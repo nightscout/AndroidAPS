@@ -5,10 +5,36 @@ import info.nightscout.androidaps.database.data.Block
 import info.nightscout.androidaps.database.data.TargetBlock
 import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.entities.*
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.serialisation.SealedClassHelper
+import info.nightscout.androidaps.database.serialisation.fromJson
 import org.json.JSONArray
 import org.json.JSONObject
 
 class Converters {
+
+    @TypeConverter
+    fun fromAction(action: Action?) = action?.name
+
+    @TypeConverter
+    fun toAction(action: String?) = action?.let { Action.fromString(it) }
+
+    @TypeConverter
+    fun fromSource(source: Sources?) = source?.name
+
+    @TypeConverter
+    fun toSource(source: String?) = source?.let { Sources.fromString(it) }
+
+    @TypeConverter
+    fun fromListOfValueWithUnit(values: List<ValueWithUnit>): String = values.map(::ValueWithUnitWrapper)
+        .let(SealedClassHelper.gson::toJson)
+
+    @TypeConverter
+    fun toMutableListOfValueWithUnit(string: String): List<ValueWithUnit> = SealedClassHelper.gson
+        .fromJson<List<ValueWithUnitWrapper>>(string).map { it.wrapped }
+
+    private class ValueWithUnitWrapper(val wrapped: ValueWithUnit)
 
     @TypeConverter
     fun fromBolusType(bolusType: Bolus.Type?) = bolusType?.name
@@ -47,10 +73,28 @@ class Converters {
     fun toTherapyEventType(therapyEventType: String?) = therapyEventType?.let { TherapyEvent.Type.valueOf(it) }
 
     @TypeConverter
-    fun fromGlucoseUnit(glucoseUnit: ProfileSwitch.GlucoseUnit?) = glucoseUnit?.name
+    fun fromGlucoseType(meterType: TherapyEvent.MeterType?) = meterType?.name
 
     @TypeConverter
-    fun toGlucoseUnit(glucoseUnit: String?) = glucoseUnit?.let { ProfileSwitch.GlucoseUnit.valueOf(it) }
+    fun toGlucoseType(meterType: String?) = meterType?.let { TherapyEvent.MeterType.valueOf(it) }
+
+    @TypeConverter
+    fun fromProfileSwitchGlucoseUnit(glucoseUnit: ProfileSwitch.GlucoseUnit?) = glucoseUnit?.name
+
+    @TypeConverter
+    fun toProfileSwitchGlucoseUnit(glucoseUnit: String?) = glucoseUnit?.let { ProfileSwitch.GlucoseUnit.valueOf(it) }
+
+    @TypeConverter
+    fun fromEffectiveProfileSwitchGlucoseUnit(glucoseUnit: EffectiveProfileSwitch.GlucoseUnit?) = glucoseUnit?.name
+
+    @TypeConverter
+    fun toEffectiveProfileSwitchGlucoseUnit(glucoseUnit: String?) = glucoseUnit?.let { EffectiveProfileSwitch.GlucoseUnit.valueOf(it) }
+
+    @TypeConverter
+    fun fromTherapyGlucoseUnit(glucoseUnit: TherapyEvent.GlucoseUnit?) = glucoseUnit?.name
+
+    @TypeConverter
+    fun toTherapyGlucoseUnit(glucoseUnit: String?) = glucoseUnit?.let { TherapyEvent.GlucoseUnit.valueOf(it) }
 
     @TypeConverter
     fun fromPumpType(pumpType: InterfaceIDs.PumpType?) = pumpType?.name
@@ -91,24 +135,24 @@ class Converters {
 
     @TypeConverter
     fun anyToString(value: Any?) = when (value) {
-        null -> null
-        is String -> "S$value"
-        is Int -> "I$value"
-        is Long -> "L$value"
+        null       -> null
+        is String  -> "S$value"
+        is Int     -> "I$value"
+        is Long    -> "L$value"
         is Boolean -> "B$value"
-        is Float -> "F$value"
-        else -> throw IllegalArgumentException("Type not supported")
+        is Float   -> "F$value"
+        else       -> throw IllegalArgumentException("Type not supported")
     }
 
     @TypeConverter
     fun stringToAny(value: String?): Any? = when {
-        value == null -> null
+        value == null         -> null
         value.startsWith("S") -> value.substring(1)
         value.startsWith("I") -> value.substring(1).toInt()
         value.startsWith("L") -> value.substring(1).toLong()
         value.startsWith("B") -> value.substring(1).toBoolean()
         value.startsWith("F") -> value.substring(1).toFloat()
-        else -> throw IllegalArgumentException("Type not supported")
+        else                  -> throw IllegalArgumentException("Type not supported")
     }
 
     @TypeConverter
@@ -139,4 +183,9 @@ class Converters {
         return list
     }
 
+    @TypeConverter
+    fun fromOfflineEventReason(reason: OfflineEvent.Reason?) = reason?.name
+
+    @TypeConverter
+    fun toOfflineEventReason(reason: String?) = reason?.let { OfflineEvent.Reason.valueOf(it) }
 }

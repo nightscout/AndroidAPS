@@ -8,9 +8,8 @@ import android.util.Log;
 
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.RawDisplayData;
+import info.nightscout.androidaps.interaction.utils.DisplayFormat;
 import info.nightscout.androidaps.interaction.utils.SmallestDoubleString;
-
-import static info.nightscout.androidaps.interaction.utils.DisplayFormat.MAX_FIELD_LEN_SHORT;
 
 /*
  * Created by dlvoy on 2019-11-12
@@ -24,7 +23,7 @@ public class IobIconComplication extends BaseComplicationProviderService {
         ComplicationData complicationData = null;
 
         if (dataType == ComplicationData.TYPE_SHORT_TEXT) {
-            final String iob = new SmallestDoubleString(raw.sIOB1, SmallestDoubleString.Units.USE).minimise(MAX_FIELD_LEN_SHORT);
+            final String iob = new SmallestDoubleString(raw.sIOB1, SmallestDoubleString.Units.USE).minimise(displayFormat.MAX_FIELD_LEN_SHORT);
 
             final ComplicationData.Builder builder = new ComplicationData.Builder(ComplicationData.TYPE_SHORT_TEXT)
                     .setShortText(ComplicationText.plainText(iob))

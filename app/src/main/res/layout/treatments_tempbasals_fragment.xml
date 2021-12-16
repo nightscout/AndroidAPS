@@ -1,34 +1,33 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsTemporaryBasalsFragment">
+    tools:context="info.nightscout.androidaps.activities.fragments.TreatmentsTemporaryBasalsFragment">
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp">
+        android:orientation="horizontal">
 
-        <TextView
+        <CheckBox
+            android:id="@+id/show_invalidated"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="10dp"
-            android:text="@string/tempbasals_iobtotal_label_string"
-            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_gravity="end|center_vertical"
+            android:checked="false"
+            android:paddingEnd="5dp"
             tools:ignore="RtlSymmetry" />
 
-        <TextView
-            android:id="@+id/total_temp_iob"
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="10dp"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textStyle="bold"
-            tools:ignore="RtlSymmetry" />
+            android:layout_gravity="center_vertical"
+            android:contentDescription="@string/show_removed"
+            app:srcCompat="@drawable/ic_visibility" />
+
 
     </LinearLayout>
 

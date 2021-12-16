@@ -17,7 +17,6 @@ abstract class ObjectivesModule {
     @ContributesAndroidInjector abstract fun objective5Injector(): Objective5
     @ContributesAndroidInjector abstract fun objective6Injector(): Objective6
     @ContributesAndroidInjector abstract fun objective7Injector(): Objective7
-    @ContributesAndroidInjector abstract fun objective8Injector(): Objective8
     @ContributesAndroidInjector abstract fun objective9Injector(): Objective9
     @ContributesAndroidInjector abstract fun objective10Injector(): Objective10
 

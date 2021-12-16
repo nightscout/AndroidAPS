@@ -17,7 +17,6 @@
     <string name="objectives_maxiob_gate">Kör några dagar och åtminstone en natt utan larm för lågt BG innan du sänker målvärdet för BG</string>
     <string name="objectives_autosens_objective">Justera basaler och kvoter om det behövs. Aktivera sedan autosens</string>
     <string name="objectives_autosens_gate">1 veckas lyckad looping dagtid, där alla måltider lagts in</string>
-    <string name="objectives_ama_objective">Aktiverar extra funktioner som kan användas dagtid, såsom avancerad måltidsassistans, AMA</string>
     <string name="objectives_smb_objective">Aktiverar ytterligare funktioner för användning dagtid, t ex SMB</string>
     <string name="objectives_auto_objective">Aktivera automatisering</string>
     <string name="objectives_smb_gate">Du måste läsa på wikin och öka max IOB för att få SMB att fungera bra. En bra start är att sätta max IOB till din genomsnittliga måltidsbolus plus 3 gånger den högsta basalen du har under ett dygn</string>

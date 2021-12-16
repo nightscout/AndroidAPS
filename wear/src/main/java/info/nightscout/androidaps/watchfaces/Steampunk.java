@@ -10,7 +10,8 @@ import android.view.animation.RotateAnimation;
 
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interaction.menus.MainMenuActivity;
-import info.nightscout.androidaps.interaction.utils.SafeParse;
+import info.nightscout.shared.SafeParse;
+
 /**
  * Created by andrew-warrington on 01/12/2017.
  */
@@ -264,6 +265,6 @@ public class Steampunk extends BaseWatchFace {
             pointSize = 1;
         }
         setupCharts();
-        sharedPrefs.edit().putString("chart_timeframe", "" + timeframe).commit();
+        sharedPrefs.edit().putString("chart_timeframe", "" + timeframe).apply();
     }
 }

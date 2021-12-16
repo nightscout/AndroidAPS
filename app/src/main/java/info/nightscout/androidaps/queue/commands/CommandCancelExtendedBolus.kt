@@ -1,8 +1,9 @@
 package info.nightscout.androidaps.queue.commands
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.R
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.queue.Callback
 import javax.inject.Inject
 
@@ -11,7 +12,7 @@ class CommandCancelExtendedBolus constructor(
     callback: Callback?
 ) : Command(injector, CommandType.EXTENDEDBOLUS, callback) {
 
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
 
     override fun execute() {
         val r = activePlugin.activePump.cancelExtendedBolus()
@@ -19,5 +20,7 @@ class CommandCancelExtendedBolus constructor(
         callback?.result(r)?.run()
     }
 
-    override fun status(): String = "CANCEL EXTENDEDBOLUS"
+    override fun status(): String = rh.gs(R.string.uel_cancel_extended_bolus)
+
+    override fun log(): String = "CANCEL EXTENDEDBOLUS"
 }

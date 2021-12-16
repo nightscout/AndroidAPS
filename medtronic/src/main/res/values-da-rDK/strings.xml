@@ -2,6 +2,7 @@
 <resources>
     <!-- Medtronic (MDT) - Base -->
     <!-- MDT Configuration -->
+    <!-- MDT Fragment -->
     <!-- MDT Errors -->
     <!-- MDT History -->
     <!--    <string name="medtronic_history_group_basal">Basals</string>-->

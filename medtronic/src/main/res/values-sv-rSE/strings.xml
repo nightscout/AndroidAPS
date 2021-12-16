@@ -24,6 +24,8 @@
     <string name="medtronic_pump_battery_nizn">NiZn (utökad vy)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (utökad vy)</string>
     <string name="medtronic_bolus_debugging">Avlusning av Bolus/Behandlingar</string>
+    <!-- MDT Fragment -->
+    <string name="rl_battery_label">RileyLink-batteri</string>
     <!-- MDT Errors -->
     <string name="medtronic_errors">Fel</string>
     <string name="medtronic_error_serial_not_set">Serienummer ej angett.</string>
@@ -63,13 +65,17 @@
     <string name="medtronic_cmd_desc_get_history">Hämta historik - Sida %1$d (%2$d/16)</string>
     <string name="medtronic_cmd_desc_get_history_request">Hämta historik - Sida %1$d</string>
     <string name="medtronic_cmd_desc_get_time">Hämta tid och datum från pumpen</string>
+    <string name="medtronic_cmd_desc_set_time">Ställ in pumptid</string>
+    <string name="medtronic_cmd_desc_get_battery_status">Hämta batteristatus</string>
     <string name="medtronic_cmd_desc_get_settings">Hämta inställningar</string>
     <string name="medtronic_cmd_desc_get_model">Hämta pumpmodell</string>
     <string name="medtronic_cmd_desc_get_basal_profile">Hämta basalprofil</string>
     <string name="medtronic_cmd_desc_set_basal_profile">Sätt basalprofil</string>
     <string name="medtronic_cmd_desc_get_tbr">Hämta temp basal</string>
     <string name="medtronic_cmd_desc_set_tbr">Sätt temp basal</string>
+    <string name="medtronic_cmd_desc_cancel_tbr">Avbryt temporär basal</string>
     <string name="medtronic_cmd_desc_set_bolus">Leverera bolus</string>
+    <string name="medtronic_cmd_desc_get_remaining_insulin">Hämta återstående insulinmängd</string>
     <string name="medtronic_pump_status_pump_unreachable">Pumpen kan inte nås</string>
     <string name="medtronic_warning">Varning</string>
     <!-- medtronic_warning -->
@@ -83,4 +89,6 @@
     <string name="pump_time_updated">Tiden uppdaterad i pumpen</string>
     <string name="set_neutral_temps_title">Sätt neutrala temp basaler</string>
     <string name="set_neutral_temps_summary">Om aktiverad, kommer en eventuell temporär basal automatiskt avbrytas före utgången av varje timme. Denna metod kan förhindra att vissa pumpar piper/vibrerar.</string>
+    <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d min kvar)</string>
+    <string name="invalid_history_data">Ogiltig pumpdata upptäckt. Öppna nytt ärende och bifoga loggar.</string>
 </resources>

@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.danar.comm
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.LTag
 
 class MsgSetUserOptions(
     injector: HasAndroidInjector
@@ -9,20 +9,20 @@ class MsgSetUserOptions(
 
     init {
         SetCommand(0x330B)
-        if (danaPump.userOptionsFrompump == null) {
+        if (danaPump.userOptionsFromPump == null) {
             // No options set -> Exiting
             aapsLogger.debug(LTag.PUMPCOMM, "NO USER OPTIONS LOADED EXITING!")
         } else {
-            danaPump.userOptionsFrompump!![0] = if( danaPump.timeDisplayType24) 0.toByte() else 1.toByte()
-            danaPump.userOptionsFrompump!![1] = if (danaPump.buttonScrollOnOff) 1.toByte() else 0.toByte()
-            danaPump.userOptionsFrompump!![2] = danaPump.beepAndAlarm.toByte()
-            danaPump.userOptionsFrompump!![3] = danaPump.lcdOnTimeSec.toByte()
-            danaPump.userOptionsFrompump!![4] = danaPump.backlightOnTimeSec.toByte()
-            danaPump.userOptionsFrompump!![5] = danaPump.selectedLanguage.toByte()
-            danaPump.userOptionsFrompump!![8] = danaPump.units.toByte()
-            danaPump.userOptionsFrompump!![9] = danaPump.shutdownHour.toByte()
-            danaPump.userOptionsFrompump!![27] = danaPump.lowReservoirRate.toByte()
-            for (element in danaPump.userOptionsFrompump!!) {
+            danaPump.userOptionsFromPump!![0] = if( danaPump.timeDisplayType24) 0.toByte() else 1.toByte()
+            danaPump.userOptionsFromPump!![1] = if (danaPump.buttonScrollOnOff) 1.toByte() else 0.toByte()
+            danaPump.userOptionsFromPump!![2] = danaPump.beepAndAlarm.toByte()
+            danaPump.userOptionsFromPump!![3] = danaPump.lcdOnTimeSec.toByte()
+            danaPump.userOptionsFromPump!![4] = danaPump.backlightOnTimeSec.toByte()
+            danaPump.userOptionsFromPump!![5] = danaPump.selectedLanguage.toByte()
+            danaPump.userOptionsFromPump!![8] = danaPump.units.toByte()
+            danaPump.userOptionsFromPump!![9] = danaPump.shutdownHour.toByte()
+            danaPump.userOptionsFromPump!![27] = danaPump.lowReservoirRate.toByte()
+            for (element in danaPump.userOptionsFromPump!!) {
                 AddParamByte(element)
             }
             aapsLogger.debug(LTag.PUMPCOMM, "New message")

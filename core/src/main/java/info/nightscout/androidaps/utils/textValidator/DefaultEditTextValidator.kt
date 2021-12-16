@@ -9,25 +9,26 @@ import com.google.android.material.textfield.TextInputLayout
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.utils.textValidator.validators.*
 
+@Suppress("SpellCheckingInspection")
 class DefaultEditTextValidator : EditTextValidator {
-    protected var mValidator: MultiValidator? = null
-    protected var testErrorString: String? = null
-    protected var emptyAllowed = false
-    protected lateinit var editTextView: EditText
+    private var mValidator: MultiValidator? = null
+    private var testErrorString: String? = null
+    private var emptyAllowed = false
+    private lateinit var editTextView: EditText
     private var tw: TextWatcher? = null
     private var defaultEmptyErrorString: String? = null
 
-    protected var testType: Int
-    protected var classType: String? = null
-    protected var customRegexp: String? = null
-    protected var customFormat: String? = null
-    protected var emptyErrorStringActual: String? = null
-    protected var emptyErrorStringDef: String? = null
-    protected var minLength = 0
-    protected var minNumber = 0
-    protected var maxNumber = 0
-    protected var floatminNumber = 0f
-    protected var floatmaxNumber = 0f
+    private var testType: Int
+    private var classType: String? = null
+    private var customRegexp: String? = null
+    private var customFormat: String? = null
+    private var emptyErrorStringActual: String? = null
+    private var emptyErrorStringDef: String? = null
+    private var minLength = 0
+    private var minNumber = 0
+    private var maxNumber = 0
+    private var floatminNumber = 0f
+    private var floatmaxNumber = 0f
 
     @Suppress("unused")
     constructor(editTextView: EditText, context: Context) {
@@ -56,8 +57,7 @@ class DefaultEditTextValidator : EditTextValidator {
 
     @Throws(IllegalArgumentException::class)
     override fun addValidator(theValidator: Validator) {
-        requireNotNull(theValidator) { "theValidator argument should not be null" }
-        mValidator!!.enqueue(theValidator)
+        mValidator?.enqueue(theValidator)
     }
 
     private fun setEditText(editText: EditText) {
@@ -105,9 +105,9 @@ class DefaultEditTextValidator : EditTextValidator {
             EditTextValidator.TEST_ALPHANUMERIC        -> toAdd = AlphaNumericValidator(
                 if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_this_field_cannot_contain_special_character) else testErrorString)
             EditTextValidator.TEST_NUMERIC             -> toAdd = NumericValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_only_numeric_digits_allowed) else testErrorString)
-            EditTextValidator.TEST_NUMERIC_RANGE       -> toAdd = NumericRangeValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_only_numeric_digits_range_allowed, Integer.toString(minNumber), Integer.toString(maxNumber)) else testErrorString, minNumber, maxNumber)
-            EditTextValidator.TEST_FLOAT_NUMERIC_RANGE -> toAdd = FloatNumericRangeValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_only_numeric_digits_range_allowed, java.lang.Float.toString(floatminNumber), java.lang.Float.toString(floatmaxNumber)) else testErrorString, floatminNumber, floatmaxNumber)
-            EditTextValidator.TEST_REGEXP              -> toAdd = RegexpValidator(testErrorString, customRegexp)
+            EditTextValidator.TEST_NUMERIC_RANGE       -> toAdd = NumericRangeValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_only_numeric_digits_range_allowed, minNumber.toString(), maxNumber.toString()) else testErrorString, minNumber, maxNumber)
+            EditTextValidator.TEST_FLOAT_NUMERIC_RANGE -> toAdd = FloatNumericRangeValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_only_numeric_digits_range_allowed, floatminNumber.toString(), floatmaxNumber.toString()) else testErrorString, floatminNumber, floatmaxNumber)
+            EditTextValidator.TEST_REGEXP              -> toAdd = RegexpValidator(testErrorString, customRegexp ?: "")
             EditTextValidator.TEST_CREDITCARD          -> toAdd = CreditCardValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_creditcard_number_not_valid) else testErrorString)
             EditTextValidator.TEST_EMAIL               -> toAdd = EmailValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_email_address_not_valid) else testErrorString)
             EditTextValidator.TEST_PHONE               -> toAdd = PhoneValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_phone_not_valid) else testErrorString)
@@ -185,7 +185,7 @@ class DefaultEditTextValidator : EditTextValidator {
         return this
     }
 
-    fun setEmptyErrorString(emptyErrorString: String?): DefaultEditTextValidator {
+    private fun setEmptyErrorString(emptyErrorString: String?): DefaultEditTextValidator {
         emptyErrorStringActual = if (!TextUtils.isEmpty(emptyErrorString)) {
             emptyErrorString
         } else {
@@ -243,6 +243,7 @@ class DefaultEditTextValidator : EditTextValidator {
             !TextUtils.isEmpty(editTextView.error)
         }
 
+    @Suppress("SpellCheckingInspection")
     data class Parameters(
         val testErrorString: String? = null,
         val emptyAllowed: Boolean = false,

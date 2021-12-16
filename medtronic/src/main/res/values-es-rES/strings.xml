@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Medtronic (MDT) - Base -->
-    <string name="description_pump_medtronic">Integración de Bomba para Medtronic, requiere dispositivo RileyLink y modelo específico de Bomba</string>
+    <string name="description_pump_medtronic">Integración de bomba de insulina Medtronic. Requiere dispositivo RileyLink y modelo específico de bomba</string>
     <!-- MDT Configuration -->
     <string name="medtronic_serial_number">Número de serie de la Infusora</string>
     <string name="medtronic_pump_type">Tipo de Infusora</string>
@@ -24,6 +24,8 @@
     <string name="medtronic_pump_battery_nizn">NiZn (vista ampliada)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (vista extendida)</string>
     <string name="medtronic_bolus_debugging">Bolos/Depuración de Tratamientos</string>
+    <!-- MDT Fragment -->
+    <string name="rl_battery_label">Batería RileyLink</string>
     <!-- MDT Errors -->
     <string name="medtronic_errors">Errores</string>
     <string name="medtronic_error_serial_not_set">Nº serie no establecido.</string>
@@ -63,13 +65,17 @@
     <string name="medtronic_cmd_desc_get_history">Recuperar el historial - Página %1$d (%2$d/16)</string>
     <string name="medtronic_cmd_desc_get_history_request">Recuperar el historial - Página %1$d</string>
     <string name="medtronic_cmd_desc_get_time">Obtener la hora de la infusora</string>
+    <string name="medtronic_cmd_desc_set_time">Establecer hora de la bomba</string>
+    <string name="medtronic_cmd_desc_get_battery_status">Comprobar Estado Batería</string>
     <string name="medtronic_cmd_desc_get_settings">Obtener la configuración</string>
     <string name="medtronic_cmd_desc_get_model">Obtener el modelo de la infusora</string>
     <string name="medtronic_cmd_desc_get_basal_profile">Obtener el perfil basal</string>
     <string name="medtronic_cmd_desc_set_basal_profile">Establecer el perfil basal</string>
     <string name="medtronic_cmd_desc_get_tbr">Obtener la basal temporal</string>
     <string name="medtronic_cmd_desc_set_tbr">Establecer la basal temporal</string>
+    <string name="medtronic_cmd_desc_cancel_tbr">Cancelar base temporal</string>
     <string name="medtronic_cmd_desc_set_bolus">Fijar Bolo</string>
+    <string name="medtronic_cmd_desc_get_remaining_insulin">Comprobar Insulina Restante</string>
     <string name="medtronic_pump_status_pump_unreachable">Infusora no alcanzable</string>
     <string name="medtronic_warning">Alerta</string>
     <!-- medtronic_warning -->
@@ -83,4 +89,6 @@
     <string name="pump_time_updated">Hora del infusor actualizada</string>
     <string name="set_neutral_temps_title">Establecer basales temporales neutras</string>
     <string name="set_neutral_temps_summary">Si está activado, cancelará un basal temporal antes del final de cada hora. Este método puede ayudar a evitar que algunas bombas pitan/vibran al final de la hora.</string>
+    <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d min restantes)</string>
+    <string name="invalid_history_data">Se han detectado datos inválidos en el historial de la bomba. Abre una nueva incidencia y proporciona los archivos de registros.</string>
 </resources>

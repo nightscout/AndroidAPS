@@ -132,7 +132,7 @@
     <string name="wronginsulin_label">Insulin delivery/entry errors</string>
     <string name="wronginsulin_whattodo">What should you do if you received less insulin than the pump history suggests e.g. due to an occlusion, a failed cannula or forgetting to reattach the pump after a shower? </string>
     <string name="wronginsulin_careportal">Delete insulin data from Nightscout Careportal to remove it from the pump history.</string>
-    <string name="wronginsulin_compare">Compare values in AndroidAPS and pump history.</string>
+    <string name="wronginsulin_compare">Compare values in AndroidAPS and pump history (if pump supports this).</string>
     <string name="wronginsulin_prime">Bolus a proportion of your calculated ‘missed’ insulin by either syringe/pen or using a prime.</string>
     <string name="wronginsulin_donothing">Do nothing and allow AndroidAPS to correct any resulting high blood glucose level.</string>
     <string name="iob_label">Insulin on Board (IOB)</string>

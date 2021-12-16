@@ -11,23 +11,27 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.InvalidateGlucoseValueTransaction
 import info.nightscout.androidaps.databinding.BgsourceFragmentBinding
 import info.nightscout.androidaps.databinding.BgsourceItemBinding
 import info.nightscout.androidaps.events.EventNewBG
-import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
+import info.nightscout.androidaps.extensions.directionToIcon
+import info.nightscout.androidaps.extensions.toVisibility
+import info.nightscout.androidaps.extensions.valueToUnitsString
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.extensions.directionToIcon
-import info.nightscout.androidaps.utils.extensions.toVisibility
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.androidaps.utils.valueToUnitsString
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import java.util.concurrent.TimeUnit
@@ -35,18 +39,18 @@ import javax.inject.Inject
 
 class BGSourceFragment : DaggerFragment() {
 
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var databaseHelper: DatabaseHelperInterface
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var uel: UserEntryLogger
+    @Inject lateinit var activePlugin: ActivePlugin
 
     private val disposable = CompositeDisposable()
-    private val millsToThePast = T.hours(12).msecs()
+    private val millsToThePast = T.hours(36).msecs()
 
     private var _binding: BgsourceFragmentBinding? = null
 
@@ -78,11 +82,11 @@ class BGSourceFragment : DaggerFragment() {
             .observeOn(aapsSchedulers.io)
             .debounce(1L, TimeUnit.SECONDS)
             .subscribe({
-                disposable += repository
-                    .compatGetBgReadingsDataFromTime(now - millsToThePast, false)
-                    .observeOn(aapsSchedulers.main)
-                    .subscribe { list -> binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true) }
-            }, fabricPrivacy::logException)
+                           disposable += repository
+                               .compatGetBgReadingsDataFromTime(now - millsToThePast, false)
+                               .observeOn(aapsSchedulers.main)
+                               .subscribe { list -> binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true) }
+                       }, fabricPrivacy::logException)
     }
 
     @Synchronized
@@ -113,6 +117,12 @@ class BGSourceFragment : DaggerFragment() {
             holder.binding.value.text = glucoseValue.valueToUnitsString(profileFunction.getUnits())
             holder.binding.direction.setImageResource(glucoseValue.trendArrow.directionToIcon())
             holder.binding.remove.tag = glucoseValue
+            if (position > 0) {
+                val previous = glucoseValues[position - 1]
+                val diff = previous.timestamp - glucoseValue.timestamp
+                if (diff < T.secs(20).msecs())
+                    holder.binding.root.setBackgroundColor(rh.gc(R.color.errorAlertBackground))
+            }
         }
 
         override fun getItemCount(): Int = glucoseValues.size
@@ -127,8 +137,23 @@ class BGSourceFragment : DaggerFragment() {
                     val glucoseValue = v.tag as GlucoseValue
                     activity?.let { activity ->
                         val text = dateUtil.dateAndTimeString(glucoseValue.timestamp) + "\n" + glucoseValue.valueToUnitsString(profileFunction.getUnits())
-                        OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord), text, Runnable {
-                            uel.log("BG REMOVED", dateUtil.dateAndTimeString(glucoseValue.timestamp))
+                        OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord), text, Runnable {
+                            val source = when ((activePlugin.activeBgSource as PluginBase).pluginDescription.pluginName) {
+                                R.string.dexcom_app_patched -> Sources.Dexcom
+                                R.string.eversense          -> Sources.Eversense
+                                R.string.Glimp              -> Sources.Glimp
+                                R.string.MM640g             -> Sources.MM640g
+                                R.string.nsclientbg         -> Sources.NSClientSource
+                                R.string.poctech            -> Sources.PocTech
+                                R.string.tomato             -> Sources.Tomato
+                                R.string.glunovo            -> Sources.Glunovo
+                                R.string.xdrip              -> Sources.Xdrip
+                                else                        -> Sources.Unknown
+                            }
+                            uel.log(
+                                Action.BG_REMOVED, source,
+                                ValueWithUnit.Timestamp(glucoseValue.timestamp)
+                            )
                             disposable += repository.runTransaction(InvalidateGlucoseValueTransaction(glucoseValue.id)).subscribe()
                         })
                     }

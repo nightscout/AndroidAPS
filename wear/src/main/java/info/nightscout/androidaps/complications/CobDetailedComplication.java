@@ -22,7 +22,7 @@ public class CobDetailedComplication extends BaseComplicationProviderService {
 
         if (dataType == ComplicationData.TYPE_SHORT_TEXT) {
 
-            Pair<String, String> cob = DisplayFormat.detailedCob(raw);
+            Pair<String, String> cob = displayFormat.detailedCob(raw);
             final ComplicationData.Builder builder = new ComplicationData.Builder(ComplicationData.TYPE_SHORT_TEXT)
                     .setShortText(ComplicationText.plainText(cob.first))
                     .setTapAction(complicationPendingIntent);

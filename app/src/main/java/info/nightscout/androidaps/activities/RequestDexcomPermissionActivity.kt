@@ -7,7 +7,7 @@ import javax.inject.Inject
 class RequestDexcomPermissionActivity : DialogAppCompatActivity() {
     @Inject lateinit var dexcomPlugin: DexcomPlugin
 
-    private val requestCode = "AndroidAPS <3".map { it.toInt() }.sum()
+    private val requestCode = "AndroidAPS <3".map { it.code }.sum()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

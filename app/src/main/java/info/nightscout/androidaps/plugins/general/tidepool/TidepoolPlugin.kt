@@ -13,9 +13,9 @@ import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.tidepool.comm.TidepoolUploader
 import info.nightscout.androidaps.plugins.general.tidepool.comm.TidepoolUploader.ConnectionStatus.CONNECTED
 import info.nightscout.androidaps.plugins.general.tidepool.comm.TidepoolUploader.ConnectionStatus.DISCONNECTED
@@ -33,7 +33,7 @@ import info.nightscout.androidaps.utils.ToastUtils
 import io.reactivex.rxkotlin.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
 import java.util.*
 import javax.inject.Inject
@@ -43,9 +43,9 @@ import javax.inject.Singleton
 class TidepoolPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     private val aapsSchedulers: AapsSchedulers,
-    private val rxBus: RxBusWrapper,
+    private val rxBus: RxBus,
     private val context: Context,
     private val fabricPrivacy: FabricPrivacy,
     private val tidepoolUploader: TidepoolUploader,
@@ -60,7 +60,7 @@ class TidepoolPlugin @Inject constructor(
     .fragmentClass(TidepoolFragment::class.qualifiedName)
     .preferencesId(R.xml.pref_tidepool)
     .description(R.string.description_tidepool),
-    aapsLogger, resourceHelper, injector
+    aapsLogger, rh, injector
 ) {
 
     private var disposable: CompositeDisposable = CompositeDisposable()
@@ -108,9 +108,9 @@ class TidepoolPlugin @Inject constructor(
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event ->
-                if (event.isChanged(resourceHelper, R.string.key_tidepool_dev_servers)
-                    || event.isChanged(resourceHelper, R.string.key_tidepool_username)
-                    || event.isChanged(resourceHelper, R.string.key_tidepool_password)
+                if (event.isChanged(rh, R.string.key_tidepool_dev_servers)
+                    || event.isChanged(rh, R.string.key_tidepool_username)
+                    || event.isChanged(rh, R.string.key_tidepool_password)
                 )
                     tidepoolUploader.resetInstance()
             }, fabricPrivacy::logException)
@@ -129,7 +129,7 @@ class TidepoolPlugin @Inject constructor(
     override fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {
         super.preprocessPreferences(preferenceFragment)
 
-        val tidepoolTestLogin: Preference? = preferenceFragment.findPreference(resourceHelper.gs(R.string.key_tidepool_test_login))
+        val tidepoolTestLogin: Preference? = preferenceFragment.findPreference(rh.gs(R.string.key_tidepool_test_login))
         tidepoolTestLogin?.setOnPreferenceClickListener {
             preferenceFragment.context?.let {
                 tidepoolUploader.testLogin(it)

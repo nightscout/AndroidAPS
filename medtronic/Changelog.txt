@@ -1,0 +1,11 @@
+
+V1 - Medtronic initial implementation
+... lots of changes
+
+
+V2 - Rewrite into kotlin, new database (for v3.0)
+0001 - initial version
+0002 - some fixes
+0003 - SMB fix (798)
+0004 - Zero TBR Duration fix (798), refactoring of TempBasalProcessDTO
+0005 - fixes to MedtronicHistoryEntry lateinit problem

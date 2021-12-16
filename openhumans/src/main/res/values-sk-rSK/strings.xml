@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="open_humans">Open Humans</string>
+    <string name="open_humans_short">OH</string>
+    <string name="open_humans_description">Open Humans vám umožňuje nahrávať dáta vášho diabetu a darovať ich vedeckým projektom.</string>
+    <string name="logout">Odhlásiť</string>
+    <string name="setup">Nastaviť</string>
+    <string name="setup_completed_info">Open Humans bol nastavený. Pokiaľ chcete prestať nahrávať, kliknite na \"Odhlásiť\".</string>
+    <string name="not_setup_info">Open Humans je momentálne neaktívny. Ak chcete začať nahrávať dáta, kliknite na tlačítko \"Nastaviť\".</string>
+    <string name="project_member_id">ID člena projektu: %1$s</string>
+    <string name="only_upload_if_connected_to_wifi">Odoslať iba ak ste pripojený k Wi-Fi</string>
+    <string name="only_upload_if_charging">Odoslať iba pri nabíjaní</string>
+    <string name="open_humans_uploading">Nahrávanie na Open Humans…</string>
+    <string name="open_humans_notifications">Notifikácie Open Humans</string>
+    <string name="uploading_to_open_humans">AndroidAPS nahráva na Open Humans. To môže chvíľu trvať.</string>
+    <string name="you_have_been_signed_out_of_open_humans">Boli ste odhlásený z Open Humans</string>
+    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Kliknite sem, ak sa chcete prihlásiť znova, v prípade, že sa to stalo nedopatrením.</string>
+    <string name="upload_now">Nahrať teraz</string>
+</resources>

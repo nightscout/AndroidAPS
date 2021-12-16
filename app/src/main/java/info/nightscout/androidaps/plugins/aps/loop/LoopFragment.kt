@@ -8,16 +8,17 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.LoopFragmentBinding
 import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.interfaces.Loop
+import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopSetLastRunGui
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopUpdateGui
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import javax.inject.Inject
@@ -26,11 +27,11 @@ class LoopFragment : DaggerFragment() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var sp: SP
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var loopPlugin: LoopPlugin
+    @Inject lateinit var loop: Loop
     @Inject lateinit var dateUtil: DateUtil
 
     private var disposable: CompositeDisposable = CompositeDisposable()
@@ -51,8 +52,8 @@ class LoopFragment : DaggerFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.run.setOnClickListener {
-            binding.lastrun.text = resourceHelper.gs(R.string.executing)
-            Thread { loopPlugin.invoke("Loop button", true) }.start()
+            binding.lastrun.text = rh.gs(R.string.executing)
+            Thread { loop.invoke("Loop button", true) }.start()
         }
     }
 
@@ -93,12 +94,11 @@ class LoopFragment : DaggerFragment() {
     @Synchronized
     fun updateGUI() {
         if (_binding == null) return
-        loopPlugin.lastRun?.let {
+        loop.lastRun?.let {
             binding.request.text = it.request?.toSpanned() ?: ""
             binding.constraintsprocessed.text = it.constraintsProcessed?.toSpanned() ?: ""
             binding.source.text = it.source ?: ""
             binding.lastrun.text = dateUtil.dateAndTimeString(it.lastAPSRun)
-                ?: ""
             binding.smbrequestTime.text = dateUtil.dateAndTimeAndSecondsString(it.lastSMBRequest)
             binding.smbexecutionTime.text = dateUtil.dateAndTimeAndSecondsString(it.lastSMBEnact)
             binding.tbrrequestTime.text = dateUtil.dateAndTimeAndSecondsString(it.lastTBRRequest)

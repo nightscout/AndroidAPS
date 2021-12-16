@@ -2,7 +2,7 @@ package info.nightscout.androidaps.danar.comm
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danar.R
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
@@ -34,7 +34,7 @@ class MsgInitConnStatusOption(
             failed = true
         }
         if (!danaPump.isPasswordOK) {
-            val notification = Notification(Notification.WRONG_PUMP_PASSWORD, resourceHelper.gs(R.string.wrongpumppassword), Notification.URGENT)
+            val notification = Notification(Notification.WRONG_PUMP_PASSWORD, rh.gs(R.string.wrongpumppassword), Notification.URGENT)
             rxBus.send(EventNewNotification(notification))
         } else {
             rxBus.send(EventDismissNotification(Notification.WRONG_PUMP_PASSWORD))

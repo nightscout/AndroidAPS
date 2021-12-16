@@ -125,7 +125,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/overview_quickwizard_item_remove_button" />
+                android:text="@string/remove_button" />
         </LinearLayout>
 
     </LinearLayout>

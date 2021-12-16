@@ -11,8 +11,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-import info.nightscout.androidaps.logging.AAPSLogger;
-import info.nightscout.androidaps.logging.LTag;
+import info.nightscout.shared.logging.AAPSLogger;
+import info.nightscout.shared.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.action.AcknowledgeAlertsAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.action.AssignAddressAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.action.BolusAction;
@@ -63,7 +63,7 @@ public class OmnipodManager {
     private static final int ACTION_VERIFICATION_TRIES = 1;
 
     private final OmnipodRileyLinkCommunicationManager communicationService;
-    private final PodStateManager podStateManager;
+    private final ErosPodStateManager podStateManager;
 
     private ActiveBolusData activeBolusData;
     private SingleSubject<Boolean> bolusCommandExecutionSubject;
@@ -76,7 +76,7 @@ public class OmnipodManager {
     public OmnipodManager(AAPSLogger aapsLogger,
                           AapsSchedulers aapsSchedulers,
                           OmnipodRileyLinkCommunicationManager communicationService,
-                          PodStateManager podStateManager) {
+                          ErosPodStateManager podStateManager) {
         if (communicationService == null) {
             throw new IllegalArgumentException("Communication service cannot be null");
         }

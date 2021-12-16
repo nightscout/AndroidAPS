@@ -3,30 +3,28 @@ package info.nightscout.androidaps.plugins.source
 import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
-import info.nightscout.androidaps.interfaces.BgSourceInterface
+import info.nightscout.androidaps.interfaces.BgSource
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.receivers.BundleStore
-import info.nightscout.androidaps.receivers.DataReceiver
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
+import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.services.Intents
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class XdripPlugin @Inject constructor(
     injector: HasAndroidInjector,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     aapsLogger: AAPSLogger
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
@@ -34,11 +32,13 @@ class XdripPlugin @Inject constructor(
     .pluginIcon((R.drawable.ic_blooddrop_48))
     .pluginName(R.string.xdrip)
     .description(R.string.description_source_xdrip),
-    aapsLogger, resourceHelper, injector
-), BgSourceInterface {
+    aapsLogger, rh, injector
+), BgSource {
 
     private var advancedFiltering = false
     override var sensorBatteryLevel = -1
+
+    override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean  = false
 
     override fun advancedFilteringSupported(): Boolean {
         return advancedFiltering
@@ -50,15 +50,9 @@ class XdripPlugin @Inject constructor(
             GlucoseValue.SourceSensor.DEXCOM_G6_NATIVE,
             GlucoseValue.SourceSensor.DEXCOM_G5_NATIVE,
             GlucoseValue.SourceSensor.DEXCOM_G6_NATIVE_XDRIP,
-            GlucoseValue.SourceSensor.DEXCOM_G5_NATIVE_XDRIP
+            GlucoseValue.SourceSensor.DEXCOM_G5_NATIVE_XDRIP,
+            GlucoseValue.SourceSensor.DEXCOM_G6_G5_NATIVE_XDRIP
         ).any { it == glucoseValue.sourceSensor }
-    }
-
-    private val disposable = CompositeDisposable()
-
-    override fun onStop() {
-        disposable.clear()
-        super.onStop()
     }
 
     // cannot be inner class because of needed injection
@@ -67,20 +61,23 @@ class XdripPlugin @Inject constructor(
         params: WorkerParameters
     ) : Worker(context, params) {
 
+        @Inject lateinit var aapsLogger: AAPSLogger
         @Inject lateinit var xdripPlugin: XdripPlugin
         @Inject lateinit var repository: AppRepository
-        @Inject lateinit var bundleStore: BundleStore
+        @Inject lateinit var dataWorker: DataWorker
 
         init {
             (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
         }
 
         override fun doWork(): Result {
-            if (!xdripPlugin.isEnabled(PluginType.BGSOURCE)) return Result.failure()
-            val bundle = bundleStore.pickup(inputData.getLong(DataReceiver.STORE_KEY, -1))
-                ?: return Result.failure()
-            
-            xdripPlugin.aapsLogger.debug(LTag.BGSOURCE, "Received xDrip data: $bundle")
+            var ret = Result.success()
+
+            if (!xdripPlugin.isEnabled()) return Result.success(workDataOf("Result" to "Plugin not enabled"))
+            val bundle = dataWorker.pickupBundle(inputData.getLong(DataWorker.STORE_KEY, -1))
+                ?: return Result.failure(workDataOf("Error" to "missing input data"))
+
+            aapsLogger.debug(LTag.BGSOURCE, "Received xDrip data: $bundle")
             val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
             glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(
                 timestamp = bundle.getLong(Intents.EXTRA_TIMESTAMP, 0),
@@ -91,15 +88,20 @@ class XdripPlugin @Inject constructor(
                 sourceSensor = GlucoseValue.SourceSensor.fromString(bundle.getString(Intents.XDRIP_DATA_SOURCE_DESCRIPTION)
                     ?: "")
             )
-            xdripPlugin.disposable += repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null)).subscribe({ savedValues ->
-                savedValues.all().forEach {
-                    xdripPlugin.detectSource(it)
+            repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
+                .doOnError {
+                    aapsLogger.error(LTag.DATABASE, "Error while saving values from Xdrip", it)
+                    ret = Result.failure(workDataOf("Error" to it.toString()))
                 }
-            }, {
-                xdripPlugin.aapsLogger.error(LTag.BGSOURCE, "Error while saving values from Eversense App", it)
-            })
+                .blockingGet()
+                .also { savedValues ->
+                    savedValues.all().forEach {
+                        xdripPlugin.detectSource(it)
+                        aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
+                    }
+                }
             xdripPlugin.sensorBatteryLevel = bundle.getInt(Intents.EXTRA_SENSOR_BATTERY, -1)
-            return Result.success()
+            return ret
         }
     }
 }

@@ -90,6 +90,9 @@
     <string name="action_confirm">BEKRÄFTA</string>
     <string name="action_timeshift">tidsförskjutning</string>
     <string name="action_bolus">bolus</string>
+    <string name="bolus_progress">Bolusförlopp</string>
+    <string name="press_to_cancel">tryck för att avbryta</string>
+    <string name="cancel_bolus">AVBRYT BOLUS</string>
     <string name="status_pump">Pump</string>
     <string name="status_loop">APS</string>
     <string name="status_cpp">CPP</string>
@@ -129,4 +132,8 @@
     <string name="digitalstyle_pref_your_color">Färg:</string>
     <string name="digitalstyle_pref_your_color_saturation">Färgmättnad:</string>
     <string name="digitalstyle_pref_your_color_opacity">Opacitet:</string>
+    <string name="bolus_progress_channel_name">AAPS Bolusförlopp</string>
+    <string name="bolus_progress_silent_channel_name">AAPS Bolusförlopp (tyst)</string>
+    <string name="bolus_progress_channel_description">Bolusförlopp och avbryt</string>
+    <string name="bolus_progress_silent_channel_description">Bolusförlopp och avbryt med mindre vibrationer</string>
 </resources>

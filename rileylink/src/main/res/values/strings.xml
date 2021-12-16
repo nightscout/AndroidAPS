@@ -45,6 +45,7 @@
     <string name="rileylink_last_device_contact">Last Device Contact:</string>
     <string name="rileylink_firmware_version">Firmware Version:</string>
     <string name="rileylink_firmware_version_value">BLE113: %1$s\nCC110: %2$s</string>
+    <string name="rileylink_firmware_version_value_orange">Fw: %1$s\nHw: %2$s</string>
     <string name="rileylink_pump_serial_number">Pump Serial Number:</string>
     <string name="rileylink_pump_frequency">Pump Frequency:</string>
     <string name="rileylink_pump_frequency_value">%1$.2f MHz</string>
@@ -77,7 +78,7 @@
     <string name="riley_link_common_no">No</string>
 
     <!-- RileyLink - Preferences -->
-    <string name="riley_link_show_battery_level">Show battery level reported by OrangeLink/EmaLink</string>
+    <string name="riley_link_show_battery_level">Show battery level reported by OrangeLink/EmaLink/DiaLink</string>
     <string name="riley_link_show_battery_level_summary">DOES NOT work with the original RileyLink. May not work with other RileyLink alternatives.</string>
 
     <plurals name="duration_days">
@@ -88,5 +89,7 @@
         <item quantity="one">%1$d hour</item>
         <item quantity="other">%1$d hours</item>
     </plurals>
-
+    <string name="orange_use_scanning_level">Use Scanning</string>
+    <string name="orange_use_scanning_level_summary">Scan before connecting to OrangeLink, it should improve connections (can also be used with other RileyLink clones, if needed)</string>
+    <string name="key_orange_use_scanning" translatable="false">pref_orange_use_scanning</string>
 </resources>

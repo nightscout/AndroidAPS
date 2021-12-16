@@ -5,7 +5,7 @@ import org.joda.time.DateTimeZone;
 import java.util.Collections;
 import java.util.Random;
 
-import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.shared.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.OmnipodMessage;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.command.AssignAddressCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.response.VersionResponse;
@@ -14,14 +14,14 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.Pa
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.exception.IllegalMessageAddressException;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.exception.IllegalPacketTypeException;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.exception.IllegalVersionResponseTypeException;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.PodStateManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.ErosPodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 
 public class AssignAddressAction implements OmnipodAction<Void> {
-    private final PodStateManager podStateManager;
+    private final ErosPodStateManager podStateManager;
     private final AAPSLogger aapsLogger;
 
-    public AssignAddressAction(PodStateManager podStateManager, AAPSLogger aapsLogger) {
+    public AssignAddressAction(ErosPodStateManager podStateManager, AAPSLogger aapsLogger) {
         if (podStateManager == null) {
             throw new IllegalArgumentException("podStateManager can not be null");
         }

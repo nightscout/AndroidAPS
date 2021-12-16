@@ -24,6 +24,8 @@
     <string name="medtronic_pump_battery_nizn">Šarminė (išplėstinis vaizdas)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (išplėstinis vaizdas)</string>
     <string name="medtronic_bolus_debugging">Boluso/Terapijos Derinimas</string>
+    <!-- MDT Fragment -->
+    <string name="rl_battery_label">RileyLink baterija</string>
     <!-- MDT Errors -->
     <string name="medtronic_errors">Klaidos</string>
     <string name="medtronic_error_serial_not_set">Serijos Nr. nenustatytas.</string>
@@ -63,13 +65,17 @@
     <string name="medtronic_cmd_desc_get_history">Gauti istoriją - Lapas %1$d (%2$d/16)</string>
     <string name="medtronic_cmd_desc_get_history_request">Gauti istoriją - Lapas %1$d</string>
     <string name="medtronic_cmd_desc_get_time">Gauti pompos laiką</string>
+    <string name="medtronic_cmd_desc_set_time">Nustatyti pompos laiką</string>
+    <string name="medtronic_cmd_desc_get_battery_status">Parodyti baterijos būseną</string>
     <string name="medtronic_cmd_desc_get_settings">Gauti parametrus</string>
     <string name="medtronic_cmd_desc_get_model">Gauti pompos modelį</string>
     <string name="medtronic_cmd_desc_get_basal_profile">Gauti bazės profilį</string>
     <string name="medtronic_cmd_desc_set_basal_profile">Nustatyti bazės profilį</string>
     <string name="medtronic_cmd_desc_get_tbr">Gauti laikiną bazę</string>
     <string name="medtronic_cmd_desc_set_tbr">Nustatyti laikiną bazę</string>
+    <string name="medtronic_cmd_desc_cancel_tbr">Atšaukti laikiną bazę</string>
     <string name="medtronic_cmd_desc_set_bolus">Nustatyti bolusą</string>
+    <string name="medtronic_cmd_desc_get_remaining_insulin">Parodyti insulino likutį</string>
     <string name="medtronic_pump_status_pump_unreachable">Pompa nepasiekiama</string>
     <string name="medtronic_warning">Perspėjimas</string>
     <!-- medtronic_warning -->
@@ -83,4 +89,5 @@
     <string name="pump_time_updated">Pompos laikas pakeistas</string>
     <string name="set_neutral_temps_title">Nustatyti neutralią laikiną bazę</string>
     <string name="set_neutral_temps_summary">Jei įjungta, laikina valandinė bazė bus anuliuota iki kiekvienos valandos pabaigos. Šis metodas gali padėti išvengti kai kurių pompų pypsėjimo ar vibravimo.</string>
+    <string name="mdt_tbr_remaining">%1$.1f vv/h (liko %2$d min)</string>
 </resources>

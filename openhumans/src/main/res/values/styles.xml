@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="OpenHumans" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/open_humans_orange</item>
+        <item name="colorSecondary">@color/open_humans_blue</item>
+        <item name="colorPrimaryVariant">@color/open_humans_orange_variant</item>
+        <item name="colorSecondaryVariant">@color/open_humans_blue_variant</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+        <item name="colorOnSecondary">@android:color/white</item>
+        <item name="fontFamily">@font/montserrat</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+</resources>

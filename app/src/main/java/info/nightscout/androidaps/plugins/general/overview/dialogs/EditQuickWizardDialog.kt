@@ -10,11 +10,11 @@ import android.view.Window
 import android.view.WindowManager
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.databinding.OverviewEditquickwizardDialogBinding
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventQuickWizardChange
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.SafeParse
+import info.nightscout.shared.SafeParse
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.extensions.selectedItemPosition
 import info.nightscout.androidaps.utils.extensions.setEnableForChildren
@@ -26,7 +26,7 @@ import javax.inject.Inject
 
 class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
 
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var quickWizard: QuickWizard
     @Inject lateinit var dateUtil: DateUtil
@@ -83,7 +83,7 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
         // create an OnTimeSetListener
         val fromTimeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
             fromSeconds = (T.hours(hour.toLong()).secs() + T.mins(minute.toLong()).secs()).toInt()
-            binding.from.text = dateUtil.timeString(DateUtil.toDate(fromSeconds))
+            binding.from.text = dateUtil.timeString(dateUtil.secondsOfTheDayToMilliseconds(fromSeconds))
         }
 
         binding.from.setOnClickListener {
@@ -96,24 +96,24 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
             }
         }
         fromSeconds = entry.validFrom()
-        binding.from.text = dateUtil.timeString(DateUtil.toDate(fromSeconds))
+        binding.from.text = dateUtil.timeString(dateUtil.secondsOfTheDayToMilliseconds(fromSeconds))
 
         val toTimeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
             toSeconds = (T.hours(hour.toLong()).secs() + T.mins(minute.toLong()).secs()).toInt()
-            binding.from.text = dateUtil.timeString(DateUtil.toDate(toSeconds))
+            binding.to.text = dateUtil.timeString(dateUtil.secondsOfTheDayToMilliseconds(toSeconds))
         }
 
         binding.to.setOnClickListener {
             context?.let {
                 TimePickerDialog(it, toTimeSetListener,
-                    T.secs(fromSeconds.toLong()).hours().toInt(),
-                    T.secs((fromSeconds % 3600).toLong()).mins().toInt(),
+                    T.secs(toSeconds.toLong()).hours().toInt(),
+                    T.secs((toSeconds % 3600).toLong()).mins().toInt(),
                     DateFormat.is24HourFormat(context)
                 ).show()
             }
         }
-        toSeconds = entry.validFrom()
-        binding.to.text = dateUtil.timeString(DateUtil.toDate(toSeconds))
+        toSeconds = entry.validTo()
+        binding.to.text = dateUtil.timeString(dateUtil.secondsOfTheDayToMilliseconds(toSeconds))
 
         binding.buttonEdit.setText(entry.buttonText())
         binding.carbsEdit.setText(entry.carbs().toString())

@@ -8,6 +8,7 @@
     <string name="dia_meaningisequaltodiapump">Om du tycker att värdet för DIA som du använde i din pump före AndroidAPS fungerade väl, behöver du inte ändra det här när du börjar looping.</string>
     <string name="dia_valuemustbedetermined">Du bör själv fastställa det lämpliga värdet för DIA.</string>
     <string name="hypott_label">Hypo tempmål</string>
+    <string name="hypott_whenhypott">Vad är huvudskälet till att ange ett hypo tempmål?</string>
     <string name="hypott_wrongbasal">För att korrigera känningar som orsakas av felaktiga basalinställningar.</string>
     <string name="hypott_preventoversmb">För att förhindra att AndroidAPS överkorrigerar för de snabbverkande kolhydraterna som används för att behandla en insulinkänning.</string>
     <string name="hypott_exercise">För att korrigera för en känning om ett resultat av motion.</string>
@@ -40,12 +41,14 @@
     <string name="noisycgm_label">Brusiga CGM-värden</string>
     <string name="noisycgm_whattodo">Vad bör göras om CGM-datat är brusigt?</string>
     <string name="noisycgm_nothing">Gör inget-AndroidAPS tar hand om det.</string>
+    <string name="noisycgm_pause">Inaktivera closed loop-läge för att undvika över- eller underdosering.</string>
     <string name="noisycgm_replacesensor">Byt ut brusiga eller felaktiga sensorer.</string>
     <string name="noisycgm_checksmoothing">Kontrollera att din CGM-app ger utjämnade data.</string>
     <string name="noisycgm_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Smoothing-Blood-Glucose-Data-in-xDrip.html#smoothing-blood-glucose-data</string>
     <string name="exerciseprofile_label">Träning och profiler</string>
     <string name="exerciseprofile_whattodo">Hur kan du använda profiler för att bäst hjälpa systemet att hantera aerobisk träning?</string>
     <string name="exerciseprofile_switchprofilebelow100">Gör ett profilbyte till mindre än 100%.</string>
+    <string name="exerciseprofile_switchprofileabove100">Gör ett profilbyte till mer än 100%.</string>
     <string name="exerciseprofile_leaveat100">Lämna profilen på 100%.</string>
     <string name="exerciseprofile_suspendloop">Pausa loopen.</string>
     <string name="exerciseprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>
@@ -129,7 +132,7 @@
     <string name="wronginsulin_label">Fel i bolusinmatning</string>
     <string name="wronginsulin_whattodo">Vad ska du göra om du fått mindre insulin än vad pumpens historik visar, t.ex. på grund av en ocklusion, en felaktig kanyl eller om du glömt att sätta fast pumpen efter en dusch? </string>
     <string name="wronginsulin_careportal">Ta bort insulindata från Nightscout för att ta bort den från pumpens historik.</string>
-    <string name="wronginsulin_compare">Jämför värden i AndroidAPS och pumphistoriken.</string>
+    <string name="wronginsulin_compare">Jämför värden i AndroidAPS och pumpens historia (om pumpen stöder detta).</string>
     <string name="wronginsulin_prime">Ge en bolus med en del av det insulin du saknar antingen med penna eller genom att använda förfyllningsfunktionen.</string>
     <string name="wronginsulin_donothing">Gör ingenting och låt AndroidAPS korrigera eventuella höga blodglukosnivåer.</string>
     <string name="iob_label">Aktivt Insulin (IOB)</string>

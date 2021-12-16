@@ -20,7 +20,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.R;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.AlertSet;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.AlertSlot;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.AlertType;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.PodStateManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.ErosPodStateManager;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 /**
@@ -29,13 +29,13 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 @Singleton
 public class AapsOmnipodUtil {
 
-    private final ResourceHelper resourceHelper;
+    private final ResourceHelper rh;
 
     private final Gson gsonInstance = createGson();
 
     @Inject
-    public AapsOmnipodUtil(ResourceHelper resourceHelper) {
-        this.resourceHelper = resourceHelper;
+    public AapsOmnipodUtil(ResourceHelper rh) {
+        this.rh = rh;
     }
 
     private Gson createGson() {
@@ -56,7 +56,7 @@ public class AapsOmnipodUtil {
         return this.gsonInstance;
     }
 
-    public List<String> getTranslatedActiveAlerts(PodStateManager podStateManager) {
+    public List<String> getTranslatedActiveAlerts(ErosPodStateManager podStateManager) {
         List<String> translatedAlerts = new ArrayList<>();
         AlertSet activeAlerts = podStateManager.getActiveAlerts();
 
@@ -68,21 +68,21 @@ public class AapsOmnipodUtil {
 
     private String translateAlertType(AlertType alertType) {
         if (alertType == null) {
-            return resourceHelper.gs(R.string.omnipod_alert_unknown_alert);
+            return rh.gs(R.string.omnipod_common_alert_unknown_alert);
         }
         switch (alertType) {
             case FINISH_PAIRING_REMINDER:
-                return resourceHelper.gs(R.string.omnipod_alert_finish_pairing_reminder);
+                return rh.gs(R.string.omnipod_common_alert_finish_pairing_reminder);
             case FINISH_SETUP_REMINDER:
-                return resourceHelper.gs(R.string.omnipod_alert_finish_setup_reminder_reminder);
+                return rh.gs(R.string.omnipod_common_alert_finish_setup_reminder_reminder);
             case EXPIRATION_ALERT:
-                return resourceHelper.gs(R.string.omnipod_alert_expiration);
+                return rh.gs(R.string.omnipod_common_alert_expiration);
             case EXPIRATION_ADVISORY_ALERT:
-                return resourceHelper.gs(R.string.omnipod_alert_expiration_advisory);
+                return rh.gs(R.string.omnipod_common_alert_expiration_advisory);
             case SHUTDOWN_IMMINENT_ALARM:
-                return resourceHelper.gs(R.string.omnipod_alert_shutdown_imminent);
+                return rh.gs(R.string.omnipod_common_alert_shutdown_imminent);
             case LOW_RESERVOIR_ALERT:
-                return resourceHelper.gs(R.string.omnipod_alert_low_reservoir);
+                return rh.gs(R.string.omnipod_common_alert_low_reservoir);
             default:
                 return alertType.name();
         }

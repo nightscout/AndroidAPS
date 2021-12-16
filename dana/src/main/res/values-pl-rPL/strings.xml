@@ -5,9 +5,9 @@
     <string name="danars_pairingok">Parowanie OK</string>
     <string name="danars_pairingtimedout">Przekroczono limit czasu parowania</string>
     <string name="danars_waitingforpairing">Oczekiwanie na pompę na sparowanie</string>
-    <string name="danarspump">DanaRS</string>
+    <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
-    <string name="description_pump_dana_rs">Integracja z pompą DANA RS Diabecare</string>
+    <string name="description_pump_dana_rs">Integracja z pompami DANA Diabecare RS i Dana-i</string>
     <string name="maxbolusviolation">Przekroczenie ograniczenia maks. bolusa</string>
     <string name="commanderror">Błąd polecenia</string>
     <string name="speederror">Błąd prędkości</string>
@@ -94,8 +94,6 @@
     <string name="profile_set_failed">Ustawienie profilu bazy nie powiodło się</string>
     <string name="danar_bluetooth_status">Status Bluetooth</string>
     <string name="danar_iob_label">IOB w pompie</string>
-    <string name="basal_step">Krok bazy</string>
-    <string name="bolus_step">Krok bolusa</string>
     <string name="virtualpump_firmware_label">Firmware</string>
     <string name="danar_pump_settings">Ustawienia pompy Dana</string>
     <string name="timeformat12h">12h</string>
@@ -106,7 +104,6 @@
     <string name="danars_password_title">Hasło pompy (tylko v1)</string>
     <string name="danar_password_title">Hasło pompy</string>
     <string name="danar_useextended_title">Używaj przedłużonych bolusów dla &gt;200%%</string>
-    <string name="danar_visualizeextendedaspercentage_title">Wizualizacja bolusa przedłużonego jako %%</string>
     <string name="bolusspeed">Szybkość podawania bolusa</string>
     <string name="selectedpump">Wybrana pompa</string>
     <string name="rs_loginsulinchange_title">Zapisz zmianę zbiorniczka</string>
@@ -118,4 +115,5 @@
     <string name="press_ok_on_the_pump">Naciśnij OK na pompie\ni wpisz 2 wyświetlone numery\nUtrzymuj wyświetlacz pompy włączony poprzez naciskanie przycisku minus, aż do momentu zakończenia przepisywania kodu.</string>
     <string name="num1pin">1: (12 cyfr)</string>
     <string name="num2pin">2: (8 cyfr)</string>
+    <string name="basal_bolus_step">Rozmiar kroku Bazy/Bolusa</string>
 </resources>

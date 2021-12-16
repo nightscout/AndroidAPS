@@ -81,15 +81,6 @@
                 android:text="" />
 
             <TextView
-                android:id="@+id/ph"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:text="PH"
-                android:textColor="@color/colorSetTempButton"
-                tools:ignore="HardcodedText" />
-
-            <TextView
                 android:id="@+id/ns"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -135,11 +126,20 @@
                 tools:ignore="HardcodedText,RtlSymmetry" />
 
             <TextView
+                android:id="@+id/invalid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:text="@string/invalid"
+                android:textColor="@android:color/holo_red_light" />
+
+            <TextView
                 android:id="@+id/remove"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
-                android:text="@string/overview_quickwizard_item_remove_button"
+                android:text="@string/remove_button"
                 android:textAlignment="viewEnd"
                 android:textColor="@android:color/holo_orange_light" />
 
@@ -148,10 +148,10 @@
         <View
             android:layout_width="fill_parent"
             android:layout_height="2dip"
-            android:layout_marginBottom="5dp"
             android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
             android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp"
             android:background="@color/list_delimiter" />
 
     </LinearLayout>

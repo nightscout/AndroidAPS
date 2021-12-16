@@ -4,6 +4,7 @@
     xmlns:validate="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
+        android:key="@string/key_smscommunicator_settings"
         android:title="@string/smscommunicator"
         app:initialExpandedChildrenCount="0">
 

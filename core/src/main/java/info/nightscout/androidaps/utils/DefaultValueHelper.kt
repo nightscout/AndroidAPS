@@ -1,15 +1,18 @@
 package info.nightscout.androidaps.utils
 
 import info.nightscout.androidaps.Constants
+import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.GlucoseUnit
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 import javax.inject.Singleton
 
+@OpenForTesting
 @Singleton
-open class DefaultValueHelper @Inject constructor(
+class DefaultValueHelper @Inject constructor(
     private val sp: SP,
     private val profileFunction: ProfileFunction
 ) {
@@ -20,8 +23,8 @@ open class DefaultValueHelper @Inject constructor(
      * @param units
      * @return
      */
-    private fun getDefaultEatingSoonTT(units: String): Double {
-        return if (Constants.MMOL == units) Constants.defaultEatingSoonTTmmol else Constants.defaultEatingSoonTTmgdl
+    private fun getDefaultEatingSoonTT(units: GlucoseUnit): Double {
+        return if (GlucoseUnit.MMOL == units) Constants.defaultEatingSoonTTmmol else Constants.defaultEatingSoonTTmgdl
     }
 
     /**
@@ -30,8 +33,8 @@ open class DefaultValueHelper @Inject constructor(
      * @param units
      * @return
      */
-    private fun getDefaultActivityTT(units: String): Double {
-        return if (Constants.MMOL == units) Constants.defaultActivityTTmmol else Constants.defaultActivityTTmgdl
+    private fun getDefaultActivityTT(units: GlucoseUnit): Double {
+        return if (GlucoseUnit.MMOL == units) Constants.defaultActivityTTmmol else Constants.defaultActivityTTmgdl
     }
 
     /**
@@ -40,8 +43,8 @@ open class DefaultValueHelper @Inject constructor(
      * @param units
      * @return
      */
-    private fun getDefaultHypoTT(units: String): Double {
-        return if (Constants.MMOL == units) Constants.defaultHypoTTmmol else Constants.defaultHypoTTmgdl
+    private fun getDefaultHypoTT(units: GlucoseUnit): Double {
+        return if (GlucoseUnit.MMOL == units) Constants.defaultHypoTTmmol else Constants.defaultHypoTTmgdl
     }
 
     /**

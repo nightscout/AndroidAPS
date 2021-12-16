@@ -2,6 +2,17 @@
 <resources>
     <!--    Keys-->
     <!--    General-->
+    <string name="loopdisabled">LOOP DEAKTIVERET AF BEGRÆNSNINGER</string>
+    <string name="bolusdelivered">Bolus %1$.2fE leveret uden fejl</string>
+    <string name="virtualpump_resultok">OK</string>
+    <string name="removerecord">Fjern registrering</string>
+    <string name="disableloop">Deaktivér loop</string>
+    <string name="enableloop">Aktiver loop</string>
+    <string name="noprofile">Ingen profil er indlæst fra NS endnu</string>
+    <string name="glucose">Glukose</string>
+    <string name="cob">COB</string>
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="event_time_label">Tidspunkt for hændelsen</string>
     <!--    Constraints-->
     <!--    Dialogs-->
     <!--    BlePreCheck-->
@@ -15,14 +26,16 @@
     <!--    Temptarget-->
     <!--    TDD-->
     <!--    Translator-->
+    <string name="eatingsoon">Spiser snart</string>
+    <string name="hypo">Hypo</string>
+    <string name="activity">Aktivitet</string>
+    <string name="wear">Ur</string>
+    <string name="automation">Automatisering</string>
     <!--    Command-->
     <!--    PumpEnactResult-->
     <!--    CarbsReq-->
     <!--    TDDStatsActivity-->
     <!--    Ntp-->
-    <!-- PumoCommon - Pump Abstract -->
-    <!-- PumoCommon - Pump Status -->
-    <!-- PumpCommon - History Group -->
     <!-- Maintenance -->
     <string name="metadata_label_created_at">Oprettet den</string>
     <string name="metadata_label_aaps_version">AAPS Version</string>
@@ -30,7 +43,6 @@
     <string name="metadata_label_device_name">Eksporterer enhedens patientnavn</string>
     <string name="metadata_label_device_model">Eksporterer enhedsmodel</string>
     <string name="metadata_label_encryption">Filkryptering</string>
-    <string name="metadata_format_old">Gammelt eksportformat</string>
     <string name="metadata_format_new">Nyt krypteret format</string>
     <string name="metadata_format_debug">Nyt debug format (ukrypteret)</string>
     <string name="metadata_format_other">Ukendt eksportformat</string>
@@ -59,4 +71,9 @@
     <string name="prefdecrypt_issue_wrong_algorithm">Ikke-understøttet eller ikke angivet krypteringsalgoritme!</string>
     <!-- VersionChecker -->
     <!-- Permissions -->
+    <!-- WeekdayPicker -->
+    <!-- User Entry -->
+    <!-- HardLimits -->
+    <string name="valuelimitedto">%1$.2f begrænset til %2$.2f</string>
+    <!-- Command Queue + readStatus reasons -->
 </resources>

@@ -2,6 +2,7 @@
 <resources>
     <!-- Medtronic (MDT) - Base -->
     <!-- MDT Configuration -->
+    <!-- MDT Fragment -->
     <!-- MDT Errors -->
     <string name="medtronic_errors">Earráidí</string>
     <!-- MDT History -->

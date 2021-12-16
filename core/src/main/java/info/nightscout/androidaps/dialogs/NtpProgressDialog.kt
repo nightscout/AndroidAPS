@@ -9,9 +9,9 @@ import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.core.databinding.DialogBolusprogressBinding
 import info.nightscout.androidaps.events.EventNtpStatus
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
@@ -21,9 +21,9 @@ import javax.inject.Inject
 
 class NtpProgressDialog : DaggerDialogFragment() {
 
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var aapsSchedulers: AapsSchedulers
 
@@ -51,14 +51,14 @@ class NtpProgressDialog : DaggerDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val defaultMessage = resourceHelper.gs(R.string.timedetection)
-        dialog?.setTitle(resourceHelper.gs(R.string.objectives))
+        val defaultMessage = rh.gs(R.string.timedetection)
+        dialog?.setTitle(rh.gs(R.string.objectives))
         binding.stop.setOnClickListener { dismiss() }
         binding.status.text = state ?: defaultMessage
         binding.progressbar.max = 100
         binding.progressbar.progress = percent
-        binding.stop.text = resourceHelper.gs(R.string.close)
-        binding.title.text = resourceHelper.gs(R.string.please_wait)
+        binding.stop.text = rh.gs(R.string.close)
+        binding.title.text = rh.gs(R.string.please_wait)
     }
 
     override fun onResume() {

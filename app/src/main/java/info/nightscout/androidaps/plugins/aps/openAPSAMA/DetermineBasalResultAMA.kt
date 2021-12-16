@@ -1,9 +1,8 @@
 package info.nightscout.androidaps.plugins.aps.openAPSAMA
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.aps.loop.APSResult
-import info.nightscout.androidaps.utils.DateUtil
 import org.json.JSONException
 import org.json.JSONObject
 import org.mozilla.javascript.NativeObject
@@ -14,7 +13,7 @@ class DetermineBasalResultAMA private constructor(injector: HasAndroidInjector) 
     private var snoozeBG = 0.0
 
     internal constructor(injector: HasAndroidInjector, result: NativeObject, j: JSONObject) : this(injector) {
-        date = DateUtil.now()
+        date = dateUtil.now()
         json = j
         if (result.containsKey("error")) {
             reason = result["error"].toString()
@@ -41,7 +40,6 @@ class DetermineBasalResultAMA private constructor(injector: HasAndroidInjector) 
                 tempBasalRequested = false
             }
         }
-        bolusRequested = false
     }
 
     override fun newAndClone(injector: HasAndroidInjector): DetermineBasalResultAMA {

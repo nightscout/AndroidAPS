@@ -4,7 +4,7 @@ import org.joda.time.DateTime;
 
 import java.util.Collections;
 
-import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.shared.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.OmnipodMessage;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.command.SetupPodCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.response.VersionResponse;
@@ -16,14 +16,14 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.exception.Ill
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.exception.IllegalPacketTypeException;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.exception.IllegalPodProgressException;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.exception.IllegalVersionResponseTypeException;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.PodStateManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.ErosPodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 
 public class SetupPodAction implements OmnipodAction<Void> {
-    private final PodStateManager podStateManager;
+    private final ErosPodStateManager podStateManager;
     private final AAPSLogger aapsLogger;
 
-    public SetupPodAction(PodStateManager podStateManager, AAPSLogger aapsLogger) {
+    public SetupPodAction(ErosPodStateManager podStateManager, AAPSLogger aapsLogger) {
         if (podStateManager == null) {
             throw new IllegalArgumentException("Pod state manager can not be null");
         }

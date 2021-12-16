@@ -3,15 +3,15 @@ package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communicatio
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.action.service.PrimeService;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.ActivationProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.exception.IllegalActivationProgressException;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.PodStateManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.ErosPodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 
 public class PrimeAction implements OmnipodAction<Void> {
 
     private final PrimeService service;
-    private final PodStateManager podStateManager;
+    private final ErosPodStateManager podStateManager;
 
-    public PrimeAction(PrimeService primeService, PodStateManager podStateManager) {
+    public PrimeAction(PrimeService primeService, ErosPodStateManager podStateManager) {
         if (primeService == null) {
             throw new IllegalArgumentException("Prime service cannot be null");
         }

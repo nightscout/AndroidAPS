@@ -19,6 +19,14 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="HardcodedText" />
 
+    <ImageView
+        android:id="@+id/bg_quality"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="Blood glucose quality icon"
+        tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/delta_large"
@@ -240,7 +248,6 @@
         android:layout_marginStart="5dp"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/cob_layout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bg"
@@ -272,7 +279,6 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/basal_layout"
         app:layout_constraintStart_toEndOf="@+id/iob_layout"
         app:layout_constraintTop_toTopOf="@+id/iob_layout"
@@ -305,7 +311,6 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/extended_layout"
         app:layout_constraintStart_toEndOf="@+id/cob_layout"
         app:layout_constraintTop_toTopOf="@+id/iob_layout"
@@ -338,7 +343,6 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/as_layout"
         app:layout_constraintStart_toEndOf="@+id/basal_layout"
         app:layout_constraintTop_toTopOf="@+id/iob_layout"
@@ -370,7 +374,6 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/extended_layout"
         app:layout_constraintTop_toTopOf="@+id/iob_layout"

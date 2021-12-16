@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.command;
 
+import androidx.annotation.NonNull;
+
 import java.util.List;
 
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
@@ -40,7 +42,7 @@ public class ConfigureAlertsCommand extends NonceResyncableMessageBlock {
         encode();
     }
 
-    @Override
+    @Override @NonNull
     public String toString() {
         return "ConfigureAlertsCommand{" +
                 "configurations=" + configurations +

@@ -7,7 +7,7 @@ interface TraceableDBEntry: DBEntry {
     var dateCreated: Long
     var isValid: Boolean
     var referenceId: Long?
-    var interfaceIDs_backing: InterfaceIDs?
+    @Suppress("PropertyName") var interfaceIDs_backing: InterfaceIDs?
 
     val historic: Boolean get() = referenceId != null
 

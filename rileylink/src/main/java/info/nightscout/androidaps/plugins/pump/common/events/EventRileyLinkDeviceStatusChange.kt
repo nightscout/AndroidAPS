@@ -33,16 +33,16 @@ open class EventRileyLinkDeviceStatusChange : EventStatus {
         this.errorDescription = errorDescription
     }
 
-    override fun getStatus(resourceHelper: ResourceHelper): String {
+    override fun getStatus(rh: ResourceHelper): String {
         val rileyLinkServiceState = this.rileyLinkServiceState ?: return ""
         val resourceId = rileyLinkServiceState.resourceId
         val rileyLinkError = this.rileyLinkError
 
         if (rileyLinkServiceState.isError && rileyLinkError != null) {
             val rileyLinkTargetDevice = this.rileyLinkTargetDevice ?: return ""
-            return resourceHelper.gs(rileyLinkError.getResourceId(rileyLinkTargetDevice))
+            return rh.gs(rileyLinkError.getResourceId(rileyLinkTargetDevice))
         }
 
-        return resourceHelper.gs(resourceId)
+        return rh.gs(resourceId)
     }
 }

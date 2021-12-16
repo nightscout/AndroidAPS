@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition;
 
+import androidx.annotation.NonNull;
+
 public abstract class AlertTrigger<T> {
     private final T value;
 
@@ -11,7 +13,7 @@ public abstract class AlertTrigger<T> {
         return value;
     }
 
-    @Override public String toString() {
+    @NonNull @Override public String toString() {
         return "AlertTrigger{" +
                 "value=" + value +
                 '}';
