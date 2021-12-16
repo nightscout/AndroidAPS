@@ -233,12 +233,6 @@ abstract class PluginsModule {
     @Binds
     @AllConfigs
     @IntoMap
-    @IntKey(260)
-    abstract fun bindTreatmentsPlugin(plugin: TreatmentsPlugin): PluginBase
-
-    @Binds
-    @AllConfigs
-    @IntoMap
     @IntKey(265)
     abstract fun bindSafetyPlugin(plugin: SafetyPlugin): PluginBase
 

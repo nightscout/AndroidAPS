@@ -11,16 +11,16 @@ import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.db.*
 import info.nightscout.androidaps.historyBrowser.IobCobCalculatorPluginHistory
 import info.nightscout.androidaps.historyBrowser.TreatmentsPluginHistory
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
+import info.nightscout.androidaps.activities.TreatmentsActivity
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.MidnightTime
 import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
 import org.json.JSONArray
 import org.json.JSONException
@@ -39,10 +39,10 @@ class AutotuneIob(
     @Inject lateinit var autotunePlugin: AutotunePlugin
     @Inject lateinit var sp: SP
     @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
-    @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
+    @Inject lateinit var treatmentsActivity: TreatmentsActivity
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var iobCobCalculatorPluginHistory: IobCobCalculatorPluginHistory
     @Inject lateinit var treatmentsPluginHistory: TreatmentsPluginHistory
     @Inject lateinit var nsUpload: NSUpload

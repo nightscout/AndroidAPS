@@ -9,22 +9,22 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.databinding.AutotuneFragmentBinding
 import info.nightscout.androidaps.dialogs.ProfileViewerDialog
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.autotune.data.ATProfile
 import info.nightscout.androidaps.plugins.general.autotune.events.EventAutotuneUpdateGui
 import info.nightscout.androidaps.plugins.general.autotune.events.EventAutotuneUpdateResult
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
+import info.nightscout.androidaps.activities.TreatmentsActivity
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.MidnightTime
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog.showConfirmation
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import org.slf4j.LoggerFactory
@@ -41,13 +41,13 @@ class AutotuneFragment : DaggerFragment() {
     @Inject lateinit var autotunePlugin: AutotunePlugin
     @Inject lateinit var sp: SP
     @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
-    @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
+    @Inject lateinit var treatmentsActivity: TreatmentsActivity
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var localProfilePlugin: LocalProfilePlugin
     @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
 
     private var disposable: CompositeDisposable = CompositeDisposable()
     private var lastRun: Date? = null

@@ -2,19 +2,19 @@ package info.nightscout.androidaps.plugins.general.autotune
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+//import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.plugins.general.autotune.data.ATProfile
 import info.nightscout.androidaps.plugins.general.autotune.data.PreppedGlucose
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.utils.Round
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class AutotuneCore(private val injector: HasAndroidInjector) {
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    //@Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var  sp: SP
     @Inject lateinit var  autotunePlugin: AutotunePlugin
 

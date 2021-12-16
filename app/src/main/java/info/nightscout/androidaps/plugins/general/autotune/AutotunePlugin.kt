@@ -7,9 +7,9 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.autotune.data.ATProfile
 import info.nightscout.androidaps.plugins.general.autotune.data.PreppedGlucose
 import info.nightscout.androidaps.plugins.general.autotune.events.EventAutotuneUpdateResult
@@ -17,7 +17,7 @@ import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfile
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.MidnightTime
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONException
 import org.json.JSONObject
 import org.slf4j.LoggerFactory
@@ -50,9 +50,9 @@ class AutotunePlugin @Inject constructor(
     resourceHelper: ResourceHelper,
     private val context: Context,
     private val sp: SP,
-    private val rxBus: RxBusWrapper,
+    private val rxBus: RxBus,
     private val profileFunction: ProfileFunction,
-    private val activePlugin: ActivePluginProvider,
+    private val activePlugin: ActivePlugin,
     aapsLogger: AAPSLogger
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
@@ -111,13 +111,13 @@ class AutotunePlugin @Inject constructor(
         val starttime = endTime - daysBack * 24 * 60 * 60 * 1000L
         autotuneFS!!.exportSettings(settings(lastRun, daysBack, Date(starttime), Date(endTime)))
         tunedProfile = ATProfile(profile)
-        tunedProfile!!.profilename = resourceHelper.gs(R.string.autotune_tunedprofile_name)
+        tunedProfile!!.profilename = rh.gs(R.string.autotune_tunedprofile_name)
         val pumpprofile = ATProfile(profile)
         pumpprofile.profilename = profileFunction.getProfileName()
         autotuneFS!!.exportPumpProfile(pumpprofile)
         if (daysBack < 1) {
             //Not necessary today (test is done in fragment, but left if other way later to launch autotune (i.e. with automation)
-            result = resourceHelper.gs(R.string.autotune_min_days)
+            result = rh.gs(R.string.autotune_min_days)
             atLog(result)
             calculationRunning = false
             Thread(Runnable {
@@ -141,7 +141,7 @@ class AutotunePlugin @Inject constructor(
                 preppedGlucose = autotunePrep!!.categorizeBGDatums(autotuneIob!!, tunedProfile!!, pumpprofile)
                 //<=> autotune.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
                 if (preppedGlucose == null) {
-                    result = resourceHelper.gs(R.string.autotune_error)
+                    result = rh.gs(R.string.autotune_error)
                     atLog(result)
                     calculationRunning = false
                     Thread(Runnable {
@@ -159,7 +159,7 @@ class AutotunePlugin @Inject constructor(
                 if (i < daysBack - 1) {
                     atLog("Partial result for day ${i + 1}".trimIndent())
                     Thread(Runnable {
-                        result = resourceHelper.gs(R.string.format_autotune_partialresult, i + 1, daysBack, showResults(tunedProfile!!, pumpprofile))
+                        result = rh.gs(R.string.format_autotune_partialresult, i + 1, daysBack, showResults(tunedProfile!!, pumpprofile))
                         rxBus.send(EventAutotuneUpdateResult(result))
                     }).start()
                 }
@@ -189,9 +189,9 @@ class AutotunePlugin @Inject constructor(
     private fun showResults(tunedProfile: ATProfile, pumpProfile: ATProfile): String {
         var toMgDl = 1.0
         if (profileFunction.getUnits() == Constants.MMOL) toMgDl = Constants.MMOLL_TO_MGDL
-        val line = resourceHelper.gs(R.string.format_autotune_separator)
+        val line = rh.gs(R.string.format_autotune_separator)
         var strResult = line
-        strResult += resourceHelper.gs(R.string.format_autotune_title)
+        strResult += rh.gs(R.string.format_autotune_title)
         strResult += line
         var totalBasal = 0.0
         var totalTuned = 0.0
@@ -199,15 +199,15 @@ class AutotunePlugin @Inject constructor(
             totalBasal += pumpProfile.basal[i]
             totalTuned += tunedProfile.basal[i]
             val percentageChangeValue = tunedProfile.basal[i] / pumpProfile.basal[i] * 100 - 100
-            strResult += resourceHelper.gs(R.string.format_autotune_basal, i.toDouble(), pumpProfile.basal[i], tunedProfile.basal[i], tunedProfile.basalUntuned[i], percentageChangeValue)
+            strResult += rh.gs(R.string.format_autotune_basal, i.toDouble(), pumpProfile.basal[i], tunedProfile.basal[i], tunedProfile.basalUntuned[i], percentageChangeValue)
         }
         strResult += line
-        strResult += resourceHelper.gs(R.string.format_autotune_sum_basal, totalBasal, totalTuned)
+        strResult += rh.gs(R.string.format_autotune_sum_basal, totalBasal, totalTuned)
         strResult += line
         // show ISF and CR
-        strResult += resourceHelper.gs(R.string.format_autotune_isf, resourceHelper.gs(R.string.isf_short), pumpProfile.isf / toMgDl, tunedProfile.isf / toMgDl)
+        strResult += rh.gs(R.string.format_autotune_isf, rh.gs(R.string.isf_short), pumpProfile.isf / toMgDl, tunedProfile.isf / toMgDl)
         strResult += line
-        strResult += resourceHelper.gs(R.string.format_autotune_ic, resourceHelper.gs(R.string.ic_short), pumpProfile.ic, tunedProfile.ic)
+        strResult += rh.gs(R.string.format_autotune_ic, rh.gs(R.string.ic_short), pumpProfile.ic, tunedProfile.ic)
         strResult += line
         atLog(strResult)
         return strResult
@@ -243,7 +243,7 @@ class AutotunePlugin @Inject constructor(
             jsonSettings.put("tune_insulin_curve", false)
             //todo: philoul Check in oref0-autotune if Tune insulin works with exponential curve (aaps don't use bilinear curve...)
             if (insulinInterface.id == InsulinInterface.InsulinType.OREF_ULTRA_RAPID_ACTING || insulinInterface.id == InsulinInterface.InsulinType.OREF_LYUMJEV) jsonSettings.put("curve", "ultra-rapid") else if (insulinInterface.id == InsulinInterface.InsulinType.OREF_RAPID_ACTING) jsonSettings.put("curve", "rapid-acting") else if (insulinInterface.id == InsulinInterface.InsulinType.OREF_FREE_PEAK) {
-                val peaktime = sp.getInt(resourceHelper.gs(R.string.key_insulin_oref_peak), 75)
+                val peaktime = sp.getInt(rh.gs(R.string.key_insulin_oref_peak), 75)
                 jsonSettings.put("curve", if (peaktime > 30) "rapid-acting" else "ultra-rapid")
                 jsonSettings.put("useCustomPeakTime", true)
                 jsonSettings.put("insulinPeakTime", peaktime)

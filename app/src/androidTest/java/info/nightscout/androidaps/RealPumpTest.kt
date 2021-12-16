@@ -26,7 +26,7 @@ class RealPumpTest {
     @Inject lateinit var actionsPlugin: ActionsPlugin
     @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
     @Inject lateinit var objectivesPlugin: ObjectivesPlugin
-    @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
+    @Inject lateinit var treatmentsActivity: TreatmentsPlugin
     @Inject lateinit var sp: SP
 
     @Rule
@@ -63,7 +63,7 @@ class RealPumpTest {
         val singleProfile = LocalProfilePlugin.SingleProfile().copyFrom(localProfilePlugin.rawProfile, profile, "TestProfile")
         localProfilePlugin.addProfile(singleProfile)
         val profileSwitch = profileFunction.prepareProfileSwitch(localProfilePlugin.createProfileStore(), "TestProfile", 0, 100, 0, dateUtil._now())
-        treatmentsPlugin.addToHistoryProfileSwitch(profileSwitch)
+        treatmentsActivity.addToHistoryProfileSwitch(profileSwitch)
         // Insulin
         configBuilderPlugin.performPluginSwitch(insulinOrefUltraRapidActingPlugin, true, PluginType.INSULIN)
         // Pump

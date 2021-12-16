@@ -4,17 +4,16 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
-import info.nightscout.androidaps.db.Treatment
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.general.autotune.data.ATProfile
 import info.nightscout.androidaps.plugins.general.autotune.data.BGDatum
 import info.nightscout.androidaps.plugins.general.autotune.data.CRDatum
 import info.nightscout.androidaps.plugins.general.autotune.data.PreppedGlucose
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
+import info.nightscout.androidaps.activities.TreatmentsActivity
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.Round
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -30,7 +29,7 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
     @Inject lateinit var autotunePlugin: AutotunePlugin
     @Inject lateinit var sp: SP
     @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
-    @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
+    @Inject lateinit var treatmentsActivity: TreatmentsActivity
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var repository: AppRepository
 
@@ -122,7 +121,7 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
             // As we're processing each data point, go through the treatment.carbs and see if any of them are older than
             // the current BG data point.  If so, add those carbs to COB.
             val treatment = if (treatments.size > 0) treatments[treatments.size - 1] else null
-            var myCarbs = 0.0
+            var myCarbs = 0
             if (treatment != null) {
                 if (treatment.date < BGTime) {
                     if (treatment.carbs >= 1) {
@@ -182,7 +181,7 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
             //log("currentBasal: " + currentBasal + " BGTime: " + BGTime + " / " + dateUtil!!.timeStringWithSeconds(BGTime) + "******************************************************************************************")
             val iob = autotuneIob.getIOB(BGTime, currentPumpBasal)
             //log.debug("Bolus activity: " + bolusIob.activity + " Basal activity: " + basalIob.activity + " Total activity: " + iob.activity);
-            //log.debug("treatmentsPlugin Iob Activity: " + iob.activity + " Iob Basal: " + iob.basaliob + " Iob: " + iob.iob + " netbasalins: " + iob.netbasalinsulin + " netinsulin: " + iob.netInsulin);
+            //log.debug("treatmentsActivity Iob Activity: " + iob.activity + " Iob Basal: " + iob.basaliob + " Iob: " + iob.iob + " netbasalins: " + iob.netbasalinsulin + " netinsulin: " + iob.netInsulin);
 
             // activity times ISF times 5 minutes is BGI
             val BGI = Round.roundTo(-iob.activity * sens * 5, 0.01)

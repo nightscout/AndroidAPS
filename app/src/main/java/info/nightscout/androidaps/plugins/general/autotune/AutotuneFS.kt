@@ -2,13 +2,12 @@ package info.nightscout.androidaps.plugins.general.autotune
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.plugins.general.autotune.data.ATProfile
 import info.nightscout.androidaps.plugins.general.autotune.data.PreppedGlucose
 import info.nightscout.androidaps.plugins.general.maintenance.LoggerUtils
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONException
 import java.io.*
 import java.text.SimpleDateFormat
@@ -25,7 +24,7 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
     @Inject lateinit var  dateUtil: DateUtil
     @Inject lateinit var  resourceHelper: ResourceHelper
 
-    val logDirectory = LoggerUtils.getLogDirectory()
+    val logDirectory = LoggerUtils.logDirectory
     val AUTOTUNEFOLDER = "autotune"
     val SETTINGSFOLDER = "settings"
     val RECOMMENDATIONS = "autotune_recommendations.log"
