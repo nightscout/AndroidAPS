@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context=".watchfaces.Home2" tools:deviceIds="wear_round"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/black"
-    android:id="@+id/main_layout">
+    tools:context=".watchfaces.Home2"
+    tools:deviceIds="wear_round">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,15 +18,15 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="0px"
-            android:orientation="vertical"
-            android:layout_weight="0.05">
-        </LinearLayout>
+            android:layout_weight="0.05"
+            android:orientation="vertical" />
 
         <LinearLayout
+            android:id="@+id/primary_layout"
             android:layout_width="fill_parent"
             android:layout_height="0px"
             android:layout_gravity="center_horizontal"
-            android:layout_weight="0.27"
+            android:layout_weight="@dimen/home2_primary_layout_height"
             android:gravity="center_horizontal"
             android:orientation="horizontal"
             android:textAlignment="center">
@@ -49,11 +52,11 @@
                 android:layout_marginBottom="-2dp"
                 android:gravity="bottom|right"
                 android:paddingLeft="5dp"
-                android:paddingRight="5dp"
                 android:paddingTop="-2dp"
+                android:paddingRight="5dp"
                 android:text="---"
                 android:textColor="#FFFFFF"
-                android:textSize="38sp" />
+                android:textSize="@dimen/home2_sgv_text_size" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -74,7 +77,7 @@
                     android:text="--"
                     android:textAlignment="center"
                     android:textColor="#FFFFFF"
-                    android:textSize="22sp"
+                    android:textSize="@dimen/home2_direction_text_size"
                     android:textStyle="bold" />
 
                 <TextView
@@ -109,8 +112,8 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:paddingEnd="5dp"
                 android:paddingStart="5dp"
+                android:paddingEnd="5dp"
                 android:textAlignment="center">
 
                 <TextView
@@ -279,7 +282,7 @@
                     android:text="12:00"
                     android:textAlignment="center"
                     android:textColor="#FFFFFF"
-                    android:textSize="30sp" />
+                    android:textSize="@dimen/home2_time_text_size" />
 
                 <LinearLayout
                     android:id="@+id/date_time"
@@ -375,9 +378,8 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="0px"
-            android:orientation="vertical"
-            android:layout_weight="0.05">
-        </LinearLayout>
+            android:layout_weight="0.05"
+            android:orientation="vertical" />
 
     </LinearLayout>
 

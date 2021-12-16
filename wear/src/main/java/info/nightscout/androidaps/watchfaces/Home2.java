@@ -1,11 +1,18 @@
 package info.nightscout.androidaps.watchfaces;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
+
 import androidx.annotation.ColorInt;
 import androidx.core.content.ContextCompat;
+
+import android.os.BatteryManager;
 import android.support.wearable.watchface.WatchFaceStyle;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import com.ustwo.clockwise.common.WatchMode;
 
@@ -28,23 +35,23 @@ public class Home2 extends BaseWatchFace {
     @Override
     protected void onTapCommand(int tapType, int x, int y, long eventTime) {
 
-        int extra = mSgv!=null?(mSgv.getRight() - mSgv.getLeft())/2:0;
+        int extra = mSgv != null ? (mSgv.getRight() - mSgv.getLeft()) / 2 : 0;
 
-        if (tapType == TAP_TYPE_TAP&&
-                x >=chart.getLeft() &&
-                x <= chart.getRight()&&
+        if (tapType == TAP_TYPE_TAP &&
+                x >= chart.getLeft() &&
+                x <= chart.getRight() &&
                 y >= chart.getTop() &&
-                y <= chart.getBottom()){
-            if (eventTime - chartTapTime < 800){
+                y <= chart.getBottom()) {
+            if (eventTime - chartTapTime < 800) {
                 changeChartTimeframe();
             }
             chartTapTime = eventTime;
-        } else if (tapType == TAP_TYPE_TAP&&
-                x + extra >=mSgv.getLeft() &&
-                x - extra <= mSgv.getRight()&&
+        } else if (tapType == TAP_TYPE_TAP &&
+                x + extra >= mSgv.getLeft() &&
+                x - extra <= mSgv.getRight() &&
                 y >= mSgv.getTop() &&
-                y <= mSgv.getBottom()){
-            if (eventTime - sgvTapTime < 800){
+                y <= mSgv.getBottom()) {
+            if (eventTime - sgvTapTime < 800) {
                 Intent intent = new Intent(this, MainMenuActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
@@ -55,12 +62,12 @@ public class Home2 extends BaseWatchFace {
 
     private void changeChartTimeframe() {
         int timeframe = Integer.parseInt(sharedPrefs.getString("chart_timeframe", "3"));
-        timeframe = (timeframe%5) + 1;
+        timeframe = (timeframe % 5) + 1;
         sharedPrefs.edit().putString("chart_timeframe", "" + timeframe).apply();
     }
 
     @Override
-    protected WatchFaceStyle getWatchFaceStyle(){
+    protected WatchFaceStyle getWatchFaceStyle() {
         return new WatchFaceStyle.Builder(this).setAcceptsTapEvents(true).build();
     }
 
@@ -176,7 +183,7 @@ public class Home2 extends BaseWatchFace {
 
         if (getCurrentWatchMode() == WatchMode.INTERACTIVE) {
 
-            @ColorInt final int dividerTxtColor = dividerMatchesBg ?  Color.BLACK :
+            @ColorInt final int dividerTxtColor = dividerMatchesBg ? Color.BLACK :
                     ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor);
             @ColorInt final int dividerBgColor = ContextCompat.getColor(getApplicationContext(),
                     dividerMatchesBg ? R.color.light_background : R.color.light_stripe_background);
@@ -256,5 +263,60 @@ public class Home2 extends BaseWatchFace {
                 mIOB2.setTextSize(14);
             }
         }
+    }
+
+
+    @Override
+    public void setDataFields() {
+        super.setDataFields();
+        if (sharedPrefs.getBoolean("simplify_ui_charging", false) && isCharging()) {
+            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    0,
+                    0.5f
+            );
+            mLinearLayout3.setLayoutParams(param);
+            mLinearLayout3.setWeightSum(0.7f);
+            mLinearLayout.setVisibility(View.GONE);
+            mLoop.setVisibility(View.INVISIBLE);
+            chart.setVisibility(View.GONE);
+            mIOB1.setVisibility(View.GONE);
+            mIOB2.setVisibility(View.GONE);
+            mCOB1.setVisibility(View.GONE);
+            mCOB2.setVisibility(View.GONE);
+            mTimestamp.setVisibility(View.GONE);
+            mTime.setTextSize(35);
+            mDirection.setTextSize(35);
+            mSgv.setTextSize(50);
+        } else {
+            TypedValue outValue = new TypedValue();
+            getResources().getValue(R.dimen.home2_primary_layout_height, outValue, true);
+            float layoutHeight = outValue.getFloat();
+            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    0,
+                    layoutHeight
+            );
+            mLinearLayout3.setLayoutParams(param);
+            mLinearLayout.setVisibility(View.VISIBLE);
+            mLoop.setVisibility(View.VISIBLE);
+            chart.setVisibility(View.VISIBLE);
+            mIOB1.setVisibility(View.VISIBLE);
+            mIOB2.setVisibility(View.VISIBLE);
+            mCOB1.setVisibility(View.VISIBLE);
+            mCOB2.setVisibility(View.VISIBLE);
+            mTimestamp.setVisibility(View.VISIBLE);
+            mDirection.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.home2_direction_text_size));
+            mSgv.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.home2_sgv_text_size));
+            mTime.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.home2_time_text_size));
+        }
+    }
+
+    private boolean isCharging() {
+        IntentFilter iFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        Intent batteryStatus = this.registerReceiver(null, iFilter);
+        int status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+        return status == BatteryManager.BATTERY_STATUS_CHARGING ||
+                status == BatteryManager.BATTERY_STATUS_FULL;
     }
 }

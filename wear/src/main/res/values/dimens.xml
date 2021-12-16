@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <dimen name="home2_primary_layout_height">0.27</dimen>
+    <dimen name="home2_sgv_text_size">38sp</dimen>
+    <dimen name="home2_direction_text_size">22sp</dimen>
+    <dimen name="home2_time_text_size">30sp</dimen>
+</resources>

@@ -72,7 +72,8 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
     public TextView mTime, mHour, mMinute, mSgv, mDirection, mTimestamp, mUploaderBattery, mRigBattery, mDelta, mAvgDelta, mStatus, mBasalRate, mIOB1, mIOB2, mCOB1, mCOB2, mBgi, mLoop, mDay, mDayName, mMonth, isAAPSv2, mHighLight, mLowLight;
     public ImageView mGlucoseDial, mDeltaGauge, mHourHand, mMinuteHand;
     public RelativeLayout mRelativeLayout;
-    public LinearLayout mLinearLayout, mLinearLayout2, mDate, mChartTap, mMainMenuTap;
+    public LinearLayout mLinearLayout, mLinearLayout2, mLinearLayout3, mDate, mChartTap,
+            mMainMenuTap;
     public int ageLevel = 1;
     public int loopLevel = 1;
     public int highColor = Color.YELLOW;
@@ -167,6 +168,7 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
                                                  mHighLight = stub.findViewById(R.id.highLight);
                                                  mLowLight = stub.findViewById(R.id.lowLight);
                                                  mRelativeLayout = stub.findViewById(R.id.main_layout);
+                                                 mLinearLayout3 = stub.findViewById(R.id.primary_layout);
                                                  mLinearLayout = stub.findViewById(R.id.secondary_layout);
                                                  mLinearLayout2 = stub.findViewById(R.id.tertiary_layout);
                                                  mGlucoseDial = stub.findViewById(R.id.glucose_dial);
