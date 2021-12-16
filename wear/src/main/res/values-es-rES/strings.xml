@@ -63,10 +63,10 @@
     <string name="pref_version">Versión:</string>
     <string name="pref_moreWatchfaceSettings">Más ajustes de la esfera del reloj</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Mira en la configuración de la esfera del reloj, por favor</string>
-    <string name="menu_tempt">ObjetivoT</string>
+    <string name="menu_tempt">Objetivo Temporal</string>
     <string name="menu_wizard">Asistente</string>
     <string name="menu_bolus">Bolo</string>
-    <string name="menu_ecarb">eCarb</string>
+    <string name="menu_ecarb">Carbohidratos</string>
     <string name="menu_settings">Configuración</string>
     <string name="menu_status">Estado</string>
     <string name="menu_resync">Re-sincronizar</string>
