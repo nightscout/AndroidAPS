@@ -522,7 +522,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                         intent.putExtras(params);
                         startActivity(intent);
                     } else {
-                        showConfirmationDialog(title, message, actionstring);
+                        showConfirmationDialog(message, actionstring);
                     }
 
                 } else if (path.equals(NEW_STATUS_PATH)) {
@@ -680,12 +680,10 @@ public class ListenerService extends WearableListenerService implements GoogleAp
         notificationManager.createNotificationChannel(channel);
     }
 
-    private void showConfirmationDialog(String title, String message, String actionstring) {
-
+    private void showConfirmationDialog(String message, String actionstring) {
         Intent intent = new Intent(this, AcceptActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Bundle params = new Bundle();
-        params.putString("title", title);
         params.putString("message", message);
         params.putString("actionstring", actionstring);
         intent.putExtras(params);

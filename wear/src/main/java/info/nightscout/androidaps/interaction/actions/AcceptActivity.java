@@ -21,7 +21,6 @@ import info.nightscout.androidaps.data.ListenerService;
 
 public class AcceptActivity extends ViewSelectorActivity {
 
-    String title = "";
     String message = "";
     String actionstring = "";
     private DismissThread dismissThread;
@@ -34,7 +33,6 @@ public class AcceptActivity extends ViewSelectorActivity {
         dismissThread.start();
 
         Bundle extras = getIntent().getExtras();
-        title = extras.getString("title", "");
         message = extras.getString("message", "");
         actionstring = extras.getString("actionstring", "");
 
@@ -43,7 +41,6 @@ public class AcceptActivity extends ViewSelectorActivity {
             return;
         }
 
-        setContentView(R.layout.grid_layout);
         setAdapter(new MyGridViewPagerAdapter());
 
         Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -73,8 +70,6 @@ public class AcceptActivity extends ViewSelectorActivity {
 
             if (col == 0) {
                 final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_confirm_text, container, false);
-                final TextView headingView = view.findViewById(R.id.title);
-                headingView.setText(title);
                 final TextView textView = view.findViewById(R.id.message);
                 textView.setText(message);
                 container.addView(view);
