@@ -16,6 +16,9 @@ import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.activities.TreatmentsActivity
+import info.nightscout.androidaps.database.entities.ExtendedBolus
+import info.nightscout.androidaps.database.entities.TemporaryBasal
+import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.MidnightTime
 import info.nightscout.androidaps.utils.Round
@@ -118,7 +121,7 @@ class AutotuneIob(
 
     //nsTreatment is used only for export data
     private fun initializeTempBasalData(from: Long, to: Long) {
-        val temp = MainApp.getDbHelper().getTemporaryBasalsDataFromTime(from - range(), to, false)
+        val temp = repository.getTemporaryBasalsDataFromTimeToTime(from - range(), to, false).blockingGet()
         // Initialize tempBasals according to TreatmentsPlugin
         tempBasals.reset().add(temp)
         //first keep only valid data
@@ -133,22 +136,22 @@ class AutotuneIob(
         val temp2: MutableList<TemporaryBasal> = ArrayList()
         //log.debug("D/AutotunePlugin after cleaning number of entries:" + temp.size());
         //Then add neutral TBR if start of next TBR is after the end of previous one
-        var previousend = temp[temp.size - 1].date + temp[temp.size - 1].realDuration * 60 * 1000
+        var previousend = temp[temp.size - 1].timestamp + temp[temp.size - 1].realDuration * 60 * 1000
         for (i in temp.indices.reversed()) {
             val tb = temp[i]
             //log.debug("D/AutotunePlugin previous end: " + dateUtil.dateAndTimeAndSecondsString(previousend) + " new entry start:" + dateUtil.dateAndTimeAndSecondsString(tb.date) + " new entry duration:" + tb.getRealDuration() + " test:" + (tb.date < previousend + 60 * 1000));
-            if (tb.date < previousend + 60 * 1000) {                         // 1 min is minimum duration for TBR
+            if (tb.timestamp < previousend + 60 * 1000) {                         // 1 min is minimum duration for TBR
                 nsTreatments.add(NsTreatment(tb))
                 temp2.add(0, tb)
-                previousend = tb.date + tb.realDuration * 60 * 1000
+                previousend = tb.timestamp + tb.realDuration * 60 * 1000
             } else {
                 var minutesToFill = (tb.date - previousend).toInt() / (60 * 1000)
                 //log.debug("D/AutotunePlugin Minutes to fill: "+ minutesToFill);
                 while (minutesToFill > 0) {
                     val profile = profileFunction.getProfile(previousend)
-                    if (Profile.secondsFromMidnight(tb.date) / 3600 == Profile.secondsFromMidnight(previousend) / 3600) {  // next tbr is in the same hour
+                    if (Profile.secondsFromMidnight(tb.timestamp) / 3600 == Profile.secondsFromMidnight(previousend) / 3600) {  // next tbr is in the same hour
                         val neutralTbr = TemporaryBasal(injector)
-                        neutralTbr.date = previousend + 1000 //add 1s to be sure it starts after endEvent
+                        neutralTbr.timestamp = previousend + 1000 //add 1s to be sure it starts after endEvent
                         neutralTbr.isValid = true
                         neutralTbr.absoluteRate = profile!!.getBasal(previousend)
                         neutralTbr.durationInMinutes = minutesToFill + 1 //add 1 minute to be sure there is no gap between TBR and neutral TBR
@@ -162,7 +165,7 @@ class AutotuneIob(
                         val minutesFilled = 60 - Profile.secondsFromMidnight(previousend) / 60 % 60
                         //log.debug("D/AutotunePlugin remaining time before next hour: "+ minutesFilled);
                         val neutralTbr = TemporaryBasal(injector)
-                        neutralTbr.date = previousend + 1000 //add 1s to be sure it starts after endEvent
+                        neutralTbr.timestamp = previousend + 1000 //add 1s to be sure it starts after endEvent
                         neutralTbr.isValid = true
                         neutralTbr.absoluteRate = profile!!.getBasal(previousend)
                         neutralTbr.durationInMinutes = minutesFilled + 1 //add 1 minute to be sure there is no gap between TBR and neutral TBR
@@ -176,7 +179,7 @@ class AutotuneIob(
                 }
                 nsTreatments.add(NsTreatment(tb))
                 temp2.add(0, tb)
-                previousend = tb.date + tb.realDuration * 60 * 1000
+                previousend = tb.timestamp + tb.realDuration * 60 * 1000
             }
         }
         Collections.sort(temp2) { o1: TemporaryBasal, o2: TemporaryBasal -> (o2.date - o1.date).toInt() }
@@ -187,7 +190,7 @@ class AutotuneIob(
 
     //nsTreatment is used only for export data
     private fun initializeExtendedBolusData(from: Long, to: Long) {
-        val temp = MainApp.getDbHelper().getExtendedBolusDataFromTime(from - range(), to, false)
+        val temp = repository.getExtendedBolusDataFromTimeToTime(from - range(), to, false).blockingGet()
         extendedBoluses.reset().add(temp)
         for (i in temp.indices) {
             val eb = temp[i]
@@ -380,13 +383,13 @@ class AutotuneIob(
         }
 
         private fun _NsTreatment(t: TemporaryBasal) {
-            _id = t._id
-            date = t.date
+            _id = t.id
+            date = t.timestamp
             if (t.isAbsolute)
                 absoluteRate = Round.roundTo(t.absoluteRate, 0.001)
             else {
                 val profile = profileFunction.getProfile(date)
-                absoluteRate = profile!!.getBasal(temporaryBasal!!.date) * temporaryBasal!!.percentRate / 100
+                absoluteRate = profile!!.getBasal(temporaryBasal!!.timestamp) * temporaryBasal!!.percentRate / 100
             }
             isValid = t.isValid
             isEndingEvent = t.isEndingEvent
@@ -395,7 +398,7 @@ class AutotuneIob(
             duration = t.realDuration
             percentRate = t.percentRate
             isFakeExtended = t.isFakeExtended
-            created_at = DateUtil.toISOString(t.date)
+            created_at = DateUtil.toISOString(t.timestamp)
             isAbsolute = true
         }
 
