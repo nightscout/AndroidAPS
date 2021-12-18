@@ -400,7 +400,7 @@ class AutotuneIob(
             isValid = t.isValid
             mealBolus = t.mealBolus
             eventType = if (insulin > 0 && carbs > 0) CareportalEvent.BOLUSWIZARD else if (carbs > 0) CareportalEvent.CARBCORRECTION else CareportalEvent.CORRECTIONBOLUS
-            created_at = gateUtil.toISOString(t.date)
+            created_at = dateUtil.toISOString(t.date)
         }
 
         constructor(t: CareportalEvent) {

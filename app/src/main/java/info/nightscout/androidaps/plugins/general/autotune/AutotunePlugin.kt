@@ -98,7 +98,7 @@ class AutotunePlugin @Inject constructor(
         lastNbDays = "" + daysBack
         val now = System.currentTimeMillis()
         profile = profileFunction.getProfile(now)
-        lastRun = Date(System.currentTimeMillis())
+        lastRun = System.currentTimeMillis()
 
         atLog("Start Autotune with $daysBack days back")
         //create autotune subfolder for autotune files if not exists
@@ -111,7 +111,7 @@ class AutotunePlugin @Inject constructor(
         // Check if 4 AM is before now
         if (endTime > now) endTime -= 24 * 60 * 60 * 1000L
         val starttime = endTime - daysBack * 24 * 60 * 60 * 1000L
-        autotuneFS!!.exportSettings(settings(lastRun, daysBack, Date(starttime), Date(endTime)))
+        autotuneFS!!.exportSettings(settings(lastRun, daysBack, starttime, endTime))
         tunedProfile = ATProfile(profile)
         tunedProfile!!.profilename = rh.gs(R.string.autotune_tunedprofile_name)
         val pumpprofile = ATProfile(profile)
@@ -272,7 +272,7 @@ class AutotunePlugin @Inject constructor(
         @JvmField var tunedProfile: ATProfile? = null
         @JvmField var result = ""
         @JvmField var calculationRunning = false
-        @JvmField var lastRun: Date? = null
+        @JvmField var lastRun: Long = 0
         @JvmField var lastNbDays = ""
         @JvmField var copyButtonVisibility = 0
         @JvmField var profileSwitchButtonVisibility = 0

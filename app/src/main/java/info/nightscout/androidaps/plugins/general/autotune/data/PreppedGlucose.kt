@@ -51,7 +51,7 @@ class PreppedGlucose {
         for (index in 0 until array.length()) {
             try {
                 val o = array.getJSONObject(index)
-                bgData.add(BGDatum(o))
+                bgData.add(BGDatum(o, dateUtil))
             } catch (e: Exception) {
             }
         }
@@ -76,19 +76,19 @@ class PreppedGlucose {
         try {
             val crjson = JSONArray()
             for (crd in crData!!) {
-                crjson.put(crd.toJSON(dateUtil))
+                crjson.put(crd.toJSON())
             }
             val csfjson = JSONArray()
             for (bgd in csfGlucoseData!!) {
-                csfjson.put(bgd.toJSON(true, dateUtil))
+                csfjson.put(bgd.toJSON(true))
             }
             val isfjson = JSONArray()
             for (bgd in isfGlucoseData!!) {
-                isfjson.put(bgd.toJSON(false, dateUtil))
+                isfjson.put(bgd.toJSON(false))
             }
             val basaljson = JSONArray()
             for (bgd in basalGlucoseData!!) {
-                basaljson.put(bgd.toJSON(false, dateUtil))
+                basaljson.put(bgd.toJSON(false))
             }
             val diajson = JSONArray()
             val peakjson = JSONArray()

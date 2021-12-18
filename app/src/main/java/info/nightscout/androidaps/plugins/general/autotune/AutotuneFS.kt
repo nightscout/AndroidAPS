@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.general.autotune
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.plugins.general.autotune.data.ATProfile
 import info.nightscout.androidaps.plugins.general.autotune.data.PreppedGlucose
 import info.nightscout.androidaps.plugins.general.maintenance.LoggerUtils
@@ -18,13 +19,13 @@ import javax.inject.Inject
 
 //@Singleton
 class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var  sp: SP
     @Inject lateinit var  autotunePlugin: AutotunePlugin
     @Inject lateinit var  dateUtil: DateUtil
     @Inject lateinit var  resourceHelper: ResourceHelper
+    @Inject lateinit var loggerUtils: LoggerUtils
 
-    val logDirectory = LoggerUtils.logDirectory
     val AUTOTUNEFOLDER = "autotune"
     val SETTINGSFOLDER = "settings"
     val RECOMMENDATIONS = "autotune_recommendations.log"
@@ -46,15 +47,15 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
      */
     fun createAutotuneFolder() {
         //create autotune subfolder for autotune files if not exists
-        autotunePath = File(logDirectory, AUTOTUNEFOLDER)
+        autotunePath = File(loggerUtils.logDirectory, AUTOTUNEFOLDER)
         if (!(autotunePath!!.exists() && autotunePath!!.isDirectory)) {
             autotunePath!!.mkdir()
-            log("Create $AUTOTUNEFOLDER subfolder in $logDirectory")
+            log("Create $AUTOTUNEFOLDER subfolder in ${loggerUtils.logDirectory}")
         }
-        autotuneSettings = File(logDirectory, SETTINGSFOLDER)
+        autotuneSettings = File(loggerUtils.logDirectory, SETTINGSFOLDER)
         if (!(autotuneSettings!!.exists() && autotuneSettings!!.isDirectory)) {
             autotuneSettings!!.mkdir()
-            log("Create $SETTINGSFOLDER subfolder in $logDirectory")
+            log("Create $SETTINGSFOLDER subfolder in ${loggerUtils.logDirectory}")
         }
     }
 
@@ -113,9 +114,9 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
         createAutotunefile(RECOMMENDATIONS, result)
     }
 
-    fun exportLogAndZip(lastRun: Date?, logString: String) {
-        log("Create " + LOGPREF + DateUtil.toISOString(lastRun, "yyyy-MM-dd_HH-mm-ss", null) + ".log" + " file in " + AUTOTUNEFOLDER + " folder")
-        createAutotunefile(LOGPREF + DateUtil.toISOString(lastRun, "yyyy-MM-dd_HH-mm-ss", null) + ".log", logString)
+    fun exportLogAndZip(lastRun: Long, logString: String) {
+        log("Create " + LOGPREF + dateUtil.toISOString(lastRun) + ".log" + " file in " + AUTOTUNEFOLDER + " folder")
+        createAutotunefile(LOGPREF + dateUtil.toISOString(lastRun) + ".log", logString)
         zipAutotune(lastRun)
     }
 
@@ -152,17 +153,17 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
     /**********************************************************************************
      * create a zip file with all autotune files and settings in autotune folder at the end of run
      */
-    fun zipAutotune(lastRun: Date?) {
+    fun zipAutotune(lastRun: Long) {
         if (lastRun != null) {
             try {
-                val zipFileName = ZIPPREF + DateUtil.toISOString(lastRun, "yyyy-MM-dd_HH-mm-ss", null) + ".zip"
-                val zipFile = File(logDirectory, zipFileName)
+                val zipFileName = ZIPPREF + dateUtil.toISOString(lastRun) + ".zip"
+                val zipFile = File(loggerUtils.logDirectory, zipFileName)
                 val out = ZipOutputStream(BufferedOutputStream(FileOutputStream(zipFile)))
                 if (autotunePath != null) zipDirectory(autotunePath!!, autotunePath!!.name, out)
                 if (autotuneSettings != null) zipDirectory(autotuneSettings!!, autotuneSettings!!.name, out)
                 out.flush()
                 out.close()
-                log("Create $zipFileName file in $logDirectory folder")
+                log("Create $zipFileName file in ${loggerUtils.logDirectory} folder")
             } catch (e: IOException) {
             }
         }
