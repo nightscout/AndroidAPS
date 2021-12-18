@@ -9,7 +9,6 @@ import info.nightscout.androidaps.data.*
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.db.*
-import info.nightscout.androidaps.historyBrowser.IobCobCalculatorPluginHistory
 import info.nightscout.androidaps.historyBrowser.TreatmentsPluginHistory
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
@@ -19,10 +18,19 @@ import info.nightscout.androidaps.activities.TreatmentsActivity
 import info.nightscout.androidaps.database.entities.ExtendedBolus
 import info.nightscout.androidaps.database.entities.TemporaryBasal
 import info.nightscout.androidaps.interfaces.PumpSync
+import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.general.overview.OverviewData
+import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin
+import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
+import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.MidnightTime
 import info.nightscout.androidaps.utils.Round
+import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
 import org.json.JSONArray
@@ -38,10 +46,18 @@ class AutotuneIob(
     private val injector: HasAndroidInjector
 ) {
 
+    @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
+    @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var rh: ResourceHelper
+    @Inject lateinit var sensitivityOref1Plugin: SensitivityOref1Plugin
+    @Inject lateinit var sensitivityAAPSPlugin: SensitivityAAPSPlugin
+    @Inject lateinit var sensitivityWeightedAveragePlugin: SensitivityWeightedAveragePlugin
+    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var autotunePlugin: AutotunePlugin
     @Inject lateinit var sp: SP
-    @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
     @Inject lateinit var treatmentsActivity: TreatmentsActivity
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var resourceHelper: ResourceHelper
@@ -49,8 +65,8 @@ class AutotuneIob(
     @Inject lateinit var iobCobCalculatorPluginHistory: IobCobCalculatorPluginHistory
     @Inject lateinit var treatmentsPluginHistory: TreatmentsPluginHistory
     @Inject lateinit var nsUpload: NSUpload
-    @Inject lateinit var repository: AppRepository
 
+    lateinit var iobCobCalculator: IobCobCalculatorPlugin
     private val disposable = CompositeDisposable()
     private val nsTreatments = ArrayList<NsTreatment>()
     var treatments: MutableList<Treatment> = ArrayList()
@@ -72,6 +88,24 @@ class AutotuneIob(
     }
 
     fun initializeData(from: Long, to: Long) {
+        iobCobCalculator =
+            IobCobCalculatorPlugin(
+                injector,
+                aapsLogger,
+                aapsSchedulers,
+                rxBus,
+                sp,
+                rh,
+                profileFunction,
+                activePlugin,
+                sensitivityOref1Plugin,
+                sensitivityAAPSPlugin,
+                sensitivityWeightedAveragePlugin,
+                fabricPrivacy,
+                dateUtil,
+                repository
+            )
+
         startBG = from
         endBG = to
         nsTreatments.clear()
@@ -182,7 +216,7 @@ class AutotuneIob(
                 previousend = tb.timestamp + tb.realDuration * 60 * 1000
             }
         }
-        Collections.sort(temp2) { o1: TemporaryBasal, o2: TemporaryBasal -> (o2.date - o1.date).toInt() }
+        Collections.sort(temp2) { o1: TemporaryBasal, o2: TemporaryBasal -> (o2.timestamp - o1.timestamp).toInt() }
         // Initialize tempBasals with neutral TBR added
         tempBasals2.reset().add(temp2)
         log.debug("D/AutotunePlugin: tempBasal size: " + tempBasals.size() + " tempBasal2 size: " + tempBasals2.size())
@@ -246,9 +280,14 @@ class AutotuneIob(
             var calc: IobTotal?
             val profile = profileFunction.getProfile(t.date) ?: continue
             calc = if (truncate && t.end() > truncateTime) {
-                val dummyTemp = TemporaryBasal(injector)
-                dummyTemp.copyFrom(t)
-                dummyTemp.cutEndTo(truncateTime)
+                val dummyTemp = TemporaryBasal(
+                    id = t.id,
+                    timestamp = t.timestamp,
+                    rate = t.rate,
+                    type = TemporaryBasal.Type.NORMAL,
+                    isAbsolute = true,
+                    duration = truncate - t.timestamp
+                )
                 dummyTemp.iobCalc(time, profile, currentBasal)
             } else {
                 t.iobCalc(time, profile, currentBasal)
@@ -264,8 +303,12 @@ class AutotuneIob(
                 var calc: IobTotal?
                 val profile = profileFunction.getProfile(e.date) ?: continue
                 calc = if (truncate && e.end() > truncateTime) {
-                    val dummyExt = ExtendedBolus(injector)
-                    dummyExt.copyFrom(e)
+                    val dummyExt = ExtendedBolus(
+                        id = e.id,
+                        timestamp = e.timestamp,
+                        duration = e.duration,
+                        amount = e.amount
+                    )
                     dummyExt.cutEndTo(truncateTime)
                     dummyExt.iobCalc(time, profile)
                 } else {
@@ -286,19 +329,18 @@ class AutotuneIob(
     /** */
     fun glucosetoJSON(): JSONArray {
         val glucoseJson = JSONArray()
-        val now = Date(System.currentTimeMillis())
-        val utcOffset = ((DateUtil.fromISODateString(DateUtil.toISOString(now, null, null)).time - DateUtil.fromISODateString(DateUtil.toISOString(now)).time) / (60 * 1000)).toInt()
+        val utcOffset = T.msecs(TimeZone.getDefault().getOffset(dateUtil.now()).toLong()).hours()
         try {
             for (bgreading in glucose) {
                 val bgjson = JSONObject()
                 bgjson.put("_id", bgreading.id)
                 bgjson.put("device", "AndroidAPS")
                 bgjson.put("date", bgreading.timestamp)
-                bgjson.put("dateString", DateUtil.toISOString(bgreading.timestamp))
+                bgjson.put("dateString", dateUtil.toISOString(bgreading.timestamp))
                 bgjson.put("sgv", bgreading.value)
                 bgjson.put("direction", bgreading.trendArrow)
                 bgjson.put("type", "sgv")
-                bgjson.put("systime", DateUtil.toISOString(bgreading.timestamp))
+                bgjson.put("systime", dateUtil.toISOString(bgreading.timestamp))
                 bgjson.put("utcOffset", utcOffset)
                 glucoseJson.put(bgjson)
             }
@@ -358,16 +400,16 @@ class AutotuneIob(
             isValid = t.isValid
             mealBolus = t.mealBolus
             eventType = if (insulin > 0 && carbs > 0) CareportalEvent.BOLUSWIZARD else if (carbs > 0) CareportalEvent.CARBCORRECTION else CareportalEvent.CORRECTIONBOLUS
-            created_at = DateUtil.toISOString(t.date)
+            created_at = gateUtil.toISOString(t.date)
         }
 
         constructor(t: CareportalEvent) {
             careportalEvent = t
             _id = t._id
-            date = t.date
-            created_at = DateUtil.toISOString(t.date)
+            date = t.timestmp
+            created_at = dateUtil.toISOString(t.timestmp)
             eventType = t.eventType
-            duration = Math.round(t.duration / 60f / 1000)
+            duration = Math.round(t.duration / 60f / 1000).toInt()
             isValid = t.isValid
             json = t.json
         }
@@ -383,7 +425,7 @@ class AutotuneIob(
         }
 
         private fun _NsTreatment(t: TemporaryBasal) {
-            _id = t.id
+            _id = t.id.toString()
             date = t.timestamp
             if (t.isAbsolute)
                 absoluteRate = Round.roundTo(t.absoluteRate, 0.001)

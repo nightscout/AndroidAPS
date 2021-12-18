@@ -6,7 +6,6 @@ import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -17,17 +16,18 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.db.StaticInjector;
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
-import info.nightscout.androidaps.interfaces.InsulinInterface;
+import info.nightscout.androidaps.interfaces.ActivePlugin;
+import info.nightscout.androidaps.interfaces.Config;
+import info.nightscout.androidaps.interfaces.Insulin;
+import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.ProfileStore;
-import info.nightscout.androidaps.utils.DateUtil;
-import info.nightscout.androidaps.utils.MidnightTime;
+import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.utils.*;
 import info.nightscout.androidaps.utils.Round;
-import info.nightscout.androidaps.utils.SafeParse;
+import info.nightscout.shared.SafeParse;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
-import info.nightscout.androidaps.utils.sharedPreferences.SP;
+import info.nightscout.shared.sharedPreferences.SP;
 
 public class ATProfile {
     public Profile profile;
@@ -40,30 +40,34 @@ public class ATProfile {
     public double isf;
     private Profile.ProfileValue[] srcisf = null;
     public double dia;
-    public boolean isValid = false;
+    public Profile.ValidityCheck isValid;
     public long from;
-    @Inject ActivePluginProvider activePlugin;
+    @Inject ActivePlugin activePlugin;
     @Inject SP sp;
     @Inject ResourceHelper resourceHelper;
     @Inject ProfileFunction profileFunction;
     @Inject DateUtil dateUtil;
-    private final HasAndroidInjector injector;
+    @Inject HardLimits hardLimits;
+    @Inject Config config;
+    @Inject RxBus rxBus;
+    @Inject ResourceHelper rh;
+    @Inject protected HasAndroidInjector injector;
 
 //Todo add Autotune Injector
     public ATProfile(Profile profile) {
-        injector = StaticInjector.Companion.getInstance();
         injector.androidInjector().inject(this);
 
         this.profile=profile;
         if (profile != null )
-            isValid = profile.isValid("Autotune");
-        if (isValid) {
+            isValid = profile.isValid("Autotune", activePlugin.getActivePump(), config, rh, rxBus,
+                    hardLimits, false);
+        if (isValid.isValid()) {
             //initialize tuned value with current profile values
             basal = getBasal();
             if (srcic == null)
-                srcic = profile.getIcs();
+                srcic = profile.getIcsValues();
             if (srcisf == null)
-                srcisf = profile.getIsfsMgdl();
+                srcisf = profile.getIsfsMgdlValues();
             ic = getAvgIC();
             isf = getAvgISF();
             dia = profile.getDia();
@@ -83,19 +87,21 @@ public class ATProfile {
     }
 
     public int getIcSize() {
-        return profile.getIcs().length;
+        return profile.getIcsValues().length;
     }
 
     public int getIsfSize() {
-        return profile.getIsfsMgdl().length;
+        return profile.getIsfsMgdlValues().length;
     }
 
     public double getAvgISF() {
-        return profile.getIsfsMgdl().length==1?profile.getIsfsMgdl()[0].value:Round.roundTo(averageProfileValue(profile.getIsfsMgdl()),0.01);
+        return profile.getIsfsMgdlValues().length==1?profile.getIsfsMgdlValues()[0].getValue():
+                Round.roundTo(averageProfileValue(profile.getIsfsMgdlValues()),0.01);
     }
 
     public double getAvgIC() {
-        return profile.getIcs().length==1?profile.getIcs()[0].value: Round.roundTo(averageProfileValue(profile.getIcs()),0.01);
+        return profile.getIcsValues().length==1?profile.getIcsValues()[0].getValue():
+                Round.roundTo(averageProfileValue(profile.getIcsValues()),0.01);
     }
 
     public double[] getBasal() {
@@ -107,14 +113,14 @@ public class ATProfile {
     }
 
     public double getBasal(Integer hour){
-        if(!isValid)
+        if(!isValid.isValid())
             return 0d;
         int secondfrommidnight = hour * 60 * 60;
         return profile.getBasalTimeFromMidnight(secondfrommidnight);
     }
 
     public void setBasal(long time, double value) {
-        int hour = (int) ((time - MidnightTime.calc(time))/60/60/1000);
+        int hour = (int) ((time - MidnightTime.INSTANCE.calc(time))/60/60/1000);
         basal[hour] = value;
     }
 
@@ -124,7 +130,7 @@ public class ATProfile {
         if (pf == null)
             return avgValue;
         for(int i = 0; i< pf.length;i++) {
-            avgValue+=pf[i].value*((i==pf.length -1 ? secondPerDay : pf[i+1].timeAsSeconds) -pf[i].timeAsSeconds);
+            avgValue+=pf[i].getValue()*((i==pf.length -1 ? secondPerDay : pf[i+1].getTimeAsSeconds()) -pf[i].getTimeAsSeconds());
         }
         avgValue/=secondPerDay;
         return avgValue;
@@ -137,7 +143,7 @@ public class ATProfile {
         String jsonString = "";
         JSONObject json = new JSONObject();
         int basalIncrement = 60 ;
-        InsulinInterface insulinInterface = activePlugin.getActiveInsulin();
+        Insulin insulinInterface = activePlugin.getActiveInsulin();
 
         try {
             json.put("name",profilename);
@@ -153,7 +159,7 @@ public class ATProfile {
                 basals.put(new JSONObject().put("start", time).put("minutes", h * basalIncrement).put("rate", profile.getBasalTimeFromMidnight(secondfrommidnight)));
             };
             json.put("basalprofile", basals);
-            double isfvalue = Profile.fromMgdlToUnits(profile.getIsfMgdl(),profile.getUnits());
+            double isfvalue = Profile.Companion.fromMgdlToUnits(profile.getIsfMgdl(),profile.getUnits());
             json.put("isfProfile",new JSONObject().put("sensitivities",new JSONArray().put(new JSONObject().put("i",0).put("start","00:00:00").put("sensitivity",isfvalue).put("offset",0).put("x",0).put("endoffset",1440))));
             // json.put("carbratio", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", previousResult.optDouble("carb_ratio", 0d))));
             json.put("carb_ratio", profile.getIc());
@@ -161,15 +167,15 @@ public class ATProfile {
             json.put("autosens_min", SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_autosens_min, "0.7")));
             json.put("units",profileFunction.getUnits());
             json.put("timezone", TimeZone.getDefault().getID());
-            if (insulinInterface.getId() == InsulinInterface.InsulinType.OREF_ULTRA_RAPID_ACTING)
+            if (insulinInterface.getId() == Insulin.InsulinType.OREF_ULTRA_RAPID_ACTING)
                 json.put("curve","ultra-rapid");
-            else if (insulinInterface.getId() == InsulinInterface.InsulinType.OREF_RAPID_ACTING)
+            else if (insulinInterface.getId() == Insulin.InsulinType.OREF_RAPID_ACTING)
                 json.put("curve","rapid-acting");
-            else if (insulinInterface.getId() == InsulinInterface.InsulinType.OREF_LYUMJEV) {
+            else if (insulinInterface.getId() == Insulin.InsulinType.OREF_LYUMJEV) {
                 json.put("curve", "ultra-rapid");
                 json.put("useCustomPeakTime", true);
                 json.put("insulinPeakTime", 45);
-            } else if (insulinInterface.getId() == InsulinInterface.InsulinType.OREF_FREE_PEAK) {
+            } else if (insulinInterface.getId() == Insulin.InsulinType.OREF_FREE_PEAK) {
                 int peaktime = sp.getInt(resourceHelper.gs(R.string.key_insulin_oref_peak),75);
                 json.put("curve", peaktime > 30 ? "rapid-acting" : "ultra-rapid");
                 json.put("useCustomPeakTime",true);
@@ -187,14 +193,16 @@ public class ATProfile {
 
     //json profile
     public JSONObject getData(Boolean src) {
-        JSONObject json = profile.getData();
+        JSONObject json = profile.toPureNsJson(dateUtil);
         try{
             json.put("dia",dia);
             if (src) {
                 json.put("sens", getArray(srcisf));
                 json.put("carbratio", getArray(srcic));
             } else {
-                json.put("sens", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", Profile.fromMgdlToUnits(isf, profile.getUnits()))));
+                json.put("sens", new JSONArray().put(new JSONObject().put("time", "00:00").put(
+                        "timeAsSeconds", 0).put("value", Profile.Companion.fromMgdlToUnits(isf,
+                        profile.getUnits()))));
                 json.put("carbratio", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", ic)));
             }
             JSONArray basals = new JSONArray();
@@ -218,10 +226,12 @@ public class ATProfile {
             return json;
         try{
             for(int i = 0; i< pf.length;i++) {
-                int h = pf[i].timeAsSeconds/60/60;
+                int h = pf[i].getTimeAsSeconds()/60/60;
                 String time;
                 time = (h<10 ? "0"+ h : h)  + ":00";
-                json.put(new JSONObject().put("time", time).put("timeAsSeconds", pf[i].timeAsSeconds).put("value", Profile.fromMgdlToUnits(pf[i].value, profile.getUnits())));
+                json.put(new JSONObject().put("time", time).put("timeAsSeconds",
+                        pf[i].getTimeAsSeconds()).put("value",
+                        Profile.Companion.fromMgdlToUnits(pf[i].getValue(), profile.getUnits())));
             }
         } catch (JSONException e) {}
         return json;
@@ -238,7 +248,7 @@ public class ATProfile {
             json.put("defaultProfile", resourceHelper.gs(R.string.autotune_tunedprofile_name));
             json.put("store", store);
             json.put("startDate", dateUtil.toISOAsUTC(dateUtil.now()));
-            profileStore = new ProfileStore(injector, json);
+            profileStore = new ProfileStore(injector, json, dateUtil);
         } catch (JSONException e) {}
         return profileStore;
     }

@@ -16,6 +16,7 @@ import info.nightscout.androidaps.plugins.general.autotune.events.EventAutotuneU
 import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.MidnightTime
+import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONException
@@ -52,6 +53,7 @@ class AutotunePlugin @Inject constructor(
     private val sp: SP,
     private val rxBus: RxBus,
     private val profileFunction: ProfileFunction,
+    private val dateUtil: DateUtil,
     private val activePlugin: ActivePlugin,
     aapsLogger: AAPSLogger
 ) : PluginBase(PluginDescription()
@@ -173,7 +175,7 @@ class AutotunePlugin @Inject constructor(
             copyButtonVisibility = View.VISIBLE
             if (autoSwitch) {
                 profileSwitchButtonVisibility = View.GONE //hide profilSwitch button in fragment
-                activePlugin.activeTreatments.doProfileSwitch(tunedProfile!!.profileStore, tunedProfile!!.profilename, 0, 100, 0, DateUtil.now())
+                activePlugin.activeTreatments.doProfileSwitch(tunedProfile!!.profileStore, tunedProfile!!.profilename, 0, 100, 0, dateUtil.now())
                 rxBus.send(EventLocalProfileChanged())
             }
             lastRunSuccess = true
@@ -188,7 +190,7 @@ class AutotunePlugin @Inject constructor(
 
     private fun showResults(tunedProfile: ATProfile, pumpProfile: ATProfile): String {
         var toMgDl = 1.0
-        if (profileFunction.getUnits() == Constants.MMOL) toMgDl = Constants.MMOLL_TO_MGDL
+        if (profileFunction.getUnits() == GlucoseUnit.MMOL) toMgDl = Constants.MMOLL_TO_MGDL
         val line = rh.gs(R.string.format_autotune_separator)
         var strResult = line
         strResult += rh.gs(R.string.format_autotune_title)
@@ -213,19 +215,19 @@ class AutotunePlugin @Inject constructor(
         return strResult
     }
 
-    private fun settings(runDate: Date?, nbDays: Int, firstloopstart: Date, lastloopend: Date): String {
+    private fun settings(runDate: Long, nbDays: Int, firstloopstart: Long, lastloopend: Long): String {
         var jsonString = ""
         val jsonSettings = JSONObject()
         val insulinInterface = activePlugin.activeInsulin
-        val utcOffset = ((DateUtil.fromISODateString(DateUtil.toISOString(runDate, null, null)).time - DateUtil.fromISODateString(DateUtil.toISOString(runDate)).time) / (60 * 1000)).toInt()
-        val startDateString = DateUtil.toISOString(firstloopstart, "yyyy-MM-dd", null)
-        val endDateString = DateUtil.toISOString(Date(lastloopend.time - 24 * 60 * 60 * 1000L), "yyyy-MM-dd", null)
+        val utcOffset = T.msecs(TimeZone.getDefault().getOffset(dateUtil.now()).toLong()).hours()
+        val startDateString = dateUtil.toISOString(firstloopstart)
+        val endDateString = dateUtil.toISOString(lastloopend - 24 * 60 * 60 * 1000L)
         val nsUrl = sp.getString(R.string.key_nsclientinternal_url, "")
         val optCategorizeUam = if (sp.getBoolean(R.string.key_autotune_categorize_uam_as_basal, false)) " -c=true" else ""
         val optInsulinCurve = ""
         try {
-            jsonSettings.put("datestring", DateUtil.toISOString(runDate, null, null))
-            jsonSettings.put("dateutc", DateUtil.toISOString(runDate))
+            jsonSettings.put("datestring", dateUtil.toISOString(runDate))
+            jsonSettings.put("dateutc", dateUtil.toISOAsUTC(runDate))
             jsonSettings.put("utcOffset", utcOffset)
             jsonSettings.put("units", profileFunction.getUnits())
             jsonSettings.put("timezone", TimeZone.getDefault().id)
