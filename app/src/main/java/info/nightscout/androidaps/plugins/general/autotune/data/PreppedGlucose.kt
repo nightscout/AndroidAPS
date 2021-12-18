@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.autotune.data
 
+import info.nightscout.androidaps.utils.DateUtil
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -14,18 +15,20 @@ class PreppedGlucose {
     var diaDeviations: List<DiaDatum> = ArrayList()
     var peakDeviations: List<PeakDatum> = ArrayList()
     var from: Long = 0
+    lateinit var dateUtil: DateUtil
 
     // to generate same king of json string than oref0-autotune-prep
     override fun toString(): String {
         return toString(0)
     }
 
-    constructor(from: Long, crData: List<CRDatum>?, csfGlucoseData: List<BGDatum>?, isfGlucoseData: List<BGDatum>?, basalGlucoseData: List<BGDatum>?) {
+    constructor(from: Long, crData: List<CRDatum>?, csfGlucoseData: List<BGDatum>?, isfGlucoseData: List<BGDatum>?, basalGlucoseData: List<BGDatum>?, dateUtil: DateUtil) {
         this.from = from
         this.crData = crData
         this.csfGlucoseData = csfGlucoseData
         this.isfGlucoseData = isfGlucoseData
         this.basalGlucoseData = basalGlucoseData
+        this.dateUtil = dateUtil
     }
 
     constructor(json: JSONObject?) {
@@ -60,7 +63,7 @@ class PreppedGlucose {
         for (index in 0 until array.length()) {
             try {
                 val o = array.getJSONObject(index)
-                crData.add(CRDatum(o))
+                crData.add(CRDatum(o, dateUtil))
             } catch (e: Exception) {
             }
         }
@@ -73,19 +76,19 @@ class PreppedGlucose {
         try {
             val crjson = JSONArray()
             for (crd in crData!!) {
-                crjson.put(crd.toJSON())
+                crjson.put(crd.toJSON(dateUtil))
             }
             val csfjson = JSONArray()
             for (bgd in csfGlucoseData!!) {
-                csfjson.put(bgd.toJSON(true))
+                csfjson.put(bgd.toJSON(true, dateUtil))
             }
             val isfjson = JSONArray()
             for (bgd in isfGlucoseData!!) {
-                isfjson.put(bgd.toJSON(false))
+                isfjson.put(bgd.toJSON(false, dateUtil))
             }
             val basaljson = JSONArray()
             for (bgd in basalGlucoseData!!) {
-                basaljson.put(bgd.toJSON(false))
+                basaljson.put(bgd.toJSON(false, dateUtil))
             }
             val diajson = JSONArray()
             val peakjson = JSONArray()

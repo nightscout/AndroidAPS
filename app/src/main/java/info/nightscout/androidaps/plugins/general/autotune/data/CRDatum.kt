@@ -18,16 +18,18 @@ class CRDatum {
     var crCarbs = 0.0
     var crInsulin = 0.0
     var crInsulinTotal = 0.0
+    lateinit var dateUtil: DateUtil
 
     constructor() {}
-    constructor(json: JSONObject) {
+    constructor(json: JSONObject, dateUtil: DateUtil) {
+        this.dateUtil = dateUtil
         try {
             if (json.has("CRInitialIOB")) crInitialIOB = json.getDouble("CRInitialIOB")
             if (json.has("CRInitialBG")) crInitialBG = json.getDouble("CRInitialBG")
-            if (json.has("CRInitialCarbTime")) crInitialCarbTime = DateUtil.fromISODateString(json.getString("CRInitialCarbTime")).time
+            if (json.has("CRInitialCarbTime")) crInitialCarbTime = dateUtil.fromISODateString(json.getString("CRInitialCarbTime"))
             if (json.has("CREndIOB")) crEndIOB = json.getDouble("CREndIOB")
             if (json.has("CREndBG")) crEndBG = json.getDouble("CREndBG")
-            if (json.has("CREndTime")) crEndTime = DateUtil.fromISODateString(json.getString("CREndTime")).time
+            if (json.has("CREndTime")) crEndTime = dateUtil.fromISODateString(json.getString("CREndTime"))
             if (json.has("CRCarbs")) crCarbs = json.getDouble("CRCarbs")
             if (json.has("CRInsulin")) crInsulin = json.getDouble("CRInsulin")
         } catch (e: JSONException) {
@@ -39,10 +41,10 @@ class CRDatum {
         try {
             crjson.put("CRInitialIOB", crInitialIOB)
             crjson.put("CRInitialBG", crInitialBG.toInt())
-            crjson.put("CRInitialCarbTime", DateUtil.toISOString(crInitialCarbTime))
+            crjson.put("CRInitialCarbTime", dateUtil.toISOString(crInitialCarbTime))
             crjson.put("CREndIOB", crEndIOB)
             crjson.put("CREndBG", crEndBG.toInt())
-            crjson.put("CREndTime", DateUtil.toISOString(crEndTime))
+            crjson.put("CREndTime", dateUtil.toISOString(crEndTime))
             crjson.put("CRCarbs", crCarbs.toInt())
             crjson.put("CRInsulin", crInsulin)
         } catch (e: JSONException) {

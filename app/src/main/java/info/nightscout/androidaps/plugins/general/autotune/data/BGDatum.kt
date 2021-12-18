@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.general.autotune.data
 import info.nightscout.androidaps.database.entities.GlucoseValue.TrendArrow
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.T
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.*
@@ -26,9 +27,11 @@ class BGDatum {
     var avgDelta = 0.0
     var bgReading: GlucoseValue? = null
         private set
+    lateinit var dateUtil: DateUtil
 
     constructor() {}
-    constructor(json: JSONObject) {
+    constructor(json: JSONObject, dateUtil: DateUtil) {
+        this.dateUtil = dateUtil
         try {
             if (json.has("_id")) id = json.getLong("_id")
             if (json.has("date")) date = json.getLong("date")
@@ -43,8 +46,9 @@ class BGDatum {
         }
     }
 
-    constructor(glucoseValue: GlucoseValue) {
+    constructor(glucoseValue: GlucoseValue, dateUtil: DateUtil) {
         // Used like from NS sgv
+        this.dateUtil = dateUtil
         date = glucoseValue.timestamp
         value = glucoseValue.value
         raw = glucoseValue.raw as Nothing?
@@ -56,15 +60,15 @@ class BGDatum {
     fun toJSON(mealData: Boolean): JSONObject {
         val bgjson = JSONObject()
         val now = Date(System.currentTimeMillis())
-        val utcOffset = ((DateUtil.fromISODateString(DateUtil.toISOString(now, null, null)).time - DateUtil.fromISODateString(DateUtil.toISOString(now)).time) / (60 * 1000)).toInt()
+        val utcOffset = T.msecs(TimeZone.getDefault().getOffset(dateUtil.now()).toLong()).hours()
         try {
             bgjson.put("_id", id)
             bgjson.put("date", date)
-            bgjson.put("dateString", DateUtil.toISOAsUTC(date))
+            bgjson.put("dateString", dateUtil.toISOAsUTC(date))
             bgjson.put("sgv", value)
             bgjson.put("direction", direction)
             bgjson.put("type", "sgv")
-            bgjson.put("sysTime", DateUtil.toISOAsUTC(date))
+            bgjson.put("sysTime", dateUtil.toISOAsUTC(date))
             bgjson.put("utcOffset", utcOffset)
             bgjson.put("glucose", value)
             bgjson.put("avgDelta", avgDelta)
