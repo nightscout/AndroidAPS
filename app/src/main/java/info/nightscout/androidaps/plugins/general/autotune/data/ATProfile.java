@@ -16,6 +16,9 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.data.ProfileSealed;
+import info.nightscout.androidaps.database.data.Block;
+import info.nightscout.androidaps.database.entities.ProfileSwitch;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.Config;
 import info.nightscout.androidaps.interfaces.Insulin;
@@ -30,21 +33,20 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.shared.sharedPreferences.SP;
 
 public class ATProfile {
-    public Profile profile;
+    public ProfileSealed profile;
     public String profilename;
     private Profile.ProfileValue pv;
     public double basal[] = new double[24];
     public int basalUntuned[] = new int[24];
     public double ic;
-    private Profile.ProfileValue[] srcic = null;
+    private List<Block> srcic = null;
     public double isf;
-    private Profile.ProfileValue[] srcisf = null;
+    private List<Block> srcisf = null;
     public double dia;
-    public Profile.ValidityCheck isValid;
+    public Boolean isValid;
     public long from;
     @Inject ActivePlugin activePlugin;
     @Inject SP sp;
-    @Inject ResourceHelper resourceHelper;
     @Inject ProfileFunction profileFunction;
     @Inject DateUtil dateUtil;
     @Inject HardLimits hardLimits;
@@ -54,20 +56,19 @@ public class ATProfile {
     @Inject protected HasAndroidInjector injector;
 
 //Todo add Autotune Injector
-    public ATProfile(Profile profile) {
+    public ATProfile(ProfileSealed profile) {
         injector.androidInjector().inject(this);
 
         this.profile=profile;
         if (profile != null )
-            isValid = profile.isValid("Autotune", activePlugin.getActivePump(), config, rh, rxBus,
-                    hardLimits, false);
-        if (isValid.isValid()) {
+            isValid = profile.isValid();
+        if (isValid) {
             //initialize tuned value with current profile values
             basal = getBasal();
             if (srcic == null)
-                srcic = profile.getIcsValues();
+                srcic = profile.getIcBlocks();
             if (srcisf == null)
-                srcisf = profile.getIsfsMgdlValues();
+                srcisf = profile.getIsfBlocks();
             ic = getAvgIC();
             isf = getAvgISF();
             dia = profile.getDia();
@@ -79,11 +80,11 @@ public class ATProfile {
     }
 
     public void updateProfile() {
-        profile = new Profile(injector, getData());
+        profile = new ProfileSealed.Pure(getData());
     }
 
     public Profile getTunedProfile() {
-        return new Profile(injector, getData());
+        return new ProfileSealed.Pure(getData());
     }
 
     public int getIcSize() {
@@ -113,7 +114,7 @@ public class ATProfile {
     }
 
     public double getBasal(Integer hour){
-        if(!isValid.isValid())
+        if(!isValid)
             return 0d;
         int secondfrommidnight = hour * 60 * 60;
         return profile.getBasalTimeFromMidnight(secondfrommidnight);
@@ -176,7 +177,7 @@ public class ATProfile {
                 json.put("useCustomPeakTime", true);
                 json.put("insulinPeakTime", 45);
             } else if (insulinInterface.getId() == Insulin.InsulinType.OREF_FREE_PEAK) {
-                int peaktime = sp.getInt(resourceHelper.gs(R.string.key_insulin_oref_peak),75);
+                int peaktime = sp.getInt(rh.gs(R.string.key_insulin_oref_peak),75);
                 json.put("curve", peaktime > 30 ? "rapid-acting" : "ultra-rapid");
                 json.put("useCustomPeakTime",true);
                 json.put("insulinPeakTime",peaktime);
@@ -189,10 +190,10 @@ public class ATProfile {
     }
 
     //json profile
-    public JSONObject getData() { return getData(false); }
+    public ProfileSealed.Pure getData() { return getData(false); }
 
     //json profile
-    public JSONObject getData(Boolean src) {
+    public ProfileSealed.Pure getData(Boolean src) {
         JSONObject json = profile.toPureNsJson(dateUtil);
         try{
             json.put("dia",dia);
@@ -217,7 +218,7 @@ public class ATProfile {
 
         } catch (JSONException e) {}
 
-        return json;
+        return Profile.ProfileValue(json);
     }
 
     private JSONArray getArray(Profile.ProfileValue[] pf) {
@@ -231,7 +232,7 @@ public class ATProfile {
                 time = (h<10 ? "0"+ h : h)  + ":00";
                 json.put(new JSONObject().put("time", time).put("timeAsSeconds",
                         pf[i].getTimeAsSeconds()).put("value",
-                        Profile.Companion.fromMgdlToUnits(pf[i].getValue(), profile.getUnits())));
+                        Profile.Companion.fromMgdlToUnits(pf[i].getValue(),profile.getUnits())));
             }
         } catch (JSONException e) {}
         return json;
@@ -244,8 +245,8 @@ public class ATProfile {
         JSONObject store = new JSONObject();
 
         try {
-            store.put(resourceHelper.gs(R.string.autotune_tunedprofile_name), getData());
-            json.put("defaultProfile", resourceHelper.gs(R.string.autotune_tunedprofile_name));
+            store.put(rh.gs(R.string.autotune_tunedprofile_name), getData());
+            json.put("defaultProfile", rh.gs(R.string.autotune_tunedprofile_name));
             json.put("store", store);
             json.put("startDate", dateUtil.toISOAsUTC(dateUtil.now()));
             profileStore = new ProfileStore(injector, json, dateUtil);
