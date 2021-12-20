@@ -69,7 +69,6 @@
     <!-- Omnipod - Wizard Base -->
     <string name="omnipod_common_wizard_button_cancel">İptal</string>
     <string name="omnipod_common_wizard_button_finish">Bitti</string>
-    <string name="omnipod_common_wizard_button_next">Sonraki</string>
     <string name="omnipod_common_wizard_button_retry">Tekrar dene</string>
     <string name="omnipod_common_wizard_button_deactivate_pod">Pod\'u Devre Dışı Bırak</string>
     <string name="omnipod_common_wizard_button_discard_pod">Pod\'u Çıkart</string>
