@@ -34,4 +34,5 @@
     <string name="omnipod_common_history_tbr_value">Dosering: %1$.2f E, varighet: %2$d min</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f E</string>
     <string name="dash_bolusdelivering">Leverer %1$.2f E</string>
+    <string name="omnipod_common_alert_delivery_suspended">Insulintilførsel er suspendert</string>
 </resources>
