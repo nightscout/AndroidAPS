@@ -7,7 +7,7 @@
     <string name="alert_r7_title">TBR completada</string>
     <string name="alert_w31_title">Cartucho bajo</string>
     <string name="alert_w32_title">Pila baja</string>
-    <string name="alert_w33_title">Fecha/hora no válidas</string>
+    <string name="alert_w33_title">Fecha/hora inválidas</string>
     <string name="alert_w34_title">Fin de la garantía</string>
     <string name="alert_w36_title">Basal Temporal cancelada</string>
     <string name="alert_w38_title">Bolo cancelado</string>
