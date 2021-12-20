@@ -231,7 +231,7 @@
     <string name="ns_upload_only_summary">Sólo subir a Nightscout (sincronización desactivada). No es efectivo en SGV, a menos que se seleccione una fuente local como xDrip+. No es efectivo en perfiles, si se usan perfiles Nightscout.\n!!! ¡¡ADVERTENCIA!!! Desactivar esta opción puede causar mal funcionamiento y sobredosis de insulina, si cualquiera de sus componentes (AAPS, NS, xDrip+) está mal configurado. ¡Vigile cuidadosamente si los datos mostrados por AAPS coinciden con el estado de la bomba!</string>
     <string name="pumpNotInitialized">¡Bomba no iniciada!</string>
     <string name="primefill">Cebar/Llenar</string>
-    <string name="fillwarning">¡Por favor, asegúrate de que la cantidad coincide con la cantidad especificada en el set de infusión!</string>
+    <string name="fillwarning">Por favor, asegúrate de que la cantidad coincide con la cantidad especificada en el set de infusión</string>
     <string name="fillbolus_title">Cebar/Llenar la cantidad de insulina estándar</string>
     <string name="button1">Botón 1</string>
     <string name="button2">Botón 2</string>
