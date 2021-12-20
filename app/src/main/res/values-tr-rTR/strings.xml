@@ -193,7 +193,6 @@
     <string name="smscommunicator_pumpdisconnected">Pompa bağlantısı kesildi</string>
     <string name="smscommunicator_reconnect">Pompa yeniden bağlandı</string>
     <string name="smscommunicator_remotecommandnotallowed">Uzaktan komuta izin verilmez</string>
-    <string name="smscommunicator_remotebolusnotallowed">Uzaktan bolus mevcut değil. Daha sonra tekrar deneyin.</string>
     <string name="smscommunicator_basalreplywithcode">%2$d dk boyunca bazalı %1$.2f Ü/sa yapmak için %3$s koduyla yanıtlayın</string>
     <string name="smscommunicator_profilereplywithcode">Profili %1$s %2$d%% olarak değiştirmek için %3$s koduyla yanıtlayın</string>
     <string name="smscommunicator_extendedreplywithcode">%2$d dakika boyunca %1$.2f U yayma bolus başlatmak için %3$s koduyla yanıtlayın</string>
