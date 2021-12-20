@@ -410,6 +410,20 @@
     <string name="basal_value">Basal verdi</string>
     <string name="nsclient_version_does_not_match">NSKlient versjonen samsvarer ikke med AndroidAPS. Vennligst oppdater.</string>
     <!-- Command Queue + readStatus reasons -->
+    <string name="bolus_u_min">BOLUS %1$.2f E</string>
+    <string name="carbs_g">CARBS %1$d g</string>
+    <string name="extended_bolus_u_min">EXTENDED BOLUS %1$.2f E %2$d min</string>
+    <string name="load_events">LAST INN HENDELSER</string>
+    <string name="load_history">LAST INN HENDELSESLOGG %1$d</string>
+    <string name="load_tdds">LAST INN TDDs</string>
+    <string name="set_profile">SETT PROFIL</string>
+    <string name="set_user_settings">SETT BRUKE INNSTILLINGER</string>
+    <string name="smb_bolus_u">SMB BOLUS %1$.2f E</string>
+    <string name="start_pump">START PUMPE</string>
+    <string name="stop_pump">STOPP PUMPE</string>
+    <string name="temp_basal_absolute">TEMP BASAL %1$.2f E/t %2$d min</string>
+    <string name="temp_basal_percent">TEMP BASAL %1$d E/t %2$d min</string>
+    <string name="insight_set_tbr_over_notification">INSIGHT SET TBR OVER NOTIFIKASJON</string>
     <string name="read_status" comment="10 characters max for READSTATUS translation">READSTATUS %1$s</string>
     <string name="keepalive_status_outdated" comment="26 characters max for translation">Oppretthold tilkobling. Status er ikke oppdatert.</string>
     <string name="keepalive_basal_outdated" comment="26 characters max for translation">Oppretthold tilkobling. Basal er ikke oppdatert.</string>
