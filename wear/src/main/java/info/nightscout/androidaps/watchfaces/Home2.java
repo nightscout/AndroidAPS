@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.watchfaces;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
@@ -29,7 +31,26 @@ public class Home2 extends BaseWatchFace {
         super.onCreate();
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         layoutView = inflater.inflate(R.layout.activity_home_2, null);
+
+        IntentFilter intentBatteryFilter = new IntentFilter();
+        intentBatteryFilter.addAction(BatteryManager.ACTION_CHARGING);
+        intentBatteryFilter.addAction(BatteryManager.ACTION_DISCHARGING);
+        registerReceiver(batteryReceiver, intentBatteryFilter);
         performViewSetup();
+    }
+
+    private BroadcastReceiver batteryReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            setDataFields();
+            invalidate();
+        }
+    };
+
+    @Override
+    public void onDestroy() {
+        unregisterReceiver(batteryReceiver);
+        super.onDestroy();
     }
 
     @Override
