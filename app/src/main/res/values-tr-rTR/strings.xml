@@ -73,6 +73,7 @@
     <string name="openapsma_request_label">İstek</string>
     <string name="delta">Delta</string>
     <string name="sms_delta">Delta:</string>
+    <string name="configbuilder">Konfigürasyon ayarları</string>
     <string name="overview">Genel Bakış</string>
     <string name="treatments">Tedaviler</string>
     <string name="virtualpump">Sanal pompa</string>
@@ -192,6 +193,7 @@
     <string name="smscommunicator_pumpdisconnected">Pompa bağlantısı kesildi</string>
     <string name="smscommunicator_reconnect">Pompa yeniden bağlandı</string>
     <string name="smscommunicator_remotecommandnotallowed">Uzaktan komuta izin verilmez</string>
+    <string name="smscommunicator_remotebolusnotallowed">Uzaktan bolus gönderilemiyor. Daha sonra tekrar deneyin.</string>
     <string name="smscommunicator_basalreplywithcode">%2$d dk boyunca bazalı %1$.2f Ü/sa yapmak için %3$s koduyla yanıtlayın</string>
     <string name="smscommunicator_profilereplywithcode">Profili %1$s %2$d%% olarak değiştirmek için %3$s koduyla yanıtlayın</string>
     <string name="smscommunicator_extendedreplywithcode">%2$d dakika boyunca %1$.2f U yayma bolus başlatmak için %3$s koduyla yanıtlayın</string>
@@ -591,6 +593,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="absorption_cutoff_title">Besinin maksimum emilim süresi [h]</string>
     <string name="absorption_cutoff_summary">Herhangi bir öğünün emildiği kabul edilen zaman. Kalan karbonhidratlar kesilecek.</string>
     <string name="overview_show_notes_field_in_dialogs_title">Tedavi diyaloglarında not alanını göster</string>
+    <string name="next_button">İleri</string>
     <string name="previous_button">Önceki</string>
     <string name="nav_setupwizard">Kurulum Sihirbazı</string>
     <string name="setupwizard_finish">BİTTİ</string>
