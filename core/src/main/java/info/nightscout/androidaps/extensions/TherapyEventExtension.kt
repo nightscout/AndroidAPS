@@ -69,12 +69,18 @@ fun therapyEventFromNsIdForInvalidating(nsId: String): TherapyEvent =
     )!!
 
 fun therapyEventFromJson(jsonObject: JSONObject): TherapyEvent? {
-    val glucoseUnit = if (JsonHelper.safeGetString(jsonObject, "units", Constants.MGDL) == Constants.MGDL) TherapyEvent.GlucoseUnit.MGDL else TherapyEvent.GlucoseUnit.MMOL
     val timestamp = JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null) ?: return null
     val type = TherapyEvent.Type.fromString(JsonHelper.safeGetString(jsonObject, "eventType", TherapyEvent.Type.NONE.text))
     val duration = JsonHelper.safeGetLong(jsonObject, "duration")
     val durationInMilliseconds = JsonHelper.safeGetLongAllowNull(jsonObject, "durationInMilliseconds")
     val glucose = JsonHelper.safeGetDoubleAllowNull(jsonObject, "glucose")
+    val glucoseUnit = glucose?.let {
+        if (JsonHelper.safeGetDoubleAllowNull(jsonObject, "mmol") == glucose)
+            TherapyEvent.GlucoseUnit.MMOL
+        else
+            TherapyEvent.GlucoseUnit.MGDL
+    }
+        ?:if (JsonHelper.safeGetString(jsonObject, "units", Constants.MGDL) == Constants.MGDL) TherapyEvent.GlucoseUnit.MGDL else TherapyEvent.GlucoseUnit.MMOL
     val glucoseType = TherapyEvent.MeterType.fromString(JsonHelper.safeGetString(jsonObject, "glucoseType"))
     val enteredBy = JsonHelper.safeGetStringAllowNull(jsonObject, "enteredBy", null)
     val note = JsonHelper.safeGetStringAllowNull(jsonObject, "notes", null)
