@@ -120,7 +120,6 @@
     <string name="bolusconstraintapplied">Bolus kısıtlaması uygulandı</string>
     <string name="carbsconstraintapplied">Karbonhidrat kısıtlaması uygulandı</string>
     <string name="careportal_newnstreatment_other">Diğer</string>
-    <string name="careportal_newnstreatment_meter">Metre</string>
     <string name="careportal_newnstreatment_sensor">Sensör</string>
     <string name="carb_time_label">Karb. zamanı</string>
     <string name="careportal_newnstreatment_duration_label">Süre</string>
