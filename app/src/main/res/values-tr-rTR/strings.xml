@@ -546,8 +546,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="allow_automated_crash_reporting">Geliştiricilere, fabric.io hizmeti aracılığıyla otomatik kilitlenme raporlaması ve özellik kullanım verilerinin gönderilmesine izin verir.</string>
     <string name="g5appnotdetected">Lütfen Dexcom uygulamanızı desteklenen sürüme güncelleyin</string>
     <string name="dexcom_app_not_installed">Dexcom uygulaması yüklü değil.</string>
-    <string name="start_activity_tt">Egzersiz Başlat TT</string>
-    <string name="start_eating_soon_tt">Yakında Yemeğe Başla TT</string>
     <string name="temptargetshort">TT</string>
     <string name="do_not_bolus_record_only">Bolusu sadece kayıt altına al</string>
     <string name="category">Kategori</string>
@@ -562,7 +560,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="overview_show_iob">Aktif İnsülin</string>
     <string name="overview_show_basals">Bazallar</string>
     <string name="no_action_selected">Seçili eylem yok, hiçbir şey olmayacak</string>
-    <string name="start_hypo_tt">Hipo TT başlat</string>
     <string name="closed_loop_disabled_on_dev_branch">Geliştirici sürümü çalışıyor. Kapalı Döngü devre dışı.</string>
     <string name="engineering_mode_enabled">Geliştirici modu etkinleştirildi</string>
     <string name="profileswitch_ismissing">Profil geçişi yok. Lütfen Profil Değiştirme ile bir profil geçişi yapın veya Yerel Profil\'de \"Profili Etkinleştir\" düğmesine basın.</string>
