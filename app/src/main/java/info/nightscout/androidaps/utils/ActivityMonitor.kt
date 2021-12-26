@@ -5,10 +5,11 @@ import android.app.Application
 import android.os.Bundle
 import android.text.Spanned
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.SafeParse
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -64,7 +65,7 @@ class ActivityMonitor @Inject constructor(
             if (key.startsWith("Monitor") && key.endsWith("total")) {
                 val v = if (value is Long) value else SafeParse.stringToLong(value as String)
                 val activity = key.split("_")[1].replace("Activity", "")
-                val duration = dateUtil.niceTimeScalar(v as Long, rh)
+                val duration = dateUtil.niceTimeScalar(v, rh)
                 val start = sp.getLong(key.replace("total", "start"), 0)
                 val days = T.msecs(dateUtil.now() - start).days()
                 result += rh.gs(R.string.activitymonitorformat, activity, duration, days)

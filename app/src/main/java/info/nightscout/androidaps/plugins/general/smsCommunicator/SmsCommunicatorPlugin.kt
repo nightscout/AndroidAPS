@@ -29,8 +29,8 @@ import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.extensions.valueToUnitsString
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
@@ -45,8 +45,9 @@ import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+import info.nightscout.shared.SafeParse
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import org.apache.commons.lang3.StringUtils
@@ -77,7 +78,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     private val commandQueue: CommandQueue,
     private val loop: Loop,
     private val iobCobCalculator: IobCobCalculator,
-    private val xdripCalibrations: XdripCalibrations,
+    private val xDripBroadcast: XDripBroadcast,
     private var otp: OneTimePassword,
     private val config: Config,
     private val dateUtil: DateUtil,
@@ -499,7 +500,7 @@ class SmsCommunicatorPlugin @Inject constructor(
 
     private fun processPUMP(divided: Array<String>, receivedSms: Sms) {
         if (divided.size == 1) {
-            commandQueue.readStatus("SMS", object : Callback() {
+            commandQueue.readStatus(rh.gs(R.string.sms), object : Callback() {
                 override fun run() {
                     val pump = activePlugin.activePump
                     if (result.success) {
@@ -828,7 +829,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                         override fun run() {
                             val resultSuccess = result.success
                             val resultBolusDelivered = result.bolusDelivered
-                            commandQueue.readStatus("SMS", object : Callback() {
+                            commandQueue.readStatus(rh.gs(R.string.sms), object : Callback() {
                                 override fun run() {
                                     if (resultSuccess) {
                                         var replyText = if (isMeal)
@@ -1064,7 +1065,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             receivedSms.processed = true
             messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = false, cal) {
                 override fun run() {
-                    val result = xdripCalibrations.sendIntent(aDouble!!)
+                    val result = xDripBroadcast.sendCalibration(aDouble!!)
                     val replyText =
                         if (result) rh.gs(R.string.smscommunicator_calibrationsent) else rh.gs(R.string.smscommunicator_calibrationfailed)
                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))

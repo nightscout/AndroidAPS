@@ -11,9 +11,9 @@
     <string name="alert_w34_title">Garanti sonu</string>
     <string name="alert_w36_title">Geçici Bazal Oranı iptal edildi</string>
     <string name="alert_w38_title">Bolus iptal edildi</string>
-    <string name="alert_w39_title">Loantime uyarısı</string>
-    <string name="alert_m20_title">Rezervuar yerleştirilmemiş</string>
-    <string name="alert_m21_title">Rezervuar bitti</string>
+    <string name="alert_w39_title">Kiralama süresi uyarısı</string>
+    <string name="alert_m20_title">Rezervuar takılı değil</string>
+    <string name="alert_m21_title">Rezervuar boş</string>
     <string name="alert_m22_title">Pil bitti</string>
     <string name="alert_m23_title">Otomatik kapatma - pompa durdu</string>
     <string name="alert_m24_title">Tıkanma</string>

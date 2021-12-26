@@ -6,22 +6,22 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TherapyEvent
-import info.nightscout.androidaps.extensions.isEPSEvent5minBack
+import info.nightscout.androidaps.extensions.isPSEvent5minBack
 import info.nightscout.androidaps.extensions.isTherapyEventEvent5minBack
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.Sensitivity.SensitivityType
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.SMBDefaults
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.*
@@ -39,15 +39,16 @@ class SensitivityOref1Plugin @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
     private val repository: AppRepository
-) : AbstractSensitivityPlugin(PluginDescription()
-    .mainType(PluginType.SENSITIVITY)
-    .pluginIcon(R.drawable.ic_generic_icon)
-    .pluginName(R.string.sensitivityoref1)
-    .shortName(R.string.sensitivity_shortname)
-    .enableByDefault(true)
-    .preferencesId(R.xml.pref_absorption_oref1)
-    .description(R.string.description_sensitivity_oref1)
-    .setDefault(),
+) : AbstractSensitivityPlugin(
+    PluginDescription()
+        .mainType(PluginType.SENSITIVITY)
+        .pluginIcon(R.drawable.ic_generic_icon)
+        .pluginName(R.string.sensitivityoref1)
+        .shortName(R.string.sensitivity_shortname)
+        .enableByDefault(true)
+        .preferencesId(R.xml.pref_absorption_oref1)
+        .description(R.string.description_sensitivity_oref1)
+        .setDefault(),
     injector, aapsLogger, rh, sp
 ) {
 
@@ -71,7 +72,7 @@ class SensitivityOref1Plugin @Inject constructor(
             return AutosensResult()
         }
         val siteChanges = repository.getTherapyEventDataFromTime(fromTime, TherapyEvent.Type.CANNULA_CHANGE, true).blockingGet()
-        val profileSwitches = repository.getEffectiveProfileSwitchDataFromTime(fromTime, true).blockingGet()
+        val profileSwitches = repository.getProfileSwitchDataFromTime(fromTime, true).blockingGet()
 
         //[0] = 8 hour
         //[1] = 24 hour
@@ -105,11 +106,10 @@ class SensitivityOref1Plugin @Inject constructor(
                 if (siteChanges.isTherapyEventEvent5minBack(autosensData.time)) {
                     deviationsArray.clear()
                     pastSensitivity += "(SITECHANGE)"
-                    pastSensitivity += "(SITECHANGE)"
                 }
 
                 // reset deviations after profile switch
-                if (profileSwitches.isEPSEvent5minBack(autosensData.time)) {
+                if (profileSwitches.isPSEvent5minBack(autosensData.time)) {
                     deviationsArray.clear()
                     pastSensitivity += "(PROFILESWITCH)"
                 }
@@ -196,7 +196,8 @@ class SensitivityOref1Plugin @Inject constructor(
         }
         //String message = hoursDetection.get(key) + " of sensitivity used";
         val output = fillResult(ratioArray[key], current.cob, pastSensitivityArray[key], ratioLimitArray[key], sensResultArray[key] + comparison, deviationsHour[key].size)
-        aapsLogger.debug(LTag.AUTOSENS, "Sensitivity to: "
+        aapsLogger.debug(
+            LTag.AUTOSENS, "Sensitivity to: "
             + dateUtil.dateAndTimeString(toTime) +
             " ratio: " + output.ratio
             + " mealCOB: " + current.cob)

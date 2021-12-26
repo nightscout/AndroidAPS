@@ -154,7 +154,6 @@
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
-    <string name="noprofileselected">Aucun profil séléctionné</string>
     <string name="startprofile">Démarrer le profil %1$d%% pour %2$d min</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Uniquement les valeurs unitaires sont acceptées. Les plages pour les basal/bolus ne sont pas supportées par les pompes virtuelles.</string>
@@ -410,6 +409,37 @@
     <string name="value_out_of_hard_limits">\"%1$s\" %2$.2f est en dehors des limites</string>
     <string name="basal_value">Valeur de Basal</string>
     <string name="nsclient_version_does_not_match">La version NSClient ne correspond pas à AndroidAPS. Faites une mise à jour.</string>
+    <!-- Command Queue + readStatus reasons -->
+    <string name="bolus_u_min">BOLUS %1$.2f U</string>
+    <string name="carbs_g">GLUCIDES %1$d g</string>
+    <string name="extended_bolus_u_min">BOLUS ÉTENDU %1$.2f U %2$d min</string>
+    <string name="load_events">CHARGER LES ÉVÉNEMENTS</string>
+    <string name="load_history">CHARGER L\'HISTORIQUE %1$d</string>
+    <string name="load_tdds">CHARGER les DTI</string>
+    <string name="set_profile">DÉFINIR LE PROFIL</string>
+    <string name="set_user_settings">DÉFINIR LES PARAMÈTRES UTILISATEUR</string>
+    <string name="smb_bolus_u">BOLUS SMB %1$.2f U</string>
+    <string name="start_pump">DÉMARRER LA POMPE</string>
+    <string name="stop_pump">ARRÊTER LA POMPE</string>
+    <string name="temp_basal_absolute">BASAL TEMP %1$.2f U/h %2$d min</string>
+    <string name="temp_basal_percent">BASAL TEMP %1$d%% %2$d min</string>
+    <string name="insight_set_tbr_over_notification">INSIGHT DEFINIR NOTIFICATION FIN DE DBT</string>
+    <string name="read_status" comment="10 characters max for READSTATUS translation">ÉTAT POMPE %1$s</string>
+    <string name="keepalive_status_outdated" comment="26 characters max for translation">Cnx Active. État obsolète.</string>
+    <string name="keepalive_basal_outdated" comment="26 characters max for translation">Cnx Active. Basale obsolète</string>
+    <string name="sms" comment="26 characters max for translation">SMS</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Cnx à la pompe demandée</string>
+    <string name="pump_driver_changed" comment="26 characters max for translation">Pilote pompe changé.</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Changement pilote pompe.</string>
+    <string name="device_changed" comment="26 characters max for translation">Appareil changé</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Actualisation demandée</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Actualisation état programmé</string>
+    <string name="unconfirmed_command" comment="26 characters max for translation">Commande non confirmée</string>
+    <string name="requested_by_user" comment="26 characters max for translation">Demandé par l\'utilisateur</string>
+    <string name="user_request" comment="26 characters max for translation">Demande utilisateur</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
+    <string name="pump_paired" comment="26 characters max for translation">Pompe appairée</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Actualisation état Insight</string>
     <plurals name="days">
         <item quantity="one">%1$d jour</item>
         <item quantity="other">%1$d jours</item>

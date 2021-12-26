@@ -20,13 +20,13 @@ import info.nightscout.androidaps.databinding.DialogTreatmentBinding
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.HtmlHelper
-import info.nightscout.androidaps.utils.SafeParse
+import info.nightscout.shared.SafeParse
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.extensions.formatColor
@@ -105,6 +105,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
             ?: 0.0, 0.0, maxCarbs, 1.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher)
         binding.insulin.setParams(savedInstanceState?.getDouble("insulin")
             ?: 0.0, 0.0, maxInsulin, pumpDescription.bolusStep, DecimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump), false, binding.okcancel.ok, textWatcher)
+        binding.recordOnlyLayout.visibility = View.GONE
     }
 
     override fun onDestroyView() {
@@ -115,7 +116,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
     override fun submit(): Boolean {
         if (_binding == null) return false
         val pumpDescription = activePlugin.activePump.pumpDescription
-        val insulin = SafeParse.stringToDouble(binding.insulin.text ?: return false)
+        val insulin = SafeParse.stringToDouble(binding.insulin.text)
         val carbs = SafeParse.stringToInt(binding.carbs.text)
         val recordOnlyChecked = binding.recordOnly.isChecked
         val actions: LinkedList<String?> = LinkedList()
@@ -139,7 +140,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
                 OKDialog.showConfirmation(activity, rh.gs(R.string.overview_treatment_label), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     val action = when {
                         insulinAfterConstraints.equals(0.0) -> Action.CARBS
-                        carbsAfterConstraints.equals(0)     -> Action.BOLUS
+                        carbsAfterConstraints == 0          -> Action.BOLUS
                         else                                -> Action.TREATMENT
                     }
                     val detailedBolusInfo = DetailedBolusInfo()

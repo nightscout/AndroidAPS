@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugin.general.openhumans.delegates
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import info.nightscout.androidaps.plugin.general.openhumans.OpenHumansState
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.reflect.KProperty

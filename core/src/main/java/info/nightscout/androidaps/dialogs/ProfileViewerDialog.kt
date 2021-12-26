@@ -164,7 +164,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
                 binding.date.text = date
                 binding.ic.text = it.getIcList(rh, dateUtil)
                 binding.isf.text = it.getIsfList(rh, dateUtil)
-                binding.basal.text = it.getBasalList(rh, dateUtil)
+                binding.basal.text = "∑ " + rh.gs(R.string.formatinsulinunits, it.baseBasalSum()) + "\n" + it.getBasalList(rh, dateUtil)
                 binding.target.text = it.getTargetList(rh, dateUtil)
                 binding.basalGraph.show(it)
 

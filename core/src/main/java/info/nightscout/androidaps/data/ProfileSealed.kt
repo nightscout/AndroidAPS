@@ -211,9 +211,9 @@ sealed class ProfileSealed(
             if (getIcTimeFromMidnight(seconds) !=  profile.getIcTimeFromMidnight(seconds)) return false
             if (getTargetLowMgdlTimeFromMidnight(seconds) !=  profile.getTargetLowMgdlTimeFromMidnight(seconds)) return false
             if (getTargetHighMgdlTimeFromMidnight(seconds) !=  profile.getTargetHighMgdlTimeFromMidnight(seconds)) return false
-            if (dia != profile.dia) return false
-            if ((profile is EPS) && profileName != profile.value.originalProfileName) return false // handle profile name change too
         }
+        if (dia != profile.dia) return false
+        if ((profile is EPS) && profileName != profile.value.originalProfileName) return false // handle profile name change too
         return true
     }
 

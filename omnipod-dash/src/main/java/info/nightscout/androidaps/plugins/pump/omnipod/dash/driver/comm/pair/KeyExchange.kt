@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.pair
 
 import info.nightscout.androidaps.extensions.toHex
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.BuildConfig
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.MessageIOException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.RandomByteGenerator
@@ -80,13 +80,11 @@ class KeyExchange(
             pdmNonce +
             podNonce
         aesCmac(confKey, pdmConfData, pdmConf)
-        aapsLogger.debug(LTag.PUMPBTCOMM, "pdmConf: ${pdmConf.toHex()}")
 
         val podConfData = POD_CONF_MAGIC_PREFIX +
             podNonce +
             pdmNonce
         aesCmac(confKey, podConfData, podConf)
-        aapsLogger.debug(LTag.PUMPBTCOMM, "podConf: ${podConf.toHex()}")
 
         if (BuildConfig.DEBUG) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "pdmPrivate: ${pdmPrivate.toHex()}")
@@ -94,6 +92,8 @@ class KeyExchange(
             aapsLogger.debug(LTag.PUMPBTCOMM, "podPublic: ${podPublic.toHex()}")
             aapsLogger.debug(LTag.PUMPBTCOMM, "pdmNonce: ${pdmNonce.toHex()}")
             aapsLogger.debug(LTag.PUMPBTCOMM, "podNonce: ${podNonce.toHex()}")
+            aapsLogger.debug(LTag.PUMPBTCOMM, "podConf: ${podConf.toHex()}")
+            aapsLogger.debug(LTag.PUMPBTCOMM, "pdmConf: ${pdmConf.toHex()}")
 
             aapsLogger.debug(LTag.PUMPBTCOMM, "LTK, donna key: ${curveLTK.toHex()}")
             aapsLogger.debug(LTag.PUMPBTCOMM, "Intermediate key: ${intermediateKey.toHex()}")

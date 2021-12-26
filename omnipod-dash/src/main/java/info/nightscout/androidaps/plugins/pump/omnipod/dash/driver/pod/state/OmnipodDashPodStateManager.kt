@@ -33,8 +33,11 @@ interface OmnipodDashPodStateManager {
     var bluetoothConnectionState: BluetoothConnectionState
     var connectionAttempts: Int
     var successfulConnections: Int
+    val successfulConnectionAttemptsAfterRetries: Int
+    val failedConnectionsAfterRetries: Int
 
-    var timeZone: TimeZone
+    val timeZoneId: String?
+    val timeZoneUpdated: Long?
     val sameTimeZone: Boolean // The TimeZone is the same on the phone and on the pod
     val lastUpdatedSystem: Long // System.currentTimeMillis()
     val lastStatusResponseReceived: Long
@@ -74,6 +77,7 @@ interface OmnipodDashPodStateManager {
     var basalProgram: BasalProgram?
     val activeCommand: ActiveCommand?
     val lastBolus: LastBolus?
+    var suspendAlertsEnabled: Boolean
 
     fun increaseMessageSequenceNumber()
     fun increaseEapAkaSequenceNumber(): ByteArray
@@ -85,6 +89,9 @@ interface OmnipodDashPodStateManager {
     fun updateFromPairing(uniqueId: Id, pairResult: PairResult)
     fun reset()
     fun connectionSuccessRatio(): Float
+    fun incrementSuccessfulConnectionAttemptsAfterRetries()
+    fun incrementFailedConnectionsAfterRetries()
+    fun updateTimeZone()
 
     fun createActiveCommand(
         historyId: String,

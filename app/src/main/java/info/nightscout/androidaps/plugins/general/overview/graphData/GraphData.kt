@@ -11,7 +11,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.general.overview.OverviewData
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.AreaGraphSeries
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DoubleDataPoint
@@ -114,7 +114,7 @@ class GraphData(
         overviewData.iobScale.multiplier = maxY * scale / overviewData.maxIobValueFound
         addSeries(overviewData.iobSeries)
         addSeries(overviewData.iobPredictions1Series)
-        addSeries(overviewData.iobPredictions2Series)
+        //addSeries(overviewData.iobPredictions2Series)
     }
 
     // scale in % of vertical size (like 0.3)

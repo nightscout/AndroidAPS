@@ -19,8 +19,8 @@ import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.iobCalc
 import info.nightscout.androidaps.extensions.toTemporaryBasal
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData
@@ -33,10 +33,13 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import org.json.JSONArray
+import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledFuture
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.floor
@@ -126,12 +129,7 @@ class IobCobCalculatorPlugin @Inject constructor(
         disposable += rxBus
             .toObservable(EventNewHistoryData::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe(
-                { event ->
-                    newHistoryData(event.oldDataTimestamp, event.reloadBgData, if (event.newestGlucoseValue != null) EventNewBG(event.newestGlucoseValue) else event)
-                },
-                fabricPrivacy::logException
-            )
+            .subscribe({ event -> scheduleHistoryDataChange(event) }, fabricPrivacy::logException)
     }
 
     override fun onStop() {
@@ -389,6 +387,44 @@ class IobCobCalculatorPlugin @Inject constructor(
         }
     }
 
+    // Limit rate of EventNewHistoryData
+    private val historyWorker = Executors.newSingleThreadScheduledExecutor()
+    private var scheduledHistoryPost: ScheduledFuture<*>? = null
+    private var scheduledEvent: EventNewHistoryData? = null
+
+    @Synchronized
+    private fun scheduleHistoryDataChange(event: EventNewHistoryData) {
+        // if there is nothing scheduled or asking reload deeper to the past
+        if (scheduledEvent == null || event.oldDataTimestamp < (scheduledEvent?.oldDataTimestamp) ?: 0L) {
+            // cancel waiting task to prevent sending multiple posts
+            scheduledHistoryPost?.cancel(false)
+            // prepare task for execution in 1 sec
+            scheduledEvent = event
+            scheduledHistoryPost = historyWorker.schedule({
+                                                              synchronized(this) {
+                                                                  aapsLogger.debug(LTag.AUTOSENS, "Running newHistoryData")
+                                                                  newHistoryData(
+                                                                      event.oldDataTimestamp,
+                                                                      event.reloadBgData,
+                                                                      if (event.newestGlucoseValue != null) EventNewBG(event.newestGlucoseValue) else event
+                                                                  )
+                                                                  scheduledEvent = null
+                                                                  scheduledHistoryPost = null
+                                                              }
+                                                          }, 1L, TimeUnit.SECONDS)
+        } else {
+            // asked reload is newer -> adjust params only
+            scheduledEvent?.let {
+                // set reload bg data if was not set
+                if (!it.reloadBgData) it.reloadBgData = event.reloadBgData
+                // set Glucose value if newer
+                event.newestGlucoseValue?.let { gv ->
+                    if (gv.timestamp > (it.newestGlucoseValue?.timestamp ?: 0L)) it.newestGlucoseValue = gv
+                }
+            }
+        }
+    }
+
     // When historical data is changed (coming from NS etc) finished calculations after this date must be invalidated
     private fun newHistoryData(oldDataTimestamp: Long, bgDataReload: Boolean, event: Event) {
         //log.debug("Locking onNewHistoryData");
@@ -501,7 +537,11 @@ class IobCobCalculatorPlugin @Inject constructor(
             for (pos in extendedBoluses.indices) {
                 val e = extendedBoluses[pos]
                 if (e.timestamp > toTime) continue
-                if (e.end > now) e.duration = now - e.timestamp
+                if (e.end > now) {
+                    val newDuration = now - e.timestamp
+                    e.amount *= newDuration.toDouble() / e.duration
+                    e.duration = newDuration
+                }
                 val profile = profileFunction.getProfile(e.timestamp) ?: return total
                 val calc = e.iobCalc(toTime, profile, activePlugin.activeInsulin)
                 total.plus(calc)
@@ -522,16 +562,29 @@ class IobCobCalculatorPlugin @Inject constructor(
         return null
     }
 
-    override fun getTempBasalIncludingConvertedExtended(timestamp: Long): TemporaryBasal? {
-
-        val tb = repository.getTemporaryBasalActiveAt(timestamp).blockingGet()
-        if (tb is ValueWrapper.Existing) return tb.value
+    private fun getConvertedExtended(timestamp: Long): TemporaryBasal? {
         if (activePlugin.activePump.isFakingTempsByExtendedBoluses) {
             val eb = repository.getExtendedBolusActiveAt(timestamp).blockingGet()
             val profile = profileFunction.getProfile(timestamp) ?: return null
             if (eb is ValueWrapper.Existing) return eb.value.toTemporaryBasal(profile)
         }
         return null
+    }
+
+    override fun getTempBasalIncludingConvertedExtended(timestamp: Long): TemporaryBasal? {
+        val tb = repository.getTemporaryBasalActiveAt(timestamp).blockingGet()
+        if (tb is ValueWrapper.Existing) return tb.value
+        return getConvertedExtended(timestamp);
+    }
+
+    override fun getTempBasalIncludingConvertedExtendedForRange(startTime: Long, endTime: Long, calculationStep: Long): Map<Long, TemporaryBasal?> {
+        val tempBasals = HashMap<Long, TemporaryBasal?>();
+        val tbs = repository.getTemporaryBasalsDataActiveBetweenTimeAndTime(startTime, endTime).blockingGet()
+        for (t in startTime until endTime step calculationStep) {
+            val tb = tbs.firstOrNull { basal -> basal.timestamp <= t && (basal.timestamp + basal.duration) > t }
+            tempBasals[t] = tb ?: getConvertedExtended(t)
+        }
+        return tempBasals;
     }
 
     override fun calculateAbsoluteIobFromBaseBasals(toTime: Long): IobTotal {
@@ -583,7 +636,11 @@ class IobCobCalculatorPlugin @Inject constructor(
                 val e = extendedBoluses[pos]
                 if (e.timestamp > toTime) continue
                 val profile = profileFunction.getProfile(e.timestamp) ?: continue
-                if (e.end > now) e.duration = now - e.timestamp
+                if (e.end > now) {
+                    val newDuration = now - e.timestamp
+                    e.amount *= newDuration.toDouble() / e.duration
+                    e.duration = newDuration
+                }
                 val calc = e.iobCalc(toTime, profile, activePlugin.activeInsulin)
                 totalExt.plus(calc)
             }
@@ -618,7 +675,11 @@ class IobCobCalculatorPlugin @Inject constructor(
                 val e = extendedBoluses[pos]
                 if (e.timestamp > toTime) continue
                 val profile = profileFunction.getProfile(e.timestamp) ?: continue
-                if (e.end > now) e.duration = now - e.timestamp
+                if (e.end > now) {
+                    val newDuration = now - e.timestamp
+                    e.amount *= newDuration.toDouble() / e.duration
+                    e.duration = newDuration
+                }
                 val calc = e.iobCalc(toTime, profile, lastAutosensResult, exercise_mode, half_basal_exercise_target, isTempTarget, activePlugin.activeInsulin)
                 totalExt.plus(calc)
             }

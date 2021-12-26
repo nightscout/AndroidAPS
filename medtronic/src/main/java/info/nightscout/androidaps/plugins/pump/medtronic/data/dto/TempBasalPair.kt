@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data.dto
 
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.pump.common.defs.TempBasalPair
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
@@ -90,6 +90,9 @@ class TempBasalPair : TempBasalPair {
 
     val isCancelTBR: Boolean
         get() = MedtronicUtil.isSame(insulinRate, 0.0) && durationMinutes == 0
+
+    val isZeroTBR: Boolean
+        get() = MedtronicUtil.isSame(insulinRate, 0.0) && durationMinutes != 0
 
     val description: String
         get() {

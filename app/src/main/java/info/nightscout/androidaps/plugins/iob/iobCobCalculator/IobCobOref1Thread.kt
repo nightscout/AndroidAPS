@@ -13,8 +13,8 @@ import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.extensions.target
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.SMBDefaults
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
@@ -30,7 +30,7 @@ import info.nightscout.androidaps.utils.Profiler
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import java.util.*
 import javax.inject.Inject
 import kotlin.math.abs
@@ -209,12 +209,12 @@ class IobCobOref1Thread internal constructor(
                     // figure out how many carbs that represents
                     // but always assume at least 3mg/dL/5m (default) absorption per active treatment
                     val ci = max(deviation, totalMinCarbsImpact)
-                    if (ci != deviation) autosensData.failoverToMinAbsorbtionRate = true
+                    if (ci != deviation) autosensData.failOverToMinAbsorptionRate = true
                     autosensData.absorbed = ci * profile.getIc(bgTime) / sens
                     // and add that to the running total carbsAbsorbed
                     autosensData.cob = max(previous.cob - autosensData.absorbed, 0.0)
                     autosensData.mealCarbs = previous.mealCarbs
-                    autosensData.substractAbosorbedCarbs()
+                    autosensData.deductAbsorbedCarbs()
                     autosensData.usedMinCarbsImpact = totalMinCarbsImpact
                     autosensData.absorbing = previous.absorbing
                     autosensData.mealStartCounter = previous.mealStartCounter

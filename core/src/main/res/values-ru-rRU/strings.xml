@@ -154,7 +154,6 @@
     <string name="profile_ins_units_per_hour">ед/ч</string>
     <string name="profile_carbs_per_unit">г/ед</string>
     <!--    ProfileFunction-->
-    <string name="noprofileselected">профиль не выбран</string>
     <string name="startprofile">Начать профиль %1$d%% на %2$d мин</string>
     <!--    PumpType-->
     <string name="def_extended_note">* В виртуальной помпе поддерживаются только дискретные величины для обработки базала/болюса.</string>
@@ -410,6 +409,37 @@
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f за пределами жестких ограничений</string>
     <string name="basal_value">Величина базала</string>
     <string name="nsclient_version_does_not_match">Версия NSClient не совпадает с версией AndroidAPS. Пожалуйста, обновите.</string>
+    <!-- Command Queue + readStatus reasons -->
+    <string name="bolus_u_min">БОЛЮС %1$.2f ЕД</string>
+    <string name="carbs_g">УГЛ %1$d г</string>
+    <string name="extended_bolus_u_min">Пролонгированный болюс %1$.2f ед %2$d мин</string>
+    <string name="load_events">ЗАГРУЗИТЬ СОБЫТИЯ</string>
+    <string name="load_history">ЗАГРУЗИТЬ ИСТОРИЮ %1$d</string>
+    <string name="load_tdds">ЗАГРУЗИТЬ СУТ ДОЗЫ</string>
+    <string name="set_profile">ЗАДАТЬ ПРОФИЛЬ</string>
+    <string name="set_user_settings">ВЫБРАТЬ НАСТРОЙКИ ПОЛЬЗОВАТЕЛЯ</string>
+    <string name="smb_bolus_u">БОЛЮС SMB %1$.2f ЕД</string>
+    <string name="start_pump">ЗАПУСТИТЬ ПОМПУ</string>
+    <string name="stop_pump">ОСТАНОВИТЬ ПОМПУ</string>
+    <string name="temp_basal_absolute">ВРЕМ БАЗА %1$.2f ЕД/ч %2$d мин</string>
+    <string name="temp_basal_percent">ВРЕМ БАЗА %1$d%% %2$d мин</string>
+    <string name="insight_set_tbr_over_notification">ВРЕМ БАЗА TBR INSIGHT ЧЕРЕЗ УВЕДОМЛЕНИЕ</string>
+    <string name="read_status" comment="10 characters max for READSTATUS translation">ЧИТСТАТУС %1$s</string>
+    <string name="keepalive_status_outdated" comment="26 characters max for translation">Статус KeepAlive устарел.</string>
+    <string name="keepalive_basal_outdated" comment="26 characters max for translation">KeepAlive Базал устарел.</string>
+    <string name="sms" comment="26 characters max for translation">SMS</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Нажато подключ к помпе</string>
+    <string name="pump_driver_changed" comment="26 characters max for translation">Драйвер помпы изменен.</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Замена драйвера помпы.</string>
+    <string name="device_changed" comment="26 characters max for translation">Устройство изменено</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Нажато обновление</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Запланированное обновление статуса</string>
+    <string name="unconfirmed_command" comment="26 characters max for translation">Неподтвержденная команда</string>
+    <string name="requested_by_user" comment="26 characters max for translation">Запрошено пользователем</string>
+    <string name="user_request" comment="26 characters max for translation">Запрос пользователя</string>
+    <string name="bolus_ok" comment="26 characters max for translation">болюс ОК</string>
+    <string name="pump_paired" comment="26 characters max for translation">Помпа сопряжена</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Кнопка \"Обновить Insight\"</string>
     <plurals name="days">
         <item quantity="one">%1$d день</item>
         <item quantity="few">%1$d дня</item>

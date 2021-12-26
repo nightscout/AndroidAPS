@@ -149,7 +149,7 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
                     });
                 }
             };
-            commandQueue.readStatus("InsightRefreshButton", refreshCallback);
+            commandQueue.readStatus(rh.gs(R.string.insight_refresh_button), refreshCallback);
         }
     }
 

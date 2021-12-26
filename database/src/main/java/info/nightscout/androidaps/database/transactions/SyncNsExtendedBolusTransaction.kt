@@ -29,6 +29,7 @@ class SyncNsExtendedBolusTransaction(private val extendedBolus: ExtendedBolus) :
                 }
                 if (current.duration != extendedBolus.duration) {
                     current.duration = extendedBolus.duration
+                    current.amount = extendedBolus.amount
                     database.extendedBolusDao.updateExistingEntry(current)
                     result.updatedDuration.add(current)
                 }
@@ -44,6 +45,8 @@ class SyncNsExtendedBolusTransaction(private val extendedBolus: ExtendedBolus) :
                 result.updatedNsId.add(running)
             } else if (running != null) {
                 // another running record. end current and insert new
+                val pctRun = (extendedBolus.timestamp - running.timestamp) / running.duration.toDouble()
+                running.amount *= pctRun
                 running.end = extendedBolus.timestamp
                 database.extendedBolusDao.updateExistingEntry(running)
                 database.extendedBolusDao.insertNewEntry(extendedBolus)
@@ -59,6 +62,8 @@ class SyncNsExtendedBolusTransaction(private val extendedBolus: ExtendedBolus) :
             // ending event
             val running = database.extendedBolusDao.getExtendedBolusActiveAt(extendedBolus.timestamp).blockingGet()
             if (running != null) {
+                val pctRun = (extendedBolus.timestamp - running.timestamp) / running.duration.toDouble()
+                running.amount *= pctRun
                 running.end = extendedBolus.timestamp
                 database.extendedBolusDao.updateExistingEntry(running)
                 result.ended.add(running)

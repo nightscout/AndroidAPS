@@ -7,4 +7,5 @@ import android.util.Patterns
  *
  * @author Andrea Baccega <me></me>@andreabaccega.com>
  */
+@Suppress("deprecation")
 class IpAddressValidator(_customErrorMessage: String?) : PatternValidator(_customErrorMessage, Patterns.IP_ADDRESS) 

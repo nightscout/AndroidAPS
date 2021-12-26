@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import java.util.HashMap;
 import java.util.Map;
 
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
+import info.nightscout.shared.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkCommunicationException;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkBLEError;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;

@@ -2,8 +2,8 @@ package info.nightscout.androidaps.plugins.configBuilder
 
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientNewLog
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
@@ -11,7 +11,7 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject
@@ -25,7 +25,8 @@ class RunningConfiguration @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val config: Config,
     private val rh: ResourceHelper,
-    private val rxBus: RxBus
+    private val rxBus: RxBus,
+    private val pumpSync: PumpSync
 ) {
 
     private var counter = 0
@@ -60,6 +61,8 @@ class RunningConfiguration @Inject constructor(
 
     // called in NSClient mode only
     fun apply(configuration: JSONObject) {
+        assert(config.NSCLIENT)
+
         if (configuration.has("version")) {
             rxBus.send(EventNSClientNewLog("VERSION", "Received AndroidAPS version  ${configuration.getString("version")}"))
             if (config.VERSION_NAME.startsWith(configuration.getString("version")).not()) {
@@ -96,9 +99,12 @@ class RunningConfiguration @Inject constructor(
 
         if (configuration.has("pump")) {
             val pumpType = JsonHelper.safeGetString(configuration, "pump", PumpType.GENERIC_AAPS.description)
-            sp.putString(R.string.key_virtualpump_type, pumpType)
-            activePlugin.activePump.pumpDescription.fillFor(PumpType.getByDescription(pumpType))
-            aapsLogger.debug(LTag.CORE, "Changing pump type to $pumpType")
+            if (sp.getString(R.string.key_virtualpump_type, "fake") != pumpType) {
+                sp.putString(R.string.key_virtualpump_type, pumpType)
+                activePlugin.activePump.pumpDescription.fillFor(PumpType.getByDescription(pumpType))
+                pumpSync.connectNewPump(endRunning = false) // do not end running TBRs, we call this only to accept data properly
+                aapsLogger.debug(LTag.CORE, "Changing pump type to $pumpType")
+            }
         }
 
         if (configuration.has("overviewConfiguration"))

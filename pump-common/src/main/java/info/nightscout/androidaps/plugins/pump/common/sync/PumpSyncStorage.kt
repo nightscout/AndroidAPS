@@ -4,10 +4,9 @@ import com.thoughtworks.xstream.XStream
 import com.thoughtworks.xstream.security.AnyTypePermission
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.utils.sharedPreferences.SP
-import java.util.*
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
+import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -74,7 +73,7 @@ class PumpSyncStorage @Inject constructor(
     fun saveStorageBolus() {
         if (!pumpSyncStorageBolus.isEmpty()) {
             sp.putString(pumpSyncStorageBolusKey, xstream.toXML(pumpSyncStorageBolus))
-            aapsLogger.debug(LTag.PUMP,"Saving Pump Sync Storage: boluses=${pumpSyncStorageBolus.size}")
+            aapsLogger.debug(LTag.PUMP, "Saving Pump Sync Storage: boluses=${pumpSyncStorageBolus.size}")
         } else {
             if (sp.contains(pumpSyncStorageBolusKey))
                 sp.remove(pumpSyncStorageBolusKey)
@@ -118,7 +117,8 @@ class PumpSyncStorage @Inject constructor(
             creator.model(),
             creator.serialNumber())
 
-        aapsLogger.debug(LTag.PUMP, "addBolusWithTempId [date=${detailedBolusInfo.timestamp}, temporaryId=$temporaryId, " +
+        aapsLogger.debug(
+            LTag.PUMP, "addBolusWithTempId [date=${detailedBolusInfo.timestamp}, temporaryId=$temporaryId, " +
             "insulin=${detailedBolusInfo.insulin}, type=${detailedBolusInfo.bolusType}, pumpSerial=${creator.serialNumber()}] - " +
             "Result: $result")
 
@@ -149,7 +149,8 @@ class PumpSyncStorage @Inject constructor(
             carbsDto.pumpType,
             carbsDto.serialNumber)
 
-        aapsLogger.debug(LTag.PUMP, "syncCarbsWithTimestamp [date=${carbsDto.date}, " +
+        aapsLogger.debug(
+            LTag.PUMP, "syncCarbsWithTimestamp [date=${carbsDto.date}, " +
             "carbs=${carbsDto.carbs}, pumpSerial=${carbsDto.serialNumber}] - Result: $result")
     }
 

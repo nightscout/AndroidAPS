@@ -10,14 +10,14 @@ import info.nightscout.androidaps.events.EventAppInitialized
 import info.nightscout.androidaps.events.EventConfigBuilderChange
 import info.nightscout.androidaps.events.EventRebuildTabs
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.events.EventConfigBuilderUpdateGui
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -56,7 +56,6 @@ class ConfigBuilderPlugin @Inject constructor(
         for (plugin in activePlugin.getPluginsList()) {
             if (plugin.pluginDescription.alwaysEnabled) plugin.setPluginEnabled(plugin.getType(), true)
         }
-        storeSettings("setAlwaysEnabledPluginsEnabled")
     }
 
     override fun storeSettings(from: String) {
@@ -68,18 +67,13 @@ class ConfigBuilderPlugin @Inject constructor(
             if (p.pluginDescription.alwaysEnabled && p.pluginDescription.alwaysVisible) continue
             if (p.pluginDescription.alwaysEnabled && p.pluginDescription.neverVisible) continue
             savePref(p, type, true)
-            if (type == PluginType.PUMP) {
-                if (p is ProfileSource) { // Store state of optional Profile interface
-                    savePref(p, PluginType.PROFILE, false)
-                }
-            }
         }
     }
 
     private fun savePref(p: PluginBase, type: PluginType, storeVisible: Boolean) {
         val settingEnabled = "ConfigBuilder_" + type.name + "_" + p.javaClass.simpleName + "_Enabled"
-        sp.putBoolean(settingEnabled, p.isEnabled(type))
-        aapsLogger.debug(LTag.CONFIGBUILDER, "Storing: " + settingEnabled + ":" + p.isEnabled(type))
+        sp.putBoolean(settingEnabled, p.isEnabled())
+        aapsLogger.debug(LTag.CONFIGBUILDER, "Storing: " + settingEnabled + ":" + p.isEnabled())
         if (storeVisible) {
             val settingVisible = "ConfigBuilder_" + type.name + "_" + p.javaClass.simpleName + "_Visible"
             sp.putBoolean(settingVisible, p.isFragmentVisible())
@@ -92,11 +86,6 @@ class ConfigBuilderPlugin @Inject constructor(
         for (p in activePlugin.getPluginsList()) {
             val type = p.getType()
             loadPref(p, type, true)
-            if (p.getType() == PluginType.PUMP) {
-                if (p is ProfileSource) {
-                    loadPref(p, PluginType.PROFILE, false)
-                }
-            }
         }
         activePlugin.verifySelectionInCategories()
     }
@@ -118,7 +107,8 @@ class ConfigBuilderPlugin @Inject constructor(
 
     fun logPluginStatus() {
         for (p in activePlugin.getPluginsList()) {
-            aapsLogger.debug(LTag.CONFIGBUILDER, p.name + ":" +
+            aapsLogger.debug(
+                LTag.CONFIGBUILDER, p.name + ":" +
                 (if (p.isEnabled(PluginType.GENERAL)) " GENERAL" else "") +
                 (if (p.isEnabled(PluginType.SENSITIVITY)) " SENSITIVITY" else "") +
                 (if (p.isEnabled(PluginType.PROFILE)) " PROFILE" else "") +

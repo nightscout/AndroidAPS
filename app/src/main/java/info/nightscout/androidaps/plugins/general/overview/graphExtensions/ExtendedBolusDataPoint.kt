@@ -13,11 +13,11 @@ class ExtendedBolusDataPoint @Inject constructor(
 
     override fun getX(): Double = data.timestamp.toDouble()
     override fun getY(): Double = yValue
-    override fun getLabel(): String = data.toStringTotal()
-    override fun getDuration(): Long = data.duration
-    override fun getSize(): Float = 10f
-    override fun getShape(): PointsWithLabelGraphSeries.Shape = PointsWithLabelGraphSeries.Shape.EXTENDEDBOLUS
-    override fun getColor(): Int = Color.CYAN
+    override val label get() = data.toStringTotal()
+    override val duration get() = data.duration
+    override val size = 10f
+    override val shape = PointsWithLabelGraphSeries.Shape.EXTENDEDBOLUS
+    override val color = Color.CYAN
 
     override fun setY(y: Double) {
         yValue = y

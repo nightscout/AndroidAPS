@@ -12,7 +12,6 @@
     <string name="nav_resetdb">Datenbanken zurücksetzen</string>
     <string name="reset_db_confirm">Möchtest du die Datenbank wirklich zurücksetzen?</string>
     <string name="nav_exit">Schließen</string>
-    <string name="ns_sync_use_absolute_title">Verwende absolute statt prozentuale Basalwerte beim Upload zu NightScout.</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Dieses Gerät scheint keine Deaktivierung der Energieoptimierung zu unterstützen - das könnte zu Leistungsproblemen führen.</string>
     <string name="description_actions">Einige Schaltflächen, um auf häufig verwendete Funktionen zugreifen zu können.</string>
     <string name="description_config_builder">Dient zum Konfigurieren der aktiven Plugins</string>
@@ -58,7 +57,7 @@
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">Kohlenhydrate</string>
     <string name="treatments_wizard_correction_label">Korr</string>
-    <string name="treatments_wizard_bolusiob_label">Bolus-IOB</string>
+    <string name="bolus_iob_label">Bolus-IOB</string>
     <string name="openapsma_run">Ausführen</string>
     <string name="vitualpump_label">VIRTUELLE PUMPE</string>
     <string name="openapsma_lastrun_label">Letzte Ausführung</string>
@@ -97,7 +96,7 @@
     <string name="safety">Sicherheit</string>
     <string name="openapsma_disabled">Plugin ist deaktiviert</string>
     <string name="constraints_violation">Beschränkungen wurden verletzt oder Limit erreicht.</string>
-    <string name="treatmentdeliveryerror">Bolus-Abgabefehler</string>
+    <string name="treatmentdeliveryerror">Fehlermeldung Bolusabgabe. Prüfe manuell die tatsächlich abgegebene Menge.</string>
     <string name="setbasalquestion">Akzeptiere neue TBR:</string>
     <string name="overview_treatment_label">Bolus</string>
     <string name="overview_calculator_label">Rechner</string>
@@ -123,9 +122,9 @@
     <string name="careportal_newnstreatment_other">Anderes</string>
     <string name="careportal_newnstreatment_meter">Messgerät</string>
     <string name="careportal_newnstreatment_sensor">Sensor</string>
-    <string name="careportal_newnstreatment_carbtime_label">KH-Zeit</string>
+    <string name="carb_time_label">KH-Zeit</string>
     <string name="careportal_newnstreatment_duration_label">Dauer</string>
-    <string name="careportal_newnstreatment_profile_label">Profil</string>
+    <string name="profile_label">Profil</string>
     <string name="careportal_newnstreatment_glucosetype">Glukoseart</string>
     <string name="overview_tempbasal_button">TBR</string>
     <string name="overview_extendedbolus_button">Verzögerter Bolus</string>
@@ -356,7 +355,7 @@
     <string name="smscommunicator_wrongduration">Falsche Dauer</string>
     <string name="smscommunicator_loopsuspended">Loop pausiert</string>
     <string name="smscommunicator_loopresumed">Loop wurde fortgesetzt</string>
-    <string name="treatments_wizard_bgtrend_label">15\'-Trend</string>
+    <string name="bg_trend_label">15 min Trend</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Logge App-Start in Nightscout</string>
@@ -522,8 +521,8 @@
     <string name="enablesmbwithhightemptarget_summary">Aktiviere SMB bei hohen temporären Zielen (Sport, über 100 mg/dl bzw. 5,5 mmol/L)</string>
     <string name="overview_insulin_label">Insulin</string>
     <string name="overview_buttons_selection">Schaltflächen</string>
-    <string name="show_calibration_button_summary">Sendet eine Kalibierung an xDrip+ oder öffnet den G5 Kalibrierungs-Dialog.</string>
-    <string name="show_cgm_button_summary">Öffnet xDrip+, mit der Zurück-Schaltfläche gelangst du zurück zu AndroidAPS.</string>
+    <string name="show_calibration_button_summary">Sendet eine Kalibierung an xDrip+ oder öffnet den BYODA Kalibrierungs-Dialog.</string>
+    <string name="show_cgm_button_summary">Öffnet xDrip+ oder BOYDA, mit der Zurück-Schaltfläche gelangst Du zurück zu AndroidAPS.</string>
     <string name="carb_increment_button_message">Menge der Kohlenhydrate, die hinzugefügt werden soll, wenn die Schaltfläche gedrückt wird.</string>
     <string name="insulin_increment_button_message">Menge an Insulin, die hinzugefügt werden soll, wenn die Schaltfläche gedrückt wird</string>
     <string name="error_starting_cgm">CGM-Anwendung konnte nicht geöffnet werden. Stelle sicher, dass diese installiert ist.</string>
@@ -629,7 +628,7 @@
     <string name="exitwizard">Einrichtungsassistenten überspringen</string>
     <string name="setupwizard_loop_description">Drücke die Schaltfläche unten, um AndroidAPS zu erlauben, Basal-Änderungen vorzuschlagen/vorzunehmen</string>
     <string name="setupwizard_sensitivity_description">Das Sensitivitäts-Plugin wird für die Sensitivitäts- und COB-Berechnung verwendet. Für weitere Informationen siehe:</string>
-    <string name="setupwizard_sensitivity_url">http://androidaps.readthedocs.io/en/latest/DE/konfigurations-generator.html#empfindlichkeitserkennung</string>
+    <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/de/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="nsclientinfotext">Nightscout-Client ist für die Verbindung zu Nightscout zuständig. Du kannst diesen Teil jetzt überspringen, aber Du wirst nicht in der Lage sein, Zielsetzungen zu erfüllen, bis Du diesen eingerichtet hast.</string>
     <string name="diawarning">Bitte beachte: Neue Insulin-Profile benötigen einen DIA von mind. 5 Stunden. Eine DIA von 5-6 Stunden im neuen Insulin-Profil entspricht einem DIA von 3 Stunden bei alten Insulin-Profilen.</string>
     <string name="setupwizard_aps_description">Wähle einen der verfügbaren Algorithmen aus. Sie sind vom Ältesten zum Neuesten sortiert. Neuere Algorithmen sind meist stärker und aggressiver. Wenn du ein Anfänger bist, solltest du nicht mit dem Neuesten sondern mit AMA starten. Vergiss nicht, die OpenAPS-Dokumentation zu lesen und die entsprechenden Einstellungen vor der Benutzung vorzunehmen.</string>
@@ -641,6 +640,7 @@
     <string name="needsystemwindowpermission">Die App benötigt die Systemberechtigung für App-Benachrichtigungen</string>
     <string name="needlocationpermission">Die App benötigt die Berechtigung für den Standort, um Bluetooth und WLAN nutzen zu können</string>
     <string name="needstoragepermission">Die App benötigt Zugriffsrechte für den Speicher um Log-Dateien zu sichern und die Einstellungen zu exportieren.</string>
+    <string name="needconnectpermission">App benötigt Bluetooth-Berechtigung</string>
     <string name="request">Anfordern</string>
     <string name="open_navigation">Menü öffnen</string>
     <string name="close_navigation">Menü schließen</string>
@@ -650,6 +650,8 @@
     <string name="time_elapsed">Verstrichene Zeit</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Empfange Blutzucker-Werte von der Poctech-App.</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Werte von der Glunovo App erhalten</string>
     <string name="description_source_tomato">Empfange Blutzucker-Werte von der Tomato-App (MiaoMiao-Geräte)</string>
     <string name="high_temptarget_raises_sensitivity_title">Hohe temporäre Ziele erhöhen die Sensitivität</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Erhöhe die Sensitivität für temporäre Ziele >= 100.]]></string>
@@ -678,6 +680,7 @@
     <string name="resettodefaults">Auf Standardwerte zurücksetzen</string>
     <string name="nsmalfunction">NSClient Störung. Ziehe einen Neustart von NS und NSClient in Betracht.</string>
     <string name="time_offset">Zeitversatz</string>
+    <string name="bolus_reminder">Später an Bolus erinnern</string>
     <string name="setupwizard_preferred_aps_mode">Bevorzugter APS-Modus</string>
     <string name="treatments_wizard_total_label">Gesamt</string>
     <string name="calculation_short">Berech.</string>
@@ -720,9 +723,9 @@ Unerwartetes Verhalten.</string>
     <string name="application_expired">Anwendung abgelaufen</string>
     <string name="new_version_warning">Neue Version seit mindestens %1$d Tagen verfügbar! Rückfall zur sensorunterstützten Pumpentherapie nach %2$d Tagen, Loop wird nach  %3$d Tagen deaktiviert.</string>
     <string name="twohours">2h</string>
-    <string name="dexcom_app_patched">gepatchte Dexcom App</string>
-    <string name="dexcom_short">DXCM</string>
-    <string name="description_source_dexcom">Empfange Blutzucker-Werte von der gepatchten Dexcom App.</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Erhalte BZ-Werte von der \'Build Your Own Dexcom App\'.</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="bolusconstraintappliedwarn">Bolus Einschränkung angewandt: %2$.2f U statt %1$.2f U</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Langsamer Kohlenhydrat-Abbau erkannt: %2$d%% der Zeit. Überprüfe Deine Berechnung. COB könnte zu hoch sein und deswegen zu viel Insulin abgegeben werden!!!!!</font>]]></string>
@@ -845,6 +848,11 @@ Unerwartetes Verhalten.</string>
     <string name="enablebolusadvisor_summary">Option zur Erinnerung an späteres Essen (z.B. bei hohen BZ-Werten) im Bolus-Rechner (\"Spritz-Ess-Abstand\")</string>
     <string name="time_to_eat">Zeit zum Essen!\nStarte den Bolus-Rechner und gib die KH ein. </string>
     <string name="timetoeat">Zeit zum Essen</string>
+    <string name="bolusreminder">Bolus-Erinnerung</string>
+    <string name="enablebolusreminder">Bolus-Erinnerung aktivieren</string>
+    <string name="enablebolusreminder_summary">Erinnerung an späteren Bolus mit dem Assistenten verwenden
+        (\"Post-Bolus\")</string>
+    <string name="time_to_bolus">Zeit für den nächsten Bolus!\nFühre den Bolus-Assistenten aus, um die Berechnung erneut durchzuführen.</string>
     <string name="fabric_upload_disabled">Hochladen von Crash-Protokollen deaktiviert!</string>
     <string name="graph_menu_divider_header">Diagramm</string>
     <string name="chart_menu">Diagrammmenü</string>
@@ -853,7 +861,7 @@ Unerwartetes Verhalten.</string>
     <string name="cannula">Kanüle</string>
     <string name="userentry">Benutzereingabe</string>
     <string name="common_values">Verwende die Werte der größten Mahlzeit, die Du normalerweise zu Dir nimmst\n</string>
-    <string name="summary_email_for_crash_report">Diese E-Mail-Adresse wird an Absturzberichte angehängt, so dass wir Dich in dringenden Fällen kontaktieren können. Angabe ist optional.</string>
+    <string name="summary_email_for_crash_report">Diese Identifikation wird an Absturzberichte angehängt, so dass wir Dich in dringenden Fällen kontaktieren können. Angabe ist optional.</string>
     <string name="email_address">E‐Mail‐Adresse</string>
     <string name="privacy_settings">Privatsphäre-Einstellungen</string>
     <string name="privacy_summary">Du kannst optional eine E-Mail-Adresse angeben, wenn Du bei Absturzberichten kontaktiert werden möchtest. Dies ist keine Automatik, Du wirst von den Entwicklern in gefährlichen Situationen kontaktiert. </string>
@@ -887,5 +895,14 @@ Unerwartetes Verhalten.</string>
     <string name="error_in_basal_values">Fehler in den Basalwerten</string>
     <string name="error_in_target_values">Fehler in den Zielwerten</string>
     <string name="error_in_isf_values">Fehler in ISF-Werten</string>
+    <string name="run_question">%s ausführen?</string>
+    <string name="invalid_profile_not_accepted">Ungültiges Profil %1$s wurde von NS nicht akzeptiert</string>
+    <string name="errors">Fehler</string>
     <string name="ns_sync_slow">Hochladen verlangsamen</string>
+    <string name="data_status">Status BZ-Daten</string>
+    <string name="recalculated_data_used">Verwendete Daten neu berechnet</string>
+    <string name="bg_too_close">BZ zu nah:\n%1$s\n%2$s</string>
+    <string name="identification">Identifikation (E-Mail, Facebook oder Discord Nickname)</string>
+    <string name="identification_not_set">Identifikation im Dev-Modus nicht gesetzt</string>
+    <string name="not_available_full">Nicht verfügbar</string>
 </resources>

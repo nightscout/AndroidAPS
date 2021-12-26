@@ -17,8 +17,7 @@ import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
 import info.nightscout.androidaps.plugins.source.GlimpPlugin
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
-import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -69,7 +68,9 @@ class SafetyPluginTest : TestBaseWithProfile() {
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         `when`(virtualPumpPlugin.pumpDescription).thenReturn(pumpDescription)
         hardLimits = HardLimits(aapsLogger, rxBus, sp, rh, context, repository)
-        safetyPlugin = SafetyPlugin(injector, aapsLogger, rh, sp, rxBus, constraintChecker, openAPSAMAPlugin, openAPSSMBPlugin, sensitivityOref1Plugin, activePlugin, hardLimits, buildHelper, iobCobCalculator, ConfigImpl(), dateUtil)
+        `when`(config.APS).thenReturn(true)
+        safetyPlugin = SafetyPlugin(injector, aapsLogger, rh, sp, rxBus, constraintChecker, openAPSAMAPlugin, openAPSSMBPlugin, sensitivityOref1Plugin, activePlugin, hardLimits, buildHelper,
+                                    iobCobCalculator, config, dateUtil)
     }
 
     @Test fun pumpDescriptionShouldLimitLoopInvocation() {
@@ -237,7 +238,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
         var d = Constraint(Constants.REALLYHIGHIOB)
         d = safetyPlugin.applyMaxIOBConstraints(d)
         Assert.assertEquals(3.0, d.value(), 0.01)
-        Assert.assertEquals("Safety: Limiting IOB to 3.0 U because of max value in preferences\nSafety: Limiting IOB to 12.0 U because of hard limit", d.getReasons(aapsLogger))
+        Assert.assertEquals("Safety: Limiting IOB to 3.0 U because of max value in preferences\nSafety: Limiting IOB to 22.0 U because of hard limit", d.getReasons(aapsLogger))
         Assert.assertEquals("Safety: Limiting IOB to 3.0 U because of max value in preferences", d.getMostLimitedReasons(aapsLogger))
     }
 }

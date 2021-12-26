@@ -18,8 +18,8 @@ import info.nightscout.androidaps.events.EventConfigBuilderChange
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.plannedRemainingMinutes
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.common.ManufacturerType
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
@@ -34,7 +34,7 @@ import info.nightscout.androidaps.plugins.pump.common.bolusInfo.TemporaryBasalSt
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import org.json.JSONException
@@ -123,7 +123,7 @@ class DiaconnG8Plugin @Inject constructor(
         mDeviceAddress = sp.getString(R.string.key_diaconn_g8_address, "")
         mDeviceName = sp.getString(R.string.key_diaconn_g8_name, "")
         diaconnG8Pump.reset()
-        commandQueue.readStatus("DeviceChanged", null)
+        commandQueue.readStatus(rh.gs(R.string.device_changed), null)
     }
 
     override fun connect(reason: String) {
@@ -291,7 +291,7 @@ class DiaconnG8Plugin @Inject constructor(
     @Synchronized
     override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         val result = PumpEnactResult(injector)
-        var absoluteAfterConstrain = constraintChecker.applyBasalConstraints(Constraint(absoluteRate), profile).value()
+        val absoluteAfterConstrain = constraintChecker.applyBasalConstraints(Constraint(absoluteRate), profile).value()
         val doTempOff = baseBasalRate - absoluteAfterConstrain == 0.0
         val doLowTemp = absoluteAfterConstrain < baseBasalRate
         val doHighTemp = absoluteAfterConstrain > baseBasalRate
@@ -312,7 +312,7 @@ class DiaconnG8Plugin @Inject constructor(
 
         if (doLowTemp || doHighTemp) {
             // Check if some temp is already in progress
-            if(absoluteAfterConstrain > 6.0) absoluteAfterConstrain = 6.0  // pumpLimit
+            //if(absoluteAfterConstrain > 6.0) absoluteAfterConstrain = 6.0  // pumpLimit
             //val activeTemp = activePluginProvider.activeTreatments.getTempBasalFromHistory(System.currentTimeMillis())
             if (diaconnG8Pump.isTempBasalInProgress) {
                 aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: currently running")

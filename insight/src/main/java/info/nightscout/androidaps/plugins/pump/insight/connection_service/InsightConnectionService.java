@@ -2,7 +2,9 @@ package info.nightscout.androidaps.plugins.pump.insight.connection_service;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
@@ -21,8 +23,8 @@ import javax.inject.Inject;
 
 import dagger.android.DaggerService;
 import info.nightscout.androidaps.insight.R;
-import info.nightscout.androidaps.logging.AAPSLogger;
-import info.nightscout.androidaps.logging.LTag;
+import info.nightscout.shared.logging.AAPSLogger;
+import info.nightscout.shared.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.ReadParameterBlockMessage;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.configuration.CloseConfigurationWriteSessionMessage;
@@ -85,7 +87,7 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.PairingDataStorage;
 import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.Cryptograph;
 import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.DerivedKeys;
 import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.KeyPair;
-import info.nightscout.androidaps.utils.sharedPreferences.SP;
+import info.nightscout.shared.sharedPreferences.SP;
 
 public class InsightConnectionService extends DaggerService implements ConnectionEstablisher.Callback, InputStreamReader.Callback, OutputStreamWriter.Callback {
 
@@ -106,7 +108,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
     private DelayedActionThread disconnectTimer;
     private DelayedActionThread recoveryTimer;
     private DelayedActionThread timeoutTimer;
-    private final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+    private BluetoothAdapter bluetoothAdapter;
     private BluetoothDevice bluetoothDevice;
     private BluetoothSocket bluetoothSocket;
     private ConnectionEstablisher connectionEstablisher;
@@ -256,6 +258,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
     @Override
     public synchronized void onCreate() {
         super.onCreate();
+        bluetoothAdapter = ((BluetoothManager)getApplicationContext().getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
         pairingDataStorage = new PairingDataStorage(this);
         state = pairingDataStorage.isPaired() ? InsightState.DISCONNECTED : InsightState.NOT_PAIRED;
         wakeLock = ((PowerManager) getSystemService(POWER_SERVICE)).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS:InsightConnectionService");

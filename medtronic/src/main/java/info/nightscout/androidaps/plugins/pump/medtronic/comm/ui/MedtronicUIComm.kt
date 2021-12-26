@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.ui
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.MedtronicCommunicationManager
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandType
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
@@ -12,11 +12,11 @@ import javax.inject.Inject
  * Created by andy on 6/14/18.
  */
 class MedtronicUIComm @Inject constructor(
-        private val injector: HasAndroidInjector,
-        private val aapsLogger: AAPSLogger,
-        private val medtronicUtil: MedtronicUtil,
-        private val medtronicUIPostprocessor: MedtronicUIPostprocessor,
-        private val medtronicCommunicationManager: MedtronicCommunicationManager
+    private val injector: HasAndroidInjector,
+    private val aapsLogger: AAPSLogger,
+    private val medtronicUtil: MedtronicUtil,
+    private val medtronicUIPostprocessor: MedtronicUIPostprocessor,
+    private val medtronicCommunicationManager: MedtronicCommunicationManager
 ) {
 
     fun executeCommand(commandType: MedtronicCommandType): MedtronicUITask {

@@ -22,7 +22,7 @@ import javax.inject.Inject
 
 class ActionLoopSuspend(injector: HasAndroidInjector) : Action(injector) {
 
-    @Inject lateinit var loopPlugin: Loop
+    @Inject lateinit var loop: Loop
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var uel: UserEntryLogger
 
@@ -33,8 +33,8 @@ class ActionLoopSuspend(injector: HasAndroidInjector) : Action(injector) {
     @DrawableRes override fun icon(): Int = R.drawable.ic_pause_circle_outline_24dp
 
     override fun doAction(callback: Callback) {
-        if (!loopPlugin.isSuspended) {
-            loopPlugin.suspendLoop(minutes.getMinutes())
+        if (!loop.isSuspended) {
+            loop.suspendLoop(minutes.getMinutes())
             rxBus.send(EventRefreshOverview("ActionLoopSuspend"))
             uel.log(
                 UserEntry.Action.SUSPEND, Sources.Automation, title + ": " + rh.gs(R.string.suspendloopforXmin, minutes.getMinutes()),

@@ -12,7 +12,6 @@
     <string name="nav_resetdb">Inicializovat databáze</string>
     <string name="reset_db_confirm">Opravdu resetovat všechny databáze?</string>
     <string name="nav_exit">Konec</string>
-    <string name="ns_sync_use_absolute_title">Vždy použít absolutní hodnoty bazálu</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Toto zařízení zřejmě neumožňuje vypnout optimalizaci baterie - může docházet k problémům s výkonem.</string>
     <string name="description_actions">Tlačítka k běžně používaným úkonům</string>
     <string name="description_config_builder">Nastavení konfigurace (povolování součástí systému)</string>
@@ -58,7 +57,7 @@
     <string name="treatments_wizard_tt_label">DC</string>
     <string name="treatments_wizard_carbs_label">Sacharidy</string>
     <string name="treatments_wizard_correction_label">Korekce</string>
-    <string name="treatments_wizard_bolusiob_label">Bolusové IOB</string>
+    <string name="bolus_iob_label">Bolusové IOB</string>
     <string name="openapsma_run">Spustit teď</string>
     <string name="vitualpump_label">VIRTUÁLNÍ PUMPA</string>
     <string name="openapsma_lastrun_label">Poslední spuštění</string>
@@ -97,7 +96,7 @@
     <string name="safety">Bezpečnost</string>
     <string name="openapsma_disabled">Modul zakázán</string>
     <string name="constraints_violation">Mimo povolený rozsah</string>
-    <string name="treatmentdeliveryerror">Chyba podání bolusu</string>
+    <string name="treatmentdeliveryerror">Podání bolusu skončilo chybou. Ručně zkontrolujte, kolik inzulinu se skutečně vydalo.</string>
     <string name="setbasalquestion">Spustit nový dočasný bazál:</string>
     <string name="overview_treatment_label">Bolus</string>
     <string name="overview_calculator_label">Kalkulačka</string>
@@ -123,9 +122,9 @@
     <string name="careportal_newnstreatment_other">Jiné</string>
     <string name="careportal_newnstreatment_meter">Glukoměr</string>
     <string name="careportal_newnstreatment_sensor">Senzor</string>
-    <string name="careportal_newnstreatment_carbtime_label">Čas jídla</string>
+    <string name="carb_time_label">Čas jídla</string>
     <string name="careportal_newnstreatment_duration_label">Trvání</string>
-    <string name="careportal_newnstreatment_profile_label">Profil</string>
+    <string name="profile_label">Profil</string>
     <string name="careportal_newnstreatment_glucosetype">Zadání glykémie</string>
     <string name="overview_tempbasal_button">Dočasný bazál</string>
     <string name="overview_extendedbolus_button">Prodloužený bolus</string>
@@ -356,7 +355,7 @@
     <string name="smscommunicator_wrongduration">Chybná doba trvání</string>
     <string name="smscommunicator_loopsuspended">Smyčka pozastavena</string>
     <string name="smscommunicator_loopresumed">Smyčka obnovena</string>
-    <string name="treatments_wizard_bgtrend_label">15min trend</string>
+    <string name="bg_trend_label">15min trend</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Zaznamenávat spuštění aplikace do NS</string>
@@ -522,8 +521,8 @@
     <string name="enablesmbwithhightemptarget_summary">Povolit SMB, je-li aktivní vysoký cíl (cvičení, vyšší než 100 mg/dl nebo 5,5 mmol/l)</string>
     <string name="overview_insulin_label">Inzulín</string>
     <string name="overview_buttons_selection">Tlačítka</string>
-    <string name="show_calibration_button_summary">Odeslání kalibrace do xDripu+, nebo otevření kalibračního dialogu na G5</string>
-    <string name="show_cgm_button_summary">Otevře xDrip+, tlačítko zpět vrátí do AndroidAPS</string>
+    <string name="show_calibration_button_summary">Odeslání kalibrace do xDrip+ nebo otevření kalibračního dialogu BYODA</string>
+    <string name="show_cgm_button_summary">Otevře xDrip+ nebo BYODA, tlačítko zpět vrátí do AndroidAPS</string>
     <string name="carb_increment_button_message">Množství sacharidů přidané po stisknutí tlačítka</string>
     <string name="insulin_increment_button_message">Množství inzulínu přidané po stisknutí tlačítka</string>
     <string name="error_starting_cgm">Nelze spustit aplikace CGM. Ujistěte se, že je nainstalovaná.</string>
@@ -629,7 +628,7 @@
     <string name="exitwizard">Přeskočit průvodce</string>
     <string name="setupwizard_loop_description">Stiskněte tlačítko níže, chcete-li AndroidAPS povolit navrhovat nebo provádět změny bazálu</string>
     <string name="setupwizard_sensitivity_description">Plugin senzitivita slouží k detekci změn v senzitivitě a k počítání COB. Více informací zde:</string>
-    <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
+    <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/cs/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="nsclientinfotext">NSClient slouží ke spojení s Nightscoutem. Nastavení můžete nyní přeskočit, ale nebudete schopni dokončit cíle, dokud nastavení neprovedete.</string>
     <string name="diawarning">Pozor: Nové inzulínové profily vyžadují DIA minimálně 5h. DIA 5–6 hodin odpovídá zhruba nastavení 3h na starších typech profilů nebo v pumpě.</string>
     <string name="setupwizard_aps_description">Vyberte jeden z algoritmů. Jsou setříděné od nejstaršího po nejnovější. Novější je obvykle lepší a agresivnější, ale vyžaduje přesnější nastavení. Proto pokud se smyčkou začínáte, měli byste nejdříve vybrat jen AMA a ne ten poslední. Nezapomeňte si přečíst dokumentaci k OpenAPS a provést nastavení, než ho začnete používat.</string>
@@ -641,6 +640,7 @@
     <string name="needsystemwindowpermission">Pro oznámení vyžaduje aplikace oprávnění systémového okna</string>
     <string name="needlocationpermission">Aplikace potřebuje oprávnění k přístupu k poloze kvůli skenování BT a WiFi identifikaci</string>
     <string name="needstoragepermission">Aby bylo možné nahrávat logy a exportovat nastavení, je nutné pro aplikaci povolit oprávnění přístupu k úložišti</string>
+    <string name="needconnectpermission">Aplikace potřebuje oprávnění bluetooth</string>
     <string name="request">Požadavek</string>
     <string name="open_navigation">Otevřít menu</string>
     <string name="close_navigation">Zavřít menu</string>
@@ -650,6 +650,8 @@
     <string name="time_elapsed">Čas</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Získávat glykémie z aplikace Poctech</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Získávat glykémie z aplikace Glunovo</string>
     <string name="description_source_tomato">Přijímat hodnoty glykémií z Tomato aplikace (MiaoMiao zařízení)</string>
     <string name="high_temptarget_raises_sensitivity_title">Vysoký dočasný cíl zvýší senzitivitu</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Zvýšení senzitivity pro dočasné cíle >= 5.5]]></string>
@@ -720,9 +722,9 @@
     <string name="application_expired">Platnost aplikace vypršela</string>
     <string name="new_version_warning">Nová verze je dostupná minimálně %1$d dní! Přepnutí na ochranu před nízkou glykémií po %2$d dnech, vypnutí smyčky po %3$d dnech</string>
     <string name="twohours">2h</string>
-    <string name="dexcom_app_patched">Aplikace Dexcom (upravená)</string>
-    <string name="dexcom_short">DXCM</string>
-    <string name="description_source_dexcom">Příjem hodnot glykémií z upravené aplikace Dexcom.</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Příjem hodnot glykémií z upravené aplikace Dexcom (BYODA).</string>
     <string name="cobvsiob">COB vs. IOB</string>
     <string name="bolusconstraintappliedwarn">Použito omezení bolusu: %1$.2f U na %2$.2f U</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Detekována pomalá absorbce sacharidů: %2$d%% času. Překontrolujte kalkulaci. COB může být nadhodnocené, a proto může být započítáno více inzulínu !!!!!</font>]]></string>
@@ -858,7 +860,7 @@
     <string name="cannula">Kanyla</string>
     <string name="userentry">Vstup uživatele</string>
     <string name="common_values">Použijte hodnoty pro největší jídlo, jaké obvykle jíte\n</string>
-    <string name="summary_email_for_crash_report">Tato e-mailová adresa bude připojena ke zprávám o haváriích, abychom vás mohli kontaktovat v naléhavých případech. Je to dobrovolné.</string>
+    <string name="summary_email_for_crash_report">Tato e-identifikace bude připojena ke zprávám o pádech aplikace, abychom vás mohli kontaktovat v naléhavých případech. Je to dobrovolné.</string>
     <string name="email_address">E-mailová adresa</string>
     <string name="privacy_settings">Nastavení soukromí</string>
     <string name="privacy_summary">Pokud chcete být upozorněni na selhání aplikace, můžete zadat volitelně e-mailovou adresu. Toto není automatizovaná služba. Vývojáři vás budou kontaktovat v nebezpečných situacích.</string>
@@ -897,4 +899,10 @@
     <string name="view">Zobrazit</string>
     <string name="errors">Chyby</string>
     <string name="ns_sync_slow">Zpomalit odesílání</string>
+    <string name="data_status">Stav glykémie</string>
+    <string name="recalculated_data_used">Použita přepočítaná data</string>
+    <string name="bg_too_close">Glykémie je příliš blízko:\n%1$s\n%2$s</string>
+    <string name="identification">Identifikace (e-mail, jméno na FB nebo Discord atd.)</string>
+    <string name="identification_not_set">Identifikace není nastavena ve vývojářském režimu</string>
+    <string name="not_available_full">Nedostupný</string>
 </resources>

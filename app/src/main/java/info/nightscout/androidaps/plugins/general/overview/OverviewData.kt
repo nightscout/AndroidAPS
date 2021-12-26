@@ -10,12 +10,14 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
-import info.nightscout.androidaps.database.entities.*
+import info.nightscout.androidaps.database.entities.Bolus
+import info.nightscout.androidaps.database.entities.GlucoseValue
+import info.nightscout.androidaps.database.entities.TemporaryTarget
+import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.extensions.*
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.SMBDefaults
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.*
@@ -24,7 +26,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.CobInfo
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensData
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -45,27 +47,13 @@ class OverviewData @Inject constructor(
     private val defaultValueHelper: DefaultValueHelper,
     private val profileFunction: ProfileFunction,
     private val config: Config,
-    private val loopPlugin: LoopPlugin,
+    private val loop: Loop,
     private val nsDeviceStatus: NSDeviceStatus,
     private val repository: AppRepository,
     private val overviewMenus: OverviewMenus,
     private val iobCobCalculator: IobCobCalculator,
     private val translator: Translator
 ) {
-
-    enum class Property {
-        TIME,
-        CALC_PROGRESS,
-        PROFILE,
-        TEMPORARY_BASAL,
-        EXTENDED_BOLUS,
-        TEMPORARY_TARGET,
-        BG,
-        IOB_COB,
-        SENSITIVITY,
-        GRAPH,
-        PUMPSTATUS
-    }
 
     var rangeToDisplay = 6 // for graph
     var toTime: Long = 0
@@ -95,7 +83,7 @@ class OverviewData @Inject constructor(
         iobSeries = FixedLineGraphSeries()
         absIobSeries = FixedLineGraphSeries()
         iobPredictions1Series = PointsWithLabelGraphSeries()
-        iobPredictions2Series = PointsWithLabelGraphSeries()
+        //iobPredictions2Series = PointsWithLabelGraphSeries()
         minusBgiSeries = FixedLineGraphSeries()
         minusBgiHistSeries = FixedLineGraphSeries()
         cobSeries = FixedLineGraphSeries()
@@ -279,7 +267,7 @@ class OverviewData @Inject constructor(
     var iobSeries: FixedLineGraphSeries<ScaledDataPoint> = FixedLineGraphSeries()
     var absIobSeries: FixedLineGraphSeries<ScaledDataPoint> = FixedLineGraphSeries()
     var iobPredictions1Series: PointsWithLabelGraphSeries<DataPointWithLabelInterface> = PointsWithLabelGraphSeries()
-    var iobPredictions2Series: PointsWithLabelGraphSeries<DataPointWithLabelInterface> = PointsWithLabelGraphSeries()
+    //var iobPredictions2Series: PointsWithLabelGraphSeries<DataPointWithLabelInterface> = PointsWithLabelGraphSeries()
 
     var maxBGIValue = Double.MIN_VALUE
     val bgiScale = Scale()
@@ -331,8 +319,8 @@ class OverviewData @Inject constructor(
     @Synchronized
     fun preparePredictions(from: String) {
 //        val start = dateUtil.now()
-        val apsResult = if (config.APS) loopPlugin.lastRun?.constraintsProcessed else nsDeviceStatus.getAPSResult(injector)
-        val predictionsAvailable = if (config.APS) loopPlugin.lastRun?.request?.hasPredictions == true else config.NSCLIENT
+        val apsResult = if (config.APS) loop.lastRun?.constraintsProcessed else nsDeviceStatus.getAPSResult(injector)
+        val predictionsAvailable = if (config.APS) loop.lastRun?.request?.hasPredictions == true else config.NSCLIENT
         val menuChartSettings = overviewMenus.setting
         // align to hours
         val calendar = Calendar.getInstance().also {
@@ -494,7 +482,7 @@ class OverviewData @Inject constructor(
         var toTime = toTime
         val targetsSeriesArray: MutableList<DataPoint> = java.util.ArrayList()
         var lastTarget = -1.0
-        loopPlugin.lastRun?.constraintsProcessed?.let { toTime = max(it.latestPredictionsTime, toTime) }
+        loop.lastRun?.constraintsProcessed?.let { toTime = max(it.latestPredictionsTime, toTime) }
         var time = fromTime
         while (time < toTime) {
             val tt = repository.getTemporaryTargetActiveAt(time).blockingGet()
@@ -660,9 +648,9 @@ class OverviewData @Inject constructor(
                     maxCobValueFound = max(maxCobValueFound, cob.toDouble())
                     lastCob = cob
                 }
-                if (autosensData.failoverToMinAbsorbtionRate) {
-                    autosensData.setScale(cobScale)
-                    autosensData.setChartTime(time)
+                if (autosensData.failOverToMinAbsorptionRate) {
+                    autosensData.scale = cobScale
+                    autosensData.chartTime = time
                     minFailOverActiveList.add(autosensData)
                 }
             }
@@ -738,6 +726,8 @@ class OverviewData @Inject constructor(
                 maxIobValueFound = max(maxIobValueFound, abs(i.iob))
             }
             iobPredictions1Series = PointsWithLabelGraphSeries(Array(iobPrediction.size) { i -> iobPrediction[i] })
+            aapsLogger.debug(LTag.AUTOSENS, "IOB prediction for AS=" + DecimalFormatter.to2Decimal(lastAutosensResult.ratio) + ": " + iobCobCalculator.iobArrayToString(iobPredictionArray))
+            /*
             val iobPrediction2: MutableList<DataPointWithLabelInterface> = java.util.ArrayList()
             val iobPredictionArray2 = iobCobCalculator.calculateIobArrayForSMB(AutosensResult(), SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget)
             for (i in iobPredictionArray2) {
@@ -745,11 +735,11 @@ class OverviewData @Inject constructor(
                 maxIobValueFound = max(maxIobValueFound, abs(i.iob))
             }
             iobPredictions2Series = PointsWithLabelGraphSeries(Array(iobPrediction2.size) { i -> iobPrediction2[i] })
-            aapsLogger.debug(LTag.AUTOSENS, "IOB prediction for AS=" + DecimalFormatter.to2Decimal(lastAutosensResult.ratio) + ": " + iobCobCalculator.iobArrayToString(iobPredictionArray))
             aapsLogger.debug(LTag.AUTOSENS, "IOB prediction for AS=" + DecimalFormatter.to2Decimal(1.0) + ": " + iobCobCalculator.iobArrayToString(iobPredictionArray2))
+            */
         } else {
             iobPredictions1Series = PointsWithLabelGraphSeries()
-            iobPredictions2Series = PointsWithLabelGraphSeries()
+            //iobPredictions2Series = PointsWithLabelGraphSeries()
         }
 
         // COB

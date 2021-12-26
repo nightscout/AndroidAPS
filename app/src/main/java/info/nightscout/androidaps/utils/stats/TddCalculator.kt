@@ -9,8 +9,8 @@ import info.nightscout.androidaps.database.entities.TotalDailyDose
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.MidnightTime
@@ -50,10 +50,12 @@ class TddCalculator @Inject constructor(
             result.put(midnight, tdd)
         }
 
-        for (t in startTime until endTime step T.mins(5).msecs()) {
+        val calculationStep = T.mins(5).msecs()
+        val tempBasals = iobCobCalculator.getTempBasalIncludingConvertedExtendedForRange(startTime, endTime, calculationStep)
+        for (t in startTime until endTime step calculationStep) {
             val midnight = MidnightTime.calc(t)
             val tdd = result[midnight] ?: TotalDailyDose(timestamp = midnight)
-            val tbr = iobCobCalculator.getTempBasalIncludingConvertedExtended(t)
+            val tbr = tempBasals[t]
             val profile = profileFunction.getProfile(t) ?: continue
             val absoluteRate = tbr?.convertedToAbsolute(t, profile) ?: profile.getBasal(t)
             tdd.basalAmount += absoluteRate / 60.0 * 5.0

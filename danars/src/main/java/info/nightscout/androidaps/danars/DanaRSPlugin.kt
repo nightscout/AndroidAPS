@@ -20,8 +20,8 @@ import info.nightscout.androidaps.events.EventConfigBuilderChange
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.plannedRemainingMinutes
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.common.ManufacturerType
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
@@ -36,7 +36,7 @@ import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import org.json.JSONException
@@ -139,7 +139,7 @@ class DanaRSPlugin @Inject constructor(
         mDeviceAddress = sp.getString(R.string.key_danars_address, "")
         mDeviceName = sp.getString(R.string.key_danars_name, "")
         danaPump.reset()
-        commandQueue.readStatus("DeviceChanged", null)
+        commandQueue.readStatus(rh.gs(R.string.device_changed), null)
     }
 
     override fun connect(reason: String) {
@@ -465,7 +465,7 @@ class DanaRSPlugin @Inject constructor(
         result.enacted = false
         result.success = false
         result.comment = rh.gs(R.string.danar_valuenotsetproperly)
-        aapsLogger.error("setHighTempBasalPercent: Failed to set temp basal")
+        aapsLogger.error("setHighTempBasalPercent: Failed to set temp basal. connectionOK: $connectionOK isTempBasalInProgress: ${danaPump.isTempBasalInProgress} tempBasalPercent: ${danaPump.tempBasalPercent}")
         return result
     }
 
@@ -621,9 +621,11 @@ class DanaRSPlugin @Inject constructor(
     override fun loadTDDs(): PumpEnactResult = loadHistory(RecordTypes.RECORD_TYPE_DAILY)
     override fun canHandleDST(): Boolean = false
     override fun clearPairing() {
+        aapsLogger.debug(LTag.PUMPCOMM, "Pairing keys cleared")
         sp.remove(rh.gs(R.string.key_danars_pairingkey) + mDeviceName)
         sp.remove(rh.gs(R.string.key_danars_v3_randompairingkey) + mDeviceName)
         sp.remove(rh.gs(R.string.key_danars_v3_pairingkey) + mDeviceName)
         sp.remove(rh.gs(R.string.key_danars_v3_randomsynckey) + mDeviceName)
+        sp.remove(rh.gs(R.string.key_dana_ble5_pairingkey) + mDeviceName)
     }
 }

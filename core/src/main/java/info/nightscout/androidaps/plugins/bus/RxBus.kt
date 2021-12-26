@@ -2,8 +2,8 @@ package info.nightscout.androidaps.plugins.bus
 
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.events.Event
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject

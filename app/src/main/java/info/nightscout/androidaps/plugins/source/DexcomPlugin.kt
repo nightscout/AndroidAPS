@@ -19,15 +19,15 @@ import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
 import info.nightscout.androidaps.extensions.fromConstant
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.XDripBroadcast
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
+import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -39,14 +39,15 @@ class DexcomPlugin @Inject constructor(
     private val sp: SP,
     private val dexcomMediator: DexcomMediator,
     config: Config
-) : PluginBase(PluginDescription()
-    .mainType(PluginType.BGSOURCE)
-    .fragmentClass(BGSourceFragment::class.java.name)
-    .pluginIcon(R.drawable.ic_dexcom_g6)
-    .pluginName(R.string.dexcom_app_patched)
-    .shortName(R.string.dexcom_short)
-    .preferencesId(R.xml.pref_bgsourcedexcom)
-    .description(R.string.description_source_dexcom),
+) : PluginBase(
+    PluginDescription()
+        .mainType(PluginType.BGSOURCE)
+        .fragmentClass(BGSourceFragment::class.java.name)
+        .pluginIcon(R.drawable.ic_dexcom_g6)
+        .pluginName(R.string.dexcom_app_patched)
+        .shortName(R.string.dexcom_short)
+        .preferencesId(R.xml.pref_bgsourcedexcom)
+        .description(R.string.description_source_dexcom),
     aapsLogger, rh, injector
 ), BgSource {
 
@@ -83,7 +84,7 @@ class DexcomPlugin @Inject constructor(
         @Inject lateinit var sp: SP
         @Inject lateinit var dateUtil: DateUtil
         @Inject lateinit var dataWorker: DataWorker
-        @Inject lateinit var broadcastToXDrip: XDripBroadcast
+        @Inject lateinit var xDripBroadcast: XDripBroadcast
         @Inject lateinit var repository: AppRepository
         @Inject lateinit var uel: UserEntryLogger
 
@@ -94,7 +95,7 @@ class DexcomPlugin @Inject constructor(
         override fun doWork(): Result {
             var ret = Result.success()
 
-            if (!dexcomPlugin.isEnabled(PluginType.BGSOURCE)) return Result.success(workDataOf("Result" to "Plugin not enabled"))
+            if (!dexcomPlugin.isEnabled()) return Result.success(workDataOf("Result" to "Plugin not enabled"))
             val bundle = dataWorker.pickupBundle(inputData.getLong(DataWorker.STORE_KEY, -1))
                 ?: return Result.failure(workDataOf("Error" to "missing input data"))
             try {
@@ -125,11 +126,13 @@ class DexcomPlugin @Inject constructor(
                             val now = dateUtil.now()
                             val value = it.getInt("meterValue").toDouble()
                             if (timestamp > now - T.months(1).msecs() && timestamp < now) {
-                                calibrations.add(CgmSourceTransaction.Calibration(
-                                    timestamp = it.getLong("timestamp") * 1000,
-                                    value = value,
-                                    glucoseUnit = TherapyEvent.GlucoseUnit.fromConstant(Profile.unit(value))
-                                ))
+                                calibrations.add(
+                                    CgmSourceTransaction.Calibration(
+                                        timestamp = it.getLong("timestamp") * 1000,
+                                        value = value,
+                                        glucoseUnit = TherapyEvent.GlucoseUnit.fromConstant(Profile.unit(value))
+                                    )
+                                )
                             }
                         }
                     }
@@ -147,26 +150,33 @@ class DexcomPlugin @Inject constructor(
                     .blockingGet()
                     .also { result ->
                         result.inserted.forEach {
-                            broadcastToXDrip(it)
+                            xDripBroadcast.send(it)
                             aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
                         }
                         result.updated.forEach {
-                            broadcastToXDrip(it)
+                            xDripBroadcast.send(it)
                             aapsLogger.debug(LTag.DATABASE, "Updated bg $it")
                         }
                         result.sensorInsertionsInserted.forEach {
-                            uel.log(Action.CAREPORTAL,
+                            uel.log(
+                                Action.CAREPORTAL,
                                 Sources.Dexcom,
                                 ValueWithUnit.Timestamp(it.timestamp),
-                                ValueWithUnit.TherapyEventType(it.type))
+                                ValueWithUnit.TherapyEventType(it.type)
+                            )
                             aapsLogger.debug(LTag.DATABASE, "Inserted sensor insertion $it")
                         }
-                        result.calibrationsInserted.forEach {
-                            uel.log(Action.CAREPORTAL,
-                                Sources.Dexcom,
-                                ValueWithUnit.Timestamp(it.timestamp),
-                                ValueWithUnit.TherapyEventType(it.type))
-                            aapsLogger.debug(LTag.DATABASE, "Inserted calibration $it")
+                        result.calibrationsInserted.forEach { calibration ->
+                            calibration.glucose?.let { glucoseValue ->
+                                uel.log(
+                                    Action.CALIBRATION,
+                                    Sources.Dexcom,
+                                    ValueWithUnit.Timestamp(calibration.timestamp),
+                                    ValueWithUnit.TherapyEventType(calibration.type),
+                                    ValueWithUnit.fromGlucoseUnit(glucoseValue, calibration.glucoseUnit.toString)
+                                )
+                            }
+                            aapsLogger.debug(LTag.DATABASE, "Inserted calibration $calibration")
                         }
                     }
             } catch (e: Exception) {
@@ -179,10 +189,12 @@ class DexcomPlugin @Inject constructor(
 
     companion object {
 
-        private val PACKAGE_NAMES = arrayOf("com.dexcom.cgm.region1.mgdl", "com.dexcom.cgm.region1.mmol",
+        private val PACKAGE_NAMES = arrayOf(
+            "com.dexcom.cgm.region1.mgdl", "com.dexcom.cgm.region1.mmol",
             "com.dexcom.cgm.region2.mgdl", "com.dexcom.cgm.region2.mmol",
             "com.dexcom.g6.region1.mmol", "com.dexcom.g6.region2.mgdl",
-            "com.dexcom.g6.region3.mgdl", "com.dexcom.g6.region3.mmol")
+            "com.dexcom.g6.region3.mgdl", "com.dexcom.g6.region3.mmol", "com.dexcom.g6"
+        )
         const val PERMISSION = "com.dexcom.cgm.EXTERNAL_PERMISSION"
     }
 

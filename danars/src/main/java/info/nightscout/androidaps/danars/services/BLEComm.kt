@@ -21,8 +21,6 @@ import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.extensions.notify
 import info.nightscout.androidaps.extensions.waitMillis
 import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
@@ -31,7 +29,9 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
+import info.nightscout.shared.sharedPreferences.SP
 import java.util.*
 import java.util.concurrent.ScheduledFuture
 import javax.inject.Inject
@@ -69,8 +69,7 @@ class BLEComm @Inject internal constructor(
     private var scheduledDisconnection: ScheduledFuture<*>? = null
     private var processedMessage: DanaRSPacket? = null
     private val mSendQueue = ArrayList<ByteArray>()
-    private var bluetoothManager: BluetoothManager? = null
-    private var bluetoothAdapter: BluetoothAdapter? = null
+    private val bluetoothAdapter: BluetoothAdapter? get() = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
     private var connectDeviceName: String? = null
     private var bluetoothGatt: BluetoothGatt? = null
 
@@ -92,14 +91,6 @@ class BLEComm @Inject internal constructor(
     @Synchronized
     fun connect(from: String, address: String?): Boolean {
         aapsLogger.debug(LTag.PUMPBTCOMM, "Initializing BLEComm.")
-        if (bluetoothManager == null) {
-            bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-            if (bluetoothManager == null) {
-                aapsLogger.error("Unable to initialize BluetoothManager.")
-                return false
-            }
-        }
-        bluetoothAdapter = bluetoothManager?.adapter
         if (bluetoothAdapter == null) {
             aapsLogger.error("Unable to obtain a BluetoothAdapter.")
             return false
@@ -149,15 +140,7 @@ class BLEComm @Inject internal constructor(
             if (lastClearRequest != 0L && dateUtil.isOlderThan(lastClearRequest, 5)) {
                 ToastUtils.showToastInUiThread(context, R.string.invalidpairing)
                 danaRSPlugin.changePump()
-                sp.getStringOrNull(R.string.key_danars_address, null)?.let { address ->
-                    bluetoothAdapter?.getRemoteDevice(address)?.let { device ->
-                        try {
-                            device::class.java.getMethod("removeBond").invoke(device)
-                        } catch (e: Exception) {
-                            aapsLogger.error("Removing bond has been failed. ${e.message}")
-                        }
-                    }
-                }
+                removeBond()
             } else if (lastClearRequest == 0L) {
                 aapsLogger.error("Clearing pairing keys postponed")
                 sp.putLong(R.string.key_rs_last_clear_key_request, dateUtil.now())
@@ -194,6 +177,18 @@ class BLEComm @Inject internal constructor(
         encryptedDataRead = false
         encryptedCommandSent = false
         SystemClock.sleep(2000)
+    }
+
+    private fun removeBond() {
+        sp.getStringOrNull(R.string.key_danars_address, null)?.let { address ->
+            bluetoothAdapter?.getRemoteDevice(address)?.let { device ->
+                try {
+                    device::class.java.getMethod("removeBond").invoke(device)
+                } catch (e: Exception) {
+                    aapsLogger.error("Removing bond has been failed. ${e.message}")
+                }
+            }
+        }
     }
 
     @Synchronized fun close() {
@@ -407,7 +402,8 @@ class BLEComm @Inject internal constructor(
                 if (bufferLength >= 6) {
                     for (idxStartByte in 0 until bufferLength - 2) {
                         if (readBuffer[idxStartByte] == PACKET_START_BYTE && readBuffer[idxStartByte + 1] == PACKET_START_BYTE ||
-                            readBuffer[idxStartByte] == BLE5_PACKET_START_BYTE && readBuffer[idxStartByte + 1] == BLE5_PACKET_START_BYTE) {
+                            readBuffer[idxStartByte] == BLE5_PACKET_START_BYTE && readBuffer[idxStartByte + 1] == BLE5_PACKET_START_BYTE
+                        ) {
                             if (idxStartByte > 0) {
                                 // if buffer doesn't start with signature remove the leading trash
                                 aapsLogger.debug(LTag.PUMPBTCOMM, "Shifting the input buffer by $idxStartByte bytes")
@@ -425,7 +421,8 @@ class BLEComm @Inject internal constructor(
                                 return
                             // Verify packed end [5A 5A]
                             if (readBuffer[length + 5] == PACKET_END_BYTE && readBuffer[length + 6] == PACKET_END_BYTE ||
-                                readBuffer[length + 5] == BLE5_PACKET_END_BYTE && readBuffer[length + 6] == BLE5_PACKET_END_BYTE) {
+                                readBuffer[length + 5] == BLE5_PACKET_END_BYTE && readBuffer[length + 6] == BLE5_PACKET_END_BYTE
+                            ) {
                                 packetIsValid = true
                             } else {
                                 aapsLogger.error(LTag.PUMPBTCOMM, "Error in input data. Resetting buffer.")
@@ -558,9 +555,17 @@ class BLEComm @Inject internal constructor(
             danaPump.hwModel = decryptedBuffer[5].toInt()
             danaPump.protocol = decryptedBuffer[7].toInt()
             val pairingKey = DanaRSPacket.asciiStringFromBuff(decryptedBuffer, 8, 6) // used while bonding
+            if (decryptedBuffer[8] != 0.toByte())
+                sp.putString(rh.gs(R.string.key_dana_ble5_pairingkey) + danaRSPlugin.mDeviceName, pairingKey)
+
+            val storedPairingKey = sp.getString(rh.gs(R.string.key_dana_ble5_pairingkey) + danaRSPlugin.mDeviceName, "")
+            if (storedPairingKey.isNullOrBlank()) {
+                removeBond()
+                disconnect("Non existing pairing key")
+            }
 
             if (danaPump.hwModel == 0x09) {
-                bleEncryption.setBle5Key(pairingKey.encodeToByteArray())
+                bleEncryption.setBle5Key(storedPairingKey.encodeToByteArray())
                 aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK BLE5 (OK)" + " " + DanaRSPacket.toHexString(decryptedBuffer))
                 // Dana-i BLE5 Pump
                 sendBLE5PairingInformation()

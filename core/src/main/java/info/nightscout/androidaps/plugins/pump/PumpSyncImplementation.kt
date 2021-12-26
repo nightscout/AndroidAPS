@@ -9,8 +9,8 @@ import info.nightscout.androidaps.database.entities.*
 import info.nightscout.androidaps.database.transactions.*
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
@@ -19,7 +19,7 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import javax.inject.Inject
@@ -37,7 +37,15 @@ class PumpSyncImplementation @Inject constructor(
 
     private val disposable = CompositeDisposable()
 
-    override fun connectNewPump() {
+    override fun connectNewPump(endRunning: Boolean) {
+        if (endRunning) {
+            expectedPumpState().temporaryBasal?.let {
+                syncStopTemporaryBasalWithPumpId(dateUtil.now(), dateUtil.now(), it.pumpType, it.pumpSerial)
+            }
+            expectedPumpState().extendedBolus?.let {
+                syncStopExtendedBolusWithPumpId(dateUtil.now(), dateUtil.now(), it.pumpType, it.pumpSerial)
+            }
+        }
         sp.remove(R.string.key_active_pump_type)
         sp.remove(R.string.key_active_pump_serial_number)
         sp.remove(R.string.key_active_pump_change_timestamp)
@@ -77,7 +85,7 @@ class PumpSyncImplementation @Inject constructor(
     }
 
     override fun expectedPumpState(): PumpSync.PumpState {
-        val bolus = repository.getLastBolusRecordWrapped().blockingGet();
+        val bolus = repository.getLastBolusRecordWrapped().blockingGet()
         val temporaryBasal = repository.getTemporaryBasalActiveAt(dateUtil.now()).blockingGet()
         val extendedBolus = repository.getExtendedBolusActiveAt(dateUtil.now()).blockingGet()
 
@@ -91,7 +99,9 @@ class PumpSyncImplementation @Inject constructor(
                     rate = temporaryBasal.value.rate,
                     isAbsolute = temporaryBasal.value.isAbsolute,
                     type = PumpSync.TemporaryBasalType.fromDbType(temporaryBasal.value.type),
-                    pumpId = temporaryBasal.value.interfaceIDs.pumpId
+                    pumpId = temporaryBasal.value.interfaceIDs.pumpId,
+                    pumpType = temporaryBasal.value.interfaceIDs.pumpType?.let { PumpType.fromDbPumpType(it)} ?: PumpType.USER,
+                    pumpSerial = temporaryBasal.value.interfaceIDs.pumpSerial ?: "",
                 )
             else null,
             extendedBolus =
@@ -100,7 +110,9 @@ class PumpSyncImplementation @Inject constructor(
                     timestamp = extendedBolus.value.timestamp,
                     duration = extendedBolus.value.duration,
                     amount = extendedBolus.value.amount,
-                    rate = extendedBolus.value.rate
+                    rate = extendedBolus.value.rate,
+                    pumpType = extendedBolus.value.interfaceIDs.pumpType?.let { PumpType.fromDbPumpType(it)} ?: PumpType.USER,
+                    pumpSerial = extendedBolus.value.interfaceIDs.pumpSerial ?: ""
                 )
             else null,
             bolus =
@@ -112,7 +124,8 @@ class PumpSyncImplementation @Inject constructor(
                     )
                 }
             else null,
-            profile = profileFunction.getProfile()
+            profile = profileFunction.getProfile(),
+            serialNumber = sp.getString(R.string.key_active_pump_serial_number, "")
         )
     }
 

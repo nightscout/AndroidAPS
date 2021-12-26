@@ -20,7 +20,7 @@ import info.nightscout.androidaps.database.transactions.InsertAndCancelCurrentTe
 import info.nightscout.androidaps.databinding.DialogCarbsBinding
 import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
@@ -189,7 +189,7 @@ class CarbsDialog : DialogFragmentWithDate() {
 
     override fun submit(): Boolean {
         if (_binding == null) return false
-        val carbs = binding.carbs.value?.toInt() ?: return false
+        val carbs = binding.carbs.value.toInt()
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(carbs)).value()
         val units = profileFunction.getUnits()
         val activityTTDuration = defaultValueHelper.determineActivityTTDuration()

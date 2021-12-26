@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.ui
-// import info.nightscout.androidaps.plugins.pump.omnipod.dash.definition.PodHistoryEntryType;
-// import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.AapsOmnipodUtil;
+
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.LayoutInflater
@@ -13,8 +12,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpHistoryEntryGroup
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
@@ -24,12 +21,12 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.DashHistory
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.*
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.shared.logging.LTag
 import java.util.*
 import javax.inject.Inject
 
 class DashPodHistoryActivity : NoSplashAppCompatActivity() {
 
-    @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var dashHistory: DashHistory
     @Inject lateinit var aapsSchedulers: AapsSchedulers
 

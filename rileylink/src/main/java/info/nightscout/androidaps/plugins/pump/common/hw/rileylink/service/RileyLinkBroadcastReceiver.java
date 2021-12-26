@@ -5,6 +5,7 @@ package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service;
  */
 
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -21,8 +22,8 @@ import javax.inject.Inject;
 import dagger.android.DaggerBroadcastReceiver;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
-import info.nightscout.androidaps.logging.AAPSLogger;
-import info.nightscout.androidaps.logging.LTag;
+import info.nightscout.shared.logging.AAPSLogger;
+import info.nightscout.shared.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkFirmwareVersion;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkError;
@@ -33,7 +34,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTask;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.WakeAndTuneTask;
-import info.nightscout.androidaps.utils.sharedPreferences.SP;
+import info.nightscout.shared.sharedPreferences.SP;
 
 /**
  * I added this class outside of RileyLinkService, because for now it's very important part of RL framework and
@@ -134,7 +135,7 @@ public class RileyLinkBroadcastReceiver extends DaggerBroadcastReceiver {
         RileyLinkService rileyLinkService = getServiceInstance();
 
         if (action.equals(RileyLinkConst.Intents.RileyLinkDisconnected)) {
-            if (BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+            if (((BluetoothManager)context.getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter().isEnabled()) {
                 rileyLinkServiceData.setServiceState(RileyLinkServiceState.BluetoothError, RileyLinkError.RileyLinkUnreachable);
             } else {
                 rileyLinkServiceData.setServiceState(RileyLinkServiceState.BluetoothError, RileyLinkError.BluetoothDisabled);

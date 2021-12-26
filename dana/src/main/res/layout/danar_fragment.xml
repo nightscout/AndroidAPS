@@ -67,6 +67,7 @@
                 android:background="@color/list_delimiter" />
 
             <LinearLayout
+                android:id="@+id/bt_connection_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -93,7 +94,7 @@
                     tools:ignore="HardcodedText" />
 
                 <com.joanzapata.iconify.widget.IconTextView
-                    android:id="@+id/btconnection"
+                    android:id="@+id/bt_connection"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

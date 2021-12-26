@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.queue
 
-import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.os.PowerManager
 import android.os.SystemClock
@@ -8,18 +8,19 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning
 import info.nightscout.androidaps.queue.events.EventQueueChanged
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
+import info.nightscout.shared.sharedPreferences.SP
 
 class QueueThread internal constructor(
-    private val queue: CommandQueueImplementation,
-    context: Context,
+    private val queue: CommandQueue,
+    private val context: Context,
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private val activePlugin: ActivePlugin,
@@ -60,11 +61,9 @@ class QueueThread internal constructor(
                         //write time
                         sp.putLong(R.string.key_btwatchdog_lastbark, System.currentTimeMillis())
                         //toggle BT
-                        pump.stopConnecting()
                         pump.disconnect("watchdog")
                         SystemClock.sleep(1000)
-                        val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-                        if (bluetoothAdapter != null) {
+                        (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter?.let { bluetoothAdapter ->
                             bluetoothAdapter.disable()
                             SystemClock.sleep(1000)
                             bluetoothAdapter.enable()
@@ -112,14 +111,18 @@ class QueueThread internal constructor(
                     // Pickup 1st command and set performing variable
                     if (queue.size() > 0) {
                         queue.pickup()
-                        if (queue.performing() != null) {
-                            aapsLogger.debug(LTag.PUMPQUEUE, "performing " + queue.performing()?.status())
+                        val cont = queue.performing()?.let {
+                            aapsLogger.debug(LTag.PUMPQUEUE, "performing " + it.log())
                             rxBus.send(EventQueueChanged())
-                            queue.performing()?.execute()
+                            rxBus.send(EventPumpStatusChanged(it.status()))
+                            it.execute()
                             queue.resetPerforming()
                             rxBus.send(EventQueueChanged())
                             lastCommandTime = System.currentTimeMillis()
                             SystemClock.sleep(100)
+                            true
+                        } ?: false
+                        if (cont) {
                             continue
                         }
                     }

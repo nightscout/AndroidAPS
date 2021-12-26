@@ -154,7 +154,6 @@
     <string name="profile_ins_units_per_hour">Vv/val</string>
     <string name="profile_carbs_per_unit">g/vv</string>
     <!--    ProfileFunction-->
-    <string name="noprofileselected">Nepasirinktas profilis</string>
     <string name="startprofile">Pradėti profilį %1$d%% %2$d min</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Virtualioje pompoje palaikomos tik atskiros vertės, o ne diapazonas detalumui užtikrinti.</string>
@@ -409,6 +408,7 @@
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f viršija griežtą limitą</string>
     <string name="basal_value">Valandinė bazė</string>
     <string name="nsclient_version_does_not_match">NSClient ir AndroidAPS versijos nesutampa. Atnaujinkite.</string>
+    <!-- Command Queue + readStatus reasons -->
     <plurals name="days">
         <item quantity="one">%1$d d.</item>
         <item quantity="few">%1$d d.</item>

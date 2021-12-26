@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.configBuilder
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -39,6 +40,7 @@ class ConfigBuilderFragment : DaggerFragment() {
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var config: Config
     @Inject lateinit var buildHelper: BuildHelper
+    @Inject lateinit var ctx: Context
 
     private var disposable: CompositeDisposable = CompositeDisposable()
     private val pluginViewHolders = ArrayList<PluginViewHolder>()
@@ -102,9 +104,7 @@ class ConfigBuilderFragment : DaggerFragment() {
     @Synchronized
     private fun updateGUI() {
         binding.categories.removeAllViews()
-        if (!config.NSCLIENT) {
-            createViewsForPlugins(R.string.configbuilder_profile, R.string.configbuilder_profile_description, PluginType.PROFILE, activePlugin.getSpecificPluginsVisibleInList(PluginType.PROFILE))
-        }
+        createViewsForPlugins(R.string.configbuilder_profile, R.string.configbuilder_profile_description, PluginType.PROFILE, activePlugin.getSpecificPluginsVisibleInList(PluginType.PROFILE))
         if (config.APS || config.PUMPCONTROL || buildHelper.isEngineeringMode())
             createViewsForPlugins(R.string.configbuilder_insulin, R.string.configbuilder_insulin_description, PluginType.INSULIN, activePlugin.getSpecificPluginsVisibleInList(PluginType.INSULIN))
         if (!config.NSCLIENT) {
@@ -170,7 +170,7 @@ class ConfigBuilderFragment : DaggerFragment() {
             pluginPreferences.setOnClickListener {
                 fragment.activity?.let { activity ->
                     protectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, {
-                        val i = Intent(fragment.context, PreferencesActivity::class.java)
+                        val i = Intent(ctx, PreferencesActivity::class.java)
                         i.putExtra("id", plugin.preferencesId)
                         fragment.startActivity(i)
                     }, null)
