@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.databinding.AutotuneFragmentBinding
 import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.interfaces.ActivePlugin
@@ -19,6 +18,8 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorP
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
 import info.nightscout.androidaps.activities.TreatmentsActivity
+import info.nightscout.androidaps.interfaces.Autotune
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.MidnightTime
@@ -38,7 +39,7 @@ import javax.inject.Inject
 // Todo: Reset results field and Switch/Copy button visibility when Nb of selected days is changed
 class AutotuneFragment : DaggerFragment() {
     @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var autotunePlugin: AutotunePlugin
+    @Inject lateinit var autotunePlugin: Autotune
     @Inject lateinit var sp: SP
     @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
     @Inject lateinit var treatmentsActivity: TreatmentsActivity
@@ -50,7 +51,7 @@ class AutotuneFragment : DaggerFragment() {
     @Inject lateinit var rxBus: RxBus
 
     private var disposable: CompositeDisposable = CompositeDisposable()
-    private var lastRun: Date? = null
+    private var lastRun: Long = 0
     private var lastRunTxt: String? = null
     private var tempResult = ""
     private val log = LoggerFactory.getLogger(AutotunePlugin::class.java)
@@ -72,72 +73,72 @@ class AutotuneFragment : DaggerFragment() {
             val daysBack = binding.tuneDays.text.toString().toInt()
             if (daysBack > 0) {
                 tempResult = ""
-                AutotunePlugin.calculationRunning = true
+                autotunePlugin.calculationRunning = true
                 Thread(Runnable {
                     autotunePlugin.aapsAutotune(daysBack, false)
                 }).start()
-                lastRunTxt = if (AutotunePlugin.lastRun != null) "" + dateUtil.dateAndTimeString(AutotunePlugin.lastRun) else ""
-                lastRun = if (AutotunePlugin.lastRun != null) AutotunePlugin.lastRun else Date(0)
+                lastRunTxt = if (autotunePlugin.lastRun != null) "" + dateUtil.dateAndTimeString(autotunePlugin.lastRun) else ""
+                lastRun = if (autotunePlugin.lastRun != null) autotunePlugin.lastRun else 0
                 updateGui()
             } else binding.tuneResult.text = resourceHelper.gs(R.string.autotune_min_days)
         }
 
         binding.autotuneCopylocal.setOnClickListener {
-            val localName = resourceHelper.gs(R.string.autotune_tunedprofile_name) + " " + dateUtil.dateAndTimeString(AutotunePlugin.lastRun)
+            val localName = resourceHelper.gs(R.string.autotune_tunedprofile_name) + " " + dateUtil.dateAndTimeString(autotunePlugin.lastRun)
             showConfirmation(requireContext(), resourceHelper.gs(R.string.autotune_copy_localprofile_button), resourceHelper.gs(R.string.autotune_copy_local_profile_message) + "\n" + localName + " " + dateUtil.dateAndTimeString(lastRun),
                 Runnable {
-                    localProfilePlugin.addProfile(localProfilePlugin.copyFrom(AutotunePlugin.tunedProfile!!.getProfile(), localName))
+                    localProfilePlugin.addProfile(localProfilePlugin.copyFrom(autotunePlugin.tunedProfile!!.getProfile(), localName))
                     rxBus.send(EventLocalProfileChanged())
-                    AutotunePlugin.copyButtonVisibility = View.GONE
+                    autotunePlugin.copyButtonVisibility = View.GONE
                     updateGui()
                 })
         }
 
         binding.autotuneCompare.setOnClickListener {
-            val currentprofile = AutotunePlugin.currentprofile
+            val currentprofile = autotunePlugin.currentprofile
             //log("profile : " + currentprofile?.profilename + "\n" + currentprofile?.data.toString())
-            val tunedprofile = AutotunePlugin.tunedProfile
+            val tunedprofile = autotunePlugin.tunedProfile
             //log("tunedprofile : " + AutotunePlugin.tunedProfile?.profilename + "\n" + tunedprofile?.data.toString())
             ProfileViewerDialog().also { pvd ->
                 pvd.arguments = Bundle().also {
-                    it.putLong("time", DateUtil.now())
+                    it.putLong("time", dateUtil.now())
                     it.putInt("mode", ProfileViewerDialog.Mode.PROFILE_COMPARE.ordinal)
                     it.putString("customProfile", currentprofile?.getData(true).toString())
                     it.putString("customProfile2", tunedprofile?.data.toString())
-                    it.putString("customProfileUnits", profileFunction.getUnits())
-                    it.putString("customProfileName", currentprofile?.profilename + "\n" + AutotunePlugin.tunedProfile?.profilename)
+                    it.putString("customProfileUnits", profileFunction.getUnits().asText)
+                    it.putString("customProfileName", currentprofile?.profilename + "\n" + autotunePlugin.tunedProfile?.profilename)
                 }
             }.show(childFragmentManager, "ProfileViewDialog")
         }
 
         binding.autotuneProfileswitch.setOnClickListener{
             //val name = resourceHelper.gs(R.string.autotune_tunedprofile_name)
-            val profileStore = AutotunePlugin.tunedProfile!!.profileStore
+            val profileStore = autotunePlugin.tunedProfile!!.profileStore
             log("ProfileSwitch pressed")
             if (profileStore != null) {
-                showConfirmation(requireContext(), resourceHelper.gs(R.string.activate_profile) + ": " + AutotunePlugin.tunedProfile!!.profilename + " ?", Runnable {
-                    activePlugin.activeTreatments.doProfileSwitch(AutotunePlugin.tunedProfile!!.profileStore, AutotunePlugin.tunedProfile!!.profilename, 0, 100, 0, DateUtil.now())
+                showConfirmation(requireContext(), resourceHelper.gs(R.string.activate_profile) + ": " + autotunePlugin.tunedProfile!!.profilename + " ?", Runnable {
+                    activePlugin.activeTreatments.doProfileSwitch(autotunePlugin.tunedProfile!!.profileStore, autotunePlugin.tunedProfile!!.profilename, 0, 100, 0, DateUtil.now())
                     rxBus.send(EventLocalProfileChanged())
-                    AutotunePlugin.profileSwitchButtonVisibility = View.GONE
+                    autotunePlugin.profileSwitchButtonVisibility = View.GONE
                     updateGui()
                 })
             } else log("ProfileStore is null!")
         }
 
-        lastRun = if (AutotunePlugin.lastRun != null) AutotunePlugin.lastRun else Date(0)
-        if (lastRun!!.time > MidnightTime.calc(System.currentTimeMillis() - AutotunePlugin.autotuneStartHour * 3600 * 1000L) + AutotunePlugin.autotuneStartHour * 3600 * 1000L && AutotunePlugin.result !== "") {
+        lastRun = autotunePlugin.lastRun
+        if (lastRun > MidnightTime.calc(System.currentTimeMillis() - autotunePlugin.autotuneStartHour * 3600 * 1000L) + autotunePlugin.autotuneStartHour * 3600 * 1000L && AutotunePlugin.result !== "") {
             binding.tuneWarning.text = resourceHelper.gs(R.string.autotune_warning_after_run)
-            binding.tuneDays.setText(AutotunePlugin.lastNbDays)
+            binding.tuneDays.setText(autotunePlugin.lastNbDays)
         } else { //if new day reinit result, default days, warning and button's visibility
             binding.tuneWarning.text = addWarnings()
             binding.tuneDays.setText(sp.getString(R.string.key_autotune_default_tune_days, "5"))
-            AutotunePlugin.result = ""
-            AutotunePlugin.tunedProfile = null
-            AutotunePlugin.profileSwitchButtonVisibility = View.GONE
-            AutotunePlugin.copyButtonVisibility = View.GONE
+            autotunePlugin.result = ""
+            autotunePlugin.tunedProfile = null
+            autotunePlugin.profileSwitchButtonVisibility = View.GONE
+            autotunePlugin.copyButtonVisibility = View.GONE
             binding.autotuneCompare.visibility = View.GONE
         }
-        lastRunTxt = if (AutotunePlugin.lastRun != null) dateUtil.dateAndTimeString(AutotunePlugin.lastRun) else ""
+        lastRunTxt = if (autotunePlugin.lastRun != null) dateUtil.dateAndTimeString(autotunePlugin.lastRun) else ""
         updateGui()
     }
 
@@ -170,24 +171,24 @@ class AutotuneFragment : DaggerFragment() {
 
     @Synchronized
     private fun updateGui() {
-        if (AutotunePlugin.calculationRunning) {
+        if (autotunePlugin.calculationRunning) {
             binding.autotuneRun.visibility = View.GONE
             binding.autotuneCompare.visibility = View.GONE
             binding.tuneWarning.text = resourceHelper.gs(R.string.autotune_warning_during_run)
-            binding.tuneResult.text = AutotunePlugin.result
-        } else if (AutotunePlugin.lastRunSuccess) {
+            binding.tuneResult.text = autotunePlugin.result
+        } else if (autotunePlugin.lastRunSuccess) {
             binding.autotuneRun.visibility = View.VISIBLE
             binding.tuneWarning.text = resourceHelper.gs(R.string.autotune_warning_after_run)
-            binding.tuneResult.text = AutotunePlugin.result
+            binding.tuneResult.text = autotunePlugin.result
             binding.autotuneCompare.visibility = View.VISIBLE
         } else {
-            binding.tuneResult.text = AutotunePlugin.result
+            binding.tuneResult.text = autotunePlugin.result
             binding.autotuneRun.visibility = View.VISIBLE
         }
-        if (AutotunePlugin.tunedProfile == null || AutotunePlugin.currentprofile == null)
+        if (autotunePlugin.tunedProfile == null || autotunePlugin.currentprofile == null)
             binding.autotuneCompare.visibility = View.GONE
-        binding.autotuneCopylocal.visibility = AutotunePlugin.copyButtonVisibility
-        binding.autotuneProfileswitch.visibility = AutotunePlugin.profileSwitchButtonVisibility
+        binding.autotuneCopylocal.visibility = autotunePlugin.copyButtonVisibility
+        binding.autotuneProfileswitch.visibility = autotunePlugin.profileSwitchButtonVisibility
         binding.tuneLastrun.text = lastRunTxt
     }
 

@@ -94,7 +94,7 @@ class AutotunePlugin @Inject constructor(
         aapsAutotune(daysBack, autoSwitch)
     }
 
-    fun aapsAutotune(daysBack: Int, autoSwitch: Boolean): String {
+    override fun aapsAutotune(daysBack: Int, autoSwitch: Boolean): String {
         autotuneFS = AutotuneFS(injector)
         autotunePrep = AutotunePrep(injector)
         autotuneCore = AutotuneCore(injector)
@@ -278,7 +278,7 @@ class AutotunePlugin @Inject constructor(
         private val log = LoggerFactory.getLogger(AutotunePlugin::class.java)
         //@JvmField var currentprofile: ATProfile? = null
         private var profile: Profile? = null
-        const val autotuneStartHour = 4
+
         // @JvmField var tunedProfile: ATProfile? = null
         // @JvmField var result = ""
         // @JvmField var calculationRunning = false
