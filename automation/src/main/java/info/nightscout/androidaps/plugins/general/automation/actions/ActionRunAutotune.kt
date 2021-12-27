@@ -2,19 +2,19 @@ package info.nightscout.androidaps.plugins.general.automation.actions
 
 import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
+import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.interfaces.Autotune
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.general.autotune.AutotunePlugin
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 
 class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var autotunePlugin: AutotunePlugin
+    @Inject lateinit var autotunePlugin: Autotune
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var sp: SP
 
@@ -26,20 +26,20 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
         if(sp.getBoolean(R.string.key_autotune_auto, false)) {
             autotunePlugin.aapsAutotune()
             var message = R.string.autotune_run_with_autoswitch
-            if (!AutotunePlugin.lastRunSuccess) {
+            if (!autotunePlugin.lastRunSuccess) {
                 message = R.string.autotune_run_with_error
                 aapsLogger.error(LTag.AUTOMATION, "Error during Autotune Run")
             }
-            callback.result(PumpEnactResult(injector).success(AutotunePlugin.lastRunSuccess).comment(message))?.run()
+            callback.result(PumpEnactResult(injector).success(autotunePlugin.lastRunSuccess).comment(message))?.run()
             return
         } else {
             autotunePlugin.aapsAutotune()
             var message = R.string.autotune_run_without_autoswitch
-            if (!AutotunePlugin.lastRunSuccess) {
+            if (!autotunePlugin.lastRunSuccess) {
                 message = R.string.autotune_run_with_error
                 aapsLogger.error(LTag.AUTOMATION, "Error during Autotune Run")
             }
-            callback.result(PumpEnactResult(injector).success(AutotunePlugin.lastRunSuccess).comment(message))?.run()
+            callback.result(PumpEnactResult(injector).success(autotunePlugin.lastRunSuccess).comment(message))?.run()
             return
         }
     }

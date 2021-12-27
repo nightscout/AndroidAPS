@@ -55,7 +55,14 @@ class AutotunePlugin @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
     private val activePlugin: ActivePlugin,
-    aapsLogger: AAPSLogger
+    aapsLogger: AAPSLogger,
+    override var result: String = "",
+    override var calculationRunning: Boolean = false,
+    override var lastRun: Long = 0,
+    override var lastNbDays: String = "",
+    override var copyButtonVisibility: Int = 0,
+    override var profileSwitchButtonVisibility: Int = 0,
+    override var lastRunSuccess: Boolean = false
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(AutotuneFragment::class.qualifiedName)
@@ -65,7 +72,7 @@ class AutotunePlugin @Inject constructor(
     .preferencesId(R.xml.pref_autotune)
     .description(R.string.autotune_description),
     aapsLogger, resourceHelper, injector
-) {
+), Autotune {
     private var logString = ""
     private var preppedGlucose: PreppedGlucose? = null
     private var autotunePrep: AutotunePrep? = null
@@ -73,12 +80,15 @@ class AutotunePlugin @Inject constructor(
     private var autotuneIob: AutotuneIob? = null
     private var autotuneFS: AutotuneFS? = null
 
+    override var currentprofile: ATProfile? = null
+    override var tunedProfile: ATProfile? = null
+
     //    @Override
     val fragmentClass: String
         get() = AutotuneFragment::class.java.name
 
     //Launch Autotune with default settings
-    fun aapsAutotune() {
+    override fun aapsAutotune() {
         val daysBack = sp.getInt(R.string.key_autotune_default_tune_days, 5)
         val autoSwitch = sp.getBoolean(R.string.key_autotune_auto, false)
         aapsAutotune(daysBack, autoSwitch)
@@ -266,17 +276,17 @@ class AutotunePlugin @Inject constructor(
 
     companion object {
         private val log = LoggerFactory.getLogger(AutotunePlugin::class.java)
-        @JvmField var currentprofile: ATProfile? = null
+        //@JvmField var currentprofile: ATProfile? = null
         private var profile: Profile? = null
         const val autotuneStartHour = 4
-        @JvmField var tunedProfile: ATProfile? = null
-        @JvmField var result = ""
-        @JvmField var calculationRunning = false
-        @JvmField var lastRun: Long = 0
-        @JvmField var lastNbDays = ""
-        @JvmField var copyButtonVisibility = 0
-        @JvmField var profileSwitchButtonVisibility = 0
-        @JvmField var lastRunSuccess = false
+        // @JvmField var tunedProfile: ATProfile? = null
+        // @JvmField var result = ""
+        // @JvmField var calculationRunning = false
+        // @JvmField var lastRun: Long = 0
+        // @JvmField var lastNbDays = ""
+        // @JvmField var copyButtonVisibility = 0
+        // @JvmField var profileSwitchButtonVisibility = 0
+        // @JvmField var lastRunSuccess = false
     }
 
 }
