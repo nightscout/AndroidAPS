@@ -38,6 +38,7 @@ import info.nightscout.androidaps.interfaces.Pump;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
 import info.nightscout.androidaps.interfaces.PumpSync;
+import info.nightscout.androidaps.plugins.pump.combo.data.ComboErrorUtil;
 import info.nightscout.shared.logging.AAPSLogger;
 import info.nightscout.shared.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBus;
@@ -161,6 +162,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
                         .pluginIcon(R.drawable.ic_combo_128)
                         .pluginName(R.string.combopump)
                         .shortName(R.string.combopump_shortname)
+                        .preferencesId(R.xml.pref_combo)
                         .description(R.string.description_pump_combo),
                 injector, aapsLogger, rh, commandQueue
         );
@@ -171,6 +173,9 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
         this.context = context;
         this.pumpSync = pumpSync;
         this.dateUtil = dateUtil;
+
+        ComboErrorUtil.getInstance().setSP(sp);
+        ComboErrorUtil.getInstance().clearErrors();
 
         pumpDescription.fillFor(PumpType.ACCU_CHEK_COMBO);
     }
