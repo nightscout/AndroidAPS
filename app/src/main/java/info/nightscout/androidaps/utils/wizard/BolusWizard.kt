@@ -456,7 +456,7 @@ class BolusWizard @Inject constructor(
 
                 }
                 if (useAlarm && carbs > 0 && carbTime > 0) {
-                    carbTimer.scheduleReminder(dateUtil.now() + T.mins(carbTime.toLong()).msecs())
+                    carbTimer.scheduleReminder(T.mins(carbTime.toLong()).secs())
                 }
             }
         })
