@@ -1,21 +1,13 @@
 package info.nightscout.androidaps.watchfaces;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Color;
 
 import androidx.annotation.ColorInt;
 import androidx.core.content.ContextCompat;
 
-import android.os.BatteryManager;
 import android.support.wearable.watchface.WatchFaceStyle;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.LinearLayout;
 
 import com.ustwo.clockwise.common.WatchMode;
 
