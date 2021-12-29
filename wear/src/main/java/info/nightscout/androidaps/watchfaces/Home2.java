@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat;
 
 import android.os.BatteryManager;
 import android.support.wearable.watchface.WatchFaceStyle;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,25 +33,7 @@ public class Home2 extends BaseWatchFace {
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         layoutView = inflater.inflate(R.layout.activity_home_2, null);
 
-        IntentFilter intentBatteryFilter = new IntentFilter();
-        intentBatteryFilter.addAction(BatteryManager.ACTION_CHARGING);
-        intentBatteryFilter.addAction(BatteryManager.ACTION_DISCHARGING);
-        registerReceiver(batteryReceiver, intentBatteryFilter);
         performViewSetup();
-    }
-
-    private BroadcastReceiver batteryReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            setDataFields();
-            invalidate();
-        }
-    };
-
-    @Override
-    public void onDestroy() {
-        unregisterReceiver(batteryReceiver);
-        super.onDestroy();
     }
 
     @Override
@@ -286,58 +269,4 @@ public class Home2 extends BaseWatchFace {
         }
     }
 
-
-    @Override
-    public void setDataFields() {
-        super.setDataFields();
-        if (sharedPrefs.getBoolean("simplify_ui_charging", false) && isCharging()) {
-            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    0,
-                    0.5f
-            );
-            mLinearLayout3.setLayoutParams(param);
-            mLinearLayout3.setWeightSum(0.7f);
-            mLinearLayout.setVisibility(View.GONE);
-            mLoop.setVisibility(View.INVISIBLE);
-            chart.setVisibility(View.GONE);
-            mIOB1.setVisibility(View.GONE);
-            mIOB2.setVisibility(View.GONE);
-            mCOB1.setVisibility(View.GONE);
-            mCOB2.setVisibility(View.GONE);
-            mTimestamp.setVisibility(View.GONE);
-            mTime.setTextSize(35);
-            mDirection.setTextSize(35);
-            mSgv.setTextSize(50);
-        } else {
-            TypedValue outValue = new TypedValue();
-            getResources().getValue(R.dimen.home2_primary_layout_height, outValue, true);
-            float layoutHeight = outValue.getFloat();
-            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    0,
-                    layoutHeight
-            );
-            mLinearLayout3.setLayoutParams(param);
-            mLinearLayout.setVisibility(View.VISIBLE);
-            mLoop.setVisibility(View.VISIBLE);
-            chart.setVisibility(View.VISIBLE);
-            mIOB1.setVisibility(View.VISIBLE);
-            mIOB2.setVisibility(View.VISIBLE);
-            mCOB1.setVisibility(View.VISIBLE);
-            mCOB2.setVisibility(View.VISIBLE);
-            mTimestamp.setVisibility(View.VISIBLE);
-            mDirection.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.home2_direction_text_size));
-            mSgv.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.home2_sgv_text_size));
-            mTime.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.home2_time_text_size));
-        }
-    }
-
-    private boolean isCharging() {
-        IntentFilter iFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-        Intent batteryStatus = this.registerReceiver(null, iFilter);
-        int status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
-        return status == BatteryManager.BATTERY_STATUS_CHARGING ||
-                status == BatteryManager.BATTERY_STATUS_FULL;
-    }
 }
