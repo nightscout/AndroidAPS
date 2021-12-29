@@ -56,7 +56,7 @@
     <string name="treatments_wizard_bg_label">Gly</string>
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">Glucides</string>
-    <string name="treatments_wizard_correction_label">Correction</string>
+    <string name="treatments_wizard_correction_label">Corr.</string>
     <string name="bolus_iob_label">IA Bolus</string>
     <string name="openapsma_run">Exécuter maintenant</string>
     <string name="vitualpump_label">POMPE VIRTUELLE</string>
@@ -226,7 +226,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="overview_editquickwizardlistactivity_add">Ajouter</string>
     <string name="overview_quickwizard_item_edit_button">Éditer</string>
     <string name="mealbolus">Repas</string>
-    <string name="correctionbous">Correction</string>
+    <string name="correctionbous">Corr.</string>
     <string name="actions">Actions</string>
     <string name="ns_upload_only">(DÉSACTIVATION DANGEREUSE) Envoi NS uniquement</string>
     <string name="ns_upload_only_summary">Envoi NS uniquement (sync désactivée). Inactif sur les Glycémie des capteurs sauf si une source locale comme xDrip+ est sélectionnée. Inactif sur les profils si Profil NS est sélectionné.\n!!! ATTENTION !!! La désactivation de cette option peut causer des dysfonctionnements et une surdose d\'insuline si l\'un de vos composants (AAPS, NS, xDrip+) est mal configuré. Vérifiez bien si les données affichées par AAPS correspondent à l’état de la pompe !</string>
