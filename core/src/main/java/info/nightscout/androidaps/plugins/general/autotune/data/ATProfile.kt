@@ -21,7 +21,7 @@ import org.json.JSONObject
 import java.util.*
 import javax.inject.Inject
 
-class ATProfile(profile: ProfileSealed) {
+class ATProfile(profile: Profile?) {
 
     var profile: ProfileSealed
     var profilename: String? = null
@@ -46,7 +46,7 @@ class ATProfile(profile: ProfileSealed) {
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit protected var injector: HasAndroidInjector
 
-    fun getProfile(): Profile? {
+    fun getProfile(): PureProfile {
         return profile
     }
 

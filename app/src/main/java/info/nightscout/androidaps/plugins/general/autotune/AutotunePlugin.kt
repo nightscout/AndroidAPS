@@ -268,7 +268,7 @@ class AutotunePlugin @Inject constructor(
     }
 
     // end of autotune Plugin
-    fun atLog(message: String) {
+    override fun atLog(message: String) {
         aapsLogger.debug(LTag.AUTOTUNE, message)
         log.debug(message) // for debugging to have log even if Autotune Log disabled
         logString += message // for log file in autotune folder even if autotune log disable

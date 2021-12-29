@@ -6,6 +6,8 @@ interface Autotune {
 
     fun aapsAutotune()
     fun aapsAutotune(daysBack: Int, autoSwitch: Boolean): String
+    fun atLog(s: String)
+
     var currentprofile: ATProfile?
     var tunedProfile: ATProfile?
     var result: String

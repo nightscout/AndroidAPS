@@ -117,7 +117,7 @@ class AutotuneFragment : DaggerFragment() {
             log("ProfileSwitch pressed")
             if (profileStore != null) {
                 showConfirmation(requireContext(), resourceHelper.gs(R.string.activate_profile) + ": " + autotunePlugin.tunedProfile!!.profilename + " ?", Runnable {
-                    activePlugin.activeTreatments.doProfileSwitch(autotunePlugin.tunedProfile!!.profileStore, autotunePlugin.tunedProfile!!.profilename, 0, 100, 0, DateUtil.now())
+                    activePlugin.activeTreatments.doProfileSwitch(autotunePlugin.tunedProfile!!.profileStore, autotunePlugin.tunedProfile!!.profilename, 0, 100, 0, dateUtil.now())
                     rxBus.send(EventLocalProfileChanged())
                     autotunePlugin.profileSwitchButtonVisibility = View.GONE
                     updateGui()
@@ -126,7 +126,8 @@ class AutotuneFragment : DaggerFragment() {
         }
 
         lastRun = autotunePlugin.lastRun
-        if (lastRun > MidnightTime.calc(System.currentTimeMillis() - autotunePlugin.autotuneStartHour * 3600 * 1000L) + autotunePlugin.autotuneStartHour * 3600 * 1000L && AutotunePlugin.result !== "") {
+        if (lastRun > MidnightTime.calc(System.currentTimeMillis() - autotunePlugin.autotuneStartHour * 3600 * 1000L) + autotunePlugin.autotuneStartHour * 3600 * 1000L && autotunePlugin.result !==
+            "") {
             binding.tuneWarning.text = resourceHelper.gs(R.string.autotune_warning_after_run)
             binding.tuneDays.setText(autotunePlugin.lastNbDays)
         } else { //if new day reinit result, default days, warning and button's visibility
