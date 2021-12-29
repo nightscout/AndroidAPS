@@ -13,7 +13,7 @@
     <string name="reset_db_confirm">Veritabanlarını gerçekten sıfırlamak istiyor musunuz?</string>
     <string name="nav_exit">Çıkış</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Bu cihaz, program için pil optimizasyonunu desteklemiyor gibi görünüyor - performans sorunları yaşayabilirsiniz.</string>
-    <string name="description_actions">Ortak özelliklere hızlıca erişmek için bazı düğmeler</string>
+    <string name="description_actions">Ortak özelliklere hızlıca erişmek için bazı butonlar</string>
     <string name="description_config_builder">Aktif eklentileri yapılandırmak için kullanılır</string>
     <string name="description_objectives">Eğitim programı</string>
     <string name="description_food">Nightscout\'ta tanımlanan gıda ön ayarlarını gösterir</string>
@@ -219,7 +219,7 @@
     <string name="smscommunicator_unknowncommand">Bilinmeyen komut veya yanlış cevap</string>
     <string name="quickwizard">Kurulum Sihirbazı</string>
     <string name="quickwizardsettings">Kurulum Sihirbazı Ayarları</string>
-    <string name="overview_editquickwizard_buttontext">Düğme Metni:</string>
+    <string name="overview_editquickwizard_buttontext">Buton Metni:</string>
     <string name="overview_editquickwizard_carbs">Karbonhidrat:</string>
     <string name="overview_editquickwizard_valid">Geçerli:</string>
     <string name="overview_editquickwizardlistactivity_add">Ekle</string>
@@ -521,11 +521,11 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="enablesmbwithhightemptarget">Yüksek geçici hedeflerle SMB\'yi etkinleştir</string>
     <string name="enablesmbwithhightemptarget_summary">Yüksek geçici hedef aktif olduğunda SMB\'yi etkinleştirin (egzersiz, 100 mg/dl veya 5.5 mmol/l\'nin üzerinde)</string>
     <string name="overview_insulin_label">İnsülin</string>
-    <string name="overview_buttons_selection">Tuşlar</string>
+    <string name="overview_buttons_selection">Butonlar</string>
     <string name="show_calibration_button_summary">xDrip+\'a bir kalibrasyon gönderir veya BYODA kalibrasyon iletişim kutusunu açar</string>
     <string name="show_cgm_button_summary">xDrip+ veya BYODA\'yı açar, geri dönme düğmesi AAPS\'ye döndürür</string>
-    <string name="carb_increment_button_message">Düğmeye basıldığında eklenecek karbonhidrat sayısı</string>
-    <string name="insulin_increment_button_message">Düğmeye basıldığında eklenecek insülin miktarı</string>
+    <string name="carb_increment_button_message">Butona basıldığında eklenecek karbonhidrat sayısı</string>
+    <string name="insulin_increment_button_message">Butona basıldığında eklenecek insülin miktarı</string>
     <string name="error_starting_cgm">CGM uygulaması başlatılamadı. Yüklendiğinden emin olun.</string>
     <string name="overview_cgm">CGM</string>
     <string name="ignore5m">5dk yoksay</string>
@@ -820,7 +820,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="copyexistingvalues">NS ayarları kopyalansın mı (varsa)?</string>
     <string name="classic_description">Orjinal tema</string>
     <string name="lowres_description">Düşük çözünürlüklü tema</string>
-    <string name="buttonson_description">Düğmeler her zaman ekranın altında görüntülenir</string>
+    <string name="buttonson_description">Butonlar her zaman ekranın altında görüntülenir</string>
     <string name="largedisplay_description">Büyük ekran</string>
     <string name="skin">Tema</string>
     <string name="comapareprofile">Profilleri karşılaştırın</string>
