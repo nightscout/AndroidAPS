@@ -97,6 +97,7 @@ class WizardDialog : DaggerDialogFragment() {
     override fun onStart() {
         super.onStart()
         dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        aapsLogger.debug(LTag.APS, "Dialog opened: ${this.javaClass.name}")
     }
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
@@ -163,11 +164,15 @@ class WizardDialog : DaggerDialogFragment() {
                 context?.let { context ->
                     wizard?.confirmAndExecute(context)
                 }
+                aapsLogger.debug(LTag.APS, "Dialog ok pressed: ${this.javaClass.name}")
             }
             dismiss()
         }
         // cancel button
-        binding.cancel.setOnClickListener { dismiss() }
+        binding.cancel.setOnClickListener {
+            aapsLogger.debug(LTag.APS, "Dialog canceled: ${this.javaClass.name}")
+            dismiss()
+        }
         // checkboxes
         binding.bgCheckbox.setOnCheckedChangeListener(::onCheckedChanged)
         binding.ttCheckbox.setOnCheckedChangeListener(::onCheckedChanged)
