@@ -378,4 +378,9 @@
         android:layout_height="wrap_content"
         android:visibility="gone"/>
 
+    <include
+        android:id="@+id/simple_ui"
+        layout="@layout/simple_ui"
+        android:visibility="gone" />
+
 </RelativeLayout>
