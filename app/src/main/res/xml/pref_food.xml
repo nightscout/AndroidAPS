@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:validate="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        android:key="@string/key_food_settings"
+        android:title="@string/food"
+        app:initialExpandedChildrenCount="1">
+
+        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+            android:defaultValue="25.0"
+            android:dialogMessage="@string/food_carbs_calc_protein_percent"
+            android:digits="0123456789"
+            android:inputType="number"
+            android:key="@string/key_food_carbs_calc_protein_percent"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/food_carbs_calc_protein_percent"
+            validate:maxNumber="100"
+            validate:minNumber="0"
+            validate:testType="numericRange" />
+
+        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+            android:defaultValue="25.0"
+            android:dialogMessage="@string/food_carbs_calc_fat_percent"
+            android:digits="0123456789"
+            android:inputType="number"
+            android:key="@string/key_food_carbs_calc_fat_percent"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/food_carbs_calc_fat_percent"
+            validate:maxNumber="100"
+            validate:minNumber="0"
+            validate:testType="numericRange" />
+
+    </PreferenceCategory>
+
+</androidx.preference.PreferenceScreen>
+

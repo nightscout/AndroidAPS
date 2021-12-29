@@ -1139,5 +1139,14 @@
     <string name="identification">Identification (email, FB or Discord nick etc)</string>
     <string name="identification_not_set">Identification not set in dev mode</string>
     <string name="not_available_full">Not available</string>
+    <string name="key_food_carbs_calc_protein_percent">key_food_carbs_calc_protein_percent</string>
+    <string name="food_carbs_calc_protein_percent">The percentage of protein to convert to
+        carbs (defaults is 25%, can set to zero to not include protein in carb counts)</string>
+    <string name="key_food_carbs_calc_fat_percent">key_food_carbs_calc_fat_percent</string>
+    <string name="food_carbs_calc_fat_percent">The percentage of fat to convert to carbs
+        (default is 25%, can set to zero to not include fat in carb counts)</string>
+    <string name="key_food_settings">key_food_settings</string>
+
+
 
 </resources>

@@ -34,6 +34,7 @@ class FoodPlugin @Inject constructor(
     .pluginIcon(R.drawable.ic_food)
     .pluginName(R.string.food)
     .shortName(R.string.food_short)
+    .preferencesId(R.xml.pref_food)
     .description(R.string.description_food),
     aapsLogger, rh, injector
 ) {

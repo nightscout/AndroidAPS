@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.general.food
 
 import android.annotation.SuppressLint
-import android.graphics.Paint
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -36,6 +35,7 @@ import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.ui.UIRunnable
+import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.Completable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
@@ -55,6 +55,7 @@ class FoodFragment : DaggerFragment() {
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var protectionCheck: ProtectionCheck
+    @Inject lateinit var sp: SP
 
     private val disposable = CompositeDisposable()
     private var unfiltered: List<Food> = arrayListOf()
@@ -274,14 +275,20 @@ class FoodFragment : DaggerFragment() {
                             if (isAdded) {
                                 val wizardDialog = WizardDialog()
                                 val bundle = Bundle()
-                                bundle.putInt("carbs_input", food.carbs)
-                                bundle.putString("notes_input", " ${food.name} - ${food.carbs}g")
+                                var calculatedCarbs = calculateCarbsWithFatAndProtein(food).toInt()
+                                bundle.putInt("carbs_input", calculatedCarbs)
+                                bundle.putString("notes_input", " ${food.name} - ${calculatedCarbs}g")
                                 wizardDialog.setArguments(bundle)
                                 wizardDialog.show(childFragmentManager, "Food Item")
                             }
                         })
                     }
                 }
+            }
+            fun calculateCarbsWithFatAndProtein(food:Food):Double {
+                var proteinPercent = sp.getDouble(R.string.key_food_carbs_calc_protein_percent, 0.0) / 100
+                var fatPercent = sp.getDouble(R.string.key_food_carbs_calc_fat_percent, 0.0) / 100
+                return food.carbs.toDouble() + (food.protein?.toDouble() ?: 0.0) * proteinPercent + (food.fat?.toDouble() ?: 0.0) * fatPercent
             }
         }
     }
