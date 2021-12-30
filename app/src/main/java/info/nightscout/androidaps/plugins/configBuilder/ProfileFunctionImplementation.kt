@@ -136,6 +136,12 @@ class ProfileFunctionImplementation @Inject constructor(
 
     override fun getRequestedProfile(): ProfileSwitch? = repository.getActiveProfileSwitch(dateUtil.now())
 
+    override fun isProfileChangePending(): Boolean {
+        val requested = getRequestedProfile() ?: return false
+        val running = getProfile() ?: return true
+        return !ProfileSealed.PS(requested).isEqual(running)
+    }
+
     override fun getUnits(): GlucoseUnit =
         if (sp.getString(R.string.key_units, Constants.MGDL) == Constants.MGDL) GlucoseUnit.MGDL
         else GlucoseUnit.MMOL
