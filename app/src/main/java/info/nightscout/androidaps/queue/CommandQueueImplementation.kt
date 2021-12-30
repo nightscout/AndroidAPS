@@ -88,7 +88,7 @@ class CommandQueueImplementation @Inject constructor(
                                    override fun run() {
                                        if (!result.success) {
                                            ErrorHelperActivity.runAlarm(context, result.comment, rh.gs(R.string.failedupdatebasalprofile), R.raw.boluserror)
-                                       } else if (result.enacted) {
+                                       } else {
                                            val nonCustomized = ProfileSealed.PS(it).convertToNonCustomizedProfile(dateUtil)
                                            EffectiveProfileSwitch(
                                                timestamp = dateUtil.now(),
