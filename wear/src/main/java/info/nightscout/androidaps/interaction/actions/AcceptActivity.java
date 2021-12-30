@@ -7,10 +7,16 @@ import android.os.SystemClock;
 import android.os.Vibrator;
 import android.support.wearable.view.GridPagerAdapter;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.core.view.InputDeviceCompat;
+import androidx.core.view.MotionEventCompat;
+import androidx.core.view.ViewConfigurationCompat;
 
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.ListenerService;
@@ -71,8 +77,28 @@ public class AcceptActivity extends ViewSelectorActivity {
             if (col == 0) {
                 final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_confirm_text, container, false);
                 final TextView textView = view.findViewById(R.id.message);
+                final View scrollView = view.findViewById(R.id.message_scroll);
                 textView.setText(message);
                 container.addView(view);
+                scrollView.setOnGenericMotionListener(new View.OnGenericMotionListener() {
+                    @Override
+                    public boolean onGenericMotion(View v, MotionEvent ev) {
+                        if (ev.getAction() == MotionEvent.ACTION_SCROLL &&
+                                ev.isFromSource(InputDeviceCompat.SOURCE_ROTARY_ENCODER)
+                        ) {
+                            float delta = -ev.getAxisValue(MotionEventCompat.AXIS_SCROLL) *
+                                    ViewConfigurationCompat.getScaledVerticalScrollFactor(
+                                            ViewConfiguration.get(container.getContext()),
+                                            container.getContext());
+                            v.scrollBy(0, Math.round(delta));
+
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+
+                scrollView.requestFocus();
                 return view;
             } else {
                 final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_send_item, container, false);
