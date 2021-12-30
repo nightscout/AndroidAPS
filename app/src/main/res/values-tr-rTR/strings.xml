@@ -217,8 +217,8 @@
     <string name="smscommunicator_tempbasalcancelfailed">Geçici bazal iptal edilemedi</string>
     <string name="smscommunicator_extendedcancelfailed">Yayma bolus iptal edilemedi</string>
     <string name="smscommunicator_unknowncommand">Bilinmeyen komut veya yanlış cevap</string>
-    <string name="quickwizard">Kurulum Sihirbazı</string>
-    <string name="quickwizardsettings">Kurulum Sihirbazı Ayarları</string>
+    <string name="quickwizard">Hızlı Asistan</string>
+    <string name="quickwizardsettings">Hızlı asistan ayarları</string>
     <string name="overview_editquickwizard_buttontext">Buton Metni:</string>
     <string name="overview_editquickwizard_carbs">Karbonhidrat:</string>
     <string name="overview_editquickwizard_valid">Geçerli:</string>
