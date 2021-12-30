@@ -91,7 +91,7 @@
     <string name="suspendloop">Suspender lazo</string>
     <string name="duration_min_label">Duración [min]</string>
     <string name="notification">Notificación</string>
-    <string name="noprofile">Pendiente carga perfil NS</string>
+    <string name="noprofile">Ningún perfil cargado desde Nightscout</string>
     <string name="exists">existe</string>
     <string name="notexists">no existe</string>
     <string name="glucose">Glucosa</string>
@@ -290,7 +290,7 @@
     <string name="signature_verifier">Verificador de firma</string>
     <string name="running_invalid_version">Hemos detectado que está ejecutando una versión no válida. ¡Lazo desactivado!</string>
     <string name="versionavailable">Versión %1$s disponible</string>
-    <string name="version_expire">Versión %1$s expira el %2$s</string>
+    <string name="version_expire">La versión %1$s expira el %2$s</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Por favor, reinicia el teléfono o AndroidAPS desde los ajustes del sistema, sino, AndroidAPS no guardará los registros. Esto es importante para trazar y verificar que el algoritmo funciona correctamente.</string>
     <!-- WeekdayPicker -->

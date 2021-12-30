@@ -13,7 +13,7 @@
     <string name="reset_db_confirm">Veritabanlarını gerçekten sıfırlamak istiyor musunuz?</string>
     <string name="nav_exit">Çıkış</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Bu cihaz, program için pil optimizasyonunu desteklemiyor gibi görünüyor - performans sorunları yaşayabilirsiniz.</string>
-    <string name="description_actions">Ortak özelliklere hızlıca erişmek için bazı düğmeler</string>
+    <string name="description_actions">Ortak özelliklere hızlıca erişmek için bazı butonlar</string>
     <string name="description_config_builder">Aktif eklentileri yapılandırmak için kullanılır</string>
     <string name="description_objectives">Eğitim programı</string>
     <string name="description_food">Nightscout\'ta tanımlanan gıda ön ayarlarını gösterir</string>
@@ -73,7 +73,7 @@
     <string name="openapsma_request_label">İstek</string>
     <string name="delta">Delta</string>
     <string name="sms_delta">Delta:</string>
-    <string name="configbuilder">Konfigurasyon oluştur</string>
+    <string name="configbuilder">Konfigürasyon ayarları</string>
     <string name="overview">Genel Bakış</string>
     <string name="treatments">Tedaviler</string>
     <string name="virtualpump">Sanal pompa</string>
@@ -111,7 +111,7 @@
     <string name="apsmode_title">APS modu</string>
     <string name="closedloop">Kapalı Döngü</string>
     <string name="openloop">Açık Döngü</string>
-    <string name="lowglucosesuspend">Düşük Glikoz Askıya alma</string>
+    <string name="lowglucosesuspend">Düşük Glikoz Süspansiyonu</string>
     <string name="disabledloop">Döngü devre dışı</string>
     <string name="openloop_newsuggestion">Yeni öneri mevcut</string>
     <string name="carbssuggestion">Karbonhidrat Önerisi</string>
@@ -120,7 +120,7 @@
     <string name="bolusconstraintapplied">Bolus kısıtlaması uygulandı</string>
     <string name="carbsconstraintapplied">Karbonhidrat kısıtlaması uygulandı</string>
     <string name="careportal_newnstreatment_other">Diğer</string>
-    <string name="careportal_newnstreatment_meter">Metre</string>
+    <string name="careportal_newnstreatment_meter">GlkMetre</string>
     <string name="careportal_newnstreatment_sensor">Sensör</string>
     <string name="carb_time_label">Karb. zamanı</string>
     <string name="careportal_newnstreatment_duration_label">Süre</string>
@@ -193,7 +193,8 @@
     <string name="smscommunicator_pumpdisconnected">Pompa bağlantısı kesildi</string>
     <string name="smscommunicator_reconnect">Pompa yeniden bağlandı</string>
     <string name="smscommunicator_remotecommandnotallowed">Uzaktan komuta izin verilmez</string>
-    <string name="smscommunicator_remotebolusnotallowed">Uzaktan bolus mevcut değil. Daha sonra tekrar deneyin.</string>
+    <string name="smscommunicator_remotebolusnotallowed">Uzaktan bolus gönderilemiyor. Daha sonra tekrar deneyin.</string>
+    <string name="smscommunicator_basalreplywithcode">%2$d dk boyunca bazalı %1$.2f Ü/sa yapmak için %3$s koduyla yanıtlayın</string>
     <string name="smscommunicator_profilereplywithcode">Profili %1$s %2$d%% olarak değiştirmek için %3$s koduyla yanıtlayın</string>
     <string name="smscommunicator_extendedreplywithcode">%2$d dakika boyunca %1$.2f U yayma bolus başlatmak için %3$s koduyla yanıtlayın</string>
     <string name="smscommunicator_carbsreplywithcode">%2$s\'de %1$dg girmek için %3$s koduyla yanıtlayın</string>
@@ -216,9 +217,9 @@
     <string name="smscommunicator_tempbasalcancelfailed">Geçici bazal iptal edilemedi</string>
     <string name="smscommunicator_extendedcancelfailed">Yayma bolus iptal edilemedi</string>
     <string name="smscommunicator_unknowncommand">Bilinmeyen komut veya yanlış cevap</string>
-    <string name="quickwizard">Kurulum Sihirbazı</string>
-    <string name="quickwizardsettings">Kurulum Sihirbazı Ayarları</string>
-    <string name="overview_editquickwizard_buttontext">Düğme Metni:</string>
+    <string name="quickwizard">Hızlı Asistan</string>
+    <string name="quickwizardsettings">Hızlı asistan ayarları</string>
+    <string name="overview_editquickwizard_buttontext">Buton Metni:</string>
     <string name="overview_editquickwizard_carbs">Karbonhidrat:</string>
     <string name="overview_editquickwizard_valid">Geçerli:</string>
     <string name="overview_editquickwizardlistactivity_add">Ekle</string>
@@ -266,14 +267,14 @@
     <string name="configbuilder_shortname">KONF</string>
     <string name="loop_shortname">DÖNGÜ</string>
     <string name="oaps_shortname">OAPS</string>
-    <string name="localprofile_shortname">LP</string>
+    <string name="localprofile_shortname">YP</string>
     <string name="overview_shortname">GİRİŞ</string>
     <string name="virtualpump_shortname">VPOMP</string>
     <string name="treatments_shortname">TEDAVİ</string>
     <string name="objectives_shortname">GRV</string>
     <string name="wear_shortname">WEAR</string>
     <string name="smscommunicator_shortname">SMS</string>
-    <string name="short_tabtitles">Kısa tab başlıkları</string>
+    <string name="short_tabtitles">Kısa sekme başlıkları</string>
     <string name="always_use_shortavg">Her zaman basit delta yerine kısa ortalama delta kullan</string>
     <string name="always_use_shortavg_summary">xDrip+ gibi filtrelenmemiş kaynaklardan gelen veriler gürültülü olduğunda kullanışlıdır.</string>
     <string name="profile">Profil</string>
@@ -520,11 +521,11 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="enablesmbwithhightemptarget">Yüksek geçici hedeflerle SMB\'yi etkinleştir</string>
     <string name="enablesmbwithhightemptarget_summary">Yüksek geçici hedef aktif olduğunda SMB\'yi etkinleştirin (egzersiz, 100 mg/dl veya 5.5 mmol/l\'nin üzerinde)</string>
     <string name="overview_insulin_label">İnsülin</string>
-    <string name="overview_buttons_selection">Tuşlar</string>
+    <string name="overview_buttons_selection">Butonlar</string>
     <string name="show_calibration_button_summary">xDrip+\'a bir kalibrasyon gönderir veya BYODA kalibrasyon iletişim kutusunu açar</string>
     <string name="show_cgm_button_summary">xDrip+ veya BYODA\'yı açar, geri dönme düğmesi AAPS\'ye döndürür</string>
-    <string name="carb_increment_button_message">Düğmeye basıldığında eklenecek karbonhidrat sayısı</string>
-    <string name="insulin_increment_button_message">Düğmeye basıldığında eklenecek insülin miktarı</string>
+    <string name="carb_increment_button_message">Butona basıldığında eklenecek karbonhidrat sayısı</string>
+    <string name="insulin_increment_button_message">Butona basıldığında eklenecek insülin miktarı</string>
     <string name="error_starting_cgm">CGM uygulaması başlatılamadı. Yüklendiğinden emin olun.</string>
     <string name="overview_cgm">CGM</string>
     <string name="ignore5m">5dk yoksay</string>
@@ -545,8 +546,8 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="allow_automated_crash_reporting">Geliştiricilere, fabric.io hizmeti aracılığıyla otomatik kilitlenme raporlaması ve özellik kullanım verilerinin gönderilmesine izin verir.</string>
     <string name="g5appnotdetected">Lütfen Dexcom uygulamanızı desteklenen sürüme güncelleyin</string>
     <string name="dexcom_app_not_installed">Dexcom uygulaması yüklü değil.</string>
-    <string name="start_activity_tt">Egzersiz Başlat TT</string>
-    <string name="start_eating_soon_tt">Yakında Yemeğe Başla TT</string>
+    <string name="start_activity_tt">Egzersiz Başlat GH</string>
+    <string name="start_eating_soon_tt">Yakında Öğün GH</string>
     <string name="temptargetshort">TT</string>
     <string name="do_not_bolus_record_only">Bolusu sadece kayıt altına al</string>
     <string name="category">Kategori</string>
@@ -561,7 +562,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="overview_show_iob">Aktif İnsülin</string>
     <string name="overview_show_basals">Bazallar</string>
     <string name="no_action_selected">Seçili eylem yok, hiçbir şey olmayacak</string>
-    <string name="start_hypo_tt">Hipo TT başlat</string>
+    <string name="start_hypo_tt">Hipo GH başlat</string>
     <string name="closed_loop_disabled_on_dev_branch">Geliştirici sürümü çalışıyor. Kapalı Döngü devre dışı.</string>
     <string name="engineering_mode_enabled">Geliştirici modu etkinleştirildi</string>
     <string name="profileswitch_ismissing">Profil geçişi yok. Lütfen Profil Değiştirme ile bir profil geçişi yapın veya Yerel Profil\'de \"Profili Etkinleştir\" düğmesine basın.</string>
@@ -592,7 +593,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="absorption_cutoff_title">Besinin maksimum emilim süresi [h]</string>
     <string name="absorption_cutoff_summary">Herhangi bir öğünün emildiği kabul edilen zaman. Kalan karbonhidratlar kesilecek.</string>
     <string name="overview_show_notes_field_in_dialogs_title">Tedavi diyaloglarında not alanını göster</string>
-    <string name="next_button">Sonraki</string>
+    <string name="next_button">İleri</string>
     <string name="previous_button">Önceki</string>
     <string name="nav_setupwizard">Kurulum Sihirbazı</string>
     <string name="setupwizard_finish">BİTTİ</string>
@@ -728,7 +729,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="cobvsiob">COB vs IOB</string>
     <string name="bolusconstraintappliedwarn">Bolus kısıtlaması uygulandı: %1$.2f Ü ile %2$.2f Ü</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Yavaş karbonhidrat emilimi tespit edildi: zamanın %2$d%% si. Hesaplamanızı iki kez kontrol edin. Aktif Karbonhidrat (COB) olduğundan fazla tahmin edilebilir, bu nedenle daha fazla insülin verilebilir !!!!!</font>]]></string>
-    <string name="partialboluswizard">Bolus sihirbazı sonucunun bu bölümünü ilet [%]</string>
+    <string name="partialboluswizard">Bolus sihirbazı sonucunun bu kadarını ilet [%]</string>
     <string name="deliverpartofboluswizard">Bolus sihirbazı hesaplamayı gerçekleştirir ancak hesaplanan insülinin yalnızca bu kısmı iletilir. SMB algoritması ile kullanışlıdır.</string>
     <string name="snooze">Ertele</string>
     <string name="increasingmaxbasal">Profilinizdeki maksimum bazal değeriniz düşük olduğu için maksimum bazal değeri artırma</string>
@@ -819,7 +820,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="copyexistingvalues">NS ayarları kopyalansın mı (varsa)?</string>
     <string name="classic_description">Orjinal tema</string>
     <string name="lowres_description">Düşük çözünürlüklü tema</string>
-    <string name="buttonson_description">Düğmeler her zaman ekranın altında görüntülenir</string>
+    <string name="buttonson_description">Butonlar her zaman ekranın altında görüntülenir</string>
     <string name="largedisplay_description">Büyük ekran</string>
     <string name="skin">Tema</string>
     <string name="comapareprofile">Profilleri karşılaştırın</string>

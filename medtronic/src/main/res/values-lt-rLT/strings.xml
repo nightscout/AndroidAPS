@@ -90,4 +90,5 @@
     <string name="set_neutral_temps_title">Nustatyti neutralią laikiną bazę</string>
     <string name="set_neutral_temps_summary">Jei įjungta, laikina valandinė bazė bus anuliuota iki kiekvienos valandos pabaigos. Šis metodas gali padėti išvengti kai kurių pompų pypsėjimo ar vibravimo.</string>
     <string name="mdt_tbr_remaining">%1$.1f vv/h (liko %2$d min)</string>
+    <string name="invalid_history_data">Aptikti neteisingi pompos istorijos duomenys. Sukurkite naują problemos įrašą ir pateikite žurnalus.</string>
 </resources>

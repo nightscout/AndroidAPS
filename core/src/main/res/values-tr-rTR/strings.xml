@@ -101,7 +101,7 @@
     <string name="time">Zaman</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
     <string name="loading">Yükleniyor…</string>
-    <string name="event_time_label">Etkinlik saati</string>
+    <string name="event_time_label">Tarih, saat</string>
     <string name="notes_label">Notlar</string>
     <string name="remove_button">Kaldır</string>
     <string name="addnew">Yeni ekle</string>

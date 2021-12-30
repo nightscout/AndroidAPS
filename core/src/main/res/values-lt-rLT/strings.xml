@@ -409,6 +409,17 @@
     <string name="basal_value">Valandinė bazė</string>
     <string name="nsclient_version_does_not_match">NSClient ir AndroidAPS versijos nesutampa. Atnaujinkite.</string>
     <!-- Command Queue + readStatus reasons -->
+    <string name="bolus_u_min">BOLUSAS %1$.2f vv</string>
+    <string name="carbs_g">AV %1$d g</string>
+    <string name="extended_bolus_u_min">IŠTĘSTAS BOLUSAS %1$.2f vv %2$d min</string>
+    <string name="set_profile">NUSTATYTI PROFILĮ</string>
+    <string name="set_user_settings">PASIRINKTI VARTOTOJO NUSTATYMUS</string>
+    <string name="smb_bolus_u">SMB BOLUSAS %1$.2f vv</string>
+    <string name="start_pump">PALEISTI POMPĄ</string>
+    <string name="stop_pump">SUSTABDYTI POMPĄ</string>
+    <string name="sms" comment="26 characters max for translation">SMS</string>
+    <string name="device_changed" comment="26 characters max for translation">Įrenginys pakeistas</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Paspausta atnaujinti</string>
     <plurals name="days">
         <item quantity="one">%1$d d.</item>
         <item quantity="few">%1$d d.</item>

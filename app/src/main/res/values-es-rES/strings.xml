@@ -8,7 +8,7 @@
     <string name="treatmentssafety_maxcarbs_title">Máximos carbohidratos permitidos [g]</string>
     <string name="nav_preferences_plugin">%1$s preferencias</string>
     <string name="nav_preferences">Preferencias</string>
-    <string name="nav_refreshtreatments">Actualizar los tratamientos desde NS</string>
+    <string name="nav_refreshtreatments">Actualizar los tratamientos desde Nightscout</string>
     <string name="nav_resetdb">Restablecer las bases de datos</string>
     <string name="reset_db_confirm">¿Realmente quiere restablecer las bases de datos?</string>
     <string name="nav_exit">Salir</string>
@@ -130,7 +130,7 @@
     <string name="overview_extendedbolus_button">Bolo extendido</string>
     <string name="configbuilder_nightscoutversion_label">Versión de Nightscout:</string>
     <string name="missing_carbs">Falta %1$d g</string>
-    <string name="exported">Ajustes exportados correctamente</string>
+    <string name="exported">Ajustes exportados</string>
     <string name="ue_exported">Entradas de usuario exportadas</string>
     <string name="export_to">Exportar ajustes a</string>
     <string name="import_from">Importar configuración de</string>
@@ -231,7 +231,7 @@
     <string name="ns_upload_only_summary">Sólo subir a Nightscout (sincronización desactivada). No es efectivo en SGV, a menos que se seleccione una fuente local como xDrip+. No es efectivo en perfiles, si se usan perfiles Nightscout.\n!!! ¡¡ADVERTENCIA!!! Desactivar esta opción puede causar mal funcionamiento y sobredosis de insulina, si cualquiera de sus componentes (AAPS, NS, xDrip+) está mal configurado. ¡Vigile cuidadosamente si los datos mostrados por AAPS coinciden con el estado de la bomba!</string>
     <string name="pumpNotInitialized">¡Bomba no iniciada!</string>
     <string name="primefill">Cebar/Llenar</string>
-    <string name="fillwarning">¡Por favor, asegúrate de que la cantidad coincide con la especificación del set de infusión!</string>
+    <string name="fillwarning">Por favor, asegúrate de que la cantidad coincide con la cantidad especificada en el set de infusión</string>
     <string name="fillbolus_title">Cebar/Llenar la cantidad de insulina estándar</string>
     <string name="button1">Botón 1</string>
     <string name="button2">Botón 2</string>
@@ -261,7 +261,7 @@
     <string name="openapsma_autosensdata_label">Datos Autosens</string>
     <string name="openapsma_scriptdebugdata_label">Depurar script</string>
     <string name="openapsama_useautosens">Usar la función Autosens</string>
-    <string name="refresheventsfromnightscout">Actualizar desde NS</string>
+    <string name="refresheventsfromnightscout">Actualizar desde Nightscout</string>
     <string name="deletefuturetreatments">Borrar tratamientos en el futuro</string>
     <string name="actions_shortname">ACC</string>
     <string name="configbuilder_shortname">CONF</string>
@@ -292,11 +292,11 @@
     <string name="xdripnotinstalled">xDrip+ no instalado</string>
     <string name="calibrationsent">Calibración mandada a xDrip+</string>
     <string name="smscommunicator_calibrationsent">Calibración enviada. La recepción debe estar habilitada en xDrip+.</string>
-    <string name="smscommunicator_calibrationfailed">xDrip + no está recibiendo calibraciones</string>
+    <string name="smscommunicator_calibrationfailed">xDrip+ no está recibiendo calibraciones</string>
     <string name="pumpsuspended">Bomba parada</string>
     <string name="executing">Ejecutando</string>
     <string name="virtualpump_settings">Ajustes de bomba virtual</string>
-    <string name="virtualpump_uploadstatus_title">Subir estado a NS</string>
+    <string name="virtualpump_uploadstatus_title">Subir estado a Nightscout</string>
     <string name="nsclientinternal">NSClient</string>
     <string name="nsclientinternal_shortname">NSCLI</string>
     <string name="nsclientinternal_url">URL:</string>
@@ -314,7 +314,7 @@
     <string name="queue">Cola:</string>
     <string name="status">Estado:</string>
     <string name="clearlog">Borrar log</string>
-    <string name="nowritepermission">NSCLIENT no tiene permisos de escritura. ¿API Secret incorrecta?</string>
+    <string name="nowritepermission">NSClient no tiene permisos de escritura. ¿API Secret incorrecta?</string>
     <string name="wear_settings">Ajustes de reloj</string>
     <string name="wear_detailedIOB_title">Mostrar detalles IOB</string>
     <string name="wear_detailedIOB_summary">Separar la insulina activa en bolo y basal en el reloj</string>
@@ -326,7 +326,7 @@
     <string name="adult">Adulto</string>
     <string name="resistantadult">Adulto resistente a la insulina</string>
     <string name="pregnant">Embarazada</string>
-    <string name="patientage_summary">Por favor seleccione el tipo de paciente para establecer límites de seguridad</string>
+    <string name="patientage_summary">Por favor, selecciona el tipo de paciente para establecer los límites de seguridad</string>
     <string name="patient_name">Nombre del paciente</string>
     <string name="patient_name_summary">Proporcione el nombre de paciente o el apodo para diferenciar entre varias configuraciones</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Usuario</string>
@@ -413,7 +413,7 @@
     <string name="openaps">OpenAPS</string>
     <string name="uploader">Cargador datos</string>
     <string name="configbuilder_sensitivity">Detección sensibilidad</string>
-    <string name="configbuilder_sensitivity_description">¿Que algoritmo de sensibilidad se debe usar?</string>
+    <string name="configbuilder_sensitivity_description">¿Qué algoritmo de sensibilidad debería usar?</string>
     <string name="sensitivity_shortname">SENS</string>
     <string name="sensitivityoref1">Sensibilidad Oref1</string>
     <string name="sensitivityaaps">Sensibilidad AAPS</string>
@@ -457,7 +457,7 @@
     <string name="hypo_duration">Duración OT Hipo</string>
     <string name="hypo_target">Objetivo Hipo</string>
     <string name="reuse_profile_pct_hours">Reutilizar %1$d%% %2$dh</string>
-    <string name="wearcontrol_title">Control desde reloj</string>
+    <string name="wearcontrol_title">Control desde el reloj</string>
     <string name="wearcontrol_summary">Establece Objetivos Temporales (OT) y añade tratamientos desde el reloj</string>
     <string name="food">Comida</string>
     <string name="shortgramm">g</string>
@@ -688,7 +688,7 @@
     <string name="loop_openmode_min_change">Valor mínimo de cambio [%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">Valor predeterminado 20%. El lazo abierto realizará una petición de cambio, sólo cuando se supere este valor</string>
     <string name="profile_total">== ∑%1$s U</string>
-    <string name="dexcom_lognssensorchange_title">Registro de cambio de sensor en NS</string>
+    <string name="dexcom_lognssensorchange_title">Registro de cambio de sensor en Nightscout</string>
     <string name="dexcom_lognssensorchange_summary">Crear evento \"Cambio de sensor\" en Nightscout automáticamente al iniciar el sensor</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
@@ -865,27 +865,27 @@
     <string name="privacy_settings">Ajustes de privacidad</string>
     <string name="privacy_summary">Puedes proporcionar una dirección de correo electrónico opcional si quieres ser notificado sobre fallos de la aplicación. Este no es un servicio automatizado. Los desarrolladores se comunicarán contigo en situaciones peligrosas.</string>
     <string name="full_sync">Sincronización completa</string>
-    <string name="full_sync_comment">¿Sincronización completa? Puede tardar muchas horas y hasta que termine no verás nuevos datos en NS.</string>
+    <string name="full_sync_comment">¿Sincronización completa? Puede tardar muchas horas y hasta que termine no verás nuevos datos en Nightscout</string>
     <string name="prime">Cebar</string>
     <string name="ns_sync_options">Sincronización</string>
     <string name="ns_upload_summary">Perfiles, bolos, carbohidratos y basales temporales se suben a NS</string>
-    <string name="ns_upload">Subir datos a NS</string>
+    <string name="ns_upload">Subir datos a Nightscout</string>
     <string name="ns_receive_profile_store">Recibir perfil almacenado</string>
-    <string name="ns_receive_profile_store_summary">Sincronizar perfiles del editor de perfiles de NS</string>
+    <string name="ns_receive_profile_store_summary">Sincronizar perfiles desde el editor de perfiles de Nightscout</string>
     <string name="ns_receive_temp_target">Recibir objetivos temporales</string>
-    <string name="ns_receive_temp_target_summary">Aceptar objetivos temporales registrados mediante NS o NSClient</string>
+    <string name="ns_receive_temp_target_summary">Aceptar objetivos temporales registrados mediante Nightscout o NSClient</string>
     <string name="ns_receive_profile_switch">Recibir cambios de perfil</string>
-    <string name="ns_receive_profile_switch_summary">Aceptar cambios de perfil registrados mediante NS o NSClient</string>
+    <string name="ns_receive_profile_switch_summary">Aceptar cambios de perfil registrados mediante Nightscout o NSClient</string>
     <string name="ns_receive_offline_event">Recibir eventos de desconexión de APS</string>
-    <string name="ns_receive_offline_event_summary">Aceptar eventos de desconexión de APS registrados mediante NS o NSClient</string>
+    <string name="ns_receive_offline_event_summary">Aceptar eventos de desconexión de APS registrados mediante Nightscout o NSClient</string>
     <string name="ns_receive_insulin">Recibir insulina</string>
-    <string name="ns_receive_insulin_summary">Aceptar insulina registrada mediante NS o NSClient (no se entrega, sólo se calcula para IOB)</string>
+    <string name="ns_receive_insulin_summary">Aceptar insulina registrada mediante Nightscout o NSClient (no se entrega, sólo se calcula para IOB)</string>
     <string name="ns_receive_carbs">Recibir carbohidratos</string>
-    <string name="ns_receive_carbs_summary">Aceptar carbohidratos añadidos mediante NS o NSClient</string>
+    <string name="ns_receive_carbs_summary">Aceptar carbohidratos añadidos mediante Nightscout o NSClient</string>
     <string name="ns_receive_therapy_events">Recibir eventos de tratamientos</string>
-    <string name="ns_receive_therapy_events_summary">Aceptar registros de tratamientos (cánula, insulina, cambios de batería, etc.) añadidos mediante NS o NSClient</string>
+    <string name="ns_receive_therapy_events_summary">Aceptar registros de terapia (cánula, insulina, cambios de batería, etc.) añadidos mediante Nightscout o NSClient</string>
     <string name="ns_receive_cgm">Recibir/Rellenar datos del MCG</string>
-    <string name="ns_receive_cgm_summary">Aceptar valores MCG desde NS</string>
+    <string name="ns_receive_cgm_summary">Aceptar valores MCG desde Nightscout</string>
     <string name="sms_timeout_while_wating">Tiempo de espera agotado mientras finalizaba la comunicación anterior con la bomba</string>
     <string name="smscommunicator_another_bolus_in_queue">Hay otro bolo en cola. Inténtalo de nuevo más tarde.</string>
     <string name="calculation_in_progress">Cálculo en curso</string>
@@ -895,7 +895,7 @@
     <string name="error_in_target_values">Error en los valores de objetivo</string>
     <string name="error_in_isf_values">Error en valores ISF</string>
     <string name="run_question">¿Ejecutar %s?</string>
-    <string name="invalid_profile_not_accepted">Perfil no válido %1$s no aceptado por NS</string>
+    <string name="invalid_profile_not_accepted">Perfil no válido %1$s no aceptado desde Nightscout</string>
     <string name="view">Vista</string>
     <string name="errors">Errores</string>
     <string name="ns_sync_slow">Ralentizar subidas</string>
