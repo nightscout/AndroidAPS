@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context=".watchfaces.Home2" tools:deviceIds="wear_square"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/black"
-    android:id="@+id/main_layout">
+    tools:context=".watchfaces.Home2"
+    tools:deviceIds="wear_square">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,6 +16,7 @@
         android:weightSum="1">
 
         <LinearLayout
+            android:id="@+id/primary_layout"
             android:layout_width="fill_parent"
             android:layout_height="0px"
             android:layout_gravity="center_horizontal"
@@ -42,8 +46,8 @@
                 android:layout_marginBottom="-2dp"
                 android:gravity="bottom|right"
                 android:paddingLeft="5dp"
-                android:paddingRight="5dp"
                 android:paddingTop="-2dp"
+                android:paddingRight="5dp"
                 android:text="---"
                 android:textColor="#FFFFFF"
                 android:textSize="38sp" />
@@ -101,8 +105,8 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:paddingEnd="2dp"
                 android:paddingStart="2dp"
+                android:paddingEnd="2dp"
                 android:textAlignment="center">
 
                 <TextView
@@ -271,7 +275,7 @@
                     android:text="12:00"
                     android:textAlignment="center"
                     android:textColor="#FFFFFF"
-                    android:textSize="26sp" />
+                    android:textSize="30sp" />
 
                 <LinearLayout
                     android:id="@+id/date_time"
@@ -365,5 +369,10 @@
             android:gravity="center_horizontal|top" />
 
     </LinearLayout>
+
+    <include
+        android:id="@+id/simple_ui"
+        layout="@layout/simple_ui"
+        android:visibility="gone" />
 
 </RelativeLayout>

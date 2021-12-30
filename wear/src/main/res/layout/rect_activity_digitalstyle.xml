@@ -317,19 +317,21 @@
                             android:textColor="@color/white"
                             android:textFontWeight="400"
                             android:textSize="18sp" />
+
                         <TextView
                             android:id="@+id/weeknumber"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="4"
                             android:fontFamily="@font/roboto_condensed_light"
+                            android:letterSpacing="-0.1"
                             android:text="ww"
                             android:textAllCaps="true"
                             android:textColor="@color/light_grey"
                             android:textFontWeight="400"
                             android:textSize="18sp"
-                            android:letterSpacing="-0.1"
-                            android:visibility="gone"/>
+                            android:visibility="gone" />
+
                         <Space
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
@@ -529,6 +531,7 @@
                         android:layout_gravity="bottom"
                         android:layout_weight="1"
                         android:gravity="center_horizontal|top" />
+
                 </LinearLayout>
 
                 <!--  right side bottom - spacer    2/10 -->
@@ -540,6 +543,10 @@
         </LinearLayout>
     </LinearLayout>
 
+    <include
+        android:id="@+id/simple_ui"
+        layout="@layout/simple_ui"
+        android:visibility="gone" />
 
     <!--   FLAGs   -->
 

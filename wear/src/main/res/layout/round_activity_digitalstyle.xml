@@ -121,6 +121,7 @@
 
                     <!-- 1st line with direction and timestamp-->
                     <LinearLayout
+                        android:id="@+id/directionLayout"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_gravity="center_horizontal"
@@ -317,19 +318,21 @@
                             android:textColor="@color/white"
                             android:textFontWeight="400"
                             android:textSize="18sp" />
+
                         <TextView
                             android:id="@+id/weeknumber"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="4"
                             android:fontFamily="@font/roboto_condensed_light"
+                            android:letterSpacing="-0.1"
                             android:text="ww"
                             android:textAllCaps="true"
                             android:textColor="@color/light_grey"
                             android:textFontWeight="400"
                             android:textSize="18sp"
-                            android:letterSpacing="-0.1"
-                            android:visibility="gone"/>
+                            android:visibility="gone" />
+
                         <Space
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
@@ -426,12 +429,12 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:layout_marginLeft="7dp"
+                android:layout_marginRight="7dp"
                 android:layout_weight="1"
                 android:baselineAligned="false"
                 android:gravity="left|top"
                 android:orientation="vertical"
-                android:layout_marginLeft="7dp"
-                android:layout_marginRight="7dp"
                 android:weightSum="10">
 
                 <!--  right side bottom - statusbar  2/10 -->
@@ -529,6 +532,7 @@
                         android:layout_gravity="bottom"
                         android:layout_weight="1"
                         android:gravity="center_horizontal|top" />
+
                 </LinearLayout>
 
                 <!--  right side bottom - spacer    2/10 -->
@@ -541,7 +545,10 @@
         </LinearLayout>
     </LinearLayout>
 
-
+    <include
+        android:id="@+id/simple_ui"
+        layout="@layout/simple_ui"
+        android:visibility="gone" />
     <!--   FLAGs   -->
 
     <TextView

@@ -34,7 +34,7 @@ public class SgvComplication extends BaseComplicationProviderService {
         switch (dataType) {
             case ComplicationData.TYPE_SHORT_TEXT:
                 final ComplicationData.Builder builder = new ComplicationData.Builder(ComplicationData.TYPE_SHORT_TEXT)
-                        .setShortText(ComplicationText.plainText(raw.sSgv + raw.sDirection))
+                        .setShortText(ComplicationText.plainText(raw.sSgv + raw.sDirection + "\uFE0E"))
                         .setShortTitle(ComplicationText.plainText(displayFormat.shortTrend(raw)))
                         .setTapAction(complicationPendingIntent);
 

@@ -8,7 +8,7 @@
         android:summary="Dark theme"
         android:title="@string/pref_dark"
         app:wear_iconOff="@drawable/settings_off"
-        app:wear_iconOn="@drawable/settings_on"/>
+        app:wear_iconOn="@drawable/settings_on" />
 
     <CheckBoxPreference
         android:defaultValue="false"
@@ -16,7 +16,7 @@
         android:summary="Status bar divider background matches watchface background"
         android:title="@string/pref_matching_divider"
         app:wear_iconOff="@drawable/settings_off"
-        app:wear_iconOn="@drawable/settings_on"/>
+        app:wear_iconOn="@drawable/settings_on" />
 
     <CheckBoxPreference
         android:defaultValue="false"
@@ -26,9 +26,18 @@
         app:wear_iconOn="@drawable/settings_on" />
 
     <CheckBoxPreference
+        android:defaultValue="false"
         android:key="vibrate_Hourly"
         android:title="@string/pref_vibrate_hourly"
-        android:defaultValue="false"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="simplify_ui_charging"
+        android:summary="@string/pref_simplify_ui_charging_sum"
+        android:title="@string/pref_simplify_ui_charging"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
 </PreferenceScreen>

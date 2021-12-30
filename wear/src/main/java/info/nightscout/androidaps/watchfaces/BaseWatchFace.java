@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.os.BatteryManager;
 import android.os.PowerManager;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
@@ -25,6 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.gms.wearable.DataMap;
@@ -40,7 +42,6 @@ import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.complications.BaseComplicationProviderService;
 import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.data.RawDisplayData;
 import info.nightscout.androidaps.interaction.utils.Persistence;
@@ -59,7 +60,6 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
     @Inject Persistence persistence;
 
     public final static IntentFilter INTENT_FILTER;
-    public static final long[] vibratePattern = {0, 400, 300, 400, 300, 400};
 
     static {
         INTENT_FILTER = new IntentFilter();
@@ -70,7 +70,9 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
 
     public final Point displaySize = new Point();
     public TextView mTime, mHour, mMinute, mSgv, mDirection, mTimestamp, mUploaderBattery, mRigBattery, mDelta, mAvgDelta, mStatus, mBasalRate, mIOB1, mIOB2, mCOB1, mCOB2, mBgi, mLoop, mDay, mDayName, mMonth, isAAPSv2, mHighLight, mLowLight;
+    public TextView mSimpleSvg, mSimpleDirection, mSimpleTime;
     public ImageView mGlucoseDial, mDeltaGauge, mHourHand, mMinuteHand;
+    public View mSimpleUi;
     public RelativeLayout mRelativeLayout;
     public LinearLayout mLinearLayout, mLinearLayout2, mDate, mChartTap, mMainMenuTap;
     public int ageLevel = 1;
@@ -100,6 +102,8 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
     protected SharedPreferences sharedPrefs;
     private LocalBroadcastManager localBroadcastManager;
     private MessageReceiver messageReceiver;
+    private BroadcastReceiver batteryReceiver;
+    protected boolean isCharging = false;
 
     @Override
     public void onCreate() {
@@ -121,6 +125,26 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
         sharedPrefs.registerOnSharedPreferenceChangeListener(this);
 
         persistence.turnOff();
+
+        setupBatteryReceiver();
+    }
+
+    private void setupBatteryReceiver() {
+        if (sharedPrefs.getBoolean("simplify_ui_charging", false)) {
+            IntentFilter intentBatteryFilter = new IntentFilter();
+            intentBatteryFilter.addAction(BatteryManager.ACTION_CHARGING);
+            intentBatteryFilter.addAction(BatteryManager.ACTION_DISCHARGING);
+            isCharging = checkIsCharging();
+            batteryReceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    isCharging = checkIsCharging();
+                    setDataFields();
+                    invalidate();
+                }
+            };
+            registerReceiver(batteryReceiver, intentBatteryFilter);
+        }
     }
 
     @Override
@@ -176,8 +200,11 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
                                                  mChartTap = stub.findViewById(R.id.chart_zoom_tap);
                                                  mMainMenuTap = stub.findViewById(R.id.main_menu_tap);
                                                  chart = stub.findViewById(R.id.chart);
+                                                 mSimpleUi = stub.findViewById(R.id.simple_ui);
+                                                 mSimpleSvg = stub.findViewById(R.id.simple_sgv);
+                                                 mSimpleDirection = stub.findViewById(R.id.simple_direction);
+                                                 mSimpleTime = stub.findViewById(R.id.simple_watch_time);
                                                  layoutSet = true;
-
                                                  setDataFields();
                                                  setColor();
                                              }
@@ -216,6 +243,9 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
         }
         if (sharedPrefs != null) {
             sharedPrefs.unregisterOnSharedPreferenceChangeListener(this);
+        }
+        if (batteryReceiver != null) {
+            unregisterReceiver(batteryReceiver);
         }
         super.onDestroy();
     }
@@ -256,8 +286,16 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
         }
     }
 
+    private boolean checkIsCharging() {
+        IntentFilter iFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        Intent batteryStatus = this.registerReceiver(null, iFilter);
+        int status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+        return status == BatteryManager.BATTERY_STATUS_CHARGING ||
+                status == BatteryManager.BATTERY_STATUS_FULL;
+    }
+
     private void checkVibrateHourly(WatchFaceTime oldTime, WatchFaceTime newTime) {
-        Boolean hourlyVibratePref = sharedPrefs.getBoolean("vibrate_Hourly", false);
+        boolean hourlyVibratePref = sharedPrefs.getBoolean("vibrate_Hourly", false);
         if (hourlyVibratePref && layoutSet && newTime.hasHourChanged(oldTime)) {
             Log.i("hourlyVibratePref", "true --> " + newTime.toString());
             Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
@@ -285,7 +323,7 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
 
         if (mDirection != null) {
             if (sharedPrefs.getBoolean("show_direction", true)) {
-                mDirection.setText(rawData.sDirection);
+                mDirection.setText(rawData.sDirection+"\uFE0E");
                 mDirection.setVisibility(View.VISIBLE);
             } else {
                 mDirection.setVisibility(View.GONE);
@@ -448,6 +486,37 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
                 mLoop.setVisibility(View.GONE);
             }
         }
+        setDataFieldsSimpleUi();
+    }
+
+    void setDataFieldsSimpleUi() {
+        if (sharedPrefs.getBoolean("simplify_ui_charging", false) && isCharging) {
+            mSimpleUi.setVisibility(View.VISIBLE);
+
+            mSimpleSvg.setText(rawData.sSgv);
+            if (ageLevel() <= 0) {
+                mSimpleSvg.setPaintFlags(mSimpleSvg.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            } else {
+                mSimpleSvg.setPaintFlags(mSimpleSvg.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
+            }
+            if (rawData.sgvLevel == 1) {
+                mSimpleSvg.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor));
+                mSimpleDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor));
+            } else if (rawData.sgvLevel == 0) {
+                mSimpleSvg.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
+                mSimpleDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
+            } else if (rawData.sgvLevel == -1) {
+                mSimpleSvg.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_lowColor));
+                mSimpleDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_lowColor));
+            }
+
+            mSimpleDirection.setText(rawData.sDirection+"\uFE0E");
+
+            final java.text.DateFormat timeFormat = DateFormat.getTimeFormat(BaseWatchFace.this);
+            mSimpleTime.setText(timeFormat.format(System.currentTimeMillis()));
+        } else {
+            mSimpleUi.setVisibility(View.GONE);
+        }
     }
 
     public void setDateAndTime() {
@@ -526,7 +595,7 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-
+        setupBatteryReceiver();
         if ("delta_granularity".equals(key)) {
             ListenerService.requestData(this);
         }
