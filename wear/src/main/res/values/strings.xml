@@ -136,6 +136,8 @@
     <string name="color_name_white">white</string>
     <string name="color_name_black">black</string>
     <string name="color_name_multicolor">multicolor</string>
+    <string name="pref_simplify_ui_charging">Simplify Charging UI</string>
+    <string name="pref_simplify_ui_charging_sum">Only show time and BG when charging</string>
 
 
     <string name="pref_vibrate_hourly">Vibrate hourly</string>
