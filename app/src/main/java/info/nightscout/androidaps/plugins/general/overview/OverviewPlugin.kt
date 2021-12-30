@@ -213,6 +213,7 @@ class OverviewPlugin @Inject constructor(
             .putDouble(R.string.key_statuslights_res_critical, sp, rh)
             .putDouble(R.string.key_statuslights_bat_warning, sp, rh)
             .putDouble(R.string.key_statuslights_bat_critical, sp, rh)
+            .putInt(R.string.key_boluswizard_percentage, sp, rh)
 
     override fun applyConfiguration(configuration: JSONObject) {
         configuration
@@ -240,6 +241,7 @@ class OverviewPlugin @Inject constructor(
             .storeDouble(R.string.key_statuslights_res_critical, sp, rh)
             .storeDouble(R.string.key_statuslights_bat_warning, sp, rh)
             .storeDouble(R.string.key_statuslights_bat_critical, sp, rh)
+            .storeInt(R.string.key_boluswizard_percentage, sp, rh)
     }
 
     @Volatile
