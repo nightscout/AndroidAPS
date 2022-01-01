@@ -141,7 +141,7 @@
     <string name="openapsma_maxbasal_title">Máximas U/h que la basal temporal no podrá superar</string>
     <string name="openapsma_maxbasal_summary">Este valor se llama \"Max basal\" en el contexto de OpenAPS</string>
     <string name="openapsma_maxiob_title">Basal máxima que OpenAPS puede entregar [U]</string>
-    <string name="openapsma_maxiob_summary">Este valor es llamado \"Max IOB\" en OpenAPS\nEsta es la cantidad máxima de insulina en [U] que APS puede entregar a la vez.</string>
+    <string name="openapsma_maxiob_summary">Este valor se denomina \"Max IOB\" en OpenAPS\nEsta es la cantidad máxima de insulina en [U] que APS puede entregar a la vez.</string>
     <string name="password_preferences_encrypt_prompt">Se le solicitará la contraseña maestra, que se utilizará para cifrar los ajustes exportados</string>
     <string name="password_preferences_decrypt_prompt">Se le solicitará la contraseña maestra, que es necesaria para descifrar las preferencias importadas.</string>
     <string name="preferences_export_canceled">¡Exportación cancelada! ¡Las preferencias NO se han exportado!</string>
@@ -278,7 +278,7 @@
     <string name="always_use_shortavg">Usar siempre el delta medio corto, en lugar del delta simple</string>
     <string name="always_use_shortavg_summary">Útil cuando los datos de fuentes sin filtrar como los de xDrip+ son inestables</string>
     <string name="profile">Perfiles</string>
-    <string name="openapsama_max_daily_safety_multiplier_summary">Valor predeterminado: 3. Este valor es una protección de seguridad clave de OpenAPS. Limita la basal máxima que puede usar AAPS a un máximo de tres veces tu basal. Probablemente nunca necesites modificar este valor. Antes de modificarlo deberías tener en cuenta las discusiones sobre \"3x máx diaria; 4x actual\" por motivos de segurida</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Valor predeterminado: 3. Este valor es una protección de seguridad clave de OpenAPS. Limita la basal máxima que puede usar AAPS a un máximo de tres veces tu basal. Probablemente nunca necesites modificar este valor. Antes de modificarlo deberías tener en cuenta las discusiones sobre \"3x máx diaria; 4x actual\" por motivos de seguridad</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Valor predeterminado: 4. Esta es la otra mitad de los ajustes de seguridad de OpenAPS y de \"3x máx diaria, 4x actual\". Esto significa que tu basal, independientemente del valor de basal máxima que tengas configurado en la bomba, nunca podrá superar este valor multiplicado por tu basal actual. Esto se usa para evitar que las personas se encuentren en situaciones peligrosas por aumentar excesivamente la basal, sin entender como funciona el algoritmo. La mayoría de las personas nunca tendrán que cambiar estos valores. Si estás cerca de alcanzar éstos límites, deberías de ajustar otras configuraciones</string>
     <string name="openapsama_autosens_max_summary">Valor predeterminado: 1.2\nEste parámetro establece un límite de seguridad máximo por defecto del 20% en autosens (y pronto en Autotune), que limita los valores máximos que puede: aumentar las basales, disminuir el factor de sensibilidad (ISF) y disminuir el objetivo de glucosa</string>
     <string name="openapsama_autosens_min_summary">Valor predeterminado: 0.7\nEste parámetro establece un límite de seguridad mínimo por defecto del 30% en autosens, que limita los valores que puede: disminuir las basales, aumentar el factor de sensibilidad (ISF) y aumentar el objetivo de glucosa</string>
@@ -516,8 +516,8 @@
     <string name="enablesmbwithcob">Habilitar SMB con COB</string>
     <string name="enablesmbwithcob_summary">Habilitar SMB cuando hay carbohidratos activos (COB)</string>
     <string name="enablesmbwithtemptarget">Habilitar SMB con Objetivos Temporales</string>
-    <string name="enablesmbwithtemptarget_summary">Habilitar SMB cuando hay un Objetivo Temporal (TT) activo (ComiendoPronto, Actividad)</string>
-    <string name="enablesmbwithhightemptarget">Habilitar SMB con Objetivo Temporal Alto</string>
+    <string name="enablesmbwithtemptarget_summary">Habilitar SMB cuando hay un Objetivo Temporal (OT) activo (ComiendoPronto, Actividad, etc.)</string>
+    <string name="enablesmbwithhightemptarget">Habilitar SMB con Objetivos Temporales altos</string>
     <string name="enablesmbwithhightemptarget_summary">Habilitar SMB cuando hay activo un objetivo temporal alto (ejercicio superior a 100 mg/dl o 5.5 mmol/l)</string>
     <string name="overview_insulin_label">Insulina</string>
     <string name="overview_buttons_selection">Botones</string>
