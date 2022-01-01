@@ -138,9 +138,9 @@
     <string name="filenotfound">Archivo no encontrado</string>
     <string name="nav_export">Exportar ajustes</string>
     <string name="nav_import">Importar ajustes</string>
-    <string name="openapsma_maxbasal_title">Max U/h para la basal temporal</string>
-    <string name="openapsma_maxbasal_summary">Este valor es llamado max basal en OpenAPS</string>
-    <string name="openapsma_maxiob_title">Max IOB basal que OpenAPs puede emitir [U]</string>
+    <string name="openapsma_maxbasal_title">Máximas U/h que la basal temporal no podrá superar</string>
+    <string name="openapsma_maxbasal_summary">Este valor se llama \"Max basal\" en el contexto de OpenAPS</string>
+    <string name="openapsma_maxiob_title">Basal máxima que OpenAPS puede entregar [U]</string>
     <string name="openapsma_maxiob_summary">Este valor es llamado \"Max IOB\" en OpenAPS\nEsta es la cantidad máxima de insulina en [U] que APS puede entregar a la vez.</string>
     <string name="password_preferences_encrypt_prompt">Se le solicitará la contraseña maestra, que se utilizará para cifrar los ajustes exportados</string>
     <string name="password_preferences_decrypt_prompt">Se le solicitará la contraseña maestra, que es necesaria para descifrar las preferencias importadas.</string>
