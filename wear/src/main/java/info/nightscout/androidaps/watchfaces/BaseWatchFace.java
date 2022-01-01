@@ -130,15 +130,13 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
     }
 
     private void setupBatteryReceiver() {
-        if (sharedPrefs.getBoolean("simplify_ui_charging", false)) {
+        if (sharedPrefs.getBoolean("simplify_ui_charging", false) && batteryReceiver == null) {
             IntentFilter intentBatteryFilter = new IntentFilter();
             intentBatteryFilter.addAction(BatteryManager.ACTION_CHARGING);
             intentBatteryFilter.addAction(BatteryManager.ACTION_DISCHARGING);
-            isCharging = checkIsCharging();
             batteryReceiver = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
-                    isCharging = checkIsCharging();
                     setDataFields();
                     invalidate();
                 }
@@ -286,7 +284,7 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
         }
     }
 
-    private boolean checkIsCharging() {
+    private boolean isCharging() {
         IntentFilter iFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
         Intent batteryStatus = this.registerReceiver(null, iFilter);
         int status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
@@ -490,7 +488,7 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
     }
 
     void setDataFieldsSimpleUi() {
-        if (sharedPrefs.getBoolean("simplify_ui_charging", false) && isCharging) {
+        if (sharedPrefs.getBoolean("simplify_ui_charging", false) && isCharging()) {
             mSimpleUi.setVisibility(View.VISIBLE);
 
             mSimpleSvg.setText(rawData.sSgv);
