@@ -26,7 +26,15 @@ class ATProfile(profile: Profile?) {
     var profile: ProfileSealed
     var profilename: String? = null
     private val pv: Profile.ProfileValue? = null
-    var basal = DoubleArray(24)
+    val basal: DoubleArray
+        get() {
+            val basal = DoubleArray(24)
+            for (i in 0..23) {
+                basal[i] = getBasal(i)
+            }
+            return basal
+        }
+
     var basalUntuned = IntArray(24)
     var ic = 0.0
     private var srcic: List<Block>? = null
@@ -47,15 +55,15 @@ class ATProfile(profile: Profile?) {
     @Inject lateinit protected var injector: HasAndroidInjector
 
     fun getProfile(): PureProfile {
-        return profile
+        return profile.convertToNonCustomizedProfile(dateUtil)
     }
 
     fun updateProfile() {
-        profile = ProfileSealed.Pure(data)
+        profile = ProfileSealed.Pure(data!!)
     }
 
-    val tunedProfile: Profile
-        get() = ProfileSealed.Pure(data)
+    val tunedProfile: Profile?
+        get() = data?.let { ProfileSealed.Pure(it)}
     val icSize: Int
         get() = profile.getIcsValues().size
     val isfSize: Int
@@ -65,13 +73,7 @@ class ATProfile(profile: Profile?) {
     val avgIC: Double
         get() = if (profile.getIcsValues().size == 1) profile.getIcsValues().get(0).value else Round.roundTo(averageProfileValue(profile.getIcsValues()), 0.01)
 
-    fun getBasal(): DoubleArray {
-        val basal = DoubleArray(24)
-        for (i in 0..23) {
-            basal[i] = getBasal(i)
-        }
-        return basal
-    }
+
 
     fun getBasal(hour: Int): Double {
         if (!isValid) return 0.0
@@ -235,11 +237,10 @@ class ATProfile(profile: Profile?) {
     //Todo add Autotune Injector
     init {
         injector.androidInjector().inject(this)
-        this.profile = profile
+        this.profile = profile as ProfileSealed
         isValid = profile.isValid
         if (isValid) {
             //initialize tuned value with current profile values
-            basal = getBasal()
             if (srcic == null) srcic = profile.icBlocks
             if (srcisf == null) srcisf = profile.isfBlocks
             ic = avgIC
