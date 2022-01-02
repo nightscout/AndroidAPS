@@ -18,7 +18,7 @@ class TimerUtil @Inject constructor(
     /**
      * Schedule alarm in @seconds
      */
-    fun scheduleReminder(seconds: Long, text: String) {
+    fun scheduleReminder(seconds: Int, text: String) {
         Intent(AlarmClock.ACTION_SET_TIMER).apply {
             flags = flags or Intent.FLAG_ACTIVITY_NEW_TASK
             putExtra(AlarmClock.EXTRA_LENGTH, seconds)

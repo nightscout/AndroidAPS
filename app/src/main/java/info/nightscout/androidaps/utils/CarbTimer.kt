@@ -24,7 +24,7 @@ class CarbTimer @Inject constructor(
     private val timerUtil: TimerUtil
 ) {
 
-    fun scheduleReminder(seconds: Long, text: String? = null) =
+    fun scheduleReminder(seconds: Int, text: String? = null) =
         timerUtil.scheduleReminder(seconds, text ?: rh.gs(R.string.timetoeat))
 
     fun scheduleEatReminder() {
