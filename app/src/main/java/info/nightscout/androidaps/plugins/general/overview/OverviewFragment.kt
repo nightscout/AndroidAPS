@@ -416,10 +416,10 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                                     OKDialog.showConfirmation(activity, rh.gs(R.string.tempbasal_label), lastRun.constraintsProcessed?.toSpanned()
                                         ?: "".toSpanned(), {
                                                                   uel.log(Action.ACCEPTS_TEMP_BASAL, Sources.Overview)
-                                                                  binding.buttonsLayout.acceptTempButton.visibility = View.GONE
                                                                   (context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(Constants.notificationID)
                                                                   rxBus.send(EventWearInitiateAction("cancelChangeRequest"))
                                                                   Thread { loop.acceptChangeRequest() }.run()
+                                                                  binding.buttonsLayout.acceptTempButton.visibility = View.GONE
                                                               })
                                 })
                             }
