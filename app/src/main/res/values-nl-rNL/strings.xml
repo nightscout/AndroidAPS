@@ -57,6 +57,7 @@
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">Koolhydraten</string>
     <string name="treatments_wizard_correction_label">Correctie</string>
+    <string name="bolus_iob_label">Bolus IOB</string>
     <string name="openapsma_run">Nu uitvoeren</string>
     <string name="vitualpump_label">VIRTUELE POMP</string>
     <string name="openapsma_lastrun_label">Laatste berekening</string>
@@ -121,7 +122,9 @@
     <string name="careportal_newnstreatment_other">Andere</string>
     <string name="careportal_newnstreatment_meter">Meter</string>
     <string name="careportal_newnstreatment_sensor">Sensor</string>
+    <string name="carb_time_label">KH tijdsduur</string>
     <string name="careportal_newnstreatment_duration_label">Tijdsduur</string>
+    <string name="profile_label">Profiel</string>
     <string name="careportal_newnstreatment_glucosetype">Glucose type</string>
     <string name="overview_tempbasal_button">Tijdelijk basaal</string>
     <string name="overview_extendedbolus_button">Vertraagde bolus</string>
@@ -135,7 +138,7 @@
     <string name="filenotfound">Bestand niet gevonden</string>
     <string name="nav_export">Exporteer instellingen</string>
     <string name="nav_import">Importeer instellingen</string>
-    <string name="openapsma_maxbasal_title">Maximaal instelbaar basaal Eh/u</string>
+    <string name="openapsma_maxbasal_title">Maximaal instelbaar basaal E/uur</string>
     <string name="openapsma_maxbasal_summary">Dit is de maximale waarde waarop het basaal door OpenAPS ingesteld kan worden</string>
     <string name="openapsma_maxiob_title">Maximale basaal IOB, dat OpenAPS kan toedienen [E]</string>
     <string name="openapsma_maxiob_summary">Deze waarde wordt de Max IOB genoemd in OpenAPS context\nDit is de maximale insuline hoeveelheid in [E] dat APS in één keer kan toedienen.</string>
@@ -200,7 +203,7 @@
     <string name="smscommunicator_loopresumereplywithcode">Om loop te hervatten antwoord met code %1$s</string>
     <string name="smscommunicator_loopenablereplywithcode">Om loop in te schakelen antwoord met code %1$s</string>
     <string name="smscommunicator_loopdisablereplywithcode">Om loop uit te schakelen antwoord met code %1$s</string>
-    <string name="smscommunicator_tempbasalset">Tijdelijk basaal %1$.2fE/u voor %2$d minuten succesvol gestart</string>
+    <string name="smscommunicator_tempbasalset">Tijdelijk basaal %1$.2fE/uur voor %2$d minuten succesvol gestart</string>
     <string name="smscommunicator_extendedset">Vertraagde bolus %1$.2fE voor %2$d minuten succesvol gestart</string>
     <string name="smscommunicator_carbsset">Koolhydraten %1$d g succesvol ingevoerd</string>
     <string name="smscommunicator_carbsfailed">Invoeren van %1$dg koolhydraten is mislukt</string>
@@ -352,6 +355,7 @@
     <string name="smscommunicator_wrongduration">Verkeerde tijdsduur</string>
     <string name="smscommunicator_loopsuspended">Loop onderbroken</string>
     <string name="smscommunicator_loopresumed">Loop hervat</string>
+    <string name="bg_trend_label">15min trend</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Log app start naar NS</string>
@@ -517,6 +521,8 @@
     <string name="enablesmbwithhightemptarget_summary">Schakel SMB in wanneer er een hoog tijdelijk doel actief is (uitvoeren boven 100 mg/dl of 5,5 mmol/l)</string>
     <string name="overview_insulin_label">Insuline</string>
     <string name="overview_buttons_selection">Knoppen</string>
+    <string name="show_calibration_button_summary">Stuurt een kalibratie naar xDrip+ of open het BYODA kalibratie venster</string>
+    <string name="show_cgm_button_summary">Opent xDrip+ of BYODA, terug knop om terug te gaan naar AAPS</string>
     <string name="carb_increment_button_message">Aantal koolhydraten toevoegen wanneer de knop wordt ingedrukt</string>
     <string name="insulin_increment_button_message">Hoeveelheid insuline dat wordt toegevoegd wanneer er op de knop gedrukt wordt</string>
     <string name="error_starting_cgm">Kon de CGM applicatie niet starten. Zorg dat deze geïnstalleerd is.</string>
@@ -622,6 +628,7 @@
     <string name="exitwizard">De installatiewizard overslaan</string>
     <string name="setupwizard_loop_description">Druk op de knop hieronder om AndroidAPS basaalwijzigingen te laten voorstellen/uitvoeren</string>
     <string name="setupwizard_sensitivity_description">Gevoeligheid plugin wordt gebruikt voor de detectie van de gevoeligheid en COB berekening. Voor meer info bezoek:</string>
+    <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="nsclientinfotext">NSClient zorgt voor verbinding met Nightscout. Je kunt dit deel nu overslaan, maar pas de Doelen afronden als je het hebt ingesteld.</string>
     <string name="diawarning">Onthoud: nieuwe insuline profielen vereisen een minimale DIA van 5 uur. DIA 5 – 6h op nieuw profiel is gelijk aan DIA 3h op oude insuline profielen.</string>
     <string name="setupwizard_aps_description">Selecteer een van beschikbare algoritmen. Ze zijn gesorteerd van oudste naar nieuwste. Nieuwer algoritme is meestal krachtiger en agressiever. Dus als je een nieuwe looper bent, kun je waarschijnlijk beginnen met AMA en niet met de nieuwste. Vergeet niet de OpenAPS-documentatie te lezen en deze vóór gebruik te configureren.</string>
@@ -633,6 +640,7 @@
     <string name="needsystemwindowpermission">Toepassing vereist systeemvenstermachtiging voor meldingen</string>
     <string name="needlocationpermission">App heeft locatie toestemming nodig voor Bluetooth scan en WiFi identificatie</string>
     <string name="needstoragepermission">Applicatie heeft toestemming nodig om log bestanden op te slaan en instellingen te exporteren</string>
+    <string name="needconnectpermission">Applicatie heeft Bluetooth toestemming nodig</string>
     <string name="request">Verzoek</string>
     <string name="open_navigation">Open navigatie</string>
     <string name="close_navigation">Sluit navigatie</string>
@@ -888,6 +896,7 @@
     <string name="error_in_isf_values">Fout in ISF waarden</string>
     <string name="run_question">%s uitvoeren?</string>
     <string name="invalid_profile_not_accepted">Ongeldig profiel %1$s niet geaccepteerd door NS</string>
+    <string name="view">Weergeven</string>
     <string name="errors">Foutmeldingen</string>
     <string name="ns_sync_slow">Vertraag uploads</string>
     <string name="data_status">BG data status</string>
