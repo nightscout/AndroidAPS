@@ -130,7 +130,7 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
     }
 
     private void setupBatteryReceiver() {
-        if (sharedPrefs.getBoolean("simplify_ui_charging", false) && batteryReceiver == null) {
+        if (sharedPrefs.getString("simplify_ui", "off") == "charching" && batteryReceiver == null) {
             IntentFilter intentBatteryFilter = new IntentFilter();
             intentBatteryFilter.addAction(BatteryManager.ACTION_CHARGING);
             intentBatteryFilter.addAction(BatteryManager.ACTION_DISCHARGING);
@@ -306,7 +306,9 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
     public void setDataFields() {
 
         setDateAndTime();
-
+        if (setDataFieldsSimpleUi()) {
+            return;
+        }
         if (mSgv != null) {
             if (sharedPrefs.getBoolean("showBG", true)) {
                 mSgv.setText(rawData.sSgv);
@@ -485,11 +487,11 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
                 mLoop.setVisibility(View.GONE);
             }
         }
-        setDataFieldsSimpleUi();
+
     }
 
-    void setDataFieldsSimpleUi() {
-        if (sharedPrefs.getBoolean("simplify_ui_charging", false) && isCharging()) {
+    boolean setDataFieldsSimpleUi() {
+        if (isSimpleUi()) {
             mSimpleUi.setVisibility(View.VISIBLE);
 
             mSimpleSvg.setText(rawData.sSgv);
@@ -513,9 +515,10 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
 
             final java.text.DateFormat timeFormat = DateFormat.getTimeFormat(BaseWatchFace.this);
             mSimpleTime.setText(timeFormat.format(System.currentTimeMillis()));
-        } else {
-            mSimpleUi.setVisibility(View.GONE);
+            return true;
         }
+        mSimpleUi.setVisibility(View.GONE);
+        return false;
     }
 
     @Override
@@ -598,7 +601,7 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
     }
 
     protected void onWatchModeChanged(WatchMode watchMode) {
-
+        setDataFields();
         if (lowResMode ^ isLowRes(watchMode)) { //if there was a change in lowResMode
             lowResMode = isLowRes(watchMode);
             setColor();
@@ -610,6 +613,20 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
 
     private boolean isLowRes(WatchMode watchMode) {
         return (watchMode == WatchMode.LOW_BIT) || (watchMode == WatchMode.LOW_BIT_BURN_IN); // || (watchMode == WatchMode.LOW_BIT_BURN_IN);
+    }
+
+    private boolean isSimpleUi() {
+        String simplify = sharedPrefs.getString("simplify_ui", "off");
+        if (simplify.equals("off")) {
+            return false;
+        }
+        if (simplify.equals("ambient") && getCurrentWatchMode() == WatchMode.AMBIENT) {
+            return true;
+        }
+        if (simplify.equals("charging") && isCharging()) {
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -640,6 +657,9 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
     }
 
     public void setupCharts() {
+        if (isSimpleUi()) {
+            return;
+        }
         if (rawData.bgDataList.size() > 0) { //Dont crash things just because we dont have values, people dont like crashy things
             int timeframe = Integer.parseInt(sharedPrefs.getString("chart_timeframe", "3"));
             if (lowResMode) {
