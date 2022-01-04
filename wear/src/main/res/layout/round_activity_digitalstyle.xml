@@ -9,7 +9,6 @@
     tools:context=".watchfaces.DigitalStyle"
     tools:deviceIds="wear_round">
 
-
     <!-- background-image with shapes elements-->
     <LinearLayout
         android:id="@+id/shapes_elements"
@@ -266,7 +265,6 @@
                 android:layout_weight="13.95" />
         </LinearLayout>
 
-
         <!-- right side 5/8 width  -->
         <LinearLayout
             android:layout_width="0dp"
@@ -386,14 +384,12 @@
                     android:layout_height="0dp"
                     android:layout_weight="4"
                     android:gravity="left|center_vertical"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
+                    android:orientation="horizontal">
 
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginTop="-5dp"
-                        android:layout_weight="1">
+                        android:layout_marginTop="-5dp">
                         <!-- hour -->
                         <TextView
                             android:id="@+id/hour"
@@ -406,6 +402,13 @@
                             android:textColor="@color/white"
                             android:textSize="40sp"
                             android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
                         <!-- minute -->
                         <TextView
@@ -414,15 +417,27 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="left"
                             android:layout_marginLeft="6sp"
+                            android:layout_marginBottom="-8sp"
                             android:fontFamily="@font/roboto_condensed_bold"
-                            android:paddingTop="5sp"
                             android:text="MI"
                             android:textColor="@color/light_grey"
                             android:textSize="26sp"
                             android:textStyle="bold" />
+
+                        <!-- 12h period AM / PM -->
+                        <TextView
+                            android:id="@+id/timePeriod"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8sp"
+                            android:fontFamily="@font/roboto_condensed_bold"
+                            android:gravity="top"
+                            android:text="AM"
+                            android:textColor="@color/light_grey"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
                     </LinearLayout>
                 </LinearLayout>
-
             </LinearLayout>
 
             <!-- right side 1/2 height - bottom halft -->
@@ -549,8 +564,8 @@
         android:id="@+id/simple_ui"
         layout="@layout/simple_ui"
         android:visibility="gone" />
-    <!--   FLAGs   -->
 
+    <!--   FLAGs   -->
     <TextView
         android:id="@+id/AAPSv2"
         android:layout_width="wrap_content"
