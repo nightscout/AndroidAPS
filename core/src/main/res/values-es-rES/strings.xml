@@ -80,7 +80,7 @@
     <string name="unsafeusage">uso no seguro</string>
     <string name="pump_unreachable">Bomba no alcanzable</string>
     <string name="extended_bolus">Bolo extendido</string>
-    <string name="pump_time_updated">Hora de infusora actualizada</string>
+    <string name="pump_time_updated">Hora actualizada en la bomba</string>
     <string name="exit">Salir</string>
     <string name="removerecord">Eliminar registro</string>
     <string name="loopisdisabled">Lazo desactivado</string>
