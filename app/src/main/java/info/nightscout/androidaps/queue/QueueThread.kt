@@ -2,6 +2,7 @@ package info.nightscout.androidaps.queue
 
 import android.bluetooth.BluetoothManager
 import android.content.Context
+import android.os.Build
 import android.os.PowerManager
 import android.os.SystemClock
 import info.nightscout.androidaps.Constants
@@ -12,6 +13,7 @@ import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning
 import info.nightscout.androidaps.queue.events.EventQueueChanged
+import info.nightscout.androidaps.utils.AndroidPermission
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.shared.logging.AAPSLogger
@@ -25,7 +27,8 @@ class QueueThread internal constructor(
     private val rxBus: RxBus,
     private val activePlugin: ActivePlugin,
     private val rh: ResourceHelper,
-    private val sp: SP
+    private val sp: SP,
+    private val androidPermission: AndroidPermission
 ) : Thread() {
 
     private var connectLogged = false
@@ -46,6 +49,14 @@ class QueueThread internal constructor(
             while (true) {
                 val secondsElapsed = (System.currentTimeMillis() - connectionStartTime) / 1000
                 val pump = activePlugin.activePump
+                //  Manifest.permission.BLUETOOTH_CONNECT
+                if (Build.VERSION.SDK_INT >= /*Build.VERSION_CODES.S*/31)
+                    if (androidPermission.permissionNotGranted(context, "android.permission.BLUETOOTH_CONNECT")) {
+                        aapsLogger.debug(LTag.PUMPQUEUE, "no permission")
+                        rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTING))
+                        SystemClock.sleep(1000)
+                        continue
+                    }
                 if (!pump.isConnected() && secondsElapsed > Constants.PUMP_MAX_CONNECTION_TIME_IN_SECONDS) {
                     rxBus.send(EventDismissBolusProgressIfRunning(null, null))
                     rxBus.send(EventPumpStatusChanged(rh.gs(R.string.connectiontimedout)))

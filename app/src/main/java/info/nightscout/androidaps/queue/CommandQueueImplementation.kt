@@ -33,6 +33,7 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotifi
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.queue.commands.*
 import info.nightscout.androidaps.queue.commands.Command.CommandType
+import info.nightscout.androidaps.utils.AndroidPermission
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HtmlHelper
@@ -64,7 +65,8 @@ class CommandQueueImplementation @Inject constructor(
     private val dateUtil: DateUtil,
     private val repository: AppRepository,
     private val fabricPrivacy: FabricPrivacy,
-    private val config: Config
+    private val config: Config,
+    private val androidPermission: AndroidPermission
 ) : CommandQueue {
 
     private val disposable = CompositeDisposable()
@@ -177,7 +179,7 @@ class CommandQueueImplementation @Inject constructor(
     @Synchronized fun notifyAboutNewCommand() {
         waitForFinishedThread()
         if (thread == null || thread!!.state == Thread.State.TERMINATED) {
-            thread = QueueThread(this, context, aapsLogger, rxBus, activePlugin, rh, sp)
+            thread = QueueThread(this, context, aapsLogger, rxBus, activePlugin, rh, sp, androidPermission)
             thread!!.start()
             aapsLogger.debug(LTag.PUMPQUEUE, "Starting new thread")
         } else {
@@ -199,7 +201,7 @@ class CommandQueueImplementation @Inject constructor(
         val tempCommandQueue = CommandQueueImplementation(
             injector, aapsLogger, rxBus, aapsSchedulers, rh,
             constraintChecker, profileFunction, activePlugin, context, sp,
-            buildHelper, dateUtil, repository, fabricPrivacy, config
+            buildHelper, dateUtil, repository, fabricPrivacy, config, androidPermission
         )
         tempCommandQueue.readStatus(reason, callback)
         tempCommandQueue.disposable.clear()

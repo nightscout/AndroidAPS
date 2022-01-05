@@ -20,8 +20,8 @@ import javax.inject.Singleton
 
 @Singleton
 class BlePreCheck @Inject constructor(
-    val context: Context,
-    val rh: ResourceHelper
+    private val context: Context,
+    private val rh: ResourceHelper
 ) {
 
     companion object {
@@ -43,8 +43,12 @@ class BlePreCheck @Inject constructor(
             }
             // change after SDK = 31+
             if (Build.VERSION.SDK_INT >= /*Build.VERSION_CODES.S*/31) {
+                if (ContextCompat.checkSelfPermission(context, "android.permission.BLUETOOTH_CONNECT") != PackageManager.PERMISSION_GRANTED ||
+                    ContextCompat.checkSelfPermission(context, "android.permission.BLUETOOTH_SCAN") != PackageManager.PERMISSION_GRANTED
+                )
                 //ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT), PERMISSION_REQUEST_BLUETOOTH)
-                ActivityCompat.requestPermissions(activity, arrayOf("android.permission.BLUETOOTH_SCAN", "android.permission.BLUETOOTH_CONNECT"), PERMISSION_REQUEST_BLUETOOTH)
+                    ActivityCompat.requestPermissions(activity, arrayOf("android.permission.BLUETOOTH_SCAN", "android.permission.BLUETOOTH_CONNECT"), PERMISSION_REQUEST_BLUETOOTH)
+                return false
             }
 
             val bluetoothAdapter = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
