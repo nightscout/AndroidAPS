@@ -69,7 +69,7 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
     }
 
     public final Point displaySize = new Point();
-    public TextView mTime, mHour, mMinute, mSgv, mDirection, mTimestamp, mUploaderBattery, mRigBattery, mDelta, mAvgDelta, mStatus, mBasalRate, mIOB1, mIOB2, mCOB1, mCOB2, mBgi, mLoop, mDay, mDayName, mMonth, isAAPSv2, mHighLight, mLowLight;
+    public TextView mTime, mHour, mMinute, mTimePeriod, mSgv, mDirection, mTimestamp, mUploaderBattery, mRigBattery, mDelta, mAvgDelta, mStatus, mBasalRate, mIOB1, mIOB2, mCOB1, mCOB2, mBgi, mLoop, mDay, mDayName, mMonth, isAAPSv2, mHighLight, mLowLight;
     public TextView mSimpleSvg, mSimpleDirection, mSimpleTime;
     public ImageView mGlucoseDial, mDeltaGauge, mHourHand, mMinuteHand;
     public View mSimpleUi;
@@ -166,6 +166,7 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
                                                  mTime = stub.findViewById(R.id.watch_time);
                                                  mHour = stub.findViewById(R.id.hour);
                                                  mMinute = stub.findViewById(R.id.minute);
+                                                 mTimePeriod = stub.findViewById(R.id.timePeriod);
                                                  mDay = stub.findViewById(R.id.day);
                                                  mDayName = stub.findViewById(R.id.dayname);
                                                  mMonth = stub.findViewById(R.id.month);
@@ -517,6 +518,11 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
         }
     }
 
+    @Override
+    protected void on24HourFormatChanged(boolean is24HourFormat) {
+        setDateAndTime();
+    }
+
     public void setDateAndTime() {
 
         final java.text.DateFormat timeFormat = DateFormat.getTimeFormat(BaseWatchFace.this);
@@ -525,14 +531,29 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
         }
 
         Date now = new Date();
-        SimpleDateFormat sdfHour = new SimpleDateFormat("HH");
+        SimpleDateFormat sdfHour;
         SimpleDateFormat sdfMinute = new SimpleDateFormat("mm");
+        if (DateFormat.is24HourFormat(this)) {
+            sdfHour = new SimpleDateFormat("HH");
+        } else {
+            sdfHour = new SimpleDateFormat("hh");
+        }
         sHour = sdfHour.format(now);
         sMinute = sdfMinute.format(now);
 
         if (mHour != null && mMinute != null) {
             mHour.setText(sHour);
             mMinute.setText(sMinute);
+        }
+
+        if(mTimePeriod != null) {
+            if (!DateFormat.is24HourFormat(this)) {
+                mTimePeriod.setVisibility(View.VISIBLE);
+                SimpleDateFormat sdfPeriod = new SimpleDateFormat("a");
+                mTimePeriod.setText(sdfPeriod.format(now).toUpperCase());
+            } else {
+                mTimePeriod.setVisibility(View.GONE);
+            }
         }
 
         if (mDate != null && mDay != null && mMonth != null) {
