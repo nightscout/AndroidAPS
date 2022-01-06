@@ -271,6 +271,8 @@ class DanaRSService : DaggerService() {
             val msgSetHistoryEntryV2 = DanaRSPacketAPSSetEventHistory(injector, DanaPump.HistoryEntry.CARBS.value, carbTime, carbs, 0)
             sendMessage(msgSetHistoryEntryV2)
             danaPump.lastHistoryFetched = min(danaPump.lastHistoryFetched, carbTime - T.mins(1).msecs())
+            if (!msgSetHistoryEntryV2.isReceived || msgSetHistoryEntryV2.failed)
+                ErrorHelperActivity.runAlarm(context, rh.gs(R.string.carbs_store_error), rh.gs(R.string.error), R.raw.boluserror)
         }
         val bolusStart = System.currentTimeMillis()
         if (insulin > 0) {

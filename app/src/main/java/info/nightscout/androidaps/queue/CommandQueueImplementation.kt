@@ -235,6 +235,7 @@ class CommandQueueImplementation @Inject constructor(
                 (detailedBolusInfo.carbsTimestamp ?: detailedBolusInfo.timestamp) > dateUtil.now())
         ) {
             carbsRunnable = Runnable {
+                aapsLogger.debug(LTag.PUMPQUEUE, "Going to store carbs")
                 detailedBolusInfo.carbs = originalCarbs
                 disposable += repository.runTransactionForResult(detailedBolusInfo.insertCarbsTransaction())
                     .subscribeBy(
