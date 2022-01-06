@@ -122,6 +122,8 @@
     <string name="color_name_white">bianco</string>
     <string name="color_name_black">nero</string>
     <string name="color_name_multicolor">multicolore</string>
+    <string name="pref_simplify_ui_charging">Semplifica interfaccia di caricamento</string>
+    <string name="pref_simplify_ui_charging_sum">Mostra solo tempo e BG durante la carica</string>
     <string name="pref_vibrate_hourly">Vibra a ogni ora</string>
     <string name="pref_show_weeknumber">Mostra numero settimana</string>
     <string name="digitalstyle_pref_your_style">Il tuo stile:</string>

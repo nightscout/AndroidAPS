@@ -80,7 +80,7 @@
     <string name="unsafeusage">uso no seguro</string>
     <string name="pump_unreachable">Bomba no alcanzable</string>
     <string name="extended_bolus">Bolo extendido</string>
-    <string name="pump_time_updated">Hora de infusora actualizada</string>
+    <string name="pump_time_updated">Hora actualizada en la bomba</string>
     <string name="exit">Salir</string>
     <string name="removerecord">Eliminar registro</string>
     <string name="loopisdisabled">Lazo desactivado</string>
@@ -184,7 +184,7 @@
     <string name="careportal_note_message">Nota : %1$s</string>
     <string name="careportal_question_message">Pregunta : %1$s</string>
     <string name="careportal_exercise_message">Ejercicio : %1$s</string>
-    <string name="careportal_pumpsitechange">Cambio de cánula de bomba</string>
+    <string name="careportal_pumpsitechange">Cambio de cánula</string>
     <string name="careportal_cgmsensorinsert">Inserción de sensor</string>
     <string name="careportal_cgmsensorstart">Inicio de Sensor</string>
     <string name="careportal_cgm_sensor_stop">Detener sensor MCG</string>
@@ -199,7 +199,7 @@
     <string name="careportal_tempbasalend">Fin Basal Temp</string>
     <string name="careportal_carbscorrection">Carbohidratos de corrección</string>
     <string name="careportal_openapsoffline">OpenAPS sin conexión</string>
-    <string name="careportal_pumpbatterychange">Cambio batería de bomba</string>
+    <string name="careportal_pumpbatterychange">Cambiar batería de bomba</string>
     <string name="careportal_temporarytarget">Objetivo temporal</string>
     <string name="careportal_temporarytargetvalue">Valor objetivo temporal</string>
     <string name="careportal_temporarytargetcancel">Cancelar Objetivo temporal</string>
@@ -429,8 +429,8 @@
     <string name="keepalive_basal_outdated" comment="26 characters max for translation">KeepAlive. Basal desactualizada.</string>
     <string name="sms" comment="26 characters max for translation">SMS</string>
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">Pulsa sobre conectar a la bomba</string>
-    <string name="pump_driver_changed" comment="26 characters max for translation">Controlador de bomba cambiado.</string>
-    <string name="pump_driver_change" comment="26 characters max for translation">Cambio del controlador de la bomba.</string>
+    <string name="pump_driver_changed" comment="26 characters max for translation">Controlador de bomba cambiado</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Cambio del controlador de la bomba</string>
     <string name="device_changed" comment="26 characters max for translation">Dispositivo cambiado</string>
     <string name="clicked_refresh" comment="26 characters max for translation">Refresco pulsado</string>
     <string name="scheduled_status_refresh" comment="26 characters max for translation">Refrescar estado programado</string>

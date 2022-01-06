@@ -35,4 +35,5 @@
     <string name="omnipod_common_history_bolus_value">%1$.2f ед</string>
     <string name="dash_bolusdelivering">Подается болюс %1$.2f ед</string>
     <string name="omnipod_common_alert_delivery_suspended">Введение инсулина приостановлено</string>
+    <string name="omnipod_dash_connection_lost">Потеряно соединение с подом</string>
 </resources>
