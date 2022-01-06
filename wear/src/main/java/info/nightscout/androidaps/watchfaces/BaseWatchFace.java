@@ -303,7 +303,7 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
         Log.i(TAG, "onTimeChanged: ");
         if (layoutSet && (newTime.hasHourChanged(oldTime) || newTime.hasMinuteChanged(oldTime))) {
             Log.i(TAG, "onTimeChanged: time changed");
-            // wakeLock.acquire(50);
+            PowerManager.WakeLock wl =  wearUtil.getWakeLock("readingPrefs", 50);
 
             setDataFields();
             setColor();
@@ -316,6 +316,7 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
             } else {
                 mRelativeLayout.layout(0, 0, displaySize.x, displaySize.y);
             }
+            wearUtil.releaseWakeLock(wl);
             // invalidate();
         }
     }
