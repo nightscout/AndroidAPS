@@ -81,7 +81,7 @@ class QueueThreadTest : TestBaseWithProfile() {
             .thenReturn(percentageConstraint)
         Mockito.`when`(rh.gs(ArgumentMatchers.eq(R.string.temp_basal_absolute), anyObject(), anyObject())).thenReturn("TEMP BASAL %1\$.2f U/h %2\$d min")
 
-        sut = QueueThread(commandQueue, context, aapsLogger, rxBus, activePlugin, rh, sp, androidPermission)
+        sut = QueueThread(commandQueue, context, aapsLogger, rxBus, activePlugin, rh, sp, androidPermission, config)
     }
 
     @Test

@@ -179,7 +179,7 @@ class CommandQueueImplementation @Inject constructor(
     @Synchronized fun notifyAboutNewCommand() {
         waitForFinishedThread()
         if (thread == null || thread!!.state == Thread.State.TERMINATED) {
-            thread = QueueThread(this, context, aapsLogger, rxBus, activePlugin, rh, sp, androidPermission)
+            thread = QueueThread(this, context, aapsLogger, rxBus, activePlugin, rh, sp, androidPermission, config)
             thread!!.start()
             aapsLogger.debug(LTag.PUMPQUEUE, "Starting new thread")
         } else {
