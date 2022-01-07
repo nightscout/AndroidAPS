@@ -2,11 +2,7 @@ package info.nightscout.androidaps.di
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import info.nightscout.androidaps.complications.BaseComplicationProviderService
-import info.nightscout.androidaps.complications.BrCobIobComplication
-import info.nightscout.androidaps.complications.LongStatusComplication
-import info.nightscout.androidaps.complications.LongStatusFlippedComplication
-import info.nightscout.androidaps.complications.SgvComplication
+import info.nightscout.androidaps.complications.*
 import info.nightscout.androidaps.data.ListenerService
 import info.nightscout.androidaps.watchfaces.*
 
@@ -15,11 +11,20 @@ import info.nightscout.androidaps.watchfaces.*
 abstract class ServicesModule {
 
     @ContributesAndroidInjector abstract fun contributesListenerService(): ListenerService
+
     @ContributesAndroidInjector abstract fun contributesBaseComplicationProviderService(): BaseComplicationProviderService
     @ContributesAndroidInjector abstract fun contributesBrCobIobComplication(): BrCobIobComplication
+    @ContributesAndroidInjector abstract fun contributesCobDetailedComplication(): CobDetailedComplication
+    @ContributesAndroidInjector abstract fun contributesCobIconComplication(): CobIconComplication
+    @ContributesAndroidInjector abstract fun contributesCobIobComplication(): CobIobComplication
+    @ContributesAndroidInjector abstract fun contributesIobDetailedComplication(): IobDetailedComplication
+    @ContributesAndroidInjector abstract fun contributesIobIconComplication(): IobIconComplication
     @ContributesAndroidInjector abstract fun contributesLongStatusComplication(): LongStatusComplication
     @ContributesAndroidInjector abstract fun contributesLongStatusFlippedComplication(): LongStatusFlippedComplication
     @ContributesAndroidInjector abstract fun contributesSgvComplication(): SgvComplication
+    @ContributesAndroidInjector abstract fun contributesUploaderBattery(): UploaderBattery
+    @ContributesAndroidInjector abstract fun contributesWallpaperComplication(): WallpaperComplication
+
     @ContributesAndroidInjector abstract fun contributesBaseWatchFace(): BaseWatchFace
     @ContributesAndroidInjector abstract fun contributesHome(): Home
     @ContributesAndroidInjector abstract fun contributesHome2(): Home2

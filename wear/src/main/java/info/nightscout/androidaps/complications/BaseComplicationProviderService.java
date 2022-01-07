@@ -12,7 +12,6 @@ import android.support.wearable.complications.ComplicationManager;
 import android.support.wearable.complications.ComplicationProviderService;
 import android.support.wearable.complications.ComplicationText;
 import android.support.wearable.complications.ProviderUpdateRequester;
-import android.util.Log;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
@@ -30,6 +29,8 @@ import info.nightscout.androidaps.interaction.utils.DisplayFormat;
 import info.nightscout.androidaps.interaction.utils.Inevitable;
 import info.nightscout.androidaps.interaction.utils.Persistence;
 import info.nightscout.androidaps.interaction.utils.WearUtil;
+import info.nightscout.shared.logging.AAPSLogger;
+import info.nightscout.shared.logging.LTag;
 
 /**
  * Base class for all complications
@@ -42,6 +43,7 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
     @Inject WearUtil wearUtil;
     @Inject DisplayFormat displayFormat;
     @Inject Persistence persistence;
+    @Inject AAPSLogger aapsLogger;
 
     // Not derived from DaggerService, do injection here
     @Override
@@ -49,8 +51,6 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
         AndroidInjection.inject(this);
         super.onCreate();
     }
-
-    private static final String TAG = BaseComplicationProviderService.class.getSimpleName();
 
     public static final String KEY_COMPLICATIONS = "complications";
     private static final String KEY_LAST_SHOWN_SINCE_VALUE = "lastSince";
@@ -116,9 +116,7 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
             case ComplicationData.TYPE_LARGE_IMAGE:
                 return buildComplicationData(dataType, raw, complicationPendingIntent);
             default:
-                if (Log.isLoggable(TAG, Log.WARN)) {
-                    Log.w(TAG, "Unexpected complication type " + dataType);
-                }
+                aapsLogger.warn(LTag.WEAR, "Unexpected complication type " + dataType);
                 break;
         }
 
@@ -165,9 +163,7 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
             case ComplicationData.TYPE_LARGE_IMAGE:
                 return buildComplicationData(dataType, raw, complicationPendingIntent);
             default:
-                if (Log.isLoggable(TAG, Log.WARN)) {
-                    Log.w(TAG, "Unexpected complication type " + dataType);
-                }
+                aapsLogger.warn(LTag.WEAR, "Unexpected complication type " + dataType);
                 break;
         }
 
@@ -197,7 +193,7 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
     @Override
     public void onComplicationActivated(
             int complicationId, int dataType, ComplicationManager complicationManager) {
-        Log.d(TAG, "onComplicationActivated(): " + complicationId + " of kind: " + getProviderCanonicalName());
+        aapsLogger.warn(LTag.WEAR, "onComplicationActivated(): " + complicationId + " of kind: " + getProviderCanonicalName());
 
         persistence.putString("complication_" + complicationId, getProviderCanonicalName());
         persistence.putBoolean("complication_" + complicationId + "_since", usesSinceField());
@@ -226,7 +222,7 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
     @Override
     public void onComplicationUpdate(
             int complicationId, int dataType, ComplicationManager complicationManager) {
-        Log.d(TAG, "onComplicationUpdate() id: " + complicationId + " of class: " + getProviderCanonicalName());
+        aapsLogger.warn(LTag.WEAR, "onComplicationUpdate() id: " + complicationId + " of class: " + getProviderCanonicalName());
 
         // Create Tap Action so that the user can checkIfUpdateNeeded an update by tapping the complication.
         final ComponentName thisProvider = new ComponentName(this, getProviderCanonicalName());
@@ -238,7 +234,7 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
 
         final RawDisplayData raw = new RawDisplayData(wearUtil);
         raw.updateForComplicationsFromPersistence(persistence);
-        Log.d(TAG, "Complication data: " + raw.toDebugString());
+        aapsLogger.warn(LTag.WEAR, "Complication data: " + raw.toDebugString());
 
         // store what is currently rendered in 'SGV since' field, to detect if it was changed and need update
         persistence.putString(KEY_LAST_SHOWN_SINCE_VALUE, displayFormat.shortTimeSince(raw.datetime));
@@ -277,7 +273,7 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
      */
     @Override
     public void onComplicationDeactivated(int complicationId) {
-        Log.d(TAG, "onComplicationDeactivated(): " + complicationId);
+        aapsLogger.warn(LTag.WEAR, "onComplicationDeactivated(): " + complicationId);
 
         persistence.removeFromSet(KEY_COMPLICATIONS, "complication_" + complicationId);
 
@@ -296,11 +292,11 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
      */
     public void checkIfUpdateNeeded() {
 
-        Log.d(TAG, "Pending check if update needed - " + persistence.getString(KEY_COMPLICATIONS, ""));
+        aapsLogger.warn(LTag.WEAR, "Pending check if update needed - " + persistence.getString(KEY_COMPLICATIONS, ""));
 
         inevitable.task(TASK_ID_REFRESH_COMPLICATION, 15 * Constants.SECOND_IN_MS, () -> {
             if (wearUtil.isBelowRateLimit("complication-checkIfUpdateNeeded", 5)) {
-                Log.d(TAG, "Checking if update needed");
+                aapsLogger.warn(LTag.WEAR, "Checking if update needed");
                 requestUpdateIfSinceChanged();
                 // We reschedule need for check - to make sure next check will Inevitable go in next 15s
                 checkIfUpdateNeeded();
@@ -329,7 +325,7 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
             persistence.putString(KEY_LAST_SHOWN_SINCE_VALUE, calcSince);
             persistence.putBoolean(KEY_STALE_REPORTED, isStale);
 
-            Log.d(TAG, "Detected refresh of time needed! Reason: "
+            aapsLogger.warn(LTag.WEAR, "Detected refresh of time needed! Reason: "
                     + (isStale ? "- stale detected" : "")
                     + (sinceWasChanged ? "- since changed from: " + lastSince + " to: " + calcSince : ""));
 
@@ -348,11 +344,11 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
      */
     private void requestUpdate(Set<String> providers) {
         for (String provider : providers) {
-            Log.d(TAG, "Pending update of " + provider);
+            aapsLogger.warn(LTag.WEAR, "Pending update of " + provider);
             // We wait with updating allowing all request, from various sources, to arrive
             inevitable.task("update-req-" + provider, 700, () -> {
                 if (wearUtil.isBelowRateLimit("update-req-" + provider, 2)) {
-                    Log.d(TAG, "Requesting update of " + provider);
+                    aapsLogger.warn(LTag.WEAR, "Requesting update of " + provider);
                     final ComponentName componentName = new ComponentName(getApplicationContext(), provider);
                     final ProviderUpdateRequester providerUpdateRequester = new ProviderUpdateRequester(getApplicationContext(), componentName);
                     providerUpdateRequester.requestUpdateAll();
