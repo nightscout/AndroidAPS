@@ -67,7 +67,7 @@ public class Steampunk extends BaseWatchFace {
     protected void setColorDark() {
 
         if (mLinearLayout2 != null) {
-            if (ageLevel() <= 0) {
+            if (ageLevel() <= 0 && rawData.datetime != 0) {
                 mLinearLayout2.setBackgroundResource(R.drawable.redline);
                 mTimestamp.setTextColor(getResources().getColor(R.color.red_600));
             } else {
