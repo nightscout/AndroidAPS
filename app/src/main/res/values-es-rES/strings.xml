@@ -224,7 +224,7 @@
     <string name="overview_editquickwizard_valid">Validar:</string>
     <string name="overview_editquickwizardlistactivity_add">Añadir</string>
     <string name="overview_quickwizard_item_edit_button">Editar</string>
-    <string name="mealbolus">Comida</string>
+    <string name="mealbolus">Bolo de comida</string>
     <string name="correctionbous">Corrección</string>
     <string name="actions">Acciones</string>
     <string name="ns_upload_only">(PELIGROSO DESHABILITAR) Sólo subida a Nightscout</string>
@@ -409,7 +409,7 @@
     <string name="nsalarm_staledatavalue_label">Datos antiguos limite [min]</string>
     <string name="nsalarm_urgent_staledatavalue_label">Datos antiguos urgentes limite [min]</string>
     <string name="openapsama_autosens_period">Intervalo para autosens [h]</string>
-    <string name="openapsama_autosens_period_summary">Horas en el pasado para detectar sensibilidad (tiempo de absorción de carbohidratos no incluidos)</string>
+    <string name="openapsama_autosens_period_summary">Número de horas para detectar la sensibilidad (tiempo de absorción de carbohidratos excluido)</string>
     <string name="openaps">OpenAPS</string>
     <string name="uploader">Cargador datos</string>
     <string name="configbuilder_sensitivity">Detección sensibilidad</string>
@@ -418,7 +418,7 @@
     <string name="sensitivityoref1">Sensibilidad Oref1</string>
     <string name="sensitivityaaps">Sensibilidad AAPS</string>
     <string name="absorptionsettings_title">Ajustes de absorción</string>
-    <string name="absorption_maxtime_title">Tiempo max absorción comida [h]</string>
+    <string name="absorption_maxtime_title">Tiempo máximo de absorción de la comida [h]</string>
     <string name="absorption_maxtime_summary">Tiempo en horas en el que se espera que todos los carbohidratos hayan sido absorbidos</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
@@ -613,7 +613,7 @@
     <string name="openapsama_autosens_min">Ratio mínimo de autosens</string>
     <string name="openapsama_bolussnooze_dia_divisor">DIA Divisor para suspensión de bolos</string>
     <string name="openapsama_max_daily_safety_multiplier">Máximo multiplicador diario de seguridad</string>
-    <string name="openapsama_current_basal_safety_multiplier">Multiplicador de seguridad basal actual</string>
+    <string name="openapsama_current_basal_safety_multiplier">Multiplicador basal de seguridad actual</string>
     <string name="value_unavailable_short">n/a</string>
     <string name="virtualpump_type">Bomba virtual</string>
     <string name="virtualpump_definition">Definición de la bomba</string>
@@ -631,7 +631,7 @@
     <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/es/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="nsclientinfotext">NSCliente controla la conexión con Nightscout. Puedes saltar este paso ahora pero no podrás completar los objetivos hasta que lo configures.</string>
     <string name="diawarning">Por favor, recuerde: nuevos perfiles de insulina requieren DIA de al menos 5h. DIA de 5-6h en nuevos perfiles es lo mismo que DIA de 3h en perfiles antiguos.</string>
-    <string name="setupwizard_aps_description">Selecciona uno de los algoritmos disponibles. Están ordenados de más antiguos a más recientes. Los nuevos son más potentes y agresivos. Por ello, si eres usuario nuevo, se recomienda empezar con AMA y no con el último. No olvides leer la documentación de OpenAPS y configurarlo antes de usarlo.</string>
+    <string name="setupwizard_aps_description">Selecciona uno de los algoritmos disponibles. Están ordenados de más antiguos a más recientes. Los nuevos son más potentes y agresivos. Por ello, si eres un nuevo usuario, se recomienda empezar con AMA y no con el último. No olvides leer la documentación de OpenAPS y configurarlo antes de usarlo.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Por favor, a continuación configure su RileyLink. Después de seleccionar un RileyLink, será posible continuar la configuración una vez que el estado de RileyLink esté en \"Conectado\". Esto podría tardar un minuto.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Nota:</b> Puede continuar con la configuración una vez que la bomba se haya configurado.\n</string>
     <string name="startobjective">Comienza tu primer objetivo</string>
@@ -859,7 +859,7 @@
     <string name="trend_arrow">Flecha de tendencia</string>
     <string name="cannula">Cánula</string>
     <string name="userentry">Entrada usuario</string>
-    <string name="common_values">Usa los valores de tu comida más grande que comes normalmente\n</string>
+    <string name="common_values">Usa los valores de la comida más grande que sueles comer\n</string>
     <string name="summary_email_for_crash_report">Esta identificación se adjuntará a los informes de errores, para que podamos contactarte en casos urgentes. Es opcional.</string>
     <string name="email_address">Dirección de Correo Electrónico</string>
     <string name="privacy_settings">Ajustes de privacidad</string>
