@@ -8,102 +8,130 @@
     card_view:cardBackgroundColor="?android:colorBackground">
 
     <LinearLayout
+        android:id="@+id/food_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/left_right_split"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingLeft="3dp"
+            android:paddingRight="3dp">
 
-            <TextView
-                android:id="@+id/name"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:id="@+id/name_and_info_container"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:layout_weight="1"
-                android:text="Name"
-                android:textStyle="bold"
-                tools:ignore="HardcodedText" />
+                android:gravity="start">
 
-            <TextView
-                android:id="@+id/portion"
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:gravity="end"
-                android:text="Portion"
-                tools:ignore="HardcodedText" />
+                <LinearLayout
+                    android:id="@+id/name_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/carbs"
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:gravity="end"
-                android:text="Carbs"
-                tools:ignore="HardcodedText" />
+                    <TextView
+                        android:id="@+id/name"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Name"
+                        android:textStyle="bold"
+                        android:textSize="@dimen/twenty_four_dp"
+                        tools:ignore="HardcodedText" />
 
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/info_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="start"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="5dp">
+
+                    <TextView
+                        android:id="@+id/carbs"
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Carbs"
+                        tools:ignore="HardcodedText" />
+
+                    <TextView
+                        android:id="@+id/portion"
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Portion"
+                        tools:ignore="HardcodedText" />
+
+                    <TextView
+                        android:id="@+id/fat"
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Fat"
+                        tools:ignore="HardcodedText" />
+
+                    <TextView
+                        android:id="@+id/protein"
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Protein"
+                        tools:ignore="HardcodedText" />
+
+                    <TextView
+                        android:id="@+id/energy"
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Energy"
+                        tools:ignore="HardcodedText" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/buttons_container"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="end">
+
+                <ImageView
+                    android:id="@+id/ic_calculator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:padding="2dp"
+                    android:orientation="horizontal"
+                    android:src="@drawable/ic_calculator" />
+                <ImageView
+                    android:id="@+id/ic_remove"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:padding="2dp"
+                    android:orientation="horizontal"
+                    android:src="@drawable/ic_trash_outline" />
+
+            </LinearLayout>
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="end"
-            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/fat"
-                android:layout_width="70dp"
-                android:layout_height="wrap_content"
-                android:gravity="end"
-                android:text="Fat"
-                tools:ignore="HardcodedText" />
-
-            <TextView
-                android:id="@+id/protein"
-                android:layout_width="70dp"
-                android:layout_height="wrap_content"
-                android:gravity="end"
-                android:text="Protein"
-                tools:ignore="HardcodedText" />
-
-            <TextView
-                android:id="@+id/energy"
-                android:layout_width="70dp"
-                android:layout_height="wrap_content"
-                android:gravity="end"
-                android:text="Energy"
-                tools:ignore="HardcodedText" />
-
-            <TextView
-                android:id="@+id/ns_sign"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:width="30dp"
-                android:text="NS"
-                android:textAlignment="viewEnd"
-                android:textColor="@color/colorSetTempButton"
-                tools:ignore="HardcodedText" />
-
-            <TextView
-                android:id="@+id/remove"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingEnd="5dp"
-                android:paddingStart="10dp"
-                android:text="@string/remove_button"
-                android:textAlignment="viewEnd"
-                android:textColor="@android:color/holo_orange_light" />
-
-        </LinearLayout>
 
         <View
             android:layout_width="fill_parent"
             android:layout_height="2dip"
             android:layout_marginBottom="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
             android:layout_marginTop="5dp"
             android:background="@color/list_delimiter" />
 
