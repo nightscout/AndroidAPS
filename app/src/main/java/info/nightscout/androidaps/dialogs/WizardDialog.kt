@@ -64,6 +64,8 @@ class WizardDialog : DaggerDialogFragment() {
     private var calculatedPercentage = 100.0
     private var calculatedCorrection = 0.0
     private var correctionPercent = false
+    private var carbsPassedIntoWizard = 0.0
+    private var notesPassedIntoWizard = ""
 
     //one shot guards
     private var okClicked: Boolean = false
@@ -110,6 +112,11 @@ class WizardDialog : DaggerDialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
+        this.arguments?.let { bundle ->
+            carbsPassedIntoWizard = bundle.getInt("carbs_input")?.toDouble()
+            notesPassedIntoWizard = bundle.getString("notes_input").toString()
+        }
+
         dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
         isCancelable = true
@@ -274,6 +281,12 @@ class WizardDialog : DaggerDialogFragment() {
         else DecimalFormatter.to1Decimal(value * Constants.MGDL_TO_MMOLL)
 
     private fun initDialog() {
+        if(carbsPassedIntoWizard != 0.0) {
+            binding.carbsInput.value = carbsPassedIntoWizard
+        }
+        if(!notesPassedIntoWizard.isBlank()) {
+            binding.notes.setText(notesPassedIntoWizard.toString())
+        }
         val profile = profileFunction.getProfile()
         val profileStore = activePlugin.activeProfileSource.profile
 
