@@ -113,7 +113,7 @@ class WizardDialog : DaggerDialogFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         this.arguments?.let { bundle ->
-            carbsPassedIntoWizard = bundle.getInt("carbs_input")?.toDouble()
+            carbsPassedIntoWizard = bundle.getInt("carbs_input").toDouble()
             notesPassedIntoWizard = bundle.getString("notes_input").toString()
         }
 
@@ -184,8 +184,7 @@ class WizardDialog : DaggerDialogFragment() {
         binding.bgCheckbox.setOnCheckedChangeListener(::onCheckedChanged)
         binding.ttCheckbox.setOnCheckedChangeListener(::onCheckedChanged)
         binding.cobCheckbox.setOnCheckedChangeListener(::onCheckedChanged)
-        binding.basalIobCheckbox.setOnCheckedChangeListener(::onCheckedChanged)
-        binding.bolusIobCheckbox.setOnCheckedChangeListener(::onCheckedChanged)
+        binding.iobCheckbox.setOnCheckedChangeListener(::onCheckedChanged)
         binding.bgTrendCheckbox.setOnCheckedChangeListener(::onCheckedChanged)
         binding.sbCheckbox.setOnCheckedChangeListener(::onCheckedChanged)
 
@@ -198,8 +197,11 @@ class WizardDialog : DaggerDialogFragment() {
                 sp.putBoolean(rh.gs(R.string.key_wizard_calculation_visible), isChecked)
                 binding.delimiter.visibility = isChecked.toVisibility()
                 binding.result.visibility = isChecked.toVisibility()
+                processEnabledIcons()
             }
         }
+
+        processEnabledIcons()
 
         binding.correctionPercent.setOnCheckedChangeListener {_, isChecked ->
             run {
@@ -248,19 +250,28 @@ class WizardDialog : DaggerDialogFragment() {
         binding.ttCheckbox.isEnabled = binding.bgCheckbox.isChecked && repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing
         if (buttonView.id == binding.cobCheckbox.id)
             processCobCheckBox()
+        processEnabledIcons()
         calculateInsulin()
     }
 
     private fun processCobCheckBox() {
         if (binding.cobCheckbox.isChecked) {
-            binding.bolusIobCheckbox.isEnabled = false
-            binding.basalIobCheckbox.isEnabled = false
-            binding.bolusIobCheckbox.isChecked = true
-            binding.basalIobCheckbox.isChecked = true
+            binding.iobCheckbox.isEnabled = false
+            binding.iobCheckbox.isChecked = true
         } else {
-            binding.bolusIobCheckbox.isEnabled = true
-            binding.basalIobCheckbox.isEnabled = true
+            binding.iobCheckbox.isEnabled = true
         }
+    }
+
+    private fun processEnabledIcons() {
+        binding.bgEnabledIcon.alpha = if (binding.bgCheckbox.isChecked) 1.0f else 0.2f
+        binding.trendEnabledIcon.alpha = if (binding.bgTrendCheckbox.isChecked) 1.0f else 0.2f
+        binding.iobEnabledIcon.alpha = if (binding.iobCheckbox.isChecked) 1.0f else 0.2f
+        binding.cobEnabledIcon.alpha = if (binding.cobCheckbox.isChecked) 1.0f else 0.2f
+        binding.bgEnabledIcon.visibility = binding.calculationCheckbox.isChecked.not().toVisibility()
+        binding.trendEnabledIcon.visibility = binding.calculationCheckbox.isChecked.not().toVisibility()
+        binding.iobEnabledIcon.visibility = binding.calculationCheckbox.isChecked.not().toVisibility()
+        binding.cobEnabledIcon.visibility = binding.calculationCheckbox.isChecked.not().toVisibility()
     }
 
     private fun saveCheckedStates() {
@@ -284,8 +295,8 @@ class WizardDialog : DaggerDialogFragment() {
         if(carbsPassedIntoWizard != 0.0) {
             binding.carbsInput.value = carbsPassedIntoWizard
         }
-        if(!notesPassedIntoWizard.isBlank()) {
-            binding.notes.setText(notesPassedIntoWizard.toString())
+        if(notesPassedIntoWizard.isNotBlank()) {
+            binding.notes.setText(notesPassedIntoWizard)
         }
         val profile = profileFunction.getProfile()
         val profileStore = activePlugin.activeProfileSource.profile
@@ -315,8 +326,7 @@ class WizardDialog : DaggerDialogFragment() {
         val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
         val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
 
-        binding.bolusIobInsulin.text = rh.gs(R.string.formatinsulinunits, -bolusIob.iob)
-        binding.basalIobInsulin.text = rh.gs(R.string.formatinsulinunits, -basalIob.basaliob)
+        binding.iobInsulin.text = rh.gs(R.string.formatinsulinunits, -bolusIob.iob - basalIob.basaliob)
 
         calculateInsulin()
 
@@ -378,8 +388,8 @@ class WizardDialog : DaggerDialogFragment() {
         wizard = BolusWizard(injector).doCalc(specificProfile, profileName, tempTarget, carbsAfterConstraint, cob, bg, correction, sp.getInt(R.string.key_boluswizard_percentage, 100),
             binding.bgCheckbox.isChecked,
             binding.cobCheckbox.isChecked,
-            binding.bolusIobCheckbox.isChecked,
-            binding.basalIobCheckbox.isChecked,
+            binding.iobCheckbox.isChecked,
+            binding.iobCheckbox.isChecked,
             binding.sbCheckbox.isChecked,
             binding.ttCheckbox.isChecked,
             binding.bgTrendCheckbox.isChecked,
@@ -397,8 +407,7 @@ class WizardDialog : DaggerDialogFragment() {
             binding.carbs.text = String.format(rh.gs(R.string.format_carbs_ic), carbs.toDouble(), wizard.ic)
             binding.carbsInsulin.text = rh.gs(R.string.formatinsulinunits, wizard.insulinFromCarbs)
 
-            binding.bolusIobInsulin.text = rh.gs(R.string.formatinsulinunits, wizard.insulinFromBolusIOB)
-            binding.basalIobInsulin.text = rh.gs(R.string.formatinsulinunits, wizard.insulinFromBasalIOB)
+            binding.iobInsulin.text = rh.gs(R.string.formatinsulinunits, wizard.insulinFromBolusIOB + wizard.insulinFromBasalIOB)
 
             binding.correctionInsulin.text = rh.gs(R.string.formatinsulinunits, wizard.insulinFromCorrection)
 
