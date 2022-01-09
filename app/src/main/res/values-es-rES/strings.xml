@@ -560,7 +560,7 @@
     <string name="overview_show_cob">Carbohidratos activos COB</string>
     <string name="overview_show_iob">Insulina activa</string>
     <string name="overview_show_basals">Basales</string>
-    <string name="no_action_selected">Ninguna acción seleccionada, nada sucederá</string>
+    <string name="no_action_selected">No se ha seleccionado ninguna opción, por lo que no se realizará ningún cambio</string>
     <string name="start_hypo_tt">Iniciar OT Hipo</string>
     <string name="closed_loop_disabled_on_dev_branch">Ejecutando la versión dev. Lazo cerrado no disponible.</string>
     <string name="engineering_mode_enabled">Modo de ingeniería activado</string>
