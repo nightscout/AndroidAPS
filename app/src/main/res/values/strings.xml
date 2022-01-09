@@ -1026,6 +1026,7 @@
     <string name="overview_show_predictions">Predictions</string>
     <string name="overview_show_deviationslope">Deviation slope</string>
     <string name="key_graphconfig" translatable="false">graphconfig</string>
+    <string name="key_therapy_events_visible" translatable="false">therapy_events_visible</string>
     <string name="authorizationfailed">Authorization failed</string>
     <string name="overview_show_absinsulin">Absolute insulin</string>
     <string name="master_password_summary">Master password is used for backup encryption and to override security in application. Remember it or store on a safe place.</string>

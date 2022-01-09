@@ -261,6 +261,8 @@ class OverviewData @Inject constructor(
 
     var maxTreatmentsValue = 0.0
     var treatmentsSeries: PointsWithLabelGraphSeries<DataPointWithLabelInterface> = PointsWithLabelGraphSeries()
+    var maxTherapyEventValue = 0.0
+    var therapyEventSeries: PointsWithLabelGraphSeries<DataPointWithLabelInterface> = PointsWithLabelGraphSeries()
 
     var maxIobValueFound = Double.MIN_VALUE
     val iobScale = Scale()
@@ -515,6 +517,8 @@ class OverviewData @Inject constructor(
 //        val start = dateUtil.now()
         maxTreatmentsValue = 0.0
         val filteredTreatments: MutableList<DataPointWithLabelInterface> = java.util.ArrayList()
+        val filteredTherapyEvents: MutableList<DataPointWithLabelInterface> = java.util.ArrayList()
+
         repository.getBolusesDataFromTimeToTime(fromTime, endTime, true).blockingGet()
             .map { BolusDataPoint(it, rh, activePlugin, defaultValueHelper) }
             .filter { it.data.type == Bolus.Type.NORMAL || it.data.type == Bolus.Type.SMB }
@@ -563,7 +567,7 @@ class OverviewData @Inject constructor(
             .filterTimeframe(fromTime, endTime)
             .forEach {
                 if (it.y == 0.0) it.y = getNearestBg(it.x.toLong())
-                filteredTreatments.add(it)
+                filteredTherapyEvents.add(it)
             }
 
         // increase maxY if a treatment forces it's own height that's higher than a BG value
@@ -571,8 +575,13 @@ class OverviewData @Inject constructor(
             .maxOrNull()
             ?.let(::addUpperChartMargin)
             ?.let { maxTreatmentsValue = maxOf(maxTreatmentsValue, it) }
+        filteredTherapyEvents.map { it.y }
+            .maxOrNull()
+            ?.let(::addUpperChartMargin)
+            ?.let { maxTherapyEventValue = maxOf(maxTherapyEventValue, it) }
 
         treatmentsSeries = PointsWithLabelGraphSeries(filteredTreatments.toTypedArray())
+        therapyEventSeries = PointsWithLabelGraphSeries(filteredTherapyEvents.toTypedArray())
 //        profiler.log(LTag.UI, "prepareTreatmentsData() $from", start)
     }
 

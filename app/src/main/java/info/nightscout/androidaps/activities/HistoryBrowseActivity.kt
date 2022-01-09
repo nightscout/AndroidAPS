@@ -186,6 +186,14 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
             ).show()
         }
 
+        binding.simplifyCheckbox.isChecked = sp.getBoolean(R.string.key_therapy_events_visible, true)
+        binding.simplifyCheckbox.setOnCheckedChangeListener { _, isChecked ->
+            run {
+                sp.putBoolean(rh.gs(R.string.key_therapy_events_visible), isChecked)
+                updateGUI("SimplifyCheckbox Change")
+            }
+        }
+
         val dm = DisplayMetrics()
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R)
             display?.getRealMetrics(dm)
@@ -371,6 +379,8 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         graphData.addBgReadings(menuChartSettings[0][OverviewMenus.CharType.PRE.ordinal])
         if (buildHelper.isDev()) graphData.addBucketedData()
         graphData.addTreatments()
+        if(binding.simplifyCheckbox.isChecked)
+            graphData.addTherapyEvents()
         if (menuChartSettings[0][OverviewMenus.CharType.ACT.ordinal])
             graphData.addActivity(0.8)
         if (pump.pumpDescription.isTempBasalCapable && menuChartSettings[0][OverviewMenus.CharType.BAS.ordinal])
