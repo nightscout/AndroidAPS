@@ -76,6 +76,14 @@ allprojects {
             jvmTarget = "11"
         }
     }
+    // Workaround to support M1 builds. Room 2.4.0 fixes this but requires min compileSdkVersion
+    // 31 => remove when upgrading to Room 2.4.0
+    // Source: https://issuetracker.google.com/issues/174695268
+    configurations.configureEach {
+        resolutionStrategy {
+            force 'org.xerial:sqlite-jdbc:3.34.0'
+        }
+    }
 }
 
 task clean(type: Delete) {
