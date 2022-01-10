@@ -89,18 +89,15 @@ public class CPPActivity extends ViewSelectorActivity {
 
                 final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_send_item, container, false);
                 final ImageView confirmbutton = view.findViewById(R.id.confirmbutton);
-                confirmbutton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                confirmbutton.setOnClickListener((View v) -> {
+                    //check if it can happen that the fagment is never created that hold data?
+                    // (you have to swipe past them anyways - but still)
 
-                        //check if it can happen that the fagment is never created that hold data?
-                        // (you have to swipe past them anyways - but still)
-
-                        String actionstring = "cppset " + SafeParse.stringToInt(editTimeshift.editText.getText().toString())
-                                + " " + SafeParse.stringToInt(editPercentage.editText.getText().toString());
-                        ListenerService.initiateAction(CPPActivity.this, actionstring);
-                        finishAffinity();
-                    }
+                    String actionstring = "cppset " + SafeParse.stringToInt(editTimeshift.editText.getText().toString())
+                            + " " + SafeParse.stringToInt(editPercentage.editText.getText().toString());
+                    ListenerService.initiateAction(CPPActivity.this, actionstring);
+                    confirmAction(CPPActivity.this, R.string.action_cpp_confirmation);
+                    finishAffinity();
                 });
                 container.addView(view);
                 return view;

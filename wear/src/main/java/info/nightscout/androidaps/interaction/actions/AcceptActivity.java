@@ -103,12 +103,9 @@ public class AcceptActivity extends ViewSelectorActivity {
             } else {
                 final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_send_item, container, false);
                 final ImageView confirmbutton = view.findViewById(R.id.confirmbutton);
-                confirmbutton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ListenerService.confirmAction(AcceptActivity.this, actionstring);
-                        finishAffinity();
-                    }
+                confirmbutton.setOnClickListener((View v) -> {
+                    ListenerService.confirmAction(AcceptActivity.this, actionstring);
+                    finishAffinity();
                 });
                 container.addView(view);
                 return view;

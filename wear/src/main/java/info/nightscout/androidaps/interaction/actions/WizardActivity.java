@@ -82,23 +82,20 @@ public class WizardActivity extends ViewSelectorActivity {
 
                 final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_send_item, container, false);
                 final ImageView confirmbutton = view.findViewById(R.id.confirmbutton);
-                confirmbutton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                confirmbutton.setOnClickListener((View v) -> {
+                    // check if it can happen that the fragment is never created that hold data?
+                    // (you have to swipe past them anyways - but still)
 
-                        // check if it can happen that the fragment is never created that hold data?
-                        // (you have to swipe past them anyways - but still)
+                    int percentage = 100;
 
-                        int percentage = 100;
+                    if (editPercentage != null)
+                        percentage = SafeParse.stringToInt(editPercentage.editText.getText().toString());
 
-                        if (editPercentage != null)
-                            percentage = SafeParse.stringToInt(editPercentage.editText.getText().toString());
-
-                        String actionstring = "wizard2 " + SafeParse.stringToInt(editCarbs.editText.getText().toString())
-                                + " " + percentage;
-                        ListenerService.initiateAction(WizardActivity.this, actionstring);
-                        finishAffinity();
-                    }
+                    String actionstring = "wizard2 " + SafeParse.stringToInt(editCarbs.editText.getText().toString())
+                            + " " + percentage;
+                    ListenerService.initiateAction(WizardActivity.this, actionstring);
+                    confirmAction(WizardActivity.this, R.string.action_wizard_confirmation);
+                    finishAffinity();
                 });
                 container.addView(view);
                 return view;
