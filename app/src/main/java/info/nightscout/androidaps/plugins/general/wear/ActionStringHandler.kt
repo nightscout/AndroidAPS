@@ -79,7 +79,8 @@ class ActionStringHandler @Inject constructor(
     private val dateUtil: DateUtil,
     private val config: Config,
     private val repository: AppRepository,
-    private val uel: UserEntryLogger
+    private val uel: UserEntryLogger,
+    private val defaultValueHelper: DefaultValueHelper
 ) {
 
     private val timeout = 65 * 1000
@@ -143,32 +144,65 @@ class ActionStringHandler @Inject constructor(
             }
             rAction += "bolus $insulinAfterConstraints $carbsAfterConstraints"
         } else if ("temptarget" == act[0]) { ///////////////////////////////////////////////////////// TEMPTARGET
-            val isMGDL = java.lang.Boolean.parseBoolean(act[1])
-            if (profileFunction.getUnits() == GlucoseUnit.MGDL != isMGDL) {
-                sendError("Different units used on watch and phone!")
-                return
-            }
-            val duration = SafeParse.stringToInt(act[2])
-            if (duration == 0) {
-                rMessage += "Zero-Temp-Target - cancelling running Temp-Targets?"
+            if ("cancel" == act[1]) {
+                rMessage += rh.gs(R.string.wear_action_tempt_cancel_message)
                 rAction = "temptarget true 0 0 0"
+            } else if ("preset" == act[1]) {
+                val presetIsMGDL = profileFunction.getUnits() == GlucoseUnit.MGDL
+                val preset = act[2]
+                if ("activity" == preset) {
+                    val activityTTDuration = defaultValueHelper.determineActivityTTDuration()
+                    val activityTT = defaultValueHelper.determineActivityTT()
+                    val reason = rh.gs(R.string.activity)
+                    rMessage += rh.gs(R.string.wear_action_tempt_preset_message, reason, activityTT, activityTTDuration)
+                    rAction = "temptarget $presetIsMGDL $activityTTDuration $activityTT $activityTT"
+                }
+                if ("hypo" == preset) {
+                    val hypoTTDuration = defaultValueHelper.determineHypoTTDuration()
+                    val hypoTT = defaultValueHelper.determineHypoTT()
+                    val reason = rh.gs(R.string.hypo)
+                    rMessage += rh.gs(R.string.wear_action_tempt_preset_message, reason, hypoTT, hypoTTDuration)
+                    rAction = "temptarget $presetIsMGDL $hypoTTDuration $hypoTT $hypoTT"
+                }
+                if ("eating" == preset) {
+                    val eatingSoonTTDuration = defaultValueHelper.determineEatingSoonTTDuration()
+                    val eatingSoonTT = defaultValueHelper.determineEatingSoonTT()
+                    val reason = rh.gs(R.string.eatingsoon)
+                    rMessage += rh.gs(R.string.wear_action_tempt_preset_message, reason, eatingSoonTT, eatingSoonTTDuration)
+                    rAction = "temptarget $presetIsMGDL $eatingSoonTTDuration $eatingSoonTT $eatingSoonTT"
+                } else {
+                    sendError(rh.gs(R.string.wear_action_tempt_preset_error, preset))
+                    return
+                }
             } else {
-                var low = SafeParse.stringToDouble(act[3])
-                var high = SafeParse.stringToDouble(act[4])
-                if (!isMGDL) {
-                    low *= Constants.MMOLL_TO_MGDL
-                    high *= Constants.MMOLL_TO_MGDL
-                }
-                if (low < HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[0] || low > HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[1]) {
-                    sendError("Min-BG out of range!")
+                val isMGDL = java.lang.Boolean.parseBoolean(act[1])
+                if (profileFunction.getUnits() == GlucoseUnit.MGDL != isMGDL) {
+                    sendError(rh.gs(R.string.wear_action_tempt_unit_error))
                     return
                 }
-                if (high < HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[0] || high > HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[1]) {
-                    sendError("Max-BG out of range!")
-                    return
+                val duration = SafeParse.stringToInt(act[2])
+                if (duration == 0) {
+                    rMessage += rh.gs(R.string.wear_action_tempt_zero_message)
+                    rAction = "temptarget true 0 0 0"
+                } else {
+                    var low = SafeParse.stringToDouble(act[3])
+                    var high = SafeParse.stringToDouble(act[4])
+                    if (!isMGDL) {
+                        low *= Constants.MMOLL_TO_MGDL
+                        high *= Constants.MMOLL_TO_MGDL
+                    }
+                    if (low < HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[0] || low > HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[1]) {
+                        sendError(rh.gs(R.string.wear_action_tempt_min_bg_error))
+                        return
+                    }
+                    if (high < HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[0] || high > HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[1]) {
+                        sendError(rh.gs(R.string.wear_action_tempt_max_bg_error))
+                        return
+                    }
+                    rMessage += if(act[3] === act[4]) rh.gs(R.string.wear_action_tempt_manual_message, act[3], act[2])
+                                else  rh.gs(R.string.wear_action_tempt_manual_range_message, act[3], act[4], act[2])
+                    rAction = actionString
                 }
-                rMessage += "Temptarget:\nMin: " + act[3] + "\nMax: " + act[4] + "\nDuration: " + act[2]
-                rAction = actionString
             }
         } else if ("status" == act[0]) { ////////////////////////////////////////////// STATUS
             rTitle = "STATUS"

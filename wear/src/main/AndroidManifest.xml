@@ -512,15 +512,34 @@
 
         <service
             android:name=".tile.ActionsTileService"
-            android:label="Pump Actions"
+            android:label="@string/label_actions_tile"
             android:permission="com.google.android.wearable.permission.BIND_TILE_PROVIDER">
             <intent-filter>
                 <action android:name="androidx.wear.tiles.action.BIND_TILE_PROVIDER" />
             </intent-filter>
 
             <meta-data
+                android:name="com.google.android.clockwork.tiles.PROVIDER_CONFIG_ACTION"
+                android:value="tile_configuration_activity" />
+            <meta-data
                 android:name="androidx.wear.tiles.PREVIEW"
                 android:resource="@drawable/action_tile_preview" />
+        </service>
+
+        <service
+            android:name=".tile.TempTargetTileService"
+            android:label="@string/label_temp_target_tile"
+            android:permission="com.google.android.wearable.permission.BIND_TILE_PROVIDER">
+            <intent-filter>
+                <action android:name="androidx.wear.tiles.action.BIND_TILE_PROVIDER" />
+            </intent-filter>
+
+            <meta-data
+                android:name="com.google.android.clockwork.tiles.PROVIDER_CONFIG_ACTION"
+                android:value="tile_configuration_tempt" />
+            <meta-data
+                android:name="androidx.wear.tiles.PREVIEW"
+                android:resource="@drawable/temp_target_tile_preview" />
         </service>
 
         <receiver android:name=".complications.ComplicationTapBroadcastReceiver" />
@@ -587,5 +606,15 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".interaction.TileConfigurationActivity" android:exported="true">
+            <intent-filter>
+                <action android:name="tile_configuration_activity" />
+                <action android:name="tile_configuration_tempt" />
+                <category android:name="com.google.android.clockwork.tiles.category.PROVIDER_CONFIG" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
     </application>
 </manifest>

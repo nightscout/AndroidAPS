@@ -85,19 +85,18 @@ public class ECarbActivity extends ViewSelectorActivity {
 
                 final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_send_item, container, false);
                 final ImageView confirmbutton = view.findViewById(R.id.confirmbutton);
-                confirmbutton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                confirmbutton.setOnClickListener((View v) -> {
 
-                        //check if it can happen that the fagment is never created that hold data?
-                        // (you have to swipe past them anyways - but still)
+                    //check if it can happen that the fagment is never created that hold data?
+                    // (you have to swipe past them anyways - but still)
 
-                        String actionstring = "ecarbs " + SafeParse.stringToInt(editCarbs.editText.getText().toString())
-                                + " " + SafeParse.stringToInt(editStartTime.editText.getText().toString())
-                                + " " + SafeParse.stringToInt(editDuration.editText.getText().toString());
-                        ListenerService.initiateAction(ECarbActivity.this, actionstring);
-                        finishAffinity();
-                    }
+                    String actionstring = "ecarbs " + SafeParse.stringToInt(editCarbs.editText.getText().toString())
+                            + " " + SafeParse.stringToInt(editStartTime.editText.getText().toString())
+                            + " " + SafeParse.stringToInt(editDuration.editText.getText().toString());
+                    ListenerService.initiateAction(ECarbActivity.this, actionstring);
+                    confirmAction(ECarbActivity.this, R.string.action_ecarb_confirmation);
+                    finishAffinity();
+
                 });
                 container.addView(view);
                 return view;
