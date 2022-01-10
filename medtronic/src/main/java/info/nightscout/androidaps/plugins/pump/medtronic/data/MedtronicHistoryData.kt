@@ -769,7 +769,7 @@ class MedtronicHistoryData @Inject constructor(
                 pheEnd.atechDateTime = DateTimeUtil.getATDWithAddedSeconds(tempBasalProcessDTO.itemOne.atechDateTime, -2)
                 pheEnd.addDecodedData("Object", TempBasalPair(0.0, false, 0))
 
-                var initialDuration = previousItem.durationAsSeconds
+                val initialDuration = previousItem.durationAsSeconds
 
                 previousItem.itemTwo = pheEnd
 
