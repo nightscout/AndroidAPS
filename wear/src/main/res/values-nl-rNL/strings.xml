@@ -122,6 +122,8 @@
     <string name="color_name_white">wit</string>
     <string name="color_name_black">zwart</string>
     <string name="color_name_multicolor">multicolor</string>
+    <string name="pref_simplify_ui_charging">Vereenvoudig weergave tijdens opladen</string>
+    <string name="pref_simplify_ui_charging_sum">Toon alleen tijd en BG tijdens het opladen</string>
     <string name="pref_vibrate_hourly">Tril ieder uur</string>
     <string name="pref_show_weeknumber">Weeknummer weergeven</string>
     <string name="digitalstyle_pref_your_style">Jouw stijl:</string>

@@ -35,4 +35,5 @@
     <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
     <string name="dash_bolusdelivering">Erogazione di %1$.2f U</string>
     <string name="omnipod_common_alert_delivery_suspended">L\'erogazione di insulina è sospesa</string>
+    <string name="omnipod_dash_connection_lost">Persa connessione al pod</string>
 </resources>

@@ -257,7 +257,6 @@ class OverviewPlugin @Inject constructor(
         overviewBus.send(EventUpdateOverviewTemporaryBasal(from))
         overviewBus.send(EventUpdateOverviewExtendedBolus(from))
         overviewBus.send(EventUpdateOverviewTemporaryTarget(from))
-        overviewBus.send(EventUpdateOverviewSensitivity(from))
         loadAsData(from)
         overviewData.preparePredictions(from)
         overviewData.prepareBasalData(from)

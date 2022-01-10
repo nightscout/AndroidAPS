@@ -348,6 +348,9 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
                     DanaPump.HistoryEntry.CARBS.getValue(), carbtime, carbs, 0);
             mSerialIOThread.sendMessage(msgSetHistoryEntry_v2);
             danaPump.lastHistoryFetched = Math.min(danaPump.lastHistoryFetched, carbtime - T.Companion.mins(1).msecs());
+            if (!msgSetHistoryEntry_v2.isReceived() || msgSetHistoryEntry_v2.failed)
+                ErrorHelperActivity.Companion.runAlarm(context, rh.gs(R.string.carbs_store_error)
+                        , rh.gs(R.string.error), R.raw.boluserror);
         }
 
         final long bolusStart = System.currentTimeMillis();
