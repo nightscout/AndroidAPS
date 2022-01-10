@@ -14,6 +14,8 @@
     <string name="label_xdrip_steampunk">AAPS(Steampunk)</string>
     <string name="label_digitalstyle">AAPS(DigitalStyle)</string>
 
+    <string name="label_actions_tile">AAPS(Actions)</string>
+    <string name="label_temp_target_tile">AAPS(Temp Target)</string>
 
     <string name="label_warning_sync">No data!</string>
     <string name="label_warning_old">Old data!</string>
@@ -70,7 +72,6 @@
     <string name="pref_moreWatchfaceSettings">more Watchface settings</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Look into Watchface configuration, please.</string>
 
-
     <string name="menu_tempt">TempT</string>
     <string name="menu_wizard">Wizard</string>
     <string name="menu_bolus">Bolus</string>
@@ -84,10 +85,16 @@
     <string name="menu_menu">Menu</string>
 
     <string name="action_duration">duration</string>
+    <string name="action_tempt_confirmation">Temp Target Requested</string>
+    <string name="action_bolus_confirmation">Bolus Requested</string>
+    <string name="action_wizard_confirmation">Updated Requested</string>
+    <string name="action_fill_confirmation">Fill Requested</string>
+    <string name="action_ecarb_confirmation">Carbs Requested</string>
+    <string name="action_cpp_confirmation">CPP Requested</string>
     <string name="action_target" comment="In temp target menu, single target value">target</string>
     <string name="action_low" comment="In temp target menu, lower value from range">low</string>
     <string name="action_high" comment="In temp target menu, higher value from range">high</string>
-    <string name="action_carbs">carbs</string>
+    <string name="action_carbs">Carbs</string>
     <string name="action_percentage">percentage</string>
     <string name="action_start_min">start [min]</string>
     <string name="action_duration_h">duration [h]</string>
@@ -98,7 +105,7 @@
     <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Free amount</string>
     <string name="action_confirm">CONFIRM</string>
     <string name="action_timeshift">timeshift</string>
-    <string name="action_bolus">bolus</string>
+    <string name="action_bolus">Bolus</string>
 
     <string name="bolus_progress">Bolus Progress</string>
     <string name="press_to_cancel">press to cancel</string>
@@ -112,7 +119,6 @@
     <string name="activity_carb">Carb</string>
     <string name="activity_IOB">IOB</string>
     <string name="activity_no_status">no status</string>
-
 
     <string name="color_name_red">red</string>
     <string name="color_name_pink">pink</string>
@@ -139,7 +145,6 @@
     <string name="pref_simplify_ui">Simplify UI</string>
     <string name="pref_simplify_ui_sum">Only show time and BG</string>
 
-
     <string name="pref_vibrate_hourly">Vibrate hourly</string>
     <string name="pref_show_weeknumber">Show Week number</string>
 
@@ -161,5 +166,12 @@
     <string name="simple_ui_charging">During Charging</string>
     <string name="simple_ui_always_on">Always On Mode</string>
     <string name="simple_ui_always_on_charging">Always On and Charging</string>
+    <string name="temp_target_eating_soon">Eating</string>
+    <string name="temp_target_hypo">Hypo</string>
+    <string name="temp_target_activity">Activity</string>
+    <string name="temp_target_manual">Manual</string>
+    <string name="temp_target_cancel">Cancel</string>
+    <string name="tile_none">None</string>
+    <string name="tile_no_config">No tile config available</string>
 
 </resources>
