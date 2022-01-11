@@ -568,9 +568,9 @@
             android:name=".interaction.menus.StatusMenuActivity"
             android:label="@string/menu_status" />
         <activity
-            android:name=".interaction.actions.BolusActivity"
+            android:name=".interaction.actions.TreatmentActivity"
             android:exported="true"
-            android:label="@string/action_bolus" />
+            android:label="@string/menu_treatment" />
         <activity
             android:name=".interaction.actions.CPPActivity"
             android:label="@string/status_cpp" />
