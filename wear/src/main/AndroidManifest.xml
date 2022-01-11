@@ -572,6 +572,10 @@
             android:exported="true"
             android:label="@string/menu_treatment" />
         <activity
+            android:name=".interaction.actions.BolusActivity"
+            android:exported="true"
+            android:label="@string/menu_bolus" />
+        <activity
             android:name=".interaction.actions.CPPActivity"
             android:label="@string/status_cpp" />
         <activity

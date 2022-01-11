@@ -82,6 +82,7 @@
     <string-array name="tile_action_names">
         <item>@string/menu_wizard</item>
         <item>@string/menu_treatment</item>
+        <item>@string/menu_bolus</item>
         <item>@string/menu_ecarb</item>
         <item>@string/menu_tempt</item>
         <item>@string/tile_none</item>
@@ -89,6 +90,7 @@
 
     <string-array name="tile_action_values">
         <item>wizzard</item>
+        <item>treatment</item>
         <item>bolus</item>
         <item>carbs</item>
         <item>temp_target</item>
