@@ -234,12 +234,12 @@ abstract open class TileBase : TileService() {
 
     private fun getActionFromPreference(sharedPrefs: SharedPreferences, index: Int): Action? {
         val actionPref = sharedPrefs?.getString(preferencePrefix + index, "none")
-        return source.getActions().find { a -> a.settingName == actionPref }
+        return source.getActions().find { action -> action.settingName == actionPref }
     }
 
     fun setDefaultSettings(sharedPrefs: SharedPreferences) {
         val defaults = source.getDefaultConfig()
-        val firstKey = defaults.firstNotNullOf { d -> d.key }
+        val firstKey = defaults.firstNotNullOf { settings -> settings.key }
         if (!sharedPrefs.contains(firstKey)) {
             Log.i(TAG, "setDefaultSettings: set defaults")
             val editor = sharedPrefs.edit()

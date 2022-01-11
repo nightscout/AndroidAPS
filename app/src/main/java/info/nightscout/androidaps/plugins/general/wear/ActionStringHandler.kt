@@ -144,6 +144,7 @@ class ActionStringHandler @Inject constructor(
             }
             rAction += "bolus $insulinAfterConstraints $carbsAfterConstraints"
         } else if ("temptarget" == act[0]) { ///////////////////////////////////////////////////////// TEMPTARGET
+            aapsLogger.info(LTag.WEAR, "temptarget received:" + act)
             if ("cancel" == act[1]) {
                 rMessage += rh.gs(R.string.wear_action_tempt_cancel_message)
                 rAction = "temptarget true 0 0 0"
@@ -156,15 +157,13 @@ class ActionStringHandler @Inject constructor(
                     val reason = rh.gs(R.string.activity)
                     rMessage += rh.gs(R.string.wear_action_tempt_preset_message, reason, activityTT, activityTTDuration)
                     rAction = "temptarget $presetIsMGDL $activityTTDuration $activityTT $activityTT"
-                }
-                if ("hypo" == preset) {
+                } else if ("hypo" == preset) {
                     val hypoTTDuration = defaultValueHelper.determineHypoTTDuration()
                     val hypoTT = defaultValueHelper.determineHypoTT()
                     val reason = rh.gs(R.string.hypo)
                     rMessage += rh.gs(R.string.wear_action_tempt_preset_message, reason, hypoTT, hypoTTDuration)
                     rAction = "temptarget $presetIsMGDL $hypoTTDuration $hypoTT $hypoTT"
-                }
-                if ("eating" == preset) {
+                } else if ("eating" == preset) {
                     val eatingSoonTTDuration = defaultValueHelper.determineEatingSoonTTDuration()
                     val eatingSoonTT = defaultValueHelper.determineEatingSoonTT()
                     val reason = rh.gs(R.string.eatingsoon)
