@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.tile
 
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interaction.actions.BolusActivity
+import info.nightscout.androidaps.interaction.actions.TreatmentActivity
 import info.nightscout.androidaps.interaction.actions.ECarbActivity
 import info.nightscout.androidaps.interaction.actions.TempTargetActivity
 import info.nightscout.androidaps.interaction.actions.WizardActivity
@@ -24,7 +24,7 @@ object ActionSource : TileSource {
                 settingName = "bolus",
                 nameRes = R.string.action_bolus,
                 iconRes = R.drawable.ic_bolus_carbs,
-                activityClass = BolusActivity::class.java.getName(),
+                activityClass = TreatmentActivity::class.java.getName(),
                 background = false,
                 actionString = "",
             ),
