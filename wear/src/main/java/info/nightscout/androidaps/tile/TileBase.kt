@@ -1,13 +1,11 @@
 package info.nightscout.androidaps.tile
 
 import android.util.Log
+import android.content.SharedPreferences
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-
-import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import androidx.core.content.ContextCompat
-
 import androidx.wear.tiles.ActionBuilders
 import androidx.wear.tiles.ColorBuilders.argb
 import androidx.wear.tiles.DeviceParametersBuilders.DeviceParameters
@@ -35,11 +33,8 @@ import androidx.wear.tiles.TileBuilders.Tile
 import androidx.wear.tiles.TileService
 import androidx.wear.tiles.TimelineBuilders.Timeline
 import androidx.wear.tiles.TimelineBuilders.TimelineEntry
-
 import com.google.common.util.concurrent.ListenableFuture
-
 import info.nightscout.androidaps.R
-
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -49,10 +44,12 @@ private const val CIRCLE_SIZE = 75f
 private val ICON_SIZE = dp(25f)
 private val SPACING_ACTIONS = dp(3f)
 private const val BUTTON_COLOR = R.color.gray_850
-private var sharedPrefs: SharedPreferences? = null
+const val TAG = "ASTAG-tile"
 
 interface TileSource {
+
     fun getActions(): List<Action>
+    fun getDefaultConfig(): Map<String, String>
 }
 
 data class Action(
@@ -65,9 +62,7 @@ data class Action(
     val actionString: String?,
 )
 
-const val TAG = "ASTAG-tile"
-
-open class TileBase : TileService(), SharedPreferences.OnSharedPreferenceChangeListener {
+abstract open class TileBase : TileService() {
 
     open val preferencePrefix = "tile_action_"
     open val resourceVersion = "1"
@@ -76,22 +71,12 @@ open class TileBase : TileService(), SharedPreferences.OnSharedPreferenceChangeL
 
     private val serviceJob = Job()
     private val serviceScope = CoroutineScope(Dispatchers.IO + serviceJob)
-    private val actionsSelected: MutableList<Action> = mutableListOf()
-    private val actionsAll: MutableList<Action> = mutableListOf()
-
-    override fun onCreate() {
-        Log.i(TAG, "onCreate: ")
-        super.onCreate()
-        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this)
-        sharedPrefs?.registerOnSharedPreferenceChangeListener(this)
-        actionsAll.addAll(source.getActions())
-        actionsSelected.addAll(getSelectedActions())
-    }
 
     override fun onTileRequest(
         requestParams: RequestBuilders.TileRequest
     ): ListenableFuture<Tile> = serviceScope.future {
         Log.i(TAG, "onTileRequest: ")
+        val actionsSelected = getSelectedActions()
         Tile.Builder()
             .setResourcesVersion(resourceVersion)
             .setTimeline(
@@ -111,7 +96,7 @@ open class TileBase : TileService(), SharedPreferences.OnSharedPreferenceChangeL
         Resources.Builder()
             .setVersion(resourceVersion)
             .apply {
-                actionsAll.mapNotNull { action ->
+                source.getActions().mapNotNull { action ->
                     addIdToImageMapping(
                         idIconActionPrefix + action.id,
                         ImageResource.Builder()
@@ -228,26 +213,42 @@ open class TileBase : TileService(), SharedPreferences.OnSharedPreferenceChangeL
         )
         .build()
 
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        Log.i(TAG, "onSharedPreferenceChanged: ")
-        getUpdater(this).requestUpdate(this::class.java)
-    }
-
     private fun getSelectedActions(): List<Action> {
+        val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this)
+        setDefaultSettings(sharedPrefs)
+
         val actionList: MutableList<Action> = mutableListOf()
         for (i in 0..4) {
-            val action = getActionFromPreference(i)
+            val action = getActionFromPreference(sharedPrefs, i)
             if (action != null) {
                 actionList.add(action)
             }
         }
-        Log.i(TAG, "getSelectedActions: " + actionList.toString())
+        Log.i(TAG, this::class.java.name + ".getSelectedActions: " + actionList.size + " " + actionList.toString())
+        if (actionList.isEmpty()) {
+            Log.i(TAG, "getSelectedActions: default")
+            return source.getActions().take(4)
+        }
         return actionList
     }
 
-    private fun getActionFromPreference(index: Int): Action? {
-        val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this)
-        val actionPref = sharedPrefs.getString(preferencePrefix + index, "none")
-        return actionsAll.find { a -> a.settingName == actionPref }
+    private fun getActionFromPreference(sharedPrefs: SharedPreferences, index: Int): Action? {
+        val actionPref = sharedPrefs?.getString(preferencePrefix + index, "none")
+        return source.getActions().find { a -> a.settingName == actionPref }
     }
+
+    fun setDefaultSettings(sharedPrefs: SharedPreferences) {
+        val defaults = source.getDefaultConfig()
+        val firstKey = defaults.firstNotNullOf { d -> d.key }
+        if (!sharedPrefs.contains(firstKey)) {
+            Log.i(TAG, "setDefaultSettings: set defaults")
+            val editor = sharedPrefs.edit()
+            for ((key, value) in defaults) {
+                println("$key = $value")
+                editor.putString(key, value)
+            }
+            editor.apply()
+        }
+    }
+
 }

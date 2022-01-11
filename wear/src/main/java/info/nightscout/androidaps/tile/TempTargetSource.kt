@@ -3,7 +3,7 @@ package info.nightscout.androidaps.tile
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interaction.actions.TempTargetActivity
 
-object TempTargetSource: TileSource {
+object TempTargetSource : TileSource {
 
     override fun getActions(): List<Action> {
         return listOf(
@@ -55,6 +55,15 @@ object TempTargetSource: TileSource {
                 actionString = "temptarget cancel",
                 background = false,
             )
+        )
+    }
+
+    override fun getDefaultConfig(): Map<String, String> {
+        return mapOf(
+            "tile_tempt_1" to "activity",
+            "tile_tempt_2" to "eating_soon",
+            "tile_tempt_3" to "hypo",
+            "tile_tempt_4" to "manual"
         )
     }
 }
