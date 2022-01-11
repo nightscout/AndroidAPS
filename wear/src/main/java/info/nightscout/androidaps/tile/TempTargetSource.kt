@@ -14,8 +14,8 @@ object TempTargetSource : TileSource {
                 iconRes = R.drawable.ic_target_activity,
                 activityClass = TempTargetActivity::class.java.getName(),
                 background = true,
-                actionString = "temptarget false 90 8.0 8.0",
-                // actionString = "temptarget preset activity",
+                // actionString = "temptarget false 90 8.0 8.0",
+                actionString = "temptarget preset activity",
             ),
             Action(
                 id = 1,
@@ -24,8 +24,8 @@ object TempTargetSource : TileSource {
                 iconRes = R.drawable.ic_target_eatingsoon,
                 activityClass = TempTargetActivity::class.java.getName(),
                 background = true,
-                actionString = "temptarget false 45 4.5 4.5",
-                //actionString = "temptarget preset eating",
+                // actionString = "temptarget false 45 4.5 4.5",
+                actionString = "temptarget preset eating",
             ),
             Action(
                 id = 2,
@@ -34,8 +34,8 @@ object TempTargetSource : TileSource {
                 iconRes = R.drawable.ic_target_hypo,
                 activityClass = TempTargetActivity::class.java.getName(),
                 background = true,
-                actionString = "temptarget false 45 7.0 7.0",
-                // actionString = "temptarget preset hypo",
+                // actionString = "temptarget false 45 7.0 7.0",
+                actionString = "temptarget preset hypo",
             ),
             Action(
                 id = 3,
