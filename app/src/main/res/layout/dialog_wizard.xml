@@ -289,17 +289,6 @@
                 app:srcCompat="@drawable/ic_fortyfiveup" />
 
             <ImageView
-                android:id="@+id/iob_enabled_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:paddingStart="-11dp"
-                android:paddingEnd="-11dp"
-                android:scaleX="0.5"
-                android:scaleY="0.5"
-                app:srcCompat="@drawable/ic_bolus" />
-
-            <ImageView
                 android:id="@+id/cob_enabled_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -309,6 +298,17 @@
                 android:scaleX="0.5"
                 android:scaleY="0.5"
                 app:srcCompat="@drawable/ic_cp_bolus_carbs" />
+
+            <ImageView
+                android:id="@+id/iob_enabled_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:paddingStart="-11dp"
+                android:paddingEnd="-11dp"
+                android:scaleX="0.5"
+                android:scaleY="0.5"
+                app:srcCompat="@drawable/ic_bolus" />
 
             <Button
                 android:id="@+id/cancel"
