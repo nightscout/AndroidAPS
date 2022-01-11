@@ -317,7 +317,7 @@
     <string name="nowritepermission">NSClient no tiene permisos de escritura. ¿API Secret incorrecta?</string>
     <string name="wear_settings">Ajustes de reloj</string>
     <string name="wear_detailedIOB_title">Mostrar detalles IOB</string>
-    <string name="wear_detailedIOB_summary">Separar la insulina activa en bolo y basal en el reloj</string>
+    <string name="wear_detailedIOB_summary">Separar la insulina activa en bolos y basales en el reloj</string>
     <string name="nosuccess">sin efecto - por favor verificar en móvil</string>
     <string name="notavailable">n/a</string>
     <string name="patientage">Tipo de paciente</string>
@@ -458,7 +458,7 @@
     <string name="hypo_target">Objetivo Hipo</string>
     <string name="reuse_profile_pct_hours">Reutilizar %1$d%% %2$dh</string>
     <string name="wearcontrol_title">Control desde el reloj</string>
-    <string name="wearcontrol_summary">Establece Objetivos Temporales (OT) y añade tratamientos desde el reloj</string>
+    <string name="wearcontrol_summary">Establece objetivos temporales (OT) y añade tratamientos desde el reloj</string>
     <string name="food">Comida</string>
     <string name="shortgramm">g</string>
     <string name="none"><![CDATA[<ninguno>]]></string>
@@ -868,7 +868,7 @@
     <string name="full_sync_comment">¿Sincronización completa? Puede tardar muchas horas y hasta que termine no verás nuevos datos en Nightscout</string>
     <string name="prime">Cebar</string>
     <string name="ns_sync_options">Sincronización</string>
-    <string name="ns_upload_summary">Perfiles, bolos, carbohidratos y basales temporales se suben a NS</string>
+    <string name="ns_upload_summary">Perfiles, bolos, carbohidratos y basales temporales se suben a Nightscout</string>
     <string name="ns_upload">Subir datos a Nightscout</string>
     <string name="ns_receive_profile_store">Recibir perfil almacenado</string>
     <string name="ns_receive_profile_store_summary">Sincronizar perfiles desde el editor de perfiles de Nightscout</string>
