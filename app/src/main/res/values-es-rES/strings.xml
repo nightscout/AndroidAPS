@@ -543,7 +543,7 @@
     <string name="data_choices">Opciones de datos</string>
     <string name="fabric_upload">Reporte fallos a Fabric.io</string>
     <string name="allow_automated_crash_reporting">Permite que los informes de errores automáticos y los datos de uso de las funciones, se envíen a los desarrolladores mediante el servicio fabric.io</string>
-    <string name="g5appnotdetected">Actualice su aplicación Dexcom a una versión compatible</string>
+    <string name="g5appnotdetected">Actualiza tu aplicación de Dexcom a una versión compatible</string>
     <string name="dexcom_app_not_installed">La aplicación Dexcom no está instalada.</string>
     <string name="start_activity_tt">Iniciar OT Actividad</string>
     <string name="start_eating_soon_tt">Iniciar OT Comiendo Pronto</string>
@@ -676,7 +676,7 @@
     <string name="error_adding_treatment_message">Un tratamiento (insulina: %1$.2f, carbs: %2$d, at: %3$s) no ha podido ser añadido a tratamientos. Por favor compruebe y añada manualmente el registro apropiadamente.</string>
     <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), retraso: %3$d m</string>
     <string name="openaps_noasdata">Sin datos autosens disponibles</string>
-    <string name="nav_logsettings">Ajustes del registro</string>
+    <string name="nav_logsettings">Ajustes de registros</string>
     <string name="resettodefaults">Restablecer valores predeterminados</string>
     <string name="nsmalfunction">NSClient fallando. Considera reiniciar NS y NSClient.</string>
     <string name="time_offset">Retardo</string>
@@ -724,7 +724,7 @@
     <string name="twohours">2h</string>
     <string name="dexcom_app_patched">Dexcom (BYODA)</string>
     <string name="dexcom_short">BYODA</string>
-    <string name="description_source_dexcom">Recibir los valores de glucosa de la aplicación Dexcom \'Build Your Own Device\'.</string>
+    <string name="description_source_dexcom">Recibir los valores de glucosa de la aplicación Dexcom \'Build Your Own Device\'</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="bolusconstraintappliedwarn">Restricción de bolo aplicada: %1$.2f U a %2$.2f U</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>! Se ha detectado una absorción lenta de carbohidratos: %2$d%% de tiempo. Compruebe de nuevo su cálculo. Los COB se pueden sobrestimar, por lo que se podría administrar más insulina de la cuenta</font>]]></string>
