@@ -77,12 +77,14 @@ abstract open class TileBase : TileService() {
     ): ListenableFuture<Tile> = serviceScope.future {
         Log.i(TAG, "onTileRequest: ")
         val actionsSelected = getSelectedActions()
+        val wearControlEnabled = hasWearControl()
+
         Tile.Builder()
             .setResourcesVersion(resourceVersion)
             .setTimeline(
                 Timeline.Builder().addTimelineEntry(
                     TimelineEntry.Builder().setLayout(
-                        Layout.Builder().setRoot(layout(actionsSelected, requestParams.deviceParameters!!)).build()
+                        Layout.Builder().setRoot(layout(wearControlEnabled, actionsSelected, requestParams.deviceParameters!!)).build()
                     ).build()
                 ).build()
             )
@@ -124,7 +126,12 @@ abstract open class TileBase : TileService() {
             .addContent(action(action2, deviceParameters))
             .build()
 
-    private fun layout(actions: List<Action>, deviceParameters: DeviceParameters): LayoutElement {
+    private fun layout(enabled: Boolean, actions: List<Action>, deviceParameters: DeviceParameters): LayoutElement {
+        if (!enabled) {
+            return Text.Builder()
+                .setText(resources.getString(R.string.wear_control_not_enabled))
+                .build()
+        }
         if (actions.isNotEmpty()) {
             val b = Column.Builder()
             if (actions.size == 1 || actions.size == 3) {
@@ -212,6 +219,11 @@ abstract open class TileBase : TileService() {
                 ).build()
         )
         .build()
+
+    private fun hasWearControl(): Boolean {
+        val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this)
+        return sharedPrefs.getBoolean("wearcontrol", false)
+    }
 
     private fun getSelectedActions(): List<Action> {
         val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this)
