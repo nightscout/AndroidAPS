@@ -18,7 +18,7 @@ import info.nightscout.shared.SafeParse;
  * Created by adrian on 09/02/17.
  */
 
-public class BolusActivity extends ViewSelectorActivity {
+public class TreatmentActivity extends ViewSelectorActivity {
 
     PlusMinusEditText editCarbs;
     PlusMinusEditText editInsulin;

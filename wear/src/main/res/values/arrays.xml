@@ -49,7 +49,7 @@
         <item>@string/menu_default</item>
         <item>@string/menu_menu</item>
         <item>@string/menu_wizard</item>
-        <item>@string/menu_bolus</item>
+        <item>@string/menu_treatment</item>
         <item>@string/menu_ecarb</item>
         <item>@string/menu_status</item>
         <item>@string/menu_none</item>
@@ -81,7 +81,7 @@
 
     <string-array name="tile_action_names">
         <item>@string/menu_wizard</item>
-        <item>@string/menu_bolus</item>
+        <item>@string/menu_treatment</item>
         <item>@string/menu_ecarb</item>
         <item>@string/menu_tempt</item>
         <item>@string/tile_none</item>
