@@ -75,7 +75,8 @@
     <string name="menu_tempt">TempT</string>
     <string name="menu_wizard">Wizard</string>
     <string name="menu_treatment">Treatment</string>
-    <string name="menu_ecarb">eCarb</string>
+    <string name="menu_bolus">Bolus</string>
+    <string name="menu_ecarb">Carbs</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_status">Status</string>
     <string name="menu_resync">Re-Sync</string>
@@ -86,6 +87,7 @@
 
     <string name="action_duration">duration</string>
     <string name="action_tempt_confirmation">Temp Target Requested</string>
+    <string name="action_treatment_confirmation">Treatment Requested</string>
     <string name="action_bolus_confirmation">Bolus Requested</string>
     <string name="action_wizard_confirmation">Updated Requested</string>
     <string name="action_fill_confirmation">Fill Requested</string>
@@ -95,10 +97,10 @@
     <string name="action_low" comment="In temp target menu, lower value from range">low</string>
     <string name="action_high" comment="In temp target menu, higher value from range">high</string>
     <string name="action_carbs">Carbs</string>
-    <string name="action_percentage">percentage</string>
-    <string name="action_start_min">start [min]</string>
-    <string name="action_duration_h">duration [h]</string>
-    <string name="action_insulin">insulin</string>
+    <string name="action_percentage">Percentage</string>
+    <string name="action_start_min">Start [min]</string>
+    <string name="action_duration_h">Duration [h]</string>
+    <string name="action_insulin">Insulin</string>
     <string name="action_preset_1">Preset 1</string>
     <string name="action_preset_2">Preset 2</string>
     <string name="action_preset_3">Preset 3</string>
