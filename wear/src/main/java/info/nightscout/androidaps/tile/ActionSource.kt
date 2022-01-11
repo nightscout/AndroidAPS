@@ -6,7 +6,7 @@ import info.nightscout.androidaps.interaction.actions.BolusActivity
 import info.nightscout.androidaps.interaction.actions.ECarbActivity
 import info.nightscout.androidaps.interaction.actions.TempTargetActivity
 
-object ActionSource: TileSource {
+object ActionSource : TileSource {
 
     override fun getActions(): List<Action> {
         return listOf(
@@ -48,4 +48,14 @@ object ActionSource: TileSource {
             )
         )
     }
+
+    override fun getDefaultConfig(): Map<String, String> {
+        return mapOf(
+            "tile_action_1" to "wizzard",
+            "tile_action_2" to "bolus",
+            "tile_action_3" to "carbs",
+            "tile_action_4" to "temp_target"
+        )
+    }
+
 }
