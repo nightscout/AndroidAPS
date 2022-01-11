@@ -49,7 +49,7 @@ public class MainMenuActivity extends MenuListActivity {
 
         if (showWizard) menuItems.add(new MenuItem(R.drawable.ic_calculator, getString(R.string.menu_wizard)));
         menuItems.add(new MenuItem(R.drawable.ic_e_carbs, getString(R.string.menu_ecarb)));
-        menuItems.add(new MenuItem(R.drawable.ic_bolus, getString(R.string.menu_treatment)));
+        menuItems.add(new MenuItem(R.drawable.ic_treatment, getString(R.string.menu_treatment)));
         menuItems.add(new MenuItem(R.drawable.ic_temptarget, getString(R.string.menu_tempt)));
         menuItems.add(new MenuItem(R.drawable.ic_settings, getString(R.string.menu_settings)));
         menuItems.add(new MenuItem(R.drawable.ic_status, getString(R.string.menu_status)));

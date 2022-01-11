@@ -12,7 +12,7 @@
     <ListPreference
         android:key="tile_action_2"
         android:title="Action 2"
-        android:defaultValue="bolus"
+        android:defaultValue="treatment"
         android:entries="@array/tile_action_names"
         android:entryValues="@array/tile_action_values"/>
 
