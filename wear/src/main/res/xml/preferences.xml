@@ -121,7 +121,7 @@
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="showWizard"
-        android:summary="Wizard from watch possible"
+        android:summary="Calculator from watch possible"
         android:title="@string/pref_wizard_in_menu"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
