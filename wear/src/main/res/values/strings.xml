@@ -110,7 +110,6 @@
     <string name="action_confirm">CONFIRM</string>
     <string name="action_timeshift">timeshift</string>
     <string name="action_bolus">Bolus</string>
-    <string name="action_insulin">Insulin</string>
 
     <string name="bolus_progress">Bolus Progress</string>
     <string name="press_to_cancel">press to cancel</string>

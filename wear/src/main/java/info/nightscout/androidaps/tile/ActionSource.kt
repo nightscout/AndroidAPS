@@ -32,7 +32,7 @@ object ActionSource : TileSource {
             Action(
                 id = 2,
                 settingName = "bolus",
-                nameRes = R.string.action_Insulin,
+                nameRes = R.string.action_insulin,
                 iconRes = R.drawable.ic_bolus,
                 activityClass = BolusActivity::class.java.getName(),
                 background = false,
