@@ -512,6 +512,7 @@
 
         <service
             android:name=".tile.ActionsTileService"
+            android:exported="true"
             android:label="@string/label_actions_tile"
             android:permission="com.google.android.wearable.permission.BIND_TILE_PROVIDER">
             <intent-filter>
@@ -528,6 +529,7 @@
 
         <service
             android:name=".tile.TempTargetTileService"
+            android:exported="true"
             android:label="@string/label_temp_target_tile"
             android:permission="com.google.android.wearable.permission.BIND_TILE_PROVIDER">
             <intent-filter>
@@ -607,10 +609,11 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".interaction.TileConfigurationActivity" android:exported="true">
+        <activity android:name=".interaction.TileConfigurationActivity">
             <intent-filter>
                 <action android:name="tile_configuration_activity" />
                 <action android:name="tile_configuration_tempt" />
+
                 <category android:name="com.google.android.clockwork.tiles.category.PROVIDER_CONFIG" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
