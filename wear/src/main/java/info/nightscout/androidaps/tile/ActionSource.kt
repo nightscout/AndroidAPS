@@ -1,10 +1,10 @@
 package info.nightscout.androidaps.tile
 
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interaction.TileConfigurationActivity
 import info.nightscout.androidaps.interaction.actions.BolusActivity
 import info.nightscout.androidaps.interaction.actions.ECarbActivity
 import info.nightscout.androidaps.interaction.actions.TempTargetActivity
+import info.nightscout.androidaps.interaction.actions.WizardActivity
 
 object ActionSource : TileSource {
 
@@ -15,7 +15,7 @@ object ActionSource : TileSource {
                 settingName = "wizzard",
                 nameRes = R.string.menu_wizard,
                 iconRes = R.drawable.ic_calculator_green,
-                activityClass = TileConfigurationActivity::class.java.getName(),
+                activityClass = WizardActivity::class.java.getName(),
                 background = false,
                 actionString = "",
             ),
