@@ -62,10 +62,10 @@
     <string name="pref_ring_history">Ring History</string>
     <string name="pref_light_ring_history">Light Ring History</string>
     <string name="pref_animations">Animations</string>
-    <string name="pref_wizard_in_menu">Wizard in Menu</string>
+    <string name="pref_wizard_in_menu">Calculator in Menu</string>
     <string name="pref_prime_in_menu">Prime in Menu</string>
     <string name="pref_single_target">Single Target</string>
-    <string name="pref_wizard_percentage">Wizard Percentage</string>
+    <string name="pref_wizard_percentage">Calculator Percentage</string>
     <string name="pref_complication_tap_action">Complication Tap Action</string>
     <string name="pref_unicode_in_complications">Unicode in Complications</string>
     <string name="pref_version">Version:</string>
@@ -73,8 +73,10 @@
     <string name="pref_lookInYourWatchfaceConfiguration">Look into Watchface configuration, please.</string>
 
     <string name="menu_tempt">TempT</string>
-    <string name="menu_wizard">Wizard</string>
+    <string name="menu_wizard">Calculator</string>
+    <string name="menu_wizard_short">Calc</string>
     <string name="menu_treatment">Treatment</string>
+    <string name="menu_treatment_short">Treat</string>
     <string name="menu_bolus">Bolus</string>
     <string name="menu_ecarb">Carbs</string>
     <string name="menu_settings">Settings</string>
@@ -85,17 +87,17 @@
     <string name="menu_default">Default</string>
     <string name="menu_menu">Menu</string>
 
-    <string name="action_duration">duration</string>
+    <string name="action_duration">Duration</string>
     <string name="action_tempt_confirmation">Temp Target Requested</string>
     <string name="action_treatment_confirmation">Treatment Requested</string>
     <string name="action_bolus_confirmation">Bolus Requested</string>
-    <string name="action_wizard_confirmation">Updated Requested</string>
+    <string name="action_wizard_confirmation">Calculation Requested</string>
     <string name="action_fill_confirmation">Fill Requested</string>
     <string name="action_ecarb_confirmation">Carbs Requested</string>
     <string name="action_cpp_confirmation">CPP Requested</string>
-    <string name="action_target" comment="In temp target menu, single target value">target</string>
-    <string name="action_low" comment="In temp target menu, lower value from range">low</string>
-    <string name="action_high" comment="In temp target menu, higher value from range">high</string>
+    <string name="action_target" comment="In temp target menu, single target value">Target</string>
+    <string name="action_low" comment="In temp target menu, lower value from range">Low</string>
+    <string name="action_high" comment="In temp target menu, higher value from range">High</string>
     <string name="action_carbs">Carbs</string>
     <string name="action_percentage">Percentage</string>
     <string name="action_start_min">Start [min]</string>
@@ -108,6 +110,7 @@
     <string name="action_confirm">CONFIRM</string>
     <string name="action_timeshift">timeshift</string>
     <string name="action_bolus">Bolus</string>
+    <string name="action_insulin">Insulin</string>
 
     <string name="bolus_progress">Bolus Progress</string>
     <string name="press_to_cancel">press to cancel</string>

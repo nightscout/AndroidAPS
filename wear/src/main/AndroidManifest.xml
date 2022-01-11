@@ -574,7 +574,7 @@
         <activity
             android:name=".interaction.actions.BolusActivity"
             android:exported="true"
-            android:label="@string/menu_bolus" />
+            android:label="@string/action_insulin" />
         <activity
             android:name=".interaction.actions.CPPActivity"
             android:label="@string/status_cpp" />

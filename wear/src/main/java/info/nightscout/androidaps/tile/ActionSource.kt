@@ -14,7 +14,7 @@ object ActionSource : TileSource {
             Action(
                 id = 0,
                 settingName = "wizzard",
-                nameRes = R.string.menu_wizard,
+                nameRes = R.string.menu_wizard_short,
                 iconRes = R.drawable.ic_calculator_green,
                 activityClass = WizardActivity::class.java.getName(),
                 background = false,
@@ -23,7 +23,7 @@ object ActionSource : TileSource {
             Action(
                 id = 1,
                 settingName = "treatment",
-                nameRes = R.string.menu_treatment,
+                nameRes = R.string.menu_treatment_short,
                 iconRes = R.drawable.ic_bolus_carbs,
                 activityClass = TreatmentActivity::class.java.getName(),
                 background = false,
@@ -32,7 +32,7 @@ object ActionSource : TileSource {
             Action(
                 id = 2,
                 settingName = "bolus",
-                nameRes = R.string.action_bolus,
+                nameRes = R.string.action_Insulin,
                 iconRes = R.drawable.ic_bolus,
                 activityClass = BolusActivity::class.java.getName(),
                 background = false,
