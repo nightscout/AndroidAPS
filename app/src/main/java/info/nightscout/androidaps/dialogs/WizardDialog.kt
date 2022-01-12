@@ -175,6 +175,10 @@ class WizardDialog : DaggerDialogFragment() {
             }
             dismiss()
         }
+        binding.bgEnabledIcon.setOnClickListener { binding.bgCheckbox.isChecked = !binding.bgCheckbox.isChecked }
+        binding.trendEnabledIcon.setOnClickListener { binding.bgTrendCheckbox.isChecked = !binding.bgTrendCheckbox.isChecked }
+        binding.cobEnabledIcon.setOnClickListener { binding.cobCheckbox.isChecked = !binding.cobCheckbox.isChecked; processCobCheckBox(); }
+        binding.iobEnabledIcon.setOnClickListener { if (!binding.cobCheckbox.isChecked) binding.iobCheckbox.isChecked = !binding.iobCheckbox.isChecked }
         // cancel button
         binding.cancel.setOnClickListener {
             aapsLogger.debug(LTag.APS, "Dialog canceled: ${this.javaClass.name}")
