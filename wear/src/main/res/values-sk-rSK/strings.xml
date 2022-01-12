@@ -122,6 +122,8 @@
     <string name="color_name_white">biela</string>
     <string name="color_name_black">čierna</string>
     <string name="color_name_multicolor">viacfarebná</string>
+    <string name="pref_simplify_ui">Zjednodušené užívateľské rozhranie</string>
+    <string name="pref_simplify_ui_sum">Zobraziť iba čas a glykémiu</string>
     <string name="pref_vibrate_hourly">Vibrovať každú hodinu</string>
     <string name="pref_show_weeknumber">Zobraziť číslo týždňa</string>
     <string name="digitalstyle_pref_your_style">Váš štýl:</string>
