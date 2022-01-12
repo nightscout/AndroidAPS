@@ -138,4 +138,7 @@
     <string name="bolus_progress_silent_channel_name">התקדמות בולוס שקטה</string>
     <string name="bolus_progress_channel_description">התקדמות הבולוס וביטול</string>
     <string name="bolus_progress_silent_channel_description">התקדמות הבולוס וביטול עם פחות רטט</string>
+    <string name="simple_ui_charging">בזמן טעינה</string>
+    <string name="simple_ui_always_on">מצב דלוק תמיד</string>
+    <string name="simple_ui_always_on_charging">דלוק תמיד וטוען</string>
 </resources>
