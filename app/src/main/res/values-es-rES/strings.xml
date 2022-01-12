@@ -129,7 +129,7 @@
     <string name="overview_tempbasal_button">Basal temporal</string>
     <string name="overview_extendedbolus_button">Bolo extendido</string>
     <string name="configbuilder_nightscoutversion_label">Versión de Nightscout:</string>
-    <string name="missing_carbs">Falta %1$d g</string>
+    <string name="missing_carbs">Faltan %1$d g</string>
     <string name="exported">Ajustes exportados</string>
     <string name="ue_exported">Entradas de usuario exportadas</string>
     <string name="export_to">Exportar ajustes a</string>
