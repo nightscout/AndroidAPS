@@ -89,7 +89,7 @@
     </string-array>
 
     <string-array name="tile_action_values">
-        <item>wizzard</item>
+        <item>wizard</item>
         <item>treatment</item>
         <item>bolus</item>
         <item>carbs</item>

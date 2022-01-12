@@ -58,16 +58,17 @@ data class Action(
     @StringRes val nameRes: Int,
     val activityClass: String,
     @DrawableRes val iconRes: Int,
-    val background: Boolean?,
-    val actionString: String?,
+    val background: Boolean = false,
+    val actionString: String? = null,
 )
 
-abstract open class TileBase : TileService() {
+abstract class TileBase : TileService() {
 
-    open val preferencePrefix = "tile_action_"
     open val resourceVersion = "1"
     open val idIconActionPrefix = "ic_action_"
-    open val source: TileSource = ActionSource
+
+    abstract val preferencePrefix: String
+    abstract val source: TileSource
 
     private val serviceJob = Job()
     private val serviceScope = CoroutineScope(Dispatchers.IO + serviceJob)
@@ -114,18 +115,6 @@ abstract open class TileBase : TileService() {
             .build()
     }
 
-    private fun addRowSingle(action1: Action, deviceParameters: DeviceParameters): LayoutElement =
-        Row.Builder()
-            .addContent(action(action1, deviceParameters))
-            .build()
-
-    private fun addRowDouble(action1: Action, action2: Action, deviceParameters: DeviceParameters): LayoutElement =
-        Row.Builder()
-            .addContent(action(action1, deviceParameters))
-            .addContent(Spacer.Builder().setWidth(SPACING_ACTIONS).build())
-            .addContent(action(action2, deviceParameters))
-            .build()
-
     private fun layout(enabled: Boolean, actions: List<Action>, deviceParameters: DeviceParameters): LayoutElement {
         if (!enabled) {
             return Text.Builder()
@@ -154,18 +143,31 @@ abstract open class TileBase : TileService() {
             .build()
     }
 
+    private fun addRowSingle(action1: Action, deviceParameters: DeviceParameters): LayoutElement =
+        Row.Builder()
+            .addContent(action(action1, deviceParameters))
+            .build()
+
+    private fun addRowDouble(action1: Action, action2: Action, deviceParameters: DeviceParameters): LayoutElement =
+        Row.Builder()
+            .addContent(action(action1, deviceParameters))
+            .addContent(Spacer.Builder().setWidth(SPACING_ACTIONS).build())
+            .addContent(action(action2, deviceParameters))
+            .build()
+
     private fun doAction(action: Action): ActionBuilders.Action {
-        val ab = ActionBuilders.AndroidActivity.Builder()
+        val inBackground = ActionBuilders.AndroidBooleanExtra.Builder().setValue(action.background).build()
+        val builder = ActionBuilders.AndroidActivity.Builder()
             .setClassName(action.activityClass)
             .setPackageName(this.packageName)
+            .addKeyToExtraMapping("inBackground", inBackground)
         if (action.actionString != null) {
-            ab.addKeyToExtraMapping("actionString", ActionBuilders.AndroidStringExtra.Builder().setValue(action.actionString).build())
+            val actionString = ActionBuilders.AndroidStringExtra.Builder().setValue(action.actionString).build()
+            builder.addKeyToExtraMapping("actionString", actionString)
         }
-        if (action.background != null) {
-            ab.addKeyToExtraMapping("inBackground", ActionBuilders.AndroidBooleanExtra.Builder().setValue(action.background).build())
-        }
+
         return ActionBuilders.LaunchAction.Builder()
-            .setAndroidActivity(ab.build())
+            .setAndroidActivity(builder.build())
             .build()
     }
 
@@ -245,18 +247,18 @@ abstract open class TileBase : TileService() {
     }
 
     private fun getActionFromPreference(sharedPrefs: SharedPreferences, index: Int): Action? {
-        val actionPref = sharedPrefs?.getString(preferencePrefix + index, "none")
+        val actionPref = sharedPrefs.getString(preferencePrefix + index, "none")
         return source.getActions().find { action -> action.settingName == actionPref }
     }
 
-    fun setDefaultSettings(sharedPrefs: SharedPreferences) {
+    private fun setDefaultSettings(sharedPrefs: SharedPreferences) {
         val defaults = source.getDefaultConfig()
         val firstKey = defaults.firstNotNullOf { settings -> settings.key }
         if (!sharedPrefs.contains(firstKey)) {
             Log.i(TAG, "setDefaultSettings: set defaults")
             val editor = sharedPrefs.edit()
             for ((key, value) in defaults) {
-                println("$key = $value")
+                // println("$key = $value")
                 editor.putString(key, value)
             }
             editor.apply()

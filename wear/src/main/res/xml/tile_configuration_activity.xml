@@ -5,7 +5,7 @@
     <ListPreference
         android:key="tile_action_1"
         android:title="Action 1"
-        android:defaultValue="wizzard"
+        android:defaultValue="wizard"
         android:entries="@array/tile_action_names"
         android:entryValues="@array/tile_action_values"/>
 
