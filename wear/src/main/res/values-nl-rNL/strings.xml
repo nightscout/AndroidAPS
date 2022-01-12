@@ -138,4 +138,8 @@
     <string name="bolus_progress_silent_channel_name">AAPS Bolus Voortgang Stil</string>
     <string name="bolus_progress_channel_description">Bolus voortgang en annuleer</string>
     <string name="bolus_progress_silent_channel_description">Bolus voortgang en annuleer met minder trillingen</string>
+    <string name="simple_ui_off">Uit</string>
+    <string name="simple_ui_charging">Tijdens Opladen</string>
+    <string name="simple_ui_always_on">Altijd Aan modus</string>
+    <string name="simple_ui_always_on_charging">Altijd Aan en Opladen</string>
 </resources>
