@@ -122,8 +122,6 @@
     <string name="color_name_white">white</string>
     <string name="color_name_black">noir</string>
     <string name="color_name_multicolor">multicolor</string>
-    <string name="pref_simplify_ui_charging">Simplifier l\'interface de chargement</string>
-    <string name="pref_simplify_ui_charging_sum">Afficher seulement l\'heure et la glycémie pendant la charge</string>
     <string name="pref_vibrate_hourly">Vibrer à l\'heure</string>
     <string name="pref_show_weeknumber">Afficher numéro semaine</string>
     <string name="digitalstyle_pref_your_style">Style :</string>
