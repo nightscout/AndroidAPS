@@ -138,4 +138,8 @@
     <string name="bolus_progress_silent_channel_name">Postęp bolusa AAPS (Cichszy)</string>
     <string name="bolus_progress_channel_description">Informacja o postępie w podawaniu / anulowaniu bolusa</string>
     <string name="bolus_progress_silent_channel_description">Informacja o postępie w podawaniu / anulowaniu bolusa - zmniejsza ilość wibracji</string>
+    <string name="simple_ui_off">Wyłącz</string>
+    <string name="simple_ui_charging">Podczas ładowania</string>
+    <string name="simple_ui_always_on">Tryb Always On</string>
+    <string name="simple_ui_always_on_charging">Always On i ładowanie</string>
 </resources>
