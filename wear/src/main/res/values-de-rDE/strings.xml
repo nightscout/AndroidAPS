@@ -138,4 +138,8 @@
     <string name="bolus_progress_silent_channel_name">AAPS Bolus-Fortschritt stumm</string>
     <string name="bolus_progress_channel_description">Bolus-Fortschritt und Abbruch</string>
     <string name="bolus_progress_silent_channel_description">Bolus Fortschritt und Abbruch mit weniger Vibrationen</string>
+    <string name="simple_ui_off">Aus</string>
+    <string name="simple_ui_charging">Während des Ladevorgangs</string>
+    <string name="simple_ui_always_on">Immer im Modus</string>
+    <string name="simple_ui_always_on_charging">Immer ein und Aufladen</string>
 </resources>
