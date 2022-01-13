@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.tile
 
-import android.util.Log
 import android.content.SharedPreferences
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -80,7 +79,6 @@ abstract class TileBase : TileService() {
     override fun onTileRequest(
         requestParams: RequestBuilders.TileRequest
     ): ListenableFuture<Tile> = serviceScope.future {
-        Log.i(TAG, "onTileRequest: ")
         val actionsSelected = getSelectedActions()
         val wearControl = getWearControl()
 
@@ -99,7 +97,6 @@ abstract class TileBase : TileService() {
     override fun onResourcesRequest(
         requestParams: ResourcesRequest
     ): ListenableFuture<Resources> = serviceScope.future {
-        Log.i(TAG, "onResourcesRequest: ")
         Resources.Builder()
             .setVersion(resourceVersion)
             .apply {
@@ -232,7 +229,9 @@ abstract class TileBase : TileService() {
 
     private fun getWearControl(): WearControl {
         val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this)
-        if (!sharedPrefs.contains("wearcontrol")) return WearControl.NO_DATA;
+        if (!sharedPrefs.contains("wearcontrol")) {
+            return WearControl.NO_DATA
+        }
         val wearControlPref = sharedPrefs.getBoolean("wearcontrol", false)
         if (wearControlPref) {
             return WearControl.ENABLED
@@ -251,9 +250,7 @@ abstract class TileBase : TileService() {
                 actionList.add(action)
             }
         }
-        Log.i(TAG, this::class.java.name + ".getSelectedActions: " + actionList.size + " " + actionList.toString())
         if (actionList.isEmpty()) {
-            Log.i(TAG, "getSelectedActions: default")
             return source.getActions().take(4)
         }
         return actionList
@@ -268,10 +265,8 @@ abstract class TileBase : TileService() {
         val defaults = source.getDefaultConfig()
         val firstKey = defaults.firstNotNullOf { settings -> settings.key }
         if (!sharedPrefs.contains(firstKey)) {
-            Log.i(TAG, "setDefaultSettings: set defaults")
             val editor = sharedPrefs.edit()
             for ((key, value) in defaults) {
-                // println("$key = $value")
                 editor.putString(key, value)
             }
             editor.apply()
