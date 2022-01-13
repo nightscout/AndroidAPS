@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.wearable.view.GridPagerAdapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +47,6 @@ public class TempTargetActivity extends ViewSelectorActivity {
             String actionString = extras.getString("actionString", "");
             boolean inBackground = extras.getBoolean("inBackground", false);
             if (inBackground) {
-                Log.i("ASTAG", "TempTargetActivity.onCreate: " + actionString);
                 ListenerService.initiateAction(this, actionString);
                 confirmAction(this, R.string.action_tempt_confirmation);
                 finishAffinity();
