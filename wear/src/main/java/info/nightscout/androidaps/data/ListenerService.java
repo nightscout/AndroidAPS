@@ -18,6 +18,7 @@ import android.util.Log;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.wear.tiles.TileService;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -46,6 +47,8 @@ import info.nightscout.androidaps.interaction.AAPSPreferences;
 import info.nightscout.androidaps.interaction.actions.AcceptActivity;
 import info.nightscout.androidaps.interaction.actions.CPPActivity;
 import info.nightscout.androidaps.interaction.utils.Persistence;
+import info.nightscout.androidaps.tile.ActionsTileService;
+import info.nightscout.androidaps.tile.TempTargetTileService;
 import info.nightscout.shared.SafeParse;
 import info.nightscout.androidaps.interaction.utils.WearUtil;
 
@@ -547,6 +550,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putBoolean("wearcontrol", wearcontrol);
                         editor.apply();
+                        updateTiles();
                     }
                 } else if (path.equals(NEW_CHANGECONFIRMATIONREQUEST_PATH)) {
                     String title = DataMapItem.fromDataItem(event.getDataItem()).getDataMap().getString("title");
@@ -565,6 +569,16 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                     LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);
                 }
             }
+        }
+    }
+
+    private void updateTiles() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            TileService.getUpdater(this)
+                    .requestUpdate(ActionsTileService.class);
+
+            TileService.getUpdater(this)
+                    .requestUpdate(TempTargetTileService.class);
         }
     }
 
