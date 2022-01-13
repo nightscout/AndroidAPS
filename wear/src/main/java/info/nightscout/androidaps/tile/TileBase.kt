@@ -244,7 +244,7 @@ abstract class TileBase : TileService() {
         setDefaultSettings(sharedPrefs)
 
         val actionList: MutableList<Action> = mutableListOf()
-        for (i in 0..4) {
+        for (i in 1..4) {
             val action = getActionFromPreference(sharedPrefs, i)
             if (action != null) {
                 actionList.add(action)
