@@ -138,4 +138,8 @@
     <string name="bolus_progress_silent_channel_name">AAPS Priebeh podávania bolusu tichý</string>
     <string name="bolus_progress_channel_description">Priebeh bolusu a zrušenie</string>
     <string name="bolus_progress_silent_channel_description">Priebeh bolusu a zrušenie s menej vibráciami</string>
+    <string name="simple_ui_off">Vyp</string>
+    <string name="simple_ui_charging">Počas nabíjania</string>
+    <string name="simple_ui_always_on">Mód vždy zapnuté</string>
+    <string name="simple_ui_always_on_charging">Vždy zapnuté a nabíjanie</string>
 </resources>
