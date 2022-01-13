@@ -47,7 +47,6 @@ private const val BUTTON_COLOR = R.color.gray_850
 const val TAG = "ASTAG-tile"
 
 interface TileSource {
-
     fun getActions(): List<Action>
     fun getDefaultConfig(): Map<String, String>
 }
@@ -61,6 +60,11 @@ data class Action(
     val background: Boolean = false,
     val actionString: String? = null,
 )
+
+enum class WearControl {
+    NO_DATA, ENABLED, DISABLED
+}
+
 
 abstract class TileBase : TileService() {
 
@@ -78,14 +82,14 @@ abstract class TileBase : TileService() {
     ): ListenableFuture<Tile> = serviceScope.future {
         Log.i(TAG, "onTileRequest: ")
         val actionsSelected = getSelectedActions()
-        val wearControlEnabled = hasWearControl()
+        val wearControl = getWearControl()
 
         Tile.Builder()
             .setResourcesVersion(resourceVersion)
             .setTimeline(
                 Timeline.Builder().addTimelineEntry(
                     TimelineEntry.Builder().setLayout(
-                        Layout.Builder().setRoot(layout(wearControlEnabled, actionsSelected, requestParams.deviceParameters!!)).build()
+                        Layout.Builder().setRoot(layout(wearControl, actionsSelected, requestParams.deviceParameters!!)).build()
                     ).build()
                 ).build()
             )
@@ -115,10 +119,14 @@ abstract class TileBase : TileService() {
             .build()
     }
 
-    private fun layout(enabled: Boolean, actions: List<Action>, deviceParameters: DeviceParameters): LayoutElement {
-        if (!enabled) {
+    private fun layout(wearControl: WearControl, actions: List<Action>, deviceParameters: DeviceParameters): LayoutElement {
+        if (wearControl == WearControl.DISABLED) {
             return Text.Builder()
                 .setText(resources.getString(R.string.wear_control_not_enabled))
+                .build()
+        } else if (wearControl == WearControl.NO_DATA) {
+            return Text.Builder()
+                .setText(resources.getString(R.string.wear_control_no_data))
                 .build()
         }
         if (actions.isNotEmpty()) {
@@ -222,9 +230,14 @@ abstract class TileBase : TileService() {
         )
         .build()
 
-    private fun hasWearControl(): Boolean {
+    private fun getWearControl(): WearControl {
         val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this)
-        return sharedPrefs.getBoolean("wearcontrol", false)
+        if (!sharedPrefs.contains("wearcontrol")) return WearControl.NO_DATA;
+        val wearControlPref = sharedPrefs.getBoolean("wearcontrol", false)
+        if (wearControlPref) {
+            return WearControl.ENABLED
+        }
+        return WearControl.DISABLED
     }
 
     private fun getSelectedActions(): List<Action> {

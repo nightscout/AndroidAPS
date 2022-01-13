@@ -177,6 +177,7 @@
     <string name="temp_target_cancel">Cancel</string>
     <string name="tile_none">None</string>
     <string name="tile_no_config">No config available</string>
-    <string name="wear_control_not_enabled">Wear control disabled</string>
+    <string name="wear_control_not_enabled">Wear controls disabled</string>
+    <string name="wear_control_no_data">No data available</string>
 
 </resources>
