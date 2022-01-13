@@ -138,4 +138,8 @@
     <string name="bolus_progress_silent_channel_name">AAPS Progreso de bolo silencioso</string>
     <string name="bolus_progress_channel_description">Progreso del bolo y cancelación</string>
     <string name="bolus_progress_silent_channel_description">Progreso del bolo y cancelar con menos vibraciones</string>
+    <string name="simple_ui_off">Desactivado</string>
+    <string name="simple_ui_charging">Durante la carga</string>
+    <string name="simple_ui_always_on">Modo siempre encendido</string>
+    <string name="simple_ui_always_on_charging">Siempre encendido y cargando</string>
 </resources>
