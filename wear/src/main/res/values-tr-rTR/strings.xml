@@ -138,4 +138,8 @@
     <string name="bolus_progress_silent_channel_name">AAPS Bolus İletimi Sessiz</string>
     <string name="bolus_progress_channel_description">Bolus iletimi ve iptali</string>
     <string name="bolus_progress_silent_channel_description">Bolus iletimi ve daha az titreşimle iptal etme</string>
+    <string name="simple_ui_off">Kapa</string>
+    <string name="simple_ui_charging">Şarj Olurken</string>
+    <string name="simple_ui_always_on">Her Zaman Açık Modu</string>
+    <string name="simple_ui_always_on_charging">Her Zaman Açık ve Şarj Oluyor</string>
 </resources>
