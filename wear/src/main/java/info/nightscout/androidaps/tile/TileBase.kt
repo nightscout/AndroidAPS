@@ -3,21 +3,15 @@ package info.nightscout.androidaps.tile
 import android.content.SharedPreferences
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.preference.PreferenceManager
 import androidx.core.content.ContextCompat
+import androidx.preference.PreferenceManager
 import androidx.wear.tiles.ActionBuilders
 import androidx.wear.tiles.ColorBuilders.argb
 import androidx.wear.tiles.DeviceParametersBuilders.DeviceParameters
+import androidx.wear.tiles.DimensionBuilders.SpProp
 import androidx.wear.tiles.DimensionBuilders.dp
-import androidx.wear.tiles.LayoutElementBuilders.Box
-import androidx.wear.tiles.LayoutElementBuilders.Column
-import androidx.wear.tiles.LayoutElementBuilders.FontStyles
-import androidx.wear.tiles.LayoutElementBuilders.Image
-import androidx.wear.tiles.LayoutElementBuilders.Layout
-import androidx.wear.tiles.LayoutElementBuilders.LayoutElement
-import androidx.wear.tiles.LayoutElementBuilders.Row
-import androidx.wear.tiles.LayoutElementBuilders.Spacer
-import androidx.wear.tiles.LayoutElementBuilders.Text
+import androidx.wear.tiles.DimensionBuilders.sp
+import androidx.wear.tiles.LayoutElementBuilders.*
 import androidx.wear.tiles.ModifiersBuilders.Background
 import androidx.wear.tiles.ModifiersBuilders.Clickable
 import androidx.wear.tiles.ModifiersBuilders.Corner
@@ -38,14 +32,15 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.guava.future
+import kotlin.math.sqrt
 
-private const val CIRCLE_SIZE = 75f
-private val ICON_SIZE = dp(25f)
-private val SPACING_ACTIONS = dp(3f)
+private const val SPACING_ACTIONS = 3f
+private const val ICON_SIZE_FRACTION = 0.4f // Percentage of button diameter
 private const val BUTTON_COLOR = R.color.gray_850
-const val TAG = "ASTAG-tile"
+private const val LARGE_SCREEN_WIDTH_DP = 210
 
 interface TileSource {
+
     fun getActions(): List<Action>
     fun getDefaultConfig(): Map<String, String>
 }
@@ -63,7 +58,6 @@ data class Action(
 enum class WearControl {
     NO_DATA, ENABLED, DISABLED
 }
-
 
 abstract class TileBase : TileService() {
 
@@ -138,7 +132,7 @@ abstract class TileBase : TileService() {
                 b.addContent(addRowDouble(actions[1], actions[2], deviceParameters))
             }
             if (actions.size == 4) {
-                b.addContent(Spacer.Builder().setHeight(SPACING_ACTIONS).build())
+                b.addContent(Spacer.Builder().setHeight(dp(SPACING_ACTIONS)).build())
                     .addContent(addRowDouble(actions[2], actions[3], deviceParameters))
             }
             return b.build()
@@ -148,15 +142,15 @@ abstract class TileBase : TileService() {
             .build()
     }
 
-    private fun addRowSingle(action1: Action, deviceParameters: DeviceParameters): LayoutElement =
+    private fun addRowSingle(action: Action, deviceParameters: DeviceParameters): LayoutElement =
         Row.Builder()
-            .addContent(action(action1, deviceParameters))
+            .addContent(action(action, deviceParameters))
             .build()
 
     private fun addRowDouble(action1: Action, action2: Action, deviceParameters: DeviceParameters): LayoutElement =
         Row.Builder()
             .addContent(action(action1, deviceParameters))
-            .addContent(Spacer.Builder().setWidth(SPACING_ACTIONS).build())
+            .addContent(Spacer.Builder().setWidth(dp(SPACING_ACTIONS)).build())
             .addContent(action(action2, deviceParameters))
             .build()
 
@@ -176,56 +170,73 @@ abstract class TileBase : TileService() {
             .build()
     }
 
-    private fun action(action: Action, deviceParameters: DeviceParameters) = Box.Builder()
-        .setWidth(dp(CIRCLE_SIZE))
-        .setHeight(dp(CIRCLE_SIZE))
-        .setModifiers(
-            Modifiers.Builder()
-                .setBackground(
-                    Background.Builder()
-                        .setColor(
-                            argb(ContextCompat.getColor(baseContext, BUTTON_COLOR))
-                        )
-                        .setCorner(
-                            Corner.Builder().setRadius(dp(CIRCLE_SIZE / 2)).build()
-                        )
-                        .build()
-                )
-                .setSemantics(
-                    Semantics.Builder()
-                        .setContentDescription(resources.getString(action.nameRes))
-                        .build()
-                )
-                .setClickable(
-                    Clickable.Builder()
-                        .setOnClick(doAction(action))
-                        .build()
-                )
-                .build()
-        )
-        .addContent(
-            Column.Builder()
-                .addContent(
-                    Image.Builder()
-                        .setWidth(ICON_SIZE)
-                        .setHeight(ICON_SIZE)
-                        .setResourceId(idIconActionPrefix + action.id)
-                        .build()
-                ).addContent(
-                    Text.Builder()
-                        .setText(resources.getString(action.nameRes))
-                        .setFontStyle(
-                            FontStyles
-                                .button(deviceParameters)
-                                .setColor(
-                                    argb(ContextCompat.getColor(baseContext, R.color.white))
-                                )
-                                .build()
-                        )
-                        .build()
-                ).build()
-        )
-        .build()
+    private fun action(action: Action, deviceParameters: DeviceParameters): LayoutElement {
+        val circleDiameter = ((sqrt(2f) - 1) * deviceParameters.screenHeightDp) - (2 * SPACING_ACTIONS)
+        val iconSize = dp(circleDiameter * ICON_SIZE_FRACTION)
+        val text = resources.getString(action.nameRes)
+        return Box.Builder()
+            .setWidth(dp(circleDiameter))
+            .setHeight(dp(circleDiameter))
+            .setModifiers(
+                Modifiers.Builder()
+                    .setBackground(
+                        Background.Builder()
+                            .setColor(
+                                argb(ContextCompat.getColor(baseContext, BUTTON_COLOR))
+                            )
+                            .setCorner(
+                                Corner.Builder().setRadius(dp(circleDiameter / 2)).build()
+                            )
+                            .build()
+                    )
+                    .setSemantics(
+                        Semantics.Builder()
+                            .setContentDescription(text)
+                            .build()
+                    )
+                    .setClickable(
+                        Clickable.Builder()
+                            .setOnClick(doAction(action))
+                            .build()
+                    )
+                    .build()
+            )
+            .addContent(
+                Column.Builder()
+                    .addContent(
+                        Image.Builder()
+                            .setWidth(iconSize)
+                            .setHeight(iconSize)
+                            .setResourceId(idIconActionPrefix + action.id)
+                            .build()
+                    ).addContent(
+                        Text.Builder()
+                            .setText(text)
+                            .setFontStyle(
+                                FontStyle.Builder()
+                                    .setWeight(FONT_WEIGHT_BOLD)
+                                    .setColor(
+                                        argb(ContextCompat.getColor(baseContext, R.color.white))
+                                    )
+                                    .setSize(buttonTextSize(deviceParameters, text))
+                                    .build()
+                            )
+                            .build()
+                    ).build()
+            )
+            .build()
+    }
+
+    private fun buttonTextSize(deviceParameters: DeviceParameters, text: String): SpProp {
+        if (text.length > 6) {
+            return sp(if (isLargeScreen(deviceParameters)) 14f else 12f)
+        }
+        return sp(if (isLargeScreen(deviceParameters)) 16f else 14f)
+    }
+
+    private fun isLargeScreen(deviceParameters: DeviceParameters): Boolean {
+        return deviceParameters.screenWidthDp >= LARGE_SCREEN_WIDTH_DP
+    }
 
     private fun getWearControl(): WearControl {
         val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this)
