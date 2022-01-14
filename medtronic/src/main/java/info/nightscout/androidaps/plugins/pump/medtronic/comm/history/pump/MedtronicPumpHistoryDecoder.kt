@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump
 
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.MedtronicHistoryDecoder
@@ -96,7 +96,8 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
                         listRawData.add(dataClearInput[counter])
                         counter++
                     } catch (ex: Exception) {
-                        aapsLogger.error(LTag.PUMPBTCOMM, "OpCode: " + ByteUtil.shortHexString(opCode.toByte()) + ", Invalid package: "
+                        aapsLogger.error(
+                            LTag.PUMPBTCOMM, "OpCode: " + ByteUtil.shortHexString(opCode.toByte()) + ", Invalid package: "
                             + ByteUtil.getHex(listRawData))
                         // throw ex;
                         incompletePacket = true
@@ -493,8 +494,9 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
 
             //LOG.debug("DT: {} {} {}", year, month, dayOfMonth);
             if (dayOfMonth == 32) {
-                aapsLogger.warn(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "Entry: Day 32 %s = [%s] %s", entry.entryType.name,
-                    ByteUtil.getHex(entry.rawData), entry))
+                aapsLogger.warn(
+                    LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "Entry: Day 32 %s = [%s] %s", entry.entryType.name,
+                                                   ByteUtil.getHex(entry.rawData), entry))
             }
             if (isEndResults(entry.entryType)) {
                 hour = 23

@@ -23,4 +23,6 @@ class CommandStopPump(
     }
 
     override fun status(): String = rh.gs(R.string.stop_pump)
+
+    override fun log(): String = "STOP PUMP"
 }

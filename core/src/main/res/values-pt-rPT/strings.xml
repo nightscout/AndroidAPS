@@ -351,6 +351,13 @@
     <string name="uel_unknown">DESCONHECIDO</string>
     <string name="ue_export_to_csv">Exportar Entradas do Utilizador para o Excel (csv)</string>
     <!-- HardLimits -->
+    <string name="profile_dia">Valor Perfil DIA</string>
+    <string name="profile_sensitivity_value">Valor Perfil Sensibilidade</string>
+    <string name="profile_max_daily_basal_value">Valor Perfil Basal Máxima</string>
+    <string name="current_basal_value">Valor Actual Basal</string>
+    <string name="profile_carbs_ratio_value">Valor Perfil Rácio Hidratos</string>
+    <string name="valuelimitedto">%1$.2f limitado a %2$.2f</string>
+    <string name="valueoutofrange">»%1$s« está fora dos limites máximos</string>
     <!-- Command Queue + readStatus reasons -->
     <plurals name="days">
         <item quantity="one">%1$d dia</item>

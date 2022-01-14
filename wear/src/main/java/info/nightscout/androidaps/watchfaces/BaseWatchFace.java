@@ -36,10 +36,15 @@ import com.ustwo.clockwise.wearable.WatchFace;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.inject.Inject;
+
+import dagger.android.AndroidInjection;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.complications.BaseComplicationProviderService;
 import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.data.RawDisplayData;
+import info.nightscout.androidaps.interaction.utils.Persistence;
+import info.nightscout.androidaps.interaction.utils.WearUtil;
 import lecho.lib.hellocharts.view.LineChartView;
 
 /**
@@ -49,6 +54,10 @@ import lecho.lib.hellocharts.view.LineChartView;
  */
 
 public abstract class BaseWatchFace extends WatchFace implements SharedPreferences.OnSharedPreferenceChangeListener {
+
+    @Inject WearUtil wearUtil;
+    @Inject Persistence persistence;
+
     public final static IntentFilter INTENT_FILTER;
     public static final long[] vibratePattern = {0, 400, 300, 400, 300, 400};
 
@@ -80,7 +89,7 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
     public int pointSize = 2;
     public BgGraphBuilder bgGraphBuilder;
     public LineChartView chart;
-    public RawDisplayData rawData = new RawDisplayData();
+    public RawDisplayData rawData;
     public PowerManager.WakeLock wakeLock;
     // related endTime manual layout
     public View layoutView;
@@ -94,7 +103,10 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
 
     @Override
     public void onCreate() {
+        // Not derived from DaggerService, do injection here
+        AndroidInjection.inject(this);
         super.onCreate();
+        rawData = new RawDisplayData(wearUtil);
         Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         display.getSize(displaySize);
         wakeLock = ((PowerManager) getSystemService(Context.POWER_SERVICE)).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS:BaseWatchFace");
@@ -108,7 +120,7 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPrefs.registerOnSharedPreferenceChangeListener(this);
 
-        BaseComplicationProviderService.turnOff();
+        persistence.turnOff();
     }
 
     @Override

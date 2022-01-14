@@ -2,7 +2,7 @@ package info.nightscout.androidaps.extensions
 
 import androidx.annotation.StringRes
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONObject
 
 fun JSONObject.putInt(@StringRes key: Int, sp: SP, rh: ResourceHelper): JSONObject =

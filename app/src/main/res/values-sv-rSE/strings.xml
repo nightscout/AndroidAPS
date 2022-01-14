@@ -58,7 +58,6 @@ Eversense-appen.</string>
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">Kolhydrater</string>
     <string name="treatments_wizard_correction_label">Korrektion</string>
-    <string name="treatments_wizard_bolusiob_label">Bolus IOB</string>
     <string name="openapsma_run">Utför nu</string>
     <string name="vitualpump_label">Virtuell pump</string>
     <string name="openapsma_lastrun_label">Senaste beräkning</string>
@@ -122,9 +121,7 @@ Eversense-appen.</string>
     <string name="careportal_newnstreatment_other">Annat</string>
     <string name="careportal_newnstreatment_meter">Mätare</string>
     <string name="careportal_newnstreatment_sensor">Sensor</string>
-    <string name="careportal_newnstreatment_carbtime_label">KH-tid</string>
     <string name="careportal_newnstreatment_duration_label">Duration</string>
-    <string name="careportal_newnstreatment_profile_label">Profil</string>
     <string name="careportal_newnstreatment_glucosetype">Glukostyp</string>
     <string name="overview_tempbasal_button">Temp basal</string>
     <string name="overview_extendedbolus_button">Förlängd bolus</string>
@@ -355,7 +352,6 @@ Eversense-appen.</string>
     <string name="smscommunicator_wrongduration">Fel duration</string>
     <string name="smscommunicator_loopsuspended">Loop pausad</string>
     <string name="smscommunicator_loopresumed">Loop återupptagen</string>
-    <string name="treatments_wizard_bgtrend_label">15 min trend</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Rapportera appstart till Nightscout</string>
@@ -521,8 +517,6 @@ Eversense-appen.</string>
     <string name="enablesmbwithhightemptarget_summary">Aktivera SMB när det finns högt temp mål aktivt (träning, över 100 mg/dl eller 5,5 mmol/l)</string>
     <string name="overview_insulin_label">Insulin</string>
     <string name="overview_buttons_selection">Knappar</string>
-    <string name="show_calibration_button_summary">Skicka kalibrering till xDrip+ eller öppna kalibreringsrutan i G5-appen</string>
-    <string name="show_cgm_button_summary">Öppnar xDrip+. Tillbaka-knappen återgår till AndroidAPS</string>
     <string name="carb_increment_button_message">Mängd kolhydrater att lägga till när man trycker på knappen</string>
     <string name="insulin_increment_button_message">Mängd insulin att lägga till när man trycker på knappen</string>
     <string name="error_starting_cgm">Kunde inte starta CGM-appen. Kontrollera att den är installerad.</string>
@@ -628,7 +622,6 @@ Eversense-appen.</string>
     <string name="exitwizard">Hoppa över installationsguiden</string>
     <string name="setupwizard_loop_description">Tryck på knappen nedan för att låta AndroidAPS föreslå/göra basalförändringar</string>
     <string name="setupwizard_sensitivity_description">Insticksprogrammet för känslighet används för att detektera insulinkänslighet och för att beräkning av aktiva kolhydrater, COB. För mer information, besök:</string>
-    <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
     <string name="nsclientinfotext">NSClient hanterar anslutningen till Nightscout. Du kan hoppa över denna del nu, men du kommer inte att kunna passera vissa mål tills du har satt upp det.</string>
     <string name="diawarning">Kom ihåg: De nya insulinprofilerna kräver en duration (DIA) på minst 5 timmar. En DIA på 5-6 timmar enligt de nya profilerna är ungefär lika med DIA 3 timmar enligt de gamla insulinprofilerna.</string>
     <string name="setupwizard_aps_description">Välj en av dessa algoritmer. De sorteras från den äldsta till nyaste. Nyare algoritm är oftast mer kraftfull och mer aggressiv. Om du är ny som loopanvändare vill du förmodligen börja med AMA och inte med senaste. Glöm inte att läsa dokumentationen om OpenAPS och konfigurera algoritmen innan användning.</string>

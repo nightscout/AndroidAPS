@@ -11,7 +11,7 @@ import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.setupwizard.SWNumberValidator
-import info.nightscout.androidaps.utils.SafeParse
+import info.nightscout.shared.SafeParse
 import info.nightscout.androidaps.utils.ui.NumberPicker
 import java.text.DecimalFormat
 import javax.inject.Inject

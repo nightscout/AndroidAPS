@@ -2,6 +2,7 @@ package info.nightscout.androidaps.danar.services;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
@@ -40,8 +41,8 @@ import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.interfaces.PumpSync;
-import info.nightscout.androidaps.logging.AAPSLogger;
-import info.nightscout.androidaps.logging.LTag;
+import info.nightscout.shared.logging.AAPSLogger;
+import info.nightscout.shared.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
@@ -51,7 +52,7 @@ import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.ToastUtils;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.rx.AapsSchedulers;
-import info.nightscout.androidaps.utils.sharedPreferences.SP;
+import info.nightscout.shared.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
 
 /**
@@ -190,7 +191,7 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
 
     protected void getBTSocketForSelectedPump() {
         mDevName = sp.getString(R.string.key_danar_bt_name, "");
-        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        BluetoothAdapter bluetoothAdapter = ((BluetoothManager)context.getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
 
         if (bluetoothAdapter != null) {
             Set<BluetoothDevice> bondedDevices = bluetoothAdapter.getBondedDevices();

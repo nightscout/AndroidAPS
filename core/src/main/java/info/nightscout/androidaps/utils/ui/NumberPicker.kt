@@ -20,8 +20,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.utils.SafeParse
 import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.shared.SafeParse
 import java.text.NumberFormat
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService

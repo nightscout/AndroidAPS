@@ -1,5 +1,18 @@
 package info.nightscout.androidaps.testing.mocks;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyByte;
+import static org.mockito.ArgumentMatchers.anyChar;
+import static org.mockito.ArgumentMatchers.anyDouble;
+import static org.mockito.ArgumentMatchers.anyFloat;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyShort;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.when;
+
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.SparseArray;
@@ -7,30 +20,17 @@ import android.util.SparseArray;
 import com.google.android.gms.wearable.DataMap;
 
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyByte;
-import static org.mockito.Matchers.anyChar;
-import static org.mockito.Matchers.anyDouble;
-import static org.mockito.Matchers.anyFloat;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.anyShort;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.when;
-
+@SuppressWarnings({"unused", "rawtypes", "SuspiciousMethodCalls", "unchecked"})
 public final class BundleMock {
 
     public static Bundle mock() {
-        return mock(new HashMap<String, Object>());
+        return mock(new HashMap<>());
     }
 
     public static Bundle mock(DataMap dataMap) {
@@ -43,85 +43,35 @@ public final class BundleMock {
 
     public static Bundle mock(final HashMap<String, Object> map) {
 
-        Answer unsupported = new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                throw new UnsupportedOperationException();
-            }
+        Answer unsupported = invocation -> {
+            throw new UnsupportedOperationException();
         };
-        Answer put = new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                map.put((String)invocation.getArguments()[0], invocation.getArguments()[1]);
-                return null;
-            }
+        Answer put = invocation -> {
+            map.put((String) invocation.getArguments()[0], invocation.getArguments()[1]);
+            return null;
         };
-        Answer<Object> get = new Answer<Object>() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                return map.get(invocation.getArguments()[0]);
-            }
-        };
-        Answer<Object> getOrDefault = new Answer<Object>() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Object key = invocation.getArguments()[0];
-                return map.containsKey(key) ? map.get(key) : invocation.getArguments()[1];
-            }
+        Answer<Object> get = invocation -> map.get(invocation.getArguments()[0]);
+        Answer<Object> getOrDefault = invocation -> {
+            Object key = invocation.getArguments()[0];
+            return map.containsKey(key) ? map.get(key) : invocation.getArguments()[1];
         };
 
         Bundle bundle = Mockito.mock(Bundle.class);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                return map.size();
-            }
-        }).when(bundle).size();
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                return map.isEmpty();
-            }
-        }).when(bundle).isEmpty();
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                map.clear();
-                return null;
-            }
+        doAnswer(invocation -> map.size()).when(bundle).size();
+        doAnswer(invocation -> map.isEmpty()).when(bundle).isEmpty();
+        doAnswer(invocation -> {
+            map.clear();
+            return null;
         }).when(bundle).clear();
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                return map.containsKey(invocation.getArguments()[0]);
-            }
-        }).when(bundle).containsKey(anyString());
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                return map.get(invocation.getArguments()[0]);
-            }
-        }).when(bundle).get(anyString());
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                map.remove(invocation.getArguments()[0]);
-                return null;
-            }
+        doAnswer(invocation -> map.containsKey(invocation.getArguments()[0])).when(bundle).containsKey(anyString());
+        doAnswer(invocation -> map.get(invocation.getArguments()[0])).when(bundle).get(anyString());
+        doAnswer(invocation -> {
+            map.remove(invocation.getArguments()[0]);
+            return null;
         }).when(bundle).remove(anyString());
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                return map.keySet();
-            }
-        }).when(bundle).keySet();
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                return BundleMock.class.getSimpleName() + "{map=" + map.toString() + "}";
-            }
-        }).when(bundle).toString();
+        doAnswer(invocation -> map.keySet()).when(bundle).keySet();
+        doAnswer(invocation -> BundleMock.class.getSimpleName() + "{map=" + map.toString() + "}").when(bundle).toString();
 
         doAnswer(put).when(bundle).putBoolean(anyString(), anyBoolean());
         when(bundle.getBoolean(anyString())).thenAnswer(get);

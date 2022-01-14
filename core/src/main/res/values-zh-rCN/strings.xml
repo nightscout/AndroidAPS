@@ -90,5 +90,6 @@
     <!-- WeekdayPicker -->
     <!-- User Entry -->
     <!-- HardLimits -->
+    <string name="valuelimitedto">%1$.2f 超过 %2$.2f的限制</string>
     <!-- Command Queue + readStatus reasons -->
 </resources>

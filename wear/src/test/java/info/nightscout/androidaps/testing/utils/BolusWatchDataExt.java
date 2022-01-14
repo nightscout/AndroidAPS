@@ -1,12 +1,13 @@
 package info.nightscout.androidaps.testing.utils;
 
+import static info.nightscout.androidaps.testing.utils.ExtUtil.assertClassHaveSameFields;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.Objects;
 
 import info.nightscout.androidaps.data.BolusWatchData;
-
-import static info.nightscout.androidaps.testing.utils.ExtUtil.assertClassHaveSameFields;
 
 public class BolusWatchDataExt extends BolusWatchData {
 
@@ -40,7 +41,7 @@ public class BolusWatchDataExt extends BolusWatchData {
 
     @Override
     public boolean equals(@Nullable Object obj) {
-        if ((obj instanceof BolusWatchData)||(obj instanceof BolusWatchDataExt)) {
+        if (obj instanceof BolusWatchData) {
             return (this.date == ((BolusWatchData) obj).date)
                     && (this.bolus == ((BolusWatchData) obj).bolus)
                     && (this.carbs == ((BolusWatchData) obj).carbs)
@@ -51,9 +52,9 @@ public class BolusWatchDataExt extends BolusWatchData {
         }
     }
 
-    @Override
+    @NonNull @Override
     public String toString() {
-        return date+", "+bolus+", "+carbs+", "+isSMB+", "+isValid;
+        return date + ", " + bolus + ", " + carbs + ", " + isSMB + ", " + isValid;
     }
 
     @Override

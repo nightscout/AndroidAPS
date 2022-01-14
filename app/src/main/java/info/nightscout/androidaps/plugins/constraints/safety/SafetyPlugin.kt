@@ -6,7 +6,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.extensions.*
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import info.nightscout.androidaps.plugins.bus.RxBus
@@ -20,7 +20,7 @@ import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton

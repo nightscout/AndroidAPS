@@ -9,6 +9,7 @@ import info.nightscout.androidaps.database.transactions.UserEntryTransaction
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.userEntry.UserEntryMapper
 import info.nightscout.androidaps.utils.userEntry.ValueWithUnitMapper
+import info.nightscout.shared.logging.AAPSLogger
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy

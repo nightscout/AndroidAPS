@@ -4,7 +4,6 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
-import android.os.Looper
 import android.os.SystemClock
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -25,7 +24,7 @@ import info.nightscout.androidaps.databinding.ObjectivesFragmentBinding
 import info.nightscout.androidaps.databinding.ObjectivesItemBinding
 import info.nightscout.androidaps.dialogs.NtpProgressDialog
 import info.nightscout.androidaps.events.EventNtpStatus
-import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.constraints.objectives.activities.ObjectivesExamDialog
@@ -41,7 +40,7 @@ import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import io.reactivex.rxkotlin.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 

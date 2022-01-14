@@ -71,26 +71,26 @@ class WizardInfoDialog : DaggerDialogFragment() {
         val bgString = Profile.toUnitsString(data.glucoseValue, data.glucoseValue * Constants.MGDL_TO_MMOLL, units)
         // BG
         binding.bg.text = rh.gs(R.string.format_bg_isf, bgString, data.isf)
-        binding.bginsulin.text = rh.gs(R.string.formatinsulinunits, data.glucoseInsulin)
-        binding.bgcheckbox.isChecked = data.wasGlucoseUsed
-        binding.ttcheckbox.isChecked = data.wasTempTargetUsed
+        binding.bgInsulin.text = rh.gs(R.string.formatinsulinunits, data.glucoseInsulin)
+        binding.bgCheckbox.isChecked = data.wasGlucoseUsed
+        binding.ttCheckbox.isChecked = data.wasTempTargetUsed
         // Trend
-        binding.bgtrend.text = DecimalFormatter.to1Decimal(data.glucoseTrend)
-        binding.bgtrendinsulin.text = rh.gs(R.string.formatinsulinunits, data.trendInsulin)
-        binding.bgtrendcheckbox.isChecked = data.wasTrendUsed
+        binding.bgTrend.text = DecimalFormatter.to1Decimal(data.glucoseTrend)
+        binding.bgTrendInsulin.text = rh.gs(R.string.formatinsulinunits, data.trendInsulin)
+        binding.bgTrendCheckbox.isChecked = data.wasTrendUsed
         // COB
         binding.cob.text = rh.gs(R.string.format_cob_ic, data.cob, data.ic)
-        binding.cobinsulin.text = rh.gs(R.string.formatinsulinunits, data.cobInsulin)
-        binding.cobcheckbox.isChecked = data.wasCOBUsed
+        binding.cobInsulin.text = rh.gs(R.string.formatinsulinunits, data.cobInsulin)
+        binding.cobCheckbox.isChecked = data.wasCOBUsed
         // Bolus IOB
-        binding.bolusiobinsulin.text = rh.gs(R.string.formatinsulinunits, data.bolusIOB)
-        binding.bolusiobcheckbox.isChecked = data.wasBolusIOBUsed
+        binding.bolusIobInsulin.text = rh.gs(R.string.formatinsulinunits, data.bolusIOB)
+        binding.bolusIobCheckbox.isChecked = data.wasBolusIOBUsed
         // Basal IOB
-        binding.basaliobinsulin.text = rh.gs(R.string.formatinsulinunits, data.basalIOB)
-        binding.basaliobcheckbox.isChecked = data.wasBasalIOBUsed
+        binding.basalIobInsulin.text = rh.gs(R.string.formatinsulinunits, data.basalIOB)
+        binding.basalIobCheckbox.isChecked = data.wasBasalIOBUsed
         // Superbolus
         binding.sbinsulin.text = rh.gs(R.string.formatinsulinunits, data.superbolusInsulin)
-        binding.sbcheckbox.isChecked = data.wasSuperbolusUsed
+        binding.sbCheckbox.isChecked = data.wasSuperbolusUsed
         // Carbs
         binding.carbs.text = rh.gs(R.string.format_carbs_ic, data.carbs, data.ic)
         binding.carbsinsulin.text = rh.gs(R.string.formatinsulinunits, data.carbsInsulin)

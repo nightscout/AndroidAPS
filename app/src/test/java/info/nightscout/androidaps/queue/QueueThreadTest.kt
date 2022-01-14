@@ -17,7 +17,7 @@ import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvid
 import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.androidaps.queue.commands.CommandTempBasalAbsolute
 import info.nightscout.androidaps.utils.buildHelper.BuildHelperImpl
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

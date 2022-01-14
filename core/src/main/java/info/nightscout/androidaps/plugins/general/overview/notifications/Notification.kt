@@ -129,6 +129,7 @@ open class Notification {
         const val INVALID_PROFILE_NOT_ACCEPTED = 75
         const val MDT_INVALID_HISTORY_DATA = 76
         const val IDENTIFICATION_NOT_SET = 77
+        const val PERMISSION_BT = 78
 
         const val USER_MESSAGE = 1000
 

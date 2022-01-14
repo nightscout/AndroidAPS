@@ -16,8 +16,8 @@ import info.nightscout.androidaps.events.EventTempBasalChange
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState
 import info.nightscout.androidaps.plugins.pump.common.events.EventRefreshButtonState
@@ -100,7 +100,7 @@ class MedtronicFragment : DaggerFragment() {
         binding.pumpStatusIcon.text = "{fa-bed}"
 
         binding.history.setOnClickListener {
-            if (medtronicPumpPlugin.rileyLinkService.verifyConfiguration()) {
+            if (medtronicPumpPlugin.rileyLinkService?.verifyConfiguration() == true) {
                 startActivity(Intent(context, MedtronicHistoryActivity::class.java))
             } else {
                 displayNotConfiguredDialog()
@@ -108,7 +108,7 @@ class MedtronicFragment : DaggerFragment() {
         }
 
         binding.refresh.setOnClickListener {
-            if (!medtronicPumpPlugin.rileyLinkService.verifyConfiguration()) {
+            if (medtronicPumpPlugin.rileyLinkService?.verifyConfiguration() != true) {
                 displayNotConfiguredDialog()
             } else {
                 binding.refresh.isEnabled = false
@@ -122,7 +122,7 @@ class MedtronicFragment : DaggerFragment() {
         }
 
         binding.stats.setOnClickListener {
-            if (medtronicPumpPlugin.rileyLinkService.verifyConfiguration()) {
+            if (medtronicPumpPlugin.rileyLinkService?.verifyConfiguration() == true) {
                 startActivity(Intent(context, RileyLinkStatusActivity::class.java))
             } else {
                 displayNotConfiguredDialog()
@@ -162,7 +162,7 @@ class MedtronicFragment : DaggerFragment() {
             .observeOn(aapsSchedulers.main)
             .subscribe({
                 aapsLogger.debug(LTag.PUMP, "EventMedtronicPumpConfigurationChanged triggered")
-                medtronicPumpPlugin.rileyLinkService.verifyConfiguration()
+                medtronicPumpPlugin.rileyLinkService?.verifyConfiguration()
                 updateGUI()
             }, fabricPrivacy::logException)
         disposable += rxBus
@@ -194,7 +194,7 @@ class MedtronicFragment : DaggerFragment() {
     @Synchronized
     private fun setDeviceStatus() {
         val resourceId = rileyLinkServiceData.rileyLinkServiceState.resourceId
-        val rileyLinkError = medtronicPumpPlugin.rileyLinkService.error
+        val rileyLinkError = medtronicPumpPlugin.rileyLinkService?.error
         binding.rlStatus.text =
             when {
                 rileyLinkServiceData.rileyLinkServiceState == RileyLinkServiceState.NotStarted -> rh.gs(resourceId)
@@ -346,7 +346,7 @@ class MedtronicFragment : DaggerFragment() {
             rh.getAttributeColor(context, R.attr.statuslightWarning),
             rh.getAttributeColor(context, R.attr.statuslightAlarm))
 
-        medtronicPumpPlugin.rileyLinkService.verifyConfiguration()
+        medtronicPumpPlugin.rileyLinkService?.verifyConfiguration()
         binding.errors.text = medtronicPumpStatus.errorInfo
 
         val showRileyLinkBatteryLevel: Boolean = rileyLinkServiceData.showBatteryLevel

@@ -4,7 +4,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.dana.comm.RecordTypes
 import info.nightscout.androidaps.dana.database.DanaHistoryRecord
 import info.nightscout.androidaps.events.EventDanaRSyncStatus
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.utils.T
 
 open class MsgHistoryAll(

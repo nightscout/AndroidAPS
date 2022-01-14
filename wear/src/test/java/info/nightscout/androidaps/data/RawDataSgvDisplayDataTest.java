@@ -1,43 +1,21 @@
 package info.nightscout.androidaps.data;
 
-import android.content.Context;
+import static org.junit.Assert.assertEquals;
+
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.android.gms.wearable.DataMap;
 
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
-import info.nightscout.androidaps.Aaps;
+import info.nightscout.androidaps.TestBase;
 import info.nightscout.androidaps.interaction.utils.Constants;
-import info.nightscout.androidaps.interaction.utils.Persistence;
-import info.nightscout.androidaps.interaction.utils.WearUtil;
-import info.nightscout.androidaps.testing.mockers.AAPSMocker;
-import info.nightscout.androidaps.testing.mockers.AndroidMocker;
 import info.nightscout.androidaps.testing.mockers.WearUtilMocker;
 import info.nightscout.androidaps.testing.mocks.BundleMock;
 import info.nightscout.androidaps.testing.mocks.IntentMock;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
-@RunWith(PowerMockRunner.class)
-@PrepareForTest( { WearUtil.class, Log.class, SharedPreferences.class, Context.class, Aaps.class, android.util.Base64.class, Intent.class } )
-public class RawDataSgvDisplayDataTest {
-
-    @Before
-    public void mock() throws Exception {
-        AAPSMocker.prepareMock();
-        AAPSMocker.resetMockedSharedPrefs();
-        AndroidMocker.mockBase64();
-        WearUtilMocker.prepareMockNoReal();
-    }
+public class RawDataSgvDisplayDataTest extends TestBase {
 
     //==============================================================================================
     // SGV DATA
@@ -56,30 +34,29 @@ public class RawDataSgvDisplayDataTest {
     }
 
     private void assertDataEmpty(RawDisplayData newRaw) {
-        assertThat(newRaw.sgvLevel, is(0L));
-        assertThat(newRaw.datetime, is(0L));
-        assertThat(newRaw.sSgv, is("---"));
-        assertThat(newRaw.sDirection, is("--"));
-        assertThat(newRaw.sDelta, is("--"));
-        assertThat(newRaw.sAvgDelta, is("--"));
-        assertThat(newRaw.sUnits, is("-"));
+        assertEquals(newRaw.sgvLevel, 0L);
+        assertEquals(newRaw.datetime, 0L);
+        assertEquals(newRaw.sSgv, "---");
+        assertEquals(newRaw.sDirection, "--");
+        assertEquals(newRaw.sDelta, "--");
+        assertEquals(newRaw.sAvgDelta, "--");
+        assertEquals(newRaw.sUnits, "-");
     }
 
     private void assertDataOk(RawDisplayData newRaw) {
-        assertThat(newRaw.sgvLevel, is(1L));
-        assertThat(newRaw.datetime, is(WearUtilMocker.REF_NOW - Constants.MINUTE_IN_MS));
-        assertThat(newRaw.sSgv, is("106"));
-        assertThat(newRaw.sDirection, is("↗"));
-        assertThat(newRaw.sDelta, is("5.4"));
-        assertThat(newRaw.sAvgDelta, is("3.7"));
-        assertThat(newRaw.sUnits, is("mg/dl"));
+        assertEquals(newRaw.sgvLevel, 1L);
+        assertEquals(newRaw.datetime, WearUtilMocker.REF_NOW - Constants.MINUTE_IN_MS);
+        assertEquals(newRaw.sSgv, "106");
+        assertEquals(newRaw.sDirection, "↗");
+        assertEquals(newRaw.sDelta, "5.4");
+        assertEquals(newRaw.sAvgDelta, "3.7");
+        assertEquals(newRaw.sUnits, "mg/dl");
     }
 
     @Test
     public void updateDataFromEmptyPersistenceTest() {
         // GIVEN
-        Persistence persistence = new Persistence();
-        RawDisplayData newRaw = new RawDisplayData();
+        RawDisplayData newRaw = new RawDisplayData(getWearUtil());
 
         // WHEN
         newRaw.updateFromPersistence(persistence);
@@ -91,11 +68,10 @@ public class RawDataSgvDisplayDataTest {
     @Test
     public void updateDataFromPersistenceTest() {
         // GIVEN
-        Persistence persistence = new Persistence();
-        RawDisplayData newRaw = new RawDisplayData();
+        RawDisplayData newRaw = new RawDisplayData(getWearUtil());
 
         // WHEN
-        Persistence.storeDataMap(RawDisplayData.DATA_PERSISTENCE_KEY, dataMapForData());
+        persistence.storeDataMap(RawDisplayData.DATA_PERSISTENCE_KEY, dataMapForData());
         newRaw.updateFromPersistence(persistence);
 
         // THEN
@@ -105,11 +81,10 @@ public class RawDataSgvDisplayDataTest {
     @Test
     public void partialUpdateDataFromPersistenceTest() {
         // GIVEN
-        Persistence persistence = new Persistence();
-        RawDisplayData newRaw = new RawDisplayData();
+        RawDisplayData newRaw = new RawDisplayData(getWearUtil());
 
         // WHEN
-        Persistence.storeDataMap(RawDisplayData.DATA_PERSISTENCE_KEY, dataMapForData());
+        persistence.storeDataMap(RawDisplayData.DATA_PERSISTENCE_KEY, dataMapForData());
         newRaw.updateForComplicationsFromPersistence(persistence);
 
         // THEN
@@ -123,7 +98,7 @@ public class RawDataSgvDisplayDataTest {
         Bundle bundle = BundleMock.mock(dataMapForData());
 
         intent.putExtra("data", bundle);
-        RawDisplayData newRaw = new RawDisplayData();
+        RawDisplayData newRaw = new RawDisplayData(getWearUtil());
 
         // WHEN
         newRaw.updateDataFromMessage(intent, null);
@@ -136,7 +111,7 @@ public class RawDataSgvDisplayDataTest {
     public void updateDataFromEmptyMessageTest() {
         // GIVEN
         Intent intent = IntentMock.mock();
-        RawDisplayData newRaw = new RawDisplayData();
+        RawDisplayData newRaw = new RawDisplayData(getWearUtil());
 
         // WHEN
         newRaw.updateDataFromMessage(intent, null);

@@ -11,6 +11,7 @@
     <string name="noprofile">Ingen profil er indlæst fra NS endnu</string>
     <string name="glucose">Glukose</string>
     <string name="cob">COB</string>
+    <string name="ns_wifi_ssids">WiFi SSID</string>
     <string name="event_time_label">Tidspunkt for hændelsen</string>
     <!--    Constraints-->
     <!--    Dialogs-->
@@ -29,6 +30,7 @@
     <string name="hypo">Hypo</string>
     <string name="activity">Aktivitet</string>
     <string name="wear">Ur</string>
+    <string name="automation">Automatisering</string>
     <!--    Command-->
     <!--    PumpEnactResult-->
     <!--    CarbsReq-->
@@ -72,5 +74,6 @@
     <!-- WeekdayPicker -->
     <!-- User Entry -->
     <!-- HardLimits -->
+    <string name="valuelimitedto">%1$.2f begrænset til %2$.2f</string>
     <!-- Command Queue + readStatus reasons -->
 </resources>

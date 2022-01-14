@@ -3,7 +3,7 @@ package info.nightscout.androidaps.danaRKorean.comm
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danar.comm.MessageBase
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.LTag
 
 class MsgCheckValue_k(
     injector: HasAndroidInjector

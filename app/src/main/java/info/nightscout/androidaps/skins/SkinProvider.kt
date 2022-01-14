@@ -2,7 +2,7 @@ package info.nightscout.androidaps.skins
 
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.dependencyInjection.SkinsModule
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import okhttp3.internal.toImmutableMap
 import javax.inject.Inject
 import javax.inject.Singleton

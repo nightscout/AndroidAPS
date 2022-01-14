@@ -2,6 +2,7 @@
 <resources>
 
     <color name="cardObjectiveText">#779ECB</color>
+    <color name="titleHeader">#D9000000</color>
 
 
     <!-- light colors -->
@@ -38,10 +39,12 @@
     <color name="basal_light_lowres">@color/grey_300</color>
     <color name="basal_dark_lowres">@color/grey_500</color>
 
-
-
-
-
+    <!-- menu colors -->
+    <color name="colorCalculatorButton">#67e86a</color>
+    <color name="colorCarbsButton">#ffae01</color>
+    <color name="colorInsulinButton">#67dfe8</color>
+    <color name="colorTemptButton">#CF8BFE</color>
+    <color name="colorPrimeButton">#FBC02D</color>
 
     <!-- Material Design - Color Palette -->
     <!-- https://designguidelines.withgoogle.com/wearos/style/color.html#color-dark-color-palette-for-wear-os -->

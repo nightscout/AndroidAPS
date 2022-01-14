@@ -6,8 +6,8 @@ import android.content.IntentFilter
 import android.os.BatteryManager
 import dagger.android.DaggerBroadcastReceiver
 import info.nightscout.androidaps.events.EventChargingState
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import javax.inject.Inject
 
@@ -19,7 +19,8 @@ class ChargingStateReceiver : DaggerBroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
         rxBus.send(grabChargingState(context))
-        aapsLogger.debug(LTag.CORE, receiverStatusStore.lastChargingEvent?.toString()
+        aapsLogger.debug(
+            LTag.CORE, receiverStatusStore.lastChargingEvent?.toString()
             ?: "Unknown charging state")
     }
 

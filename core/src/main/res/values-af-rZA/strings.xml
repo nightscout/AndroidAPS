@@ -60,5 +60,6 @@
     <!-- WeekdayPicker -->
     <!-- User Entry -->
     <!-- HardLimits -->
+    <string name="valuelimitedto">%1$.2f beperk tot %2$.2f</string>
     <!-- Command Queue + readStatus reasons -->
 </resources>

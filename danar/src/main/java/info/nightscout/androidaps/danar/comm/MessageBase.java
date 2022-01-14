@@ -22,8 +22,8 @@ import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.CommandQueue;
 import info.nightscout.androidaps.interfaces.ConfigBuilder;
 import info.nightscout.androidaps.interfaces.PumpSync;
-import info.nightscout.androidaps.logging.AAPSLogger;
-import info.nightscout.androidaps.logging.LTag;
+import info.nightscout.shared.logging.AAPSLogger;
+import info.nightscout.shared.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage;
@@ -119,7 +119,7 @@ public class MessageBase {
         this.buffer[2] = (byte) length;
         this.buffer[3] = (byte) 0xF1;
 
-        this.AddParamInt(CRC.getCrc16(this.buffer, 3, length));
+        this.AddParamInt(CRC.INSTANCE.getCrc16(this.buffer, 3, length));
 
         this.buffer[length + 5] = (byte) 0x2E;
         this.buffer[length + 6] = (byte) 0x2E;

@@ -12,7 +12,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import java.util.*
 import javax.inject.Inject
 import kotlin.math.floor

@@ -55,6 +55,7 @@ object ToastUtils {
             lastToast?.cancel()
             lastToast = Toast(ctx)
             lastToast?.duration = if (isShort) Toast.LENGTH_SHORT else Toast.LENGTH_LONG
+            @Suppress("deprecation")
             lastToast?.view = toastRoot
             lastToast?.show()
         }
