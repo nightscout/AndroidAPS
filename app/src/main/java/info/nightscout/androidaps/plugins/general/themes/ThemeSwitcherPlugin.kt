@@ -7,13 +7,12 @@ import androidx.appcompat.app.AppCompatDelegate
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.MainActivity
 import info.nightscout.androidaps.R
-
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.events.EventThemeSwitch
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -24,16 +23,16 @@ import javax.inject.Singleton
 @Singleton
 class ThemeSwitcherPlugin @Inject constructor(
     injector: HasAndroidInjector,
-    resourceHelper: ResourceHelper,
     aapsLogger: AAPSLogger,
+    rh: ResourceHelper,
     private val rxBus: RxBus,
-    private val sp: SP
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .neverVisible(true)
     .alwaysEnabled(true)
-    .showInList(false),
-    aapsLogger, resourceHelper, injector
+    .showInList(false)
+    .pluginName(R.string.dst_plugin_name),
+    aapsLogger, rh, injector
 ) {
 
     private val compositeDisposable = CompositeDisposable()
