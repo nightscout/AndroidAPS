@@ -56,7 +56,8 @@
     <string name="treatments_wizard_bg_label">Gly</string>
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">Glucides</string>
-    <string name="treatments_wizard_correction_label">Correction</string>
+    <string name="treatments_wizard_correction_label">Corr.</string>
+    <string name="bolus_iob_label">IA Bolus</string>
     <string name="openapsma_run">Exécuter maintenant</string>
     <string name="vitualpump_label">POMPE VIRTUELLE</string>
     <string name="openapsma_lastrun_label">Dernière exécution</string>
@@ -115,13 +116,15 @@
     <string name="openloop_newsuggestion">Nouvelle recommendation disponible</string>
     <string name="carbssuggestion">Suggestion de glucides</string>
     <string name="unsupportednsversion">Version incompatible de Nightscout</string>
-    <string name="treatments_wizard_basaliob_label">Basal IA</string>
+    <string name="treatments_wizard_basaliob_label">IA Basal</string>
     <string name="bolusconstraintapplied">Restriction du Bolus appliquée</string>
     <string name="carbsconstraintapplied">Restriction des Glucides appliquée</string>
     <string name="careportal_newnstreatment_other">Autre</string>
     <string name="careportal_newnstreatment_meter">Lecteur</string>
     <string name="careportal_newnstreatment_sensor">Capteur</string>
+    <string name="carb_time_label">Décalage horaire</string>
     <string name="careportal_newnstreatment_duration_label">Durée</string>
+    <string name="profile_label">Profil</string>
     <string name="careportal_newnstreatment_glucosetype">Source de Glycémie</string>
     <string name="overview_tempbasal_button">Basal Temporaire</string>
     <string name="overview_extendedbolus_button">Bolus étendu</string>
@@ -223,7 +226,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="overview_editquickwizardlistactivity_add">Ajouter</string>
     <string name="overview_quickwizard_item_edit_button">Éditer</string>
     <string name="mealbolus">Repas</string>
-    <string name="correctionbous">Correction</string>
+    <string name="correctionbous">Corr.</string>
     <string name="actions">Actions</string>
     <string name="ns_upload_only">(DÉSACTIVATION DANGEREUSE) Envoi NS uniquement</string>
     <string name="ns_upload_only_summary">Envoi NS uniquement (sync désactivée). Inactif sur les Glycémie des capteurs sauf si une source locale comme xDrip+ est sélectionnée. Inactif sur les profils si Profil NS est sélectionné.\n!!! ATTENTION !!! La désactivation de cette option peut causer des dysfonctionnements et une surdose d\'insuline si l\'un de vos composants (AAPS, NS, xDrip+) est mal configuré. Vérifiez bien si les données affichées par AAPS correspondent à l’état de la pompe !</string>
@@ -353,6 +356,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="smscommunicator_wrongduration">Durée incorrecte</string>
     <string name="smscommunicator_loopsuspended">Boucle suspendue</string>
     <string name="smscommunicator_loopresumed">Boucle relancée</string>
+    <string name="bg_trend_label">Delta 15 min</string>
     <string name="treatments_wizard_cob_label">GA</string>
     <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Démarrage AAPS entré dans NS</string>
@@ -637,6 +641,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="needsystemwindowpermission">L\'application a besoin de l\'autorisation d\'accès à la fenêtre système pour les notifications</string>
     <string name="needlocationpermission">L\'application a besoin de l\'autorisation de localisation pour l\'analyse BT et l\'identification WiFi</string>
     <string name="needstoragepermission">L\'application a besoin d\'une autorisation de stockage pour pouvoir stocker les fichiers journaux et les paramètres d\'exportation</string>
+    <string name="needconnectpermission">L\'application a besoin de l\'autorisation Bluetooth</string>
     <string name="request">Demande</string>
     <string name="open_navigation">Ouvrir navigation</string>
     <string name="close_navigation">Fermer navigation</string>
@@ -724,8 +729,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="cobvsiob">GA vs IA</string>
     <string name="bolusconstraintappliedwarn">Contrainte de Bolus appliquée : %1$.2f U vers %2$.2f U</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Absorption lente des glucides détectée : %2$d%% du temps. Vérifiez de nouveau votre calcul. Les GA (Glucides Actifs) peuvent être surestimés et alors plus d\'insuline pourrait être délivré !!!!!</font>]]></string>
-    <string name="partialboluswizard">Injecter cette partie de Bolus calculée par l’assistant [%]</string>
-    <string name="deliverpartofboluswizard">L\'assistant Bolus effectue le calcul mais seulement cette partie de l\'insuline calculée est délivrée. Utile avec l\'algorithme SMB.</string>
+    <string name="partialboluswizard">Injecter ce pourcentage du bolus calculé par l’assistant [%]</string>
+    <string name="deliverpartofboluswizard">L\'assistant bolus effectue le calcul mais seulement ce pourcentage de l\'insuline calculée est délivré. Utile avec l\'algorithme SMB.</string>
     <string name="snooze">Masquer</string>
     <string name="increasingmaxbasal">Augmentation de la valeur du débit Basal max parce que ce paramètre est inférieur au débit Basal max de votre profil</string>
     <string name="smscommunicator_messagebody">Message invalide</string>

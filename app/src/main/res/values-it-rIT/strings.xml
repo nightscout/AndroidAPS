@@ -57,6 +57,7 @@
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">CHO</string>
     <string name="treatments_wizard_correction_label">Corr</string>
+    <string name="bolus_iob_label">IOB da bolo</string>
     <string name="openapsma_run">Esegui ora</string>
     <string name="vitualpump_label">MICRO VIRTUALE</string>
     <string name="openapsma_lastrun_label">Ultima esecuzione</string>
@@ -121,7 +122,9 @@
     <string name="careportal_newnstreatment_other">Altro</string>
     <string name="careportal_newnstreatment_meter">Glucometro</string>
     <string name="careportal_newnstreatment_sensor">Sensore</string>
+    <string name="carb_time_label">Offset CHO</string>
     <string name="careportal_newnstreatment_duration_label">Durata</string>
+    <string name="profile_label">Profilo</string>
     <string name="careportal_newnstreatment_glucosetype">Tipo glicemia</string>
     <string name="overview_tempbasal_button">Basale temporanea</string>
     <string name="overview_extendedbolus_button">Bolo esteso</string>
@@ -352,6 +355,7 @@
     <string name="smscommunicator_wrongduration">Durata errata</string>
     <string name="smscommunicator_loopsuspended">Loop sospeso</string>
     <string name="smscommunicator_loopresumed">Loop ripreso</string>
+    <string name="bg_trend_label">Trend di 15min</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="superbolus">Superbolo</string>
     <string name="ns_logappstartedevent">Registra l\'avvio dell\'app in NS</string>
@@ -636,6 +640,7 @@
     <string name="needsystemwindowpermission">L\'applicazione richiede l\'autorizzazione \"finestra di sistema\" per le notifiche</string>
     <string name="needlocationpermission">L\'applicazione richiede l\'accesso alla posizione per la scansione bluetooth e l\'identificazione WiFi</string>
     <string name="needstoragepermission">L\'applicazione richiede l\'accesso alla memoria per memorizzare i file di log ed esportare le impostazioni</string>
+    <string name="needconnectpermission">L\'applicazione richiede l\'autorizzazione bluetooth</string>
     <string name="request">Richiesta</string>
     <string name="open_navigation">Apri navigazione</string>
     <string name="close_navigation">Chiudi navigazione</string>

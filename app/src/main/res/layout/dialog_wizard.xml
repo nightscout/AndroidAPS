@@ -266,12 +266,55 @@
                 android:contentDescription="@string/show_calculation"
                 app:srcCompat="@drawable/ic_visibility" />
 
+            <ImageView
+                android:id="@+id/bg_enabled_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:paddingStart="-11dp"
+                android:paddingEnd="-11dp"
+                android:scaleX="0.5"
+                android:scaleY="0.5"
+                app:srcCompat="@drawable/ic_xdrip"/>
+
+            <ImageView
+                android:id="@+id/trend_enabled_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:paddingStart="-11dp"
+                android:paddingEnd="-11dp"
+                android:scaleX="0.5"
+                android:scaleY="0.5"
+                app:srcCompat="@drawable/ic_fortyfiveup" />
+
+            <ImageView
+                android:id="@+id/iob_enabled_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:paddingStart="-11dp"
+                android:paddingEnd="-11dp"
+                android:scaleX="0.5"
+                android:scaleY="0.5"
+                app:srcCompat="@drawable/ic_bolus" />
+
+            <ImageView
+                android:id="@+id/cob_enabled_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:paddingStart="-11dp"
+                android:paddingEnd="-11dp"
+                android:scaleX="0.5"
+                android:scaleY="0.5"
+                app:srcCompat="@drawable/ic_cp_bolus_carbs" />
+
             <Button
                 android:id="@+id/cancel"
                 style="@style/mdtp_ActionButton.Text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:text="@string/mdtp_cancel"
                 android:textAlignment="textEnd" />
@@ -281,7 +324,7 @@
                 style="@style/mdtp_ActionButton.Text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="8dp"
                 android:text="@string/mdtp_ok" />
         </LinearLayout>
 
@@ -532,7 +575,7 @@
                     android:layout_height="match_parent">
 
                     <CheckBox
-                        android:id="@+id/bolus_iob_checkbox"
+                        android:id="@+id/iob_checkbox"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:width="32dp"
@@ -542,7 +585,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:width="130dp"
-                        android:text="@string/bolus_iob_label"
+                        android:text="@string/iob"
                         android:textAppearance="?android:attr/textAppearanceSmall" />
 
                     <TextView
@@ -553,42 +596,7 @@
                         android:textAppearance="?android:attr/textAppearanceSmall" />
 
                     <TextView
-                        android:id="@+id/bolus_iob_insulin"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:width="50dp"
-                        android:gravity="end"
-                        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <CheckBox
-                        android:id="@+id/basal_iob_checkbox"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:width="32dp"
-                        android:checked="true" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:width="130dp"
-                        android:text="@string/treatments_wizard_basaliob_label"
-                        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:width="50dp"
-                        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-                    <TextView
-                        android:id="@+id/basal_iob_insulin"
+                        android:id="@+id/iob_insulin"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:width="50dp"

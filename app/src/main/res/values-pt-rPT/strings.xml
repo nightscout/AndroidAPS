@@ -57,6 +57,7 @@
     <string name="treatments_wizard_tt_label">AT</string>
     <string name="treatments_wizard_carbs_label">Hidratos</string>
     <string name="treatments_wizard_correction_label">Corr</string>
+    <string name="bolus_iob_label">Bólus - IA</string>
     <string name="openapsma_run">Executar agora</string>
     <string name="vitualpump_label">BOMBA VIRTUAL</string>
     <string name="openapsma_lastrun_label">Última execução</string>
@@ -120,7 +121,9 @@
     <string name="careportal_newnstreatment_other">Outro</string>
     <string name="careportal_newnstreatment_meter">Medidor</string>
     <string name="careportal_newnstreatment_sensor">Sensor</string>
+    <string name="carb_time_label">Hora dos Hidratos</string>
     <string name="careportal_newnstreatment_duration_label">Duração</string>
+    <string name="profile_label">Perfil</string>
     <string name="careportal_newnstreatment_glucosetype">Tipo de Glicose</string>
     <string name="overview_tempbasal_button">Basal Temporária</string>
     <string name="overview_extendedbolus_button">Bólus Prolongado</string>
@@ -251,6 +254,7 @@
     <string name="ongoingnotificaction">Notificação em curso</string>
     <string name="old_data">DADOS ANTIGOS</string>
     <string name="sms_minago">%1$dmin atrás</string>
+    <string name="localprofile">Perfil</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Array de %1$d elementos.\nValor actual:</string>
     <string name="openapsma_autosensdata_label">Dados Autosens</string>
@@ -350,6 +354,7 @@
     <string name="smscommunicator_wrongduration">Duração errada</string>
     <string name="smscommunicator_loopsuspended">Loop suspenso</string>
     <string name="smscommunicator_loopresumed">Loop retomado</string>
+    <string name="bg_trend_label">Tendência 15 min</string>
     <string name="treatments_wizard_cob_label">HCA</string>
     <string name="superbolus">Superbólus</string>
     <string name="ns_logappstartedevent">Registar inicio da app no NS</string>
@@ -486,6 +491,7 @@
     <string name="dexcomg5_xdripupload_title">Enviar dados Glicose para xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">Seleccionar 640g/Eversense como fonte no xDrip+</string>
     <string name="nsclientbg">Glicose ClienteNS</string>
+    <string name="nsclientbgshort">Glicemia do NS</string>
     <string name="overview_editquickwizard_usebg">Cálculos Glicose</string>
     <string name="overview_editquickwizard_usebolusiob">Cálculo de Bólus IA</string>
     <string name="overview_editquickwizard_usebasaliob">Cálculo de Basal IA</string>
@@ -619,6 +625,7 @@
     <string name="exitwizard">Saltar assistente de configuração</string>
     <string name="setupwizard_loop_description">Pressione o botão abaixo para permitir que a AndroidAPS sugira/faça alterações nas basais</string>
     <string name="setupwizard_sensitivity_description">Plugin de Sensibilidade é usado para deteção de sensibilidade e cálculos HCA. Para mais info visite:</string>
+    <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="nsclientinfotext">ClienteNS gere a ligação ao Nightscout. Pode saltar esta parte mas não será possível passar os objectivos até que o configure.</string>
     <string name="diawarning">Lembre-se: novos perfis de insulina requerem diâmetro de pelo menos 5h. DIA 5–6h no novo perfil é igual ao diâmetro 3h nos antigos perfis de insulina.</string>
     <string name="setupwizard_aps_description">Seleccione um dos algoritmos disponíveis. Eles são classificados do mais antigo para o mais recente. Algoritmo mais recente é geralmente mais forte e mais agressivo. Assim, se é novo looper, poderá provavelmente começar com AMA e não com a versão mais recente. Não se esqueça de ler a documentação de OpenAPS e configurá-lo antes de utilizar.</string>
@@ -667,6 +674,7 @@
     <string name="resettodefaults">Repor definições por defeito</string>
     <string name="nsmalfunction">Erro de funcionamento do ClienteNS. Pondere reiniciar o NS e ClienteNS.</string>
     <string name="time_offset">Fuso horário</string>
+    <string name="bolus_reminder">Lembrete para bólus mais tarde</string>
     <string name="setupwizard_preferred_aps_mode">Modo APS preferido</string>
     <string name="treatments_wizard_total_label">Total</string>
     <string name="calculation_short">Calc</string>
@@ -705,6 +713,7 @@
     <string name="versionChecker">Verificador de Versão</string>
     <string name="old_version">versão antiga</string>
     <string name="very_old_version">versão muito antiga</string>
+    <string name="application_expired">A aplicação expirou</string>
     <string name="new_version_warning">Nova versão para pelo menos %1$d dias disponíveis! Retorno a SGB após %2$d dias, o loop será desactivado após %3$d dias</string>
     <string name="twohours">2h</string>
     <string name="cobvsiob">HCA vs IA</string>
@@ -735,6 +744,7 @@
     <string name="clone_label">Clone</string>
     <string name="saveorresetchangesfirst">Guardar ou repor as alterações actuais primeiro</string>
     <string name="deletecurrentprofile">Eliminar perfil actual?</string>
+    <string name="copytolocalprofile">Criar novo perfil local a partir deste perfil?</string>
     <string name="profilenamecontainsdot">Nome do perfil contém pontos.\nIsso não é suportado pelo NS.\nPerfil não é enviado para o NS.</string>
     <string name="low_mark_comment">Valor mais baixo da área de intervalo (apenas exibição)</string>
     <string name="high_mark_comment">Valor mais alto da área de intervalo (apenas exibição)</string>
@@ -758,6 +768,7 @@
     <string name="randombg_short">Glicose</string>
     <string name="tools">Ferramentas</string>
     <string name="show_calculation">Mostrar Localização</string>
+    <string name="show_removed">Exibir removidos</string>
     <string name="clearqueueconfirm">Limpar fila? Todos os dados na fila serão perdidos!</string>
     <string name="ebstopsloop">O uso do Bólus Prolongado irá parar o modo Loop Fechado durante o tempo do bólus prolongado. Quer realmente isso?</string>
     <string name="closed_loop_disabled_with_eb">Loop Fechado desativado por causa da execução do Bólus Prolongado</string>
@@ -815,6 +826,7 @@
     <string name="dpvdefaultprofile">Perfil Padrão DPV</string>
     <string name="setupwizard_pump_riley_link_status">Estado RileyLink:</string>
     <string name="filter">Filtro</string>
+    <string name="copytolocalprofile_invalid">Não é possível criar o perfil. O perfil é inválido.</string>
     <string name="cta_dont_kill_my_app_info">Não encerre minha app?</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Enviar SMS se evento de bomba inacessível for acionado</string>
     <string name="smscommunicator_pump_ureachable">Reportar bomba inacessível</string>
@@ -826,6 +838,7 @@
     <string name="enablebolusadvisor_summary">Use lembrete para começar a comer mais tarde em vez di resultado do assistente durante a glicemia alta (\"pré-bolus\")</string>
     <string name="time_to_eat">Hora de comer!\nExecutar assistente de Bólus e fazer cálculo novamente.</string>
     <string name="timetoeat">Hora de comer</string>
+    <string name="bolusreminder">Lembrete de bólus</string>
     <string name="fabric_upload_disabled">Envio de registos de erro desativado!</string>
     <string name="graph_menu_divider_header">Gráfico</string>
     <string name="chart_menu">Menu do Gráfico</string>

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.dependencyInjection
+package info.nightscout.androidaps.di
 
 import android.content.Context
 import dagger.Binds

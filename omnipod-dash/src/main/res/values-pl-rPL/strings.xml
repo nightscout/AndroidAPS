@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Omnipod Dash - Description -->
-    <string name="omnipod_dash_pump_description">Integracja dla pompy Omnipod Dash (nowy, posiadając Bluetooth model z niebieską osłonką na igłę).</string>
+    <string name="omnipod_dash_pump_description">Integracja dla pompy Omnipod Dash (nowy, posiadający Bluetooth model z niebieską osłonką na igłę).</string>
     <!-- Omnipod Dash - Keys -->
     <!-- Omnipod Dash - History -->
     <string name="omnipod_dash_history_title">Historia Poda</string>
@@ -35,4 +35,5 @@
     <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
     <string name="dash_bolusdelivering">Dostarczanie %1$.2f U</string>
     <string name="omnipod_common_alert_delivery_suspended">Podawanie insuliny zawieszone</string>
+    <string name="omnipod_dash_connection_lost">Utracono połączenie z Podem</string>
 </resources>

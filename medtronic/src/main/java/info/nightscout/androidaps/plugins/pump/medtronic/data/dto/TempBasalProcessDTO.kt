@@ -12,7 +12,11 @@ class TempBasalProcessDTO constructor(var itemOne: PumpHistoryEntry,
         set(value) {
             field = value
             if (objectType == ObjectType.TemporaryBasal) {
-                itemTwoTbr = value!!.getDecodedDataEntry("Object") as TempBasalPair
+                if (value!=null) {
+                    itemTwoTbr = value.getDecodedDataEntry("Object") as TempBasalPair
+                } else {
+                    itemTwoTbr = null
+                }
             }
         }
 

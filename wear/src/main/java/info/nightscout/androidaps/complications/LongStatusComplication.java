@@ -3,13 +3,13 @@ package info.nightscout.androidaps.complications;
 import android.app.PendingIntent;
 import android.support.wearable.complications.ComplicationData;
 import android.support.wearable.complications.ComplicationText;
-import android.util.Log;
 
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
 import info.nightscout.androidaps.data.RawDisplayData;
 import info.nightscout.androidaps.interaction.utils.DisplayFormat;
+import info.nightscout.shared.logging.LTag;
 
 /*
  * Created by dlvoy on 2019-11-12
@@ -24,8 +24,6 @@ public class LongStatusComplication extends BaseComplicationProviderService {
         AndroidInjection.inject(this);
         super.onCreate();
     }
-
-    private static final String TAG = LongStatusComplication.class.getSimpleName();
 
     public ComplicationData buildComplicationData(int dataType, RawDisplayData raw, PendingIntent complicationPendingIntent) {
 
@@ -45,9 +43,7 @@ public class LongStatusComplication extends BaseComplicationProviderService {
 
                 break;
             default:
-                if (Log.isLoggable(TAG, Log.WARN)) {
-                    Log.w(TAG, "Unexpected complication type " + dataType);
-                }
+                aapsLogger.warn(LTag.WEAR, "Unexpected complication type " + dataType);
         }
         return complicationData;
     }

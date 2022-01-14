@@ -8,14 +8,13 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Icon;
 import android.support.wearable.complications.ComplicationData;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.WindowManager;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-import info.nightscout.androidaps.Aaps;
 import info.nightscout.androidaps.data.RawDisplayData;
+import info.nightscout.shared.logging.LTag;
 
 /*
  * Created by dlvoy on 2019-11-12
@@ -23,8 +22,6 @@ import info.nightscout.androidaps.data.RawDisplayData;
 public abstract class WallpaperComplication extends BaseComplicationProviderService {
 
     public abstract String getWallpaperAssetsFileName();
-
-    private static final String TAG = WallpaperComplication.class.getSimpleName();
 
     public ComplicationData buildComplicationData(int dataType, RawDisplayData raw, PendingIntent complicationPendingIntent) {
 
@@ -42,19 +39,17 @@ public abstract class WallpaperComplication extends BaseComplicationProviderServ
             final ComplicationData.Builder builder = new ComplicationData.Builder(ComplicationData.TYPE_LARGE_IMAGE);
 
             AssetManager assetManager = getAssets();
-            try (InputStream istr = assetManager.open(getWallpaperAssetsFileName())) {
-                    Bitmap bitmap = BitmapFactory.decodeStream(istr);
-                    Bitmap scaled = Bitmap.createScaledBitmap(bitmap, width, height, true);
-                    builder.setLargeImage(Icon.createWithBitmap(scaled));
+            try (InputStream iStr = assetManager.open(getWallpaperAssetsFileName())) {
+                Bitmap bitmap = BitmapFactory.decodeStream(iStr);
+                Bitmap scaled = Bitmap.createScaledBitmap(bitmap, width, height, true);
+                builder.setLargeImage(Icon.createWithBitmap(scaled));
             } catch (IOException e) {
-                Log.e(TAG, "Cannot read wallpaper asset: "+e.getMessage(), e);
+                aapsLogger.error(LTag.WEAR, "Cannot read wallpaper asset: " + e.getMessage(), e);
             }
 
             complicationData = builder.build();
         } else {
-            if (Log.isLoggable(TAG, Log.WARN)) {
-                Log.w(TAG, "Unexpected complication type " + dataType);
-            }
+            aapsLogger.warn(LTag.WEAR, "Unexpected complication type " + dataType);
         }
         return complicationData;
     }

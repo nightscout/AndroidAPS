@@ -1,14 +1,12 @@
-package info.nightscout.androidaps.dependencyInjection
+package info.nightscout.androidaps.di
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import info.nightscout.androidaps.plugins.aps.logger.LoggerCallback
-import info.nightscout.androidaps.plugins.aps.loop.APSResult
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.DetermineBasalAdapterAMAJS
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.DetermineBasalResultAMA
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.DetermineBasalAdapterSMBJS
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.DetermineBasalResultSMB
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobOref1Thread
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobThread
 

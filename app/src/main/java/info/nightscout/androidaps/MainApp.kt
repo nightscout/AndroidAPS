@@ -15,7 +15,7 @@ import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.transactions.InsertIfNewByTimestampTherapyEventTransaction
 import info.nightscout.androidaps.database.transactions.VersionChangeTransaction
 import info.nightscout.androidaps.db.CompatDBHelper
-import info.nightscout.androidaps.dependencyInjection.DaggerAppComponent
+import info.nightscout.androidaps.di.DaggerAppComponent
 import info.nightscout.androidaps.di.StaticInjector
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.ConfigBuilder

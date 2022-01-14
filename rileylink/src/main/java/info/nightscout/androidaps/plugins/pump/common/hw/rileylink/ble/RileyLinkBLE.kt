@@ -43,6 +43,7 @@ class RileyLinkBLE @Inject constructor(private val context: Context) {
     private val gattDebugEnabled = true
     private var manualDisconnect = false
 
+    //val bluetoothAdapter: BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
     val bluetoothAdapter: BluetoothAdapter? get() = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
     private val bluetoothGattCallback: BluetoothGattCallback
     var rileyLinkDevice: BluetoothDevice? = null

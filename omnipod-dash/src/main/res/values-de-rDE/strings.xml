@@ -35,4 +35,5 @@
     <string name="omnipod_common_history_bolus_value">%1$.2f IE</string>
     <string name="dash_bolusdelivering">Gebe %1$.2f IE ab</string>
     <string name="omnipod_common_alert_delivery_suspended">Insulinabgabe ist unterbrochen</string>
+    <string name="omnipod_dash_connection_lost">Verbindung zum Pod verloren</string>
 </resources>

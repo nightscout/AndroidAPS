@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.dependencyInjection
+package info.nightscout.androidaps.di
 
 import dagger.BindsInstance
 import dagger.Component
@@ -12,7 +12,6 @@ import info.nightscout.androidaps.dana.di.DanaModule
 import info.nightscout.androidaps.danar.di.DanaRModule
 import info.nightscout.androidaps.danars.di.DanaRSModule
 import info.nightscout.androidaps.database.DatabaseModule
-import info.nightscout.androidaps.di.CoreModule
 import info.nightscout.androidaps.diaconn.di.DiaconnG8Module
 import info.nightscout.androidaps.insight.di.InsightDatabaseModule
 import info.nightscout.androidaps.insight.di.InsightModule

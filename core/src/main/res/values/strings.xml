@@ -372,7 +372,7 @@
     <string name="prefdecrypt_issue_wrong_algorithm">Unsupported or not specified encryption algorithm!</string>
 
     <!-- VersionChecker -->
-    <string name="key_last_time_this_version_detected" translatable="false">last_time_this_version_detected</string>
+    <string name="key_last_time_this_version_detected_as_ok" translatable="false">last_time_this_version_detected</string>
     <string name="key_last_versionchecker_warning" translatable="false">last_versionchecker_warning</string>
     <string name="key_last_expired_versionchecker_warning" translatable="false">last_expired_version_checker_warning</string>
     <string name="key_last_versionchecker_plugin_warning" translatable="false">last_versionchecker_plugin_waring</string>

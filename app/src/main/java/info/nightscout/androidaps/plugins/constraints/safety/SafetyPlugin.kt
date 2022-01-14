@@ -57,52 +57,52 @@ class SafetyPlugin @Inject constructor(
      * Constraints interface
      */
     override fun isLoopInvocationAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
-        if (!activePlugin.activePump.pumpDescription.isTempBasalCapable) value[aapsLogger, false, rh.gs(R.string.pumpisnottempbasalcapable)] = this
+        if (!activePlugin.activePump.pumpDescription.isTempBasalCapable) value.set(aapsLogger, false, rh.gs(R.string.pumpisnottempbasalcapable), this)
         return value
     }
 
     override fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         val mode = sp.getString(R.string.key_aps_mode, "open")
-        if (mode == "open") value[aapsLogger, false, rh.gs(R.string.closedmodedisabledinpreferences)] = this
+        if (mode == "open") value.set(aapsLogger, false, rh.gs(R.string.closedmodedisabledinpreferences), this)
         if (!buildHelper.isEngineeringModeOrRelease()) {
             if (value.value()) {
                 val n = Notification(Notification.TOAST_ALARM, rh.gs(R.string.closed_loop_disabled_on_dev_branch), Notification.NORMAL)
                 rxBus.send(EventNewNotification(n))
             }
-            value[aapsLogger, false, rh.gs(R.string.closed_loop_disabled_on_dev_branch)] = this
+            value.set(aapsLogger, false, rh.gs(R.string.closed_loop_disabled_on_dev_branch), this)
         }
         val pump = activePlugin.activePump
         if (!pump.isFakingTempsByExtendedBoluses && iobCobCalculator.getExtendedBolus(dateUtil.now()) != null) {
-            value[aapsLogger, false, rh.gs(R.string.closed_loop_disabled_with_eb)] = this
+            value.set(aapsLogger, false, rh.gs(R.string.closed_loop_disabled_with_eb), this)
         }
         return value
     }
 
     override fun isAutosensModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         val enabled = sp.getBoolean(R.string.key_openapsama_useautosens, false)
-        if (!enabled) value[aapsLogger, false, rh.gs(R.string.autosensdisabledinpreferences)] = this
+        if (!enabled) value.set(aapsLogger, false, rh.gs(R.string.autosensdisabledinpreferences), this)
         return value
     }
 
     override fun isSMBModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         val enabled = sp.getBoolean(R.string.key_use_smb, false)
-        if (!enabled) value[aapsLogger, false, rh.gs(R.string.smbdisabledinpreferences)] = this
+        if (!enabled) value.set(aapsLogger, false, rh.gs(R.string.smbdisabledinpreferences), this)
         val closedLoop = constraintChecker.isClosedLoopAllowed()
-        if (!closedLoop.value()) value[aapsLogger, false, rh.gs(R.string.smbnotallowedinopenloopmode)] = this
+        if (!closedLoop.value()) value.set(aapsLogger, false, rh.gs(R.string.smbnotallowedinopenloopmode), this)
         return value
     }
 
     override fun isUAMEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         val enabled = sp.getBoolean(R.string.key_use_uam, false)
-        if (!enabled) value[aapsLogger, false, rh.gs(R.string.uamdisabledinpreferences)] = this
+        if (!enabled) value.set(aapsLogger, false, rh.gs(R.string.uamdisabledinpreferences), this)
         val oref1Enabled = sensitivityOref1Plugin.isEnabled()
-        if (!oref1Enabled) value[aapsLogger, false, rh.gs(R.string.uamdisabledoref1notselected)] = this
+        if (!oref1Enabled) value.set(aapsLogger, false, rh.gs(R.string.uamdisabledoref1notselected), this)
         return value
     }
 
     override fun isAdvancedFilteringEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         val bgSource = activePlugin.activeBgSource
-        if (!bgSource.advancedFilteringSupported()) value[aapsLogger, false, rh.gs(R.string.smbalwaysdisabled)] = this
+        if (!bgSource.advancedFilteringSupported()) value.set(aapsLogger, false, rh.gs(R.string.smbalwaysdisabled), this)
         return value
     }
 
@@ -134,7 +134,7 @@ class SafetyPlugin @Inject constructor(
 
         // do rounding
         if (pump.pumpDescription.tempBasalStyle == PumpDescription.ABSOLUTE) {
-            absoluteRate[aapsLogger] = Round.roundTo(absoluteRate.value(), pump.pumpDescription.tempAbsoluteStep)
+            absoluteRate.set(aapsLogger, Round.roundTo(absoluteRate.value(), pump.pumpDescription.tempAbsoluteStep))
         }
         return absoluteRate
     }
@@ -149,7 +149,7 @@ class SafetyPlugin @Inject constructor(
         val pump = activePlugin.activePump
         var percentRateAfterConst = java.lang.Double.valueOf(absoluteConstraint.value() / currentBasal * 100).toInt()
         percentRateAfterConst = if (percentRateAfterConst < 100) Round.ceilTo(percentRateAfterConst.toDouble(), pump.pumpDescription.tempPercentStep.toDouble()).toInt() else Round.floorTo(percentRateAfterConst.toDouble(), pump.pumpDescription.tempPercentStep.toDouble()).toInt()
-        percentRate[aapsLogger, percentRateAfterConst, String.format(rh.gs(R.string.limitingpercentrate), percentRateAfterConst, rh.gs(R.string.pumplimit))] = this
+        percentRate.set(aapsLogger, percentRateAfterConst, String.format(rh.gs(R.string.limitingpercentrate), percentRateAfterConst, rh.gs(R.string.pumplimit)), this)
         if (pump.pumpDescription.tempBasalStyle == PumpDescription.PERCENT) {
             val pumpLimit = pump.pumpDescription.pumpType.tbrSettings?.maxDose ?: 0.0
             percentRate.setIfSmaller(aapsLogger, pumpLimit.toInt(), String.format(rh.gs(R.string.limitingbasalratio), pumpLimit, rh.gs(R.string.pumplimit)), this)

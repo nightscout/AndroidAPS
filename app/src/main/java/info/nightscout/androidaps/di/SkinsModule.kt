@@ -1,6 +1,5 @@
-package info.nightscout.androidaps.dependencyInjection
+package info.nightscout.androidaps.di
 
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntKey

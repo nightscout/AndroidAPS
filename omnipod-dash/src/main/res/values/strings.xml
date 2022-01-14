@@ -48,4 +48,5 @@
     <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
     <string name="dash_bolusdelivering">Delivering %1$.2f U</string>
     <string name="omnipod_common_alert_delivery_suspended">Insulin delivery is suspended</string>
+    <string name="omnipod_dash_connection_lost">Lost connection to pod</string>
 </resources>
