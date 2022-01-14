@@ -418,7 +418,7 @@
     <string name="load_tdds">CARICA TDD</string>
     <string name="set_profile">IMPOSTA PROFILO</string>
     <string name="set_user_settings">CONFIGURA IMPOSTAZIONI UTENTE</string>
-    <string name="smb_bolus_u">BOLO SMS %1$.2f U</string>
+    <string name="smb_bolus_u">BOLO SMB %1$.2f U</string>
     <string name="start_pump">AVVIA MICRO</string>
     <string name="stop_pump">STOPPA MICRO</string>
     <string name="temp_basal_absolute">BASALE TEMPORANEA %1$.2f U/h %2$d min</string>

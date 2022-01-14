@@ -57,6 +57,7 @@
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">углеводы</string>
     <string name="treatments_wizard_correction_label">коррекция</string>
+    <string name="bolus_iob_label">болюс IOB</string>
     <string name="openapsma_run">выполнить сейчас</string>
     <string name="vitualpump_label">ВИРТУАЛЬНАЯ ПОМПА</string>
     <string name="openapsma_lastrun_label">последнее выполненное</string>
@@ -121,7 +122,9 @@
     <string name="careportal_newnstreatment_other">другое</string>
     <string name="careportal_newnstreatment_meter">глюкометр</string>
     <string name="careportal_newnstreatment_sensor">сенсор</string>
+    <string name="carb_time_label">Подождать до еды</string>
     <string name="careportal_newnstreatment_duration_label">Длительность действия</string>
+    <string name="profile_label">профиль</string>
     <string name="careportal_newnstreatment_glucosetype">тип глюкозы</string>
     <string name="overview_tempbasal_button">ВремБазал</string>
     <string name="overview_extendedbolus_button">Пролонгированный болюс</string>
@@ -352,6 +355,7 @@
     <string name="smscommunicator_wrongduration">неверное значение длительности</string>
     <string name="smscommunicator_loopsuspended">ЗЦ остановлен</string>
     <string name="smscommunicator_loopresumed">ЗЦикл возобновлен</string>
+    <string name="bg_trend_label">15 мин тренд</string>
     <string name="treatments_wizard_cob_label">активн углеводы</string>
     <string name="superbolus">суперболюс</string>
     <string name="ns_logappstartedevent">Передать в NS запись о начале работы приложения</string>
@@ -517,6 +521,8 @@
     <string name="enablesmbwithhightemptarget_summary">Включить микроболюс SMB, когда активна высока временная цель (нагрузка, выше 100 мг/дл или 5,5 ммоль/л)</string>
     <string name="overview_insulin_label">Инсулин</string>
     <string name="overview_buttons_selection">Кнопки</string>
+    <string name="show_calibration_button_summary">Отправляет калибровки на xDrip+ или открывает диалоговое окно калибровки BYODA DEXCOM</string>
+    <string name="show_cgm_button_summary">Открывает xDrip + или BYODA DEXCOM, кнопка назад возвращает в AAPS</string>
     <string name="carb_increment_button_message">Количество вводимых углеводов при нажатии кнопки</string>
     <string name="insulin_increment_button_message">Количество инсулина, вводимого при нажатии кнопки</string>
     <string name="error_starting_cgm">Не удалось запустить приложения мониторинга СК. Убедитесь, что оно установлено.</string>
@@ -622,6 +628,7 @@
     <string name="exitwizard">Пропустить Мастер установки</string>
     <string name="setupwizard_loop_description">Нажмите на кнопку ниже, чтобы AndroidAPS мог предложить/внести изменения в базал</string>
     <string name="setupwizard_sensitivity_description">Плагин чувствительности Sensitivity применяется для определения чувствительности к инсулину и вычисления активных углеводов COB. Дополнительная информация:</string>
+    <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="nsclientinfotext">NSClient обрабатывает подключения к Nightscout. Вы можете пропустить этот этап сейчас, но не преодолеете все Цели пока не настроите его.</string>
     <string name="diawarning">Напоминание: новые профили инсулина требуют как минимум 5 часов длительности действия DIA. 5-6 часовая DIA эквивалентна трехчасовой на старых профилях.</string>
     <string name="setupwizard_aps_description">Выберите один из доступных алгоритмов. Они расположены от самых старых к самым новым. Более новый алгоритм обычно мощнее и агрессивнее. Если вы новый пользователь возможно вам лучше начать с помощника болюса AMA а не с новейшего алгоритма. Читайте документацию OpenAPS и определите свою конфигурацию.</string>
@@ -633,6 +640,7 @@
     <string name="needsystemwindowpermission">Приложению требуется разрешение системного окна для уведомлений</string>
     <string name="needlocationpermission">Приложению требуется разрешение на доступ к местоположению для сканирования BT и идентификации WiFi</string>
     <string name="needstoragepermission">Приложение требует разрешения на доступ к записи в память, чтобы хранить файлы журналов и настройки экспорта</string>
+    <string name="needconnectpermission">Приложению требуется разрешение Bluetooth</string>
     <string name="request">Запрос</string>
     <string name="open_navigation">Показать панель навигации</string>
     <string name="close_navigation">Cкрыть панель навигации</string>

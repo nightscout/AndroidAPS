@@ -35,4 +35,5 @@
     <string name="omnipod_common_history_bolus_value">%1$.2f יח\'</string>
     <string name="dash_bolusdelivering">מזריק %1$.2f יח\'</string>
     <string name="omnipod_common_alert_delivery_suspended">הזרקת האינסולין מופסקת</string>
+    <string name="omnipod_dash_connection_lost">אבד החיבור לפוד</string>
 </resources>

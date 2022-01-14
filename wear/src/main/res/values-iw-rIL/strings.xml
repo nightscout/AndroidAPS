@@ -122,6 +122,8 @@
     <string name="color_name_white">לבן</string>
     <string name="color_name_black">שחור</string>
     <string name="color_name_multicolor">צבעוני</string>
+    <string name="pref_simplify_ui_charging">פשט את ממשק הטעינה</string>
+    <string name="pref_simplify_ui_charging_sum">מציג את השעה ואת רמת הסוכר בלבד בזמן טעינה</string>
     <string name="pref_vibrate_hourly">רטט אחת לשעה</string>
     <string name="pref_show_weeknumber">הצג מס\' שבוע</string>
     <string name="digitalstyle_pref_your_style">הסגנון שלכם:</string>

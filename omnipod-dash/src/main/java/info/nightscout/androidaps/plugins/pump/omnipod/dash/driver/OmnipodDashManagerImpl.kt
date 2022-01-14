@@ -377,6 +377,7 @@ class OmnipodDashManagerImpl @Inject constructor(
             )
         }
         if (podStateManager.activationProgress.isBefore(ActivationProgress.INSERTING_CANNULA)) {
+            observables.add(observeConnectToPod) // connection can time out while waiting
             observables.add(
                 Observable.defer {
                     Observable.timer(podStateManager.secondPrimeBolusVolume!!.toLong(), TimeUnit.SECONDS)

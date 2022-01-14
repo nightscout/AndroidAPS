@@ -47,6 +47,13 @@ interface ProfileFunction {
     fun getRequestedProfile(): ProfileSwitch?
 
     /**
+     * Get requested profile by user (profile must not be active yet)
+     *
+     * @return true if ProfileSwitch != EffectiveProfileSwitch
+     */
+    fun isProfileChangePending(): Boolean
+
+    /**
      * Build a new circadian profile switch request based on provided profile
      *
      * @param profileStore  ProfileStore to use

@@ -4,6 +4,14 @@
     <string name="omnipod_dash_pump_description">Pompos integracija Omnipod Dash (naujas, Bluetooth palaikantis modelis su mėlynu adatos dangteliu).</string>
     <!-- Omnipod Dash - Keys -->
     <!-- Omnipod Dash - History -->
+    <string name="omnipod_dash_history_title">POD istorija</string>
+    <string name="omnipod_dash_history_item_description">Aprašymas</string>
+    <string name="omnipod_dash_history_item_source">Šaltinis</string>
+    <string name="omnipod_dash_history_item_date">Data</string>
+    <string name="omnipod_dash_history_type">Tipas:</string>
+    <string name="omnipod_dash_history_bolus_value">%1$.2f vv</string>
+    <string name="omnipod_dash_history_bolus_value_with_carbs">%1$.2f vv, AV=%2$.1f g</string>
+    <string name="omnipod_dash_history_tbr_value">Kiekis: %1$.2f vv, trukmė: %2$d min</string>
     <!-- Omnipod Dash - Overview -->
     <string name="omnipod_dash_overview_bluetooth_status">Bluetooth būklė</string>
     <string name="omnipod_dash_overview_bluetooth_address">Bluetooth adresas</string>
@@ -19,4 +27,12 @@
     <string name="omnipod_dash_found_too_many_pods">Nustatyta, kad suaktyvinama per daug Pod įrenginių</string>
     <string name="omnipod_dash_scan_failed">Nepavyksta rasti aktyvinamo Pod</string>
     <string name="omnipod_dash_generic_error">Bendroji klaida: %1$s</string>
+    <string name="omnipod_dash_failed_to_send">Nepavyko išsiųsti komandos</string>
+    <string name="omnipod_dash_command_not_sent">Komanda nenusiųsta</string>
+    <string name="omnipod_dash_command_not_received_by_the_pod">Pod pompa negavo komandos</string>
+    <string name="omnipod_dash_unknown">Nežinoma komandos būklė</string>
+    <string name="omnipod_common_history_tbr_value">Kiekis: %1$.2f vv, trukmė: %2$d min</string>
+    <string name="omnipod_common_history_bolus_value">%1$.2f vv</string>
+    <string name="dash_bolusdelivering">Leidžiama %1$.2f vv</string>
+    <string name="omnipod_common_alert_delivery_suspended">Insulino leidimas sustabdytas</string>
 </resources>

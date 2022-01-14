@@ -59,7 +59,8 @@ class NSClientAddUpdateWorker(
 
         for (i in 0 until treatments.length()) {
             var json = treatments.getJSONObject(i)
-            // new DB model
+            aapsLogger.debug(LTag.DATABASE, "Received NS treatment: $json")
+
             val insulin = JsonHelper.safeGetDouble(json, "insulin")
             val carbs = JsonHelper.safeGetDouble(json, "carbs")
             var eventType = JsonHelper.safeGetString(json, "eventType")

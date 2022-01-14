@@ -89,5 +89,6 @@
     <string name="pump_time_updated">Pompa zamanı güncellendi</string>
     <string name="set_neutral_temps_title">Sık kullanılan Geçici Bazalları ayarla</string>
     <string name="set_neutral_temps_summary">Etkinleştirilirse, her saatin sonunda geçici bazali iptal eder. Bu yöntem, bazı pompaların saatte bip sesini/titremesini durdurmaya yardımcı olabilir.</string>
+    <string name="mdt_tbr_remaining">%1$.1f Ü/sa (%2$d dk. kaldı)</string>
     <string name="invalid_history_data">Geçersiz pompa geçmişi verisi tespit edildi. Yeni hata bildirim konusu açın ve günlükleri gönderin.</string>
 </resources>

@@ -135,7 +135,7 @@ public class RawDisplayData {
     }
 
     private void updateData(DataMap dataMap) {
-        wearUtil.getWakeLock("readingPrefs", 50);
+        PowerManager.WakeLock wl = wearUtil.getWakeLock("readingPrefs", 50);
         sgvLevel = dataMap.getLong("sgvLevel");
         datetime = dataMap.getLong("timestamp");
         sSgv = dataMap.getString("sgvString");
@@ -143,6 +143,7 @@ public class RawDisplayData {
         sDelta = dataMap.getString("delta");
         sAvgDelta = dataMap.getString("avgDelta");
         sUnits = dataMap.getString("glucoseUnits");
+        wearUtil.releaseWakeLock(wl);
     }
 
     public DataMap updateStatusFromMessage(Intent intent, PowerManager.WakeLock wakeLock) {
@@ -156,7 +157,7 @@ public class RawDisplayData {
     }
 
     private void updateStatus(DataMap dataMap) {
-        wearUtil.getWakeLock("readingPrefs", 50);
+        PowerManager.WakeLock wl = wearUtil.getWakeLock("readingPrefs", 50);
         sBasalRate = dataMap.getString("currentBasal");
         sUploaderBattery = dataMap.getString("battery");
         sRigBattery = dataMap.getString("rigBattery");
@@ -170,6 +171,7 @@ public class RawDisplayData {
         externalStatusString = dataMap.getString("externalStatusString");
         batteryLevel = dataMap.getInt("batteryLevel");
         openApsStatus = dataMap.getLong("openApsStatus");
+        wearUtil.releaseWakeLock(wl);
     }
 
     public DataMap updateBasalsFromMessage(Intent intent, PowerManager.WakeLock wakeLock) {
@@ -183,8 +185,9 @@ public class RawDisplayData {
     }
 
     private void updateBasals(DataMap dataMap) {
-        wearUtil.getWakeLock("readingPrefs", 500);
+        PowerManager.WakeLock wl = wearUtil.getWakeLock("readingPrefs", 500);
         loadBasalsAndTemps(dataMap);
+        wearUtil.releaseWakeLock(wl);
     }
 
     private void loadBasalsAndTemps(DataMap dataMap) {
@@ -194,7 +197,7 @@ public class RawDisplayData {
             for (DataMap temp : temps) {
                 TempWatchData twd = new TempWatchData();
                 twd.startTime = temp.getLong("starttime");
-                twd.startBasal =  temp.getDouble("startBasal");
+                twd.startBasal = temp.getDouble("startBasal");
                 twd.endTime = temp.getLong("endtime");
                 twd.endBasal = temp.getDouble("endbasal");
                 twd.amount = temp.getDouble("amount");

@@ -4,13 +4,13 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.extensions.daysToMillis
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -59,50 +59,12 @@ class VersionCheckerPlugin @Inject constructor(
         checkWarning()
         versionCheckerUtils.triggerCheckVersion()
         if (isOldVersion(gracePeriod.veryOld.daysToMillis()))
-            value[aapsLogger, false, rh.gs(R.string.very_old_version)] = this
-        val endDate = sp.getLong(rh.gs(info.nightscout.androidaps.core.R.string.key_app_expiration) + "_" + config.VERSION_NAME, 0)
+            value.set(aapsLogger, false, rh.gs(R.string.very_old_version), this)
+        val endDate = sp.getLong(rh.gs(R.string.key_app_expiration) + "_" + config.VERSION_NAME, 0)
         if (endDate != 0L && dateUtil.now() > endDate)
-            value[aapsLogger, false, rh.gs(R.string.application_expired)] = this
+            value.set(aapsLogger, false, rh.gs(R.string.application_expired), this)
         return value
     }
-
-    private fun checkWarning() {
-        val now = System.currentTimeMillis()
-
-        if (!sp.contains(R.string.key_last_versionchecker_plugin_warning)) {
-            sp.putLong(R.string.key_last_versionchecker_plugin_warning, now)
-            return
-        }
-
-
-        if (isOldVersion(gracePeriod.warning.daysToMillis()) && shouldWarnAgain(now)) {
-            // store last notification time
-            sp.putLong(R.string.key_last_versionchecker_plugin_warning, now)
-
-            //notify
-            val message = rh.gs(
-                R.string.new_version_warning,
-                ((now - sp.getLong(R.string.key_last_time_this_version_detected, now)) / 1L.daysToMillis().toDouble()).roundToInt(),
-                gracePeriod.old,
-                gracePeriod.veryOld
-            )
-            val notification = Notification(Notification.OLD_VERSION, message, Notification.NORMAL)
-            rxBus.send(EventNewNotification(notification))
-        }
-
-        val endDate = sp.getLong(rh.gs(info.nightscout.androidaps.core.R.string.key_app_expiration) + "_" + config.VERSION_NAME, 0)
-        if (endDate != 0L && dateUtil.now() > endDate && shouldWarnAgain(now)) {
-            // store last notification time
-            sp.putLong(R.string.key_last_versionchecker_plugin_warning, now)
-
-            //notify
-            val notification = Notification(Notification.VERSION_EXPIRE, rh.gs(R.string.application_expired), Notification.URGENT)
-            rxBus.send(EventNewNotification(notification))
-        }
-    }
-
-    private fun shouldWarnAgain(now: Long) =
-        now > sp.getLong(R.string.key_last_versionchecker_plugin_warning, 0) + WARN_EVERY
 
     override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> =
         if (isOldVersion(gracePeriod.old.daysToMillis()))
@@ -110,8 +72,42 @@ class VersionCheckerPlugin @Inject constructor(
         else
             maxIob
 
-    private fun isOldVersion(gracePeriod: Long): Boolean {
-        val now = System.currentTimeMillis()
-        return now > sp.getLong(R.string.key_last_time_this_version_detected, 0) + gracePeriod
+    private fun checkWarning() {
+        val now = dateUtil.now()
+
+        if (!sp.contains(R.string.key_last_versionchecker_plugin_warning)) {
+            sp.putLong(R.string.key_last_versionchecker_plugin_warning, now)
+            return
+        }
+
+
+        if (isOldVersion(gracePeriod.warning.daysToMillis()) && shouldWarnAgain()) {
+            // store last notification time
+            sp.putLong(R.string.key_last_versionchecker_plugin_warning, now)
+
+            //notify
+            val message = rh.gs(
+                R.string.new_version_warning,
+                ((now - sp.getLong(R.string.key_last_time_this_version_detected_as_ok, now)) / 1L.daysToMillis().toDouble()).roundToInt(),
+                gracePeriod.old,
+                gracePeriod.veryOld
+            )
+            rxBus.send(EventNewNotification(Notification(Notification.OLD_VERSION, message, Notification.NORMAL)))
+        }
+
+        val endDate = sp.getLong(rh.gs(R.string.key_app_expiration) + "_" + config.VERSION_NAME, 0)
+        if (endDate != 0L && dateUtil.now() > endDate && shouldWarnAgain()) {
+            // store last notification time
+            sp.putLong(R.string.key_last_versionchecker_plugin_warning, now)
+
+            //notify
+            rxBus.send(EventNewNotification(Notification(Notification.VERSION_EXPIRE, rh.gs(R.string.application_expired), Notification.URGENT)))
+        }
     }
+
+    private fun shouldWarnAgain() =
+        dateUtil.now() > sp.getLong(R.string.key_last_versionchecker_plugin_warning, 0) + WARN_EVERY
+
+    private fun isOldVersion(gracePeriod: Long): Boolean =
+        dateUtil.now() > sp.getLong(R.string.key_last_time_this_version_detected_as_ok, 0) + gracePeriod
 }

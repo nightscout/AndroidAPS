@@ -21,7 +21,7 @@ class DanaRSPacketAPSSetEventHistory(
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE__APS_SET_EVENT_HISTORY
         if ((packetType == DanaPump.HistoryEntry.CARBS.value || packetType == DanaPump.HistoryEntry.BOLUS.value) && param1 <= 0) param1 = 0
-        aapsLogger.debug(LTag.PUMPCOMM, "Set history entry: " + dateUtil.dateAndTimeString(time) + " type: " + packetType + " param1: " + param1 + " param2: " + param2)
+        aapsLogger.debug(LTag.PUMPCOMM, "Set history entry: " + dateUtil.dateAndTimeAndSecondsString(time) + " type: " + packetType + " param1: " + param1 + " param2: " + param2)
     }
 
     override fun getRequestParams(): ByteArray {
