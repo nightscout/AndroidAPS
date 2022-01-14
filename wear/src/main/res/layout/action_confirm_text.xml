@@ -11,29 +11,18 @@
         app:boxedEdges="all">
 
         <androidx.core.widget.NestedScrollView
+            android:id="@+id/message_scroll"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/message"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
-                <TextView
-                    android:id="@+id/title"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="title"
-                    android:textAppearance="@style/TextAppearance.Wearable.Medium"
-                    android:textColor="@color/white" />
-                <TextView
-                    android:id="@+id/message"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="message"
-                    android:textAppearance="@style/TextAppearance.Wearable.Small"
-                    android:textColor="@color/white" />
-            </LinearLayout>
-
+                android:text="message"
+                android:textAppearance="@style/TextAppearance.Wearable.Small"
+                android:textColor="@color/white" />
         </androidx.core.widget.NestedScrollView>
 
     </FrameLayout>

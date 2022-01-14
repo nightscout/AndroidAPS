@@ -681,7 +681,6 @@ public class ListenerService extends WearableListenerService implements GoogleAp
     }
 
     private void showConfirmationDialog(String title, String message, String actionstring) {
-
         Intent intent = new Intent(this, AcceptActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Bundle params = new Bundle();

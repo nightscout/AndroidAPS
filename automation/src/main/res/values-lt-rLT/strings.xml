@@ -105,9 +105,11 @@
     <string name="edit_short">Keisti</string>
     <string name="please_choose_an_action_type">Pasirinkite veiksmo tipą</string>
     <string name="please_choose_a_trigger_type">Pasirinkite sąlygos tipą</string>
+    <string name="please_choose_a_operation_type">Pasirinkite veiksmo tipą</string>
     <string name="triggers">Sąlygos:</string>
     <string name="remove_label">PAŠALINTI</string>
     <string name="preconditions">Išankstinės sąlygos:</string>
     <string name="automation_event">Automatizuotas įvykis</string>
     <string name="reorder_label">Pertvarkyti</string>
+    <string name="user_action">Vartotojo veiksmas</string>
 </resources>

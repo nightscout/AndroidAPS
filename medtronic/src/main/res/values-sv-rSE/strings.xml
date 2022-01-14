@@ -90,4 +90,5 @@
     <string name="set_neutral_temps_title">Sätt neutrala temp basaler</string>
     <string name="set_neutral_temps_summary">Om aktiverad, kommer en eventuell temporär basal automatiskt avbrytas före utgången av varje timme. Denna metod kan förhindra att vissa pumpar piper/vibrerar.</string>
     <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d min kvar)</string>
+    <string name="invalid_history_data">Ogiltig pumpdata upptäckt. Öppna nytt ärende och bifoga loggar.</string>
 </resources>

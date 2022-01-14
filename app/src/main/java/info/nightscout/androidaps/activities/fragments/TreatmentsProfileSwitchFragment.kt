@@ -243,7 +243,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
                     ProfileViewerDialog().also { pvd ->
                         pvd.arguments = Bundle().also { args ->
                             args.putLong("time", (it.tag as ProfileSealed).timestamp)
-                            args.putInt("mode", ProfileViewerDialog.Mode.DB_PROFILE.ordinal)
+                            args.putInt("mode", ProfileViewerDialog.Mode.RUNNING_PROFILE.ordinal)
                         }
                         pvd.show(childFragmentManager, "ProfileViewDialog")
                     }
@@ -252,7 +252,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
                     ProfileViewerDialog().also { pvd ->
                         pvd.arguments = Bundle().also { args ->
                             args.putLong("time", (it.tag as ProfileSealed).timestamp)
-                            args.putInt("mode", ProfileViewerDialog.Mode.DB_PROFILE.ordinal)
+                            args.putInt("mode", ProfileViewerDialog.Mode.RUNNING_PROFILE.ordinal)
                         }
                         pvd.show(childFragmentManager, "ProfileViewDialog")
                     }

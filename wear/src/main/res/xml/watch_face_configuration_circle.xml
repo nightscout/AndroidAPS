@@ -8,7 +8,7 @@
         android:summary="Dark theme"
         android:title="@string/pref_dark"
         app:wear_iconOff="@drawable/settings_off"
-        app:wear_iconOn="@drawable/settings_on"/>
+        app:wear_iconOn="@drawable/settings_on" />
 
     <CheckBoxPreference
         android:defaultValue="false"
@@ -16,7 +16,7 @@
         android:summary="Big numbers. (Circle WF)"
         android:title="@string/pref_big_numbers"
         app:wear_iconOff="@drawable/settings_off"
-        app:wear_iconOn="@drawable/settings_on"/>
+        app:wear_iconOn="@drawable/settings_on" />
 
     <CheckBoxPreference
         android:defaultValue="false"
@@ -32,7 +32,7 @@
         android:summary="Less eyecandy. (Circle WF)"
         android:title="@string/pref_light_ring_history"
         app:wear_iconOff="@drawable/settings_off"
-        app:wear_iconOn="@drawable/settings_on"/>
+        app:wear_iconOn="@drawable/settings_on" />
 
     <CheckBoxPreference
         android:defaultValue="true"
@@ -40,13 +40,13 @@
         android:summary="Animations. (Circle WF)"
         android:title="@string/pref_animations"
         app:wear_iconOff="@drawable/settings_off"
-        app:wear_iconOn="@drawable/settings_on"/>
-   
+        app:wear_iconOn="@drawable/settings_on" />
 
     <CheckBoxPreference
+        android:defaultValue="false"
         android:key="vibrate_Hourly"
         android:title="@string/pref_vibrate_hourly"
-        android:defaultValue="false"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
+
 </PreferenceScreen>

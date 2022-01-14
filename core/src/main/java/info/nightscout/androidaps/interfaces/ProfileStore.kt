@@ -61,6 +61,7 @@ class ProfileStore(val injector: HasAndroidInjector, val data: JSONObject, val d
         return ret
     }
 
+    @Synchronized
     fun getSpecificProfile(profileName: String): PureProfile? {
         var profile: PureProfile? = null
         val units = JsonHelper.safeGetStringAllowNull(data, "units", storeUnits())

@@ -22,6 +22,7 @@ import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.InvalidateFoodTransaction
 import info.nightscout.androidaps.databinding.FoodFragmentBinding
 import info.nightscout.androidaps.databinding.FoodItemBinding
+import info.nightscout.androidaps.dialogs.WizardDialog
 import info.nightscout.androidaps.events.EventFoodDatabaseChanged
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
@@ -31,8 +32,10 @@ import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientR
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.extensions.toVisibility
+import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.androidaps.utils.ui.UIRunnable
 import io.reactivex.Completable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
@@ -51,6 +54,7 @@ class FoodFragment : DaggerFragment() {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var uel: UserEntryLogger
+    @Inject lateinit var protectionCheck: ProtectionCheck
 
     private val disposable = CompositeDisposable()
     private var unfiltered: List<Food> = arrayListOf()
@@ -229,7 +233,6 @@ class FoodFragment : DaggerFragment() {
         @SuppressLint("SetTextI18n")
         override fun onBindViewHolder(holder: FoodsViewHolder, position: Int) {
             val food = foodList[position]
-            holder.binding.nsSign.visibility = (food.interfaceIDs.nightscoutId != null).toVisibility()
             holder.binding.name.text = food.name
             holder.binding.portion.text = food.portion.toString() + food.unit
             holder.binding.carbs.text = food.carbs.toString() + rh.gs(R.string.shortgramm)
@@ -239,7 +242,9 @@ class FoodFragment : DaggerFragment() {
             holder.binding.protein.visibility = food.protein.isNotZero().toVisibility()
             holder.binding.energy.text = rh.gs(R.string.shortenergy) + ": " + food.energy + rh.gs(R.string.shortkilojoul)
             holder.binding.energy.visibility = food.energy.isNotZero().toVisibility()
-            holder.binding.remove.tag = food
+            holder.binding.icRemove.tag = food
+            holder.binding.foodItem.tag = food
+            holder.binding.icCalculator.tag = food
         }
 
         override fun getItemCount(): Int = foodList.size
@@ -249,7 +254,7 @@ class FoodFragment : DaggerFragment() {
             val binding = FoodItemBinding.bind(itemView)
 
             init {
-                binding.remove.setOnClickListener { v: View ->
+                binding.icRemove.setOnClickListener { v: View ->
                     val food = v.tag as Food
                     activity?.let { activity ->
                         OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord) + "\n" + food.name, {
@@ -262,7 +267,21 @@ class FoodFragment : DaggerFragment() {
                         }, null)
                     }
                 }
-                binding.remove.paintFlags = binding.remove.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+                binding.icCalculator.setOnClickListener { v:View ->
+                    val food = v.tag as Food
+                    activity?.let { activity ->
+                        protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable {
+                            if (isAdded) {
+                                val wizardDialog = WizardDialog()
+                                val bundle = Bundle()
+                                bundle.putInt("carbs_input", food.carbs)
+                                bundle.putString("notes_input", " ${food.name} - ${food.carbs}g")
+                                wizardDialog.setArguments(bundle)
+                                wizardDialog.show(childFragmentManager, "Food Item")
+                            }
+                        })
+                    }
+                }
             }
         }
     }

@@ -35,4 +35,5 @@
     <string name="omnipod_common_history_bolus_value">%1$.2f JI</string>
     <string name="dash_bolusdelivering">Podávanie %1$.2f JI</string>
     <string name="omnipod_common_alert_delivery_suspended">Podávanie inzulínu je pozastavené</string>
+    <string name="omnipod_dash_connection_lost">Stratilo sa spojenie s Podom</string>
 </resources>

@@ -69,7 +69,7 @@
     <!-- Omnipod - Wizard Base -->
     <string name="omnipod_common_wizard_button_cancel">İptal</string>
     <string name="omnipod_common_wizard_button_finish">Bitti</string>
-    <string name="omnipod_common_wizard_button_next">Sonraki</string>
+    <string name="omnipod_common_wizard_button_next">İleri</string>
     <string name="omnipod_common_wizard_button_retry">Tekrar dene</string>
     <string name="omnipod_common_wizard_button_deactivate_pod">Pod\'u Devre Dışı Bırak</string>
     <string name="omnipod_common_wizard_button_discard_pod">Pod\'u Çıkart</string>
@@ -97,24 +97,24 @@
     <string name="omnipod_common_pod_deactivation_wizard_discard_pod_confirmation">Pod\'u çıkartırsanız, artık onunla iletişim kuramazsınız. Bunu yalnızca Pod ile tüm iletişim sürekli olarak başarısız olduğunda yapmalısınız. Pod\'u çıkartmak istediğinizden emin misiniz?</string>
     <string name="omnipod_common_pod_deactivation_wizard_discard_pod">Pod\'u Çıkart</string>
     <!-- Omnipod - Preferences -->
-    <string name="omnipod_common_preferences_bolus_beeps_enabled">Bolus bip sesleri etkinleştirildi</string>
-    <string name="omnipod_common_preferences_basal_beeps_enabled">Bazal bip sesleri etkinleştirildi</string>
-    <string name="omnipod_common_preferences_smb_beeps_enabled">SMB bip sesleri etkinleştirildi</string>
-    <string name="omnipod_common_preferences_tbr_beeps_enabled">GBO (TBR) bip sesleri etkinleştirildi</string>
+    <string name="omnipod_common_preferences_bolus_beeps_enabled">Bolus bip seslerini etkinleştir</string>
+    <string name="omnipod_common_preferences_basal_beeps_enabled">Bazal bip seslerini etkinleştir</string>
+    <string name="omnipod_common_preferences_smb_beeps_enabled">SMB bip seslerini etkinleştir</string>
+    <string name="omnipod_common_preferences_tbr_beeps_enabled">GBO (TBR) bip seslerini etkinleştir</string>
     <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Omnipod sekmesinde İletimi Askıya Al düğmesini göster</string>
-    <string name="omnipod_common_preferences_time_change_enabled">DST/Saat dilimi algılama etkinleştirildi</string>
-    <string name="omnipod_common_preferences_expiration_reminder_enabled">Süre sonu hatırlatıcısı etkinleştirildi</string>
-    <string name="omnipod_common_preferences_expiration_reminder_hours_before_shutdown">Kapanmadan saatler önce</string>
-    <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Düşük rezervuar uyarısı etkinleştirildi</string>
+    <string name="omnipod_common_preferences_time_change_enabled">DST/Saat dilimi algılamayı etkinleştir</string>
+    <string name="omnipod_common_preferences_expiration_reminder_enabled">Süre sonu hatırlatıcısını etkinleştir</string>
+    <string name="omnipod_common_preferences_expiration_reminder_hours_before_shutdown">Kapanmadan kaç saat önce?</string>
+    <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Düşük rezervuar uyarısını etkinleştir</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_units">Ünite</string>
     <string name="omnipod_common_preferences_automatically_silence_alerts">Pod uyarılarını otomatik olarak sustur</string>
     <string name="omnipod_common_preferences_category_other">Diğer</string>
     <string name="omnipod_common_preferences_category_alerts">Alarmlar</string>
     <string name="omnipod_common_preferences_category_confirmation_beeps">Onay Bipleri</string>
     <string name="omnipod_common_preferences_category_notifications">Bildirimler</string>
-    <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Belirsiz GBO(TBR) bildirimleri için ses etkinleştirildi</string>
-    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Belirsiz SMB bildirimleri için ses etkinleştirildi</string>
-    <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Belirsiz bolus bildirimleri için ses etkinleştirildi</string>
+    <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Belirsiz GBO(TBR) bildirimleri için sesi etkinleştir</string>
+    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Belirsiz SMB bildirimleri için sesi etkinleştir</string>
+    <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Belirsiz bolus bildirimleri için sesi etkinleştir</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Aktif Pod Yok</string>
     <string name="omnipod_common_pod_status_waiting_for_activation">Kurulum devam ediyor (Pod aktivasyonu bekleniyor)</string>

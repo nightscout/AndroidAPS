@@ -410,6 +410,36 @@
     <string name="basal_value">Basaldos</string>
     <string name="nsclient_version_does_not_match">NS Client-versionen matchar inte Android APS. Vänligen uppdatera.</string>
     <!-- Command Queue + readStatus reasons -->
+    <string name="bolus_u_min">BOLUS %1$.2f U</string>
+    <string name="carbs_g">KH %1$d g</string>
+    <string name="extended_bolus_u_min">FÖRLÄNGD BOLUS %1$.2f U %2$d min</string>
+    <string name="load_events">HÄMTA HÄNDELSER</string>
+    <string name="load_history">HÄMTA HISTORIK %1$d</string>
+    <string name="load_tdds">HÄMTA TDD</string>
+    <string name="set_profile">SPARA PROFIL</string>
+    <string name="set_user_settings">SPARA ANVÄNDARINSTÄLLNINGAR</string>
+    <string name="smb_bolus_u">SMB BOLUS %1$.2f U</string>
+    <string name="start_pump">STARTA PUMP</string>
+    <string name="stop_pump">PAUSA PUMP</string>
+    <string name="temp_basal_absolute">TEMP BASAL %1$.2f U/h %2$d min</string>
+    <string name="temp_basal_percent">TEMP BASAL %1$d%% %2$d min</string>
+    <string name="insight_set_tbr_over_notification">INSIGHT SET TBR ÖVER NOTIS</string>
+    <string name="read_status" comment="10 characters max for READSTATUS translation">LÄS STATUS %1$s</string>
+    <string name="keepalive_status_outdated" comment="26 characters max for translation">KA: Status inaktuell.</string>
+    <string name="keepalive_basal_outdated" comment="26 characters max for translation">KA: Basalinfo inaktuell.</string>
+    <string name="sms" comment="26 characters max for translation">SMS</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Klickade Anslut till pump</string>
+    <string name="pump_driver_changed" comment="26 characters max for translation">Pumpdrivr. byttes.</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Pumpdrivr. byte.</string>
+    <string name="device_changed" comment="26 characters max for translation">Enheten ändrad</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Klickade Uppdatering</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Schemalagd statusuppdat</string>
+    <string name="unconfirmed_command" comment="26 characters max for translation">Obekräftat kommando</string>
+    <string name="requested_by_user" comment="26 characters max for translation">Begärt av användare</string>
+    <string name="user_request" comment="26 characters max for translation">Användarbegäran</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
+    <string name="pump_paired" comment="26 characters max for translation">Pump parkopplad</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Uppdat. knapp för Insight</string>
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagar</item>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <dimen name="simple_ui_svg_text_size">50sp</dimen>
+    <dimen name="simple_ui_direction_text_size">35sp</dimen>
+    <dimen name="simple_ui_time_text_size">35sp</dimen>
+    <dimen name="simple_ui_y_offset">5dp</dimen>
+</resources>
