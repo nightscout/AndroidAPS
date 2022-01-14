@@ -57,6 +57,7 @@
     <string name="treatments_wizard_tt_label">OT</string>
     <string name="treatments_wizard_carbs_label">Carbs</string>
     <string name="treatments_wizard_correction_label">Corr</string>
+    <string name="bolus_iob_label">IOB Bolus</string>
     <string name="openapsma_run">Executar ara</string>
     <string name="vitualpump_label">BOMBA VIRTUAL</string>
     <string name="openapsma_lastrun_label">Última execució</string>
