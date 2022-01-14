@@ -87,7 +87,7 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
     fun exportTunedProfile(tunedProfile: ATProfile) {
         createAutotunefile(TUNEDPROFILE + formatDate(Date(tunedProfile.from)) + ".json", tunedProfile.profiletoOrefJSON())
         try {
-            createAutotunefile(resourceHelper.gs(R.string.autotune_tunedprofile_name) + ".json", tunedProfile.data.toString(2).replace("\\/", "/"), true)
+            createAutotunefile(resourceHelper.gs(R.string.autotune_tunedprofile_name) + ".json", tunedProfile.data!!.toString().replace("\\/", "/"), true)
         } catch (e: JSONException) {
         }
     }

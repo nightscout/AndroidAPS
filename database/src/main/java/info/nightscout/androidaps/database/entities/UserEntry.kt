@@ -138,6 +138,7 @@ data class UserEntry(
         Announcement,
         Actions,            //From Actions plugin
         Automation,         //From Automation plugin
+        Autotune,           //From Autotune plugin
         BG,                 //From BG plugin => Add One Source per BG Source for Calibration or Sensor Change
         Dexcom,
         Eversense,

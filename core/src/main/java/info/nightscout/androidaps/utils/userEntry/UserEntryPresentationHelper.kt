@@ -62,6 +62,7 @@ class UserEntryPresentationHelper @Inject constructor(
         Sources.Announcement        -> R.drawable.ic_cp_announcement
         Sources.Actions             -> R.drawable.ic_action
         Sources.Automation          -> R.drawable.ic_automation
+        Sources.Autotune            -> R.drawable.ic_autotune
         Sources.BG                  -> R.drawable.ic_generic_cgm
         Sources.Dexcom              -> R.drawable.ic_dexcom_g6
         Sources.Eversense           -> R.drawable.ic_eversense

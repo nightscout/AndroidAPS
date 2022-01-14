@@ -284,6 +284,7 @@ class Translator @Inject internal constructor(
         Sources.Aaps                               -> TODO()
         */
         Sources.Automation -> rh.gs(R.string.automation)
+        Sources.Autotune   -> rh.gs(R.string.autotune)
         Sources.Loop       -> rh.gs(R.string.loop)
         Sources.NSClient   -> rh.gs(R.string.ns)
         Sources.Pump       -> rh.gs(R.string.pump)

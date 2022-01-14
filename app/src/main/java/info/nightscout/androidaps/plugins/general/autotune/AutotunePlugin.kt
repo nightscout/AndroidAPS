@@ -5,8 +5,11 @@ import android.view.View
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.database.entities.UserEntry
+import info.nightscout.androidaps.database.entities.ValueWithUnit
+//import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.interfaces.*
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
@@ -55,6 +58,7 @@ class AutotunePlugin @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
     private val activePlugin: ActivePlugin,
+    private val uel: UserEntryLogger,
     aapsLogger: AAPSLogger,
     override var result: String = "",
     override var calculationRunning: Boolean = false,
@@ -185,7 +189,23 @@ class AutotunePlugin @Inject constructor(
             copyButtonVisibility = View.VISIBLE
             if (autoSwitch) {
                 profileSwitchButtonVisibility = View.GONE //hide profilSwitch button in fragment
-                activePlugin.activeTreatments.doProfileSwitch(tunedProfile!!.profileStore, tunedProfile!!.profilename, 0, 100, 0, dateUtil.now())
+                //activePlugin.activeTreatments.doProfileSwitch(tunedProfile!!.profileStore, tunedProfile!!.profilename, 0, 100, 0, dateUtil.now())
+                val now = dateUtil.now()
+                if (profileFunction.createProfileSwitch(
+                        tunedProfile!!.profileStore!!,
+                        profileName = tunedProfile!!.profilename!!,
+                        durationInMinutes = 0,
+                        percentage = 100,
+                        timeShiftInHours = 0,
+                        timestamp = now
+                    )
+                ) {
+                    uel.log(
+                        UserEntry.Action.PROFILE_SWITCH,
+                        UserEntry.Sources.ProfileSwitchDialog,
+                        "Autotune AutoSwitch",
+                        ValueWithUnit.SimpleString(tunedProfile!!.profilename!!))
+                }
                 rxBus.send(EventLocalProfileChanged())
             }
             lastRunSuccess = true
@@ -254,7 +274,11 @@ class AutotunePlugin @Inject constructor(
             jsonSettings.put("categorize_uam_as_basal", sp.getBoolean(R.string.key_autotune_categorize_uam_as_basal, false))
             jsonSettings.put("tune_insulin_curve", false)
             //todo: philoul Check in oref0-autotune if Tune insulin works with exponential curve (aaps don't use bilinear curve...)
-            if (insulinInterface.id == InsulinInterface.InsulinType.OREF_ULTRA_RAPID_ACTING || insulinInterface.id == InsulinInterface.InsulinType.OREF_LYUMJEV) jsonSettings.put("curve", "ultra-rapid") else if (insulinInterface.id == InsulinInterface.InsulinType.OREF_RAPID_ACTING) jsonSettings.put("curve", "rapid-acting") else if (insulinInterface.id == InsulinInterface.InsulinType.OREF_FREE_PEAK) {
+            if (insulinInterface.id == Insulin.InsulinType.OREF_ULTRA_RAPID_ACTING || insulinInterface.id == Insulin.InsulinType.OREF_LYUMJEV)
+                jsonSettings.put("curve", "ultra-rapid")
+            else if (insulinInterface.id == Insulin.InsulinType.OREF_RAPID_ACTING)
+                jsonSettings.put("curve", "rapid-acting")
+            else if (insulinInterface.id == Insulin.InsulinType.OREF_FREE_PEAK) {
                 val peaktime = sp.getInt(rh.gs(R.string.key_insulin_oref_peak), 75)
                 jsonSettings.put("curve", if (peaktime > 30) "rapid-acting" else "ultra-rapid")
                 jsonSettings.put("useCustomPeakTime", true)
