@@ -560,11 +560,6 @@
         </LinearLayout>
     </LinearLayout>
 
-    <include
-        android:id="@+id/simple_ui"
-        layout="@layout/simple_ui"
-        android:visibility="gone" />
-
     <!--   FLAGs   -->
     <TextView
         android:id="@+id/AAPSv2"

@@ -81,7 +81,7 @@ allprojects {
     // Source: https://issuetracker.google.com/issues/174695268
     configurations.configureEach {
         resolutionStrategy {
-            force 'org.xerial:sqlite-jdbc:3.34.0'
+            force 'org.xerial:sqlite-jdbc:3.36.0.3'
         }
     }
 }
