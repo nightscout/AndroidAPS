@@ -34,20 +34,13 @@ class VersionCheckerUtils @Inject constructor(
 
     fun triggerCheckVersion() {
 
-        if (!sp.contains(R.string.key_last_time_this_version_detected)) {
+        if (!sp.contains(R.string.key_last_time_this_version_detected_as_ok)) {
             // On a new installation, set it as 30 days old in order to warn that there is a new version.
-            sp.putLong(
-                R.string.key_last_time_this_version_detected,
-                dateUtil.now() - TimeUnit.DAYS.toMillis(30)
-            )
+            sp.putLong(R.string.key_last_time_this_version_detected_as_ok, dateUtil.now() - TimeUnit.DAYS.toMillis(30))
         }
 
         // If we are good, only check once every day.
-        if (dateUtil.now() > sp.getLong(
-                R.string.key_last_time_this_version_detected,
-                0
-            ) + CHECK_EVERY
-        ) {
+        if (dateUtil.now() > sp.getLong(R.string.key_last_time_this_version_detected_as_ok, 0) + CHECK_EVERY) {
             checkVersion()
         }
     }
@@ -68,7 +61,7 @@ class VersionCheckerUtils @Inject constructor(
                             sp.putLong(rh.gs(R.string.key_app_expiration) + "_" + config.VERSION_NAME, endDate)
                         }
                     }
-                    if (endDate != 0L) onExpiredVersionDetected(config.VERSION_NAME, dateUtil.dateString(endDate))
+                    if (endDate != 0L) onExpireDateDetected(config.VERSION_NAME, dateUtil.dateString(endDate))
 
                 } catch (e: IOException) {
                     aapsLogger.error(LTag.CORE, "Github master version check error: $e")
@@ -111,11 +104,11 @@ class VersionCheckerUtils @Inject constructor(
 
     private fun onOlderVersionDetected() {
         aapsLogger.debug(LTag.CORE, "Version newer than master. Are you developer?")
-        sp.putLong(R.string.key_last_time_this_version_detected, dateUtil.now())
+        sp.putLong(R.string.key_last_time_this_version_detected_as_ok, dateUtil.now())
     }
 
     private fun onSameVersionDetected() {
-        sp.putLong(R.string.key_last_time_this_version_detected, dateUtil.now())
+        sp.putLong(R.string.key_last_time_this_version_detected_as_ok, dateUtil.now())
     }
 
     private fun onVersionNotDetectable() {
@@ -126,26 +119,16 @@ class VersionCheckerUtils @Inject constructor(
         val now = dateUtil.now()
         if (now > sp.getLong(R.string.key_last_versionchecker_warning, 0) + WARN_EVERY) {
             aapsLogger.debug(LTag.CORE, "Version $currentVersion outdated. Found $newVersion")
-            val notification = Notification(
-                Notification.NEW_VERSION_DETECTED,
-                rh.gs(R.string.versionavailable, newVersion.toString()),
-                Notification.LOW
-            )
-            rxBus.send(EventNewNotification(notification))
+            rxBus.send(EventNewNotification(Notification(Notification.NEW_VERSION_DETECTED, rh.gs(R.string.versionavailable, newVersion.toString()), Notification.LOW)))
             sp.putLong(R.string.key_last_versionchecker_warning, now)
         }
     }
 
-    private fun onExpiredVersionDetected(currentVersion: String, endDate: String?) {
+    private fun onExpireDateDetected(currentVersion: String, endDate: String?) {
         val now = dateUtil.now()
         if (now > sp.getLong(R.string.key_last_expired_versionchecker_warning, 0) + WARN_EVERY) {
-            aapsLogger.debug(LTag.CORE, "Version $currentVersion expired.")
-            val notification = Notification(
-                Notification.VERSION_EXPIRE,
-                rh.gs(R.string.version_expire, currentVersion, endDate),
-                Notification.LOW
-            )
-            rxBus.send(EventNewNotification(notification))
+            aapsLogger.debug(LTag.CORE, rh.gs(R.string.version_expire, currentVersion, endDate))
+            rxBus.send(EventNewNotification(Notification(Notification.VERSION_EXPIRE, rh.gs(R.string.version_expire, currentVersion, endDate), Notification.LOW)))
             sp.putLong(R.string.key_last_expired_versionchecker_warning, now)
         }
     }
