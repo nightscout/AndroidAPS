@@ -720,16 +720,21 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
     private void sendPreferences() {
         if (googleApiClient != null && googleApiClient.isConnected()) {
 
+            GlucoseUnit units = profileFunction.getUnits();
             boolean wearcontrol = sp.getBoolean(R.string.key_wear_control, false);
+            boolean mgdl = units.equals(GlucoseUnit.MGDL);
+            int percentage = sp.getInt(R.string.key_boluswizard_percentage, 100);
 
             PutDataMapRequest dataMapRequest = PutDataMapRequest.create(NEW_PREFERENCES_PATH);
             //unique content
             dataMapRequest.getDataMap().putLong("timestamp", System.currentTimeMillis());
             dataMapRequest.getDataMap().putBoolean(rh.gs(R.string.key_wear_control), wearcontrol);
+            dataMapRequest.getDataMap().putBoolean(rh.gs(R.string.key_units_mgdl), mgdl);
+            dataMapRequest.getDataMap().putInt(rh.gs(R.string.key_boluswizard_percentage), percentage);
             PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
             Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);
         } else {
-            Log.e("SendStatus", "No connection to wearable available!");
+            Log.e("SendPreferences", "No connection to wearable available!");
         }
     }
 

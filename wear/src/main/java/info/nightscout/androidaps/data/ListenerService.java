@@ -544,13 +544,26 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                     LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);
                 } else if (path.equals(NEW_PREFERENCES_PATH)) {
                     dataMap = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
-                    if (dataMap.containsKey("wearcontrol")) {
-                        boolean wearcontrol = dataMap.getBoolean("wearcontrol", false);
-                        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putBoolean("wearcontrol", wearcontrol);
+                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    String keyControl = getString(R.string.key_wear_control);
+                    if (dataMap.containsKey(keyControl)) {
+                        boolean wearControl = dataMap.getBoolean(keyControl, false);
+                        editor.putBoolean(keyControl, wearControl);
                         editor.apply();
                         updateTiles();
+                    }
+                    String keyPercentage = getString(R.string.key_boluswizard_percentage);
+                    if (dataMap.containsKey(keyPercentage)) {
+                        int wpercentage = dataMap.getInt(keyPercentage, 100);
+                        editor.putInt(keyPercentage, wpercentage);
+                        editor.apply();
+                    }
+                    String keyUnits = getString(R.string.key_units_mgdl);
+                    if (dataMap.containsKey(keyUnits)) {
+                        boolean mgdl = dataMap.getBoolean(keyUnits, true);
+                        editor.putBoolean(keyUnits, mgdl);
+                        editor.apply();
                     }
                 } else if (path.equals(NEW_CHANGECONFIRMATIONREQUEST_PATH)) {
                     String title = DataMapItem.fromDataItem(event.getDataItem()).getDataMap().getString("title");

@@ -26,6 +26,7 @@ public class WizardActivity extends ViewSelectorActivity {
     PlusMinusEditText editPercentage;
 
     boolean hasPercentage;
+    double percentage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +34,7 @@ public class WizardActivity extends ViewSelectorActivity {
         setAdapter(new MyGridViewPagerAdapter());
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         hasPercentage = sp.getBoolean("wizardpercentage", false);
+        percentage = sp.getInt(getString(R.string.key_boluswizard_percentage), 100);
     }
 
     @Override
@@ -70,7 +72,7 @@ public class WizardActivity extends ViewSelectorActivity {
             } else if (col == 1 && hasPercentage) {
                 final View view = getInflatedPlusMinusView(container);
                 if (editPercentage == null) {
-                    editPercentage = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, 100d, 50d, 150d, 1d, new DecimalFormat("0"), false);
+                    editPercentage = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, percentage, 50d, 150d, 1d, new DecimalFormat("0"), false);
                 } else {
                     double def = SafeParse.stringToDouble(editPercentage.editText.getText().toString());
                     editPercentage = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 50d, 150d, 1d, new DecimalFormat("0"), false);
@@ -83,13 +85,9 @@ public class WizardActivity extends ViewSelectorActivity {
                 final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_send_item, container, false);
                 final ImageView confirmbutton = view.findViewById(R.id.confirmbutton);
                 confirmbutton.setOnClickListener((View v) -> {
-                    // check if it can happen that the fragment is never created that hold data?
-                    // (you have to swipe past them anyways - but still)
-
-                    int percentage = 100;
-
-                    if (editPercentage != null)
+                    if (editPercentage != null) {
                         percentage = SafeParse.stringToInt(editPercentage.editText.getText().toString());
+                    }
 
                     String actionstring = "wizard2 " + SafeParse.stringToInt(editCarbs.editText.getText().toString())
                             + " " + percentage;
