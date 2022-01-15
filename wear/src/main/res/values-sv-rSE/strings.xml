@@ -141,4 +141,5 @@
     <string name="simple_ui_off">Av</string>
     <string name="simple_ui_charging">Vid laddning</string>
     <string name="simple_ui_always_on">Alltid På-läge</string>
+    <string name="simple_ui_always_on_charging">Alltid På och vid laddning</string>
 </resources>
