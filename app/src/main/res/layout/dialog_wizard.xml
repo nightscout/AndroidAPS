@@ -539,6 +539,41 @@
                     android:layout_height="match_parent">
 
                     <CheckBox
+                        android:id="@+id/iob_checkbox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:width="32dp"
+                        android:checked="true" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:width="130dp"
+                        android:text="@string/iob"
+                        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:width="50dp"
+                        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                    <TextView
+                        android:id="@+id/iob_insulin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:width="50dp"
+                        android:gravity="end"
+                        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <CheckBox
                         android:id="@+id/cob_checkbox"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -562,41 +597,6 @@
 
                     <TextView
                         android:id="@+id/cob_insulin"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:width="50dp"
-                        android:gravity="end"
-                        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <CheckBox
-                        android:id="@+id/iob_checkbox"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:width="32dp"
-                        android:checked="true" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:width="130dp"
-                        android:text="@string/iob"
-                        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:width="50dp"
-                        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-                    <TextView
-                        android:id="@+id/iob_insulin"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:width="50dp"
