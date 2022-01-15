@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
 import androidx.wear.tiles.ActionBuilders
 import androidx.wear.tiles.ColorBuilders.argb
+import androidx.wear.tiles.DeviceParametersBuilders.SCREEN_SHAPE_ROUND
 import androidx.wear.tiles.DeviceParametersBuilders.DeviceParameters
 import androidx.wear.tiles.DimensionBuilders.SpProp
 import androidx.wear.tiles.DimensionBuilders.dp
@@ -121,21 +122,22 @@ abstract class TileBase : TileService() {
                 .build()
         }
         if (actions.isNotEmpty()) {
-            val b = Column.Builder()
-            if (actions.size == 1 || actions.size == 3) {
-                b.addContent(addRowSingle(actions[0], deviceParameters))
+            with(Column.Builder()) {
+                if (actions.size == 1 || actions.size == 3) {
+                    addContent(addRowSingle(actions[0], deviceParameters))
+                }
+                if (actions.size == 4 || actions.size == 2) {
+                    addContent(addRowDouble(actions[0], actions[1], deviceParameters))
+                }
+                if (actions.size == 3) {
+                    addContent(addRowDouble(actions[1], actions[2], deviceParameters))
+                }
+                if (actions.size == 4) {
+                    addContent(Spacer.Builder().setHeight(dp(SPACING_ACTIONS)).build())
+                    addContent(addRowDouble(actions[2], actions[3], deviceParameters))
+                }
+                return build()
             }
-            if (actions.size == 4 || actions.size == 2) {
-                b.addContent(addRowDouble(actions[0], actions[1], deviceParameters))
-            }
-            if (actions.size == 3) {
-                b.addContent(addRowDouble(actions[1], actions[2], deviceParameters))
-            }
-            if (actions.size == 4) {
-                b.addContent(Spacer.Builder().setHeight(dp(SPACING_ACTIONS)).build())
-                    .addContent(addRowDouble(actions[2], actions[3], deviceParameters))
-            }
-            return b.build()
         }
         return Text.Builder()
             .setText(resources.getString(R.string.tile_no_config))
@@ -171,7 +173,7 @@ abstract class TileBase : TileService() {
     }
 
     private fun action(action: Action, deviceParameters: DeviceParameters): LayoutElement {
-        val circleDiameter = ((sqrt(2f) - 1) * deviceParameters.screenHeightDp) - (2 * SPACING_ACTIONS)
+        val circleDiameter = circleDiameter(deviceParameters)
         val iconSize = dp(circleDiameter * ICON_SIZE_FRACTION)
         val text = resources.getString(action.nameRes)
         return Box.Builder()
@@ -225,6 +227,11 @@ abstract class TileBase : TileService() {
                     ).build()
             )
             .build()
+    }
+
+    private fun circleDiameter(deviceParameters: DeviceParameters) = when (deviceParameters.screenShape) {
+        SCREEN_SHAPE_ROUND -> ((sqrt(2f) - 1) * deviceParameters.screenHeightDp) - (2 * SPACING_ACTIONS)
+        else               -> 0.5f * deviceParameters.screenHeightDp - SPACING_ACTIONS
     }
 
     private fun buttonTextSize(deviceParameters: DeviceParameters, text: String): SpProp {
@@ -283,5 +290,4 @@ abstract class TileBase : TileService() {
             editor.apply()
         }
     }
-
 }
