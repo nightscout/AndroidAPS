@@ -15,6 +15,8 @@ import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.activities.TreatmentsActivity
+import info.nightscout.androidaps.database.entities.Bolus
+import info.nightscout.androidaps.database.entities.Carbs
 import info.nightscout.androidaps.database.entities.ExtendedBolus
 import info.nightscout.androidaps.database.entities.TemporaryBasal
 import info.nightscout.androidaps.interfaces.PumpSync
@@ -64,13 +66,12 @@ class AutotuneIob(
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var iobCobCalculatorPluginHistory: IobCobCalculatorPluginHistory
     @Inject lateinit var treatmentsPluginHistory: TreatmentsPluginHistory
-    @Inject lateinit var nsUpload: NSUpload
 
     lateinit var iobCobCalculator: IobCobCalculatorPlugin
     private val disposable = CompositeDisposable()
     private val nsTreatments = ArrayList<NsTreatment>()
-    var treatments: MutableList<Treatment> = ArrayList()
-    var meals = ArrayList<Treatment>()
+    var treatments: MutableList<Bolus> = ArrayList()
+    var meals = ArrayList<Carbs>()
     lateinit var glucose: List<GlucoseValue> // newest at index 0
     //var glucose: MutableList<GlucoseValue> = ArrayList()
     private val tempBasals: Intervals<TemporaryBasal> = NonOverlappingIntervals()
@@ -130,26 +131,39 @@ class AutotuneIob(
     private fun initializeTreatmentData(from: Long, to: Long) {
         val oldestBgDate = if (glucose.size > 0) glucose[glucose.size - 1].timestamp else from
         log.debug("AutotunePlugin Check BG date: BG Size: " + glucose.size + " OldestBG: " + dateUtil.dateAndTimeAndSecondsString(oldestBgDate) + " to: " + dateUtil.dateAndTimeAndSecondsString(to))
-        val temp = treatmentsPluginHistory.service.getTreatmentDataFromTime(from, to, false)
-        log.debug("AutotunePlugin Nb treatments after query: " + temp.size)
+        val tmpCarbs = repository.getCarbsDataFromTimeToTimeExpanded(from, to, true).blockingGet()
+        log.debug("AutotunePlugin Nb treatments after query: " + tmpCarbs.size)
         meals.clear()
         treatments.clear()
         var nbCarbs = 0
+        for (i in tmpCarbs.indices) {
+            val tp = tmpCarbs[i]
+            if (tp.isValid) {
+                nsTreatments.add(NsTreatment(tp))
+                //only carbs after first BGReadings are taken into account in calculation of Autotune
+                if (tp.amount > 0.0 && tp.timestamp >= oldestBgDate) meals.add(tmpCarbs[i])
+                if (tp.timestamp < to && tp.amount > 0.0)
+                    nbCarbs++
+            }
+        }
+        val tmpBolus = repository.getBolusesDataFromTimeToTime(from, to, true).blockingGet()
         var nbSMB = 0
         var nbBolus = 0
-        for (i in temp.indices) {
-            val tp = temp[i]
+        for (i in tmpBolus.indices) {
+            val tp = tmpBolus[i]
             if (tp.isValid) {
                 treatments.add(tp)
                 nsTreatments.add(NsTreatment(tp))
                 //only carbs after first BGReadings are taken into account in calculation of Autotune
-                if (tp.carbs > 0 && tp.date >= oldestBgDate) meals.add(temp[i])
-                if (tp.date < to) {
-                    if (tp.isSMB) nbSMB++ else if (tp.insulin > 0) nbBolus++
-                    if (tp.carbs > 0) nbCarbs++
+                if (tp.timestamp < to) {
+                    if (tp.type == Bolus.Type.SMB)
+                        nbSMB++
+                    else if (tp.amount > 0.0)
+                        nbBolus++
                 }
             }
         }
+
         log.debug("AutotunePlugin Nb Meals: $nbCarbs Nb Bolus: $nbBolus Nb SMB: $nbSMB")
     }
 
@@ -159,7 +173,7 @@ class AutotuneIob(
         // Initialize tempBasals according to TreatmentsPlugin
         tempBasals.reset().add(temp)
         //first keep only valid data
-        //log.debug("D/AutotunePlugin Start inisalize Tempbasal from: " + dateUtil.dateAndTimeAndSecondsString(from) + " number of entries:" + temp.size());
+        //log.debug("D/AutotunePlugin Start inisalize Tempbasal from: " + dateUtil.dateAndTimeAndSecondsString(from) + " number of entries:" + tmpCarbs.size());
         run {
             var i = 0
             while (i < temp.size) {
@@ -168,7 +182,7 @@ class AutotuneIob(
             }
         }
         val temp2: MutableList<TemporaryBasal> = ArrayList()
-        //log.debug("D/AutotunePlugin after cleaning number of entries:" + temp.size());
+        //log.debug("D/AutotunePlugin after cleaning number of entries:" + tmpCarbs.size());
         //Then add neutral TBR if start of next TBR is after the end of previous one
         var previousend = temp[temp.size - 1].timestamp + temp[temp.size - 1].realDuration * 60 * 1000
         for (i in temp.indices.reversed()) {

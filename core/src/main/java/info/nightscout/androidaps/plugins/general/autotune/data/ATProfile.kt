@@ -24,18 +24,10 @@ import javax.inject.Inject
 class ATProfile(profile: Profile?) {
 
     var profile: ProfileSealed
-    var profilename: String? = null
+    var profilename: String? = profile?.profileName
     private val pv: Profile.ProfileValue? = null
-    val basal: DoubleArray
-        get() {
-            val basal = DoubleArray(24)
-            for (i in 0..23) {
-                basal[i] = getBasal(i)
-            }
-            return basal
-        }
-
-    var basalUntuned = IntArray(24)
+    var basal = DoubleArray(24)
+    var basalUntuned = DoubleArray(24)
     var ic = 0.0
     private var srcic: List<Block>? = null
     var isf = 0.0

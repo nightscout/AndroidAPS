@@ -36,7 +36,7 @@ sealed class ProfileSealed(
     var isfBlocks: List<Block>,
     var icBlocks: List<Block>,
     var targetBlocks: List<TargetBlock>,
-    val profileName: String,
+    override val profileName: String,
     var duration: Long?, // [milliseconds]
     var ts: Int, // timeshift [hours]
     var pct: Int,
@@ -370,6 +370,8 @@ sealed class ProfileSealed(
         }
         return ret
     }
+
+    //override fun ProfileName(): String = profileName
 
     private fun getValuesList(array: List<Block>, multiplier: Double, format: DecimalFormat, units: String, dateUtil: DateUtil): String =
         StringBuilder().also { sb ->

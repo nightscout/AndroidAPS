@@ -11,6 +11,8 @@ import info.nightscout.androidaps.plugins.general.autotune.data.CRDatum
 import info.nightscout.androidaps.plugins.general.autotune.data.PreppedGlucose
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.activities.TreatmentsActivity
+import info.nightscout.androidaps.database.entities.Bolus
+import info.nightscout.androidaps.database.entities.Carbs
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.Round
 import info.nightscout.shared.sharedPreferences.SP
@@ -35,7 +37,8 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
 
     fun categorizeBGDatums(autotuneIob: AutotuneIob, tunedprofile: ATProfile, pumpprofile: ATProfile): PreppedGlucose? {
         //lib/meals is called before to get only meals data (in AAPS it's done in AutotuneIob)
-        var treatments: MutableList<Treatment> = autotuneIob.meals
+        var treatments: MutableList<Carbs> = autotuneIob.meals
+        var boluses: MutableList<Bolus> = autotuneIob.treatments
         val profileData = tunedprofile.profile
 
         // Bloc between #21 and # 54 replaced by bloc below (just remove BG value below 39, Collections.sort probably not necessary because BG values already sorted...)
@@ -71,7 +74,7 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
         //Bloc below replace bloc between #72 and #93
         // I keep it because BG lines in log are consistent between AAPS and Oref0
         val bucketedData: MutableList<BGDatum> = ArrayList()
-        bucketedData.add(BGDatum(glucoseData[0]))
+        bucketedData.add(BGDatum(glucoseData[0], dateUtil))
         //int j=0;
         var k = 0 // index of first value used by bucket
         //for loop to validate and bucket the data
@@ -82,7 +85,7 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
             if (Math.abs(elapsedMinutes) >= 2) {
                 //j++; // move to next bucket
                 k = i // store index of first value used by bucket
-                bucketedData.add(BGDatum(glucoseData[i]))
+                bucketedData.add(BGDatum(glucoseData[i], dateUtil))
             } else {
                 // average all readings within time deadband
                 val average = glucoseData[k]
@@ -90,7 +93,7 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
                     average.value += glucoseData[l].value
                 }
                 average.value = average.value / (i - k + 1)
-                bucketedData.add(BGDatum(average))
+                bucketedData.add(BGDatum(average, dateUtil))
             }
         }
 
@@ -121,13 +124,13 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
             // As we're processing each data point, go through the treatment.carbs and see if any of them are older than
             // the current BG data point.  If so, add those carbs to COB.
             val treatment = if (treatments.size > 0) treatments[treatments.size - 1] else null
-            var myCarbs = 0
+            var myCarbs = 0.0
             if (treatment != null) {
-                if (treatment.date < BGTime) {
-                    if (treatment.carbs >= 1) {
-                        mealCOB += treatment.carbs
-                        mealCarbs += treatment.carbs
-                        myCarbs = treatment.carbs
+                if (treatment.timestamp < BGTime) {
+                    if (treatment.amount > 0.0) {
+                        mealCOB += treatment.amount
+                        mealCarbs += treatment.amount
+                        myCarbs = treatment.amount
                     }
                     treatments.removeAt(treatments.size - 1)
                 }
@@ -219,7 +222,7 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
                     crInitialIOB = iob.iob
                     crInitialBG = glucoseDatum.value
                     crInitialCarbTime = glucoseDatum.date
-                    log("CRInitialIOB: " + crInitialIOB + " CRInitialBG: " + crInitialBG + " CRInitialCarbTime: " + DateUtil.toISOString(crInitialCarbTime))
+                    log("CRInitialIOB: " + crInitialIOB + " CRInitialBG: " + crInitialBG + " CRInitialCarbTime: " + dateUtil.toISOString(crInitialCarbTime))
                 }
                 // keep calculatingCR as long as we have COB or enough IOB
                 if (mealCOB > 0 && i > 1) {
@@ -231,7 +234,7 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
                     val crEndIOB = iob.iob
                     val crEndBG = glucoseDatum.value
                     val crEndTime = glucoseDatum.date
-                    log("CREndIOB: " + crEndIOB + " CREndBG: " + crEndBG + " CREndTime: " + DateUtil.toISOString(crEndTime))
+                    log("CREndIOB: " + crEndIOB + " CREndBG: " + crEndBG + " CREndTime: " + dateUtil.toISOString(crEndTime))
                     val crDatum = CRDatum()
                     crDatum.crInitialBG = crInitialBG
                     crDatum.crInitialIOB = crInitialIOB
@@ -330,11 +333,11 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
         }
 
 //****************************************************************************************************************************************
-        treatments = autotuneIob.treatments
+        boluses = autotuneIob.treatments
 
 // categorize.js Lines 372-383
         for (crDatum in crData) {
-            crDatum.crInsulin = dosed(crDatum.crInitialCarbTime, crDatum.crEndTime, treatments)
+            crDatum.crInsulin = dosed(crDatum.crInitialCarbTime, crDatum.crEndTime, boluses)
         }
         // categorize.js Lines 384-436
         val CSFLength = csfGlucoseData.size
@@ -543,22 +546,22 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
             }
         }
         */
-        return PreppedGlucose(autotuneIob.startBG, crData, csfGlucoseData, isfGlucoseData, basalGlucoseData)
+        return PreppedGlucose(autotuneIob.startBG, crData, csfGlucoseData, isfGlucoseData, basalGlucoseData, dateUtil)
 
         // and may be later
         // return new PreppedGlucose(crData, csfGlucoseData, isfGlucoseData, basalGlucoseData, diaDeviations, peakDeviations);
     }
 
     //dosed.js full
-    private fun dosed(start: Long, end: Long, treatments: List<Treatment>): Double {
+    private fun dosed(start: Long, end: Long, treatments: List<Bolus>): Double {
         var insulinDosed = 0.0
         if (treatments.size == 0) {
             log("No treatments to process.")
             return 0.0
         }
         for (treatment in treatments) {
-            if (treatment.insulin != 0.0 && treatment.date > start && treatment.date <= end) {
-                insulinDosed += treatment.insulin
+            if (treatment.amount != 0.0 && treatment.timestamp > start && treatment.timestamp <= end) {
+                insulinDosed += treatment.amount
             }
         }
         //log("insulin dosed: " + insulinDosed);
