@@ -403,15 +403,15 @@
     <string name="profile_sensitivity_value">Valor de sensibilidad del perfil</string>
     <string name="profile_max_daily_basal_value">Máximo valor basal del perfil</string>
     <string name="current_basal_value">Valor basal actual</string>
-    <string name="profile_carbs_ratio_value">Valor del ratio de carbohidratos de perfil</string>
+    <string name="profile_carbs_ratio_value">Valor del ratio de carbohidratos del perfil</string>
     <string name="valuelimitedto">%1$.2f limitado a %2$.2f</string>
-    <string name="valueoutofrange">»%1$s« está fuera de límite</string>
-    <string name="value_out_of_hard_limits">»%1$s« %2$.2f está fuera de límites duros</string>
+    <string name="valueoutofrange">»%1$s« está fuera del límite estricto</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f está fuera de los límites estrictos</string>
     <string name="basal_value">Valor basal</string>
     <string name="nsclient_version_does_not_match">La versión de NSClient no coincide con AndroidAPS. Actualízala.</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLO %1$.2f U</string>
-    <string name="carbs_g">CARBOS %1$d g</string>
+    <string name="carbs_g">CARBOHIDRATOS %1$d g</string>
     <string name="extended_bolus_u_min">BOLO EXTENDIDO %1$.2f U %2$d min</string>
     <string name="load_events">CARGAR EVENTOS</string>
     <string name="load_history">CARGAR HISTORIAL %1$d</string>
@@ -425,8 +425,8 @@
     <string name="temp_basal_percent">BASAL TEMPORAL %1$d%% %2$d min</string>
     <string name="insight_set_tbr_over_notification">INSIGHT ESTABLECER TBR SOBRE NOTIFICACIÓN</string>
     <string name="read_status" comment="10 characters max for READSTATUS translation">LEER ESTADO %1$s</string>
-    <string name="keepalive_status_outdated" comment="26 characters max for translation">KeepAlive. Estado desactualizado.</string>
-    <string name="keepalive_basal_outdated" comment="26 characters max for translation">KeepAlive. Basal desactualizada.</string>
+    <string name="keepalive_status_outdated" comment="26 characters max for translation">KeepAlive: Estado desactualizado</string>
+    <string name="keepalive_basal_outdated" comment="26 characters max for translation">KeepAlive: Basal desactualizada</string>
     <string name="sms" comment="26 characters max for translation">SMS</string>
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">Pulsa sobre conectar a la bomba</string>
     <string name="pump_driver_changed" comment="26 characters max for translation">Controlador de bomba cambiado</string>
