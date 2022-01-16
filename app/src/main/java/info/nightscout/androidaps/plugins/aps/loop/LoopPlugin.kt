@@ -524,6 +524,17 @@ class LoopPlugin @Inject constructor(
         aapsLogger.debug(LTag.APS, "applyAPSRequest: $request")
         val now = System.currentTimeMillis()
         val activeTemp = iobCobCalculator.getTempBasalIncludingConvertedExtended(now)
+        if (request.rate == 0.0 && request.duration == 0 || abs(request.rate - pump.baseBasalRate) < pump.pumpDescription.basalStep) {
+            if (activeTemp != null) {
+                aapsLogger.debug(LTag.APS, "applyAPSRequest: cancelTempBasal()")
+                uel.log(Action.CANCEL_TEMP_BASAL, Sources.Loop)
+                commandQueue.cancelTempBasal(false, callback)
+            } else {
+                aapsLogger.debug(LTag.APS, "applyAPSRequest: Basal set correctly")
+                callback?.result(PumpEnactResult(injector).absolute(request.rate).duration(0)
+                                     .enacted(false).success(true).comment(R.string.basal_set_correctly))?.run()
+            }
+        }
         if (request.usePercent && allowPercentage()) {
             if (request.percent == 100 && request.duration == 0) {
                 if (activeTemp != null) {
@@ -548,17 +559,7 @@ class LoopPlugin @Inject constructor(
                 commandQueue.tempBasalPercent(request.percent, request.duration, false, profile, PumpSync.TemporaryBasalType.NORMAL, callback)
             }
         } else {
-            if (request.rate == 0.0 && request.duration == 0 || abs(request.rate - pump.baseBasalRate) < pump.pumpDescription.basalStep) {
-                if (activeTemp != null) {
-                    aapsLogger.debug(LTag.APS, "applyAPSRequest: cancelTempBasal()")
-                    uel.log(Action.CANCEL_TEMP_BASAL, Sources.Loop)
-                    commandQueue.cancelTempBasal(false, callback)
-                } else {
-                    aapsLogger.debug(LTag.APS, "applyAPSRequest: Basal set correctly")
-                    callback?.result(PumpEnactResult(injector).absolute(request.rate).duration(0)
-                        .enacted(false).success(true).comment(R.string.basal_set_correctly))?.run()
-                }
-            } else if (activeTemp != null && activeTemp.plannedRemainingMinutes > 5 && request.duration - activeTemp.plannedRemainingMinutes < 30 && abs(request.rate - activeTemp.convertedToAbsolute(now, profile)) < pump.pumpDescription.basalStep) {
+            if (activeTemp != null && activeTemp.plannedRemainingMinutes > 5 && request.duration - activeTemp.plannedRemainingMinutes < 30 && abs(request.rate - activeTemp.convertedToAbsolute(now, profile)) < pump.pumpDescription.basalStep) {
                 aapsLogger.debug(LTag.APS, "applyAPSRequest: Temp basal set correctly")
                 callback?.result(PumpEnactResult(injector).absolute(activeTemp.convertedToAbsolute(now, profile))
                     .enacted(false).success(true).duration(activeTemp.plannedRemainingMinutes)
