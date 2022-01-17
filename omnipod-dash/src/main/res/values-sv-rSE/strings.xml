@@ -35,4 +35,5 @@
     <string name="omnipod_common_history_bolus_value">%1$.2fU</string>
     <string name="dash_bolusdelivering">Levererar %1$.2f enheter</string>
     <string name="omnipod_common_alert_delivery_suspended">Insulinleverans är pausad</string>
+    <string name="omnipod_dash_connection_lost">Tappade anslutningen till pod</string>
 </resources>

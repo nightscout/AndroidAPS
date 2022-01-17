@@ -184,15 +184,15 @@ class BgQualityCheckPluginTest : TestBase() {
     }
 
     @Test
-    fun isLoopInvocationAllowedTest() {
+    fun applyMaxIOBConstraintsTest() {
         plugin.state = BgQualityCheckPlugin.State.UNKNOWN
-        Assert.assertEquals(true, plugin.isLoopInvocationAllowed(Constraint(true)).value())
+        Assert.assertEquals(10.0, plugin.applyMaxIOBConstraints(Constraint(10.0)).value(), 0.001)
         plugin.state = BgQualityCheckPlugin.State.FIVE_MIN_DATA
-        Assert.assertEquals(true, plugin.isLoopInvocationAllowed(Constraint(true)).value())
+        Assert.assertEquals(10.0, plugin.applyMaxIOBConstraints(Constraint(10.0)).value(), 0.001)
         plugin.state = BgQualityCheckPlugin.State.RECALCULATED
-        Assert.assertEquals(true, plugin.isLoopInvocationAllowed(Constraint(true)).value())
+        Assert.assertEquals(10.0, plugin.applyMaxIOBConstraints(Constraint(10.0)).value(), 0.001)
         plugin.state = BgQualityCheckPlugin.State.DOUBLED
-        Assert.assertEquals(false, plugin.isLoopInvocationAllowed(Constraint(true)).value())
+        Assert.assertEquals(0.0, plugin.applyMaxIOBConstraints(Constraint(10.0)).value(), 0.001)
     }
 
 }
