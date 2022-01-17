@@ -20,6 +20,7 @@
             android:layout_gravity="center"
             android:background="@drawable/background_total"
             android:orientation="horizontal"
+            android:layout_marginTop="2dp"
             android:padding="5dp">
 
             <ImageView
@@ -70,7 +71,9 @@
                 <info.nightscout.androidaps.utils.ui.NumberPicker
                     android:id="@+id/bg_input"
                     android:layout_width="130dp"
-                    android:layout_height="40dp" />
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="2dp"
+                    />
 
                 <TextView
                     android:id="@+id/bg_units"
@@ -78,7 +81,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:gravity="start"
-                    android:padding="5dp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
                     android:text="@string/mgdl"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -101,6 +105,7 @@
                     android:id="@+id/carbs_input"
                     android:layout_width="130dp"
                     android:layout_height="40dp"
+                    android:layout_marginBottom="2dp"
                     android:layout_gravity="center_horizontal" />
 
 
@@ -109,7 +114,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:gravity="start"
-                    android:padding="5dp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
                     android:text="@string/shortgramm"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -168,7 +174,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:gravity="start"
-                    android:padding="5dp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
                     android:text="@string/insulin_unit_shortname"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -387,7 +394,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:gravity="start"
-                    android:padding="5dp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
                     android:text="@string/unit_minute_short"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
