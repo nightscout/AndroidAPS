@@ -43,9 +43,7 @@ import kotlin.math.min
 import kotlin.math.roundToInt
 
 class TDDStatsActivity : NoSplashAppCompatActivity() {
-
-    @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var rxBus: RxBus
+    
     @Inject lateinit var sp: SP
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var activePlugin: ActivePlugin

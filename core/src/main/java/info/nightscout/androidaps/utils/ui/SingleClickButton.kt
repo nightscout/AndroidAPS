@@ -3,7 +3,7 @@ package info.nightscout.androidaps.utils.ui
 import android.content.Context
 import android.util.AttributeSet
 import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper
+import info.nightscout.shared.logging.StacktraceLoggerWrapper
 import org.slf4j.Logger
 
 class SingleClickButton @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = R.style.Widget_MaterialComponents_Button_UnelevatedButton) : com.google.android.material.button.MaterialButton(context, attrs, defStyleAttr) {

@@ -15,7 +15,7 @@ import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -25,6 +25,7 @@ class ThemeSwitcherPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
+    private val sp: SP,
     private val rxBus: RxBus,
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)

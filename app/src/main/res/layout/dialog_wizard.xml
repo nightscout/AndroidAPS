@@ -7,7 +7,6 @@
     android:focusableInTouchMode="true"
     android:minWidth="300dp"
     android:orientation="vertical"
-    android:background="?attr/windowBackground"
     tools:context=".dialogs.InsulinDialog">
 
     <LinearLayout
@@ -19,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="?attr/dialogTitleBackground"
+            android:background="@drawable/background_total"
             android:orientation="horizontal"
             android:padding="5dp">
 
@@ -57,8 +56,7 @@
 
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="1dp">
+                android:layout_height="match_parent">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -88,8 +86,7 @@
 
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="1dp">
+                android:layout_height="match_parent">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -120,8 +117,7 @@
 
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="1dp">
+                android:layout_height="match_parent">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -187,7 +183,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="10dp"
-            android:background="@color/dialog_title_background"
+            android:background="@drawable/background_total"
             android:gravity="center_horizontal"
             android:orientation="horizontal"
             android:paddingTop="5dp"
@@ -217,10 +213,35 @@
 
         </LinearLayout>
 
-        <include
+        <LinearLayout
             android:id="@+id/notes_layout"
-            layout="@layout/notes" />
-        
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:labelFor="@+id/notes"
+                android:padding="10dp"
+                android:text="@string/notes_label"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/notes"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:autofillHints="@string/notes_label"
+                android:gravity="start"
+                android:inputType="text|textCapSentences"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        </LinearLayout>
+
         <LinearLayout
             android:id="@+id/done_background"
             android:layout_width="match_parent"
@@ -418,7 +439,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="0dp"
                     android:layout_marginBottom="5dp"
-                    android:background="@color/list_delimiter" />
+                    android:background="?android:attr/dividerHorizontal" />
 
                 <TableRow
                     android:layout_width="match_parent"
