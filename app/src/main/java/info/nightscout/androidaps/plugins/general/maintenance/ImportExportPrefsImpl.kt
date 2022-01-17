@@ -110,7 +110,11 @@ class ImportExportPrefsImpl @Inject constructor(
         // based on https://medium.com/@pribble88/how-to-get-an-android-device-nickname-4b4700b3068c
         val n1 = Settings.System.getString(context.contentResolver, "bluetooth_name")
         val n2 = Settings.Secure.getString(context.contentResolver, "bluetooth_name")
-        val n3 = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter?.name
+        val n3 = try {
+            (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter?.name
+        } catch (e: Exception){
+            null
+        }
         val n4 = Settings.System.getString(context.contentResolver, "device_name")
         val n5 = Settings.Secure.getString(context.contentResolver, "lock_screen_owner_info")
         val n6 = Settings.Global.getString(context.contentResolver, "device_name")
