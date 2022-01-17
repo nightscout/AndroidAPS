@@ -38,7 +38,7 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
     fun categorizeBGDatums(autotuneIob: AutotuneIob, tunedprofile: ATProfile, pumpprofile: ATProfile): PreppedGlucose? {
         //lib/meals is called before to get only meals data (in AAPS it's done in AutotuneIob)
         var treatments: MutableList<Carbs> = autotuneIob.meals
-        var boluses: MutableList<Bolus> = autotuneIob.treatments
+        var boluses: MutableList<Bolus> = autotuneIob.boluses
         val profileData = tunedprofile.profile
 
         // Bloc between #21 and # 54 replaced by bloc below (just remove BG value below 39, Collections.sort probably not necessary because BG values already sorted...)
@@ -60,7 +60,7 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
             log("No Carbs entries")
             //return null
         }
-        if (autotuneIob.treatments.size < 1) {
+        if (autotuneIob.boluses.size < 1) {
             log("No treatment received")
             return null
         }
@@ -333,7 +333,6 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
         }
 
 //****************************************************************************************************************************************
-        boluses = autotuneIob.treatments
 
 // categorize.js Lines 372-383
         for (crDatum in crData) {

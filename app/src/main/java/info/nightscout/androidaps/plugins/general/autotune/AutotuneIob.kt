@@ -3,25 +3,21 @@ package info.nightscout.androidaps.plugins.general.autotune
 import androidx.collection.LongSparseArray
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.*
 import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.db.*
 import info.nightscout.androidaps.historyBrowser.TreatmentsPluginHistory
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.activities.TreatmentsActivity
-import info.nightscout.androidaps.database.entities.Bolus
-import info.nightscout.androidaps.database.entities.Carbs
-import info.nightscout.androidaps.database.entities.ExtendedBolus
-import info.nightscout.androidaps.database.entities.TemporaryBasal
-import info.nightscout.androidaps.interfaces.PumpSync
+import info.nightscout.androidaps.database.entities.*
+import info.nightscout.androidaps.extensions.durationInMinutes
+import info.nightscout.androidaps.extensions.iobCalc
+import info.nightscout.androidaps.extensions.toJson
+import info.nightscout.androidaps.extensions.toTemporaryBasal
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.general.overview.OverviewData
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
@@ -70,7 +66,7 @@ class AutotuneIob(
     lateinit var iobCobCalculator: IobCobCalculatorPlugin
     private val disposable = CompositeDisposable()
     private val nsTreatments = ArrayList<NsTreatment>()
-    var treatments: MutableList<Bolus> = ArrayList()
+    var boluses: MutableList<Bolus> = ArrayList()
     var meals = ArrayList<Carbs>()
     lateinit var glucose: List<GlucoseValue> // newest at index 0
     //var glucose: MutableList<GlucoseValue> = ArrayList()
@@ -134,7 +130,7 @@ class AutotuneIob(
         val tmpCarbs = repository.getCarbsDataFromTimeToTimeExpanded(from, to, true).blockingGet()
         log.debug("AutotunePlugin Nb treatments after query: " + tmpCarbs.size)
         meals.clear()
-        treatments.clear()
+        boluses.clear()
         var nbCarbs = 0
         for (i in tmpCarbs.indices) {
             val tp = tmpCarbs[i]
@@ -152,7 +148,7 @@ class AutotuneIob(
         for (i in tmpBolus.indices) {
             val tp = tmpBolus[i]
             if (tp.isValid) {
-                treatments.add(tp)
+                boluses.add(tp)
                 nsTreatments.add(NsTreatment(tp))
                 //only carbs after first BGReadings are taken into account in calculation of Autotune
                 if (tp.timestamp < to) {
@@ -259,20 +255,20 @@ class AutotuneIob(
         val profile = profileFunction.getProfile(time) ?: return total
         val pumpInterface = activePlugin.activePump
         val dia = profile.dia
-        for (pos in treatments.indices) {
-            val t = treatments[pos]
+        for (pos in boluses.indices) {
+            val t = boluses[pos]
             if (!t.isValid) continue
-            if (t.date > time) continue
-            val tIOB = t.iobCalc(time, dia)
+            if (t.timestamp > time) continue
+            val tIOB = t.iobCalc(activePlugin, time, dia)
             total.iob += tIOB.iobContrib
             total.activity += tIOB.activityContrib
-            if (t.insulin > 0 && t.date > total.lastBolusTime) total.lastBolusTime = t.date
-            if (!t.isSMB) {
+            if (t.amount > 0 && t.timestamp > total.lastBolusTime) total.lastBolusTime = t.timestamp
+            if (t.type != Bolus.Type.SMB) {
                 // instead of dividing the DIA that only worked on the bilinear curves,
                 // multiply the time the treatment is seen active.
-                val timeSinceTreatment = time - t.date
-                val snoozeTime = t.date + (timeSinceTreatment * sp.getDouble(R.string.key_openapsama_bolussnooze_dia_divisor, 2.0)).toLong()
-                val bIOB = t.iobCalc(snoozeTime, dia)
+                val timeSinceTreatment = time - t.timestamp
+                val snoozeTime = t.timestamp + (timeSinceTreatment * sp.getDouble(R.string.key_openapsama_bolussnooze_dia_divisor, 2.0)).toLong()
+                val bIOB = t.iobCalc(activePlugin, snoozeTime, dia)
                 total.bolussnooze += bIOB.iobContrib
             }
         }
@@ -378,11 +374,12 @@ class AutotuneIob(
         var _id: String? = null
         var date: Long = 0
         var isValid = false
-        var eventType: String? = null
+        var eventType: TherapyEvent.Type? = null
         var created_at: String? = null
 
         // treatment properties
-        var treatment: Treatment? = null
+        var carbsTreatment: Carbs? = null
+        var bolusTreatment: Bolus? = null
         var insulin = 0.0
         var carbs = 0.0
         var isSMB = false
@@ -401,60 +398,75 @@ class AutotuneIob(
         private val origin: String? = null
 
         //CarePortalEvents
-        var careportalEvent: CareportalEvent? = null
+        var careportalEvent: TherapyEvent? = null
         var json: String? = null
 
-        constructor(t: Treatment) {
-            treatment = t
-            _id = t._id
-            date = t.date
-            carbs = t.carbs
-            insulin = t.insulin
-            isSMB = t.isSMB
+        constructor(t: Carbs) {
+            carbsTreatment = t
+            _id = t.interfaceIDs.nightscoutId
+            date = t.timestamp
+            carbs = t.amount
+            insulin = 0.0
+            isSMB = false
             isValid = t.isValid
-            mealBolus = t.mealBolus
-            eventType = if (insulin > 0 && carbs > 0) CareportalEvent.BOLUSWIZARD else if (carbs > 0) CareportalEvent.CARBCORRECTION else CareportalEvent.CORRECTIONBOLUS
-            created_at = dateUtil.toISOString(t.date)
+            mealBolus = false // t.mealBolus
+            eventType = TherapyEvent.Type.CARBS_CORRECTION  //if (insulin > 0 && carbs > 0) CareportalEvent.BOLUSWIZARD else if (carbs > 0) CareportalEvent.CARBCORRECTION else CareportalEvent
+                // .CORRECTIONBOLUS
+            created_at = dateUtil.toISOString(t.timestamp)
         }
 
-        constructor(t: CareportalEvent) {
+        constructor(t: Bolus) {
+            bolusTreatment = t
+            _id = t.interfaceIDs.nightscoutId
+            date = t.timestamp
+            carbs = 0.0
+            insulin = t.amount
+            isSMB = t.type == Bolus.Type.SMB
+            isValid = t.isValid
+            mealBolus = false //t.mealBolus
+            eventType = TherapyEvent.Type.CORRECTION_BOLUS //if (insulin > 0 && carbs > 0) CareportalEvent.BOLUSWIZARD else if (carbs > 0) CareportalEvent.CARBCORRECTION else CareportalEvent
+            // .CORRECTIONBOLUS
+            created_at = dateUtil.toISOString(t.timestamp)
+        }
+
+        constructor(t: TherapyEvent) {
             careportalEvent = t
-            _id = t._id
-            date = t.timestmp
-            created_at = dateUtil.toISOString(t.timestmp)
-            eventType = t.eventType
+            _id = t.interfaceIDs.nightscoutId
+            date = t.timestamp
+            created_at = dateUtil.toISOString(t.timestamp)
+            eventType = t.type
             duration = Math.round(t.duration / 60f / 1000).toInt()
             isValid = t.isValid
-            json = t.json
+            json = t.toJson(true, dateUtil).toString(2)
         }
 
         constructor(t: TemporaryBasal) {
             temporaryBasal = t
+            isFakeExtended = false
             _NsTreatment(t)
         }
 
-        constructor(t: ExtendedBolus?) {
+        constructor(t: ExtendedBolus) {
             extendedBolus = t
-            _NsTreatment(TemporaryBasal(t))
+            val profile = profileFunction.getProfile(date)
+            isFakeExtended = true
+            _NsTreatment(t.toTemporaryBasal(profile!!))
         }
 
         private fun _NsTreatment(t: TemporaryBasal) {
-            _id = t.id.toString()
+            _id = t.interfaceIDs.nightscoutId
             date = t.timestamp
             if (t.isAbsolute)
-                absoluteRate = Round.roundTo(t.absoluteRate, 0.001)
+                absoluteRate = Round.roundTo(t.rate, 0.001)
             else {
                 val profile = profileFunction.getProfile(date)
-                absoluteRate = profile!!.getBasal(temporaryBasal!!.timestamp) * temporaryBasal!!.percentRate / 100
+                absoluteRate = profile!!.getBasal(temporaryBasal!!.timestamp) * temporaryBasal!!.rate / 100
             }
             isValid = t.isValid
-            isEndingEvent = t.isEndingEvent
-            eventType = CareportalEvent.TEMPBASAL
+            eventType = TherapyEvent.Type.TEMPORARY_BASAL
             enteredBy = "openaps://" + resourceHelper.gs(R.string.app_name)
-            duration = t.realDuration
-            percentRate = t.percentRate
-            isFakeExtended = t.isFakeExtended
-            created_at = DateUtil.toISOString(t.timestamp)
+            duration = t.durationInMinutes.toInt()
+            created_at = dateUtil.toISOString(t.timestamp)
             isAbsolute = true
         }
 
@@ -462,21 +474,17 @@ class AutotuneIob(
             val cPjson = JSONObject()
             try {
                 cPjson.put("_id", _id)
-                cPjson.put("eventType", eventType)
+                cPjson.put("eventType", eventType!!.text)
                 cPjson.put("date", date)
                 cPjson.put("created_at", created_at)
                 cPjson.put("insulin", if (insulin > 0) insulin else JSONObject.NULL)
                 cPjson.put("carbs", if (carbs > 0) carbs else JSONObject.NULL)
-                if (eventType === CareportalEvent.TEMPBASAL) {
-                    if (!isEndingEvent) {
-                        cPjson.put("duration", duration)
-                        cPjson.put("absolute", absoluteRate)
-                        cPjson.put("rate", absoluteRate)
-                        // cPjson.put("percent", percentRate - 100);
-                        cPjson.put("isFakeExtended", isFakeExtended)
-                    }
+                if (eventType === TherapyEvent.Type.TEMPORARY_BASAL) {
+                    cPjson.put("duration", duration)
+                    cPjson.put("absolute", absoluteRate)
+                    cPjson.put("rate", absoluteRate)
+                    cPjson.put("isFakeExtended", isFakeExtended)
                     cPjson.put("enteredBy", enteredBy)
-                    //cPjson.put("isEnding", isEndingEvent);
                 } else {
                     cPjson.put("isSMB", isSMB)
                     cPjson.put("isMealBolus", mealBolus)
