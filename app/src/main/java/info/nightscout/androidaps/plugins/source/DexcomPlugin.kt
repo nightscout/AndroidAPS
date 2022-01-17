@@ -104,20 +104,6 @@ class DexcomPlugin @Inject constructor(
                     "G5" -> GlucoseValue.SourceSensor.DEXCOM_G5_NATIVE
                     else -> GlucoseValue.SourceSensor.DEXCOM_NATIVE_UNKNOWN
                 }
-                val glucoseValuesBundle = bundle.getBundle("glucoseValues")
-                    ?: return Result.failure(workDataOf("Error" to "missing glucoseValues"))
-                val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
-                for (i in 0 until glucoseValuesBundle.size()) {
-                    val glucoseValueBundle = glucoseValuesBundle.getBundle(i.toString())!!
-                    glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(
-                        timestamp = glucoseValueBundle.getLong("timestamp") * 1000,
-                        value = glucoseValueBundle.getInt("glucoseValue").toDouble(),
-                        noise = null,
-                        raw = null,
-                        trendArrow = GlucoseValue.TrendArrow.fromString(glucoseValueBundle.getString("trendArrow")!!),
-                        sourceSensor = sourceSensor
-                    )
-                }
                 val calibrations = mutableListOf<CgmSourceTransaction.Calibration>()
                 bundle.getBundle("meters")?.let { meters ->
                     for (i in 0 until meters.size()) {
@@ -136,6 +122,26 @@ class DexcomPlugin @Inject constructor(
                             }
                         }
                     }
+                }
+                val glucoseValuesBundle = bundle.getBundle("glucoseValues")
+                    ?: return Result.failure(workDataOf("Error" to "missing glucoseValues"))
+                val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
+                for (i in 0 until glucoseValuesBundle.size()) {
+                    val glucoseValueBundle = glucoseValuesBundle.getBundle(i.toString())!!
+                    val timestamp = glucoseValueBundle.getLong("timestamp") * 1000
+                    // G5 calibration bug workaround (calibration is sent as glucoseValue too)
+                    var valid = true
+                    if (sourceSensor == GlucoseValue.SourceSensor.DEXCOM_G5_NATIVE)
+                        calibrations.forEach { calibration -> if (calibration.timestamp == timestamp) valid = false }
+                    if (valid)
+                        glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(
+                            timestamp = timestamp,
+                            value = glucoseValueBundle.getInt("glucoseValue").toDouble(),
+                            noise = null,
+                            raw = null,
+                            trendArrow = GlucoseValue.TrendArrow.fromString(glucoseValueBundle.getString("trendArrow")!!),
+                            sourceSensor = sourceSensor
+                        )
                 }
                 val sensorStartTime = if (sp.getBoolean(R.string.key_dexcom_lognssensorchange, false) && bundle.containsKey("sensorInsertionTime")) {
                     bundle.getLong("sensorInsertionTime", 0) * 1000

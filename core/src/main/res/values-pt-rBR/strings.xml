@@ -2,6 +2,7 @@
 <resources>
     <!--    Keys-->
     <!--    General-->
+    <string name="refresh">Atualizar</string>
     <string name="error">Erro</string>
     <string name="not_set_short">Não definido</string>
     <string name="failedupdatebasalprofile">Falha ao atualizar o perfil basal</string>
@@ -58,7 +59,7 @@
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">Watchdog BT</string>
     <string name="btwatchdog_summary">Desliga o bluetooth do telefone durante um segundo se nenhuma conexão com bomba for possível. Este parâmetro pode ser util em alguns telefones, onde a pilha bluetooth congela.</string>
-    <string name="pairing">A emparelhar</string>
+    <string name="pairing">Emparelhando</string>
     <string name="yes">Sim</string>
     <string name="no">Não</string>
     <string name="loopdisabled">LOOP DESATIVADO POR RESTRIÇÕES</string>
@@ -79,14 +80,16 @@
     <string name="name_short">Nome:</string>
     <string name="time">Hora</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="loading">Carregando…</string>
     <string name="event_time_label">Hora do Evento</string>
+    <string name="notes_label">Notas</string>
     <string name="addnew">Adicionar novo</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">A basal max está limitada a %1$.2f U/h por %2$s</string>
-    <string name="pumplimit">limite bomba</string>
+    <string name="pumplimit">limite da bomba</string>
     <string name="limitingpercentrate">A limitar rácio percentagem máx para %1$d%% porque %2$s</string>
     <string name="itmustbepositivevalue">deve ser valor positivo</string>
-    <string name="limitingbolus">A limitar bólus para %1$.1f U porque %2$s</string>
+    <string name="limitingbolus">Limitando bólus para %1$.1f U porque %2$s</string>
     <string name="pumpNotInitializedProfileNotSet">Bomba não inicializada, perfil não definido!</string>
     <!--    Dialogs-->
     <string name="confirmation">Confirmação</string>
@@ -96,8 +99,8 @@
     <string name="dismiss">Dispensar</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth de energia baixa (LE) não suportado.</string>
-    <string name="ble_not_enabled">Bluetooth não está activado.</string>
-    <string name="location_not_found_title">Localização Não Está Activada</string>
+    <string name="ble_not_enabled">Bluetooth não está ativado.</string>
+    <string name="location_not_found_title">Localização Não Está Ativada</string>
     <string name="location_not_found_message">Para que a procura de Bluetooth funcione em aparelhos mais recentes, a localização tem que ser activada. A app não rastreia a sua localização e pode ser desativada depois de um emparelhamento bem sucedido.</string>
     <!--    DateUtil-->
     <string name="shorthour">h</string>
@@ -128,8 +131,8 @@
     <!--    PumpType-->
     <string name="def_extended_note">* Somente valores discretos nos intervalos são suportados como granularidade para basal/bolus na bomba virtual.</string>
     <!--    APSResult-->
-    <string name="canceltemp">Cancelar basal temporária</string>
-    <string name="let_temp_basal_run">Permitir basal temp correr</string>
+    <string name="canceltemp">Cancelar basal temporário</string>
+    <string name="let_temp_basal_run">Deixa o basal temporário em andamento</string>
     <string name="rate">Rácio</string>
     <string name="duration">Duração</string>
     <string name="reason">Motivo</string>
@@ -147,17 +150,17 @@
     <string name="careportal_pumpsitechange">Alteração do local do cateter</string>
     <string name="careportal_cgmsensorinsert">Colocação do Sensor CGM</string>
     <string name="careportal_cgmsensorstart">Início do Sensor CGM</string>
-    <string name="careportal_insulincartridgechange">Mudança de Cartucho de Insulina</string>
+    <string name="careportal_insulincartridgechange">Troca de Reservatório de Insulina</string>
     <string name="careportal_profileswitch">Troca de Perfil</string>
     <string name="careportal_snackbolus">Bólus Lanche</string>
     <string name="careportal_mealbolus">Bólus Refeição</string>
-    <string name="careportal_correctionbolus">Bólus Correcção</string>
+    <string name="careportal_correctionbolus">Bólus Correção</string>
     <string name="careportal_combobolus">Bólus Combo</string>
     <string name="careportal_tempbasalstart">Início Basal Temp</string>
-    <string name="careportal_tempbasalend">Fim de Basal Temp</string>
-    <string name="careportal_carbscorrection">Correção Carbos</string>
+    <string name="careportal_tempbasalend">Fim do Basal Temp</string>
+    <string name="careportal_carbscorrection">Correção Carboidratos</string>
     <string name="careportal_openapsoffline">OpenAPS Offline</string>
-    <string name="careportal_pumpbatterychange">Mudança de Bateria</string>
+    <string name="careportal_pumpbatterychange">Troca de Bateria da Bomba</string>
     <string name="careportal_temporarytarget">Alvo Temporário</string>
     <string name="careportal_temporarytargetcancel">Cancelar alvo temporário</string>
     <string name="boluswizard">Assistente de Bólus</string>
@@ -168,7 +171,7 @@
     <string name="eatingsoon">Comer em breve</string>
     <string name="hypo">Hipo</string>
     <string name="wear">Wear</string>
-    <string name="automation">Automatização</string>
+    <string name="automation">Automação</string>
     <string name="custom">Personalizado</string>
     <!--    Command-->
     <string name="connectiontimedout">Ligação expirou</string>
@@ -192,12 +195,12 @@
     <string name="ratio">Média</string>
     <string name="amount_days"># Dias</string>
     <string name="weight">Peso</string>
-    <string name="warning_Message">Possivelmente impreciso se foram usados bolus para purgar/preencher!</string>
+    <string name="warning_Message">Possivelmente impreciso se o bolus for usado para purgar!</string>
     <string name="olddata_Message">Dados antigos, pressione \"Recarregar\"</string>
     <string name="tbb">Basal Diária Total</string>
     <string name="tbb2">Basal diária * 2</string>
     <!--    Ntp-->
-    <string name="timedetection">Detecção de tempo</string>
+    <string name="timedetection">Deteção de tempo</string>
     <!-- Maintenance -->
     <string name="metadata_label_created_at">Criado em</string>
     <string name="metadata_label_aaps_version">Versão AAPS</string>
@@ -237,4 +240,12 @@
     <!-- HardLimits -->
     <string name="valuelimitedto">%1$.2f limitado a %2$.2f</string>
     <!-- Command Queue + readStatus reasons -->
+    <plurals name="days">
+        <item quantity="one">%1$d dia</item>
+        <item quantity="other">%1$d dias</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d hora</item>
+        <item quantity="other">%1$d horas</item>
+    </plurals>
 </resources>

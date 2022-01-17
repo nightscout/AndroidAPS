@@ -303,6 +303,7 @@
     <string name="sunday_short">S</string>
     <!-- User Entry -->
     <string name="uel_bolus">BOLUSAS</string>
+    <string name="uel_bolus_calculator">SKAIČIUOTUVAS</string>
     <string name="uel_bolus_advisor">BOLUSO SKAIČIUOTUVAS</string>
     <string name="uel_extended_bolus">IŠTĘSTAS BOLUSAS</string>
     <string name="uel_superbolus_tbr">SUPERBOLUSO LB</string>
@@ -412,14 +413,33 @@
     <string name="bolus_u_min">BOLUSAS %1$.2f vv</string>
     <string name="carbs_g">AV %1$d g</string>
     <string name="extended_bolus_u_min">IŠTĘSTAS BOLUSAS %1$.2f vv %2$d min</string>
+    <string name="load_events">GAUTI ĮVYKIUS</string>
+    <string name="load_history">GAUTI ISTORIJĄ %1$d</string>
+    <string name="load_tdds">GAUTI BPD</string>
     <string name="set_profile">NUSTATYTI PROFILĮ</string>
     <string name="set_user_settings">PASIRINKTI VARTOTOJO NUSTATYMUS</string>
     <string name="smb_bolus_u">SMB BOLUSAS %1$.2f vv</string>
     <string name="start_pump">PALEISTI POMPĄ</string>
     <string name="stop_pump">SUSTABDYTI POMPĄ</string>
+    <string name="temp_basal_absolute">LAIKINA BAZĖ %1$.2f vv/h %2$d min</string>
+    <string name="temp_basal_percent">LAIKINA BAZĖ %1$d%% %2$d min</string>
+    <string name="insight_set_tbr_over_notification">INSIGHT NUSTATYTI LAIKINĄ BAZĘ PRANEŠIMU</string>
+    <string name="read_status" comment="10 characters max for READSTATUS translation">STATUSAS %1$s</string>
+    <string name="keepalive_status_outdated" comment="26 characters max for translation">Tęsti. Būklė per sena.</string>
+    <string name="keepalive_basal_outdated" comment="26 characters max for translation">Tęsti. Bazė per sena.</string>
     <string name="sms" comment="26 characters max for translation">SMS</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Spausta \"jungtis su pompa\"</string>
+    <string name="pump_driver_changed" comment="26 characters max for translation">Pompos valdik. pakeistas.</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Pompos valdiklio keitimas.</string>
     <string name="device_changed" comment="26 characters max for translation">Įrenginys pakeistas</string>
     <string name="clicked_refresh" comment="26 characters max for translation">Paspausta atnaujinti</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Planuotas būklės naujinimas</string>
+    <string name="unconfirmed_command" comment="26 characters max for translation">Nepatvirtinta komanda</string>
+    <string name="requested_by_user" comment="26 characters max for translation">Užklausta vartotojo</string>
+    <string name="user_request" comment="26 characters max for translation">Vartotojo užklausa</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bolusas OK</string>
+    <string name="pump_paired" comment="26 characters max for translation">Pompa suporuota</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Insight Mygtukas Naujinti</string>
     <plurals name="days">
         <item quantity="one">%1$d d.</item>
         <item quantity="few">%1$d d.</item>
