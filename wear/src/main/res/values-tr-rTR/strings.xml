@@ -79,7 +79,7 @@
     <string name="action_low" comment="In temp target menu, lower value from range">düşük</string>
     <string name="action_high" comment="In temp target menu, higher value from range">yüksek</string>
     <string name="action_carbs">karbonhidrat</string>
-    <string name="action_percentage">yüzdesi</string>
+    <string name="action_percentage">yüzde</string>
     <string name="action_start_min">başlat [min]</string>
     <string name="action_duration_h">süre [h]</string>
     <string name="action_insulin">insülin</string>
@@ -96,7 +96,7 @@
     <string name="status_pump">Pompa</string>
     <string name="status_loop">Döngü</string>
     <string name="status_cpp">CPP</string>
-    <string name="status_tdd">TDD</string>
+    <string name="status_tdd">GTD</string>
     <string name="activity_carb">Karb</string>
     <string name="activity_IOB">IOB</string>
     <string name="activity_no_status">durum yok</string>
@@ -122,6 +122,8 @@
     <string name="color_name_white">beyaz</string>
     <string name="color_name_black">siyah</string>
     <string name="color_name_multicolor">çok renkli</string>
+    <string name="pref_simplify_ui_charging">Basitleştirilmiş şarj arayüzü</string>
+    <string name="pref_simplify_ui_charging_sum">Yalnızca şarj olurken zamanı ve KŞ\'ni göster</string>
     <string name="pref_vibrate_hourly">Saatlik titreşim</string>
     <string name="pref_show_weeknumber">Hafta numarasını göster</string>
     <string name="digitalstyle_pref_your_style">Stilin:</string>

@@ -17,9 +17,9 @@ class EffectiveProfileSwitchDataPoint @Inject constructor(
         yValue = y
     }
 
-    override fun getLabel(): String = data.originalCustomizedName
-    override fun getDuration(): Long = 0
-    override fun getShape(): PointsWithLabelGraphSeries.Shape = PointsWithLabelGraphSeries.Shape.PROFILE
-    override fun getSize(): Float = 10f
-    override fun getColor(): Int = Color.CYAN
+    override val label get() = data.originalCustomizedName
+    override val duration = 0L
+    override val shape = PointsWithLabelGraphSeries.Shape.PROFILE
+    override val size = 10f
+    override val color = Color.CYAN
 }

@@ -1,6 +1,6 @@
 package info.nightscout.androidaps
 
-import info.nightscout.androidaps.logging.AAPSLoggerTest
+import info.nightscout.shared.logging.AAPSLoggerTest
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.rx.TestAapsSchedulers
 import org.junit.Before

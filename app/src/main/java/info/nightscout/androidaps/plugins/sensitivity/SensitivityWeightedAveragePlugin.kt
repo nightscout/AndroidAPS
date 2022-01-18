@@ -7,20 +7,20 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TherapyEvent
-import info.nightscout.androidaps.extensions.isEPSEvent5minBack
+import info.nightscout.androidaps.extensions.isPSEvent5minBack
 import info.nightscout.androidaps.extensions.isTherapyEventEvent5minBack
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.Sensitivity.SensitivityType
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject
@@ -37,13 +37,14 @@ class SensitivityWeightedAveragePlugin @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
     private val repository: AppRepository
-) : AbstractSensitivityPlugin(PluginDescription()
-    .mainType(PluginType.SENSITIVITY)
-    .pluginIcon(R.drawable.ic_generic_icon)
-    .pluginName(R.string.sensitivityweightedaverage)
-    .shortName(R.string.sensitivity_shortname)
-    .preferencesId(R.xml.pref_absorption_aaps)
-    .description(R.string.description_sensitivity_weighted_average),
+) : AbstractSensitivityPlugin(
+    PluginDescription()
+        .mainType(PluginType.SENSITIVITY)
+        .pluginIcon(R.drawable.ic_generic_icon)
+        .pluginName(R.string.sensitivityweightedaverage)
+        .shortName(R.string.sensitivity_shortname)
+        .preferencesId(R.xml.pref_absorption_aaps)
+        .description(R.string.description_sensitivity_weighted_average),
     injector, aapsLogger, rh, sp
 ) {
 
@@ -69,7 +70,7 @@ class SensitivityWeightedAveragePlugin @Inject constructor(
             return AutosensResult()
         }
         val siteChanges = repository.getTherapyEventDataFromTime(fromTime, TherapyEvent.Type.CANNULA_CHANGE, true).blockingGet()
-        val profileSwitches = repository.getEffectiveProfileSwitchDataFromTime(fromTime, true).blockingGet()
+        val profileSwitches = repository.getProfileSwitchDataFromTime(fromTime, true).blockingGet()
         var pastSensitivity = ""
         var index = 0
         val data = LongSparseArray<Double>()
@@ -95,7 +96,7 @@ class SensitivityWeightedAveragePlugin @Inject constructor(
             }
 
             // reset deviations after profile switch
-            if (profileSwitches.isEPSEvent5minBack(autosensData.time)) {
+            if (profileSwitches.isPSEvent5minBack(autosensData.time)) {
                 data.clear()
                 pastSensitivity += "(PROFILESWITCH)"
             }
@@ -148,7 +149,8 @@ class SensitivityWeightedAveragePlugin @Inject constructor(
         aapsLogger.debug(LTag.AUTOSENS, sensResult)
         val output = fillResult(ratio, current.cob, pastSensitivity, ratioLimit,
             sensResult, data.size())
-        aapsLogger.debug(LTag.AUTOSENS, "Sensitivity to: "
+        aapsLogger.debug(
+            LTag.AUTOSENS, "Sensitivity to: "
             + dateUtil.dateAndTimeString(toTime) +
             " ratio: " + output.ratio
             + " mealCOB: " + current.cob)

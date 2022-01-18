@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugin.general.openhumans.delegates
 
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton

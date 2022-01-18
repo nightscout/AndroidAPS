@@ -10,7 +10,8 @@ import android.view.animation.RotateAnimation;
 
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interaction.menus.MainMenuActivity;
-import info.nightscout.androidaps.interaction.utils.SafeParse;
+import info.nightscout.shared.SafeParse;
+
 /**
  * Created by andrew-warrington on 01/12/2017.
  */
@@ -66,7 +67,7 @@ public class Steampunk extends BaseWatchFace {
     protected void setColorDark() {
 
         if (mLinearLayout2 != null) {
-            if (ageLevel() <= 0) {
+            if (ageLevel() <= 0 && rawData.datetime != 0) {
                 mLinearLayout2.setBackgroundResource(R.drawable.redline);
                 mTimestamp.setTextColor(getResources().getColor(R.color.red_600));
             } else {
@@ -107,6 +108,7 @@ public class Steampunk extends BaseWatchFace {
 
             if (rotationAngle > 330) rotationAngle = 330;                       //if the glucose value is higher than 330 then show "HIGH" on the dial. ("HIGH" is at 330 degrees on the dial)
             if (rotationAngle != 0 && rotationAngle < 30) rotationAngle = 30;   //if the glucose value is lower than 30 show "LOW" on the dial. ("LOW" is at 30 degrees on the dial)
+            if (lastEndDegrees == 0) lastEndDegrees = rotationAngle;
 
             //rotate glucose dial
             RotateAnimation rotate = new RotateAnimation(

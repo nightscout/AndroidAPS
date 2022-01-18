@@ -76,7 +76,7 @@ class CalibrationDialog : DialogFragmentWithDate() {
         val units = profileFunction.getUnits()
         val unitLabel = if (units == GlucoseUnit.MMOL) rh.gs(R.string.mmol) else rh.gs(R.string.mgdl)
         val actions: LinkedList<String?> = LinkedList()
-        val bg = binding.bg.value ?: return false
+        val bg = binding.bg.value
         actions.add(rh.gs(R.string.treatments_wizard_bg_label) + ": " + Profile.toCurrentUnitsString(profileFunction, bg) + " " + unitLabel)
         if (bg > 0) {
             activity?.let { activity ->

@@ -5,40 +5,39 @@ import android.content.Intent
 import android.text.Spanned
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.BolusCalculatorResult
 import info.nightscout.androidaps.database.entities.OfflineEvent
-import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.InsertOrUpdateBolusCalculatorResultTransaction
 import info.nightscout.androidaps.events.EventRefreshOverview
+import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.queue.Callback
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.utils.*
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import java.util.*
 import javax.inject.Inject
 import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
 
 class BolusWizard @Inject constructor(
     val injector: HasAndroidInjector
@@ -52,7 +51,7 @@ class BolusWizard @Inject constructor(
     @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var commandQueue: CommandQueue
-    @Inject lateinit var loopPlugin: LoopPlugin
+    @Inject lateinit var loop: Loop
     @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var config: Config
@@ -108,6 +107,10 @@ class BolusWizard @Inject constructor(
         private set
     var insulinAfterConstraints: Double = 0.0
         private set
+    var calculatedPercentage: Double = 100.0
+        private set
+    var calculatedCorrection: Double = 0.0
+        private set
 
     // Input
     lateinit var profile: Profile
@@ -117,7 +120,8 @@ class BolusWizard @Inject constructor(
     var cob: Double = 0.0
     var bg: Double = 0.0
     private var correction: Double = 0.0
-    private var percentageCorrection: Int = 0
+    var percentageCorrection: Int = 100
+    private var totalPercentage: Double = 100.0
     private var useBg: Boolean = false
     private var useCob: Boolean = false
     private var includeBolusIOB: Boolean = false
@@ -129,6 +133,7 @@ class BolusWizard @Inject constructor(
     var notes: String = ""
     private var carbTime: Int = 0
     private var quickWizard: Boolean = true
+    var usePercentage: Boolean = false
 
     fun doCalc(profile: Profile,
                profileName: String,
@@ -148,6 +153,8 @@ class BolusWizard @Inject constructor(
                useAlarm: Boolean,
                notes: String = "",
                carbTime: Int = 0,
+               usePercentage: Boolean = false,
+               totalPercentage: Double = 100.0,
                quickWizard: Boolean = false
     ): BolusWizard {
 
@@ -170,6 +177,8 @@ class BolusWizard @Inject constructor(
         this.notes = notes
         this.carbTime = carbTime
         this.quickWizard = quickWizard
+        this.usePercentage = usePercentage
+        this.totalPercentage = totalPercentage
 
         // Insulin from BG
         sens = Profile.fromMgdlToUnits(profile.getIsfMgdl(), profileFunction.getUnits())
@@ -211,7 +220,7 @@ class BolusWizard @Inject constructor(
         insulinFromBasalIOB = if (includeBasalIOB) -basalIob.basaliob else 0.0
 
         // Insulin from correction
-        insulinFromCorrection = correction
+        insulinFromCorrection = if (usePercentage) 0.0 else correction
 
         // Insulin from superbolus for 2h. Get basal rate now and after 1h
         if (useSuperBolus) {
@@ -224,15 +233,23 @@ class BolusWizard @Inject constructor(
         // Total
         calculatedTotalInsulin = insulinFromBG + insulinFromTrend + insulinFromCarbs + insulinFromBolusIOB + insulinFromBasalIOB + insulinFromCorrection + insulinFromSuperBolus + insulinFromCOB
 
+        var percentage = if (usePercentage) totalPercentage else percentageCorrection.toDouble()
+
         // Percentage adjustment
         totalBeforePercentageAdjustment = calculatedTotalInsulin
-        if (calculatedTotalInsulin > 0) {
-            calculatedTotalInsulin = calculatedTotalInsulin * percentageCorrection / 100.0
-        }
-
-        if (calculatedTotalInsulin < 0) {
+        if (calculatedTotalInsulin >= 0) {
+            calculatedTotalInsulin = calculatedTotalInsulin * percentage / 100.0
+            if (usePercentage)
+                calcCorrectionWithConstraints()
+            else
+                calcPercentageWithConstraints()
+            if (usePercentage)  //Should be updated after calcCorrectionWithConstraints and calcPercentageWithConstraints to have correct synthesis in WizardInfo
+                this.percentageCorrection = Round.roundTo(totalPercentage, 1.0).toInt()
+        } else {
             carbsEquivalent = (-calculatedTotalInsulin) * ic
             calculatedTotalInsulin = 0.0
+            calculatedPercentage = percentageCorrection.toDouble()
+            calculatedCorrection = 0.0
         }
 
         val bolusStep = activePlugin.activePump.pumpDescription.bolusStep
@@ -373,8 +390,8 @@ class BolusWizard @Inject constructor(
             if (insulinAfterConstraints > 0 || carbs > 0) {
                 if (useSuperBolus) {
                     uel.log(Action.SUPERBOLUS_TBR, Sources.WizardDialog)
-                    if (loopPlugin.isEnabled()) {
-                        loopPlugin.goToZeroTemp(2 * 60, profile, OfflineEvent.Reason.SUPER_BOLUS)
+                    if ((loop as PluginBase).isEnabled()) {
+                        loop.goToZeroTemp(2 * 60, profile, OfflineEvent.Reason.SUPER_BOLUS)
                         rxBus.send(EventRefreshOverview("WizardDialog"))
                     }
 
@@ -439,9 +456,25 @@ class BolusWizard @Inject constructor(
 
                 }
                 if (useAlarm && carbs > 0 && carbTime > 0) {
-                    carbTimer.scheduleReminder(dateUtil.now() + T.mins(carbTime.toLong()).msecs())
+                    carbTimer.scheduleReminder(T.mins(carbTime.toLong()).secs().toInt())
                 }
             }
         })
     }
+
+    private fun calcPercentageWithConstraints() {
+        calculatedPercentage = 100.0
+        if (totalBeforePercentageAdjustment != insulinFromCorrection)
+            calculatedPercentage = calculatedTotalInsulin/(totalBeforePercentageAdjustment-insulinFromCorrection) * 100
+        calculatedPercentage = max(calculatedPercentage, 10.0)
+        calculatedPercentage = min(calculatedPercentage,250.0)
+    }
+
+    private fun calcCorrectionWithConstraints() {
+        calculatedCorrection = totalBeforePercentageAdjustment * totalPercentage / percentageCorrection - totalBeforePercentageAdjustment
+        //Apply constraints
+        calculatedCorrection = min(constraintChecker.getMaxBolusAllowed().value(), calculatedCorrection)
+        calculatedCorrection = max(-constraintChecker.getMaxBolusAllowed().value(), calculatedCorrection)
+    }
+
 }

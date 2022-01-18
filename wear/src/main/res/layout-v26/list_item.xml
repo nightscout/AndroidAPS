@@ -1,23 +1,37 @@
-<info.nightscout.androidaps.interaction.utils.WearableListItemLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:gravity="center_vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/menu_container"
     android:layout_width="match_parent"
-    android:layout_height="80dp">
-    <TextView
-        android:id="@+id/actionitem"
-        android:gravity="center_vertical|center_horizontal"
-        android:layout_width="match_parent"
-        android:layout_marginRight="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_height="match_parent"
-        android:fontFamily="sans-serif-condensed-light"
-        android:lineSpacingExtra="-4sp"
-        android:textColor="@color/dark_statusView"
-        android:textSize="32sp"
-        android:autoSizeTextType="uniform"
-        android:autoSizeMinTextSize="12sp"
-        android:autoSizeMaxTextSize="32sp"
-        android:autoSizeStepGranularity="2sp"
-        />
-</info.nightscout.androidaps.interaction.utils.WearableListItemLayout>
+    android:layout_height="wrap_content"
+    android:background="@drawable/menu_item_layout_bg"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp">
 
+    <ImageView
+        android:id="@+id/menuItemIcon"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="10dp"
+        android:src="@drawable/circle" />
+
+    <TextView
+        android:id="@+id/menuItemText"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="10dp"
+        android:layout_toEndOf="@+id/menuItemIcon"
+        android:layout_toRightOf="@+id/menuItemIcon"
+        android:autoSizeMaxTextSize="32sp"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeStepGranularity="2sp"
+        android:autoSizeTextType="uniform"
+        android:text="action item"
+        android:textColor="@color/dark_statusView"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+</RelativeLayout>

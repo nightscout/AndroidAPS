@@ -127,7 +127,7 @@ class DashPodManagementActivity : NoSplashAppCompatActivity() {
         binding.buttonDiscardPod.visibility = discardButtonEnabled.toVisibility()
 
         binding.buttonActivatePod.isEnabled = podStateManager.activationProgress.isBefore(ActivationProgress.COMPLETED)
-        binding.buttonDeactivatePod.isEnabled = podStateManager.bluetoothAddress != null
+        binding.buttonDeactivatePod.isEnabled = podStateManager.bluetoothAddress != null || podStateManager.ltk != null
 
         if (podStateManager.activationProgress.isAtLeast(ActivationProgress.PHASE_1_COMPLETED)) {
             if (commandQueue.isCustomCommandInQueue(CommandPlayTestBeep::class.java)) {

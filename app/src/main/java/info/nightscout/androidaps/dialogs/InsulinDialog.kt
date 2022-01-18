@@ -12,23 +12,24 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
 import info.nightscout.androidaps.databinding.DialogInsulinBinding
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.extensions.formatColor
+import info.nightscout.androidaps.extensions.toVisibility
+import info.nightscout.androidaps.interfaces.*
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.utils.extensions.toSignedString
-import info.nightscout.androidaps.extensions.toVisibility
-import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.shared.SafeParse
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import java.text.DecimalFormat
@@ -149,7 +150,7 @@ class InsulinDialog : DialogFragmentWithDate() {
     override fun submit(): Boolean {
         if (_binding == null) return false
         val pumpDescription = activePlugin.activePump.pumpDescription
-        val insulin = SafeParse.stringToDouble(binding.amount.text ?: return false)
+        val insulin = SafeParse.stringToDouble(binding.amount.text)
         val insulinAfterConstraints = constraintChecker.applyBolusConstraints(Constraint(insulin)).value()
         val actions: LinkedList<String?> = LinkedList()
         val units = profileFunction.getUnits()

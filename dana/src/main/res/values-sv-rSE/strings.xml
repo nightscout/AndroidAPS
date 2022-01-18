@@ -116,4 +116,5 @@
     <string name="num1pin">1: (12 tecken)</string>
     <string name="num2pin">2: (8 tecken)</string>
     <string name="basal_bolus_step">Basal/bolus steg</string>
+    <string name="carbs_store_error">Kolhydrater lagrades förmodligen inte korrekt. Kontrollera och lagra manuellt igen vid behov.</string>
 </resources>

@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.danars.comm
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.danars.encryption.BleEncryption
 
 class DanaRSPacketHistoryAllHistory(

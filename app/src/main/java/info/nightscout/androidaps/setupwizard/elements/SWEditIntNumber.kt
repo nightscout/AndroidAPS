@@ -8,7 +8,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.setupwizard.SWIntNumberValidator
-import info.nightscout.androidaps.utils.SafeParse
+import info.nightscout.shared.SafeParse
 import info.nightscout.androidaps.utils.ui.NumberPicker
 import java.text.DecimalFormat
 

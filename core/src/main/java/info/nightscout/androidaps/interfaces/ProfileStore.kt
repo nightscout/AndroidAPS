@@ -4,7 +4,7 @@ import androidx.collection.ArrayMap
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.PureProfile
 import info.nightscout.androidaps.extensions.pureProfileFromJson
-import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
 import org.json.JSONException
@@ -61,6 +61,7 @@ class ProfileStore(val injector: HasAndroidInjector, val data: JSONObject, val d
         return ret
     }
 
+    @Synchronized
     fun getSpecificProfile(profileName: String): PureProfile? {
         var profile: PureProfile? = null
         val units = JsonHelper.safeGetStringAllowNull(data, "units", storeUnits())

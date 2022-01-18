@@ -14,12 +14,12 @@ import info.nightscout.androidaps.interfaces.BgSource
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.utils.JsonHelper.safeGetString
 import info.nightscout.androidaps.utils.XDripBroadcast
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONArray
 import org.json.JSONException
 import javax.inject.Inject
@@ -70,8 +70,8 @@ class PoctechPlugin @Inject constructor(
                     val json = jsonArray.getJSONObject(i)
                     glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(
                         timestamp = json.getLong("date"),
-                        value = if (safeGetString(json, "units", Constants.MGDL) == "mmol/L") json.getDouble("current")
-                        else json.getDouble("current") * Constants.MMOLL_TO_MGDL,
+                        value = if (safeGetString(json, "units", Constants.MGDL) == "mmol/L") json.getDouble("current") * Constants.MMOLL_TO_MGDL
+                        else json.getDouble("current"),
                         raw = json.getDouble("raw"),
                         noise = null,
                         trendArrow = GlucoseValue.TrendArrow.fromString(json.getString("direction")),

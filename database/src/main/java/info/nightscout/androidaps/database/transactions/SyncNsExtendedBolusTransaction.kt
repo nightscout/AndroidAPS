@@ -29,6 +29,7 @@ class SyncNsExtendedBolusTransaction(private val extendedBolus: ExtendedBolus) :
                 }
                 if (current.duration != extendedBolus.duration) {
                     current.duration = extendedBolus.duration
+                    current.amount = extendedBolus.amount
                     database.extendedBolusDao.updateExistingEntry(current)
                     result.updatedDuration.add(current)
                 }

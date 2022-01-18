@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.dana
 
 import info.nightscout.androidaps.TestBaseWithProfile
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

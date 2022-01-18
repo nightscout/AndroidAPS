@@ -8,11 +8,11 @@ import info.nightscout.androidaps.extensions.toJson
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.DataSyncSelector
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -29,19 +29,19 @@ class DataSyncSelectorImplementation @Inject constructor(
 ) : DataSyncSelector {
 
     class QueueCounter(
-        var bolusesRemaining: Long = 0L,
-        var carbsRemaining: Long = 0L,
-        var bcrRemaining: Long = 0L,
-        var ttsRemaining: Long = 0L,
-        var foodsRemaining: Long = 0L,
-        var gvsRemaining: Long = 0L,
-        var tesRemaining: Long = 0L,
-        var dssRemaining: Long = 0L,
-        var tbrsRemaining: Long = 0L,
-        var ebsRemaining: Long = 0L,
-        var pssRemaining: Long = 0L,
-        var epssRemaining: Long = 0L,
-        var oesRemaining: Long = 0L
+        var bolusesRemaining: Long = -1L,
+        var carbsRemaining: Long = -1L,
+        var bcrRemaining: Long = -1L,
+        var ttsRemaining: Long = -1L,
+        var foodsRemaining: Long = -1L,
+        var gvsRemaining: Long = -1L,
+        var tesRemaining: Long = -1L,
+        var dssRemaining: Long = -1L,
+        var tbrsRemaining: Long = -1L,
+        var ebsRemaining: Long = -1L,
+        var pssRemaining: Long = -1L,
+        var epssRemaining: Long = -1L,
+        var oesRemaining: Long = -1L
     ) {
 
         fun size(): Long =

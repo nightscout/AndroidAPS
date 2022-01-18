@@ -17,19 +17,19 @@ import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
 import info.nightscout.androidaps.queue.commands.*
+import info.nightscout.androidaps.utils.AndroidPermission
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.buildHelper.BuildHelperImpl
-import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.Single
 import org.junit.Assert
 import org.junit.Before
@@ -47,6 +47,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     @Mock lateinit var powerManager: PowerManager
     @Mock lateinit var repository: AppRepository
     @Mock lateinit var fileListProvider: PrefFileListProvider
+    @Mock lateinit var androidPermission: AndroidPermission
 
     class CommandQueueMocked(
         injector: HasAndroidInjector,
@@ -63,9 +64,10 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         dateUtil: DateUtil,
         repository: AppRepository,
         fabricPrivacy: FabricPrivacy,
-        config: Config
+        config: Config,
+        androidPermission: AndroidPermission
     ) : CommandQueueImplementation(injector, aapsLogger, rxBus, aapsSchedulers, rh, constraintChecker, profileFunction,
-                                   activePlugin, context, sp, buildHelper, dateUtil, repository, fabricPrivacy, config) {
+                                   activePlugin, context, sp, buildHelper, dateUtil, repository, fabricPrivacy, config, androidPermission) {
 
         override fun notifyAboutNewCommand() {}
 
@@ -106,8 +108,9 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     fun prepare() {
         commandQueue = CommandQueueMocked(injector, aapsLogger, rxBus, aapsSchedulers, rh,
                                           constraintChecker, profileFunction, activePlugin, context, sp,
-                                         BuildHelperImpl(ConfigImpl(), fileListProvider), dateUtil, repository,
-                                          fabricPrivacy, config)
+                                         BuildHelperImpl(config, fileListProvider), dateUtil,
+                                          repository,
+                                          fabricPrivacy, config, androidPermission)
         testPumpPlugin = TestPumpPlugin(injector)
 
         testPumpPlugin.pumpDescription.basalMinimumRate = 0.1
@@ -140,8 +143,9 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     fun commandIsPickedUp() {
         val commandQueue = CommandQueueImplementation(injector, aapsLogger, rxBus, aapsSchedulers, rh,
                                                       constraintChecker, profileFunction, activePlugin, context, sp,
-                                                      BuildHelperImpl(ConfigImpl(), fileListProvider), dateUtil, repository,
-                                                      fabricPrivacy, config)
+                                                      BuildHelperImpl(config, fileListProvider),
+                                                      dateUtil, repository,
+                                                      fabricPrivacy, config, androidPermission)
         // start with empty queue
         Assert.assertEquals(0, commandQueue.size())
 

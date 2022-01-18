@@ -5,7 +5,7 @@ import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator
 import info.nightscout.androidaps.plugins.general.automation.elements.InputPercent
 import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement
@@ -41,6 +41,10 @@ class TriggerProfilePercent(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun shouldRun(): Boolean {
         val profile = profileFunction.getProfile()
+        if (profileFunction.isProfileChangePending()) {
+            aapsLogger.debug(LTag.AUTOMATION, "NOT ready for execution: " + "Profile change is already pending: " + friendlyDescription())
+            return false
+        }
         if (profile == null && comparator.value == Comparator.Compare.IS_NOT_AVAILABLE) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
             return true

@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data.dto
 
-import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry
 
@@ -12,7 +12,11 @@ class TempBasalProcessDTO constructor(var itemOne: PumpHistoryEntry,
         set(value) {
             field = value
             if (objectType == ObjectType.TemporaryBasal) {
-                itemTwoTbr = value!!.getDecodedDataEntry("Object") as TempBasalPair
+                if (value!=null) {
+                    itemTwoTbr = value.getDecodedDataEntry("Object") as TempBasalPair
+                } else {
+                    itemTwoTbr = null
+                }
             }
         }
 

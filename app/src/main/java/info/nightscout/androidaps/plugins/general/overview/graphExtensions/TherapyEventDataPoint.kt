@@ -19,9 +19,7 @@ class TherapyEventDataPoint @Inject constructor(
 
     private var yValue = 0.0
 
-    override fun getX(): Double {
-        return data.timestamp.toDouble()
-    }
+    override fun getX(): Double = data.timestamp.toDouble()
 
     override fun getY(): Double {
         val units = profileFunction.getUnits()
@@ -46,30 +44,29 @@ class TherapyEventDataPoint @Inject constructor(
         yValue = y
     }
 
-    override fun getLabel(): String? =
-        if (data.note.isNullOrBlank().not()) data.note
-        else translator.translate(data.type)
+    override val label get() = if (data.note.isNullOrBlank().not()) data.note else translator.translate(data.type)
+    override val duration get() = data.duration
+    override val shape
+        get() =
+            when {
+                data.type == TherapyEvent.Type.NS_MBG                -> PointsWithLabelGraphSeries.Shape.MBG
+                data.type == TherapyEvent.Type.FINGER_STICK_BG_VALUE -> PointsWithLabelGraphSeries.Shape.BGCHECK
+                data.type == TherapyEvent.Type.ANNOUNCEMENT          -> PointsWithLabelGraphSeries.Shape.ANNOUNCEMENT
+                data.type == TherapyEvent.Type.APS_OFFLINE           -> PointsWithLabelGraphSeries.Shape.OPENAPSOFFLINE
+                data.type == TherapyEvent.Type.EXERCISE              -> PointsWithLabelGraphSeries.Shape.EXERCISE
+                duration > 0                                         -> PointsWithLabelGraphSeries.Shape.GENERALWITHDURATION
+                else                                                 -> PointsWithLabelGraphSeries.Shape.GENERAL
+            }
 
-    override fun getDuration(): Long = data.duration
-    override fun getShape(): PointsWithLabelGraphSeries.Shape =
-        when {
-            data.type == TherapyEvent.Type.NS_MBG                -> PointsWithLabelGraphSeries.Shape.MBG
-            data.type == TherapyEvent.Type.FINGER_STICK_BG_VALUE -> PointsWithLabelGraphSeries.Shape.BGCHECK
-            data.type == TherapyEvent.Type.ANNOUNCEMENT          -> PointsWithLabelGraphSeries.Shape.ANNOUNCEMENT
-            data.type == TherapyEvent.Type.APS_OFFLINE           -> PointsWithLabelGraphSeries.Shape.OPENAPSOFFLINE
-            data.type == TherapyEvent.Type.EXERCISE              -> PointsWithLabelGraphSeries.Shape.EXERCISE
-            duration > 0                                         -> PointsWithLabelGraphSeries.Shape.GENERALWITHDURATION
-            else                                                 -> PointsWithLabelGraphSeries.Shape.GENERAL
-        }
-
-    override fun getSize(): Float = if (rh.gb(R.bool.isTablet)) 12.0f else 10.0f
-    override fun getColor(): Int =
-        when (data.type) {
-            TherapyEvent.Type.ANNOUNCEMENT          -> rh.gc(R.color.notificationAnnouncement)
-            TherapyEvent.Type.NS_MBG                -> Color.RED
-            TherapyEvent.Type.FINGER_STICK_BG_VALUE -> Color.RED
-            TherapyEvent.Type.EXERCISE              -> Color.BLUE
-            TherapyEvent.Type.APS_OFFLINE           -> Color.GRAY and -0x7f000001
-            else                                    -> Color.GRAY
-        }
+    override val size get() = if (rh.gb(R.bool.isTablet)) 12.0f else 10.0f
+    override val color
+        get() =
+            when (data.type) {
+                TherapyEvent.Type.ANNOUNCEMENT          -> rh.gc(R.color.notificationAnnouncement)
+                TherapyEvent.Type.NS_MBG                -> Color.RED
+                TherapyEvent.Type.FINGER_STICK_BG_VALUE -> Color.RED
+                TherapyEvent.Type.EXERCISE              -> Color.BLUE
+                TherapyEvent.Type.APS_OFFLINE           -> Color.GRAY and -0x7f000001
+                else                                    -> Color.GRAY
+            }
 }

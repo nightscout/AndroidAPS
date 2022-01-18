@@ -9,8 +9,8 @@ import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.events.*
 import info.nightscout.androidaps.extensions.*
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.aps.events.EventLoopInvoked
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.*
@@ -23,7 +23,7 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import org.json.JSONObject
@@ -77,14 +77,14 @@ class OverviewPlugin @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe({ n ->
                            if (notificationStore.add(n.notification))
-                               rxBus.send(EventUpdateOverviewNotification("EventNewNotification"))
+                               overviewBus.send(EventUpdateOverviewNotification("EventNewNotification"))
                        }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventDismissNotification::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ n ->
                            if (notificationStore.remove(n.id))
-                               rxBus.send(EventUpdateOverviewNotification("EventDismissNotification"))
+                               overviewBus.send(EventUpdateOverviewNotification("EventDismissNotification"))
                        }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventIobCalculationProgress::class.java)
@@ -213,6 +213,7 @@ class OverviewPlugin @Inject constructor(
             .putDouble(R.string.key_statuslights_res_critical, sp, rh)
             .putDouble(R.string.key_statuslights_bat_warning, sp, rh)
             .putDouble(R.string.key_statuslights_bat_critical, sp, rh)
+            .putInt(R.string.key_boluswizard_percentage, sp, rh)
 
     override fun applyConfiguration(configuration: JSONObject) {
         configuration
@@ -240,34 +241,32 @@ class OverviewPlugin @Inject constructor(
             .storeDouble(R.string.key_statuslights_res_critical, sp, rh)
             .storeDouble(R.string.key_statuslights_bat_warning, sp, rh)
             .storeDouble(R.string.key_statuslights_bat_critical, sp, rh)
+            .storeInt(R.string.key_boluswizard_percentage, sp, rh)
     }
 
     @Volatile
     var runningRefresh = false
     override fun refreshLoop(from: String) {
         if (runningRefresh) return
-        Thread {
-            runningRefresh = true
-            overviewBus.send(EventUpdateOverviewNotification(from))
-            loadIobCobResults(from)
-            overviewBus.send(EventUpdateOverviewProfile(from))
-            overviewBus.send(EventUpdateOverviewBg(from))
-            overviewBus.send(EventUpdateOverviewTime(from))
-            overviewBus.send(EventUpdateOverviewTemporaryBasal(from))
-            overviewBus.send(EventUpdateOverviewExtendedBolus(from))
-            overviewBus.send(EventUpdateOverviewTemporaryTarget(from))
-            overviewBus.send(EventUpdateOverviewSensitivity(from))
-            loadAsData(from)
-            overviewData.preparePredictions(from)
-            overviewData.prepareBasalData(from)
-            overviewData.prepareTemporaryTargetData(from)
-            overviewData.prepareTreatmentsData(from)
-            overviewData.prepareIobAutosensData(from)
-            overviewBus.send(EventUpdateOverviewGraph(from))
-            overviewBus.send(EventUpdateOverviewIobCob(from))
-            aapsLogger.debug(LTag.UI, "refreshLoop finished")
-            runningRefresh = false
-        }.start()
+        runningRefresh = true
+        overviewBus.send(EventUpdateOverviewNotification(from))
+        loadIobCobResults(from)
+        overviewBus.send(EventUpdateOverviewProfile(from))
+        overviewBus.send(EventUpdateOverviewBg(from))
+        overviewBus.send(EventUpdateOverviewTime(from))
+        overviewBus.send(EventUpdateOverviewTemporaryBasal(from))
+        overviewBus.send(EventUpdateOverviewExtendedBolus(from))
+        overviewBus.send(EventUpdateOverviewTemporaryTarget(from))
+        loadAsData(from)
+        overviewData.preparePredictions(from)
+        overviewData.prepareBasalData(from)
+        overviewData.prepareTemporaryTargetData(from)
+        overviewData.prepareTreatmentsData(from)
+        overviewData.prepareIobAutosensData(from)
+        overviewBus.send(EventUpdateOverviewGraph(from))
+        overviewBus.send(EventUpdateOverviewIobCob(from))
+        aapsLogger.debug(LTag.UI, "refreshLoop finished")
+        runningRefresh = false
     }
 
     @Suppress("SameParameterValue")

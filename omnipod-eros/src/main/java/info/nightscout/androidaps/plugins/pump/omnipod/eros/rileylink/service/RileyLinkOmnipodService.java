@@ -9,7 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 
-import info.nightscout.androidaps.logging.LTag;
+import info.nightscout.shared.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;

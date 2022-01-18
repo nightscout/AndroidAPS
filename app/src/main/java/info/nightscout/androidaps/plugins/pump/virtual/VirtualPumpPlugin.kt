@@ -11,8 +11,8 @@ import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.plannedRemainingMinutes
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.common.ManufacturerType
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
@@ -27,7 +27,7 @@ import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.TimeChangeType
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import org.json.JSONException
@@ -78,7 +78,7 @@ open class VirtualPumpPlugin @Inject constructor(
         it.isExtendedBolusCapable = true
         it.extendedBolusStep = 0.05
         it.extendedBolusDurationStep = 30.0
-        it.extendedBolusMaxDuration = 8 * 60.toDouble()
+        it.extendedBolusMaxDuration = 8 * 60.0
         it.isTempBasalCapable = true
         it.tempBasalStyle = PumpDescription.PERCENT or PumpDescription.ABSOLUTE
         it.maxTempPercent = 500
@@ -93,14 +93,6 @@ open class VirtualPumpPlugin @Inject constructor(
         it.isRefillingCapable = true
         it.storesCarbInfo = false
         it.is30minBasalRatesCapable = true
-    }
-
-    private fun getFakingStatus(): Boolean {
-        return sp.getBoolean(R.string.key_fromNSAreCommingFakedExtendedBoluses, false)
-    }
-
-    fun setFakingStatus(newStatus: Boolean) {
-        sp.putBoolean(R.string.key_fromNSAreCommingFakedExtendedBoluses, newStatus)
     }
 
     override fun onStart() {
@@ -125,7 +117,8 @@ open class VirtualPumpPlugin @Inject constructor(
     }
 
     override val isFakingTempsByExtendedBoluses: Boolean
-        get() = config.NSCLIENT && getFakingStatus()
+        get() = config.NSCLIENT && fakeDataDetected
+    var fakeDataDetected = false
 
     override fun loadTDDs(): PumpEnactResult { //no result, could read DB in the future?
         return PumpEnactResult(injector)
@@ -156,14 +149,9 @@ open class VirtualPumpPlugin @Inject constructor(
         return PumpEnactResult(injector).success(true).enacted(true)
     }
 
-    override fun isThisProfileSet(profile: Profile): Boolean {
-        val running = pumpSync.expectedPumpState().profile
-        return running?.isEqual(profile) ?: false
-    }
+    override fun isThisProfileSet(profile: Profile): Boolean = pumpSync.expectedPumpState().profile?.isEqual(profile) ?: false
 
-    override fun lastDataTime(): Long {
-        return lastDataTime
-    }
+    override fun lastDataTime(): Long = lastDataTime
 
     override val baseBasalRate: Double
         get() = profileFunction.getProfile()?.getBasal() ?: 0.0
@@ -373,25 +361,15 @@ open class VirtualPumpPlugin @Inject constructor(
         return pump
     }
 
-    override fun manufacturer(): ManufacturerType {
-        return pumpDescription.pumpType.manufacturer ?: ManufacturerType.AndroidAPS
-    }
+    override fun manufacturer(): ManufacturerType = pumpDescription.pumpType.manufacturer ?: ManufacturerType.AndroidAPS
 
-    override fun model(): PumpType {
-        return pumpDescription.pumpType
-    }
+    override fun model(): PumpType = pumpDescription.pumpType
 
-    override fun serialNumber(): String {
-        return instanceId()
-    }
+    override fun serialNumber(): String = instanceId()
 
-    override fun shortStatus(veryShort: Boolean): String {
-        return "Virtual Pump"
-    }
+    override fun shortStatus(veryShort: Boolean): String = "Virtual Pump"
 
-    override fun canHandleDST(): Boolean {
-        return true
-    }
+    override fun canHandleDST(): Boolean = true
 
     fun refreshConfiguration() {
         val pumpType = sp.getString(R.string.key_virtualpump_type, PumpType.GENERIC_AAPS.description)
@@ -404,5 +382,4 @@ open class VirtualPumpPlugin @Inject constructor(
     }
 
     override fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {}
-
 }

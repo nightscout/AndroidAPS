@@ -30,8 +30,8 @@ import info.nightscout.androidaps.events.EventNewBG
 import info.nightscout.androidaps.events.EventTempTargetChange
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.interfaces.Loop.LastRun
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopSetLastRunGui
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopUpdateGui
@@ -58,7 +58,7 @@ import info.nightscout.androidaps.extensions.plannedRemainingMinutes
 import info.nightscout.androidaps.plugins.aps.events.EventLoopInvoked
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import javax.inject.Inject
@@ -175,7 +175,7 @@ class LoopPlugin @Inject constructor(
             setPluginEnabled(PluginType.LOOP, value)
         }
 
-    val isLGS: Boolean
+    override val isLGS: Boolean
         get() {
             val closedLoopEnabled = constraintChecker.isClosedLoopAllowed()
             val maxIobAllowed = constraintChecker.getMaxIOBAllowed().value()
@@ -186,13 +186,13 @@ class LoopPlugin @Inject constructor(
             return isLGS
         }
 
-    val isSuperBolus: Boolean
+    override val isSuperBolus: Boolean
         get() {
             val offlineEventWrapped = repository.getOfflineEventActiveAt(dateUtil.now()).blockingGet()
             return offlineEventWrapped is ValueWrapper.Existing && offlineEventWrapped.value.reason == OfflineEvent.Reason.SUPER_BOLUS
         }
 
-    val isDisconnected: Boolean
+    override val isDisconnected: Boolean
         get() {
             val offlineEventWrapped = repository.getOfflineEventActiveAt(dateUtil.now()).blockingGet()
             return offlineEventWrapped is ValueWrapper.Existing && offlineEventWrapped.value.reason == OfflineEvent.Reason.DISCONNECT_PUMP
@@ -208,10 +208,6 @@ class LoopPlugin @Inject constructor(
         return bool
     }
 
-    @Synchronized operator fun invoke(initiator: String, allowNotification: Boolean) {
-        invoke(initiator, allowNotification, false)
-    }
-
     @Synchronized
     fun isEmptyQueue(): Boolean {
         val maxMinutes = 2L
@@ -224,7 +220,7 @@ class LoopPlugin @Inject constructor(
     }
 
     @Synchronized
-    operator fun invoke(initiator: String, allowNotification: Boolean, tempBasalFallback: Boolean) {
+    override fun invoke(initiator: String, allowNotification: Boolean, tempBasalFallback: Boolean) {
         try {
             aapsLogger.debug(LTag.APS, "invoke from $initiator")
             val loopEnabled = constraintChecker.isLoopInvocationAllowed()
@@ -443,7 +439,7 @@ class LoopPlugin @Inject constructor(
         }
     }
 
-    fun disableCarbSuggestions(durationMinutes: Int) {
+    override fun disableCarbSuggestions(durationMinutes: Int) {
         carbsSuggestionsSuspendedUntil = System.currentTimeMillis() + durationMinutes * 60 * 1000
         dismissSuggestion()
     }
@@ -479,7 +475,7 @@ class LoopPlugin @Inject constructor(
         rxBus.send(EventWearConfirmAction("cancelChangeRequest"))
     }
 
-    fun acceptChangeRequest() {
+    override fun acceptChangeRequest() {
         val profile = profileFunction.getProfile() ?: return
         lastRun?.let { lastRun ->
             lastRun.constraintsProcessed?.let { constraintsProcessed ->
@@ -528,7 +524,17 @@ class LoopPlugin @Inject constructor(
         aapsLogger.debug(LTag.APS, "applyAPSRequest: $request")
         val now = System.currentTimeMillis()
         val activeTemp = iobCobCalculator.getTempBasalIncludingConvertedExtended(now)
-        if (request.usePercent && allowPercentage()) {
+        if (request.rate == 0.0 && request.duration == 0 || abs(request.rate - pump.baseBasalRate) < pump.pumpDescription.basalStep) {
+            if (activeTemp != null) {
+                aapsLogger.debug(LTag.APS, "applyAPSRequest: cancelTempBasal()")
+                uel.log(Action.CANCEL_TEMP_BASAL, Sources.Loop)
+                commandQueue.cancelTempBasal(false, callback)
+            } else {
+                aapsLogger.debug(LTag.APS, "applyAPSRequest: Basal set correctly")
+                callback?.result(PumpEnactResult(injector).absolute(request.rate).duration(0)
+                                     .enacted(false).success(true).comment(R.string.basal_set_correctly))?.run()
+            }
+        } else if (request.usePercent && allowPercentage()) {
             if (request.percent == 100 && request.duration == 0) {
                 if (activeTemp != null) {
                     aapsLogger.debug(LTag.APS, "applyAPSRequest: cancelTempBasal()")
@@ -552,17 +558,7 @@ class LoopPlugin @Inject constructor(
                 commandQueue.tempBasalPercent(request.percent, request.duration, false, profile, PumpSync.TemporaryBasalType.NORMAL, callback)
             }
         } else {
-            if (request.rate == 0.0 && request.duration == 0 || abs(request.rate - pump.baseBasalRate) < pump.pumpDescription.basalStep) {
-                if (activeTemp != null) {
-                    aapsLogger.debug(LTag.APS, "applyAPSRequest: cancelTempBasal()")
-                    uel.log(Action.CANCEL_TEMP_BASAL, Sources.Loop)
-                    commandQueue.cancelTempBasal(false, callback)
-                } else {
-                    aapsLogger.debug(LTag.APS, "applyAPSRequest: Basal set correctly")
-                    callback?.result(PumpEnactResult(injector).absolute(request.rate).duration(0)
-                        .enacted(false).success(true).comment(R.string.basal_set_correctly))?.run()
-                }
-            } else if (activeTemp != null && activeTemp.plannedRemainingMinutes > 5 && request.duration - activeTemp.plannedRemainingMinutes < 30 && abs(request.rate - activeTemp.convertedToAbsolute(now, profile)) < pump.pumpDescription.basalStep) {
+            if (activeTemp != null && activeTemp.plannedRemainingMinutes > 5 && request.duration - activeTemp.plannedRemainingMinutes < 30 && abs(request.rate - activeTemp.convertedToAbsolute(now, profile)) < pump.pumpDescription.basalStep) {
                 aapsLogger.debug(LTag.APS, "applyAPSRequest: Temp basal set correctly")
                 callback?.result(PumpEnactResult(injector).absolute(activeTemp.convertedToAbsolute(now, profile))
                     .enacted(false).success(true).duration(activeTemp.plannedRemainingMinutes)

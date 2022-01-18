@@ -1,30 +1,36 @@
 package info.nightscout.androidaps.queue
 
-import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothManager
 import android.content.Context
+import android.os.Build
 import android.os.PowerManager
 import android.os.SystemClock
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.interfaces.CommandQueue
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning
 import info.nightscout.androidaps.queue.events.EventQueueChanged
+import info.nightscout.androidaps.utils.AndroidPermission
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
+import info.nightscout.shared.sharedPreferences.SP
 
 class QueueThread internal constructor(
-    private val queue: CommandQueueImplementation,
-    context: Context,
+    private val queue: CommandQueue,
+    private val context: Context,
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private val activePlugin: ActivePlugin,
     private val rh: ResourceHelper,
-    private val sp: SP
+    private val sp: SP,
+    private val androidPermission: AndroidPermission,
+    private val config: Config
 ) : Thread() {
 
     private var connectLogged = false
@@ -45,6 +51,14 @@ class QueueThread internal constructor(
             while (true) {
                 val secondsElapsed = (System.currentTimeMillis() - connectionStartTime) / 1000
                 val pump = activePlugin.activePump
+                //  Manifest.permission.BLUETOOTH_CONNECT
+                if (config.PUMPDRIVERS && Build.VERSION.SDK_INT >= /*Build.VERSION_CODES.S*/31)
+                    if (androidPermission.permissionNotGranted(context, "android.permission.BLUETOOTH_CONNECT")) {
+                        aapsLogger.debug(LTag.PUMPQUEUE, "no permission")
+                        rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTING))
+                        SystemClock.sleep(1000)
+                        continue
+                    }
                 if (!pump.isConnected() && secondsElapsed > Constants.PUMP_MAX_CONNECTION_TIME_IN_SECONDS) {
                     rxBus.send(EventDismissBolusProgressIfRunning(null, null))
                     rxBus.send(EventPumpStatusChanged(rh.gs(R.string.connectiontimedout)))
@@ -62,8 +76,7 @@ class QueueThread internal constructor(
                         //toggle BT
                         pump.disconnect("watchdog")
                         SystemClock.sleep(1000)
-                        val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-                        if (bluetoothAdapter != null) {
+                        (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter?.let { bluetoothAdapter ->
                             bluetoothAdapter.disable()
                             SystemClock.sleep(1000)
                             bluetoothAdapter.enable()
@@ -112,7 +125,7 @@ class QueueThread internal constructor(
                     if (queue.size() > 0) {
                         queue.pickup()
                         val cont = queue.performing()?.let {
-                            aapsLogger.debug(LTag.PUMPQUEUE, "performing " + it.status())
+                            aapsLogger.debug(LTag.PUMPQUEUE, "performing " + it.log())
                             rxBus.send(EventQueueChanged())
                             rxBus.send(EventPumpStatusChanged(it.status()))
                             it.execute()

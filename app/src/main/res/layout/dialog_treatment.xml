@@ -28,17 +28,6 @@
                 android:contentDescription="@string/overview_treatment_label"
                 app:srcCompat="@drawable/ic_bolus" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:text="@string/overview_treatment_label"
-                android:textAlignment="center"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
-
         </RelativeLayout>
 
         <LinearLayout
@@ -46,12 +35,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="5dp" />
+            android:padding="5dp" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="@string/overview_treatment_label"
+                android:textAlignment="center"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+        </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/recordOnlyLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            tools:visibility="visible">
 
             <CheckBox
                 android:id="@+id/record_only"

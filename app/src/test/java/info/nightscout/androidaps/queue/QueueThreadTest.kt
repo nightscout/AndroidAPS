@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.PowerManager
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
 import info.nightscout.androidaps.database.AppRepository
@@ -15,12 +16,13 @@ import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
 import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.androidaps.queue.commands.CommandTempBasalAbsolute
+import info.nightscout.androidaps.utils.AndroidPermission
 import info.nightscout.androidaps.utils.buildHelper.BuildHelperImpl
-import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
+import org.mockito.ArgumentMatchers
 import org.mockito.Mock
 import org.mockito.Mockito
 
@@ -32,6 +34,7 @@ class QueueThreadTest : TestBaseWithProfile() {
     @Mock lateinit var fileListProvider: PrefFileListProvider
     @Mock lateinit var powerManager: PowerManager
     @Mock lateinit var repository: AppRepository
+    @Mock lateinit var androidPermission: AndroidPermission
 
     val injector = HasAndroidInjector {
         AndroidInjector {
@@ -41,6 +44,7 @@ class QueueThreadTest : TestBaseWithProfile() {
             }
             if (it is CommandTempBasalAbsolute) {
                 it.activePlugin = activePlugin
+                it.rh = rh
             }
         }
     }
@@ -55,7 +59,7 @@ class QueueThreadTest : TestBaseWithProfile() {
         commandQueue = CommandQueueImplementation(
             injector, aapsLogger, rxBus, aapsSchedulers, rh, constraintChecker,
             profileFunction, activePlugin, context, sp,
-            BuildHelperImpl(ConfigImpl(), fileListProvider), dateUtil, repository, fabricPrivacy, config
+            BuildHelperImpl(config, fileListProvider), dateUtil, repository, fabricPrivacy, config, androidPermission
         )
 
         val pumpDescription = PumpDescription()
@@ -75,8 +79,9 @@ class QueueThreadTest : TestBaseWithProfile() {
         val percentageConstraint = Constraint(0)
         Mockito.`when`(constraintChecker.applyBasalPercentConstraints(anyObject(), anyObject()))
             .thenReturn(percentageConstraint)
+        Mockito.`when`(rh.gs(ArgumentMatchers.eq(R.string.temp_basal_absolute), anyObject(), anyObject())).thenReturn("TEMP BASAL %1\$.2f U/h %2\$d min")
 
-        sut = QueueThread(commandQueue, context, aapsLogger, rxBus, activePlugin, rh, sp)
+        sut = QueueThread(commandQueue, context, aapsLogger, rxBus, activePlugin, rh, sp, androidPermission, config)
     }
 
     @Test

@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.appcompat.R
 import androidx.appcompat.widget.AppCompatButton
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper
+import info.nightscout.shared.logging.StacktraceLoggerWrapper
 import org.slf4j.Logger
 
 class SingleClickButton @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = R.attr.buttonStyle) : AppCompatButton(context, attrs, defStyleAttr) {

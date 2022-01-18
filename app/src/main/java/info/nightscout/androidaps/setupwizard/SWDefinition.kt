@@ -31,7 +31,7 @@ import info.nightscout.androidaps.utils.CryptoUtil
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.extensions.isRunningTest
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -292,7 +292,7 @@ class SWDefinition @Inject constructor(
                 .visibility { activePlugin.activePump is OmnipodErosPumpPlugin })
         .add(SWButton(injector)
             .text(R.string.readstatus)
-            .action { commandQueue.readStatus("Clicked connect to pump", null) }
+            .action { commandQueue.readStatus(rh.gs(R.string.clicked_connect_to_pump), null) }
             .visibility {
                 // Hide for Omnipod, because as we don't require a Pod to be paired in the setup wizard,
                 // Getting the status might not be possible

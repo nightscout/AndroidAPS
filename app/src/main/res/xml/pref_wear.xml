@@ -34,7 +34,7 @@
                 android:defaultValue="false"
                 android:dependency="@string/key_wear_control"
                 android:key="@string/key_wearwizard_trend"
-                android:title="@string/treatments_wizard_bgtrend_label" />
+                android:title="@string/bg_trend_label" />
 
             <CheckBoxPreference
                 android:defaultValue="true"
@@ -46,7 +46,7 @@
                 android:defaultValue="true"
                 android:dependency="@string/key_wear_control"
                 android:key="@string/key_wearwizard_bolusiob"
-                android:title="@string/treatments_wizard_bolusiob_label" />
+                android:title="@string/bolus_iob_label" />
 
             <CheckBoxPreference
                 android:defaultValue="true"

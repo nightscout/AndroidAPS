@@ -2,7 +2,7 @@ package info.nightscout.androidaps.utils.wizard
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONArray
 import org.json.JSONObject
 import javax.inject.Inject

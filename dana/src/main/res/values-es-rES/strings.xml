@@ -7,7 +7,7 @@
     <string name="danars_waitingforpairing">Esperando para conectar con bomba</string>
     <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
-    <string name="description_pump_dana_rs">Integración para bombas DANA Diabecare RS y Dana-i</string>
+    <string name="description_pump_dana_rs">Integración de bombas de insulina DANA Diabecare RS y Dana-i</string>
     <string name="maxbolusviolation">Violación de bolo Max</string>
     <string name="commanderror">Error de comando</string>
     <string name="speederror">Error de velocidad</string>
@@ -79,9 +79,9 @@
     <string name="danar_shutdown">Apagar [hours]</string>
     <string name="danar_lowreservoir">Reservorio bajo [Units]</string>
     <string name="danar_saveuseroptions">Guardar las opciones en la bomba</string>
-    <string name="description_pump_dana_r">Integración de bombas de insulina de DANA Diabecare R</string>
-    <string name="description_pump_dana_r_korean">Integración de bombas de insulina DANA Diabecare R</string>
-    <string name="description_pump_dana_r_v2">Integración para bombas de insulina DANA Diabecare R con el firmware actualizado</string>
+    <string name="description_pump_dana_r">Integración de bombas de insulina DANA Diabecare R</string>
+    <string name="description_pump_dana_r_korean">Integración de bombas de insulina domésticas DANA Diabecare R</string>
+    <string name="description_pump_dana_r_v2">Integración de bombas de insulina DANA Diabecare R con el firmware actualizado</string>
     <string name="danarpump_shortname">DANA</string>
     <string name="nobtadapter">No se encuentra adaptador Bluetooth</string>
     <string name="devicenotfound">El dispositivo seleccionado no se encuentra</string>

@@ -154,7 +154,6 @@
     <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
-    <string name="noprofileselected">Niciun profil selectat</string>
     <string name="startprofile">Utilizează profilul %1$d%% pentru %2$d min</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Pompa virtuală acceptă doar valori specifice ca și incremente, nu și intervale de valori.
@@ -411,6 +410,7 @@
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f este in afara limitelor stabilite</string>
     <string name="basal_value">Valoare rata bazală</string>
     <string name="nsclient_version_does_not_match">Versiunea NSClient nu se potrivește cu versiunea AndroidAPS. Vă rugăm să o actualizați.</string>
+    <!-- Command Queue + readStatus reasons -->
     <plurals name="days">
         <item quantity="one">%1$d zi</item>
         <item quantity="few">%1$d zile</item>
