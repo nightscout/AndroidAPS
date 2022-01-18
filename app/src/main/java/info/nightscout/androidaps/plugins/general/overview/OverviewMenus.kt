@@ -10,6 +10,7 @@ import androidx.annotation.StringRes
 import androidx.appcompat.widget.PopupMenu
 import com.google.gson.Gson
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.Loop
@@ -86,7 +87,7 @@ class OverviewMenus @Inject constructor(
         }
     }
 
-    fun setupChartMenu(chartButton: ImageButton) {
+    fun setupChartMenu(chartButton: ImageButton, overviewData: OverviewData, updateGraph:(from: String) -> Unit) {
         val settingsCopy = setting
         val numOfGraphs = settingsCopy.size // 1 main + x secondary
 
@@ -152,7 +153,7 @@ class OverviewMenus @Inject constructor(
                     }
                 }
                 storeGraphConfig()
-                setupChartMenu(chartButton)
+                setupChartMenu(chartButton, overviewData, updateGraph)
                 rxBus.send(EventRefreshOverview("OnMenuItemClickListener", now = true))
                 return@setOnMenuItemClickListener true
             }
@@ -160,6 +161,30 @@ class OverviewMenus @Inject constructor(
             popup.setOnDismissListener { chartButton.setImageResource(R.drawable.ic_arrow_drop_down_white_24dp) }
             popup.show()
         }
+
+        chartButton.setOnLongClickListener { v: View ->
+            val popup = PopupMenu(v.context, v)
+            popup.menu.add(Menu.NONE, 6, Menu.NONE, rh.gq(R.plurals.hours, 6, 6))
+            popup.menu.add(Menu.NONE, 12, Menu.NONE, rh.gq(R.plurals.hours, 12, 12))
+            popup.menu.add(Menu.NONE, 18, Menu.NONE, rh.gq(R.plurals.hours, 18, 18))
+            popup.menu.add(Menu.NONE, 24, Menu.NONE, rh.gq(R.plurals.hours, 24, 24))
+            popup.setOnMenuItemClickListener {
+                // id == Range to display ...
+                sp.putInt(R.string.key_rangetodisplay, it.itemId)
+                overviewData.initRange()
+                overviewData.prepareBucketedData("EventBucketedDataCreated")
+                overviewData.prepareBgData("EventBucketedDataCreated")
+                updateGraph("rangeChange")
+                rxBus.send(EventPreferenceChange(rh, R.string.key_rangetodisplay))
+                return@setOnMenuItemClickListener true
+            }
+            chartButton.setImageResource(R.drawable.ic_arrow_drop_up_white_24dp)
+            popup.setOnDismissListener { chartButton.setImageResource(R.drawable.ic_arrow_drop_down_white_24dp) }
+            popup.show()
+            false
+        }
+
+
     }
 
     fun isEnabledIn(type: CharType): Int {
