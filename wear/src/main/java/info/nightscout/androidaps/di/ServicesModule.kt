@@ -17,6 +17,7 @@ abstract class ServicesModule {
     @ContributesAndroidInjector abstract fun contributesCobDetailedComplication(): CobDetailedComplication
     @ContributesAndroidInjector abstract fun contributesCobIconComplication(): CobIconComplication
     @ContributesAndroidInjector abstract fun contributesCobIobComplication(): CobIobComplication
+    @ContributesAndroidInjector abstract fun contributesComplicationTapBroadcastReceiver(): ComplicationTapBroadcastReceiver
     @ContributesAndroidInjector abstract fun contributesIobDetailedComplication(): IobDetailedComplication
     @ContributesAndroidInjector abstract fun contributesIobIconComplication(): IobIconComplication
     @ContributesAndroidInjector abstract fun contributesLongStatusComplication(): LongStatusComplication
