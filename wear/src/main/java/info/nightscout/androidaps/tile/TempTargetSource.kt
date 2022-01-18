@@ -1,59 +1,62 @@
 package info.nightscout.androidaps.tile
 
+import android.content.res.Resources
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.interaction.actions.BackgroundActionActivity
 import info.nightscout.androidaps.interaction.actions.TempTargetActivity
 
-object TempTargetSource : TileSource {
+object TempTargetSource : StaticTileSource(), TileSource {
+    override val preferencePrefix= "tile_tempt_"
 
-    override fun getActions(): List<Action> {
+    override fun getActions(resources: Resources): List<StaticAction> {
+        val message = resources.getString(R.string.action_tempt_confirmation)
         return listOf(
-            Action(
-                id = 0,
+            StaticAction(
                 settingName = "activity",
-                nameRes = R.string.temp_target_activity,
+                buttonText = resources.getString(R.string.temp_target_activity),
                 iconRes = R.drawable.ic_target_activity,
-                activityClass = TempTargetActivity::class.java.name,
-                background = true,
+                activityClass = BackgroundActionActivity::class.java.name,
+                message = message,
                 // actionString = "temptarget false 90 8.0 8.0",
                 actionString = "temptarget preset activity",
             ),
-            Action(
-                id = 1,
+            StaticAction(
                 settingName = "eating_soon",
-                nameRes = R.string.temp_target_eating_soon,
+                buttonText = resources.getString(R.string.temp_target_eating_soon),
                 iconRes = R.drawable.ic_target_eatingsoon,
-                activityClass = TempTargetActivity::class.java.name,
-                background = true,
+                activityClass = BackgroundActionActivity::class.java.name,
+                message = message,
                 // actionString = "temptarget false 45 4.5 4.5",
                 actionString = "temptarget preset eating",
             ),
-            Action(
-                id = 2,
+            StaticAction(
                 settingName = "hypo",
-                nameRes = R.string.temp_target_hypo,
+                buttonText = resources.getString(R.string.temp_target_hypo),
                 iconRes = R.drawable.ic_target_hypo,
-                activityClass = TempTargetActivity::class.java.name,
-                background = true,
+                activityClass = BackgroundActionActivity::class.java.name,
+                message = message,
                 // actionString = "temptarget false 45 7.0 7.0",
                 actionString = "temptarget preset hypo",
             ),
-            Action(
-                id = 3,
+            StaticAction(
                 settingName = "manual",
-                nameRes = R.string.temp_target_manual,
+                buttonText = resources.getString(R.string.temp_target_manual),
                 iconRes = R.drawable.ic_target_manual,
                 activityClass = TempTargetActivity::class.java.name,
             ),
-            Action(
-                id = 4,
+            StaticAction(
                 settingName = "cancel",
-                nameRes = R.string.generic_cancel,
+                buttonText = resources.getString(R.string.generic_cancel),
                 iconRes = R.drawable.ic_target_cancel,
-                activityClass = TempTargetActivity::class.java.name,
+                activityClass = BackgroundActionActivity::class.java.name,
+                message = message,
                 actionString = "temptarget cancel",
-                background = true,
             )
         )
+    }
+
+    override fun getResourceReferences(resources: Resources): List<Int> {
+        return getActions(resources).map { it.iconRes }
     }
 
     override fun getDefaultConfig(): Map<String, String> {

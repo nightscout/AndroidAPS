@@ -108,6 +108,35 @@
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/device_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/overview_editquickwizard_show_on_device"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+        <RadioGroup
+            android:id="@+id/device"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="15dp">
+
+            <RadioButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="All" />
+
+            <RadioButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Phone" />
+
+            <RadioButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Watch" />
+
+        </RadioGroup>
 
         <TextView
             android:layout_width="match_parent"

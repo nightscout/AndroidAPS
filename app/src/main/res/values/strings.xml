@@ -1175,5 +1175,9 @@
     <string name="wear_action_tempt_manual_range_message">Temptarget:\nMin: %1$s\nMax: %2$s\nDuration: %3$s</string>
     <string name="wear_action_tempt_manual_message">Temptarget:\nTarget: %1$s\nDuration: %2$s</string>
     <string name="wear_action_tempt_preset_message">Temptarget:\Reason: %1$s\nTarget: %2$s\nDuration: %3$s</string>
+    <string name="quick_wizard_no_action">No insulin needed nor are carbs added.</string>
+    <string name="quick_wizard_can_not_calculate">Can not calculate wizard, requires actual blood glucose and active profile.</string>
+    <string name="quick_wizard_message">Quick Wizard: %1$s\nInsulin: %2$.2fU\nCarbs: %3$dg</string>
+    <string name="overview_editquickwizard_show_on_device">Show entry on device:</string>
 
 </resources>

@@ -260,6 +260,10 @@
                     android:scheme="wear" />
                 <data
                     android:host="*"
+                    android:pathPrefix="/send_quick_wizard"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
                     android:pathPrefix="/sendstatustowear"
                     android:scheme="wear" />
                 <data
@@ -544,6 +548,20 @@
                 android:resource="@drawable/temp_target_tile_preview" />
         </service>
 
+        <service
+            android:name=".tile.QuickWizardTileService"
+            android:exported="true"
+            android:label="@string/label_quick_wizard_tile"
+            android:permission="com.google.android.wearable.permission.BIND_TILE_PROVIDER">
+            <intent-filter>
+                <action android:name="androidx.wear.tiles.action.BIND_TILE_PROVIDER" />
+            </intent-filter>
+
+            <meta-data
+                android:name="androidx.wear.tiles.PREVIEW"
+                android:resource="@drawable/quick_wizard_tile_preview" />
+        </service>
+
         <receiver android:name=".complications.ComplicationTapBroadcastReceiver" />
 
         <activity
@@ -594,6 +612,10 @@
             android:name=".interaction.actions.TempTargetActivity"
             android:exported="true"
             android:label="@string/menu_tempt" />
+
+        <activity
+            android:name=".interaction.actions.BackgroundActionActivity"
+            android:exported="true" />
 
         <activity android:name=".interaction.ConfigurationActivity">
             <intent-filter>

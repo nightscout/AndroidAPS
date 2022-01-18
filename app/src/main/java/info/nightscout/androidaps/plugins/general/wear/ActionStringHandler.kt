@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.general.wear
 
 import android.app.NotificationManager
 import android.content.Context
+import android.util.Log
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
@@ -39,6 +40,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.androidaps.utils.wizard.BolusWizard
+import info.nightscout.androidaps.utils.wizard.QuickWizard
 import info.nightscout.shared.SafeParse
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
@@ -71,6 +73,7 @@ class ActionStringHandler @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val iobCobCalculator: IobCobCalculator,
     private val localInsightPlugin: LocalInsightPlugin,
+    private val quickWizard: QuickWizard,
     private val danaRPlugin: DanaRPlugin,
     private val danaRKoreanPlugin: DanaRKoreanPlugin,
     private val danaRv2Plugin: DanaRv2Plugin,
@@ -144,34 +147,39 @@ class ActionStringHandler @Inject constructor(
             }
             rAction += "bolus $insulinAfterConstraints $carbsAfterConstraints"
         } else if ("temptarget" == act[0]) { ///////////////////////////////////////////////////////// TEMPTARGET
-            aapsLogger.info(LTag.WEAR, "temptarget received:" + act)
+            aapsLogger.info(LTag.WEAR, "temptarget received: $act")
             if ("cancel" == act[1]) {
                 rMessage += rh.gs(R.string.wear_action_tempt_cancel_message)
                 rAction = "temptarget true 0 0 0"
             } else if ("preset" == act[1]) {
                 val presetIsMGDL = profileFunction.getUnits() == GlucoseUnit.MGDL
                 val preset = act[2]
-                if ("activity" == preset) {
-                    val activityTTDuration = defaultValueHelper.determineActivityTTDuration()
-                    val activityTT = defaultValueHelper.determineActivityTT()
-                    val reason = rh.gs(R.string.activity)
-                    rMessage += rh.gs(R.string.wear_action_tempt_preset_message, reason, activityTT, activityTTDuration)
-                    rAction = "temptarget $presetIsMGDL $activityTTDuration $activityTT $activityTT"
-                } else if ("hypo" == preset) {
-                    val hypoTTDuration = defaultValueHelper.determineHypoTTDuration()
-                    val hypoTT = defaultValueHelper.determineHypoTT()
-                    val reason = rh.gs(R.string.hypo)
-                    rMessage += rh.gs(R.string.wear_action_tempt_preset_message, reason, hypoTT, hypoTTDuration)
-                    rAction = "temptarget $presetIsMGDL $hypoTTDuration $hypoTT $hypoTT"
-                } else if ("eating" == preset) {
-                    val eatingSoonTTDuration = defaultValueHelper.determineEatingSoonTTDuration()
-                    val eatingSoonTT = defaultValueHelper.determineEatingSoonTT()
-                    val reason = rh.gs(R.string.eatingsoon)
-                    rMessage += rh.gs(R.string.wear_action_tempt_preset_message, reason, eatingSoonTT, eatingSoonTTDuration)
-                    rAction = "temptarget $presetIsMGDL $eatingSoonTTDuration $eatingSoonTT $eatingSoonTT"
-                } else {
-                    sendError(rh.gs(R.string.wear_action_tempt_preset_error, preset))
-                    return
+                when (preset) {
+                    "activity" -> {
+                        val activityTTDuration = defaultValueHelper.determineActivityTTDuration()
+                        val activityTT = defaultValueHelper.determineActivityTT()
+                        val reason = rh.gs(R.string.activity)
+                        rMessage += rh.gs(R.string.wear_action_tempt_preset_message, reason, activityTT, activityTTDuration)
+                        rAction = "temptarget $presetIsMGDL $activityTTDuration $activityTT $activityTT"
+                    }
+                    "hypo"     -> {
+                        val hypoTTDuration = defaultValueHelper.determineHypoTTDuration()
+                        val hypoTT = defaultValueHelper.determineHypoTT()
+                        val reason = rh.gs(R.string.hypo)
+                        rMessage += rh.gs(R.string.wear_action_tempt_preset_message, reason, hypoTT, hypoTTDuration)
+                        rAction = "temptarget $presetIsMGDL $hypoTTDuration $hypoTT $hypoTT"
+                    }
+                    "eating"   -> {
+                        val eatingSoonTTDuration = defaultValueHelper.determineEatingSoonTTDuration()
+                        val eatingSoonTT = defaultValueHelper.determineEatingSoonTT()
+                        val reason = rh.gs(R.string.eatingsoon)
+                        rMessage += rh.gs(R.string.wear_action_tempt_preset_message, reason, eatingSoonTT, eatingSoonTTDuration)
+                        rAction = "temptarget $presetIsMGDL $eatingSoonTTDuration $eatingSoonTT $eatingSoonTT"
+                    }
+                    else       -> {
+                        sendError(rh.gs(R.string.wear_action_tempt_preset_error, preset))
+                        return
+                    }
                 }
             } else {
                 val isMGDL = java.lang.Boolean.parseBoolean(act[1])
@@ -281,6 +289,34 @@ class ActionStringHandler @Inject constructor(
                 rMessage += "\nPercentage: " + format.format(bolusWizard.totalBeforePercentageAdjustment) + "U * " + percentage + "% -> ~" + format.format(bolusWizard.calculatedTotalInsulin) + "U"
             }
             lastBolusWizard = bolusWizard
+        } else if ("quick_wizard" == act[0]) {
+            val guid = act[1]
+            val actualBg = iobCobCalculator.ads.actualBg()
+            val profile = profileFunction.getProfile()
+            val profileName = profileFunction.getProfileName()
+            val pump = activePlugin.activePump
+            val quickWizardEntry = quickWizard.get(guid)
+            Log.i("QuickWizard", "handleInitiate: quick_wizard " + quickWizardEntry?.buttonText() + " c "+ quickWizardEntry?.carbs())
+            if (quickWizardEntry != null && actualBg != null && profile != null) {
+                // Logic related from Overview.kt
+                val wizard = quickWizardEntry.doCalc(profile, profileName, actualBg, true)
+                if (wizard.calculatedTotalInsulin > 0.0 && quickWizardEntry.carbs() > 0.0) {
+                    val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(quickWizardEntry.carbs())).value()
+                    val insulinAfterConstraints = wizard.insulinAfterConstraints
+                    if (abs(insulinAfterConstraints - wizard.calculatedTotalInsulin) >= pump.pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints) || carbsAfterConstraints != quickWizardEntry.carbs()) {
+                        // TODO check error is correct
+                        sendError(rh.gs(R.string.constraints_violation) + "\n" + rh.gs(R.string.changeyourinput))
+                        return
+                    }
+                    rMessage = rh.gs(R.string.quick_wizard_message, quickWizardEntry.buttonText(), wizard.calculatedTotalInsulin, quickWizardEntry.carbs())
+                    rAction = "bolus $insulinAfterConstraints $carbsAfterConstraints"
+                    Log.i("QuickWizard", "handleInitiate: quick_wizard action=$rAction")
+                } else {
+                    sendError(rh.gs(R.string.quick_wizard_no_action))
+                }
+            } else {
+                sendError(rh.gs(R.string.quick_wizard_can_not_calculate))
+            }
         } else if ("opencpp" == act[0]) {
             val activeProfileSwitch = repository.getEffectiveProfileSwitchActiveAt(dateUtil.now()).blockingGet()
             if (activeProfileSwitch is ValueWrapper.Existing) { // read CPP values
@@ -364,7 +400,10 @@ class ActionStringHandler @Inject constructor(
             rAction = "cancelChangeRequest"
             wearPlugin.requestNotificationCancel(rAction)
             return
-        } else return
+        } else {
+            sendError("Unknown action command: " + act[0] )
+            return
+        }
         // send result
         wearPlugin.requestActionConfirmation(rTitle, rMessage, rAction)
         lastSentTimestamp = System.currentTimeMillis()

@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.tile
 
+import android.content.res.Resources
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interaction.actions.BolusActivity
 import info.nightscout.androidaps.interaction.actions.TreatmentActivity
@@ -7,46 +8,47 @@ import info.nightscout.androidaps.interaction.actions.ECarbActivity
 import info.nightscout.androidaps.interaction.actions.TempTargetActivity
 import info.nightscout.androidaps.interaction.actions.WizardActivity
 
-object ActionSource : TileSource {
+object ActionSource : StaticTileSource(), TileSource {
 
-    override fun getActions(): List<Action> {
+    override val preferencePrefix = "tile_action_"
+
+    override fun getActions(resources: Resources): List<StaticAction> {
         return listOf(
-            Action(
-                id = 0,
+            StaticAction(
                 settingName = "wizard",
-                nameRes = R.string.menu_wizard_short,
+                buttonText = resources.getString(R.string.menu_wizard_short),
                 iconRes = R.drawable.ic_calculator_green,
                 activityClass = WizardActivity::class.java.name,
             ),
-            Action(
-                id = 1,
+            StaticAction(
                 settingName = "treatment",
-                nameRes = R.string.menu_treatment_short,
+                buttonText = resources.getString(R.string.menu_treatment_short),
                 iconRes = R.drawable.ic_bolus_carbs,
                 activityClass = TreatmentActivity::class.java.name,
             ),
-            Action(
-                id = 2,
+            StaticAction(
                 settingName = "bolus",
-                nameRes = R.string.action_insulin,
+                buttonText = resources.getString(R.string.action_insulin),
                 iconRes = R.drawable.ic_bolus,
                 activityClass = BolusActivity::class.java.name,
             ),
-            Action(
-                id = 3,
+            StaticAction(
                 settingName = "carbs",
-                nameRes = R.string.action_carbs,
+                buttonText = resources.getString(R.string.action_carbs),
                 iconRes = R.drawable.ic_carbs_orange,
                 activityClass = ECarbActivity::class.java.name,
             ),
-            Action(
-                id = 4,
+            StaticAction(
                 settingName = "temp_target",
-                nameRes = R.string.menu_tempt,
+                buttonText = resources.getString(R.string.menu_tempt),
                 iconRes = R.drawable.ic_temptarget_flat,
                 activityClass = TempTargetActivity::class.java.name,
             )
         )
+    }
+
+    override fun getResourceReferences(resources: Resources): List<Int> {
+        return getActions(resources).map { it.iconRes }
     }
 
     override fun getDefaultConfig(): Map<String, String> {

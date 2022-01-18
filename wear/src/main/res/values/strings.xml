@@ -16,6 +16,7 @@
 
     <string name="label_actions_tile">AAPS(Actions)</string>
     <string name="label_temp_target_tile">AAPS(Temp Target)</string>
+    <string name="label_quick_wizard_tile">AAPS(Quick Wizard)</string>
 
     <string name="label_warning_sync">No data!</string>
     <string name="label_warning_old">Old data!</string>
@@ -86,9 +87,11 @@
     <string name="menu_none">None</string>
     <string name="menu_default">Default</string>
     <string name="menu_menu">Menu</string>
+    <string name="quick_wizard_short">XL</string>
 
     <string name="action_duration">Duration</string>
     <string name="action_tempt_confirmation">Temp Target Requested</string>
+    <string name="action_quick_wizard_confirmation">Quick Wizard Requested</string>
     <string name="action_treatment_confirmation">Treatment Requested</string>
     <string name="action_bolus_confirmation">Bolus Requested</string>
     <string name="action_wizard_confirmation">Calculation Requested</string>
@@ -165,7 +168,7 @@
     <string name="bolus_progress_silent_channel_name">AAPS Bolus Progress Silent</string>
     <string name="bolus_progress_channel_description">Bolus progress and cancel</string>
     <string name="bolus_progress_silent_channel_description">Bolus progress and cancel with less vibrations</string>
-
+    <string name="key_quickwizard" translatable="false">QuickWizard</string>
     <string name="key_wear_control" translatable="false">wearcontrol</string>
     <string name="key_units_mgdl" translatable="false">units_mgdl</string>
     <string name="key_boluswizard_percentage" translatable="false">boluswizard_percentage</string>
@@ -182,5 +185,6 @@
     <string name="tile_no_config">No config available</string>
     <string name="wear_control_not_enabled">Wear controls disabled</string>
     <string name="wear_control_no_data">No data available</string>
+    <string name="key_quick_wizard_data_map" translatable="false">quick_wizard_data_map</string>
 
 </resources>

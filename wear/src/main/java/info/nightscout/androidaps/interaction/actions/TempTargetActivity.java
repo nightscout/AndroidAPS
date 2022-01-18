@@ -31,29 +31,12 @@ public class TempTargetActivity extends ViewSelectorActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (executeInBackground()){
-            return;
-        }
+
         setAdapter(new MyGridViewPagerAdapter());
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         isMGDL = sp.getBoolean("units_mgdl", true);
         isSingleTarget = sp.getBoolean("singletarget", true);
-    }
-
-    private boolean executeInBackground() {
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            String actionString = extras.getString("actionString", "");
-            boolean inBackground = extras.getBoolean("inBackground", false);
-            if (inBackground) {
-                ListenerService.initiateAction(this, actionString);
-                confirmAction(this, R.string.action_tempt_confirmation);
-                finishAffinity();
-                return true;
-            }
-        }
-        return false;
     }
 
     @Override

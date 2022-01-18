@@ -19,6 +19,7 @@ import info.nightscout.androidaps.utils.JsonHelper.safeGetString
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONException
 import org.json.JSONObject
+import java.util.*
 import javax.inject.Inject
 
 class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjector) {
@@ -41,11 +42,15 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
         const val NO = 1
         private const val POSITIVE_ONLY = 2
         private const val NEGATIVE_ONLY = 3
+        const val DEVICE_ALL = 0
+        const val DEVICE_PHONE = 1
+        const val DEVICE_WATCH = 2
     }
 
     init {
         injector.androidInjector().inject(this)
-        val emptyData = "{\"buttonText\":\"\",\"carbs\":0,\"validFrom\":0,\"validTo\":86340}"
+        val guid = UUID.randomUUID().toString()
+        val emptyData = "{\"guid\": \"$guid\",\"buttonText\":\"\",\"carbs\":0,\"validFrom\":0,\"validTo\":86340, \"device\": \"all\"}"
         try {
             storage = JSONObject(emptyData)
         } catch (e: JSONException) {
@@ -55,6 +60,8 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
 
     /*
         {
+            guid: string,
+            device: string, // (phone, watch, all)
             buttonText: "Meal",
             carbs: 36,
             validFrom: 8 * 60 * 60, // seconds from midnight
@@ -69,12 +76,13 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
         }
      */
     fun from(entry: JSONObject, position: Int): QuickWizardEntry {
+        // TODO set guid if missing for migration
         storage = entry
         this.position = position
         return this
     }
 
-    fun isActive(): Boolean = profileFunction.secondsFromMidnight() >= validFrom() && profileFunction.secondsFromMidnight() <= validTo()
+    fun isActive(): Boolean = profileFunction.secondsFromMidnight() >= validFrom() && profileFunction.secondsFromMidnight() <= validTo() && forDevice(DEVICE_PHONE)
 
     fun doCalc(profile: Profile, profileName: String, lastBG: GlucoseValue, _synchronized: Boolean): BolusWizard {
         val dbRecord = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
@@ -122,6 +130,12 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
         val percentage = sp.getInt(R.string.key_boluswizard_percentage, 100)
         return BolusWizard(injector).doCalc(profile, profileName, tempTarget, carbs(), cob, bg, 0.0, percentage, true, useCOB() == YES, bolusIOB, basalIOB, superBolus, useTempTarget() == YES, trend, false, buttonText(), quickWizard = true) //tbc, ok if only quickwizard, but if other sources elsewhere use Sources.QuickWizard
     }
+
+    fun guid(): String = safeGetString(storage, "guid", "")
+
+    fun device(): Int = safeGetInt(storage, "device", DEVICE_ALL)
+
+    fun forDevice(device: Int) = device() == device || device() == DEVICE_ALL
 
     fun buttonText(): String = safeGetString(storage, "buttonText", "")
 

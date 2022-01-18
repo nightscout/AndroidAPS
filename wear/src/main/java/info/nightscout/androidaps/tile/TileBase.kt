@@ -1,8 +1,9 @@
 package info.nightscout.androidaps.tile
 
-import android.content.SharedPreferences
+import android.content.Context
+import android.os.Build
 import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
 import androidx.wear.tiles.ActionBuilders
@@ -42,18 +43,17 @@ private const val LARGE_SCREEN_WIDTH_DP = 210
 
 interface TileSource {
 
-    fun getActions(): List<Action>
-    fun getDefaultConfig(): Map<String, String>
+    fun getResourceReferences(resources: android.content.res.Resources): List<Int>
+    fun getSelectedActions(context: Context): List<Action>
 }
 
-data class Action(
-    val id: Int,
-    val settingName: String,
-    @StringRes val nameRes: Int,
+open class Action(
+    val buttonText: String,
+    val buttonTextSub: String? = null,
     val activityClass: String,
     @DrawableRes val iconRes: Int,
-    val background: Boolean = false,
     val actionString: String? = null,
+    val message: String? = null,
 )
 
 enum class WearControl {
@@ -62,10 +62,7 @@ enum class WearControl {
 
 abstract class TileBase : TileService() {
 
-    open val resourceVersion = "1"
-    open val idIconActionPrefix = "ic_action_"
-
-    abstract val preferencePrefix: String
+    abstract val resourceVersion: String
     abstract val source: TileSource
 
     private val serviceJob = Job()
@@ -89,19 +86,25 @@ abstract class TileBase : TileService() {
             .build()
     }
 
+    private fun getSelectedActions(): List<Action> {
+        // TODO check why thi scan not be don in scope of the coroutine
+        return source.getSelectedActions(this)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onResourcesRequest(
         requestParams: ResourcesRequest
     ): ListenableFuture<Resources> = serviceScope.future {
         Resources.Builder()
             .setVersion(resourceVersion)
             .apply {
-                source.getActions().mapNotNull { action ->
+                source.getResourceReferences(resources).forEach { resourceId ->
                     addIdToImageMapping(
-                        idIconActionPrefix + action.id,
+                        resourceId.toString(),
                         ImageResource.Builder()
                             .setAndroidResourceByResId(
                                 AndroidImageResourceByResId.Builder()
-                                    .setResourceId(action.iconRes)
+                                    .setResourceId(resourceId)
                                     .build()
                             )
                             .build()
@@ -157,14 +160,16 @@ abstract class TileBase : TileService() {
             .build()
 
     private fun doAction(action: Action): ActionBuilders.Action {
-        val inBackground = ActionBuilders.AndroidBooleanExtra.Builder().setValue(action.background).build()
         val builder = ActionBuilders.AndroidActivity.Builder()
             .setClassName(action.activityClass)
             .setPackageName(this.packageName)
-            .addKeyToExtraMapping("inBackground", inBackground)
         if (action.actionString != null) {
             val actionString = ActionBuilders.AndroidStringExtra.Builder().setValue(action.actionString).build()
             builder.addKeyToExtraMapping("actionString", actionString)
+        }
+        if (action.message != null) {
+            val message = ActionBuilders.AndroidStringExtra.Builder().setValue(action.message).build()
+            builder.addKeyToExtraMapping("message", message)
         }
 
         return ActionBuilders.LaunchAction.Builder()
@@ -174,8 +179,8 @@ abstract class TileBase : TileService() {
 
     private fun action(action: Action, deviceParameters: DeviceParameters): LayoutElement {
         val circleDiameter = circleDiameter(deviceParameters)
-        val iconSize = dp(circleDiameter * ICON_SIZE_FRACTION)
-        val text = resources.getString(action.nameRes)
+        val text = action.buttonText
+        val textSub = action.buttonTextSub
         return Box.Builder()
             .setWidth(dp(circleDiameter))
             .setHeight(dp(circleDiameter))
@@ -193,7 +198,7 @@ abstract class TileBase : TileService() {
                     )
                     .setSemantics(
                         Semantics.Builder()
-                            .setContentDescription(text)
+                            .setContentDescription("$text $textSub")
                             .build()
                     )
                     .setClickable(
@@ -203,30 +208,53 @@ abstract class TileBase : TileService() {
                     )
                     .build()
             )
-            .addContent(
-                Column.Builder()
-                    .addContent(
-                        Image.Builder()
-                            .setWidth(iconSize)
-                            .setHeight(iconSize)
-                            .setResourceId(idIconActionPrefix + action.id)
-                            .build()
-                    ).addContent(
-                        Text.Builder()
-                            .setText(text)
-                            .setFontStyle(
-                                FontStyle.Builder()
-                                    .setWeight(FONT_WEIGHT_BOLD)
-                                    .setColor(
-                                        argb(ContextCompat.getColor(baseContext, R.color.white))
-                                    )
-                                    .setSize(buttonTextSize(deviceParameters, text))
-                                    .build()
-                            )
-                            .build()
-                    ).build()
-            )
+            .addContent(addTextContent(action, deviceParameters))
             .build()
+    }
+
+    private fun addTextContent(action: Action, deviceParameters: DeviceParameters): LayoutElement {
+        val circleDiameter = circleDiameter(deviceParameters)
+        val iconSize = dp(circleDiameter * ICON_SIZE_FRACTION)
+        val text = action.buttonText
+        val textSub = action.buttonTextSub
+        val col = Column.Builder()
+            .addContent(
+                Image.Builder()
+                    .setWidth(iconSize)
+                    .setHeight(iconSize)
+                    .setResourceId(action.iconRes.toString())
+                    .build()
+            ).addContent(
+                Text.Builder()
+                    .setText(text)
+                    .setFontStyle(
+                        FontStyle.Builder()
+                            .setWeight(FONT_WEIGHT_BOLD)
+                            .setColor(
+                                argb(ContextCompat.getColor(baseContext, R.color.white))
+                            )
+                            .setSize(buttonTextSize(deviceParameters, text))
+                            .build()
+                    )
+                    .build()
+            )
+        if (textSub != null) {
+            col.addContent(
+                Text.Builder()
+                    .setText(textSub)
+                    .setFontStyle(
+                        FontStyle.Builder()
+                            .setColor(
+                                argb(ContextCompat.getColor(baseContext, R.color.white))
+                            )
+                            .setSize(buttonTextSize(deviceParameters, textSub))
+                            .build()
+                    )
+                    .build()
+            )
+        }
+
+        return col.build()
     }
 
     private fun circleDiameter(deviceParameters: DeviceParameters) = when (deviceParameters.screenShape) {
@@ -257,37 +285,4 @@ abstract class TileBase : TileService() {
         return WearControl.DISABLED
     }
 
-    private fun getSelectedActions(): List<Action> {
-        val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this)
-        setDefaultSettings(sharedPrefs)
-
-        val actionList: MutableList<Action> = mutableListOf()
-        for (i in 1..4) {
-            val action = getActionFromPreference(sharedPrefs, i)
-            if (action != null) {
-                actionList.add(action)
-            }
-        }
-        if (actionList.isEmpty()) {
-            return source.getActions().take(4)
-        }
-        return actionList
-    }
-
-    private fun getActionFromPreference(sharedPrefs: SharedPreferences, index: Int): Action? {
-        val actionPref = sharedPrefs.getString(preferencePrefix + index, "none")
-        return source.getActions().find { action -> action.settingName == actionPref }
-    }
-
-    private fun setDefaultSettings(sharedPrefs: SharedPreferences) {
-        val defaults = source.getDefaultConfig()
-        val firstKey = defaults.firstNotNullOf { settings -> settings.key }
-        if (!sharedPrefs.contains(firstKey)) {
-            val editor = sharedPrefs.edit()
-            for ((key, value) in defaults) {
-                editor.putString(key, value)
-            }
-            editor.apply()
-        }
-    }
 }
