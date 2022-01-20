@@ -4,6 +4,7 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="treatmentssafety_title">Behandlings sikkerhed</string>
+    <string name="treatmentssafety_maxbolus_title">Maks tilladt bolus [IE]</string>
     <string name="treatmentssafety_maxcarbs_title">Maks tilladte kulhydrater [g]</string>
     <string name="nav_preferences_plugin">%1$s indstillinger</string>
     <string name="nav_preferences">Indstillinger</string>
@@ -12,7 +13,9 @@
     <string name="reset_db_confirm">Er du sikker på, at du vil nulstille databaserne?</string>
     <string name="nav_exit">Afslut</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Denne enhed synes ikke at understøtte batterioptimering whitelisting - du kan opleve problemer med ydeevnen.</string>
+    <string name="description_actions">Nogle knapper til hurtigt at få adgang til almindelige funktioner</string>
     <string name="description_config_builder">Bruges til at konfigurere de aktive plugins</string>
+    <string name="description_objectives">Oplæringsprogram</string>
     <string name="description_food">Viser forudindstillede madvarer defineret i Nightscout</string>
     <string name="description_insulin_rapid">Insulin forudindstillet til Humalog og NovoRapid / NovoLog</string>
     <string name="description_insulin_ultra_rapid">Insulinforudindstilling til Fiasp</string>
@@ -28,6 +31,8 @@
     <string name="description_pump_virtual">Pumpeintegration til pumper, som endnu ikke har nogen driver (Åbent Loop)</string>
     <string name="description_sensitivity_aaps">Sensitiviteten er beregnet på samme måde som Oref0, men du kan angive tidsramme for fortiden. Minimal optagelse af kulhydrater beregnes fra maks. kulhydrat optagelse fra præferencer.</string>
     <string name="description_sensitivity_oref1">Sensitiviteten beregnes fra 8t-eller 24t-data i fortiden (Ved hjælp af den der er mest sensitiv). Kulhydrater (hvis ikke optaget) er opdelt, efter den tid der er angivet i Indstillinger. Pluginnet beregner også UAM.</string>
+    <string name="description_sensitivity_weighted_average">Sensitiviteten er beregnet som et vægtet gennemsnit fra afvigelser. Nyere afvigelser har større vægt. Minimal kulhydratoptagelse beregnes fra maks. kulhydrats optagelsestid fra Indstillinger. Denne algoritme er den hurtigste til at følge følsomhedsændringer.</string>
+    <string name="description_source_eversense">Modtag BG værdier fra den patchede Eversense app.</string>
     <string name="description_source_glimp">Modtag BG-værdier fra Glimp.</string>
     <string name="description_source_mm640g">Modtag BG-værdier fra 600SeriesAndroidUploader.</string>
     <string name="description_source_ns_client">Downloader BG data fra Nightscout</string>
@@ -66,5 +71,43 @@
     <string name="delta">Delta</string>
     <string name="sms_delta">Delta:</string>
     <string name="configbuilder">Konfigurations bygger</string>
+    <string name="treatments">Behandlinger</string>
+    <string name="virtualpump">Virtuel pumpe</string>
+    <string name="configbuilder_pump">Pumpe</string>
+    <string name="configbuilder_pump_description">Hvilken pumpe vil du bruge med AndroidAPS?</string>
+    <string name="configbuilder_profile">Profil</string>
+    <string name="configbuilder_profile_description">Hvilken profil skal AndroidAPS bruge?</string>
+    <string name="configbuilder_aps">APS</string>
+    <string name="configbuilder_aps_description">Hvilken APS algoritme skal foretage terapi justeringer?</string>
+    <string name="configbuilder_general">Generelt</string>
+    <string name="configbuilder_constraints_description">Hvilke begrænsninger er anvendt?</string>
+    <string name="constraints">Begrænsninger</string>
+    <string name="configbuilder_loop">Loop</string>
+    <string name="configbuilder_loop_description">Brug dette til at aktivere AndroidAPS\' loop integration.</string>
+    <string name="loop_aps_label">APS</string>
+    <string name="loop_constraintsprocessed_label">Efter bearbejdede begrænsninger</string>
+    <string name="loop_tbrsetbypump_label">Midlertidig basal sat af pumpe</string>
+    <string name="noapsselected">INGEN APS VALGT ELLER GIVET RESULTAT</string>
+    <string name="safety">Sikkerhed</string>
+    <string name="openapsma_disabled">Plugin deaktiveret</string>
+    <string name="constraints_violation">Begrænsninger overtrådt</string>
+    <string name="overview_treatment_label">Behandling</string>
+    <string name="overview_calculator_label">Beregner</string>
+    <string name="sms_bolus">Bolus:</string>
+    <string name="basal">Basal</string>
+    <string name="sms_basal">Basal:</string>
+    <string name="changeyourinput">Skift dit input!</string>
+    <string name="configbuilder_bgsource">BG kilde</string>
+    <string name="configbuilder_bgsource_description">Hvor skal AndroidAPS få sit data fra?</string>
+    <string name="xdrip">xDrip+</string>
+    <string name="apsmode_title">APS Tilstand</string>
+    <string name="closedloop">Lukket Loop</string>
+    <string name="openloop">Åben Loop</string>
+    <string name="disabledloop">Loop deaktiveret</string>
+    <string name="openloop_newsuggestion">Nyt forslag tilgængeligt</string>
+    <string name="carbssuggestion">Kulhydrat Forslag</string>
+    <string name="unsupportednsversion">Ikke understøttet version af Nightscout</string>
+    <string name="check_preferences_import_anyway_btn">Importér alligevel (FARLIGT!)</string>
+    <string name="end_user_license_agreement">Slutbrugerlicensaftale</string>
     <!-- SMS Communicator & OTP Authenticator -->
 </resources>
