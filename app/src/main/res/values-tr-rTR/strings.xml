@@ -818,11 +818,9 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="statuslights">Durum ışıkları</string>
     <string name="statuslights_copy_ns">Ayarları NS\'den kopyala</string>
     <string name="copyexistingvalues">NS ayarları kopyalansın mı (varsa)?</string>
-    <string name="classic_description">Orjinal tema</string>
     <string name="lowres_description">Düşük çözünürlüklü tema</string>
     <string name="buttonson_description">Butonlar her zaman ekranın altında görüntülenir</string>
     <string name="largedisplay_description">Büyük ekran</string>
-    <string name="skin">Tema</string>
     <string name="comapareprofile">Profilleri karşılaştırın</string>
     <string name="nav_profilehelper">Profil yardımcısı</string>
     <string name="motoldefaultprofile">Varsayılan profil</string>
