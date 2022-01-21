@@ -199,6 +199,6 @@ class Connection(
         const val BASE_CONNECT_TIMEOUT_MS = 10000L
         const val MIN_DISCOVERY_TIMEOUT_MS = 10000L
         const val STOP_CONNECTING_CHECK_INTERVAL_MS = 500L
-        const val SLEEP_WHEN_FAILING_TO_CONNECT_GATT = 5000L
+        const val SLEEP_WHEN_FAILING_TO_CONNECT_GATT = 10000L
     }
 }
