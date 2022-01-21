@@ -534,8 +534,7 @@ class LoopPlugin @Inject constructor(
                 callback?.result(PumpEnactResult(injector).absolute(request.rate).duration(0)
                                      .enacted(false).success(true).comment(R.string.basal_set_correctly))?.run()
             }
-        }
-        if (request.usePercent && allowPercentage()) {
+        } else if (request.usePercent && allowPercentage()) {
             if (request.percent == 100 && request.duration == 0) {
                 if (activeTemp != null) {
                     aapsLogger.debug(LTag.APS, "applyAPSRequest: cancelTempBasal()")
