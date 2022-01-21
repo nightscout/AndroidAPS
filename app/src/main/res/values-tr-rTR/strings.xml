@@ -358,15 +358,12 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="smscommunicator_loopresumed">Döngü devam ettirildi</string>
     <string name="bg_trend_label">15 dk eğilim</string>
     <string name="treatments_wizard_cob_label">COB</string>
-    <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">NS\'a uygulama başlangıcını kaydet</string>
     <string name="restartingapp">Ayarları uygulamak için uygulamadan çıkılıyor.</string>
     <string name="configbuilder_insulin_description">Hangi tür insülin kullanıyorsunuz?</string>
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
     <string name="ultrafastactinginsulincomment">Fiasp</string>
     <string name="insulin_shortname">İNS</string>
-    <string name="enablesuperbolus">Sihirbazda superbolusu etkinleştir</string>
-    <string name="enablesuperbolus_summary">Bolus sihirbazında superbolus işlevselliğini etkinleştirin. Gerçekten ne yaptığınızı öğrenene kadar etkinleştirmeyin. BİLİNÇSİZ KULLANILDIĞINDA AŞIRI DOZ İNSÜLIN VERİLEBİLİR!</string>
     <string name="show_statuslights">Ana ekranda durum ışıklarını göster</string>
     <string name="statuslights_cage_warning">Kanül ömrü uyarısı belirle (saat) [h]</string>
     <string name="statuslights_cage_critical">Kritik kanül ömrü (saat) [h]</string>
@@ -498,7 +495,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="overview_editquickwizard_usebolusiob">Bolus IOB (Aktif İnsülin) hesaplaması</string>
     <string name="overview_editquickwizard_usebasaliob">Bazal IOB (Aktif İnsülin) hesaplaması</string>
     <string name="overview_editquickwizard_usetrend">Trend hesapla</string>
-    <string name="overview_editquickwizard_usesuperbolus">Super Bolus hesapla</string>
     <string name="positiveonly">Sadece pozitif</string>
     <string name="negativeonly">Sadece negatif</string>
     <string name="overview_editquickwizard_usecob">COB (Aktif Karbonhidrat) hesaplaması</string>
