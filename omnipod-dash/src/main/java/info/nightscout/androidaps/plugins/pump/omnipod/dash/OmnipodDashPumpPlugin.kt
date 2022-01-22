@@ -546,12 +546,6 @@ class OmnipodDashPumpPlugin @Inject constructor(
         try {
             bolusDeliveryInProgress = true
             aapsLogger.info(LTag.PUMP, "Delivering treatment: $detailedBolusInfo $bolusCanceled")
-            val beepsConfigurationKey = if (detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB)
-                R.string.key_omnipod_common_smb_beeps_enabled
-            else
-                R.string.key_omnipod_common_bolus_beeps_enabled
-            val bolusBeeps = sp.getBoolean(beepsConfigurationKey, false)
-            R.string.key_omnipod_common_smb_beeps_enabled
             if (detailedBolusInfo.carbs > 0 ||
                 detailedBolusInfo.insulin == 0.0
             ) {
@@ -568,10 +562,24 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     .success(false)
                     .enacted(false)
                     .bolusDelivered(0.0)
-                    .comment("Not enough insulin in the reservoir")
+                    .comment(rh.gs(R.string.omnipod_dash_not_enough_insulin))
             }
+            if (podStateManager.deliveryStatus == DeliveryStatus.BOLUS_AND_BASAL_ACTIVE ||
+                podStateManager.deliveryStatus == DeliveryStatus.BOLUS_AND_TEMP_BASAL_ACTIVE) {
+                return PumpEnactResult(injector)
+                    .success(false)
+                    .enacted(false)
+                    .bolusDelivered(0.0)
+                    .comment(rh.gs(R.string.omnipod_dash_bolus_already_in_progress))
+            }
+
             var deliveredBolusAmount = 0.0
 
+            val beepsConfigurationKey = if (detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB)
+                R.string.key_omnipod_common_smb_beeps_enabled
+            else
+                R.string.key_omnipod_common_bolus_beeps_enabled
+            val bolusBeeps = sp.getBoolean(beepsConfigurationKey, false)
             aapsLogger.info(
                 LTag.PUMP,
                 "deliverTreatment: requestedBolusAmount=$requestedBolusAmount"
