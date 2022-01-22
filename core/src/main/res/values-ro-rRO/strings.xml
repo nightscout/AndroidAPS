@@ -411,6 +411,36 @@
     <string name="basal_value">Valoare rata bazală</string>
     <string name="nsclient_version_does_not_match">Versiunea NSClient nu se potrivește cu versiunea AndroidAPS. Vă rugăm să o actualizați.</string>
     <!-- Command Queue + readStatus reasons -->
+    <string name="bolus_u_min">BOLUS %1$.2f U</string>
+    <string name="carbs_g">CARB %1$d g</string>
+    <string name="extended_bolus_u_min">BOLUS EXTINS %1$.2f U %2$d min</string>
+    <string name="load_events">ÎNCARCA EVENIMENTE</string>
+    <string name="load_history">ÎNCARCA ISTORICUL %1$d</string>
+    <string name="load_tdds">ÎNCARCA TDD-uri</string>
+    <string name="set_profile">SETARE PROFIL</string>
+    <string name="set_user_settings">CONFIGURARE SETĂRI UTILIZATOR</string>
+    <string name="smb_bolus_u">BOLUS SMB %1$.2f U</string>
+    <string name="start_pump">START POMPĂ</string>
+    <string name="stop_pump">STOP POMPĂ</string>
+    <string name="temp_basal_absolute">BAZALA TEMP %1$.2f U/h %2$d min</string>
+    <string name="temp_basal_percent">BAZALA TEMP %1$d%% %2$d min</string>
+    <string name="insight_set_tbr_over_notification">SETARE RBT INSIGHT CONFORM NOTIFICARII</string>
+    <string name="read_status" comment="10 characters max for READSTATUS translation">CITIRE STARE %1$s</string>
+    <string name="keepalive_status_outdated" comment="26 characters max for translation">KeepAlive. Stare depăşită.</string>
+    <string name="keepalive_basal_outdated" comment="26 characters max for translation">KeepAlive. Bazală depăşită.</string>
+    <string name="sms" comment="26 characters max for translation">SMS</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Conectare la pompă apăsat</string>
+    <string name="pump_driver_changed" comment="26 characters max for translation">Driver-ul pompei a fost schimbat.</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Schimbare driver pompa.</string>
+    <string name="device_changed" comment="26 characters max for translation">Dispozitiv modificat</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Reîmprospătare apăsată</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Reîmprospătare stare programată</string>
+    <string name="unconfirmed_command" comment="26 characters max for translation">Comandă neconfirmată</string>
+    <string name="requested_by_user" comment="26 characters max for translation">Solicitat de utilizator</string>
+    <string name="user_request" comment="26 characters max for translation">Cerere utilizator</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
+    <string name="pump_paired" comment="26 characters max for translation">Pompă împerecheată</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Buton Reîmprospătare Insight</string>
     <plurals name="days">
         <item quantity="one">%1$d zi</item>
         <item quantity="few">%1$d zile</item>
