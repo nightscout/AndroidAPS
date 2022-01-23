@@ -55,52 +55,22 @@ class OverviewData @Inject constructor(
     private val translator: Translator
 ) {
     var overviewMode: Boolean = true
-    var loadNewHistoryData = true
     val minRangeToDisplay = 6
     var rangeToDisplay = minRangeToDisplay // for graph
     val rangeMaxToDisplay = 24
     var toTime: Long = 0
-        get() = field
+        get() = field + 100000 // little bit more to avoid wrong rounding - GraphView specific
         set(to) {
-            if (overviewMode)
-                field = to
-            else {
-                if (to > endTimeData) {
-                    loadNewHistoryData = true
-                    fromTimeArray = longArrayOf(fromTime,
-                                                fromTime + T.hours(minRangeToDisplay.toLong()).msecs(),
-                                                fromTime + T.hours(minRangeToDisplay.toLong()).msecs() * 2,
-                                                fromTime + T.hours(minRangeToDisplay.toLong()).msecs() * 3,
-                                                0, 0, 0, 0) // not used for history browser
-                    historyIndex = 0
-                    endTimeData = fromTime + T.hours(minRangeToDisplay.toLong()).msecs() * 4    // always load 24h of data if reload is necessary
-                }
-                historyRange = ((to - fromTime) / T.hours(minRangeToDisplay.toLong()).msecs()).toInt()
-                field = to
-            }
+            field = to
+            if (!overviewMode)
+                endTimeData = to
         }
     var fromTimeArray = longArrayOf(0, 0, 0, 0, 0, 0, 0, 0)
     var fromTime: Long
         get() = fromTimeArray.get(indexRange)
         set(from) {
-            if (overviewMode)
-                fromTimeArray = longArrayOf(from, from, from, from, from, from, from, from)
-            else {
-                if (from < fromTimeData || from >= endTimeData) {
-                    fromTimeArray = longArrayOf(from,
-                                                from + T.hours(minRangeToDisplay.toLong()).msecs(),
-                                                from + T.hours(minRangeToDisplay.toLong()).msecs() * 2,
-                                                from + T.hours(minRangeToDisplay.toLong()).msecs() * 3,
-                                                0, 0, 0, 0) // not used for history browser
-                    historyIndex = 0
-                    fromTimeData = from
-                    endTimeData = from + T.hours(minRangeToDisplay.toLong()).msecs() * 4    // always load 24h of data if reload is necessary
-                    loadNewHistoryData = true
-                } else {
-                    loadNewHistoryData = false
-                    historyIndex = ((from - fromTimeArray.get(0))/T.hours(minRangeToDisplay.toLong()).msecs()).toInt()  // initialise historyIndex to get correct fromTime if inside previous range
-                }
-            }
+            fromTimeArray = longArrayOf(from)
+            fromTimeData = from
         }
     var endTime: Long = 0
     var fromTimeData: Long = 0
@@ -298,14 +268,12 @@ class OverviewData @Inject constructor(
      * Graphs
      */
     var predictAvailable: Boolean = false
-    var historyIndex: Int = 0
-    var historyRange: Int = 3
     var indexRange: Int = 0
-        get() = if (overviewMode) { 2 * (rangeToDisplay / minRangeToDisplay - 1) + if (predictAvailable) 0 else 1 } else historyIndex
+        get() = if (overviewMode) { 2 * (rangeToDisplay / minRangeToDisplay - 1) + if (predictAvailable) 0 else 1 } else 0
     var bgReadingsArray: List<GlucoseValue> = ArrayList()
     var maxBgArray = doubleArrayOf(Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE)
     var maxBgValue = Double.MIN_VALUE
-        get() = if (overviewMode) maxBgArray.get(indexRange) else historyBrowserMax(maxBgArray)
+        get() = maxBgArray.get(indexRange)
     var bucketedListArray: MutableList<DataPointWithLabelInterface> = java.util.ArrayList()
     var bucketedGraphSeries: PointsWithLabelGraphSeries<DataPointWithLabelInterface> = PointsWithLabelGraphSeries()
         get() {
@@ -322,7 +290,7 @@ class OverviewData @Inject constructor(
 
     var maxBasalArray = doubleArrayOf(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
     var maxBasalValueFound = 0.0
-        get() = if (overviewMode) maxBasalArray.get(indexRange) else historyBrowserMax(maxBasalArray)
+        get() = maxBasalArray.get(indexRange)
     val basalScale = Scale()
     var baseBasalGraphSeries: LineGraphSeries<ScaledDataPoint> = LineGraphSeries()
     var tempBasalGraphSeries: LineGraphSeries<ScaledDataPoint> = LineGraphSeries()
@@ -333,14 +301,14 @@ class OverviewData @Inject constructor(
 
     var maxIAArray = doubleArrayOf(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
     var maxIAValue = 0.0
-        get() = if (overviewMode) maxIAArray.get(indexRange) else historyBrowserMax(maxIAArray)
+        get() = maxIAArray.get(indexRange)
     val actScale = Scale()
     var activitySeries: FixedLineGraphSeries<ScaledDataPoint> = FixedLineGraphSeries()
     var activityPredictionSeries: FixedLineGraphSeries<ScaledDataPoint> = FixedLineGraphSeries()
 
     var maxTreatmentsArray = doubleArrayOf(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
     var maxTreatmentsValue = 0.0
-        get() = if (overviewMode) maxTreatmentsArray.get(indexRange) else historyBrowserMax(maxTreatmentsArray)
+        get() = maxTreatmentsArray.get(indexRange)
     var filteredTreatments: MutableList<DataPointWithLabelInterface> = java.util.ArrayList()
     var treatmentsSeries: PointsWithLabelGraphSeries<DataPointWithLabelInterface> = PointsWithLabelGraphSeries()
         get() {
@@ -349,7 +317,7 @@ class OverviewData @Inject constructor(
         }
     var maxIobArray = doubleArrayOf(Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE)
     var maxIobValueFound = Double.MIN_VALUE
-        get() = if (overviewMode) maxIobArray.get(indexRange) else historyBrowserMax(maxIobArray)
+        get() = maxIobArray.get(indexRange)
     val iobScale = Scale()
     var iobSeries: FixedLineGraphSeries<ScaledDataPoint> = FixedLineGraphSeries()
     var absIobSeries: FixedLineGraphSeries<ScaledDataPoint> = FixedLineGraphSeries()
@@ -358,14 +326,14 @@ class OverviewData @Inject constructor(
 
     var maxBGIArray = doubleArrayOf(Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE)
     var maxBGIValue = Double.MIN_VALUE
-        get() = if (overviewMode) maxBGIArray.get(indexRange) else historyBrowserMax(maxBGIArray)
+        get() = maxBGIArray.get(indexRange)
     val bgiScale = Scale()
     var minusBgiSeries: FixedLineGraphSeries<ScaledDataPoint> = FixedLineGraphSeries()
     var minusBgiHistSeries: FixedLineGraphSeries<ScaledDataPoint> = FixedLineGraphSeries()
 
     var maxCobArray = doubleArrayOf(Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE)
     var maxCobValueFound = Double.MIN_VALUE
-        get() = if (overviewMode) maxCobArray.get(indexRange) else historyBrowserMax(maxCobArray)
+        get() = maxCobArray.get(indexRange)
     val cobScale = Scale()
     var cobSeries: FixedLineGraphSeries<ScaledDataPoint> = FixedLineGraphSeries()
     var cobMinFailOverSeries: PointsWithLabelGraphSeries<DataPointWithLabelInterface> = PointsWithLabelGraphSeries()
@@ -378,21 +346,17 @@ class OverviewData @Inject constructor(
 
     var maxRatioArray = doubleArrayOf(5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0)
     var maxRatioValueFound = 5.0                    //even if sens data equals 0 for all the period, minimum scale is between 95% and 105%
-        get() = if (overviewMode) maxRatioArray.get(indexRange) else historyBrowserMax(maxRatioArray)
+        get() = maxRatioArray.get(indexRange)
     var minRatioValueFound = -maxRatioValueFound
     val ratioScale = Scale()
     var ratioSeries: LineGraphSeries<ScaledDataPoint> = LineGraphSeries()
 
     var maxFromMaxArray = doubleArrayOf(Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE)
     var maxFromMaxValueFound = Double.MIN_VALUE
-        get() = if (overviewMode)
-                    maxFromMaxArray.get(indexRange)
-                else {
-                    0.0     // TODO() Return MaxBGIValue value for HistoryBrowser according to selected range (6, 12, 18, 24) and fromTime
-                }
+        get() = maxFromMaxArray.get(indexRange)
     var maxFromMinArray = doubleArrayOf(Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE)
     var maxFromMinValueFound = Double.MIN_VALUE
-        get() = if (overviewMode) maxFromMinArray.get(indexRange) else historyBrowserMax(maxFromMinArray)
+        get() = maxFromMinArray.get(indexRange)
     val dsMaxScale = Scale()
     val dsMinScale = Scale()
     var dsMaxSeries: LineGraphSeries<ScaledDataPoint> = LineGraphSeries()
@@ -418,8 +382,7 @@ class OverviewData @Inject constructor(
     fun preparePredictions(from: String) {
 //        val start = dateUtil.now()
         val apsResult = if (config.APS) loop.lastRun?.constraintsProcessed else nsDeviceStatus.getAPSResult(injector)
-        val predictionsAvailable = if (config.APS) loop.lastRun?.request?.hasPredictions == true else config.NSCLIENT
-        predictAvailable = predictionsAvailable
+        predictAvailable = if (config.APS) loop.lastRun?.request?.hasPredictions == true else config.NSCLIENT
         val menuChartSettings = overviewMenus.setting
         // align to hours
         val calendar = Calendar.getInstance().also {
@@ -445,7 +408,7 @@ class OverviewData @Inject constructor(
             endTimeData - T.hours(minRangeToDisplay.toLong()).msecs() * 4,
             toTime - T.hours(minRangeToDisplay.toLong()).msecs() * 4,
         )
-        if (predictionsAvailable && apsResult != null && menuChartSettings[0][OverviewMenus.CharType.PRE.ordinal]) {
+        if (predictAvailable && apsResult != null && menuChartSettings[0][OverviewMenus.CharType.PRE.ordinal]) {
             //fromTime = toTime - T.hours(hoursToFetch.toLong()).msecs()
             endTime = toTime + T.hours(predictionHours.toLong()).msecs()
         } else {
@@ -469,121 +432,116 @@ class OverviewData @Inject constructor(
     @Suppress("SameParameterValue", "UNUSED_PARAMETER")
     fun prepareBucketedData(from: String) {
 //        val start = dateUtil.now()
-        if (loadNewHistoryData) {
-            val bucketedData = iobCobCalculator.ads.getBucketedDataTableCopy() ?: return
-            if (bucketedData.isEmpty()) {
-                aapsLogger.debug("No bucketed data.")
-                return
-            }
-            bucketedListArray = java.util.ArrayList()
-            for (inMemoryGlucoseValue in bucketedData) {
-                if (inMemoryGlucoseValue.timestamp < fromTimeData || inMemoryGlucoseValue.timestamp > toTime) continue
-                bucketedListArray.add(InMemoryGlucoseValueDataPoint(inMemoryGlucoseValue, profileFunction, rh))
-            }
-            bucketedListArray.sortWith { o1: DataPointWithLabelInterface, o2: DataPointWithLabelInterface -> o1.x.compareTo(o2.x) }
+        val bucketedData = iobCobCalculator.ads.getBucketedDataTableCopy() ?: return
+        if (bucketedData.isEmpty()) {
+            aapsLogger.debug("No bucketed data.")
+            return
+        }
+        bucketedListArray = java.util.ArrayList()
+        for (inMemoryGlucoseValue in bucketedData) {
+            if (inMemoryGlucoseValue.timestamp < fromTimeData || inMemoryGlucoseValue.timestamp > toTime) continue
+            bucketedListArray.add(InMemoryGlucoseValueDataPoint(inMemoryGlucoseValue, profileFunction, rh))
+        }
+        bucketedListArray.sortWith { o1: DataPointWithLabelInterface, o2: DataPointWithLabelInterface -> o1.x.compareTo(o2.x) }
 //        bucketedGraphSeries = PointsWithLabelGraphSeries(Array(bucketedListArray.size) { i -> bucketedListArray[i] })
 //        profiler.log(LTag.UI, "prepareBucketedData() $from", start)
-        }
     }
 
     @Suppress("UNUSED_PARAMETER")
     @Synchronized
     fun prepareBasalData(from: String) {
-        if (loadNewHistoryData) {
 //        val start = dateUtil.now()
-            val tempMaxBasalArray = doubleArrayOf(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
-            val baseBasalArray: MutableList<ScaledDataPoint> = java.util.ArrayList()
-            val tempBasalArray: MutableList<ScaledDataPoint> = java.util.ArrayList()
-            val basalLineArray: MutableList<ScaledDataPoint> = java.util.ArrayList()
-            val absoluteBasalLineArray: MutableList<ScaledDataPoint> = java.util.ArrayList()
-            var lastLineBasal = 0.0
-            var lastAbsoluteLineBasal = -1.0
-            var lastBaseBasal = 0.0
-            var lastTempBasal = 0.0
-            var time = fromTimeData
-            while (time < toTime) {
-                val profile = profileFunction.getProfile(time)
-                if (profile == null) {
-                    time += 60 * 1000L
-                    continue
-                }
-                val basalData = iobCobCalculator.getBasalData(profile, time)
-                val baseBasalValue = basalData.basal
-                var absoluteLineValue = baseBasalValue
-                var tempBasalValue = 0.0
-                var basal = 0.0
-                if (basalData.isTempBasalRunning) {
-                    tempBasalValue = basalData.tempBasalAbsolute
-                    absoluteLineValue = tempBasalValue
-                    if (tempBasalValue != lastTempBasal) {
-                        tempBasalArray.add(ScaledDataPoint(time, lastTempBasal, basalScale))
-                        tempBasalArray.add(ScaledDataPoint(time, tempBasalValue.also { basal = it }, basalScale))
-                    }
-                    if (lastBaseBasal != 0.0) {
-                        baseBasalArray.add(ScaledDataPoint(time, lastBaseBasal, basalScale))
-                        baseBasalArray.add(ScaledDataPoint(time, 0.0, basalScale))
-                        lastBaseBasal = 0.0
-                    }
-                } else {
-                    if (baseBasalValue != lastBaseBasal) {
-                        baseBasalArray.add(ScaledDataPoint(time, lastBaseBasal, basalScale))
-                        baseBasalArray.add(ScaledDataPoint(time, baseBasalValue.also { basal = it }, basalScale))
-                        lastBaseBasal = baseBasalValue
-                    }
-                    if (lastTempBasal != 0.0) {
-                        tempBasalArray.add(ScaledDataPoint(time, lastTempBasal, basalScale))
-                        tempBasalArray.add(ScaledDataPoint(time, 0.0, basalScale))
-                    }
-                }
-                if (baseBasalValue != lastLineBasal) {
-                    basalLineArray.add(ScaledDataPoint(time, lastLineBasal, basalScale))
-                    basalLineArray.add(ScaledDataPoint(time, baseBasalValue, basalScale))
-                }
-                if (absoluteLineValue != lastAbsoluteLineBasal) {
-                    absoluteBasalLineArray.add(ScaledDataPoint(time, lastAbsoluteLineBasal, basalScale))
-                    absoluteBasalLineArray.add(ScaledDataPoint(time, basal, basalScale))
-                }
-                lastAbsoluteLineBasal = absoluteLineValue
-                lastLineBasal = baseBasalValue
-                lastTempBasal = tempBasalValue
-                maxTime(tempMaxBasalArray, time, max(tempBasalValue, baseBasalValue))
-                //maxBasalValueFound = max(maxBasalValueFound, max(tempBasalValue, baseBasalValue))
+        maxBasalArray = doubleArrayOf(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
+        val baseBasalArray: MutableList<ScaledDataPoint> = java.util.ArrayList()
+        val tempBasalArray: MutableList<ScaledDataPoint> = java.util.ArrayList()
+        val basalLineArray: MutableList<ScaledDataPoint> = java.util.ArrayList()
+        val absoluteBasalLineArray: MutableList<ScaledDataPoint> = java.util.ArrayList()
+        var lastLineBasal = 0.0
+        var lastAbsoluteLineBasal = -1.0
+        var lastBaseBasal = 0.0
+        var lastTempBasal = 0.0
+        var time = fromTimeData
+        while (time < toTime) {
+            val profile = profileFunction.getProfile(time)
+            if (profile == null) {
                 time += 60 * 1000L
+                continue
             }
+            val basalData = iobCobCalculator.getBasalData(profile, time)
+            val baseBasalValue = basalData.basal
+            var absoluteLineValue = baseBasalValue
+            var tempBasalValue = 0.0
+            var basal = 0.0
+            if (basalData.isTempBasalRunning) {
+                tempBasalValue = basalData.tempBasalAbsolute
+                absoluteLineValue = tempBasalValue
+                if (tempBasalValue != lastTempBasal) {
+                    tempBasalArray.add(ScaledDataPoint(time, lastTempBasal, basalScale))
+                    tempBasalArray.add(ScaledDataPoint(time, tempBasalValue.also { basal = it }, basalScale))
+                }
+                if (lastBaseBasal != 0.0) {
+                    baseBasalArray.add(ScaledDataPoint(time, lastBaseBasal, basalScale))
+                    baseBasalArray.add(ScaledDataPoint(time, 0.0, basalScale))
+                    lastBaseBasal = 0.0
+                }
+            } else {
+                if (baseBasalValue != lastBaseBasal) {
+                    baseBasalArray.add(ScaledDataPoint(time, lastBaseBasal, basalScale))
+                    baseBasalArray.add(ScaledDataPoint(time, baseBasalValue.also { basal = it }, basalScale))
+                    lastBaseBasal = baseBasalValue
+                }
+                if (lastTempBasal != 0.0) {
+                    tempBasalArray.add(ScaledDataPoint(time, lastTempBasal, basalScale))
+                    tempBasalArray.add(ScaledDataPoint(time, 0.0, basalScale))
+                }
+            }
+            if (baseBasalValue != lastLineBasal) {
+                basalLineArray.add(ScaledDataPoint(time, lastLineBasal, basalScale))
+                basalLineArray.add(ScaledDataPoint(time, baseBasalValue, basalScale))
+            }
+            if (absoluteLineValue != lastAbsoluteLineBasal) {
+                absoluteBasalLineArray.add(ScaledDataPoint(time, lastAbsoluteLineBasal, basalScale))
+                absoluteBasalLineArray.add(ScaledDataPoint(time, basal, basalScale))
+            }
+            lastAbsoluteLineBasal = absoluteLineValue
+            lastLineBasal = baseBasalValue
+            lastTempBasal = tempBasalValue
+            maxTime(maxBasalArray, time, max(tempBasalValue, baseBasalValue))
+            //maxBasalValueFound = max(maxBasalValueFound, max(tempBasalValue, baseBasalValue))
+            time += 60 * 1000L
+        }
 
-            // final points
-            basalLineArray.add(ScaledDataPoint(toTime, lastLineBasal, basalScale))
-            baseBasalArray.add(ScaledDataPoint(toTime, lastBaseBasal, basalScale))
-            tempBasalArray.add(ScaledDataPoint(toTime, lastTempBasal, basalScale))
-            absoluteBasalLineArray.add(ScaledDataPoint(toTime, lastAbsoluteLineBasal, basalScale))
+        // final points
+        basalLineArray.add(ScaledDataPoint(toTime, lastLineBasal, basalScale))
+        baseBasalArray.add(ScaledDataPoint(toTime, lastBaseBasal, basalScale))
+        tempBasalArray.add(ScaledDataPoint(toTime, lastTempBasal, basalScale))
+        absoluteBasalLineArray.add(ScaledDataPoint(toTime, lastAbsoluteLineBasal, basalScale))
 
-            // create series
-            baseBasalGraphSeries = LineGraphSeries(Array(baseBasalArray.size) { i -> baseBasalArray[i] }).also {
-                it.isDrawBackground = true
-                it.backgroundColor = rh.gc(R.color.basebasal)
-                it.thickness = 0
-            }
-            tempBasalGraphSeries = LineGraphSeries(Array(tempBasalArray.size) { i -> tempBasalArray[i] }).also {
-                it.isDrawBackground = true
-                it.backgroundColor = rh.gc(R.color.tempbasal)
-                it.thickness = 0
-            }
-            basalLineGraphSeries = LineGraphSeries(Array(basalLineArray.size) { i -> basalLineArray[i] }).also {
-                it.setCustomPaint(Paint().also { paint ->
-                    paint.style = Paint.Style.STROKE
-                    paint.strokeWidth = rh.getDisplayMetrics().scaledDensity * 2
-                    paint.pathEffect = DashPathEffect(floatArrayOf(2f, 4f), 0f)
-                    paint.color = rh.gc(R.color.basal)
-                })
-            }
-            absoluteBasalGraphSeries = LineGraphSeries(Array(absoluteBasalLineArray.size) { i -> absoluteBasalLineArray[i] }).also {
-                it.setCustomPaint(Paint().also { absolutePaint ->
-                    absolutePaint.style = Paint.Style.STROKE
-                    absolutePaint.strokeWidth = rh.getDisplayMetrics().scaledDensity * 2
-                    absolutePaint.color = rh.gc(R.color.basal)
-                })
-            }
-            maxBasalArray = tempMaxBasalArray
+        // create series
+        baseBasalGraphSeries = LineGraphSeries(Array(baseBasalArray.size) { i -> baseBasalArray[i] }).also {
+            it.isDrawBackground = true
+            it.backgroundColor = rh.gc(R.color.basebasal)
+            it.thickness = 0
+        }
+        tempBasalGraphSeries = LineGraphSeries(Array(tempBasalArray.size) { i -> tempBasalArray[i] }).also {
+            it.isDrawBackground = true
+            it.backgroundColor = rh.gc(R.color.tempbasal)
+            it.thickness = 0
+        }
+        basalLineGraphSeries = LineGraphSeries(Array(basalLineArray.size) { i -> basalLineArray[i] }).also {
+            it.setCustomPaint(Paint().also { paint ->
+                paint.style = Paint.Style.STROKE
+                paint.strokeWidth = rh.getDisplayMetrics().scaledDensity * 2
+                paint.pathEffect = DashPathEffect(floatArrayOf(2f, 4f), 0f)
+                paint.color = rh.gc(R.color.basal)
+            })
+        }
+        absoluteBasalGraphSeries = LineGraphSeries(Array(absoluteBasalLineArray.size) { i -> absoluteBasalLineArray[i] }).also {
+            it.setCustomPaint(Paint().also { absolutePaint ->
+                absolutePaint.style = Paint.Style.STROKE
+                absolutePaint.strokeWidth = rh.getDisplayMetrics().scaledDensity * 2
+                absolutePaint.color = rh.gc(R.color.basal)
+            })
         }
     }
 
@@ -591,340 +549,316 @@ class OverviewData @Inject constructor(
     @Synchronized
     fun prepareTemporaryTargetData(from: String) {
 //        val start = dateUtil.now()
-        if (loadNewHistoryData) {
-            val profile = profileFunction.getProfile() ?: return
-            val units = profileFunction.getUnits()
-            var toTime = toTime
-            val targetsSeriesArray: MutableList<DataPoint> = java.util.ArrayList()
-            var lastTarget = -1.0
-            loop.lastRun?.constraintsProcessed?.let { toTime = max(it.latestPredictionsTime, toTime) }
-            var time = fromTimeData
-            while (time < toTime) {
-                val tt = repository.getTemporaryTargetActiveAt(time).blockingGet()
-                val value: Double = if (tt is ValueWrapper.Existing) {
-                    Profile.fromMgdlToUnits(tt.value.target(), units)
-                } else {
-                    Profile.fromMgdlToUnits((profile.getTargetLowMgdl(time) + profile.getTargetHighMgdl(time)) / 2, units)
-                }
-                if (lastTarget != value) {
-                    if (lastTarget != -1.0) targetsSeriesArray.add(DataPoint(time.toDouble(), lastTarget))
-                    targetsSeriesArray.add(DataPoint(time.toDouble(), value))
-                }
-                lastTarget = value
-                time += 5 * 60 * 1000L
+        val profile = profileFunction.getProfile() ?: return
+        val units = profileFunction.getUnits()
+        var toTime = toTime
+        val targetsSeriesArray: MutableList<DataPoint> = java.util.ArrayList()
+        var lastTarget = -1.0
+        loop.lastRun?.constraintsProcessed?.let { toTime = max(it.latestPredictionsTime, toTime) }
+        var time = fromTimeData
+        while (time < toTime) {
+            val tt = repository.getTemporaryTargetActiveAt(time).blockingGet()
+            val value: Double = if (tt is ValueWrapper.Existing) {
+                Profile.fromMgdlToUnits(tt.value.target(), units)
+            } else {
+                Profile.fromMgdlToUnits((profile.getTargetLowMgdl(time) + profile.getTargetHighMgdl(time)) / 2, units)
             }
-            // final point
-            targetsSeriesArray.add(DataPoint(toTime.toDouble(), lastTarget))
-            // create series
-            temporaryTargetSeries = LineGraphSeries(Array(targetsSeriesArray.size) { i -> targetsSeriesArray[i] }).also {
-                it.isDrawBackground = false
-                it.color = rh.gc(R.color.tempTargetBackground)
-                it.thickness = 2
+            if (lastTarget != value) {
+                if (lastTarget != -1.0) targetsSeriesArray.add(DataPoint(time.toDouble(), lastTarget))
+                targetsSeriesArray.add(DataPoint(time.toDouble(), value))
             }
-//        profiler.log(LTag.UI, "prepareTemporaryTargetData() $from", start)
+            lastTarget = value
+            time += 5 * 60 * 1000L
         }
+        // final point
+        targetsSeriesArray.add(DataPoint(toTime.toDouble(), lastTarget))
+        // create series
+        temporaryTargetSeries = LineGraphSeries(Array(targetsSeriesArray.size) { i -> targetsSeriesArray[i] }).also {
+            it.isDrawBackground = false
+            it.color = rh.gc(R.color.tempTargetBackground)
+            it.thickness = 2
+        }
+//        profiler.log(LTag.UI, "prepareTemporaryTargetData() $from", start)
     }
 
     @Suppress("UNUSED_PARAMETER")
     @Synchronized
     fun prepareTreatmentsData(from: String) {
 //        val start = dateUtil.now()
-        if (loadNewHistoryData) {
-            val tempMaxTreatmentsArray = doubleArrayOf(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
-            filteredTreatments = java.util.ArrayList()
-            repository.getBolusesDataFromTimeToTime(fromTimeData, endTimeData, true).blockingGet()
-                .map { BolusDataPoint(it, rh, activePlugin, defaultValueHelper) }
-                .filter { it.data.type == Bolus.Type.NORMAL || it.data.type == Bolus.Type.SMB }
-                .forEach {
-                    it.y = getNearestBg(it.x.toLong())
-                    filteredTreatments.add(it)
-                }
-            repository.getCarbsDataFromTimeToTimeExpanded(fromTimeData, endTimeData, true).blockingGet()
-                .map { CarbsDataPoint(it, rh) }
-                .forEach {
-                    it.y = getNearestBg(it.x.toLong())
-                    filteredTreatments.add(it)
-                }
-
-            // ProfileSwitch
-            repository.getEffectiveProfileSwitchDataFromTimeToTime(fromTimeData, endTimeData, true).blockingGet()
-                .map { EffectiveProfileSwitchDataPoint(it) }
-                .forEach(filteredTreatments::add)
-
-            // OfflineEvent
-            repository.getOfflineEventDataFromTimeToTime(fromTimeData, endTimeData, true).blockingGet()
-                .map {
-                    TherapyEventDataPoint(
-                        TherapyEvent(timestamp = it.timestamp, duration = it.duration, type = TherapyEvent.Type.APS_OFFLINE, glucoseUnit = TherapyEvent.GlucoseUnit.MMOL),
-                        rh,
-                        profileFunction,
-                        translator
-                    )
-                }
-                .forEach(filteredTreatments::add)
-
-            // Extended bolus
-            if (!activePlugin.activePump.isFakingTempsByExtendedBoluses) {
-                repository.getExtendedBolusDataFromTimeToTime(fromTimeData, endTimeData, true).blockingGet()
-                    .map { ExtendedBolusDataPoint(it) }
-                    .filter { it.duration != 0L }
-                    .forEach {
-                        it.y = getNearestBg(it.x.toLong())
-                        filteredTreatments.add(it)
-                    }
+        maxTreatmentsArray = doubleArrayOf(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
+        filteredTreatments = java.util.ArrayList()
+        repository.getBolusesDataFromTimeToTime(fromTimeData, endTimeData, true).blockingGet()
+            .map { BolusDataPoint(it, rh, activePlugin, defaultValueHelper) }
+            .filter { it.data.type == Bolus.Type.NORMAL || it.data.type == Bolus.Type.SMB }
+            .forEach {
+                it.y = getNearestBg(it.x.toLong())
+                filteredTreatments.add(it)
+            }
+        repository.getCarbsDataFromTimeToTimeExpanded(fromTimeData, endTimeData, true).blockingGet()
+            .map { CarbsDataPoint(it, rh) }
+            .forEach {
+                it.y = getNearestBg(it.x.toLong())
+                filteredTreatments.add(it)
             }
 
-            // Careportal
-            repository.compatGetTherapyEventDataFromToTime(fromTimeData - T.hours(6).msecs(), endTimeData).blockingGet()
-                .map { TherapyEventDataPoint(it, rh, profileFunction, translator) }
-                .filterTimeframe(fromTimeData, endTimeData)
+        // ProfileSwitch
+        repository.getEffectiveProfileSwitchDataFromTimeToTime(fromTimeData, endTimeData, true).blockingGet()
+            .map { EffectiveProfileSwitchDataPoint(it) }
+            .forEach(filteredTreatments::add)
+
+        // OfflineEvent
+        repository.getOfflineEventDataFromTimeToTime(fromTimeData, endTimeData, true).blockingGet()
+            .map {
+                TherapyEventDataPoint(
+                    TherapyEvent(timestamp = it.timestamp, duration = it.duration, type = TherapyEvent.Type.APS_OFFLINE, glucoseUnit = TherapyEvent.GlucoseUnit.MMOL),
+                    rh,
+                    profileFunction,
+                    translator
+                )
+            }
+            .forEach(filteredTreatments::add)
+
+        // Extended bolus
+        if (!activePlugin.activePump.isFakingTempsByExtendedBoluses) {
+            repository.getExtendedBolusDataFromTimeToTime(fromTimeData, endTimeData, true).blockingGet()
+                .map { ExtendedBolusDataPoint(it) }
+                .filter { it.duration != 0L }
                 .forEach {
-                    if (it.y == 0.0)
-                        it.y = getNearestBg(it.x.toLong())
-                    else
-                        maxTime(tempMaxTreatmentsArray, it.data.timestamp, addUpperChartMargin(it.y))
+                    it.y = getNearestBg(it.x.toLong())
                     filteredTreatments.add(it)
                 }
-            maxTreatmentsArray = tempMaxTreatmentsArray
-            //treatmentsSeries = PointsWithLabelGraphSeries(filteredTreatments.toTypedArray())
-//        profiler.log(LTag.UI, "prepareTreatmentsData() $from", start)
         }
+
+        // Careportal
+        repository.compatGetTherapyEventDataFromToTime(fromTimeData - T.hours(6).msecs(), endTimeData).blockingGet()
+            .map { TherapyEventDataPoint(it, rh, profileFunction, translator) }
+            .filterTimeframe(fromTimeData, endTimeData)
+            .forEach {
+                if (it.y == 0.0)
+                    it.y = getNearestBg(it.x.toLong())
+                else
+                    maxTime(maxTreatmentsArray, it.data.timestamp, addUpperChartMargin(it.y))
+                filteredTreatments.add(it)
+            }
+        //treatmentsSeries = PointsWithLabelGraphSeries(filteredTreatments.toTypedArray())
+//        profiler.log(LTag.UI, "prepareTreatmentsData() $from", start)
     }
 
     @Suppress("UNUSED_PARAMETER")
     @Synchronized
     fun prepareIobAutosensData(from: String) {
 //        val start = dateUtil.now()
-        if (loadNewHistoryData) {
-            val iobArray: MutableList<ScaledDataPoint> = java.util.ArrayList()
-            val absIobArray: MutableList<ScaledDataPoint> = java.util.ArrayList()
-            val tempMaxIobArray = doubleArrayOf(Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE)
-            var lastIob = 0.0
-            var absLastIob = 0.0
-            var time = fromTimeData
+        val iobArray: MutableList<ScaledDataPoint> = java.util.ArrayList()
+        val absIobArray: MutableList<ScaledDataPoint> = java.util.ArrayList()
+        maxIobArray = doubleArrayOf(Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE)
+        var lastIob = 0.0
+        var absLastIob = 0.0
+        var time = fromTimeData
 
-            val minFailOverActiveList: MutableList<DataPointWithLabelInterface> = java.util.ArrayList()
-            val cobArray: MutableList<ScaledDataPoint> = java.util.ArrayList()
-            val tempMaxCobArray = doubleArrayOf(Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE)
-            var lastCob = 0
+        val minFailOverActiveList: MutableList<DataPointWithLabelInterface> = java.util.ArrayList()
+        val cobArray: MutableList<ScaledDataPoint> = java.util.ArrayList()
+        maxCobArray = doubleArrayOf(Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE)
+        var lastCob = 0
 
-            val actArrayHist: MutableList<ScaledDataPoint> = java.util.ArrayList()
-            val actArrayPrediction: MutableList<ScaledDataPoint> = java.util.ArrayList()
-            val now = dateUtil.now().toDouble()
-            val tempMaxIAArray = doubleArrayOf(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
+        val actArrayHist: MutableList<ScaledDataPoint> = java.util.ArrayList()
+        val actArrayPrediction: MutableList<ScaledDataPoint> = java.util.ArrayList()
+        val now = dateUtil.now().toDouble()
+        maxIAArray = doubleArrayOf(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
 
-            val bgiArrayHist: MutableList<ScaledDataPoint> = java.util.ArrayList()
-            val bgiArrayPrediction: MutableList<ScaledDataPoint> = java.util.ArrayList()
-            val tempMaxBGIArray = doubleArrayOf(Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE)
+        val bgiArrayHist: MutableList<ScaledDataPoint> = java.util.ArrayList()
+        val bgiArrayPrediction: MutableList<ScaledDataPoint> = java.util.ArrayList()
+        maxBGIArray = doubleArrayOf(Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE)
 
-            val devArray: MutableList<OverviewPlugin.DeviationDataPoint> = java.util.ArrayList()
-            val tempMaxDevArray = doubleArrayOf(Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE)
+        val devArray: MutableList<OverviewPlugin.DeviationDataPoint> = java.util.ArrayList()
+        maxDevArray = doubleArrayOf(Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE)
 
-            val ratioArray: MutableList<ScaledDataPoint> = java.util.ArrayList()
-            val tempMaxRatioArray = doubleArrayOf(5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0)
+        val ratioArray: MutableList<ScaledDataPoint> = java.util.ArrayList()
+        maxRatioArray = doubleArrayOf(5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0)
 
-            val dsMaxArray: MutableList<ScaledDataPoint> = java.util.ArrayList()
-            val dsMinArray: MutableList<ScaledDataPoint> = java.util.ArrayList()
-            val tempMaxFromMaxArray = doubleArrayOf(Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE)
-            val tempMaxFromMinArray = doubleArrayOf(Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE)
+        val dsMaxArray: MutableList<ScaledDataPoint> = java.util.ArrayList()
+        val dsMinArray: MutableList<ScaledDataPoint> = java.util.ArrayList()
+        maxFromMaxArray = doubleArrayOf(Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE)
+        maxFromMinArray = doubleArrayOf(Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE)
 
-            val adsData = iobCobCalculator.ads.clone()
+        val adsData = iobCobCalculator.ads.clone()
 
-            while (time <= toTime) {
-                val profile = profileFunction.getProfile(time)
-                if (profile == null) {
-                    time += 5 * 60 * 1000L
-                    continue
-                }
-                // IOB
-                val iob = iobCobCalculator.calculateFromTreatmentsAndTemps(time, profile)
-                val baseBasalIob = iobCobCalculator.calculateAbsoluteIobFromBaseBasals(time)
-                val absIob = IobTotal.combine(iob, baseBasalIob)
-                val autosensData = adsData.getAutosensDataAtTime(time)
-                if (abs(lastIob - iob.iob) > 0.02) {
-                    if (abs(lastIob - iob.iob) > 0.2) iobArray.add(ScaledDataPoint(time, lastIob, iobScale))
-                    iobArray.add(ScaledDataPoint(time, iob.iob, iobScale))
-                    maxTime(tempMaxIobArray, time, abs(iob.iob))
-                    lastIob = iob.iob
-                }
-                if (abs(absLastIob - absIob.iob) > 0.02) {
-                    if (abs(absLastIob - absIob.iob) > 0.2) absIobArray.add(ScaledDataPoint(time, absLastIob, iobScale))
-                    absIobArray.add(ScaledDataPoint(time, absIob.iob, iobScale))
-                    maxTime(tempMaxIobArray, time, abs(absIob.iob))
-                    absLastIob = absIob.iob
-                }
-
-                // COB
-                if (autosensData != null) {
-                    val cob = autosensData.cob.toInt()
-                    if (cob != lastCob) {
-                        if (autosensData.carbsFromBolus > 0) cobArray.add(ScaledDataPoint(time, lastCob.toDouble(), cobScale))
-                        cobArray.add(ScaledDataPoint(time, cob.toDouble(), cobScale))
-                        maxTime(tempMaxCobArray, time, cob.toDouble())
-                        lastCob = cob
-                    }
-                    if (autosensData.failOverToMinAbsorptionRate) {
-                        autosensData.scale = cobScale
-                        autosensData.chartTime = time
-                        minFailOverActiveList.add(autosensData)
-                    }
-                }
-
-                // ACTIVITY
-                if (time <= now) actArrayHist.add(ScaledDataPoint(time, iob.activity, actScale))
-                else actArrayPrediction.add(ScaledDataPoint(time, iob.activity, actScale))
-                maxTime(tempMaxIAArray, time, abs(iob.activity))
-
-                // BGI
-                val devBgiScale = overviewMenus.isEnabledIn(OverviewMenus.CharType.DEV) == overviewMenus.isEnabledIn(OverviewMenus.CharType.BGI)
-                val deviation = if (devBgiScale) autosensData?.deviation ?: 0.0 else 0.0
-                val bgi: Double = iob.activity * profile.getIsfMgdl(time) * 5.0
-                if (time <= now) bgiArrayHist.add(ScaledDataPoint(time, bgi, bgiScale))
-                else bgiArrayPrediction.add(ScaledDataPoint(time, bgi, bgiScale))
-                maxTime(tempMaxBGIArray, time, max(abs(bgi), deviation))
-
-                // DEVIATIONS
-                if (autosensData != null) {
-                    var color = rh.gc(R.color.deviationblack) // "="
-                    if (autosensData.type == "" || autosensData.type == "non-meal") {
-                        if (autosensData.pastSensitivity == "C") color = rh.gc(R.color.deviationgrey)
-                        if (autosensData.pastSensitivity == "+") color = rh.gc(R.color.deviationgreen)
-                        if (autosensData.pastSensitivity == "-") color = rh.gc(R.color.deviationred)
-                    } else if (autosensData.type == "uam") {
-                        color = rh.gc(R.color.uam)
-                    } else if (autosensData.type == "csf") {
-                        color = rh.gc(R.color.deviationgrey)
-                    }
-                    devArray.add(OverviewPlugin.DeviationDataPoint(time.toDouble(), autosensData.deviation, color, devScale))
-                    maxTime(tempMaxDevArray, time, abs(autosensData.deviation))
-                }
-
-                // RATIO
-                if (autosensData != null) {
-                    ratioArray.add(ScaledDataPoint(time, 100.0 * (autosensData.autosensResult.ratio - 1), ratioScale))
-                    maxTime(tempMaxRatioArray, time, 100.0 * (autosensData.autosensResult.ratio - 1))
-                    maxTime(tempMaxRatioArray, time, 100.0 * (1 - autosensData.autosensResult.ratio))
-                }
-
-                // DEV SLOPE
-                if (autosensData != null) {
-                    dsMaxArray.add(ScaledDataPoint(time, autosensData.slopeFromMaxDeviation, dsMaxScale))
-                    dsMinArray.add(ScaledDataPoint(time, autosensData.slopeFromMinDeviation, dsMinScale))
-                    maxTime(tempMaxFromMaxArray, time, abs(autosensData.slopeFromMaxDeviation))
-                    maxTime(tempMaxFromMinArray, time, abs(autosensData.slopeFromMinDeviation))
-                }
-
+        while (time <= toTime) {
+            val profile = profileFunction.getProfile(time)
+            if (profile == null) {
                 time += 5 * 60 * 1000L
+                continue
             }
             // IOB
-            iobSeries = FixedLineGraphSeries(Array(iobArray.size) { i -> iobArray[i] }).also {
-                it.isDrawBackground = true
-                it.backgroundColor = -0x7f000001 and rh.gc(R.color.iob) //50%
-                it.color = rh.gc(R.color.iob)
-                it.thickness = 3
+            val iob = iobCobCalculator.calculateFromTreatmentsAndTemps(time, profile)
+            val baseBasalIob = iobCobCalculator.calculateAbsoluteIobFromBaseBasals(time)
+            val absIob = IobTotal.combine(iob, baseBasalIob)
+            val autosensData = adsData.getAutosensDataAtTime(time)
+            if (abs(lastIob - iob.iob) > 0.02) {
+                if (abs(lastIob - iob.iob) > 0.2) iobArray.add(ScaledDataPoint(time, lastIob, iobScale))
+                iobArray.add(ScaledDataPoint(time, iob.iob, iobScale))
+                maxTime(maxIobArray, time, abs(iob.iob))
+                lastIob = iob.iob
             }
-            absIobSeries = FixedLineGraphSeries(Array(absIobArray.size) { i -> absIobArray[i] }).also {
-                it.isDrawBackground = true
-                it.backgroundColor = -0x7f000001 and rh.gc(R.color.iob) //50%
-                it.color = rh.gc(R.color.iob)
-                it.thickness = 3
-            }
-
-            if (overviewMenus.setting[0][OverviewMenus.CharType.PRE.ordinal]) {
-                val autosensData = adsData.getLastAutosensData("GraphData", aapsLogger, dateUtil)
-                val lastAutosensResult = autosensData?.autosensResult ?: AutosensResult()
-                val isTempTarget = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing
-                val iobPrediction: MutableList<DataPointWithLabelInterface> = java.util.ArrayList()
-                val iobPredictionArray = iobCobCalculator.calculateIobArrayForSMB(lastAutosensResult, SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget)
-                for (i in iobPredictionArray) {
-                    iobPrediction.add(i.setColor(rh.gc(R.color.iobPredAS)))
-                    maxTime(tempMaxIobArray, i.time, abs(i.iob))
-                }
-                iobPredictions1Series = PointsWithLabelGraphSeries(Array(iobPrediction.size) { i -> iobPrediction[i] })
-                aapsLogger.debug(LTag.AUTOSENS, "IOB prediction for AS=" + DecimalFormatter.to2Decimal(lastAutosensResult.ratio) + ": " + iobCobCalculator.iobArrayToString(iobPredictionArray))
-            /*val iobPrediction2: MutableList<DataPointWithLabelInterface> = java.util.ArrayList()
-                val iobPredictionArray2 = iobCobCalculator.calculateIobArrayForSMB(AutosensResult(), SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget)
-                for (i in iobPredictionArray2) {
-                    iobPrediction2.add(i.setColor(rh.gc(R.color.iobPred)))
-                    maxTime(tempMaxIobArray, i.time, abs(i.iob))
-                }
-                iobPredictions2Series = PointsWithLabelGraphSeries(Array(iobPrediction2.size) { i -> iobPrediction2[i] })
-                aapsLogger.debug(LTag.AUTOSENS, "IOB prediction for AS=" + DecimalFormatter.to2Decimal(1.0) + ": " + iobCobCalculator.iobArrayToString(iobPredictionArray2))
-            */
-            } else {
-                iobPredictions1Series = PointsWithLabelGraphSeries()
-                //iobPredictions2Series = PointsWithLabelGraphSeries()
+            if (abs(absLastIob - absIob.iob) > 0.02) {
+                if (abs(absLastIob - absIob.iob) > 0.2) absIobArray.add(ScaledDataPoint(time, absLastIob, iobScale))
+                absIobArray.add(ScaledDataPoint(time, absIob.iob, iobScale))
+                maxTime(maxIobArray, time, abs(absIob.iob))
+                absLastIob = absIob.iob
             }
 
             // COB
-            cobSeries = FixedLineGraphSeries(Array(cobArray.size) { i -> cobArray[i] }).also {
-                it.isDrawBackground = true
-                it.backgroundColor = -0x7f000001 and rh.gc(R.color.cob) //50%
-                it.color = rh.gc(R.color.cob)
-                it.thickness = 3
+            if (autosensData != null) {
+                val cob = autosensData.cob.toInt()
+                if (cob != lastCob) {
+                    if (autosensData.carbsFromBolus > 0) cobArray.add(ScaledDataPoint(time, lastCob.toDouble(), cobScale))
+                    cobArray.add(ScaledDataPoint(time, cob.toDouble(), cobScale))
+                    maxTime(maxCobArray, time, cob.toDouble())
+                    lastCob = cob
+                }
+                if (autosensData.failOverToMinAbsorptionRate) {
+                    autosensData.scale = cobScale
+                    autosensData.chartTime = time
+                    minFailOverActiveList.add(autosensData)
+                }
             }
-            cobMinFailOverSeries = PointsWithLabelGraphSeries(Array(minFailOverActiveList.size) { i -> minFailOverActiveList[i] })
 
             // ACTIVITY
-            activitySeries = FixedLineGraphSeries(Array(actArrayHist.size) { i -> actArrayHist[i] }).also {
-                it.isDrawBackground = false
-                it.color = rh.gc(R.color.activity)
-                it.thickness = 3
-            }
-            activityPredictionSeries = FixedLineGraphSeries(Array(actArrayPrediction.size) { i -> actArrayPrediction[i] }).also {
-                it.setCustomPaint(Paint().also { paint ->
-                    paint.style = Paint.Style.STROKE
-                    paint.strokeWidth = 3f
-                    paint.pathEffect = DashPathEffect(floatArrayOf(4f, 4f), 0f)
-                    paint.color = rh.gc(R.color.activity)
-                })
-            }
+            if (time <= now) actArrayHist.add(ScaledDataPoint(time, iob.activity, actScale))
+            else actArrayPrediction.add(ScaledDataPoint(time, iob.activity, actScale))
+            maxTime(maxIAArray, time, abs(iob.activity))
 
             // BGI
-            minusBgiSeries = FixedLineGraphSeries(Array(bgiArrayHist.size) { i -> bgiArrayHist[i] }).also {
-                it.isDrawBackground = false
-                it.color = rh.gc(R.color.bgi)
-                it.thickness = 3
-            }
-            minusBgiHistSeries = FixedLineGraphSeries(Array(bgiArrayPrediction.size) { i -> bgiArrayPrediction[i] }).also {
-                it.setCustomPaint(Paint().also { paint ->
-                    paint.style = Paint.Style.STROKE
-                    paint.strokeWidth = 3f
-                    paint.pathEffect = DashPathEffect(floatArrayOf(4f, 4f), 0f)
-                    paint.color = rh.gc(R.color.bgi)
-                })
-            }
+            val devBgiScale = overviewMenus.isEnabledIn(OverviewMenus.CharType.DEV) == overviewMenus.isEnabledIn(OverviewMenus.CharType.BGI)
+            val deviation = if (devBgiScale) autosensData?.deviation ?: 0.0 else 0.0
+            val bgi: Double = iob.activity * profile.getIsfMgdl(time) * 5.0
+            if (time <= now) bgiArrayHist.add(ScaledDataPoint(time, bgi, bgiScale))
+            else bgiArrayPrediction.add(ScaledDataPoint(time, bgi, bgiScale))
+            maxTime(maxBGIArray, time, max(abs(bgi), deviation))
 
             // DEVIATIONS
-            deviationsSeries = BarGraphSeries(Array(devArray.size) { i -> devArray[i] }).also {
-                it.setValueDependentColor { data: OverviewPlugin.DeviationDataPoint -> data.color }
+            if (autosensData != null) {
+                var color = rh.gc(R.color.deviationblack) // "="
+                if (autosensData.type == "" || autosensData.type == "non-meal") {
+                    if (autosensData.pastSensitivity == "C") color = rh.gc(R.color.deviationgrey)
+                    if (autosensData.pastSensitivity == "+") color = rh.gc(R.color.deviationgreen)
+                    if (autosensData.pastSensitivity == "-") color = rh.gc(R.color.deviationred)
+                } else if (autosensData.type == "uam") {
+                    color = rh.gc(R.color.uam)
+                } else if (autosensData.type == "csf") {
+                    color = rh.gc(R.color.deviationgrey)
+                }
+                devArray.add(OverviewPlugin.DeviationDataPoint(time.toDouble(), autosensData.deviation, color, devScale))
+                maxTime(maxDevArray, time, abs(autosensData.deviation))
             }
 
             // RATIO
-            ratioSeries = LineGraphSeries(Array(ratioArray.size) { i -> ratioArray[i] }).also {
-                it.color = rh.gc(R.color.ratio)
-                it.thickness = 3
+            if (autosensData != null) {
+                ratioArray.add(ScaledDataPoint(time, 100.0 * (autosensData.autosensResult.ratio - 1), ratioScale))
+                maxTime(maxRatioArray, time, 100.0 * (autosensData.autosensResult.ratio - 1))
+                maxTime(maxRatioArray, time, 100.0 * (1 - autosensData.autosensResult.ratio))
             }
 
             // DEV SLOPE
-            dsMaxSeries = LineGraphSeries(Array(dsMaxArray.size) { i -> dsMaxArray[i] }).also {
-                it.color = rh.gc(R.color.devslopepos)
-                it.thickness = 3
+            if (autosensData != null) {
+                dsMaxArray.add(ScaledDataPoint(time, autosensData.slopeFromMaxDeviation, dsMaxScale))
+                dsMinArray.add(ScaledDataPoint(time, autosensData.slopeFromMinDeviation, dsMinScale))
+                maxTime(maxFromMaxArray, time, abs(autosensData.slopeFromMaxDeviation))
+                maxTime(maxFromMinArray, time, abs(autosensData.slopeFromMinDeviation))
             }
-            dsMinSeries = LineGraphSeries(Array(dsMinArray.size) { i -> dsMinArray[i] }).also {
-                it.color = rh.gc(R.color.devslopeneg)
-                it.thickness = 3
-            }
-            maxIobArray = tempMaxIobArray
-            maxCobArray = tempMaxCobArray
-            maxIAArray = tempMaxIAArray
-            maxBGIArray = tempMaxBGIArray
-            maxDevArray = tempMaxDevArray
-            maxRatioArray = tempMaxRatioArray
-            maxFromMaxArray = tempMaxFromMaxArray
-            maxFromMinArray = tempMaxFromMinArray
-//        profiler.log(LTag.UI, "prepareIobAutosensData() $from", start)
+
+            time += 5 * 60 * 1000L
         }
+        // IOB
+        iobSeries = FixedLineGraphSeries(Array(iobArray.size) { i -> iobArray[i] }).also {
+            it.isDrawBackground = true
+            it.backgroundColor = -0x7f000001 and rh.gc(R.color.iob) //50%
+            it.color = rh.gc(R.color.iob)
+            it.thickness = 3
+        }
+        absIobSeries = FixedLineGraphSeries(Array(absIobArray.size) { i -> absIobArray[i] }).also {
+            it.isDrawBackground = true
+            it.backgroundColor = -0x7f000001 and rh.gc(R.color.iob) //50%
+            it.color = rh.gc(R.color.iob)
+            it.thickness = 3
+        }
+
+        if (overviewMenus.setting[0][OverviewMenus.CharType.PRE.ordinal]) {
+            val autosensData = adsData.getLastAutosensData("GraphData", aapsLogger, dateUtil)
+            val lastAutosensResult = autosensData?.autosensResult ?: AutosensResult()
+            val isTempTarget = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing
+            val iobPrediction: MutableList<DataPointWithLabelInterface> = java.util.ArrayList()
+            val iobPredictionArray = iobCobCalculator.calculateIobArrayForSMB(lastAutosensResult, SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget)
+            for (i in iobPredictionArray) {
+                iobPrediction.add(i.setColor(rh.gc(R.color.iobPredAS)))
+                maxTime(maxIobArray, i.time, abs(i.iob))
+            }
+            iobPredictions1Series = PointsWithLabelGraphSeries(Array(iobPrediction.size) { i -> iobPrediction[i] })
+            aapsLogger.debug(LTag.AUTOSENS, "IOB prediction for AS=" + DecimalFormatter.to2Decimal(lastAutosensResult.ratio) + ": " + iobCobCalculator.iobArrayToString(iobPredictionArray))
+        } else {
+            iobPredictions1Series = PointsWithLabelGraphSeries()
+            //iobPredictions2Series = PointsWithLabelGraphSeries()
+        }
+
+        // COB
+        cobSeries = FixedLineGraphSeries(Array(cobArray.size) { i -> cobArray[i] }).also {
+            it.isDrawBackground = true
+            it.backgroundColor = -0x7f000001 and rh.gc(R.color.cob) //50%
+            it.color = rh.gc(R.color.cob)
+            it.thickness = 3
+        }
+        cobMinFailOverSeries = PointsWithLabelGraphSeries(Array(minFailOverActiveList.size) { i -> minFailOverActiveList[i] })
+
+        // ACTIVITY
+        activitySeries = FixedLineGraphSeries(Array(actArrayHist.size) { i -> actArrayHist[i] }).also {
+            it.isDrawBackground = false
+            it.color = rh.gc(R.color.activity)
+            it.thickness = 3
+        }
+        activityPredictionSeries = FixedLineGraphSeries(Array(actArrayPrediction.size) { i -> actArrayPrediction[i] }).also {
+            it.setCustomPaint(Paint().also { paint ->
+                paint.style = Paint.Style.STROKE
+                paint.strokeWidth = 3f
+                paint.pathEffect = DashPathEffect(floatArrayOf(4f, 4f), 0f)
+                paint.color = rh.gc(R.color.activity)
+            })
+        }
+
+        // BGI
+        minusBgiSeries = FixedLineGraphSeries(Array(bgiArrayHist.size) { i -> bgiArrayHist[i] }).also {
+            it.isDrawBackground = false
+            it.color = rh.gc(R.color.bgi)
+            it.thickness = 3
+        }
+        minusBgiHistSeries = FixedLineGraphSeries(Array(bgiArrayPrediction.size) { i -> bgiArrayPrediction[i] }).also {
+            it.setCustomPaint(Paint().also { paint ->
+                paint.style = Paint.Style.STROKE
+                paint.strokeWidth = 3f
+                paint.pathEffect = DashPathEffect(floatArrayOf(4f, 4f), 0f)
+                paint.color = rh.gc(R.color.bgi)
+            })
+        }
+
+        // DEVIATIONS
+        deviationsSeries = BarGraphSeries(Array(devArray.size) { i -> devArray[i] }).also {
+            it.setValueDependentColor { data: OverviewPlugin.DeviationDataPoint -> data.color }
+        }
+
+        // RATIO
+        ratioSeries = LineGraphSeries(Array(ratioArray.size) { i -> ratioArray[i] }).also {
+            it.color = rh.gc(R.color.ratio)
+            it.thickness = 3
+        }
+
+        // DEV SLOPE
+        dsMaxSeries = LineGraphSeries(Array(dsMaxArray.size) { i -> dsMaxArray[i] }).also {
+            it.color = rh.gc(R.color.devslopepos)
+            it.thickness = 3
+        }
+        dsMinSeries = LineGraphSeries(Array(dsMinArray.size) { i -> dsMinArray[i] }).also {
+            it.color = rh.gc(R.color.devslopeneg)
+            it.thickness = 3
+        }
+//        profiler.log(LTag.UI, "prepareIobAutosensData() $from", start)
     }
 
     private fun addUpperChartMargin(maxBgValue: Double) =
@@ -952,20 +886,8 @@ class OverviewData @Inject constructor(
                 if (time <= toTime && time > toTime - T.hours(minRangeToDisplay.toLong()).msecs() * range)
                     arrayMax.set(2 * (range - 1) + 1, max(value, arrayMax.get(2 * (range - 1) + 1)))
             }
-        } else {            //Update 4 Max Values for block of 6 hours starting after fromTimeData
-            for (range in 1..4) {
-                if (time > fromTimeData + T.hours(minRangeToDisplay.toLong()).msecs() * (range - 1) && time <= fromTimeData + T.hours(minRangeToDisplay.toLong()).msecs() * range)
-                    arrayMax.set(range - 1, max(value, arrayMax.get(range - 1)))
-            }
+        } else {            //Update only first item of array
+            arrayMax.set(0, max(value, arrayMax.get(0)))
         }
-    }
-
-    private fun historyBrowserMax(arrayMax: DoubleArray) : Double {
-        val nbRange = rangeToDisplay / minRangeToDisplay
-        val startRange = ((fromTime - fromTimeData) / T.hours(minRangeToDisplay.toLong()).msecs()).toInt()
-        var maxValue = 0.0
-        for (range in startRange..(startRange + nbRange - 1))
-            maxValue = max(maxValue, arrayMax.get(range))
-        return maxValue
     }
 }
