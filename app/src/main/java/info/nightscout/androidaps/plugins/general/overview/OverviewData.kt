@@ -123,7 +123,7 @@ class OverviewData @Inject constructor(
             it.add(Calendar.HOUR, 1)
         }
 
-        toTime = calendar.timeInMillis + 100000 // little bit more to avoid wrong rounding - GraphView specific
+        toTime = calendar.timeInMillis // little bit more to avoid wrong rounding - GraphView specific
         fromTimeData = toTime - T.hours(rangeMaxToDisplay.toLong()).msecs()
         endTimeData = toTime + T.hours(predictionHours.toLong()).msecs()
         fromTimeArray = longArrayOf(
@@ -365,7 +365,6 @@ class OverviewData @Inject constructor(
     @Synchronized
     @Suppress("SameParameterValue", "UNUSED_PARAMETER")
     fun prepareBgData(from: String) {
-//        val start = dateUtil.now()
         maxBgArray = doubleArrayOf(Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE)
         bgReadingsArray = repository.compatGetBgReadingsDataFromTime(fromTimeData, toTime, false).blockingGet()
         bgReadingGraphArray = java.util.ArrayList()
@@ -374,16 +373,16 @@ class OverviewData @Inject constructor(
             maxTime(maxBgArray, bg.timestamp, bg.value)
             bgReadingGraphArray.add(GlucoseValueDataPoint(bg, defaultValueHelper, profileFunction, rh))
         }
+        maxBgArray = maxBgArray.map { max(it, defaultValueHelper.determineHighLine()) }.toDoubleArray()
         maxBgArray = maxBgArray.map { addUpperChartMargin(max(Profile.fromMgdlToUnits(it, profileFunction.getUnits()), defaultValueHelper.determineHighLine())) }.toDoubleArray()
     }
 
     @Suppress("UNUSED_PARAMETER")
     @Synchronized
     fun preparePredictions(from: String) {
-//        val start = dateUtil.now()
         val apsResult = if (config.APS) loop.lastRun?.constraintsProcessed else nsDeviceStatus.getAPSResult(injector)
-        predictAvailable = if (config.APS) loop.lastRun?.request?.hasPredictions == true else config.NSCLIENT
         val menuChartSettings = overviewMenus.setting
+        predictAvailable = (if (config.APS) loop.lastRun?.request?.hasPredictions == true else config.NSCLIENT) && apsResult != null && menuChartSettings[0][OverviewMenus.CharType.PRE.ordinal]
         // align to hours
         val calendar = Calendar.getInstance().also {
             it.timeInMillis = System.currentTimeMillis()
@@ -396,7 +395,7 @@ class OverviewData @Inject constructor(
             ?: 0
         predictionHours = min(2, predictionHours)
         predictionHours = max(0, predictionHours)
-        toTime = calendar.timeInMillis + 100000 // little bit more to avoid wrong rounding - GraphView specific
+        toTime = calendar.timeInMillis
         endTimeData = toTime + T.hours(predictionHours.toLong()).msecs()
         fromTimeArray = longArrayOf(
             endTimeData - T.hours(minRangeToDisplay.toLong()).msecs(),
@@ -408,13 +407,7 @@ class OverviewData @Inject constructor(
             endTimeData - T.hours(minRangeToDisplay.toLong()).msecs() * 4,
             toTime - T.hours(minRangeToDisplay.toLong()).msecs() * 4,
         )
-        if (predictAvailable && apsResult != null && menuChartSettings[0][OverviewMenus.CharType.PRE.ordinal]) {
-            //fromTime = toTime - T.hours(hoursToFetch.toLong()).msecs()
-            endTime = toTime + T.hours(predictionHours.toLong()).msecs()
-        } else {
-            //fromTime = toTime - T.hours(rangeToDisplay.toLong()).msecs()
-            endTime = toTime
-        }
+        endTime = toTime + if (predictAvailable) T.hours(predictionHours.toLong()).msecs() else 0
 
         val bgListArray: MutableList<DataPointWithLabelInterface> = java.util.ArrayList()
         val predictions: MutableList<GlucoseValueDataPoint>? = apsResult?.predictions
@@ -443,7 +436,6 @@ class OverviewData @Inject constructor(
             bucketedListArray.add(InMemoryGlucoseValueDataPoint(inMemoryGlucoseValue, profileFunction, rh))
         }
         bucketedListArray.sortWith { o1: DataPointWithLabelInterface, o2: DataPointWithLabelInterface -> o1.x.compareTo(o2.x) }
-//        bucketedGraphSeries = PointsWithLabelGraphSeries(Array(bucketedListArray.size) { i -> bucketedListArray[i] })
 //        profiler.log(LTag.UI, "prepareBucketedData() $from", start)
     }
 
@@ -507,7 +499,6 @@ class OverviewData @Inject constructor(
             lastLineBasal = baseBasalValue
             lastTempBasal = tempBasalValue
             maxTime(maxBasalArray, time, max(tempBasalValue, baseBasalValue))
-            //maxBasalValueFound = max(maxBasalValueFound, max(tempBasalValue, baseBasalValue))
             time += 60 * 1000L
         }
 
@@ -543,6 +534,7 @@ class OverviewData @Inject constructor(
                 absolutePaint.color = rh.gc(R.color.basal)
             })
         }
+//        profiler.log(LTag.UI, "prepareBasalData() $from", start)
     }
 
     @Suppress("UNUSED_PARAMETER")
@@ -640,7 +632,6 @@ class OverviewData @Inject constructor(
                     maxTime(maxTreatmentsArray, it.data.timestamp, addUpperChartMargin(it.y))
                 filteredTreatments.add(it)
             }
-        //treatmentsSeries = PointsWithLabelGraphSeries(filteredTreatments.toTypedArray())
 //        profiler.log(LTag.UI, "prepareTreatmentsData() $from", start)
     }
 
@@ -794,6 +785,16 @@ class OverviewData @Inject constructor(
             }
             iobPredictions1Series = PointsWithLabelGraphSeries(Array(iobPrediction.size) { i -> iobPrediction[i] })
             aapsLogger.debug(LTag.AUTOSENS, "IOB prediction for AS=" + DecimalFormatter.to2Decimal(lastAutosensResult.ratio) + ": " + iobCobCalculator.iobArrayToString(iobPredictionArray))
+            /*
+            val iobPrediction2: MutableList<DataPointWithLabelInterface> = java.util.ArrayList()
+            val iobPredictionArray2 = iobCobCalculator.calculateIobArrayForSMB(AutosensResult(), SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget)
+            for (i in iobPredictionArray2) {
+                iobPrediction2.add(i.setColor(rh.gc(R.color.iobPred)))
+                maxIobValueFound = max(maxIobValueFound, abs(i.iob))
+            }
+            iobPredictions2Series = PointsWithLabelGraphSeries(Array(iobPrediction2.size) { i -> iobPrediction2[i] })
+            aapsLogger.debug(LTag.AUTOSENS, "IOB prediction for AS=" + DecimalFormatter.to2Decimal(1.0) + ": " + iobCobCalculator.iobArrayToString(iobPredictionArray2))
+            */
         } else {
             iobPredictions1Series = PointsWithLabelGraphSeries()
             //iobPredictions2Series = PointsWithLabelGraphSeries()
@@ -858,6 +859,7 @@ class OverviewData @Inject constructor(
             it.color = rh.gc(R.color.devslopeneg)
             it.thickness = 3
         }
+
 //        profiler.log(LTag.UI, "prepareIobAutosensData() $from", start)
     }
 
@@ -882,12 +884,12 @@ class OverviewData @Inject constructor(
         if (overviewMode) { //Update 8 Max values in overview mode (4 ranges without prediction and 4 ranges with prediction)
             for (range in 1..4) {
                 if (time <= endTimeData && time > endTimeData - T.hours(minRangeToDisplay.toLong()).msecs() * range)
-                    arrayMax.set(2 * (range - 1), max(value, arrayMax.get(2 * (range - 1))))
+                    arrayMax[2 * (range - 1)] = max(value, arrayMax[2 * (range - 1)])
                 if (time <= toTime && time > toTime - T.hours(minRangeToDisplay.toLong()).msecs() * range)
-                    arrayMax.set(2 * (range - 1) + 1, max(value, arrayMax.get(2 * (range - 1) + 1)))
+                    arrayMax[2 * (range - 1) + 1] = max(value, arrayMax[2 * (range - 1) + 1])
             }
         } else {            //Update only first item of array
-            arrayMax.set(0, max(value, arrayMax.get(0)))
+            arrayMax[0] = max(value, arrayMax[0])
         }
     }
 }
