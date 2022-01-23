@@ -1,2 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="dia_whatmeansdia">Hvad er sandt ved DIA?</string>
+    <string name="dia_label_exam">Varighed af insulin aktivitet (DIA)</string>
+    <string name="dia_profile">Du skal angive værdien for DIA i din profil.</string>
+    <string name="dia_minimumis5h">Den mindst tilladte værdi er 5 timer.</string>
+    <string name="dia_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html?#insulin</string>
+    <string name="dia_meaningisequaltodiapump">Hvis du er tilfreds med den værdi af DIA som du brugte i din pumpe før AndroidAPS, er der ingen grund til at ændre dette når du begynder at loope.</string>
+    <string name="dia_valuemustbedetermined">Du bør selv bestemme, hvad den passende værdi af DIA er for dig.</string>
+    <string name="hypott_label">Hypo midlertidig basal</string>
+</resources>
