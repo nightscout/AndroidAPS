@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="description_pump_combo">Pumpeintegration til Accu-Chek Combo pumper, kræver at ruffy er installeret</string>
+    <string name="combo_programming_bolus">Programmerer pumpe til bolus</string>
+    <string name="combo_pump_state_label">Tilstand</string>
+    <string name="combo_pump_activity_label">Aktivitet</string>
+    <string name="combo_no_pump_connection">Ingen forbindelse i %1$d min.</string>
+    <string name="combo_tbr_remaining">%1$d%% (%2$d min tilbage)</string>
+    <string name="combo_pump_state_initializing">Initialiserer</string>
+    <string name="combo_pump_state_suspended_due_to_error">Suspenderet på grund af fejl</string>
+    <string name="combo_pump_state_suspended_by_user">Suspenderet af bruger</string>
+    <string name="combo_pump_state_running">Kører</string>
+    <string name="combo_pump_action_cancelling_tbr">Annullerer TBR</string>
+    <string name="combo_pump_action_setting_tbr">Indstiller TBR (%1$d%% / %2$d min)</string>
+    <string name="combo_pump_action_bolusing">Bolusser (%1$.1f IE)</string>
+    <string name="combo_pump_action_refreshing">Opdaterer</string>
+    <string name="combo_pump_unsupported_operation">Anmodet operation understøttes ikke af pumpe</string>
+    <string name="combo_low_suspend_forced_notification">Usikker brug: forlængede eller multibølge bolusser er aktive. Loop mode er blevet indstillet til lav-suspendering kun 6 timer. Kun normale bolusser understøttes i loop-tilstand</string>
     <string name="bolusstopped">Bolus stoppet</string>
     <string name="bolusstopping">Stopper bolus</string>
 </resources>
