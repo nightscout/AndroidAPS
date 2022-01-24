@@ -2,6 +2,56 @@
 <resources>
     <!--    Keys-->
     <!--    General-->
+    <string name="refresh">Opdatér</string>
+    <string name="error">Fejl</string>
+    <string name="not_set_short">Ikke angivet</string>
+    <string name="failedupdatebasalprofile">Opdatering af basal profil mislykkedes</string>
+    <string name="profile_set_ok">Basal profil i pumpen er opdateret</string>
+    <string name="invalidinput">Ugyldigt input</string>
+    <string name="tempbasaldeliveryerror">Midlertidig basal leveringsfejl</string>
+    <string name="goingtodeliver">Leverer %1$.2f IE</string>
+    <string name="waitingforpump">Venter på pumpe</string>
+    <string name="connectingfor">Opretter forbindelse i %1$d s</string>
+    <string name="bolusdelivering">Leverer %1$.2f IE</string>
+    <string name="handshaking">Forbindelse verificeres</string>
+    <string name="connecting">Forbinder</string>
+    <string name="connected">Tilsuttet</string>
+    <string name="disconnected">Forbindelse afbrudt</string>
+    <string name="disconnecting">Afbryder</string>
+    <string name="waiting_for_disconnection">Venter på afbrydelse</string>
+    <string name="androidaps_start">AndroidAPS startet</string>
+    <string name="formatinsulinunits1">%1$.1f IE</string>
+    <string name="formatinsulinunits">%1$.2f IE</string>
+    <string name="formatsignedinsulinunits">%1$+.2f IE</string>
+    <string name="format_carbs">%1$d g</string>
+    <string name="reservoirvalue">%1$.0f / %2$d IE</string>
+    <string name="pump_basebasalrate">%1$.2f E/t</string>
+    <string name="format_hours">%1$.2f t</string>
+    <string name="format_mins">%1$d min</string>
+    <string name="pumpbusy">Pumpe er optaget</string>
+    <string name="connectionerror">Forbindelsesfejl til pumpe</string>
+    <string name="youareonallowedlimit">Du har nået den tilladte grænse</string>
+    <string name="objectives">Mål</string>
+    <string name="close">Luk</string>
+    <string name="please_wait">Vent venligst…</string>
+    <string name="mute">Lydløs</string>
+    <string name="reload">Genindlæs</string>
+    <string name="stoppressed">STOP TRYKKET</string>
+    <string name="stop">Stop</string>
+    <string name="carbs">Kulhydrater</string>
+    <string name="invalidprofile">Ugyldig profil !!!</string>
+    <string name="noprofileset">INGEN PROFIL SAT</string>
+    <string name="date">Dato</string>
+    <string name="units_label">Enheder</string>
+    <string name="dia_label">DIA</string>
+    <string name="ic_label">IC</string>
+    <string name="isf_label">ISF</string>
+    <string name="basal_label">Basal</string>
+    <string name="target_label">Målværdi</string>
+    <string name="initializing">Initialiserer ...</string>
+    <string name="serialnumber">Serienummer</string>
+    <string name="battery_label">Batteri</string>
+    <string name="lastconnection_label">Seneste forbindelse</string>
     <string name="loopdisabled">LOOP DEAKTIVERET AF BEGRÆNSNINGER</string>
     <string name="bolusdelivered">Bolus %1$.2fE leveret uden fejl</string>
     <string name="virtualpump_resultok">OK</string>
@@ -26,17 +76,50 @@
     <!--    Temptarget-->
     <!--    TDD-->
     <!--    Translator-->
+    <string name="careportal_announcement">Meddelelse</string>
+    <string name="careportal_note">Notat</string>
+    <string name="careportal_question">Spørgsmål</string>
+    <string name="careportal_exercise">Motion</string>
+    <string name="careportal_announcement_message">Meddelelse : %1$s</string>
+    <string name="careportal_note_message">Notat : %1$s</string>
+    <string name="careportal_question_message">Spørgsmål : %1$s</string>
+    <string name="careportal_exercise_message">Motion: %1$s</string>
+    <string name="careportal_pumpsitechange">Skift af pumpeindstik</string>
+    <string name="careportal_cgmsensorinsert">Skift af CGM Sensor</string>
+    <string name="careportal_cgmsensorstart">CGM Sensor Start</string>
+    <string name="careportal_cgm_sensor_stop">CGM Sensor Stop</string>
+    <string name="careportal_insulincartridgechange">Skift af insulinampul</string>
+    <string name="careportal_profileswitch">Profilskift</string>
+    <string name="careportal_snackbolus">Snack Bolus</string>
+    <string name="careportal_mealbolus">Måltidsbolus</string>
+    <string name="careportal_correctionbolus">Korrektionsbolus</string>
+    <string name="careportal_combobolus">Kombineret bolus</string>
+    <string name="careportal_tempbasalstart">Midlertidig basal start</string>
+    <string name="careportal_tempbasalend">Midlertidig basal slut</string>
+    <string name="careportal_carbscorrection">Korrektion for kulhydrater</string>
+    <string name="careportal_openapsoffline">OpenAPS Offline</string>
+    <string name="careportal_pumpbatterychange">Skift af pumpebatteri</string>
+    <string name="careportal_temporarytarget">Midlertidigt mål</string>
+    <string name="glucosetype_sensor">Sensor</string>
     <string name="eatingsoon">Spiser snart</string>
     <string name="hypo">Hypo</string>
     <string name="activity">Aktivitet</string>
     <string name="wear">Ur</string>
     <string name="automation">Automatisering</string>
+    <string name="pump">Pumpe</string>
+    <string name="loop">Loop</string>
+    <string name="reading_pump_history">Læser pumpehistorik</string>
     <!--    Command-->
     <!--    PumpEnactResult-->
+    <string name="configbuilder_insulin">Insulin</string>
     <!--    CarbsReq-->
     <!--    TDDStatsActivity-->
+    <string name="basalrate">Basal</string>
+    <string name="bolus">Bolus</string>
+    <string name="ratio">Ratio</string>
     <!--    Ntp-->
     <!-- Maintenance -->
+    <string name="metadata_label_format">Filformat</string>
     <string name="metadata_label_created_at">Oprettet den</string>
     <string name="metadata_label_aaps_version">AAPS Version</string>
     <string name="metadata_label_aaps_flavour">Build Variant</string>
@@ -71,9 +154,12 @@
     <string name="prefdecrypt_issue_wrong_algorithm">Ikke-understøttet eller ikke angivet krypteringsalgoritme!</string>
     <!-- VersionChecker -->
     <!-- Permissions -->
+    <string name="alert_dialog_storage_permission_text">Genstart venligst din telefon eller genstart AndroidAPS fra Systemindstillinger \nellers vil Android APS ikke have logning (vigtigt at spore og kontrollere, at algoritmerne fungerer korrekt)!</string>
     <!-- WeekdayPicker -->
     <!-- User Entry -->
+    <string name="ue_action">Handling</string>
     <!-- HardLimits -->
     <string name="valuelimitedto">%1$.2f begrænset til %2$.2f</string>
     <!-- Command Queue + readStatus reasons -->
+    <string name="sms" comment="26 characters max for translation">SMS</string>
 </resources>
