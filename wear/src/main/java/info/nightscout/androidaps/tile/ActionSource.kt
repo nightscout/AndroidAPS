@@ -8,7 +8,7 @@ import info.nightscout.androidaps.interaction.actions.ECarbActivity
 import info.nightscout.androidaps.interaction.actions.TempTargetActivity
 import info.nightscout.androidaps.interaction.actions.WizardActivity
 
-object ActionSource : StaticTileSource(), TileSource {
+object ActionSource : StaticTileSource() {
 
     override val preferencePrefix = "tile_action_"
 

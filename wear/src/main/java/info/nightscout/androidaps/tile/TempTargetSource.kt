@@ -5,8 +5,9 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interaction.actions.BackgroundActionActivity
 import info.nightscout.androidaps.interaction.actions.TempTargetActivity
 
-object TempTargetSource : StaticTileSource(), TileSource {
-    override val preferencePrefix= "tile_tempt_"
+object TempTargetSource : StaticTileSource() {
+
+    override val preferencePrefix = "tile_tempt_"
 
     override fun getActions(resources: Resources): List<StaticAction> {
         val message = resources.getString(R.string.action_tempt_confirmation)

@@ -45,6 +45,7 @@ interface TileSource {
 
     fun getResourceReferences(resources: android.content.res.Resources): List<Int>
     fun getSelectedActions(context: Context): List<Action>
+    fun getValidFor(context: Context): Long?
 }
 
 open class Action(
@@ -73,8 +74,7 @@ abstract class TileBase : TileService() {
     ): ListenableFuture<Tile> = serviceScope.future {
         val actionsSelected = getSelectedActions()
         val wearControl = getWearControl()
-
-        Tile.Builder()
+        val tile = Tile.Builder()
             .setResourcesVersion(resourceVersion)
             .setTimeline(
                 Timeline.Builder().addTimelineEntry(
@@ -83,12 +83,21 @@ abstract class TileBase : TileService() {
                     ).build()
                 ).build()
             )
-            .build()
+
+        val validFor = validFor()
+        if (validFor != null) {
+            tile.setFreshnessIntervalMillis(validFor)
+        }
+        tile.build()
     }
 
     private fun getSelectedActions(): List<Action> {
         // TODO check why thi scan not be don in scope of the coroutine
         return source.getSelectedActions(this)
+    }
+
+    private fun validFor(): Long? {
+        return source.getValidFor(this)
     }
 
     @RequiresApi(Build.VERSION_CODES.N)

@@ -16,14 +16,14 @@ class StaticAction(
     message: String? = null,
 ) : Action(buttonText, buttonTextSub, activityClass, iconRes, actionString, message)
 
-abstract class StaticTileSource {
+abstract class StaticTileSource : TileSource {
 
     abstract fun getActions(resources: Resources): List<StaticAction>
 
     abstract val preferencePrefix: String
     abstract fun getDefaultConfig(): Map<String, String>
 
-    open fun getSelectedActions(context: Context): List<Action> {
+    override fun getSelectedActions(context: Context): List<Action> {
         val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
         setDefaultSettings(sharedPrefs)
 
@@ -40,12 +40,14 @@ abstract class StaticTileSource {
         return actionList
     }
 
+    override fun getValidFor(context: Context): Long? = null
+
     private fun getActionFromPreference(resources: Resources, sharedPrefs: SharedPreferences, index: Int): Action? {
         val actionPref = sharedPrefs.getString(preferencePrefix + index, "none")
         return getActions(resources).find { action -> action.settingName == actionPref }
     }
 
-    open fun setDefaultSettings(sharedPrefs: SharedPreferences) {
+    private fun setDefaultSettings(sharedPrefs: SharedPreferences) {
         val defaults = getDefaultConfig()
         val firstKey = defaults.firstNotNullOf { settings -> settings.key }
         if (!sharedPrefs.contains(firstKey)) {
@@ -56,4 +58,5 @@ abstract class StaticTileSource {
             editor.apply()
         }
     }
+
 }

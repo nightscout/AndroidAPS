@@ -1175,9 +1175,26 @@
     <string name="wear_action_tempt_manual_range_message">Temptarget:\nMin: %1$s\nMax: %2$s\nDuration: %3$s</string>
     <string name="wear_action_tempt_manual_message">Temptarget:\nTarget: %1$s\nDuration: %2$s</string>
     <string name="wear_action_tempt_preset_message">Temptarget:\Reason: %1$s\nTarget: %2$s\nDuration: %3$s</string>
-    <string name="quick_wizard_no_action">No insulin needed nor are carbs added.</string>
-    <string name="quick_wizard_can_not_calculate">Can not calculate wizard, requires actual blood glucose and active profile.</string>
-    <string name="quick_wizard_message">Quick Wizard: %1$s\nInsulin: %2$.2fU\nCarbs: %3$dg</string>
+    <string name="quick_wizard_message">QuickWizard: %1$s\nInsulin: %2$.2fU\nCarbs: %3$dg</string>
+    <string name="wizard_result">Calc. Wizard:\nInsulin: %1$.2fU\nCarbs: %2$dg</string>
     <string name="overview_editquickwizard_show_on_device">Show entry on device:</string>
-
+    <string name="quick_wizard_not_available">Selected quickwizard no longer available, please refresh your tile</string>
+    <string name="wizard_no_actual_bg">No recent BG to base calculation on!</string>
+    <string name="wizard_no_active_profile">No active profile set!</string>
+    <string name="wizard_no_cob">Unknown COB! BG reading missing or recent app restart?</string>
+    <string name="wizard_carbs_constraint">Carb constraint violation!</string>
+    <string name="wizard_explain_calc">Calc (IC: %2$.1f, ISF: %2$.1f) from:"</string>
+    <string name="wizard_explain_carbs">Carbs: %1$.2fU</string>
+    <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fU</string>
+    <string name="wizard_explain_bg">BG: %1$.2fU</string>
+    <string name="wizard_explain_basal_iob">Basal IOB: %1$.2fU</string>
+    <string name="wizard_explain_bolus_iob">Bolus IOB: %1$.2fU</string>
+    <string name="wizard_explain_superbolus">Superbolus: %1$.2fU</string>
+    <string name="wizard_explain_trend">15\' trend: %1$.2fU</string>
+    <string name="wizard_explain_percent">Perctage: %1$.2fU x %2$d% = %3$.2fU</string>
+    <string name="wizard_constraint_bolus_size">Insulin constraint violation!\nCannot deliver %1$.2fU</string>
+    <string name="wizard_explain_tt">TempT: %1$s</string>
+    <string name="wizard_explain_tt_to">%1$s to %2$s</string>
+    <string name="wizard_pump_not_available">No pump available!</string>
+    <string name="wear_unknown_action_string">Unknown action command:</string>
 </resources>

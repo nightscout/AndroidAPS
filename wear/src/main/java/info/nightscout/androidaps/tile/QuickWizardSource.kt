@@ -21,7 +21,6 @@ object QuickWizardSource : TileSource {
             val validFrom = quick.getInt("from", 0)
             val validTo = quick.getInt("to", 0)
             val isActive = sfm in validFrom..validTo
-            // use from and to to schedule new update for timeline, for now just refresh every minute
             val guid = quick.getString("guid", "")
             if (isActive && guid != "") {
                 quickList.add(
@@ -42,6 +41,36 @@ object QuickWizardSource : TileSource {
         }
 
         return quickList
+    }
+
+    override fun getValidFor(context: Context): Long? {
+        val quickMap = getDataMap(context)
+        if (quickMap.size == 0) {
+            return null
+        }
+        val sfm = secondsFromMidnight()
+        var validTill = 24 * 60 * 60
+
+        for (quick in quickMap) {
+            val validFrom = quick.getInt("from", 0)
+            val validTo = quick.getInt("to", 0)
+            val isActive = sfm in validFrom..validTo
+            val guid = quick.getString("guid", "")
+            Log.i(TAG, "valid: " + validFrom + "-" + validTo)
+            if (guid != "") {
+                if (isActive && validTill > validTo) {
+                    validTill = validTo
+                }
+                if (validFrom > sfm && validTill > validFrom) {
+                    validTill = validFrom
+                }
+            }
+        }
+
+        val validWithin = 60
+        val delta = (validTill - sfm + validWithin) * 1000L
+        Log.i(TAG, "getValidTill: sfm" + sfm + " till" + validTill + " d=" + delta)
+        return delta
     }
 
     private fun getDataMap(context: Context): ArrayList<DataMap> {
