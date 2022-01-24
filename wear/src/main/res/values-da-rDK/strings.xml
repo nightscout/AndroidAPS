@@ -1,2 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="pref_1_hour">1 time</string>
+    <string name="pref_2_hours">2 timer</string>
+    <string name="pref_3_hours">3 timer</string>
+    <string name="pref_4_hours">4 timer</string>
+    <string name="pref_5_hours">5 timer</string>
+    <string name="pref_low">Lav</string>
+    <string name="pref_auto">Auto</string>
+    <string name="menu_bolus">Bolus</string>
+    <string name="menu_settings">Indstillinger</string>
+    <string name="menu_status">Status</string>
+    <string name="menu_prime_fill">Prime / Fyld</string>
+    <string name="action_duration">varighed</string>
+    <string name="action_low" comment="In temp target menu, lower value from range">lav</string>
+    <string name="action_carbs">kulhydrater</string>
+    <string name="action_percentage">procent</string>
+    <string name="action_duration_h">varighed [h]</string>
+    <string name="action_insulin">insulin</string>
+    <string name="action_bolus">bolus</string>
+    <string name="status_pump">Pumpe</string>
+    <string name="status_loop">Loop</string>
+    <string name="activity_IOB">IOB</string>
+</resources>
