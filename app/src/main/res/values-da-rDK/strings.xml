@@ -719,6 +719,7 @@
     <string name="advisoralarm">Kør alarm når det er tid til at spise</string>
     <string name="alarminxmin">Kør alarm om %1$d min</string>
     <string name="bolusadvisor">Bolus rådgiver</string>
+    <string name="bolusadvisormessage">Du har høj glycæmi. I stedet for at spise nu anbefales det at vente på bedre glycæmi. Ønsker du at lave en korrektionsbolus nu og minde dig om, hvornår det er tid til at spise? I dette tilfælde vil ingen kulhydrater blive registreret, og du skal bruge guiden igen, når vi påminder dig.</string>
     <string name="enablebolusadvisor">Aktiver bolus rådgiver</string>
     <string name="enablebolusadvisor_summary">Brug påmindelse om at begynde at spise senere i stedet for guiden under høj glykæmi (\"pre-bolus\")</string>
     <string name="time_to_eat">Tid til at spise!\nKør Bolus guiden og lav beregning igen.</string>
