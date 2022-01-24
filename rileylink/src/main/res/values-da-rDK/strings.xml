@@ -55,6 +55,7 @@
     <string name="rileylink_error_not_rl">Enheden er ikke RileyLink</string>
     <string name="rileylink_error_unreachable">RileyLink utilgængelig</string>
     <string name="rileylink_error_bt_disabled">Bluetooth er deaktiveret</string>
+    <string name="rileylink_error_no_bt_adapter">Ingen bluetooth adapter</string>
     <!-- RileyLink - Common -->
     <!-- RileyLink - Preferences -->
 </resources>
