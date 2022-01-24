@@ -32,7 +32,7 @@ public class PlusMinusEditText implements View.OnKeyListener,
     Double minValue = 0d;
     Double maxValue = 1d;
     Double step = 1d;
-    NumberFormat formater;
+    NumberFormat formatter;
     boolean allowZero = false;
     boolean roundRobin;
 
@@ -74,11 +74,11 @@ public class PlusMinusEditText implements View.OnKeyListener,
     private static final int MSG_INC = 0;
     private static final int MSG_DEC = 1;
 
-    public PlusMinusEditText(View view, int editTextID, int plusID, int minusID, Double initValue, Double minValue, Double maxValue, Double step, NumberFormat formater, boolean allowZero) {
-        this(view, editTextID, plusID, minusID, initValue, minValue, maxValue, step, formater, allowZero, false);
+    public PlusMinusEditText(View view, int editTextID, int plusID, int minusID, Double initValue, Double minValue, Double maxValue, Double step, NumberFormat formatter, boolean allowZero) {
+        this(view, editTextID, plusID, minusID, initValue, minValue, maxValue, step, formatter, allowZero, false);
     }
 
-    public PlusMinusEditText(View view, int editTextID, int plusID, int minusID, Double initValue, Double minValue, Double maxValue, Double step, NumberFormat formater, boolean allowZero, boolean roundRobin) {
+    public PlusMinusEditText(View view, int editTextID, int plusID, int minusID, Double initValue, Double minValue, Double maxValue, Double step, NumberFormat formatter, boolean allowZero, boolean roundRobin) {
         editText = view.findViewById(editTextID);
         minusImage = view.findViewById(minusID);
         plusImage = view.findViewById(plusID);
@@ -87,7 +87,7 @@ public class PlusMinusEditText implements View.OnKeyListener,
         this.minValue = minValue;
         this.maxValue = maxValue;
         this.step = step;
-        this.formater = formater;
+        this.formatter = formatter;
         this.allowZero = allowZero;
         this.roundRobin = roundRobin;
 
@@ -159,7 +159,7 @@ public class PlusMinusEditText implements View.OnKeyListener,
         if (value == 0d && !allowZero)
             editText.setText("");
         else
-            editText.setText(formater.format(value));
+            editText.setText(formatter.format(value));
     }
 
     private void startUpdating(boolean inc) {

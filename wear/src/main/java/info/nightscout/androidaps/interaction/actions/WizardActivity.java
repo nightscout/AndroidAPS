@@ -27,6 +27,7 @@ public class WizardActivity extends ViewSelectorActivity {
 
     boolean hasPercentage;
     int percentage;
+    int maxCarbs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +36,7 @@ public class WizardActivity extends ViewSelectorActivity {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         hasPercentage = sp.getBoolean("wizardpercentage", false);
         percentage = sp.getInt(getString(R.string.key_boluswizard_percentage), 100);
+        maxCarbs = sp.getInt(getString(R.string.key_treatmentssafety_maxcarbs), 48);
     }
 
     @Override
@@ -60,10 +62,10 @@ public class WizardActivity extends ViewSelectorActivity {
             if (col == 0) {
                 final View view = getInflatedPlusMinusView(container);
                 if (editCarbs == null) {
-                    editCarbs = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, 0d, 0d, 150d, 1d, new DecimalFormat("0"), false);
+                    editCarbs = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, 0d, 0d, (double)maxCarbs, 1d, new DecimalFormat("0"), false);
                 } else {
                     double def = SafeParse.stringToDouble(editCarbs.editText.getText().toString());
-                    editCarbs = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 150d, 1d, new DecimalFormat("0"), false);
+                    editCarbs = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, (double)maxCarbs, 1d, new DecimalFormat("0"),false);
                 }
                 setLabelToPlusMinusView(view, getString(R.string.action_carbs));
                 container.addView(view);

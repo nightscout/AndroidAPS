@@ -1,6 +1,8 @@
 package info.nightscout.androidaps.interaction.actions;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.wearable.view.GridPagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,11 +19,14 @@ import info.nightscout.shared.SafeParse;
 public class BolusActivity extends ViewSelectorActivity {
 
     PlusMinusEditText editInsulin;
+    float maxBolus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setAdapter(new MyGridViewPagerAdapter());
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        maxBolus = sp.getFloat(getString(R.string.key_treatmentssafety_maxbolus), 3f);
     }
 
     @Override
@@ -50,7 +55,7 @@ public class BolusActivity extends ViewSelectorActivity {
                 if (editInsulin != null) {
                     def = SafeParse.stringToDouble(editInsulin.editText.getText().toString());
                 }
-                editInsulin = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 30d, 0.1d, new DecimalFormat("#0.0"), false);
+                editInsulin = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, (double)maxBolus, 0.1d, new DecimalFormat("#0.0"),false);
                 setLabelToPlusMinusView(view, getString(R.string.action_insulin));
                 container.addView(view);
                 view.requestFocus();

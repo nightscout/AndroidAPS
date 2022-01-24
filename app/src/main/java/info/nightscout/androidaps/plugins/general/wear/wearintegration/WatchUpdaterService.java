@@ -732,13 +732,16 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             boolean wearcontrol = sp.getBoolean(R.string.key_wear_control, false);
             boolean mgdl = units.equals(GlucoseUnit.MGDL);
             int percentage = sp.getInt(R.string.key_boluswizard_percentage, 100);
-
+            int maxCarbs = sp.getInt(R.string.key_treatmentssafety_maxcarbs, 48);
+            double maxBolus = sp.getDouble(R.string.key_treatmentssafety_maxbolus, 3.0);
             PutDataMapRequest dataMapRequest = PutDataMapRequest.create(NEW_PREFERENCES_PATH);
             //unique content
             dataMapRequest.getDataMap().putLong("timestamp", System.currentTimeMillis());
             dataMapRequest.getDataMap().putBoolean(rh.gs(R.string.key_wear_control), wearcontrol);
             dataMapRequest.getDataMap().putBoolean(rh.gs(R.string.key_units_mgdl), mgdl);
             dataMapRequest.getDataMap().putInt(rh.gs(R.string.key_boluswizard_percentage), percentage);
+            dataMapRequest.getDataMap().putInt(rh.gs(R.string.key_treatmentssafety_maxcarbs), maxCarbs);
+            dataMapRequest.getDataMap().putDouble(rh.gs(R.string.key_treatmentssafety_maxbolus),maxBolus);
             PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
             Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);
         } else {

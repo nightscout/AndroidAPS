@@ -362,6 +362,19 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                         editor.putBoolean(keyUnits, mgdl);
                         editor.apply();
                     }
+                    String keyMaxCarbs = getString(R.string.key_treatmentssafety_maxcarbs);
+                    if (dataMap.containsKey(keyMaxCarbs)) {
+                        int maxCarbs = dataMap.getInt(keyMaxCarbs, 48);
+                        editor.putInt(keyMaxCarbs, maxCarbs);
+                        editor.apply();
+                    }
+                    String keyMaxBolus = getString(R.string.key_treatmentssafety_maxbolus);
+                    if (dataMap.containsKey(keyMaxBolus)) {
+                        float maxBolus = (float)dataMap.getDouble(keyMaxBolus, 3.0f);
+                        editor.putFloat(keyMaxBolus, maxBolus);
+                        editor.apply();
+                    }
+
                 } else if (path.equals(QUICK_WIZARD_PATH)) {
                     dataMap = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
                     Log.i(TAG, "onDataChanged: QUICK_WIZARD_PATH" + dataMap);

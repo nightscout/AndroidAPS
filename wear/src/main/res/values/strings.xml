@@ -172,6 +172,8 @@
     <string name="key_wear_control" translatable="false">wearcontrol</string>
     <string name="key_units_mgdl" translatable="false">units_mgdl</string>
     <string name="key_boluswizard_percentage" translatable="false">boluswizard_percentage</string>
+    <string name="key_treatmentssafety_maxcarbs" translatable="false">treatmentssafety_maxcarbs</string>
+    <string name="key_treatmentssafety_maxbolus" translatable="false">treatmentssafety_maxbolus</string>
     <string name="simple_ui_off">Off</string>
     <string name="simple_ui_charging">During Charging</string>
     <string name="simple_ui_always_on">Always On Mode</string>
