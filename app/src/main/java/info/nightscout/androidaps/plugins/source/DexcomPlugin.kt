@@ -30,6 +30,7 @@ import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.abs
 
 @Singleton
 class DexcomPlugin @Inject constructor(
@@ -142,6 +143,18 @@ class DexcomPlugin @Inject constructor(
                             trendArrow = GlucoseValue.TrendArrow.fromString(glucoseValueBundle.getString("trendArrow")!!),
                             sourceSensor = sourceSensor
                         )
+                }
+                // G6 calibration bug workaround (2 additional GVs are created within 1 second from previous record)
+                if (sourceSensor == GlucoseValue.SourceSensor.DEXCOM_G6_NATIVE) {
+                    glucoseValues.sortBy { it.timestamp }
+                    for (i in glucoseValues.indices) {
+                        if (i < glucoseValues.size - 1) {
+                            if (abs(glucoseValues[i].timestamp - glucoseValues[i + 1].timestamp) < 1000) {
+                                aapsLogger.debug(LTag.DATABASE, "Excluding bg ${glucoseValues[i + 1]}")
+                                glucoseValues.removeAt(i + 1)
+                            }
+                        }
+                    }
                 }
                 val sensorStartTime = if (sp.getBoolean(R.string.key_dexcom_lognssensorchange, false) && bundle.containsKey("sensorInsertionTime")) {
                     bundle.getLong("sensorInsertionTime", 0) * 1000
