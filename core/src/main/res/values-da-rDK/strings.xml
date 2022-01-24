@@ -99,13 +99,33 @@
     <!--    Profile-->
     <string name="basalprofilenotaligned">Basalværdier ikke angivet i hele timer: %1$s</string>
     <string name="minimalbasalvaluereplaced">Basal dosis erstattet af minimal understøttet dosis: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Basal dosis erstattet af maximal understøttet dosis: %1$s</string>
+    <string name="profile_per_unit">/IE</string>
+    <string name="profile_ins_units_per_hour">E/t</string>
+    <string name="profile_carbs_per_unit">g/E</string>
     <!--    ProfileFunction-->
+    <string name="startprofile">Start profil %1$d%% i %2$d min</string>
     <!--    PumpType-->
+    <string name="def_extended_note">* Kun konkrete værdier, ingen intervaller, er understøttet som granularitet for basal/bolus i virtuel pumpe.</string>
     <!--    APSResult-->
+    <string name="canceltemp">Annuller midlertidig basal</string>
+    <string name="let_temp_basal_run">Lad midlertidig basal køre</string>
+    <string name="rate">Dosis</string>
+    <string name="duration">Varighed</string>
+    <string name="reason">Årsag</string>
+    <string name="nochangerequested">Ingen ændring efterspurgt</string>
     <!--    ProfileSwitch-->
+    <string name="zerovalueinprofile">Ugyldig profil: %1$s</string>
     <!--    Temptarget-->
+    <string name="mins">%1$d min</string>
     <!--    TDD-->
+    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f IE</b> Bol: <b>%3$.2f IE</b> Bas: <b>%4$.2f IE(%5$.0f%%)</b>]]></string>
+    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f IE</b> Bol: <b>%3$.2f IE</b> Bas: <b>%4$.2f IE(%5$.0f%%)</b> Kulh: <b>%6$.0f g</b>]]></string>
+    <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> i <b>%3$d</b> dage<br>]]></string>
     <!--    Translator-->
+    <string name="careportal">Behandlingsportal</string>
+    <string name="careportal_bgcheck">BS kontrol</string>
+    <string name="careportal_mbg">Manuelt BS eller kalibrering</string>
     <string name="careportal_announcement">Meddelelse</string>
     <string name="careportal_note">Notat</string>
     <string name="careportal_question">Spørgsmål</string>
