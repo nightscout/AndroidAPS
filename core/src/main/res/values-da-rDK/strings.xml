@@ -52,23 +52,53 @@
     <string name="serialnumber">Serienummer</string>
     <string name="battery_label">Batteri</string>
     <string name="lastconnection_label">Seneste forbindelse</string>
+    <string name="lastbolus_label">Seneste Bolus</string>
+    <string name="dailyunits">Daglige enheder</string>
+    <string name="basebasalrate_label">Standard basal rate</string>
+    <string name="tempbasal_label">Midlertidig basal</string>
+    <string name="virtualpump_extendedbolus_label">Forlænget bolus</string>
+    <string name="reservoir_label">Reservoir</string>
+    <string name="pumphistory">Pumpe historik</string>
+    <string name="viewprofile">Se profil</string>
+    <string name="eventtype">Hændelsestype</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
+    <string name="shortgram">g</string>
+    <string name="shortpercent">%</string>
     <string name="loopdisabled">LOOP DEAKTIVERET AF BEGRÆNSNINGER</string>
     <string name="bolusdelivered">Bolus %1$.2fE leveret uden fejl</string>
     <string name="virtualpump_resultok">OK</string>
+    <string name="exit">Afslut</string>
     <string name="removerecord">Fjern registrering</string>
+    <string name="loopisdisabled">Loop er deaktiveret</string>
+    <string name="alarm">Alarm</string>
     <string name="disableloop">Deaktivér loop</string>
     <string name="enableloop">Aktiver loop</string>
+    <string name="duration_min_label">Varighed [min]</string>
     <string name="noprofile">Ingen profil er indlæst fra NS endnu</string>
     <string name="glucose">Glukose</string>
+    <string name="iob">IOB</string>
     <string name="cob">COB</string>
+    <string name="name_short">Navn:</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
     <string name="event_time_label">Tidspunkt for hændelsen</string>
+    <string name="notes_label">Bemærkninger</string>
+    <string name="remove_button">Fjern</string>
     <!--    Constraints-->
     <!--    Dialogs-->
+    <string name="ok">OK</string>
+    <string name="cancel">Annuller</string>
     <!--    BlePreCheck-->
     <!--    DateUtil-->
+    <string name="unit_weeks">uger</string>
+    <string name="shortminute">min</string>
+    <string name="shortday">d</string>
     <!--    Protection-->
+    <string name="wrongpassword">Forkert kodeord</string>
+    <string name="passwords_dont_match">Kodeordene stemmer ikke overens</string>
     <!--    Profile-->
+    <string name="basalprofilenotaligned">Basalværdier ikke angivet i hele timer: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Basal dosis erstattet af minimal understøttet dosis: %1$s</string>
     <!--    ProfileFunction-->
     <!--    PumpType-->
     <!--    APSResult-->
