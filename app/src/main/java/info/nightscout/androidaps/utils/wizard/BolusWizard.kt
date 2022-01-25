@@ -405,9 +405,9 @@ class BolusWizard @Inject constructor(
         if (useBg) message += "\n" + rh.gs(R.string.wizard_explain_bg, insulinFromBG)
         if (includeBolusIOB) message += "\n" + rh.gs(R.string.wizard_explain_bolus_iob, insulinFromBolusIOB)
         if (includeBasalIOB) message += "\n" + rh.gs(R.string.wizard_explain_basal_iob, insulinFromBasalIOB)
-        if (usePercentage) message += "\n" + rh.gs(R.string.wizard_explain_trend, insulinFromTrend)
+        if (useTrend) message += "\n" + rh.gs(R.string.wizard_explain_trend, insulinFromTrend)
         if (useSuperBolus) message += "\n" + rh.gs(R.string.wizard_explain_superbolus, insulinFromSuperBolus)
-        if (usePercentage) {
+        if (percentageCorrection != 100) {
             message += "\n" + rh.gs(R.string.wizard_explain_percent, totalBeforePercentageAdjustment, percentageCorrection, calculatedTotalInsulin)
         }
         return message

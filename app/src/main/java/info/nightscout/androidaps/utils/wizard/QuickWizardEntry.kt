@@ -45,12 +45,23 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
         const val DEVICE_ALL = 0
         const val DEVICE_PHONE = 1
         const val DEVICE_WATCH = 2
+        const val DEFAULT = 0
+        const val CUSTOM = 1
     }
 
     init {
         injector.androidInjector().inject(this)
         val guid = UUID.randomUUID().toString()
-        val emptyData = "{\"guid\": \"$guid\",\"buttonText\":\"\",\"carbs\":0,\"validFrom\":0,\"validTo\":86340, \"device\": \"all\"}"
+        val emptyData = """{
+                "guid": "$guid",
+                "buttonText": "",
+                "carbs": 0,
+                "validFrom": 0,
+                "validTo": 86340,
+                "device": "all",
+                "usePercentage": "default",
+                "percentage": 100
+            }""".trimMargin()
         try {
             storage = JSONObject(emptyData)
         } catch (e: JSONException) {
@@ -73,6 +84,8 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
             useTrend: 0,
             useSuperBolus: 0,
             useTemptarget: 0
+            usePercentage: string, // default, custom
+            percentage: int,
         }
      */
     fun from(entry: JSONObject, position: Int): QuickWizardEntry {
@@ -127,7 +140,7 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
         } else if (useTrend() == NEGATIVE_ONLY && glucoseStatus != null && glucoseStatus.shortAvgDelta < 0) {
             trend = true
         }
-        val percentage = sp.getInt(R.string.key_boluswizard_percentage, 100)
+        val percentage = if (usePercentage() == DEFAULT) sp.getInt(R.string.key_boluswizard_percentage, 100) else percentage()
         return BolusWizard(injector).doCalc(profile, profileName, tempTarget, carbs(), cob, bg, 0.0, percentage, true, useCOB() == YES, bolusIOB, basalIOB, superBolus, useTempTarget() == YES, trend, false, buttonText(), quickWizard = true) //tbc, ok if only quickwizard, but if other sources elsewhere use Sources.QuickWizard
     }
 
@@ -162,4 +175,8 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
     fun useSuperBolus(): Int = safeGetInt(storage, "useSuperBolus", NO)
 
     fun useTempTarget(): Int = safeGetInt(storage, "useTempTarget", NO)
+
+    fun usePercentage(): Int = safeGetInt(storage, "usePercentage", DEFAULT)
+
+    fun percentage(): Int = safeGetInt(storage, "percentage", 100)
 }

@@ -613,7 +613,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
         // Log.d(TAG, logPrefix + "onConnected call requestData");
 
         Wearable.ChannelApi.addListener(googleApiClient, this);
-        requestData();
+        // requestData();
     }
 
     @Override

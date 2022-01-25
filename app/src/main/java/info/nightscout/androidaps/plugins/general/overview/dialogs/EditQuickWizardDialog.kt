@@ -35,7 +35,6 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
     @Inject lateinit var sp: SP
 
     var position = -1
-
     var fromSeconds: Int = 0
     var toSeconds: Int = 0
 
@@ -45,8 +44,10 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
         isCancelable = true
@@ -82,6 +83,9 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
                 entry.storage.put("useTrend", binding.useTrend.selectedItemPosition)
                 entry.storage.put("useSuperBolus", binding.useSuperBolus.selectedItemPosition)
                 entry.storage.put("useTempTarget", binding.useTempTarget.selectedItemPosition)
+                entry.storage.put("usePercentage", binding.usePercentage.selectedItemPosition)
+                val percentage = SafeParse.stringToInt(binding.percentage.text.toString())
+                entry.storage.put("percentage", percentage)
             } catch (e: JSONException) {
                 aapsLogger.error("Unhandled exception", e)
             }
@@ -100,7 +104,8 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
 
         binding.from.setOnClickListener {
             context?.let {
-                TimePickerDialog(it, fromTimeSetListener,
+                TimePickerDialog(
+                    it, fromTimeSetListener,
                     T.secs(fromSeconds.toLong()).hours().toInt(),
                     T.secs((fromSeconds % 3600).toLong()).mins().toInt(),
                     DateFormat.is24HourFormat(context)
@@ -117,13 +122,29 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
 
         binding.to.setOnClickListener {
             context?.let {
-                TimePickerDialog(it, toTimeSetListener,
+                TimePickerDialog(
+                    it, toTimeSetListener,
                     T.secs(toSeconds.toLong()).hours().toInt(),
                     T.secs((toSeconds % 3600).toLong()).mins().toInt(),
                     DateFormat.is24HourFormat(context)
                 ).show()
             }
         }
+
+        fun usePercentage(custom: Boolean) {
+            if (custom) {
+                binding.percentageLabel.visibility = View.VISIBLE
+                binding.percentage.visibility = View.VISIBLE
+            } else {
+                binding.percentageLabel.visibility = View.GONE
+                binding.percentage.visibility = View.GONE
+            }
+        }
+
+        binding.usePercentage.setOnCheckedChangeListener { _, checkedId ->
+            usePercentage(checkedId == R.id.use_percentage_custom)
+        }
+
         toSeconds = entry.validTo()
         binding.to.text = dateUtil.timeString(dateUtil.secondsOfTheDayToMilliseconds(toSeconds))
 
@@ -138,7 +159,9 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
         binding.useTrend.setSelection(entry.useTrend())
         binding.useSuperBolus.setSelection(entry.useSuperBolus())
         binding.useTempTarget.setSelection(entry.useTempTarget())
-
+        binding.usePercentage.setSelection(entry.usePercentage())
+        usePercentage(entry.usePercentage() == QuickWizardEntry.CUSTOM)
+        binding.percentage.setText(entry.percentage().toString())
         binding.useCobYes.setOnClickListener(this)
         binding.useCobNo.setOnClickListener(this)
         processCob()

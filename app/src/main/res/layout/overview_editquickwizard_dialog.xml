@@ -305,7 +305,6 @@
 
         </RadioGroup>
 
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -330,6 +329,47 @@
 
         </RadioGroup>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/overview_editquickwizard_usepercentage"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+        <RadioGroup
+            android:id="@+id/use_percentage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="15dp">
+
+            <RadioButton
+                android:id="@+id/use_percentage_default"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/app_default" />
+
+            <RadioButton
+                android:id="@+id/use_percentage_custom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/custom" />
+
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/percentage_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/overview_editquickwizard_percentage"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+        <EditText
+            android:id="@+id/percentage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="number"
+            android:maxLength="3"
+            android:paddingLeft="10dp" />
 
         <include
             android:id="@+id/okcancel"

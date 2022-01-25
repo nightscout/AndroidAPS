@@ -617,6 +617,7 @@
     <string name="negativeonly">Negative only</string>
     <string name="overview_editquickwizard_usecob">COB calculation</string>
     <string name="overview_editquickwizard_usetemptarget">Temporary target calculation</string>
+    <string name="overview_editquickwizard_usepercentage">Percentage calculation</string>
     <string name="loopenabled">Loop enabled</string>
     <string name="apsselected">APS selected</string>
     <string name="nsclienthaswritepermission">NSClient has write permission</string>
@@ -1191,10 +1192,12 @@
     <string name="wizard_explain_bolus_iob">Bolus IOB: %1$.2fU</string>
     <string name="wizard_explain_superbolus">Superbolus: %1$.2fU</string>
     <string name="wizard_explain_trend">15\' trend: %1$.2fU</string>
-    <string name="wizard_explain_percent">Perctage: %1$.2fU x %2$d% = %3$.2fU</string>
+    <string name="wizard_explain_percent">Percentage: %1$.2fU x %2$d%% ≈ %3$.2fU</string>
     <string name="wizard_constraint_bolus_size">Insulin constraint violation!\nCannot deliver %1$.2fU</string>
     <string name="wizard_explain_tt">TempT: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s to %2$s</string>
     <string name="wizard_pump_not_available">No pump available!</string>
     <string name="wear_unknown_action_string">Unknown action command:</string>
+    <string name="overview_editquickwizard_percentage">Percentage</string>
+    <string name="app_default">Application default</string>
 </resources>
