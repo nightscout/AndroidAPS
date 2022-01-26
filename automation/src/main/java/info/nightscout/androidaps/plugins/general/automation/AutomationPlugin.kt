@@ -9,8 +9,6 @@ import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.events.*
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.automation.actions.*
@@ -24,6 +22,8 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
@@ -230,7 +230,7 @@ class AutomationPlugin @Inject constructor(
             val actions = event.actions
             for (action in actions) {
                 action.title = event.title
-                if (action.isValid())
+                if (action.isValid()) {
                     action.doAction(object : Callback() {
                         override fun run() {
                             val sb = StringBuilder()
@@ -248,7 +248,8 @@ class AutomationPlugin @Inject constructor(
                             rxBus.send(EventAutomationUpdateGui())
                         }
                     })
-                else {
+                    SystemClock.sleep(3000)
+                } else {
                     executionLog.add("Invalid action: ${action.shortDescription()}")
                     aapsLogger.debug(LTag.AUTOMATION, "Invalid action: ${action.shortDescription()}")
                     rxBus.send(EventAutomationUpdateGui())
