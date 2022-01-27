@@ -192,6 +192,14 @@ open class NumberPicker(context: Context, attrs: AttributeSet? = null) : LinearL
         set(value) {
             if (watcher != null) editText?.removeTextChangedListener(watcher)
             currentValue = value
+            if (currentValue > maxValue) {
+                currentValue = maxValue
+                ToastUtils.showToastInUiThread(context, context.getString(R.string.youareonallowedlimit))
+            }
+            if (currentValue < minValue) {
+                currentValue = minValue
+                ToastUtils.showToastInUiThread(context, context.getString(R.string.youareonallowedlimit))
+            }
             callValueChangedListener()
             updateEditText()
             if (watcher != null) editText?.addTextChangedListener(watcher)
