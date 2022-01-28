@@ -120,6 +120,10 @@ class BigLogInquireResponsePacket(
                     diaconnG8HistoryRecord.bolusType = "M" // meal bolus
                     diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logmealsuccess)
                     diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
+                    if (!newRecord && detailedBolusInfo != null) {
+                        // detailedInfo can be from another similar record. Reinsert
+                        detailedBolusInfoStorage.add(detailedBolusInfo)
+                    }
                     status = "MEALBOLUSSUCCESS" + dateUtil.timeString(logDateTime)
                 }
 
@@ -144,6 +148,10 @@ class BigLogInquireResponsePacket(
                     diaconnG8HistoryRecord.bolusType = "M" // Meal bolus
                     diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logmealfail)
                     diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
+                    if (!newRecord && detailedBolusInfo != null) {
+                        // detailedInfo can be from another similar record. Reinsert
+                        detailedBolusInfoStorage.add(detailedBolusInfo)
+                    }
                     status = "MEALBOLUSFAIL " + dateUtil.timeString(logDateTime)
                 }
 
@@ -169,6 +177,10 @@ class BigLogInquireResponsePacket(
                     diaconnG8HistoryRecord.bolusType = "B" // bolus
                     diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logsuccess)
                     diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
+                    if (!newRecord && detailedBolusInfo != null) {
+                        // detailedInfo can be from another similar record. Reinsert
+                        detailedBolusInfoStorage.add(detailedBolusInfo)
+                    }
                     status = "BOLUSSUCCESS" + dateUtil.timeString(logDateTime)
                 }
 
@@ -196,6 +208,10 @@ class BigLogInquireResponsePacket(
                     diaconnG8HistoryRecord.bolusType = "B" // bolus
                     diaconnG8HistoryRecord.stringValue = getReasonName(pumplogKind, logItem.reason)
                     diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
+                    if (!newRecord && detailedBolusInfo != null) {
+                        // detailedInfo can be from another similar record. Reinsert
+                        detailedBolusInfoStorage.add(detailedBolusInfo)
+                    }
                     status = "BOLUSFAIL " + dateUtil.timeString(logDateTime)
                 }
 
@@ -311,6 +327,10 @@ class BigLogInquireResponsePacket(
                     diaconnG8HistoryRecord.bolusType = "D" // bolus
                     diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logdualnormalsuccess)
                     diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
+                    if (!newRecord && detailedBolusInfo != null) {
+                        // detailedInfo can be from another similar record. Reinsert
+                        detailedBolusInfoStorage.add(detailedBolusInfo)
+                    }
                     status = "DUALBOLUS" + dateUtil.timeString(logDateTime)
                 }
 

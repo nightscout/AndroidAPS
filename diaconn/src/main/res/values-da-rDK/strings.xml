@@ -1,2 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="diaconn_g8_pumpalarm_intensity_low">lav</string>
+    <string name="diaconn_g8_pumpalarm_low">lav</string>
+    <string name="diaconn_g8_reasonother">Andet</string>
+</resources>

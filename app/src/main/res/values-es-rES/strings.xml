@@ -129,7 +129,7 @@
     <string name="overview_tempbasal_button">Basal temporal</string>
     <string name="overview_extendedbolus_button">Bolo extendido</string>
     <string name="configbuilder_nightscoutversion_label">Versión de Nightscout:</string>
-    <string name="missing_carbs">Falta %1$d g</string>
+    <string name="missing_carbs">Faltan %1$d g</string>
     <string name="exported">Ajustes exportados</string>
     <string name="ue_exported">Entradas de usuario exportadas</string>
     <string name="export_to">Exportar ajustes a</string>
@@ -224,14 +224,14 @@
     <string name="overview_editquickwizard_valid">Validar:</string>
     <string name="overview_editquickwizardlistactivity_add">Añadir</string>
     <string name="overview_quickwizard_item_edit_button">Editar</string>
-    <string name="mealbolus">Comida</string>
+    <string name="mealbolus">Bolo de comida</string>
     <string name="correctionbous">Corrección</string>
     <string name="actions">Acciones</string>
     <string name="ns_upload_only">(PELIGROSO DESHABILITAR) Sólo subida a Nightscout</string>
     <string name="ns_upload_only_summary">Sólo subir a Nightscout (sincronización desactivada). No es efectivo en SGV, a menos que se seleccione una fuente local como xDrip+. No es efectivo en perfiles, si se usan perfiles Nightscout.\n!!! ¡¡ADVERTENCIA!!! Desactivar esta opción puede causar mal funcionamiento y sobredosis de insulina, si cualquiera de sus componentes (AAPS, NS, xDrip+) está mal configurado. ¡Vigile cuidadosamente si los datos mostrados por AAPS coinciden con el estado de la bomba!</string>
     <string name="pumpNotInitialized">¡Bomba no iniciada!</string>
     <string name="primefill">Cebar/Llenar</string>
-    <string name="fillwarning">Por favor, asegúrate de que la cantidad coincide con la cantidad especificada en el set de infusión</string>
+    <string name="fillwarning">Por favor, asegúrate de que la cantidad coincide con la especificada en el set de infusión</string>
     <string name="fillbolus_title">Cebar/Llenar la cantidad de insulina estándar</string>
     <string name="button1">Botón 1</string>
     <string name="button2">Botón 2</string>
@@ -317,7 +317,7 @@
     <string name="nowritepermission">NSClient no tiene permisos de escritura. ¿API Secret incorrecta?</string>
     <string name="wear_settings">Ajustes de reloj</string>
     <string name="wear_detailedIOB_title">Mostrar detalles IOB</string>
-    <string name="wear_detailedIOB_summary">Separar la insulina activa en bolo y basal en el reloj</string>
+    <string name="wear_detailedIOB_summary">Separar la insulina activa en bolos y basales en el reloj</string>
     <string name="nosuccess">sin efecto - por favor verificar en móvil</string>
     <string name="notavailable">n/a</string>
     <string name="patientage">Tipo de paciente</string>
@@ -409,7 +409,7 @@
     <string name="nsalarm_staledatavalue_label">Datos antiguos limite [min]</string>
     <string name="nsalarm_urgent_staledatavalue_label">Datos antiguos urgentes limite [min]</string>
     <string name="openapsama_autosens_period">Intervalo para autosens [h]</string>
-    <string name="openapsama_autosens_period_summary">Horas en el pasado para detectar sensibilidad (tiempo de absorción de carbohidratos no incluidos)</string>
+    <string name="openapsama_autosens_period_summary">Número de horas para detectar la sensibilidad (tiempo de absorción de carbohidratos excluido)</string>
     <string name="openaps">OpenAPS</string>
     <string name="uploader">Cargador datos</string>
     <string name="configbuilder_sensitivity">Detección sensibilidad</string>
@@ -418,7 +418,7 @@
     <string name="sensitivityoref1">Sensibilidad Oref1</string>
     <string name="sensitivityaaps">Sensibilidad AAPS</string>
     <string name="absorptionsettings_title">Ajustes de absorción</string>
-    <string name="absorption_maxtime_title">Tiempo max absorción comida [h]</string>
+    <string name="absorption_maxtime_title">Tiempo máximo de absorción de la comida [h]</string>
     <string name="absorption_maxtime_summary">Tiempo en horas en el que se espera que todos los carbohidratos hayan sido absorbidos</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
@@ -458,7 +458,7 @@
     <string name="hypo_target">Objetivo Hipo</string>
     <string name="reuse_profile_pct_hours">Reutilizar %1$d%% %2$dh</string>
     <string name="wearcontrol_title">Control desde el reloj</string>
-    <string name="wearcontrol_summary">Establece Objetivos Temporales (OT) y añade tratamientos desde el reloj</string>
+    <string name="wearcontrol_summary">Establece objetivos temporales (OT) y añade tratamientos desde el reloj</string>
     <string name="food">Comida</string>
     <string name="shortgramm">g</string>
     <string name="none"><![CDATA[<ninguno>]]></string>
@@ -510,10 +510,10 @@
     <string name="hasbgdata">Glucosa disponible desde la fuente seleccionada</string>
     <string name="extendedbolusdeliveryerror">Error al emitir bolo extendido</string>
     <string name="enablesmbalways">Habilitar SMB siempre</string>
-    <string name="enablesmbalways_summary">Habilitar SMB siempre, de forma independiente a los bolos. Sólo se puede usar con fuentes de glucosa con buen filtrado, como G5/G6</string>
+    <string name="enablesmbalways_summary">Habilitar SMB siempre, de forma independiente a los bolos. Sólo se puede usar con sensores de glucosa con buen filtrado, como G5/G6</string>
     <string name="enablesmbaftercarbs">Habilitar SMB después de Carbohidratos</string>
-    <string name="enablesmbaftercarbs_summary">Habilitar SMB durante 6 horas después de los carbohidratos, incluso con 0 COB. Sólo es posible con fuentes de glucosa con buen filtrado de datos, como G5/G6</string>
-    <string name="enablesmbwithcob">Habilitar SMB con COB</string>
+    <string name="enablesmbaftercarbs_summary">Habilitar SMB durante 6 horas después de los carbohidratos, incluso con 0g de carbohidratos (COB). Sólo se puede usar con sensores de glucosa con buen filtrado de datos, como G5/G6</string>
+    <string name="enablesmbwithcob">Habilitar SMB con Carbohidratos</string>
     <string name="enablesmbwithcob_summary">Habilitar SMB cuando hay carbohidratos activos (COB)</string>
     <string name="enablesmbwithtemptarget">Habilitar SMB con Objetivos Temporales</string>
     <string name="enablesmbwithtemptarget_summary">Habilitar SMB cuando hay un Objetivo Temporal (OT) activo (ComiendoPronto, Actividad, etc.)</string>
@@ -543,7 +543,7 @@
     <string name="data_choices">Opciones de datos</string>
     <string name="fabric_upload">Reporte fallos a Fabric.io</string>
     <string name="allow_automated_crash_reporting">Permite que los informes de errores automáticos y los datos de uso de las funciones, se envíen a los desarrolladores mediante el servicio fabric.io</string>
-    <string name="g5appnotdetected">Actualice su aplicación Dexcom a una versión compatible</string>
+    <string name="g5appnotdetected">Actualiza tu aplicación de Dexcom a una versión compatible</string>
     <string name="dexcom_app_not_installed">La aplicación Dexcom no está instalada.</string>
     <string name="start_activity_tt">Iniciar OT Actividad</string>
     <string name="start_eating_soon_tt">Iniciar OT Comiendo Pronto</string>
@@ -560,7 +560,7 @@
     <string name="overview_show_cob">Carbohidratos activos COB</string>
     <string name="overview_show_iob">Insulina activa</string>
     <string name="overview_show_basals">Basales</string>
-    <string name="no_action_selected">Ninguna acción seleccionada, nada sucederá</string>
+    <string name="no_action_selected">No se ha seleccionado ninguna opción, por lo que no se realizará ningún cambio</string>
     <string name="start_hypo_tt">Iniciar OT Hipo</string>
     <string name="closed_loop_disabled_on_dev_branch">Ejecutando la versión dev. Lazo cerrado no disponible.</string>
     <string name="engineering_mode_enabled">Modo de ingeniería activado</string>
@@ -613,7 +613,7 @@
     <string name="openapsama_autosens_min">Ratio mínimo de autosens</string>
     <string name="openapsama_bolussnooze_dia_divisor">DIA Divisor para suspensión de bolos</string>
     <string name="openapsama_max_daily_safety_multiplier">Máximo multiplicador diario de seguridad</string>
-    <string name="openapsama_current_basal_safety_multiplier">Multiplicador de seguridad basal actual</string>
+    <string name="openapsama_current_basal_safety_multiplier">Multiplicador basal de seguridad actual</string>
     <string name="value_unavailable_short">n/a</string>
     <string name="virtualpump_type">Bomba virtual</string>
     <string name="virtualpump_definition">Definición de la bomba</string>
@@ -631,7 +631,7 @@
     <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/es/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="nsclientinfotext">NSCliente controla la conexión con Nightscout. Puedes saltar este paso ahora pero no podrás completar los objetivos hasta que lo configures.</string>
     <string name="diawarning">Por favor, recuerde: nuevos perfiles de insulina requieren DIA de al menos 5h. DIA de 5-6h en nuevos perfiles es lo mismo que DIA de 3h en perfiles antiguos.</string>
-    <string name="setupwizard_aps_description">Selecciona uno de los algoritmos disponibles. Están ordenados de más antiguos a más recientes. Los nuevos son más potentes y agresivos. Por ello, si eres usuario nuevo, se recomienda empezar con AMA y no con el último. No olvides leer la documentación de OpenAPS y configurarlo antes de usarlo.</string>
+    <string name="setupwizard_aps_description">Selecciona uno de los algoritmos disponibles. Están ordenados de más antiguos a más recientes. Los nuevos son más potentes y agresivos. Por ello, si eres un nuevo usuario, se recomienda empezar con AMA y no con el último. No olvides leer la documentación de OpenAPS y configurarlo antes de usarlo.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Por favor, a continuación configure su RileyLink. Después de seleccionar un RileyLink, será posible continuar la configuración una vez que el estado de RileyLink esté en \"Conectado\". Esto podría tardar un minuto.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Nota:</b> Puede continuar con la configuración una vez que la bomba se haya configurado.\n</string>
     <string name="startobjective">Comienza tu primer objetivo</string>
@@ -676,7 +676,7 @@
     <string name="error_adding_treatment_message">Un tratamiento (insulina: %1$.2f, carbs: %2$d, at: %3$s) no ha podido ser añadido a tratamientos. Por favor compruebe y añada manualmente el registro apropiadamente.</string>
     <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), retraso: %3$d m</string>
     <string name="openaps_noasdata">Sin datos autosens disponibles</string>
-    <string name="nav_logsettings">Ajustes del registro</string>
+    <string name="nav_logsettings">Ajustes de registros</string>
     <string name="resettodefaults">Restablecer valores predeterminados</string>
     <string name="nsmalfunction">NSClient fallando. Considera reiniciar NS y NSClient.</string>
     <string name="time_offset">Retardo</string>
@@ -720,11 +720,11 @@
     <string name="old_version">versión antigua</string>
     <string name="very_old_version">versión muy antigua</string>
     <string name="application_expired">Aplicación caducada</string>
-    <string name="new_version_warning">Nueva versión disponible de al menos %1$d días. Soporte a función de suspensión por glucosa baja (LGS) durante %2$d días. Después se deshabilitará el lazo en %3$d días</string>
+    <string name="new_version_warning">Nueva versión disponible de al menos %1$d día/s. Soporte a función de suspensión por glucosa baja (LGS) durante %2$d días. Después se deshabilitará el lazo en %3$d días</string>
     <string name="twohours">2h</string>
     <string name="dexcom_app_patched">Dexcom (BYODA)</string>
     <string name="dexcom_short">BYODA</string>
-    <string name="description_source_dexcom">Recibir los valores de glucosa de la aplicación Dexcom \'Build Your Own Device\'.</string>
+    <string name="description_source_dexcom">Recibir los valores de glucosa de la aplicación Dexcom \'Build Your Own Device\'</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="bolusconstraintappliedwarn">Restricción de bolo aplicada: %1$.2f U a %2$.2f U</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>! Se ha detectado una absorción lenta de carbohidratos: %2$d%% de tiempo. Compruebe de nuevo su cálculo. Los COB se pueden sobrestimar, por lo que se podría administrar más insulina de la cuenta</font>]]></string>
@@ -859,7 +859,7 @@
     <string name="trend_arrow">Flecha de tendencia</string>
     <string name="cannula">Cánula</string>
     <string name="userentry">Entrada usuario</string>
-    <string name="common_values">Usa los valores de tu comida más grande que comes normalmente\n</string>
+    <string name="common_values">Usa los valores de la comida más grande que sueles comer\n</string>
     <string name="summary_email_for_crash_report">Esta identificación se adjuntará a los informes de errores, para que podamos contactarte en casos urgentes. Es opcional.</string>
     <string name="email_address">Dirección de Correo Electrónico</string>
     <string name="privacy_settings">Ajustes de privacidad</string>
@@ -868,7 +868,7 @@
     <string name="full_sync_comment">¿Sincronización completa? Puede tardar muchas horas y hasta que termine no verás nuevos datos en Nightscout</string>
     <string name="prime">Cebar</string>
     <string name="ns_sync_options">Sincronización</string>
-    <string name="ns_upload_summary">Perfiles, bolos, carbohidratos y basales temporales se suben a NS</string>
+    <string name="ns_upload_summary">Perfiles, bolos, carbohidratos y basales temporales se suben a Nightscout</string>
     <string name="ns_upload">Subir datos a Nightscout</string>
     <string name="ns_receive_profile_store">Recibir perfil almacenado</string>
     <string name="ns_receive_profile_store_summary">Sincronizar perfiles desde el editor de perfiles de Nightscout</string>

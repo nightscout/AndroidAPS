@@ -36,4 +36,6 @@
     <string name="dash_bolusdelivering">Leverer %1$.2f E</string>
     <string name="omnipod_common_alert_delivery_suspended">Insulintilførsel er suspendert</string>
     <string name="omnipod_dash_connection_lost">Mistet tilkoblingen til pod</string>
+    <string name="omnipod_dash_bolus_already_in_progress">En annen bolusdose blir levert</string>
+    <string name="omnipod_dash_not_enough_insulin">Ikke nok insulin igjen i reservoaret</string>
 </resources>

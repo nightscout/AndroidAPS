@@ -870,7 +870,7 @@
     <string name="ns_sync_options">Sincronizzazione</string>
     <string name="ns_upload_summary">Profili, boli, CHO, basali temporanee vengono caricati su NS</string>
     <string name="ns_upload">Carica dati su NS</string>
-    <string name="ns_receive_profile_store">Ricevi \"store\" profilo</string>
+    <string name="ns_receive_profile_store">Ricevi profilo</string>
     <string name="ns_receive_profile_store_summary">Sincronizza i profili dall\'editor profilo di NS</string>
     <string name="ns_receive_temp_target">Ricevi target temporanei</string>
     <string name="ns_receive_temp_target_summary">Accetta target temporanei inseriti tramite NS o NSClient</string>

@@ -151,6 +151,10 @@ class MsgHistoryEventsV2 constructor(
                     (if (newRecord) "**NEW** " else "") + "EVENT BOLUS (" + recordCode + ") "
                         + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Bolus: " + param1 / 100.0 + "U Duration: " + param2 + "min"
                 )
+                if (!newRecord && detailedBolusInfo != null) {
+                    // detailedInfo can be from another similar record. Reinsert
+                    detailedBolusInfoStorage.add(detailedBolusInfo)
+                }
                 status = "BOLUS " + dateUtil.timeString(datetime)
             }
 
@@ -169,6 +173,10 @@ class MsgHistoryEventsV2 constructor(
                     (if (newRecord) "**NEW** " else "") + "EVENT DUAL_BOLUS (" + recordCode + ") "
                         + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Bolus: " + param1 / 100.0 + "U Duration: " + param2 + "min"
                 )
+                if (!newRecord && detailedBolusInfo != null) {
+                    // detailedInfo can be from another similar record. Reinsert
+                    detailedBolusInfoStorage.add(detailedBolusInfo)
+                }
                 status = "DUAL_BOLUS " + dateUtil.timeString(datetime)
             }
 
