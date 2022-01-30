@@ -116,43 +116,43 @@ class LocalProfilePlugin @Inject constructor(
                 ToastUtils.errorToast(activity, rh.gs(R.string.missing_profile_name))
                 return false
             }
-            if (blockFromJsonArray(ic, dateUtil)?.any { it.amount < hardLimits.minIC() || it.amount > hardLimits.maxIC() } != false) {
+            if (blockFromJsonArray(ic, dateUtil)?.all { it.amount < hardLimits.minIC() || it.amount > hardLimits.maxIC() } != false) {
                 ToastUtils.errorToast(activity, rh.gs(R.string.error_in_ic_values))
                 return false
             }
             val low = blockFromJsonArray(targetLow, dateUtil)
             val high = blockFromJsonArray(targetHigh, dateUtil)
             if (mgdl) {
-                if (blockFromJsonArray(isf, dateUtil)?.any {  hardLimits.isInRange(it.amount, HardLimits.MIN_ISF, HardLimits.MAX_ISF) } == false) {
+                if (blockFromJsonArray(isf, dateUtil)?.all {  hardLimits.isInRange(it.amount, HardLimits.MIN_ISF, HardLimits.MAX_ISF) } == false) {
                     ToastUtils.errorToast(activity, rh.gs(R.string.error_in_isf_values))
                     return false
                 }
-                if (blockFromJsonArray(basal, dateUtil)?.any { it.amount < pumpDescription.basalMinimumRate || it.amount > 10.0 } != false)  {
+                if (blockFromJsonArray(basal, dateUtil)?.all { it.amount < pumpDescription.basalMinimumRate || it.amount > 10.0 } != false)  {
                     ToastUtils.errorToast(activity, rh.gs(R.string.error_in_basal_values))
                     return false
                 }
-                if (low?.any { hardLimits.isInRange(it.amount, HardLimits.VERY_HARD_LIMIT_MIN_BG[0], HardLimits.VERY_HARD_LIMIT_MIN_BG[1]) } == false) {
+                if (low?.all { hardLimits.isInRange(it.amount, HardLimits.VERY_HARD_LIMIT_MIN_BG[0], HardLimits.VERY_HARD_LIMIT_MIN_BG[1]) } == false) {
                     ToastUtils.errorToast(activity, rh.gs(R.string.error_in_target_values))
                     return false
                 }
-                if (high?.any { hardLimits.isInRange(it.amount, HardLimits.VERY_HARD_LIMIT_MAX_BG[0], HardLimits.VERY_HARD_LIMIT_MAX_BG[1]) } == false) {
+                if (high?.all { hardLimits.isInRange(it.amount, HardLimits.VERY_HARD_LIMIT_MAX_BG[0], HardLimits.VERY_HARD_LIMIT_MAX_BG[1]) } == false) {
                     ToastUtils.errorToast(activity, rh.gs(R.string.error_in_target_values))
                     return false
                 }
             } else {
-                if (blockFromJsonArray(isf, dateUtil)?.any { hardLimits.isInRange(Profile.toMgdl(it.amount, GlucoseUnit.MMOL), HardLimits.MIN_ISF, HardLimits.MAX_ISF) } == false) {
+                if (blockFromJsonArray(isf, dateUtil)?.all { hardLimits.isInRange(Profile.toMgdl(it.amount, GlucoseUnit.MMOL), HardLimits.MIN_ISF, HardLimits.MAX_ISF) } == false) {
                     ToastUtils.errorToast(activity, rh.gs(R.string.error_in_isf_values))
                     return false
                 }
-                if (blockFromJsonArray(basal, dateUtil)?.any { it.amount < pumpDescription.basalMinimumRate || it.amount > 10.0 } != false)  {
+                if (blockFromJsonArray(basal, dateUtil)?.all { it.amount < pumpDescription.basalMinimumRate || it.amount > 10.0 } != false)  {
                     ToastUtils.errorToast(activity, rh.gs(R.string.error_in_basal_values))
                     return false
                 }
-                if (low?.any { hardLimits.isInRange(Profile.toMgdl(it.amount, GlucoseUnit.MMOL), HardLimits.VERY_HARD_LIMIT_MIN_BG[0], HardLimits.VERY_HARD_LIMIT_MIN_BG[1]) } == false) {
+                if (low?.all { hardLimits.isInRange(Profile.toMgdl(it.amount, GlucoseUnit.MMOL), HardLimits.VERY_HARD_LIMIT_MIN_BG[0], HardLimits.VERY_HARD_LIMIT_MIN_BG[1]) } == false) {
                     ToastUtils.errorToast(activity, rh.gs(R.string.error_in_target_values))
                     return false
                 }
-                if (high?.any {  hardLimits.isInRange(Profile.toMgdl(it.amount, GlucoseUnit.MMOL), HardLimits.VERY_HARD_LIMIT_MAX_BG[0], HardLimits.VERY_HARD_LIMIT_MAX_BG[1]) } == false) {
+                if (high?.all {  hardLimits.isInRange(Profile.toMgdl(it.amount, GlucoseUnit.MMOL), HardLimits.VERY_HARD_LIMIT_MAX_BG[0], HardLimits.VERY_HARD_LIMIT_MAX_BG[1]) } == false) {
                     ToastUtils.errorToast(activity, rh.gs(R.string.error_in_target_values))
                     return false
                 }
