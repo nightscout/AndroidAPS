@@ -81,7 +81,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
     private var disconnectTimer: DelayedActionThread? = null
     private var recoveryTimer: DelayedActionThread? = null
     private var timeoutTimer: DelayedActionThread? = null
-    private var bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+    private lateinit var bluetoothAdapter: BluetoothAdapter
     private var bluetoothDevice: BluetoothDevice? = null
     private var bluetoothSocket: BluetoothSocket? = null
     private var connectionEstablisher: ConnectionEstablisher? = null
@@ -91,8 +91,6 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
     private val buffer = ByteBuf(BUFFER_SIZE)
     @get:Synchronized var verificationString: String? = null
         private set
-    private var intKeyPair: KeyPair? = null
-    private var intRandomBytes: ByteArray? = null
     private val messageQueue = MessageQueue()
     private val activatedServices: MutableList<Service?> = ArrayList()
     var lastDataTime: Long = 0
@@ -102,19 +100,10 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
     @get:Synchronized var recoveryDuration: Long = 0
         private set
     private var timeoutDuringHandshakeCounter = 0
-    val keyPair: KeyPair
-        get() {
-            if (intKeyPair == null) intKeyPair = generateRSAKey()
-            return intKeyPair!!
-        }
-    val randomBytes: ByteArray
-        get() {
-            if (intRandomBytes == null) {
-                intRandomBytes = ByteArray(28)
-                SecureRandom().nextBytes(intRandomBytes)
-            }
-            return intRandomBytes!!
-        }
+    private var intKeyPair: KeyPair? = null
+    val keyPair: KeyPair = intKeyPair ?:generateRSAKey().also { intKeyPair = it }
+    private var intRandomBytes: ByteArray? = null
+    val randomBytes: ByteArray = intRandomBytes ?: ByteArray(28).also {  intRandomBytes = it; SecureRandom().nextBytes(intRandomBytes) }
 
     private fun increaseRecoveryDuration() {
         var maxRecoveryDuration = sp.getInt(R.string.key_insight_max_recovery_duration, 20).toLong()
@@ -189,7 +178,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
     private fun requestNextMessage() {
         while (messageQueue.activeRequest == null && messageQueue.hasPendingMessages()) {
             messageQueue.nextRequest()
-            val service = messageQueue.activeRequest!!.request.service
+            val service = messageQueue.activeRequest?.request?.service
             if (service !== Service.CONNECTION && !activatedServices.contains(service)) {
                 if (service!!.servicePassword == null) {
                     val activateServiceMessage = ActivateServiceMessage()
@@ -203,7 +192,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
                     serviceChallengeMessage.version = service.version
                     sendAppLayerMessage(serviceChallengeMessage)
                 }
-            } else sendAppLayerMessage(messageQueue.activeRequest!!.request)
+            } else sendAppLayerMessage(messageQueue.activeRequest?.request)
         }
     }
 
@@ -361,7 +350,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
     }
 
     @Synchronized private fun connect() {
-        if (bluetoothDevice == null) bluetoothDevice = bluetoothAdapter!!.getRemoteDevice(pairingDataStorage.macAddress)
+        if (bluetoothDevice == null) bluetoothDevice = bluetoothAdapter.getRemoteDevice(pairingDataStorage.macAddress)
         setState(InsightState.CONNECTING)
         connectionEstablisher = ConnectionEstablisher(this, !pairingDataStorage.paired, bluetoothAdapter, bluetoothDevice, bluetoothSocket)
         connectionEstablisher!!.start()
@@ -374,10 +363,8 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
     @Synchronized override fun onConnectionSucceed() {
         try {
             recoveryDuration = 0
-            inputStreamReader = InputStreamReader(bluetoothSocket!!.inputStream, this)
-            outputStreamWriter = OutputStreamWriter(bluetoothSocket!!.outputStream, this)
-            inputStreamReader!!.start()
-            outputStreamWriter!!.start()
+            inputStreamReader = InputStreamReader(bluetoothSocket!!.inputStream, this).also { it.start() }
+            outputStreamWriter = OutputStreamWriter(bluetoothSocket!!.outputStream, this).also { it.start() }
             if (pairingDataStorage.paired) {
                 setState(InsightState.SATL_SYN_REQUEST)
                 sendSatlMessage(SynRequest())
@@ -395,9 +382,11 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
         try {
             while (hasCompletePacket(this.buffer)) {
                 val satlMessage = deserialize(this.buffer, pairingDataStorage.lastNonceReceived, pairingDataStorage.incomingKey)
-                if (pairingDataStorage.incomingKey != null && pairingDataStorage.lastNonceReceived != null && !pairingDataStorage.lastNonceReceived!!.isSmallerThan(satlMessage!!.nonce!!)) {
-                    throw InvalidNonceException()
-                } else processSatlMessage(satlMessage)
+                satlMessage?.let {
+                    if (pairingDataStorage.incomingKey != null && pairingDataStorage.lastNonceReceived != null && !pairingDataStorage.lastNonceReceived!!.isSmallerThan(it.nonce!!)) {
+                        throw InvalidNonceException()
+                    } else processSatlMessage(it)
+                }
             }
         } catch (e: InsightException) {
             handleException(e)
@@ -407,13 +396,13 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
     private fun prepareSatlMessage(satlMessage: SatlMessage): ByteArray {
         satlMessage.commID = pairingDataStorage.commId
         val nonce = pairingDataStorage.lastNonceSent
-        if (nonce != null) {
-            nonce.increment()
-            pairingDataStorage.lastNonceSent = nonce
-            satlMessage.nonce = nonce
+        nonce?.let {
+            it.increment()
+            pairingDataStorage.lastNonceSent = it
+            satlMessage.nonce = it
         }
         val serialized = satlMessage.serialize(pairingDataStorage.outgoingKey)
-        if (timeoutTimer != null) timeoutTimer!!.interrupt()
+        timeoutTimer?.interrupt()
         timeoutTimer = runDelayed("TimeoutTimer", RESPONSE_TIMEOUT) {
             timeoutTimer = null
             handleException(TimeoutException())
@@ -421,22 +410,14 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
         return serialized.bytes
     }
 
-    private fun sendSatlMessage(satlMessage: SatlMessage) {
-        if (outputStreamWriter == null) return
-        outputStreamWriter!!.write(prepareSatlMessage(satlMessage))
-    }
+    private fun sendSatlMessage(satlMessage: SatlMessage) = outputStreamWriter?.write(prepareSatlMessage(satlMessage))
 
-    private fun sendSatlMessageAndWait(satlMessage: SatlMessage) {
-        if (outputStreamWriter == null) return
-        outputStreamWriter!!.writeAndWait(prepareSatlMessage(satlMessage))
-    }
+    private fun sendSatlMessageAndWait(satlMessage: SatlMessage) = outputStreamWriter?.writeAndWait(prepareSatlMessage(satlMessage))
 
     private fun processSatlMessage(satlMessage: SatlMessage?) {
-        if (timeoutTimer != null) {
-            timeoutTimer!!.interrupt()
-            timeoutTimer = null
-        }
-        pairingDataStorage.lastNonceReceived = satlMessage!!.nonce
+        timeoutTimer?.interrupt()
+        timeoutTimer = null
+        satlMessage?.let { pairingDataStorage.lastNonceReceived = it.nonce }
         if (satlMessage is ConnectionResponse) processConnectionResponse() else if (satlMessage is KeyResponse) processKeyResponse(satlMessage) else if (satlMessage is VerifyDisplayResponse) processVerifyDisplayResponse() else if (satlMessage is VerifyConfirmResponse) processVerifyConfirmResponse(
             satlMessage
         ) else if (satlMessage is DataMessage) processDataMessage(satlMessage) else if (satlMessage is SynAckResponse) processSynAckResponse() else if (satlMessage is ErrorMessage) processErrorMessage(
