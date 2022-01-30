@@ -224,7 +224,7 @@
     <string name="overview_editquickwizard_valid">Validar:</string>
     <string name="overview_editquickwizardlistactivity_add">Añadir</string>
     <string name="overview_quickwizard_item_edit_button">Editar</string>
-    <string name="mealbolus">Bolo de comida</string>
+    <string name="mealbolus">BOLO</string>
     <string name="correctionbous">Corrección</string>
     <string name="actions">Acciones</string>
     <string name="ns_upload_only">(PELIGROSO DESHABILITAR) Sólo subida a Nightscout</string>
@@ -512,7 +512,7 @@
     <string name="enablesmbalways">Habilitar SMB siempre</string>
     <string name="enablesmbalways_summary">Habilitar SMB siempre, de forma independiente a los bolos. Sólo se puede usar con sensores de glucosa con buen filtrado, como G5/G6</string>
     <string name="enablesmbaftercarbs">Habilitar SMB después de Carbohidratos</string>
-    <string name="enablesmbaftercarbs_summary">Habilitar SMB durante 6 horas después de los carbohidratos, incluso con 0g de carbohidratos (COB). Sólo se puede usar con sensores de glucosa con buen filtrado de datos, como G5/G6</string>
+    <string name="enablesmbaftercarbs_summary">Habilitar SMB durante 6 horas después de los carbohidratos, incluso con 0g de carbohidratos (COB). Sólo se puede usar con sensores de glucosa con buen filtrado, como G5/G6</string>
     <string name="enablesmbwithcob">Habilitar SMB con Carbohidratos</string>
     <string name="enablesmbwithcob_summary">Habilitar SMB cuando hay carbohidratos activos (COB)</string>
     <string name="enablesmbwithtemptarget">Habilitar SMB con Objetivos Temporales</string>
