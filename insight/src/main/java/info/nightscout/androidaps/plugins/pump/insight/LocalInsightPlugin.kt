@@ -1406,7 +1406,7 @@ class LocalInsightPlugin @Inject constructor(
             //TODO: Add function to Constraints or use different approach
             // This only works if the interface of the InsightPlugin is called last.
             // If not, another constraint could theoretically set the value between 0 and minimumBolusAmount
-            insulin[aapsLogger, 0.0, String.format(rh.gs(R.string.limitingbolus), minimumBolusAmount, rh.gs(R.string.pumplimit))] = this
+            insulin.set(aapsLogger, 0.0, String.format(rh.gs(R.string.limitingbolus), minimumBolusAmount, rh.gs(R.string.pumplimit)), this)
         }
         return insulin
     }
