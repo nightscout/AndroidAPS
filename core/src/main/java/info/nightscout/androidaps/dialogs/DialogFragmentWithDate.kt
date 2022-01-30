@@ -44,6 +44,7 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
+        aapsLogger.debug(LTag.APS, "Dialog opened: ${this.javaClass.name}")
     }
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
@@ -129,15 +130,24 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
         (view.findViewById(R.id.ok) as Button?)?.setOnClickListener {
             synchronized(okClicked) {
                 if (okClicked) {
-                    aapsLogger.warn(LTag.UI, "guarding: ok already clicked")
+                    aapsLogger.warn(LTag.UI, "guarding: ok already clicked for dialog: ${this.javaClass.name}")
                 } else {
                     okClicked = true
-                    if (submit()) dismiss()
-                    else okClicked = false
+                    if (submit()) {
+                        aapsLogger.debug(LTag.APS, "Submit pressed for Dialog: ${this.javaClass.name}")
+                        dismiss()
+                    } else {
+                        aapsLogger.debug(LTag.APS, "Submit returned false for Dialog: ${this.javaClass.name}")
+                        okClicked = false
+                    }
                 }
             }
         }
-        (view.findViewById(R.id.cancel) as Button?)?.setOnClickListener { dismiss() }
+        (view.findViewById(R.id.cancel) as Button?)?.setOnClickListener {
+            aapsLogger.debug(LTag.APS, "Cancel pressed for dialog: ${this.javaClass.name}")
+            dismiss()
+        }
+
     }
 
     override fun show(manager: FragmentManager, tag: String?) {

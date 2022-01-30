@@ -29,7 +29,7 @@ public class ViewSelectorActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.grid_layout);
 
-        setTitleBasedOnScreenShape(String.valueOf(getTitle()));
+        setTitleBasedOnScreenShape();
 
         pager = findViewById(R.id.pager);
         DotsPageIndicator dotsPageIndicator = findViewById(R.id.page_indicator);
@@ -59,7 +59,12 @@ public class ViewSelectorActivity extends Activity {
         pager.setAdapter(adapter);
     }
 
-    private void setTitleBasedOnScreenShape(String title) {
+    private void setTitleBasedOnScreenShape() {
+        // intents can inject dynamic titles, otherwise we'll use the default
+        String title = String.valueOf(getTitle());
+        if (getIntent().getExtras() != null)
+            title = getIntent().getExtras().getString("title", title);
+
         CurvedTextView titleViewCurved = findViewById(R.id.title_curved);
         TextView titleView = findViewById(R.id.title);
         if (this.getResources().getConfiguration().isScreenRound()) {
@@ -91,18 +96,8 @@ public class ViewSelectorActivity extends Activity {
     }
 
     void setLabelToPlusMinusView(View view, String labelText) {
-        SharedPreferences sharedPrefs = PreferenceManager
-                .getDefaultSharedPreferences(this);
-        int design = Integer.parseInt(sharedPrefs.getString("input_design", "1"));
-
-        if (design == 4) {
-            //@LadyViktoria: Here the label can be set differently, if you like.
             final TextView textView = view.findViewById(R.id.label);
             textView.setText(labelText);
-        } else {
-            final TextView textView = view.findViewById(R.id.label);
-            textView.setText(labelText);
-        }
     }
 
 }

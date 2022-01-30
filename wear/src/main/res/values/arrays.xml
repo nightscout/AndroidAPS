@@ -65,4 +65,18 @@
         <item>none</item>
     </string-array>
 
+    <string-array name="watchface_simplify_ui_name">
+        <item>@string/simple_ui_off</item>
+        <item>@string/simple_ui_charging</item>
+        <item>@string/simple_ui_always_on</item>
+        <item>@string/simple_ui_always_on_charging</item>
+    </string-array>
+
+    <string-array name="watchface_simplify_ui_values">
+        <item>off</item>
+        <item>charging</item>
+        <item>ambient</item>
+        <item>ambient_charging</item>
+    </string-array>
+
 </resources>

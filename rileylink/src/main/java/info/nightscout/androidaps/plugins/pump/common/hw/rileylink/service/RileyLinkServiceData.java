@@ -37,7 +37,7 @@ public class RileyLinkServiceData {
     public RileyLinkServiceState rileyLinkServiceState = RileyLinkServiceState.NotStarted;
     private long lastServiceStateChange = 0L;
     public RileyLinkFirmwareVersion firmwareVersion; // here we have "compatibility level" version
-    public RileyLinkTargetFrequency rileyLinkTargetFrequency;
+    @Nullable public RileyLinkTargetFrequency rileyLinkTargetFrequency;
     @Nullable public String rileyLinkAddress;
     @Nullable public String rileyLinkName;
     public Integer batteryLevel;

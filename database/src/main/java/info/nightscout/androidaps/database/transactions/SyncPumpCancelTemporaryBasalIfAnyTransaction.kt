@@ -15,7 +15,8 @@ class SyncPumpCancelTemporaryBasalIfAnyTransaction(
             return result
         val current = database.temporaryBasalDao.getTemporaryBasalActiveAt(timestamp, pumpType, pumpSerial).blockingGet()
         if (current != null && current.interfaceIDs.endId == null) { // do not allow overwrite if cut by end event
-            current.end = timestamp
+            if (current.timestamp != timestamp) current.end = timestamp // prevent zero duration
+            else current.duration = 1
             current.interfaceIDs.endId = endPumpId
             database.temporaryBasalDao.updateExistingEntry(current)
             result.updated.add(current)

@@ -26,7 +26,7 @@ buildscript {
         tink_version = '1.5.0'
 
         junit_version = '4.13.2'
-        mockitoVersion = '4.1.0'
+        mockitoVersion = '4.3.1'
         dexmakerVersion = "1.2"
         retrofit2Version = '2.9.0'
         okhttp3Version = '4.9.0'
@@ -56,7 +56,7 @@ buildscript {
 
 plugins {
     id "io.gitlab.arturbosch.detekt" version "1.19.0"
-    id "org.jlleitschuh.gradle.ktlint" version "10.2.0"
+    id "org.jlleitschuh.gradle.ktlint" version "10.2.1"
 }
 
 allprojects {
@@ -74,6 +74,14 @@ allprojects {
                     '-Xjvm-default=all'     //Support @JvmDefault
             ]
             jvmTarget = "11"
+        }
+    }
+    // Workaround to support M1 builds. Room 2.4.0 fixes this but requires min compileSdkVersion
+    // 31 => remove when upgrading to Room 2.4.0
+    // Source: https://issuetracker.google.com/issues/174695268
+    configurations.configureEach {
+        resolutionStrategy {
+            force 'org.xerial:sqlite-jdbc:3.36.0.3'
         }
     }
 }

@@ -101,7 +101,7 @@
     <string name="time">Zaman</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
     <string name="loading">Yükleniyor…</string>
-    <string name="event_time_label">Etkinlik saati</string>
+    <string name="event_time_label">Tarih, saat</string>
     <string name="notes_label">Notlar</string>
     <string name="remove_button">Kaldır</string>
     <string name="addnew">Yeni ekle</string>
@@ -306,7 +306,7 @@
     <string name="uel_bolus_calculator">BOLUS HESAPLAYICI</string>
     <string name="uel_bolus_advisor">BOLUS DANIŞMANI</string>
     <string name="uel_extended_bolus">YAYMA BOLUS</string>
-    <string name="uel_superbolus_tbr">SURBOLUS TBR</string>
+    <string name="uel_superbolus_tbr">SÜPERBOLUS GBO</string>
     <string name="uel_carbs">KARBLR</string>
     <string name="uel_extended_carbs">YAYMA KARBONHİDRAT</string>
     <string name="uel_temp_basal">GEÇİCİ BAZAL</string>

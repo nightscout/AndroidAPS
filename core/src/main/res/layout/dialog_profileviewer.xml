@@ -245,6 +245,12 @@
 
         </LinearLayout>
 
+        <info.nightscout.androidaps.utils.ui.IcProfileGraph
+            android:id="@+id/ic_graph"
+            android:layout_width="match_parent"
+            android:layout_height="100dip"
+            android:layout_margin="20dp" />
+
         <View
             android:layout_width="fill_parent"
             android:layout_height="2dip"
@@ -289,6 +295,12 @@
                 android:textSize="14sp" />
 
         </LinearLayout>
+
+        <info.nightscout.androidaps.utils.ui.IsfProfileGraph
+            android:id="@+id/isf_graph"
+            android:layout_width="match_parent"
+            android:layout_height="100dip"
+            android:layout_margin="20dp" />
 
         <View
             android:layout_width="fill_parent"
@@ -371,7 +383,7 @@
 
         </LinearLayout>
 
-        <info.nightscout.androidaps.utils.ui.ProfileGraph
+        <info.nightscout.androidaps.utils.ui.BasalProfileGraph
             android:id="@+id/basal_graph"
             android:layout_width="match_parent"
             android:layout_height="100dip"

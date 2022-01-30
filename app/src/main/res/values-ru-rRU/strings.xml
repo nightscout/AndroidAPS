@@ -895,7 +895,7 @@
     <string name="error_in_isf_values">Ошибка в значении фактора чувствительности к инсулину ISF</string>
     <string name="run_question">Запустить %s?</string>
     <string name="invalid_profile_not_accepted">Неверный профиль %1$s не принят из NS</string>
-    <string name="view">Вид</string>
+    <string name="view">Посмотреть</string>
     <string name="errors">Ошибки</string>
     <string name="ns_sync_slow">Замедлить выгрузку</string>
     <string name="data_status">Состояние данных ГК</string>

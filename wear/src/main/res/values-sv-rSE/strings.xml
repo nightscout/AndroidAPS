@@ -122,6 +122,8 @@
     <string name="color_name_white">vit</string>
     <string name="color_name_black">svart</string>
     <string name="color_name_multicolor">flerfärgad</string>
+    <string name="pref_simplify_ui">Förenkla gränssnittet</string>
+    <string name="pref_simplify_ui_sum">Visa bara tid och BG</string>
     <string name="pref_vibrate_hourly">Vibrera varje timme</string>
     <string name="pref_show_weeknumber">Visa veckonummer</string>
     <string name="digitalstyle_pref_your_style">Din stil:</string>
@@ -136,4 +138,8 @@
     <string name="bolus_progress_silent_channel_name">AAPS Bolusförlopp (tyst)</string>
     <string name="bolus_progress_channel_description">Bolusförlopp och avbryt</string>
     <string name="bolus_progress_silent_channel_description">Bolusförlopp och avbryt med mindre vibrationer</string>
+    <string name="simple_ui_off">Av</string>
+    <string name="simple_ui_charging">Vid laddning</string>
+    <string name="simple_ui_always_on">Alltid På-läge</string>
+    <string name="simple_ui_always_on_charging">Alltid På och vid laddning</string>
 </resources>

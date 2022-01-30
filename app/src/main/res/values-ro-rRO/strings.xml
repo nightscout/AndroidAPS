@@ -57,6 +57,7 @@
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">Carbohidrați</string>
     <string name="treatments_wizard_correction_label">Corecție</string>
+    <string name="bolus_iob_label">IOB bolus</string>
     <string name="openapsma_run">Execută</string>
     <string name="vitualpump_label">POMPĂ VIRTUALĂ</string>
     <string name="openapsma_lastrun_label">Ultima execuție</string>
@@ -95,6 +96,7 @@
     <string name="safety">Siguranță</string>
     <string name="openapsma_disabled">Modul inactiv</string>
     <string name="constraints_violation">Încălcare a unei limite</string>
+    <string name="treatmentdeliveryerror">Bolus a raportat o eroare. Verifică manual cantitatea livrată</string>
     <string name="setbasalquestion">Acceptă noua bazală temporară:</string>
     <string name="overview_treatment_label">Tratament</string>
     <string name="overview_calculator_label">Calculator</string>
@@ -120,7 +122,9 @@
     <string name="careportal_newnstreatment_other">Altul</string>
     <string name="careportal_newnstreatment_meter">Glucometru</string>
     <string name="careportal_newnstreatment_sensor">Senzor</string>
+    <string name="carb_time_label">Ora carbohidrați</string>
     <string name="careportal_newnstreatment_duration_label">Durată</string>
+    <string name="profile_label">Profil</string>
     <string name="careportal_newnstreatment_glucosetype">Tip glicemie</string>
     <string name="overview_tempbasal_button">Bazală temporară</string>
     <string name="overview_extendedbolus_button">Bolus extins</string>
@@ -351,6 +355,7 @@
     <string name="smscommunicator_wrongduration">Durată greșită</string>
     <string name="smscommunicator_loopsuspended">Buclă suspendată</string>
     <string name="smscommunicator_loopresumed">Buclă restabilită</string>
+    <string name="bg_trend_label">Tendință 15min</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Înregistrează pornirea aplicației în NS</string>
@@ -516,6 +521,8 @@
     <string name="enablesmbwithhightemptarget_summary">Activați SMB atunci când există o țintă temporară activă (exerciții fizice, peste 100mg/dl sau 5.5mmol/l)</string>
     <string name="overview_insulin_label">Insulină</string>
     <string name="overview_buttons_selection">Butoane</string>
+    <string name="show_calibration_button_summary">Trimite o calibrare la xDrip+ sau deschide fereastra de calibrare BYODA</string>
+    <string name="show_cgm_button_summary">Deschide xDrip+ sau BYODA, prin butoanele înapoi se revine la AAPS</string>
     <string name="carb_increment_button_message">Cantitate de carbohidrați de adăugat când se apasă butonul</string>
     <string name="insulin_increment_button_message">Cantitatea de insulină de adăugat când se apasă butonul</string>
     <string name="error_starting_cgm">Nu s-a putut deschide aplicația CGM. Asigurați-vă că este instalată.</string>
@@ -621,6 +628,7 @@
     <string name="exitwizard">Ignoră asistentul pentru setări</string>
     <string name="setupwizard_loop_description">Apăsați butonul pentru a permite AndroidAPS să sugereze/facă schimbări ale bazalei</string>
     <string name="setupwizard_sensitivity_description">Pluginul Sensibilitate este folosit pentru estimarea sensibilității și calcularea COB. Pentru mai multe info vizitați:</string>
+    <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="nsclientinfotext">NSClient se ocupă de conectarea la Nightscout. Puteți sări peste această parte, dar nu se vor îndeplini anumite obiective dacă faceți acest lucru.</string>
     <string name="diawarning">Reamintire: noile profiluri necesită o durată de acțiune a insulinei (DIA) de cel puțin 5 ore. DIA de 5-6 ore în profilurile noi sunt echivalente cu DIA 3 ore din profilele vechi.</string>
     <string name="setupwizard_aps_description">Alegeți unul dintre algoritmii disponibili. Algoritmii sunt aranjați de la cel mai vechi spre cel mai nou. Algoritmii mai noi sunt, de obicei, mai puternici și mai agresivi. De aceeea, dacă sunteți la început, ar fi indicat să porniți cu AMA și nu cu cel mai nou. Este important să parcurgeți documentația OpenAPS și să îl configurați corect înainte de a folosi aplicația.</string>
@@ -632,6 +640,7 @@
     <string name="needsystemwindowpermission">Aplicația are nevoie de permisiune la fereastra sistemului pentru a afișa notificări</string>
     <string name="needlocationpermission">Aplicația are nevoie sa acceseze locația pentru scanare Bluetooth și identificare WiFi</string>
     <string name="needstoragepermission">Aplicația are nevoie de permisiunea de a accesa unitatea de stocare pentru a scrie fișierele registru și pentru a exporta setările</string>
+    <string name="needconnectpermission">Aplicația are nevoie de permisiune Bluetooth</string>
     <string name="request">Cerință</string>
     <string name="open_navigation">Afișare navigație</string>
     <string name="close_navigation">Închidere navigație</string>
@@ -713,6 +722,9 @@
     <string name="application_expired">Aplicația a expirat</string>
     <string name="new_version_warning">O versiune nouă este disponibilă de cel puțin %1$d zile! Reveniți la LGS după %2$d zile, bucla închisă va fi dezactivată după %3$d zile</string>
     <string name="twohours">2h</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Primește valori de glicemie de la aplicația Dexcom modificată.</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="bolusconstraintappliedwarn">Este aplicatâ limitarea bolusului %1$.2f U la %2$.2f U</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! A fost detectată o absorbție lentă a carbohidraților: %2$d%% din timp. Reverificați calculele. COB poate fi supraestimat, astfel că este posibilă administrarea de mai multă insulină !!!!!</font>]]></string>
@@ -848,6 +860,7 @@
     <string name="cannula">Canula</string>
     <string name="userentry">Înregistrare utilizator</string>
     <string name="common_values">Folosește valorile corespunzătoarea celor mai mari mese pe care le ai de obicei\n</string>
+    <string name="summary_email_for_crash_report">Această identificare va fi atașată rapoartelor de eroare pentru a vă putea contacta în cazuri urgente. Este opționala.</string>
     <string name="email_address">Adresă de e-mail</string>
     <string name="privacy_settings">Setări de confidenţialitate</string>
     <string name="privacy_summary">Puteți furniza o adresă de e-mail opțională dacă doriți să fiți notificat despre erorile aplicației. Acesta nu este un serviciu automat. Veți fi contactat de dezvoltatori în situații periculoase.</string>
@@ -889,4 +902,7 @@
     <string name="data_status">Stare date glicemie</string>
     <string name="recalculated_data_used">Date recalculate utilizate</string>
     <string name="bg_too_close">BG prea aproape:\n%1$s\n%2$s</string>
+    <string name="identification">Identificare (email, FB sau Discord etc)</string>
+    <string name="identification_not_set">Identificarea nu este setată în modul dezvoltator</string>
+    <string name="not_available_full">Nu este disponibil</string>
 </resources>

@@ -105,9 +105,11 @@ class BLECommonService @Inject internal constructor(
         scheduledDisconnection?.cancel(false)
         scheduledDisconnection = null
 
-        if (bluetoothAdapter == null || bluetoothGatt == null) {
+        if (bluetoothAdapter == null || bluetoothGatt == null || uartIndicate == null) {
             aapsLogger.error("disconnect is not possible: (mBluetoothAdapter == null) " + (bluetoothAdapter == null))
             aapsLogger.error("disconnect is not possible: (mBluetoothGatt == null) " + (bluetoothGatt == null))
+            aapsLogger.error("disconnect is not possible: (uartIndicate == null) " + (uartIndicate == null))
+            isConnected = false
             return
         }
         bluetoothGatt?.setCharacteristicNotification(uartIndicate, false)

@@ -100,7 +100,7 @@ class MedtronicHistoryActivity : DaggerActivity() {
         val spinnerAdapter = ArrayAdapter(this, R.layout.spinner_centered, typeListFull)
         historyTypeSpinner.adapter = spinnerAdapter
         historyTypeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (manualChange) return
                 val selected = historyTypeSpinner.selectedItem as TypeList
                 showingType = selected

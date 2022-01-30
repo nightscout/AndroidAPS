@@ -86,7 +86,7 @@ public class WizardActivity extends ViewSelectorActivity {
                     @Override
                     public void onClick(View v) {
 
-                        //check if it can happen that the fagment is never created that hold data?
+                        // check if it can happen that the fragment is never created that hold data?
                         // (you have to swipe past them anyways - but still)
 
                         int percentage = 100;
