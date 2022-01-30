@@ -101,9 +101,9 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
         private set
     private var timeoutDuringHandshakeCounter = 0
     private var intKeyPair: KeyPair? = null
-    val keyPair: KeyPair = intKeyPair ?:generateRSAKey().also { intKeyPair = it }
+    val keyPair: KeyPair = intKeyPair ?: generateRSAKey().also { intKeyPair = it }
     private var intRandomBytes: ByteArray? = null
-    val randomBytes: ByteArray = intRandomBytes ?: ByteArray(28).also {  intRandomBytes = it; SecureRandom().nextBytes(intRandomBytes) }
+    val randomBytes: ByteArray = intRandomBytes ?: ByteArray(28).also { intRandomBytes = it; SecureRandom().nextBytes(intRandomBytes) }
 
     private fun increaseRecoveryDuration() {
         var maxRecoveryDuration = sp.getInt(R.string.key_insight_max_recovery_duration, 20).toLong()
@@ -116,7 +116,6 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
         recoveryDuration = max(recoveryDuration, minRecoveryDuration * 1000)
         recoveryDuration = min(recoveryDuration, maxRecoveryDuration * 1000)
     }
-
 
     val pumpFirmwareVersions: FirmwareVersions?             // pairingDataStorage is a lateinit var
         get() = pairingDataStorage.firmwareVersions
@@ -289,7 +288,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
         when (state) {
             InsightState.NOT_PAIRED,
             InsightState.DISCONNECTED,
-            InsightState.RECOVERING     -> return
+            InsightState.RECOVERING -> return
         }
         aapsLogger.info(LTag.PUMP, "Exception occurred: " + e.javaClass.simpleName)
         if (pairingDataStorage.paired) {
@@ -418,11 +417,14 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
         timeoutTimer?.interrupt()
         timeoutTimer = null
         satlMessage?.let { pairingDataStorage.lastNonceReceived = it.nonce }
-        if (satlMessage is ConnectionResponse) processConnectionResponse() else if (satlMessage is KeyResponse) processKeyResponse(satlMessage) else if (satlMessage is VerifyDisplayResponse) processVerifyDisplayResponse() else if (satlMessage is VerifyConfirmResponse) processVerifyConfirmResponse(
-            satlMessage
-        ) else if (satlMessage is DataMessage) processDataMessage(satlMessage) else if (satlMessage is SynAckResponse) processSynAckResponse() else if (satlMessage is ErrorMessage) processErrorMessage(
-            satlMessage
-        ) else handleException(InvalidSatlCommandException())
+        if (satlMessage is ConnectionResponse) processConnectionResponse()      // Pairing seems to be better with if ... else if than with when (satlMessage) is ... ->
+        else if (satlMessage is KeyResponse) processKeyResponse(satlMessage)
+        else if (satlMessage is VerifyDisplayResponse) processVerifyDisplayResponse()
+        else if (satlMessage is VerifyConfirmResponse) processVerifyConfirmResponse(satlMessage)
+        else if (satlMessage is DataMessage) processDataMessage(satlMessage)
+        else if (satlMessage is SynAckResponse) processSynAckResponse()
+        else if (satlMessage is ErrorMessage) processErrorMessage(satlMessage)
+        else handleException(InvalidSatlCommandException())
     }
 
     private fun processConnectionResponse() {
@@ -430,11 +432,12 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
             handleException(ReceivedPacketInInvalidStateException())
             return
         }
-        keyRequest = KeyRequest()
-        keyRequest!!.setPreMasterKey(keyPair.publicKeyBytes)
-        keyRequest!!.setRandomBytes(randomBytes)
-        setState(InsightState.SATL_KEY_REQUEST)
-        sendSatlMessage(keyRequest!!)
+        keyRequest = KeyRequest().also {
+            it.setPreMasterKey(keyPair.publicKeyBytes)
+            it.setRandomBytes(randomBytes)
+            setState(InsightState.SATL_KEY_REQUEST)
+            sendSatlMessage(it)
+        }
     }
 
     private fun processKeyResponse(keyResponse: KeyResponse) {
@@ -444,10 +447,10 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
         }
         try {
             val derivedKeys = deriveKeys(
-                combine(keyRequest!!.satlContent, keyResponse.satlContent),
-                decryptRSA(keyPair.privateKey, keyResponse.preMasterSecret),
-                randomBytes,
-                keyResponse.randomData
+                verificationSeed = combine(keyRequest!!.satlContent, keyResponse.satlContent),
+                secret = decryptRSA(keyPair.privateKey, keyResponse.preMasterSecret),
+                random = randomBytes,
+                peerRandom = keyResponse.randomData
             )
             pairingDataStorage.commId = keyResponse.commID
             keyRequest = null
@@ -524,19 +527,25 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
 
     private fun processDataMessage(dataMessage: DataMessage) {
         when (state) {
-            InsightState.CONNECTED, InsightState.APP_BIND_MESSAGE, InsightState.APP_CONNECT_MESSAGE, InsightState.APP_ACTIVATE_PARAMETER_SERVICE, InsightState.APP_ACTIVATE_STATUS_SERVICE, InsightState.APP_FIRMWARE_VERSIONS, InsightState.APP_SYSTEM_IDENTIFICATION -> {}
-
-            else                                                                                                                                                                                                                                                       -> handleException(
-                ReceivedPacketInInvalidStateException()
-            )
+            InsightState.CONNECTED,
+            InsightState.APP_BIND_MESSAGE,
+            InsightState.APP_CONNECT_MESSAGE,
+            InsightState.APP_ACTIVATE_PARAMETER_SERVICE,
+            InsightState.APP_ACTIVATE_STATUS_SERVICE,
+            InsightState.APP_FIRMWARE_VERSIONS,
+            InsightState.APP_SYSTEM_IDENTIFICATION -> Unit
+            else                                   -> handleException(ReceivedPacketInInvalidStateException())
         }
         try {
             val appLayerMessage = unwrap(dataMessage)
-            if (appLayerMessage is BindMessage) processBindMessage() else if (appLayerMessage is ConnectMessage) processConnectMessage() else if (appLayerMessage is ActivateServiceMessage) processActivateServiceMessage() else if (appLayerMessage is DisconnectMessage) ; else if (appLayerMessage is ServiceChallengeMessage) processServiceChallengeMessage(
-                appLayerMessage
-            ) else if (appLayerMessage is GetFirmwareVersionsMessage) processFirmwareVersionsMessage(appLayerMessage) else if (appLayerMessage is ReadParameterBlockMessage) processReadParameterBlockMessage(
-                appLayerMessage
-            ) else processGenericAppLayerMessage(appLayerMessage)
+            if (appLayerMessage is BindMessage) processBindMessage()
+            else if (appLayerMessage is ConnectMessage) processConnectMessage()
+            else if (appLayerMessage is ActivateServiceMessage) processActivateServiceMessage()
+            else if (appLayerMessage is DisconnectMessage)
+            else if (appLayerMessage is ServiceChallengeMessage) processServiceChallengeMessage(appLayerMessage)
+            else if (appLayerMessage is GetFirmwareVersionsMessage) processFirmwareVersionsMessage(appLayerMessage)
+            else if (appLayerMessage is ReadParameterBlockMessage) processReadParameterBlockMessage(appLayerMessage)
+            else processGenericAppLayerMessage(appLayerMessage)
         } catch (e: Exception) {
             if (state !== InsightState.CONNECTED) {
                 handleException(e)
@@ -599,12 +608,11 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
             setState(InsightState.APP_FIRMWARE_VERSIONS)
             sendAppLayerMessage(GetFirmwareVersionsMessage())
         } else {
-            if (messageQueue.activeRequest == null) {
-                handleException(TooChattyPumpException())
-            } else {
-                activatedServices.add(messageQueue.activeRequest!!.request.service)
-                sendAppLayerMessage(messageQueue.activeRequest!!.request)
+            messageQueue.activeRequest?.let {
+                activatedServices.add(it.request.service)
+                sendAppLayerMessage(it.request)
             }
+                ?:handleException(TooChattyPumpException())
         }
     }
 
@@ -622,16 +630,18 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
     }
 
     private fun processServiceChallengeMessage(serviceChallengeMessage: ServiceChallengeMessage) {
-        if (messageQueue.activeRequest == null) {
-            handleException(TooChattyPumpException())
-        } else {
-            val service = messageQueue.activeRequest!!.request.service
+        messageQueue.activeRequest?.let { messageRequest ->
+            val service = messageRequest.request.service
             val activateServiceMessage = ActivateServiceMessage()
-            activateServiceMessage.serviceID = service!!.id
-            activateServiceMessage.version = service.version
-            activateServiceMessage.servicePassword = getServicePasswordHash(service.servicePassword!!, serviceChallengeMessage.randomData)
+            if (service != null) {
+                activateServiceMessage.serviceID = service.id
+                activateServiceMessage.version = service.version
+            }
+            service?.run { servicePassword?.let { activateServiceMessage.servicePassword = getServicePasswordHash(it, serviceChallengeMessage.randomData) } }
+
             sendAppLayerMessage(activateServiceMessage)
         }
+            ?:handleException(TooChattyPumpException())
     }
 
     private fun processGenericAppLayerMessage(appLayerMessage: AppLayerMessage) {
@@ -647,7 +657,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
     }
 
     fun sendAppLayerMessage(appLayerMessage: AppLayerMessage?) {
-        sendSatlMessage(wrap(appLayerMessage!!))
+        appLayerMessage?.let { sendSatlMessage(wrap(it)) }
     }
 
     @Synchronized override fun onConnectionFail(e: Exception, duration: Long) {
@@ -666,7 +676,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
         disconnect()
     }
 
-    override fun onBind(intent: Intent): IBinder? {
+    override fun onBind(intent: Intent): IBinder {
         return localBinder
     }
 
