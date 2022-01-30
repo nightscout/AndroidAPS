@@ -5,10 +5,11 @@ import android.content.SharedPreferences
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.FirmwareVersions
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.SystemIdentification
 import org.spongycastle.util.encoders.Hex
+import javax.inject.Inject
 
 class PairingDataStorage(context: Context) {
 
-    private val preferences: SharedPreferences
+    lateinit var preferences: SharedPreferences
     private var _paired: Boolean = false
     private var _macAddress: String? = null
     private var _lastNonceSent: Nonce? = null
