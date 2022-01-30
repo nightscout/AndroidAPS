@@ -104,7 +104,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
     private final List<ExceptionCallback> exceptionCallbacks = new ArrayList<>();
     private final LocalBinder localBinder = new LocalBinder();
     private PairingDataStorage pairingDataStorage;
-    private InsightState state;
+    private InsightState intState;
     private PowerManager.WakeLock wakeLock;
     private DelayedActionThread disconnectTimer;
     private DelayedActionThread recoveryTimer;
@@ -117,27 +117,27 @@ public class InsightConnectionService extends DaggerService implements Connectio
     private OutputStreamWriter outputStreamWriter;
     private KeyRequest keyRequest;
     private final ByteBuf buffer = new ByteBuf(BUFFER_SIZE);
-    private String verificationString;
-    private KeyPair keyPair;
-    private byte[] randomBytes;
+    private String intVerificationString;
+    private KeyPair intKeyPair;
+    private byte[] intRandomBytes;
     private final MessageQueue messageQueue = new MessageQueue();
     private final List<Service> activatedServices = new ArrayList<>();
-    private long lastDataTime;
-    private long lastConnected;
+    private long intLastDataTime;
+    private long intLastConnected;
     private long recoveryDuration = 0;
     private int timeoutDuringHandshakeCounter;
 
     KeyPair getKeyPair() {
-        if (keyPair == null) keyPair = Cryptograph.generateRSAKey();
-        return keyPair;
+        if (intKeyPair == null) intKeyPair = Cryptograph.generateRSAKey();
+        return intKeyPair;
     }
 
     byte[] getRandomBytes() {
-        if (randomBytes == null) {
-            randomBytes = new byte[28];
-            new SecureRandom().nextBytes(randomBytes);
+        if (intRandomBytes == null) {
+            intRandomBytes = new byte[28];
+            new SecureRandom().nextBytes(intRandomBytes);
         }
-        return randomBytes;
+        return intRandomBytes;
     }
 
     public synchronized long getRecoveryDuration() {
@@ -157,11 +157,11 @@ public class InsightConnectionService extends DaggerService implements Connectio
     }
 
     public long getLastConnected() {
-        return lastConnected;
+        return intLastConnected;
     }
 
     public long getLastDataTime() {
-        return lastDataTime;
+        return intLastDataTime;
     }
 
     public FirmwareVersions getPumpFirmwareVersions() {
@@ -177,7 +177,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
     }
 
     public synchronized String getVerificationString() {
-        return verificationString;
+        return intVerificationString;
     }
 
     public synchronized void registerStateCallback(StateCallback stateCallback) {
@@ -253,7 +253,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
     }
 
     public synchronized InsightState getState() {
-        return state;
+        return intState;
     }
 
     @Override
@@ -261,17 +261,17 @@ public class InsightConnectionService extends DaggerService implements Connectio
         super.onCreate();
         bluetoothAdapter = ((BluetoothManager)getApplicationContext().getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
         pairingDataStorage = new PairingDataStorage(this);
-        state = pairingDataStorage.getPaired() ? InsightState.DISCONNECTED : InsightState.NOT_PAIRED;
+        intState = pairingDataStorage.getPaired() ? InsightState.DISCONNECTED : InsightState.NOT_PAIRED;
         wakeLock = ((PowerManager) getSystemService(POWER_SERVICE)).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS:InsightConnectionService");
     }
 
     private void setState(InsightState state) {
-        if (this.state == state) return;
-        if (this.state == InsightState.CONNECTED) lastConnected = System.currentTimeMillis();
+        if (this.intState == state) return;
+        if (this.intState == InsightState.CONNECTED) intLastConnected = System.currentTimeMillis();
         if ((state == InsightState.DISCONNECTED || state == InsightState.NOT_PAIRED) && wakeLock.isHeld())
             wakeLock.release();
         else if (!wakeLock.isHeld()) wakeLock.acquire();
-        this.state = state;
+        this.intState = state;
         for (StateCallback stateCallback : stateCallbacks) stateCallback.onStateChanged(state);
         aapsLogger.info(LTag.PUMP, "Insight state changed: " + state.name());
     }
@@ -283,7 +283,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
             disconnectTimer.interrupt();
             disconnectTimer = null;
         }
-        if (state == InsightState.DISCONNECTED && pairingDataStorage.getPaired()) {
+        if (intState == InsightState.DISCONNECTED && pairingDataStorage.getPaired()) {
             recoveryDuration = 0;
             timeoutDuringHandshakeCounter = 0;
             connect();
@@ -294,12 +294,12 @@ public class InsightConnectionService extends DaggerService implements Connectio
         if (!connectionRequests.contains(lock)) return;
         connectionRequests.remove(lock);
         if (connectionRequests.size() == 0) {
-            if (state == InsightState.RECOVERING) {
+            if (intState == InsightState.RECOVERING) {
                 recoveryTimer.interrupt();
                 recoveryTimer = null;
                 setState(InsightState.DISCONNECTED);
                 cleanup(true);
-            } else if (state != InsightState.DISCONNECTED) {
+            } else if (intState != InsightState.DISCONNECTED) {
                 long disconnectTimeout = sp.getInt(R.string.key_insight_disconnect_delay, 5);
                 disconnectTimeout = Math.min(disconnectTimeout, 15);
                 disconnectTimeout = Math.max(disconnectTimeout, 0);
@@ -344,9 +344,9 @@ public class InsightConnectionService extends DaggerService implements Connectio
             timeoutTimer = null;
         }
         buffer.clear();
-        verificationString = null;
-        keyPair = null;
-        randomBytes = null;
+        intVerificationString = null;
+        intKeyPair = null;
+        intRandomBytes = null;
         activatedServices.clear();
         if (!pairingDataStorage.getPaired()) {
             bluetoothSocket = null;
@@ -356,7 +356,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
     }
 
     private synchronized void handleException(Exception e) {
-        switch (state) {
+        switch (intState) {
             case NOT_PAIRED:
             case DISCONNECTED:
             case RECOVERING:
@@ -364,7 +364,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
         }
         aapsLogger.info(LTag.PUMP, "Exception occurred: " + e.getClass().getSimpleName());
         if (pairingDataStorage.getPaired()) {
-            if (e instanceof TimeoutException && (state == InsightState.SATL_SYN_REQUEST || state == InsightState.APP_CONNECT_MESSAGE)) {
+            if (e instanceof TimeoutException && (intState == InsightState.SATL_SYN_REQUEST || intState == InsightState.APP_CONNECT_MESSAGE)) {
                 if (++timeoutDuringHandshakeCounter == TIMEOUT_DURING_HANDSHAKE_NOTIFICATION_THRESHOLD) {
                     for (StateCallback stateCallback : stateCallbacks) {
                         stateCallback.onTimeoutDuringHandshake();
@@ -402,7 +402,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
     }
 
     private synchronized void disconnect() {
-        if (state == InsightState.CONNECTED) {
+        if (intState == InsightState.CONNECTED) {
             sendAppLayerMessage(new DisconnectMessage());
             sendSatlMessageAndWait(new info.nightscout.androidaps.plugins.pump.insight.satl.DisconnectMessage());
         }
@@ -522,7 +522,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
     }
 
     private void processConnectionResponse() {
-        if (state != InsightState.SATL_CONNECTION_REQUEST) {
+        if (intState != InsightState.SATL_CONNECTION_REQUEST) {
             handleException(new ReceivedPacketInInvalidStateException());
             return;
         }
@@ -534,7 +534,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
     }
 
     private void processKeyResponse(KeyResponse keyResponse) {
-        if (state != InsightState.SATL_KEY_REQUEST) {
+        if (intState != InsightState.SATL_KEY_REQUEST) {
             handleException(new ReceivedPacketInInvalidStateException());
             return;
         }
@@ -545,9 +545,9 @@ public class InsightConnectionService extends DaggerService implements Connectio
                     keyResponse.getRandomData());
             pairingDataStorage.setCommId(keyResponse.getCommID());
             keyRequest = null;
-            randomBytes = null;
-            keyPair = null;
-            verificationString = derivedKeys.getVerificationString();
+            intRandomBytes = null;
+            intKeyPair = null;
+            intVerificationString = derivedKeys.getVerificationString();
             pairingDataStorage.setOutgoingKey(derivedKeys.getOutgoingKey());
             pairingDataStorage.setIncomingKey(derivedKeys.getIncomingKey());
             pairingDataStorage.setLastNonceSent(new Nonce());
@@ -559,7 +559,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
     }
 
     private void processVerifyDisplayResponse() {
-        if (state != InsightState.SATL_VERIFY_DISPLAY_REQUEST) {
+        if (intState != InsightState.SATL_VERIFY_DISPLAY_REQUEST) {
             handleException(new ReceivedPacketInInvalidStateException());
             return;
         }
@@ -567,13 +567,13 @@ public class InsightConnectionService extends DaggerService implements Connectio
     }
 
     private void processVerifyConfirmResponse(VerifyConfirmResponse verifyConfirmResponse) {
-        if (state != InsightState.SATL_VERIFY_CONFIRM_REQUEST) {
+        if (intState != InsightState.SATL_VERIFY_CONFIRM_REQUEST) {
             handleException(new ReceivedPacketInInvalidStateException());
             return;
         }
         switch (verifyConfirmResponse.getPairingStatus()) {
             case CONFIRMED:
-                verificationString = null;
+                intVerificationString = null;
                 setState(InsightState.APP_BIND_MESSAGE);
                 sendAppLayerMessage(new BindMessage());
                 break;
@@ -593,7 +593,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
     }
 
     private void processSynAckResponse() {
-        if (state != InsightState.SATL_SYN_REQUEST) {
+        if (intState != InsightState.SATL_SYN_REQUEST) {
             handleException(new ReceivedPacketInInvalidStateException());
             return;
         }
@@ -646,7 +646,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
     }
 
     private void processDataMessage(DataMessage dataMessage) {
-        switch (state) {
+        switch (intState) {
             case CONNECTED:
             case APP_BIND_MESSAGE:
             case APP_CONNECT_MESSAGE:
@@ -673,7 +673,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
                 processReadParameterBlockMessage((ReadParameterBlockMessage) appLayerMessage);
             else processGenericAppLayerMessage(appLayerMessage);
         } catch (Exception e) {
-            if (state != InsightState.CONNECTED) {
+            if (intState != InsightState.CONNECTED) {
                 handleException(e);
             } else {
                 if (messageQueue.getActiveRequest() == null) {
@@ -687,7 +687,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
     }
 
     private void processBindMessage() {
-        if (state != InsightState.APP_BIND_MESSAGE) {
+        if (intState != InsightState.APP_BIND_MESSAGE) {
             handleException(new ReceivedPacketInInvalidStateException());
             return;
         }
@@ -700,7 +700,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
     }
 
     private void processFirmwareVersionsMessage(GetFirmwareVersionsMessage message) {
-        if (state != InsightState.APP_FIRMWARE_VERSIONS) {
+        if (intState != InsightState.APP_FIRMWARE_VERSIONS) {
             handleException(new ReceivedPacketInInvalidStateException());
             return;
         }
@@ -714,7 +714,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
     }
 
     private void processConnectMessage() {
-        if (state != InsightState.APP_CONNECT_MESSAGE) {
+        if (intState != InsightState.APP_CONNECT_MESSAGE) {
             handleException(new ReceivedPacketInInvalidStateException());
             return;
         }
@@ -722,14 +722,14 @@ public class InsightConnectionService extends DaggerService implements Connectio
     }
 
     private void processActivateServiceMessage() {
-        if (state == InsightState.APP_ACTIVATE_PARAMETER_SERVICE) {
+        if (intState == InsightState.APP_ACTIVATE_PARAMETER_SERVICE) {
             activatedServices.add(info.nightscout.androidaps.plugins.pump.insight.app_layer.Service.PARAMETER);
             setState(InsightState.APP_SYSTEM_IDENTIFICATION);
             ReadParameterBlockMessage message = new ReadParameterBlockMessage();
             message.setParameterBlockId(SystemIdentificationBlock.class);
             message.setService(info.nightscout.androidaps.plugins.pump.insight.app_layer.Service.PARAMETER);
             sendAppLayerMessage(message);
-        } else if (state == InsightState.APP_ACTIVATE_STATUS_SERVICE) {
+        } else if (intState == InsightState.APP_ACTIVATE_STATUS_SERVICE) {
             activatedServices.add(info.nightscout.androidaps.plugins.pump.insight.app_layer.Service.STATUS);
             setState(InsightState.APP_FIRMWARE_VERSIONS);
             sendAppLayerMessage(new GetFirmwareVersionsMessage());
@@ -744,7 +744,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
     }
 
     private void processReadParameterBlockMessage(ReadParameterBlockMessage message) {
-        if (state == InsightState.APP_SYSTEM_IDENTIFICATION) {
+        if (intState == InsightState.APP_SYSTEM_IDENTIFICATION) {
             if (!(message.getParameterBlock() instanceof SystemIdentificationBlock))
                 handleException(new TooChattyPumpException());
             else {
@@ -776,7 +776,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
         else {
             try {
                 messageQueue.completeActiveRequest(appLayerMessage);
-                lastDataTime = System.currentTimeMillis();
+                intLastDataTime = System.currentTimeMillis();
             } catch (Exception e) {
                 messageQueue.completeActiveRequest(e);
             }
