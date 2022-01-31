@@ -14,7 +14,7 @@ class BuildHelperImpl constructor(
     private var engineeringMode = false
 
     init {
-        val engineeringModeSemaphore = File(fileListProvider.ensureExtraDirExists(), "engineering__mode")
+        val engineeringModeSemaphore = File(fileListProvider.ensureExtraDirExists(), "engineering_mode")
 
         engineeringMode = engineeringModeSemaphore.exists() && engineeringModeSemaphore.isFile
         devBranch = BuildConfig.VERSION.contains("-") || BuildConfig.VERSION.matches(Regex(".*[a-zA-Z]+.*"))
