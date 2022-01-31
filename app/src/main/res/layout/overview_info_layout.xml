@@ -53,7 +53,7 @@
         app:layout_constraintStart_toEndOf="@+id/delta_large"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="UseCompoundDrawables"
-        android:screenReaderFocusable="true">
+        android:focusable="true">
 
         <ImageView
             android:id="@+id/arrow"

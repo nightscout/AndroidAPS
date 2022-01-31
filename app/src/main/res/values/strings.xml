@@ -1165,19 +1165,21 @@
     <string name="a11y_high">heigh</string>
     <string name="a11y_inrange">in range</string>
     <string name="a11y_low">low</string>
-    <string name="a11y_arrow_double_down">down fast</string>
-    <string name="a11y_arrow_single_down">down</string>
-    <string name="a11y_arrow_forty_five_down">down trending</string>
-    <string name="a11y_arrow_flat">flat</string>
-    <string name="a11y_arrow_forty_five_up">up trending</string>
-    <string name="a11y_arrow_single_up">up</string>
-    <string name="a11y_arrow_double_up">up fast</string>
+    <string name="a11y_arrow_double_down">falling rapidly</string>
+    <string name="a11y_arrow_single_down">falling</string>
+    <string name="a11y_arrow_forty_five_down">falling slowly</string>
+    <string name="a11y_arrow_flat">stable</string>
+    <string name="a11y_arrow_forty_five_up">rising slowly</string>
+    <string name="a11y_arrow_single_up">rising</string>
+    <string name="a11y_arrow_double_up">rising rapidly</string>
     <string name="a11y_arrow_none">none</string>
     <string name="a11y_arrow_unknown">unknown</string>
     <string name="a11y_graph">graph</string>
-    <string name="a11y_bg_quality">Blood glucose quality</string>
+    <string name="a11y_bg_quality">blood glucose quality</string>
     <string name="a11_bg_quality_recalculated">recalculated</string>
     <string name="a11_bg_quality_doubles">double entries</string>
     <string name="a11y_insulin_label">insulin</string>
+    <string name="a11y_blood_glucose">blood glucose</string>
+    <string name="a11y_bg_outdated">out dated</string>
 
 </resources>
