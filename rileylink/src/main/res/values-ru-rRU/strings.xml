@@ -36,6 +36,7 @@
     <string name="rileylink_last_device_contact">Контакт последнего устройства:</string>
     <string name="rileylink_firmware_version">Версия прошивки:</string>
     <string name="rileylink_firmware_version_value">BLE113: %1$s\nCC110: %2$s</string>
+    <string name="rileylink_firmware_version_value_orange">Прошивка: %1$s\n Устройство: %2$s</string>
     <string name="rileylink_pump_serial_number">Серийный номер помы:</string>
     <string name="rileylink_pump_frequency">Частота помпы:</string>
     <string name="rileylink_pump_frequency_value">%1$.2f МГц</string>
@@ -64,7 +65,7 @@
     <string name="riley_link_common_yes">Да</string>
     <string name="riley_link_common_no">Нет</string>
     <!-- RileyLink - Preferences -->
-    <string name="riley_link_show_battery_level">Использовать уровень заряда батареи, который передает OrangeLink/EmaLink</string>
+    <string name="riley_link_show_battery_level">Показать уровень батареи от OrangeLink/EmaLink/DiaLink</string>
     <string name="riley_link_show_battery_level_summary">НЕ РАБОТАЕТ с оригинальной RileyLink. Может не работать с альтернативными RileyLink.</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d день</item>
@@ -78,4 +79,6 @@
         <item quantity="many">%1$d ч</item>
         <item quantity="other">%1$d ч</item>
     </plurals>
+    <string name="orange_use_scanning_level">Использовать сканирование</string>
+    <string name="orange_use_scanning_level_summary">Используйте сканирование перед сопряжением с OrangeLink, это должно улучшить качество связи (при необходимости можно применять и в других клонах RileyLink)</string>
 </resources>

@@ -2,7 +2,7 @@ package info.nightscout.androidaps.danaRv2.comm
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danar.comm.MessageBase
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.LTag
 import java.util.*
 
 class MsgSetHistoryEntry_v2(

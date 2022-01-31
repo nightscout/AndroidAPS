@@ -15,14 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import info.nightscout.androidaps.plugins.pump.common.R;
 import info.nightscout.androidaps.plugins.pump.common.dialog.RefreshableInterface;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.R;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.CommandValueDefinition;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.CommandValueDefinitionType;
-//import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.CommandValueDefinition;
-//import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem;
-//import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.CommandValueDefinitionType;
-//import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
+
 
 /**
  * Created by andy on 5/19/18.
@@ -140,7 +137,7 @@ public class RileyLinkStatusDevice extends Fragment implements RefreshableInterf
                 viewHolder.itemValue = view.findViewById(R.id.rileylink_device_action);
                 view.setTag(viewHolder);
             } else {
-                viewHolder = (RileyLinkStatusDevice.ViewHolder)view.getTag();
+                viewHolder = (RileyLinkStatusDevice.ViewHolder) view.getTag();
             }
             // Z
             // RLHistoryItem item = historyItemList.get(i);

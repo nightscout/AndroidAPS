@@ -3,6 +3,7 @@ package info.nightscout.androidaps.utils.resources
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.AssetFileDescriptor
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
@@ -10,6 +11,7 @@ import android.util.DisplayMetrics
 import androidx.annotation.*
 import androidx.core.content.ContextCompat
 import info.nightscout.androidaps.core.R
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -23,6 +25,12 @@ class ResourceHelperImplementation @Inject constructor(private val context: Cont
 
     override fun gq(@PluralsRes id: Int, quantity: Int, vararg args: Any?): String =
         context.resources.getQuantityString(id, quantity, *args)
+
+    override fun gsNotLocalised(@StringRes id: Int, vararg args: Any?): String =
+        with(Configuration(context.resources.configuration)) {
+            setLocale(Locale.ENGLISH)
+            context.createConfigurationContext(this).getString(id, args)
+        }
 
     override fun gc(@ColorRes id: Int): Int = ContextCompat.getColor(context, id)
 
@@ -43,7 +51,7 @@ class ResourceHelperImplementation @Inject constructor(private val context: Cont
     override fun decodeResource(id: Int): Bitmap =
         BitmapFactory.decodeResource(context.resources, id)
 
-    override fun getDisplayMetrics():DisplayMetrics =
+    override fun getDisplayMetrics(): DisplayMetrics =
         context.resources.displayMetrics
 
     override fun dpToPx(dp: Int): Int {
@@ -51,5 +59,10 @@ class ResourceHelperImplementation @Inject constructor(private val context: Cont
         return (dp * scale + 0.5f).toInt()
     }
 
-    override fun shortTextMode() : Boolean = !gb(R.bool.isTablet)
+    override fun dpToPx(dp: Float): Int {
+        val scale = context.resources.displayMetrics.density
+        return (dp * scale + 0.5f).toInt()
+    }
+
+    override fun shortTextMode(): Boolean = !gb(R.bool.isTablet)
 }

@@ -1,0 +1,12 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:height="48dp"
+    android:width="48dp"
+    android:viewportHeight="30"
+    android:viewportWidth="30">
+    <path
+        android:pathData="M 15 0 c -8 0 -15 7 -15 15 c 0 8 7 15 15 15 s 15 -7 15 -15 C 30 7 23 0 15 0"
+        android:fillColor="@color/colorTemptButton"/>
+    <path
+        android:pathData="M 24.569 15.709 h -4.772 c -0.392 0 -0.709 -0.317 -0.709 -0.709 V 12.177 H 10.927 l 0 2.823 c 0 0.392 -0.317 0.709 -0.708 0.709 H 5.431 c -0.392 0 -0.708 -0.317 -0.708 -0.709 s 0.317 -0.708 0.708 -0.708 H 9.51 l 0 -2.823 c 0 -0.392 0.317 -0.708 0.708 -0.708 h 9.578 c 0.392 0 0.709 0.317 0.709 0.708 v 2.823 h 4.063 c 0.392 0 0.709 0.317 0.709 0.708 S 24.961 15.709 24.569 15.709 z"
+        android:fillColor="@android:color/white"/>
+</vector>

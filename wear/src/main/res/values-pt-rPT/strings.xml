@@ -20,15 +20,15 @@
     <string name="pref_vibrate_on_bolus">Vibrar no Bólus</string>
     <string name="pref_units_for_actions">Unidades para Acções</string>
     <string name="pref_show_date">Mostrar Data</string>
-    <string name="pref_show_iob">Mostrar IOB</string>
-    <string name="pref_show_cob">Mostrar COB</string>
+    <string name="pref_show_iob">Mostrar IA </string>
+    <string name="pref_show_cob">Mostrar HCA</string>
     <string name="pref_show_delta">Mostrar Delta</string>
     <string name="pref_show_avgdelta">Mostrar MedDelta</string>
     <string name="pref_show_phone_battery">Mostrar Bateria Telefone</string>
     <string name="pref_show_rig_battery">Mostrar Bateria Equipamento</string>
     <string name="pref_show_basal_rate">Mostrar Taxa Basal</string>
     <string name="pref_show_loop_status">Mostrar Estado Loop</string>
-    <string name="pref_show_bg">Mostrar Glic.</string>
+    <string name="pref_show_bg">Mostrar Glicose</string>
     <string name="pref_show_direction_arrow">Mostrar Seta Direcção</string>
     <string name="pref_show_ago">Mostrar Atrás</string>
     <string name="pref_dark" comment="Enables dark visual theme">Escuro</string>
@@ -69,6 +69,7 @@
     <string name="menu_ecarb">eCarb</string>
     <string name="menu_settings">Definições</string>
     <string name="menu_status">Estado</string>
+    <string name="menu_resync">Re-Sincronizar</string>
     <string name="menu_prime_fill">Purgar/Preencher</string>
     <string name="menu_none">Nenhum</string>
     <string name="menu_default">Padrão</string>
@@ -87,14 +88,17 @@
     <string name="action_preset_3">Predefinição 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Valor livre</string>
     <string name="action_confirm">CONFIRMAR</string>
-    <string name="action_timeshift">alteração turno</string>
+    <string name="action_timeshift">Deslocamento temporal</string>
     <string name="action_bolus">bólus</string>
+    <string name="bolus_progress">Progresso do Bólus</string>
+    <string name="press_to_cancel">pressione para cancelar</string>
+    <string name="cancel_bolus">CANCELAR BÓLUS</string>
     <string name="status_pump">Bomba</string>
     <string name="status_loop">Loop</string>
     <string name="status_cpp">CPP</string>
-    <string name="status_tdd">TDD</string>
+    <string name="status_tdd">TDI</string>
     <string name="activity_carb">Hidratos</string>
-    <string name="activity_IOB">IOB</string>
+    <string name="activity_IOB">IA </string>
     <string name="activity_no_status">sem estado</string>
     <string name="color_name_red">vermelho</string>
     <string name="color_name_pink">rosa</string>
@@ -128,4 +132,8 @@
     <string name="digitalstyle_pref_your_color">Sua cor:</string>
     <string name="digitalstyle_pref_your_color_saturation">Sua saturação de cor:</string>
     <string name="digitalstyle_pref_your_color_opacity">Sua opacidade de cor:</string>
+    <string name="bolus_progress_channel_name">Progresso Bólus AAPS</string>
+    <string name="bolus_progress_silent_channel_name">Progresso Bólus AAPS Silencioso</string>
+    <string name="bolus_progress_channel_description">Progresso Bólus e cancelar</string>
+    <string name="bolus_progress_silent_channel_description">Progresso Bólus e cancelar com menos vibrações</string>
 </resources>

@@ -1,92 +1,111 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".plugins.treatments.TreatmentsFragment">
+    android:orientation="vertical"
+    tools:context="info.nightscout.androidaps.activities.TreatmentsActivity">
 
 
-    <LinearLayout
+    <com.google.android.flexbox.FlexboxLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:background="@color/defaultbackground"
+        app:alignContent="stretch"
+        app:alignItems="stretch"
+        app:flexDirection="row"
+        app:flexWrap="wrap"
+        app:justifyContent="center">
 
-        <com.google.android.flexbox.FlexboxLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/treatments"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/defaultbackground"
-            app:alignContent="stretch"
-            app:alignItems="stretch"
-            app:flexDirection="row"
-            app:flexWrap="wrap"
-            app:justifyContent="center">
+            android:paddingStart="1dp"
+            android:paddingEnd="1dp"
+            android:layout_weight="1"
+            android:contentDescription="@string/bolus"
+            android:scaleX="0.8"
+            android:scaleY="0.8"
+            app:srcCompat="@drawable/ic_cp_bolus_carbs" />
 
-            <TextView
-                android:id="@+id/treatments_treatments"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_weight="1"
-                android:gravity="center_vertical|center_horizontal"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:text="@string/bolus" />
+        <ImageView
+            android:id="@+id/extended_boluses"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:contentDescription="@string/extended_bolus"
+            android:paddingStart="1dp"
+            android:paddingEnd="1dp"
+            android:scaleX="0.7"
+            android:scaleY="0.7"
+            app:srcCompat="@drawable/ic_actions_startextbolus" />
 
-            <TextView
-                android:id="@+id/treatments_extendedboluses"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_weight="1"
-                android:gravity="center_vertical|center_horizontal"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:text="@string/extended_bolus" />
+        <ImageView
+            android:id="@+id/temp_basals"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="1dp"
+            android:paddingEnd="1dp"
+            android:layout_weight="1"
+            android:contentDescription="@string/tempbasal_label"
+            android:scaleX="0.7"
+            android:scaleY="0.7"
+            app:srcCompat="@drawable/ic_actions_starttempbasal" />
 
-            <TextView
-                android:id="@+id/treatments_tempbasals"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_weight="1"
-                android:gravity="center_vertical|center_horizontal"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:text="@string/tempbasal_label" />
+        <ImageView
+            android:id="@+id/temp_targets"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="1dp"
+            android:paddingEnd="1dp"
+            android:layout_weight="1"
+            android:contentDescription="@string/careportal_temporarytarget"
+            android:scaleX="0.7"
+            android:scaleY="0.7"
+            app:srcCompat="@drawable/ic_temptarget_high" />
 
-            <TextView
-                android:id="@+id/treatments_temptargets"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_weight="1"
-                android:gravity="center_vertical|center_horizontal"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:text="@string/careportal_temporarytarget" />
+        <ImageView
+            android:id="@+id/profile_switches"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="1dp"
+            android:paddingEnd="1dp"
+            android:layout_weight="1"
+            android:contentDescription="@string/careportal_profileswitch"
+            android:scaleX="0.7"
+            android:scaleY="0.7"
+            app:srcCompat="@drawable/ic_actions_profileswitch" />
 
-            <TextView
-                android:id="@+id/treatments_profileswitches"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_weight="1"
-                android:gravity="center_vertical|center_horizontal"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:text="@string/careportal_profileswitch" />
+        <ImageView
+            android:id="@+id/careportal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="1dp"
+            android:paddingEnd="1dp"
+            android:layout_weight="1"
+            android:contentDescription="@string/careportal"
+            android:scaleX="0.7"
+            android:scaleY="0.7"
+            app:srcCompat="@drawable/ic_cp_note" />
 
-            <TextView
-                android:id="@+id/treatments_careportal"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_weight="1"
-                android:gravity="center_vertical|center_horizontal"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:text="@string/careportal" />
+        <ImageView
+            android:id="@+id/userentry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:contentDescription="@string/userentry"
+            android:paddingStart="1dp"
+            android:paddingEnd="1dp"
+            android:scaleX="0.7"
+            android:scaleY="0.7"
+            app:srcCompat="@drawable/ic_danar_useropt" />
 
-        </com.google.android.flexbox.FlexboxLayout>
+    </com.google.android.flexbox.FlexboxLayout>
 
-        <FrameLayout
-            android:id="@+id/treatments_fragment_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
-    </LinearLayout>
-
-</FrameLayout>
+</LinearLayout>

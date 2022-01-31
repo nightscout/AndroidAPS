@@ -1,34 +1,61 @@
 package info.nightscout.androidaps.interaction.utils;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Base64;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
 import com.google.android.gms.wearable.DataMap;
 
+import java.util.HashSet;
 import java.util.Set;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import info.nightscout.androidaps.Aaps;
+import info.nightscout.androidaps.complications.BaseComplicationProviderService;
+import info.nightscout.shared.logging.AAPSLogger;
+import info.nightscout.shared.logging.LTag;
 
 /**
  * Created by dlvoy on 2019-11-12
  */
+@Singleton
 public class Persistence {
 
-    final SharedPreferences preferences;
-    public static final String COMPLICATION_PROVIDER_PREFERENCES_FILE_KEY =
+    private Context context;
+    private AAPSLogger aapsLogger;
+    private WearUtil wearUtil;
+    private SharedPreferences preferences;
+    private final String COMPLICATION_PROVIDER_PREFERENCES_FILE_KEY =
             "info.nightscout.androidaps.complications.COMPLICATION_PROVIDER_PREFERENCES_FILE_KEY";
 
-    public Persistence() {
-        preferences = Aaps.getAppContext().getSharedPreferences(COMPLICATION_PROVIDER_PREFERENCES_FILE_KEY, 0);
+    @Inject
+    public Persistence(Context context, AAPSLogger aapsLogger, WearUtil wearUtil) {
+        this.context = context;
+        this.aapsLogger = aapsLogger;
+        this.wearUtil = wearUtil;
+        preferences = context.getSharedPreferences(COMPLICATION_PROVIDER_PREFERENCES_FILE_KEY, 0);
+    }
+
+    // For mocking only
+    public byte[] base64decode(String str, int flags) {
+        return Base64.decode(str, flags);
+    }
+
+    // For mocking only
+    public String base64encodeToString(byte[] input, int flags) {
+        return Base64.encodeToString(input, flags);
     }
 
     @Nullable
     public DataMap getDataMap(String key) {
         if (preferences.contains(key)) {
             final String rawB64Data = preferences.getString(key, null);
-            byte[] rawData = Base64.decode(rawB64Data, Base64.DEFAULT);
+            byte[] rawData = base64decode(rawB64Data, Base64.DEFAULT);
             try {
                 return DataMap.fromByteArray(rawData);
             } catch (IllegalArgumentException ex) {
@@ -39,7 +66,7 @@ public class Persistence {
     }
 
     public void putDataMap(String key, DataMap dataMap) {
-        preferences.edit().putString(key, Base64.encodeToString(dataMap.toByteArray(), Base64.DEFAULT)).apply();
+        preferences.edit().putString(key, base64encodeToString(dataMap.toByteArray(), Base64.DEFAULT)).apply();
     }
 
     public String getString(String key, String defaultValue) {
@@ -63,34 +90,62 @@ public class Persistence {
     }
 
     private void markDataUpdated() {
-        preferences.edit().putLong("data_updated_at", WearUtil.timestamp()).apply();
+        preferences.edit().putLong("data_updated_at", wearUtil.timestamp()).apply();
     }
 
     public Set<String> getSetOf(String key) {
-        return WearUtil.explodeSet(getString(key, ""), "|");
+        return explodeSet(getString(key, ""), "|");
     }
 
     public void addToSet(String key, String value) {
-        final Set<String> set = WearUtil.explodeSet(getString(key, ""), "|");
+        final Set<String> set = explodeSet(getString(key, ""), "|");
         set.add(value);
-        putString(key, WearUtil.joinSet(set, "|"));
+        putString(key, joinSet(set, "|"));
     }
 
     public void removeFromSet(String key, String value) {
-        final Set<String> set = WearUtil.explodeSet(getString(key, ""), "|");
+        final Set<String> set = explodeSet(getString(key, ""), "|");
         set.remove(value);
-        putString(key, WearUtil.joinSet(set, "|"));
+        putString(key, joinSet(set, "|"));
     }
 
-    public static void storeDataMap(String key, DataMap dataMap) {
-        Persistence p = new Persistence();
-        p.putDataMap(key, dataMap);
-        p.markDataUpdated();
+    public void storeDataMap(String key, DataMap dataMap) {
+        putDataMap(key, dataMap);
+        markDataUpdated();
     }
 
-    public static Set<String> setOf(String key) {
-        Persistence p = new Persistence();
-        return p.getSetOf(key);
+    public String joinSet(Set<String> set, String separator) {
+        StringBuilder sb = new StringBuilder();
+        int i = 0;
+        for (String item : set) {
+            final String itemToAdd = item.trim();
+            if (itemToAdd.length() > 0) {
+                if (i > 0) {
+                    sb.append(separator);
+                }
+                i++;
+                sb.append(itemToAdd);
+            }
+        }
+        return sb.toString();
     }
 
+    public Set<String> explodeSet(String joined, String separator) {
+        // special RegEx literal \\Q starts sequence we escape, \\E ends is
+        // we use it to escape separator for use in RegEx
+        String[] items = joined.split("\\Q"+separator+"\\E");
+        Set<String> set = new HashSet<>();
+        for (String item : items) {
+            final String itemToAdd = item.trim();
+            if (itemToAdd.length() > 0) {
+                set.add(itemToAdd);
+            }
+        }
+        return set;
+    }
+
+    public void turnOff() {
+        aapsLogger.debug(LTag.WEAR, "TURNING OFF all active complications");
+        putString(BaseComplicationProviderService.KEY_COMPLICATIONS, "");
+    }
 }

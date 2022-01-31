@@ -9,20 +9,19 @@
     <!--    Protection-->
     <!--    Profile-->
     <!--    ProfileFunction-->
+    <string name="startprofile">Iniciar perfil %1$d%% durant %2$d min</string>
     <!--    PumpType-->
     <!--    APSResult-->
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    TDD-->
     <!--    Translator-->
+    <string name="loop">Llaç</string>
     <!--    Command-->
     <!--    PumpEnactResult-->
     <!--    CarbsReq-->
     <!--    TDDStatsActivity-->
     <!--    Ntp-->
-    <!-- PumoCommon - Pump Abstract -->
-    <!-- PumoCommon - Pump Status -->
-    <!-- PumpCommon - History Group -->
     <!-- Maintenance -->
     <string name="metadata_label_created_at">Creat:</string>
     <string name="metadata_label_aaps_version">Versió d\'AAPS</string>
@@ -30,7 +29,6 @@
     <string name="metadata_label_device_name">Exportant nom del pacient del dispositiu</string>
     <string name="metadata_label_device_model">Exportant model del dispositiu</string>
     <string name="metadata_label_encryption">Encriptació d\'arxius</string>
-    <string name="metadata_format_old">Format d\'exportació antic</string>
     <string name="metadata_format_new">Format nou d\'encriptació</string>
     <string name="metadata_format_debug">Nou format de debug (no encriptat)</string>
     <string name="metadata_format_other">Format d\'exportació desconegut</string>
@@ -55,4 +53,19 @@
     <string name="prefdecrypt_issue_wrong_algorithm">Algoritme d\'encriptació no compatible o no especificat!</string>
     <!-- VersionChecker -->
     <!-- Permissions -->
+    <!-- WeekdayPicker -->
+    <!-- User Entry -->
+    <!-- HardLimits -->
+    <string name="profile_high_target">Objectiu alt del perfil</string>
+    <string name="temp_target_low_target">Valor mínim d\'objectiu temporal</string>
+    <string name="temp_target_high_target">Valor màxim d\'objectiu temporal</string>
+    <string name="temp_target_value">Valor objectiu temporal</string>
+    <string name="profile_dia">Valor DIA del perfil</string>
+    <string name="profile_sensitivity_value">Valor sensibilitat del perfil</string>
+    <string name="profile_max_daily_basal_value">Valor basal màxima del perfil</string>
+    <string name="current_basal_value">Valor basal actual</string>
+    <string name="profile_carbs_ratio_value">Valor ràtio de carbohidrats del perfil</string>
+    <string name="valuelimitedto">%1$.2f limitat a %2$.2f</string>
+    <string name="valueoutofrange">»%1$s« supera els límits</string>
+    <!-- Command Queue + readStatus reasons -->
 </resources>

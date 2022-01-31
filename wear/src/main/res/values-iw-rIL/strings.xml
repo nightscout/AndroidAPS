@@ -23,10 +23,10 @@
     <string name="pref_show_iob">הצג אינסולין IOB</string>
     <string name="pref_show_cob">הצג COB</string>
     <string name="pref_show_delta">הצג דלתא</string>
-    <string name="pref_show_avgdelta">הצגת דלתא ממוצעת</string>
+    <string name="pref_show_avgdelta">הצג דלתא ממוצעת</string>
     <string name="pref_show_phone_battery">הצג את סוללת הטלפון</string>
     <string name="pref_show_rig_battery">הצג את סוללת ה-Rig</string>
-    <string name="pref_show_basal_rate">הצג קצב בזאלי</string>
+    <string name="pref_show_basal_rate">הצג מינון בזאלי</string>
     <string name="pref_show_loop_status">הצג סטטוס לולאה</string>
     <string name="pref_show_bg">הצג רמת סוכר</string>
     <string name="pref_show_direction_arrow">הצג חץ כיוון</string>
@@ -122,6 +122,8 @@
     <string name="color_name_white">לבן</string>
     <string name="color_name_black">שחור</string>
     <string name="color_name_multicolor">צבעוני</string>
+    <string name="pref_simplify_ui_charging">פשט את ממשק הטעינה</string>
+    <string name="pref_simplify_ui_charging_sum">מציג את השעה ואת רמת הסוכר בלבד בזמן טעינה</string>
     <string name="pref_vibrate_hourly">רטט אחת לשעה</string>
     <string name="pref_show_weeknumber">הצג מס\' שבוע</string>
     <string name="digitalstyle_pref_your_style">הסגנון שלכם:</string>

@@ -36,6 +36,7 @@
     <string name="rileylink_last_device_contact">Laatste contact met apparaat:</string>
     <string name="rileylink_firmware_version">Firmwareversie:</string>
     <string name="rileylink_firmware_version_value">BLE113: %1$s\nCC110: %2$s</string>
+    <string name="rileylink_firmware_version_value_orange">Fw: %1$s\nHw: %2$s</string>
     <string name="rileylink_pump_serial_number">Serienummer van de pomp:</string>
     <string name="rileylink_pump_frequency">Pompfrequentie:</string>
     <string name="rileylink_pump_frequency_value">%1$.2f MHz</string>
@@ -74,4 +75,6 @@
         <item quantity="one">%1$d uur</item>
         <item quantity="other">%1$d uren</item>
     </plurals>
+    <string name="orange_use_scanning_level">Gebruik scannen</string>
+    <string name="orange_use_scanning_level_summary">Scan voordat u verbinding maakt met OrangeLink, het zou de verbindingen moeten verbeteren (kan ook worden gebruikt met andere RileyLink klonen, indien nodig)</string>
 </resources>

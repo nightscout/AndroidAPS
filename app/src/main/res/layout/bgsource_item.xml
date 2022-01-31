@@ -12,64 +12,57 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:gravity="center"
+        android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:text="16:55"
+            android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/bgsource_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="16:55"
-                android:textStyle="bold" />
+        <TextView
+            android:id="@+id/value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="10dp"
+            android:text="Name"
+            android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/bgsource_value"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="10dp"
-                android:text="Name"
-                android:textStyle="bold" />
+        <ImageView
+            android:id="@+id/direction"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            card_view:srcCompat="@drawable/ic_flat" />
 
-            <ImageView
-                android:id="@+id/bgsource_direction"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                card_view:srcCompat="@drawable/ic_flat" />
+        <TextView
+            android:id="@+id/ns"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="10dp"
+            android:text="NS"
+            android:textAlignment="viewEnd"
+            android:textColor="@color/colorSetTempButton" />
 
-            <TextView
-                android:id="@+id/ns_sign"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="10dp"
-                android:text="NS"
-                android:textAlignment="viewEnd"
-                android:textColor="@color/colorSetTempButton" />
+        <TextView
+            android:id="@+id/invalid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="10dp"
+            android:text="@string/invalid"
+            android:textColor="@android:color/holo_red_light" />
 
-            <TextView
-                android:id="@+id/invalid_sign"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="10dp"
-                android:text="@string/invalid"
-                android:textColor="@android:color/holo_red_light" />
-
-            <TextView
-                android:id="@+id/bgsource_remove"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingEnd="5dp"
-                android:paddingStart="10dp"
-                android:text="@string/overview_quickwizard_item_remove_button"
-                android:textAlignment="viewEnd"
-                android:textColor="@android:color/holo_orange_light" />
-
-        </LinearLayout>
+        <TextView
+            android:id="@+id/remove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="10dp"
+            android:paddingEnd="5dp"
+            android:text="@string/remove_button"
+            android:textAlignment="viewEnd"
+            android:textColor="@android:color/holo_orange_light" />
 
     </LinearLayout>
 

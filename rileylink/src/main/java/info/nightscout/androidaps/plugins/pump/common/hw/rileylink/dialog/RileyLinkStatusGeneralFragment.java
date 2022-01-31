@@ -13,10 +13,10 @@ import java.util.Optional;
 import javax.inject.Inject;
 
 import dagger.android.support.DaggerFragment;
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
-import info.nightscout.androidaps.logging.AAPSLogger;
-import info.nightscout.androidaps.plugins.pump.common.R;
+import info.nightscout.androidaps.interfaces.ActivePlugin;
+import info.nightscout.shared.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.pump.common.dialog.RefreshableInterface;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.R;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkError;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpDevice;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpInfo;
@@ -25,7 +25,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.Riley
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
-import info.nightscout.androidaps.utils.sharedPreferences.SP;
+import info.nightscout.shared.sharedPreferences.SP;
 
 /**
  * Created by andy on 5/19/18.
@@ -35,8 +35,8 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
 
     private static final String PLACEHOLDER = "-";
 
-    @Inject ActivePluginProvider activePlugin;
-    @Inject ResourceHelper resourceHelper;
+    @Inject ActivePlugin activePlugin;
+    @Inject ResourceHelper rh;
     @Inject AAPSLogger aapsLogger;
     @Inject RileyLinkServiceData rileyLinkServiceData;
     @Inject DateUtil dateUtil;
@@ -89,26 +89,31 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
     @Override public void refreshData() {
         RileyLinkTargetDevice targetDevice = rileyLinkServiceData.targetDevice;
 
-        this.connectionStatus.setText(resourceHelper.gs(rileyLinkServiceData.rileyLinkServiceState.getResourceId()));
+        this.connectionStatus.setText(rh.gs(rileyLinkServiceData.rileyLinkServiceState.getResourceId()));
 
-        // BS FIXME rileyLinkServiceData is injected so I suppose it cannot be null?
-        if (rileyLinkServiceData != null) {
-            this.configuredRileyLinkAddress.setText(Optional.ofNullable(rileyLinkServiceData.rileyLinkAddress).orElse(PLACEHOLDER));
-            this.configuredRileyLinkName.setText(Optional.ofNullable(rileyLinkServiceData.rileyLinkName).orElse(PLACEHOLDER));
+        this.configuredRileyLinkAddress.setText(Optional.ofNullable(rileyLinkServiceData.rileyLinkAddress).orElse(PLACEHOLDER));
+        this.configuredRileyLinkName.setText(Optional.ofNullable(rileyLinkServiceData.rileyLinkName).orElse(PLACEHOLDER));
 
-            if (sp.getBoolean(resourceHelper.gs(R.string.key_riley_link_show_battery_level), false)) {
-                batteryLevelRow.setVisibility(View.VISIBLE);
-                Integer batteryLevel = rileyLinkServiceData.batteryLevel;
-                this.batteryLevel.setText(batteryLevel == null ? PLACEHOLDER : resourceHelper.gs(R.string.rileylink_battery_level_value, batteryLevel));
-            } else {
-                batteryLevelRow.setVisibility(View.GONE);
-            }
+        if (sp.getBoolean(rh.gs(R.string.key_riley_link_show_battery_level), false)) {
+            batteryLevelRow.setVisibility(View.VISIBLE);
+            Integer batteryLevel = rileyLinkServiceData.batteryLevel;
+            this.batteryLevel.setText(batteryLevel == null ? PLACEHOLDER : rh.gs(R.string.rileylink_battery_level_value, batteryLevel));
+        } else {
+            batteryLevelRow.setVisibility(View.GONE);
+        }
 
-            RileyLinkError rileyLinkError = rileyLinkServiceData.rileyLinkError;
-            this.connectionError.setText(rileyLinkError == null ? PLACEHOLDER : resourceHelper.gs(rileyLinkError.getResourceId(targetDevice)));
+        RileyLinkError rileyLinkError = rileyLinkServiceData.rileyLinkError;
+        this.connectionError.setText(rileyLinkError == null ? PLACEHOLDER : rh.gs(rileyLinkError.getResourceId(targetDevice)));
 
-            this.firmwareVersion.setText(resourceHelper.gs(R.string.rileylink_firmware_version_value,
-                    Optional.ofNullable(rileyLinkServiceData.versionBLE113).orElse(PLACEHOLDER), Optional.ofNullable(rileyLinkServiceData.versionCC110).orElse(PLACEHOLDER)));
+
+        if (rileyLinkServiceData.isOrange && rileyLinkServiceData.versionOrangeFirmware!=null) {
+            this.firmwareVersion.setText(rh.gs(R.string.rileylink_firmware_version_value_orange,
+                            rileyLinkServiceData.versionOrangeFirmware,
+                            Optional.ofNullable(rileyLinkServiceData.versionOrangeHardware).orElse(PLACEHOLDER)));
+        } else {
+            this.firmwareVersion.setText(rh.gs(R.string.rileylink_firmware_version_value,
+                    Optional.ofNullable(rileyLinkServiceData.versionBLE113).orElse(PLACEHOLDER),
+                    Optional.ofNullable(rileyLinkServiceData.versionCC110).orElse(PLACEHOLDER)));
         }
 
         RileyLinkPumpDevice rileyLinkPumpDevice = (RileyLinkPumpDevice) activePlugin.getActivePump();
@@ -116,7 +121,7 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
         this.deviceType.setText(targetDevice.getResourceId());
         if (targetDevice == RileyLinkTargetDevice.MedtronicPump) {
             this.connectedDeviceDetails.setVisibility(View.VISIBLE);
-            this.configuredDeviceModel.setText(activePlugin.getActivePump().getPumpDescription().pumpType.getDescription());
+            this.configuredDeviceModel.setText(activePlugin.getActivePump().getPumpDescription().getPumpType().getDescription());
             this.connectedDeviceModel.setText(rileyLinkPumpInfo.getConnectedDeviceModel());
         } else {
             this.connectedDeviceDetails.setVisibility(View.GONE);
@@ -125,12 +130,12 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
         this.pumpFrequency.setText(rileyLinkPumpInfo.getPumpFrequency());
 
         if (rileyLinkServiceData.lastGoodFrequency != null) {
-            this.lastUsedFrequency.setText(resourceHelper.gs(R.string.rileylink_pump_frequency_value, rileyLinkServiceData.lastGoodFrequency));
+            this.lastUsedFrequency.setText(rh.gs(R.string.rileylink_pump_frequency_value, rileyLinkServiceData.lastGoodFrequency));
         }
 
         long lastConnectionTimeMillis = rileyLinkPumpDevice.getLastConnectionTimeMillis();
         if (lastConnectionTimeMillis == 0) {
-            this.lastDeviceContact.setText(resourceHelper.gs(R.string.riley_link_ble_config_connected_never));
+            this.lastDeviceContact.setText(rh.gs(R.string.riley_link_ble_config_connected_never));
         } else {
             this.lastDeviceContact.setText(StringUtil.toDateTimeString(dateUtil, new LocalDateTime(lastConnectionTimeMillis)));
         }

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="alert_r1_code">Påmindelse R1</string>
+    <string name="alert_r2_code">Påmindelse R2</string>
+    <string name="alert_r3_code">Påmindelse R3</string>
+    <string name="alert_r4_code">Påmindelse R4</string>
+    <string name="alert_r7_code">Påmindelse R7</string>
+    <string name="alert_w31_code">Advarsel W31</string>
+    <string name="alert_w32_code">Advarsel W32</string>
+    <string name="alert_w33_code">Advarsel W33</string>
+    <string name="alert_w34_code">Advarsel W34</string>
+    <string name="alert_w36_code">Advarsel W36</string>
+    <string name="alert_w38_code">Advarsel W38</string>
+    <string name="alert_w39_code">Advarsel W39</string>
+    <string name="alert_m20_code">Vedligeholdelse M20</string>
+    <string name="alert_m21_code">Vedligeholdelse M21</string>
+    <string name="alert_m22_code">Vedligeholdelse M22</string>
+    <string name="alert_m23_code">Vedligeholdelse M23</string>
+    <string name="alert_m24_code">Vedligeholdelse M24</string>
+    <string name="alert_m25_code">Vedligeholdelse M25</string>
+    <string name="alert_m26_code">Vedligeholdelse M26</string>
+    <string name="alert_m27_code">Vedligeholdelse M27</string>
+    <string name="alert_m28_code">Vedligeholdelse M28</string>
+    <string name="alert_m29_code">Vedligeholdelse M29</string>
+    <string name="alert_m30_code">Vedligeholdelse M30</string>
+    <string name="alert_e6_code">Fejl E6</string>
+    <string name="alert_e10_code">Fejl E10</string>
+    <string name="alert_e13_code">Fejl E13</string>
+</resources>

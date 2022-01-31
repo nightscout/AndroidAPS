@@ -6,14 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.databinding.DialogCalibrationBinding
+import info.nightscout.androidaps.interfaces.GlucoseUnit
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
+import info.nightscout.androidaps.logging.UserEntryLogger
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.utils.HtmlHelper
-import info.nightscout.androidaps.utils.XdripCalibrations
+import info.nightscout.androidaps.utils.XDripBroadcast
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import java.text.DecimalFormat
@@ -23,9 +27,11 @@ import javax.inject.Inject
 class CalibrationDialog : DialogFragmentWithDate() {
 
     @Inject lateinit var injector: HasAndroidInjector
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var xdripCalibrations: XdripCalibrations
+    @Inject lateinit var xDripBroadcast: XDripBroadcast
+    @Inject lateinit var uel: UserEntryLogger
+    @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
 
     private var _binding: DialogCalibrationBinding? = null
 
@@ -49,15 +55,15 @@ class CalibrationDialog : DialogFragmentWithDate() {
         super.onViewCreated(view, savedInstanceState)
 
         val units = profileFunction.getUnits()
-        val bg = Profile.fromMgdlToUnits(GlucoseStatus(injector).glucoseStatusData?.glucose
+        val bg = Profile.fromMgdlToUnits(glucoseStatusProvider.glucoseStatusData?.glucose
             ?: 0.0, units)
-        if (units == Constants.MMOL)
+        if (units == GlucoseUnit.MMOL)
             binding.bg.setParams(savedInstanceState?.getDouble("bg")
                 ?: bg, 2.0, 30.0, 0.1, DecimalFormat("0.0"), false, binding.okcancel.ok)
         else
             binding.bg.setParams(savedInstanceState?.getDouble("bg")
                 ?: bg, 36.0, 500.0, 1.0, DecimalFormat("0"), false, binding.okcancel.ok)
-        binding.units.text = if (units == Constants.MMOL) resourceHelper.gs(R.string.mmol) else resourceHelper.gs(R.string.mgdl)
+        binding.units.text = if (units == GlucoseUnit.MMOL) rh.gs(R.string.mmol) else rh.gs(R.string.mgdl)
     }
 
     override fun onDestroyView() {
@@ -68,20 +74,20 @@ class CalibrationDialog : DialogFragmentWithDate() {
     override fun submit(): Boolean {
         if (_binding == null) return false
         val units = profileFunction.getUnits()
-        val unitLabel = if (units == Constants.MMOL) resourceHelper.gs(R.string.mmol) else resourceHelper.gs(R.string.mgdl)
+        val unitLabel = if (units == GlucoseUnit.MMOL) rh.gs(R.string.mmol) else rh.gs(R.string.mgdl)
         val actions: LinkedList<String?> = LinkedList()
-        val bg = binding.bg.value ?: return false
-        actions.add(resourceHelper.gs(R.string.treatments_wizard_bg_label) + ": " + Profile.toCurrentUnitsString(profileFunction, bg) + " " + unitLabel)
+        val bg = binding.bg.value
+        actions.add(rh.gs(R.string.treatments_wizard_bg_label) + ": " + Profile.toCurrentUnitsString(profileFunction, bg) + " " + unitLabel)
         if (bg > 0) {
             activity?.let { activity ->
-                OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.overview_calibration), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
-                    aapsLogger.debug("USER ENTRY: CALIBRATION $bg")
-                    xdripCalibrations.sendIntent(bg)
+                OKDialog.showConfirmation(activity, rh.gs(R.string.overview_calibration), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
+                    uel.log(Action.CALIBRATION, Sources.CalibrationDialog, ValueWithUnit.fromGlucoseUnit(bg, units.asText))
+                    xDripBroadcast.sendCalibration(bg)
                 })
             }
         } else
             activity?.let { activity ->
-                OKDialog.show(activity, resourceHelper.gs(R.string.overview_calibration), resourceHelper.gs(R.string.no_action_selected))
+                OKDialog.show(activity, rh.gs(R.string.overview_calibration), rh.gs(R.string.no_action_selected))
             }
         return true
     }

@@ -5,9 +5,9 @@
     <string name="danars_pairingok">Pairing OK</string>
     <string name="danars_pairingtimedout">Zeitüberschreitung beim Pairing</string>
     <string name="danars_waitingforpairing">Auf Verbindung warten</string>
-    <string name="danarspump">DanaRS</string>
+    <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
-    <string name="description_pump_dana_rs">Pumpen-Integration für Dana Diabecare RS Pumpen</string>
+    <string name="description_pump_dana_rs">Pumpen-Integration für Dana Diabecare RS und Dana-i Pumpen</string>
     <string name="maxbolusviolation">Max. Bolus überschritten</string>
     <string name="commanderror">Fehler bei Befehl</string>
     <string name="speederror">Geschwindigkeits-Fehler</string>
@@ -94,8 +94,6 @@
     <string name="profile_set_failed">Setzen des Basal-Profils fehlgeschlagen</string>
     <string name="danar_bluetooth_status">Bluetooth-Status</string>
     <string name="danar_iob_label">Pumpen-IOB</string>
-    <string name="basal_step">Basal-Schritt</string>
-    <string name="bolus_step">Bolus-Schritt</string>
     <string name="virtualpump_firmware_label">Firmware</string>
     <string name="danar_pump_settings">Dana Pumpen-Einstellungen</string>
     <string name="timeformat12h">12h</string>
@@ -106,7 +104,6 @@
     <string name="danars_password_title">Pumpen-Passwort (nur v1)</string>
     <string name="danar_password_title">Pumpen-Passwort</string>
     <string name="danar_useextended_title">Benutze verzögerten Bolus für hohe TBR &gt;200%%</string>
-    <string name="danar_visualizeextendedaspercentage_title">Zeige verzögerten Bolus als %% an.</string>
     <string name="bolusspeed">Bolus-Geschwindigkeit</string>
     <string name="selectedpump">Ausgewählte Pumpe</string>
     <string name="rs_loginsulinchange_title">Reservoirwechsel aufzeichnen</string>
@@ -118,4 +115,5 @@
     <string name="press_ok_on_the_pump">Drücke OK auf der Pumpe\nund gib die beiden angezeigten Ziffernfolgen ein.\nHalte das Pumpendisplay aktiv indem Du den Minus-Button gedrückt hälst, bis Du den Code eingegeben hast.</string>
     <string name="num1pin">1: (12 Zeichen)</string>
     <string name="num2pin">2: (8 Zeichen)</string>
+    <string name="basal_bolus_step">Basal/Bolus Schrittgröße</string>
 </resources>

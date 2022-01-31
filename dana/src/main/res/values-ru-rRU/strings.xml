@@ -5,9 +5,9 @@
     <string name="danars_pairingok">Соединение OK</string>
     <string name="danars_pairingtimedout">Истекло время ожидания соединения</string>
     <string name="danars_waitingforpairing">Ожидание соединения на помпе</string>
-    <string name="danarspump">DanaRS</string>
+    <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
-    <string name="description_pump_dana_rs">Интеграция с помпой DANA Diabetcare RS</string>
+    <string name="description_pump_dana_rs">Интеграция с помпами DANA Diabecare RS и Dana-i</string>
     <string name="maxbolusviolation">Нарушение макс болюса</string>
     <string name="commanderror">Ошибка в команде</string>
     <string name="speederror">Ошибка в скорости</string>
@@ -94,8 +94,6 @@
     <string name="profile_set_failed">настройка базального профиля не состоялась</string>
     <string name="danar_bluetooth_status">статус блутус</string>
     <string name="danar_iob_label">активный инсулин на помпе</string>
-    <string name="basal_step">шаг базала</string>
-    <string name="bolus_step">шаг болюса</string>
     <string name="virtualpump_firmware_label">прошивка</string>
     <string name="danar_pump_settings">Настройки помпы Dana</string>
     <string name="timeformat12h">12 ч</string>
@@ -106,7 +104,6 @@
     <string name="danars_password_title">Пароль для помпы (только v1)</string>
     <string name="danar_password_title">пароль помпы</string>
     <string name="danar_useextended_title">Для величин &gt;200%% пользуйтесь пролонгированным болюсом</string>
-    <string name="danar_visualizeextendedaspercentage_title">Показать пролонгированный болюс в %%</string>
     <string name="bolusspeed">Скорость подачи болюса</string>
     <string name="selectedpump">Выбранная помпа</string>
     <string name="rs_loginsulinchange_title">Отслеживать замену резервуара</string>
@@ -118,4 +115,5 @@
     <string name="press_ok_on_the_pump">Нажмите OK на помпе\nи введите 2 отображаемых номера\nДержите экран помпы включенным нажимая кнопку минус, пока не закончите ввод кода.</string>
     <string name="num1pin">1: (12 цифр)</string>
     <string name="num2pin">2: (8 цифр)</string>
+    <string name="basal_bolus_step">Шаг Базала/болюса</string>
 </resources>

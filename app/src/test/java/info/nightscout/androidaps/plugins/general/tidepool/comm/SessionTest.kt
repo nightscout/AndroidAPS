@@ -5,10 +5,7 @@ import info.nightscout.androidaps.plugins.general.tidepool.messages.DatasetReply
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.powermock.modules.junit4.PowerMockRunner
 
-@RunWith(PowerMockRunner::class)
 class SessionTest {
     @Test
     fun populateBody() {

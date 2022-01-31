@@ -9,14 +9,14 @@ import android.net.wifi.SupplicantState
 import android.net.wifi.WifiManager
 import dagger.android.DaggerBroadcastReceiver
 import info.nightscout.androidaps.events.EventNetworkChange
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.StringUtils
 import javax.inject.Inject
 
 class NetworkChangeReceiver : DaggerBroadcastReceiver() {
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var receiverStatusStore: ReceiverStatusStore
 
@@ -25,7 +25,7 @@ class NetworkChangeReceiver : DaggerBroadcastReceiver() {
         rxBus.send(grabNetworkStatus(context, aapsLogger))
     }
 
-    fun grabNetworkStatus(context: Context, aapsLogger: AAPSLogger): EventNetworkChange {
+    private fun grabNetworkStatus(context: Context, aapsLogger: AAPSLogger): EventNetworkChange {
         val event = EventNetworkChange()
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networks: Array<Network> = cm.allNetworks

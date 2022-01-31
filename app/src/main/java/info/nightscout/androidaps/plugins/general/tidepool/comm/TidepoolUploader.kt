@@ -4,12 +4,11 @@ import android.content.Context
 import android.os.PowerManager
 import android.os.SystemClock
 import info.nightscout.androidaps.BuildConfig
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolStatus
 import info.nightscout.androidaps.plugins.general.tidepool.messages.AuthReplyMessage
 import info.nightscout.androidaps.plugins.general.tidepool.messages.AuthRequestMessage
@@ -17,10 +16,10 @@ import info.nightscout.androidaps.plugins.general.tidepool.messages.DatasetReply
 import info.nightscout.androidaps.plugins.general.tidepool.messages.OpenDatasetRequestMessage
 import info.nightscout.androidaps.plugins.general.tidepool.messages.UploadReplyMessage
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -33,18 +32,19 @@ import javax.inject.Singleton
 @Singleton
 class TidepoolUploader @Inject constructor(
     private val aapsLogger: AAPSLogger,
-    private val rxBus: RxBusWrapper,
-    private val mainApp: MainApp,
-    private val resourceHelper: ResourceHelper,
+    private val rxBus: RxBus,
+    private val ctx: Context,
+    private val rh: ResourceHelper,
     private val sp: SP,
     private val uploadChunk: UploadChunk,
-    private val activePlugin: ActivePluginProvider,
+    private val activePlugin: ActivePlugin,
     private val dateUtil: DateUtil
 ) {
 
     private var wl: PowerManager.WakeLock? = null
 
     companion object {
+
         private const val INTEGRATION_BASE_URL = "https://int-api.tidepool.org"
         private const val PRODUCTION_BASE_URL = "https://api.tidepool.org"
         internal const val VERSION = "0.0.1"
@@ -130,13 +130,13 @@ class TidepoolUploader @Inject constructor(
             val call = session.service?.getLogin(it)
 
             call?.enqueue(TidepoolCallback<AuthReplyMessage>(aapsLogger, rxBus, session, "Login", {
-                OKDialog.show(rootContext, resourceHelper.gs(R.string.tidepool), "Successfully logged into Tidepool.")
+                OKDialog.show(rootContext, rh.gs(R.string.tidepool), "Successfully logged into Tidepool.")
             }, {
-                OKDialog.show(rootContext, resourceHelper.gs(R.string.tidepool), "Failed to log into Tidepool.\nCheck that your user name and password are correct.")
+                OKDialog.show(rootContext, rh.gs(R.string.tidepool), "Failed to log into Tidepool.\nCheck that your user name and password are correct.")
             }))
 
         }
-            ?: OKDialog.show(rootContext, resourceHelper.gs(R.string.tidepool), "Cannot do login as user credentials have not been set correctly")
+            ?: OKDialog.show(rootContext, rh.gs(R.string.tidepool), "Cannot do login as user credentials have not been set correctly")
 
     }
 
@@ -151,7 +151,7 @@ class TidepoolUploader @Inject constructor(
                 if (session.datasetReply == null) {
                     rxBus.send(EventTidepoolStatus(("Creating new dataset")))
                     val call = session.service.openDataSet(session.token!!, session.authReply!!.userid!!,
-                        OpenDatasetRequestMessage(activePlugin.activePump.serialNumber()).getBody())
+                        OpenDatasetRequestMessage(activePlugin.activePump.serialNumber(), dateUtil).getBody())
                     call.enqueue(TidepoolCallback<DatasetReplyMessage>(aapsLogger, rxBus, session, "Open New Dataset", {
                         connectionStatus = ConnectionStatus.CONNECTED
                         rxBus.send(EventTidepoolStatus(("New dataset OK")))
@@ -232,7 +232,7 @@ class TidepoolUploader @Inject constructor(
     }
 
     private fun uploadNext() {
-        if (uploadChunk.getLastEnd() < DateUtil.now() - T.mins(1).msecs()) {
+        if (uploadChunk.getLastEnd() < dateUtil.now() - T.mins(1).msecs()) {
             SystemClock.sleep(3000)
             aapsLogger.debug(LTag.TIDEPOOL, "Restarting doUpload. Last: " + dateUtil.dateAndTimeString(uploadChunk.getLastEnd()))
             doUpload()
@@ -285,7 +285,7 @@ class TidepoolUploader @Inject constructor(
     @Synchronized
     private fun extendWakeLock(ms: Long) {
         if (wl == null) {
-            val pm = mainApp.getSystemService(Context.POWER_SERVICE) as PowerManager
+            val pm = ctx.getSystemService(Context.POWER_SERVICE) as PowerManager
             wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS:TidepoolUploader")
             wl?.acquire(ms)
         } else {

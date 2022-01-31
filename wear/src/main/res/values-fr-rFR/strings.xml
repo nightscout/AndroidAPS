@@ -63,7 +63,7 @@
     <string name="pref_version">Version:</string>
     <string name="pref_moreWatchfaceSettings">Plus de paramètres</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Veuillez regardez dans la configuration du cadran.</string>
-    <string name="menu_tempt">Cible Temp.</string>
+    <string name="menu_tempt">Cible Temp</string>
     <string name="menu_wizard">Assistant</string>
     <string name="menu_bolus">Bolus</string>
     <string name="menu_ecarb">eGlucides</string>
@@ -122,6 +122,8 @@
     <string name="color_name_white">white</string>
     <string name="color_name_black">noir</string>
     <string name="color_name_multicolor">multicolor</string>
+    <string name="pref_simplify_ui">Interface simplifiée</string>
+    <string name="pref_simplify_ui_sum">Afficher seulement l\'heure et la glycémie</string>
     <string name="pref_vibrate_hourly">Vibrer à l\'heure</string>
     <string name="pref_show_weeknumber">Afficher numéro semaine</string>
     <string name="digitalstyle_pref_your_style">Style :</string>
@@ -132,4 +134,12 @@
     <string name="digitalstyle_pref_your_color">Couleur :</string>
     <string name="digitalstyle_pref_your_color_saturation">Saturation :</string>
     <string name="digitalstyle_pref_your_color_opacity">Opacité :</string>
+    <string name="bolus_progress_channel_name">Progression Bolus AAPS</string>
+    <string name="bolus_progress_silent_channel_name">Progression Bolus silencieuse</string>
+    <string name="bolus_progress_channel_description">Progression et annulation Bolus</string>
+    <string name="bolus_progress_silent_channel_description">Progression et annulation Bolus avec moins de vibrations</string>
+    <string name="simple_ui_off">Désactivé</string>
+    <string name="simple_ui_charging">Pendant la charge</string>
+    <string name="simple_ui_always_on">Toujours en mode activé</string>
+    <string name="simple_ui_always_on_charging">Toujours allumé et pendant la charge</string>
 </resources>

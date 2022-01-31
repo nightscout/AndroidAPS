@@ -4,6 +4,7 @@
     xmlns:validate="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
+        android:key="@string/key_localalert_settings"
         android:title="@string/localalertsettings_title"
         app:initialExpandedChildrenCount="0">
 
@@ -27,11 +28,6 @@
             android:key="@string/key_enable_pump_unreachable_alert"
             android:title="@string/enable_pump_unreachable_alert" />
 
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="@string/key_enable_carbs_required_alert_local"
-            android:title="@string/enable_carbs_req_alert" />
-
         <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
             android:defaultValue="30"
             android:dependency="@string/key_enable_pump_unreachable_alert"
@@ -43,7 +39,12 @@
             validate:testType="numericRange" />
 
         <SwitchPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
+            android:key="@string/key_enable_carbs_required_alert_local"
+            android:title="@string/enable_carbs_req_alert" />
+
+        <SwitchPreference
+            android:defaultValue="true"
             android:key="@string/key_raise_notifications_as_android_notifications"
             android:title="@string/raise_notifications_as_android_notifications" />
 

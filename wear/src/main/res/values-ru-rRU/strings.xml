@@ -122,6 +122,8 @@
     <string name="color_name_white">белый</string>
     <string name="color_name_black">black</string>
     <string name="color_name_multicolor">полихром</string>
+    <string name="pref_simplify_ui_charging">Упростить интерфейс зарядки</string>
+    <string name="pref_simplify_ui_charging_sum">При зарядке показывать только время и ГК</string>
     <string name="pref_vibrate_hourly">Почасовая вибрация</string>
     <string name="pref_show_weeknumber">Показывать номер недели</string>
     <string name="digitalstyle_pref_your_style">Ваш стиль:</string>
@@ -132,4 +134,8 @@
     <string name="digitalstyle_pref_your_color">Ваш цвет:</string>
     <string name="digitalstyle_pref_your_color_saturation">Ваша цветовая насыщенность:</string>
     <string name="digitalstyle_pref_your_color_opacity">Непрозрачность вашего цвета:</string>
+    <string name="bolus_progress_channel_name">Подается болюс</string>
+    <string name="bolus_progress_silent_channel_name">Беззвучная подача болюса</string>
+    <string name="bolus_progress_channel_description">Подача и отмена болюса</string>
+    <string name="bolus_progress_silent_channel_description">Подача и отмена болюса с меньшими вибрациями</string>
 </resources>
