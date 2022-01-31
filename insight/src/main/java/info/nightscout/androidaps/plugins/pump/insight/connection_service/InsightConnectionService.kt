@@ -2,54 +2,74 @@ package info.nightscout.androidaps.plugins.pump.insight.connection_service
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothSocket
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import android.os.PowerManager
+import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.Cryptograph.generateRSAKey
+import info.nightscout.androidaps.plugins.pump.insight.utils.DelayedActionThread.Companion.runDelayed
+import info.nightscout.androidaps.plugins.pump.insight.satl.SatlMessage.Companion.hasCompletePacket
+import info.nightscout.androidaps.plugins.pump.insight.satl.SatlMessage.Companion.deserialize
+import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.Cryptograph.deriveKeys
+import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.Cryptograph.combine
+import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.Cryptograph.decryptRSA
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage.Companion.unwrap
+import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.Cryptograph.getServicePasswordHash
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage.Companion.wrap
 import dagger.android.DaggerService
 import info.nightscout.androidaps.insight.R
+import javax.inject.Inject
 import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.InsightState
+import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlPairingRejectedException
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage.Companion.unwrap
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage.Companion.wrap
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.ReadParameterBlockMessage
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.Service
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.configuration.CloseConfigurationWriteSessionMessage
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.configuration.OpenConfigurationWriteSessionMessage
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.configuration.WriteConfigurationBlockMessage
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.configuration.OpenConfigurationWriteSessionMessage
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.configuration.CloseConfigurationWriteSessionMessage
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.connection.ActivateServiceMessage
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.connection.ServiceChallengeMessage
+import info.nightscout.shared.logging.LTag
+import org.spongycastle.crypto.InvalidCipherTextException
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.connection.BindMessage
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.connection.ConnectMessage
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.connection.DisconnectMessage
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.connection.ServiceChallengeMessage
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.SystemIdentificationBlock
+import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlInvalidNonceErrorException
+import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlInvalidCRCErrorException
+import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlInvalidMacErrorException
+import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlDecryptVerifyFailedErrorException
+import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlInvalidPayloadLengthErrorException
+import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlInvalidMessageTypeErrorException
+import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlIncompatibleVersionErrorException
+import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlCompatibleStateErrorException
+import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlInvalidCommIdErrorException
+import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlInvalidPacketErrorException
+import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlWrongStateException
+import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlUndefinedErrorException
+import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlNoneErrorException
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.status.GetFirmwareVersionsMessage
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.ReadParameterBlockMessage
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.Service
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.connection.DisconnectMessage
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.SystemIdentificationBlock
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.FirmwareVersions
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.InsightState
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.SystemIdentification
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.*
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.*
 import info.nightscout.androidaps.plugins.pump.insight.satl.*
 import info.nightscout.androidaps.plugins.pump.insight.utils.*
-import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.Cryptograph
 import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.KeyPair
-import info.nightscout.shared.sharedPreferences.SP
-import org.spongycastle.crypto.InvalidCipherTextException
 import java.io.IOException
+import java.lang.Exception
 import java.security.SecureRandom
-import java.util.*
-import javax.inject.Inject
+import java.util.ArrayList
 import kotlin.math.max
 import kotlin.math.min
 
-// Todo I cannot pair with this file (cannot establish connection with pump during pairing process)
-class InsightConnectionServiceXX : DaggerService(), ConnectionEstablisher.Callback, InputStreamReader.Callback, OutputStreamWriter.Callback {
+class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback, InputStreamReader.Callback, OutputStreamWriter.Callback {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var sp: SP
-
     private val stateCallbacks: MutableList<StateCallback> = ArrayList()
     private val connectionRequests: MutableList<Any> = ArrayList()
     private val exceptionCallbacks: MutableList<ExceptionCallback> = ArrayList()
@@ -61,7 +81,7 @@ class InsightConnectionServiceXX : DaggerService(), ConnectionEstablisher.Callba
     private var disconnectTimer: DelayedActionThread? = null
     private var recoveryTimer: DelayedActionThread? = null
     private var timeoutTimer: DelayedActionThread? = null
-    private val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+    private lateinit var bluetoothAdapter: BluetoothAdapter
     private var bluetoothDevice: BluetoothDevice? = null
     private var bluetoothSocket: BluetoothSocket? = null
     private var connectionEstablisher: ConnectionEstablisher? = null
@@ -80,12 +100,10 @@ class InsightConnectionServiceXX : DaggerService(), ConnectionEstablisher.Callba
     @get:Synchronized var recoveryDuration: Long = 0
         private set
     private var timeoutDuringHandshakeCounter = 0
-
-    private var _keyPair: KeyPair? = null
-    private val keyPair: KeyPair = _keyPair ?: Cryptograph.generateRSAKey().also { _keyPair = it }
-
-    private var _randomBytes: ByteArray? = null
-    val randomBytes: ByteArray = _randomBytes ?: ByteArray(28).also {  _randomBytes = it; SecureRandom().nextBytes(_randomBytes) }
+    private var intKeyPair: KeyPair? = null
+    val keyPair: KeyPair = intKeyPair ?: generateRSAKey().also { intKeyPair = it }
+    private var intRandomBytes: ByteArray? = null
+    val randomBytes: ByteArray = intRandomBytes ?: ByteArray(28).also { intRandomBytes = it; SecureRandom().nextBytes(intRandomBytes) }
 
     private fun increaseRecoveryDuration() {
         var maxRecoveryDuration = sp.getInt(R.string.key_insight_max_recovery_duration, 20).toLong()
@@ -180,6 +198,7 @@ class InsightConnectionServiceXX : DaggerService(), ConnectionEstablisher.Callba
     @Synchronized override fun onCreate() {
         super.onCreate()
         pairingDataStorage = PairingDataStorage(this)
+        bluetoothAdapter = (applicationContext.getSystemService(BLUETOOTH_SERVICE) as BluetoothManager).adapter
         state = if (pairingDataStorage.paired) InsightState.DISCONNECTED else InsightState.NOT_PAIRED
         wakeLock = (getSystemService(POWER_SERVICE) as PowerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS:InsightConnectionService")
     }
@@ -219,7 +238,7 @@ class InsightConnectionServiceXX : DaggerService(), ConnectionEstablisher.Callba
                 disconnectTimeout = min(disconnectTimeout, 15)
                 disconnectTimeout = max(disconnectTimeout, 0)
                 aapsLogger.info(LTag.PUMP, "Last connection lock released, will disconnect in $disconnectTimeout seconds")
-                disconnectTimer = DelayedActionThread.runDelayed("Disconnect Timer", disconnectTimeout * 1000) { disconnect() }
+                disconnectTimer = runDelayed("Disconnect Timer", disconnectTimeout * 1000) { disconnect() }
             }
         }
     }
@@ -233,12 +252,16 @@ class InsightConnectionServiceXX : DaggerService(), ConnectionEstablisher.Callba
         messageQueue.completePendingRequests(ConnectionLostException())
         recoveryTimer?.interrupt()
         recoveryTimer = null
+
         disconnectTimer?.interrupt()
         disconnectTimer = null
+
         inputStreamReader?.close()
         inputStreamReader = null
+
         outputStreamWriter?.close()
         outputStreamWriter = null
+
         connectionEstablisher?.let {
             if (closeSocket) {
                 it.close(closeSocket)
@@ -248,10 +271,11 @@ class InsightConnectionServiceXX : DaggerService(), ConnectionEstablisher.Callba
         connectionEstablisher = null
         timeoutTimer?.interrupt()
         timeoutTimer = null
+
         buffer.clear()
         verificationString = null
-        _keyPair = null
-        _randomBytes = null
+        intKeyPair = null
+        intRandomBytes = null
         activatedServices.clear()
         if (!pairingDataStorage.paired) {
             bluetoothSocket = null
@@ -265,7 +289,6 @@ class InsightConnectionServiceXX : DaggerService(), ConnectionEstablisher.Callba
             InsightState.NOT_PAIRED,
             InsightState.DISCONNECTED,
             InsightState.RECOVERING -> return
-            else                    -> Unit
         }
         aapsLogger.info(LTag.PUMP, "Exception occurred: " + e.javaClass.simpleName)
         if (pairingDataStorage.paired) {
@@ -288,9 +311,9 @@ class InsightConnectionServiceXX : DaggerService(), ConnectionEstablisher.Callba
                 } else {
                     increaseRecoveryDuration()
                     if (recoveryDuration == 0L) connect() else {
-                        recoveryTimer = DelayedActionThread.runDelayed("RecoveryTimer", recoveryDuration) {
+                        recoveryTimer = runDelayed("RecoveryTimer", recoveryDuration) {
                             recoveryTimer = null
-                            synchronized(this@InsightConnectionServiceXX) { if (!Thread.currentThread().isInterrupted) connect() }
+                            synchronized(this@InsightConnectionService) { if (!Thread.currentThread().isInterrupted) connect() }
                         }
                     }
                 }
@@ -328,8 +351,8 @@ class InsightConnectionServiceXX : DaggerService(), ConnectionEstablisher.Callba
     @Synchronized private fun connect() {
         if (bluetoothDevice == null) bluetoothDevice = bluetoothAdapter.getRemoteDevice(pairingDataStorage.macAddress)
         setState(InsightState.CONNECTING)
-        connectionEstablisher = ConnectionEstablisher(this, !pairingDataStorage.paired, bluetoothAdapter, bluetoothDevice!!, bluetoothSocket)
-        connectionEstablisher?.start()
+        connectionEstablisher = ConnectionEstablisher(this, !pairingDataStorage.paired, bluetoothAdapter, bluetoothDevice, bluetoothSocket)
+        connectionEstablisher!!.start()
     }
 
     @Synchronized override fun onSocketCreated(bluetoothSocket: BluetoothSocket) {
@@ -356,12 +379,12 @@ class InsightConnectionServiceXX : DaggerService(), ConnectionEstablisher.Callba
     @Synchronized override fun onReceiveBytes(buffer: ByteArray, bytesRead: Int) {
         this.buffer.putBytes(buffer, bytesRead)
         try {
-            while (SatlMessage.hasCompletePacket(this.buffer)) {
-                val satlMessage = SatlMessage.deserialize(this.buffer, pairingDataStorage.lastNonceReceived, pairingDataStorage.incomingKey)
+            while (hasCompletePacket(this.buffer)) {
+                val satlMessage = deserialize(this.buffer, pairingDataStorage.lastNonceReceived, pairingDataStorage.incomingKey)
                 satlMessage?.let {
                     if (pairingDataStorage.incomingKey != null && pairingDataStorage.lastNonceReceived != null && !pairingDataStorage.lastNonceReceived!!.isSmallerThan(it.nonce!!)) {
                         throw InvalidNonceException()
-                    } else processSatlMessage(satlMessage)
+                    } else processSatlMessage(it)
                 }
             }
         } catch (e: InsightException) {
@@ -379,34 +402,29 @@ class InsightConnectionServiceXX : DaggerService(), ConnectionEstablisher.Callba
         }
         val serialized = satlMessage.serialize(pairingDataStorage.outgoingKey)
         timeoutTimer?.interrupt()
-        timeoutTimer = DelayedActionThread.runDelayed("TimeoutTimer", RESPONSE_TIMEOUT) {
+        timeoutTimer = runDelayed("TimeoutTimer", RESPONSE_TIMEOUT) {
             timeoutTimer = null
             handleException(TimeoutException())
         }
         return serialized.bytes
     }
 
-    private fun sendSatlMessage(satlMessage: SatlMessage?) {
-        outputStreamWriter?.write(satlMessage?.let { prepareSatlMessage(it) })
-    }
+    private fun sendSatlMessage(satlMessage: SatlMessage) = outputStreamWriter?.write(prepareSatlMessage(satlMessage))
 
-    private fun sendSatlMessageAndWait(satlMessage: SatlMessage?) {
-        outputStreamWriter?.writeAndWait(satlMessage?.let { prepareSatlMessage(it) })
-    }
+    private fun sendSatlMessageAndWait(satlMessage: SatlMessage) = outputStreamWriter?.writeAndWait(prepareSatlMessage(satlMessage))
 
     private fun processSatlMessage(satlMessage: SatlMessage?) {
         timeoutTimer?.interrupt()
         timeoutTimer = null
         satlMessage?.let { pairingDataStorage.lastNonceReceived = it.nonce }
-        when (satlMessage) {
-            is KeyResponse              -> processKeyResponse(satlMessage)
-            is VerifyDisplayResponse    -> processVerifyDisplayResponse()
-            is VerifyConfirmResponse    -> processVerifyConfirmResponse(satlMessage)
-            is DataMessage              -> processDataMessage(satlMessage)
-            is SynAckResponse           -> processSynAckResponse()
-            is ErrorMessage             -> processErrorMessage(satlMessage)
-            else                        -> handleException(InvalidSatlCommandException())
-        }
+        if (satlMessage is ConnectionResponse) processConnectionResponse()      // Pairing seems to be better with if ... else if than with when (satlMessage) is ... ->
+        else if (satlMessage is KeyResponse) processKeyResponse(satlMessage)
+        else if (satlMessage is VerifyDisplayResponse) processVerifyDisplayResponse()
+        else if (satlMessage is VerifyConfirmResponse) processVerifyConfirmResponse(satlMessage)
+        else if (satlMessage is DataMessage) processDataMessage(satlMessage)
+        else if (satlMessage is SynAckResponse) processSynAckResponse()
+        else if (satlMessage is ErrorMessage) processErrorMessage(satlMessage)
+        else handleException(InvalidSatlCommandException())
     }
 
     private fun processConnectionResponse() {
@@ -417,9 +435,9 @@ class InsightConnectionServiceXX : DaggerService(), ConnectionEstablisher.Callba
         keyRequest = KeyRequest().also {
             it.setPreMasterKey(keyPair.publicKeyBytes)
             it.setRandomBytes(randomBytes)
+            setState(InsightState.SATL_KEY_REQUEST)
+            sendSatlMessage(it)
         }
-        setState(InsightState.SATL_KEY_REQUEST)
-        sendSatlMessage(keyRequest)
     }
 
     private fun processKeyResponse(keyResponse: KeyResponse) {
@@ -428,19 +446,20 @@ class InsightConnectionServiceXX : DaggerService(), ConnectionEstablisher.Callba
             return
         }
         try {
-            val derivedKeys = Cryptograph.deriveKeys(Cryptograph.combine(keyRequest!!.satlContent, keyResponse.satlContent),
-                Cryptograph.decryptRSA(keyPair.privateKey, keyResponse.preMasterSecret),
-                randomBytes,
-                keyResponse.randomData)
-            keyRequest = null
-            _randomBytes = null
-            _keyPair = null
-            verificationString = derivedKeys.verificationString
+            val derivedKeys = deriveKeys(
+                verificationSeed = combine(keyRequest!!.satlContent, keyResponse.satlContent),
+                secret = decryptRSA(keyPair.privateKey, keyResponse.preMasterSecret),
+                random = randomBytes,
+                peerRandom = keyResponse.randomData
+            )
             pairingDataStorage.commId = keyResponse.commID
+            keyRequest = null
+            intRandomBytes = null
+            intKeyPair = null
+            verificationString = derivedKeys.verificationString
             pairingDataStorage.outgoingKey = derivedKeys.outgoingKey
             pairingDataStorage.incomingKey = derivedKeys.incomingKey
             pairingDataStorage.lastNonceSent = Nonce()
-
             setState(InsightState.SATL_VERIFY_DISPLAY_REQUEST)
             sendSatlMessage(VerifyDisplayRequest())
         } catch (e: InvalidCipherTextException) {
@@ -463,17 +482,18 @@ class InsightConnectionServiceXX : DaggerService(), ConnectionEstablisher.Callba
         }
         when (verifyConfirmResponse.pairingStatus) {
             PairingStatus.CONFIRMED -> {
-                    verificationString = null
-                    setState(InsightState.APP_BIND_MESSAGE)
-                    sendAppLayerMessage(BindMessage())
-                }
+                verificationString = null
+                setState(InsightState.APP_BIND_MESSAGE)
+                sendAppLayerMessage(BindMessage())
+            }
+
             PairingStatus.PENDING   -> try {
-                    Thread.sleep(200)
-                    sendSatlMessage(VerifyConfirmRequest())
-                } catch (e: InterruptedException) {
-                    //Redirect interrupt flag
-                    Thread.currentThread().interrupt()
-                }
+                Thread.sleep(200)
+                sendSatlMessage(VerifyConfirmRequest())
+            } catch (e: InterruptedException) {
+                //Redirect interrupt flag
+                Thread.currentThread().interrupt()
+            }
             PairingStatus.REJECTED  -> handleException(SatlPairingRejectedException())
         }
     }
@@ -513,22 +533,19 @@ class InsightConnectionServiceXX : DaggerService(), ConnectionEstablisher.Callba
             InsightState.APP_ACTIVATE_PARAMETER_SERVICE,
             InsightState.APP_ACTIVATE_STATUS_SERVICE,
             InsightState.APP_FIRMWARE_VERSIONS,
-            InsightState.APP_SYSTEM_IDENTIFICATION      -> Unit
-            else                                        -> handleException(ReceivedPacketInInvalidStateException())
+            InsightState.APP_SYSTEM_IDENTIFICATION -> Unit
+            else                                   -> handleException(ReceivedPacketInInvalidStateException())
         }
         try {
             val appLayerMessage = unwrap(dataMessage)
-            when(appLayerMessage) {
-                is BindMessage                  -> processBindMessage()
-                is ConnectMessage               -> processConnectMessage()
-                is ActivateServiceMessage       -> processActivateServiceMessage()
-                is ServiceChallengeMessage      -> processServiceChallengeMessage(appLayerMessage)
-                is GetFirmwareVersionsMessage   -> processFirmwareVersionsMessage(appLayerMessage)
-                is ReadParameterBlockMessage    -> processReadParameterBlockMessage(appLayerMessage)
-                is DisconnectMessage            -> Unit
-                else                            -> processGenericAppLayerMessage(appLayerMessage)
-            }
-
+            if (appLayerMessage is BindMessage) processBindMessage()
+            else if (appLayerMessage is ConnectMessage) processConnectMessage()
+            else if (appLayerMessage is ActivateServiceMessage) processActivateServiceMessage()
+            else if (appLayerMessage is DisconnectMessage)
+            else if (appLayerMessage is ServiceChallengeMessage) processServiceChallengeMessage(appLayerMessage)
+            else if (appLayerMessage is GetFirmwareVersionsMessage) processFirmwareVersionsMessage(appLayerMessage)
+            else if (appLayerMessage is ReadParameterBlockMessage) processReadParameterBlockMessage(appLayerMessage)
+            else processGenericAppLayerMessage(appLayerMessage)
         } catch (e: Exception) {
             if (state !== InsightState.CONNECTED) {
                 handleException(e)
@@ -591,22 +608,18 @@ class InsightConnectionServiceXX : DaggerService(), ConnectionEstablisher.Callba
             setState(InsightState.APP_FIRMWARE_VERSIONS)
             sendAppLayerMessage(GetFirmwareVersionsMessage())
         } else {
-            val activeRequest = messageQueue.activeRequest
-            if (activeRequest == null) {
-                handleException(TooChattyPumpException())
-            } else {
-                activatedServices.add(activeRequest.request!!.service)
-                sendAppLayerMessage(activeRequest.request)
+            messageQueue.activeRequest?.let {
+                activatedServices.add(it.request.service)
+                sendAppLayerMessage(it.request)
             }
+                ?:handleException(TooChattyPumpException())
         }
     }
 
     private fun processReadParameterBlockMessage(message: ReadParameterBlockMessage) {
         if (state === InsightState.APP_SYSTEM_IDENTIFICATION) {
-            if (message.parameterBlock !is SystemIdentificationBlock)
-                handleException(TooChattyPumpException())
-            else {
-                var systemIdentification = (message.parameterBlock as SystemIdentificationBlock).systemIdentification
+            if (message.parameterBlock !is SystemIdentificationBlock) handleException(TooChattyPumpException()) else {
+                val systemIdentification = (message.parameterBlock as SystemIdentificationBlock?)!!.systemIdentification
                 pairingDataStorage.systemIdentification = systemIdentification
                 pairingDataStorage.paired = true
                 aapsLogger.info(LTag.PUMP, "Pairing completed YEE-HAW ♪ ┏(・o･)┛ ♪ ┗( ･o･)┓ ♪")
@@ -617,20 +630,18 @@ class InsightConnectionServiceXX : DaggerService(), ConnectionEstablisher.Callba
     }
 
     private fun processServiceChallengeMessage(serviceChallengeMessage: ServiceChallengeMessage) {
-        val activeRequest = messageQueue.activeRequest
-        if (activeRequest == null) {
-            handleException(TooChattyPumpException())
-        } else {
-            val service = activeRequest.request!!.service
+        messageQueue.activeRequest?.let { messageRequest ->
+            val service = messageRequest.request.service
             val activateServiceMessage = ActivateServiceMessage()
             if (service != null) {
                 activateServiceMessage.serviceID = service.id
                 activateServiceMessage.version = service.version
             }
-            service?.run { servicePassword?.let { activateServiceMessage.servicePassword = Cryptograph.getServicePasswordHash(it, serviceChallengeMessage.randomData) } }
+            service?.run { servicePassword?.let { activateServiceMessage.servicePassword = getServicePasswordHash(it, serviceChallengeMessage.randomData) } }
 
             sendAppLayerMessage(activateServiceMessage)
         }
+            ?:handleException(TooChattyPumpException())
     }
 
     private fun processGenericAppLayerMessage(appLayerMessage: AppLayerMessage) {
@@ -671,8 +682,8 @@ class InsightConnectionServiceXX : DaggerService(), ConnectionEstablisher.Callba
 
     inner class LocalBinder : Binder() {
 
-        val service: InsightConnectionServiceXX
-            get() = this@InsightConnectionServiceXX
+        val service: InsightConnectionService
+            get() = this@InsightConnectionService
     }
 
     interface StateCallback {
