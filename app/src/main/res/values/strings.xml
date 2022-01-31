@@ -1138,6 +1138,27 @@
     <string name="key_last_processed_glunovo_timestamp" translatable="false">last_processed_glunovo_timestamp</string>
     <string name="identification">Identification (email, FB or Discord nick etc)</string>
     <string name="identification_not_set">Identification not set in dev mode</string>
+    <string name="a11y_high">heigh</string>
+    <string name="a11y_inrange">in range</string>
+    <string name="a11y_low">low</string>
+    <string name="a11y_arrow_double_down">down fast</string>
+    <string name="a11y_arrow_single_down">down</string>
+    <string name="a11y_arrow_forty_five_down">down trending</string>
+    <string name="a11y_arrow_flat">flat</string>
+    <string name="a11y_arrow_forty_five_up">up trending</string>
+    <string name="a11y_arrow_single_up">up</string>
+    <string name="a11y_arrow_double_up">up fast</string>
+    <string name="a11y_arrow_none">none</string>
+    <string name="a11y_arrow_unknown">unknown</string>
+    <string name="a11y_graph">graph</string>
+    <string name="a11y_bg_quality">Blood glucose quality</string>
+    <string name="a11_bg_quality_recalculated">recalculated</string>
+    <string name="a11_bg_quality_doubles">double entries</string>
+    <string name="a11y_insulin_label">insulin</string>
+    <string name="a11y_dialog">dialog</string>
+    <string name="a11y_current_bg">current blood glucode</string>
+    <string name="a11_correction_percentage">correct outcome with %</string>
+    <string name="a11_correction_units">correct outcome with units</string>
     <string name="not_available_full">Not available</string>
 
 </resources>

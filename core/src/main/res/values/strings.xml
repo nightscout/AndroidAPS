@@ -535,6 +535,8 @@
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="pump_paired" comment="26 characters max for translation">Pump paired</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight Refresh Button</string>
+    <string name="a11y_min_button_description">decrement %1$s by %2$s</string>
+    <string name="a11y_plus_button_description">increment %1$s by %2$s</string>
 
     <plurals name="days">
         <item quantity="one">%1$d day</item>
