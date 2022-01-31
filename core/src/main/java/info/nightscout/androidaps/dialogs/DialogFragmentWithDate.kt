@@ -27,8 +27,18 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
     @Inject lateinit var sp: SP
     @Inject lateinit var dateUtil: DateUtil
 
+    fun interface OnValueChangedListener {
+        fun onValueChanged(value: Long)
+    }
+
     var eventTime: Long = 0
-    var eventTimeChanged = false
+    var eventTimeOriginal: Long = 0
+    val eventTimeChanged: Boolean
+        get() = eventTime != eventTimeOriginal
+
+    var eventDateView: TextView? = null
+    var eventTimeView: TextView? = null
+    private var mOnValueChangedListener: OnValueChangedListener? = null
 
     //one shot guards
     private var okClicked: Boolean = false
@@ -50,7 +60,7 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
         super.onSaveInstanceState(savedInstanceState)
         savedInstanceState.putLong("eventTime", eventTime)
-        savedInstanceState.putBoolean("eventTimeChanged", eventTimeChanged)
+        savedInstanceState.putLong("eventTimeOriginal", eventTimeOriginal)
     }
 
     fun onCreateViewGeneral() {
@@ -60,12 +70,18 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
         dialog?.setCanceledOnTouchOutside(false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val eventDateView = view.findViewById(R.id.eventdate) as TextView?
-        val eventTimeView = view.findViewById(R.id.eventtime) as TextView?
+    fun updateDateTime(timeMs: Long) {
+        eventTime = timeMs
+        eventDateView?.text = dateUtil.dateString(eventTime)
+        eventTimeView?.text = dateUtil.timeString(eventTime)
+    }
 
-        eventTime = savedInstanceState?.getLong("eventTime") ?: dateUtil.nowWithoutMilliseconds()
-        eventTimeChanged = savedInstanceState?.getBoolean("eventTimeChanged") ?: false
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        eventDateView = view.findViewById(R.id.eventdate) as TextView?
+        eventTimeView = view.findViewById(R.id.eventtime) as TextView?
+
+        eventTimeOriginal = savedInstanceState?.getLong("eventTimeOriginal") ?: dateUtil.nowWithoutMilliseconds()
+        eventTime = savedInstanceState?.getLong("eventTime") ?: eventTimeOriginal
 
         eventDateView?.text = dateUtil.dateString(eventTime)
         eventTimeView?.text = dateUtil.timeString(eventTime)
@@ -79,8 +95,8 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
                 cal.set(Calendar.MONTH, monthOfYear)
                 cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
                 eventTime = cal.timeInMillis
-                eventTimeChanged = true
                 eventDateView?.text = dateUtil.dateString(eventTime)
+                callValueChangedListener()
             }
 
         eventDateView?.setOnClickListener {
@@ -107,8 +123,8 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
                 seconds++
             ) // randomize seconds to prevent creating record of the same time, if user choose time manually
             eventTime = cal.timeInMillis
-            eventTimeChanged = true
             eventTimeView?.text = dateUtil.timeString(eventTime)
+            callValueChangedListener()
         }
 
         eventTimeView?.setOnClickListener {
@@ -148,6 +164,14 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
             dismiss()
         }
 
+    }
+
+    private fun callValueChangedListener() {
+        mOnValueChangedListener?.onValueChanged(eventTime)
+    }
+
+    fun setOnValueChangedListener(onValueChangedListener: OnValueChangedListener?) {
+        mOnValueChangedListener = onValueChangedListener
     }
 
     override fun show(manager: FragmentManager, tag: String?) {

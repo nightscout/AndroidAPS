@@ -125,6 +125,7 @@ class DexcomPlugin @Inject constructor(
                         }
                     }
                 }
+                val now = dateUtil.now()
                 val glucoseValuesBundle = bundle.getBundle("glucoseValues")
                     ?: return Result.failure(workDataOf("Error" to "missing glucoseValues"))
                 val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
@@ -135,6 +136,9 @@ class DexcomPlugin @Inject constructor(
                     var valid = true
                     if (sourceSensor == GlucoseValue.SourceSensor.DEXCOM_G5_NATIVE)
                         calibrations.forEach { calibration -> if (calibration.timestamp == timestamp) valid = false }
+                    // G6 is sending one 24h old changed value causing recalculation. Ignore
+                    if (sourceSensor == GlucoseValue.SourceSensor.DEXCOM_G6_NATIVE)
+                        if ((now - timestamp) > T.hours(20).msecs()) valid = false
                     if (valid)
                         glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(
                             timestamp = timestamp,
