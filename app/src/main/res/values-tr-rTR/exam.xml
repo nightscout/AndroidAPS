@@ -131,6 +131,7 @@
     <string name="wrongcarbs_bolus">Genel Bakış\'ta İnsülin (bolus) düğmesini kullanarak insülin gönderme.</string>
     <string name="wronginsulin_label">İnsülin gönderme/giriş hataları</string>
     <string name="wronginsulin_whattodo">Tıkanma, başarısız bir kanül veya duştan sonra pompayı tekrar takmayı unutma v.s. nedeniyle, pompa geçmişinin önerdiğinden daha az insülin aldıysanız ne yapmalısınız?</string>
+    <string name="wronginsulin_careportal">Pompa geçmişinden çıkarmak için insülin verilerini Nightscout Bakım Portalından silin.</string>
     <string name="wronginsulin_compare">AndroidAPS ve pompa geçmişindeki değerleri karşılaştırın (pompa bunu destekliyorsa).</string>
     <string name="wronginsulin_prime">Şırınga/kalem veya başlatma kullanarak hesaplanan \"eksik\" insülininizi bolus olarak karşılayın.</string>
     <string name="wronginsulin_donothing">Hiçbir şey yapmayın ve AndroidAPS\'in ortaya çıkabilecek yüksek kan şekeri seviyesini düzeltmesine müsade edin.</string>

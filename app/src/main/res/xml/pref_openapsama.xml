@@ -14,7 +14,7 @@
             android:inputType="numberDecimal"
             android:key="@string/key_openapsma_max_basal"
             android:title="@string/openapsma_maxbasal_title"
-            validate:floatmaxNumber="12.0"
+            validate:floatmaxNumber="25.0"
             validate:floatminNumber="0.1"
             validate:testType="floatNumericRange" />
 
@@ -24,7 +24,7 @@
             android:inputType="numberDecimal"
             android:key="@string/key_openapsma_max_iob"
             android:title="@string/openapsma_maxiob_title"
-            validate:floatmaxNumber="12.0"
+            validate:floatmaxNumber="25.0"
             validate:floatminNumber="0"
             validate:testType="floatNumericRange" />
 

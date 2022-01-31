@@ -306,7 +306,7 @@
     <string name="uel_bolus_calculator">BOLUS HESAPLAYICI</string>
     <string name="uel_bolus_advisor">BOLUS DANIŞMANI</string>
     <string name="uel_extended_bolus">YAYMA BOLUS</string>
-    <string name="uel_superbolus_tbr">SURBOLUS TBR</string>
+    <string name="uel_superbolus_tbr">SÜPERBOLUS GBO</string>
     <string name="uel_carbs">KARBLR</string>
     <string name="uel_extended_carbs">YAYMA KARBONHİDRAT</string>
     <string name="uel_temp_basal">GEÇİCİ BAZAL</string>

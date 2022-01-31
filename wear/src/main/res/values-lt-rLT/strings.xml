@@ -122,6 +122,8 @@
     <string name="color_name_white">balta</string>
     <string name="color_name_black">juoda</string>
     <string name="color_name_multicolor">daug spalvų</string>
+    <string name="pref_simplify_ui">Supaprastinta sąsaja</string>
+    <string name="pref_simplify_ui_sum">Rodyti tik laiką ir KG</string>
     <string name="pref_vibrate_hourly">Vibruoti kas valandą</string>
     <string name="pref_show_weeknumber">Rodyti savaitės numerį</string>
     <string name="digitalstyle_pref_your_style">Jūsų stilius:</string>
@@ -136,4 +138,8 @@
     <string name="bolus_progress_silent_channel_name">Nutildyti AAPS boluso suleidimą</string>
     <string name="bolus_progress_channel_description">Boluso leidimas ir atšaukimas</string>
     <string name="bolus_progress_silent_channel_description">Boluso leidimas ir atšaukimas su mažiau vibracijų</string>
+    <string name="simple_ui_off">Išj.</string>
+    <string name="simple_ui_charging">Įkrovimo metu</string>
+    <string name="simple_ui_always_on">Režimas: visada įjungta</string>
+    <string name="simple_ui_always_on_charging">Režimas: visada įjungta kraunant</string>
 </resources>

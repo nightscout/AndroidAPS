@@ -25,7 +25,7 @@
     <string name="pref_show_delta">Mostrar delta</string>
     <string name="pref_show_avgdelta">Mostrar delta promedio</string>
     <string name="pref_show_phone_battery">Mostrar batería del teléfono</string>
-    <string name="pref_show_rig_battery">Mostrar batería del reloj</string>
+    <string name="pref_show_rig_battery">Mostrar batería de la plataforma</string>
     <string name="pref_show_basal_rate">Mostrar la tasa basal</string>
     <string name="pref_show_loop_status">Mostrar estado del lazo</string>
     <string name="pref_show_bg">Mostrar glucosa</string>
@@ -122,8 +122,8 @@
     <string name="color_name_white">Blanco</string>
     <string name="color_name_black">Negro</string>
     <string name="color_name_multicolor">Multicolor</string>
-    <string name="pref_simplify_ui_charging">Simplificar la interfaz de carga</string>
-    <string name="pref_simplify_ui_charging_sum">Sólo mostrar hora y glucosa cuando está cargando</string>
+    <string name="pref_simplify_ui">Simplificar interfaz</string>
+    <string name="pref_simplify_ui_sum">Mostrar sólo la hora y la glucosa</string>
     <string name="pref_vibrate_hourly">Vibrar cada hora</string>
     <string name="pref_show_weeknumber">Mostrar número de semana</string>
     <string name="digitalstyle_pref_your_style">Tu estilo:</string>
@@ -138,4 +138,8 @@
     <string name="bolus_progress_silent_channel_name">AAPS Progreso de bolo silencioso</string>
     <string name="bolus_progress_channel_description">Progreso del bolo y cancelación</string>
     <string name="bolus_progress_silent_channel_description">Progreso del bolo y cancelar con menos vibraciones</string>
+    <string name="simple_ui_off">Desactivado</string>
+    <string name="simple_ui_charging">Durante la carga</string>
+    <string name="simple_ui_always_on">Modo siempre encendido</string>
+    <string name="simple_ui_always_on_charging">Siempre encendido y cargando</string>
 </resources>

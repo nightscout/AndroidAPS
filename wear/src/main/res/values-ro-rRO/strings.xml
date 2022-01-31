@@ -122,6 +122,8 @@
     <string name="color_name_white">alb</string>
     <string name="color_name_black">negru</string>
     <string name="color_name_multicolor">multicolor</string>
+    <string name="pref_simplify_ui">Simplificare UI</string>
+    <string name="pref_simplify_ui_sum">Arată doar timpul și glicemia</string>
     <string name="pref_vibrate_hourly">Vibrează la fiecare ora</string>
     <string name="pref_show_weeknumber">Afișare număr săptămână</string>
     <string name="digitalstyle_pref_your_style">Stilul tău:</string>
@@ -136,4 +138,8 @@
     <string name="bolus_progress_silent_channel_name">Progres bolus AAPS silențios</string>
     <string name="bolus_progress_channel_description">Progres bolus și anulare</string>
     <string name="bolus_progress_silent_channel_description">Progres bolus şi anulare cu mai puţine vibraţii</string>
+    <string name="simple_ui_off">Oprit</string>
+    <string name="simple_ui_charging">În timpul încărcării</string>
+    <string name="simple_ui_always_on">Modul mereu activ</string>
+    <string name="simple_ui_always_on_charging">Mereu activ şi încărcare</string>
 </resources>

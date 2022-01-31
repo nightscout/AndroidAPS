@@ -2,9 +2,60 @@
 <resources>
     <!-- RL keys -->
     <!-- RL BLE Config -->
+    <string name="riley_link_ble_config_button_scan_start">Scan</string>
+    <string name="riley_link_ble_config_scan_stop">Stop</string>
+    <string name="riley_link_ble_config_scan_selected">Valgt</string>
+    <string name="riley_link_ble_config_scan_title">Rileylink scan</string>
+    <string name="riley_link_ble_config_scan_scanning">Scanning</string>
+    <string name="riley_link_ble_config_scan_finished">Scanning fuldendt</string>
+    <string name="riley_link_ble_config_scan_error">Scanningsfejl: %1$d</string>
+    <string name="riley_link_ble_config_connected_never">Aldrig</string>
+    <string name="riley_link_ble_config_scan_currently_selected_riley_link">Valgt RileyLink</string>
+    <string name="riley_link_ble_config_remove_riley_link">Fjern</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation">Er du sikker på at du vil fjerne din Rileylink?</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation_title">Fjern Rileylink</string>
+    <string name="riley_link_ble_config_no_riley_link_selected">Ingen Rileylink valgt</string>
     <!-- RL Status Page -->
+    <string name="rileylink_settings_tab1">Indstillinger</string>
+    <string name="rileylink_settings_tab2">Historik</string>
+    <string name="rileylink_status">RileyLink Status</string>
+    <string name="medtronic_pump_status">Pumpe status</string>
+    <string name="title_activity_rileylink_settings">Indstillinger For RileyLink</string>
+    <string name="rileylink_title">RileyLink</string>
+    <string name="rileylink_address">Adresse:</string>
+    <string name="rileylink_name">Navn:</string>
+    <string name="rileylink_battery_level">Batteriniveau:</string>
+    <string name="rileylink_battery_level_value">%1$d%%</string>
+    <string name="rileylink_connection_status">Forbindelsesstatus:</string>
+    <string name="rileylink_connection_error">Forbindelsesfejl:</string>
+    <string name="rileylink_device">Enhed</string>
+    <string name="rileylink_device_type">Enhedstype:</string>
+    <string name="rileylink_configured_device_model">Konfigureret Enhedsmodel:</string>
+    <string name="rileylink_connected_device_model">Forbundet Enhedsmodel:</string>
+    <string name="rileylink_last_used_frequency">Sidst anvendt frekvens:</string>
+    <string name="rileylink_last_device_contact">Seneste Enhedskontakt:</string>
+    <string name="rileylink_firmware_version">Firmwareversion:</string>
+    <string name="rileylink_firmware_version_value">BLE113: %1$s\nCC110: %2$s</string>
+    <string name="rileylink_firmware_version_value_orange">Fw: %1$s\nHw: %2$s</string>
+    <string name="rileylink_pump_serial_number">Pumpe Serienummer:</string>
+    <string name="rileylink_pump_frequency">Pumpe Frekvens:</string>
+    <string name="rileylink_pump_frequency_value">%1$.2f MHz</string>
     <!-- RL State -->
+    <string name="rileylink_state_bt_init">Bluetooth Initialiserer…</string>
+    <string name="rileylink_state_bt_error">Bluetooth Fejl</string>
+    <string name="rileylink_state_bt_ready">Bluetooth Klar</string>
+    <string name="rileylink_state_not_started">Ikke startet</string>
+    <string name="rileylink_state_rl_init">Initialisering af RileyLink…</string>
+    <string name="rileylink_state_rl_error">RileyLink Fejl</string>
+    <string name="rileylink_state_pc_tune_up">Indstilling af RileyLink og Pumpe</string>
+    <string name="rileylink_state_pc_error">Problemer med at oprette forbindelse til pumpe</string>
+    <string name="rileylink_state_connected">Tilsuttet</string>
+    <string name="rileylink_state_rl_ready">RileyLink klar</string>
     <!-- RL Errors -->
+    <string name="rileylink_error_not_rl">Enheden er ikke RileyLink</string>
+    <string name="rileylink_error_unreachable">RileyLink utilgængelig</string>
+    <string name="rileylink_error_bt_disabled">Bluetooth er deaktiveret</string>
+    <string name="rileylink_error_no_bt_adapter">Ingen bluetooth adapter</string>
     <!-- RileyLink - Common -->
     <!-- RileyLink - Preferences -->
 </resources>

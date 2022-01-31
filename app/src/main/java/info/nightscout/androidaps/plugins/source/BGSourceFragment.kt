@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.work.ListenableWorker
+import androidx.work.workDataOf
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
@@ -32,6 +34,8 @@ import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import java.util.concurrent.TimeUnit
@@ -48,6 +52,7 @@ class BGSourceFragment : DaggerFragment() {
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var activePlugin: ActivePlugin
+    @Inject lateinit var aapsLogger: AAPSLogger
 
     private val disposable = CompositeDisposable()
     private val millsToThePast = T.hours(36).msecs()
@@ -154,7 +159,10 @@ class BGSourceFragment : DaggerFragment() {
                                 Action.BG_REMOVED, source,
                                 ValueWithUnit.Timestamp(glucoseValue.timestamp)
                             )
-                            disposable += repository.runTransaction(InvalidateGlucoseValueTransaction(glucoseValue.id)).subscribe()
+                            repository.runTransactionForResult(InvalidateGlucoseValueTransaction(glucoseValue.id))
+                                .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating BG value", it) }
+                                .blockingGet()
+                                .also { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated bg $it") } }
                         })
                     }
                 }

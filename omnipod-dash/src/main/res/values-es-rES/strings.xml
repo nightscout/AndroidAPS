@@ -37,4 +37,6 @@
     <string name="dash_bolusdelivering">Entregando %1$.2f U</string>
     <string name="omnipod_common_alert_delivery_suspended">Suspendida la entrega de insulina</string>
     <string name="omnipod_dash_connection_lost">Conexión perdida con el pod</string>
+    <string name="omnipod_dash_bolus_already_in_progress">Otro bolo está siendo entregado</string>
+    <string name="omnipod_dash_not_enough_insulin">No queda suficiente insulina en el reservorio</string>
 </resources>

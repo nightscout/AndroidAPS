@@ -36,4 +36,6 @@
     <string name="dash_bolusdelivering">Gebe %1$.2f IE ab</string>
     <string name="omnipod_common_alert_delivery_suspended">Insulinabgabe ist unterbrochen</string>
     <string name="omnipod_dash_connection_lost">Verbindung zum Pod verloren</string>
+    <string name="omnipod_dash_bolus_already_in_progress">Ein weiterer Bolus wird abgegeben</string>
+    <string name="omnipod_dash_not_enough_insulin">Nicht genug Insulin im Reservoir übrig</string>
 </resources>

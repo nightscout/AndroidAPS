@@ -21,6 +21,7 @@ import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -87,6 +88,7 @@ class MainActivity : NoSplashAppCompatActivity() {
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private var pluginPreferencesMenuItem: MenuItem? = null
     private var menu: Menu? = null
+    private var menuOpen = false
 
     private lateinit var binding: ActivityMainBinding
 
@@ -258,9 +260,18 @@ class MainActivity : NoSplashAppCompatActivity() {
     }
 
     override fun onMenuOpened(featureId: Int, menu: Menu): Boolean {
+        menuOpen = true
+        if (binding.mainDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            binding.mainDrawerLayout.closeDrawers()
+        }
         val result = super.onMenuOpened(featureId, menu)
         menu.findItem(R.id.nav_treatments)?.isEnabled = profileFunction.getProfile() != null
         return result
+    }
+
+    override fun onPanelClosed(featureId: Int, menu: Menu) {
+        menuOpen = false;
+        super.onPanelClosed(featureId, menu)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -357,6 +368,22 @@ class MainActivity : NoSplashAppCompatActivity() {
             }
         }
         return actionBarDrawerToggle.onOptionsItemSelected(item)
+    }
+
+    override fun onBackPressed() {
+        if (binding.mainDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            binding.mainDrawerLayout.closeDrawers()
+            return
+        }
+        if (menuOpen) {
+            this.menu?.close()
+            return
+        }
+        if (binding.mainPager.currentItem != 0) {
+            binding.mainPager.currentItem = 0
+            return
+        }
+        super.onBackPressed()
     }
 
     // Correct place for calling setUserStats() would be probably MainApp
