@@ -347,6 +347,8 @@ class BolusWizard @Inject constructor(
                 )
             else
                 commonProcessing(ctx)
+        } else {
+            OKDialog.show(ctx, rh.gs(R.string.boluswizard), rh.gs(R.string.no_action_selected))
         }
     }
 
