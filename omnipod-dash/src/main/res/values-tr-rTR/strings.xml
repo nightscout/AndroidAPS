@@ -36,4 +36,6 @@
     <string name="dash_bolusdelivering">%1$.2f Ü gönderiliyor</string>
     <string name="omnipod_common_alert_delivery_suspended">İnsülin iletimi askıya alındı</string>
     <string name="omnipod_dash_connection_lost">Pod ile bağlantı koptu</string>
+    <string name="omnipod_dash_bolus_already_in_progress">Diğer bolus iletiliyor</string>
+    <string name="omnipod_dash_not_enough_insulin">Rezervuarda yeterli insülin kalmamış</string>
 </resources>

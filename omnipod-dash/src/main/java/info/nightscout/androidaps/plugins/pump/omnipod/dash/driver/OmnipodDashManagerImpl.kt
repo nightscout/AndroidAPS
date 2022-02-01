@@ -668,11 +668,9 @@ class OmnipodDashManagerImpl @Inject constructor(
 
             when (event) {
                 is PodEvent.AlreadyConnected -> {
-                    podStateManager.bluetoothAddress = event.bluetoothAddress
                 }
 
                 is PodEvent.BluetoothConnected -> {
-                    podStateManager.bluetoothAddress = event.bluetoothAddress
                 }
 
                 is PodEvent.Connected -> {

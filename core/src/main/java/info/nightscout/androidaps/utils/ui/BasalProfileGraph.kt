@@ -11,7 +11,7 @@ import info.nightscout.androidaps.utils.Round
 import java.util.ArrayList
 import kotlin.math.max
 
-class ProfileGraph : GraphView {
+class BasalProfileGraph : GraphView {
 
     constructor(context: Context?) : super(context)
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
