@@ -250,22 +250,10 @@ class WizardDialog : DaggerDialogFragment() {
     }
 
     private fun setA11yLabels() {
-        val bgInputTextId = binding.bgInput.editText?.id
-        if (bgInputTextId != null) {
-            binding.bgInputLabel.labelFor = bgInputTextId
-        }
-        val carbsTextId = binding.carbsInput.editText?.id
-        if (carbsTextId != null) {
-            binding.carbsInputLabel.labelFor = carbsTextId
-        }
-        val corrTextId = binding.correctionInput.editText?.id
-        if (corrTextId != null) {
-            binding.correctionInputLabel.labelFor = corrTextId
-        }
-        val carbTimeTextId = binding.carbTimeInput.editText?.id
-        if (carbTimeTextId != null) {
-            binding.carbTimeInputLabel.labelFor = carbTimeTextId
-        }
+        binding.bgInput.editText?.id?.let { binding.bgInputLabel.labelFor = it }
+        binding.carbsInput.editText?.id?.let { binding.carbsInputLabel.labelFor = it }
+        binding.correctionInput.editText?.id?.let { binding.correctionInputLabel.labelFor = it }
+        binding.carbTimeInput.editText?.id?.let { binding.carbTimeInputLabel.labelFor = it }
     }
 
     override fun onDestroyView() {
