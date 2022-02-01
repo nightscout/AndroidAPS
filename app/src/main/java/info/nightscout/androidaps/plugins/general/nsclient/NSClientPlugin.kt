@@ -154,10 +154,10 @@ class NSClientPlugin @Inject constructor(
 //            preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_sync_use_absolute))?.isVisible = false
         } else {
             // APS or pumpControl mode
-            preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_receive_profile_switch))?.isVisible = buildHelper.isEngineeringMode()
-            preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_receive_insulin))?.isVisible = buildHelper.isEngineeringMode()
-            preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_receive_carbs))?.isVisible = buildHelper.isEngineeringMode()
-            preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_receive_temp_target))?.isVisible = buildHelper.isEngineeringMode()
+//            preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_receive_profile_switch))?.isVisible = buildHelper.isEngineeringMode()
+//            preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_receive_insulin))?.isVisible = buildHelper.isEngineeringMode()
+//            preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_receive_carbs))?.isVisible = buildHelper.isEngineeringMode()
+//            preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_receive_temp_target))?.isVisible = buildHelper.isEngineeringMode()
         }
     }
 
