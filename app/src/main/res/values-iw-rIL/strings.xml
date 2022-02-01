@@ -882,7 +882,7 @@
     <string name="ns_receive_insulin_summary">קבלת אינסולין שהוזן באמצעות נייטסקאוט או NSClient (הוא לא מוזרק, רק מחושב רק כאינסולין פעיל)</string>
     <string name="ns_receive_carbs">קבלת פחמימות</string>
     <string name="ns_receive_carbs_summary">קבלת פחמימות שנרשמו בנייטסקאוט או ב-NSClient</string>
-    <string name="ns_receive_therapy_events">קבלת אירועי טיפול</string>
+    <string name="ns_receive_therapy_events">קבל אירועי טיפול</string>
     <string name="ns_receive_therapy_events_summary">קבלת אירועי טיפול (צינורית, אינסולין, החלפת סוללה) שצוינו באמצעות נייטסקאוט או NSClient</string>
     <string name="ns_receive_cgm">קבלת\\טעינת נתוני סנסור</string>
     <string name="ns_receive_cgm_summary">קבלת נתוני סנסור מנייטסקאוט</string>
