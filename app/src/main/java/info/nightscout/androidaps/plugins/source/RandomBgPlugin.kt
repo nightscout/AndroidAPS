@@ -1,27 +1,25 @@
 package info.nightscout.androidaps.plugins.source
 
-import android.content.Intent
 import android.os.Handler
 import android.os.HandlerThread
+import android.os.SystemClock
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.db.BgReading
-import info.nightscout.androidaps.interfaces.BgSourceInterface
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.GlucoseValue
+import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
+import info.nightscout.androidaps.interfaces.BgSource
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
-import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.buildHelper.BuildHelper
-import info.nightscout.androidaps.utils.extensions.isRunningTest
+import info.nightscout.androidaps.utils.XDripBroadcast
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -31,74 +29,96 @@ import kotlin.math.sin
 @Singleton
 class RandomBgPlugin @Inject constructor(
     injector: HasAndroidInjector,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     aapsLogger: AAPSLogger,
-    private val virtualPumpPlugin: VirtualPumpPlugin,
-    private val buildHelper: BuildHelper,
     private val sp: SP,
-    private val nsUpload: NSUpload
-) : PluginBase(PluginDescription()
-    .mainType(PluginType.BGSOURCE)
-    .fragmentClass(BGSourceFragment::class.java.name)
-    .pluginIcon(R.drawable.ic_dice)
-    .pluginName(R.string.randombg)
-    .shortName(R.string.randombg_short)
-    .preferencesId(R.xml.pref_bgsource)
-    .description(R.string.description_source_randombg),
-    aapsLogger, resourceHelper, injector
-), BgSourceInterface {
+    private val repository: AppRepository,
+    private val xDripBroadcast: XDripBroadcast
+) : PluginBase(
+    PluginDescription()
+        .mainType(PluginType.BGSOURCE)
+        .fragmentClass(BGSourceFragment::class.java.name)
+        .pluginIcon(R.drawable.ic_dice)
+        .pluginName(R.string.randombg)
+        .shortName(R.string.randombg_short)
+        .preferencesId(R.xml.pref_bgsource)
+        .description(R.string.description_source_randombg),
+    aapsLogger, rh, injector
+), BgSource {
 
-    private val loopHandler : Handler = Handler(HandlerThread(RandomBgPlugin::class.java.simpleName + "Handler").also { it.start() }.looper)
+    private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private lateinit var refreshLoop: Runnable
 
     companion object {
+
         const val interval = 5L // minutes
+        const val min = 70 // mgdl
+        const val max = 190 // mgdl
+        const val period = 120.0 // minutes
     }
 
     init {
         refreshLoop = Runnable {
-            handleNewData(Intent())
-            loopHandler.postDelayed(refreshLoop, T.mins(interval).msecs())
+            handler.postDelayed(refreshLoop, T.mins(interval).msecs())
+            handleNewData()
         }
     }
+
+    private val disposable = CompositeDisposable()
 
     override fun advancedFilteringSupported(): Boolean {
         return true
     }
 
+    override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean =
+        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.RANDOM && sp.getBoolean(R.string.key_dexcomg5_nsupload, false)
+
     override fun onStart() {
         super.onStart()
-        loopHandler.postDelayed(refreshLoop, T.mins(interval).msecs())
+        val cal = GregorianCalendar()
+        cal[Calendar.MILLISECOND] = 0
+        cal[Calendar.SECOND] = 0
+        cal[Calendar.MINUTE] -= cal[Calendar.MINUTE] % 5
+        handler.postAtTime(refreshLoop, SystemClock.uptimeMillis() + cal.timeInMillis + T.mins(5).msecs() + 1000 - System.currentTimeMillis())
+        disposable.clear()
     }
 
     override fun onStop() {
         super.onStop()
-        loopHandler.removeCallbacks(refreshLoop)
+        handler.removeCallbacks(refreshLoop)
     }
 
     override fun specialEnableCondition(): Boolean {
-        return isRunningTest() || virtualPumpPlugin.isEnabled(PluginType.PUMP) && buildHelper.isEngineeringMode()
+//        return isRunningTest() || virtualPumpPlugin.isEnabled() && buildHelper.isEngineeringMode()
+        return true
     }
 
-    override fun handleNewData(intent: Intent) {
-        if (!isEnabled(PluginType.BGSOURCE)) return
-        val min = 70
-        val max = 190
+    private fun handleNewData() {
+        if (!isEnabled()) return
 
         val cal = GregorianCalendar()
-        val currentMinute = cal.get(Calendar.MINUTE) + (cal.get(Calendar.HOUR_OF_DAY) % 2) * 60
-        val bgMgdl = min + ((max - min) + (max - min) * sin(currentMinute / 120.0 * 2 * PI))/2
+        val currentMinute = cal[Calendar.MINUTE] + (cal[Calendar.HOUR_OF_DAY] % 2) * 60
+        val bgMgdl = min + ((max - min) + (max - min) * sin(currentMinute / period * 2 * PI)) / 2
 
-        val bgReading = BgReading()
-        bgReading.value = bgMgdl
-        bgReading.date = DateUtil.now()
-        bgReading.raw = bgMgdl
-        if (MainApp.getDbHelper().createIfNotExists(bgReading, "RandomBG")) {
-            if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false))
-                nsUpload.uploadBg(bgReading, "AndroidAPS-RandomBG")
-            if (sp.getBoolean(R.string.key_dexcomg5_xdripupload, false))
-                nsUpload.sendToXdrip(bgReading)
-        }
-        aapsLogger.debug(LTag.BGSOURCE, "Generated BG: $bgReading")
+        cal[Calendar.MILLISECOND] = 0
+        cal[Calendar.SECOND] = 0
+        cal[Calendar.MINUTE] -= cal[Calendar.MINUTE] % 5
+        val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
+        glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(
+            timestamp = cal.timeInMillis,
+            value = bgMgdl,
+            raw = 0.0,
+            noise = null,
+            trendArrow = GlucoseValue.TrendArrow.NONE,
+            sourceSensor = GlucoseValue.SourceSensor.RANDOM
+        )
+        disposable += repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
+            .subscribe({ savedValues ->
+                           savedValues.inserted.forEach {
+                               xDripBroadcast.send(it)
+                               aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
+                           }
+                       }, { aapsLogger.error(LTag.DATABASE, "Error while saving values from Random plugin", it) }
+            )
     }
 }

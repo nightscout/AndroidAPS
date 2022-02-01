@@ -5,16 +5,16 @@ import android.content.pm.PackageManager
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.interfaces.ConstraintsInterface
+import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import org.spongycastle.util.encoders.Hex
 import java.io.*
 import java.net.URL
@@ -35,9 +35,9 @@ import javax.inject.Singleton
 class SignatureVerifierPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     private val sp: SP,
-    private val rxBus: RxBusWrapper,
+    private val rxBus: RxBus,
     private val context: Context
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.CONSTRAINTS)
@@ -45,8 +45,8 @@ class SignatureVerifierPlugin @Inject constructor(
     .alwaysEnabled(true)
     .showInList(false)
     .pluginName(R.string.signature_verifier),
-    aapsLogger, resourceHelper, injector
-), ConstraintsInterface {
+    aapsLogger, rh, injector
+), Constraints {
 
     private val REVOKED_CERTS_URL = "https://raw.githubusercontent.com/nightscout/AndroidAPS/master/app/src/main/assets/revoked_certs.txt"
     private val UPDATE_INTERVAL = TimeUnit.DAYS.toMillis(1)
@@ -88,7 +88,7 @@ class SignatureVerifierPlugin @Inject constructor(
     }
 
     private fun showNotification() {
-        val notification = Notification(Notification.INVALID_VERSION, resourceHelper.gs(R.string.running_invalid_version), Notification.URGENT)
+        val notification = Notification(Notification.INVALID_VERSION, rh.gs(R.string.running_invalid_version), Notification.URGENT)
         rxBus.send(EventNewNotification(notification))
     }
 
@@ -157,7 +157,7 @@ class SignatureVerifierPlugin @Inject constructor(
         val sb = StringBuilder()
         for (i in array.indices) {
             if (i != 0) sb.append(":")
-            sb.append(String.format("%02X", 0xFF and map[map.indexOf(shortHash[i])].toInt()))
+            sb.append(String.format("%02X", 0xFF and map[map.indexOf(shortHash[i])].code))
         }
         return sb.toString()
     }

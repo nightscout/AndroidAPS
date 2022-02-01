@@ -48,7 +48,7 @@
     <string name="exerciseprofile_label">Trening og profiler</string>
     <string name="exerciseprofile_whattodo">Hvordan kan du bruke profiler for å hjelpe systemet med å håndtere treninger?</string>
     <string name="exerciseprofile_switchprofilebelow100">Gjør et profilbytte til mindre enn 100%.</string>
-    <string name="exerciseprofile_switchprofileabove100">Gjør et profilbytte til mer enn 100%</string>
+    <string name="exerciseprofile_switchprofileabove100">For å gjøre et profilbytte til mer enn 100%.</string>
     <string name="exerciseprofile_leaveat100">La profilen være på 100%.</string>
     <string name="exerciseprofile_suspendloop">Pause loop.</string>
     <string name="exerciseprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#active temp-target</string>
@@ -132,7 +132,7 @@
     <string name="wronginsulin_label">Feil i insulin levering/registrering</string>
     <string name="wronginsulin_whattodo">Hva ska du gjøre hvis du har fått mindre insulin enn hva pumpens historikk viser, f.eks. på grunn av okklusjon, feil med kanyle eller om du har glemt å koble på pumpen etter en dusj</string>
     <string name="wronginsulin_careportal">Fjern insulindata fra Nightscout slik at det slettes fra pumpens historikk.</string>
-    <string name="wronginsulin_compare">Sammenligne verdier i AndroidAPS og pumpehistorikk.</string>
+    <string name="wronginsulin_compare">Sammenlign verdiene i AndroidAPS og pumpehistorikken (hvis pumpen støtter dette).</string>
     <string name="wronginsulin_prime">Gi en bolus med en del av det insulinet du mangler enten med penn eller ved å bruke prime funksjonen.</string>
     <string name="wronginsulin_donothing">Ikke gjør noe og la AndroidAPS korrigere eventuelle høye blodsukkerverdier.</string>
     <string name="iob_label">Aktivt insulin (IOB)</string>

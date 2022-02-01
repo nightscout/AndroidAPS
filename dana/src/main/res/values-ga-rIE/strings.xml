@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="danarspump">DanaRS</string>
     <string name="danarspump_shortname">Dana</string>
     <string name="overview_bolusprogress_delivered">Seachadta</string>
     <string name="overview_bolusprogress_stoped">Stopadh</string>
@@ -20,8 +19,6 @@
     <string name="danarpump">DanaR</string>
     <string name="danarv2pump">DanaRv2</string>
     <string name="danar_bluetooth_status">Bluetooth stádas</string>
-    <string name="basal_step">Bunaidh Céim</string>
-    <string name="bolus_step">Bólas Céim</string>
     <string name="timeformat12h">12u</string>
     <string name="timeformat24h">24u</string>
     <string name="danar_bt_name_title">DanaR Bluetooth gléas</string>

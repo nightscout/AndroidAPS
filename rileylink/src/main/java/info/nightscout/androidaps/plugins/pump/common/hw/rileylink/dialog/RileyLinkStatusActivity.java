@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -16,13 +17,13 @@ import java.util.List;
 import javax.inject.Inject;
 
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
-import info.nightscout.androidaps.plugins.pump.common.R;
 import info.nightscout.androidaps.plugins.pump.common.dialog.RefreshableInterface;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.R;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 public class RileyLinkStatusActivity extends NoSplashAppCompatActivity {
 
-    @Inject ResourceHelper resourceHelper;
+    @Inject ResourceHelper rh;
 
     private SectionsPagerAdapter sectionsPagerAdapter;
     private TabLayout tabLayout;
@@ -59,8 +60,8 @@ public class RileyLinkStatusActivity extends NoSplashAppCompatActivity {
     public void setupViewPager() {
         sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        sectionsPagerAdapter.addFragment(new RileyLinkStatusGeneralFragment(), resourceHelper.gs(R.string.rileylink_settings_tab1));
-        sectionsPagerAdapter.addFragment(new RileyLinkStatusHistoryFragment(), resourceHelper.gs(R.string.rileylink_settings_tab2));
+        sectionsPagerAdapter.addFragment(new RileyLinkStatusGeneralFragment(), rh.gs(R.string.rileylink_settings_tab1));
+        sectionsPagerAdapter.addFragment(new RileyLinkStatusHistoryFragment(), rh.gs(R.string.rileylink_settings_tab2));
         viewPager.setAdapter(sectionsPagerAdapter);
     }
 
@@ -68,7 +69,7 @@ public class RileyLinkStatusActivity extends NoSplashAppCompatActivity {
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    public static class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         List<Fragment> fragmentList = new ArrayList<>();
         List<String> fragmentTitle = new ArrayList<>();
@@ -78,7 +79,7 @@ public class RileyLinkStatusActivity extends NoSplashAppCompatActivity {
             super(fm);
         }
 
-        @Override
+        @NonNull @Override
         public Fragment getItem(int position) {
             this.lastSelectedPosition = position;
             return fragmentList.get(position);

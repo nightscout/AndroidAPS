@@ -22,7 +22,7 @@ class SntpClientTest : TestBase() {
         SntpClient(aapsLogger, dateUtil).doNtpTime(object : SntpClient.Callback() {
             override fun run() {
                 Assert.assertTrue(success)
-                Assert.assertTrue(Math.abs(time - DateUtil.now()) < 60000)
+                Assert.assertTrue(Math.abs(time - System.currentTimeMillis()) < 60000)
             }
         })
     }

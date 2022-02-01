@@ -48,7 +48,7 @@
     <string name="exerciseprofile_label">Cvičení a profily</string>
     <string name="exerciseprofile_whattodo">Jak můžete použít profily, abyste mohli nejlépe pomoci systému řešit aerobní cvičení?</string>
     <string name="exerciseprofile_switchprofilebelow100">Přepnout na profil pod 100 %.</string>
-    <string name="exerciseprofile_switchprofileabove100">Přepnout profil na více než 100 %.</string>
+    <string name="exerciseprofile_switchprofileabove100">Přepněte profil na více než 100 %.</string>
     <string name="exerciseprofile_leaveat100">Ponechte profil nastavený na hodnotu 100%.</string>
     <string name="exerciseprofile_suspendloop">Pozastavte smyčku.</string>
     <string name="exerciseprofile_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Usage/temptarget.html#docasny-cil-pri-pohybove-aktivite</string>
@@ -132,7 +132,7 @@
     <string name="wronginsulin_label">Chyby v podání inzulínu</string>
     <string name="wronginsulin_whattodo">Co byste měli udělat, pokud jste dostali méně inzulínu, než ukazuje historie pumpy, např. v důsledku okluze, vadné kanyly nebo zapomenutí na opětovné připojení pumpy po sprše? </string>
     <string name="wronginsulin_careportal">Odstraňte data z Nightscoutu pro odstranění z historie pumpy.</string>
-    <string name="wronginsulin_compare">Porovnejte hodnoty v AndroidAPS a historii pumpy.</string>
+    <string name="wronginsulin_compare">Porovnat hodnoty v AndroidAPS s hodnotami v historii pumpy (pokud to pumpa podporuje).</string>
     <string name="wronginsulin_prime">Pošlete bolus na vypočtený „chybějící“ inzulín buď injekční stříkačkou nebo perem nebo pomocí plnění na pumpě.</string>
     <string name="wronginsulin_donothing">Neudělejte nic a dovolte AndroidAPS opravit jakoukoliv výslednou vysokou hladinu glukózy v krvi.</string>
     <string name="iob_label">Aktivní inzulín (IOB)</string>
@@ -195,7 +195,7 @@
     <string name="profileswitchtime_iwant">Pokud se probudíte o 2h dříve než obvykle, jak byste měli oznámit AndroidAPS tuto změnu?</string>
     <string name="profileswitchtime_2">Proveďte přepnutí profilu s posunem času 2</string>
     <string name="profileswitchtime__2">Proveďte přepnutí profilu s posunem času -2</string>
-    <string name="profileswitchtime_tt">Nastavte dočasný cíl pro blížící se jídlo.</string>
+    <string name="profileswitchtime_tt">Nastavte dočasný cíl Před jídlem.</string>
     <string name="profileswitchtime_100">Přepněte profil na více než 100%. </string>
     <string name="profileswitchtime_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Usage/Profiles.html#posun-casu</string>
     <string name="profileswitch4_label">Změna profilu</string>

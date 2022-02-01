@@ -50,7 +50,7 @@ object LocaleHelper {
         configuration.setLocale(newLocale)
         val localeList = LocaleList(newLocale)
         LocaleList.setDefault(localeList)
-        configuration.locales = localeList
+        configuration.setLocales(localeList)
         val context = ctx.createConfigurationContext(configuration)
         return ContextWrapper(context)
     }

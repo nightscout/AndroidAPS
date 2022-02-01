@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.queue.commands
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.queue.Callback
 import javax.inject.Inject
 
@@ -12,7 +12,7 @@ class CommandCustomCommand(
     callback: Callback?
 ) : Command(injector, CommandType.CUSTOM_COMMAND, callback) {
 
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
 
     override fun execute() {
         val result = activePlugin.activePump.executeCustomCommand(customCommand)
@@ -20,7 +20,7 @@ class CommandCustomCommand(
         callback?.result(result)?.run()
     }
 
-    override fun status(): String {
-        return customCommand.statusDescription
-    }
+    override fun status(): String = customCommand.statusDescription
+
+    override fun log(): String = customCommand.statusDescription
 }

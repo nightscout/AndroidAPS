@@ -1,36 +1,29 @@
 package info.nightscout.androidaps.plugins.constraints.safety
 
-import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBaseWithProfile
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
 import info.nightscout.androidaps.plugins.source.GlimpPlugin
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
 
-@RunWith(PowerMockRunner::class)
-@PrepareForTest(ConstraintChecker::class, BuildHelper::class, VirtualPumpPlugin::class, GlimpPlugin::class)
 class SafetyPluginTest : TestBaseWithProfile() {
 
     @Mock lateinit var sp: SP
@@ -38,45 +31,46 @@ class SafetyPluginTest : TestBaseWithProfile() {
     @Mock lateinit var openAPSAMAPlugin: OpenAPSAMAPlugin
     @Mock lateinit var openAPSSMBPlugin: OpenAPSSMBPlugin
     @Mock lateinit var sensitivityOref1Plugin: SensitivityOref1Plugin
-    @Mock lateinit var activePlugin: ActivePluginProvider
+    @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var buildHelper: BuildHelper
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Mock lateinit var glimpPlugin: GlimpPlugin
-    @Mock lateinit var context: Context
-    @Mock lateinit var nsUpload: NSUpload
+    @Mock lateinit var repository: AppRepository
 
     private lateinit var hardLimits: HardLimits
     private lateinit var safetyPlugin: SafetyPlugin
 
     val injector = HasAndroidInjector { AndroidInjector { } }
-    val pumpDescription = PumpDescription()
+    private val pumpDescription = PumpDescription()
 
     @Before
     fun prepare() {
-        `when`(resourceHelper.gs(R.string.limitingbolus)).thenReturn("Limiting bolus to %1\$.1f U because of %2\$s")
-        `when`(resourceHelper.gs(R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
-        `when`(resourceHelper.gs(R.string.limitingiob)).thenReturn("Limiting IOB to %1\$.1f U because of %2\$s")
-        `when`(resourceHelper.gs(R.string.limitingcarbs)).thenReturn("Limiting carbs to %1\$d g because of %2\$s")
-        `when`(resourceHelper.gs(R.string.limitingpercentrate)).thenReturn("Limiting max percent rate to %1\$d%% because of %2\$s")
-        `when`(resourceHelper.gs(R.string.pumpisnottempbasalcapable)).thenReturn("Pump is not temp basal capable")
-        `when`(resourceHelper.gs(R.string.increasingmaxbasal)).thenReturn("Increasing max basal value because setting is lower than your max basal in profile")
-        `when`(resourceHelper.gs(R.string.smbdisabledinpreferences)).thenReturn("SMB disabled in preferences")
-        `when`(resourceHelper.gs(R.string.closedmodedisabledinpreferences)).thenReturn("Closed loop mode disabled in preferences")
-        `when`(resourceHelper.gs(R.string.closed_loop_disabled_on_dev_branch)).thenReturn("Running dev version. Closed loop is disabled.")
-        `when`(resourceHelper.gs(R.string.itmustbepositivevalue)).thenReturn("it must be positive value")
-        `when`(resourceHelper.gs(R.string.pumplimit)).thenReturn("pump limit")
-        `when`(resourceHelper.gs(R.string.smbalwaysdisabled)).thenReturn("SMB always and after carbs disabled because active BG source doesn\\'t support advanced filtering")
-        `when`(resourceHelper.gs(R.string.smbnotallowedinopenloopmode)).thenReturn("SMB not allowed in open loop mode")
-        `when`(resourceHelper.gs(R.string.maxvalueinpreferences)).thenReturn("max value in preferences")
-        `when`(resourceHelper.gs(R.string.maxbasalmultiplier)).thenReturn("max basal multiplier")
-        `when`(resourceHelper.gs(R.string.maxdailybasalmultiplier)).thenReturn("max daily basal multiplier")
-        `when`(resourceHelper.gs(R.string.hardlimit)).thenReturn("hard limit")
-        `when`(resourceHelper.gs(R.string.key_child)).thenReturn("child")
+        `when`(rh.gs(R.string.limitingbolus)).thenReturn("Limiting bolus to %1\$.1f U because of %2\$s")
+        `when`(rh.gs(R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
+        `when`(rh.gs(R.string.limitingiob)).thenReturn("Limiting IOB to %1\$.1f U because of %2\$s")
+        `when`(rh.gs(R.string.limitingcarbs)).thenReturn("Limiting carbs to %1\$d g because of %2\$s")
+        `when`(rh.gs(R.string.limitingpercentrate)).thenReturn("Limiting max percent rate to %1\$d%% because of %2\$s")
+        `when`(rh.gs(R.string.pumpisnottempbasalcapable)).thenReturn("Pump is not temp basal capable")
+        `when`(rh.gs(R.string.increasingmaxbasal)).thenReturn("Increasing max basal value because setting is lower than your max basal in profile")
+        `when`(rh.gs(R.string.smbdisabledinpreferences)).thenReturn("SMB disabled in preferences")
+        `when`(rh.gs(R.string.closedmodedisabledinpreferences)).thenReturn("Closed loop mode disabled in preferences")
+        `when`(rh.gs(R.string.closed_loop_disabled_on_dev_branch)).thenReturn("Running dev version. Closed loop is disabled.")
+        `when`(rh.gs(R.string.itmustbepositivevalue)).thenReturn("it must be positive value")
+        `when`(rh.gs(R.string.pumplimit)).thenReturn("pump limit")
+        `when`(rh.gs(R.string.smbalwaysdisabled)).thenReturn("SMB always and after carbs disabled because active BG source doesn\\'t support advanced filtering")
+        `when`(rh.gs(R.string.smbnotallowedinopenloopmode)).thenReturn("SMB not allowed in open loop mode")
+        `when`(rh.gs(R.string.maxvalueinpreferences)).thenReturn("max value in preferences")
+        `when`(rh.gs(R.string.maxbasalmultiplier)).thenReturn("max basal multiplier")
+        `when`(rh.gs(R.string.maxdailybasalmultiplier)).thenReturn("max daily basal multiplier")
+        `when`(rh.gs(R.string.hardlimit)).thenReturn("hard limit")
+        `when`(rh.gs(R.string.key_child)).thenReturn("child")
 
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         `when`(virtualPumpPlugin.pumpDescription).thenReturn(pumpDescription)
-        hardLimits = HardLimits(aapsLogger, rxBus, sp, resourceHelper, context, nsUpload)
-        safetyPlugin = SafetyPlugin(injector, aapsLogger, resourceHelper, sp, rxBus, constraintChecker, openAPSAMAPlugin, openAPSSMBPlugin, sensitivityOref1Plugin, activePlugin, hardLimits, buildHelper, treatmentsPlugin, Config())
+        hardLimits = HardLimits(aapsLogger, rxBus, sp, rh, context, repository)
+        `when`(config.APS).thenReturn(true)
+        safetyPlugin = SafetyPlugin(injector, aapsLogger, rh, sp, rxBus, constraintChecker, openAPSAMAPlugin, openAPSSMBPlugin, sensitivityOref1Plugin, activePlugin, hardLimits, buildHelper,
+                                    iobCobCalculator, config, dateUtil)
     }
 
     @Test fun pumpDescriptionShouldLimitLoopInvocation() {
@@ -198,7 +192,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
         `when`(sp.getString(R.string.key_age, "")).thenReturn("child")
         var d = Constraint(Constants.REALLYHIGHBOLUS)
         d = safetyPlugin.applyBolusConstraints(d)
-        Assert.assertEquals(3.0, d.value()!!, 0.01)
+        Assert.assertEquals(3.0, d.value(), 0.01)
         Assert.assertEquals("""
     Safety: Limiting bolus to 3.0 U because of max value in preferences
     Safety: Limiting bolus to 5.0 U because of hard limit
@@ -233,17 +227,18 @@ class SafetyPluginTest : TestBaseWithProfile() {
     }
 
     @Test fun iobShouldBeLimited() {
+        `when`(openAPSSMBPlugin.isEnabled()).thenReturn(true)
+        `when`(openAPSAMAPlugin.isEnabled()).thenReturn(false)
         `when`(sp.getString(R.string.key_aps_mode, "open")).thenReturn("closed")
         `when`(sp.getDouble(R.string.key_openapsma_max_iob, 1.5)).thenReturn(1.5)
+        `when`(sp.getDouble(R.string.key_openapssmb_max_iob, 3.0)).thenReturn(3.0)
         `when`(sp.getString(R.string.key_age, "")).thenReturn("teenage")
 
         // Apply all limits
         var d = Constraint(Constants.REALLYHIGHIOB)
         d = safetyPlugin.applyMaxIOBConstraints(d)
-        Assert.assertEquals(1.5, d.value()!!, 0.01)
-        Assert.assertEquals("""
-    Safety: Limiting IOB to 1.5 U because of max value in preferences
-    """.trimIndent(), d.getReasons(aapsLogger))
-        Assert.assertEquals("Safety: Limiting IOB to 1.5 U because of max value in preferences", d.getMostLimitedReasons(aapsLogger))
+        Assert.assertEquals(3.0, d.value(), 0.01)
+        Assert.assertEquals("Safety: Limiting IOB to 3.0 U because of max value in preferences\nSafety: Limiting IOB to 22.0 U because of hard limit", d.getReasons(aapsLogger))
+        Assert.assertEquals("Safety: Limiting IOB to 3.0 U because of max value in preferences", d.getMostLimitedReasons(aapsLogger))
     }
 }

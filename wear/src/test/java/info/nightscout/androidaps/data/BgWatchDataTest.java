@@ -1,46 +1,32 @@
 package info.nightscout.androidaps.data;
 
-import org.junit.Before;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import info.nightscout.androidaps.TestBase;
 import info.nightscout.androidaps.interaction.utils.Constants;
-import info.nightscout.androidaps.interaction.utils.WearUtil;
 import info.nightscout.androidaps.testing.mockers.WearUtilMocker;
 
-import static org.hamcrest.number.OrderingComparison.comparesEqualTo;
-import static org.hamcrest.number.OrderingComparison.greaterThan;
-import static org.hamcrest.number.OrderingComparison.lessThan;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
-@RunWith(PowerMockRunner.class)
-@PrepareForTest( { WearUtil.class } )
-public class BgWatchDataTest {
-
-    @Before
-    public void mock() throws Exception {
-        WearUtilMocker.prepareMockNoReal();
-    }
+public class BgWatchDataTest extends TestBase {
 
     @Test
     public void bgWatchDataHashTest() {
         // GIVEN
         BgWatchData inserted = new BgWatchData(
                 88.0, 160.0, 90.0,
-                WearUtilMocker.REF_NOW - Constants.MINUTE_IN_MS*4*1, 1
+                WearUtilMocker.REF_NOW - Constants.MINUTE_IN_MS * 4, 1
         );
         Set<BgWatchData> set = new HashSet<>();
 
         // THEN
+        //noinspection ConstantConditions
         assertFalse(set.contains(inserted));
         set.add(inserted);
         assertTrue(set.contains(inserted));
@@ -68,15 +54,13 @@ public class BgWatchDataTest {
         );
         BgWatchData item4differentTime = new BgWatchData(
                 88.0, 160.0, 90.0,
-                WearUtilMocker.REF_NOW - Constants.MINUTE_IN_MS*2, 1
+                WearUtilMocker.REF_NOW - Constants.MINUTE_IN_MS * 2, 1
         );
 
         // THEN
         assertEquals(item1, item2sameTimeSameColor);
         assertNotEquals(item1, item3sameTimeSameDiffColor);
         assertNotEquals(item1, item4differentTime);
-
-        assertFalse(item1.equals("aa bbb"));
     }
 
     /**
@@ -87,7 +71,7 @@ public class BgWatchDataTest {
         // GIVEN
         BgWatchData item1 = new BgWatchData(
                 85, 160.0, 90.0,
-                WearUtilMocker.REF_NOW - Constants.MINUTE_IN_MS*2, 1
+                WearUtilMocker.REF_NOW - Constants.MINUTE_IN_MS * 2, 1
         );
 
         BgWatchData item2 = new BgWatchData(
@@ -97,7 +81,7 @@ public class BgWatchDataTest {
 
         BgWatchData item3 = new BgWatchData(
                 80, 190, 50.0,
-                WearUtilMocker.REF_NOW + Constants.MINUTE_IN_MS*5, 0
+                WearUtilMocker.REF_NOW + Constants.MINUTE_IN_MS * 5, 0
         );
 
         BgWatchData item4 = new BgWatchData(
@@ -106,8 +90,8 @@ public class BgWatchDataTest {
         );
 
         // THEN
-        assertThat(item2, lessThan(item1));
-        assertThat(item2, greaterThan(item3));
-        assertThat(item2, comparesEqualTo(item4));
+        assertTrue(item2.compareTo(item1) < 0);
+        assertTrue(item2.compareTo(item3) > 0);
+        assertEquals(0, item2.compareTo(item4));
     }
 }

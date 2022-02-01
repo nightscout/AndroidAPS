@@ -5,9 +5,9 @@
     <string name="danars_pairingok">Сдвояване - ОК</string>
     <string name="danars_pairingtimedout">Времето за сдвояване изтече</string>
     <string name="danars_waitingforpairing">Очаква сдвояване с помпа</string>
-    <string name="danarspump">DanaRS</string>
+    <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
-    <string name="description_pump_dana_rs">Поддръжка за Dana Diabecare RS помпи</string>
+    <string name="description_pump_dana_rs">Интеграция за помпа DANA Diabecare RS и Dana-i</string>
     <string name="maxbolusviolation">Превишавате макс болус</string>
     <string name="commanderror">Грешка при команда</string>
     <string name="speederror">Скорост грешка</string>
@@ -94,8 +94,6 @@
     <string name="profile_set_failed">Неуспешно задаване на базален профил</string>
     <string name="danar_bluetooth_status">Bluetooh статус</string>
     <string name="danar_iob_label">IOB на помпата</string>
-    <string name="basal_step">Стъпка при базал</string>
-    <string name="bolus_step">Стъпка при болус</string>
     <string name="virtualpump_firmware_label">Фърмуер</string>
     <string name="danar_pump_settings">DanaR настройки</string>
     <string name="timeformat12h">12ч</string>
@@ -106,7 +104,6 @@
     <string name="danars_password_title">Парола на помпата (само v1)</string>
     <string name="danar_password_title">Парола за помпата</string>
     <string name="danar_useextended_title">Използвай удължени болуси при над  &gt;200%%</string>
-    <string name="danar_visualizeextendedaspercentage_title">Показвай удължените болуси като %%</string>
     <string name="bolusspeed">Скорост на болус</string>
     <string name="selectedpump">Избрана помпа</string>
     <string name="rs_loginsulinchange_title">Записвай смените на резервоар</string>
@@ -118,4 +115,5 @@
     <string name="press_ok_on_the_pump">Натиснете OK на помпата\nи въведете двата номера\nДръжте дисплея на помпата включен чрез натискане минус бутон, докато завършите въвеждане на код.</string>
     <string name="num1pin">1: (12 цифри)</string>
     <string name="num2pin">2: (8 цифри)</string>
+    <string name="basal_bolus_step">Базал/Болус стъпка</string>
 </resources>

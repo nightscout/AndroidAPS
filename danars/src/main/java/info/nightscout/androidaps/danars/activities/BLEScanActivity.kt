@@ -3,12 +3,15 @@ package info.nightscout.androidaps.danars.activities
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothManager
 import android.bluetooth.le.BluetoothLeScanner
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
+import android.content.Context
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
@@ -17,9 +20,9 @@ import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.danars.R
 import info.nightscout.androidaps.danars.databinding.DanarsBlescannerActivityBinding
 import info.nightscout.androidaps.danars.events.EventDanaRSDeviceChange
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.common.ble.BlePreCheck
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import java.util.*
 import java.util.regex.Pattern
 import javax.inject.Inject
@@ -27,12 +30,14 @@ import javax.inject.Inject
 class BLEScanActivity : NoSplashAppCompatActivity() {
 
     @Inject lateinit var sp: SP
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var blePreCheck: BlePreCheck
+    @Inject lateinit var context: Context
 
     private var listAdapter: ListAdapter? = null
     private val devices = ArrayList<BluetoothDeviceItem>()
-    private var bluetoothLeScanner: BluetoothLeScanner? = null
+    private val bluetoothAdapter: BluetoothAdapter? get() = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
+    private val bluetoothLeScanner: BluetoothLeScanner? get() = bluetoothAdapter?.bluetoothLeScanner
 
     private lateinit var binding: DanarsBlescannerActivityBinding
 
@@ -54,11 +59,8 @@ class BLEScanActivity : NoSplashAppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        BluetoothAdapter.getDefaultAdapter()?.let { bluetoothAdapter ->
-            if (!bluetoothAdapter.isEnabled) bluetoothAdapter.enable()
-            bluetoothLeScanner = bluetoothAdapter.bluetoothLeScanner
-            startScan()
-        }
+        if (bluetoothAdapter?.isEnabled != true) bluetoothAdapter?.enable()
+        startScan()
     }
 
     override fun onPause() {
@@ -87,7 +89,7 @@ class BLEScanActivity : NoSplashAppCompatActivity() {
             return
         }
         devices.add(item)
-        Handler().post { listAdapter!!.notifyDataSetChanged() }
+        Handler(Looper.getMainLooper()).post { listAdapter?.notifyDataSetChanged() }
     }
 
     private val mBleScanCallback: ScanCallback = object : ScanCallback() {
@@ -172,7 +174,7 @@ class BLEScanActivity : NoSplashAppCompatActivity() {
         override fun hashCode(): Int = device.hashCode()
     }
 
-    private fun isSNCheck(sn: String?): Boolean {
+    private fun isSNCheck(sn: String): Boolean {
         val regex = "^([a-zA-Z]{3})([0-9]{5})([a-zA-Z]{2})$"
         val p = Pattern.compile(regex)
         val m = p.matcher(sn)

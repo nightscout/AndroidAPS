@@ -17,7 +17,6 @@
     <string name="objectives_maxiob_gate">Używaj pętli przez kilka dni i przynajmniej jedną noc bez żadnego alarmu niskiego poziomu, przed obniżeniem docelowego poziomu cukru</string>
     <string name="objectives_autosens_objective">Dostosuj bazę i wartości parametrów jeśli jest to potrzebne, i wtedy uruchom funkcję autosens</string>
     <string name="objectives_autosens_gate">1 tydzień sukcesu w działaniu pętli w ciągu dnia z regularnym wprowadzaniem spożywanych węglowodanów</string>
-    <string name="objectives_ama_objective">Włączanie dodatkowych funkcji do użytku, jak AMA</string>
     <string name="objectives_smb_objective">Włączanie dodatkowych funkcji do użytku, jak SMB (Super Mikro Bolusy)</string>
     <string name="objectives_auto_objective">Włączanie automatyzacji</string>
     <string name="objectives_smb_gate">Musisz przeczytać wiki i zwiększyć maxIOB, aby SMB działało dobrze! Dobrym początkiem jest maxIOB = średni bolus + 3 x maks. dzienna dawka bazowa</string>
@@ -41,7 +40,7 @@
     <string name="codeinvalid">Niepoprawny kod</string>
     <string name="objectives_exam_objective">Potwierdź swoje umiejętności</string>
     <string name="objectives_exam_gate">Przestudiuj pytania.  Na każde pytanie masz cztery możliwe odpowiedzi. Może być więcej niż jedna poprawna odpowiedź. Zaznacz wszystkie poprawne i wybierz WERYFIKUJ.</string>
-    <string name="answerdisabledto">Odpowiadanie wyłączone na: %1$s</string>
+    <string name="answerdisabledto">Odpowiadanie wyłączone do: %1$s</string>
     <string name="wronganswer">Odpowiedź nieprawidłowa!</string>
     <string name="unfinshed_button">Następny niedokończony</string>
     <string name="requestcode">Kod zapytania: %1$s</string>

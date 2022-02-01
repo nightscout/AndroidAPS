@@ -21,6 +21,7 @@
     <string name="medtronic_pump_battery_no">Nie gekies (Eenvoudige oorsig)</string>
     <string name="medtronic_pump_battery_alkaline">Alkaliese (Uitgebreide modus)</string>
     <string name="medtronic_pump_battery_lithium">Lithium (Uitgebreide modus)</string>
+    <!-- MDT Fragment -->
     <!-- MDT Errors -->
     <string name="medtronic_error_serial_not_set">Reeksno # nie gestel.</string>
     <string name="medtronic_error_serial_invalid">Reeksno # is ongeldig.</string>

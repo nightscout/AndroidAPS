@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pumperror">Erro Bomba</string>
+    <string name="invalidpairing">Informações de emparelhamento inválidas. A solicitar novo emparelhamento</string>
+    <string name="gettingpumpsettings">A obter as definições da bomba</string>
+    <string name="gettingpumptime">A obter hora bomba</string>
+    <string name="largetimediff">Grande diferença horária:\n A diferença de hora para a bomba é superior a 1.5h.\nPor favor ajuste manualmente a hora na bomba e certifique-se que a leitura do histórico da bomba não provoca problemas.\nSe possível apague o histórico da bomba antes de modificar a hora ou desabilite o loop durante toda a duração de acção da insulina (DIA) depois da ultima entrada no histórico da bomba ou mais um DIA desde o momento da correcção, qual delas seja a que mantenha o loop aberto durante mais tempo.</string>
+    <string name="approachingdailylimit">Aproximação do limite diário de insulina</string>
+    <string name="startingbolus">A iniciar administração de bólus</string>
+    <string name="stoppingtempbasal">A parar basal temp</string>
+    <string name="settingtempbasal">Definindo basal temp</string>
+    <string name="settingextendedbolus">A configurar bólus prolongado</string>
+    <string name="stoppingextendedbolus">A parar bólus prolongado</string>
+    <string name="updatingbasalrates">A actualizar taxas das basais</string>
+    <string name="maxbolusviolation">Transgressão Bólus máx</string>
+    <string name="commanderror">Erro no comando</string>
+    <string name="speederror">Erro velocidade</string>
+    <string name="insulinlimitviolation">Transgressão limite insulina</string>
+    <string name="boluserrorcode">Pedido: %1$.2fU Administrado: %2$.2fU Código Erro: %3$s</string>
+    <string name="bolusspeed">Velocidade Bólus</string>
+    <string name="selectedpump">Bomba seleccionada</string>
+    <string name="bolus_step">Incremento Bólus</string>
+    <string name="basal_step">Incremento Basal</string>
+    <string name="pairfirst">Emparelhe a sua bomba com o seu telefone!</string>
+</resources>

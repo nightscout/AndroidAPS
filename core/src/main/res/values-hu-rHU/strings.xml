@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    Keys-->
+    <!--    General-->
+    <string name="pump_time_updated">Pumpa idő frissítve</string>
+    <!--    Constraints-->
+    <!--    Dialogs-->
+    <!--    BlePreCheck-->
+    <!--    DateUtil-->
+    <!--    Protection-->
+    <!--    Profile-->
+    <!--    ProfileFunction-->
+    <!--    PumpType-->
+    <!--    APSResult-->
+    <!--    ProfileSwitch-->
+    <!--    Temptarget-->
+    <!--    TDD-->
+    <!--    Translator-->
+    <!--    Command-->
+    <!--    PumpEnactResult-->
+    <!--    CarbsReq-->
+    <!--    TDDStatsActivity-->
+    <!--    Ntp-->
+    <!-- Maintenance -->
+    <!-- VersionChecker -->
+    <!-- Permissions -->
+    <!-- WeekdayPicker -->
+    <!-- User Entry -->
+    <!-- HardLimits -->
+    <!-- Command Queue + readStatus reasons -->
+</resources>

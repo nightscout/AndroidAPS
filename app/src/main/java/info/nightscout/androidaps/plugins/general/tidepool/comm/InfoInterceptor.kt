@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.general.tidepool.comm
 
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import okhttp3.Interceptor
 import okhttp3.Response
 import okio.Buffer

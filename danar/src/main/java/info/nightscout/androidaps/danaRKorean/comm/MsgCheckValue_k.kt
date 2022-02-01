@@ -1,8 +1,9 @@
 package info.nightscout.androidaps.danaRKorean.comm
 
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danar.comm.MessageBase
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.LTag
 
 class MsgCheckValue_k(
     injector: HasAndroidInjector
@@ -19,7 +20,7 @@ class MsgCheckValue_k(
         danaPump.hwModel = intFromBuff(bytes, 0, 1)
         danaPump.protocol = intFromBuff(bytes, 1, 1)
         danaPump.productCode = intFromBuff(bytes, 2, 1)
-        if (danaPump.hwModel != info.nightscout.androidaps.dana.DanaPump.DOMESTIC_MODEL) {
+        if (danaPump.hwModel != DanaPump.DOMESTIC_MODEL) {
             danaRKoreanPlugin.disconnect("Wrong Model")
             aapsLogger.debug(LTag.PUMPCOMM, "Wrong model selected")
         }

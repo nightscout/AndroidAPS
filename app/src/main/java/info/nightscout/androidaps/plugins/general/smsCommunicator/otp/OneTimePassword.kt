@@ -5,9 +5,10 @@ import com.eatthepath.otp.HmacOneTimePasswordGenerator
 import com.google.common.io.BaseEncoding
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import java.net.URLEncoder
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
@@ -15,10 +16,12 @@ import javax.crypto.spec.SecretKeySpec
 import javax.inject.Inject
 import javax.inject.Singleton
 
+@OpenForTesting
 @Singleton
 class OneTimePassword @Inject constructor(
     private val sp: SP,
-    private val resourceHelper: ResourceHelper
+    private val rh: ResourceHelper,
+    private val dateUtil: DateUtil
 ) {
 
     private var key: SecretKey? = null
@@ -26,29 +29,14 @@ class OneTimePassword @Inject constructor(
     private val totp = HmacOneTimePasswordGenerator()
 
     init {
-        instance = this
         configure()
-    }
-
-    companion object {
-        private lateinit var instance: OneTimePassword
-
-        @JvmStatic
-        fun getInstance(): OneTimePassword = instance
-    }
-
-    /**
-     * If OTP Authenticator support is enabled by user
-     */
-    fun isEnabled(): Boolean {
-        return sp.getBoolean(R.string.key_smscommunicator_otp_enabled, true)
     }
 
     /**
      * Name of master device (target of OTP)
      */
     fun name(): String {
-        val defaultUserName = resourceHelper.gs(R.string.patient_name_default)
+        val defaultUserName = rh.gs(R.string.patient_name_default)
         var userName = sp.getString(R.string.key_patient_name, defaultUserName).replace(":", "").trim()
         if (userName.isEmpty())
             userName = defaultUserName
@@ -100,7 +88,7 @@ class OneTimePassword @Inject constructor(
             return OneTimePasswordValidationResult.ERROR_WRONG_PIN
         }
 
-        val counter: Long = DateUtil.now() / 30000L
+        val counter: Long = dateUtil.now() / 30000L
 
         val acceptableTokens: MutableList<String> = mutableListOf(generateOneTimePassword(counter))
         for (i in 0 until Constants.OTP_ACCEPT_OLD_TOKENS_COUNT) {

@@ -24,6 +24,8 @@
     <string name="medtronic_pump_battery_nizn">NiZn (uitgebreide weergave)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (Uitgebreide weergave)</string>
     <string name="medtronic_bolus_debugging">Bolus/Behandelingen Debuggen</string>
+    <!-- MDT Fragment -->
+    <string name="rl_battery_label">Batterij van de rileylink</string>
     <!-- MDT Errors -->
     <string name="medtronic_errors">Foutmeldingen</string>
     <string name="medtronic_error_serial_not_set">Serie# niet ingesteld.</string>
@@ -63,13 +65,17 @@
     <string name="medtronic_cmd_desc_get_history">Ophalen Geschiedenis - Pagina %1$d (%2$d/16)</string>
     <string name="medtronic_cmd_desc_get_history_request">Ophalen Geschiedenis - Pagina %1$d</string>
     <string name="medtronic_cmd_desc_get_time">Haal Pomp Tijd op</string>
+    <string name="medtronic_cmd_desc_set_time">Stel de Pomp Tijd in</string>
+    <string name="medtronic_cmd_desc_get_battery_status">Haal batterijstatus op</string>
     <string name="medtronic_cmd_desc_get_settings">Ophalen Instellingen</string>
     <string name="medtronic_cmd_desc_get_model">Ophalen Pomp Model</string>
     <string name="medtronic_cmd_desc_get_basal_profile">Ophalen Basaal Profiel</string>
     <string name="medtronic_cmd_desc_set_basal_profile">Instellen Basaal Profiel</string>
     <string name="medtronic_cmd_desc_get_tbr">Ophalen Tijdelijke Basaal</string>
     <string name="medtronic_cmd_desc_set_tbr">Instellen Tijdelijke Basaal</string>
+    <string name="medtronic_cmd_desc_cancel_tbr">Tijdelijk basaal annuleren</string>
     <string name="medtronic_cmd_desc_set_bolus">Instellen Bolus</string>
+    <string name="medtronic_cmd_desc_get_remaining_insulin">Haal Resterende Insuline op</string>
     <string name="medtronic_pump_status_pump_unreachable">Pomp niet bereikbaar</string>
     <string name="medtronic_warning">Waarschuwing</string>
     <!-- medtronic_warning -->
@@ -83,4 +89,6 @@
     <string name="pump_time_updated">Pomp tijd bijgewerkt</string>
     <string name="set_neutral_temps_title">Stel neutraal tijdelijk basaal in</string>
     <string name="set_neutral_temps_summary">Als deze optie is ingeschakeld, wordt een tijdelijk basaal geannuleerd vlak voor het einde van elk uur. Handige optie voor sommige pompen die elk uur piepen/vibreren zolang een tijdelijk basaal actief is.</string>
+    <string name="mdt_tbr_remaining">%1$.1f E/u (%2$d min resterend)</string>
+    <string name="invalid_history_data">Ongeldige pompgeschiedenis gegevens gedetecteerd. Open een nieuw issue inclusief de logbestanden.</string>
 </resources>

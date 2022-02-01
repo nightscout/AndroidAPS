@@ -1,8 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink;
 
 
-import info.nightscout.androidaps.plugins.pump.common.R;
-
 /**
  * Created by andy on 16/05/2018.
  */
@@ -34,9 +32,11 @@ public class RileyLinkConst {
         //public static final String RileyLinkAddress = PrefPrefix + "mac_address"; // pref_rileylink_mac_address
         public static final int RileyLinkAddress = R.string.key_rileylink_mac_address;
         public static final int RileyLinkName = R.string.key_rileylink_name;
+        public static final int OrangeUseScanning = R.string.key_orange_use_scanning;
         public static final String LastGoodDeviceCommunicationTime = Prefix + "lastGoodDeviceCommunicationTime";
         public static final String LastGoodDeviceFrequency = Prefix + "LastGoodDeviceFrequency";
         public static final int Encoding = R.string.key_medtronic_encoding;
+        public static final int ShowBatteryLevel = R.string.key_riley_link_show_battery_level;
     }
 
     public static class IPC {

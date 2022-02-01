@@ -2,7 +2,7 @@ package info.nightscout.androidaps.utils.protection
 
 import androidx.fragment.app.FragmentActivity
 import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -49,7 +49,6 @@ class ProtectionCheck @Inject constructor(
         }
     }
 
-    @JvmOverloads
     fun queryProtection(activity: FragmentActivity, protection: Protection,
                         ok: Runnable?, cancel: Runnable? = null, fail: Runnable? = null) {
         when (ProtectionType.values()[sp.getInt(protectionTypeResourceIDs[protection.ordinal], ProtectionType.NONE.ordinal)]) {

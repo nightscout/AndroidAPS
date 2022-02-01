@@ -2,22 +2,23 @@ package info.nightscout.androidaps.plugins.general.overview.notifications
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSAlarm
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 
+@Suppress("SpellCheckingInspection")
 class NotificationWithAction constructor(
     injector: HasAndroidInjector
 ) : Notification() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var sp: SP
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var nsClientPlugin: NSClientPlugin
@@ -37,21 +38,21 @@ class NotificationWithAction constructor(
         date = System.currentTimeMillis()
         when (nsAlarm.level()) {
             0 -> {
-                id = NSANNOUNCEMENT
+                id = NS_ANNOUNCEMENT
                 level = ANNOUNCEMENT
                 text = nsAlarm.message()
                 validTo = System.currentTimeMillis() + T.mins(60).msecs()
             }
 
             1 -> {
-                id = NSALARM
+                id = NS_ALARM
                 level = NORMAL
                 text = nsAlarm.title()
                 soundId = R.raw.alarm
             }
 
             2 -> {
-                id = NSURGENTALARM
+                id = NS_URGENT_ALARM
                 level = URGENT
                 text = nsAlarm.title()
                 soundId = R.raw.urgentalarm

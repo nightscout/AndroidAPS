@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- PumoCommon - Pump Abstract -->
+    <string name="pump_operation_not_supported_by_pump_driver">Operation not supported by pump and/or driver.</string>
+    <string name="pump_operation_not_yet_supported_by_pump">Operation not YET supported by pump.</string>
+    <string name="common_resultok">OK</string>
+
+    <!-- PumoCommon - Pump Status -->
+    <string name="pump_status_never_contacted">Never contacted</string>
+    <string name="pump_status_waking_up">Waking up</string>
+    <string name="pump_status_error_comm">Error with communication</string>
+    <string name="pump_status_timeout_comm">Timeout on communication</string>
+    <string name="pump_status_pump_unreachable">Pump unreachable</string>
+    <string name="pump_status_invalid_config">Invalid configuration</string>
+    <string name="pump_status_active">Active</string>
+    <string name="pump_status_sleeping">Sleeping</string>
+
+    <!-- PumpCommon - History Group -->
+    <string name="history_group_basal">Basals</string>
+    <string name="history_group_configuration">Configurations</string>
+    <string name="history_group_notification">Notifications</string>
+    <string name="history_group_statistic">Statistics</string>
+    <string name="history_group_unknown">Unknowns</string>
+    <string name="history_group_all">All</string>
+    <string name="history_group_bolus">Boluses</string>
+    <string name="history_group_prime">Prime</string>
+    <string name="history_group_alarm">Alarms</string>
+    <string name="history_group_glucose">Glucose</string>
+
+
+</resources>

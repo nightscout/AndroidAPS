@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="alert_r7_description"><![CDATA[总数: <b>%1$d%%</b>\nDuration: <b>%2$s h</b>]]></string>
+    <string name="alert_w31_description"><![CDATA[储药器内容: <b>%1$s U</b>]]></string>
+    <string name="alert_w33_description">设置时间/日期</string>
+    <string name="alert_w36_description"><![CDATA[总数: <b>%1$d%%</b><br/>Duration: <b>%2$s h</b>]]></string>
+    <string name="alert_w38_description"><![CDATA[程序: <b>%1$s U</b><br/>Delivered: <b>%2$s U</b>]]></string>
+    <string name="alert_m20_description">插入储药器</string>
+    <string name="alert_m21_description">更换储药器</string>
+    <string name="alert_m22_description">更换电池。</string>
+    <string name="alert_m23_description">检查泵状态。</string>
+    <string name="alert_m24_description">更换管路</string>
+    <string name="alert_m25_description">联系 Accu-Chek 获得支持。</string>
+    <string name="alert_m27_description">重新启动数据下载。</string>
+    <string name="alert_m29_description">设置电池类型。</string>
+    <string name="alert_m30_description">设置储药器类型</string>
+    <string name="alert_e6_description">更换电池和储药器。</string>
+    <string name="alert_e13_description">更改语言</string>
+</resources>

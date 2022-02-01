@@ -1,16 +1,15 @@
 package info.nightscout.androidaps.testing.utils;
 
+import static org.junit.Assert.assertEquals;
+
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 class ExtUtil {
 
-    static <T> void  assertClassHaveSameFields(Class<T> checkedClass, String commaSeparatedFieldList) {
+    static <T> void assertClassHaveSameFields(Class<T> checkedClass, String commaSeparatedFieldList) {
         Set<String> parentFields = new HashSet<>();
         for (Field f : checkedClass.getDeclaredFields()) {
             final String fieldName = f.getName();
@@ -22,7 +21,7 @@ class ExtUtil {
         }
 
         Set<String> knownFields = new HashSet<>(Arrays.asList(commaSeparatedFieldList.split(",")));
-        assertThat(parentFields, is(knownFields));
+        assertEquals(parentFields, knownFields);
     }
 
 }

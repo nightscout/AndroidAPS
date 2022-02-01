@@ -3,10 +3,11 @@ package info.nightscout.androidaps.plugins.insulin
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interfaces.InsulinInterface
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.androidaps.interfaces.Insulin
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -25,10 +26,11 @@ class InsulinOrefRapidActingPluginTest {
 
     private lateinit var sut: InsulinOrefRapidActingPlugin
 
-    @Mock lateinit var resourceHelper: ResourceHelper
-    @Mock lateinit var rxBus: RxBusWrapper
+    @Mock lateinit var rh: ResourceHelper
+    @Mock lateinit var rxBus: RxBus
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var aapsLogger: AAPSLogger
+    @Mock lateinit var config: Config
 
     private var injector: HasAndroidInjector = HasAndroidInjector {
         AndroidInjector {
@@ -37,7 +39,7 @@ class InsulinOrefRapidActingPluginTest {
 
     @Before
     fun setup() {
-        sut = InsulinOrefRapidActingPlugin(injector, resourceHelper, profileFunction, rxBus, aapsLogger)
+        sut = InsulinOrefRapidActingPlugin(injector, rh, profileFunction, rxBus, aapsLogger, config)
     }
 
     @Test
@@ -47,18 +49,18 @@ class InsulinOrefRapidActingPluginTest {
 
     @Test
     fun getIdTest() {
-        assertEquals(InsulinInterface.InsulinType.OREF_RAPID_ACTING, sut.id)
+        assertEquals(Insulin.InsulinType.OREF_RAPID_ACTING, sut.id)
     }
 
     @Test
     fun commentStandardTextTest() {
-        `when`(resourceHelper.gs(eq(R.string.fastactinginsulincomment))).thenReturn("Novorapid, Novolog, Humalog")
+        `when`(rh.gs(eq(R.string.fastactinginsulincomment))).thenReturn("Novorapid, Novolog, Humalog")
         assertEquals("Novorapid, Novolog, Humalog", sut.commentStandardText())
     }
 
     @Test
     fun getFriendlyNameTest() {
-        `when`(resourceHelper.gs(eq(R.string.rapid_acting_oref))).thenReturn("Rapid-Acting Oref")
+        `when`(rh.gs(eq(R.string.rapid_acting_oref))).thenReturn("Rapid-Acting Oref")
         assertEquals("Rapid-Acting Oref", sut.friendlyName)
     }
 
