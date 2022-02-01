@@ -7,33 +7,147 @@
     tools:context=".plugins.general.overview.OverviewFragment">
 
     <ScrollView
-        android:id="@+id/overview_toppart_scrollbar"
-        android:layout_weight="1"
+        android:id="@+id/top_part_scrollbar"
         android:layout_width="wrap_content"
-        android:layout_height="0dp">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
         <LinearLayout
+            android:id="@+id/inner_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/overview_notifications"
+                android:id="@+id/notifications"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <include layout="@layout/overview_loop_pumpstatus_layout" />
+            <LinearLayout
+                android:id="@+id/loop_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
 
-            <include layout="@layout/overview_info_layout" />
+                <TextView
+                    android:id="@+id/active_profile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="6dp"
+                    android:text="Profile"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    tools:ignore="HardcodedText" />
 
-            <include layout="@layout/overview_statuslights_layout" />
+                <TextView
+                    android:id="@+id/temp_target"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="6dp"
+                    android:text="@string/notavailable"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/mdtp_white"
+                    tools:ignore="HardcodedText" />
 
-            <include layout="@layout/overview_graphs_layout" />
+            </LinearLayout>
+
+
+            <include
+                android:id="@+id/info_layout"
+                layout="@layout/overview_info_layout" />
+
+            <include
+                android:id="@+id/status_lights_layout"
+                layout="@layout/overview_statuslights_layout" />
+
+            <com.google.android.flexbox.FlexboxLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/nsclient_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/colorControlHighlight"
+                app:alignContent="stretch"
+                app:alignItems="stretch"
+                app:flexDirection="row"
+                app:flexWrap="wrap"
+                app:justifyContent="center">
+
+                <TextView
+                    android:id="@+id/pump"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="4sp"
+                    android:paddingEnd="4sp"
+                    android:text="Pump: running"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:id="@+id/openaps"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingStart="4sp"
+                    android:paddingEnd="4sp"
+                    android:text="OpenAPS: 3 min ago"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:id="@+id/uploader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingStart="4sp"
+                    android:paddingEnd="4sp"
+                    android:text="Uploader: 84%"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    tools:ignore="HardcodedText" />
+
+            </com.google.android.flexbox.FlexboxLayout>
+
+            <include
+                android:id="@+id/graphs_layout"
+                layout="@layout/overview_graphs_layout" />
 
         </LinearLayout>
 
     </ScrollView>
 
-    <include layout="@layout/overview_buttons_layout" />
+    <LinearLayout
+        android:id="@+id/pump_status_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/pump_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@color/pumpStatusBackground"
+            android:gravity="center_vertical|center_horizontal"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            android:text="@string/initializing"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    </LinearLayout>
+
+    <include
+        android:id="@+id/buttons_layout"
+        layout="@layout/overview_buttons_layout" />
 
 </LinearLayout>

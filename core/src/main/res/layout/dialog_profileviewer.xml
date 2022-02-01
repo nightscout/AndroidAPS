@@ -117,7 +117,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/listdelimiter" />
+            android:background="@color/list_delimiter" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -162,7 +162,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/listdelimiter" />
+            android:background="@color/list_delimiter" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -207,7 +207,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/listdelimiter" />
+            android:background="@color/list_delimiter" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -245,6 +245,12 @@
 
         </LinearLayout>
 
+        <info.nightscout.androidaps.utils.ui.IcProfileGraph
+            android:id="@+id/ic_graph"
+            android:layout_width="match_parent"
+            android:layout_height="100dip"
+            android:layout_margin="20dp" />
+
         <View
             android:layout_width="fill_parent"
             android:layout_height="2dip"
@@ -252,7 +258,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/listdelimiter" />
+            android:background="@color/list_delimiter" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -290,6 +296,12 @@
 
         </LinearLayout>
 
+        <info.nightscout.androidaps.utils.ui.IsfProfileGraph
+            android:id="@+id/isf_graph"
+            android:layout_width="match_parent"
+            android:layout_height="100dip"
+            android:layout_margin="20dp" />
+
         <View
             android:layout_width="fill_parent"
             android:layout_height="2dip"
@@ -297,7 +309,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/listdelimiter" />
+            android:background="@color/list_delimiter" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -371,7 +383,7 @@
 
         </LinearLayout>
 
-        <info.nightscout.androidaps.plugins.treatments.fragments.ProfileGraph
+        <info.nightscout.androidaps.utils.ui.BasalProfileGraph
             android:id="@+id/basal_graph"
             android:layout_width="match_parent"
             android:layout_height="100dip"
@@ -384,7 +396,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/listdelimiter" />
+            android:background="@color/list_delimiter" />
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -59,7 +59,7 @@
                 android:layout_gravity="center_horizontal"
                 android:width="120dp"
                 android:padding="10dp"
-                android:text="@string/careportal_newnstreatment_profile_label"
+                android:text="@string/profile_label"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textStyle="bold" />
 
@@ -75,36 +75,17 @@
             android:id="@+id/reuselayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
             android:orientation="horizontal"
             android:visibility="gone">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:width="120dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:text=""
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textStyle="bold" />
-
-            <Button
+            <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/reusebutton"
+                style="?android:attr/buttonStyle"
+                android:drawablePadding="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/reuse_profile_pct_hours" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:gravity="start"
-                android:minWidth="45dp"
-                android:paddingStart="5dp"
-                android:paddingEnd="5dp"
-                android:text=" "
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:drawableStart="@drawable/ic_clone" />
 
         </LinearLayout>
 
@@ -207,6 +188,33 @@
                 android:paddingEnd="5dp"
                 android:text="@string/unit_hours"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tt_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:width="120dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="@string/careportal_temporarytarget"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textStyle="bold" />
+
+            <CheckBox
+                android:id="@+id/tt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="@string/activity" />
 
         </LinearLayout>
 

@@ -24,6 +24,8 @@
     <string name="medtronic_pump_battery_nizn">NiZn (Подробный вид)</string>
     <string name="medtronic_pump_battery_nimh">Никель-металлогидридная (подробно)</string>
     <string name="medtronic_bolus_debugging">Отладка Болюс/Назначения</string>
+    <!-- MDT Fragment -->
+    <string name="rl_battery_label">Батарея RileyLink</string>
     <!-- MDT Errors -->
     <string name="medtronic_errors">Ошибки</string>
     <string name="medtronic_error_serial_not_set">Серийный # не задан.</string>
@@ -63,13 +65,17 @@
     <string name="medtronic_cmd_desc_get_history">Получить историю - страница %1$d (%2$d/16)</string>
     <string name="medtronic_cmd_desc_get_history_request">Получить историю - страница %1$d</string>
     <string name="medtronic_cmd_desc_get_time">Получить время с помпы</string>
+    <string name="medtronic_cmd_desc_set_time">Установить время помпы</string>
+    <string name="medtronic_cmd_desc_get_battery_status">Получить состояние батареи</string>
     <string name="medtronic_cmd_desc_get_settings">Получить настройки</string>
     <string name="medtronic_cmd_desc_get_model">Получить модель помпы</string>
     <string name="medtronic_cmd_desc_get_basal_profile">Получить профиль базала</string>
     <string name="medtronic_cmd_desc_set_basal_profile">Установить профиль базала</string>
     <string name="medtronic_cmd_desc_get_tbr">Получить временный базал</string>
     <string name="medtronic_cmd_desc_set_tbr">Установить временный базал</string>
+    <string name="medtronic_cmd_desc_cancel_tbr">Отменить временный базал</string>
     <string name="medtronic_cmd_desc_set_bolus">Настроить болюс</string>
+    <string name="medtronic_cmd_desc_get_remaining_insulin">Получить данные об оставшемся инсулине</string>
     <string name="medtronic_pump_status_pump_unreachable">Помпа недоступна</string>
     <string name="medtronic_warning">Внимание</string>
     <!-- medtronic_warning -->
@@ -83,4 +89,6 @@
     <string name="pump_time_updated">Время на помпе обновлено</string>
     <string name="set_neutral_temps_title">Установить нейтральные временные базалы</string>
     <string name="set_neutral_temps_summary">Если эта опция включена, то она отменяет временный базал до конца каждого часа. Такой метод помогает прекратить почасовую вибрацию некоторых помп.</string>
+    <string name="mdt_tbr_remaining">%1$.1fед/ч(%2$d мин осталось)</string>
+    <string name="invalid_history_data">Обнаружены недопустимые данные истории помпы. Создайте запись о новой проблеме и предоставьте журналы.</string>
 </resources>

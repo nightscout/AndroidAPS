@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
-        android:key="maintenance"
+        android:key="@string/key_maintenance_settings"
         android:title="@string/maintenance_settings"
         app:initialExpandedChildrenCount="0">
 
@@ -25,11 +25,6 @@
             validate:maxNumber="10"
             validate:minNumber="1"
             validate:testType="numericRange"/>
-
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="@string/key_maintenance_encrypt_exported_prefs"
-            android:title="@string/maintenance_encrypt_exported_prefs" />
 
     </PreferenceCategory>
 

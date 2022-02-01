@@ -2,6 +2,8 @@ package info.nightscout.androidaps.utils
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.annotation.TargetApi
+import android.bluetooth.BluetoothAdapter
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -15,22 +17,21 @@ import androidx.fragment.app.FragmentActivity
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.DaggerAppCompatActivityWithResult
-import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationWithAction
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog.show
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class AndroidPermission @Inject constructor(
-    val resourceHelper: ResourceHelper,
-    val rxBus: RxBusWrapper,
+    val rh: ResourceHelper,
+    val rxBus: RxBus,
     val injector: HasAndroidInjector
 ) {
 
@@ -58,7 +59,7 @@ class AndroidPermission @Inject constructor(
                     activity.callForBatteryOptimization.launch(null)
             } catch (e: ActivityNotFoundException) {
                 permissionBatteryOptimizationFailed = true
-                show(activity, resourceHelper.gs(R.string.permission), resourceHelper.gs(R.string.alert_dialog_permission_battery_optimization_failed), Runnable { activity.recreate() })
+                OKDialog.show(activity, rh.gs(R.string.permission), rh.gs(R.string.alert_dialog_permission_battery_optimization_failed)) { activity.recreate() }
             }
         }
     }
@@ -79,29 +80,40 @@ class AndroidPermission @Inject constructor(
 
     @Synchronized
     fun notifyForSMSPermissions(activity: FragmentActivity, smsCommunicatorPlugin: SmsCommunicatorPlugin) {
-        if (smsCommunicatorPlugin.isEnabled(PluginType.GENERAL)) {
+        if (smsCommunicatorPlugin.isEnabled()) {
             if (permissionNotGranted(activity, Manifest.permission.RECEIVE_SMS)) {
-                val notification = NotificationWithAction(injector, Notification.PERMISSION_SMS, resourceHelper.gs(R.string.smscommunicator_missingsmspermission), Notification.URGENT)
-                notification.action(R.string.request) {
-                    askForPermission(activity, arrayOf(Manifest.permission.RECEIVE_SMS,
-                        Manifest.permission.SEND_SMS,
-                        Manifest.permission.RECEIVE_MMS))
-                }
+                val notification = NotificationWithAction(injector, Notification.PERMISSION_SMS, rh.gs(R.string.smscommunicator_missingsmspermission), Notification.URGENT)
+                notification.action(R.string.request) { askForPermission(activity, arrayOf(Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS, Manifest.permission.RECEIVE_MMS)) }
                 rxBus.send(EventNewNotification(notification))
             } else rxBus.send(EventDismissNotification(Notification.PERMISSION_SMS))
             // Following is a bug in Android 8
-            if (permissionNotGranted(activity, Manifest.permission.READ_PHONE_STATE)) {
-                val notification = NotificationWithAction(injector, Notification.PERMISSION_PHONESTATE, resourceHelper.gs(R.string.smscommunicator_missingphonestatepermission), Notification.URGENT)
-                notification.action(R.string.request) { askForPermission(activity, arrayOf(Manifest.permission.READ_PHONE_STATE)) }
+//            if (permissionNotGranted(activity, Manifest.permission.READ_PHONE_STATE)) {
+//                val notification = NotificationWithAction(injector, Notification.PERMISSION_PHONE_STATE, rh.gs(R.string.smscommunicator_missingphonestatepermission), Notification.URGENT)
+//                notification.action(R.string.request) { askForPermission(activity, arrayOf(Manifest.permission.READ_PHONE_STATE)) }
+//                rxBus.send(EventNewNotification(notification))
+//            } else rxBus.send(EventDismissNotification(Notification.PERMISSION_PHONE_STATE))
+        }
+    }
+
+    @Synchronized
+    fun notifyForBtConnectPermission(activity: FragmentActivity) {
+        if (Build.VERSION.SDK_INT >= /*Build.VERSION_CODES.S*/31) {
+            //  Manifest.permission.BLUETOOTH_CONNECT
+            if (permissionNotGranted(activity, "android.permission.BLUETOOTH_CONNECT") || permissionNotGranted(activity, "android.permission.BLUETOOTH_SCAN")) {
+                val notification = NotificationWithAction(injector, Notification.PERMISSION_BT, rh.gs(R.string.needconnectpermission), Notification.URGENT)
+                notification.action(R.string.request) { askForPermission(activity, arrayOf("android.permission.BLUETOOTH_SCAN", "android.permission.BLUETOOTH_CONNECT")) }
                 rxBus.send(EventNewNotification(notification))
-            } else rxBus.send(EventDismissNotification(Notification.PERMISSION_PHONESTATE))
+            } else {
+                activity.startActivity(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
+                rxBus.send(EventDismissNotification(Notification.PERMISSION_BT))
+            }
         }
     }
 
     @Synchronized
     fun notifyForBatteryOptimizationPermission(activity: FragmentActivity) {
         if (permissionNotGranted(activity, Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)) {
-            val notification = NotificationWithAction(injector, Notification.PERMISSION_BATTERY, String.format(resourceHelper.gs(R.string.needwhitelisting), resourceHelper.gs(R.string.app_name)), Notification.URGENT)
+            val notification = NotificationWithAction(injector, Notification.PERMISSION_BATTERY, String.format(rh.gs(R.string.needwhitelisting), rh.gs(R.string.app_name)), Notification.URGENT)
             notification.action(R.string.request) { askForPermission(activity, arrayOf(Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)) }
             rxBus.send(EventNewNotification(notification))
         } else rxBus.send(EventDismissNotification(Notification.PERMISSION_BATTERY))
@@ -109,18 +121,15 @@ class AndroidPermission @Inject constructor(
 
     @Synchronized fun notifyForStoragePermission(activity: FragmentActivity) {
         if (permissionNotGranted(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            val notification = NotificationWithAction(injector, Notification.PERMISSION_STORAGE, resourceHelper.gs(R.string.needstoragepermission), Notification.URGENT)
-            notification.action(R.string.request) {
-                askForPermission(activity, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE))
-            }
+            val notification = NotificationWithAction(injector, Notification.PERMISSION_STORAGE, rh.gs(R.string.needstoragepermission), Notification.URGENT)
+            notification.action(R.string.request) { askForPermission(activity, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)) }
             rxBus.send(EventNewNotification(notification))
         } else rxBus.send(EventDismissNotification(Notification.PERMISSION_STORAGE))
     }
 
     @Synchronized fun notifyForLocationPermissions(activity: FragmentActivity) {
         if (permissionNotGranted(activity, Manifest.permission.ACCESS_FINE_LOCATION)) {
-            val notification = NotificationWithAction(injector, Notification.PERMISSION_LOCATION, resourceHelper.gs(R.string.needlocationpermission), Notification.URGENT)
+            val notification = NotificationWithAction(injector, Notification.PERMISSION_LOCATION, rh.gs(R.string.needlocationpermission), Notification.URGENT)
             notification.action(R.string.request) { askForPermission(activity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)) }
             rxBus.send(EventNewNotification(notification))
         } else rxBus.send(EventDismissNotification(Notification.PERMISSION_LOCATION))
@@ -130,7 +139,7 @@ class AndroidPermission @Inject constructor(
         // Check if Android Q or higher
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
             if (!Settings.canDrawOverlays(activity)) {
-                val notification = NotificationWithAction(injector, Notification.PERMISSION_SYSTEM_WINDOW, resourceHelper.gs(R.string.needsystemwindowpermission), Notification.URGENT)
+                val notification = NotificationWithAction(injector, Notification.PERMISSION_SYSTEM_WINDOW, rh.gs(R.string.needsystemwindowpermission), Notification.URGENT)
                 notification.action(R.string.request) {
                     // Check if Android Q or higher
                     if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {

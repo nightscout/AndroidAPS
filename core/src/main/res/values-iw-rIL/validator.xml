@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_only_numeric_digits_allowed">ניתן להשתמש רק בתוים מספריים.</string>
+    <string name="error_only_numeric_digits_range_allowed">מותר להשתמש רק בתוים מספריים בטווח %1$s עד %2$s. </string>
+    <string name="error_this_field_cannot_contain_special_character">שדה זה לא יכול להכיל תוים מיוחדים</string>
+    <string name="error_only_standard_letters_are_allowed">ניתן להשתמש רק באותיות אנגליות רגילות</string>
+    <string name="error_field_must_not_be_empty">שדה זה לא יכול להיות ריק</string>
+    <string name="error_email_address_not_valid">כתובת הדוא\"ל אינה תקינה</string>
+    <string name="error_creditcard_number_not_valid">מספר כרטיס האשראי לא תקין</string>
+    <string name="error_phone_not_valid">מספר הטלפון אינו תקין</string>
+    <string name="error_domain_not_valid">שם הדומיין לא תקין</string>
+    <string name="error_ip_not_valid">כתובת ה-IP אינה תקינה</string>
+    <string name="error_url_not_valid">כתובת ה-URL אינה תקינה</string>
+    <string name="error_notvalid_personname">השם הפרטי או שם המשפחה לא תקינים.</string>
+    <string name="error_notvalid_personfullname">השם המלא אינו תקין.</string>
+    <string name="error_date_not_valid">הפורמט אינו תקין</string>
+    <string name="error_mustbe4digitnumber">חייב להיות מספר ארבע ספרתי</string>
+    <string name="error_mustbe6digitnumber">חייב להיות מספר שש ספרתי</string>
+    <string name="error_mustbe12hexadidits">חייב להיות באורך 12 תוים, מהתוים הבאים: ABCDEF0123456789</string>
+    <string name="error_mustbe8hexadidits">חייב להיות באורך 8 תוים, מהתוים הבאים: ABCDEF0123456789</string>
+    <string name="error_mustbe4hexadidits">חייב להיות באורך 4 תוים, מהתוים הבאים: ABCDEF0123456789</string>
+    <string name="error_not_a_minimum_length">לא באורך המינימלי</string>
+    <string name="error_pin_not_valid">קוד ה-PIN חייב להיות באורך 3 עד 6 תוים, לא זהים ולא בסדר</string>
+</resources>

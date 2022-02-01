@@ -90,6 +90,9 @@
     <string name="action_confirm">BEVESTIGEN</string>
     <string name="action_timeshift">tijdsverschuiving</string>
     <string name="action_bolus">bolus</string>
+    <string name="bolus_progress">Bolus voortgang</string>
+    <string name="press_to_cancel">druk om te annuleren</string>
+    <string name="cancel_bolus">BOLUS ANNULEREN</string>
     <string name="status_pump">Pomp</string>
     <string name="status_loop">Loop</string>
     <string name="status_cpp">CPP</string>
@@ -119,6 +122,8 @@
     <string name="color_name_white">wit</string>
     <string name="color_name_black">zwart</string>
     <string name="color_name_multicolor">multicolor</string>
+    <string name="pref_simplify_ui">Versimpel interface</string>
+    <string name="pref_simplify_ui_sum">Alleen tijd en BG weergeven</string>
     <string name="pref_vibrate_hourly">Tril ieder uur</string>
     <string name="pref_show_weeknumber">Weeknummer weergeven</string>
     <string name="digitalstyle_pref_your_style">Jouw stijl:</string>
@@ -129,4 +134,12 @@
     <string name="digitalstyle_pref_your_color">Jouw kleur:</string>
     <string name="digitalstyle_pref_your_color_saturation">Jouw kleurverzadiging:</string>
     <string name="digitalstyle_pref_your_color_opacity">Jouw kleurendoorzichtigheid:</string>
+    <string name="bolus_progress_channel_name">AAPS Bolus Voortgang</string>
+    <string name="bolus_progress_silent_channel_name">AAPS Bolus Voortgang Stil</string>
+    <string name="bolus_progress_channel_description">Bolus voortgang en annuleer</string>
+    <string name="bolus_progress_silent_channel_description">Bolus voortgang en annuleer met minder trillingen</string>
+    <string name="simple_ui_off">Uit</string>
+    <string name="simple_ui_charging">Tijdens Opladen</string>
+    <string name="simple_ui_always_on">Altijd Aan modus</string>
+    <string name="simple_ui_always_on_charging">Altijd Aan en Opladen</string>
 </resources>

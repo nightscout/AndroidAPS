@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pumperror">泵错误</string>
+    <string name="gettingpumpsettings">正在获取泵设置</string>
+    <string name="gettingpumptime">正在获取泵时间</string>
+    <string name="largetimediff">手机和泵的时间相差很大\n泵上的时间已经偏离１. ５小时\n请在泵上手动调整时间，并且确定可以顺利读取泵历史，没有出现意外的行为。\n如果可能的话，在更改泵时间之前从泵上删除历史。或者禁用闭环至少一个DIA的时间，也就是胰岛素作用时间。</string>
+    <string name="approachingdailylimit">接近每日胰岛素的极限值</string>
+    <string name="startingbolus">开始大剂量输注</string>
+    <string name="stoppingtempbasal">正在停止临时基础率</string>
+    <string name="settingtempbasal">正在设定临时基础率</string>
+    <string name="settingextendedbolus">正在设定扩展大剂量</string>
+    <string name="stoppingextendedbolus">正在停止扩展大剂量</string>
+    <string name="updatingbasalrates">正在更新基础率</string>
+    <string name="maxbolusviolation">超出最大大剂量的限制</string>
+    <string name="commanderror">命令错误</string>
+    <string name="speederror">速度错误</string>
+    <string name="insulinlimitviolation">违反胰岛素限制</string>
+    <string name="boluserrorcode">已请求: %1$.2fU 已输注: %2$.2fU 错误代码: %3$s</string>
+    <string name="bolusspeed">大剂量输注速度</string>
+    <string name="selectedpump">已选择的泵</string>
+    <string name="bolus_step">大剂量步值</string>
+    <string name="basal_step">基础率步值</string>
+    <string name="pairfirst">请将您的泵与您的手机配对!</string>
+</resources>

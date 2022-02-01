@@ -17,7 +17,6 @@
     <string name="objectives_maxiob_gate">Praleiskite keletą dienų ir bent vieną naktį be hipoglikemijos aliarmų</string>
     <string name="objectives_autosens_objective">Jei reikia, paderinkite valandines bazės vertes bei pagrindinius parametrus ir įgalinkite Autosens funkciją</string>
     <string name="objectives_autosens_gate">1 savaitę praleiskite sėkmingai naudodami uždarąjį ciklą dienos metu ir įvesdami visus valgomus angliavandenius</string>
-    <string name="objectives_ama_objective">Dienos metu aktyvuokite papildomas funkcijas, tokias kaip pažangioji maisto skaičiuoklė (AMA Advanced Meal Assist)</string>
     <string name="objectives_smb_objective">Dienos metu aktyvuokite papildomas funkcijas, tokias kaip SMB (Super Mikro Bolusas)</string>
     <string name="objectives_auto_objective">Automatizavimo įjungimas</string>
     <string name="objectives_smb_gate">Norėdami, kad SMB veiktų gerai, turite perskaityti dokumentaciją ir padidinti max AIO! Pradžiai patartina skaičiuoti taip: maxAIO=(didžiausia valandinė bazė x 3) + vidutinis bolusas</string>

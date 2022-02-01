@@ -9,16 +9,15 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
  * Created by andy on 6/16/18.
  */
 //@RunWith(PowerMockRunner.class)
-//@PrepareForTest({ MainApp.class, DatabaseHelper.class, DateUtil.class, SP.class })
+//@PrepareForTest({ DatabaseHelper.class, DateUtil.class, SP.class })
 @Ignore
 public class BasalProfileUTest {
 /*
-    // MainApp mainApp = new MainApp();
     @Before
     public void initMocking() {
 
         PowerMockito.mockStatic(DateUtil.class);
-        when(DateUtil.now()).thenReturn(1514766900000L + T.mins(1).msecs());
+        when(dateUtil._now()).thenReturn(1514766900000L + T.mins(1).msecs());
     }
 
 

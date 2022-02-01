@@ -10,8 +10,8 @@ import java.io.OutputStream;
 import info.nightscout.androidaps.dana.DanaPump;
 import info.nightscout.androidaps.danar.comm.MessageBase;
 import info.nightscout.androidaps.danar.comm.MessageHashTableBase;
-import info.nightscout.androidaps.logging.AAPSLogger;
-import info.nightscout.androidaps.logging.LTag;
+import info.nightscout.shared.logging.AAPSLogger;
+import info.nightscout.shared.logging.LTag;
 import info.nightscout.androidaps.utils.CRC;
 
 /**
@@ -113,7 +113,7 @@ public class SerialIOThread extends Thread {
                 return null;
             }
 
-            short crc = CRC.getCrc16(mReadBuff, 3, length - 7);
+            short crc = CRC.INSTANCE.getCrc16(mReadBuff, 3, length - 7);
             byte crcByte0 = (byte) (crc >> 8 & 0xFF);
             byte crcByte1 = (byte) (crc & 0xFF);
 

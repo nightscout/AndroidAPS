@@ -4,18 +4,18 @@ import android.content.Context
 import android.content.Intent
 import com.google.gson.Gson
 import dagger.android.DaggerBroadcastReceiver
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.interfaces.PumpInterface
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.BundleLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.Pump
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.BundleLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.utils.TimeChangeType
 import java.util.*
 import javax.inject.Inject
 
 class TimeDateOrTZChangeReceiver : DaggerBroadcastReceiver() {
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     val gson: Gson = Gson()
 
     private var isDST = false
@@ -37,7 +37,7 @@ class TimeDateOrTZChangeReceiver : DaggerBroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
         val action = intent.action
-        val activePump: PumpInterface = activePlugin.activePump
+        val activePump: Pump = activePlugin.activePump
 
         aapsLogger.debug(LTag.PUMP, "TimeDateOrTZChangeReceiver::Date, Time and/or TimeZone changed. [action={}]", action)
         aapsLogger.debug(LTag.PUMP, "TimeDateOrTZChangeReceiver::Intent::{}", BundleLogger.log(intent.extras))
@@ -60,10 +60,10 @@ class TimeDateOrTZChangeReceiver : DaggerBroadcastReceiver() {
                 } else {
                     if (currentDst) {
                         aapsLogger.info(LTag.PUMP, "TimeDateOrTZChangeReceiver::DST started. Notifying pump driver.")
-                        activePump.timezoneOrDSTChanged(TimeChangeType.DST_Started)
+                        activePump.timezoneOrDSTChanged(TimeChangeType.DSTStarted)
                     } else {
                         aapsLogger.info(LTag.PUMP, "TimeDateOrTZChangeReceiver::DST ended. Notifying pump driver.")
-                        activePump.timezoneOrDSTChanged(TimeChangeType.DST_Ended)
+                        activePump.timezoneOrDSTChanged(TimeChangeType.DSTEnded)
                     }
                 }
                 isDST = currentDst

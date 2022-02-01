@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="open_humans">Open Humans</string>
+    <string name="open_humans_short">OH</string>
+    <string name="logout">Terminar Sessão</string>
+    <string name="only_upload_if_connected_to_wifi">Apenas enviar se ligado ao Wi-Fi</string>
+    <string name="only_upload_if_charging">Apenas enviar se estiver a carregar</string>
+    <string name="you_have_been_signed_out_of_open_humans">Sessão do Open Humans foi encerrada</string>
+    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Clique aqui para entrar novamente, se não era de propósito.</string>
+</resources>

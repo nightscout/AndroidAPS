@@ -3,17 +3,17 @@ package info.nightscout.androidaps.plugins.insulin
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Iob
-import info.nightscout.androidaps.db.Treatment
-import info.nightscout.androidaps.interfaces.InsulinInterface
-import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PluginDescription
-import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.database.embedments.InsulinConfiguration
+import info.nightscout.androidaps.database.entities.Bolus
+import info.nightscout.androidaps.interfaces.*
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
+import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import kotlin.math.exp
+import kotlin.math.pow
 
 /**
  * Created by adrian on 13.08.2017.
@@ -23,17 +23,21 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
  */
 abstract class InsulinOrefBasePlugin(
     injector: HasAndroidInjector,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     val profileFunction: ProfileFunction,
-    val rxBus: RxBusWrapper, aapsLogger: AAPSLogger
-) : PluginBase(PluginDescription()
-    .mainType(PluginType.INSULIN)
-    .fragmentClass(InsulinFragment::class.java.name)
-    .pluginIcon(R.drawable.ic_insulin)
-    .shortName(R.string.insulin_shortname)
-    .visibleByDefault(false),
-    aapsLogger, resourceHelper, injector
-), InsulinInterface {
+    val rxBus: RxBus,
+    aapsLogger: AAPSLogger,
+    config: Config
+) : PluginBase(
+    PluginDescription()
+        .mainType(PluginType.INSULIN)
+        .fragmentClass(InsulinFragment::class.java.name)
+        .pluginIcon(R.drawable.ic_insulin)
+        .shortName(R.string.insulin_shortname)
+        .visibleByDefault(false)
+        .neverVisible(config.NSCLIENT),
+    aapsLogger, rh, injector
+), Insulin {
 
     private var lastWarned: Long = 0
     override val dia
@@ -56,7 +60,7 @@ abstract class InsulinOrefBasePlugin(
     }
 
     private val notificationPattern: String
-        get() = resourceHelper.gs(R.string.dia_too_short)
+        get() = rh.gs(R.string.dia_too_short)
 
     open val userDefinedDia: Double
         get() {
@@ -64,11 +68,11 @@ abstract class InsulinOrefBasePlugin(
             return profile?.dia ?: MIN_DIA
         }
 
-    override fun iobCalcForTreatment(treatment: Treatment, time: Long, dia: Double): Iob {
+    override fun iobCalcForTreatment(bolus: Bolus, time: Long, dia: Double): Iob {
         val result = Iob()
         val peak = peak
-        if (treatment.insulin != 0.0) {
-            val bolusTime = treatment.date
+        if (bolus.amount != 0.0) {
+            val bolusTime = bolus.timestamp
             val t = (time - bolusTime) / 1000.0 / 60.0
             val td = dia * 60 //getDIA() always >= MIN_DIA
             val tp = peak.toDouble()
@@ -76,20 +80,23 @@ abstract class InsulinOrefBasePlugin(
             if (t < td) {
                 val tau = tp * (1 - tp / td) / (1 - 2 * tp / td)
                 val a = 2 * tau / td
-                val S = 1 / (1 - a + (1 + a) * Math.exp(-td / tau))
-                result.activityContrib = treatment.insulin * (S / Math.pow(tau, 2.0)) * t * (1 - t / td) * Math.exp(-t / tau)
-                result.iobContrib = treatment.insulin * (1 - S * (1 - a) * ((Math.pow(t, 2.0) / (tau * td * (1 - a)) - t / tau - 1) * Math.exp(-t / tau) + 1))
+                val S = 1 / (1 - a + (1 + a) * exp(-td / tau))
+                result.activityContrib = bolus.amount * (S / tau.pow(2.0)) * t * (1 - t / td) * exp(-t / tau)
+                result.iobContrib = bolus.amount * (1 - S * (1 - a) * ((t.pow(2.0) / (tau * td * (1 - a)) - t / tau - 1) * Math.exp(-t / tau) + 1))
             }
         }
         return result
     }
+
+    override val insulinConfiguration: InsulinConfiguration
+        get() = InsulinConfiguration(friendlyName, (dia * 1000.0 * 3600.0).toLong(), T.mins(peak.toLong()).msecs())
 
     override val comment
         get(): String {
             var comment = commentStandardText()
             val userDia = userDefinedDia
             if (userDia < MIN_DIA) {
-                comment += "\n" + resourceHelper.gs(R.string.dia_too_short, userDia, MIN_DIA)
+                comment += "\n" + rh.gs(R.string.dia_too_short, userDia, MIN_DIA)
             }
             return comment
         }

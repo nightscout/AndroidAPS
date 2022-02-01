@@ -6,7 +6,7 @@ import android.widget.TextView
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.setupwizard.SWValidator
 
-class SWBreak(injector: HasAndroidInjector) : SWItem(injector, Type.TEXT) {
+class SWBreak(injector: HasAndroidInjector) : SWItem(injector, Type.BREAK) {
     private var l: TextView? = null
     private var visibilityValidator: SWValidator? = null
 

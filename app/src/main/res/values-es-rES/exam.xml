@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="dia_whatmeansdia">¿Qué es cierto acerca de DIA?</string>
-    <string name="dia_label_exam">Duración de actividad de insulina (DIA)</string>
-    <string name="dia_profile">Debe establecer el valor para DIA en su perfil.</string>
+    <string name="dia_label_exam">Duración de la acción de insulina (DIA)</string>
+    <string name="dia_profile">Debes establecer el valor de DIA en tu perfil.</string>
     <string name="dia_minimumis5h">El valor mínimo permitido es 5 horas.</string>
     <string name="dia_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html?#insulin</string>
     <string name="dia_meaningisequaltodiapump">Si está satisfecho con el valor para DIA que utilizó en su bomba antes de usar AndroidAPS y le funcionó bien, no hay necesidad de cambiar esto cuando empieces a cerrar el bucle.</string>
@@ -48,8 +48,8 @@
     <string name="exerciseprofile_label">Ejercicio y perfiles</string>
     <string name="exerciseprofile_whattodo">¿Cómo puede usar perfiles para ayudar mejor al sistema a hacer frente al ejercicio aeróbico?</string>
     <string name="exerciseprofile_switchprofilebelow100">Haga un cambio de perfil a menos de 100%.</string>
-    <string name="exerciseprofile_switchprofileabove100">Haga un cambio de perfil a más de 100%. </string>
-    <string name="exerciseprofile_leaveat100">Deja el perfil fijado a 100%.</string>
+    <string name="exerciseprofile_switchprofileabove100">Haga un cambio de perfil a más de 100%.</string>
+    <string name="exerciseprofile_leaveat100">Dejar el perfil configurado al 100%.</string>
     <string name="exerciseprofile_suspendloop">Suspender el bucle.</string>
     <string name="exerciseprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>
     <string name="exercise_label">Ejercicios y objetivos temporales</string>
@@ -75,8 +75,8 @@
     <string name="prerequisites_determinedcorrectprofile">Información de perfil validada (Basal, IC, ISF, DIA).</string>
     <string name="prerequisites_computer">Un ordenador con Android Studio instalado y configurado.</string>
     <string name="prerequisites_phone">Un teléfono compatible.</string>
-    <string name="prerequisites_pump">Una bomba de insulina compatible si pretendes usar el sistema en modo \"lazo cerrado\".</string>
-    <string name="prerequisites_nightscout">Nightscout, para tener un registro de los datos y revisar los parámetros de cnfiguración.</string>
+    <string name="prerequisites_pump">Una bomba de insulina compatible, si planeas usar el sistema en modo \"lazo cerrado\".</string>
+    <string name="prerequisites_nightscout">Nightscout, para tener un registro de los datos y revisar los parámetros de configuración.</string>
     <string name="prerequisites_tidepoolaccount">Una cuenta de Tidepool.</string>
     <string name="prerequisites_googleaccount">Una cuenta de Google.</string>
     <string name="prerequisites_githubaccount">Una cuenta de Github.</string>
@@ -84,7 +84,7 @@
     <string name="prerequisites_own670g">Una bomba MiniMed 670G.</string>
     <string name="prerequisites_hint1">https://androidaps.readthedocs.io/en/latest/EN/Module/module.html</string>
     <string name="prerequisites_smartwatch">Un Smartwatch.</string>
-    <string name="prerequisites_supportedcgm">Un CGM soportado.</string>
+    <string name="prerequisites_supportedcgm">Un MCG soportado.</string>
     <string name="prerequisites2_label">Requisitos previos</string>
     <string name="prerequisites2_what">¿Qué es necesario para poder instalar y usar AndroidAPS?</string>
     <string name="prerequisites2_profile">Parámetros validados para poder configurar un perfil (ISF, I:C ratio, perfil basal, DIA etc.).</string>
@@ -132,7 +132,7 @@
     <string name="wronginsulin_label">Errores de entrega/entrada de insulina</string>
     <string name="wronginsulin_whattodo">¿Qué debes hacer si recibiste menos insulina de la que sugiere la historia de la bomba p.ej. debido a una oclusión, una cánula fallida o olvidarse de reponer la bomba después de una ducha?</string>
     <string name="wronginsulin_careportal">Elimina los datos de insulina del portal de Nightscout Careportal para eliminarlos del historial de la bomba.</string>
-    <string name="wronginsulin_compare">Comparar valores en AndroidAPS e historial de la bomba.</string>
+    <string name="wronginsulin_compare">Comparar valores en AndroidAPS con el historial de la bomba (si la bomba lo soporta).</string>
     <string name="wronginsulin_prime">Bolo una proporción de la insulina calculada “perdida” por jeringa/pluma o usando menú de llenado.</string>
     <string name="wronginsulin_donothing">No haga nada y permite que AndroidAPS corrija cualquier nivel alto de glucosa en la sangre resultante.</string>
     <string name="iob_label">Insulina a bordo (IOB)</string>

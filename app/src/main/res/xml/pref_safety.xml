@@ -4,6 +4,7 @@
     xmlns:validate="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
+        android:key="@string/key_treatmentssafety_settings"
         android:title="@string/treatmentssafety_title"
         app:initialExpandedChildrenCount="0">
 

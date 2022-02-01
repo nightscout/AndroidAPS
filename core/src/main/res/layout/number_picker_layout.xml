@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="130dp"
     android:layout_height="40dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:background="@drawable/background_darkgray">
 
@@ -12,7 +12,8 @@
         android:layout_height="match_parent"
         android:padding="0dp"
         android:textColor="@color/mdtp_white"
-        android:background="@null"
+        android:background="@android:color/transparent"
+        app:backgroundTint="@android:color/transparent"
         android:textStyle="bold"
         android:text="—"/>
 
@@ -34,6 +35,8 @@
         android:padding="0dp"
         android:textSize="25sp"
         android:textColor="@color/mdtp_white"
-        android:background="@null"
+        android:background="@android:color/transparent"
+        app:backgroundTint="@android:color/transparent"
+
         android:text="+"/>
 </LinearLayout>

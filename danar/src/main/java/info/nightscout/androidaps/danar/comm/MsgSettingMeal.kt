@@ -2,8 +2,7 @@ package info.nightscout.androidaps.danar.comm
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danar.R
-import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
@@ -31,17 +30,17 @@ class MsgSettingMeal(
         aapsLogger.debug(LTag.PUMPCOMM, "Block time: $blockTime")
         aapsLogger.debug(LTag.PUMPCOMM, "Is Config U/d: " + danaPump.isConfigUD)
         // DanaRKorean is not possible to set to 0.01 but it works when controlled from AAPS
-        if (danaRKoreanPlugin.isEnabled(PluginType.PUMP)) {
+        if (danaRKoreanPlugin.isEnabled()) {
             danaPump.basalStep = 0.01
         }
         if (danaPump.basalStep != 0.01) {
-            val notification = Notification(Notification.WRONGBASALSTEP, resourceHelper.gs(R.string.danar_setbasalstep001), Notification.URGENT)
+            val notification = Notification(Notification.WRONG_BASAL_STEP, rh.gs(R.string.danar_setbasalstep001), Notification.URGENT)
             rxBus.send(EventNewNotification(notification))
         } else {
-            rxBus.send(EventDismissNotification(Notification.WRONGBASALSTEP))
+            rxBus.send(EventDismissNotification(Notification.WRONG_BASAL_STEP))
         }
         if (danaPump.isConfigUD) {
-            val notification = Notification(Notification.UD_MODE_ENABLED, resourceHelper.gs(R.string.danar_switchtouhmode), Notification.URGENT)
+            val notification = Notification(Notification.UD_MODE_ENABLED, rh.gs(R.string.danar_switchtouhmode), Notification.URGENT)
             rxBus.send(EventNewNotification(notification))
         } else {
             rxBus.send(EventDismissNotification(Notification.UD_MODE_ENABLED))

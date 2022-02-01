@@ -2,14 +2,15 @@ package info.nightscout.androidaps.plugins.insulin
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interfaces.InsulinInterface
+import info.nightscout.androidaps.extensions.putInt
+import info.nightscout.androidaps.extensions.storeInt
+import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.androidaps.interfaces.Insulin
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.utils.extensions.storeInt
-import info.nightscout.androidaps.utils.extensions.putInt
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -21,22 +22,24 @@ import javax.inject.Singleton
 class InsulinOrefFreePeakPlugin @Inject constructor(
     injector: HasAndroidInjector,
     private val sp: SP,
-    resourceHelper: ResourceHelper,
+    rh: ResourceHelper,
     profileFunction: ProfileFunction,
-    rxBus: RxBusWrapper, aapsLogger: AAPSLogger
-) : InsulinOrefBasePlugin(injector, resourceHelper, profileFunction, rxBus, aapsLogger) {
+    rxBus: RxBus,
+    aapsLogger: AAPSLogger,
+    config: Config
+) : InsulinOrefBasePlugin(injector, rh, profileFunction, rxBus, aapsLogger, config) {
 
-    override val id get(): InsulinInterface.InsulinType = InsulinInterface.InsulinType.OREF_FREE_PEAK
+    override val id get(): Insulin.InsulinType = Insulin.InsulinType.OREF_FREE_PEAK
 
-    override val friendlyName get(): String = resourceHelper.gs(R.string.free_peak_oref)
+    override val friendlyName get(): String = rh.gs(R.string.free_peak_oref)
 
-    override fun configuration(): JSONObject = JSONObject().putInt(R.string.key_insulin_oref_peak, sp, resourceHelper)
+    override fun configuration(): JSONObject = JSONObject().putInt(R.string.key_insulin_oref_peak, sp, rh)
     override fun applyConfiguration(configuration: JSONObject) {
-            configuration.storeInt(R.string.key_insulin_oref_peak, sp, resourceHelper)
+        configuration.storeInt(R.string.key_insulin_oref_peak, sp, rh)
     }
 
     override fun commentStandardText(): String {
-        return resourceHelper.gs(R.string.insulin_peak_time) + ": " + peak
+        return rh.gs(R.string.insulin_peak_time) + ": " + peak
     }
 
     override val peak: Int

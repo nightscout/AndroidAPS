@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs;
 
 
-import info.nightscout.androidaps.plugins.pump.common.R;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.R;
 
 /**
  * Created by andy on 14/05/2018.
@@ -43,8 +43,8 @@ public enum RileyLinkError {
         if (this.resourceIdPod != null) {
 
             return targetDevice == RileyLinkTargetDevice.MedtronicPump ? //
-            this.resourceId
-                : this.resourceIdPod;
+                    this.resourceId
+                    : this.resourceIdPod;
         } else {
             return this.resourceId;
         }

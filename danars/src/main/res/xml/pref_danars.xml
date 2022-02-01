@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
+        android:key="@string/key_danars_settings"
         android:title="@string/danarspump"
         app:initialExpandedChildrenCount="0">
 

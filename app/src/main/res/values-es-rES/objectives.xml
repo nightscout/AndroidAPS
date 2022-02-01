@@ -5,7 +5,7 @@
     <string name="nth_objective">%1$d. Objetivo</string>
     <string name="objectivenotstarted">Objetivo %1$d no iniciado</string>
     <string name="objectivenotfinished">Objetivo %1$d no finalizado</string>
-    <string name="objectives_0_objective">Configurar la visualización y la monitorización, analizar los valores basales y las ratios</string>
+    <string name="objectives_0_objective">Configurar la visualización y la monitorización, analizar los valores basales y los ratios</string>
     <string name="objectives_0_gate">Comprobar que los datos de glucosa están disponibles en Nightscout, y que los datos de la bomba de insulina se están subiendo</string>
     <string name="objectives_openloop_objective">Comenzando en lazo abierto</string>
     <string name="objectives_openloop_gate">Ejecutar en modo de lazo abierto durante unos días, y aceptar manualmente las basales temporales. Configure y use objetivos temporales y predeterminados (por ejemplo, para actividad o carbohidratos para hipoglucemia)</string>
@@ -17,7 +17,6 @@
     <string name="objectives_maxiob_gate">Usar unos cuantos días, y al menos una noche sin alarmas de glucosa baja, antes de bajar valor de glucosa</string>
     <string name="objectives_autosens_objective">Ajustar las basales y ratios, si es necesario, y luego activar auto-sens</string>
     <string name="objectives_autosens_gate">Una semana con éxito en lazo cerrado durante el día con entrada regular de carbohidratos</string>
-    <string name="objectives_ama_objective">Habilitar funciones adicionales para su uso durante el día, como el asistente de comida avanzado</string>
     <string name="objectives_smb_objective">Habilitar funciones adicionales para uso durante el día como SMB</string>
     <string name="objectives_auto_objective">Activar automatización</string>
     <string name="objectives_smb_gate">¡Debes leer el wiki y subir maxIOB para que SMB funcione bien! Para comenzar un buen valor sería maxIOB = bolo de comida medio + 3 x máximo basal diario</string>
@@ -38,7 +37,7 @@
     <string name="objectives_button_enter">Intro</string>
     <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Si tienes al menos 3 meses de experiencia con el bucle cerrado de otros sistemas puedes cualificarte para obtener un código para saltarte los objetivos. Para información detallada (en inglés): https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives.</string>
     <string name="codeaccepted">Código aceptado</string>
-    <string name="codeinvalid">Código no válido</string>
+    <string name="codeinvalid">Código inválido</string>
     <string name="objectives_exam_objective">Compruebe su conocimiento</string>
     <string name="objectives_exam_gate">Estudia las preguntas. Se te dan cuatro respuestas posibles para cada pregunta. Puede haber más de una respuesta correcta. Por favor, marca todas las que son correctas y seleccione VERIFICAR.</string>
     <string name="answerdisabledto">Respuesta deshabilitada a: %1$s</string>

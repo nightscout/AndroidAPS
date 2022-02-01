@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.interaction.utils;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -8,17 +9,19 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.core.view.InputDeviceCompat;
+import androidx.core.view.MotionEventCompat;
+
 import java.text.NumberFormat;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-
 /**
  * Created by mike on 28.06.2016.
  */
 public class PlusMinusEditText implements View.OnKeyListener,
-        View.OnTouchListener, View.OnClickListener {
+        View.OnTouchListener, View.OnClickListener, View.OnGenericMotionListener {
 
     Integer editTextID;
     public TextView editText;
@@ -32,6 +35,12 @@ public class PlusMinusEditText implements View.OnKeyListener,
     NumberFormat formater;
     boolean allowZero = false;
     boolean roundRobin;
+
+    private int mChangeCounter = 0;
+    private long mLastChange = 0;
+    private final static int THRESHOLD_COUNTER = 5;
+    private final static int THRESHOLD_COUNTER_LONG = 10;
+    private final static int THRESHOLD_TIME = 100;
 
     private final Handler mHandler;
     private ScheduledExecutorService mUpdater;
@@ -66,7 +75,7 @@ public class PlusMinusEditText implements View.OnKeyListener,
     private static final int MSG_DEC = 1;
 
     public PlusMinusEditText(View view, int editTextID, int plusID, int minusID, Double initValue, Double minValue, Double maxValue, Double step, NumberFormat formater, boolean allowZero) {
-        this( view,  editTextID,  plusID,  minusID,  initValue,  minValue,  maxValue,  step,  formater,  allowZero, false);
+        this(view, editTextID, plusID, minusID, initValue, minValue, maxValue, step, formater, allowZero, false);
     }
 
     public PlusMinusEditText(View view, int editTextID, int plusID, int minusID, Double initValue, Double minValue, Double maxValue, Double step, NumberFormat formater, boolean allowZero, boolean roundRobin) {
@@ -82,7 +91,7 @@ public class PlusMinusEditText implements View.OnKeyListener,
         this.allowZero = allowZero;
         this.roundRobin = roundRobin;
 
-        mHandler = new Handler() {
+        mHandler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
                 switch (msg.what) {
@@ -103,6 +112,7 @@ public class PlusMinusEditText implements View.OnKeyListener,
         plusImage.setOnTouchListener(this);
         plusImage.setOnKeyListener(this);
         plusImage.setOnClickListener(this);
+        editText.setOnGenericMotionListener(this);
         updateEditText();
     }
 
@@ -118,10 +128,11 @@ public class PlusMinusEditText implements View.OnKeyListener,
     public void setStep(Double step) {
         this.step = step;
     }
+
     private void inc(int multiplier) {
         value += step * multiplier;
         if (value > maxValue) {
-            if(roundRobin){
+            if (roundRobin) {
                 value = minValue;
             } else {
                 value = maxValue;
@@ -131,10 +142,10 @@ public class PlusMinusEditText implements View.OnKeyListener,
         updateEditText();
     }
 
-    private void dec( int multiplier) {
+    private void dec(int multiplier) {
         value -= step * multiplier;
         if (value < minValue) {
-            if(roundRobin){
+            if (roundRobin) {
                 value = maxValue;
             } else {
                 value = minValue;
@@ -202,6 +213,28 @@ public class PlusMinusEditText implements View.OnKeyListener,
             stopUpdating();
         } else if (isPressed) {
             startUpdating(v == plusImage);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onGenericMotion(View v, MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_SCROLL && ev.isFromSource(InputDeviceCompat.SOURCE_ROTARY_ENCODER)) {
+            long now = System.currentTimeMillis();
+            if (now - mLastChange > THRESHOLD_TIME) mChangeCounter = 0;
+
+            int dynamicMultiplier = mChangeCounter < THRESHOLD_COUNTER ? 1 :
+                    mChangeCounter < THRESHOLD_COUNTER_LONG ? 2 : 4;
+
+            float delta = -ev.getAxisValue(MotionEventCompat.AXIS_SCROLL);
+            if (delta > 0) {
+                inc(dynamicMultiplier);
+            } else {
+                dec(dynamicMultiplier);
+            }
+            mLastChange = System.currentTimeMillis();
+            mChangeCounter++;
+            return true;
         }
         return false;
     }

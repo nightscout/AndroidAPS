@@ -4,7 +4,7 @@ import java.io.Serializable
 
 /**
  * Implement this interface for every custom pump command that you want to be able to queue
- * See [info.nightscout.androidaps.interfaces.CommandQueueProvider.customCommand] for queuing a custom command.
+ * See [info.nightscout.androidaps.interfaces.CommandQueue.customCommand] for queuing a custom command.
  */
 interface CustomCommand : Serializable {
 

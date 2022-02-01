@@ -1,13 +1,20 @@
 package info.nightscout.androidaps.interaction.utils;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
-import android.support.wearable.view.WearableListView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.wear.widget.CurvedTextView;
+import androidx.wear.widget.WearableLinearLayoutManager;
+import androidx.wear.widget.WearableRecyclerView;
+
+import java.util.List;
 
 import info.nightscout.androidaps.R;
 
@@ -15,106 +22,130 @@ import info.nightscout.androidaps.R;
  * Created by adrian on 08/02/17.
  */
 
-public abstract class MenuListActivity extends Activity
-        implements WearableListView.ClickListener {
+public abstract class MenuListActivity extends Activity {
+    List<MenuItem> elements;
 
-    String[] elements;
-
-    protected abstract String[] getElements();
+    protected abstract List<MenuItem> getElements();
 
     protected abstract void doAction(String position);
 
-    @Override
-    protected void onPause(){
-        super.onPause();
-        finish();
+    public interface AdapterCallback {
+        void onItemClicked(MenuAdapter.ItemViewHolder v);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        elements = getElements();
         setContentView(R.layout.actions_list_activity);
+        setTitleBasedOnScreenShape(String.valueOf(getTitle()));
 
-        // Get the list component from the layout of the activity
-        WearableListView listView =
-                findViewById(R.id.wearable_list);
-
-        // Assign an adapter to the list
-        listView.setAdapter(new Adapter(this, elements));
-
-        // Set a click listener
-        listView.setClickListener(this);
+        elements = getElements();
+        CustomScrollingLayoutCallback customScrollingLayoutCallback = new CustomScrollingLayoutCallback();
+        WearableLinearLayoutManager layoutManager = new WearableLinearLayoutManager(this);
+        WearableRecyclerView listView = findViewById(R.id.action_list);
+        boolean isScreenRound = this.getResources().getConfiguration().isScreenRound();
+        if (isScreenRound) {
+            layoutManager.setLayoutCallback(customScrollingLayoutCallback);
+            listView.setEdgeItemsCenteringEnabled(true);
+        } else {
+            // Bug in androidx.wear:wear:1.2.0 
+            // WearableRecyclerView setEdgeItemsCenteringEnabled requires fix for square screen
+            listView.setPadding(0, 50, 0, 0);
+        }
+        listView.setHasFixedSize(true);
+        listView.setLayoutManager(layoutManager);
+        listView.setAdapter(new MenuAdapter(elements, v -> {
+            String tag = (String) v.itemView.getTag();
+            doAction(tag);
+        }));
     }
 
-    // WearableListView click listener
-    @Override
-    public void onClick(WearableListView.ViewHolder v) {
-        String tag = (String) v.itemView.getTag();
-        doAction(tag);
-        //ActionsDefinitions.doAction(v.getAdapterPosition(), this);
-        finish();
+    private void setTitleBasedOnScreenShape(String title) {
+        CurvedTextView titleViewCurved = findViewById(R.id.title_curved);
+        TextView titleView = findViewById(R.id.title);
+        if (this.getResources().getConfiguration().isScreenRound()) {
+            titleViewCurved.setText(title);
+            titleViewCurved.setVisibility(View.VISIBLE);
+            titleView.setVisibility((View.GONE));
+        } else {
+            titleView.setText(title);
+            titleView.setVisibility(View.VISIBLE);
+            titleViewCurved.setVisibility((View.GONE));
+        }
     }
 
-    @Override
-    public void onTopEmptyRegionClick() {
-    }
+    private static class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder> {
+        private final List<MenuItem> mDataset;
+        private final AdapterCallback callback;
 
-
-    private static final class Adapter extends WearableListView.Adapter {
-        private final String[] mDataset;
-        private final Context mContext;
-        private final LayoutInflater mInflater;
-
-        // Provide a suitable constructor (depends on the kind of dataset)
-        public Adapter(Context context, String[] dataset) {
-            mContext = context;
-            mInflater = LayoutInflater.from(context);
+        public MenuAdapter(List<MenuItem> dataset, AdapterCallback callback) {
             mDataset = dataset;
+            this.callback = callback;
         }
 
-        // Provide a reference to the type of views you're using
-        public static class ItemViewHolder extends WearableListView.ViewHolder {
-            private final TextView textView;
+        public static class ItemViewHolder extends RecyclerView.ViewHolder {
+            protected final RelativeLayout menuContainer;
+            protected final TextView actionItem;
+            protected final ImageView actionIcon;
 
             public ItemViewHolder(View itemView) {
                 super(itemView);
-                // find the text view within the custom item's layout
-                textView = itemView.findViewById(R.id.actionitem);
+                menuContainer = itemView.findViewById(R.id.menu_container);
+                actionItem = itemView.findViewById(R.id.menuItemText);
+                actionIcon = itemView.findViewById(R.id.menuItemIcon);
             }
         }
 
-        // Create new views for list items
-        // (invoked by the WearableListView's layout manager)
         @Override
-        public WearableListView.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                              int viewType) {
-            // Inflate our custom layout for list items
-            return new ItemViewHolder(mInflater.inflate(R.layout.list_item, null));
+        public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
+
+            return new ItemViewHolder(view);
         }
 
-        // Replace the contents of a list item
-        // Instead of creating new views, the list tries to recycle existing ones
-        // (invoked by the WearableListView's layout manager)
         @Override
-        public void onBindViewHolder(WearableListView.ViewHolder holder,
-                                     int position) {
-            // retrieve the text view
-            ItemViewHolder itemHolder = (ItemViewHolder) holder;
-            TextView view = itemHolder.textView;
-            // replace text contents
-            view.setText(mDataset[position]);
-            // replace list item's metadata
-            holder.itemView.setTag(mDataset[position]);
+        public void onBindViewHolder(ItemViewHolder holder, final int position) {
+            MenuItem item = mDataset.get(position);
+            holder.actionItem.setText(item.actionItem);
+            holder.actionIcon.setImageResource(item.actionIcon);
+            holder.itemView.setTag(item.actionItem);
+            holder.menuContainer.setOnClickListener(v -> callback.onItemClicked(holder));
         }
 
-        // Return the size of your dataset
-        // (invoked by the WearableListView's layout manager)
         @Override
         public int getItemCount() {
-            return mDataset.length;
+            return mDataset.size();
         }
     }
 
+    protected static class MenuItem {
+        public MenuItem(int actionIcon, String actionItem) {
+            this.actionIcon = actionIcon;
+            this.actionItem = actionItem;
+        }
+
+        public int actionIcon;
+        public String actionItem;
+    }
+
+    public static class CustomScrollingLayoutCallback extends WearableLinearLayoutManager.LayoutCallback {
+        // How much should we scale the icon at most.
+        private static final float MAX_ICON_PROGRESS = 0.65f;
+
+        @Override
+        public void onLayoutFinished(View child, RecyclerView parent) {
+            // Figure out % progress from top to bottom
+            float centerOffset = ((float) child.getHeight() / 2.0f) / (float) parent.getHeight();
+            float yRelativeToCenterOffset = (child.getY() / parent.getHeight()) + centerOffset;
+
+            // Normalize for center
+            float progressToCenter = Math.abs(0.5f - yRelativeToCenterOffset);
+            // Adjust to the maximum scale
+            progressToCenter = Math.min(progressToCenter, MAX_ICON_PROGRESS);
+
+            child.setScaleX(1 - progressToCenter);
+            child.setScaleY(1 - progressToCenter);
+        }
+    }
 
 }

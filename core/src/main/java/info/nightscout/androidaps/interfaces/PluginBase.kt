@@ -3,8 +3,8 @@ package info.nightscout.androidaps.interfaces
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 
 /**
@@ -13,7 +13,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 abstract class PluginBase(
     val pluginDescription: PluginDescription,
     val aapsLogger: AAPSLogger,
-    val resourceHelper: ResourceHelper,
+    val rh: ResourceHelper,
     val injector: HasAndroidInjector
 ) {
 
@@ -26,29 +26,31 @@ abstract class PluginBase(
 
     open val menuIcon: Int
         get() = pluginDescription.pluginIcon
+    open val menuIcon2: Int
+        get() = pluginDescription.pluginIcon2
 
     open val name: String
-        get() = if (pluginDescription.pluginName == -1) "UNKNOWN" else resourceHelper.gs(pluginDescription.pluginName)
+        get() = if (pluginDescription.pluginName == -1) "UNKNOWN" else rh.gs(pluginDescription.pluginName)
 
     //only if translation exists
     // use long name as fallback
     val nameShort: String
         get() {
             if (pluginDescription.shortName == -1) return name
-            val translatedName = resourceHelper.gs(pluginDescription.shortName)
-            return if (!translatedName.trim { it <= ' ' }.isEmpty()) translatedName else name
+            val translatedName = rh.gs(pluginDescription.shortName)
+            return if (translatedName.trim { it <= ' ' }.isNotEmpty()) translatedName else name
             // use long name as fallback
         }
 
     val description: String?
-        get() = if (pluginDescription.description == -1) null else resourceHelper.gs(pluginDescription.description)
+        get() = if (pluginDescription.description == -1) null else rh.gs(pluginDescription.description)
 
     fun getType(): PluginType = pluginDescription.mainType
 
     open val preferencesId: Int
         get() = pluginDescription.preferencesId
 
-    fun isEnabled() = isEnabled(pluginDescription.mainType)
+    open fun isEnabled() = isEnabled(pluginDescription.mainType)
 
     fun isEnabled(type: PluginType): Boolean {
         if (pluginDescription.alwaysEnabled && type == pluginDescription.mainType) return true
@@ -66,9 +68,8 @@ abstract class PluginBase(
     fun isDefault() = pluginDescription.defaultPlugin
 
     /**
-     * So far plugin can have it's main type + ConstraintInterface + ProfileInterface
+     * So far plugin can have it's main type + ConstraintInterface
      * ConstraintInterface is enabled if main plugin is enabled
-     * ProfileInterface can be enabled only  if main iterface is enable
      */
     fun setPluginEnabled(type: PluginType, newState: Boolean) {
         if (type == pluginDescription.mainType) {
@@ -103,7 +104,7 @@ abstract class PluginBase(
 
     fun showInList(type: PluginType): Boolean {
         if (pluginDescription.mainType == type) return pluginDescription.showInList && specialShowInListCondition()
-        return if (type == PluginType.PROFILE && pluginDescription.mainType == PluginType.PUMP) isEnabled(PluginType.PUMP) else false
+        return false
     }
 
     open fun specialEnableCondition(): Boolean {

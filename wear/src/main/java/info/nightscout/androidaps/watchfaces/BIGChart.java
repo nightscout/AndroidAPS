@@ -193,7 +193,7 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
     private void changeChartTimeframe() {
         int timeframe = Integer.parseInt(sharedPrefs.getString("chart_timeframe", "3"));
         timeframe = (timeframe%5) + 1;
-        sharedPrefs.edit().putString("chart_timeframe", "" + timeframe).commit();
+        sharedPrefs.edit().putString("chart_timeframe", "" + timeframe).apply();
     }
 
     protected void onWatchModeChanged(WatchMode watchMode) {
@@ -208,7 +208,7 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
     }
 
     private boolean isLowRes(WatchMode watchMode) {
-        return (watchMode == WatchMode.LOW_BIT) || (watchMode == WatchMode.LOW_BIT_BURN_IN) || (watchMode == WatchMode.LOW_BIT_BURN_IN);
+        return (watchMode == WatchMode.LOW_BIT) || (watchMode == WatchMode.LOW_BIT_BURN_IN);
     }
 
 

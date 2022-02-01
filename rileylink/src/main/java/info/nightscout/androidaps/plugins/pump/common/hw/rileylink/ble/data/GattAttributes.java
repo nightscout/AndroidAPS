@@ -13,13 +13,20 @@ public class GattAttributes {
 
     public static String PREFIX = "0000";
     public static String SUFFIX = "-0000-1000-8000-00805f9b34fb";
-    public static String SERVICE_GAP = PREFIX + "1800" + SUFFIX;
-    public static String CHARA_GAP_NAME = PREFIX + "2a00" + SUFFIX; // RileyLink RFSpy
-    public static String CHARA_GAP_NUM = PREFIX + "2a01" + SUFFIX; // 0000
-    public static String CHARA_GAP_UNK = PREFIX + "2a01" + SUFFIX; // a
 
+    // Generic Access
+    public static String SERVICE_GA = PREFIX + "1800" + SUFFIX;
+    public static String CHARA_GA_NAME = PREFIX + "2a00" + SUFFIX; // RileyLink RFSpy
+    public static String CHARA_GA_APPEARANCE = PREFIX + "2a01" + SUFFIX; // 0000
+    public static String CHARA_GA_PPCP = PREFIX + "2a04" + SUFFIX; // 0000
+    public static String CHARA_GA_CAR = PREFIX + "2aa6" + SUFFIX; // 0000
+
+    // Generic Attribute
+    public static String SERVICE_G_ATTR = PREFIX + "1801" + SUFFIX;
+
+    // Battery Service
     public static String SERVICE_BATTERY = PREFIX + "180f" + SUFFIX; // Battery
-    public static String CHARA_BATTERY_UNK = PREFIX + "2a19" + SUFFIX;
+    public static String CHARA_BATTERY_LEVEL = PREFIX + "2a19" + SUFFIX;
 
     // RileyLink Radio Service
     public static String SERVICE_RADIO = "0235733b-99c5-4197-b856-69219c2a3845";
@@ -30,6 +37,20 @@ public class GattAttributes {
     public static String CHARA_RADIO_VERSION = "30d99dc9-7c91-4295-a051-0a104d238cf2";
     public static String CHARA_RADIO_LED_MODE = "c6d84241-f1a7-4f9c-a25f-fce16732f14e";
 
+    // Secure DFU Service (Orange 1.5 - 3.2)
+    public static String SERVICE_DFU = "0000fe59-0000-1000-8000-00805f9b34fb";
+    public static String CHARA_BUTTONLESS_DFU = "8ec90003-f315-4f60-9fb8-838830daea50";
+
+    // Nordic UART Service (Orange 2.1 - 3.2)
+    public static String SERVICE_NORDIC_UART = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
+    public static String CHARA_NORDIC_RX = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
+    public static String CHARA_NORDIC_TX = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
+
+
+    // Orange Radio Service
+    public static String SERVICE_RADIO_ORANGE = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
+    public static String CHARA_NOTIFICATION_ORANGE = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
+
     private static final Map<String, String> attributes;
     private static final Map<String, String> attributesRileyLinkSpecific;
 
@@ -37,19 +58,31 @@ public class GattAttributes {
     static {
         attributes = new HashMap<>();
 
-        attributes.put(SERVICE_GAP, "Device Information Service");
-        attributes.put(CHARA_GAP_NAME, "Name"); //
-        attributes.put(CHARA_GAP_NUM, "Number"); //
+        attributes.put(SERVICE_GA, "Generic Access");
+        attributes.put(CHARA_GA_NAME, "Device Name"); //
+        attributes.put(CHARA_GA_APPEARANCE, "Appearance"); //
+        attributes.put(CHARA_GA_PPCP, "Peripheral Preffered Connection Parameters");
+        attributes.put(CHARA_GA_CAR, "Central Address Resolution");
+
+        attributes.put(SERVICE_G_ATTR, "Generic Attribute");
 
         attributes.put(SERVICE_BATTERY, "Battery Service");
+        attributes.put(CHARA_BATTERY_LEVEL, "Battery Level");
 
-        attributes.put(SERVICE_RADIO, "Radio Interface"); // a
+        attributes.put(SERVICE_RADIO, "Radio Interface Service");
         attributes.put(CHARA_RADIO_CUSTOM_NAME, "Custom Name");
         attributes.put(CHARA_RADIO_DATA, "Data");
         attributes.put(CHARA_RADIO_RESPONSE_COUNT, "Response Count");
         attributes.put(CHARA_RADIO_TIMER_TICK, "Timer Tick");
         attributes.put(CHARA_RADIO_VERSION, "Version"); // firmwareVersion
         attributes.put(CHARA_RADIO_LED_MODE, "Led Mode");
+
+        attributes.put(SERVICE_DFU, "Secure DFU Service");
+        attributes.put(CHARA_BUTTONLESS_DFU, "Buttonless DFU");
+
+        attributes.put(SERVICE_NORDIC_UART, "Nordic UART Service");
+        attributes.put(CHARA_NORDIC_RX, "RX Characteristic");
+        attributes.put(CHARA_NORDIC_TX, "TX Characteristic");
 
         attributesRileyLinkSpecific = new HashMap<>();
 
@@ -60,6 +93,9 @@ public class GattAttributes {
         attributesRileyLinkSpecific.put(CHARA_RADIO_TIMER_TICK, "Timer Tick");
         attributesRileyLinkSpecific.put(CHARA_RADIO_VERSION, "Version"); // firmwareVersion
         attributesRileyLinkSpecific.put(CHARA_RADIO_LED_MODE, "Led Mode");
+
+        attributesRileyLinkSpecific.put(SERVICE_RADIO_ORANGE, "Orange Radio Interface");
+        attributesRileyLinkSpecific.put(CHARA_NOTIFICATION_ORANGE, "Orange Notification");
     }
 
 
@@ -82,6 +118,11 @@ public class GattAttributes {
     // we check for specific UUID (Radio ones, because thoose seem to be unique
     public static boolean isRileyLink(UUID uuid) {
         return attributesRileyLinkSpecific.containsKey(uuid.toString());
+    }
+
+
+    public static boolean isOrange(UUID uuid) {
+        return SERVICE_RADIO_ORANGE.equals(uuid.toString());
     }
 
 }

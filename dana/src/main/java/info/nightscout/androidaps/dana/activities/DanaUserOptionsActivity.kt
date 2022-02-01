@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.dana.activities
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.activities.ErrorHelperActivity
@@ -10,17 +9,16 @@ import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.dana.R
 import info.nightscout.androidaps.dana.databinding.DanarUserOptionsActivityBinding
 import info.nightscout.androidaps.events.EventInitializationChanged
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.interfaces.CommandQueueProvider
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.CommandQueue
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.extensions.plusAssign
-import io.reactivex.android.schedulers.AndroidSchedulers
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.shared.logging.LTag
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import java.text.DecimalFormat
 import javax.inject.Inject
 import kotlin.math.max
@@ -28,20 +26,20 @@ import kotlin.math.min
 
 class DanaUserOptionsActivity : NoSplashAppCompatActivity() {
 
-    @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var context: Context
     @Inject lateinit var danaPump: DanaPump
-    @Inject lateinit var activePlugin: ActivePluginProvider
-    @Inject lateinit var commandQueue: CommandQueueProvider
+    @Inject lateinit var activePlugin: ActivePlugin
+    @Inject lateinit var commandQueue: CommandQueue
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
 
     private val disposable = CompositeDisposable()
 
     // This is for Dana pumps only
-    private fun isRS() = activePlugin.activePump.pumpDescription.pumpType == PumpType.DanaRS
-    private fun isDanaR() = activePlugin.activePump.pumpDescription.pumpType == PumpType.DanaR
-    private fun isDanaRv2() = activePlugin.activePump.pumpDescription.pumpType == PumpType.DanaRv2
+    private fun isRS() = activePlugin.activePump.pumpDescription.pumpType == PumpType.DANA_RS
+    private fun isDanaR() = activePlugin.activePump.pumpDescription.pumpType == PumpType.DANA_R
+    private fun isDanaRv2() = activePlugin.activePump.pumpDescription.pumpType == PumpType.DANA_RV2
 
     var minBacklight = 1
 
@@ -52,8 +50,8 @@ class DanaUserOptionsActivity : NoSplashAppCompatActivity() {
         super.onResume()
         disposable += rxBus
             .toObservable(EventInitializationChanged::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ setData() }) { fabricPrivacy.logException(it) }
+            .observeOn(aapsSchedulers.main)
+            .subscribe({ setData() }, fabricPrivacy::logException)
     }
 
     @Synchronized
@@ -71,7 +69,8 @@ class DanaUserOptionsActivity : NoSplashAppCompatActivity() {
 
         minBacklight = if (danaPump.hwModel < 7) 1 else 0 // Dana-i allows zero
 
-        aapsLogger.debug(LTag.PUMP,
+        aapsLogger.debug(
+            LTag.PUMP,
             "UserOptionsLoaded:" + (System.currentTimeMillis() - danaPump.lastConnection) / 1000 + " s ago"
                 + "\ntimeDisplayType24:" + danaPump.timeDisplayType24
                 + "\nbuttonScroll:" + danaPump.buttonScrollOnOff
@@ -79,16 +78,17 @@ class DanaUserOptionsActivity : NoSplashAppCompatActivity() {
                 + "\nlcdOnTimeSec:" + danaPump.lcdOnTimeSec
                 + "\nbackLight:" + danaPump.backlightOnTimeSec
                 + "\npumpUnits:" + danaPump.units
-                + "\nlowReservoir:" + danaPump.lowReservoirRate)
+                + "\nlowReservoir:" + danaPump.lowReservoirRate
+        )
 
         binding.screentimeout.setParams(danaPump.lcdOnTimeSec.toDouble(), 5.0, 240.0, 5.0, DecimalFormat("1"), false, binding.saveUserOptions)
         binding.backlight.setParams(danaPump.backlightOnTimeSec.toDouble(), minBacklight.toDouble(), 60.0, 1.0, DecimalFormat("1"), false, binding.saveUserOptions)
         binding.shutdown.setParams(danaPump.shutdownHour.toDouble(), 0.0, 24.0, 1.0, DecimalFormat("1"), true, binding.saveUserOptions)
         binding.lowreservoir.setParams(danaPump.lowReservoirRate.toDouble(), 10.0, 50.0, 10.0, DecimalFormat("10"), false, binding.saveUserOptions)
         when (danaPump.beepAndAlarm) {
-            0b01 -> binding.pumpalarmSound.isChecked = true
-            0b10 -> binding.pumpalarmVibrate.isChecked = true
-            0b11 -> binding.pumpalarmBoth.isChecked = true
+            0b01  -> binding.pumpalarmSound.isChecked = true
+            0b10  -> binding.pumpalarmVibrate.isChecked = true
+            0b11  -> binding.pumpalarmBoth.isChecked = true
 
             0b101 -> {
                 binding.pumpalarmSound.isChecked = true
@@ -153,12 +153,7 @@ class DanaUserOptionsActivity : NoSplashAppCompatActivity() {
         commandQueue.setUserOptions(object : Callback() {
             override fun run() {
                 if (!result.success) {
-                    val i = Intent(context, ErrorHelperActivity::class.java)
-                    i.putExtra("soundid", R.raw.boluserror)
-                    i.putExtra("status", result.comment)
-                    i.putExtra("title", resourceHelper.gs(R.string.pumperror))
-                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    context.startActivity(i)
+                    ErrorHelperActivity.runAlarm(context, result.comment, rh.gs(R.string.pumperror), R.raw.boluserror)
                 }
             }
         })
