@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.general.overview
 
+import android.graphics.Color
+import android.view.View
 import android.widget.TextView
 import androidx.annotation.StringRes
 import info.nightscout.androidaps.R
@@ -37,11 +39,16 @@ class StatusLightHandler @Inject constructor(
     fun updateStatusLights(careportal_cannula_age: TextView?, careportal_insulin_age: TextView?, careportal_reservoir_level: TextView?, careportal_sensor_age: TextView?, careportal_sensor_battery_level: TextView?, careportal_pb_age: TextView?, careportal_battery_level: TextView?,  colorNormal: Int, colorWarning: Int, colorAlarm: Int) {
         val pump = activePlugin.activePump
         val bgSource = activePlugin.activeBgSource
-        handleAge(careportal_cannula_age, TherapyEvent.Type.CANNULA_CHANGE, R.string.key_statuslights_cage_warning, 48.0, R.string.key_statuslights_cage_critical, 72.0 , colorNormal, colorWarning, colorAlarm)
-        handleAge(careportal_insulin_age, TherapyEvent.Type.INSULIN_CHANGE, R.string.key_statuslights_iage_warning, 72.0, R.string.key_statuslights_iage_critical, 144.0 , colorNormal, colorWarning, colorAlarm)
+        handleAge(careportal_cannula_age, TherapyEvent.Type.CANNULA_CHANGE, R.string.key_statuslights_cage_warning, 48.0, R.string.key_statuslights_cage_critical, 72.0, colorNormal, colorWarning, colorAlarm)
+        if (pump.model() == PumpType.OMNIPOD_EROS || pump.model() == PumpType.OMNIPOD_DASH) {
+            careportal_insulin_age?.visibility = View.GONE
+        } else {
+            careportal_insulin_age?.visibility = View.VISIBLE
+            handleAge(careportal_insulin_age, TherapyEvent.Type.INSULIN_CHANGE, R.string.key_statuslights_iage_warning, 72.0, R.string.key_statuslights_iage_critical, 144.0 , colorNormal, colorWarning, colorAlarm)
+        }
         handleAge(careportal_sensor_age, TherapyEvent.Type.SENSOR_CHANGE, R.string.key_statuslights_sage_warning, 216.0, R.string.key_statuslights_sage_critical, 240.0 , colorNormal, colorWarning, colorAlarm)
-        if (pump.pumpDescription.isBatteryReplaceable) {
-            handleAge(careportal_pb_age, TherapyEvent.Type.PUMP_BATTERY_CHANGE, R.string.key_statuslights_bage_warning, 216.0, R.string.key_statuslights_bage_critical, 240.0 , colorNormal, colorWarning, colorAlarm)
+        if (pump.pumpDescription.isBatteryReplaceable || (pump is OmnipodErosPumpPlugin && pump.isUseRileyLinkBatteryLevel && pump.isBatteryChangeLoggingEnabled)) {
+            handleAge(careportal_pb_age, TherapyEvent.Type.PUMP_BATTERY_CHANGE, R.string.key_statuslights_bage_warning, 216.0, R.string.key_statuslights_bage_critical, 240.0, colorNormal, colorWarning, colorAlarm)
         }
         if (!config.NSCLIENT) {
             if (pump.model() == PumpType.OMNIPOD_EROS || pump.model() == PumpType.OMNIPOD_DASH) {
