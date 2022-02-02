@@ -162,8 +162,6 @@ class NSClientSourcePlugin @Inject constructor(
                 aapsLogger.error("Unhandled exception", e)
                 ret = Result.failure(workDataOf("Error" to e.toString()))
             }
-            // Objectives 0
-            sp.putBoolean(R.string.key_ObjectivesbgIsAvailableInNS, true)
             return ret
         }
     }

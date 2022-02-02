@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.dependencyInjection
+package info.nightscout.androidaps.di
 
 import dagger.Binds
 import dagger.Module
@@ -52,6 +52,7 @@ import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAverage
 import info.nightscout.androidaps.plugins.source.*
 import javax.inject.Qualifier
 
+@Suppress("unused")
 @Module
 abstract class PluginsModule {
 
@@ -160,20 +161,20 @@ abstract class PluginsModule {
     @Binds
     @PumpDriver
     @IntoMap
-    @IntKey(150)
-    abstract fun bindMedtronicPumpPlugin(plugin: MedtronicPumpPlugin): PluginBase
+    @IntKey(145)
+    abstract fun bindOmnipodErosPumpPlugin(plugin: OmnipodErosPumpPlugin): PluginBase
 
     @Binds
     @PumpDriver
     @IntoMap
-    @IntKey(156)
+    @IntKey(148)
     abstract fun bindOmnipodDashPumpPlugin(plugin: OmnipodDashPumpPlugin): PluginBase
 
     @Binds
     @PumpDriver
     @IntoMap
-    @IntKey(135)
-    abstract fun bindOmnipodErosPumpPlugin(plugin: OmnipodErosPumpPlugin): PluginBase
+    @IntKey(150)
+    abstract fun bindMedtronicPumpPlugin(plugin: MedtronicPumpPlugin): PluginBase
 
     @Binds
     @PumpDriver

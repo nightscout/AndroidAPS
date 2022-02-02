@@ -16,8 +16,6 @@ import info.nightscout.androidaps.events.EventConfigBuilderChange
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.DataSyncSelector
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.food.FoodPlugin.FoodWorker
 import info.nightscout.androidaps.plugins.general.nsclient.*
@@ -48,6 +46,8 @@ import info.nightscout.androidaps.utils.XDripBroadcast
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
 import io.socket.client.IO
@@ -540,13 +540,17 @@ class NSClientService : DaggerService() {
                     }
                     if (data.has("sgvs")) {
                         val sgvs = data.getJSONArray("sgvs")
-                        if (sgvs.length() > 0) rxBus.send(EventNSClientNewLog("DATA", "received " + sgvs.length() + " sgvs"))
-                        dataWorker.enqueue(
-                            OneTimeWorkRequest.Builder(NSClientSourceWorker::class.java)
-                                .setInputData(dataWorker.storeInputData(sgvs, null))
-                                .build()
-                        )
-                        xDripBroadcast.sendSgvs(sgvs)
+                        if (sgvs.length() > 0) {
+                            rxBus.send(EventNSClientNewLog("DATA", "received " + sgvs.length() + " sgvs"))
+                            // Objective0
+                            sp.putBoolean(R.string.key_ObjectivesbgIsAvailableInNS, true)
+                            dataWorker.enqueue(
+                                OneTimeWorkRequest.Builder(NSClientSourceWorker::class.java)
+                                    .setInputData(dataWorker.storeInputData(sgvs, null))
+                                    .build()
+                            )
+                            xDripBroadcast.sendSgvs(sgvs)
+                        }
                     }
                     rxBus.send(EventNSClientNewLog("LAST", dateUtil.dateAndTimeString(latestDateInReceivedData)))
                 } catch (e: JSONException) {

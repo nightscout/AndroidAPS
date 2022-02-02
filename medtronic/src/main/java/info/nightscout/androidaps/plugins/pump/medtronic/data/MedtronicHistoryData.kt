@@ -759,6 +759,7 @@ class MedtronicHistoryData @Inject constructor(
         }
 
         var previousItem: TempBasalProcessDTO? = null
+        val removalList : MutableList<TempBasalProcessDTO> = arrayListOf()
 
         // fix for Zero TBRs
         for (tempBasalProcessDTO in processList) {
@@ -768,12 +769,29 @@ class MedtronicHistoryData @Inject constructor(
                 pheEnd.atechDateTime = DateTimeUtil.getATDWithAddedSeconds(tempBasalProcessDTO.itemOne.atechDateTime, -2)
                 pheEnd.addDecodedData("Object", TempBasalPair(0.0, false, 0))
 
+                val initialDuration = previousItem.durationAsSeconds
+
                 previousItem.itemTwo = pheEnd
+
+                if (previousItem.durationAsSeconds <=0) {
+                    // if we have duration of 0 or less, then we have invalid entry which needs to be removed
+                    removalList.add(previousItem)
+                } else if (previousItem.durationAsSeconds > initialDuration) {
+                    // if duration with last item is longer than planned TBR duration we remove previous item and leave original duration
+                    previousItem.itemTwo = null
+                }
 
                 previousItem = null
             }
             if (tempBasalProcessDTO.itemOneTbr!!.isZeroTBR) {
                 previousItem = tempBasalProcessDTO
+            }
+        }
+
+        // removing previously tagged item
+        if (removalList.isNotEmpty()) {
+            for (tempBasalProcessDTO in removalList) {
+                processList.remove(tempBasalProcessDTO)
             }
         }
 

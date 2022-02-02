@@ -80,7 +80,7 @@
     <string name="unsafeusage">uso no seguro</string>
     <string name="pump_unreachable">Bomba no alcanzable</string>
     <string name="extended_bolus">Bolo extendido</string>
-    <string name="pump_time_updated">Hora de infusora actualizada</string>
+    <string name="pump_time_updated">Hora actualizada en la bomba</string>
     <string name="exit">Salir</string>
     <string name="removerecord">Eliminar registro</string>
     <string name="loopisdisabled">Lazo desactivado</string>
@@ -91,7 +91,7 @@
     <string name="suspendloop">Suspender lazo</string>
     <string name="duration_min_label">Duración [min]</string>
     <string name="notification">Notificación</string>
-    <string name="noprofile">Pendiente carga perfil NS</string>
+    <string name="noprofile">Ningún perfil cargado desde Nightscout</string>
     <string name="exists">existe</string>
     <string name="notexists">no existe</string>
     <string name="glucose">Glucosa</string>
@@ -184,7 +184,7 @@
     <string name="careportal_note_message">Nota : %1$s</string>
     <string name="careportal_question_message">Pregunta : %1$s</string>
     <string name="careportal_exercise_message">Ejercicio : %1$s</string>
-    <string name="careportal_pumpsitechange">Cambio de cánula de bomba</string>
+    <string name="careportal_pumpsitechange">Cambio de cánula</string>
     <string name="careportal_cgmsensorinsert">Inserción de sensor</string>
     <string name="careportal_cgmsensorstart">Inicio de Sensor</string>
     <string name="careportal_cgm_sensor_stop">Detener sensor MCG</string>
@@ -199,7 +199,7 @@
     <string name="careportal_tempbasalend">Fin Basal Temp</string>
     <string name="careportal_carbscorrection">Carbohidratos de corrección</string>
     <string name="careportal_openapsoffline">OpenAPS sin conexión</string>
-    <string name="careportal_pumpbatterychange">Cambio batería de bomba</string>
+    <string name="careportal_pumpbatterychange">Cambiar batería de bomba</string>
     <string name="careportal_temporarytarget">Objetivo temporal</string>
     <string name="careportal_temporarytargetvalue">Valor objetivo temporal</string>
     <string name="careportal_temporarytargetcancel">Cancelar Objetivo temporal</string>
@@ -290,7 +290,7 @@
     <string name="signature_verifier">Verificador de firma</string>
     <string name="running_invalid_version">Hemos detectado que está ejecutando una versión no válida. ¡Lazo desactivado!</string>
     <string name="versionavailable">Versión %1$s disponible</string>
-    <string name="version_expire">Versión %1$s expira el %2$s</string>
+    <string name="version_expire">La versión %1$s expira el %2$s</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Por favor, reinicia el teléfono o AndroidAPS desde los ajustes del sistema, sino, AndroidAPS no guardará los registros. Esto es importante para trazar y verificar que el algoritmo funciona correctamente.</string>
     <!-- WeekdayPicker -->
@@ -403,15 +403,15 @@
     <string name="profile_sensitivity_value">Valor de sensibilidad del perfil</string>
     <string name="profile_max_daily_basal_value">Máximo valor basal del perfil</string>
     <string name="current_basal_value">Valor basal actual</string>
-    <string name="profile_carbs_ratio_value">Valor del ratio de carbohidratos de perfil</string>
+    <string name="profile_carbs_ratio_value">Valor del ratio de carbohidratos del perfil</string>
     <string name="valuelimitedto">%1$.2f limitado a %2$.2f</string>
-    <string name="valueoutofrange">»%1$s« está fuera de límite</string>
-    <string name="value_out_of_hard_limits">»%1$s« %2$.2f está fuera de límites duros</string>
+    <string name="valueoutofrange">»%1$s« está fuera del límite estricto</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f está fuera de los límites estrictos</string>
     <string name="basal_value">Valor basal</string>
     <string name="nsclient_version_does_not_match">La versión de NSClient no coincide con AndroidAPS. Actualízala.</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLO %1$.2f U</string>
-    <string name="carbs_g">CARBOS %1$d g</string>
+    <string name="carbs_g">CARBOHIDRATOS %1$d g</string>
     <string name="extended_bolus_u_min">BOLO EXTENDIDO %1$.2f U %2$d min</string>
     <string name="load_events">CARGAR EVENTOS</string>
     <string name="load_history">CARGAR HISTORIAL %1$d</string>
@@ -425,12 +425,12 @@
     <string name="temp_basal_percent">BASAL TEMPORAL %1$d%% %2$d min</string>
     <string name="insight_set_tbr_over_notification">INSIGHT ESTABLECER TBR SOBRE NOTIFICACIÓN</string>
     <string name="read_status" comment="10 characters max for READSTATUS translation">LEER ESTADO %1$s</string>
-    <string name="keepalive_status_outdated" comment="26 characters max for translation">KeepAlive. Estado desactualizado.</string>
-    <string name="keepalive_basal_outdated" comment="26 characters max for translation">KeepAlive. Basal desactualizada.</string>
+    <string name="keepalive_status_outdated" comment="26 characters max for translation">KeepAlive: Estado desactualizado</string>
+    <string name="keepalive_basal_outdated" comment="26 characters max for translation">KeepAlive: Basal desactualizada</string>
     <string name="sms" comment="26 characters max for translation">SMS</string>
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">Pulsa sobre conectar a la bomba</string>
-    <string name="pump_driver_changed" comment="26 characters max for translation">Controlador de bomba cambiado.</string>
-    <string name="pump_driver_change" comment="26 characters max for translation">Cambio del controlador de la bomba.</string>
+    <string name="pump_driver_changed" comment="26 characters max for translation">Controlador de bomba cambiado</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Cambio del controlador de la bomba</string>
     <string name="device_changed" comment="26 characters max for translation">Dispositivo cambiado</string>
     <string name="clicked_refresh" comment="26 characters max for translation">Refresco pulsado</string>
     <string name="scheduled_status_refresh" comment="26 characters max for translation">Refrescar estado programado</string>

@@ -416,10 +416,10 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                                     OKDialog.showConfirmation(activity, rh.gs(R.string.tempbasal_label), lastRun.constraintsProcessed?.toSpanned()
                                         ?: "".toSpanned(), {
                                                                   uel.log(Action.ACCEPTS_TEMP_BASAL, Sources.Overview)
-                                                                  binding.buttonsLayout.acceptTempButton.visibility = View.GONE
                                                                   (context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(Constants.notificationID)
                                                                   rxBus.send(EventWearInitiateAction("cancelChangeRequest"))
                                                                   Thread { loop.acceptChangeRequest() }.run()
+                                                                  binding.buttonsLayout.acceptTempButton.visibility = View.GONE
                                                               })
                                 })
                             }
@@ -553,7 +553,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         // **** Calibration & CGM buttons ****
         val xDripIsBgSource = xdripPlugin.isEnabled()
         val dexcomIsSource = dexcomPlugin.isEnabled()
-        binding.buttonsLayout.calibrationButton.visibility = ((xDripIsBgSource || dexcomIsSource) && actualBG != null && sp.getBoolean(R.string.key_show_calibration_button, true)).toVisibility()
+        binding.buttonsLayout.calibrationButton.visibility = (xDripIsBgSource && actualBG != null && sp.getBoolean(R.string.key_show_calibration_button, true)).toVisibility()
         if (dexcomIsSource) {
             binding.buttonsLayout.cgmButton.setCompoundDrawablesWithIntrinsicBounds(null, rh.gd(R.drawable.ic_byoda), null, null)
             binding.buttonsLayout.cgmButton.setTextColor(rh.gc(R.color.colorLightGray))

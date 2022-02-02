@@ -201,7 +201,7 @@ class OpenAPSSMBPlugin @Inject constructor(
     }
 
     override fun isSuperBolusEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
-        value[aapsLogger] = false
+        value.set(aapsLogger, false)
         return value
     }
 }

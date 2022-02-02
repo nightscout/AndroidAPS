@@ -377,6 +377,7 @@ class OmnipodDashManagerImpl @Inject constructor(
             )
         }
         if (podStateManager.activationProgress.isBefore(ActivationProgress.INSERTING_CANNULA)) {
+            observables.add(observeConnectToPod) // connection can time out while waiting
             observables.add(
                 Observable.defer {
                     Observable.timer(podStateManager.secondPrimeBolusVolume!!.toLong(), TimeUnit.SECONDS)
@@ -667,11 +668,9 @@ class OmnipodDashManagerImpl @Inject constructor(
 
             when (event) {
                 is PodEvent.AlreadyConnected -> {
-                    podStateManager.bluetoothAddress = event.bluetoothAddress
                 }
 
                 is PodEvent.BluetoothConnected -> {
-                    podStateManager.bluetoothAddress = event.bluetoothAddress
                 }
 
                 is PodEvent.Connected -> {

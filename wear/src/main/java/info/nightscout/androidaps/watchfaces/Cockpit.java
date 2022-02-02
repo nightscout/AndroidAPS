@@ -60,7 +60,9 @@ public class Cockpit extends BaseWatchFace {
             }
         }
 
-        if (loopLevel == 1) {
+        if (loopLevel == -1) {
+            mLoop.setBackgroundResource(R.drawable.loop_grey_25);
+        } else if (loopLevel == 1) {
             mLoop.setBackgroundResource(R.drawable.loop_green_25);
         } else {
             mLoop.setBackgroundResource(R.drawable.loop_red_25);

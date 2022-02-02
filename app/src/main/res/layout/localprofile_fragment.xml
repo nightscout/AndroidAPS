@@ -214,17 +214,45 @@
 
         <LinearLayout
             android:id="@+id/ic"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
-            android:orientation="vertical" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/ic_holder"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical" />
+
+            <info.nightscout.androidaps.utils.ui.BasalProfileGraph
+                android:id="@+id/ic_graph"
+                android:layout_width="match_parent"
+                android:layout_height="100dip"
+                android:layout_margin="20dp" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/isf"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
-            android:orientation="vertical" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/isf_holder"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical" />
+
+            <info.nightscout.androidaps.utils.ui.IsfProfileGraph
+                android:id="@+id/isf_graph"
+                android:layout_width="match_parent"
+                android:layout_height="100dip"
+                android:layout_margin="20dp" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/basal"
@@ -239,7 +267,7 @@
                 android:layout_marginBottom="10dp"
                 android:orientation="vertical" />
 
-            <info.nightscout.androidaps.utils.ui.ProfileGraph
+            <info.nightscout.androidaps.utils.ui.BasalProfileGraph
                 android:id="@+id/basal_graph"
                 android:layout_width="match_parent"
                 android:layout_height="100dip"
