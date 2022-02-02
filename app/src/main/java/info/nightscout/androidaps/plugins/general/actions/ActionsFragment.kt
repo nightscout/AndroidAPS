@@ -107,6 +107,7 @@ class ActionsFragment : DaggerFragment() {
     private var sensorLevelLabel: TextView? = null
     private var insulinLevelLabel: TextView? = null
     private var pbLevelLabel: TextView? = null
+    private var cannulaOrAge: TextView? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -153,6 +154,7 @@ class ActionsFragment : DaggerFragment() {
         sensorLevelLabel = view.findViewById(R.id.sensor_level_label)
         insulinLevelLabel = view.findViewById(R.id.insulin_level_label)
         pbLevelLabel = view.findViewById(R.id.pb_level_label)
+        cannulaOrAge = view.findViewById(R.id.cannula_or_pod)
 
         profileSwitch?.setOnClickListener {
             ProfileSwitchDialog().show(childFragmentManager, "ProfileSwitchDialog")
@@ -318,6 +320,10 @@ class ActionsFragment : DaggerFragment() {
         }
         tempTarget?.visibility = (profile != null && !loop.isDisconnected).toVisibility()
         tddStats?.visibility = pump.pumpDescription.supportsTDDs.toVisibility()
+
+        cannulaOrAge?.text = if (statusLightHandler.isOmnipod) rh.gs(R.string.omnipod_eros_name_short) else rh.gs(R.string.cannula)
+        val imageResource = if (statusLightHandler.isOmnipod) R.drawable.ic_pod_outline else R.drawable.ic_cp_age_cannula
+        cannulaOrAge?.setCompoundDrawablesWithIntrinsicBounds(imageResource, 0, 0, 0)
 
         if (!config.NSCLIENT) {
             statusLightHandler.updateStatusLights(cannulaAge, insulinAge, reservoirLevel, sensorAge, sensorLevel, pbAge, batteryLevel)
