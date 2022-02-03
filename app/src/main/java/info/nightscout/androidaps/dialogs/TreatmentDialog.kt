@@ -179,9 +179,17 @@ class TreatmentDialog : DialogFragmentWithDate() {
                                     }
                                 }
                             })
-                        } else
+                        } else {
                             uel.log(action, Sources.TreatmentDialog,
-                                ValueWithUnit.Gram(carbsAfterConstraints).takeIf { carbs != 0 })
+                                    ValueWithUnit.Gram(carbsAfterConstraints).takeIf { carbsAfterConstraints != 0 })
+                            if (detailedBolusInfo.carbs > 0) {
+                                disposable += repository.runTransactionForResult(detailedBolusInfo.insertCarbsTransaction())
+                                    .subscribe(
+                                        { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted carbs $it") } },
+                                        { aapsLogger.error(LTag.DATABASE, "Error while saving carbs", it) }
+                                    )
+                            }
+                        }
                     }
                 })
             }
