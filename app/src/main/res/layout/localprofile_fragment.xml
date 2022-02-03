@@ -225,7 +225,7 @@
                 android:layout_marginBottom="10dp"
                 android:orientation="vertical" />
 
-            <info.nightscout.androidaps.utils.ui.BasalProfileGraph
+            <info.nightscout.androidaps.utils.ui.IcProfileGraph
                 android:id="@+id/ic_graph"
                 android:layout_width="match_parent"
                 android:layout_height="100dip"
