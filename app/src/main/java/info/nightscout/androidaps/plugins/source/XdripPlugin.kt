@@ -35,13 +35,14 @@ class XdripPlugin @Inject constructor(
     aapsLogger, rh, injector
 ), BgSource {
 
-    private var advancedFiltering = true
+    private var advancedFiltering = false
     override var sensorBatteryLevel = -1
 
     override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean  = false
 
     override fun advancedFilteringSupported(): Boolean {
-        return advancedFiltering
+        return true
+        //return advancedFiltering
     }
 
     private fun detectSource(glucoseValue: GlucoseValue) {
