@@ -1,2 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="open_humans">Open Humans</string>
+    <string name="open_humans_short">OH</string>
+    <string name="open_humans_description">Open Humans giver dig mulighed for at uploade dine diabetes data og donere det til videnskabelige projekter.</string>
+    <string name="logout">Log af</string>
+    <string name="setup">Opsætning</string>
+    <string name="setup_completed_info">Open Humans er blevet konfigureret. Hvis du vil stoppe med at uploade, skal du klikke på \'Log af\'.</string>
+    <string name="not_setup_info">Open Humans er i øjeblikket inaktivt. For at begynde at uploade data, klik på \'Opsætning\'.</string>
+    <string name="project_member_id">Projekt medlem ID: %1$s</string>
+    <string name="only_upload_if_connected_to_wifi">Upload kun hvis forbundet til WiFi</string>
+    <string name="only_upload_if_charging">Upload kun ved opladning</string>
+    <string name="open_humans_uploading">Uploader til Open Humans…</string>
+    <string name="open_humans_notifications">Open Humans Notifikationer</string>
+    <string name="uploading_to_open_humans">AndroidAPS uploader til Open Humans. Dette kan tage et stykke tid.</string>
+    <string name="you_have_been_signed_out_of_open_humans">Du er blevet logget ud af Open Humans</string>
+    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Klik her for at logge ind igen, hvis dette ikke var meningen.</string>
+    <string name="upload_now">Upload nu</string>
+</resources>
