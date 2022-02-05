@@ -138,7 +138,6 @@
     <string name="omnipod_common_cmd_get_pod_info">Pod Bilgisi</string>
     <string name="omnipod_common_cmd_set_time">Saati Ayarla</string>
     <string name="omnipod_common_cmd_configure_alerts">Alarmları Yapılandır</string>
-    <string name="omnipod_common_cmd_silence_alerts">Sessiz Alarmlar</string>
     <string name="omnipod_common_cmd_suspend_delivery">İletimi Askıya Al</string>
     <string name="omnipod_common_cmd_resume_delivery">İletime devam et</string>
     <string name="omnipod_common_cmd_unknown_entry">Bilinmeyen Giriş</string>
