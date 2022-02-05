@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.insight.R
 import info.nightscout.androidaps.insight.databinding.ActivityInsightPairingBinding
+import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.plugins.pump.common.ble.BlePreCheck
 import info.nightscout.androidaps.plugins.pump.insight.connection_service.InsightConnectionService
 import info.nightscout.androidaps.plugins.pump.insight.connection_service.InsightConnectionService.ExceptionCallback
@@ -27,6 +28,7 @@ class InsightPairingActivity : NoSplashAppCompatActivity(), InsightConnectionSer
 
     @Inject lateinit var blePreCheck: BlePreCheck
     @Inject lateinit var context: Context
+    @Inject lateinit var pumpSync: PumpSync
 
     private lateinit var binding: ActivityInsightPairingBinding
     private var scanning = false
@@ -43,6 +45,7 @@ class InsightPairingActivity : NoSplashAppCompatActivity(), InsightConnectionSer
                     it.registerStateCallback(this@InsightPairingActivity)
                     it.registerExceptionCallback(this@InsightPairingActivity)
                     onStateChanged(it.state)
+                    pumpSync.connectNewPump()
                 }
             }
         }
