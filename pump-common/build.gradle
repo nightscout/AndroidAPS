@@ -14,7 +14,7 @@ dependencies {
     implementation project(':shared')
     //implementation project(':database')
 
-    implementation('com.thoughtworks.xstream:xstream:1.4.18') {
+    implementation('com.thoughtworks.xstream:xstream:1.4.19') {
         exclude group: 'xmlpull', module: 'xmlpull'
     }
 }
