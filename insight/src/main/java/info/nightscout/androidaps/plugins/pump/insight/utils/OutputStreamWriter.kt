@@ -1,74 +1,77 @@
-package info.nightscout.androidaps.plugins.pump.insight.utils;
+package info.nightscout.androidaps.plugins.pump.insight.utils
 
-import java.io.IOException;
-import java.io.OutputStream;
+import info.nightscout.androidaps.extensions.notifyAll
+import info.nightscout.androidaps.extensions.wait
+import java.io.IOException
+import java.io.OutputStream
 
-public class OutputStreamWriter extends Thread {
+class OutputStreamWriter(outputStream: OutputStream, callback: Callback) : Thread() {
 
-    private static final int BUFFER_SIZE = 1024;
-
-    private final OutputStream outputStream;
-    private final Callback callback;
-    private final ByteBuf buffer = new ByteBuf(BUFFER_SIZE);
-
-    public OutputStreamWriter(OutputStream outputStream, Callback callback) {
-        setName(getClass().getSimpleName());
-        this.outputStream = outputStream;
-        this.callback = callback;
-    }
-
-    @Override
-    public void run() {
+    private val outputStream: OutputStream
+    private val callback: Callback
+    private val buffer = ByteBuf(BUFFER_SIZE)
+    override fun run() {
         try {
-            while (!isInterrupted()) {
-                synchronized (buffer) {
-                    if (buffer.getFilledSize() != 0) {
-                        outputStream.write(buffer.readBytes());
-                        outputStream.flush();
-                        buffer.notifyAll();
+            while (!isInterrupted) {
+                synchronized(buffer) {
+                    if (buffer.filledSize != 0) {
+                        outputStream.write(buffer.readBytes())
+                        outputStream.flush()
+                        buffer.notifyAll()
                     }
-                    buffer.wait();
+                    buffer.wait()
                 }
             }
-        } catch (IOException e) {
-            if (!isInterrupted()) callback.onErrorWhileWriting(e);
-        } catch (InterruptedException ignored) {
+        } catch (e: IOException) {
+            if (!isInterrupted) callback.onErrorWhileWriting(e)
+        } catch (ignored: InterruptedException) {
         } finally {
             try {
-                outputStream.close();
-            } catch (IOException e) {
+                outputStream.close()
+            } catch (e: IOException) {
             }
         }
     }
 
-    public void write(byte[] bytes) {
-        synchronized (buffer) {
-            buffer.putBytes(bytes);
-            buffer.notifyAll();
+    fun write(bytes: ByteArray) {
+        synchronized(buffer) {
+            buffer.putBytes(bytes)
+            buffer.notifyAll()
         }
     }
 
-    public void writeAndWait(byte[] bytes) {
-        synchronized (buffer) {
-            buffer.putBytes(bytes);
-            buffer.notifyAll();
+    fun writeAndWait(bytes: ByteArray) {
+        synchronized(buffer) {
+            buffer.putBytes(bytes)
+            buffer.notifyAll()
             try {
-                buffer.wait();
-            } catch (InterruptedException e) {
+                buffer.wait()
+            } catch (e: InterruptedException) {
             }
         }
     }
 
-    public void close() {
-        interrupt();
+    fun close() {
+        interrupt()
         try {
-            outputStream.close();
-        } catch (IOException e) {
+            outputStream.close()
+        } catch (e: IOException) {
         }
     }
 
-    public interface Callback {
-        void onErrorWhileWriting(Exception e);
+    interface Callback {
+
+        fun onErrorWhileWriting(e: Exception)
     }
 
+    companion object {
+
+        private const val BUFFER_SIZE = 1024
+    }
+
+    init {
+        name = javaClass.simpleName
+        this.outputStream = outputStream
+        this.callback = callback
+    }
 }
