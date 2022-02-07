@@ -132,6 +132,7 @@
     <string name="wronginsulin_label">Erros de entrada/administração de insulina</string>
     <string name="wronginsulin_whattodo">O que deve fazer se receber menos insulina do que o histórico da bomba sugere por exemplo devido a uma oclusão, uma cânula danificada ou esquecer-se de reanexar a bomba após um banho? </string>
     <string name="wronginsulin_careportal">Elimine dados de insulina do Nightscout Careportal para removê-lo do histórico da bomba.</string>
+    <string name="wronginsulin_compare">Compare valores no AndroidAPS e no histórico da bomba.</string>
     <string name="wronginsulin_prime">Bólus uma proporção de insulina calculada \'não administrada\' ou com seringa/caneta ou purgando.</string>
     <string name="wronginsulin_donothing">Faça nada e permita que o AndroidAPS corrija qualquer nível de glicose elevado que daí resulte.</string>
     <string name="iob_label">Insulina ativa (IA )</string>
