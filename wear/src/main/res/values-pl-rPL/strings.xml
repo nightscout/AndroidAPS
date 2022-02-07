@@ -122,8 +122,8 @@
     <string name="color_name_white">biały</string>
     <string name="color_name_black">czarny</string>
     <string name="color_name_multicolor">wielokolorowy</string>
-    <string name="pref_simplify_ui_charging">Uprość przy ładowaniu</string>
-    <string name="pref_simplify_ui_charging_sum">Pokaż tylko czas i glikemię podczas ładowania</string>
+    <string name="pref_simplify_ui">Uprość UI</string>
+    <string name="pref_simplify_ui_sum">Pokaż tylko czas i glikemię</string>
     <string name="pref_vibrate_hourly">Wibruj co godzinę</string>
     <string name="pref_show_weeknumber">Pokaż numer tygodnia</string>
     <string name="digitalstyle_pref_your_style">Styl:</string>
@@ -138,4 +138,8 @@
     <string name="bolus_progress_silent_channel_name">Postęp bolusa AAPS (Cichszy)</string>
     <string name="bolus_progress_channel_description">Informacja o postępie w podawaniu / anulowaniu bolusa</string>
     <string name="bolus_progress_silent_channel_description">Informacja o postępie w podawaniu / anulowaniu bolusa - zmniejsza ilość wibracji</string>
+    <string name="simple_ui_off">Wyłącz</string>
+    <string name="simple_ui_charging">Podczas ładowania</string>
+    <string name="simple_ui_always_on">Tryb Always On</string>
+    <string name="simple_ui_always_on_charging">Always On i ładowanie</string>
 </resources>
