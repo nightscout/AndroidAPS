@@ -122,8 +122,8 @@
     <string name="color_name_white">beyaz</string>
     <string name="color_name_black">siyah</string>
     <string name="color_name_multicolor">çok renkli</string>
-    <string name="pref_simplify_ui_charging">Basitleştirilmiş şarj arayüzü</string>
-    <string name="pref_simplify_ui_charging_sum">Yalnızca şarj olurken zamanı ve KŞ\'ni göster</string>
+    <string name="pref_simplify_ui">Basitleştirilmiş Kullanıcı Arayüzü</string>
+    <string name="pref_simplify_ui_sum">Yalnızca zamanı ve KŞ\'ni göster</string>
     <string name="pref_vibrate_hourly">Saatlik titreşim</string>
     <string name="pref_show_weeknumber">Hafta numarasını göster</string>
     <string name="digitalstyle_pref_your_style">Stilin:</string>
@@ -138,4 +138,8 @@
     <string name="bolus_progress_silent_channel_name">AAPS Bolus İletimi Sessiz</string>
     <string name="bolus_progress_channel_description">Bolus iletimi ve iptali</string>
     <string name="bolus_progress_silent_channel_description">Bolus iletimi ve daha az titreşimle iptal etme</string>
+    <string name="simple_ui_off">Kapa</string>
+    <string name="simple_ui_charging">Şarj Olurken</string>
+    <string name="simple_ui_always_on">Her Zaman Açık Modu</string>
+    <string name="simple_ui_always_on_charging">Her Zaman Açık ve Şarj Oluyor</string>
 </resources>
