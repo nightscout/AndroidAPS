@@ -96,6 +96,7 @@
     <string name="safety">Saugumas</string>
     <string name="openapsma_disabled">Įskiepis išjungtas</string>
     <string name="constraints_violation">Apribojimų pažeidimas</string>
+    <string name="treatmentdeliveryerror">Boluso suleidimo klaida. Rankiniu būdu patikrinkite faktiškai suleistą kiekį</string>
     <string name="setbasalquestion">Patvirtinti naują laikiną bazę:</string>
     <string name="overview_treatment_label">Terapija</string>
     <string name="overview_calculator_label">Skaičiuotuvas</string>
@@ -121,6 +122,7 @@
     <string name="careportal_newnstreatment_other">Kiti</string>
     <string name="careportal_newnstreatment_meter">Matuoklis</string>
     <string name="careportal_newnstreatment_sensor">Sensorius</string>
+    <string name="carb_time_label">AV laikas</string>
     <string name="careportal_newnstreatment_duration_label">Trukmė</string>
     <string name="profile_label">Profilis</string>
     <string name="careportal_newnstreatment_glucosetype">Gliukozės tipas</string>
@@ -519,6 +521,8 @@
     <string name="enablesmbwithhightemptarget_summary">Įjungti SMB, kai yra aktyvus aukštas tikslas (aktyvumas, daugiau nei 100 mg/dl arba 5,5 mmol/l)</string>
     <string name="overview_insulin_label">Insulinas</string>
     <string name="overview_buttons_selection">Mygtukai</string>
+    <string name="show_calibration_button_summary">Siunčia kalibravimą į xDrip+ arba atidaro modifikuotos Dexcom programos BYODA kalibravimo dialogą</string>
+    <string name="show_cgm_button_summary">Atidaro xDrip+ ar BYODA, o mygtukas ATGAL gražina į AAPS</string>
     <string name="carb_increment_button_message">Paspaudus mygtuką įvedamas nustatytas angliavandenių kiekis</string>
     <string name="insulin_increment_button_message">Paspaudus mygtuką įvedamas nustatytas insulino kiekis</string>
     <string name="error_starting_cgm">Nepavyko paleisti NGJ programos.  Įsitikinkite, kad ji įdiegta.</string>
@@ -624,6 +628,7 @@
     <string name="exitwizard">Praleisti sąrankos vedlį</string>
     <string name="setupwizard_loop_description">Paspauskite mygtuką žemiau, norėdami leisti AndroidAPS patarti/atlikti bazės pakeitimus</string>
     <string name="setupwizard_sensitivity_description">Jautrumo įskiepis yra naudojamas jautrumo aptikimui ir AAO skaičiavimams. Daugiau informacijos:</string>
+    <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="nsclientinfotext">NSClient palaiko ryšį su Nightscout. Jūs galite praleisti šią dalį dabar, bet negalėsite baigti mokymosi programos, kol nenustatysite ryšio su NS.</string>
     <string name="diawarning">Atminkite: DKS profiliams reikia IVT bent 5 val. IVT = 5 - 6 val DKS profilyje atitinka IVT = 3 val sename (pompos terapijos) insulino profilyje.</string>
     <string name="setupwizard_aps_description">Pasirinkite vieną iš esamų algoritmų. Jie yra išdėstyti nuo seniausio iki naujausio. Naujesni algoritmai yra galingesni ir agresyvesni. Taigi jei esate naujas vartotojas, geriau pradėti nuo AMA, o ne naujesnio. Nepamirškite perskaityti dokumentaciją ir sukonfigūruoti jį prieš naudojant.</string>
@@ -635,6 +640,7 @@
     <string name="needsystemwindowpermission">Norint gauti pranešimus, programai reikalingas sisteminio lango leidimas</string>
     <string name="needlocationpermission">Programai reikia vietos nustatymo leidimo, kad būtų galima naudoti Bluetooth ir WiFi</string>
     <string name="needstoragepermission">Aplikacijai reikia leidimo prieigai prie saugyklos, kad galėtų išsaugoti žurnalo įrašus ir eksportavimo nustatymus</string>
+    <string name="needconnectpermission">Programai reikalinga Bluetooth prieigos teisė</string>
     <string name="request">Užklausa</string>
     <string name="open_navigation">Atidaryti meniu</string>
     <string name="close_navigation">Uždaryti meniu</string>
@@ -644,6 +650,8 @@
     <string name="time_elapsed">Praėjo laiko</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Gauti KG vertes iš Poctech programėlės</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Gauti KG reikšmes iš Glunovo programos</string>
     <string name="description_source_tomato">Gauti KG vertes iš Tomato programėlės (MiaoMiao)</string>
     <string name="high_temptarget_raises_sensitivity_title">Intensyvus laikinas tikslas didina jautrumą</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Padidinti jautrumą laikiniems tikslams >= 100]]></string>
@@ -672,6 +680,7 @@
     <string name="resettodefaults">Atkurti numatytuosius</string>
     <string name="nsmalfunction">NSClient sutrikimas. Reikėtų paleisti iš naujo NS ir NSClient.</string>
     <string name="time_offset">Laiko poslinkis</string>
+    <string name="bolus_reminder">Priminti apie bolusą vėliau</string>
     <string name="setupwizard_preferred_aps_mode">Pageidaujamas DKS režimas</string>
     <string name="treatments_wizard_total_label">Viso</string>
     <string name="calculation_short">Skaič.</string>
@@ -713,6 +722,9 @@
     <string name="application_expired">Aplikacijos laikas baigėsi</string>
     <string name="new_version_warning">Nauja versija pasiekiama mažiausiai %1$d d.! Po %2$d grįšite prie stabdymo prie žemo, po %3$d ciklas bus išjungtas</string>
     <string name="twohours">2 val</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Gauti kraujo gliukozės reikšmes iš \'Build Your Own Dexcom App\'.</string>
     <string name="cobvsiob">AAO prieš AIO</string>
     <string name="bolusconstraintappliedwarn">Pritaikytas boluso apribojimas: %1$.2f vv iki %2$.2f vv</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Nustatytas lėtas angliavandenių įsisavinimas: %2$d%% laiko. Dar karą patikrinkite savo skaičiavimus. AAO gali būti pervertinti, todėl gali būti suleista per daug insulino!!!!!</font>]]></string>
@@ -835,6 +847,10 @@
     <string name="enablebolusadvisor_summary">Galimybė priminti jums valgyti vėliau (pvz., esant aukštai glikemijai) boliuso vedlyje („po susileidimo palaukti ir valgyti vėliau“)</string>
     <string name="time_to_eat">Laikas valgyti!\nĮjunkite Boluso patarėją ir atlikite skaičiavimą dar kartą.</string>
     <string name="timetoeat">Laikas valgyti</string>
+    <string name="bolusreminder">Priminimas apie bolusą</string>
+    <string name="enablebolusreminder">Įgalinti priminimą apie bolusą</string>
+    <string name="enablebolusreminder_summary">Naudoti priminimus apie bolusą su skaičiuotuvu        („post-bolusas“)</string>
+    <string name="time_to_bolus">Laikas bolusui!\nĮjunkite Skaičiuotuvą ir pakartokite skaičiavimus.</string>
     <string name="fabric_upload_disabled">Sutrikimų žurnalo įrašų įkėlimas išjungtas!</string>
     <string name="graph_menu_divider_header">Grafikas</string>
     <string name="chart_menu">Grafiko meniu</string>
@@ -843,6 +859,7 @@
     <string name="cannula">Kaniulė</string>
     <string name="userentry">Naudotojo įrašas</string>
     <string name="common_values">Naudokite gausiausio patiekalo, kurį paprastai valgote, reikšmes\n</string>
+    <string name="summary_email_for_crash_report">Šis identifikatorius bus pridėtas prie gedimų ataskaitų, kad skubiais atvejais galėtume su jumis susisiekti. Jis neprivalomas.</string>
     <string name="email_address">El. pašto adresas</string>
     <string name="privacy_settings">Privatumo nuostatos</string>
     <string name="privacy_summary">Nurodykite el. pašto adresą (neprivaloma), jei norite gauti informaciją apie programos strigimus. Tai nėra automatizuota paslauga. Kūrėjai susisieks esant pavojingoms situacijoms.</string>
@@ -873,7 +890,18 @@
     <string name="calculation_in_progress">Skaičiuojama</string>
     <string name="missing_profile_name">Profilio pavadinimas nėra įrašytas</string>
     <string name="error_in_ic_values">Insulino ir AV santykio (I:A) reikšmės klaida</string>
+    <string name="error_in_basal_values">Bazės reikšmių klaida</string>
+    <string name="error_in_target_values">Tikslinės glikemijos reikšmės klaida</string>
+    <string name="error_in_isf_values">JIF reikšmės klaida</string>
+    <string name="run_question">Vykdyti %s?</string>
+    <string name="invalid_profile_not_accepted">Neteisingas profilis %1$s nepriimtas iš NS</string>
+    <string name="view">Rodymas</string>
     <string name="errors">Klaidos</string>
+    <string name="ns_sync_slow">Sulėtinti įkėlimus</string>
     <string name="data_status">KG duomenų būklė</string>
+    <string name="recalculated_data_used">Naudojami perskaičiuoti duomenys</string>
+    <string name="bg_too_close">KG per arti:\n%1$s\n%2$s</string>
+    <string name="identification">Identifikacija (el. paštas, FB, Discord slapyvardis ar kt.)</string>
+    <string name="identification_not_set">Kūrėjo režime tapatybė nenustatyta</string>
     <string name="not_available_full">Negalimas</string>
 </resources>
