@@ -116,4 +116,5 @@
     <string name="num1pin">1: (12 cijfers)</string>
     <string name="num2pin">2: (8 cijfers)</string>
     <string name="basal_bolus_step">Basaal/bolus stap</string>
+    <string name="carbs_store_error">Koolhydraten zijn waarschijnlijk niet correct opgeslagen. Handmatig controleren en opnieuw opslaan indien nodig.</string>
 </resources>

@@ -116,4 +116,5 @@
     <string name="num1pin">1: (12 chiffres)</string>
     <string name="num2pin">2: (8 chiffres)</string>
     <string name="basal_bolus_step">Étape Basal/Bolus</string>
+    <string name="carbs_store_error">Les glucides n\'étaient probablement pas enregistrées correctement. Vérifiez manuellement et renseignez les à nouveau si nécessaire.</string>
 </resources>
