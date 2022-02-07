@@ -65,31 +65,81 @@
     <string name="mmol">mmol/l</string>
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
+    <string name="advancedsettings_title">Avancerede indstillinger</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="btwatchdog_title">BT Vagthund</string>
+    <string name="btwatchdog_summary">Slår telefonens bluetooth fra i et sekund, hvis der ikke er mulighed for tilslutning til pumpen. Dette kan hjælpe på nogle telefoner, hvis bluetooth stakken fryser.</string>
+    <string name="pairing">Parring</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nej</string>
     <string name="loopdisabled">LOOP DEAKTIVERET AF BEGRÆNSNINGER</string>
     <string name="bolusdelivered">Bolus %1$.2fE leveret uden fejl</string>
     <string name="virtualpump_resultok">OK</string>
+    <string name="novalidbasalrate">Ingen gyldig basal rate læst fra pumpen</string>
+    <string name="limitingmaxiob">Begrænser max IOB til %1$.1f IE på grund af %2$s</string>
+    <string name="unsafeusage">usikker brug</string>
+    <string name="pump_unreachable">Pumpe utilgængelig</string>
+    <string name="extended_bolus">Forlænget bolus</string>
+    <string name="pump_time_updated">Pumpe tid opdateret</string>
     <string name="exit">Afslut</string>
     <string name="removerecord">Fjern registrering</string>
     <string name="loopisdisabled">Loop er deaktiveret</string>
     <string name="alarm">Alarm</string>
     <string name="disableloop">Deaktivér loop</string>
     <string name="enableloop">Aktiver loop</string>
+    <string name="resumeloop">Genoptag loop</string>
+    <string name="suspendloop">Suspendér Loop</string>
     <string name="duration_min_label">Varighed [min]</string>
+    <string name="notification">Notifikation</string>
     <string name="noprofile">Ingen profil er indlæst fra NS endnu</string>
+    <string name="exists">eksisterer</string>
+    <string name="notexists">eksisterer ikke</string>
     <string name="glucose">Glukose</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="name_short">Navn:</string>
+    <string name="time">Tid</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="loading">Indlæser …</string>
     <string name="event_time_label">Tidspunkt for hændelsen</string>
     <string name="notes_label">Bemærkninger</string>
     <string name="remove_button">Fjern</string>
+    <string name="addnew">Tilføj ny</string>
+    <string name="wrong_pump_data">Data kommer fra en anden pumpe. Skift pumpedriver for at nulstille pumpetilstand.</string>
     <!--    Constraints-->
+    <string name="limitingbasalratio">Begrænser max IOB til %1$.2f E/t på grund af %2$s</string>
+    <string name="pumplimit">pumpe grænse</string>
+    <string name="limitingpercentrate">Begrænser maks. procent til %1$d%% på grund af %2$s</string>
+    <string name="itmustbepositivevalue">det skal være en positiv værdi</string>
+    <string name="limitingbolus">Begrænser bolus til %1$.1f IE på grund af %2$s</string>
+    <string name="pumpNotInitializedProfileNotSet">Pumpe ikke initialiseret, profil ikke angivet!</string>
     <!--    Dialogs-->
+    <string name="confirmation">Bekræftelse</string>
+    <string name="message">Besked</string>
     <string name="ok">OK</string>
     <string name="cancel">Annuller</string>
+    <string name="dismiss">AFVIS</string>
     <!--    BlePreCheck-->
+    <string name="ble_not_supported">Bluetooth Low Energy understøttes ikke.</string>
+    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy understøttes ikke eller enheden er ikke parret.</string>
+    <string name="ble_not_enabled">Bluetooth er deaktiveret.</string>
+    <string name="location_not_found_title">Lokation er deaktiveret</string>
+    <string name="location_not_found_message">Placeringen skal være aktiveret, hvis Bluetooth-opdagelsen skal fungere på nyere enheder. AAPS sporer ikke din placering, og det kan deaktiveres efter parring er lykkedes.</string>
     <!--    DateUtil-->
+    <string name="minago">%1$d min. siden</string>
+    <string name="hoursago">%1$.1f t siden</string>
+    <string name="shorthour">t</string>
+    <string name="days">dage</string>
+    <string name="hours">timer</string>
+    <string name="unit_second">sekund</string>
+    <string name="unit_minute">minut</string>
+    <string name="unit_hour">time</string>
+    <string name="unit_day">dag</string>
+    <string name="unit_week">uge</string>
+    <string name="unit_seconds">sekunder</string>
+    <string name="unit_minutes">minutter</string>
+    <string name="unit_hours">timer</string>
+    <string name="unit_days">dage</string>
     <string name="unit_weeks">uger</string>
     <string name="shortminute">min</string>
     <string name="shortday">d</string>
@@ -138,6 +188,7 @@
     <string name="careportal_cgmsensorinsert">Skift af CGM Sensor</string>
     <string name="careportal_cgmsensorstart">CGM Sensor Start</string>
     <string name="careportal_cgm_sensor_stop">CGM Sensor Stop</string>
+    <string name="careportal_dad_alert">Diabeteshund alarm</string>
     <string name="careportal_insulincartridgechange">Skift af insulinampul</string>
     <string name="careportal_profileswitch">Profilskift</string>
     <string name="careportal_snackbolus">Snack Bolus</string>
@@ -150,24 +201,57 @@
     <string name="careportal_openapsoffline">OpenAPS Offline</string>
     <string name="careportal_pumpbatterychange">Skift af pumpebatteri</string>
     <string name="careportal_temporarytarget">Midlertidigt mål</string>
+    <string name="careportal_temporarytargetvalue">Midlertidig mål værdi</string>
+    <string name="careportal_temporarytargetcancel">Afslut midlertidigt mål</string>
+    <string name="boluswizard">Bolusberegner</string>
+    <string name="glucosetype_finger">Finger</string>
     <string name="glucosetype_sensor">Sensor</string>
+    <string name="manual">Manuel</string>
+    <string name="unknown">ukendt</string>
     <string name="eatingsoon">Spiser snart</string>
     <string name="hypo">Hypo</string>
     <string name="activity">Aktivitet</string>
     <string name="wear">Ur</string>
     <string name="automation">Automatisering</string>
+    <string name="custom">Brugerdefineret</string>
     <string name="pump">Pumpe</string>
     <string name="loop">Loop</string>
+    <string name="ns">NS</string>
+    <string name="record">Registrér</string>
     <string name="reading_pump_history">Læser pumpehistorik</string>
+    <string name="pump_icon">Pumpe ikon</string>
     <!--    Command-->
+    <string name="connectiontimedout">Forbindelsen fik timeout</string>
     <!--    PumpEnactResult-->
+    <string name="enacted">Udført</string>
+    <string name="comment">Kommentar</string>
+    <string name="success">Succes</string>
+    <string name="percent">Procent</string>
+    <string name="absolute">Absolut</string>
     <string name="configbuilder_insulin">Insulin</string>
+    <string name="insulin_unit_shortname">IE</string>
+    <string name="waitingforpumpresult">Venter på resultat</string>
+    <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
+    <string name="carbsreq">%1$d g ekstra kulhydrater krævet inden for %2$d minutter</string>
     <!--    TDDStatsActivity-->
+    <string name="stats">Statistik</string>
+    <string name="cumulative_tdd">Akkumuleret TDD</string>
+    <string name="expweight">Eksponentielt Vægtet TDD</string>
     <string name="basalrate">Basal</string>
     <string name="bolus">Bolus</string>
+    <string name="tdd">TDD</string>
     <string name="ratio">Ratio</string>
+    <string name="amount_days"># Dage</string>
+    <string name="weight">Vægt</string>
+    <string name="warning_Message">Muligvis unøjagtig, hvis du bruger bolusser til priming/fyldning!</string>
+    <string name="olddata_Message">Gammel data. Tryk venligst På \"GENINDLÆS\"</string>
+    <string name="tbb">Basis Basal I Alt</string>
+    <string name="tbb2">TBB * 2</string>
     <!--    Ntp-->
+    <string name="timedetection">Tidsdetektering</string>
+    <string name="format_hour_minute">%1$dt %2$dm</string>
+    <string name="mute5min">Lydløs i 5 minutter</string>
     <!-- Maintenance -->
     <string name="metadata_label_format">Filformat</string>
     <string name="metadata_label_created_at">Oprettet den</string>
@@ -203,13 +287,169 @@
     <string name="prefdecrypt_issue_wrong_format">Manglende krypteringskonfiguration, indstillingsformat er ugyldigt!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Ikke-understøttet eller ikke angivet krypteringsalgoritme!</string>
     <!-- VersionChecker -->
+    <string name="signature_verifier">Signaturgodkender</string>
+    <string name="running_invalid_version">Vi har opdaget, at du kører en ugyldig version. Loop deaktiveret!</string>
+    <string name="versionavailable">Version %1$s tilgængelig</string>
+    <string name="version_expire">Version %1$s udløber den %2$s</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Genstart venligst din telefon eller genstart AndroidAPS fra Systemindstillinger \nellers vil Android APS ikke have logning (vigtigt at spore og kontrollere, at algoritmerne fungerer korrekt)!</string>
     <!-- WeekdayPicker -->
+    <string name="monday_short">Ma</string>
+    <string name="tuesday_short">Ti</string>
+    <string name="wednesday_short">On</string>
+    <string name="thursday_short">To</string>
+    <string name="friday_short">Fr</string>
+    <string name="saturday_short">Lø</string>
+    <string name="sunday_short">Sø</string>
     <!-- User Entry -->
+    <string name="uel_bolus">BOLUS</string>
+    <string name="uel_bolus_calculator">BOLUS BEREGNER</string>
+    <string name="uel_bolus_advisor">BOLUS ASSISTENT</string>
+    <string name="uel_extended_bolus">FORLÆNGET BOLUS</string>
+    <string name="uel_superbolus_tbr">SUPERBOLUS TBR</string>
+    <string name="uel_carbs">KH</string>
+    <string name="uel_extended_carbs">FORLÆNGET KH</string>
+    <string name="uel_temp_basal">MIDLERTIDIG BASAL</string>
+    <string name="uel_tt">MIDLERTIDIG MÅL</string>
+    <string name="uel_new_profile">NY PROFIL</string>
+    <string name="uel_clone_profile">KLON PROFIL</string>
+    <string name="uel_store_profile">OPBEVAR PROFIL</string>
+    <string name="uel_profile_switch">PROFIL SKIFT</string>
+    <string name="uel_profile_switch_cloned">PROFIL SKIFT KLONET</string>
+    <string name="uel_closed_loop_mode">LUKKET LOOP MODUS</string>
+    <string name="uel_lgs_loop_mode">LGS LOOP MODUS</string>
+    <string name="uel_open_loop_mode">ÅBEN LOOP MODUS</string>
+    <string name="uel_loop_disabled">LOOP DEAKTIVERET</string>
+    <string name="uel_loop_enabled">LOOP AKTIVERET</string>
+    <string name="uel_reconnect">GENFORBIND</string>
+    <string name="uel_disconnect">AFBRYD</string>
+    <string name="uel_resume">FORTSÆT</string>
+    <string name="uel_suspend">SUSPENDÉR</string>
+    <string name="uel_hw_pump_allowed">HW PUMPE TILLADT</string>
+    <string name="uel_clear_pairing_keys">RYD PARRINGSNØGLER</string>
+    <string name="uel_accepts_temp_basal">ACCEPTERER MIDLERTIDIG BASAL</string>
+    <string name="uel_cancel_temp_basal">ANNULLER MIDLERTIDIG BASAL</string>
+    <string name="uel_cancel_bolus">ANNULLER BOLUS</string>
+    <string name="uel_cancel_extended_bolus">ANNULLER FORLÆNGET BOLUS</string>
+    <string name="uel_cancel_tt">ANNULLER MIDLERTIDIG MÅL</string>
+    <string name="uel_careportal">CAREPORTAL</string>
+    <string name="uel_site_change">SKIFT INFUSIONSSÆT</string>
+    <string name="uel_reservoir_change">SKIFT RESERVOIR</string>
+    <string name="uel_calibration">KALIBRERING</string>
+    <string name="uel_prime_bolus">FORFYLDNINGSBOLUS</string>
+    <string name="uel_treatment">BEHANDLING</string>
+    <string name="uel_careportal_ns_refresh">CAREPORTAL NS OPDATER</string>
+    <string name="uel_profile_switch_ns_refresh">PROFIL SKIFT NS OPDATER</string>
+    <string name="uel_treatments_ns_refresh">BEHANDLINGER NS OPDATER</string>
+    <string name="uel_tt_ns_refresh">MIDLERTIDIG MÅL NS OPDATER</string>
+    <string name="uel_automation_removed">AUTOMATIK FJERNET</string>
+    <string name="uel_bg_removed">BG FJERNET</string>
+    <string name="uel_careportal_removed">CAREPORTAL FJERNET</string>
+    <string name="uel_bolus_removed">BOLUS FJERNET</string>
+    <string name="uel_carbs_removed">KULHYDRATER FJERNET</string>
+    <string name="uel_temp_basal_removed">MIDLERTIDIG BASAL FJERNET</string>
+    <string name="uel_extended_bolus_removed">FORLÆNGET BOLUS FJERNET</string>
+    <string name="uel_food">MAD</string>
+    <string name="uel_food_removed">MAD FJERNET</string>
+    <string name="uel_profile_removed">PROFIL FJERNET</string>
+    <string name="uel_profile_switch_removed">PROFIL SKIFT FJERNET</string>
+    <string name="uel_restart_events_removed">GENSTART HÆNDELSER FJERNET</string>
+    <string name="uel_treatment_removed">BEHANDLING FJERNET</string>
+    <string name="uel_tt_removed">MIDLERTIDIG MÅL FJERNET</string>
+    <string name="uel_ns_paused">NS PAUSE</string>
+    <string name="uel_ns_resume">NS GENOPTAG</string>
+    <string name="uel_ns_queue_cleared">NS KØ RYDDET</string>
+    <string name="uel_ns_settings_copied">NS INDSTILLINGER KOPIERET</string>
+    <string name="uel_error_dialog_ok">FEJLDIALOG OK</string>
+    <string name="uel_error_dialog_mute">FEJLDIALOG LYDLØS </string>
+    <string name="uel_error_dialog_mute_5min">FEJLDIALOG LYDLØS 5MIN</string>
+    <string name="uel_objective_started">MÅL STARTET</string>
+    <string name="uel_objective_unstarted">MÅL EJ STARTET</string>
+    <string name="uel_objectives_skipped">MÅL SKIPPET</string>
+    <string name="uel_stat_reset">STAT NULSTIL</string>
+    <string name="uel_delete_logs">SLET LOGS</string>
+    <string name="uel_delete_future_treatments">SLET FREMTIDIGE BEHANDLINGER</string>
+    <string name="uel_export_settings">EKSPORTER INDSTILLINGER</string>
+    <string name="uel_import_settings">IMPORTER INDSTILLINGER</string>
+    <string name="uel_reset_databases">NULSTIL DATABASER</string>
+    <string name="uel_export_databases">EKSPORTER DATABASER</string>
+    <string name="uel_import_databases">IMPORTER DATABASER</string>
+    <string name="uel_otp_export">OTP EKSPORT</string>
+    <string name="uel_otp_reset">OTP NULSTIL</string>
+    <string name="uel_stop_sms">STOP SMS</string>
+    <string name="uel_export_csv">EKSPORTER BRUGER INDTASTNINGER</string>
+    <string name="uel_start_aaps">START AAPS</string>
+    <string name="uel_exit_aaps">Afslut AAPS</string>
+    <string name="uel_plugin_enabled">PLUGIN AKTIVERET</string>
+    <string name="uel_plugin_disabled">PLUGIN DEAKTIVERET</string>
+    <string name="uel_unknown">UKENDT</string>
+    <string name="ue_string">Streng</string>
+    <string name="ue_source">Kilde</string>
+    <string name="ue_utc_offset">UTC Tidsforskydning</string>
     <string name="ue_action">Handling</string>
+    <string name="ue_timestamp">Tidsstempel</string>
+    <string name="ue_none">Ingen Enhed</string>
+    <string name="ue_export_to_csv">Eksporter brugerindtastninger til Excel (csv)</string>
+    <string name="uel_loop_change">LOOP ÆNDRET</string>
+    <string name="uel_loop_removed">LOOP FJERNET</string>
+    <string name="uel_other">ANDRE</string>
     <!-- HardLimits -->
+    <string name="profile_low_target">Nedre målværdi for profilen</string>
+    <string name="profile_high_target">Øvre målværdi for profilen</string>
+    <string name="temp_target_low_target">Nedre målværdi for midlertidig mål </string>
+    <string name="temp_target_high_target">Øvre målværdi for midlertidig mål</string>
+    <string name="temp_target_value">Midlertidig mål værdi</string>
+    <string name="profile_dia">Profil DIA værdi</string>
+    <string name="profile_sensitivity_value">Profil følsomhed værdi</string>
+    <string name="profile_max_daily_basal_value">Maksimal profil basal værdi</string>
+    <string name="current_basal_value">Aktuel basal værdi</string>
+    <string name="profile_carbs_ratio_value">Profil KH ratio værdi</string>
     <string name="valuelimitedto">%1$.2f begrænset til %2$.2f</string>
+    <string name="valueoutofrange">»%1$s« er uden for absolutte grænser</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f er uden for absolutte grænser</string>
+    <string name="basal_value">Basalværdi</string>
+    <string name="nsclient_version_does_not_match">NSClient version matcher ikke AndroidAPS. Opdater venligst.</string>
     <!-- Command Queue + readStatus reasons -->
+    <string name="bolus_u_min">BOLUS %1$.2f IE</string>
+    <string name="carbs_g">KH %1$d g</string>
+    <string name="extended_bolus_u_min">FORLÆNGET BOLUS %1$.2f IE %2$d min</string>
+    <string name="load_events">INDLÆS BEGIVENHEDER</string>
+    <string name="load_history">INDLÆS HISTORIK %1$d</string>
+    <string name="load_tdds">LÆS TDD\'er</string>
+    <string name="set_profile">SÆT PROFIL</string>
+    <string name="set_user_settings">SÆT BRUGERINDSTILLINGER</string>
+    <string name="smb_bolus_u">SMB BOLUS %1$.2f IE</string>
+    <string name="start_pump">START PUMPE</string>
+    <string name="stop_pump">STOP PUMPE</string>
+    <string name="temp_basal_absolute">MIDLERTIDIG BASAL %1$.2f E/t %2$d min</string>
+    <string name="temp_basal_percent">MIDLERTIDIG BASAL %1$d%% %2$d min</string>
+    <string name="insight_set_tbr_over_notification">INSIGHT SÆT TBR OVER NOTIFIKATION</string>
+    <string name="read_status" comment="10 characters max for READSTATUS translation">LÆS STATUS %1$s</string>
+    <string name="keepalive_status_outdated" comment="26 characters max for translation">KeepAlive.Status forældet.</string>
+    <string name="keepalive_basal_outdated" comment="26 characters max for translation">KeepAlive. Basal forældet.</string>
     <string name="sms" comment="26 characters max for translation">SMS</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Klikket: tilslut til pumpe</string>
+    <string name="pump_driver_changed" comment="26 characters max for translation">Pumpe driver ændret.</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Pumpe driver ændret.</string>
+    <string name="device_changed" comment="26 characters max for translation">Enhed ændret</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Klikket: opdater</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Planlagt Status Opdatering</string>
+    <string name="unconfirmed_command" comment="26 characters max for translation">Ubekræftet kommando</string>
+    <string name="requested_by_user" comment="26 characters max for translation">Anmodet af bruger</string>
+    <string name="user_request" comment="26 characters max for translation">Bruger anmodning</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
+    <string name="pump_paired" comment="26 characters max for translation">Pumpe parret</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Insight Opdater-knap</string>
+    <plurals name="days">
+        <item quantity="one">%1$d dag</item>
+        <item quantity="other">%1$d dage</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d time</item>
+        <item quantity="other">%1$d timer</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%1$d minut</item>
+        <item quantity="other">%1$d minutter</item>
+    </plurals>
 </resources>
