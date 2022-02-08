@@ -58,23 +58,6 @@ android {
         versionName "1.0.3"
         buildConfigField "String", "BUILDVERSION", generateGitBuild()
     }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-        firebaseDisable {
-        }
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
-    }
-
-    lintOptions {
-        abortOnError false
-    }
 
     flavorDimensions "standard"
     productFlavors {
