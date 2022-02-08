@@ -472,7 +472,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="missed_bg_readings">Kaçırılan KŞ Okumaları</string>
     <string name="raise_notifications_as_android_notifications">Uyarılar ve bildirimler için sistem bildirimlerini kullan</string>
     <string name="gradually_increase_notification_volume">Uyarılar ve bildirimler için ses seviyesini kademeli olarak artırın</string>
-    <string name="localalertsettings_title">Yerel uyarıları</string>
     <string name="enable_missed_bg_readings_alert">KŞ bilgisi alınmadığında uyar</string>
     <string name="enable_pump_unreachable_alert">Pompa ulaşılamıyorsa uyar</string>
     <string name="pump_unreachable_threshold">Pompa ulaşılamaz eşiği [min]</string>
