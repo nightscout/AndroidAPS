@@ -434,6 +434,12 @@
 
         </LinearLayout>
 
+        <info.nightscout.androidaps.utils.ui.TargetBgProfileGraph
+            android:id="@+id/target_graph"
+            android:layout_width="match_parent"
+            android:layout_height="100dip"
+            android:layout_margin="20dp" />
+
         <include
             android:id="@+id/close_layout"
             layout="@layout/close" />
