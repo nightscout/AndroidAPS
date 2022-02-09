@@ -1134,7 +1134,8 @@
     <string name="ns_sync_slow">Slow down uploads</string>
     <string name="data_status">BG data status</string>
     <string name="statuslights_cannula_age">cannula age</string>
-    <string name="statuslights_pod_age">pod age</string>
+    <string name="statuslights_patch_pump_age">patch pump age</string>
+    <string name="patch_pump">Patch pump</string>
     <string name="recalculated_data_used">Recalculated data used</string>
     <string name="bg_too_close">BG too close:\n%1$s\n%2$s</string>
     <string name="key_last_processed_glunovo_timestamp" translatable="false">last_processed_glunovo_timestamp</string>

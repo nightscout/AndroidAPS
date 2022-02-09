@@ -72,8 +72,6 @@ class StatusLightHandler @Inject constructor(
         }
     }
 
-    val isOmnipod: Boolean get() = activePlugin.activePump.model() == PumpType.OMNIPOD_EROS || activePlugin.activePump.model() == PumpType.OMNIPOD_DASH
-
     private fun handleAge(view: TextView?, type: TherapyEvent.Type, @StringRes warnSettings: Int, defaultWarnThreshold: Double, @StringRes urgentSettings: Int, defaultUrgentThreshold: Double) {
         val warn = sp.getDouble(warnSettings, defaultWarnThreshold)
         val urgent = sp.getDouble(urgentSettings, defaultUrgentThreshold)

@@ -823,13 +823,13 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     fun updateTime(from: String) {
         binding.infoLayout.time.text = dateUtil.timeString(dateUtil.now())
         // Status lights
-        val isPod = statusLightHandler.isOmnipod
+        val isPatchPump = activePlugin.activePump.pumpDescription.isPatchPump
         binding.statusLightsLayout.apply {
-            cannulaOrPod.setImageResource(if (isPod) R.drawable.ic_pod_outline else R.drawable.ic_cp_age_cannula)
-            cannulaOrPod.contentDescription = rh.gs(if (isPod) R.string.statuslights_pod_age else R.string.statuslights_cannula_age)
-            cannulaOrPod.scaleX = if (isPod) 1.4f else 2f
-            cannulaOrPod.scaleY = cannulaOrPod.scaleX
-            insulinAge.visibility = (!isPod).toVisibility()
+            cannulaOrPatch.setImageResource(if (isPatchPump) R.drawable.ic_patch_pump_outline else R.drawable.ic_cp_age_cannula)
+            cannulaOrPatch.contentDescription = rh.gs(if (isPatchPump) R.string.statuslights_patch_pump_age else R.string.statuslights_cannula_age)
+            cannulaOrPatch.scaleX = if (isPatchPump) 1.4f else 2f
+            cannulaOrPatch.scaleY = cannulaOrPatch.scaleX
+            insulinAge.visibility = (!isPatchPump).toVisibility()
             statusLights.visibility = (sp.getBoolean(R.string.key_show_statuslights, true) || config.NSCLIENT).toVisibility()
         }
         statusLightHandler.updateStatusLights(

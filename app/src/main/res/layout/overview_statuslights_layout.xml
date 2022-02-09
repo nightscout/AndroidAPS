@@ -12,7 +12,7 @@
     android:paddingBottom="4dp">
 
     <ImageView
-        android:id="@+id/cannula_or_pod"
+        android:id="@+id/cannula_or_patch"
         android:layout_width="40dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
