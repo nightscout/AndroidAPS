@@ -51,7 +51,7 @@
     <string name="nsclient_hint1">https://androidaps.readthedocs.io/en/latest/EN/Children/Children.html</string>
     <string name="isf_label_exam">Tópico: Fator de Sensibilidade à Insulina (ISF)</string>
     <string name="isf_increasingvalue">Aumentar os valores de ISF levará à administração de mais insulina para cobrir uma quantidade específica de carboidratos.</string>
-    <string name="isf_decreasingvalue">Reduzir os valores do ISF levará à adminstração de quantidades menores de insulina para corrigir uma glicose acima do alvo.</string>
+    <string name="isf_decreasingvalue">Reduzir os valores do ISF levará à adminstração de quantidades maiores de insulina para corrigir uma glicose acima do alvo.</string>
     <string name="isf_noeffect">Aumentar ou reduzir o ISF não tem efeito na administração de insulina quando os níveis de glicose estão abaixo do alvo.</string>
     <string name="isf_preferences">O ISF deve ser configurado nas Preferências do AndroidAPS.</string>
     <string name="isf_profile">Alterar o valor do ISF no seu perfil é o suficiente para aplicar a alteração.</string>
