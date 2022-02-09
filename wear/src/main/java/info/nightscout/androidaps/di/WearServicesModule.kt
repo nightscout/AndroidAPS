@@ -8,7 +8,7 @@ import info.nightscout.androidaps.watchfaces.*
 
 @Module
 @Suppress("unused")
-abstract class ServicesModule {
+abstract class WearServicesModule {
 
     @ContributesAndroidInjector abstract fun contributesListenerService(): ListenerService
 
