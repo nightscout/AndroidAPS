@@ -829,7 +829,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             cannulaOrPatch.contentDescription = rh.gs(if (isPatchPump) R.string.statuslights_patch_pump_age else R.string.statuslights_cannula_age)
             cannulaOrPatch.scaleX = if (isPatchPump) 1.4f else 2f
             cannulaOrPatch.scaleY = cannulaOrPatch.scaleX
-            insulinAge.visibility = (!isPatchPump).toVisibility()
+            insulinAge.visibility = isPatchPump.not().toVisibility()
             statusLights.visibility = (sp.getBoolean(R.string.key_show_statuslights, true) || config.NSCLIENT).toVisibility()
         }
         statusLightHandler.updateStatusLights(
