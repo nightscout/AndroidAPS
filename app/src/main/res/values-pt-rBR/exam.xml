@@ -59,7 +59,6 @@
     <string name="isf_hint2">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html</string>
     <string name="ic_multiple">Você pode definir mais do que um valor para o rácio I:C no seu perfil.</string>
     <string name="ic_isf">Se você mudar o ISF no seu perfil, também deveria mudar o I:C.</string>
-    <string name="ic_label_exam">Tópico: Rácio Insulina:Carboidrato (racio I:C)</string>
     <string name="ic_increasingvalue">Rácios IC mais altos levam a menos insulina administrada por uma dada quantidade de carboidratos.</string>
     <string name="ic_decreasingvalue">Rácios IC mais baixos levam a menos insulina administrada por uma dada quantidade de carboidratos.</string>
     <string name="ic_noeffect">Se tiver 0 COB, alterar a proporção IC irá levar a uma quantidade diferente de insulina para corrigir um determinado valor da glicemia.</string>
@@ -70,8 +69,7 @@
     <string name="profileswitch_pctwillchange"> Ao especificar uma mudança de perfil de 90%, quais respostas são corretas?</string>
     <string name="profileswitch_basallower">Taxas de basal serão 10% menores.</string>
     <string name="profileswitch_isfhigher">O valor do ISF será 10% maior.</string>
-    <string name="profileswitch_iclower">O valor da proporção I:C será 10% menor.</string>
-    <string name="profileswitch_unchanged">O ISF e a I:C continuem iguas.</string>
+    <string name="profileswitch_unchanged">O ISF e a I:C não sofrem alterações.</string>
     <string name="profileswitch_hint1" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#profile-switch</string>
     <string name="profileswitch2_label">Tópico: Troca de Perfil</string>
     <string name="profileswitchtime_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#timeshift</string>
