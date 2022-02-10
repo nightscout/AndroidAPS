@@ -36,4 +36,6 @@
     <string name="dash_bolusdelivering">%1$.2f eh worden toegediend</string>
     <string name="omnipod_common_alert_delivery_suspended">Insuline levering is opgeschort</string>
     <string name="omnipod_dash_connection_lost">Verbinding met pod verbroken</string>
+    <string name="omnipod_dash_bolus_already_in_progress">Een andere bolus wordt op dit moment toegediend</string>
+    <string name="omnipod_dash_not_enough_insulin">Niet voldoende insuline in het reservoir</string>
 </resources>
