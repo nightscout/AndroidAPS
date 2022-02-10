@@ -134,22 +134,22 @@ class LocalProfileFragment : DaggerFragment() {
         binding.name.addTextChangedListener(textWatch)
         binding.dia.setParams(currentProfile.dia, hardLimits.minDia(), hardLimits.maxDia(), 0.1, DecimalFormat("0.0"), false, null, textWatch)
         binding.dia.tag = "LP_DIA"
-        TimeListEdit(context, aapsLogger, dateUtil, view, R.id.ic_holder, "IC", rh.gs(R.string.ic_label), currentProfile.ic, null, doubleArrayOf(hardLimits.minIC(), hardLimits.maxIC()), null, 0.1, DecimalFormat ("0.0"), save)
-        basalView = TimeListEdit(context, aapsLogger, dateUtil, view, R.id.basal_holder, "BASAL", rh.gs(R.string.basal_label) + ": " + sumLabel(), currentProfile.basal, null, doubleArrayOf(pumpDescription.basalMinimumRate, pumpDescription.basalMaximumRate), null, 0.01, DecimalFormat("0.00"), save)
+        TimeListEdit(context, aapsLogger, dateUtil, view, R.id.ic_holder, "IC", rh.gs(R.string.ic_long_label), currentProfile.ic, null, doubleArrayOf(hardLimits.minIC(), hardLimits.maxIC()), null, 0.1, DecimalFormat ("0.0"), save)
+        basalView = TimeListEdit(context, aapsLogger, dateUtil, view, R.id.basal_holder, "BASAL", rh.gs(R.string.basal_long_label) + ": " + sumLabel(), currentProfile.basal, null, doubleArrayOf(pumpDescription.basalMinimumRate, pumpDescription.basalMaximumRate), null, 0.01, DecimalFormat("0.00"), save)
         if (units == Constants.MGDL) {
             val isfRange = doubleArrayOf(HardLimits.MIN_ISF, HardLimits.MAX_ISF)
-            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.isf_holder, "ISF", rh.gs(R.string.isf_label), currentProfile.isf, null, isfRange , null, 1.0, DecimalFormat("0"), save)
-            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.target_holder, "TARGET", rh.gs(R.string.target_label), currentProfile.targetLow, currentProfile.targetHigh, HardLimits.VERY_HARD_LIMIT_MIN_BG, HardLimits.VERY_HARD_LIMIT_TARGET_BG, 1.0, DecimalFormat("0"), save)
+            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.isf_holder, "ISF", rh.gs(R.string.isf_long_label), currentProfile.isf, null, isfRange , null, 1.0, DecimalFormat("0"), save)
+            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.target_holder, "TARGET", rh.gs(R.string.target_long_label), currentProfile.targetLow, currentProfile.targetHigh, HardLimits.VERY_HARD_LIMIT_MIN_BG, HardLimits.VERY_HARD_LIMIT_TARGET_BG, 1.0, DecimalFormat("0"), save)
         } else {
             val isfRange = doubleArrayOf(roundUp(Profile.fromMgdlToUnits(HardLimits.MIN_ISF, GlucoseUnit.MMOL)), 
                 roundDown(Profile.fromMgdlToUnits(HardLimits.MAX_ISF, GlucoseUnit.MMOL)))
-            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.isf_holder, "ISF", rh.gs(R.string.isf_label), currentProfile.isf, null,isfRange , null, 0.1, DecimalFormat("0.0"), save)
+            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.isf_holder, "ISF", rh.gs(R.string.isf_long_label), currentProfile.isf, null,isfRange , null, 0.1, DecimalFormat("0.0"), save)
             val range1 = doubleArrayOf(roundUp(Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_MIN_BG[0], GlucoseUnit.MMOL)),
                 roundDown(Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_MIN_BG[1], GlucoseUnit.MMOL)))
             val range2 = doubleArrayOf(roundUp(Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_MAX_BG[0], GlucoseUnit.MMOL)),
                 roundDown(Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_MAX_BG[1], GlucoseUnit.MMOL)))
             Log.i("TimeListEdit", "build: range1" + range1[0] + " " + range1[1]   + " range2" + range2[0] + " " + range2[1])
-            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.target_holder, "TARGET", rh.gs(R.string.target_label), currentProfile.targetLow, currentProfile.targetHigh, range1 , range2, 0.1, DecimalFormat("0.0"), save)
+            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.target_holder, "TARGET", rh.gs(R.string.target_long_label), currentProfile.targetLow, currentProfile.targetHigh, range1 , range2, 0.1, DecimalFormat("0.0"), save)
         }
 
         // Spinner

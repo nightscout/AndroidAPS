@@ -32,7 +32,6 @@ class IsfProfileGraph : GraphView {
         val isfSeries: LineGraphSeries<DataPoint> = LineGraphSeries(isfDataPoints)
         addSeries(isfSeries)
         isfSeries.thickness = 8
-        isfSeries.isDrawBackground = true
         viewport.isXAxisBoundsManual = true
         viewport.setMinX(0.0)
         viewport.setMaxX(24.0)
