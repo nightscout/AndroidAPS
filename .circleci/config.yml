@@ -23,7 +23,7 @@ jobs:
           test-command: ./gradlew testFullDebugUnitTest
 
       - android/run-tests:
-          test-command: ./gradlew allDebugCoverage
+          test-command: ./gradlew jacocoAllDebugReport
 
       # Then start the emulator and run the Instrumentation tests!
       #      - android/start-emulator-and-run-tests:
@@ -36,7 +36,7 @@ jobs:
       #          command: |
       #            ./gradlew assembleRelease
       - codecov/upload:
-          file: './build/reports/jacoco/allDebugCoverage/allDebugCoverage.xml'
+          file: './build/reports/jacoco/jacocoAllDebugReport/jacocoAllDebugReport.xml'
 
 workflows:
   # Below is the definition of your workflow.

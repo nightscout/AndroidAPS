@@ -12,7 +12,7 @@ tasks.withType(Test) {
 project.afterEvaluate {
     def variants = ["debug", "fullDebug"]
 
-    tasks.create(name: "allDebugCoverage", type: JacocoReport) {
+    tasks.create(name: "jacocoAllDebugReport", type: JacocoReport) {
 
         group = "Reporting"
         description = "Generate overall Jacoco coverage report for the debug build."
@@ -74,7 +74,7 @@ project.afterEvaluate {
         def executions = subprojects.collect { proj ->
             variants.collect { variant ->
                 def path = "${proj.buildDir}/jacoco/test${variant.capitalize()}UnitTest.exec"
-                printf('Collecting execution data from: %s\n', path)
+                //printf('Collecting execution data from: %s\n', path)
                 if ((new File(path)).exists()) path else null
             }
         }.flatten()
