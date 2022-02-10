@@ -111,6 +111,11 @@
     <string name="isf_label">ISF</string>
     <string name="basal_label">Basal</string>
     <string name="target_label">Target</string>
+    <string name="dia_long_label">Duration of Insulin Action</string>
+    <string name="ic_long_label">Insulin to Carb ratio</string>
+    <string name="isf_long_label">Insulin Sensitivity Factor</string>
+    <string name="basal_long_label">Basel rate</string>
+    <string name="target_long_label">Blood Glucose Target</string>
     <string name="initializing">Initializing ...</string>
     <string name="serialnumber">Serial number</string>
     <string name="battery_label">Battery</string>
