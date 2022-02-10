@@ -48,6 +48,10 @@
     <string name="isf_label">ISF</string>
     <string name="basal_label">אינסולין בזאלי</string>
     <string name="target_label">ערך מטרה</string>
+    <string name="dia_long_label">משך פעילות האינסולין</string>
+    <string name="ic_long_label">יחס אינסולין-פחמימות </string>
+    <string name="basal_long_label">מינון בזאלי</string>
+    <string name="target_long_label">ערך מטרה</string>
     <string name="initializing">מאתחל...</string>
     <string name="serialnumber">מספר סידורי</string>
     <string name="battery_label">סוללה</string>
