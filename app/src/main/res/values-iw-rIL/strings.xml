@@ -900,6 +900,9 @@
     <string name="errors">שגיאות</string>
     <string name="ns_sync_slow">האט העלאות</string>
     <string name="data_status">מצב נתוני הסוכר</string>
+    <string name="statuslights_cannula_age">גיל הצינורית</string>
+    <string name="statuslights_patch_pump_age">גיל משאבה</string>
+    <string name="patch_pump">משאבה ללא צינורית</string>
     <string name="recalculated_data_used">משתמש בנתונים מחושבים מחדש</string>
     <string name="bg_too_close">רמת הסוכר קרובה מדי:\n%1$s\n%2$s</string>
     <string name="identification">אמצעי זיהוי (מייל, פייסבוק או דיסקורד וכו\')</string>
