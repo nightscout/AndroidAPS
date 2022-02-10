@@ -125,13 +125,16 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
             holder.binding.ns.visibility = (extendedBolus.interfaceIDs.nightscoutId != null).toVisibility()
             holder.binding.ph.visibility = (extendedBolus.interfaceIDs.pumpId != null).toVisibility()
             holder.binding.invalid.visibility = extendedBolus.isValid.not().toVisibility()
+            val sameDayPrevious = position > 0 && dateUtil.isSameDay(extendedBolus.timestamp, extendedBolusList[position-1].timestamp)
+            holder.binding.date.visibility = sameDayPrevious.not().toVisibility()
+            holder.binding.date.text = dateUtil.dateString(extendedBolus.timestamp)
             @SuppressLint("SetTextI18n")
             if (extendedBolus.isInProgress(dateUtil)) {
-                holder.binding.date.text = dateUtil.dateAndTimeString(extendedBolus.timestamp)
-                holder.binding.date.setTextColor(rh.gc(R.color.colorActive))
+                holder.binding.time.text = dateUtil.timeString(extendedBolus.timestamp)
+                holder.binding.time.setTextColor(rh.gc(R.color.colorActive))
             } else {
-                holder.binding.date.text = dateUtil.dateAndTimeString(extendedBolus.timestamp) + " - " + dateUtil.timeString(extendedBolus.end)
-                holder.binding.date.setTextColor(holder.binding.insulin.currentTextColor)
+                holder.binding.time.text = dateUtil.timeRangeString(extendedBolus.timestamp, extendedBolus.end)
+                holder.binding.time.setTextColor(holder.binding.insulin.currentTextColor)
             }
             val profile = profileFunction.getProfile(extendedBolus.timestamp) ?: return
             holder.binding.duration.text = rh.gs(R.string.format_mins, T.msecs(extendedBolus.duration).mins())
@@ -141,6 +144,8 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
             holder.binding.ratio.text = rh.gs(R.string.pump_basebasalrate, extendedBolus.rate)
             if (iob.iob != 0.0) holder.binding.iob.setTextColor(rh.gc(R.color.colorActive)) else holder.binding.iob.setTextColor(holder.binding.insulin.currentTextColor)
             holder.binding.remove.tag = extendedBolus
+            val nextTimestamp = if (extendedBolusList.size != position + 1) extendedBolusList[position + 1].timestamp else 0L
+            holder.binding.delimiter.visibility = dateUtil.isSameDay(extendedBolus.timestamp, nextTimestamp).toVisibility()
         }
 
         override fun getItemCount(): Int = extendedBolusList.size

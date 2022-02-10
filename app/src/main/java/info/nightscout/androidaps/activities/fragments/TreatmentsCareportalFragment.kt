@@ -152,7 +152,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
         _binding = null
     }
 
-    inner class RecyclerViewAdapter internal constructor(private var list: List<TherapyEvent>) : RecyclerView.Adapter<TherapyEventsViewHolder>() {
+    inner class RecyclerViewAdapter internal constructor(private var therapyList: List<TherapyEvent>) : RecyclerView.Adapter<TherapyEventsViewHolder>() {
 
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): TherapyEventsViewHolder {
             val v = LayoutInflater.from(viewGroup.context).inflate(R.layout.treatments_careportal_item, viewGroup, false)
@@ -160,18 +160,23 @@ class TreatmentsCareportalFragment : DaggerFragment() {
         }
 
         override fun onBindViewHolder(holder: TherapyEventsViewHolder, position: Int) {
-            val therapyEvent = list[position]
+            val therapyEvent = therapyList[position]
             holder.binding.ns.visibility = (therapyEvent.interfaceIDs.nightscoutId != null).toVisibility()
             holder.binding.invalid.visibility = therapyEvent.isValid.not().toVisibility()
-            holder.binding.date.text = dateUtil.dateAndTimeString(therapyEvent.timestamp)
+            val sameDayPrevious = position > 0 && dateUtil.isSameDay(therapyEvent.timestamp, therapyList[position - 1].timestamp)
+            holder.binding.date.visibility = sameDayPrevious.not().toVisibility()
+            holder.binding.date.text = dateUtil.dateString(therapyEvent.timestamp)
+            holder.binding.time.text = dateUtil.timeString(therapyEvent.timestamp)
             holder.binding.duration.text = if (therapyEvent.duration == 0L) "" else dateUtil.niceTimeScalar(therapyEvent.duration, rh)
             holder.binding.note.text = therapyEvent.note
             holder.binding.type.text = translator.translate(therapyEvent.type)
             holder.binding.remove.tag = therapyEvent
+            val nextTimestamp = if (therapyList.size != position + 1) therapyList[position + 1].timestamp else 0L
+            holder.binding.delimiter.visibility = dateUtil.isSameDay(therapyEvent.timestamp, nextTimestamp).toVisibility()
         }
 
         override fun getItemCount(): Int {
-            return list.size
+            return therapyList.size
         }
 
         inner class TherapyEventsViewHolder(view: View) : RecyclerView.ViewHolder(view) {

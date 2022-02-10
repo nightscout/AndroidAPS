@@ -12,12 +12,25 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="@color/list_delimiter"
+            android:gravity="center"
+            android:text="1.1.2000"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            tools:ignore="HardcodedText" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:baselineAligned="true"
             android:orientation="horizontal">
-
 
             <com.joanzapata.iconify.widget.IconTextView
                 android:layout_width="wrap_content"
@@ -30,10 +43,10 @@
                 tools:ignore="HardcodedText" />
 
             <TextView
-                android:id="@+id/date"
+                android:id="@+id/time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1.1.2000 18:00"
+                android:text="18:00"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 tools:ignore="HardcodedText" />
 
@@ -158,6 +171,7 @@
         </LinearLayout>
 
         <View
+            android:id="@+id/delimiter"
             android:layout_width="fill_parent"
             android:layout_height="2dip"
             android:layout_marginBottom="5dp"
