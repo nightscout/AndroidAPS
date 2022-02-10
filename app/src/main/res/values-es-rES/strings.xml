@@ -900,6 +900,9 @@
     <string name="errors">Errores</string>
     <string name="ns_sync_slow">Ralentizar subidas</string>
     <string name="data_status">Estado de datos de glucosa</string>
+    <string name="statuslights_cannula_age">edad de la cánula</string>
+    <string name="statuslights_patch_pump_age">edad del parche de la bomba</string>
+    <string name="patch_pump">Bomba parche</string>
     <string name="recalculated_data_used">Datos recalculados utilizados</string>
     <string name="bg_too_close">Datos de glucosa demasiado cercanos:\n%1$s\n%2$s</string>
     <string name="identification">Identificación (correo electrónico, FB, nick de Discord, etc.)</string>
