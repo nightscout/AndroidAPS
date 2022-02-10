@@ -36,7 +36,7 @@ dependencies {
 
     api "androidx.room:room-ktx:$room_version"
     api "androidx.room:room-runtime:$room_version"
-    api "androidx.room:room-rxjava2:$room_version"
+    api "androidx.room:room-rxjava3:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
 
     api 'com.github.guepardoapps:kulid:2.0.0.0'
