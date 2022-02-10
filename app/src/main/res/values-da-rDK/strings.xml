@@ -900,6 +900,9 @@
     <string name="errors">Fejl</string>
     <string name="ns_sync_slow">Reducer upload hastighed</string>
     <string name="data_status">BG data status</string>
+    <string name="statuslights_cannula_age">Indstik alder</string>
+    <string name="statuslights_patch_pump_age">patch pumpe alder</string>
+    <string name="patch_pump">Patch pumpe</string>
     <string name="recalculated_data_used">Genberegnede data anvendt</string>
     <string name="bg_too_close">BG for tæt:\n%1$s\n%2$s</string>
     <string name="identification">Identifikation (e-mail, FB eller Discord alias osv.)</string>
