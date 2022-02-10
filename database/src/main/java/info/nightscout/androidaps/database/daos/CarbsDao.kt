@@ -5,8 +5,8 @@ import androidx.room.Query
 import info.nightscout.androidaps.database.TABLE_BOLUSES
 import info.nightscout.androidaps.database.TABLE_CARBS
 import info.nightscout.androidaps.database.entities.Carbs
-import io.reactivex.Maybe
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Single
 
 @Suppress("FunctionName")
 @Dao

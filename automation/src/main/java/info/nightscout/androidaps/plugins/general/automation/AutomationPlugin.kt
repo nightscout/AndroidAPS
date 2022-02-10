@@ -25,8 +25,8 @@ import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -115,11 +115,9 @@ class AutomationPlugin @Inject constructor(
         disposable += rxBus
             .toObservable(EventLocationChange::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ e ->
-                           e?.let {
-                               aapsLogger.debug(LTag.AUTOMATION, "Grabbed location: $it.location.latitude $it.location.longitude Provider: $it.location.provider")
-                               processActions()
-                           }
+            .subscribe({
+                           aapsLogger.debug(LTag.AUTOMATION, "Grabbed location: ${it.location.latitude} ${it.location.longitude} Provider: ${it.location.provider}")
+                           processActions()
                        }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventChargingState::class.java)

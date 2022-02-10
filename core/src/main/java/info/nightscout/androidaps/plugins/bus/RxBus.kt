@@ -5,8 +5,8 @@ import info.nightscout.androidaps.events.Event
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import io.reactivex.Observable
-import io.reactivex.subjects.PublishSubject
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.PublishSubject
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -26,7 +26,7 @@ class RxBus @Inject constructor(
 
     // Listen should return an Observable and not the publisher
     // Using ofType we filter only events that match that class type
-    fun <T> toObservable(eventType: Class<T>): Observable<T> =
+    fun <T: Any> toObservable(eventType: Class<T>): Observable<T> =
         publisher
             .subscribeOn(aapsSchedulers.io)
             .ofType(eventType)

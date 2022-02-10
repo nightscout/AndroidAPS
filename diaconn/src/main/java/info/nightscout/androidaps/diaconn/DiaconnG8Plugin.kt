@@ -18,8 +18,6 @@ import info.nightscout.androidaps.events.EventConfigBuilderChange
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.plannedRemainingMinutes
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.common.ManufacturerType
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
@@ -34,9 +32,11 @@ import info.nightscout.androidaps.plugins.pump.common.bolusInfo.TemporaryBasalSt
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject
@@ -60,7 +60,8 @@ class DiaconnG8Plugin @Inject constructor(
     private val detailedBolusInfoStorage: DetailedBolusInfoStorage,
     private val temporaryBasalStorage: TemporaryBasalStorage,
     private val fabricPrivacy: FabricPrivacy,
-    private val dateUtil: DateUtil
+    private val dateUtil: DateUtil,
+    private val aapsSchedulers: AapsSchedulers
 ) : PumpPluginBase(PluginDescription()
     .mainType(PluginType.PUMP)
     .fragmentClass(DiaconnG8Fragment::class.java.name)
@@ -84,17 +85,17 @@ class DiaconnG8Plugin @Inject constructor(
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
         disposable.add(rxBus
             .toObservable(EventAppExit::class.java)
-            .observeOn(Schedulers.io())
+            .observeOn(aapsSchedulers.io)
             .subscribe({ context.unbindService(mConnection) }) { fabricPrivacy.logException(it) }
         )
         disposable.add(rxBus
             .toObservable(EventConfigBuilderChange::class.java)
-            .observeOn(Schedulers.io())
+            .observeOn(aapsSchedulers.io)
             .subscribe { diaconnG8Pump.reset() }
         )
         disposable.add(rxBus
             .toObservable(EventDiaconnG8DeviceChange::class.java)
-            .observeOn(Schedulers.io())
+            .observeOn(aapsSchedulers.io)
             .subscribe({ changePump() }) { fabricPrivacy.logException(it) }
         )
         changePump() // load device name
