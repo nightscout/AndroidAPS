@@ -48,6 +48,11 @@
     <string name="isf_label">ISF (Factor Sensibilidad Insulina)</string>
     <string name="basal_label">Dosis Basal</string>
     <string name="target_label">Objetivo</string>
+    <string name="dia_long_label">Duración de la acción de la insulina</string>
+    <string name="ic_long_label">Ratio de insulina/carbohidratos</string>
+    <string name="isf_long_label">Factor de sensibilidad a la insulina</string>
+    <string name="basal_long_label">Tasa Basal</string>
+    <string name="target_long_label">Objetivo de glucosa en sangre</string>
     <string name="initializing">Iniciando...</string>
     <string name="serialnumber">Número de serie</string>
     <string name="battery_label">Batería</string>
