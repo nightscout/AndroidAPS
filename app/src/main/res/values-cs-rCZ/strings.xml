@@ -900,6 +900,9 @@
     <string name="errors">Chyby</string>
     <string name="ns_sync_slow">Zpomalit odesílání</string>
     <string name="data_status">Stav glykémie</string>
+    <string name="statuslights_cannula_age">stáří kanyly</string>
+    <string name="statuslights_patch_pump_age">stáří náplasťové pumpy</string>
+    <string name="patch_pump">Náplasťová pumpa</string>
     <string name="recalculated_data_used">Použita přepočítaná data</string>
     <string name="bg_too_close">Glykémie je příliš blízko:\n%1$s\n%2$s</string>
     <string name="identification">Identifikace (e-mail, jméno na FB nebo Discord atd.)</string>
