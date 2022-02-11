@@ -901,9 +901,23 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="errors">Hatalar</string>
     <string name="ns_sync_slow">Yüklemeleri yavaşlat</string>
     <string name="data_status">KŞ veri durumu</string>
+    <string name="statuslights_cannula_age">kanül yaşı</string>
+    <string name="statuslights_patch_pump_age">yama pompa yaşı</string>
+    <string name="patch_pump">Yama pompa</string>
     <string name="recalculated_data_used">Kullanılan veriler yeniden hesaplandı</string>
     <string name="bg_too_close">KŞ çok yakın:\n%1$s\n%2$s</string>
     <string name="identification">Tanımlama (E-posta, FB veya Discord rumuz vs.)</string>
     <string name="identification_not_set">Tanımlama geliştirme modunda ayarlanmadı</string>
+    <string name="a11y_dialog">diyalog</string>
+    <string name="a11y_current_bg">geçerli kan şekeri</string>
+    <string name="a11_correction_percentage">% ile doğru sonuç</string>
+    <string name="a11_correction_units">ünite ile doğru sonuç</string>
     <string name="not_available_full">Mevcut değil</string>
+    <string name="a11y_high">yüksek</string>
+    <string name="a11y_inrange">aralık içinde</string>
+    <string name="a11y_low">düşük</string>
+    <string name="a11y_arrow_none">yok</string>
+    <string name="a11y_arrow_unknown">bilinmiyor</string>
+    <string name="a11y_graph">grafik</string>
+    <string name="a11y_insulin_label">insülin</string>
 </resources>
