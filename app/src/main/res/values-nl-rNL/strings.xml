@@ -900,9 +900,21 @@
     <string name="errors">Foutmeldingen</string>
     <string name="ns_sync_slow">Vertraag uploads</string>
     <string name="data_status">BG data status</string>
+    <string name="statuslights_cannula_age">canule leeftijd</string>
+    <string name="statuslights_patch_pump_age">patchpomp leeftijd</string>
+    <string name="patch_pump">Patchpomp</string>
     <string name="recalculated_data_used">Herberekende data gebruikt</string>
     <string name="bg_too_close">BG data interval to kort:\n%1$s\n%2$s</string>
     <string name="identification">Identificatie (e-mail, FB, Discord e. d.)</string>
     <string name="identification_not_set">Identificatie niet ingesteld in dev modus</string>
+    <string name="a11y_dialog">dialoogvenster</string>
+    <string name="a11_correction_percentage">corrigeer uitkomt met percentage</string>
+    <string name="a11_correction_units">corrigeer uitkomt met units</string>
     <string name="not_available_full">Niet beschikbaar</string>
+    <string name="a11y_inrange">binnen bereik</string>
+    <string name="a11y_low">laag</string>
+    <string name="a11y_arrow_none">geen</string>
+    <string name="a11y_arrow_unknown">onbekend</string>
+    <string name="a11y_graph">grafiek</string>
+    <string name="a11y_insulin_label">insuline</string>
 </resources>
