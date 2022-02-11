@@ -214,7 +214,8 @@ class RileyLinkBLEConfigActivity : NoSplashAppCompatActivity() {
     private fun stopLeDeviceScan() {
         if (scanning) {
             scanning = false
-            bleScanner?.stopScan(bleScanCallback)
+            if (bluetoothAdapter?.isEnabled == true && bluetoothAdapter?.state == BluetoothAdapter.STATE_ON)
+                bleScanner?.stopScan(bleScanCallback)
             aapsLogger.debug(LTag.PUMPBTCOMM, "stopLeDeviceScan: Scanning Stop")
             Toast.makeText(this, R.string.riley_link_ble_config_scan_finished, Toast.LENGTH_SHORT).show()
             handler.removeCallbacks(stopScanAfterTimeoutRunnable)

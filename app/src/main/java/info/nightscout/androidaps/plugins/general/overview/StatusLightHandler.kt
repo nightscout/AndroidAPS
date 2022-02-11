@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.general.overview
 
 import android.graphics.Color
+import android.view.View
 import android.widget.TextView
 import androidx.annotation.StringRes
 import info.nightscout.androidaps.R

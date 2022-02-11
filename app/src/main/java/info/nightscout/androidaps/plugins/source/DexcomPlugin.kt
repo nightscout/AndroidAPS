@@ -17,6 +17,7 @@ import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
+import info.nightscout.androidaps.database.transactions.InvalidateGlucoseValueTransaction
 import info.nightscout.androidaps.extensions.fromConstant
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -30,6 +31,7 @@ import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.abs
 
 @Singleton
 class DexcomPlugin @Inject constructor(
@@ -123,6 +125,7 @@ class DexcomPlugin @Inject constructor(
                         }
                     }
                 }
+                val now = dateUtil.now()
                 val glucoseValuesBundle = bundle.getBundle("glucoseValues")
                     ?: return Result.failure(workDataOf("Error" to "missing glucoseValues"))
                 val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
@@ -133,6 +136,9 @@ class DexcomPlugin @Inject constructor(
                     var valid = true
                     if (sourceSensor == GlucoseValue.SourceSensor.DEXCOM_G5_NATIVE)
                         calibrations.forEach { calibration -> if (calibration.timestamp == timestamp) valid = false }
+                    // G6 is sending one 24h old changed value causing recalculation. Ignore
+                    if (sourceSensor == GlucoseValue.SourceSensor.DEXCOM_G6_NATIVE)
+                        if ((now - timestamp) > T.hours(20).msecs()) valid = false
                     if (valid)
                         glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(
                             timestamp = timestamp,
@@ -155,9 +161,27 @@ class DexcomPlugin @Inject constructor(
                     }
                     .blockingGet()
                     .also { result ->
-                        result.inserted.forEach {
-                            xDripBroadcast.send(it)
-                            aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
+                        // G6 calibration bug workaround (2 additional GVs are created within 1 minute)
+                        for (i in result.inserted.indices) {
+                            if (sourceSensor == GlucoseValue.SourceSensor.DEXCOM_G6_NATIVE) {
+                                if (i < result.inserted.size - 1) {
+                                    if (abs(result.inserted[i].timestamp - result.inserted[i + 1].timestamp) < T.mins(1).msecs()) {
+                                        repository.runTransactionForResult(InvalidateGlucoseValueTransaction(result.inserted[i].id))
+                                            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating BG value", it) }
+                                            .blockingGet()
+                                            .also { result1 -> result1.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted and invalidated bg $it") } }
+                                        repository.runTransactionForResult(InvalidateGlucoseValueTransaction(result.inserted[i + 1].id))
+                                            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating BG value", it) }
+                                            .blockingGet()
+                                            .also { result1 -> result1.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted and invalidated bg $it") } }
+                                        result.inserted.removeAt(i + 1)
+                                        result.inserted.removeAt(i)
+                                        continue
+                                    }
+                                }
+                            }
+                            xDripBroadcast.send(result.inserted[i])
+                            aapsLogger.debug(LTag.DATABASE, "Inserted bg ${result.inserted[i]}")
                         }
                         result.updated.forEach {
                             xDripBroadcast.send(it)

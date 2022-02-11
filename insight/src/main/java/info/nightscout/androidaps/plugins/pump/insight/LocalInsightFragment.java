@@ -289,7 +289,7 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
         if (cartridgeStatus == null) return;
         String status;
         if (cartridgeStatus.isInserted())
-            status = DecimalFormatter.INSTANCE.to2Decimal(localInsightPlugin.getCartridgeStatus().getRemainingAmount()) + "U";
+            status = DecimalFormatter.INSTANCE.to2Decimal(cartridgeStatus.getRemainingAmount()) + "U";
         else status = rh.gs(R.string.not_inserted);
         statusItems.add(getStatusItem(rh.gs(R.string.reservoir_label), status));
     }

@@ -232,6 +232,8 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
 
         pumpDescription = new PumpDescription();
         pumpDescription.fillFor(PumpType.ACCU_CHEK_INSIGHT);
+        lastBolusTimestamp = sp.getLong(R.string.key_insight_last_bolus_timestamp,0L);
+        lastBolusAmount = sp.getDouble(R.string.key_insight_last_bolus_amount, 0.0);
     }
 
     public TBROverNotificationBlock getTBROverNotificationBlock() {
@@ -1442,7 +1444,9 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     PumpType.ACCU_CHEK_INSIGHT,
                     serial);
             lastBolusTimestamp = bolusID.getTimestamp();
+            sp.putLong(R.string.key_insight_last_bolus_timestamp,lastBolusTimestamp);
             lastBolusAmount = event.getImmediateAmount();
+            sp.putDouble(R.string.key_insight_last_bolus_amount, lastBolusAmount);
         }
         if (event.getBolusType() == BolusType.EXTENDED || event.getBolusType() == BolusType.MULTIWAVE) {
             if (event.getDuration() > 0 && profileFunction.getProfile(bolusID.getTimestamp()) != null)

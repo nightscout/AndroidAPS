@@ -18,7 +18,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/danars_pairing"
+            android:importantForAccessibility="no"
             app:srcCompat="@drawable/ic_bluetooth_white_48dp" />
 
         <TextView

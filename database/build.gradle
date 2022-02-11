@@ -18,7 +18,7 @@ android {
 }
 
 dependencies {
-    api "androidx.core:core-ktx:$coreVersion"
+    api "androidx.core:core-ktx:$core_version"
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     api "io.reactivex.rxjava2:rxjava:$rxjava_version"

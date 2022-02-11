@@ -261,22 +261,23 @@ class BolusWizard @Inject constructor(
         return this
     }
 
-    private fun createBolusCalculatorResult(): BolusCalculatorResult =
-        BolusCalculatorResult(
+    private fun createBolusCalculatorResult(): BolusCalculatorResult {
+        val unit = profileFunction.getUnits()
+        return BolusCalculatorResult(
             timestamp = dateUtil.now(),
-            targetBGLow = targetBGLow,
-            targetBGHigh = targetBGHigh,
-            isf = sens,
+            targetBGLow = Profile.toMgdl(targetBGLow, unit),
+            targetBGHigh = Profile.toMgdl(targetBGHigh, unit),
+            isf = Profile.toMgdl(sens, unit),
             ic = ic,
             bolusIOB = insulinFromBolusIOB,
             wasBolusIOBUsed = includeBolusIOB,
             basalIOB = insulinFromBasalIOB,
             wasBasalIOBUsed = includeBasalIOB,
-            glucoseValue = bg,
+            glucoseValue = Profile.toMgdl(bg, unit),
             wasGlucoseUsed = useBg && bg > 0,
             glucoseDifference = bgDiff,
             glucoseInsulin = insulinFromBG,
-            glucoseTrend = trend,
+            glucoseTrend = Profile.fromMgdlToUnits(trend, unit),
             wasTrendUsed = useTrend,
             trendInsulin = insulinFromTrend,
             cob = cob,
@@ -294,6 +295,7 @@ class BolusWizard @Inject constructor(
             profileName = profileName,
             note = notes
         )
+    }
 
     private fun confirmMessageAfterConstraints(advisor: Boolean): Spanned {
 
@@ -347,6 +349,8 @@ class BolusWizard @Inject constructor(
                 )
             else
                 commonProcessing(ctx)
+        } else {
+            OKDialog.show(ctx, rh.gs(R.string.boluswizard), rh.gs(R.string.no_action_selected))
         }
     }
 

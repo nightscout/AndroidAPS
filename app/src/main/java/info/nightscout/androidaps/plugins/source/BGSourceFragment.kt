@@ -32,6 +32,8 @@ import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import java.util.concurrent.TimeUnit
@@ -48,6 +50,7 @@ class BGSourceFragment : DaggerFragment() {
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var activePlugin: ActivePlugin
+    @Inject lateinit var aapsLogger: AAPSLogger
 
     private val disposable = CompositeDisposable()
     private val millsToThePast = T.hours(36).msecs()
@@ -113,7 +116,10 @@ class BGSourceFragment : DaggerFragment() {
             val glucoseValue = glucoseValues[position]
             holder.binding.ns.visibility = (glucoseValue.interfaceIDs.nightscoutId != null).toVisibility()
             holder.binding.invalid.visibility = (!glucoseValue.isValid).toVisibility()
-            holder.binding.date.text = dateUtil.dateAndTimeString(glucoseValue.timestamp)
+            val sameDayPrevious = position > 0 && dateUtil.isSameDay(glucoseValue.timestamp, glucoseValues[position-1].timestamp)
+            holder.binding.date.visibility = sameDayPrevious.not().toVisibility()
+            holder.binding.date.text = dateUtil.dateString(glucoseValue.timestamp)
+            holder.binding.time.text = dateUtil.timeString(glucoseValue.timestamp)
             holder.binding.value.text = glucoseValue.valueToUnitsString(profileFunction.getUnits())
             holder.binding.direction.setImageResource(glucoseValue.trendArrow.directionToIcon())
             holder.binding.remove.tag = glucoseValue
@@ -154,7 +160,10 @@ class BGSourceFragment : DaggerFragment() {
                                 Action.BG_REMOVED, source,
                                 ValueWithUnit.Timestamp(glucoseValue.timestamp)
                             )
-                            disposable += repository.runTransaction(InvalidateGlucoseValueTransaction(glucoseValue.id)).subscribe()
+                            repository.runTransactionForResult(InvalidateGlucoseValueTransaction(glucoseValue.id))
+                                .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating BG value", it) }
+                                .blockingGet()
+                                .also { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated bg $it") } }
                         })
                     }
                 }

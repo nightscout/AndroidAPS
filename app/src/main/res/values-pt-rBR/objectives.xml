@@ -1,27 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="objectives_button_start">Iniciar</string>
-    <string name="objectives_button_verify">Verificar</string>
-    <string name="nth_objective">%1$d. Objetivo</string>
-    <string name="objectivenotstarted">Objetivo %1$d não iniciado</string>
-    <string name="objectivenotfinished">Objetivo %1$d não concluido</string>
-    <string name="objectives_0_objective">Configurando a visualização e monitorando e analisando basais e proporções</string>
-    <string name="objectives_0_gate">Verificar se a Glicemia está disponível no Nightscout, e se os dados de insulina da bomba estão sendo transferidos</string>
-    <string name="objectives_openloop_objective">Iniciando em um loop aberto</string>
-    <string name="objectives_openloop_gate">Utilize o modo Open Loop por alguns dias e execute manualmente muitos basais temporários. Configure e use alvos temporários e padrão (por exemplo, para exercício ou tratamento hipos com carboidratos)</string>
-    <string name="objectives_maxbasal_objective">Entendendo o seu open loop, incluindo as suas recomendações de basais temporárias</string>
-    <string name="objectives_maxbasal_gate">Com base nessa experiência, decidir qual deve ser a basal máximo e configurá-lo na bomba e nas preferências</string>
-    <string name="objectives_maxiobzero_objective">Começar a fechar loop com Suspensão por Glicose Baixa</string>
-    <string name="objectives_maxiobzero_gate">Utilizar em close loop com IOB máx = 0 por alguns dias sem muitas situações de Suspensão por Baixa Glicose</string>
-    <string name="objectives_maxiob_objective">Ajustar o close loop, aumentar a IOB máximo acima de 0 e reduzir gradualmente os alvos de valor glicêmico</string>
-    <string name="objectives_maxiob_gate">Utilizar por alguns dias e pelo menos uma noite sem alarmes de Glic baixa, antes de baixar Glic</string>
-    <string name="objectives_autosens_objective">Ajuste as basais e os rácios, se necessário, e, em seguida, active o auto-sens</string>
-    <string name="objectives_autosens_gate">1 semana de looping durante o dia com sucesso com entrada regular de hidratos de carbono</string>
-    <string name="objectives_smb_objective">Ativando recursos adicionais para uso durante o dia, como SMB</string>
-    <string name="objectives_auto_objective">A ativar a automação</string>
-    <string name="objectives_smb_gate">Deverá ler a wiki e aumentar a IOB máx para que os SMBs funcionem devidamente! Inicialmente poderá considerar maxIOB=média dos bólus + 3 x a basal máxima</string>
-    <string name="objectives_bgavailableinns">Glic disponível no NS</string>
-    <string name="objectives_pumpstatusavailableinns">Estado da Bomba disponível no NS</string>
+    <string name="objectives_auto_gate">Leia os documentos de como a automação funciona. Configure suas primeiras regras simples. Em vez de efetuar uma ação deixe AAPS apresentar apenas uma notificação. Quando você tiver certeza de que a automação é acionada no momento certo substitua a notificação por uma ação real. (https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
+    <string name="objectives_bgavailableinns">Glicose disponível no NS</string>
+    <string name="objectives_pumpstatusavailableinns">Status da Bomba disponível no NS</string>
     <string name="objectives_manualenacts">Execução manual</string>
     <string name="accomplished">Concluído: %1$s</string>
     <string name="objectives_usage_objective">Aprenda como controlar AndroidAPS</string>
@@ -34,14 +15,20 @@
     <string name="objectives_useloop">Mostrar conteúdo do plugin Loop</string>
     <string name="objectives_usescale">Utilizar a função de escala premindo longamente gráfico Glic</string>
     <string name="objectives_button_enter">Inserir</string>
+    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Se você tiver pelo menos 3 meses de experiência com sistemas Closed Loop com outros aplicativos, pode-se qualificar por um código para pular os objetivos. Vê https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives para mais detalhes.</string>
     <string name="codeaccepted">Código aceito</string>
     <string name="codeinvalid">Código inválido</string>
     <string name="objectives_exam_objective">Prove seu conhecimento</string>
+    <string name="objectives_exam_gate">Estude as perguntas.  Haverá quatro respostas possíveis para cada pergunta.  Pode ter mais do que uma resposta correta. Por favor, marque todas as que estão corretas e selecione VERIFY.</string>
     <string name="answerdisabledto">Resposta desativada para: %1$s</string>
     <string name="wronganswer">Resposta errada!</string>
     <string name="unfinshed_button">Próximo inacabado</string>
     <string name="requestcode">Pedir Código: %1$s</string>
     <string name="objectives_hint">(marque todas as respostas correctas)</string>
+    <string name="disconnectpump_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#config-builder</string>
+    <string name="usescale_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="notconnected">Não está ligado à internet</string>
     <string name="failedretrievetime">Falha ao recuperar tempo</string>
     <string name="requirementnotmet">Requisitos de objetivo não cumpridos</string>

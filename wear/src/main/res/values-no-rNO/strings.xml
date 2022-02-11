@@ -122,8 +122,8 @@
     <string name="color_name_white">hvit</string>
     <string name="color_name_black">svart</string>
     <string name="color_name_multicolor">flerfarget</string>
-    <string name="pref_simplify_ui_charging">Forenkle lader brukergrensesnittet</string>
-    <string name="pref_simplify_ui_charging_sum">Vis kun tid og BS ved lading</string>
+    <string name="pref_simplify_ui">Forenklet brukergrensesnittet</string>
+    <string name="pref_simplify_ui_sum">Vis kun tid og BS</string>
     <string name="pref_vibrate_hourly">Vibrer hver time</string>
     <string name="pref_show_weeknumber">Vis ukenummer</string>
     <string name="digitalstyle_pref_your_style">Din stil:</string>
@@ -138,4 +138,8 @@
     <string name="bolus_progress_silent_channel_name">AAPS stille bolus framdrift</string>
     <string name="bolus_progress_channel_description">Bolus framdrift og avbryt</string>
     <string name="bolus_progress_silent_channel_description">Bolus framdrift og avbryt med mindre vibrasjoner</string>
+    <string name="simple_ui_off">Av</string>
+    <string name="simple_ui_charging">Under lading</string>
+    <string name="simple_ui_always_on">Alltid På modus</string>
+    <string name="simple_ui_always_on_charging">Alltid på under lading</string>
 </resources>

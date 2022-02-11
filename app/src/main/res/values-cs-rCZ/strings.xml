@@ -53,7 +53,7 @@
     <string name="tempbasals_netinsulin_label_string">Inz:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">Celkové IOB:</string>
-    <string name="treatments_wizard_bg_label">Glykémie</string>
+    <string name="treatments_wizard_bg_label">Gly</string>
     <string name="treatments_wizard_tt_label">DC</string>
     <string name="treatments_wizard_carbs_label">Sacharidy</string>
     <string name="treatments_wizard_correction_label">Korekce</string>

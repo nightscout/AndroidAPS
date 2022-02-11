@@ -75,7 +75,7 @@ class NSClientAddUpdateWorker(
                 if (mills > latestDateInReceivedData) latestDateInReceivedData = mills
 
             if (insulin > 0) {
-                if (sp.getBoolean(R.string.key_ns_receive_insulin, false) && buildHelper.isEngineeringMode() || config.NSCLIENT) {
+                if (sp.getBoolean(R.string.key_ns_receive_insulin, false) || config.NSCLIENT) {
                     bolusFromJson(json)?.let { bolus ->
                         repository.runTransactionForResult(SyncNsBolusTransaction(bolus))
                             .doOnError {
@@ -109,7 +109,7 @@ class NSClientAddUpdateWorker(
                 }
             }
             if (carbs > 0) {
-                if (sp.getBoolean(R.string.key_ns_receive_carbs, false) && buildHelper.isEngineeringMode() || config.NSCLIENT) {
+                if (sp.getBoolean(R.string.key_ns_receive_carbs, false) || config.NSCLIENT) {
                     carbsFromJson(json)?.let { carb ->
                         repository.runTransactionForResult(SyncNsCarbsTransaction(carb))
                             .doOnError {
@@ -159,7 +159,7 @@ class NSClientAddUpdateWorker(
             when {
                 insulin > 0 || carbs > 0                                    -> Any()
                 eventType == TherapyEvent.Type.TEMPORARY_TARGET.text        ->
-                    if (sp.getBoolean(R.string.key_ns_receive_temp_target, false) && buildHelper.isEngineeringMode() || config.NSCLIENT) {
+                    if (sp.getBoolean(R.string.key_ns_receive_temp_target, false) || config.NSCLIENT) {
                         temporaryTargetFromJson(json)?.let { temporaryTarget ->
                             repository.runTransactionForResult(SyncNsTemporaryTargetTransaction(temporaryTarget))
                                 .doOnError {
@@ -205,7 +205,7 @@ class NSClientAddUpdateWorker(
                         } ?: aapsLogger.error("Error parsing TT json $json")
                     }
                 eventType == TherapyEvent.Type.NOTE.text  && json.isEffectiveProfileSwitch()        -> // replace this by new Type when available in NS
-                    if (sp.getBoolean(R.string.key_ns_receive_profile_switch, false) && buildHelper.isEngineeringMode() || config.NSCLIENT) {
+                    if (sp.getBoolean(R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
                         effectiveProfileSwitchFromJson(json, dateUtil)?.let { effectiveProfileSwitch ->
                             repository.runTransactionForResult(SyncNsEffectiveProfileSwitchTransaction(effectiveProfileSwitch))
                                 .doOnError {
@@ -399,7 +399,7 @@ class NSClientAddUpdateWorker(
                         } ?: aapsLogger.error("Error parsing TemporaryBasal json $json")
                     }
                 eventType == TherapyEvent.Type.PROFILE_SWITCH.text          ->
-                    if (sp.getBoolean(R.string.key_ns_receive_profile_switch, false) && buildHelper.isEngineeringMode() || config.NSCLIENT) {
+                    if (sp.getBoolean(R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
                         profileSwitchFromJson(json, dateUtil, activePlugin)?.let { profileSwitch ->
                             repository.runTransactionForResult(SyncNsProfileSwitchTransaction(profileSwitch))
                                 .doOnError {

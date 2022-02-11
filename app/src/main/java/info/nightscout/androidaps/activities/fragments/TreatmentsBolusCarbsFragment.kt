@@ -271,6 +271,8 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
         _binding = null
     }
 
+    private fun timestamp(ml: MealLink): Long = ml.bolusCalculatorResult?.let { it.timestamp } ?: ml.bolus?.let { it.timestamp } ?: ml.carbs?.let { it.timestamp } ?: 0L
+
     inner class RecyclerViewAdapter internal constructor(var mealLinks: List<MealLink>) : RecyclerView.Adapter<RecyclerViewAdapter.MealLinkLoadedViewHolder>() {
 
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): MealLinkLoadedViewHolder =
@@ -280,16 +282,20 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
             val profile = profileFunction.getProfile() ?: return
             val ml = mealLinks[position]
 
+            val sameDayPrevious = position > 0 && dateUtil.isSameDay(timestamp(ml), timestamp(mealLinks[position - 1]))
+            holder.binding.date.visibility = sameDayPrevious.not().toVisibility()
+            holder.binding.date.text = dateUtil.dateString(timestamp(ml))
+
             // Metadata
             holder.binding.metadataLayout.visibility = (ml.bolusCalculatorResult != null && (ml.bolusCalculatorResult.isValid || binding.showInvalidated.isChecked)).toVisibility()
             ml.bolusCalculatorResult?.let { bolusCalculatorResult ->
-                holder.binding.date.text = dateUtil.dateAndTimeString(bolusCalculatorResult.timestamp)
+                holder.binding.calcTime.text = dateUtil.timeString(bolusCalculatorResult.timestamp)
             }
 
             // Bolus
             holder.binding.bolusLayout.visibility = (ml.bolus != null && (ml.bolus.isValid || binding.showInvalidated.isChecked)).toVisibility()
             ml.bolus?.let { bolus ->
-                holder.binding.bolusDate.text = dateUtil.timeString(bolus.timestamp)
+                holder.binding.bolusTime.text = dateUtil.timeString(bolus.timestamp)
                 holder.binding.insulin.text = rh.gs(R.string.formatinsulinunits, bolus.amount)
                 holder.binding.bolusNs.visibility = (bolus.interfaceIDs.nightscoutId != null).toVisibility()
                 holder.binding.bolusPump.visibility = (bolus.interfaceIDs.pumpId != null).toVisibility()
@@ -317,7 +323,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
             // Carbs
             holder.binding.carbsLayout.visibility = (ml.carbs != null && (ml.carbs.isValid || binding.showInvalidated.isChecked)).toVisibility()
             ml.carbs?.let { carbs ->
-                holder.binding.carbsDate.text = dateUtil.timeString(carbs.timestamp)
+                holder.binding.carbsTime.text = dateUtil.timeString(carbs.timestamp)
                 holder.binding.carbs.text = rh.gs(R.string.format_carbs, carbs.amount.toInt())
                 holder.binding.carbsDuration.text = if (carbs.duration > 0) rh.gs(R.string.format_mins, T.msecs(carbs.duration).mins().toInt()) else ""
                 holder.binding.carbsNs.visibility = (carbs.interfaceIDs.nightscoutId != null).toVisibility()
@@ -330,6 +336,8 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
             holder.binding.bolusRemove.tag = ml
             holder.binding.carbsRemove.tag = ml
             holder.binding.calculation.tag = ml
+            val nextTimestamp = if (mealLinks.size != position + 1) timestamp(mealLinks[position + 1]) else 0L
+            holder.binding.delimiter.visibility = dateUtil.isSameDay(timestamp(ml), nextTimestamp).toVisibility()
         }
 
         override fun getItemCount(): Int {
