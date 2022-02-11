@@ -34,6 +34,10 @@ buildscript {
 
         androidx_junit = '1.1.2'
         androidx_rules = '1.4.0-alpha04'
+
+        timber_version = "4.7.1"
+        rxandroidble_version = '1.12.1'
+        replayshare_version = '2.2.0'
     }
     repositories {
         google()

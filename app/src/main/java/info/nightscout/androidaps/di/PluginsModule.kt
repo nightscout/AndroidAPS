@@ -40,6 +40,7 @@ import info.nightscout.androidaps.plugins.insulin.InsulinOrefUltraRapidActingPlu
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.pump.combo.ComboPlugin
+import info.nightscout.androidaps.plugins.pump.eopatch.EopatchPumpPlugin
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.plugins.pump.mdi.MDIPlugin
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
@@ -181,6 +182,12 @@ abstract class PluginsModule {
     @IntoMap
     @IntKey(155)
     abstract fun bindDiaconnG8Plugin(plugin: DiaconnG8Plugin): PluginBase
+
+    @Binds
+    @PumpDriver
+    @IntoMap
+    @IntKey(156)
+    abstract fun bindEopatchPumpPlugin(plugin: EopatchPumpPlugin): PluginBase
 
     @Binds
     @NotNSClient

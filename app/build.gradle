@@ -163,6 +163,10 @@ android {
     }
 
     useLibrary "org.apache.http.legacy"
+
+    dataBinding {
+        enabled = true
+    }
 }
 
 allprojects {
@@ -193,6 +197,7 @@ dependencies {
     implementation project(':omnipod-dash')
     implementation project(':diaconn')
     implementation project(':openhumans')
+    implementation project(':eopatch')
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
