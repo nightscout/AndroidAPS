@@ -15,6 +15,8 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.view.View.OnTouchListener
+import android.view.accessibility.AccessibilityEvent
+import android.view.accessibility.AccessibilityManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
@@ -50,6 +52,7 @@ open class NumberPicker(context: Context, attrs: AttributeSet? = null) : LinearL
     protected var focused = false
     private var mUpdater: ScheduledExecutorService? = null
     private var mOnValueChangedListener: OnValueChangedListener? = null
+    private var mCustomContentDescription: String? = null
 
     private var mHandler: Handler = Handler(Looper.getMainLooper(), Handler.Callback { msg: Message ->
         when (msg.what) {
@@ -86,6 +89,13 @@ open class NumberPicker(context: Context, attrs: AttributeSet? = null) : LinearL
         }
     }
 
+    var customContentDescription: String?
+        get() = mCustomContentDescription
+        set(value) {
+            mCustomContentDescription = value
+            updateA11yDescription()
+        }
+
     protected open fun inflate(context: Context) {
         LayoutInflater.from(context).inflate(R.layout.number_picker_layout, this, true)
     }
@@ -120,6 +130,29 @@ open class NumberPicker(context: Context, attrs: AttributeSet? = null) : LinearL
             focused = hasFocus
             if (!focused) value // check min/max
             updateEditText()
+        }
+        updateA11yDescription()
+    }
+
+    fun updateA11yDescription() {
+        val description = if (mCustomContentDescription != null) mCustomContentDescription else ""
+        minusButton?.contentDescription = context.getString(R.string.a11y_min_button_description, description, formatter?.format(this.step))
+        plusButton?.contentDescription = context.getString(R.string.a11y_plus_button_description, description, formatter?.format(this.step))
+    }
+
+    fun announceValue() {
+        val manager: AccessibilityManager = context
+            .getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
+        if (manager.isEnabled) {
+            val valueDescription = formatter?.format(currentValue)
+            AccessibilityEvent.obtain().apply {
+                eventType = AccessibilityEvent.TYPE_ANNOUNCEMENT
+                className = javaClass.name
+                packageName = context.packageName
+                text.add(valueDescription)
+            }.also {
+                manager.sendAccessibilityEvent(it)
+            }
         }
     }
 
@@ -173,6 +206,7 @@ open class NumberPicker(context: Context, attrs: AttributeSet? = null) : LinearL
         this.okButton = okButton
         editText?.keyListener = DigitsKeyListenerWithComma.getInstance(minValue < 0, step != round(step))
         if (watcher != null) editText?.removeTextChangedListener(watcher)
+        updateA11yDescription()
         updateEditText()
         if (watcher != null) editText?.addTextChangedListener(watcher)
     }
@@ -253,6 +287,7 @@ open class NumberPicker(context: Context, attrs: AttributeSet? = null) : LinearL
     private fun stopUpdating() {
         mUpdater?.shutdownNow()
         mUpdater = null
+        announceValue()
     }
 
     override fun onClick(v: View) {
@@ -265,6 +300,7 @@ open class NumberPicker(context: Context, attrs: AttributeSet? = null) : LinearL
             } else {
                 dec(1)
             }
+            announceValue()
         }
     }
 
@@ -299,5 +335,16 @@ open class NumberPicker(context: Context, attrs: AttributeSet? = null) : LinearL
 
     init {
         initialize(context)
+        context.theme.obtainStyledAttributes(
+            attrs,
+            R.styleable.NumberPicker,
+            0, 0).apply {
+
+            try {
+                mCustomContentDescription = getString(R.styleable.NumberPicker_customContentDescription)
+            } finally {
+                recycle()
+            }
+        }
     }
 }
