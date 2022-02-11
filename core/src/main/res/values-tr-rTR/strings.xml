@@ -48,6 +48,7 @@
     <string name="isf_label">İDF</string>
     <string name="basal_label">Bazal</string>
     <string name="target_label">Hedef</string>
+    <string name="dia_long_label">İnsülin Etki Süresi</string>
     <string name="initializing">Başlatılıyor ...</string>
     <string name="serialnumber">Seri numarası</string>
     <string name="battery_label">Pil</string>
