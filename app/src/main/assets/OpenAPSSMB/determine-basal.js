@@ -169,7 +169,7 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
             return rT;
             //return tempBasalFunctions.setTempBasal(0, 30, profile, rT, currenttemp);
         } else { //do nothing.
-            rT.reason += ". Temp " + currenttemp.rate + " <= current basal " + basal + "U/hr; doing nothing. ";
+            rT.reason += ". Temp " + currenttemp.rate + " <= current basal " + round(basal, 2) + "U/hr; doing nothing. ";
             return rT;
         }
     }
@@ -920,10 +920,10 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
                 rT.reason += ", but Min. Delta " + minDelta.toFixed(2) + " > Exp. Delta " + convert_bg(expectedDelta, profile);
             }
             if (currenttemp.duration > 15 && (round_basal(basal, profile) === round_basal(currenttemp.rate, profile))) {
-                rT.reason += ", temp " + currenttemp.rate + " ~ req " + basal + "U/hr. ";
+                rT.reason += ", temp " + currenttemp.rate + " ~ req " + round(basal, 2) + "U/hr. ";
                 return rT;
             } else {
-                rT.reason += "; setting current basal of " + basal + " as temp. ";
+                rT.reason += "; setting current basal of " + round(basal, 2) + " as temp. ";
                 return tempBasalFunctions.setTempBasal(basal, 30, profile, rT, currenttemp);
             }
         }
@@ -992,10 +992,10 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
                 rT.reason += "Eventual BG " + convert_bg(eventualBG, profile) + " > " + convert_bg(min_bg, profile) + " but Min. Delta " + minDelta.toFixed(2) + " < Exp. Delta " + convert_bg(expectedDelta, profile);
             }
             if (currenttemp.duration > 15 && (round_basal(basal, profile) === round_basal(currenttemp.rate, profile))) {
-                rT.reason += ", temp " + currenttemp.rate + " ~ req " + basal + "U/hr. ";
+                rT.reason += ", temp " + currenttemp.rate + " ~ req " + round(basal, 2) + "U/hr. ";
                 return rT;
             } else {
-                rT.reason += "; setting current basal of " + basal + " as temp. ";
+                rT.reason += "; setting current basal of " + round(basal, 2) + " as temp. ";
                 return tempBasalFunctions.setTempBasal(basal, 30, profile, rT, currenttemp);
             }
         }
@@ -1006,10 +1006,10 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
         if (! (microBolusAllowed && enableSMB )) {
             rT.reason += convert_bg(eventualBG, profile)+"-"+convert_bg(minPredBG, profile)+" in range: no temp required";
             if (currenttemp.duration > 15 && (round_basal(basal, profile) === round_basal(currenttemp.rate, profile))) {
-                rT.reason += ", temp " + currenttemp.rate + " ~ req " + basal + "U/hr. ";
+                rT.reason += ", temp " + currenttemp.rate + " ~ req " + round(basal, 2) + "U/hr. ";
                 return rT;
             } else {
-                rT.reason += "; setting current basal of " + basal + " as temp. ";
+                rT.reason += "; setting current basal of " + round(basal, 2) + " as temp. ";
                 return tempBasalFunctions.setTempBasal(basal, 30, profile, rT, currenttemp);
             }
         }
@@ -1023,10 +1023,10 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
     if (iob_data.iob > max_iob) {
         rT.reason += "IOB " + round(iob_data.iob,2) + " > max_iob " + max_iob;
         if (currenttemp.duration > 15 && (round_basal(basal, profile) === round_basal(currenttemp.rate, profile))) {
-            rT.reason += ", temp " + currenttemp.rate + " ~ req " + basal + "U/hr. ";
+            rT.reason += ", temp " + currenttemp.rate + " ~ req " + round(basal, 2) + "U/hr. ";
             return rT;
         } else {
-            rT.reason += "; setting current basal of " + basal + " as temp. ";
+            rT.reason += "; setting current basal of " + round(basal, 2) + " as temp. ";
             return tempBasalFunctions.setTempBasal(basal, 30, profile, rT, currenttemp);
         }
     } else { // otherwise, calculate 30m high-temp required to get projected BG down to target

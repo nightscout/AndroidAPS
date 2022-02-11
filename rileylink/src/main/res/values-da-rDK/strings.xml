@@ -56,6 +56,25 @@
     <string name="rileylink_error_unreachable">RileyLink utilgængelig</string>
     <string name="rileylink_error_bt_disabled">Bluetooth er deaktiveret</string>
     <string name="rileylink_error_no_bt_adapter">Ingen bluetooth adapter</string>
+    <string name="rileylink_error_tuneup_failed">TuneUp Mislykkedes</string>
+    <string name="rileylink_error_pump_unreachable">Pumpe utilgængelig</string>
+    <string name="rileylink_error_pod_unreachable">Pod utilgængelig</string>
     <!-- RileyLink - Common -->
+    <string name="rileylink_target_device_medtronic">Medtronic Pumpe</string>
+    <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
+    <string name="riley_link_common_yes">Ja</string>
+    <string name="riley_link_common_no">Nej</string>
     <!-- RileyLink - Preferences -->
+    <string name="riley_link_show_battery_level">Vis batteriniveau rapporteret af OrangeLink/EmaLink/DiaLink</string>
+    <string name="riley_link_show_battery_level_summary">VIRKER IKKE med den oprindelige RileyLink. Virker muligvis ikke med andre RileyLink alternativer.</string>
+    <plurals name="duration_days">
+        <item quantity="one">%1$d dag</item>
+        <item quantity="other">%1$d dage</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">%1$d time</item>
+        <item quantity="other">%1$d timer</item>
+    </plurals>
+    <string name="orange_use_scanning_level">Brug Scanning</string>
+    <string name="orange_use_scanning_level_summary">Scan før du opretter forbindelse til OrangeLink, det bør forbedre forbindelsen (kan også bruges med andre RileyLink kloner, hvis nødvendigt)</string>
 </resources>

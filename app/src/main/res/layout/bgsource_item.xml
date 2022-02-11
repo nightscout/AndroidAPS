@@ -1,68 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bg_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     card_view:cardBackgroundColor="@color/cardColorBackground"
-    card_view:cardCornerRadius="6dp"
-    card_view:cardUseCompatPadding="true"
-    card_view:contentPadding="6dp">
+    card_view:cardUseCompatPadding="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/date"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="16:55"
-            android:textStyle="bold" />
+            android:background="@color/list_delimiter"
+            android:gravity="center"
+            android:text="1.1.2000"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <TextView
-            android:id="@+id/value"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="10dp"
-            android:text="Name"
-            android:textStyle="bold" />
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="6dp">
 
-        <ImageView
-            android:id="@+id/direction"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            card_view:srcCompat="@drawable/ic_flat" />
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="16:55"
+                android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/ns"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="10dp"
-            android:text="NS"
-            android:textAlignment="viewEnd"
-            android:textColor="@color/colorSetTempButton" />
+            <TextView
+                android:id="@+id/value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="10dp"
+                android:text="Name"
+                android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/invalid"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="10dp"
-            android:text="@string/invalid"
-            android:textColor="@android:color/holo_red_light" />
+            <ImageView
+                android:id="@+id/direction"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                card_view:srcCompat="@drawable/ic_flat" />
 
-        <TextView
-            android:id="@+id/remove"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="10dp"
-            android:paddingEnd="5dp"
-            android:text="@string/remove_button"
-            android:textAlignment="viewEnd"
-            android:textColor="@android:color/holo_orange_light" />
+            <TextView
+                android:id="@+id/ns"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="10dp"
+                android:text="NS"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/colorSetTempButton" />
+
+            <TextView
+                android:id="@+id/invalid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="10dp"
+                android:text="@string/invalid"
+                android:textColor="@android:color/holo_red_light" />
+
+            <TextView
+                android:id="@+id/remove"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="10dp"
+                android:paddingEnd="5dp"
+                android:text="@string/remove_button"
+                android:textAlignment="viewEnd"
+                android:textColor="@android:color/holo_orange_light" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

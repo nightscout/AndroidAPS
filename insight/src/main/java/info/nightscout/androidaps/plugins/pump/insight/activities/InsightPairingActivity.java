@@ -30,6 +30,7 @@ import javax.inject.Inject;
 
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 import info.nightscout.androidaps.insight.R;
+import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.plugins.pump.common.ble.BlePreCheck;
 import info.nightscout.androidaps.plugins.pump.insight.connection_service.InsightConnectionService;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.InsightState;
@@ -39,6 +40,7 @@ public class InsightPairingActivity extends NoSplashAppCompatActivity implements
 
     @Inject BlePreCheck blePreCheck;
     @Inject Context context;
+    @Inject PumpSync pumpSync;
 
     private boolean scanning;
     private LinearLayout deviceSearchSection;
@@ -64,6 +66,7 @@ public class InsightPairingActivity extends NoSplashAppCompatActivity implements
                 service.registerStateCallback(InsightPairingActivity.this);
                 service.registerExceptionCallback(InsightPairingActivity.this);
                 onStateChanged(service.getState());
+                pumpSync.connectNewPump();
             }
         }
 

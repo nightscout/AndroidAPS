@@ -8,7 +8,8 @@
 
     <TableRow
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:focusable="true">
 
         <TextView
             android:layout_width="wrap_content"
@@ -19,7 +20,6 @@
             android:text="@string/careportal_sensor_label"
             android:textSize="14sp"
             app:drawableStartCompat="@drawable/ic_cp_age_sensor" />
-
 
         <TextView
             android:id="@+id/sensor_age_label"
@@ -83,7 +83,8 @@
 
     <TableRow
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:focusable="true">
 
         <TextView
             android:layout_width="wrap_content"
@@ -158,9 +159,11 @@
 
     <TableRow
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:focusable="true">
 
         <TextView
+            android:id="@+id/cannula_or_patch"
             android:layout_width="wrap_content"
             android:layout_height="25dp"
             android:gravity="center_vertical"
@@ -229,7 +232,8 @@
 
     <TableRow
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:focusable="true">
 
         <TextView
             android:id="@+id/pb_label"

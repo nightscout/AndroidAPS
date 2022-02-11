@@ -55,12 +55,8 @@ open class DataReceiver : DaggerBroadcastReceiver() {
             Intents.NS_EMULATOR                       ->
                 OneTimeWorkRequest.Builder(MM640gPlugin.MM640gWorker::class.java)
                     .setInputData(Data.Builder().also {
-                        it.copyDouble(Intents.EXTRA_BG_ESTIMATE, bundle)
-                        it.copyString(Intents.EXTRA_BG_SLOPE_NAME, bundle)
-                        it.copyLong(Intents.EXTRA_TIMESTAMP, bundle)
-                        it.copyDouble(Intents.EXTRA_RAW, bundle)
-                        it.copyInt(Intents.EXTRA_SENSOR_BATTERY, bundle, -1)
-                        it.copyString(Intents.XDRIP_DATA_SOURCE_DESCRIPTION, bundle)
+                        it.copyString("collection", bundle)
+                        it.copyString("data", bundle)
                     }.build()).build()
             Telephony.Sms.Intents.SMS_RECEIVED_ACTION ->
                 OneTimeWorkRequest.Builder(SmsCommunicatorPlugin.SmsCommunicatorWorker::class.java)
