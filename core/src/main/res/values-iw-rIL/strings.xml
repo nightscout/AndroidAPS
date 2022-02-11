@@ -50,6 +50,7 @@
     <string name="target_label">ערך מטרה</string>
     <string name="dia_long_label">משך פעילות האינסולין</string>
     <string name="ic_long_label">יחס אינסולין-פחמימות </string>
+    <string name="isf_long_label">יחס התיקון (ISF)</string>
     <string name="basal_long_label">מינון בזאלי</string>
     <string name="target_long_label">ערך מטרה</string>
     <string name="initializing">מאתחל...</string>
