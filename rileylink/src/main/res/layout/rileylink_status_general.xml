@@ -34,7 +34,8 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:focusable="true">
 
                 <TextView
                     android:layout_width="58dp"
@@ -61,7 +62,8 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:focusable="true">
 
                 <TextView
                     android:layout_width="58dp"
@@ -90,7 +92,8 @@
                 android:layout_marginBottom="5dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:visibility="gone">
+                android:visibility="gone"
+                android:focusable="true">
 
                 <TextView
                     android:layout_width="58dp"
@@ -118,7 +121,8 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:focusable="true">
 
                 <TextView
                     android:layout_width="58dp"
@@ -173,7 +177,8 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:focusable="true">
 
                 <TextView
                     android:layout_width="58dp"
@@ -215,7 +220,8 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:focusable="true">
 
                 <TextView
                     android:layout_width="58dp"
@@ -249,7 +255,8 @@
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:focusable="true">
 
                     <TextView
                         android:layout_width="58dp"
@@ -276,7 +283,8 @@
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:focusable="true">
 
                     <TextView
                         android:layout_width="58dp"
@@ -305,7 +313,8 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:focusable="true">
 
                 <TextView
                     android:layout_width="58dp"
@@ -333,7 +342,8 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:focusable="true">
 
                 <TextView
                     android:layout_width="58dp"
@@ -360,7 +370,8 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:focusable="true">
 
                 <TextView
                     android:layout_width="58dp"
@@ -388,7 +399,8 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:focusable="true">
 
                 <TextView
                     android:layout_width="58dp"
