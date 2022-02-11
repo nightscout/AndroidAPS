@@ -48,6 +48,9 @@
     <string name="isf_label">ISF</string>
     <string name="basal_label">Basaal</string>
     <string name="target_label">Streefdoel</string>
+    <string name="ic_long_label">Insuline - Koolhydraat ratio</string>
+    <string name="isf_long_label">Insuline gevoeligheidsfactor</string>
+    <string name="basal_long_label">Basaalstand</string>
     <string name="initializing">Initialiseren...</string>
     <string name="serialnumber">Serie nummer</string>
     <string name="battery_label">Batterij</string>
@@ -440,6 +443,8 @@
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="pump_paired" comment="26 characters max for translation">Pomp gekoppeld</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight actualiseren knop</string>
+    <string name="a11y_min_button_description">verlaag %1$s met %2$s</string>
+    <string name="a11y_plus_button_description">verhoog %1$s met %2$s</string>
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagen</item>
