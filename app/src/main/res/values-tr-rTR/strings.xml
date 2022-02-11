@@ -916,8 +916,20 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="a11y_high">yüksek</string>
     <string name="a11y_inrange">aralık içinde</string>
     <string name="a11y_low">düşük</string>
+    <string name="a11y_arrow_double_down">hızla düşüyor</string>
+    <string name="a11y_arrow_single_down">düşüyor</string>
+    <string name="a11y_arrow_forty_five_down">yavaşça düşüyor</string>
+    <string name="a11y_arrow_flat">sabit</string>
+    <string name="a11y_arrow_forty_five_up">yavaşça yükseliyor</string>
+    <string name="a11y_arrow_single_up">yükseliyor</string>
+    <string name="a11y_arrow_double_up">hızla yükseliyor</string>
     <string name="a11y_arrow_none">yok</string>
     <string name="a11y_arrow_unknown">bilinmiyor</string>
     <string name="a11y_graph">grafik</string>
+    <string name="a11y_bg_quality">kan şekeri kalitesi</string>
+    <string name="a11y_bg_quality_recalculated">tekrar hesaplandı</string>
+    <string name="a11y_bg_quality_doubles">çift giriş</string>
     <string name="a11y_insulin_label">insülin</string>
+    <string name="a11y_blood_glucose">kan şekeri</string>
+    <string name="a11y_bg_outdated">güncel değil</string>
 </resources>
