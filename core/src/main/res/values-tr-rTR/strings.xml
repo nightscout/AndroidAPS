@@ -49,6 +49,9 @@
     <string name="basal_label">Bazal</string>
     <string name="target_label">Hedef</string>
     <string name="dia_long_label">İnsülin Etki Süresi</string>
+    <string name="isf_long_label">İnsülin Duyarlılık Faktörü</string>
+    <string name="basal_long_label">Bazal oranı</string>
+    <string name="target_long_label">Kan Şekeri Hedefi</string>
     <string name="initializing">Başlatılıyor ...</string>
     <string name="serialnumber">Seri numarası</string>
     <string name="battery_label">Pil</string>
