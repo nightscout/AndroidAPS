@@ -274,17 +274,25 @@ class WizardDialog : DaggerDialogFragment() {
     private fun processCobCheckBox() {
         if (binding.cobCheckbox.isChecked) {
             binding.iobCheckbox.isEnabled = false
+            binding.iobCheckboxIcon.isEnabled = false
             binding.iobCheckbox.isChecked = true
         } else {
             binding.iobCheckbox.isEnabled = true
+            binding.iobCheckboxIcon.isEnabled = true
         }
     }
 
     private fun processEnabledIcons() {
+        binding.bgCheckboxIcon.isChecked = binding.bgCheckbox.isChecked
+        binding.trendCheckboxIcon.isChecked = binding.bgTrendCheckbox.isChecked
+        binding.iobCheckboxIcon.isChecked = binding.iobCheckbox.isChecked
+        binding.cobCheckboxIcon.isChecked = binding.cobCheckbox.isChecked
+
         binding.bgCheckboxIcon.alpha = if (binding.bgCheckbox.isChecked) 1.0f else 0.2f
         binding.trendCheckboxIcon.alpha = if (binding.bgTrendCheckbox.isChecked) 1.0f else 0.2f
         binding.iobCheckboxIcon.alpha = if (binding.iobCheckbox.isChecked) 1.0f else 0.2f
         binding.cobCheckboxIcon.alpha = if (binding.cobCheckbox.isChecked) 1.0f else 0.2f
+
         binding.bgCheckboxIcon.visibility = binding.calculationCheckbox.isChecked.not().toVisibility()
         binding.trendCheckboxIcon.visibility = binding.calculationCheckbox.isChecked.not().toVisibility()
         binding.iobCheckboxIcon.visibility = binding.calculationCheckbox.isChecked.not().toVisibility()

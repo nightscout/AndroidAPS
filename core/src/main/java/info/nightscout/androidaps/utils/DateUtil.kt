@@ -156,6 +156,12 @@ class DateUtil @Inject constructor(private val context: Context) {
         return (if (mins > 0) "+" else "") + mins
     }
 
+    fun minAgoLong(rh: ResourceHelper, time: Long?): String {
+        if (time == null) return ""
+        val mins = ((now() - time) / 1000 / 60).toInt()
+        return rh.gs(R.string.minago_long, mins)
+    }
+
     fun hourAgo(time: Long, rh: ResourceHelper): String {
         val hours = (now() - time) / 1000.0 / 60 / 60
         return rh.gs(R.string.hoursago, hours)

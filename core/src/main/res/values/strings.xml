@@ -173,6 +173,7 @@
     <string name="notes_label">Notes</string>
     <string name="remove_button">Remove</string>
     <string name="addnew">Add new</string>
+    <string name="addnew_above">Add new above</string>
     <string name="wrong_pump_data">Data is coming from different pump. Change pump driver to reset pump state.</string>
 
     <!--    Constraints-->
@@ -199,6 +200,7 @@
 
     <!--    DateUtil-->
     <string name="minago">%1$d m ago</string>
+    <string name="minago_long">%1$d minutes ago</string>
     <string name="hoursago">%1$.1f h ago</string>
     <string name="shorthour">h</string>
     <string name="days">days</string>

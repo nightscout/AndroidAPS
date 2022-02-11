@@ -8,6 +8,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.drawable.AnimationDrawable
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
@@ -597,24 +598,36 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
         // aps mode
         val closedLoopEnabled = constraintChecker.isClosedLoopAllowed()
+
+        fun apsModeSetA11yLabel(stringRes: Int) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                binding.infoLayout.apsMode.stateDescription = rh.gs(stringRes)
+            } else {
+                binding.infoLayout.apsMode.contentDescription =  rh.gs(R.string.apsmode_title) + " " + rh.gs(stringRes)
+            }
+        }
+
         if (config.APS && pump.pumpDescription.isTempBasalCapable) {
             binding.infoLayout.apsMode.visibility = View.VISIBLE
             binding.infoLayout.timeLayout.visibility = View.GONE
             when {
                 (loop as PluginBase).isEnabled() && loop.isSuperBolus                       -> {
                     binding.infoLayout.apsMode.setImageResource(R.drawable.ic_loop_superbolus)
+                    apsModeSetA11yLabel(R.string.superbolus)
                     binding.infoLayout.apsModeText.text = dateUtil.age(loop.minutesToEndOfSuspend() * 60000L, true, rh)
                     binding.infoLayout.apsModeText.visibility = View.VISIBLE
                 }
 
                 loop.isDisconnected                                                         -> {
                     binding.infoLayout.apsMode.setImageResource(R.drawable.ic_loop_disconnected)
+                    apsModeSetA11yLabel(R.string.disconnected)
                     binding.infoLayout.apsModeText.text = dateUtil.age(loop.minutesToEndOfSuspend() * 60000L, true, rh)
                     binding.infoLayout.apsModeText.visibility = View.VISIBLE
                 }
 
                 (loop as PluginBase).isEnabled() && loop.isSuspended                        -> {
                     binding.infoLayout.apsMode.setImageResource(R.drawable.ic_loop_paused)
+                    apsModeSetA11yLabel(R.string.suspendloop_label)
                     binding.infoLayout.apsModeText.text = dateUtil.age(loop.minutesToEndOfSuspend() * 60000L, true, rh)
                     binding.infoLayout.apsModeText.visibility = View.VISIBLE
                 }
@@ -624,8 +637,10 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                         if (pump.model() == PumpType.OMNIPOD_EROS || pump.model() == PumpType.OMNIPOD_DASH) {
                             // For Omnipod, indicate the pump as disconnected when it's suspended.
                             // The only way to 'reconnect' it, is through the Omnipod tab
+                            apsModeSetA11yLabel(R.string.disconnected)
                             R.drawable.ic_loop_disconnected
                         } else {
+                            apsModeSetA11yLabel(R.string.pump_paused)
                             R.drawable.ic_loop_paused
                         }
                     )
@@ -634,21 +649,25 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
                 (loop as PluginBase).isEnabled() && closedLoopEnabled.value() && loop.isLGS -> {
                     binding.infoLayout.apsMode.setImageResource(R.drawable.ic_loop_lgs)
+                    apsModeSetA11yLabel(R.string.uel_lgs_loop_mode)
                     binding.infoLayout.apsModeText.visibility = View.GONE
                 }
 
                 (loop as PluginBase).isEnabled() && closedLoopEnabled.value()               -> {
                     binding.infoLayout.apsMode.setImageResource(R.drawable.ic_loop_closed)
+                    apsModeSetA11yLabel(R.string.closedloop)
                     binding.infoLayout.apsModeText.visibility = View.GONE
                 }
 
                 (loop as PluginBase).isEnabled() && !closedLoopEnabled.value()              -> {
                     binding.infoLayout.apsMode.setImageResource(R.drawable.ic_loop_open)
+                    apsModeSetA11yLabel(R.string.openloop)
                     binding.infoLayout.apsModeText.visibility = View.GONE
                 }
 
                 else                                                                        -> {
                     binding.infoLayout.apsMode.setImageResource(R.drawable.ic_loop_disabled)
+                    apsModeSetA11yLabel(R.string.disabledloop)
                     binding.infoLayout.apsModeText.visibility = View.GONE
                 }
             }
@@ -732,6 +751,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         binding.infoLayout.bg.setTextColor(overviewData.lastBgColor)
         binding.infoLayout.arrow.setImageResource(trendCalculator.getTrendArrow(overviewData.lastBg).directionToIcon())
         binding.infoLayout.arrow.setColorFilter(overviewData.lastBgColor)
+        binding.infoLayout.arrow.contentDescription = overviewData.lastBgDescription + " " + rh.gs(R.string.and) + " " + trendCalculator.getTrendDescription(overviewData.lastBg)
 
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData
         if (glucoseStatus != null) {
@@ -751,13 +771,20 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         binding.infoLayout.bg.paintFlags =
             if (!overviewData.isActualBg) binding.infoLayout.bg.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
             else binding.infoLayout.bg.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+
+        val outDate = (if (!overviewData.isActualBg) rh.gs(R.string.a11y_bg_outdated) else "")
+        binding.infoLayout.bg.contentDescription =
+            rh.gs(R.string.a11y_blood_glucose) + " " +  binding.infoLayout.bg.text.toString() + " " + overviewData.lastBgDescription + " " + outDate
+
         binding.infoLayout.timeAgo.text = dateUtil.minAgo(rh, overviewData.lastBg?.timestamp)
+        binding.infoLayout.timeAgo.contentDescription = dateUtil.minAgoLong(rh, overviewData.lastBg?.timestamp)
         binding.infoLayout.timeAgoShort.text = "(" + dateUtil.minAgoShort(overviewData.lastBg?.timestamp) + ")"
 
         val qualityIcon = bgQualityCheckPlugin.icon()
         if (qualityIcon != 0) {
             binding.infoLayout.bgQuality.visibility = View.VISIBLE
             binding.infoLayout.bgQuality.setImageResource(qualityIcon)
+            binding.infoLayout.bgQuality.contentDescription = rh.gs(R.string.a11y_bg_quality) + " " + bgQualityCheckPlugin.stateDescription()
             binding.infoLayout.bgQuality.setOnClickListener {
                 context?.let { context -> OKDialog.show(context, rh.gs(R.string.data_status), bgQualityCheckPlugin.message) }
             }
