@@ -105,8 +105,8 @@ class BgQualityCheckPlugin @Inject constructor(
 
     fun stateDescription(): String =
         when (state) {
-            State.RECALCULATED -> rh.gs(R.string.a11_bg_quality_recalculated)
-            State.DOUBLED      -> rh.gs(R.string.a11_bg_quality_doubles)
+            State.RECALCULATED -> rh.gs(R.string.a11y_bg_quality_recalculated)
+            State.DOUBLED      -> rh.gs(R.string.a11y_bg_quality_doubles)
             else               -> ""
         }
 }
