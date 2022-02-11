@@ -907,5 +907,26 @@
     <string name="bg_too_close">רמת הסוכר קרובה מדי:\n%1$s\n%2$s</string>
     <string name="identification">אמצעי זיהוי (מייל, פייסבוק או דיסקורד וכו\')</string>
     <string name="identification_not_set">אמצעי הזיהוי אינו מוגדר במצב מפתחים</string>
+    <string name="a11y_high">גבוה</string>
+    <string name="a11y_inrange">בטווח</string>
+    <string name="a11y_low">נמוך</string>
+    <string name="a11y_arrow_double_down">ירידה מהירה</string>
+    <string name="a11y_arrow_single_down">ירידה</string>
+    <string name="a11y_arrow_forty_five_down">מגמת ירידה</string>
+    <string name="a11y_arrow_flat">יציב</string>
+    <string name="a11y_arrow_forty_five_up">מגמת עלייה</string>
+    <string name="a11y_arrow_single_up">עלייה</string>
+    <string name="a11y_arrow_double_up">עלייה מהירה</string>
+    <string name="a11y_arrow_none">אין</string>
+    <string name="a11y_arrow_unknown">לא ידוע</string>
+    <string name="a11y_graph">גרף</string>
+    <string name="a11y_bg_quality">איכות נתוני סוכר</string>
+    <string name="a11_bg_quality_recalculated">חושב מחדש</string>
+    <string name="a11_bg_quality_doubles">רישומים כפולים</string>
+    <string name="a11y_insulin_label">אינסולין</string>
+    <string name="a11y_dialog">תיבת דו-שיח</string>
+    <string name="a11y_current_bg">רמת סוכר נוכחית</string>
+    <string name="a11_correction_percentage">תיקון עם %</string>
+    <string name="a11_correction_units">תיקון עם יחידות</string>
     <string name="not_available_full">לא זמין</string>
 </resources>
