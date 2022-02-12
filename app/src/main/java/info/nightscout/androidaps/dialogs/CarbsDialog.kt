@@ -137,32 +137,39 @@ class CarbsDialog : DialogFragmentWithDate() {
             savedInstanceState?.getDouble("carbs")
                 ?: 0.0, 0.0, maxCarbs, 1.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher
         )
-
-        binding.plus1.text = toSignedString(sp.getInt(R.string.key_carbs_button_increment_1, FAV1_DEFAULT))
+        val plus1text = toSignedString(sp.getInt(R.string.key_carbs_button_increment_1, FAV1_DEFAULT))
+        binding.plus1.text = plus1text
+        binding.plus1.contentDescription = rh.gs(R.string.treatments_wizard_carbs_label) +  " " + plus1text
         binding.plus1.setOnClickListener {
             binding.carbs.value = max(
                 0.0, binding.carbs.value
                     + sp.getInt(R.string.key_carbs_button_increment_1, FAV1_DEFAULT)
             )
             validateInputs()
+            binding.carbs.announceValue()
         }
 
-        binding.plus2.text = toSignedString(sp.getInt(R.string.key_carbs_button_increment_2, FAV2_DEFAULT))
+        val plus2text = toSignedString(sp.getInt(R.string.key_carbs_button_increment_2, FAV2_DEFAULT))
+        binding.plus2.text = plus2text
+        binding.plus2.contentDescription =  rh.gs(R.string.treatments_wizard_carbs_label) +  " " + plus2text
         binding.plus2.setOnClickListener {
             binding.carbs.value = max(
                 0.0, binding.carbs.value
                     + sp.getInt(R.string.key_carbs_button_increment_2, FAV2_DEFAULT)
             )
             validateInputs()
+            binding.carbs.announceValue()
         }
-
-        binding.plus3.text = toSignedString(sp.getInt(R.string.key_carbs_button_increment_3, FAV3_DEFAULT))
+        val plus3text = toSignedString(sp.getInt(R.string.key_carbs_button_increment_3, FAV3_DEFAULT))
+        binding.plus3.text = plus3text
+        binding.plus2.contentDescription = rh.gs(R.string.treatments_wizard_carbs_label) +  " " + plus3text
         binding.plus3.setOnClickListener {
             binding.carbs.value = max(
                 0.0, binding.carbs.value
                     + sp.getInt(R.string.key_carbs_button_increment_3, FAV3_DEFAULT)
             )
             validateInputs()
+            binding.carbs.announceValue()
         }
 
         setOnValueChangedListener { eventTime: Long ->
@@ -188,6 +195,9 @@ class CarbsDialog : DialogFragmentWithDate() {
             binding.hypoTt.isChecked = false
             binding.activityTt.isChecked = false
         }
+        binding.duration.editText?.id?.let { binding.durationLabel.labelFor = it }
+        binding.time.editText?.id?.let { binding.timeLabel.labelFor = it }
+        binding.carbs.editText?.id?.let { binding.carbsLabel.labelFor = it }
     }
 
     override fun onDestroyView() {
