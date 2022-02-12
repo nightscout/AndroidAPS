@@ -284,7 +284,12 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
         else {
             console.error("Time now is "+now+"; ");
         }
+    if (meal_data.TDDAIMI7){
         var tdd7 = meal_data.TDDAIMI7;
+        }
+    else{
+    var tdd7 = ((basal * 12)*100)/21;
+    }
         var tdd_pump_now = meal_data.TDDPUMP;
         var tdd_pump = ( tdd_pump_now / (now / 24));
         var TDD = (tdd7 * 0.4) + (tdd_pump * 0.6);
@@ -306,6 +311,7 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
              console.log("TDD 7 ="+tdd7+", TDD Pump ="+tdd_pump+" and TDD = "+TDD+";");
              rT.reason += "TDD: " +TDD+ " based on standard pump 60/tdd7 40 split; ";
              }
+
 
     var variable_sens = (277700 / (TDD * bg));
     variable_sens = round(variable_sens,1);
