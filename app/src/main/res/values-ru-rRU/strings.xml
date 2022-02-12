@@ -914,4 +914,20 @@
     <string name="a11y_high">высокий</string>
     <string name="a11y_inrange">в диапазоне</string>
     <string name="a11y_low">низкий</string>
+    <string name="a11y_arrow_double_down">быстро падает</string>
+    <string name="a11y_arrow_single_down">падает</string>
+    <string name="a11y_arrow_forty_five_down">медленно падает</string>
+    <string name="a11y_arrow_flat">стабильный</string>
+    <string name="a11y_arrow_forty_five_up">медленно поднимается</string>
+    <string name="a11y_arrow_single_up">растет</string>
+    <string name="a11y_arrow_double_up">стремительно растет</string>
+    <string name="a11y_arrow_none">отсутствует</string>
+    <string name="a11y_arrow_unknown">неизвестно</string>
+    <string name="a11y_graph">график</string>
+    <string name="a11y_bg_quality">качество глюкозы в крови</string>
+    <string name="a11y_bg_quality_recalculated">пересчитано</string>
+    <string name="a11y_bg_quality_doubles">двойные записи</string>
+    <string name="a11y_insulin_label">инсулин</string>
+    <string name="a11y_blood_glucose">уровень глюкозы в крови (ГК)</string>
+    <string name="a11y_bg_outdated">устаревшие данные</string>
 </resources>
