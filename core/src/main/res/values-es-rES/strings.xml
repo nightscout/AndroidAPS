@@ -110,6 +110,7 @@
     <string name="notes_label">Notas</string>
     <string name="remove_button">Eliminar</string>
     <string name="addnew">Añadir nuevo</string>
+    <string name="addnew_above">Añadir nuevo arriba</string>
     <string name="wrong_pump_data">Los datos proceden de una bomba diferente. Cambia el controlador de la bomba para resetear su estado.</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limitando max basal rate a %1$.2f U/h debido a %2$s</string>
