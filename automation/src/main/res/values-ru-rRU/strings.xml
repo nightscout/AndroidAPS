@@ -81,6 +81,7 @@
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Автосенс %1$s %2$s %%</string>
     <string name="autosenslabel">Автосенс %</string>
+    <string name="a11y_autosenslabel">Auto sens</string>
     <string name="deltacompared">%3$s%1$s%2$s</string>
     <string name="deltalabel">Разница Гк</string>
     <string name="deltalabel_u">Разница ГК [%1$s]</string>
