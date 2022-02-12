@@ -133,6 +133,7 @@
     <string name="location_not_found_message">Para activar la visibilidad Bluetooth en nuevos dispositivos, la ubicación debe estar habilitada. AAPS no hace un seguimiento de su ubicación y se puede desactivar después de realizar la vinculación.</string>
     <!--    DateUtil-->
     <string name="minago">hace %1$d m</string>
+    <string name="minago_long">Hace %1$d minutos</string>
     <string name="hoursago">hace %1$.1f h</string>
     <string name="shorthour">h</string>
     <string name="days">días</string>
@@ -446,6 +447,8 @@
     <string name="bolus_ok" comment="26 characters max for translation">Bolo OK</string>
     <string name="pump_paired" comment="26 characters max for translation">Bomba emparejada</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Botón de refresco de Insight</string>
+    <string name="a11y_min_button_description">decrecimiento %1$s por %2$s</string>
+    <string name="a11y_plus_button_description">incremento %1$s por %2$s</string>
     <plurals name="days">
         <item quantity="one">%1$d día</item>
         <item quantity="other">%1$d días</item>
