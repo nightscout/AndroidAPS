@@ -277,16 +277,50 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
 
     var profile_sens = round(profile.sens,1)
     var sens = profile.sens;
-    if (typeof autosens_data !== 'undefined' && autosens_data) {
-        sens = profile.sens / sensitivityRatio;
-        sens = round(sens, 1);
-        if (sens !== profile_sens) {
-            console.log("ISF from "+profile_sens+" to "+sens);
-        } else {
-            console.log("ISF unchanged: "+sens);
+
+    var now = new Date().getHours();
+        if (now < 1){
+            now = 1;}
+        else {
+            console.error("Time now is "+now+"; ");
         }
-        //console.log(" (autosens ratio "+sensitivityRatio+")");
+        var tdd7 = meal_data.TDDAIMI7;
+        var tdd_pump_now = meal_data.TDDPUMP;
+        var tdd_pump = ( tdd_pump_now / (now / 24));
+        var TDD = (tdd7 * 0.4) + (tdd_pump * 0.6);
+        console.error("Pump extrapolated TDD = "+tdd_pump+"; ");
+        //if (tdd7 > 0){
+        if ( tdd_pump > tdd7 && now < 5 || now < 7 && TDD < ( 0.8 * tdd7 ) ){
+          TDD = ( 0.8 * tdd7 );
+          console.log("Excess or too low insulin from pump so TDD set to "+TDD+" based on 75% of TDD7; ");
+          rT.reason += "TDD: " +TDD+ " due to low or high tdd from pump; ";
+          }
+
+        else if (tdd_pump < (0.33 * tdd7)){
+           TDD = (tdd7 * 0.25) + (tdd_pump * 0.75);
+           console.error("TDD weighted to pump due to low insulin usage. TDD = "+TDD+"; ");
+           rT.reason += "TDD weighted to pump due to low insulin usage. TDD = "+TDD+"; ";
+           }
+
+        else {
+             console.log("TDD 7 ="+tdd7+", TDD Pump ="+tdd_pump+" and TDD = "+TDD+";");
+             rT.reason += "TDD: " +TDD+ " based on standard pump 60/tdd7 40 split; ";
+             }
+
+    var variable_sens = (277700 / (TDD * bg));
+    variable_sens = round(variable_sens,1);
+    console.log("Current sensitivity for predictions is " +variable_sens+" based on current bg");
+
+    sens = variable_sens;
+    if ( high_temptarget_raises_sensitivity && profile.temptargetSet && target_bg > normalTarget || profile.low_temptarget_lowers_sensitivity && profile.temptargetSet && target_bg < normalTarget ) {
+        sens =  sens / sensitivityRatio ;
+        sens = round(sens, 1);
+        console.log("ISF from "+variable_sens+" to "+sens+ "due to temp target; ");
+    } else {
+        sens = sens;
+        sens = round(sens, 1);
     }
+
     console.error("; CR:",profile.carb_ratio);
 
     // compare currenttemp to iob_data.lastTemp and cancel temp if they don't match
@@ -700,6 +734,20 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
 
     console.error("UAM Impact:",uci,"mg/dL per 5m; UAM Duration:",UAMduration,"hours");
 
+        console.log("EventualBG is" +eventualBG+" ;");
+
+        if( glucose_status.delta >= 0 || bg > 60 && glucose_status.delta < 2 && glucose_status.delta > -2 && glucose_status.short_avgdelta > -2 && glucose_status.short_avgdelta < 2 ) {
+            var future_sens = ( 277700 / (TDD * bg) );
+            console.log("Future state sensitivity is " +future_sens+" using current bg due to no COB & small delta or variation");
+            rT.reason += "Dosing sensitivity: " +future_sens+" using current BG;";
+            }
+        else {
+            var future_sens = ( 277700 / (TDD * eventualBG));
+        console.log("Future state sensitivity is " +future_sens+" based on eventual bg due to -ve delta");
+        rT.reason += "Dosing sensitivity: " +future_sens+" using eventual BG;";
+        }
+        var future_sens = round(future_sens,1);
+
 
     minIOBPredBG = Math.max(39,minIOBPredBG);
     minCOBPredBG = Math.max(39,minCOBPredBG);
@@ -928,22 +976,25 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
             }
         }
 
-        // calculate 30m low-temp required to get projected BG up to target
-        // multiply by 2 to low-temp faster for increased hypo safety
-        var insulinReq = 2 * Math.min(0, (eventualBG - target_bg) / sens);
-        insulinReq = round( insulinReq , 2);
-        // calculate naiveInsulinReq based on naive_eventualBG
-        var naiveInsulinReq = Math.min(0, (naive_eventualBG - target_bg) / sens);
-        naiveInsulinReq = round( naiveInsulinReq , 2);
-        if (minDelta < 0 && minDelta > expectedDelta) {
-            // if we're barely falling, newinsulinReq should be barely negative
-            var newinsulinReq = round(( insulinReq * (minDelta / expectedDelta) ), 2);
-            //console.error("Increasing insulinReq from " + insulinReq + " to " + newinsulinReq);
-            insulinReq = newinsulinReq;
-        }
-        // rate required to deliver insulinReq less insulin over 30m:
-        var rate = basal + (2 * insulinReq);
-        rate = round_basal(rate, profile);
+
+
+            // calculate 30m low-temp required to get projected BG up to target
+            // multiply by 2 to low-temp faster for increased hypo safety
+
+            var insulinReq = 2 * Math.min(0, (eventualBG - target_bg) / future_sens);
+            insulinReq = round( insulinReq , 2);
+            // calculate naiveInsulinReq based on naive_eventualBG
+            var naiveInsulinReq = Math.min(0, (naive_eventualBG - target_bg) / sens);
+            naiveInsulinReq = round( naiveInsulinReq , 2);
+            if (minDelta < 0 && minDelta > expectedDelta) {
+                // if we're barely falling, newinsulinReq should be barely negative
+                var newinsulinReq = round(( insulinReq * (minDelta / expectedDelta) ), 2);
+                //console.error("Increasing insulinReq from " + insulinReq + " to " + newinsulinReq);
+                insulinReq = newinsulinReq;
+            }
+            // rate required to deliver insulinReq less insulin over 30m:
+            var rate = basal + (2 * insulinReq);
+            rate = round_basal(rate, profile);
 
         // if required temp < existing temp basal
         var insulinScheduled = currenttemp.duration * (currenttemp.rate - basal) / 60;
@@ -1031,14 +1082,14 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
         }
     } else { // otherwise, calculate 30m high-temp required to get projected BG down to target
 
-        // insulinReq is the additional insulin required to get minPredBG down to target_bg
-        //console.error(minPredBG,eventualBG);
-        insulinReq = round( (Math.min(minPredBG,eventualBG) - target_bg) / sens, 2);
-        // if that would put us over max_iob, then reduce accordingly
-        if (insulinReq > max_iob-iob_data.iob) {
-            rT.reason += "max_iob " + max_iob + ", ";
-            insulinReq = max_iob-iob_data.iob;
-        }
+            // insulinReq is the additional insulin required to get minPredBG down to target_bg
+            //console.error(minPredBG,eventualBG);
+            insulinReq = round( (Math.min(minPredBG,eventualBG) - target_bg) / future_sens, 2);
+            // if that would put us over max_iob, then reduce accordingly
+            if (insulinReq > max_iob-iob_data.iob) {
+                rT.reason += "max_iob " + max_iob + ", ";
+                insulinReq = max_iob-iob_data.iob;
+            }
 
         // rate required to deliver insulinReq more insulin over 30m:
         rate = basal + (2 * insulinReq);

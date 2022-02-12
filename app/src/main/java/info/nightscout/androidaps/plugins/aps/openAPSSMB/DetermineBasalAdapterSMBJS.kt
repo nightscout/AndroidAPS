@@ -4,6 +4,8 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.data.MealData
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.getPassedDurationToTimeInMinutes
 import info.nightscout.androidaps.extensions.plannedRemainingMinutes
@@ -18,8 +20,11 @@ import info.nightscout.androidaps.plugins.aps.logger.LoggerCallback
 import info.nightscout.androidaps.plugins.aps.loop.ScriptReader
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.shared.SafeParse
+import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.stats.TddCalculator
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONArray
 import org.json.JSONException
@@ -40,6 +45,10 @@ class DetermineBasalAdapterSMBJS internal constructor(private val scriptReader: 
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var activePlugin: ActivePlugin
+    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var dateUtil: DateUtil
+    //@Inject lateinit var danaPump: DanaPump
+
 
     private var profile = JSONObject()
     private var mGlucoseStatus = JSONObject()
@@ -51,6 +60,11 @@ class DetermineBasalAdapterSMBJS internal constructor(private val scriptReader: 
     private var smbAlwaysAllowed = false
     private var currentTime: Long = 0
     private var saveCgmSource = false
+    private var lastBolusNormalTime: Long = 0
+    private val millsToThePast = T.hours(4).msecs()
+    private var tddAIMI: TddCalculator? = null
+
+
     var currentTempParam: String? = null
         private set
     var iobDataParam: String? = null
@@ -241,6 +255,7 @@ class DetermineBasalAdapterSMBJS internal constructor(private val scriptReader: 
         } else {
             mGlucoseStatus.put("delta", glucoseStatus.delta)
         }
+
         mGlucoseStatus.put("short_avgdelta", glucoseStatus.shortAvgDelta)
         mGlucoseStatus.put("long_avgdelta", glucoseStatus.longAvgDelta)
         mGlucoseStatus.put("date", glucoseStatus.date)
@@ -249,7 +264,13 @@ class DetermineBasalAdapterSMBJS internal constructor(private val scriptReader: 
         this.mealData.put("slopeFromMaxDeviation", mealData.slopeFromMaxDeviation)
         this.mealData.put("slopeFromMinDeviation", mealData.slopeFromMinDeviation)
         this.mealData.put("lastBolusTime", mealData.lastBolusTime)
+        this.mealData.put("lastBolusNormalTime", lastBolusNormalTime)
         this.mealData.put("lastCarbTime", mealData.lastCarbTime)
+
+        tddAIMI = TddCalculator(aapsLogger,rh,activePlugin,profileFunction,dateUtil,iobCobCalculator, repository)
+        this.mealData.put("TDD_AIMI7", tddAIMI!!.averageTDD(tddAIMI!!.calculate(7)).totalAmount)
+        this.mealData.put("TDDPUMP", tddAIMI!!.calculateDaily().totalAmount)
+
         if (constraintChecker.isAutosensModeEnabled().value()) {
             autosensData.put("ratio", autosensDataRatio)
         } else {
