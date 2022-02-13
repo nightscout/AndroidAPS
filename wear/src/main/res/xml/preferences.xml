@@ -101,15 +101,6 @@
         android:summary="Chart Timeframe"
         android:title="@string/pref_chart_timeframe" />
 
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="units_mgdl"
-        android:summaryOff="mmol/l"
-        android:summaryOn="mg/dl"
-        android:title="@string/pref_units_for_actions"
-        app:wear_iconOff="@drawable/settings_off"
-        app:wear_iconOn="@drawable/settings_on" />
-
     <ListPreference
         android:defaultValue="1"
         android:entries="@array/input_design"
@@ -121,7 +112,7 @@
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="showWizard"
-        android:summary="Wizard from watch possible"
+        android:summary="Calculator from watch possible"
         android:title="@string/pref_wizard_in_menu"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />

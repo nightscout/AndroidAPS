@@ -11,7 +11,7 @@ import java.util.List;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.interaction.AAPSPreferences;
-import info.nightscout.androidaps.interaction.actions.BolusActivity;
+import info.nightscout.androidaps.interaction.actions.TreatmentActivity;
 import info.nightscout.androidaps.interaction.actions.ECarbActivity;
 import info.nightscout.androidaps.interaction.actions.TempTargetActivity;
 import info.nightscout.androidaps.interaction.actions.WizardActivity;
@@ -49,7 +49,7 @@ public class MainMenuActivity extends MenuListActivity {
 
         if (showWizard) menuItems.add(new MenuItem(R.drawable.ic_calculator, getString(R.string.menu_wizard)));
         menuItems.add(new MenuItem(R.drawable.ic_e_carbs, getString(R.string.menu_ecarb)));
-        menuItems.add(new MenuItem(R.drawable.ic_bolus, getString(R.string.menu_bolus)));
+        menuItems.add(new MenuItem(R.drawable.ic_treatment, getString(R.string.menu_treatment)));
         menuItems.add(new MenuItem(R.drawable.ic_temptarget, getString(R.string.menu_tempt)));
         menuItems.add(new MenuItem(R.drawable.ic_settings, getString(R.string.menu_settings)));
         menuItems.add(new MenuItem(R.drawable.ic_status, getString(R.string.menu_status)));
@@ -73,8 +73,8 @@ public class MainMenuActivity extends MenuListActivity {
             intent = new Intent(this, TempTargetActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             this.startActivity(intent);
-        } else if (getString(R.string.menu_bolus).equals(action)) {
-            intent = new Intent(this, BolusActivity.class);
+        } else if (getString(R.string.menu_treatment).equals(action)) {
+            intent = new Intent(this, TreatmentActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             this.startActivity(intent);
         } else if (getString(R.string.menu_wizard).equals(action)) {

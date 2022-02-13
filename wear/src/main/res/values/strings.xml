@@ -14,6 +14,9 @@
     <string name="label_xdrip_steampunk">AAPS(Steampunk)</string>
     <string name="label_digitalstyle">AAPS(DigitalStyle)</string>
 
+    <string name="label_actions_tile">AAPS(Actions)</string>
+    <string name="label_temp_target_tile">AAPS(Temp Target)</string>
+    <string name="label_quick_wizard_tile">AAPS(Quick Wizard)</string>
 
     <string name="label_warning_sync">No data!</string>
     <string name="label_warning_old">Old data!</string>
@@ -60,21 +63,23 @@
     <string name="pref_ring_history">Ring History</string>
     <string name="pref_light_ring_history">Light Ring History</string>
     <string name="pref_animations">Animations</string>
-    <string name="pref_wizard_in_menu">Wizard in Menu</string>
+    <string name="pref_wizard_in_menu">Calculator in Menu</string>
     <string name="pref_prime_in_menu">Prime in Menu</string>
     <string name="pref_single_target">Single Target</string>
-    <string name="pref_wizard_percentage">Wizard Percentage</string>
+    <string name="pref_wizard_percentage">Calculator Percentage</string>
     <string name="pref_complication_tap_action">Complication Tap Action</string>
     <string name="pref_unicode_in_complications">Unicode in Complications</string>
     <string name="pref_version">Version:</string>
     <string name="pref_moreWatchfaceSettings">more Watchface settings</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Look into Watchface configuration, please.</string>
 
-
     <string name="menu_tempt">TempT</string>
-    <string name="menu_wizard">Wizard</string>
+    <string name="menu_wizard">Calculator</string>
+    <string name="menu_wizard_short">Calc</string>
+    <string name="menu_treatment">Treatment</string>
+    <string name="menu_treatment_short">Treat</string>
     <string name="menu_bolus">Bolus</string>
-    <string name="menu_ecarb">eCarb</string>
+    <string name="menu_ecarb">Carbs</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_status">Status</string>
     <string name="menu_resync">Re-Sync</string>
@@ -82,23 +87,32 @@
     <string name="menu_none">None</string>
     <string name="menu_default">Default</string>
     <string name="menu_menu">Menu</string>
+    <string name="quick_wizard_short">XL</string>
 
-    <string name="action_duration">duration</string>
-    <string name="action_target" comment="In temp target menu, single target value">target</string>
-    <string name="action_low" comment="In temp target menu, lower value from range">low</string>
-    <string name="action_high" comment="In temp target menu, higher value from range">high</string>
-    <string name="action_carbs">carbs</string>
-    <string name="action_percentage">percentage</string>
-    <string name="action_start_min">start [min]</string>
-    <string name="action_duration_h">duration [h]</string>
-    <string name="action_insulin">insulin</string>
+    <string name="action_duration">Duration</string>
+    <string name="action_tempt_confirmation">Temp Target Requested</string>
+    <string name="action_quick_wizard_confirmation">Quick Wizard Requested</string>
+    <string name="action_treatment_confirmation">Treatment Requested</string>
+    <string name="action_bolus_confirmation">Bolus Requested</string>
+    <string name="action_wizard_confirmation">Calculation Requested</string>
+    <string name="action_fill_confirmation">Fill Requested</string>
+    <string name="action_ecarb_confirmation">Carbs Requested</string>
+    <string name="action_cpp_confirmation">CPP Requested</string>
+    <string name="action_target" comment="In temp target menu, single target value">Target</string>
+    <string name="action_low" comment="In temp target menu, lower value from range">Low</string>
+    <string name="action_high" comment="In temp target menu, higher value from range">High</string>
+    <string name="action_carbs">Carbs</string>
+    <string name="action_percentage">Percentage</string>
+    <string name="action_start_min">Start [min]</string>
+    <string name="action_duration_h">Duration [h]</string>
+    <string name="action_insulin">Insulin</string>
     <string name="action_preset_1">Preset 1</string>
     <string name="action_preset_2">Preset 2</string>
     <string name="action_preset_3">Preset 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Free amount</string>
     <string name="action_confirm">CONFIRM</string>
     <string name="action_timeshift">timeshift</string>
-    <string name="action_bolus">bolus</string>
+    <string name="action_bolus">Bolus</string>
 
     <string name="bolus_progress">Bolus Progress</string>
     <string name="press_to_cancel">press to cancel</string>
@@ -112,7 +126,6 @@
     <string name="activity_carb">Carb</string>
     <string name="activity_IOB">IOB</string>
     <string name="activity_no_status">no status</string>
-
 
     <string name="color_name_red">red</string>
     <string name="color_name_pink">pink</string>
@@ -139,7 +152,6 @@
     <string name="pref_simplify_ui">Simplify UI</string>
     <string name="pref_simplify_ui_sum">Only show time and BG</string>
 
-
     <string name="pref_vibrate_hourly">Vibrate hourly</string>
     <string name="pref_show_weeknumber">Show Week number</string>
 
@@ -156,10 +168,25 @@
     <string name="bolus_progress_silent_channel_name">AAPS Bolus Progress Silent</string>
     <string name="bolus_progress_channel_description">Bolus progress and cancel</string>
     <string name="bolus_progress_silent_channel_description">Bolus progress and cancel with less vibrations</string>
-
+    <string name="key_quickwizard" translatable="false">QuickWizard</string>
+    <string name="key_wear_control" translatable="false">wearcontrol</string>
+    <string name="key_units_mgdl" translatable="false">units_mgdl</string>
+    <string name="key_boluswizard_percentage" translatable="false">boluswizard_percentage</string>
+    <string name="key_treatmentssafety_maxcarbs" translatable="false">treatmentssafety_maxcarbs</string>
+    <string name="key_treatmentssafety_maxbolus" translatable="false">treatmentssafety_maxbolus</string>
     <string name="simple_ui_off">Off</string>
     <string name="simple_ui_charging">During Charging</string>
     <string name="simple_ui_always_on">Always On Mode</string>
     <string name="simple_ui_always_on_charging">Always On and Charging</string>
+    <string name="temp_target_eating_soon">Eating</string>
+    <string name="temp_target_hypo">Hypo</string>
+    <string name="temp_target_activity">Activity</string>
+    <string name="temp_target_manual">Manual</string>
+    <string name="temp_target_cancel">Cancel</string>
+    <string name="tile_none">None</string>
+    <string name="tile_no_config">No config available</string>
+    <string name="wear_control_not_enabled">Wear controls disabled</string>
+    <string name="wear_control_no_data">No data available</string>
+    <string name="key_quick_wizard_data_map" translatable="false">quick_wizard_data_map</string>
 
 </resources>
