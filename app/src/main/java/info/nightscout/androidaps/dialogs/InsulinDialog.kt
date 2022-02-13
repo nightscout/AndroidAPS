@@ -116,29 +116,40 @@ class InsulinDialog : DialogFragmentWithDate() {
         binding.amount.setParams(savedInstanceState?.getDouble("amount")
             ?: 0.0, 0.0, maxInsulin, activePlugin.activePump.pumpDescription.bolusStep, DecimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump), false, binding.okcancel.ok, textWatcher)
 
-        binding.plus05.text = sp.getDouble(rh.gs(R.string.key_insulin_button_increment_1), PLUS1_DEFAULT).toSignedString(activePlugin.activePump)
+        val plus05Text = sp.getDouble(rh.gs(R.string.key_insulin_button_increment_1), PLUS1_DEFAULT).toSignedString(activePlugin.activePump)
+        binding.plus05.text = plus05Text
+        binding.plus05.contentDescription = rh.gs(R.string.overview_insulin_label) + " " + plus05Text
         binding.plus05.setOnClickListener {
             binding.amount.value = max(0.0, binding.amount.value
                 + sp.getDouble(rh.gs(R.string.key_insulin_button_increment_1), PLUS1_DEFAULT))
             validateInputs()
+            binding.amount.announceValue()
         }
-        binding.plus10.text = sp.getDouble(rh.gs(R.string.key_insulin_button_increment_2), PLUS2_DEFAULT).toSignedString(activePlugin.activePump)
+        val plus10Text = sp.getDouble(rh.gs(R.string.key_insulin_button_increment_2), PLUS2_DEFAULT).toSignedString(activePlugin.activePump)
+        binding.plus10.text = plus10Text
+        binding.plus10.contentDescription = rh.gs(R.string.overview_insulin_label) + " " + plus10Text
         binding.plus10.setOnClickListener {
             binding.amount.value = max(0.0, binding.amount.value
                 + sp.getDouble(rh.gs(R.string.key_insulin_button_increment_2), PLUS2_DEFAULT))
             validateInputs()
+            binding.amount.announceValue()
         }
-        binding.plus20.text = sp.getDouble(rh.gs(R.string.key_insulin_button_increment_3), PLUS3_DEFAULT).toSignedString(activePlugin.activePump)
+        val plus20Text = sp.getDouble(rh.gs(R.string.key_insulin_button_increment_3), PLUS3_DEFAULT).toSignedString(activePlugin.activePump)
+        binding.plus20.text = plus20Text
+        binding.plus20.contentDescription = rh.gs(R.string.overview_insulin_label) + " " + plus20Text
         binding.plus20.setOnClickListener {
             binding.amount.value = max(0.0, binding.amount.value
                 + sp.getDouble(rh.gs(R.string.key_insulin_button_increment_3), PLUS3_DEFAULT))
             validateInputs()
+            binding.amount.announceValue()
         }
 
         binding.timeLayout.visibility = View.GONE
         binding.recordOnly.setOnCheckedChangeListener { _, isChecked: Boolean ->
             binding.timeLayout.visibility = isChecked.toVisibility()
         }
+        binding.amount.editText?.id?.let { binding.insulinLabel.labelFor = it }
+        binding.time.editText?.id?.let { binding.timeLabel.labelFor = it }
     }
 
     override fun onDestroyView() {

@@ -112,7 +112,7 @@ public class TimeListEdit {
         float factor = layout.getContext().getResources().getDisplayMetrics().density;
         finalAdd = new ImageView(context);
         finalAdd.setImageResource(R.drawable.ic_add);
-        finalAdd.setContentDescription(layout.getContext().getResources().getString(R.string.addnew));
+        finalAdd.setContentDescription(layout.getContext().getResources().getString(R.string.a11y_add_new_to_list));
         LinearLayout.LayoutParams illp = new LinearLayout.LayoutParams((int) (35d * factor), (int) (35 * factor));
         illp.setMargins(0, 25, 0, 25); // llp.setMargins(left, top, right, bottom);
         illp.gravity = Gravity.CENTER;
