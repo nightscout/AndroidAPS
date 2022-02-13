@@ -169,7 +169,6 @@
     <string name="configbuilder_bgsource_description">Where should AndroidAPS gain  it\'s data from?</string>
     <string name="xdrip">xDrip+</string>
     <string name="apsmode_title">APS Mode</string>
-
     <string name="closedloop">Closed Loop</string>
     <string name="openloop">Open Loop</string>
     <string name="lowglucosesuspend">Low Glucose Suspend</string>
@@ -314,7 +313,7 @@
     <string name="wear">Wear</string>
     <string name="resend_all_data">Resend All Data</string>
     <string name="open_settings_on_wear">Open Settings on Wear</string>
-    <string name="basal_rate">Basal rate:</string>
+    <string name="basal_rate">Basal rate</string>
     <string name="basalvaluebelowminimum">Basal value below minimum. Profile not set!</string>
     <string name="sms_actualbg">BG:</string>
     <string name="sms_lastbg">Last BG:</string>
@@ -618,6 +617,7 @@
     <string name="negativeonly">Negative only</string>
     <string name="overview_editquickwizard_usecob">COB calculation</string>
     <string name="overview_editquickwizard_usetemptarget">Temporary target calculation</string>
+    <string name="overview_editquickwizard_usepercentage">Percentage calculation</string>
     <string name="loopenabled">Loop enabled</string>
     <string name="apsselected">APS selected</string>
     <string name="nsclienthaswritepermission">NSClient has write permission</string>
@@ -954,8 +954,8 @@
     <string name="low_mark_comment">Lower value of in range area (display only)</string>
     <string name="high_mark_comment">Higher value of in range area (display only)</string>
 
-    <string name="age">Age:</string>
-    <string name="weight_label">Weight:</string>
+    <string name="age">Age</string>
+    <string name="weight_label">Weight</string>
     <string name="id">ID:</string>
     <string name="submit">Submit</string>
     <string name="mostcommonprofile">Most common profile:</string>
@@ -1133,11 +1133,76 @@
     <string name="errors">Errors</string>
     <string name="ns_sync_slow">Slow down uploads</string>
     <string name="data_status">BG data status</string>
+    <string name="statuslights_cannula_age">cannula age</string>
+    <string name="statuslights_patch_pump_age">patch pump age</string>
+    <string name="patch_pump">Patch pump</string>
     <string name="recalculated_data_used">Recalculated data used</string>
     <string name="bg_too_close">BG too close:\n%1$s\n%2$s</string>
     <string name="key_last_processed_glunovo_timestamp" translatable="false">last_processed_glunovo_timestamp</string>
     <string name="identification">Identification (email, FB or Discord nick etc)</string>
     <string name="identification_not_set">Identification not set in dev mode</string>
+    <string name="a11y_dialog">dialog</string>
+    <string name="a11y_current_bg">current blood glucose</string>
+    <string name="a11_correction_percentage">correct outcome with %</string>
+    <string name="a11_correction_units">correct outcome with units</string>
     <string name="not_available_full">Not available</string>
+    <string name="a11y_high">high</string>
+    <string name="a11y_inrange">in range</string>
+    <string name="a11y_low">low</string>
+    <string name="a11y_arrow_double_down">falling rapidly</string>
+    <string name="a11y_arrow_single_down">falling</string>
+    <string name="a11y_arrow_forty_five_down">falling slowly</string>
+    <string name="a11y_arrow_flat">stable</string>
+    <string name="a11y_arrow_forty_five_up">rising slowly</string>
+    <string name="a11y_arrow_single_up">rising</string>
+    <string name="a11y_arrow_double_up">rising rapidly</string>
+    <string name="a11y_arrow_none">none</string>
+    <string name="a11y_arrow_unknown">unknown</string>
+    <string name="a11y_graph">graph</string>
+    <string name="a11y_bg_quality">blood glucose quality</string>
+    <string name="a11y_bg_quality_recalculated">recalculated</string>
+    <string name="a11y_bg_quality_doubles">double entries</string>
+    <string name="a11y_insulin_label">insulin</string>
+    <string name="a11y_blood_glucose">blood glucose</string>
+    <string name="a11y_bg_outdated">outdated</string>
+    <string name="a11y_carb_reminder">set reminder</string>
+    <string name="a11y_add_new_profile">add new profile</string>
+    <string name="a11y_clone_profile">clone current profile</string>
+    <string name="a11y_delete_current_profile">delete current profile</string>
+    <string name="a11y_add_new_to_list">add new to list</string>
 
+    <!-- WEAR OS-->
+    <string name="wear_action_tempt_preset_error">Temptarget unknown preset: %1$s</string>
+    <string name="wear_action_tempt_cancel_message">Cancelling running Temp-Targets?</string>
+    <string name="wear_action_tempt_unit_error">Different units used on watch and phone!</string>
+    <string name="wear_action_tempt_zero_message">Zero-Temp-Target - cancelling running Temp-Targets?</string>
+    <string name="wear_action_tempt_min_bg_error">Min-BG out of range!</string>
+    <string name="wear_action_tempt_max_bg_error">Max-BG out of range!</string>
+    <string name="wear_action_tempt_manual_range_message">Temptarget:\nMin: %1$s\nMax: %2$s\nDuration: %3$s</string>
+    <string name="wear_action_tempt_manual_message">Temptarget:\nTarget: %1$s\nDuration: %2$s</string>
+    <string name="wear_action_tempt_preset_message">Temptarget:\Reason: %1$s\nTarget: %2$s\nDuration: %3$s</string>
+    <string name="quick_wizard_message">QuickWizard: %1$s\nInsulin: %2$.2fU\nCarbs: %3$dg</string>
+    <string name="wizard_result">Calc. Wizard:\nInsulin: %1$.2fU\nCarbs: %2$dg</string>
+    <string name="overview_editquickwizard_show_on_device">Show entry on device:</string>
+    <string name="quick_wizard_not_available">Selected quickwizard no longer available, please refresh your tile</string>
+    <string name="wizard_no_actual_bg">No recent BG to base calculation on!</string>
+    <string name="wizard_no_active_profile">No active profile set!</string>
+    <string name="wizard_no_cob">Unknown COB! BG reading missing or recent app restart?</string>
+    <string name="wizard_carbs_constraint">Carb constraint violation!</string>
+    <string name="wizard_explain_calc">Calc (IC: %2$.1f, ISF: %2$.1f) from:"</string>
+    <string name="wizard_explain_carbs">Carbs: %1$.2fU</string>
+    <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fU</string>
+    <string name="wizard_explain_bg">BG: %1$.2fU</string>
+    <string name="wizard_explain_basal_iob">Basal IOB: %1$.2fU</string>
+    <string name="wizard_explain_bolus_iob">Bolus IOB: %1$.2fU</string>
+    <string name="wizard_explain_superbolus">Superbolus: %1$.2fU</string>
+    <string name="wizard_explain_trend">15\' trend: %1$.2fU</string>
+    <string name="wizard_explain_percent">Percentage: %1$.2fU x %2$d%% ≈ %3$.2fU</string>
+    <string name="wizard_constraint_bolus_size">Insulin constraint violation!\nCannot deliver %1$.2fU</string>
+    <string name="wizard_explain_tt">TempT: %1$s</string>
+    <string name="wizard_explain_tt_to">%1$s to %2$s</string>
+    <string name="wizard_pump_not_available">No pump available!</string>
+    <string name="wear_unknown_action_string">Unknown action command:</string>
+    <string name="overview_editquickwizard_percentage">Percentage</string>
+    <string name="app_default">Application default</string>
 </resources>

@@ -25,7 +25,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/overview_insulin_label"
+                android:importantForAccessibility="no"
                 app:srcCompat="@drawable/ic_bolus" />
 
             <TextView
@@ -76,6 +76,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/time_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -88,7 +89,8 @@
             <info.nightscout.androidaps.utils.ui.MinutesNumberPicker
                 android:id="@+id/time"
                 android:layout_width="130dp"
-                android:layout_height="40dp" />
+                android:layout_height="40dp"
+                app:customContentDescription="@string/time_offset"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -109,6 +111,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/insulin_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -121,7 +124,8 @@
             <info.nightscout.androidaps.utils.ui.NumberPicker
                 android:id="@+id/amount"
                 android:layout_width="130dp"
-                android:layout_height="40dp" />
+                android:layout_height="40dp"
+                app:customContentDescription="@string/overview_insulin_label"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -147,6 +151,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:contentDescription="Increment insuline with 0.5"
                 android:text="+0.5" />
 
             <Button

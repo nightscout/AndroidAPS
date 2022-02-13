@@ -25,7 +25,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/primefill"
+                android:importantForAccessibility="no"
                 app:srcCompat="@drawable/ic_cp_pump_canula" />
 
             <TextView
@@ -75,6 +75,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/fill_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -89,7 +90,8 @@
                 android:layout_height="40dp"
                 android:layout_gravity="end"
                 android:paddingLeft="5dp"
-                android:paddingRight="5dp" />
+                android:paddingRight="5dp"
+                app:customContentDescription="@string/overview_insulin_label" />
 
             <TextView
                 android:layout_width="wrap_content"

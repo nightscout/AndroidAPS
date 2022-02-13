@@ -151,6 +151,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
                     binding.basalGraph.show(profile1, profile2)
                     binding.isfGraph.show(profile1, profile2)
                     binding.icGraph.show(profile1, profile2)
+                    binding.targetGraph.show(profile1, profile2)
                 }
 
                 binding.noprofile.visibility = View.GONE
@@ -171,6 +172,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
                 binding.basalGraph.show(it)
                 binding.isfGraph.show(it)
                 binding.icGraph.show(it)
+                binding.targetGraph.show(it)
 
                 binding.noprofile.visibility = View.GONE
                 val validity = it.isValid("ProfileViewDialog", activePlugin.activePump, config, rh, rxBus, hardLimits, false)

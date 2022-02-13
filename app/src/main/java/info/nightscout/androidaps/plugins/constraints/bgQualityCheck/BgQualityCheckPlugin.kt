@@ -102,4 +102,11 @@ class BgQualityCheckPlugin @Inject constructor(
             State.RECALCULATED  -> R.drawable.ic_baseline_warning_24_yellow
             State.DOUBLED       -> R.drawable.ic_baseline_warning_24_red
         }
+
+    fun stateDescription(): String =
+        when (state) {
+            State.RECALCULATED -> rh.gs(R.string.a11y_bg_quality_recalculated)
+            State.DOUBLED      -> rh.gs(R.string.a11y_bg_quality_doubles)
+            else               -> ""
+        }
 }

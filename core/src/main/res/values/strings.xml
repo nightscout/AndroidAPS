@@ -27,6 +27,7 @@
     <string name="key_virtualpump_type" translatable="false">virtualpump_type</string>
     <string name="key_quickwizard" translatable="false">QuickWizard</string>
     <string name="key_wear_control" translatable="false">wearcontrol</string>
+    <string name="key_units_mgdl" translatable="false">units_mgdl</string>
     <string name="key_show_notes_entry_dialogs" translatable="false">show_notes_entry_dialogs</string>
     <string name="key_openapsama_autosens_max" translatable="false">autosens_max</string>
     <string name="key_openapsama_autosens_min" translatable="false">autosens_min</string>
@@ -111,6 +112,11 @@
     <string name="isf_label">ISF</string>
     <string name="basal_label">Basal</string>
     <string name="target_label">Target</string>
+    <string name="dia_long_label">Duration of Insulin Action</string>
+    <string name="ic_long_label">Insulin to Carb ratio</string>
+    <string name="isf_long_label">Insulin Sensitivity Factor</string>
+    <string name="basal_long_label">Basel rate</string>
+    <string name="target_long_label">Blood Glucose Target</string>
     <string name="initializing">Initializing ...</string>
     <string name="serialnumber">Serial number</string>
     <string name="battery_label">Battery</string>
@@ -168,6 +174,7 @@
     <string name="notes_label">Notes</string>
     <string name="remove_button">Remove</string>
     <string name="addnew">Add new</string>
+    <string name="addnew_above">Add new above</string>
     <string name="wrong_pump_data">Data is coming from different pump. Change pump driver to reset pump state.</string>
 
     <!--    Constraints-->
@@ -194,6 +201,7 @@
 
     <!--    DateUtil-->
     <string name="minago">%1$d m ago</string>
+    <string name="minago_long">%1$d minutes ago</string>
     <string name="hoursago">%1$.1f h ago</string>
     <string name="shorthour">h</string>
     <string name="days">days</string>
@@ -535,6 +543,8 @@
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="pump_paired" comment="26 characters max for translation">Pump paired</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight Refresh Button</string>
+    <string name="a11y_min_button_description">decrement %1$s by %2$s</string>
+    <string name="a11y_plus_button_description">increment %1$s by %2$s</string>
 
     <plurals name="days">
         <item quantity="one">%1$d day</item>
