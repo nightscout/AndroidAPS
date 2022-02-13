@@ -952,4 +952,22 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="quick_wizard_not_available">L\'assistant rapide sélectionné n\'est plus disponible, veuillez actualiser l\'écran</string>
     <string name="wizard_no_actual_bg">Pas de glycémie récente pour calculer !</string>
     <string name="wizard_no_active_profile">Aucun profil activé !</string>
+    <string name="wizard_no_cob">GA inconnu! glycémie manquante ou démarrage récent de l\'application ?</string>
+    <string name="wizard_carbs_constraint">Violation de contrainte des glucides!</string>
+    <string name="wizard_explain_calc">Calcul (G/I: %2$.1f, SI: %2$.1f) de:\"</string>
+    <string name="wizard_explain_carbs">Glucides : %1$.2fU</string>
+    <string name="wizard_explain_cob">GA: %1$.0fg %2$.2fU</string>
+    <string name="wizard_explain_bg">Gly: %1$.2fU</string>
+    <string name="wizard_explain_basal_iob">Basal IA: %1$.2fU</string>
+    <string name="wizard_explain_bolus_iob">Bolus IA: %1$.2fU</string>
+    <string name="wizard_explain_superbolus">Superbolus : %1$.2fU</string>
+    <string name="wizard_explain_trend">tendance 15\': %1$.2fU</string>
+    <string name="wizard_explain_percent">Pourcentage : %1$.2fU x %2$d%% ≈ %3$.2fU</string>
+    <string name="wizard_constraint_bolus_size">Violation de contrainte d\'insuline!\nImpossible de délivrer %1$.2fU</string>
+    <string name="wizard_explain_tt">Cible Temp: %1$s</string>
+    <string name="wizard_explain_tt_to">%1$s vers %2$s</string>
+    <string name="wizard_pump_not_available">Aucune pompe disponible!</string>
+    <string name="wear_unknown_action_string">Commande inconnue :</string>
+    <string name="overview_editquickwizard_percentage">Pourcentage</string>
+    <string name="app_default">Application par défaut</string>
 </resources>
