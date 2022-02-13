@@ -250,10 +250,10 @@ class AutotunePlugin @Inject constructor(
         val jsonSettings = JSONObject()
         val insulinInterface = activePlugin.activeInsulin
         val utcOffset = T.msecs(TimeZone.getDefault().getOffset(dateUtil.now()).toLong()).hours()
-        val startDateString = dateUtil.dateString(firstloopstart)
-        val endDateString = dateUtil.dateString(lastloopend - 24 * 60 * 60 * 1000L)
+        val startDateString = dateUtil.toISOString(firstloopstart).substring(0,10)
+        val endDateString = dateUtil.toISOString(lastloopend - 24 * 60 * 60 * 1000L).substring(0,10)
         val nsUrl = sp.getString(R.string.key_nsclientinternal_url, "")
-        val optCategorizeUam = if (sp.getBoolean(R.string.key_autotune_categorize_uam_as_basal, false)) " -c=true" else ""
+        val optCategorizeUam = if (sp.getBoolean(R.string.key_autotune_categorize_uam_as_basal, false)) "-c=true" else ""
         val optInsulinCurve = ""
         try {
             jsonSettings.put("datestring", dateUtil.toISOString(runDate))
