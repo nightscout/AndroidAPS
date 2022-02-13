@@ -246,7 +246,6 @@
     <string name="wear">Wear</string>
     <string name="resend_all_data">שלח מחדש את כל הנתונים</string>
     <string name="open_settings_on_wear">פתיחת הגדרות Wear</string>
-    <string name="basal_rate">מינונים בזאליים:</string>
     <string name="basalvaluebelowminimum">ערך הבסיס מתחת למינימום. פרופיל אינו מוגדר!</string>
     <string name="sms_actualbg">ערכי סוכר בדם:</string>
     <string name="sms_lastbg">ערכי סוכר אחרונים:</string>
@@ -757,8 +756,6 @@
     <string name="profilenamecontainsdot">שם הפרופיל מכיל נקודות.\nשם כזה אינו נתמך ע\"י Nightscout \n הפרופיל לא הועלה ל-Nightscout.</string>
     <string name="low_mark_comment">ערך נמוך יותר באזור הטווח (הצגה בלבד)</string>
     <string name="high_mark_comment">ערך גבוה יותר באזור הטווח (הצגה בלבד)</string>
-    <string name="age">גיל:</string>
-    <string name="weight_label">משקל:</string>
     <string name="id">מס\' זיהוי:</string>
     <string name="submit">עדכן</string>
     <string name="mostcommonprofile">הפרופיל הנפוץ ביותר:</string>
@@ -931,4 +928,5 @@
     <string name="a11y_insulin_label">אינסולין</string>
     <string name="a11y_blood_glucose">ערכי סוכר בדם</string>
     <string name="a11y_bg_outdated">לא עדכני</string>
+    <!-- WEAR OS-->
 </resources>
