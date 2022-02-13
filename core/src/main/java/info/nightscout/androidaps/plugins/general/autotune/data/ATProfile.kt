@@ -175,21 +175,23 @@ class ATProfile(profile: Profile?) {
 
     private fun getArray(pf: List<Block>?): JSONArray {
         val json = JSONArray()
+        var timeAsSeconds = 0L
         if (pf == null) return json
         try {
             for (i in pf.indices) {
-                val h: Int = pf[i].getTimeAsSeconds() / 60 / 60
+                val h: Long = timeAsSeconds / 60 / 60
                 var time: String
                 time = (if (h < 10) "0$h" else h).toString() + ":00"
                 json.put(
                     JSONObject().put("time", time).put(
                         "timeAsSeconds",
-                        pf[i].getTimeAsSeconds()
+                        timeAsSeconds
                     ).put(
                         "value",
                         Profile.fromMgdlToUnits(pf[i].amount, profile.units)
                     )
                 )
+                timeAsSeconds = timeAsSeconds + pf[i].duration / 1000
             }
         } catch (e: JSONException) {
         }
