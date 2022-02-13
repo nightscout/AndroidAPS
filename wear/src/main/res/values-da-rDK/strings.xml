@@ -54,19 +54,15 @@
     <string name="pref_ring_history">Ring Historik</string>
     <string name="pref_light_ring_history">Lys Ring Historik</string>
     <string name="pref_animations">Animationer</string>
-    <string name="pref_wizard_in_menu">Bolus Guide i menu</string>
     <string name="pref_prime_in_menu">Prime i menuen</string>
     <string name="pref_single_target">Enkelt Mål</string>
-    <string name="pref_wizard_percentage">Guide Procentdel</string>
     <string name="pref_complication_tap_action">Complication handling ved tryk</string>
     <string name="pref_unicode_in_complications">Unicode i komplikationer</string>
     <string name="pref_version">Version:</string>
     <string name="pref_moreWatchfaceSettings">flere Watchface indstillinger</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Se venligst på Watchface-konfigurationen.</string>
     <string name="menu_tempt">MidlertidigMål</string>
-    <string name="menu_wizard">Guide</string>
     <string name="menu_bolus">Bolus</string>
-    <string name="menu_ecarb">eCarb</string>
     <string name="menu_settings">Indstillinger</string>
     <string name="menu_status">Status</string>
     <string name="menu_resync">Gensynkronisering</string>
@@ -74,22 +70,12 @@
     <string name="menu_none">Ingen</string>
     <string name="menu_default">Standard</string>
     <string name="menu_menu">Menu</string>
-    <string name="action_duration">varighed</string>
-    <string name="action_target" comment="In temp target menu, single target value">mål</string>
-    <string name="action_low" comment="In temp target menu, lower value from range">lav</string>
-    <string name="action_high" comment="In temp target menu, higher value from range">høj</string>
-    <string name="action_carbs">kulhydrater</string>
-    <string name="action_percentage">procent</string>
-    <string name="action_start_min">start [min]</string>
-    <string name="action_duration_h">varighed [h]</string>
-    <string name="action_insulin">insulin</string>
     <string name="action_preset_1">Forvalg 1</string>
     <string name="action_preset_2">Forvalg 2</string>
     <string name="action_preset_3">Forvalg 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Fri mængde</string>
     <string name="action_confirm">BEKRÆFT</string>
     <string name="action_timeshift">tidsforskydning</string>
-    <string name="action_bolus">bolus</string>
     <string name="bolus_progress">Bolus Fremskridt</string>
     <string name="press_to_cancel">tryk for at annullere</string>
     <string name="cancel_bolus">ANNULLER BOLUS</string>
