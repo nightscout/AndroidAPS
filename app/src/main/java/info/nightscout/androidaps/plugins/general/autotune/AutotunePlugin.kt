@@ -250,8 +250,8 @@ class AutotunePlugin @Inject constructor(
         val jsonSettings = JSONObject()
         val insulinInterface = activePlugin.activeInsulin
         val utcOffset = T.msecs(TimeZone.getDefault().getOffset(dateUtil.now()).toLong()).hours()
-        val startDateString = dateUtil.toISOString(firstloopstart)
-        val endDateString = dateUtil.toISOString(lastloopend - 24 * 60 * 60 * 1000L)
+        val startDateString = dateUtil.dateString(firstloopstart)
+        val endDateString = dateUtil.dateString(lastloopend - 24 * 60 * 60 * 1000L)
         val nsUrl = sp.getString(R.string.key_nsclientinternal_url, "")
         val optCategorizeUam = if (sp.getBoolean(R.string.key_autotune_categorize_uam_as_basal, false)) " -c=true" else ""
         val optInsulinCurve = ""
@@ -274,13 +274,17 @@ class AutotunePlugin @Inject constructor(
             jsonSettings.put("categorize_uam_as_basal", sp.getBoolean(R.string.key_autotune_categorize_uam_as_basal, false))
             jsonSettings.put("tune_insulin_curve", false)
             //todo: philoul Check in oref0-autotune if Tune insulin works with exponential curve (aaps don't use bilinear curve...)
-            if (insulinInterface.id == Insulin.InsulinType.OREF_ULTRA_RAPID_ACTING || insulinInterface.id == Insulin.InsulinType.OREF_LYUMJEV)
-                jsonSettings.put("curve", "ultra-rapid")
-            else if (insulinInterface.id == Insulin.InsulinType.OREF_RAPID_ACTING)
+            if (insulinInterface.id === Insulin.InsulinType.OREF_ULTRA_RAPID_ACTING)
+                jsonSettings.put("curve","ultra-rapid")
+            else if (insulinInterface.id === Insulin.InsulinType.OREF_RAPID_ACTING)
                 jsonSettings.put("curve", "rapid-acting")
-            else if (insulinInterface.id == Insulin.InsulinType.OREF_FREE_PEAK) {
-                val peaktime = sp.getInt(rh.gs(R.string.key_insulin_oref_peak), 75)
-                jsonSettings.put("curve", if (peaktime > 30) "rapid-acting" else "ultra-rapid")
+            else if (insulinInterface.id === Insulin.InsulinType.OREF_LYUMJEV) {
+                jsonSettings.put("curve", "ultra-rapid")
+                jsonSettings.put("useCustomPeakTime", true)
+                jsonSettings.put("insulinPeakTime", 45)
+            } else if (insulinInterface.id === Insulin.InsulinType.OREF_FREE_PEAK) {
+                val peaktime: Int = sp.getInt(rh.gs(info.nightscout.androidaps.core.R.string.key_insulin_oref_peak), 75)
+                jsonSettings.put("curve", if (peaktime > 55) "rapid-acting" else "ultra-rapid")
                 jsonSettings.put("useCustomPeakTime", true)
                 jsonSettings.put("insulinPeakTime", peaktime)
             }

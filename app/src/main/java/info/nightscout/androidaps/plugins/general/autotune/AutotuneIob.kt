@@ -349,7 +349,7 @@ class AutotuneIob(
         try {
             for (bgreading in glucose) {
                 val bgjson = JSONObject()
-                bgjson.put("_id", bgreading.id)
+                bgjson.put("_id", bgreading.interfaceIDs.nightscoutId ?:bgreading.timestamp.toString())
                 bgjson.put("device", "AndroidAPS")
                 bgjson.put("date", bgreading.timestamp)
                 bgjson.put("dateString", dateUtil.toISOString(bgreading.timestamp))
