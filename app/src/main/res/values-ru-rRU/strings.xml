@@ -246,7 +246,6 @@
     <string name="wear">Смарт-часы Wear</string>
     <string name="resend_all_data">повторить отправку всех данных</string>
     <string name="open_settings_on_wear">Открыть настройки на Wear</string>
-    <string name="basal_rate">Шаг базала:</string>
     <string name="basalvaluebelowminimum">значение базала ниже минимума. профиль не создан!</string>
     <string name="sms_actualbg">гликемия:</string>
     <string name="sms_lastbg">прошлый СК:</string>
@@ -757,8 +756,6 @@
     <string name="profilenamecontainsdot">Имя профиля содержит точки.\nЭто не поддерживается NS.\nПрофиль не выгружен в NS.</string>
     <string name="low_mark_comment">Меньшее значение диапазона целевых значений (только для дисплея)</string>
     <string name="high_mark_comment">Большее значение диапазона целевых значений (только для дисплея)</string>
-    <string name="age">Возраст:</string>
-    <string name="weight_label">Вес:</string>
     <string name="id">Идентификатор:</string>
     <string name="submit">Отправить</string>
     <string name="mostcommonprofile">Наиболее часто применяемый профиль:</string>
@@ -930,4 +927,5 @@
     <string name="a11y_insulin_label">инсулин</string>
     <string name="a11y_blood_glucose">уровень глюкозы в крови (ГК)</string>
     <string name="a11y_bg_outdated">устаревшие данные</string>
+    <!-- WEAR OS-->
 </resources>
