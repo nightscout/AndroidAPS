@@ -409,7 +409,7 @@ class AutotuneIob(
 
         constructor(t: Carbs) {
             carbsTreatment = t
-            _id = t.interfaceIDs.nightscoutId
+            _id = t.interfaceIDs.nightscoutId ?:t.timestamp.toString()
             date = t.timestamp
             carbs = t.amount
             insulin = 0.0
@@ -423,7 +423,7 @@ class AutotuneIob(
 
         constructor(t: Bolus) {
             bolusTreatment = t
-            _id = t.interfaceIDs.nightscoutId
+            _id = t.interfaceIDs.nightscoutId ?:t.timestamp.toString()
             date = t.timestamp
             carbs = 0.0
             insulin = t.amount
@@ -437,7 +437,7 @@ class AutotuneIob(
 
         constructor(t: TherapyEvent) {
             careportalEvent = t
-            _id = t.interfaceIDs.nightscoutId
+            _id = t.interfaceIDs.nightscoutId ?:t.timestamp.toString()
             date = t.timestamp
             created_at = dateUtil.toISOString(t.timestamp)
             eventType = t.type
@@ -460,7 +460,7 @@ class AutotuneIob(
         }
 
         private fun _NsTreatment(t: TemporaryBasal) {
-            _id = t.interfaceIDs.nightscoutId
+            _id = t.interfaceIDs.nightscoutId ?:t.timestamp.toString()
             date = t.timestamp
             if (t.isAbsolute)
                 absoluteRate = Round.roundTo(t.rate, 0.001)
