@@ -938,4 +938,8 @@
     <string name="a11y_delete_current_profile">odstranit aktuální profil</string>
     <string name="a11y_add_new_to_list">přidat nový do seznamu</string>
     <!-- WEAR OS-->
+    <string name="wizard_pump_not_available">Pumpa není k dispozici!</string>
+    <string name="wear_unknown_action_string">Neznámý příkaz k akci:</string>
+    <string name="overview_editquickwizard_percentage">Procentní podíl</string>
+    <string name="app_default">Výchozí nastavení aplikace</string>
 </resources>
