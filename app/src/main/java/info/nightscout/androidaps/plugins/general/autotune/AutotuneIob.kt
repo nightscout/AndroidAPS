@@ -233,8 +233,9 @@ class AutotuneIob(
         }
         Collections.sort(temp2) { o1: TemporaryBasal, o2: TemporaryBasal -> (o2.timestamp - o1.timestamp).toInt() }
         // Initialize tempBasals with neutral TBR added
+        tempBasals2 = ArrayList<TemporaryBasal>()
         tempBasals2.addAll(temp2)
-        log.debug("D/AutotunePlugin: tempBasal size: " + tempBasals.size + " tempBasal2 size: " + tempBasals2.size)
+        log.debug("D/AutotunePlugin: tempBasal size: " + tempBasals2.size)
     }
 
     //nsTreatment is used only for export data

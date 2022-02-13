@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.AutotuneFragmentBinding
@@ -53,6 +54,7 @@ class AutotuneFragment : DaggerFragment() {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var injector: HasAndroidInjector
 
     private var disposable: CompositeDisposable = CompositeDisposable()
     private var lastRun: Long = 0
@@ -215,7 +217,7 @@ class AutotuneFragment : DaggerFragment() {
     private fun addWarnings(): String {
         var warning = resourceHelper.gs(R.string.autotune_warning_before_run)
         var nl = "\n"
-        val profile = ATProfile(profileFunction.getProfile(System.currentTimeMillis()))
+        val profile = ATProfile(profileFunction.getProfile(System.currentTimeMillis()), injector)
         if (!profile.isValid) return resourceHelper.gs(R.string.autotune_profile_invalid)
         if (profile.icSize > 1) {
             //warning = nl + "Autotune works with only one IC value, your profile has " + profile.getIcSize() + " values. Average value is " + profile.ic + "g/U";

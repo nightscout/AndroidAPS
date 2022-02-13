@@ -126,9 +126,9 @@ class AutotunePlugin @Inject constructor(
         if (endTime > now) endTime -= 24 * 60 * 60 * 1000L
         val starttime = endTime - daysBack * 24 * 60 * 60 * 1000L
         autotuneFS!!.exportSettings(settings(lastRun, daysBack, starttime, endTime))
-        tunedProfile = ATProfile(profile)
+        tunedProfile = ATProfile(profile, injector)
         tunedProfile!!.profilename = rh.gs(R.string.autotune_tunedprofile_name)
-        val pumpprofile = ATProfile(profile)
+        val pumpprofile = ATProfile(profile, injector)
         pumpprofile.profilename = profileFunction.getProfileName()
         autotuneFS!!.exportPumpProfile(pumpprofile)
         if (daysBack < 1) {
