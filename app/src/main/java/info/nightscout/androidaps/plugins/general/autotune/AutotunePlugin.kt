@@ -30,8 +30,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * Initialized by Rumen Georgiev on 1/29/2018.
- * Update by philoul on 2020 (complete refactor of AutotunePlugin)
+ * adaptation from oref0 autotune started by philoul on 2020 (complete refactoring of AutotunePlugin compare to Rumen Georgiev work done in 2018)
  *
  * TODO: detail analysis of iob calculation to understand (and correct if necessary) differences between oaps calculation and aaps calculation
  * => Today AutotuneCore is full consistent between oaps and aaps module (same results up to 3 digits)
@@ -273,7 +272,7 @@ class AutotunePlugin @Inject constructor(
             jsonSettings.put("aaps_command", "aaps-autotune -d=~/aaps -s=$startDateString -e=$endDateString $optCategorizeUam $optInsulinCurve")
             jsonSettings.put("categorize_uam_as_basal", sp.getBoolean(R.string.key_autotune_categorize_uam_as_basal, false))
             jsonSettings.put("tune_insulin_curve", false)
-            //todo: philoul Check in oref0-autotune if Tune insulin works with exponential curve (aaps don't use bilinear curve...)
+
             if (insulinInterface.id === Insulin.InsulinType.OREF_ULTRA_RAPID_ACTING)
                 jsonSettings.put("curve","ultra-rapid")
             else if (insulinInterface.id === Insulin.InsulinType.OREF_RAPID_ACTING)
