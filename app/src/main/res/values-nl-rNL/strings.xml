@@ -246,7 +246,6 @@
     <string name="wear">Wear</string>
     <string name="resend_all_data">Update Wear gegevens</string>
     <string name="open_settings_on_wear">Open instellingen op Wear</string>
-    <string name="basal_rate">Basaal:</string>
     <string name="basalvaluebelowminimum">Basaalwaarde onder minimum. Profiel niet ingesteld!</string>
     <string name="sms_actualbg">BG:</string>
     <string name="sms_lastbg">Laatste BG:</string>
@@ -757,8 +756,6 @@
     <string name="profilenamecontainsdot">Profielnaam bevat punten.\nDit wordt niet ondersteund door NS.\nProfiel is niet geüpload naar NS.</string>
     <string name="low_mark_comment">Laagste waarde in bereik (alleen weergave)</string>
     <string name="high_mark_comment">Hoogste waarde in bereik (alleen weergave)</string>
-    <string name="age">Leeftijd:</string>
-    <string name="weight_label">Gewicht:</string>
     <string name="id">ID:</string>
     <string name="submit">Verzenden</string>
     <string name="mostcommonprofile">Meest voorkomende profiel:</string>
@@ -917,4 +914,5 @@
     <string name="a11y_arrow_unknown">onbekend</string>
     <string name="a11y_graph">grafiek</string>
     <string name="a11y_insulin_label">insuline</string>
+    <!-- WEAR OS-->
 </resources>
