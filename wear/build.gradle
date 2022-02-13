@@ -107,7 +107,6 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.wear:wear:1.2.0'
 
-
     compileOnly "com.google.android.wearable:wearable:${wearableVersion}"
     implementation "com.google.android.support:wearable:${wearableVersion}"
     implementation "com.google.android.gms:play-services-wearable:${playServicesWearable}"
@@ -115,12 +114,10 @@ dependencies {
     implementation(name: 'wearpreferenceactivity-0.5.0', ext: 'aar')
     implementation('com.github.lecho:hellocharts-library:1.5.8@aar')
 
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0-RC'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.6.0-Rc'
-    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.6.0'
+    implementation "androidx.core:core-ktx:$core_version"
     implementation "androidx.wear.tiles:tiles:1.0.0"
-
-    implementation "androidx.core:core-ktx:$coreVersion"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
     testImplementation "junit:junit:$junit_version"
