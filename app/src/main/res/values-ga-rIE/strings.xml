@@ -78,7 +78,6 @@
     <string name="units_colon">Aonaid:</string>
     <string name="units">Aonaid</string>
     <string name="dia">DIA</string>
-    <string name="basal_rate">Bunaidh ráta:</string>
     <string name="sms_actualbg">BG:</string>
     <string name="sms_lastbg">GF deiridh:</string>
     <string name="mdi">MDI</string>
@@ -186,7 +185,7 @@
     <string name="dia_short">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
-    <string name="age">Aois:</string>
     <string name="randombg_short">BG</string>
     <!-- SMS Communicator & OTP Authenticator -->
+    <!-- WEAR OS-->
 </resources>
