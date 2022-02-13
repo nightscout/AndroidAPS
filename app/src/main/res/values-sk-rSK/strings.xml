@@ -246,7 +246,6 @@
     <string name="wear">Wear</string>
     <string name="resend_all_data">Všetky dáta poslať znova</string>
     <string name="open_settings_on_wear">Otvoriť nastavenia na hodinkách</string>
-    <string name="basal_rate">Bazál:</string>
     <string name="basalvaluebelowminimum">Hodnota bazálu pod povoleným minimom. Profil nenastavený!</string>
     <string name="sms_actualbg">Glykémia:</string>
     <string name="sms_lastbg">Posledná glykémia:</string>
@@ -757,8 +756,6 @@
     <string name="profilenamecontainsdot">Názov profilu obsahuje bodky.\nToto nie je podporované v NS.\nProfil nebude prenesený do NS.</string>
     <string name="low_mark_comment">Spodná hodnota v oblasti cieľového rozsahu (iba zobrazovanie)</string>
     <string name="high_mark_comment">Horná hodnota v oblasti cieľového rozsahu (iba zobrazovanie)</string>
-    <string name="age">Vek:</string>
-    <string name="weight_label">Váha:</string>
     <string name="id">ID:</string>
     <string name="submit">Odoslať</string>
     <string name="mostcommonprofile">Najčastejšie používaný profil:</string>
@@ -931,4 +928,5 @@
     <string name="a11y_insulin_label">inzulín</string>
     <string name="a11y_blood_glucose">glykémia</string>
     <string name="a11y_bg_outdated">zastaralé</string>
+    <!-- WEAR OS-->
 </resources>
