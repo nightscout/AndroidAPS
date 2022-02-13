@@ -48,6 +48,11 @@
     <string name="isf_label">Citlivosť</string>
     <string name="basal_label">Bazál</string>
     <string name="target_label">Cieľ</string>
+    <string name="dia_long_label">Doba pôsobenia inzulínu</string>
+    <string name="ic_long_label">Inzulíno-sacharidový pomer</string>
+    <string name="isf_long_label">Citlivosť na inzulín</string>
+    <string name="basal_long_label">Bazál</string>
+    <string name="target_long_label">Cieľová glykémia</string>
     <string name="initializing">Inicializácia ...</string>
     <string name="serialnumber">Sériové číslo</string>
     <string name="battery_label">Batéria</string>
