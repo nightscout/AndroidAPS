@@ -162,7 +162,9 @@ class AutotuneCore(private val injector: HasAndroidInjector) {
 
         //autotune-core (lib/autotune/index.js) #166-#169
         crTotalInsulin = Round.roundTo(crTotalInsulin, 0.001)
-        val totalCR = Round.roundTo(crTotalCarbs / crTotalInsulin, 0.001)
+        var totalCR = 0.0
+        if (crTotalInsulin != 0.0)
+            totalCR = Round.roundTo(crTotalCarbs / crTotalInsulin, 0.001)
         log("crTotalCarbs: $crTotalCarbs crTotalInsulin: $crTotalInsulin totalCR: $totalCR")
 
         //autotune-core (lib/autotune/index.js) #170-#209 (already hourly in aaps)
