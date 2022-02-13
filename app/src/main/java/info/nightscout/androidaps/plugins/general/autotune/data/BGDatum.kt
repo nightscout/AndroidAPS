@@ -19,7 +19,7 @@ class BGDatum {
     var value = 0.0
     var direction: TrendArrow? = null
     var deviation = 0.0
-    var raw = null
+    // var raw: Double? = 0.0
     var bgi = 0.0
     var mealAbsorption = ""
     var mealCarbs = 0
@@ -51,7 +51,7 @@ class BGDatum {
         this.dateUtil = dateUtil
         date = glucoseValue.timestamp
         value = glucoseValue.value
-        raw = glucoseValue.raw as Nothing?
+        // raw = glucoseValue.raw
         direction = glucoseValue.trendArrow
         id = glucoseValue.id
         this.bgReading = glucoseValue

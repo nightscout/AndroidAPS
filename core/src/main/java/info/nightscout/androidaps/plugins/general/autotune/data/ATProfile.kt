@@ -110,7 +110,7 @@ class ATProfile(profile: Profile?, val injector: HasAndroidInjector) {
             json.put("carb_ratio", profile.getIc())
             json.put("autosens_max", SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_autosens_max, "1.2")))
             json.put("autosens_min", SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_autosens_min, "0.7")))
-            json.put("units", profileFunction.getUnits())
+            json.put("units", profileFunction.getUnits().asText)
             json.put("timezone", TimeZone.getDefault().id)
             if (insulinInterface.id === Insulin.InsulinType.OREF_ULTRA_RAPID_ACTING) json.put(
                 "curve",

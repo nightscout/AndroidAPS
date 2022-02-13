@@ -71,7 +71,7 @@ class AutotuneIob(
     //var glucose: MutableList<GlucoseValue> = ArrayList()
     private lateinit var tempBasals: MutableList<TemporaryBasal>
     private lateinit var tempBasals2: MutableList<TemporaryBasal>
-    private lateinit var extendedBoluses: MutableList<ExtendedBolus>
+    private lateinit var extendedBoluses: List<ExtendedBolus>
     //private val tempTargets: Intervals<TempTarget> = OverlappingIntervals()
     private lateinit var profiles: MutableList<ProfileSwitch>
     var startBG: Long = 0
@@ -240,10 +240,10 @@ class AutotuneIob(
 
     //nsTreatment is used only for export data
     private fun initializeExtendedBolusData(from: Long, to: Long) {
-        val temp = repository.getExtendedBolusDataFromTimeToTime(from - range(), to, false).blockingGet()
-        extendedBoluses.addAll(temp)
-        for (i in temp.indices) {
-            val eb = temp[i]
+        extendedBoluses = repository.getExtendedBolusDataFromTimeToTime(from - range(), to, false).blockingGet()
+        //extendedBoluses.addAll(temp)
+        for (i in extendedBoluses.indices) {
+            val eb = extendedBoluses[i]
             nsTreatments.add(NsTreatment(eb))
         }
     }

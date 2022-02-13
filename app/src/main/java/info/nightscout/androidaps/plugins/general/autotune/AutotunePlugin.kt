@@ -259,7 +259,7 @@ class AutotunePlugin @Inject constructor(
             jsonSettings.put("datestring", dateUtil.toISOString(runDate))
             jsonSettings.put("dateutc", dateUtil.toISOAsUTC(runDate))
             jsonSettings.put("utcOffset", utcOffset)
-            jsonSettings.put("units", profileFunction.getUnits())
+            jsonSettings.put("units", profileFunction.getUnits().asText)
             jsonSettings.put("timezone", TimeZone.getDefault().id)
             jsonSettings.put("url_nightscout", sp.getString(R.string.key_nsclientinternal_url, ""))
             jsonSettings.put("nbdays", nbDays)
