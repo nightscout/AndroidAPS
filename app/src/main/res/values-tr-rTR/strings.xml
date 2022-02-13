@@ -246,7 +246,6 @@
     <string name="wear">Wear</string>
     <string name="resend_all_data">Tüm verileri yeniden gönderin</string>
     <string name="open_settings_on_wear">Ayarları Wear\'da açın</string>
-    <string name="basal_rate">Bazal oranı:</string>
     <string name="basalvaluebelowminimum">Bazal değer minimumun altında. Profil ayarlanmadı!</string>
     <string name="sms_actualbg">KŞ:</string>
     <string name="sms_lastbg">Son KŞ:</string>
@@ -758,8 +757,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="profilenamecontainsdot">Profil adı noktalar içeriyor.\nBu NS tarafından desteklenmiyor.\n Profil NS\'a yüklenmez.</string>
     <string name="low_mark_comment">Aralıktan daha düşük değer (sadece görüntüle)</string>
     <string name="high_mark_comment">Aralıktan daha yüksek değer (Sadece görüntüle)</string>
-    <string name="age">Yaş:</string>
-    <string name="weight_label">Kilo:</string>
     <string name="id">Kimlik:</string>
     <string name="submit">Sunum</string>
     <string name="mostcommonprofile">En yaygın profil:</string>
@@ -932,4 +929,5 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="a11y_insulin_label">insülin</string>
     <string name="a11y_blood_glucose">kan şekeri</string>
     <string name="a11y_bg_outdated">güncel değil</string>
+    <!-- WEAR OS-->
 </resources>
