@@ -466,7 +466,7 @@ class AutotuneIob(
                 absoluteRate = Round.roundTo(t.rate, 0.001)
             else {
                 val profile = profileFunction.getProfile(date)
-                absoluteRate = profile!!.getBasal(temporaryBasal!!.timestamp) * temporaryBasal!!.rate / 100
+                absoluteRate = Round.roundTo(profile!!.getBasal(temporaryBasal!!.timestamp) * temporaryBasal!!.rate / 100, 0.001)
             }
             isValid = t.isValid
             eventType = TherapyEvent.Type.TEMPORARY_BASAL
@@ -487,7 +487,7 @@ class AutotuneIob(
                 cPjson.put("carbs", if (carbs > 0) carbs else JSONObject.NULL)
                 if (eventType === TherapyEvent.Type.TEMPORARY_BASAL) {
                     cPjson.put("duration", duration)
-                    cPjson.put("absolute", absoluteRate)
+                    //cPjson.put("absolute", absoluteRate)
                     cPjson.put("rate", absoluteRate)
                     cPjson.put("isFakeExtended", isFakeExtended)
                     cPjson.put("enteredBy", enteredBy)
