@@ -57,7 +57,7 @@ class AutotuneIob(
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var autotunePlugin: AutotunePlugin
     @Inject lateinit var sp: SP
-    @Inject lateinit var treatmentsActivity: TreatmentsActivity
+    //@Inject lateinit var treatmentsActivity: TreatmentsActivity
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var activePlugin: ActivePlugin

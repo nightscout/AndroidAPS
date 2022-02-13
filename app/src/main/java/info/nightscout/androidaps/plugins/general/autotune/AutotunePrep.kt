@@ -31,7 +31,7 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
     @Inject lateinit var autotunePlugin: AutotunePlugin
     @Inject lateinit var sp: SP
     @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
-    @Inject lateinit var treatmentsActivity: TreatmentsActivity
+    //@Inject lateinit var treatmentsActivity: TreatmentsActivity
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var repository: AppRepository
 

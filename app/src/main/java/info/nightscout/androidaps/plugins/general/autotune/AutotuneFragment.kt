@@ -45,7 +45,7 @@ class AutotuneFragment : DaggerFragment() {
     @Inject lateinit var autotunePlugin: Autotune
     @Inject lateinit var sp: SP
     @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
-    @Inject lateinit var treatmentsActivity: TreatmentsActivity
+    //@Inject lateinit var treatmentsActivity: TreatmentsActivity
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var activePlugin: ActivePlugin

@@ -59,14 +59,7 @@ class AutotunePlugin @Inject constructor(
     private val dateUtil: DateUtil,
     private val activePlugin: ActivePlugin,
     private val uel: UserEntryLogger,
-    aapsLogger: AAPSLogger,
-    override var result: String = "",
-    override var calculationRunning: Boolean = false,
-    override var lastRun: Long = 0,
-    override var lastNbDays: String = "",
-    override var copyButtonVisibility: Int = 0,
-    override var profileSwitchButtonVisibility: Int = 0,
-    override var lastRunSuccess: Boolean = false
+    aapsLogger: AAPSLogger
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(AutotuneFragment::class.qualifiedName)
@@ -77,6 +70,13 @@ class AutotunePlugin @Inject constructor(
     .description(R.string.autotune_description),
     aapsLogger, resourceHelper, injector
 ), Autotune {
+    override var result: String = ""
+    override var calculationRunning: Boolean = false
+    override var lastRun: Long = 0
+    override var lastNbDays: String = ""
+    override var copyButtonVisibility: Int = 0
+    override var profileSwitchButtonVisibility: Int = 0
+    override var lastRunSuccess: Boolean = false
     private var logString = ""
     private var preppedGlucose: PreppedGlucose? = null
     private var autotunePrep: AutotunePrep? = null
