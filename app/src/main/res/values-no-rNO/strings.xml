@@ -246,7 +246,6 @@
     <string name="wear">Klokke</string>
     <string name="resend_all_data">Send alle data på nytt</string>
     <string name="open_settings_on_wear">Åpne Innstillinger på klokken</string>
-    <string name="basal_rate">Basal rate:</string>
     <string name="basalvaluebelowminimum">Basal verdi under minimum. Profilen settes ikke!</string>
     <string name="sms_actualbg">BS:</string>
     <string name="sms_lastbg">Siste BS:</string>
@@ -757,8 +756,6 @@
     <string name="profilenamecontainsdot">Profilnavnet inneholder prikker.\nDette støttes ikke av NS.\nProfilen er ikke lastet opp til NS.</string>
     <string name="low_mark_comment">Nedre verdi for målområdet (kun visning)</string>
     <string name="high_mark_comment">Øvre verdi for målområdet (kun visning)</string>
-    <string name="age">Alder:</string>
-    <string name="weight_label">Vekt:</string>
     <string name="id">ID:</string>
     <string name="submit">Lagre</string>
     <string name="mostcommonprofile">Mest vanlig profil:</string>
@@ -931,4 +928,5 @@
     <string name="a11y_insulin_label">insulin</string>
     <string name="a11y_blood_glucose">blodsukker</string>
     <string name="a11y_bg_outdated">utdatert</string>
+    <!-- WEAR OS-->
 </resources>
