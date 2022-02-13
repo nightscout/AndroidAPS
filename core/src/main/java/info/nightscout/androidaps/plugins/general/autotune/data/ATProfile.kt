@@ -89,6 +89,19 @@ class ATProfile(profile: Profile?, val injector: HasAndroidInjector) {
             json.put("name", profilename)
             json.put("min_5m_carbimpact", sp.getDouble("openapsama_min_5m_carbimpact", 3.0))
             json.put("dia", profile.dia)
+            if (insulinInterface.id === Insulin.InsulinType.OREF_ULTRA_RAPID_ACTING) json.put(
+                "curve",
+                "ultra-rapid"
+            ) else if (insulinInterface.id === Insulin.InsulinType.OREF_RAPID_ACTING) json.put("curve", "rapid-acting") else if (insulinInterface.id === Insulin.InsulinType.OREF_LYUMJEV) {
+                json.put("curve", "ultra-rapid")
+                json.put("useCustomPeakTime", true)
+                json.put("insulinPeakTime", 45)
+            } else if (insulinInterface.id === Insulin.InsulinType.OREF_FREE_PEAK) {
+                val peaktime: Int = sp.getInt(rh.gs(R.string.key_insulin_oref_peak), 75)
+                json.put("curve", if (peaktime > 30) "rapid-acting" else "ultra-rapid")
+                json.put("useCustomPeakTime", true)
+                json.put("insulinPeakTime", peaktime)
+            }
             val basals = JSONArray()
             for (h in 0..23) {
                 val secondfrommidnight = h * 60 * 60
@@ -112,19 +125,6 @@ class ATProfile(profile: Profile?, val injector: HasAndroidInjector) {
             json.put("autosens_min", SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_autosens_min, "0.7")))
             json.put("units", profileFunction.getUnits().asText)
             json.put("timezone", TimeZone.getDefault().id)
-            if (insulinInterface.id === Insulin.InsulinType.OREF_ULTRA_RAPID_ACTING) json.put(
-                "curve",
-                "ultra-rapid"
-            ) else if (insulinInterface.id === Insulin.InsulinType.OREF_RAPID_ACTING) json.put("curve", "rapid-acting") else if (insulinInterface.id === Insulin.InsulinType.OREF_LYUMJEV) {
-                json.put("curve", "ultra-rapid")
-                json.put("useCustomPeakTime", true)
-                json.put("insulinPeakTime", 45)
-            } else if (insulinInterface.id === Insulin.InsulinType.OREF_FREE_PEAK) {
-                val peaktime: Int = sp.getInt(rh.gs(R.string.key_insulin_oref_peak), 75)
-                json.put("curve", if (peaktime > 30) "rapid-acting" else "ultra-rapid")
-                json.put("useCustomPeakTime", true)
-                json.put("insulinPeakTime", peaktime)
-            }
             jsonString = json.toString(2).replace("\\/", "/")
         } catch (e: JSONException) {
         }
