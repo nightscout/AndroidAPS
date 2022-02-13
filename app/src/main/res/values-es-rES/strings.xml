@@ -246,7 +246,6 @@
     <string name="wear">Reloj</string>
     <string name="resend_all_data">Reenviar todos los datos</string>
     <string name="open_settings_on_wear">Abrir ajustes en el reloj</string>
-    <string name="basal_rate">Ratio Basal:</string>
     <string name="basalvaluebelowminimum">Valor basal por debajo del mínimo. Perfil no establecido.</string>
     <string name="sms_actualbg">Glucosa:</string>
     <string name="sms_lastbg">Última Glucosa:</string>
@@ -757,8 +756,6 @@
     <string name="profilenamecontainsdot">El nombre de perfil contiene puntos.\nEsto no está soportado por NS.\nEl perfil no se carga en NS.</string>
     <string name="low_mark_comment">Valor de glucosa baja (sólo visualización)</string>
     <string name="high_mark_comment">Valor de glucosa alta (sólo visualización)</string>
-    <string name="age">Edad:</string>
-    <string name="weight_label">Peso:</string>
     <string name="id">ID:</string>
     <string name="submit">Enviar</string>
     <string name="mostcommonprofile">Perfil más común:</string>
@@ -931,4 +928,5 @@
     <string name="a11y_insulin_label">insulina</string>
     <string name="a11y_blood_glucose">glucosa en sangre</string>
     <string name="a11y_bg_outdated">desactualizado</string>
+    <!-- WEAR OS-->
 </resources>
