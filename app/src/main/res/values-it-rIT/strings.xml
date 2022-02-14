@@ -246,7 +246,6 @@
     <string name="wear">Smartwatch</string>
     <string name="resend_all_data">Invia di nuovo tutti i dati</string>
     <string name="open_settings_on_wear">Apri impostazioni sullo smartwatch</string>
-    <string name="basal_rate">Velocità basale:</string>
     <string name="basalvaluebelowminimum">Valore basale inferiore al minimo. Profilo non impostato!</string>
     <string name="sms_actualbg">BG:</string>
     <string name="sms_lastbg">Ultimo BG:</string>
@@ -757,8 +756,6 @@
     <string name="profilenamecontainsdot">Il nome profilo contiene dei punti.\nQuesto non è supportato da NS.\nIl profilo non viene caricato in NS.</string>
     <string name="low_mark_comment">Valore più basso per l\'intervallo di visualizzazione dell\'area \"in range\"</string>
     <string name="high_mark_comment">Valore più alto per l\'intervallo di visualizzazione dell\'area \"in range\"</string>
-    <string name="age">Età:</string>
-    <string name="weight_label">Peso:</string>
     <string name="id">ID:</string>
     <string name="submit">Invia</string>
     <string name="mostcommonprofile">Profilo più comune:</string>
@@ -905,4 +902,5 @@
     <string name="identification">Identificazione (email, nick Discord o FB, etc)</string>
     <string name="identification_not_set">Identificazione non impostata in modalità dev</string>
     <string name="not_available_full">Non disponibile</string>
+    <!-- WEAR OS-->
 </resources>
