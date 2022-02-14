@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.text.DecimalFormat;
 
@@ -32,6 +31,7 @@ public class TempTargetActivity extends ViewSelectorActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setAdapter(new MyGridViewPagerAdapter());
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
@@ -61,8 +61,6 @@ public class TempTargetActivity extends ViewSelectorActivity {
 
             if (col == 0) {
                 final View view = getInflatedPlusMinusView(container);
-                final TextView textView = view.findViewById(R.id.label);
-                textView.setText("duration");
                 if (time == null) {
                     time = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, 60d, 0d, 24 * 60d, 5d, new DecimalFormat("0"), false);
                 } else {
@@ -118,22 +116,19 @@ public class TempTargetActivity extends ViewSelectorActivity {
 
                 final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_send_item, container, false);
                 final ImageView confirmbutton = view.findViewById(R.id.confirmbutton);
-                confirmbutton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                confirmbutton.setOnClickListener((View v) -> {
+                    //check if it can happen that the fagment is never created that hold data?
+                    // (you have to swipe past them anyways - but still)
 
-                        //check if it can happen that the fagment is never created that hold data?
-                        // (you have to swipe past them anyways - but still)
+                    String actionstring = "temptarget"
+                            + " " + isMGDL
+                            + " " + SafeParse.stringToInt(time.editText.getText().toString())
+                            + " " + SafeParse.stringToDouble(lowRange.editText.getText().toString())
+                            + " " + (isSingleTarget ? SafeParse.stringToDouble(lowRange.editText.getText().toString()) : SafeParse.stringToDouble(highRange.editText.getText().toString()));
 
-                        String actionstring = "temptarget "
-                                + " " + isMGDL
-                                + " " + SafeParse.stringToInt(time.editText.getText().toString())
-                                + " " + SafeParse.stringToDouble(lowRange.editText.getText().toString())
-                                + " " + (isSingleTarget ? SafeParse.stringToDouble(lowRange.editText.getText().toString()) : SafeParse.stringToDouble(highRange.editText.getText().toString()));
-
-                        ListenerService.initiateAction(TempTargetActivity.this, actionstring);
-                        finishAffinity();
-                    }
+                    ListenerService.initiateAction(TempTargetActivity.this, actionstring);
+                    confirmAction(TempTargetActivity.this, R.string.action_tempt_confirmation);
+                    finishAffinity();
                 });
                 container.addView(view);
                 return view;

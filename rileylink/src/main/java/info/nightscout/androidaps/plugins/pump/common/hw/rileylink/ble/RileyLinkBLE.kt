@@ -3,7 +3,11 @@ package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble
 import android.annotation.SuppressLint
 import android.bluetooth.*
 import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.SystemClock
+import androidx.core.content.ContextCompat
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.GattAttributes
@@ -32,14 +36,15 @@ import javax.inject.Singleton
  * Added: State handling, configuration of RF for different configuration ranges, connection handling
  */
 @Singleton
-class RileyLinkBLE @Inject constructor(private val context: Context) {
-
-    @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var rileyLinkServiceData: RileyLinkServiceData
-    @Inject lateinit var rileyLinkUtil: RileyLinkUtil
-    @Inject lateinit var sp: SP
-    @Inject lateinit var orangeLink: OrangeLinkImpl
-
+class RileyLinkBLE @Inject constructor(
+    private val context: Context,
+    private val aapsLogger: AAPSLogger,
+    private val rileyLinkServiceData: RileyLinkServiceData,
+    private val rileyLinkUtil: RileyLinkUtil,
+    private val sp: SP,
+    private val orangeLink: OrangeLinkImpl,
+    private val config: Config
+) {
     private val gattDebugEnabled = true
     private var manualDisconnect = false
 
@@ -154,7 +159,12 @@ class RileyLinkBLE @Inject constructor(private val context: Context) {
             aapsLogger.error(LTag.PUMPBTCOMM, "RileyLink device is null, can't do connectGatt.")
             return
         }
-        bluetoothConnectionGatt = rileyLinkDevice?.connectGatt(context, true, bluetoothGattCallback)
+        if (config.PUMPDRIVERS && Build.VERSION.SDK_INT >= /*Build.VERSION_CODES.S*/31 &&
+            ContextCompat.checkSelfPermission(context, "android.permission.BLUETOOTH_CONNECT") == PackageManager.PERMISSION_GRANTED
+        ) {
+            aapsLogger.debug(LTag.PUMPBTCOMM, "no permission")
+            return
+        } else bluetoothConnectionGatt = rileyLinkDevice?.connectGatt(context, true, bluetoothGattCallback)
         // , BluetoothDevice.TRANSPORT_LE
         if (bluetoothConnectionGatt == null)
             aapsLogger.error(LTag.PUMPBTCOMM, "Failed to connect to Bluetooth Low Energy device at " + bluetoothAdapter?.address)

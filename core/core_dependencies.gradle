@@ -3,16 +3,16 @@ dependencies {
 
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     api "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
-    api "androidx.core:core-ktx:$coreVersion"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
+    api "androidx.core:core-ktx:$core_version"
     api 'androidx.legacy:legacy-support-v13:1.0.0'
     api 'androidx.legacy:legacy-support-v4:1.0.0'
     api "androidx.appcompat:appcompat:$appcompat_version"
     api "androidx.preference:preference-ktx:$preferencektx_version"
     api 'androidx.biometric:biometric:1.1.0'
     api "androidx.browser:browser:1.3.0"
-    api "androidx.activity:activity-ktx:${activityVersion}"
+    api "androidx.activity:activity-ktx:${activity_version}"
     api "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
     api 'androidx.cardview:cardview:1.0.0'
     api 'androidx.recyclerview:recyclerview:1.2.1'
@@ -47,8 +47,8 @@ dependencies {
     api "com.jjoe64:graphview:4.0.1"
 
     //db
-    api "com.j256.ormlite:ormlite-core:${ormLiteVersion}"
-    api "com.j256.ormlite:ormlite-android:${ormLiteVersion}"
+    api "com.j256.ormlite:ormlite-core:${ormLite_version}"
+    api "com.j256.ormlite:ormlite-android:${ormLite_version}"
 
     // pumpCommon
     api "com.google.code.gson:gson:2.8.7"
@@ -65,11 +65,11 @@ dependencies {
     api 'com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava'
 
     // new for tidepool
-    api "com.squareup.okhttp3:okhttp:$okhttp3Version"
-    api "com.squareup.okhttp3:logging-interceptor:$okhttp3Version"
-    api "com.squareup.retrofit2:retrofit:$retrofit2Version"
-    api "com.squareup.retrofit2:adapter-rxjava2:$retrofit2Version"
-    api "com.squareup.retrofit2:converter-gson:$retrofit2Version"
+    api "com.squareup.okhttp3:okhttp:$okhttp3_version"
+    api "com.squareup.okhttp3:logging-interceptor:$okhttp3_version"
+    api "com.squareup.retrofit2:retrofit:$retrofit2_version"
+    api "com.squareup.retrofit2:adapter-rxjava2:$retrofit2_version"
+    api "com.squareup.retrofit2:converter-gson:$retrofit2_version"
 
     api "com.joanzapata.iconify:android-iconify-fontawesome:2.2.2"
     api 'net.danlew:android.joda:2.10.6'

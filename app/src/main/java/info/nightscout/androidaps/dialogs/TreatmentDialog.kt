@@ -106,6 +106,8 @@ class TreatmentDialog : DialogFragmentWithDate() {
         binding.insulin.setParams(savedInstanceState?.getDouble("insulin")
             ?: 0.0, 0.0, maxInsulin, pumpDescription.bolusStep, DecimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump), false, binding.okcancel.ok, textWatcher)
         binding.recordOnlyLayout.visibility = View.GONE
+        binding.insulin.editText?.id?.let { binding.insulinLabel.labelFor = it }
+        binding.carbs.editText?.id?.let { binding.carbsLabel.labelFor = it }
     }
 
     override fun onDestroyView() {
@@ -179,9 +181,17 @@ class TreatmentDialog : DialogFragmentWithDate() {
                                     }
                                 }
                             })
-                        } else
+                        } else {
                             uel.log(action, Sources.TreatmentDialog,
-                                ValueWithUnit.Gram(carbsAfterConstraints).takeIf { carbs != 0 })
+                                    ValueWithUnit.Gram(carbsAfterConstraints).takeIf { carbsAfterConstraints != 0 })
+                            if (detailedBolusInfo.carbs > 0) {
+                                disposable += repository.runTransactionForResult(detailedBolusInfo.insertCarbsTransaction())
+                                    .subscribe(
+                                        { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted carbs $it") } },
+                                        { aapsLogger.error(LTag.DATABASE, "Error while saving carbs", it) }
+                                    )
+                            }
+                        }
                     }
                 })
             }

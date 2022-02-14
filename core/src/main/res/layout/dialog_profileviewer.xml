@@ -26,6 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:importantForAccessibility="no"
                 app:srcCompat="@drawable/ic_home_profile" />
 
             <TextView
@@ -122,7 +123,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:focusable="true">
 
             <TextView
                 android:layout_width="match_parent"
@@ -167,7 +169,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:focusable="true">
 
             <TextView
                 android:layout_width="match_parent"
@@ -212,7 +215,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:focusable="true">
 
             <TextView
                 android:layout_width="match_parent"
@@ -266,6 +270,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:focusable="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
@@ -314,7 +319,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:focusable="true">
 
             <TextView
                 android:layout_width="match_parent"
@@ -401,7 +407,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:focusable="true">
 
             <TextView
                 android:layout_width="match_parent"
@@ -433,6 +440,12 @@
                 android:textSize="14sp" />
 
         </LinearLayout>
+
+        <info.nightscout.androidaps.utils.ui.TargetBgProfileGraph
+            android:id="@+id/target_graph"
+            android:layout_width="match_parent"
+            android:layout_height="100dip"
+            android:layout_margin="20dp" />
 
         <include
             android:id="@+id/close_layout"

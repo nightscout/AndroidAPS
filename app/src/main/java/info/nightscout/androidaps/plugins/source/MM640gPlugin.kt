@@ -75,7 +75,7 @@ class MM640gPlugin @Inject constructor(
                             when (val type = jsonObject.getString("type")) {
                                 "sgv" ->
                                     glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(
-                                        timestamp = jsonObject.getLong("sgv"),
+                                        timestamp = jsonObject.getLong("date"),
                                         value = jsonObject.getDouble("sgv"),
                                         raw = jsonObject.getDouble("sgv"),
                                         noise = null,

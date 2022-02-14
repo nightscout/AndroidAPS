@@ -6,6 +6,7 @@ import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.shared.SafeParse
+import org.apache.commons.lang3.time.DateUtils.isSameDay
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.ISODateTimeFormat
@@ -131,6 +132,10 @@ class DateUtil @Inject constructor(private val context: Context) {
         return dateAndTimeString(start) + " - " + timeString(end)
     }
 
+    fun timeRangeString(start: Long, end: Long): String {
+        return timeString(start) + " - " + timeString(end)
+    }
+
     fun dateAndTimeString(mills: Long): String {
         return if (mills == 0L) "" else dateString(mills) + " " + timeString(mills)
     }
@@ -149,6 +154,12 @@ class DateUtil @Inject constructor(private val context: Context) {
         if (time == null) return ""
         val mins = ((time - now()) / 1000 / 60).toInt()
         return (if (mins > 0) "+" else "") + mins
+    }
+
+    fun minAgoLong(rh: ResourceHelper, time: Long?): String {
+        if (time == null) return ""
+        val mins = ((now() - time) / 1000 / 60).toInt()
+        return rh.gs(R.string.minago_long, mins)
     }
 
     fun hourAgo(time: Long, rh: ResourceHelper): String {
@@ -206,6 +217,8 @@ class DateUtil @Inject constructor(private val context: Context) {
     fun getTimeZoneOffsetMinutes(timestamp: Long): Int {
         return TimeZone.getDefault().getOffset(timestamp) / 60000
     }
+
+    fun isSameDay(timestamp1: Long, timestamp2: Long) = isSameDay(Date(timestamp1), Date(timestamp2))
 
     //Map:{DAYS=1, HOURS=3, MINUTES=46, SECONDS=40, MILLISECONDS=0, MICROSECONDS=0, NANOSECONDS=0}
     fun computeDiff(date1: Long, date2: Long): Map<TimeUnit, Long> {

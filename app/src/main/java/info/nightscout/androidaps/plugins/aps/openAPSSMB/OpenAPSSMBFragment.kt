@@ -110,7 +110,7 @@ class OpenAPSSMBFragment : DaggerFragment() {
 
             binding.profile.text = jsonFormatter.format(determineBasalAdapterSMBJS.profileParam)
             binding.mealdata.text = jsonFormatter.format(determineBasalAdapterSMBJS.mealDataParam)
-            binding.scriptdebugdata.text = determineBasalAdapterSMBJS.scriptDebug
+            binding.scriptdebugdata.text = determineBasalAdapterSMBJS.scriptDebug.replace("\\s+".toRegex(), " ")
             openAPSSMBPlugin.lastAPSResult?.inputConstraints?.let {
                 binding.constraints.text = it.getReasons(aapsLogger)
             }

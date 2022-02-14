@@ -39,6 +39,7 @@
                     android:gravity="center_vertical|center_horizontal"
                     android:paddingTop="6dp"
                     android:paddingBottom="6dp"
+                    android:hint="active profile"
                     android:text="Profile"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     tools:ignore="HardcodedText" />
@@ -52,6 +53,7 @@
                     android:gravity="center_vertical|center_horizontal"
                     android:paddingTop="6dp"
                     android:paddingBottom="6dp"
+                    android:hint="temp target"
                     android:text="@string/notavailable"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="@color/mdtp_white"

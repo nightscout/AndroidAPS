@@ -25,7 +25,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="Blood glucose quality icon"
+        android:contentDescription="@string/a11y_bg_quality"
         tools:ignore="HardcodedText" />
 
     <TextView
@@ -52,7 +52,8 @@
         app:layout_constraintEnd_toStartOf="@+id/deltas_layout"
         app:layout_constraintStart_toEndOf="@+id/delta_large"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="UseCompoundDrawables">
+        tools:ignore="UseCompoundDrawables"
+        android:focusable="true">
 
         <ImageView
             android:id="@+id/arrow"
@@ -87,7 +88,8 @@
         <TableRow
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:focusable="true">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -95,6 +97,7 @@
                 android:layout_gravity="end"
                 android:textAlignment="textEnd"
                 android:text="Δ: "
+                android:contentDescription="last delta"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 tools:ignore="HardcodedText" />
 
@@ -113,7 +116,8 @@
         <TableRow
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:focusable="true">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -121,6 +125,7 @@
                 android:layout_gravity="end"
                 android:textAlignment="textEnd"
                 android:text="15m Δ: "
+                android:contentDescription="15 minutes delta"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 tools:ignore="HardcodedText" />
 
@@ -139,7 +144,8 @@
         <TableRow
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:focusable="true">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -147,6 +153,7 @@
                 android:layout_gravity="end"
                 android:textAlignment="textEnd"
                 android:text="40m Δ: "
+                android:contentDescription="40 minutes delta"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 tools:ignore="HardcodedText" />
 
@@ -185,7 +192,7 @@
             android:layout_marginBottom="-4dp"
             android:visibility="gone"
             app:srcCompat="@drawable/ic_loop_closed"
-            android:contentDescription="@string/closedloop" />
+            android:contentDescription="@string/apsmode_title" />
 
         <TextView
             android:id="@+id/aps_mode_text"
@@ -282,7 +289,8 @@
         app:layout_constraintEnd_toStartOf="@+id/basal_layout"
         app:layout_constraintStart_toEndOf="@+id/iob_layout"
         app:layout_constraintTop_toTopOf="@+id/iob_layout"
-        tools:ignore="UseCompoundDrawables">
+        tools:ignore="UseCompoundDrawables"
+        android:focusable="true">
 
         <ImageView
             android:id="@+id/carbs_icon"
@@ -377,7 +385,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/extended_layout"
         app:layout_constraintTop_toTopOf="@+id/iob_layout"
-        tools:ignore="UseCompoundDrawables">
+        tools:ignore="UseCompoundDrawables"
+        android:focusable="true">
 
         <ImageView
             android:id="@+id/sensitivity_icon"
@@ -385,7 +394,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             app:srcCompat="@drawable/ic_swap_vert_black_48dp_green"
-            android:contentDescription="@string/autosenslabel" />
+            android:contentDescription="@string/a11y_autosenslabel" />
 
         <TextView
             android:id="@+id/sensitivity"

@@ -9,12 +9,12 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:width="120dp"
+        android:labelFor="@+id/eventtime"
         android:paddingLeft="10dp"
         android:paddingRight="4dp"
         android:text="@string/event_time_label"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textStyle="bold" />
-
 
     <TextView
         android:id="@+id/eventdate"
