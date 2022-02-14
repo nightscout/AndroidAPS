@@ -117,7 +117,7 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.6.0'
     implementation "androidx.core:core-ktx:$core_version"
-    implementation "androidx.wear.tiles:tiles:1.0.0"
+    implementation "androidx.wear.tiles:tiles:1.0.1"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
     testImplementation "junit:junit:$junit_version"
