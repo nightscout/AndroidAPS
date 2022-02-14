@@ -48,6 +48,11 @@
     <string name="isf_label">SI</string>
     <string name="basal_label">Basal</string>
     <string name="target_label">Cible</string>
+    <string name="dia_long_label">Durée d\'Action de l\'Insuline</string>
+    <string name="ic_long_label">Rapport Glucides / Insuline</string>
+    <string name="isf_long_label">Facteur de sensibilité à l\'insuline (SI)</string>
+    <string name="basal_long_label">Débit de Basal</string>
+    <string name="target_long_label">Glycémie cible</string>
     <string name="initializing">En cours d\'initialisation...</string>
     <string name="serialnumber">Numéro de série</string>
     <string name="battery_label">Niveau batterie</string>
@@ -440,6 +445,7 @@
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="pump_paired" comment="26 characters max for translation">Pompe appairée</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Actualisation état Insight</string>
+    <string name="a11y_min_button_description">réduction de %1$s par %2$s</string>
     <plurals name="days">
         <item quantity="one">%1$d jour</item>
         <item quantity="other">%1$d jours</item>
