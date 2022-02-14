@@ -25,7 +25,7 @@ dependencies {
     api "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
     api("io.reactivex.rxjava2:rxkotlin:$rxkotlin_version")
 
-    api "com.google.code.gson:gson:2.8.9"
+    api "com.google.code.gson:gson:2.9.0"
 
     api "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
