@@ -247,7 +247,6 @@ Eversense-appen.</string>
     <string name="wear">Klocka (Wear)</string>
     <string name="resend_all_data">Uppdatera klockans data</string>
     <string name="open_settings_on_wear">Öppna inställningar på klockan</string>
-    <string name="basal_rate">Basal:</string>
     <string name="basalvaluebelowminimum">Basal understiger miniminivå. Profilen sattes inte.</string>
     <string name="sms_actualbg">BG:</string>
     <string name="sms_lastbg">Senaste BG:</string>
@@ -758,8 +757,6 @@ Eversense-appen.</string>
     <string name="profilenamecontainsdot">Profilnamnet innehåller punkter.\nDetta stöds inte av NS.\nProfil överförs inte till NS.</string>
     <string name="low_mark_comment">Nedre värdet för målområde (endast visning)</string>
     <string name="high_mark_comment">Övre värdet för målområde (endast visning)</string>
-    <string name="age">Ålder:</string>
-    <string name="weight_label">Vikt:</string>
     <string name="id">ID:</string>
     <string name="submit">Spara</string>
     <string name="mostcommonprofile">Den vanligaste profilen:</string>
@@ -906,4 +903,5 @@ Eversense-appen.</string>
     <string name="identification">Identifiering (e-post, FB, Discord-namn etc)</string>
     <string name="identification_not_set">Identifiering inte angiven i dev-läge</string>
     <string name="not_available_full">Ej tillgängligt</string>
+    <!-- WEAR OS-->
 </resources>
