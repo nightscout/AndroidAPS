@@ -48,6 +48,11 @@
     <string name="isf_label">ISF</string>
     <string name="basal_label">Basal</string>
     <string name="target_label">Målverdi</string>
+    <string name="dia_long_label">Insulinets virkningstid (DIA)</string>
+    <string name="ic_long_label">Insulin- til karbohydratfaktor</string>
+    <string name="isf_long_label">Insulin sensitivitetsfaktor (ISF)</string>
+    <string name="basal_long_label">Basal rate</string>
+    <string name="target_long_label">Blodsukkermål</string>
     <string name="initializing">Starter opp...</string>
     <string name="serialnumber">Serienummer</string>
     <string name="battery_label">Batteri</string>
@@ -105,6 +110,7 @@
     <string name="notes_label">Merknader</string>
     <string name="remove_button">Fjern</string>
     <string name="addnew">Legg til ny</string>
+    <string name="addnew_above">Legg til ny over</string>
     <string name="wrong_pump_data">Data kommer fra forskjellige pumper. Bytt pumpevalg for å nullstille pumpens tilstand.</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Begrenser maks basal dose til %1$.2f E/t på grunn av %2$s</string>
@@ -127,6 +133,7 @@
     <string name="location_not_found_message">Bluetooth søk på nye mobiler virker bare når posisjonstjeneste er aktivert. AAPS lagrer ikke dine posisjonsdata og den kan derfor slås av etter vellykket sammenkobling.</string>
     <!--    DateUtil-->
     <string name="minago">%1$d min siden</string>
+    <string name="minago_long">%1$d minutter siden</string>
     <string name="hoursago">%1$.1f timer siden</string>
     <string name="shorthour">t</string>
     <string name="days">dager</string>
@@ -440,6 +447,8 @@
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="pump_paired" comment="26 characters max for translation">Pumpe sammenkoblet</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight oppdateringsknapp</string>
+    <string name="a11y_min_button_description">reduser %1$s med %2$s</string>
+    <string name="a11y_plus_button_description">øk %1$s med %2$s</string>
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dager</item>
