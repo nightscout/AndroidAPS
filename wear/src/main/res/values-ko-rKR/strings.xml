@@ -54,19 +54,15 @@
     <string name="pref_ring_history">원형 이력</string>
     <string name="pref_light_ring_history">연한 원형 이력</string>
     <string name="pref_animations">애니메이션</string>
-    <string name="pref_wizard_in_menu">메뉴에서 마법사</string>
     <string name="pref_prime_in_menu">메뉴에서 교체</string>
     <string name="pref_single_target">단일 목표</string>
-    <string name="pref_wizard_percentage">마법사 퍼센트</string>
     <string name="pref_complication_tap_action">컴플리케이션 탭 동작</string>
     <string name="pref_unicode_in_complications">컴플리케이션에서 유니코드 사용</string>
     <string name="pref_version">버전:</string>
     <string name="pref_moreWatchfaceSettings">더 다양한 워치페이스 설정</string>
     <string name="pref_lookInYourWatchfaceConfiguration">워치페이스 설정을 확인하십시오.</string>
     <string name="menu_tempt">임시목표</string>
-    <string name="menu_wizard">마법사</string>
     <string name="menu_bolus">Bolus</string>
-    <string name="menu_ecarb">확장탄수화물</string>
     <string name="menu_settings">설정</string>
     <string name="menu_status">상태</string>
     <string name="menu_resync">재동기화</string>
@@ -74,22 +70,12 @@
     <string name="menu_none">없음</string>
     <string name="menu_default">기본</string>
     <string name="menu_menu">메뉴</string>
-    <string name="action_duration">기간</string>
-    <string name="action_target" comment="In temp target menu, single target value">목표</string>
-    <string name="action_low" comment="In temp target menu, lower value from range">하한값</string>
-    <string name="action_high" comment="In temp target menu, higher value from range">상한값</string>
-    <string name="action_carbs">탄수화물</string>
-    <string name="action_percentage">퍼센트</string>
-    <string name="action_start_min">시작 [min]</string>
-    <string name="action_duration_h">기간 [h]</string>
-    <string name="action_insulin">인슐린</string>
     <string name="action_preset_1">프리셋 1</string>
     <string name="action_preset_2">프리셋 2</string>
     <string name="action_preset_3">프리셋 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">양 제한없음</string>
     <string name="action_confirm">확인</string>
     <string name="action_timeshift">시간이동</string>
-    <string name="action_bolus">Bolus</string>
     <string name="bolus_progress">Bolus 주입 중</string>
     <string name="press_to_cancel">눌러서 취소하기</string>
     <string name="cancel_bolus">BOLUS 취소</string>
