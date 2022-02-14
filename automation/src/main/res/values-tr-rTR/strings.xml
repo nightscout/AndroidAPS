@@ -81,6 +81,7 @@
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Otoduyarlılık %1$s %2$s %%</string>
     <string name="autosenslabel">Otoduyarlılık %</string>
+    <string name="a11y_autosenslabel">Oto duyarlılık</string>
     <string name="deltacompared">%3$s %1$s %2$s</string>
     <string name="deltalabel">KŞ farkı</string>
     <string name="deltalabel_u">KŞ farkı [%1$s]</string>
