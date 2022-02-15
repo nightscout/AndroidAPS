@@ -246,6 +246,7 @@
     <string name="wear">Wear</string>
     <string name="resend_all_data">Alle Daten erneut senden</string>
     <string name="open_settings_on_wear">Öffne Einstellungen auf der Uhr</string>
+    <string name="basal_rate">Basalrate</string>
     <string name="basalvaluebelowminimum">Wert der Basalrate unter Minimum. Profil nicht gesetzt!</string>
     <string name="sms_actualbg">BZ:</string>
     <string name="sms_lastbg">Letzter BZ:</string>
@@ -757,6 +758,8 @@ Unerwartetes Verhalten.</string>
     <string name="profilenamecontainsdot">Profilname enthält Punkte.\nDies wird von NS nicht unterstützt.\nProfil wird nicht zu NS hochgeladen.</string>
     <string name="low_mark_comment">Unterer Wert des Zielbereichs (nur Anzeige)</string>
     <string name="high_mark_comment">Oberer Wert des Zielbereichs (nur Anzeige)</string>
+    <string name="age">Alter</string>
+    <string name="weight_label">Gewicht</string>
     <string name="id">ID:</string>
     <string name="submit">Senden</string>
     <string name="mostcommonprofile">Meistgenutztes Profil:</string>
@@ -928,5 +931,10 @@ Unerwartetes Verhalten.</string>
     <string name="a11y_insulin_label">Insulin</string>
     <string name="a11y_blood_glucose">Blutzucker</string>
     <string name="a11y_bg_outdated">veraltet</string>
+    <string name="a11y_carb_reminder">Erinnerung einstellen</string>
+    <string name="a11y_add_new_profile">Neues Profil hinzufügen</string>
+    <string name="a11y_clone_profile">aktuelles Profil klonen (kopieren)</string>
+    <string name="a11y_delete_current_profile">aktuelles Profil löschen</string>
+    <string name="a11y_add_new_to_list">neu zur Liste hinzufügen</string>
     <!-- WEAR OS-->
 </resources>
