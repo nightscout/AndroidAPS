@@ -941,6 +941,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="wear_action_tempt_preset_error">Préréglage inconnu de la cible temporaire : %1$s</string>
     <string name="wear_action_tempt_cancel_message">Annuler l\'exécution des cibles Temp?</string>
     <string name="wear_action_tempt_unit_error">Différentes unités utilisées sur la montre et le téléphone!</string>
+    <string name="wear_action_tempt_zero_message">Pas de Cible Temp - annuler la cible temporaire en cours?</string>
     <string name="wear_action_tempt_min_bg_error">Gly mini hors limite!</string>
     <string name="wear_action_tempt_max_bg_error">Gly maxi hors limite!</string>
     <string name="wear_action_tempt_manual_range_message">Cible temporaire:\nMin: %1$s\nMax : %2$s\nDurée : %3$s</string>
