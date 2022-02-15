@@ -9,8 +9,7 @@ import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.OpenapsamaFragmentBinding
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.plugins.aps.events.EventOpenAPSUpdateGui
 import info.nightscout.androidaps.plugins.aps.events.EventOpenAPSUpdateResultGui
 import info.nightscout.androidaps.plugins.bus.RxBus
@@ -19,6 +18,8 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.JSONFormatter
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import org.json.JSONArray
@@ -34,7 +35,7 @@ class OpenAPSSMBFragment : DaggerFragment() {
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var openAPSSMBPlugin: OpenAPSSMBPlugin
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var jsonFormatter: JSONFormatter
 
@@ -44,8 +45,7 @@ class OpenAPSSMBFragment : DaggerFragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,                              savedInstanceState: Bundle?): View {
         _binding = OpenapsamaFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -54,7 +54,7 @@ class OpenAPSSMBFragment : DaggerFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.run.setOnClickListener {
-            openAPSSMBPlugin.invoke("OpenAPSSMB button", false)
+            activePlugin.activeAPS.invoke("OpenAPSSMB button", false)
         }
     }
 
@@ -92,11 +92,12 @@ class OpenAPSSMBFragment : DaggerFragment() {
     @Synchronized
     fun updateGUI() {
         if (_binding == null) return
+        val openAPSSMBPlugin = activePlugin.activeAPS
         openAPSSMBPlugin.lastAPSResult?.let { lastAPSResult ->
             binding.result.text = jsonFormatter.format(lastAPSResult.json)
             binding.request.text = lastAPSResult.toSpanned()
         }
-        openAPSSMBPlugin.lastDetermineBasalAdapterSMBJS?.let { determineBasalAdapterSMBJS ->
+        openAPSSMBPlugin.lastDetermineBasalAdapter?.let { determineBasalAdapterSMBJS ->
             binding.glucosestatus.text = jsonFormatter.format(determineBasalAdapterSMBJS.glucoseStatusParam)
             binding.currenttemp.text = jsonFormatter.format(determineBasalAdapterSMBJS.currentTempParam)
             try {
