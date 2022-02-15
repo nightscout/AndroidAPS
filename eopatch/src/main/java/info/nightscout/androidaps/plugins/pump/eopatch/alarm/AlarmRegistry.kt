@@ -16,7 +16,7 @@ import info.nightscout.androidaps.plugins.pump.eopatch.EoPatchRxBus
 import info.nightscout.androidaps.plugins.pump.eopatch.OsAlarmReceiver
 import info.nightscout.androidaps.plugins.pump.eopatch.code.PatchLifecycle
 import info.nightscout.androidaps.plugins.pump.eopatch.core.code.PatchAeCode
-import info.nightscout.androidaps.plugins.pump.eopatch.extension.observeOnMainThread
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -38,6 +38,7 @@ class AlarmRegistry @Inject constructor() : IAlarmRegistry {
     @Inject lateinit var pm: IPreferenceManager
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
 
     private lateinit var mOsAlarmManager: AlarmManager
     private var mDisposable: Disposable? = null
@@ -46,7 +47,7 @@ class AlarmRegistry @Inject constructor() : IAlarmRegistry {
     @Inject fun onInit() {
         mOsAlarmManager = mContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         mDisposable = pm.observePatchLifeCycle()
-            .observeOnMainThread()
+            .observeOn(aapsSchedulers.main)
             .subscribe {
                 when(it){
                     PatchLifecycle.REMOVE_NEEDLE_CAP -> {
@@ -64,7 +65,7 @@ class AlarmRegistry @Inject constructor() : IAlarmRegistry {
                                 it.keys.forEach {
                                     sources.add(
                                         Maybe.just(it)
-                                            .observeOnMainThread()
+                                            .observeOn(aapsSchedulers.main)
                                             .doOnSuccess { rxBus.send(EventDismissNotification(Notification.EOELOW_PATCH_ALERTS + (it.aeCode + 10000))) }
                                     )
                                 }
@@ -107,7 +108,7 @@ class AlarmRegistry @Inject constructor() : IAlarmRegistry {
     override fun add(patchAeCodes: Set<PatchAeCode>) {
         compositeDisposable.add(
             Observable.fromIterable(patchAeCodes)
-               .filter{patchAeCodeItem ->  AlarmCode.Companion.findByPatchAeCode(patchAeCodeItem.getAeValue()) != null}
+               .filter{patchAeCodeItem ->  AlarmCode.findByPatchAeCode(patchAeCodeItem.getAeValue()) != null}
                .observeOn(AndroidSchedulers.mainThread())
                .filter { patchAeCodes -> AlarmCode.findByPatchAeCode(patchAeCodes.getAeValue()) != null }
                .flatMapMaybe{aeCodeResponse -> add(AlarmCode.findByPatchAeCode(aeCodeResponse.getAeValue())!!,0L, true)}

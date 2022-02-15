@@ -3,6 +3,13 @@ package info.nightscout.androidaps.plugins.pump.eopatch.ble;
 import android.content.Context;
 import android.content.Intent;
 
+import com.polidea.rxandroidble2.exceptions.BleException;
+
+import java.util.concurrent.TimeUnit;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.events.EventCustomActionsChanged;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
@@ -11,42 +18,28 @@ import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.CommandQueue;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.PumpSync;
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
-import info.nightscout.androidaps.utils.DateUtil;
-import info.nightscout.shared.logging.AAPSLogger;
-import info.nightscout.shared.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBus;
-import info.nightscout.androidaps.plugins.pump.eopatch.CommonUtils;
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.eopatch.R;
 import info.nightscout.androidaps.plugins.pump.eopatch.RxAction;
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode;
-import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.BleConnectionState;
-import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.IPatchScanner;
-import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.PatchScanner;
-import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.PatchSelfTestResult;
-import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.ScanList;
 import info.nightscout.androidaps.plugins.pump.eopatch.code.BolusExDuration;
 import info.nightscout.androidaps.plugins.pump.eopatch.code.DeactivationStatus;
 import info.nightscout.androidaps.plugins.pump.eopatch.code.PatchLifecycle;
-import com.polidea.rxandroidble2.RxBleClient;
-import com.polidea.rxandroidble2.exceptions.BleException;
-import com.polidea.rxandroidble2.internal.RxBleLog;
-
-import java.util.concurrent.TimeUnit;
-
+import info.nightscout.androidaps.plugins.pump.eopatch.code.SettingKeys;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.BasalScheduleSetResponse;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.BaseResponse;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.BolusResponse;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.BolusStopResponse;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.ComboBolusStopResponse;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.PatchBooleanResponse;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.TempBasalScheduleSetResponse;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.TemperatureResponse;
-import info.nightscout.androidaps.plugins.pump.eopatch.code.SettingKeys;
+import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.BleConnectionState;
+import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.IPatchScanner;
+import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.PatchScanner;
+import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.PatchSelfTestResult;
+import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.ScanList;
 import info.nightscout.androidaps.plugins.pump.eopatch.event.EventPatchActivationNotComplete;
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.DialogHelperActivity;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.BolusCurrent;
@@ -55,8 +48,10 @@ import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchConfig;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchLifecycleEvent;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchState;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.TempBasal;
-import info.nightscout.androidaps.queue.commands.Command;
+import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.shared.logging.AAPSLogger;
+import info.nightscout.shared.logging.LTag;
 import info.nightscout.shared.sharedPreferences.SP;
 import io.reactivex.Observable;
 import io.reactivex.Single;
@@ -83,6 +78,7 @@ public class PatchManager implements IPatchManager {
     @Inject SP sp;
     @Inject PumpSync pumpSync;
     @Inject DateUtil dateUtil;
+    @Inject RxAction rxAction;
 
     private IPatchScanner patchScanner;
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
@@ -443,7 +439,7 @@ public class PatchManager implements IPatchManager {
         if(getPatchConfig().getLifecycleEvent().isSubStepRunning()
                 && !pm.getAlarms().isOccuring(AlarmCode.A005)
                 && !pm.getAlarms().isOccuring(AlarmCode.A020)) {
-            RxAction.INSTANCE.runOnMainThread(() -> {
+            rxAction.runOnMainThread(() -> {
                 rxBus.send(new EventPatchActivationNotComplete());
             });
         }

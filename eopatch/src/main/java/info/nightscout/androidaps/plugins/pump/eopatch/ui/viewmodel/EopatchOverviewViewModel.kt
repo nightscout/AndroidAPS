@@ -1,24 +1,22 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.pump.eopatch.R
-import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.BleConnectionState
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPatchManager
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager
 import info.nightscout.androidaps.plugins.pump.eopatch.code.EventType
-import info.nightscout.androidaps.plugins.pump.eopatch.extension.observeOnMainThread
-import info.nightscout.androidaps.plugins.pump.eopatch.extension.with
+import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.BleConnectionState
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.EoBaseNavigator
-import info.nightscout.androidaps.plugins.pump.eopatch.ui.event.UIEvent
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.event.SingleLiveEvent
+import info.nightscout.androidaps.plugins.pump.eopatch.ui.event.UIEvent
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.Alarms
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchConfig
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchState
+import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import java.util.concurrent.TimeUnit
@@ -26,11 +24,11 @@ import javax.inject.Inject
 import kotlin.math.roundToInt
 
 class EopatchOverviewViewModel @Inject constructor(
-    private val context: Context,
+    private val rh: ResourceHelper,
     val patchManager: IPatchManager,
-    val preferenceManager: IPreferenceManager,
-    val profileFunction: ProfileFunction,
-    val activePlugin: ActivePlugin
+    private val preferenceManager: IPreferenceManager,
+    private val profileFunction: ProfileFunction,
+    private val aapsSchedulers: AapsSchedulers
 ) : EoBaseViewModel<EoBaseNavigator>() {
     private val _eventHandler = SingleLiveEvent<UIEvent<EventType>>()
     val UIEventTypeHandler : LiveData<UIEvent<EventType>>
@@ -82,12 +80,12 @@ class EopatchOverviewViewModel @Inject constructor(
 
     init {
         preferenceManager.observePatchConfig()
-            .observeOnMainThread()
+            .observeOn(aapsSchedulers.main)
             .subscribe { _patchConfig.value = it }
             .addTo()
 
         preferenceManager.observePatchState()
-            .observeOnMainThread()
+            .observeOn(aapsSchedulers.main)
             .subscribe {
                 _patchState.value = it
                 _patchRemainingInsulin.value = it.remainedInsulin
@@ -97,25 +95,25 @@ class EopatchOverviewViewModel @Inject constructor(
             .addTo()
 
         patchManager.observePatchConnectionState()
-            .observeOnMainThread()
+            .observeOn(aapsSchedulers.main)
             .subscribe {
                 _bleStatus.value = when(it){
                     BleConnectionState.CONNECTED -> "{fa-bluetooth}"
                     BleConnectionState.DISCONNECTED -> "{fa-bluetooth-b}"
-                    else -> "{fa-bluetooth-b spin}  ${context.getString(R.string.string_connecting)}"
+                    else -> "{fa-bluetooth-b spin}  ${rh.gs(R.string.string_connecting)}"
                 }
             }
             .addTo()
 
         patchManager.observePatchLifeCycle()
-            .observeOnMainThread()
+            .observeOn(aapsSchedulers.main)
             .subscribe {
                 updatePatchStatus()
             }
             .addTo()
 
         preferenceManager.observeAlarm()
-            .observeOnMainThread()
+            .observeOn(aapsSchedulers.main)
             .subscribe {
                 _alarms.value = it
             }
@@ -135,10 +133,10 @@ class EopatchOverviewViewModel @Inject constructor(
             val h =  TimeUnit.MILLISECONDS.toHours(remainTimeMillis)
             val m =  TimeUnit.MILLISECONDS.toMinutes(remainTimeMillis - TimeUnit.HOURS.toMillis(h))
             _status.value = if(patchManager.patchState.isNormalBasalPaused)
-                    "${context.getString(R.string.string_suspended)}\n" +
-                        "${context.getString(R.string.string_temp_basal_remained_hhmm, h.toString(), m.toString())}"
+                    "${rh.gs(R.string.string_suspended)}\n" +
+                        "${rh.gs(R.string.string_temp_basal_remained_hhmm, h.toString(), m.toString())}"
                 else
-                    context.getString(R.string.string_running)
+                    rh.gs(R.string.string_running)
         }else{
             _status.value = ""
         }
@@ -190,7 +188,8 @@ class EopatchOverviewViewModel @Inject constructor(
 
     fun pauseBasal(pauseDurationHour: Float){
         patchManager.pauseBasal(pauseDurationHour)
-            .with()
+            .subscribeOn(aapsSchedulers.io)
+            .observeOn(aapsSchedulers.main)
             .subscribe({
                 if (it.isSuccess) {
                     navigator?.toast(R.string.string_suspended_insulin_delivery_message)
@@ -205,7 +204,8 @@ class EopatchOverviewViewModel @Inject constructor(
 
     fun resumeBasal() {
         patchManager.resumeBasal()
-            .with()
+            .subscribeOn(aapsSchedulers.io)
+            .observeOn(aapsSchedulers.main)
             .subscribe({
                 if (it.isSuccess) {
                     navigator?.toast(R.string.string_resumed_insulin_delivery_message)
@@ -221,7 +221,7 @@ class EopatchOverviewViewModel @Inject constructor(
     private fun startPeriodicallyUpdate(){
         if(mDisposable == null) {
             mDisposable = Observable.interval(30, TimeUnit.SECONDS)
-                .observeOnMainThread()
+                .observeOn(aapsSchedulers.main)
                 .subscribe { updatePatchStatus() }
         }
     }

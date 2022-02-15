@@ -42,7 +42,4 @@ dependencies {
     //RxAndroidBle
     implementation "com.polidea.rxandroidble2:rxandroidble:$rxandroidble_version"
     implementation "com.jakewharton.rx2:replaying-share:$replayshare_version"
-
-    // Log
-    implementation "com.jakewharton.timber:timber:$timber_version"
 }

@@ -12,16 +12,19 @@ interface AapsSchedulers {
     val main: Scheduler
     val io: Scheduler
     val cpu: Scheduler
+    val newThread: Scheduler
 }
 
 class DefaultAapsSchedulers : AapsSchedulers {
     override val main: Scheduler = AndroidSchedulers.mainThread()
     override val io: Scheduler = Schedulers.io()
     override val cpu: Scheduler = Schedulers.computation()
+    override val newThread: Scheduler = Schedulers.newThread()
 }
 
 class TestAapsSchedulers : AapsSchedulers {
     override val main: Scheduler = Schedulers.trampoline()
     override val io: Scheduler = Schedulers.trampoline()
     override val cpu: Scheduler = Schedulers.trampoline()
+    override val newThread: Scheduler = Schedulers.trampoline()
 }

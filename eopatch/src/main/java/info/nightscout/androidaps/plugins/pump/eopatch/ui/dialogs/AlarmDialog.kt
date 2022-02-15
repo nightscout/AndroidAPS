@@ -14,10 +14,10 @@ import info.nightscout.androidaps.plugins.pump.eopatch.alarm.IAlarmProcess
 import info.nightscout.androidaps.plugins.pump.eopatch.bindingadapters.setOnSafeClickListener
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPatchManager
 import info.nightscout.androidaps.plugins.pump.eopatch.databinding.DialogAlarmBinding
-import info.nightscout.androidaps.plugins.pump.eopatch.extension.observeOnMainThread
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.AlarmHelperActivity
 import info.nightscout.androidaps.services.AlarmSoundServiceHelper
 import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
@@ -28,6 +28,7 @@ class AlarmDialog : DaggerDialogFragment() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var patchManager: IPatchManager
     @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
 
     var helperActivity: AlarmHelperActivity? = null
     var alarmCode: AlarmCode? = null
@@ -111,7 +112,7 @@ class AlarmDialog : DaggerDialogFragment() {
         startAlarm()
 
         disposable = patchManager.observePatchLifeCycle()
-            .observeOnMainThread()
+            .observeOn(aapsSchedulers.main)
             .subscribe {
                 if(it.isShutdown) {
                     activity?.finish()

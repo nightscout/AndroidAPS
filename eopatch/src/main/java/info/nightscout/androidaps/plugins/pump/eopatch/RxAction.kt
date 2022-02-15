@@ -1,35 +1,41 @@
+@file:Suppress("unused")
+
 package info.nightscout.androidaps.plugins.pump.eopatch
 
+import android.os.SystemClock
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.shared.logging.AAPSLogger
 import io.reactivex.*
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import org.reactivestreams.Subscription
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
+import javax.inject.Singleton
 
-enum class RxVoid {
-    INSTANCE
-}
+@Singleton
+class RxAction @Inject constructor(
+    private val aapsSchedulers: AapsSchedulers,
+    private val aapsLogger: AAPSLogger
+) {
 
-class SilentObserver<T> : MaybeObserver<T>, SingleObserver<T>, Observer<T>, FlowableSubscriber<T> {
-    override fun onSubscribe(d: Disposable) {}
-    override fun onSuccess(t: T) {}
-    override fun onError(e: Throwable) = Timber.d(e, "SilentObserver.onError() ignore")
-    override fun onComplete() {}
-    override fun onNext(t: T) {}
-    override fun onSubscribe(s: Subscription) {}
-}
+    enum class RxVoid {
+        INSTANCE
+    }
 
-object RxAction {
-    private fun msleep(millis: Long) {
+    class SilentObserver<T>(private val aapsLogger: AAPSLogger) : MaybeObserver<T>, SingleObserver<T>, Observer<T>, FlowableSubscriber<T> {
+
+        override fun onSubscribe(d: Disposable) {}
+        override fun onSuccess(t: T) {}
+        override fun onError(e: Throwable) = aapsLogger.error("SilentObserver.onError() ignore", e)
+        override fun onComplete() {}
+        override fun onNext(t: T) {}
+        override fun onSubscribe(s: Subscription) {}
+    }
+
+    private fun sleep(millis: Long) {
         if (millis <= 0)
             return
-        try {
-            Thread.sleep(millis)
-        } catch (e: InterruptedException) {
-        }
-
+        SystemClock.sleep(millis)
     }
 
     private fun delay(delayMs: Long): Single<*> {
@@ -41,73 +47,72 @@ object RxAction {
 
     fun single(action: Runnable, delayMs: Long, scheduler: Scheduler): Single<*> {
         return delay(delayMs)
-                .observeOn(scheduler)
-                .flatMap { o ->
-                    Single.fromCallable {
-                        action.run()
-                        RxVoid.INSTANCE
-                    }
+            .observeOn(scheduler)
+            .flatMap {
+                Single.fromCallable {
+                    action.run()
+                    RxVoid.INSTANCE
                 }
+            }
     }
 
-    fun safeSingle(action: Runnable, delayMs: Long, scheduler: Scheduler): Single<*> {
+    private fun safeSingle(action: Runnable, delayMs: Long, scheduler: Scheduler): Single<*> {
         return single(action, delayMs, scheduler)
     }
 
     @JvmOverloads
     fun runOnComputationThread(action: Runnable, delayMs: Long = 0) {
-        single(action, delayMs, Schedulers.computation()).subscribe(SilentObserver())
+        single(action, delayMs, aapsSchedulers.cpu).subscribe(SilentObserver(aapsLogger))
     }
 
     @JvmOverloads
     fun runOnIoThread(action: Runnable, delayMs: Long = 0) {
-        single(action, delayMs, Schedulers.io()).subscribe(SilentObserver())
+        single(action, delayMs, aapsSchedulers.io).subscribe(SilentObserver(aapsLogger))
     }
 
     @JvmOverloads
     fun runOnNewThread(action: Runnable, delayMs: Long = 0) {
-        single(action, delayMs, Schedulers.newThread()).subscribe(SilentObserver())
+        single(action, delayMs, aapsSchedulers.newThread).subscribe(SilentObserver(aapsLogger))
     }
 
     @JvmOverloads
     fun runOnMainThread(action: Runnable, delayMs: Long = 0) {
-        single(action, delayMs, AndroidSchedulers.mainThread()).subscribe(SilentObserver())
+        single(action, delayMs, aapsSchedulers.main).subscribe(SilentObserver(aapsLogger))
     }
 
     @JvmOverloads
     fun safeRunOnComputationThread(action: Runnable, delayMs: Long = 0) {
-        safeSingle(action, delayMs, Schedulers.computation()).subscribe(SilentObserver())
+        safeSingle(action, delayMs, aapsSchedulers.cpu).subscribe(SilentObserver(aapsLogger))
     }
 
     @JvmOverloads
     fun safeRunOnIoThread(action: Runnable, delayMs: Long = 0) {
-        safeSingle(action, delayMs, Schedulers.io()).subscribe(SilentObserver())
+        safeSingle(action, delayMs, aapsSchedulers.io).subscribe(SilentObserver(aapsLogger))
     }
 
     @JvmOverloads
     fun safeRunOnNewThread(action: Runnable, delayMs: Long = 0) {
-        safeSingle(action, delayMs, Schedulers.newThread()).subscribe(SilentObserver())
+        safeSingle(action, delayMs, aapsSchedulers.newThread).subscribe(SilentObserver(aapsLogger))
     }
 
     @JvmOverloads
     fun safeRunOnMainThread(action: Runnable, delayMs: Long = 0) {
-        safeSingle(action, delayMs, AndroidSchedulers.mainThread()).subscribe(SilentObserver())
+        safeSingle(action, delayMs, aapsSchedulers.main).subscribe(SilentObserver(aapsLogger))
     }
 
-
     fun singleOnMainThread(action: Runnable, delayMs: Long): Single<*> {
-        return single(action, delayMs, AndroidSchedulers.mainThread())
+        return single(action, delayMs, aapsSchedulers.main)
     }
 
     fun singleOnComputationThread(action: Runnable, delayMs: Long): Single<*> {
-        return single(action, delayMs, Schedulers.computation())
+        return single(action, delayMs, aapsSchedulers.cpu)
     }
 
     fun singleOnIoThread(action: Runnable, delayMs: Long): Single<*> {
-        return single(action, delayMs, Schedulers.io())
+        return single(action, delayMs, aapsSchedulers.io)
     }
 
     fun singleOnNewThread(action: Runnable, delayMs: Long): Single<*> {
-        return single(action, delayMs, Schedulers.newThread())
+        return single(action, delayMs, aapsSchedulers.newThread)
     }
 }

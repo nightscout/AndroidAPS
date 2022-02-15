@@ -1,37 +1,40 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel
 
-import android.content.Context
 import android.content.res.Resources
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.pump.eopatch.CommonUtils
 import info.nightscout.androidaps.plugins.pump.eopatch.R
 import info.nightscout.androidaps.plugins.pump.eopatch.RxAction
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.IAlarmRegistry
-import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.BleConnectionState
-import info.nightscout.androidaps.plugins.pump.eopatch.core.define.IPatchConstant
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPatchManager
-import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.PatchSelfTestResult.*
+import info.nightscout.androidaps.plugins.pump.eopatch.code.EventType
 import info.nightscout.androidaps.plugins.pump.eopatch.code.PatchLifecycle
 import info.nightscout.androidaps.plugins.pump.eopatch.code.PatchStep
-import info.nightscout.androidaps.plugins.pump.eopatch.code.EventType
-import info.nightscout.androidaps.plugins.pump.eopatch.extension.*
+import info.nightscout.androidaps.plugins.pump.eopatch.core.define.IPatchConstant
+import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.BleConnectionState
+import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.PatchSelfTestResult.TEST_SUCCESS
+import info.nightscout.androidaps.plugins.pump.eopatch.extension.getDiffDays
+import info.nightscout.androidaps.plugins.pump.eopatch.extension.subscribeDefault
+import info.nightscout.androidaps.plugins.pump.eopatch.extension.subscribeEmpty
+import info.nightscout.androidaps.plugins.pump.eopatch.extension.takeOne
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.EoBaseNavigator
-import info.nightscout.androidaps.plugins.pump.eopatch.ui.event.UIEvent
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.event.SingleLiveEvent
-import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchLifecycleEvent
+import info.nightscout.androidaps.plugins.pump.eopatch.ui.event.UIEvent
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchViewModel.SetupStep.*
+import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchLifecycleEvent
+import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
-import java.lang.ref.WeakReference
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 import javax.inject.Inject
@@ -39,10 +42,12 @@ import kotlin.math.abs
 import kotlin.math.roundToInt
 
 class EopatchViewModel @Inject constructor(
-    private val context: Context,
+    private val rh: ResourceHelper,
     val patchManager: IPatchManager,
     private val alarmRegistry: IAlarmRegistry,
-    private val aapsLogger: AAPSLogger
+    private val aapsLogger: AAPSLogger,
+    private val aapsSchedulers: AapsSchedulers,
+    private val rxAction: RxAction
 ) : EoBaseViewModel<EoBaseNavigator>() {
     companion object {
         private const val MAX_ELAPSED_MILLIS_AFTER_EXPIRATION = -12L * 60 * 60 * 1000
@@ -63,11 +68,6 @@ class EopatchViewModel @Inject constructor(
     fun onClickActivation(){
         _eventHandler.postValue(UIEvent(EventType.ACTIVTION_CLICKED))
     }
-
-    private val mContentRef = WeakReference(context)
-
-    private val mContext: Context?
-        get() = mContentRef.get()
 
     val patchStep = MutableLiveData<PatchStep>()
 
@@ -123,7 +123,7 @@ class EopatchViewModel @Inject constructor(
 
     val commCheckCancelLabel: LiveData<String>
         get() = Transformations.map(patchStep) {
-            mContext?.getString(when (it) {
+            rh.gs(when (it) {
                 PatchStep.CONNECT_NEW -> {
                     isBonded.takeOne(R.string.cancel, R.string.patch_cancel_pairing)
                 }
@@ -134,7 +134,7 @@ class EopatchViewModel @Inject constructor(
 
     val programEnabledMessage: String
         // get() = """'기초1' program has been enabled."""
-        get() = mContext?.getString(R.string.patch_basal_schedule_desc_1,"기초1") ?: ""
+        get() = rh.gs(R.string.patch_basal_schedule_desc_1,"기초1") ?: ""
 
     val patchStepIsSafeDeactivation: Boolean
         get() = patchStep.value?.isSafeDeactivation ?: false
@@ -181,13 +181,13 @@ class EopatchViewModel @Inject constructor(
             .throttleFirst(500, TimeUnit.MILLISECONDS)
             .delay(100, TimeUnit.MILLISECONDS)
             .filter { isSubStepRunning }
-            .observeOnMainThread()
+            .observeOn(aapsSchedulers.main)
             .flatMapMaybe { alarmRegistry.remove(AlarmCode.B012) }
             .flatMapMaybe { alarmRegistry.add(AlarmCode.B012, TimeUnit.MINUTES.toMillis(3)) }
-            .subscribeDefault {}
+            .subscribe()
 
         patchManager.observePatchLifeCycle()
-            .observeOnMainThread()
+            .observeOn(aapsSchedulers.main)
             .subscribe {
                 isActivated.value = patchManager.isActivated
             }
@@ -213,9 +213,9 @@ class EopatchViewModel @Inject constructor(
         CommonUtils.dispose(mUpdateDisposable)
 
         mUpdateDisposable = Observable.interval(0, 1, TimeUnit.SECONDS)
-                .observeOnMainThread()
+                .observeOn(aapsSchedulers.main)
                 .takeUntil { !patchConfig.isActivated }
-                .subscribeDefault {
+                .subscribeDefault(aapsLogger) {
                     _patchExpirationTimestamp.value = patchManager.patchExpiredTime
                 }
     }
@@ -275,12 +275,13 @@ class EopatchViewModel @Inject constructor(
                     }
                     .retry(1)
         }
-                .with()
+                .subscribeOn(aapsSchedulers.io)
+                .observeOn(aapsSchedulers.main)
                 .onErrorReturnItem(false)
                 .doOnSubscribe { showPatchCommCheckDialog() }
                 .doFinally { dismissPatchCommCheckDialog() }
                 .doOnError { aapsLogger.error(LTag.PUMP, it.message?:"Error") }
-                .subscribeDefault {
+                .subscribeDefault(aapsLogger) {
                     _isCommCheckFailed.value = !it
                 }
     }
@@ -623,11 +624,11 @@ class EopatchViewModel @Inject constructor(
                 .doFinally {
                     dismissProgressDialog()
                 }
-                .subscribeDefault { status ->
+                .subscribeDefault(aapsLogger) { status ->
                     if (status.isDeactivated) {
                         onSuccessListener.invoke()
                     } else {
-                        RxAction.runOnMainThread({
+                        rxAction.runOnMainThread({
                             checkCommunication({ deactivate(false, onSuccessListener) },
                                 { _eventHandler.postValue(UIEvent(EventType.FINISH_ACTIVITY)) })
                         }, 100)
@@ -673,7 +674,7 @@ class EopatchViewModel @Inject constructor(
                 }
                 .onErrorReturnItem("")
                 .doOnSubscribe { updateSetupStep(SCAN_STARTED) }
-                .subscribeDefault {
+                .subscribeDefault(aapsLogger) {
                     if (!it.isNullOrEmpty()) {
                         startBond(it)
                     } else {
@@ -698,7 +699,7 @@ class EopatchViewModel @Inject constructor(
                     updateSetupStep(BONDING_FAILED)
                 }
             }
-            .subscribeDefault {
+            .subscribeDefault(aapsLogger) {
                 if (it) {
                     getPatchInfo()
                 } else {
@@ -712,7 +713,7 @@ class EopatchViewModel @Inject constructor(
         patchManager.getPatchInfo(timeout)
             .doOnSubscribe { updateSetupStep(GET_PATCH_INFO_STARTED) }
             .onErrorReturnItem(false)
-            .subscribeDefault {
+            .subscribeDefault(aapsLogger) {
                 if (it) {
                     selfTest(delayMs = 1000)
                 } else {
@@ -723,12 +724,12 @@ class EopatchViewModel @Inject constructor(
 
     @Synchronized
     fun selfTest(timeout: Long = 20000, delayMs: Long = 0) {
-        RxAction.runOnMainThread({
+        rxAction.runOnMainThread({
             patchManager.selfTest(timeout)
                 .doOnSubscribe { updateSetupStep(SELF_TEST_STARTED) }
                 .map { it == TEST_SUCCESS }
                 .onErrorReturnItem(false)
-                .subscribeDefault {
+                .subscribeDefault(aapsLogger) {
                     if (it) {
                         moveStep(PatchStep.REMOVE_NEEDLE_CAP)
                     } else if (!patchManager.patchConnectionState.isConnected) {
@@ -777,7 +778,7 @@ class EopatchViewModel @Inject constructor(
                 updateSetupStep(NEEDLE_SENSING_STARTED)
             }
             .onErrorReturnItem(false)
-            .subscribeDefault {
+            .subscribeDefault(aapsLogger) {
                 if (it) {
                     startActivation()
                 } else {
@@ -798,7 +799,7 @@ class EopatchViewModel @Inject constructor(
                 }
                 .doFinally { dismissProgressDialog() }
                 .onErrorReturnItem(false)
-                .subscribeDefault {
+                .subscribeDefault(aapsLogger) {
                     if (it) {
                         moveStep(PatchStep.COMPLETE)
                     } else {

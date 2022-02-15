@@ -25,7 +25,6 @@ import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager
 import info.nightscout.androidaps.plugins.pump.eopatch.code.BolusExDuration
 import info.nightscout.androidaps.plugins.pump.eopatch.code.SettingKeys
 import info.nightscout.androidaps.plugins.pump.eopatch.extension.takeOne
-import info.nightscout.androidaps.plugins.pump.eopatch.extension.with
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.EopatchOverviewFragment
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.TempBasal
 import info.nightscout.androidaps.queue.commands.CustomCommand
@@ -34,6 +33,7 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.TimeChangeType
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -41,7 +41,6 @@ import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import org.json.JSONObject
-import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.min
@@ -53,11 +52,8 @@ class EopatchPumpPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     commandQueue: CommandQueue,
-    private val context: Context,
+    private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
-    private val sp: SP,
-    private val profileFunction: ProfileFunction,
-    private val activePlugin: ActivePlugin,
     private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil,
     private val pumpSync: PumpSync,
@@ -81,12 +77,6 @@ class EopatchPumpPlugin @Inject constructor(
     private var mLastDataTime: Long = 0
     private val mPumpDescription = PumpDescription(mPumpType)
 
-    init {
-        if (BuildConfig.DEBUG) {
-            Timber.plant(Timber.DebugTree())
-        }
-    }
-    
     override fun onStart() {
         super.onStart()
         mDisposables.add(rxBus
@@ -128,7 +118,7 @@ class EopatchPumpPlugin @Inject constructor(
 
     override fun onStop() {
         super.onStop()
-        aapsLogger.debug(LTag.PUMP, "EOPatchPumpPlugin onStop()");
+        aapsLogger.debug(LTag.PUMP, "EOPatchPumpPlugin onStop()")
     }
 
     override fun onStateChange(type: PluginType?, oldState: State?, newState: State?) {
@@ -348,7 +338,10 @@ class EopatchPumpPlugin @Inject constructor(
 
     override fun stopBolusDelivering() {
         patchmanager.stopNowBolus()
-            .with()
+            .subscribeOn(aapsSchedulers.io)
+            .observeOn(aapsSchedulers.main)
+            .subscribeOn(aapsSchedulers.io)
+            .observeOn(aapsSchedulers.main)
             .subscribe { it ->
                 rxBus.send(EventOverviewBolusProgress.apply {
                     status = rh.gs(R.string.bolusdelivered, (it.injectedBolusAmount * 0.05f))  //todo stoped 메세지로 변경 필요
@@ -362,7 +355,8 @@ class EopatchPumpPlugin @Inject constructor(
             mLastDataTime = System.currentTimeMillis()
             val tb = TempBasal.createAbsolute(durationInMinutes.toLong(), absoluteRate.toFloat())
             return patchmanager.startTempBasal(tb)
-                .with()
+                .subscribeOn(aapsSchedulers.io)
+                .observeOn(aapsSchedulers.main)
                 .doOnSuccess {
                     preferenceManager.getTempBasalManager().startedBasal = tb
                     preferenceManager.getTempBasalManager().startedBasal?.startTimestamp = System.currentTimeMillis()
@@ -394,7 +388,8 @@ class EopatchPumpPlugin @Inject constructor(
             mLastDataTime = System.currentTimeMillis()
             val tb = TempBasal.createPercent(durationInMinutes.toLong(), percent)
             return patchmanager.startTempBasal(tb)
-                .with()
+                .subscribeOn(aapsSchedulers.io)
+                .observeOn(aapsSchedulers.main)
                 .doOnSuccess {
                     preferenceManager.getTempBasalManager().startedBasal = tb
                     preferenceManager.getTempBasalManager().startedBasal?.startTimestamp = System.currentTimeMillis()

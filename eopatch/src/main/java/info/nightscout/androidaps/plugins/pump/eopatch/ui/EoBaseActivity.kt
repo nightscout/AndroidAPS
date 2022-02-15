@@ -16,9 +16,9 @@ import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.plugins.pump.eopatch.EoPatchRxBus
 import info.nightscout.androidaps.plugins.pump.eopatch.dagger.EopatchPluginQualifier
 import info.nightscout.androidaps.plugins.pump.eopatch.extension.fillExtras
-import info.nightscout.androidaps.plugins.pump.eopatch.extension.observeOnMainThread
 import info.nightscout.androidaps.plugins.pump.eopatch.extension.subscribeDefault
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.ActivityResultEvent
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
@@ -28,6 +28,8 @@ abstract class EoBaseActivity<B : ViewDataBinding> : NoSplashAppCompatActivity()
     @Inject
     @EopatchPluginQualifier
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
 
     protected lateinit var binding: B
 
@@ -90,8 +92,8 @@ abstract class EoBaseActivity<B : ViewDataBinding> : NoSplashAppCompatActivity()
     override fun checkCommunication(onSuccess: () -> Unit, onCancel: (() -> Unit)?, onDiscard: (() -> Unit)?, goHomeAfterDiscard: Boolean) {
         EoPatchRxBus.listen(ActivityResultEvent::class.java)
             .doOnSubscribe { startActivityForResult({ EopatchActivity.createIntentForCheckConnection(this, goHomeAfterDiscard) }, 10001) }
-            .observeOnMainThread()
-            .subscribeDefault {
+            .observeOn(aapsSchedulers.main)
+            .subscribeDefault(aapsLogger) {
                 if (it.requestCode == 10001) {
                     when (it.resultCode) {
                         RESULT_OK -> onSuccess.invoke()

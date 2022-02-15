@@ -19,20 +19,21 @@ import info.nightscout.androidaps.plugins.pump.eopatch.code.PatchStep
 import info.nightscout.androidaps.plugins.pump.eopatch.code.EventType
 import info.nightscout.androidaps.plugins.pump.eopatch.databinding.FragmentEopatchOverviewBinding
 import info.nightscout.androidaps.plugins.pump.eopatch.extension.fillExtras
-import info.nightscout.androidaps.plugins.pump.eopatch.extension.observeOnMainThread
 import info.nightscout.androidaps.plugins.pump.eopatch.extension.subscribeDefault
 import info.nightscout.androidaps.plugins.pump.eopatch.extension.takeOne
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchOverviewViewModel
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.ActivityResultEvent
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.shared.logging.AAPSLogger
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 class EopatchOverviewFragment: EoBaseFragment<FragmentEopatchOverviewBinding>() {
     @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
+    @Inject lateinit var aapsLogger: AAPSLogger
 
     private var disposable: CompositeDisposable = CompositeDisposable()
-
-    private var mProgressDialog: ProgressDialog? = null
 
     override fun getLayoutId(): Int = R.layout.fragment_eopatch_overview
 
@@ -167,8 +168,8 @@ class EopatchOverviewFragment: EoBaseFragment<FragmentEopatchOverviewBinding>() 
     override fun checkCommunication(onSuccess: () -> Unit, onCancel: (() -> Unit)?, onDiscard: (() -> Unit)?, goHomeAfterDiscard: Boolean) {
         EoPatchRxBus.listen(ActivityResultEvent::class.java)
             .doOnSubscribe { startActivityForResult({ EopatchActivity.createIntentForCheckConnection(this, goHomeAfterDiscard) }, 10001) }
-            .observeOnMainThread()
-            .subscribeDefault {
+            .observeOn(aapsSchedulers.main)
+            .subscribeDefault(aapsLogger) {
                 if (it.requestCode == 10001) {
                     when (it.resultCode) {
                         DaggerAppCompatActivity.RESULT_OK       -> onSuccess.invoke()
