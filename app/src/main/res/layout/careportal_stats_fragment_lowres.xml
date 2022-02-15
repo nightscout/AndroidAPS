@@ -77,7 +77,6 @@
             android:textSize="14sp"
             app:drawableStartCompat="@drawable/ic_cp_age_insulin" />
 
-
         <TextView
             android:id="@+id/insulin_age"
             android:layout_width="wrap_content"
@@ -87,7 +86,6 @@
             android:paddingRight="2dp"
             android:textColor="@android:color/white"
             android:textSize="14sp" />
-
 
         <TextView
             android:id="@+id/reservoir_level"
@@ -174,6 +172,7 @@
     </TableRow>
 
     <TableRow
+        android:id="@+id/battery_layout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:focusable="true">
@@ -188,7 +187,6 @@
             android:text="@string/pump"
             android:textSize="14sp"
             app:drawableStartCompat="@drawable/ic_cp_age_battery" />
-
 
         <TextView
             android:id="@+id/pb_age"

@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.TableRow
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import dagger.android.support.DaggerFragment
@@ -108,6 +109,7 @@ class ActionsFragment : DaggerFragment() {
     private var insulinLevelLabel: TextView? = null
     private var pbLevelLabel: TextView? = null
     private var cannulaOrPatch: TextView? = null
+    private var batteryLayout: TableRow? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -143,7 +145,6 @@ class ActionsFragment : DaggerFragment() {
         historyBrowser = view.findViewById(R.id.actions_historybrowser)
         tddStats = view.findViewById(R.id.actions_tddstats)
         pumpBatteryChange = view.findViewById(R.id.actions_pumpbatterychange)
-
         cannulaAge = view.findViewById(R.id.cannula_age)
         insulinAge = view.findViewById(R.id.insulin_age)
         reservoirLevel = view.findViewById(R.id.reservoir_level)
@@ -155,6 +156,7 @@ class ActionsFragment : DaggerFragment() {
         insulinLevelLabel = view.findViewById(R.id.insulin_level_label)
         pbLevelLabel = view.findViewById(R.id.pb_level_label)
         cannulaOrPatch = view.findViewById(R.id.cannula_or_patch)
+        batteryLayout = view.findViewById(R.id.battery_layout)
 
         profileSwitch?.setOnClickListener {
             activity?.let { activity ->
@@ -335,10 +337,11 @@ class ActionsFragment : DaggerFragment() {
         }
         tempTarget?.visibility = (profile != null && !loop.isDisconnected).toVisibility()
         tddStats?.visibility = pump.pumpDescription.supportsTDDs.toVisibility()
-
-        cannulaOrPatch?.text = if (pump.pumpDescription.isPatchPump) rh.gs(R.string.patch_pump) else rh.gs(R.string.cannula)
-        val imageResource = if (pump.pumpDescription.isPatchPump) R.drawable.ic_patch_pump_outline else R.drawable.ic_cp_age_cannula
+        val isPatchPump = pump.pumpDescription.isPatchPump
+        cannulaOrPatch?.text = if (isPatchPump) rh.gs(R.string.patch_pump) else rh.gs(R.string.cannula)
+        val imageResource = if (isPatchPump) R.drawable.ic_patch_pump_outline else R.drawable.ic_cp_age_cannula
         cannulaOrPatch?.setCompoundDrawablesWithIntrinsicBounds(imageResource, 0, 0, 0)
+        batteryLayout?.visibility = (!isPatchPump || pump is OmnipodErosPumpPlugin).toVisibility()
 
         if (!config.NSCLIENT) {
             statusLightHandler.updateStatusLights(cannulaAge, insulinAge, reservoirLevel, sensorAge, sensorLevel, pbAge, batteryLevel)
