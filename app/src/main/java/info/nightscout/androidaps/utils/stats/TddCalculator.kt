@@ -96,7 +96,6 @@ class TddCalculator @Inject constructor(
             //result.put(midnight, tdd)
         }
         val calculationStep = T.mins(5).msecs()
-        val tempBasals = iobCobCalculator.getTempBasalIncludingConvertedExtendedForRange(startTime, endTime, calculationStep)
         for (t in startTime until endTime step calculationStep) {
 
             //val midnight = MidnightTime.calc(t)
