@@ -86,6 +86,9 @@ class TempBasalDialog : DialogFragmentWithDate() {
             binding.percentLayout.visibility = View.GONE
             binding.absoluteLayout.visibility = View.VISIBLE
         }
+        binding.basalPercentInput.editText?.id?.let { binding.basalPercentLabel.labelFor = it }
+        binding.basalAbsoluteInput.editText?.id?.let { binding.basalAbsoluteLabel.labelFor = it }
+        binding.duration.editText?.id?.let { binding.durationLabel.labelFor = it }
     }
 
     override fun onDestroyView() {

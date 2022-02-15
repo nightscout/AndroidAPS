@@ -63,17 +63,14 @@ public class FillActivity extends ViewSelectorActivity {
 
                 final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_send_item, container, false);
                 final ImageView confirmbutton = view.findViewById(R.id.confirmbutton);
-                confirmbutton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
+                confirmbutton.setOnClickListener((View v) -> {
                         //check if it can happen that the fagment is never created that hold data?
                         // (you have to swipe past them anyways - but still)
 
                         String actionstring = "fill " + SafeParse.stringToDouble(editInsulin.editText.getText().toString());
                         ListenerService.initiateAction(FillActivity.this, actionstring);
+                        confirmAction(FillActivity.this, R.string.action_fill_confirmation);
                         finishAffinity();
-                    }
                 });
                 container.addView(view);
                 return view;

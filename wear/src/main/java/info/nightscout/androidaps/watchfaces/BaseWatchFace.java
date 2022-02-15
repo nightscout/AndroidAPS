@@ -71,6 +71,8 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
         INTENT_FILTER.addAction(Intent.ACTION_TIME_CHANGED);
     }
 
+    static IntentFilter iFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+
     public final Point displaySize = new Point();
     public TextView mTime, mHour, mMinute, mTimePeriod, mSgv, mDirection, mTimestamp, mUploaderBattery, mRigBattery, mDelta, mAvgDelta, mStatus, mBasalRate, mIOB1, mIOB2, mCOB1, mCOB2, mBgi, mLoop, mDay, mDayName, mMonth, isAAPSv2, mHighLight, mLowLight;
     public ImageView mGlucoseDial, mDeltaGauge, mHourHand, mMinuteHand;
@@ -111,7 +113,6 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
     private Date mDateTime;
     private String mLastSvg = "", mLastDirection = "";
     private float mYOffset = 0;
-    private Intent mBatteryStatus;
 
     @Override
     public void onCreate() {
@@ -145,10 +146,8 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
     }
 
     private void setupBatteryReceiver() {
-        IntentFilter iFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-        mBatteryStatus = this.registerReceiver(null, iFilter);
         String setting = sharedPrefs.getString("simplify_ui", "off");
-        if (setting.equals("charging") || setting.equals("ambient_charging") && batteryReceiver == null) {
+        if ((setting.equals("charging") || setting.equals("ambient_charging")) && batteryReceiver == null) {
             IntentFilter intentBatteryFilter = new IntentFilter();
             intentBatteryFilter.addAction(BatteryManager.ACTION_CHARGING);
             intentBatteryFilter.addAction(BatteryManager.ACTION_DISCHARGING);
@@ -374,6 +373,7 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
     }
 
     private boolean isCharging() {
+        Intent mBatteryStatus = this.registerReceiver(null, iFilter);
         int status = mBatteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
         return status == BatteryManager.BATTERY_STATUS_CHARGING ||
                 status == BatteryManager.BATTERY_STATUS_FULL;
@@ -658,7 +658,7 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
     }
 
     private boolean isLowRes(WatchMode watchMode) {
-        return (watchMode == WatchMode.LOW_BIT) || (watchMode == WatchMode.LOW_BIT_BURN_IN); // || (watchMode == WatchMode.LOW_BIT_BURN_IN);
+        return watchMode == WatchMode.LOW_BIT || watchMode == WatchMode.LOW_BIT_BURN_IN;
     }
 
     private boolean isSimpleUi() {

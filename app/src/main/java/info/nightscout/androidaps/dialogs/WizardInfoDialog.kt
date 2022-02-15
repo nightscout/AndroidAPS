@@ -70,7 +70,7 @@ class WizardInfoDialog : DaggerDialogFragment() {
         val units = profileFunction.getUnits()
         val bgString = Profile.toUnitsString(data.glucoseValue, data.glucoseValue * Constants.MGDL_TO_MMOLL, units)
         val isf = Profile.toUnits(data.isf, data.isf * Constants.MGDL_TO_MMOLL, units)
-        val trend = Profile.toUnitsString(data.glucoseTrend * 3, data.glucoseTrend * 3 * Constants.MGDL_TO_MMOLL, profileFunction.getUnits())
+        val trend = Profile.toUnitsString(data.glucoseTrend * 3, data.glucoseTrend * 3 * Constants.MGDL_TO_MMOLL, units)
         // BG
         binding.bg.text = rh.gs(R.string.format_bg_isf, bgString, isf)
         binding.bgInsulin.text = rh.gs(R.string.formatinsulinunits, data.glucoseInsulin)

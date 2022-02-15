@@ -1,6 +1,8 @@
 package info.nightscout.androidaps.interaction.actions;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.wearable.view.GridPagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,11 +25,14 @@ public class ECarbActivity extends ViewSelectorActivity {
     PlusMinusEditText editCarbs;
     PlusMinusEditText editStartTime;
     PlusMinusEditText editDuration;
+    int maxCarbs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setAdapter(new MyGridViewPagerAdapter());
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        maxCarbs = sp.getInt(getString(R.string.key_treatmentssafety_maxcarbs), 48);
     }
 
     @Override
@@ -56,7 +61,7 @@ public class ECarbActivity extends ViewSelectorActivity {
                 if (editCarbs != null) {
                     def = SafeParse.stringToDouble(editCarbs.editText.getText().toString());
                 }
-                editCarbs = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 150d, 1d, new DecimalFormat("0"), true);
+                editCarbs = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, (double)maxCarbs, 1d, new DecimalFormat("0"), true);
                 setLabelToPlusMinusView(view, getString(R.string.action_carbs));
                 container.addView(view);
                 view.requestFocus();
@@ -85,19 +90,18 @@ public class ECarbActivity extends ViewSelectorActivity {
 
                 final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_send_item, container, false);
                 final ImageView confirmbutton = view.findViewById(R.id.confirmbutton);
-                confirmbutton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                confirmbutton.setOnClickListener((View v) -> {
 
-                        //check if it can happen that the fagment is never created that hold data?
-                        // (you have to swipe past them anyways - but still)
+                    //check if it can happen that the fagment is never created that hold data?
+                    // (you have to swipe past them anyways - but still)
 
-                        String actionstring = "ecarbs " + SafeParse.stringToInt(editCarbs.editText.getText().toString())
-                                + " " + SafeParse.stringToInt(editStartTime.editText.getText().toString())
-                                + " " + SafeParse.stringToInt(editDuration.editText.getText().toString());
-                        ListenerService.initiateAction(ECarbActivity.this, actionstring);
-                        finishAffinity();
-                    }
+                    String actionstring = "ecarbs " + SafeParse.stringToInt(editCarbs.editText.getText().toString())
+                            + " " + SafeParse.stringToInt(editStartTime.editText.getText().toString())
+                            + " " + SafeParse.stringToInt(editDuration.editText.getText().toString());
+                    ListenerService.initiateAction(ECarbActivity.this, actionstring);
+                    confirmAction(ECarbActivity.this, R.string.action_ecarb_confirmation);
+                    finishAffinity();
+
                 });
                 container.addView(view);
                 return view;

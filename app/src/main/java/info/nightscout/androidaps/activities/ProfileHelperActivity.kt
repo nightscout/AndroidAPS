@@ -239,6 +239,10 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
             }
             ToastUtils.showToastInUiThread(this, R.string.invalidinput)
         }
+        binding.age.editText?.id?.let { binding.ageLabel.labelFor = it }
+        binding.tdd.editText?.id?.let { binding.tddLabel.labelFor = it }
+        binding.weight.editText?.id?.let { binding.weightLabel.labelFor = it }
+        binding.basalpctfromtdd.editText?.id?.let { binding.basalpctfromtddLabel.labelFor = it }
 
         switchTab(0, typeSelected[0], false)
     }
