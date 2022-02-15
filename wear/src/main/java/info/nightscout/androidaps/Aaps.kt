@@ -7,7 +7,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.preference.PreferenceManager
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
-import info.nightscout.androidaps.di.DaggerAppComponent
+import info.nightscout.androidaps.di.DaggerWearComponent
 
 class Aaps : DaggerApplication(), OnSharedPreferenceChangeListener {
 
@@ -17,7 +17,7 @@ class Aaps : DaggerApplication(), OnSharedPreferenceChangeListener {
     }
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> =
-        DaggerAppComponent
+        DaggerWearComponent
             .builder()
             .application(this)
             .build()

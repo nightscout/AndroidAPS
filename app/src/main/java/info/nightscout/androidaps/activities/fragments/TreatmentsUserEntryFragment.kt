@@ -20,6 +20,7 @@ import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.events.EventTreatmentUpdateGui
+import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
@@ -131,11 +132,13 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
 
         override fun onBindViewHolder(holder: UserEntryViewHolder, position: Int) {
             val current = entries[position]
-            holder.binding.date.text = dateUtil.dateAndTimeAndSecondsString(current.timestamp)
-            holder.binding.action.text =
-                view?.let { userEntryPresentationHelper.actionToColoredString(it.context, current.action) }
-            holder.binding.s.text = current.note
-            holder.binding.s.visibility = if (current.note != "") View.VISIBLE else View.GONE
+            val sameDayPrevious = position > 0 && dateUtil.isSameDay(current.timestamp, entries[position-1].timestamp)
+            holder.binding.date.visibility = sameDayPrevious.not().toVisibility()
+            holder.binding.date.text = dateUtil.dateString(current.timestamp)
+            holder.binding.time.text = dateUtil.timeStringWithSeconds(current.timestamp)
+            holder.binding.action.text = context?.let { userEntryPresentationHelper.actionToColoredString(it, current.action) }
+            holder.binding.notes.text = current.note
+            holder.binding.notes.visibility = if (current.note != "") View.VISIBLE else View.GONE
             holder.binding.iconSource.setImageResource(userEntryPresentationHelper.iconId(current.source))
             holder.binding.iconSource.visibility = View.VISIBLE
             holder.binding.values.text = userEntryPresentationHelper.listToPresentationString(current.values)

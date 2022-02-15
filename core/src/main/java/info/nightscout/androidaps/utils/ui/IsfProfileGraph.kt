@@ -2,13 +2,14 @@ package info.nightscout.androidaps.utils.ui
 
 import android.content.Context
 import android.util.AttributeSet
+import com.jjoe64.graphview.DefaultLabelFormatter
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.utils.Round
-import java.util.ArrayList
+import java.text.NumberFormat
 import kotlin.math.max
 
 class IsfProfileGraph : GraphView {
@@ -31,15 +32,20 @@ class IsfProfileGraph : GraphView {
         val isfSeries: LineGraphSeries<DataPoint> = LineGraphSeries(isfDataPoints)
         addSeries(isfSeries)
         isfSeries.thickness = 8
-        isfSeries.isDrawBackground = false
         viewport.isXAxisBoundsManual = true
         viewport.setMinX(0.0)
         viewport.setMaxX(24.0)
         viewport.isYAxisBoundsManual = true
         viewport.setMinY(0.0)
-        viewport.setMaxY(Round.ceilTo(maxIsf * 1.1, 0.5))
+        val maxY = Round.ceilTo(maxIsf * 1.1, 0.5)
+        viewport.setMaxY(maxY)
         gridLabelRenderer.numHorizontalLabels = 13
+        gridLabelRenderer.labelVerticalWidth = 40
         gridLabelRenderer.verticalLabelsColor = isfSeries.color
+
+        val nf: NumberFormat = NumberFormat.getInstance()
+        nf.maximumFractionDigits = 1
+        gridLabelRenderer.setLabelFormatter(DefaultLabelFormatter(nf, nf))
     }
 
     fun show(profile1: Profile, profile2: Profile) {

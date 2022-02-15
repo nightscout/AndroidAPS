@@ -1,10 +1,12 @@
 package info.nightscout.androidaps.utils.wizard
 
+import android.util.Log
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONArray
 import org.json.JSONObject
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -18,6 +20,18 @@ class QuickWizard @Inject constructor(
 
     init {
         setData(JSONArray(sp.getString(R.string.key_quickwizard, "[]")))
+        setGuidsForOldEntries()
+    }
+
+    private fun setGuidsForOldEntries() {
+        // for migration purposes; guid is a new required property
+        for (i in 0 until storage.length()) {
+            val entry = QuickWizardEntry(injector).from(storage.get(i) as JSONObject, i)
+            if (entry.guid() == "") {
+                val guid = UUID.randomUUID().toString()
+                entry.storage.put("guid", guid)
+            }
+        }
     }
 
     fun getActive(): QuickWizardEntry? {
@@ -41,6 +55,38 @@ class QuickWizard @Inject constructor(
     operator fun get(position: Int): QuickWizardEntry =
         QuickWizardEntry(injector).from(storage.get(position) as JSONObject, position)
 
+    fun get(guid: String): QuickWizardEntry? {
+        for (i in 0 until storage.length()) {
+            val entry = QuickWizardEntry(injector).from(storage.get(i) as JSONObject, i)
+            if (entry.guid() == guid) {
+                return entry
+            }
+        }
+        return null
+    }
+
+    fun move(from: Int, to: Int) {
+        Log.i("QuickWizard", "moveItem: $from $to")
+        val fromEntry = storage[from] as JSONObject
+        storage.remove(from)
+        addToPos(to, fromEntry, storage)
+        save()
+    }
+
+    fun removePos(pos: Int, jsonObj: JSONObject?, jsonArr: JSONArray) {
+        for (i in jsonArr.length() downTo pos + 1) {
+            jsonArr.put(i, jsonArr[i - 1])
+        }
+        jsonArr.put(pos, jsonObj)
+    }
+
+    private fun addToPos(pos: Int, jsonObj: JSONObject?, jsonArr: JSONArray) {
+        for (i in jsonArr.length() downTo pos + 1) {
+            jsonArr.put(i, jsonArr[i - 1])
+        }
+        jsonArr.put(pos, jsonObj)
+    }
+
     fun newEmptyItem(): QuickWizardEntry {
         return QuickWizardEntry(injector)
     }
@@ -57,4 +103,5 @@ class QuickWizard @Inject constructor(
         storage.remove(position)
         save()
     }
+
 }

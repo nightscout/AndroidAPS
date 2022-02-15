@@ -129,6 +129,9 @@
             android:drawableTop="@drawable/ic_quick_wizard"
             android:text="@string/quickwizard"
             android:textAlignment="center"
+            android:hint="@string/quickwizard"
+            android:textColor="?attr/cobColor"
+            android:textSize="10sp"
             tools:ignore="SmallSp" />
 
     </LinearLayout>

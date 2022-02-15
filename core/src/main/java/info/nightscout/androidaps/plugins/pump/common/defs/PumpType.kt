@@ -184,6 +184,7 @@ enum class PumpType {
         baseBasalSpecialSteps = null,
         pumpCapability = PumpCapability.OmnipodCapabilities,
         hasCustomUnreachableAlertCheck = true,
+        isPatchPump = true,
         source = Sources.OmnipodEros),
     OMNIPOD_DASH(description = "Omnipod Dash",
         manufacturer = ManufacturerType.Insulet,
@@ -198,6 +199,7 @@ enum class PumpType {
         baseBasalMaxValue = null,
         baseBasalStep = 0.05,
         baseBasalSpecialSteps = null,
+        isPatchPump = true,
         pumpCapability = PumpCapability.OmnipodCapabilities,
         hasCustomUnreachableAlertCheck = false),
     MEDTRONIC_512_712(description = "Medtronic 512/712",
@@ -352,6 +354,8 @@ enum class PumpType {
         private set
     var hasCustomUnreachableAlertCheck = false
         private set
+    var isPatchPump = false
+        private set
     private var parent: PumpType? = null
     val source: Sources
 
@@ -419,6 +423,7 @@ enum class PumpType {
                 baseBasalSpecialSteps: DoseStepSize? = null,
                 pumpCapability: PumpCapability,
                 hasCustomUnreachableAlertCheck: Boolean = false,
+                isPatchPump: Boolean = false,
                 source: Sources = Sources.VirtualPump) {
         this.description = description
         this.manufacturer = manufacturer
@@ -435,6 +440,7 @@ enum class PumpType {
         this.baseBasalSpecialSteps = baseBasalSpecialSteps
         this.pumpCapability = pumpCapability
         this.hasCustomUnreachableAlertCheck = hasCustomUnreachableAlertCheck
+        this.isPatchPump = isPatchPump
         this.source = source
     }
 

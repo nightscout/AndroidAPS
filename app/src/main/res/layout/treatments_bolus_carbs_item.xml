@@ -22,6 +22,20 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="?android:attr/dividerHorizontal"
+            android:gravity="center"
+            android:text="1.1.2000"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            tools:ignore="HardcodedText" />
+
         <LinearLayout
             android:id="@+id/metadata_layout"
             android:layout_width="match_parent"
@@ -39,11 +53,11 @@
                 tools:ignore="HardcodedText,RtlSymmetry" />
 
             <TextView
-                android:id="@+id/date"
+                android:id="@+id/calc_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:text="1.1.2000"
+                android:text="11:45"
                 tools:ignore="HardcodedText,RtlSymmetry" />
 
             <TextView
@@ -75,17 +89,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="5dp"
                 android:gravity="center"
                 android:text="{fa-clock-o}"
                 tools:ignore="HardcodedText,RtlSymmetry" />
 
             <TextView
-                android:id="@+id/bolus_date"
+                android:id="@+id/bolus_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:text="1.1.2000"
+                android:text="11:45"
                 tools:ignore="HardcodedText,RtlSymmetry" />
 
             <TextView
@@ -183,17 +197,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="5dp"
                 android:gravity="center"
                 android:text="{fa-clock-o}"
                 tools:ignore="HardcodedText,RtlSymmetry" />
 
             <TextView
-                android:id="@+id/carbs_date"
+                android:id="@+id/carbs_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:text="1.1.2000"
+                android:text="11:45"
                 tools:ignore="HardcodedText,RtlSymmetry" />
 
             <TextView

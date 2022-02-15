@@ -38,10 +38,6 @@
 <attr name="graphVerticalLabelText" format="reference|color" />
 <attr name="inrangeBackground" format="reference|color" />
 <attr name="graphGrid" format="reference|color" />
-<!-- Dialog specific (cutom alert dialog) -->
-<attr name="dialogTitleBackground" format="reference" />
-<attr name="dialogTitleColor" format="reference" />
-<attr name="dialogTitleIconTint" format="reference" />
 <attr name="dialogUrgent" format="reference" />
 <!-- TDD Stats   -->
 <attr name="backgroundStatsColor" format="reference" />
@@ -230,7 +226,13 @@
 <attr name="colorScheduled" format="reference" />
 <attr name="tempbasal" format="reference" />
 <attr name="colorInitializingBorder" format="reference" />
-
 <!-- Window background-->
 <attr name="windowBackground" format="reference|color" />
+<attr name="dialogTitleBackground" format="reference" />
+<attr name="dialogTitleColor" format="reference" />
+<attr name="dialogTitleIconTint" format="reference" />
+
+<declare-styleable name="NumberPicker">
+<attr name="customContentDescription" format="string" />
+</declare-styleable>
 </resources>

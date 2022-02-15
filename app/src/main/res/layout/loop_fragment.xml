@@ -24,6 +24,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:focusable="true"
             android:orientation="horizontal">
 
             <TextView
@@ -68,7 +69,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:focusable="true"
+            android:orientation="horizontal"
+            android:screenReaderFocusable="true">
 
             <TextView
                 android:layout_width="match_parent"
@@ -112,6 +115,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:focusable="true"
             android:orientation="horizontal">
 
             <TextView
@@ -156,6 +160,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:focusable="true"
             android:orientation="horizontal">
 
             <TextView
@@ -200,6 +205,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:focusable="true"
             android:orientation="horizontal">
 
             <TextView
@@ -244,6 +250,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:focusable="true"
             android:orientation="horizontal">
 
             <TextView
@@ -288,6 +295,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:focusable="true"
             android:orientation="horizontal">
 
             <TextView
@@ -332,6 +340,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:focusable="true"
             android:orientation="horizontal">
 
             <TextView
@@ -376,6 +385,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:focusable="true"
             android:orientation="horizontal">
 
             <TextView
@@ -420,6 +430,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:focusable="true"
             android:orientation="horizontal">
 
             <TextView
@@ -464,6 +475,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:focusable="true"
             android:orientation="horizontal">
 
             <TextView

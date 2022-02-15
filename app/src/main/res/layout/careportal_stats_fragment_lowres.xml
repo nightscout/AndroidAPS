@@ -8,7 +8,8 @@
 
     <TableRow
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:focusable="true">
 
         <TextView
             android:layout_width="wrap_content"
@@ -61,7 +62,8 @@
 
     <TableRow
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:focusable="true">
 
         <TextView
             android:layout_width="wrap_content"
@@ -114,9 +116,11 @@
 
     <TableRow
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:focusable="true">
 
         <TextView
+            android:id="@+id/cannula_or_patch"
             android:layout_width="wrap_content"
             android:layout_height="25dp"
             android:gravity="center_vertical"
@@ -165,7 +169,8 @@
 
     <TableRow
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:focusable="true">
 
         <TextView
             android:id="@+id/pb_label"

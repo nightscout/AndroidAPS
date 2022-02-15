@@ -122,6 +122,8 @@
     <string name="color_name_white">branco</string>
     <string name="color_name_black">preto</string>
     <string name="color_name_multicolor">multicolor</string>
+    <string name="pref_simplify_ui">Simplificar a Interface</string>
+    <string name="pref_simplify_ui_sum">Mostrar apenas tempo e glicemia</string>
     <string name="pref_vibrate_hourly">Vibrar por hora</string>
     <string name="pref_show_weeknumber">Mostrar número da Semana</string>
     <string name="digitalstyle_pref_your_style">Seu estilo:</string>
@@ -136,4 +138,8 @@
     <string name="bolus_progress_silent_channel_name">Progresso Bólus AAPS Silencioso</string>
     <string name="bolus_progress_channel_description">Progresso Bólus e cancelar</string>
     <string name="bolus_progress_silent_channel_description">Progresso Bólus e cancelar com menos vibrações</string>
+    <string name="simple_ui_off">Desligado</string>
+    <string name="simple_ui_charging">Durante o carregamento</string>
+    <string name="simple_ui_always_on">Modo Permanentemente Ligado</string>
+    <string name="simple_ui_always_on_charging">Permanentemente ligado e carregando</string>
 </resources>

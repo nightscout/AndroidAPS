@@ -181,7 +181,10 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
             val profileSwitch = profileSwitchList[position]
             holder.binding.ph.visibility = (profileSwitch is ProfileSealed.EPS).toVisibility()
             holder.binding.ns.visibility = (profileSwitch.interfaceIDs_backing?.nightscoutId != null).toVisibility()
-            holder.binding.date.text = dateUtil.dateAndTimeString(profileSwitch.timestamp)
+            val sameDayPrevious = position > 0 && dateUtil.isSameDay(profileSwitch.timestamp, profileSwitchList[position - 1].timestamp)
+            holder.binding.date.visibility = sameDayPrevious.not().toVisibility()
+            holder.binding.date.text = dateUtil.dateString(profileSwitch.timestamp)
+            holder.binding.time.text = dateUtil.timeString(profileSwitch.timestamp)
             holder.binding.duration.text = rh.gs(R.string.format_mins, T.msecs(profileSwitch.duration ?: 0L).mins())
             holder.binding.name.text = if (profileSwitch is ProfileSealed.PS) profileSwitch.value.getCustomizedName() else if (profileSwitch is ProfileSealed.EPS) profileSwitch.value.originalCustomizedName else ""
             if (profileSwitch.isInProgress(dateUtil)) holder.binding.date.setTextColor(rh.getAttributeColor(context, R.attr.treatmentActive)) else holder.binding.date.setTextColor(holder.binding.duration.currentTextColor)

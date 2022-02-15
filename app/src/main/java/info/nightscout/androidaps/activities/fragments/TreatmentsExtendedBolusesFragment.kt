@@ -125,13 +125,16 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
             holder.binding.ns.visibility = (extendedBolus.interfaceIDs.nightscoutId != null).toVisibility()
             holder.binding.ph.visibility = (extendedBolus.interfaceIDs.pumpId != null).toVisibility()
             holder.binding.invalid.visibility = extendedBolus.isValid.not().toVisibility()
+            val sameDayPrevious = position > 0 && dateUtil.isSameDay(extendedBolus.timestamp, extendedBolusList[position-1].timestamp)
+            holder.binding.date.visibility = sameDayPrevious.not().toVisibility()
+            holder.binding.date.text = dateUtil.dateString(extendedBolus.timestamp)
             @SuppressLint("SetTextI18n")
             if (extendedBolus.isInProgress(dateUtil)) {
-                holder.binding.date.text = dateUtil.dateAndTimeString(extendedBolus.timestamp)
-                holder.binding.date.setTextColor(rh.getAttributeColor(context, R.attr.treatmentActive))
+                holder.binding.time.text = dateUtil.timeString(extendedBolus.timestamp)
+                holder.binding.time.setTextColor(rh.getAttributeColor(context, R.attr.treatmentActive))
             } else {
-                holder.binding.date.text = dateUtil.dateAndTimeString(extendedBolus.timestamp) + " - " + dateUtil.timeString(extendedBolus.end)
-                holder.binding.date.setTextColor(rh.getAttributeColor(context, R.attr.treatmentActive))
+                holder.binding.time.text = dateUtil.timeRangeString(extendedBolus.timestamp, extendedBolus.end)
+                holder.binding.time.setTextColor(rh.getAttributeColor(context, R.attr.treatmentActive))
             }
             val profile = profileFunction.getProfile(extendedBolus.timestamp) ?: return
             holder.binding.duration.text = rh.gs(R.string.format_mins, T.msecs(extendedBolus.duration).mins())

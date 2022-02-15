@@ -7,8 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.work.ListenableWorker
-import androidx.work.workDataOf
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
@@ -118,7 +116,10 @@ class BGSourceFragment : DaggerFragment() {
             val glucoseValue = glucoseValues[position]
             holder.binding.ns.visibility = (glucoseValue.interfaceIDs.nightscoutId != null).toVisibility()
             holder.binding.invalid.visibility = (!glucoseValue.isValid).toVisibility()
-            holder.binding.date.text = dateUtil.dateAndTimeString(glucoseValue.timestamp)
+            val sameDayPrevious = position > 0 && dateUtil.isSameDay(glucoseValue.timestamp, glucoseValues[position-1].timestamp)
+            holder.binding.date.visibility = sameDayPrevious.not().toVisibility()
+            holder.binding.date.text = dateUtil.dateString(glucoseValue.timestamp)
+            holder.binding.time.text = dateUtil.timeString(glucoseValue.timestamp)
             holder.binding.value.text = glucoseValue.valueToUnitsString(profileFunction.getUnits())
             holder.binding.direction.setImageResource(glucoseValue.trendArrow.directionToIcon())
             holder.binding.remove.tag = glucoseValue

@@ -81,7 +81,6 @@
                         android:letterSpacing="-0.075"
                         android:lines="1"
                         android:text="000g"
-                        android:textColor="@color/white"
                         android:textSize="14sp" />
                 </LinearLayout>
 

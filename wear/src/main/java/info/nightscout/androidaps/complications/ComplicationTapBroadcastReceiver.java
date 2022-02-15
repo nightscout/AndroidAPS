@@ -15,7 +15,7 @@ import javax.inject.Inject;
 
 import dagger.android.DaggerBroadcastReceiver;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.interaction.actions.BolusActivity;
+import info.nightscout.androidaps.interaction.actions.TreatmentActivity;
 import info.nightscout.androidaps.interaction.actions.ECarbActivity;
 import info.nightscout.androidaps.interaction.actions.WizardActivity;
 import info.nightscout.androidaps.interaction.menus.MainMenuActivity;
@@ -77,7 +77,7 @@ public class ComplicationTapBroadcastReceiver extends DaggerBroadcastReceiver {
                 intentOpen = new Intent(context, WizardActivity.class);
                 break;
             case BOLUS:
-                intentOpen = new Intent(context, BolusActivity.class);
+                intentOpen = new Intent(context, TreatmentActivity.class);
                 break;
             case ECARB:
                 intentOpen = new Intent(context, ECarbActivity.class);

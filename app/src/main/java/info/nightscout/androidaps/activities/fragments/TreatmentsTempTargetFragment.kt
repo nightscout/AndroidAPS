@@ -164,12 +164,15 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
             holder.binding.ns.visibility = (tempTarget.interfaceIDs.nightscoutId != null).toVisibility()
             holder.binding.invalid.visibility = tempTarget.isValid.not().toVisibility()
             holder.binding.remove.visibility = tempTarget.isValid.toVisibility()
-            holder.binding.date.text = dateUtil.dateAndTimeString(tempTarget.timestamp) + " - " + dateUtil.timeString(tempTarget.end)
+            val sameDayPrevious = position > 0 && dateUtil.isSameDay(tempTarget.timestamp, tempTargetList[position-1].timestamp)
+            holder.binding.date.visibility = sameDayPrevious.not().toVisibility()
+            holder.binding.date.text = dateUtil.dateString(tempTarget.timestamp)
+            holder.binding.time.text = dateUtil.timeRangeString(tempTarget.timestamp, tempTarget.end)
             holder.binding.duration.text = rh.gs(R.string.format_mins, T.msecs(tempTarget.duration).mins())
             holder.binding.low.text = tempTarget.lowValueToUnitsToString(units)
             holder.binding.high.text = tempTarget.highValueToUnitsToString(units)
             holder.binding.reason.text = translator.translate(tempTarget.reason)
-            holder.binding.date.setTextColor(
+            holder.binding.time.setTextColor(
                 when {
                     tempTarget.id == currentlyActiveTarget?.id  -> rh.getAttributeColor(context, R.attr.treatmentActive)
                     tempTarget.timestamp > dateUtil.now() -> rh.getAttributeColor(context, R.attr.treatmentSheduled)
