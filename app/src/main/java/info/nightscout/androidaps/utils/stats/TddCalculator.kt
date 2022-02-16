@@ -58,13 +58,13 @@ class TddCalculator @Inject constructor(
             val tbr = tempBasals[t]
             val profile = profileFunction.getProfile(t) ?: continue
             val absoluteRate = tbr?.convertedToAbsolute(t, profile) ?: profile.getBasal(t)
-            tdd.basalAmount += absoluteRate / 60.0 * 5.0
+            tdd.basalAmount += absoluteRate / T.mins(60).msecs().toDouble() * calculationStep.toDouble()
 
             if (!activePlugin.activePump.isFakingTempsByExtendedBoluses) {
                 // they are not included in TBRs
                 val eb = iobCobCalculator.getExtendedBolus(t)
                 val absoluteEbRate = eb?.rate ?: 0.0
-                tdd.bolusAmount += absoluteEbRate / 60.0 * 5.0
+                tdd.bolusAmount += absoluteEbRate / T.mins(60).msecs().toDouble() * calculationStep.toDouble()
             }
             result.put(midnight, tdd)
         }
@@ -103,13 +103,13 @@ class TddCalculator @Inject constructor(
             val tbr = iobCobCalculator.getTempBasalIncludingConvertedExtended(t)
             val profile = profileFunction.getProfile(t) ?: continue
             val absoluteRate = tbr?.convertedToAbsolute(t, profile) ?: profile.getBasal(t)
-            tdd.basalAmount += absoluteRate / 60.0 * 5.0
+            tdd.basalAmount += absoluteRate / T.mins(5).msecs().toDouble() * calculationStep.toDouble()
 
             if (!activePlugin.activePump.isFakingTempsByExtendedBoluses) {
                 // they are not included in TBRs
                 val eb = iobCobCalculator.getExtendedBolus(t)
                 val absoluteEbRate = eb?.rate ?: 0.0
-                tdd.bolusAmount += absoluteEbRate / 60.0 * 5.0
+                tdd.bolusAmount += absoluteEbRate / T.mins(5).msecs().toDouble() * calculationStep.toDouble()
             }
             //result.put(midnight, tdd)
         }
