@@ -74,6 +74,11 @@
                 android:key="@string/key_bolus_password"
                 android:title="@string/bolus_password" />
 
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="@string/key_bypass_old_version_check"
+                android:title="@string/bypass_old_version_check_title" />
+
         </PreferenceCategory>
 
         <info.nightscout.androidaps.skins.SkinListPreference

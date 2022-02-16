@@ -380,6 +380,7 @@
     <string name="running_invalid_version">We have detected that you are running an invalid version. Loop disabled!</string>
     <string name="versionavailable">Version %1$s available</string>
     <string name="version_expire">Version %1$s expire on %2$s</string>
+    <string name="key_bypass_old_version_check" translatable="false">bypass_old_version_check</string>
 
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Please reboot your phone or restart AndroidAPS from the System Settings \notherwise Android APS will not have logging (important to track and verify that the algorithms are working correctly)!</string>

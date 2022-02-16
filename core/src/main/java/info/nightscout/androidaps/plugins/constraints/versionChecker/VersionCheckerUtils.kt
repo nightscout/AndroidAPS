@@ -33,6 +33,8 @@ class VersionCheckerUtils @Inject constructor(
     fun isConnected(): Boolean = receiverStatusStore.isConnected
 
     fun triggerCheckVersion() {
+        if (sp.getBoolean(R.string.key_bypass_old_version_check, false))
+            return;
 
         if (!sp.contains(R.string.key_last_time_this_version_detected_as_ok)) {
             // On a new installation, set it as 30 days old in order to warn that there is a new version.

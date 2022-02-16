@@ -331,6 +331,7 @@
     <string name="openapsama_useautosens">Use Autosens feature</string>
     <string name="a52_risk_enable">A52 risk enable</string>
     <string name="a52_risk_enable_summary">Flag to disable Medtronic A52 error safety (should lead to more agressive bolusing)</string>
+    <string name="bypass_old_version_check_title">Skip checking for new version (not recommended)</string>
     <string name="refresheventsfromnightscout">Refresh from NS</string>
     <string name="deletefuturetreatments">Delete treatments in the future</string>
     <string name="actions_shortname">ACT</string>
