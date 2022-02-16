@@ -60,7 +60,6 @@ class DetermineBasalAdapterSMBAutoISFJS internal constructor(private val scriptR
     private var smbAlwaysAllowed = false
     private var currentTime: Long = 0
     private var saveCgmSource = false
-    private var lastBolusNormalTime: Long = 0
 
     override var currentTempParam: String? = null
     override var iobDataParam: String? = null
@@ -257,7 +256,6 @@ class DetermineBasalAdapterSMBAutoISFJS internal constructor(private val scriptR
         this.mealData.put("slopeFromMaxDeviation", mealData.slopeFromMaxDeviation)
         this.mealData.put("slopeFromMinDeviation", mealData.slopeFromMinDeviation)
         this.mealData.put("lastBolusTime", mealData.lastBolusTime)
-        this.mealData.put("lastBolusNormalTime", lastBolusNormalTime)
         this.mealData.put("lastCarbTime", mealData.lastCarbTime)
 
         this.mealData.put("TDDAIMI7", tddCalculator.averageTDD(tddCalculator.calculate(7)).totalAmount)
