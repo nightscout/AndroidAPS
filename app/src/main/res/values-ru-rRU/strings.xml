@@ -515,6 +515,8 @@
     <string name="enablesmbalways_summary">Всегда включать супер микро болюс SMB независимо от болюсов. Возможно только для источников СК с хорошей фильтрацией данных вроде G5</string>
     <string name="enablesmbaftercarbs">Активировать супер микро болюс SMB после углеводов</string>
     <string name="enablesmbaftercarbs_summary">Включать супер микро болюс SMB на 6 часов после углеводов, даже при 0 активных углеводов COB. Возможно только для источников СК с хорошей фильтрацией данных вроде G5</string>
+    <string name="enablesmbignore">Игнорировать источник СК для SMB (РИСКОВАНО)</string>
+    <string name="enablesmbaftercarbs_ignore">Включить SMB даже для источников СК без поддержки фильтрации (РИСКОВАНО)</string>
     <string name="enablesmbwithcob">Включить супер микро болюс при активных углеводах COB</string>
     <string name="enablesmbwithcob_summary">Включить супер микро болюс SMB, когда имеются активные углеводы COB.</string>
     <string name="enablesmbwithtemptarget">Включить супер микро болюс SMB с временными целями</string>

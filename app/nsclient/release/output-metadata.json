@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "info.nightscout.nsclient",
+  "variantName": "nsclientRelease",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "properties": [],
+      "versionCode": 1500,
+      "versionName": "2.8.2.1-nsclient",
+      "enabled": true,
+      "outputFile": "app-nsclient-release.apk"
+    }
+  ]
+}
