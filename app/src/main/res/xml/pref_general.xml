@@ -79,6 +79,11 @@
                 android:key="@string/key_bypass_old_version_check"
                 android:title="@string/bypass_old_version_check_title" />
 
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="@string/key_engineering_mode"
+                android:title="@string/engineering_mode_summary" />
+
         </PreferenceCategory>
 
         <info.nightscout.androidaps.skins.SkinListPreference

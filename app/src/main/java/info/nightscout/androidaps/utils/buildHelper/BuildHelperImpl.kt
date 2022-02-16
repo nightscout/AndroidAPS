@@ -1,13 +1,16 @@
 package info.nightscout.androidaps.utils.buildHelper
 
 import info.nightscout.androidaps.BuildConfig
+import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
+import info.nightscout.shared.sharedPreferences.SP
 import java.io.File
 
 class BuildHelperImpl constructor(
     private val config: Config,
-    fileListProvider: PrefFileListProvider
+    fileListProvider: PrefFileListProvider,
+    private val sp: SP
 ) : BuildHelper {
 
     private var devBranch = false
@@ -16,7 +19,7 @@ class BuildHelperImpl constructor(
     init {
         val engineeringModeSemaphore = File(fileListProvider.ensureExtraDirExists(), "engineering_mode")
 
-        engineeringMode = engineeringModeSemaphore.exists() && engineeringModeSemaphore.isFile
+        engineeringMode = engineeringModeSemaphore.exists() && engineeringModeSemaphore.isFile|| sp.getBoolean(R.string.key_engineering_mode, false)
         devBranch = BuildConfig.VERSION.contains("-") || BuildConfig.VERSION.matches(Regex(".*[a-zA-Z]+.*"))
     }
 

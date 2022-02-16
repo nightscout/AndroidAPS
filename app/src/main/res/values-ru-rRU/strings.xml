@@ -263,6 +263,8 @@
     <string name="openapsama_useautosens">Пользоваться функцией Autosens</string>
     <string name="a52_risk_enable">A52_risk_enable</string>
     <string name="a52_risk_enable_summary">Отключить безопасности препятствующей ошибке Medtronic A52 (может привести к более агрессивным болюсам)</string>
+    <string name="engineering_mode">Инженерный режим</string>
+    <string name="engineering_mode_summary">Включить инженерный режим (НЕБЕЗОПАСНО)</string>
     <string name="bypass_old_version_check_title">Не проверять наличие новой версии (не рекомендуется)</string>
     <string name="refresheventsfromnightscout">Обновить из NS</string>
     <string name="deletefuturetreatments">Удалить назначения из будущего</string>
