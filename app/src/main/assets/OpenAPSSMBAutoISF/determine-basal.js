@@ -301,6 +301,12 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
           rT.reason += "TDD: " +TDD+ " due to low or high tdd from pump; ";
           }
 
+        else if (tdd_pump > (1.75 * tdd7)) {
+              TDD = tdd7;
+              console.error("TDD set to TDD7 due to high pump usage reported. TDD = "+TDD+"; ");
+              rT.reason += "TDD set to TDD7 due to high pump usage reported. TDD = "+TDD+"; ";
+              }
+
         else if (tdd_pump < (0.33 * tdd7)){
            TDD = (tdd7 * 0.25) + (tdd_pump * 0.75);
            console.error("TDD weighted to pump due to low insulin usage. TDD = "+TDD+"; ");
