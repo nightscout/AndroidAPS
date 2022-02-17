@@ -458,6 +458,7 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
         , 'reservoir' : reservoir_data // The expected reservoir volume at which to deliver the microbolus (the reservoir volume from right before the last pumphistory run)
         , 'deliverAt' : deliverAt // The time at which the microbolus should be delivered
         , 'sensitivityRatio' : sensitivityRatio // autosens ratio (fraction of normal basal)
+        , 'variable_sens' : variable_sens
     };
 
     // generate predicted future BGs based on IOB, COB, and current absorption rate

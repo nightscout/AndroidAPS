@@ -48,6 +48,7 @@ import info.nightscout.androidaps.interfaces.*
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.aps.loop.events.EventNewOpenLoopNotification
+import info.nightscout.androidaps.plugins.aps.openAPSSMB.DetermineBasalResultSMB
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.constraints.bgQualityCheck.BgQualityCheckPlugin
@@ -603,7 +604,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 binding.infoLayout.apsMode.stateDescription = rh.gs(stringRes)
             } else {
-                binding.infoLayout.apsMode.contentDescription =  rh.gs(R.string.apsmode_title) + " " + rh.gs(stringRes)
+                binding.infoLayout.apsMode.contentDescription = rh.gs(R.string.apsmode_title) + " " + rh.gs(stringRes)
             }
         }
 
@@ -671,6 +672,21 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     binding.infoLayout.apsModeText.visibility = View.GONE
                 }
             }
+            // Show variable sensitivity
+            val request = loop.lastRun?.request
+            if (request is DetermineBasalResultSMB) {
+                val isfMgdl = profileFunction.getProfile()?.getIsfMgdl()
+                val variableSens = request.variableSens
+                if (variableSens != isfMgdl && variableSens != null && isfMgdl != null) {
+                    binding.infoLayout.variableSensitivity.text =
+                        String.format(
+                            Locale.getDefault(), "%1$.1f→%2$.1f",
+                            Profile.toUnits(isfMgdl, isfMgdl * Constants.MGDL_TO_MMOLL, profileFunction.getUnits()),
+                            Profile.toUnits(variableSens, variableSens * Constants.MGDL_TO_MMOLL, profileFunction.getUnits())
+                        )
+                    binding.infoLayout.variableSensitivity.visibility = View.VISIBLE
+                } else binding.infoLayout.variableSensitivity.visibility = View.GONE
+            } else binding.infoLayout.variableSensitivity.visibility = View.GONE
         } else {
             //nsclient
             binding.infoLayout.apsMode.visibility = View.GONE
@@ -774,7 +790,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
         val outDate = (if (!overviewData.isActualBg) rh.gs(R.string.a11y_bg_outdated) else "")
         binding.infoLayout.bg.contentDescription =
-            rh.gs(R.string.a11y_blood_glucose) + " " +  binding.infoLayout.bg.text.toString() + " " + overviewData.lastBgDescription + " " + outDate
+            rh.gs(R.string.a11y_blood_glucose) + " " + binding.infoLayout.bg.text.toString() + " " + overviewData.lastBgDescription + " " + outDate
 
         binding.infoLayout.timeAgo.text = dateUtil.minAgo(rh, overviewData.lastBg?.timestamp)
         binding.infoLayout.timeAgo.contentDescription = dateUtil.minAgoLong(rh, overviewData.lastBg?.timestamp)
