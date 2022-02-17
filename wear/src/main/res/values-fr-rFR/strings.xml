@@ -89,7 +89,7 @@
     <string name="action_wizard_confirmation">Calcul demandé</string>
     <string name="action_fill_confirmation">Remplissage demandé</string>
     <string name="action_ecarb_confirmation">Glucides requis</string>
-    <string name="action_cpp_confirmation" comment="action_cpp_confirmation&#10;Profile switch">Profil demandé</string>
+    <string name="action_cpp_confirmation">Profil demandé</string>
     <string name="action_target" comment="In temp target menu, single target value">Cible</string>
     <string name="action_low" comment="In temp target menu, lower value from range">Bas</string>
     <string name="action_high" comment="In temp target menu, higher value from range">Élevé</string>
