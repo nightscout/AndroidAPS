@@ -264,6 +264,20 @@
                 android:contentDescription="@string/treatments_wizard_bg_label" />
 
             <CheckBox
+                android:id="@+id/tt_checkbox_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:scaleX="0.7"
+                android:scaleY="0.7"
+                android:button="@drawable/checkbox_tt_icon"
+                android:checked="true"
+                android:visibility="gone"
+                android:contentDescription="@string/treatments_wizard_tt_label" />
+
+            <CheckBox
                 android:id="@+id/trend_checkbox_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
