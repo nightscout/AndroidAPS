@@ -38,6 +38,7 @@
         android:layout_height="35dp"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="15dp"
+        android:contentDescription="@string/addnew_above"
         app:srcCompat="@drawable/ic_add" />
 
     <ImageView
@@ -46,5 +47,6 @@
         android:layout_height="35dp"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="15dp"
+        android:contentDescription="@string/remove_label"
         app:srcCompat="@drawable/ic_remove" />
 </LinearLayout>

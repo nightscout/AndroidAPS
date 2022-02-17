@@ -57,6 +57,8 @@ public class TimeListEdit {
     private final double step;
     private final double min;
     private final double max;
+    private final double min2;
+    private final double max2;
     private final NumberFormat formatter;
     private final Runnable save;
     private LinearLayout layout;
@@ -68,7 +70,7 @@ public class TimeListEdit {
             Context context,
             AAPSLogger aapsLogger,
             DateUtil dateUtil,
-            View view, int resLayoutId, String tagPrefix, String label, JSONArray data1, JSONArray data2, double min, double max, double step, NumberFormat formatter, Runnable save) {
+            View view, int resLayoutId, String tagPrefix, String label, JSONArray data1, JSONArray data2, double[] range1, double[] range2, double step, NumberFormat formatter, Runnable save) {
         this.context = context;
         this.aapsLogger = aapsLogger;
         this.dateUtil = dateUtil;
@@ -79,8 +81,10 @@ public class TimeListEdit {
         this.data1 = data1;
         this.data2 = data2;
         this.step = step;
-        this.min = min;
-        this.max = max;
+        this.min = range1[0];
+        this.max = range1[1];
+        this.min2 = range2 != null ? range2[0] : 0;
+        this.max2 = range2 != null ? range2[1] : 0;
         this.formatter = formatter;
         this.save = save;
         buildView();
@@ -108,6 +112,7 @@ public class TimeListEdit {
         float factor = layout.getContext().getResources().getDisplayMetrics().density;
         finalAdd = new ImageView(context);
         finalAdd.setImageResource(R.drawable.ic_add);
+        finalAdd.setContentDescription(layout.getContext().getResources().getString(R.string.a11y_add_new_to_list));
         LinearLayout.LayoutParams illp = new LinearLayout.LayoutParams((int) (35d * factor), (int) (35 * factor));
         illp.setMargins(0, 25, 0, 25); // llp.setMargins(left, top, right, bottom);
         illp.gravity = Gravity.CENTER;
@@ -177,7 +182,13 @@ public class TimeListEdit {
         numberPickers1[position].setTextWatcher(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                editItem(position, secondFromMidnight(position), SafeParse.stringToDouble(numberPickers1[position].getText()), value2(position));
+                Double value1 = SafeParse.stringToDouble(numberPickers1[position].getText());
+                Double value2 = value2(position);
+                if (data2 != null && value1 > value2) {
+                    value2 = value1;
+                    numberPickers2[position].setValue(value2);
+                }
+                editItem(position, secondFromMidnight(position), value1, value2);
                 callSave();
                 log();
             }
@@ -197,7 +208,13 @@ public class TimeListEdit {
         numberPickers2[position].setTextWatcher(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                editItem(position, secondFromMidnight(position), value1(position), SafeParse.stringToDouble(numberPickers2[position].getText()));
+                Double value1 = value1(position);
+                Double value2 = SafeParse.stringToDouble(numberPickers2[position].getText());
+                if (data2 != null && value2 < value1) {
+                    value1 = value2;
+                    numberPickers1[position].setValue(value1);
+                }
+                editItem(position, secondFromMidnight(position), value1, value2);
                 callSave();
                 log();
             }
@@ -246,7 +263,7 @@ public class TimeListEdit {
         fillSpinner(timeSpinner, secondFromMidnight(i), previous, next);
 
         editText1.setParams(value1(i), min, max, step, formatter, false, null);
-        editText2.setParams(value2(i), min, max, step, formatter, false, null);
+        editText2.setParams(value2(i), min2, max2, step, formatter, false, null);
 
         if (data2 == null) {
             editText2.setVisibility(View.GONE);

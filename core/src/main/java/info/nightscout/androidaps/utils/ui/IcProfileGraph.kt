@@ -2,12 +2,14 @@ package info.nightscout.androidaps.utils.ui
 
 import android.content.Context
 import android.util.AttributeSet
+import com.jjoe64.graphview.DefaultLabelFormatter
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.utils.Round
+import java.text.NumberFormat
 import java.util.*
 import kotlin.math.max
 
@@ -39,6 +41,10 @@ class IcProfileGraph : GraphView {
         viewport.setMaxY(Round.ceilTo(maxIc * 1.1, 0.5))
         gridLabelRenderer.numHorizontalLabels = 13
         gridLabelRenderer.verticalLabelsColor = icSeries.color
+
+        val nf: NumberFormat = NumberFormat.getInstance()
+        nf.maximumFractionDigits = 1
+        gridLabelRenderer.setLabelFormatter(DefaultLabelFormatter(nf, nf))
     }
 
     fun show(profile1: Profile, profile2: Profile) {

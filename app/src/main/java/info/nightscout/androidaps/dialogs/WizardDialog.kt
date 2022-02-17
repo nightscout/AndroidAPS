@@ -4,11 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.Window
-import android.view.WindowManager
+import android.view.*
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
@@ -136,33 +132,36 @@ class WizardDialog : DaggerDialogFragment() {
         val maxCorrection = constraintChecker.getMaxBolusAllowed().value()
         bolusStep = activePlugin.activePump.pumpDescription.bolusStep
 
-        if (profileFunction.getUnits() == GlucoseUnit.MGDL)
-            binding.bgInput.setParams(savedInstanceState?.getDouble("bg_input")
-                ?: 0.0, 0.0, 500.0, 1.0, DecimalFormat("0"), false, binding.ok, timeTextWatcher)
-        else
-            binding.bgInput.setParams(savedInstanceState?.getDouble("bg_input")
-                ?: 0.0, 0.0, 30.0, 0.1, DecimalFormat("0.0"), false, binding.ok, textWatcher)
+        if (profileFunction.getUnits() == GlucoseUnit.MGDL) {
+            binding.bgInput.setParams(
+                savedInstanceState?.getDouble("bg_input")
+                    ?: 0.0, 0.0, 500.0, 1.0, DecimalFormat("0"), false, binding.okcancel.ok, timeTextWatcher)
+        } else {
+            binding.bgInput.setParams(
+                savedInstanceState?.getDouble("bg_input")
+                    ?: 0.0, 0.0, 30.0, 0.1, DecimalFormat("0.0"), false, binding.okcancel.ok, textWatcher)
+        }
         binding.carbsInput.setParams(savedInstanceState?.getDouble("carbs_input")
-            ?: 0.0, 0.0, maxCarbs.toDouble(), 1.0, DecimalFormat("0"), false, binding.ok, textWatcher)
+            ?: 0.0, 0.0, maxCarbs.toDouble(), 1.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher)
 
         if (correctionPercent) {
             calculatedPercentage = sp.getInt(R.string.key_boluswizard_percentage, 100).toDouble()
-            binding.correctionInput.setParams(calculatedPercentage, 10.0, 200.0, 1.0, DecimalFormat("0"), false, binding.ok, textWatcher)
+            binding.correctionInput.setParams(calculatedPercentage, 10.0, 200.0, 1.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher)
             binding.correctionInput.value = calculatedPercentage
             binding.correctionUnit.text = "%"
         } else {
             binding.correctionInput.setParams(
                 savedInstanceState?.getDouble("correction_input")
-                    ?: 0.0, -maxCorrection, maxCorrection, bolusStep, DecimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump), false, binding.ok, textWatcher)
+                    ?: 0.0, -maxCorrection, maxCorrection, bolusStep, DecimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump), false, binding.okcancel.ok, textWatcher)
             binding.correctionUnit.text = rh.gs(R.string.insulin_unit_shortname)
         }
         binding.carbTimeInput.setParams(savedInstanceState?.getDouble("carb_time_input")
-            ?: 0.0, -60.0, 60.0, 5.0, DecimalFormat("0"), false, binding.ok, timeTextWatcher)
+            ?: 0.0, -60.0, 60.0, 5.0, DecimalFormat("0"), false, binding.okcancel.ok, timeTextWatcher)
         initDialog()
         calculatedPercentage = sp.getInt(R.string.key_boluswizard_percentage, 100).toDouble()
         binding.percentUsed.text = rh.gs(R.string.format_percent, sp.getInt(R.string.key_boluswizard_percentage, 100))
         // ok button
-        binding.ok.setOnClickListener {
+        binding.okcancel.ok.setOnClickListener {
             if (okClicked) {
                 aapsLogger.debug(LTag.UI, "guarding: ok already clicked")
             } else {
@@ -175,12 +174,12 @@ class WizardDialog : DaggerDialogFragment() {
             }
             dismiss()
         }
-        binding.bgEnabledIcon.setOnClickListener { binding.bgCheckbox.isChecked = !binding.bgCheckbox.isChecked }
-        binding.trendEnabledIcon.setOnClickListener { binding.bgTrendCheckbox.isChecked = !binding.bgTrendCheckbox.isChecked }
-        binding.cobEnabledIcon.setOnClickListener { binding.cobCheckbox.isChecked = !binding.cobCheckbox.isChecked; processCobCheckBox(); }
-        binding.iobEnabledIcon.setOnClickListener { if (!binding.cobCheckbox.isChecked) binding.iobCheckbox.isChecked = !binding.iobCheckbox.isChecked }
+        binding.bgCheckboxIcon.setOnClickListener { binding.bgCheckbox.isChecked = !binding.bgCheckbox.isChecked }
+        binding.trendCheckboxIcon.setOnClickListener { binding.bgTrendCheckbox.isChecked = !binding.bgTrendCheckbox.isChecked }
+        binding.cobCheckboxIcon.setOnClickListener { binding.cobCheckbox.isChecked = !binding.cobCheckbox.isChecked; processCobCheckBox(); }
+        binding.iobCheckboxIcon.setOnClickListener { if (!binding.cobCheckbox.isChecked) binding.iobCheckbox.isChecked = !binding.iobCheckbox.isChecked }
         // cancel button
-        binding.cancel.setOnClickListener {
+        binding.okcancel.cancel.setOnClickListener {
             aapsLogger.debug(LTag.APS, "Dialog canceled: ${this.javaClass.name}")
             dismiss()
         }
@@ -212,11 +211,17 @@ class WizardDialog : DaggerDialogFragment() {
                 sp.putBoolean(rh.gs(R.string.key_wizard_correction_percent), isChecked)
                 binding.correctionUnit.text = if (isChecked) "%" else rh.gs(R.string.insulin_unit_shortname)
                 correctionPercent = binding.correctionPercent.isChecked
-                if (correctionPercent)
-                    binding.correctionInput.setParams(calculatedPercentage, 10.0, 200.0, 1.0, DecimalFormat("0"), false, binding.ok, textWatcher)
-                else
-                    binding.correctionInput.setParams(savedInstanceState?.getDouble("correction_input")
-                                                      ?: 0.0, -maxCorrection, maxCorrection, bolusStep, DecimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump), false, binding.ok, textWatcher)
+                if (correctionPercent) {
+                    binding.correctionInput.setParams(calculatedPercentage, 10.0, 200.0, 1.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher)
+                    binding.correctionInput.customContentDescription = rh.gs(R.string.a11_correction_percentage)
+                } else {
+                    binding.correctionInput.setParams(
+                        savedInstanceState?.getDouble("correction_input")
+                            ?: 0.0, -maxCorrection, maxCorrection, bolusStep, DecimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump), false, binding.okcancel.ok, textWatcher
+                    )
+                    binding.correctionInput.customContentDescription = rh.gs(R.string.a11_correction_units)
+                }
+                binding.correctionInput.updateA11yDescription()
                 binding.correctionInput.value = if (correctionPercent) calculatedPercentage else Round.roundTo(calculatedCorrection, bolusStep)
             }
         }
@@ -224,12 +229,12 @@ class WizardDialog : DaggerDialogFragment() {
         binding.profile.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 ToastUtils.showToastInUiThread(ctx, rh.gs(R.string.noprofileset))
-                binding.ok.visibility = View.GONE
+                binding.okcancel.ok.visibility = View.GONE
             }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 calculateInsulin()
-                binding.ok.visibility = View.VISIBLE
+                binding.okcancel.ok.visibility = View.VISIBLE
             }
         }
         // bus
@@ -241,6 +246,14 @@ class WizardDialog : DaggerDialogFragment() {
             }, fabricPrivacy::logException)
         )
 
+        setA11yLabels()
+    }
+
+    private fun setA11yLabels() {
+        binding.bgInput.editText?.id?.let { binding.bgInputLabel.labelFor = it }
+        binding.carbsInput.editText?.id?.let { binding.carbsInputLabel.labelFor = it }
+        binding.correctionInput.editText?.id?.let { binding.correctionInputLabel.labelFor = it }
+        binding.carbTimeInput.editText?.id?.let { binding.carbTimeInputLabel.labelFor = it }
     }
 
     override fun onDestroyView() {
@@ -261,21 +274,29 @@ class WizardDialog : DaggerDialogFragment() {
     private fun processCobCheckBox() {
         if (binding.cobCheckbox.isChecked) {
             binding.iobCheckbox.isEnabled = false
+            binding.iobCheckboxIcon.isEnabled = false
             binding.iobCheckbox.isChecked = true
         } else {
             binding.iobCheckbox.isEnabled = true
+            binding.iobCheckboxIcon.isEnabled = true
         }
     }
 
     private fun processEnabledIcons() {
-        binding.bgEnabledIcon.alpha = if (binding.bgCheckbox.isChecked) 1.0f else 0.2f
-        binding.trendEnabledIcon.alpha = if (binding.bgTrendCheckbox.isChecked) 1.0f else 0.2f
-        binding.iobEnabledIcon.alpha = if (binding.iobCheckbox.isChecked) 1.0f else 0.2f
-        binding.cobEnabledIcon.alpha = if (binding.cobCheckbox.isChecked) 1.0f else 0.2f
-        binding.bgEnabledIcon.visibility = binding.calculationCheckbox.isChecked.not().toVisibility()
-        binding.trendEnabledIcon.visibility = binding.calculationCheckbox.isChecked.not().toVisibility()
-        binding.iobEnabledIcon.visibility = binding.calculationCheckbox.isChecked.not().toVisibility()
-        binding.cobEnabledIcon.visibility = binding.calculationCheckbox.isChecked.not().toVisibility()
+        binding.bgCheckboxIcon.isChecked = binding.bgCheckbox.isChecked
+        binding.trendCheckboxIcon.isChecked = binding.bgTrendCheckbox.isChecked
+        binding.iobCheckboxIcon.isChecked = binding.iobCheckbox.isChecked
+        binding.cobCheckboxIcon.isChecked = binding.cobCheckbox.isChecked
+
+        binding.bgCheckboxIcon.alpha = if (binding.bgCheckbox.isChecked) 1.0f else 0.2f
+        binding.trendCheckboxIcon.alpha = if (binding.bgTrendCheckbox.isChecked) 1.0f else 0.2f
+        binding.iobCheckboxIcon.alpha = if (binding.iobCheckbox.isChecked) 1.0f else 0.2f
+        binding.cobCheckboxIcon.alpha = if (binding.cobCheckbox.isChecked) 1.0f else 0.2f
+
+        binding.bgCheckboxIcon.visibility = binding.calculationCheckbox.isChecked.not().toVisibility()
+        binding.trendCheckboxIcon.visibility = binding.calculationCheckbox.isChecked.not().toVisibility()
+        binding.iobCheckboxIcon.visibility = binding.calculationCheckbox.isChecked.not().toVisibility()
+        binding.cobCheckboxIcon.visibility = binding.calculationCheckbox.isChecked.not().toVisibility()
     }
 
     private fun saveCheckedStates() {
@@ -442,10 +463,10 @@ class WizardDialog : DaggerDialogFragment() {
                 val insulinText = if (wizard.calculatedTotalInsulin > 0.0) rh.gs(R.string.formatinsulinunits, wizard.calculatedTotalInsulin).formatColor(rh, R.color.bolus) else ""
                 val carbsText = if (carbsAfterConstraint > 0.0) rh.gs(R.string.format_carbs, carbsAfterConstraint).formatColor(rh, R.color.carbs) else ""
                 binding.total.text = HtmlHelper.fromHtml(rh.gs(R.string.result_insulin_carbs, insulinText, carbsText))
-                binding.ok.visibility = View.VISIBLE
+                binding.okcancel.ok.visibility = View.VISIBLE
             } else {
                 binding.total.text = HtmlHelper.fromHtml(rh.gs(R.string.missing_carbs, wizard.carbsEquivalent.toInt()).formatColor(rh, R.color.carbs))
-                binding.ok.visibility = View.INVISIBLE
+                binding.okcancel.ok.visibility = View.INVISIBLE
             }
             binding.percentUsed.text = rh.gs(R.string.format_percent, wizard.percentageCorrection)
             calculatedPercentage = wizard.calculatedPercentage

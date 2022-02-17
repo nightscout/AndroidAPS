@@ -128,14 +128,29 @@ class OverviewData @Inject constructor(
 
     var lastBg: GlucoseValue? = null
 
-    val lastBgColor: Int
+    val isLow: Boolean
         get() = lastBg?.let { lastBg ->
-            when {
-                lastBg.valueToUnits(profileFunction.getUnits()) < defaultValueHelper.determineLowLine()  -> rh.gc(R.color.low)
-                lastBg.valueToUnits(profileFunction.getUnits()) > defaultValueHelper.determineHighLine() -> rh.gc(R.color.high)
-                else                                                                                     -> rh.gc(R.color.inrange)
-            }
-        } ?: rh.gc(R.color.inrange)
+            lastBg.valueToUnits(profileFunction.getUnits()) < defaultValueHelper.determineLowLine()
+        } ?: false
+
+    val isHigh: Boolean
+        get() = lastBg?.let { lastBg ->
+            lastBg.valueToUnits(profileFunction.getUnits()) > defaultValueHelper.determineHighLine()
+        } ?: false
+
+    val lastBgColor: Int
+        get() = when {
+            isLow  -> rh.gc(R.color.low)
+            isHigh -> rh.gc(R.color.high)
+            else   -> rh.gc(R.color.inrange)
+        }
+
+    val lastBgDescription: String
+        get() = when {
+            isLow  -> rh.gs(R.string.a11y_low)
+            isHigh -> rh.gs(R.string.a11y_high)
+            else   -> rh.gs(R.string.a11y_inrange)
+        }
 
     val isActualBg: Boolean
         get() =

@@ -38,6 +38,7 @@ class PumpDescription() {
     var supportsTDDs = false
     var needsManualTDDLoad = false
     var hasCustomUnreachableAlertCheck = false
+    var isPatchPump = false
 
     fun resetSettings() {
         isBolusCapable = true
@@ -103,6 +104,7 @@ class PumpDescription() {
         needsManualTDDLoad = pumpCapability.hasCapability(PumpCapability.ManualTDDLoad)
         is30minBasalRatesCapable = pumpCapability.hasCapability(PumpCapability.BasalRate30min)
         hasCustomUnreachableAlertCheck = pumpType.hasCustomUnreachableAlertCheck
+        isPatchPump = pumpType.isPatchPump
     }
 
     companion object {

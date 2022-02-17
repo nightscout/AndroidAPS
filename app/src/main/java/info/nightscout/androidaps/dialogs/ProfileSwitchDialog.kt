@@ -148,6 +148,9 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
                 }
         }
         binding.ttLayout.visibility = View.GONE
+        binding.duration.editText?.id?.let { binding.durationLabel.labelFor = it }
+        binding.percentage.editText?.id?.let { binding.percentageLabel.labelFor = it }
+        binding.timeshift.editText?.id?.let { binding.timeshiftLabel.labelFor = it }
     }
 
     override fun onDestroyView() {

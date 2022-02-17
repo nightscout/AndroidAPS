@@ -768,7 +768,7 @@ class MedtronicPumpPlugin @Inject constructor(
             medtronicPumpStatus.tempBasalAmount = absoluteRate
             medtronicPumpStatus.tempBasalLength = durationInMinutes
 
-            val tempData = PumpDbEntryTBR(absoluteRate, true, durationInMinutes, tbrType)
+            val tempData = PumpDbEntryTBR(absoluteRate, true, durationInMinutes * 60, tbrType)
 
             medtronicPumpStatus.runningTBRWithTemp = tempData
             pumpSyncStorage.addTemporaryBasalRateWithTempId(tempData, true, this)

@@ -18,10 +18,11 @@ class ActivityGraph : GraphView {
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
 
-    fun show(insulin: Insulin) {
+    fun show(insulin: Insulin, diaSample: Double? = null) {
         removeAllSeries()
+        val dia = diaSample ?: insulin.dia
         mSecondScale = null
-        val hours = floor(insulin.dia + 1).toLong()
+        val hours = floor(dia + 1).toLong()
         val bolus = Bolus(
             timestamp = 0,
             amount = 1.0,
@@ -31,7 +32,7 @@ class ActivityGraph : GraphView {
         val iobArray: MutableList<DataPoint> = ArrayList()
         var time: Long = 0
         while (time <= T.hours(hours).msecs()) {
-            val iob = insulin.iobCalcForTreatment(bolus, time, insulin.dia)
+            val iob = insulin.iobCalcForTreatment(bolus, time, dia)
             activityArray.add(DataPoint(T.msecs(time).mins().toDouble(), iob.activityContrib))
             iobArray.add(DataPoint(T.msecs(time).mins().toDouble(), iob.iobContrib))
             time += T.mins(5).msecs()

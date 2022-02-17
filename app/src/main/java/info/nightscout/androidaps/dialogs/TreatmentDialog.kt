@@ -106,6 +106,8 @@ class TreatmentDialog : DialogFragmentWithDate() {
         binding.insulin.setParams(savedInstanceState?.getDouble("insulin")
             ?: 0.0, 0.0, maxInsulin, pumpDescription.bolusStep, DecimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump), false, binding.okcancel.ok, textWatcher)
         binding.recordOnlyLayout.visibility = View.GONE
+        binding.insulin.editText?.id?.let { binding.insulinLabel.labelFor = it }
+        binding.carbs.editText?.id?.let { binding.carbsLabel.labelFor = it }
     }
 
     override fun onDestroyView() {

@@ -164,18 +164,23 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
             holder.binding.ns.visibility = (tempTarget.interfaceIDs.nightscoutId != null).toVisibility()
             holder.binding.invalid.visibility = tempTarget.isValid.not().toVisibility()
             holder.binding.remove.visibility = tempTarget.isValid.toVisibility()
-            holder.binding.date.text = dateUtil.dateAndTimeString(tempTarget.timestamp) + " - " + dateUtil.timeString(tempTarget.end)
+            val sameDayPrevious = position > 0 && dateUtil.isSameDay(tempTarget.timestamp, tempTargetList[position-1].timestamp)
+            holder.binding.date.visibility = sameDayPrevious.not().toVisibility()
+            holder.binding.date.text = dateUtil.dateString(tempTarget.timestamp)
+            holder.binding.time.text = dateUtil.timeRangeString(tempTarget.timestamp, tempTarget.end)
             holder.binding.duration.text = rh.gs(R.string.format_mins, T.msecs(tempTarget.duration).mins())
             holder.binding.low.text = tempTarget.lowValueToUnitsToString(units)
             holder.binding.high.text = tempTarget.highValueToUnitsToString(units)
             holder.binding.reason.text = translator.translate(tempTarget.reason)
-            holder.binding.date.setTextColor(
+            holder.binding.time.setTextColor(
                 when {
                     tempTarget.id == currentlyActiveTarget?.id -> rh.gc(R.color.colorActive)
                     tempTarget.timestamp > dateUtil.now()      -> rh.gc(R.color.colorScheduled)
                     else                                       -> holder.binding.reasonColon.currentTextColor
                 })
             holder.binding.remove.tag = tempTarget
+            val nextTimestamp = if (tempTargetList.size != position + 1) tempTargetList[position + 1].timestamp else 0L
+            holder.binding.delimiter.visibility = dateUtil.isSameDay(tempTarget.timestamp, nextTimestamp).toVisibility()
         }
 
         override fun getItemCount(): Int = tempTargetList.size
