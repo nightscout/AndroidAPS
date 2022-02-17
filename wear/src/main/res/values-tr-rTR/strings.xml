@@ -89,7 +89,7 @@
     <string name="action_wizard_confirmation">Hesaplama talebi</string>
     <string name="action_fill_confirmation">Doldurma talebi</string>
     <string name="action_ecarb_confirmation">Karonhidrat talebi</string>
-    <string name="action_cpp_confirmation" comment="action_cpp_confirmation&#10;Profile switch">CPP talebi</string>
+    <string name="action_cpp_confirmation">CPP talebi</string>
     <string name="action_target" comment="In temp target menu, single target value">Hedef</string>
     <string name="action_low" comment="In temp target menu, lower value from range">Düşük</string>
     <string name="action_high" comment="In temp target menu, higher value from range">Yüksek</string>
