@@ -60,8 +60,8 @@ class OpenAPSAMAPlugin @Inject constructor(
     // last values
     override var lastAPSRun: Long = 0
     override var lastAPSResult: DetermineBasalResultAMA? = null
-    var lastDetermineBasalAdapterAMAJS: DetermineBasalAdapterAMAJS? = null
-    var lastAutosensResult: AutosensResult = AutosensResult()
+    override var lastDetermineBasalAdapter: DetermineBasalAdapterInterface? = null
+    override var lastAutosensResult: AutosensResult = AutosensResult()
 
     override fun specialEnableCondition(): Boolean {
         return try {
@@ -158,7 +158,7 @@ class OpenAPSAMAPlugin @Inject constructor(
         // Fix bug determine basal
         if (determineBasalResultAMA == null) {
             aapsLogger.error(LTag.APS, "SMB calculation returned null")
-            lastDetermineBasalAdapterAMAJS = null
+            lastDetermineBasalAdapter = null
             lastAPSResult = null
             lastAPSRun = 0
         } else {
@@ -167,8 +167,8 @@ class OpenAPSAMAPlugin @Inject constructor(
             val now = System.currentTimeMillis()
             determineBasalResultAMA.json?.put("timestamp", dateUtil.toISOString(now))
             determineBasalResultAMA.inputConstraints = inputConstraints
-            lastDetermineBasalAdapterAMAJS = determineBasalAdapterAMAJS
-            lastAPSResult = determineBasalResultAMA
+            lastDetermineBasalAdapter = determineBasalAdapterAMAJS
+            lastAPSResult = determineBasalResultAMA as DetermineBasalResultAMA
             lastAPSRun = now
         }
         rxBus.send(EventOpenAPSUpdateGui())
