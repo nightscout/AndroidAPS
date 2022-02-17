@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.aps.openAPSSMBAutoISF
+package info.nightscout.androidaps.plugins.aps.openAPSSMBDynamicISF
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
@@ -37,7 +37,7 @@ import java.lang.reflect.InvocationTargetException
 import java.nio.charset.StandardCharsets
 import javax.inject.Inject
 
-class DetermineBasalAdapterSMBAutoISFJS internal constructor(private val scriptReader: ScriptReader, private val injector: HasAndroidInjector) : DetermineBasalAdapterInterface {
+class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scriptReader: ScriptReader, private val injector: HasAndroidInjector) : DetermineBasalAdapterInterface {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var constraintChecker: ConstraintChecker
@@ -101,7 +101,7 @@ class DetermineBasalAdapterSMBAutoISFJS internal constructor(private val scriptR
             rhino.evaluateString(scope, "require = function() {return round_basal;};", "JavaScript", 0, null)
 
             //generate functions "determine_basal" and "setTempBasal"
-            rhino.evaluateString(scope, readFile("OpenAPSSMBAutoISF/determine-basal.js"), "JavaScript", 0, null)
+            rhino.evaluateString(scope, readFile("OpenAPSSMBDynamicISF/determine-basal.js"), "JavaScript", 0, null)
             rhino.evaluateString(scope, readFile("OpenAPSSMB/basal-set-temp.js"), "setTempBasal.js", 0, null)
             val determineBasalObj = scope["determine_basal", scope]
             val setTempBasalFunctionsObj = scope["tempBasalFunctions", scope]

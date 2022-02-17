@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.aps.openAPSSMBAutoISF
+package info.nightscout.androidaps.plugins.aps.openAPSSMBDynamicISF
 
 import android.content.Context
 import dagger.android.HasAndroidInjector
@@ -26,7 +26,7 @@ import javax.inject.Singleton
 
 @OpenForTesting
 @Singleton
-class OpenAPSSMBAutoISFPlugin @Inject constructor(
+class OpenAPSSMBDynamicISFPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rxBus: RxBus,
@@ -63,12 +63,12 @@ class OpenAPSSMBAutoISFPlugin @Inject constructor(
 
     init {
         pluginDescription
-            .pluginName(R.string.openapssmbautoisf)
-            .description(R.string.description_smb_auto_isf)
+            .pluginName(R.string.openaps_smb_dynamic_isf)
+            .description(R.string.description_smb_dynamic_isf)
             .setDefault(false)
     }
 
     override fun specialEnableCondition(): Boolean = buildHelper.isEngineeringMode() && buildHelper.isDev()
 
-    override fun provideDetermineBasalAdapter(): DetermineBasalAdapterInterface = DetermineBasalAdapterSMBAutoISFJS(ScriptReader(context), injector)
+    override fun provideDetermineBasalAdapter(): DetermineBasalAdapterInterface = DetermineBasalAdapterSMBDynamicISFJS(ScriptReader(context), injector)
 }
