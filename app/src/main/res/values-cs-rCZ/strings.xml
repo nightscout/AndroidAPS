@@ -25,6 +25,7 @@
     <string name="description_ns_client">Synchronizace dat s NS</string>
     <string name="description_ama">Stav algoritmu v roce 2017</string>
     <string name="description_smb">Nejnovější algoritmus pro pokročilé uživatele</string>
+    <string name="description_smb_dynamic_isf">Nejnovější algoritmus pro pokročilé uživatele s dynamickým/automatickým ISF</string>
     <string name="description_overview">Zobrazení stavu a informací. Přístup k nejběžnějším ovládacím prvkům</string>
     <string name="description_persistent_notification">Zobrazení průběžného oznámení v Androidu s krátkým přehledem, co smyčka právě dělá</string>
     <string name="description_profile_local">Definujte profil, který je dostupný offline.</string>
@@ -434,6 +435,7 @@
     <string name="ns_localbroadcasts">Povolit vysílání do jiných aplikací (například xDrip+). Nepovolujte, pokud máte instalovánu více než jednu instanci AAPS nebo NSClient!</string>
     <string name="ns_localbroadcasts_title">Povolení odesílaní</string>
     <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openaps_smb_dynamic_isf">OpenAPS SMB s dynamickým ISF</string>
     <string name="enableuam">Povolit UAM</string>
     <string name="enablesmb">Povolit SMB</string>
     <string name="enablesmb_summary">Použít super mikro bolusy místo dočasných bazálů pro zrychlení účinku</string>
