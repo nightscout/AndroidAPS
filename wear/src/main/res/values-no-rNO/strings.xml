@@ -89,7 +89,7 @@
     <string name="action_wizard_confirmation">Beregning forespurt</string>
     <string name="action_fill_confirmation">Fylling forespurt</string>
     <string name="action_ecarb_confirmation">Karbo forespurt</string>
-    <string name="action_cpp_confirmation" comment="action_cpp_confirmation&#10;Profile switch">CPP forespurt</string>
+    <string name="action_cpp_confirmation">CPP forespurt</string>
     <string name="action_target" comment="In temp target menu, single target value">Mål</string>
     <string name="action_low" comment="In temp target menu, lower value from range">Lav</string>
     <string name="action_high" comment="In temp target menu, higher value from range">Høy</string>
