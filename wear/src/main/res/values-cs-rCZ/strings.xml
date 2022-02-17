@@ -89,7 +89,7 @@
     <string name="action_wizard_confirmation">Požadován kalkulátor</string>
     <string name="action_fill_confirmation">Požadováno plnění</string>
     <string name="action_ecarb_confirmation">Požadovány sacharidy</string>
-    <string name="action_cpp_confirmation" comment="action_cpp_confirmation&#10;Profile switch">Požadován profil</string>
+    <string name="action_cpp_confirmation">Požadován profil</string>
     <string name="action_target" comment="In temp target menu, single target value">Cíl</string>
     <string name="action_low" comment="In temp target menu, lower value from range">Nízký</string>
     <string name="action_high" comment="In temp target menu, higher value from range">Vysoký</string>
