@@ -25,6 +25,7 @@
     <string name="description_ns_client">Synchronizuje vaše dáta s NS</string>
     <string name="description_ama">Stav algoritmu v roku 2017</string>
     <string name="description_smb">Najnovší algoritmus pre pokročilých užívateľov</string>
+    <string name="description_smb_dynamic_isf">Najnovší algoritmus pre pokročilých užívateľov s dynamickým/automatickým ISF</string>
     <string name="description_overview">Zobrazenie aktuálneho stavu vašeho uzavretého okruhu a tlačidlá k najpoužívanejším ovládacím prvkom</string>
     <string name="description_persistent_notification">Zobrazuje priebežné oznámenia v Androide s krátkym prehľadom, čo práve uzavretý okruh robí</string>
     <string name="description_profile_local">Definujte profil, ktorý je dostupný offline.</string>
@@ -280,8 +281,8 @@
     <string name="profile">Profil</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Štandardná hodnota: 3 Toto je kľúčová hodnota zabezpečenia. Hovorí, že maximálny nastaviteľný bazál je trojnásobkom maximálneho denného bazálu. Spravidla to zrejme nebudete musieť meniť, prípadne si prečítate o téme \"3x max denný; 4x aktuálny\".</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Štandardná hodnota: 4 Toto je druhá kľúčová hodnota. Hovorí, že maximálna hodnota dočasného bazálu nikdy nebude väčšia, ako štvornásobok aktuálneho bazálu. Je to preto, aby se ľudia nedostali do nebezpečných hodnôt skôr, ako pochopia ako OpenAPS pracuje. Znovu, štandardná hodnota je 4 a väčšina ľudí ju nikdy nebude musieť meniť. Pokiaľ nestačí, obvykle je problém niekde inde.</string>
-    <string name="openapsama_autosens_max_summary">Štandardná hodnota: 1.2\nToto je bezpečnostné nastavenie pre detekciu citlivosti (a čoskoro autotune). Hovorí, že autosens môže zvýšiť bazály, znížiť ISF a znížiť cieľovú hodnotu glykémie o 20%%.</string>
-    <string name="openapsama_autosens_min_summary">Štandardná hodnota: 0.7\nToto je bezpečnostné nastavenie pre automatickú detekciu citlivosti. Hovorí, že automatická detekcia citlivosti môže znížiť bazály, zvýšiť ISF a zvýšiť cieľovú hodnotu glykémie na 70%.</string>
+    <string name="openapsama_autosens_max_summary">Štandardná hodnota: 1.2\nToto je bezpečnostné nastavenie pre detekciu citlivosti (a čoskoro autotune). Hovorí, že autosens môže zvýšiť bazály, znížiť ISF (citlivosť na inzulín) a znížiť cieľovú hodnotu glykémie o 20%%.</string>
+    <string name="openapsama_autosens_min_summary">Štandardná hodnota: 0.7\nToto je bezpečnostné nastavenie pre automatickú detekciu citlivosti. Hovorí, že automatická detekcia citlivosti môže znížiť bazály, zvýšiť ISF (citlivosť na inzulín) a zvýšiť cieľovú hodnotu glykémie na 70%.</string>
     <string name="openapsama_autosens_adjusttargets">Autosense takisto upravuje cieľovú glykémiu</string>
     <string name="openapsama_autosens_adjusttargets_summary">Štandardná hodnota: zapnuté\nToto je používané, aby automatická detekcia citlivosti mohla okrem cieľovej hodnoty glekémie, upravovať aj citlivosť, prevody a bazály.</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">Štandardná hodnota: 2\nToto nastavenie hovorí, po akú časť z hodnoty DIA uzavretý okruh po boluse čaká a nereaguje na zmeny glykémií (tu 3DIA/2 = 1,5h).</string>
@@ -434,6 +435,7 @@
     <string name="ns_localbroadcasts">Povoliť vysielanie do iných aplikácií (napr. xDrip+). Nepovoľujte, pokiaľ máte nainštalovanú viac ako jednu AAPS, alebo NSClient inštanciu!</string>
     <string name="ns_localbroadcasts_title">Povoliť lokálne vysielanie.</string>
     <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openaps_smb_dynamic_isf">OpenAPS SMB s dynamickým ISF</string>
     <string name="enableuam">Povoliť UAM</string>
     <string name="enablesmb">Povoliť SMB</string>
     <string name="enablesmb_summary">Použiť Super Mikro Bolusy namiesto dočasných bazálov, pre zrýchleniu účinku</string>
