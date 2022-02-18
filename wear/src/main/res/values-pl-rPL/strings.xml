@@ -62,6 +62,8 @@
     <string name="pref_moreWatchfaceSettings">więcej ustawień zegarka</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Proszę, zajrzyj do konfiguracji zegarka.</string>
     <string name="menu_tempt">CelTymcz.</string>
+    <string name="menu_wizard">Kalkulator</string>
+    <string name="menu_wizard_short">Kalk</string>
     <string name="menu_bolus">Bolus</string>
     <string name="menu_settings">Ustawienia</string>
     <string name="menu_status">Status</string>
@@ -70,12 +72,21 @@
     <string name="menu_none">Brak</string>
     <string name="menu_default">Domyślnie</string>
     <string name="menu_menu">Menu</string>
+    <string name="action_target" comment="In temp target menu, single target value">Cel</string>
+    <string name="action_low" comment="In temp target menu, lower value from range">Niski</string>
+    <string name="action_high" comment="In temp target menu, higher value from range">Wysoki</string>
+    <string name="action_carbs">Węglowodany</string>
+    <string name="action_percentage">Procent</string>
+    <string name="action_start_min">Start [min]</string>
+    <string name="action_duration_h">Czas trwania [h]</string>
+    <string name="action_insulin">Insulina</string>
     <string name="action_preset_1">Ustawienie 1</string>
     <string name="action_preset_2">Ustawienie 2</string>
     <string name="action_preset_3">Ustawienie 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Podana wartość</string>
     <string name="action_confirm">POTWIERDŹ</string>
     <string name="action_timeshift">przesunięcie czasu</string>
+    <string name="action_bolus">Bolus</string>
     <string name="bolus_progress">Postęp bolusa</string>
     <string name="press_to_cancel">naciśnij aby anulować</string>
     <string name="cancel_bolus">ANULUJ BOLUS</string>
@@ -128,4 +139,10 @@
     <string name="simple_ui_charging">Podczas ładowania</string>
     <string name="simple_ui_always_on">Tryb Always On</string>
     <string name="simple_ui_always_on_charging">Always On i ładowanie</string>
+    <string name="temp_target_eating_soon">Posiłek</string>
+    <string name="temp_target_hypo">Hipo</string>
+    <string name="temp_target_activity">Ćwiczenia</string>
+    <string name="temp_target_manual">Ręczne</string>
+    <string name="temp_target_cancel">Anuluj</string>
+    <string name="tile_no_config">Konfiguracja nie jest dostępna</string>
 </resources>
