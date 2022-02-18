@@ -25,6 +25,7 @@
     <string name="description_ns_client">Nightscout ile verilerinizi senkronize eder</string>
     <string name="description_ama">2017\'da algoritmanın durumu</string>
     <string name="description_smb">İleri düzey kullanıcılar için en yeni algoritma</string>
+    <string name="description_smb_dynamic_isf">Dinamik/otomatik İDF ile ileri düzey kullanıcılar için en yeni algoritma</string>
     <string name="description_overview">Döngünüzün mevcut durumunu ve en yaygın eylemler için düğmeleri görüntüler</string>
     <string name="description_persistent_notification">Döngü\'ün ne yaptığını kısa bir genel bakışla devam eden bir bildirimi gösterir</string>
     <string name="description_profile_local">Çevrimdışı kullanılabilen bir profil tanımlayın.</string>
