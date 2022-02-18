@@ -255,10 +255,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:paddingStart="5dp"
-                android:paddingEnd="5dp"
-                android:scaleX="0.7"
-                android:scaleY="0.7"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:scaleX="1.4"
+                android:scaleY="1.4"
                 android:button="@drawable/checkbox_bg_icon"
                 android:checked="true"
                 android:contentDescription="@string/treatments_wizard_bg_label" />
@@ -268,10 +268,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:paddingStart="5dp"
-                android:paddingEnd="5dp"
-                android:scaleX="0.7"
-                android:scaleY="0.7"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:scaleX="1.4"
+                android:scaleY="1.4"
                 android:button="@drawable/checkbox_trend_icon"
                 android:checked="true"
                 android:contentDescription="@string/bg_trend_label" />
@@ -281,10 +281,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:paddingStart="5dp"
-                android:paddingEnd="5dp"
-                android:scaleX="0.9"
-                android:scaleY="0.9"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:scaleX="1.4"
+                android:scaleY="1.4"
                 android:button="@drawable/checkbox_iob_icon"
                 android:checked="true"
                 android:contentDescription="@string/iob" />
@@ -294,13 +294,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:paddingStart="5dp"
-                android:paddingEnd="5dp"
-                android:scaleX="0.7"
-                android:scaleY="0.7"
+                android:paddingStart="0dp"
+                android:paddingEnd="0dp"
+                android:scaleX="1.6"
+                android:scaleY="1.6"
                 android:button="@drawable/checkbox_cob_icon"
                 android:checked="true"
                 android:contentDescription="@string/treatments_wizard_cob_label" />
+
 
         </LinearLayout>
 
