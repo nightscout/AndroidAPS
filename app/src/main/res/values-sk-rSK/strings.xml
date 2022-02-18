@@ -283,7 +283,7 @@
     <string name="openapsama_autosens_max_summary">Štandardná hodnota: 1.2\nToto je bezpečnostné nastavenie pre detekciu citlivosti (a čoskoro autotune). Hovorí, že autosens môže zvýšiť bazály, znížiť ISF a znížiť cieľovú hodnotu glykémie o 20%%.</string>
     <string name="openapsama_autosens_min_summary">Štandardná hodnota: 0.7\nToto je bezpečnostné nastavenie pre automatickú detekciu citlivosti. Hovorí, že automatická detekcia citlivosti môže znížiť bazály, zvýšiť ISF a zvýšiť cieľovú hodnotu glykémie na 70%.</string>
     <string name="openapsama_autosens_adjusttargets">Autosense takisto upravuje cieľovú glykémiu</string>
-    <string name="openapsama_autosens_adjusttargets_summary">Štandardná hodnota: zapnuté\nToto nastavenie hovorí, že automatická detekcia citlivosti môže meniť tiež cieľové hodnoty glykémií.</string>
+    <string name="openapsama_autosens_adjusttargets_summary">Štandardná hodnota: zapnuté\nToto je používané, aby automatická detekcia citlivosti mohla okrem cieľovej hodnoty glekémie, upravovať aj citlivosť, prevody a bazály.</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">Štandardná hodnota: 2\nToto nastavenie hovorí, po akú časť z hodnoty DIA uzavretý okruh po boluse čaká a nereaguje na zmeny glykémií (tu 3DIA/2 = 1,5h).</string>
     <string name="openapsama_min_5m_carbimpact_summary">Štandardná hodnota: 3.0 (AMA), alebo 8.0 (SMB) mg/dl/5min. Táto hodnota definuje minimálnu časť vstrebaných sacharidov za každých 5min. Táto hodnota ovplyvňuje výpočet COB.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Pozor!\nZa normálnych okolností tieto hodnoty nemusíte meniť. Kliknete TU, PREČÍTAJTE si informácie a UISTITE sa, že im rozumiete skôr, ako ich začnete meniť.</string>
