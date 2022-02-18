@@ -25,6 +25,7 @@
     <string name="description_ns_client">מסנכרן את נתוניכם עם Nightscout</string>
     <string name="description_ama">הישאר עם האלגוריתם של 2017</string>
     <string name="description_smb">האלגוריתם העדכני ביותר, עבור משתמשים מתקדמים בלבד</string>
+    <string name="description_smb_dynamic_isf">האלגוריתם העדכני ביותר, נועד למשתמשים מתקדמים עם רגישות (ISF) דינאמית\\אוטומטית</string>
     <string name="description_overview">מציג את המצב הנוכחי של הלולאה ולחצני פעולות שימושיות</string>
     <string name="description_persistent_notification">מציג הודעה קבועה עם סקירה קצרה של מה שהלולאה שלכם עושה</string>
     <string name="description_profile_local">הגדירו פרופיל שזמין באופן לא מקוון.</string>
@@ -433,6 +434,7 @@
     <string name="ns_localbroadcasts">אפשר הפצה לאפליקציות אחרות (כגון xDrip). אין להפעיל אם מותקן לכם יותר ממופע אחד של AAPS או NSClient!</string>
     <string name="ns_localbroadcasts_title">אפשר שידורים מקומיים.</string>
     <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openaps_smb_dynamic_isf">OpenAPS SMB רגישות דינאמית</string>
     <string name="enableuam">הפעלת UAM</string>
     <string name="enablesmb">אפשר SMB</string>
     <string name="enablesmb_summary">השתמש בסופר מיקרו בולוסים במקום בבזאלי זמני לפעילות מהירה יותר</string>
