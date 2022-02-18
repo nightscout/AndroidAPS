@@ -25,6 +25,7 @@
     <string name="description_ns_client">Synkroniserer dine data med Nightscout</string>
     <string name="description_ama">Slik algoritmen var definert i 2017</string>
     <string name="description_smb">Siste utgave av algoritmen for avanserte brukere</string>
+    <string name="description_smb_dynamic_isf">Nyeste algoritme for avanserte brukere med dynamisk/automatisk ISF</string>
     <string name="description_overview">Viser loopens nåværende tilstand og knapper for de vanligste funksjonene</string>
     <string name="description_persistent_notification">Viser en konstant melding med en kort oppsummering av hva loop gjør</string>
     <string name="description_profile_local">Definer en profil som er tilgjengelig offline.</string>
@@ -434,6 +435,7 @@
     <string name="ns_localbroadcasts">Aktiver kringkasting til andre apper (som xDrip+). Ikke aktiver dette hvis du har mer enn en AAPS eller NSClient installert!</string>
     <string name="ns_localbroadcasts_title">Aktiver lokale sendinger.</string>
     <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openaps_smb_dynamic_isf">OpenAPS SMB dynamisk ISF</string>
     <string name="enableuam">Aktiver UAM</string>
     <string name="enablesmb">Aktiver SMB</string>
     <string name="enablesmb_summary">Bruk Super Mikro Solen i stedet for temp basal for raskere resultat</string>
