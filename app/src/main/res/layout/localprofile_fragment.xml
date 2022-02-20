@@ -22,6 +22,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
+                android:labelFor="@+id/spinner"
                 android:text="@string/selected_profile"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -97,7 +98,7 @@
                 android:layout_height="35dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
-                android:contentDescription="@string/addnew"
+                android:contentDescription="@string/a11y_add_new_profile"
                 app:srcCompat="@drawable/ic_add" />
 
             <ImageView
@@ -106,7 +107,7 @@
                 android:layout_height="35dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
-                android:contentDescription="@string/clone_label"
+                android:contentDescription="@string/a11y_clone_profile"
                 app:srcCompat="@drawable/ic_clone" />
 
             <ImageView
@@ -115,7 +116,7 @@
                 android:layout_height="35dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
-                android:contentDescription="@string/remove_label"
+                android:contentDescription="@string/a11y_delete_current_profile"
                 android:scaleX="1"
                 android:scaleY="1"
                 app:srcCompat="@drawable/ic_remove" />
@@ -190,7 +191,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="@string/dia_label"
+                android:text="@string/dia_long_label"
                 android:textColor="@android:color/white"
                 android:textSize="20sp" />
 
@@ -202,6 +203,7 @@
                 android:paddingTop="5dp">
 
                 <TextView
+                    android:id="@+id/dia_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -214,7 +216,8 @@
                     android:layout_width="130dp"
                     android:layout_height="40dp"
                     android:layout_marginEnd="10dp"
-                    android:layout_marginBottom="10dp" />
+                    android:layout_marginBottom="10dp"
+                    app:customContentDescription="@string/dia"  />
 
                 <TextView
                     android:layout_width="wrap_content"

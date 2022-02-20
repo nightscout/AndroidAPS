@@ -83,14 +83,14 @@
                         android:layout_width="150dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
-                        android:labelFor="@+id/age"
                         android:text="@string/age"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
                     <info.nightscout.androidaps.utils.ui.NumberPicker
                         android:id="@+id/age"
                         android:layout_width="130dp"
-                        android:layout_height="40dp" />
+                        android:layout_height="40dp"
+                        app:customContentDescription="@string/age" />
 
                 </TableRow>
 
@@ -105,14 +105,14 @@
                         android:layout_width="150dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
-                        android:labelFor="@+id/weight"
                         android:text="@string/tdd_total"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
                     <info.nightscout.androidaps.utils.ui.NumberPicker
                         android:id="@+id/tdd"
                         android:layout_width="130dp"
-                        android:layout_height="40dp" />
+                        android:layout_height="40dp"
+                        app:customContentDescription="@string/tdd_total" />
 
                 </TableRow>
 
@@ -123,18 +123,18 @@
                     android:gravity="center_vertical">
 
                     <TextView
-                        android:id="@+id/weigth_label"
+                        android:id="@+id/weight_label"
                         android:layout_width="150dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
-                        android:labelFor="@+id/weight"
                         android:text="@string/weight_label"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
                     <info.nightscout.androidaps.utils.ui.NumberPicker
                         android:id="@+id/weight"
                         android:layout_width="130dp"
-                        android:layout_height="40dp" />
+                        android:layout_height="40dp"
+                        app:customContentDescription="@string/weight_label" />
 
                 </TableRow>
 
@@ -149,14 +149,14 @@
                         android:layout_width="150dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
-                        android:labelFor="@+id/basalpctfromtdd"
                         android:text="@string/basalpctfromtdd_label"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
                     <info.nightscout.androidaps.utils.ui.NumberPicker
                         android:id="@+id/basalpctfromtdd"
                         android:layout_width="130dp"
-                        android:layout_height="40dp" />
+                        android:layout_height="40dp"
+                        app:customContentDescription="@string/basalpctfromtdd_label" />
 
                 </TableRow>
 

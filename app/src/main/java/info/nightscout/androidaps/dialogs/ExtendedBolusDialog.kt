@@ -70,6 +70,8 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
         val extendedMaxDuration = pumpDescription.extendedBolusMaxDuration
         binding.duration.setParams(savedInstanceState?.getDouble("duration")
             ?: extendedDurationStep, extendedDurationStep, extendedMaxDuration, extendedDurationStep, DecimalFormat("0"), false, binding.okcancel.ok)
+        binding.insulin.editText?.id?.let { binding.insulinLabel.labelFor = it }
+        binding.duration.editText?.id?.let { binding.durationLabel.labelFor = it }
     }
 
     override fun onDestroyView() {

@@ -240,6 +240,69 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
         </LinearLayout>
+        
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|center_vertical"
+            android:layout_marginTop="0dp"
+            android:background="@android:color/transparent"
+            android:orientation="horizontal"
+            android:padding="0dp">
+
+            <CheckBox
+                android:id="@+id/bg_checkbox_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:scaleX="0.7"
+                android:scaleY="0.7"
+                android:button="@drawable/checkbox_bg_icon"
+                android:checked="true"
+                android:contentDescription="@string/treatments_wizard_bg_label" />
+
+            <CheckBox
+                android:id="@+id/trend_checkbox_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:scaleX="0.7"
+                android:scaleY="0.7"
+                android:button="@drawable/checkbox_trend_icon"
+                android:checked="true"
+                android:contentDescription="@string/bg_trend_label" />
+
+            <CheckBox
+                android:id="@+id/iob_checkbox_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:scaleX="0.9"
+                android:scaleY="0.9"
+                android:button="@drawable/checkbox_iob_icon"
+                android:checked="true"
+                android:contentDescription="@string/iob" />
+
+            <CheckBox
+                android:id="@+id/cob_checkbox_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:scaleX="0.7"
+                android:scaleY="0.7"
+                android:button="@drawable/checkbox_cob_icon"
+                android:checked="true"
+                android:contentDescription="@string/treatments_wizard_cob_label" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/done_background"
@@ -260,39 +323,7 @@
                 android:contentDescription="@string/show_calculation"
                 android:drawableEnd="@drawable/ic_visibility" />
 
-            <CheckBox
-                android:id="@+id/bg_checkbox_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:button="@drawable/checkbox_bg_icon"
-                android:checked="true"
-                android:contentDescription="@string/treatments_wizard_bg_label" />
-
-            <CheckBox
-                android:id="@+id/trend_checkbox_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:button="@drawable/checkbox_trend_icon"
-                android:checked="true"
-                android:contentDescription="@string/bg_trend_label" />
-
-            <CheckBox
-                android:id="@+id/iob_checkbox_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:button="@drawable/checkbox_iob_icon"
-                android:checked="true"
-                android:contentDescription="@string/iob" />
-
-            <CheckBox
-                android:id="@+id/cob_checkbox_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:button="@drawable/checkbox_cob_icon"
-                android:checked="true"
-                android:contentDescription="@string/treatments_wizard_cob_label" />
-
-            <include
+           <include
                 android:id="@+id/okcancel"
                 layout="@layout/okcancel" />
 

@@ -121,6 +121,7 @@ class LocalProfileFragment : DaggerFragment() {
             processVisibilityOnClick(it)
             binding.target.visibility = View.VISIBLE
         }
+        binding.dia.editText?.id?.let { binding.diaLabel.labelFor = it }
     }
 
     fun build() {
