@@ -28,7 +28,7 @@ class ResourceHelperImplementation @Inject constructor(private val context: Cont
         } catch (exception: Exception) {
             val resourceName = context.resources.getResourceEntryName(id)
             val resourceValue = context.getString(id)
-            val currentLocale: Locale = context.resources.configuration.locale
+            val currentLocale: Locale = context.resources.configuration.locales[0]
             fabricPrivacy.logMessage("Failed to get string for resource $resourceName ($id) '$resourceValue' for locale $currentLocale with args ${args.map{it.toString()}}")
             fabricPrivacy.logException(exception)
             try {
