@@ -278,7 +278,7 @@ class AutomationPlugin @Inject constructor(
 
     @Synchronized
     fun removeIfExists(event: AutomationEvent) {
-        for (e in automationEvents) {
+        for (e in automationEvents.reversed()) {
             if (event.title == e.title) {
                 automationEvents.remove(e)
                 rxBus.send(EventAutomationDataChanged())
@@ -301,6 +301,7 @@ class AutomationPlugin @Inject constructor(
     @Synchronized
     fun at(index: Int) = automationEvents[index]
 
+    @Synchronized
     fun size() = automationEvents.size
 
     @Synchronized
@@ -309,6 +310,7 @@ class AutomationPlugin @Inject constructor(
         rxBus.send(EventAutomationDataChanged())
     }
 
+    @Synchronized
     fun userEvents(): List<AutomationEvent> {
         val list = mutableListOf<AutomationEvent>()
         val iterator: MutableIterator<AutomationEvent> = automationEvents.iterator()
