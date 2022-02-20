@@ -1,19 +1,25 @@
 package info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.commands;
 
+import androidx.annotation.NonNull;
+
 import org.monkey.d.ruffy.ruffy.driver.display.Menu;
 import org.monkey.d.ruffy.ruffy.driver.display.MenuAttribute;
 import org.monkey.d.ruffy.ruffy.driver.display.MenuType;
 import org.monkey.d.ruffy.ruffy.driver.display.menu.MenuTime;
-import org.slf4j.Logger;
 
 import java.util.Arrays;
 
-import info.nightscout.shared.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.BasalProfile;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.PumpState;
+import info.nightscout.shared.logging.AAPSLogger;
+import info.nightscout.shared.logging.LTag;
 
 public class ReadBasalProfileCommand extends BaseCommand {
-    private static final Logger log = StacktraceLoggerWrapper.getLogger(ReadBasalProfileCommand.class);
+    private final AAPSLogger aapsLogger;
+    
+    public ReadBasalProfileCommand(AAPSLogger aapsLogger) {
+        this.aapsLogger = aapsLogger;
+    }
 
     @Override
     public void execute() {
@@ -44,10 +50,10 @@ public class ReadBasalProfileCommand extends BaseCommand {
                 throw new CommandException("Attempting to read basal rate for hour " + i + ", but hour " + startTime.getHour() + " is displayed");
             }
             basalProfile.hourlyRates[i] = scripter.readBlinkingValue(Double.class, MenuAttribute.BASAL_RATE);
-            log.debug("Read basal profile, hour " + i + ": " + basalProfile.hourlyRates[i]);
+            aapsLogger.debug(LTag.PUMP, "Read basal profile, hour " + i + ": " + basalProfile.hourlyRates[i]);
         }
 
-        log.debug("Basal profile read: " + Arrays.toString(basalProfile.hourlyRates));
+        aapsLogger.debug(LTag.PUMP, "Basal profile read: " + Arrays.toString(basalProfile.hourlyRates));
 
         scripter.returnToRootMenu();
         scripter.verifyRootMenuIsDisplayed();
@@ -55,7 +61,7 @@ public class ReadBasalProfileCommand extends BaseCommand {
         result.success(true).basalProfile(basalProfile);
     }
 
-    @Override
+    @NonNull @Override
     public String toString() {
         return "ReadBasalProfileCommand{}";
     }

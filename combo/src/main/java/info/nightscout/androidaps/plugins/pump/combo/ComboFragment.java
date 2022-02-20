@@ -40,6 +40,7 @@ public class ComboFragment extends DaggerFragment {
     @Inject DateUtil dateUtil;
     @Inject FabricPrivacy fabricPrivacy;
     @Inject AapsSchedulers aapsSchedulers;
+    @Inject ComboErrorUtil errorUtil;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
 
@@ -263,8 +264,6 @@ public class ComboFragment extends DaggerFragment {
 
     private void updateErrorDisplay(boolean forceHide) {
         int errorCount = -1;
-
-        ComboErrorUtil errorUtil = ComboErrorUtil.getInstance();
 
         if (!forceHide) {
             ComboErrorUtil.DisplayType displayType = errorUtil.getDisplayType();
