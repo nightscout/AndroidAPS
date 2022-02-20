@@ -6,18 +6,18 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.database.entities.TotalDailyDose
+import info.nightscout.androidaps.extensions.convertedToAbsolute
+import info.nightscout.androidaps.extensions.toText
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.MidnightTime
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.extensions.convertedToAbsolute
-import info.nightscout.androidaps.extensions.toText
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import javax.inject.Inject
 
 class TddCalculator @Inject constructor(
@@ -76,8 +76,8 @@ class TddCalculator @Inject constructor(
         return result
     }
 
-    fun calculateDaily():TotalDailyDose {
-        val  startTime = MidnightTime.calc(dateUtil.now() )
+    fun calculateDaily(): TotalDailyDose {
+        val startTime = MidnightTime.calc(dateUtil.now())
         val endTime = dateUtil.now()
         val tdd = TotalDailyDose(timestamp = startTime)
         //val result = TotalDailyDose()
@@ -118,12 +118,12 @@ class TddCalculator @Inject constructor(
         tdd.totalAmount = tdd.bolusAmount + tdd.basalAmount
         //}
 
-
         aapsLogger.debug(LTag.CORE, tdd.toString())
         return tdd
     }
-    fun calculate24Daily():TotalDailyDose {
-        val  startTime = dateUtil.now() - T.hours(hour = 24).msecs()
+
+    fun calculate24Daily(): TotalDailyDose {
+        val startTime = dateUtil.now() - T.hours(hour = 24).msecs()
         val endTime = dateUtil.now()
         val tdd = TotalDailyDose(timestamp = startTime)
         //val result = TotalDailyDose()
@@ -165,12 +165,13 @@ class TddCalculator @Inject constructor(
         tdd.totalAmount = tdd.bolusAmount + tdd.basalAmount
         //}
 
-
         aapsLogger.debug(LTag.CORE, tdd.toString())
         return tdd
     }
-    fun averageTDD(tdds: LongSparseArray<TotalDailyDose>): TotalDailyDose {
+
+    fun averageTDD(tdds: LongSparseArray<TotalDailyDose>): TotalDailyDose? {
         val totalTdd = TotalDailyDose(timestamp = dateUtil.now())
+        if (tdds.size() == 0) return null
         for (i in 0 until tdds.size()) {
             val tdd = tdds.valueAt(i)
             totalTdd.basalAmount += tdd.basalAmount
@@ -189,10 +190,11 @@ class TddCalculator @Inject constructor(
         val tdds = calculate(7)
         val averageTdd = averageTDD(tdds)
         return HtmlHelper.fromHtml(
-            "<b>" + rh.gs(R.string.tdd) + ":</b><br>" +
+            if (averageTdd != null) "<b>" + rh.gs(R.string.tdd) + ":</b><br>" +
                 toText(tdds, true) +
                 "<b>" + rh.gs(R.string.average) + ":</b><br>" +
                 averageTdd.toText(rh, tdds.size(), true)
+            else ""
         )
     }
 
