@@ -21,7 +21,7 @@ apply from: "${project.rootDir}/gradle/jacoco_global.gradle"
 
 
 ext {
-    wearableVersion = "2.8.1"
+    wearableVersion = "2.9.0"
     // playServicesWearable 17.1.0 breaks test
     playServicesWearable = "17.0.0"
 }
