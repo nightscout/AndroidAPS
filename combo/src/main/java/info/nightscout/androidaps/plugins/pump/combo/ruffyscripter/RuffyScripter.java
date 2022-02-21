@@ -7,6 +7,7 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.os.SystemClock;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -19,15 +20,15 @@ import org.monkey.d.ruffy.ruffy.driver.display.MenuAttribute;
 import org.monkey.d.ruffy.ruffy.driver.display.MenuType;
 import org.monkey.d.ruffy.ruffy.driver.display.menu.BolusType;
 import org.monkey.d.ruffy.ruffy.driver.display.menu.MenuTime;
-import org.slf4j.Logger;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-import info.nightscout.shared.logging.StacktraceLoggerWrapper;
-import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.commands.ReadQuickInfoCommand;
-import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.PumpHistoryRequest;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import info.nightscout.androidaps.plugins.pump.combo.data.ComboErrorUtil;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.commands.BolusCommand;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.commands.CancelTbrCommand;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.commands.Command;
@@ -36,18 +37,24 @@ import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.commands.Conf
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.commands.ReadBasalProfileCommand;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.commands.ReadHistoryCommand;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.commands.ReadPumpStateCommand;
+import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.commands.ReadQuickInfoCommand;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.commands.SetBasalProfileCommand;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.commands.SetTbrCommand;
+import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.PumpHistoryRequest;
+import info.nightscout.shared.logging.AAPSLogger;
+import info.nightscout.shared.logging.LTag;
 
 /**
  * Provides scripting 'runtime' and operations. consider moving operations into a separate
  * class and inject that into executing commands, so that commands operately solely on
  * operations and are cleanly separated from the thread management, connection management etc
  */
+@Singleton
 public class RuffyScripter implements RuffyCommands {
-    private static final Logger log = StacktraceLoggerWrapper.getLogger(RuffyScripter.class);
 
     private IRuffyService ruffyService;
+    private final ComboErrorUtil comboErrorUtil;
+    private final AAPSLogger aapsLogger;
 
     @Nullable
     private volatile Menu currentMenu;
@@ -63,30 +70,28 @@ public class RuffyScripter implements RuffyCommands {
     private final IRTHandler mHandler = new IRTHandler.Stub() {
         @Override
         public void log(String message) {
-            if (log.isTraceEnabled()) {
-                log.trace("Ruffy says: " + message);
-            }
+            aapsLogger.debug(LTag.PUMP, "Ruffy says: " + message);
         }
 
         @Override
         public void fail(String message) {
-            log.warn("Ruffy warns: " + message);
+            aapsLogger.warn(LTag.PUMP, "Ruffy warns: " + message);
         }
 
         @Override
         public void requestBluetooth() {
-            log.trace("Ruffy invoked requestBluetooth callback");
+            aapsLogger.debug(LTag.PUMP, "Ruffy invoked requestBluetooth callback");
         }
 
         @Override
         public void rtStopped() {
-            log.debug("rtStopped callback invoked");
+            aapsLogger.debug(LTag.PUMP, "rtStopped callback invoked");
             currentMenu = null;
         }
 
         @Override
         public void rtStarted() {
-            log.debug("rtStarted callback invoked");
+            aapsLogger.debug(LTag.PUMP, "rtStarted callback invoked");
         }
 
         @Override
@@ -100,7 +105,7 @@ public class RuffyScripter implements RuffyCommands {
         @Override
         public void rtDisplayHandleMenu(Menu menu) {
             // method is called every ~500ms
-            log.debug("rtDisplayHandleMenu: " + menu);
+            aapsLogger.debug(LTag.PUMP, "rtDisplayHandleMenu: " + menu);
 
             currentMenu = menu;
             menuLastUpdated = System.currentTimeMillis();
@@ -112,13 +117,17 @@ public class RuffyScripter implements RuffyCommands {
 
         @Override
         public void rtDisplayHandleNoMenu() {
-            log.warn("rtDisplayHandleNoMenu callback invoked");
+            aapsLogger.warn(LTag.PUMP, "rtDisplayHandleNoMenu callback invoked");
             unparsableMenuEncountered = true;
         }
     };
 
-    public RuffyScripter(Context context) {
+    @Inject
+    public RuffyScripter(Context context, ComboErrorUtil comboErrorUtil, AAPSLogger aapsLogger) {
         boolean boundSucceeded = false;
+
+        this.comboErrorUtil = comboErrorUtil;
+        this.aapsLogger = aapsLogger;
 
         try {
             Intent intent = new Intent()
@@ -138,28 +147,28 @@ public class RuffyScripter implements RuffyCommands {
             ServiceConnection mRuffyServiceConnection = new ServiceConnection() {
                 @Override
                 public void onServiceConnected(ComponentName name, IBinder service) {
-                    log.debug("ruffy service connected");
+                    aapsLogger.debug(LTag.PUMP, "ruffy service connected");
                     ruffyService = IRuffyService.Stub.asInterface(service);
                     try {
                         ruffyService.setHandler(mHandler);
                     } catch (Exception e) {
-                        log.error("Ruffy handler has issues", e);
+                        aapsLogger.error(LTag.PUMP, "Ruffy handler has issues", e);
                     }
                     started = true;
                 }
 
                 @Override
                 public void onServiceDisconnected(ComponentName name) {
-                    log.debug("ruffy service disconnected");
+                    aapsLogger.debug(LTag.PUMP, "ruffy service disconnected");
                 }
             };
             boundSucceeded = context.bindService(intent, mRuffyServiceConnection, Context.BIND_AUTO_CREATE);
         } catch (Exception e) {
-            log.error("Binding to ruffy service failed", e);
+            aapsLogger.error(LTag.PUMP, "Binding to ruffy service failed", e);
         }
 
         if (!boundSucceeded) {
-            log.info("No connection to ruffy. Pump control unavailable.");
+            aapsLogger.info(LTag.PUMP, "No connection to ruffy. Pump control unavailable.");
         }
     }
 
@@ -188,18 +197,32 @@ public class RuffyScripter implements RuffyCommands {
         }
     }
 
+    private void addError(Exception e) {
+        try {
+            comboErrorUtil.addError(e);
+        } catch (Exception ex) {
+            aapsLogger.error(LTag.PUMP, "Combo data util problem." + ex.getMessage(), ex);
+        }
+    }
+
     @Override
     public synchronized void disconnect() {
         if (ruffyService == null) {
             return;
         }
         try {
-            log.debug("Disconnecting");
+            aapsLogger.debug(LTag.PUMP, "Disconnecting");
             ruffyService.doRTDisconnect();
+            try {
+                comboErrorUtil.clearErrors();
+            } catch (Exception ex) {
+                aapsLogger.error(LTag.PUMP, "Combo data util problem." + ex.getMessage(), ex);
+            }
         } catch (RemoteException e) {
             // ignore
         } catch (Exception e) {
-            log.warn("Disconnect not happy", e);
+            aapsLogger.warn(LTag.PUMP, "Disconnect not happy", e);
+            addError(e);
         }
     }
 
@@ -210,14 +233,14 @@ public class RuffyScripter implements RuffyCommands {
 
     @Override
     public CommandResult readQuickInfo(int numberOfBolusRecordsToRetrieve) {
-        return runCommand(new ReadQuickInfoCommand(numberOfBolusRecordsToRetrieve));
+        return runCommand(new ReadQuickInfoCommand(numberOfBolusRecordsToRetrieve, aapsLogger));
     }
 
     public void returnToRootMenu() {
         // returning to main menu using the 'back' key does not cause a vibration
         MenuType menuType = getCurrentMenu().getType();
         while (menuType != MenuType.MAIN_MENU && menuType != MenuType.STOP && menuType != MenuType.WARNING_OR_ERROR) {
-            log.debug("Going back to main menu, currently at " + menuType);
+            aapsLogger.debug(LTag.PUMP, "Going back to main menu, currently at " + menuType);
             pressBackKey();
             while (getCurrentMenu().getType() == menuType) {
                 waitForScreenUpdate();
@@ -230,11 +253,11 @@ public class RuffyScripter implements RuffyCommands {
      * Always returns a CommandResult, never throws
      */
     private CommandResult runCommand(final Command cmd) {
-        log.debug("Attempting to run cmd: " + cmd);
+        aapsLogger.debug(LTag.PUMP, "Attempting to run cmd: " + cmd);
 
         List<String> violations = cmd.validateArguments();
         if (!violations.isEmpty()) {
-            log.error("Command argument violations: " + Joiner.on(", ").join(violations));
+            aapsLogger.error(LTag.PUMP, "Command argument violations: " + Joiner.on(", ").join(violations));
             return new CommandResult().success(false).state(new PumpState());
         }
 
@@ -245,26 +268,28 @@ public class RuffyScripter implements RuffyCommands {
                 unparsableMenuEncountered = false;
                 long connectStart = System.currentTimeMillis();
                 ensureConnected();
-                log.debug("Connection ready to execute cmd " + cmd);
+                aapsLogger.debug(LTag.PUMP, "Connection ready to execute cmd " + cmd);
                 cmdThread = new Thread(() -> {
                     try {
                         if (!runPreCommandChecks(cmd)) {
                             return;
                         }
                         PumpState pumpState = readPumpStateInternal();
-                        log.debug("Pump state before running command: " + pumpState);
+                        aapsLogger.debug(LTag.PUMP, "Pump state before running command: " + pumpState);
 
                         // execute the command
                         cmd.setScripter(RuffyScripter.this);
                         long cmdStartTime = System.currentTimeMillis();
                         cmd.execute();
                         long cmdEndTime = System.currentTimeMillis();
-                        log.debug("Executing " + cmd + " took " + (cmdEndTime - cmdStartTime) + "ms");
+                        aapsLogger.debug(LTag.PUMP, "Executing " + cmd + " took " + (cmdEndTime - cmdStartTime) + "ms");
                     } catch (CommandException e) {
-                        log.info("CommandException running command", e);
+                        aapsLogger.info(LTag.PUMP, "CommandException running command", e);
+                        addError(e);
                         cmd.getResult().success = false;
                     } catch (Exception e) {
-                        log.error("Unexpected exception running cmd", e);
+                        aapsLogger.error(LTag.PUMP, "Unexpected exception running cmd", e);
+                        addError(e);
                         cmd.getResult().success = false;
                     }
                 }, cmd.getClass().getSimpleName());
@@ -277,7 +302,7 @@ public class RuffyScripter implements RuffyCommands {
                         // on connection loss try to reconnect, confirm warning alerts caused by
                         // the disconnected and then return the command as failed (the caller
                         // can retry if needed).
-                        log.debug("Connection unusable (ruffy connection: " + ruffyService.isConnected() + ", "
+                        aapsLogger.debug(LTag.PUMP, "Connection unusable (ruffy connection: " + ruffyService.isConnected() + ", "
                                 + "time since last menu update: " + (System.currentTimeMillis() - menuLastUpdated) + " ms, "
                                 + "aborting command and attempting reconnect ...");
                         cmdThread.interrupt();
@@ -300,44 +325,44 @@ public class RuffyScripter implements RuffyCommands {
                     }
 
                     if (System.currentTimeMillis() > overallTimeout) {
-                        log.error("Command " + cmd + " timed out");
+                        aapsLogger.error(LTag.PUMP, "Command " + cmd + " timed out");
                         cmdThread.interrupt();
                         activeCmd.getResult().success = false;
                         break;
                     }
 
                     if (unparsableMenuEncountered) {
-                        log.error("UnparsableMenuEncountered flagged, aborting command");
+                        aapsLogger.error(LTag.PUMP, "UnparsableMenuEncountered flagged, aborting command");
                         cmdThread.interrupt();
                         activeCmd.getResult().invalidSetup = true;
                         activeCmd.getResult().success = false;
                     }
 
-                    log.trace("Waiting for running command to complete");
+                    aapsLogger.debug(LTag.PUMP, "Waiting for running command to complete");
                     SystemClock.sleep(500);
                 }
 
                 activeCmd.getResult().state = readPumpStateInternal();
                 CommandResult result = activeCmd.getResult();
-                if (log.isDebugEnabled()) {
-                    long connectDurationSec = (executionStart - connectStart) / 1000;
-                    long executionDurationSec = (System.currentTimeMillis() - executionStart) / 1000;
-                    log.debug("Command result: " + result);
-                    log.debug("Connect: " + connectDurationSec + "s, execution: " + executionDurationSec + "s");
-                }
+                long connectDurationSec = (executionStart - connectStart) / 1000;
+                long executionDurationSec = (System.currentTimeMillis() - executionStart) / 1000;
+                aapsLogger.debug(LTag.PUMP, "Command result: " + result);
+                aapsLogger.debug(LTag.PUMP, "Connect: " + connectDurationSec + "s, execution: " + executionDurationSec + "s");
                 return result;
             } catch (CommandException e) {
-                log.error("CommandException while executing command", e);
+                aapsLogger.error(LTag.PUMP, "CommandException while executing command", e);
                 PumpState pumpState = recoverFromCommandFailure();
+                addError(e);
                 return activeCmd.getResult().success(false).state(pumpState);
             } catch (Exception e) {
-                log.error("Unexpected exception communication with ruffy", e);
+                aapsLogger.error(LTag.PUMP, "Unexpected exception communication with ruffy", e);
                 PumpState pumpState = recoverFromCommandFailure();
+                addError(e);
                 return activeCmd.getResult().success(false).state(pumpState);
             } finally {
                 Menu menu = this.currentMenu;
                 if (activeCmd.getResult().success && menu != null && menu.getType() != MenuType.MAIN_MENU) {
-                    log.warn("Command " + activeCmd + " successful, but finished leaving pump on menu " + getCurrentMenuName());
+                    aapsLogger.warn(LTag.PUMP, "Command " + activeCmd + " successful, but finished leaving pump on menu " + getCurrentMenuName());
                 }
                 if (cmdThread != null) {
                     try {
@@ -358,18 +383,18 @@ public class RuffyScripter implements RuffyCommands {
             activeCmd.getResult().success = true;
         } else if (getCurrentMenu().getType() == MenuType.STOP) {
             if (cmd.needsRunMode()) {
-                log.error("Requested command requires run mode, but pump is suspended");
+                aapsLogger.error(LTag.PUMP, "Requested command requires run mode, but pump is suspended");
                 activeCmd.getResult().success = false;
                 return false;
             }
         } else if (getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR) {
             if (!(cmd instanceof ConfirmAlertCommand)) {
-                log.warn("Warning/alert active on pump, but requested command is not ConfirmAlertCommand");
+                aapsLogger.warn(LTag.PUMP, "Warning/alert active on pump, but requested command is not ConfirmAlertCommand");
                 activeCmd.getResult().success = false;
                 return false;
             }
         } else if (getCurrentMenu().getType() != MenuType.MAIN_MENU) {
-            log.debug("Pump is unexpectedly not on main menu but " + getCurrentMenuName() + ", trying to recover");
+            aapsLogger.debug(LTag.PUMP, "Pump is unexpectedly not on main menu but " + getCurrentMenuName() + ", trying to recover");
             try {
                 recoverFromCommandFailure();
             } catch (Exception e) {
@@ -392,12 +417,12 @@ public class RuffyScripter implements RuffyCommands {
      * @return whether the reconnect and return to main menu was successful
      */
     private boolean recoverFromConnectionLoss() {
-        log.debug("Connection was lost, trying to reconnect");
+        aapsLogger.debug(LTag.PUMP, "Connection was lost, trying to reconnect");
         ensureConnected();
         if (getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR) {
             WarningOrErrorCode warningOrErrorCode = readWarningOrErrorCode();
             if (Objects.equals(activeCmd.getReconnectWarningId(), warningOrErrorCode.warningCode)) {
-                log.debug("Confirming warning caused by disconnect: #" + warningOrErrorCode.warningCode);
+                aapsLogger.debug(LTag.PUMP, "Confirming warning caused by disconnect: #" + warningOrErrorCode.warningCode);
                 // confirm alert
                 verifyMenuIsDisplayed(MenuType.WARNING_OR_ERROR);
                 pressCheckKey();
@@ -414,7 +439,7 @@ public class RuffyScripter implements RuffyCommands {
                 returnToRootMenu();
             }
         }
-        log.debug("Recovery from connection loss " + (connected ? "succeeded" : "failed"));
+        aapsLogger.debug(LTag.PUMP, "Recovery from connection loss " + (connected ? "succeeded" : "failed"));
         return connected;
     }
 
@@ -430,17 +455,16 @@ public class RuffyScripter implements RuffyCommands {
         MenuType type = menu.getType();
         if (type != MenuType.WARNING_OR_ERROR && type != MenuType.MAIN_MENU) {
             try {
-                log.debug("Command execution yielded an error, returning to main menu");
+                aapsLogger.debug(LTag.PUMP, "Command execution yielded an error, returning to main menu");
                 returnToRootMenu();
             } catch (Exception e) {
-                log.warn("Error returning to main menu, when trying to recover from command failure", e);
+                aapsLogger.warn(LTag.PUMP, "Error returning to main menu, when trying to recover from command failure", e);
             }
         }
         try {
-            PumpState pumpState = readPumpStateInternal();
-            return pumpState;
+            return readPumpStateInternal();
         } catch (Exception e) {
-            log.debug("Reading pump state during recovery failed", e);
+            aapsLogger.debug(LTag.PUMP, "Reading pump state during recovery failed", e);
             return new PumpState();
         }
     }
@@ -455,8 +479,8 @@ public class RuffyScripter implements RuffyCommands {
             }
 
             boolean connectInitSuccessful = ruffyService.doRTConnect() == 0;
-            log.debug("Connect init successful: " + connectInitSuccessful);
-            log.debug("Waiting for first menu update to be sent");
+            aapsLogger.debug(LTag.PUMP, "Connect init successful: " + connectInitSuccessful);
+            aapsLogger.debug(LTag.PUMP, "Waiting for first menu update to be sent");
             long timeoutExpired = System.currentTimeMillis() + 90 * 1000;
             long initialUpdateTime = menuLastUpdated;
             while (initialUpdateTime == menuLastUpdated) {
@@ -469,14 +493,14 @@ public class RuffyScripter implements RuffyCommands {
             try {
                 ruffyService.doRTDisconnect();
             } catch (RemoteException e1) {
-                log.warn("Disconnect after connect failure failed", e1);
+                aapsLogger.warn(LTag.PUMP, "Disconnect after connect failure failed", e1);
             }
             throw e;
         } catch (Exception e) {
             try {
                 ruffyService.doRTDisconnect();
             } catch (RemoteException e1) {
-                log.warn("Disconnect after connect failure failed", e1);
+                aapsLogger.warn(LTag.PUMP, "Disconnect after connect failure failed", e1);
             }
             throw new CommandException("Unexpected exception while initiating/restoring pump connection", e);
         }
@@ -491,11 +515,11 @@ public class RuffyScripter implements RuffyCommands {
         state.timestamp = System.currentTimeMillis();
         Menu menu = currentMenu;
         if (menu == null) {
-            log.debug("Returning empty PumpState, menu is unavailable");
+            aapsLogger.debug(LTag.PUMP, "Returning empty PumpState, menu is unavailable");
             return state;
         }
 
-        log.debug("Parsing menu: " + menu);
+        aapsLogger.debug(LTag.PUMP, "Parsing menu: " + menu);
         MenuType menuType = menu.getType();
         state.menu = menuType.name();
 
@@ -558,7 +582,7 @@ public class RuffyScripter implements RuffyCommands {
             }
         }
 
-        log.debug("State read: " + state);
+        aapsLogger.debug(LTag.PUMP, "State read: " + state);
         return state;
     }
 
@@ -596,7 +620,7 @@ public class RuffyScripter implements RuffyCommands {
             throw new CommandException("Interrupted");
         Menu menu = this.currentMenu;
         if (menu == null) {
-            log.error("currentMenu == null, bailing");
+            aapsLogger.error(LTag.PUMP, "currentMenu == null, bailing");
             throw new CommandException("Unable to read current menu");
         }
         return menu;
@@ -609,39 +633,39 @@ public class RuffyScripter implements RuffyCommands {
     }
 
     public void pressUpKey() {
-        log.debug("Pressing up key");
+        aapsLogger.debug(LTag.PUMP, "Pressing up key");
         pressKey(Key.UP);
-        log.debug("Releasing up key");
+        aapsLogger.debug(LTag.PUMP, "Releasing up key");
     }
 
     public void pressDownKey() {
-        log.debug("Pressing down key");
+        aapsLogger.debug(LTag.PUMP, "Pressing down key");
         pressKey(Key.DOWN);
-        log.debug("Releasing down key");
+        aapsLogger.debug(LTag.PUMP, "Releasing down key");
     }
 
     public void pressCheckKey() {
-        log.debug("Pressing check key");
+        aapsLogger.debug(LTag.PUMP, "Pressing check key");
         pressKey(Key.CHECK);
-        log.debug("Releasing check key");
+        aapsLogger.debug(LTag.PUMP, "Releasing check key");
     }
 
     public void pressMenuKey() {
-        log.debug("Pressing menu key");
+        aapsLogger.debug(LTag.PUMP, "Pressing menu key");
         pressKey(Key.MENU);
-        log.debug("Releasing menu key");
+        aapsLogger.debug(LTag.PUMP, "Releasing menu key");
     }
 
     private void pressBackKey() {
-        log.debug("Pressing back key");
+        aapsLogger.debug(LTag.PUMP, "Pressing back key");
         pressKey(Key.BACK);
-        log.debug("Releasing back key");
+        aapsLogger.debug(LTag.PUMP, "Releasing back key");
     }
 
     public void pressKeyMs(final byte key, long ms) {
         long stepMs = 100;
         try {
-            log.debug("Scroll: Pressing key for " + ms + " ms with step " + stepMs + " ms");
+            aapsLogger.debug(LTag.PUMP, "Scroll: Pressing key for " + ms + " ms with step " + stepMs + " ms");
             ruffyService.rtSendKey(key, true);
             ruffyService.rtSendKey(key, false);
             while (ms > stepMs) {
@@ -651,7 +675,7 @@ public class RuffyScripter implements RuffyCommands {
             }
             SystemClock.sleep(ms);
             ruffyService.rtSendKey(Key.NO_KEY, true);
-            log.debug("Releasing key");
+            aapsLogger.debug(LTag.PUMP, "Releasing key");
         } catch (Exception e) {
             throw new CommandException("Error while pressing buttons");
         }
@@ -690,7 +714,7 @@ public class RuffyScripter implements RuffyCommands {
         int moves = 20;
         MenuType lastSeenMenu = getCurrentMenu().getType();
         while (lastSeenMenu != desiredMenu) {
-            log.debug("Navigating to menu " + desiredMenu + ", current menu: " + lastSeenMenu);
+            aapsLogger.debug(LTag.PUMP, "Navigating to menu " + desiredMenu + ", current menu: " + lastSeenMenu);
             moves--;
             if (moves == 0) {
                 throw new CommandException("Menu not found searching for " + desiredMenu
@@ -769,7 +793,7 @@ public class RuffyScripter implements RuffyCommands {
 
     @Override
     public CommandResult deliverBolus(double amount, BolusProgressReporter bolusProgressReporter) {
-        return runCommand(new BolusCommand(amount, bolusProgressReporter));
+        return runCommand(new BolusCommand(amount, bolusProgressReporter, aapsLogger));
     }
 
     @Override
@@ -777,18 +801,18 @@ public class RuffyScripter implements RuffyCommands {
         if (activeCmd instanceof BolusCommand) {
             ((BolusCommand) activeCmd).requestCancellation();
         } else {
-            log.error("cancelBolus called, but active command is not a bolus:" + activeCmd);
+            aapsLogger.error(LTag.PUMP, "cancelBolus called, but active command is not a bolus:" + activeCmd);
         }
     }
 
     @Override
     public CommandResult setTbr(int percent, int duration) {
-        return runCommand(new SetTbrCommand(percent, duration));
+        return runCommand(new SetTbrCommand(percent, duration, aapsLogger));
     }
 
     @Override
     public CommandResult cancelTbr() {
-        return runCommand(new CancelTbrCommand());
+        return runCommand(new CancelTbrCommand(aapsLogger));
     }
 
     @Override
@@ -798,17 +822,17 @@ public class RuffyScripter implements RuffyCommands {
 
     @Override
     public CommandResult readHistory(PumpHistoryRequest request) {
-        return runCommand(new ReadHistoryCommand(request));
+        return runCommand(new ReadHistoryCommand(request, aapsLogger));
     }
 
     @Override
     public CommandResult readBasalProfile() {
-        return runCommand(new ReadBasalProfileCommand());
+        return runCommand(new ReadBasalProfileCommand(aapsLogger));
     }
 
     @Override
     public CommandResult setBasalProfile(BasalProfile basalProfile) {
-        return runCommand(new SetBasalProfileCommand(basalProfile));
+        return runCommand(new SetBasalProfileCommand(basalProfile, aapsLogger));
     }
 
     @Override
@@ -868,8 +892,8 @@ public class RuffyScripter implements RuffyCommands {
                 // when a command returns
                 WarningOrErrorCode displayedWarning = readWarningOrErrorCode();
                 while (Objects.equals(displayedWarning.warningCode, warningCode)) {
-                   waitForScreenUpdate();
-                   displayedWarning = readWarningOrErrorCode();
+                    waitForScreenUpdate();
+                    displayedWarning = readWarningOrErrorCode();
                 }
                 return true;
             }

@@ -96,7 +96,7 @@ class OpenAPSAMAFragment : DaggerFragment() {
             binding.result.text = jsonFormatter.format(lastAPSResult.json)
             binding.request.text = lastAPSResult.toSpanned()
         }
-        openAPSAMAPlugin.lastDetermineBasalAdapterAMAJS?.let { determineBasalAdapterAMAJS ->
+        openAPSAMAPlugin.lastDetermineBasalAdapter?.let { determineBasalAdapterAMAJS ->
             binding.glucosestatus.text = jsonFormatter.format(determineBasalAdapterAMAJS.glucoseStatusParam)
             binding.currenttemp.text = jsonFormatter.format(determineBasalAdapterAMAJS.currentTempParam)
             try {
@@ -110,7 +110,7 @@ class OpenAPSAMAFragment : DaggerFragment() {
 
             binding.profile.text = jsonFormatter.format(determineBasalAdapterAMAJS.profileParam)
             binding.mealdata.text = jsonFormatter.format(determineBasalAdapterAMAJS.mealDataParam)
-            binding.scriptdebugdata.text = determineBasalAdapterAMAJS.scriptDebug
+            binding.scriptdebugdata.text = determineBasalAdapterAMAJS.scriptDebug.replace("\\s+".toRegex(), " ")
         }
         if (openAPSAMAPlugin.lastAPSRun != 0L) {
             binding.lastrun.text = dateUtil.dateAndTimeString(openAPSAMAPlugin.lastAPSRun)

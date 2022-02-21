@@ -122,8 +122,8 @@
     <string name="color_name_white">biela</string>
     <string name="color_name_black">čierna</string>
     <string name="color_name_multicolor">viacfarebná</string>
-    <string name="pref_simplify_ui_charging">Zjednodušené rozhranie pre nabíjanie</string>
-    <string name="pref_simplify_ui_charging_sum">Zobrazovať pri nabíjaní iba čas a glykémiu</string>
+    <string name="pref_simplify_ui">Zjednodušené užívateľské rozhranie</string>
+    <string name="pref_simplify_ui_sum">Zobraziť iba čas a glykémiu</string>
     <string name="pref_vibrate_hourly">Vibrovať každú hodinu</string>
     <string name="pref_show_weeknumber">Zobraziť číslo týždňa</string>
     <string name="digitalstyle_pref_your_style">Váš štýl:</string>
@@ -138,4 +138,8 @@
     <string name="bolus_progress_silent_channel_name">AAPS Priebeh podávania bolusu tichý</string>
     <string name="bolus_progress_channel_description">Priebeh bolusu a zrušenie</string>
     <string name="bolus_progress_silent_channel_description">Priebeh bolusu a zrušenie s menej vibráciami</string>
+    <string name="simple_ui_off">Vyp</string>
+    <string name="simple_ui_charging">Počas nabíjania</string>
+    <string name="simple_ui_always_on">Mód vždy zapnuté</string>
+    <string name="simple_ui_always_on_charging">Vždy zapnuté a nabíjanie</string>
 </resources>

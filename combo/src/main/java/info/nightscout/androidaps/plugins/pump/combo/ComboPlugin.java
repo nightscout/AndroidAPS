@@ -38,8 +38,6 @@ import info.nightscout.androidaps.interfaces.Pump;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
 import info.nightscout.androidaps.interfaces.PumpSync;
-import info.nightscout.shared.logging.AAPSLogger;
-import info.nightscout.shared.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
@@ -64,6 +62,8 @@ import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.InstanceId;
 import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.shared.logging.AAPSLogger;
+import info.nightscout.shared.logging.LTag;
 import info.nightscout.shared.sharedPreferences.SP;
 
 /**
@@ -98,10 +98,10 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
     private final Context context;
     private final PumpSync pumpSync;
     private final DateUtil dateUtil;
+    private final RuffyCommands ruffyScripter;
 
     private final static PumpDescription pumpDescription = new PumpDescription();
 
-    private RuffyCommands ruffyScripter;
 
     @NonNull
     private static final ComboPump pump = new ComboPump();
@@ -153,7 +153,8 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
             CommandQueue commandQueue,
             Context context,
             PumpSync pumpSync,
-            DateUtil dateUtil
+            DateUtil dateUtil,
+            RuffyScripter ruffyScripter
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.PUMP)
@@ -161,6 +162,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
                         .pluginIcon(R.drawable.ic_combo_128)
                         .pluginName(R.string.combopump)
                         .shortName(R.string.combopump_shortname)
+                        .preferencesId(R.xml.pref_combo)
                         .description(R.string.description_pump_combo),
                 injector, aapsLogger, rh, commandQueue
         );
@@ -171,13 +173,13 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
         this.context = context;
         this.pumpSync = pumpSync;
         this.dateUtil = dateUtil;
+        this.ruffyScripter = ruffyScripter;
 
         pumpDescription.fillFor(PumpType.ACCU_CHEK_COMBO);
     }
 
     @Override protected void onStart() {
         super.onStart();
-        ruffyScripter = new RuffyScripter(context);
         OPERATION_NOT_SUPPORTED = new PumpEnactResult(getInjector())
                 .success(false).enacted(false).comment(R.string.combo_pump_unsupported_operation);
     }

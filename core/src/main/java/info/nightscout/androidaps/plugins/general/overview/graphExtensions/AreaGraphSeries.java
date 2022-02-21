@@ -43,7 +43,7 @@ public class AreaGraphSeries<E extends DoubleDataPoint> extends BaseSeries<E> {
         /**
          * the thickness of the line.
          * This option will be ignored if you are
-         * using a custom paint via {@link #setCustomPaint(android.graphics.Paint)}
+         * using a custom paint via {@link #setCustomPaint(Paint)}
          */
         private int thickness = 5;
 
@@ -342,7 +342,7 @@ public class AreaGraphSeries<E extends DoubleDataPoint> extends BaseSeries<E> {
     /**
      * the thickness of the line.
      * This option will be ignored if you are
-     * using a custom paint via {@link #setCustomPaint(android.graphics.Paint)}
+     * using a custom paint via {@link #setCustomPaint(Paint)}
      *
      * @return the thickness of the line
      */
@@ -353,7 +353,7 @@ public class AreaGraphSeries<E extends DoubleDataPoint> extends BaseSeries<E> {
     /**
      * the thickness of the line.
      * This option will be ignored if you are
-     * using a custom paint via {@link #setCustomPaint(android.graphics.Paint)}
+     * using a custom paint via {@link #setCustomPaint(Paint)}
      *
      * @param thickness thickness of the line
      */

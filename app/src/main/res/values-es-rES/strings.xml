@@ -720,7 +720,7 @@
     <string name="old_version">versión antigua</string>
     <string name="very_old_version">versión muy antigua</string>
     <string name="application_expired">Aplicación caducada</string>
-    <string name="new_version_warning">Nueva versión disponible de al menos %1$d día/s. Soporte a función de suspensión por glucosa baja (LGS) durante %2$d días. Después se deshabilitará el lazo en %3$d días</string>
+    <string name="new_version_warning">Nueva versión disponible de al menos %1$d día/s. Soporte a la función de suspensión por glucosa baja (LGS) durante %2$d días. Después se deshabilitará el lazo en %3$d días</string>
     <string name="twohours">2h</string>
     <string name="dexcom_app_patched">Dexcom (BYODA)</string>
     <string name="dexcom_short">BYODA</string>

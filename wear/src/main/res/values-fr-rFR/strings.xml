@@ -140,6 +140,6 @@
     <string name="bolus_progress_silent_channel_description">Progression et annulation Bolus avec moins de vibrations</string>
     <string name="simple_ui_off">Désactivé</string>
     <string name="simple_ui_charging">Pendant la charge</string>
-    <string name="simple_ui_always_on">Toujours en mode activé</string>
+    <string name="simple_ui_always_on">Toujours allumé</string>
     <string name="simple_ui_always_on_charging">Toujours allumé et pendant la charge</string>
 </resources>

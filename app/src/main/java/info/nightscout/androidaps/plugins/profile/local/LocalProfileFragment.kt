@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.profile.local
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +21,6 @@ import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
@@ -31,8 +31,10 @@ import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.ui.SpinnerHelper
 import info.nightscout.androidaps.utils.ui.TimeListEdit
 import info.nightscout.shared.SafeParse
+import info.nightscout.shared.logging.AAPSLogger
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
+import java.math.RoundingMode
 import java.text.DecimalFormat
 import javax.inject.Inject
 
@@ -61,6 +63,8 @@ class LocalProfileFragment : DaggerFragment() {
             binding.basalGraph.show(ProfileSealed.Pure(it))
             binding.icGraph.show(ProfileSealed.Pure(it))
             binding.isfGraph.show(ProfileSealed.Pure(it))
+            binding.targetGraph.show(ProfileSealed.Pure(it))
+            binding.insulinGraph.show(activePlugin.activeInsulin, SafeParse.stringToDouble(binding.dia.text))
         }
     }
 
@@ -117,6 +121,7 @@ class LocalProfileFragment : DaggerFragment() {
             processVisibilityOnClick(it)
             binding.target.visibility = View.VISIBLE
         }
+        binding.dia.editText?.id?.let { binding.diaLabel.labelFor = it }
     }
 
     fun build() {
@@ -130,14 +135,22 @@ class LocalProfileFragment : DaggerFragment() {
         binding.name.addTextChangedListener(textWatch)
         binding.dia.setParams(currentProfile.dia, hardLimits.minDia(), hardLimits.maxDia(), 0.1, DecimalFormat("0.0"), false, null, textWatch)
         binding.dia.tag = "LP_DIA"
-        TimeListEdit(context, aapsLogger, dateUtil, view, R.id.ic_holder, "IC", rh.gs(R.string.ic_label), currentProfile.ic, null, hardLimits.minIC(), hardLimits.maxIC(), 0.1, DecimalFormat("0.0"), save)
-        basalView = TimeListEdit(context, aapsLogger, dateUtil, view, R.id.basal_holder, "BASAL", rh.gs(R.string.basal_label) + ": " + sumLabel(), currentProfile.basal, null, pumpDescription.basalMinimumRate, pumpDescription.basalMaximumRate, 0.01, DecimalFormat("0.00"), save)
+        TimeListEdit(context, aapsLogger, dateUtil, view, R.id.ic_holder, "IC", rh.gs(R.string.ic_long_label), currentProfile.ic, null, doubleArrayOf(hardLimits.minIC(), hardLimits.maxIC()), null, 0.1, DecimalFormat ("0.0"), save)
+        basalView = TimeListEdit(context, aapsLogger, dateUtil, view, R.id.basal_holder, "BASAL", rh.gs(R.string.basal_long_label) + ": " + sumLabel(), currentProfile.basal, null, doubleArrayOf(pumpDescription.basalMinimumRate, pumpDescription.basalMaximumRate), null, 0.01, DecimalFormat("0.00"), save)
         if (units == Constants.MGDL) {
-            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.isf_holder, "ISF", rh.gs(R.string.isf_label), currentProfile.isf, null, HardLimits.MIN_ISF, HardLimits.MAX_ISF, 1.0, DecimalFormat("0"), save)
-            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.target, "TARGET", rh.gs(R.string.target_label), currentProfile.targetLow, currentProfile.targetHigh, HardLimits.VERY_HARD_LIMIT_TARGET_BG[0], HardLimits.VERY_HARD_LIMIT_TARGET_BG[1], 1.0, DecimalFormat("0"), save)
+            val isfRange = doubleArrayOf(HardLimits.MIN_ISF, HardLimits.MAX_ISF)
+            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.isf_holder, "ISF", rh.gs(R.string.isf_long_label), currentProfile.isf, null, isfRange , null, 1.0, DecimalFormat("0"), save)
+            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.target_holder, "TARGET", rh.gs(R.string.target_long_label), currentProfile.targetLow, currentProfile.targetHigh, HardLimits.VERY_HARD_LIMIT_MIN_BG, HardLimits.VERY_HARD_LIMIT_TARGET_BG, 1.0, DecimalFormat("0"), save)
         } else {
-            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.isf_holder, "ISF", rh.gs(R.string.isf_label), currentProfile.isf, null, Profile.fromMgdlToUnits(HardLimits.MIN_ISF, GlucoseUnit.MMOL), Profile.fromMgdlToUnits(HardLimits.MAX_ISF, GlucoseUnit.MMOL), 0.1, DecimalFormat("0.0"), save)
-            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.target, "TARGET", rh.gs(R.string.target_label), currentProfile.targetLow, currentProfile.targetHigh, Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_TARGET_BG[0], GlucoseUnit.MMOL), Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_TARGET_BG[1], GlucoseUnit.MMOL), 0.1, DecimalFormat("0.0"), save)
+            val isfRange = doubleArrayOf(roundUp(Profile.fromMgdlToUnits(HardLimits.MIN_ISF, GlucoseUnit.MMOL)), 
+                roundDown(Profile.fromMgdlToUnits(HardLimits.MAX_ISF, GlucoseUnit.MMOL)))
+            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.isf_holder, "ISF", rh.gs(R.string.isf_long_label), currentProfile.isf, null,isfRange , null, 0.1, DecimalFormat("0.0"), save)
+            val range1 = doubleArrayOf(roundUp(Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_MIN_BG[0], GlucoseUnit.MMOL)),
+                roundDown(Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_MIN_BG[1], GlucoseUnit.MMOL)))
+            val range2 = doubleArrayOf(roundUp(Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_MAX_BG[0], GlucoseUnit.MMOL)),
+                roundDown(Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_MAX_BG[1], GlucoseUnit.MMOL)))
+            Log.i("TimeListEdit", "build: range1" + range1[0] + " " + range1[1]   + " range2" + range2[0] + " " + range2[1])
+            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.target_holder, "TARGET", rh.gs(R.string.target_long_label), currentProfile.targetLow, currentProfile.targetHigh, range1 , range2, 0.1, DecimalFormat("0.0"), save)
         }
 
         // Spinner
@@ -175,6 +188,8 @@ class LocalProfileFragment : DaggerFragment() {
             binding.basalGraph.show(ProfileSealed.Pure(it))
             binding.icGraph.show(ProfileSealed.Pure(it))
             binding.isfGraph.show(ProfileSealed.Pure(it))
+            binding.targetGraph.show(ProfileSealed.Pure(it))
+            binding.insulinGraph.show(activePlugin.activeInsulin, SafeParse.stringToDouble(binding.dia.text))
         }
 
         binding.profileAdd.setOnClickListener {
@@ -263,6 +278,14 @@ class LocalProfileFragment : DaggerFragment() {
     fun doEdit() {
         localProfilePlugin.isEdited = true
         updateGUI()
+    }
+
+    private fun roundUp(number: Double): Double {
+        return number.toBigDecimal().setScale(1, RoundingMode.UP).toDouble()
+    }
+
+    private fun roundDown(number: Double): Double {
+        return number.toBigDecimal().setScale(1, RoundingMode.DOWN).toDouble()
     }
 
     private fun updateGUI() {

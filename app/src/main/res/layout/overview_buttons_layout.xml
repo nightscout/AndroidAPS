@@ -126,6 +126,7 @@
             android:layout_weight="0.5"
             android:drawableTop="@drawable/ic_quick_wizard"
             android:text="@string/quickwizard"
+            android:hint="@string/quickwizard"
             android:textColor="@color/colorQuickWizardButton"
             android:textSize="10sp"
             tools:ignore="SmallSp" />

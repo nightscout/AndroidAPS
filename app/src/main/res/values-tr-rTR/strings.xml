@@ -54,7 +54,7 @@
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">Toplam IOB:</string>
     <string name="treatments_wizard_bg_label">KŞ</string>
-    <string name="treatments_wizard_tt_label">TT</string>
+    <string name="treatments_wizard_tt_label">GH</string>
     <string name="treatments_wizard_carbs_label">Karbonhidrat</string>
     <string name="treatments_wizard_correction_label">Düzeltme</string>
     <string name="bolus_iob_label">Bolus IOB</string>

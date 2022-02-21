@@ -11,17 +11,35 @@ import android.util.DisplayMetrics
 import androidx.annotation.*
 import androidx.core.content.ContextCompat
 import info.nightscout.androidaps.core.R
+import info.nightscout.androidaps.utils.FabricPrivacy
 import java.util.*
 import javax.inject.Inject
 
 /**
  * Created by adrian on 2019-12-23.
  */
-class ResourceHelperImplementation @Inject constructor(private val context: Context) : ResourceHelper {
+class ResourceHelperImplementation @Inject constructor(private val context: Context, private val fabricPrivacy: FabricPrivacy) : ResourceHelper {
 
     override fun gs(@StringRes id: Int): String = context.getString(id)
 
-    override fun gs(@StringRes id: Int, vararg args: Any?): String = context.getString(id, *args)
+    override fun gs(@StringRes id: Int, vararg args: Any?) : String {
+        return try {
+            context.getString(id, *args)
+        } catch (exception: Exception) {
+            val resourceName = context.resources.getResourceEntryName(id)
+            val resourceValue = context.getString(id)
+            val currentLocale: Locale = context.resources.configuration.locales[0]
+            fabricPrivacy.logMessage("Failed to get string for resource $resourceName ($id) '$resourceValue' for locale $currentLocale with args ${args.map{it.toString()}}")
+            fabricPrivacy.logException(exception)
+            try {
+                gsNotLocalised(id, *args)
+            } catch (exceptionNonLocalized: Exception) {
+                fabricPrivacy.logMessage("Fallback failed to get string for resource $resourceName ($id) '$resourceValue' with args ${args.map { it.toString() }}")
+                fabricPrivacy.logException(exceptionNonLocalized)
+                "FAILED to get string $resourceName"
+            }
+        }
+    }
 
     override fun gq(@PluralsRes id: Int, quantity: Int, vararg args: Any?): String =
         context.resources.getQuantityString(id, quantity, *args)
@@ -29,7 +47,7 @@ class ResourceHelperImplementation @Inject constructor(private val context: Cont
     override fun gsNotLocalised(@StringRes id: Int, vararg args: Any?): String =
         with(Configuration(context.resources.configuration)) {
             setLocale(Locale.ENGLISH)
-            context.createConfigurationContext(this).getString(id, args)
+            context.createConfigurationContext(this).getString(id, *args)
         }
 
     override fun gc(@ColorRes id: Int): Int = ContextCompat.getColor(context, id)

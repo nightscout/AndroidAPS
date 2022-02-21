@@ -18,6 +18,8 @@ import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.InsertOrUpdateBolusCalculatorResultTransaction
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.extensions.formatColor
+import info.nightscout.androidaps.extensions.highValueToUnitsToString
+import info.nightscout.androidaps.extensions.lowValueToUnitsToString
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
@@ -135,27 +137,28 @@ class BolusWizard @Inject constructor(
     private var quickWizard: Boolean = true
     var usePercentage: Boolean = false
 
-    fun doCalc(profile: Profile,
-               profileName: String,
-               tempTarget: TemporaryTarget?,
-               carbs: Int,
-               cob: Double,
-               bg: Double,
-               correction: Double,
-               percentageCorrection: Int = 100,
-               useBg: Boolean,
-               useCob: Boolean,
-               includeBolusIOB: Boolean,
-               includeBasalIOB: Boolean,
-               useSuperBolus: Boolean,
-               useTT: Boolean,
-               useTrend: Boolean,
-               useAlarm: Boolean,
-               notes: String = "",
-               carbTime: Int = 0,
-               usePercentage: Boolean = false,
-               totalPercentage: Double = 100.0,
-               quickWizard: Boolean = false
+    fun doCalc(
+        profile: Profile,
+        profileName: String,
+        tempTarget: TemporaryTarget?,
+        carbs: Int,
+        cob: Double,
+        bg: Double,
+        correction: Double,
+        percentageCorrection: Int = 100,
+        useBg: Boolean,
+        useCob: Boolean,
+        includeBolusIOB: Boolean,
+        includeBasalIOB: Boolean,
+        useSuperBolus: Boolean,
+        useTT: Boolean,
+        useTrend: Boolean,
+        useAlarm: Boolean,
+        notes: String = "",
+        carbTime: Int = 0,
+        usePercentage: Boolean = false,
+        totalPercentage: Double = 100.0,
+        quickWizard: Boolean = false
     ): BolusWizard {
 
         this.profile = profile
@@ -261,22 +264,23 @@ class BolusWizard @Inject constructor(
         return this
     }
 
-    private fun createBolusCalculatorResult(): BolusCalculatorResult =
-        BolusCalculatorResult(
+    private fun createBolusCalculatorResult(): BolusCalculatorResult {
+        val unit = profileFunction.getUnits()
+        return BolusCalculatorResult(
             timestamp = dateUtil.now(),
-            targetBGLow = targetBGLow,
-            targetBGHigh = targetBGHigh,
-            isf = sens,
+            targetBGLow = Profile.toMgdl(targetBGLow, unit),
+            targetBGHigh = Profile.toMgdl(targetBGHigh, unit),
+            isf = Profile.toMgdl(sens, unit),
             ic = ic,
             bolusIOB = insulinFromBolusIOB,
             wasBolusIOBUsed = includeBolusIOB,
             basalIOB = insulinFromBasalIOB,
             wasBasalIOBUsed = includeBasalIOB,
-            glucoseValue = bg,
+            glucoseValue = Profile.toMgdl(bg, unit),
             wasGlucoseUsed = useBg && bg > 0,
             glucoseDifference = bgDiff,
             glucoseInsulin = insulinFromBG,
-            glucoseTrend = trend,
+            glucoseTrend = Profile.fromMgdlToUnits(trend, unit),
             wasTrendUsed = useTrend,
             trendInsulin = insulinFromTrend,
             cob = cob,
@@ -294,6 +298,7 @@ class BolusWizard @Inject constructor(
             profileName = profileName,
             note = notes
         )
+    }
 
     private fun confirmMessageAfterConstraints(advisor: Boolean): Spanned {
 
@@ -312,7 +317,9 @@ class BolusWizard @Inject constructor(
             actions.add(rh.gs(R.string.carbs) + ": " + rh.gs(R.string.format_carbs, carbs).formatColor(rh, R.color.carbs) + timeShift)
         }
         if (insulinFromCOB > 0) {
-            actions.add(rh.gs(R.string.cobvsiob) + ": " + rh.gs(R.string.formatsignedinsulinunits, insulinFromBolusIOB + insulinFromBasalIOB + insulinFromCOB + insulinFromBG).formatColor(rh, R.color.cobAlert))
+            actions.add(
+                rh.gs(R.string.cobvsiob) + ": " + rh.gs(R.string.formatsignedinsulinunits, insulinFromBolusIOB + insulinFromBasalIOB + insulinFromCOB + insulinFromBG).formatColor(rh, R.color.cobAlert)
+            )
             val absorptionRate = iobCobCalculator.ads.slowAbsorptionPercentage(60)
             if (absorptionRate > .25)
                 actions.add(rh.gs(R.string.slowabsorptiondetected, rh.gc(R.color.cobAlert), (absorptionRate * 100).toInt()))
@@ -342,11 +349,13 @@ class BolusWizard @Inject constructor(
                 carbTimer.removeEatReminder()
             if (sp.getBoolean(R.string.key_usebolusadvisor, false) && Profile.toMgdl(bg, profile.units) > 180 && carbs > 0 && carbTime >= 0)
                 OKDialog.showYesNoCancel(ctx, rh.gs(R.string.bolusadvisor), rh.gs(R.string.bolusadvisormessage),
-                    { bolusAdvisorProcessing(ctx) },
-                    { commonProcessing(ctx) }
+                                         { bolusAdvisorProcessing(ctx) },
+                                         { commonProcessing(ctx) }
                 )
             else
                 commonProcessing(ctx)
+        } else {
+            OKDialog.show(ctx, rh.gs(R.string.boluswizard), rh.gs(R.string.no_action_selected))
         }
     }
 
@@ -363,10 +372,13 @@ class BolusWizard @Inject constructor(
                 carbTime = 0
                 bolusCalculatorResult = createBolusCalculatorResult()
                 notes = this@BolusWizard.notes
-                uel.log(Action.BOLUS_ADVISOR, if (quickWizard) Sources.QuickWizard else Sources.WizardDialog,
+                uel.log(
+                    Action.BOLUS_ADVISOR,
+                    if (quickWizard) Sources.QuickWizard else Sources.WizardDialog,
                     notes,
                     ValueWithUnit.TherapyEventType(eventType.toDBbEventType()),
-                    ValueWithUnit.Insulin(insulinAfterConstraints))
+                    ValueWithUnit.Insulin(insulinAfterConstraints)
+                )
                 if (insulin > 0) {
                     commandQueue.bolus(this, object : Callback() {
                         override fun run() {
@@ -379,6 +391,26 @@ class BolusWizard @Inject constructor(
                 }
             }
         })
+    }
+
+    fun explainShort(): String {
+        var message = rh.gs(R.string.wizard_explain_calc, ic, sens)
+        message += "\n" + rh.gs(R.string.wizard_explain_carbs, insulinFromCarbs)
+        if (useTT && tempTarget != null) {
+            val tt = if (tempTarget?.lowTarget == tempTarget?.highTarget) tempTarget?.lowValueToUnitsToString(profile.units)
+            else rh.gs(R.string.wizard_explain_tt_to, tempTarget?.lowValueToUnitsToString(profile.units), tempTarget?.highValueToUnitsToString(profile.units))
+            message += "\n" + rh.gs(R.string.wizard_explain_tt, tt)
+        }
+        if (useCob) message += "\n" + rh.gs(R.string.wizard_explain_cob, cob, insulinFromCOB)
+        if (useBg) message += "\n" + rh.gs(R.string.wizard_explain_bg, insulinFromBG)
+        if (includeBolusIOB) message += "\n" + rh.gs(R.string.wizard_explain_bolus_iob, insulinFromBolusIOB)
+        if (includeBasalIOB) message += "\n" + rh.gs(R.string.wizard_explain_basal_iob, insulinFromBasalIOB)
+        if (useTrend) message += "\n" + rh.gs(R.string.wizard_explain_trend, insulinFromTrend)
+        if (useSuperBolus) message += "\n" + rh.gs(R.string.wizard_explain_superbolus, insulinFromSuperBolus)
+        if (percentageCorrection != 100) {
+            message += "\n" + rh.gs(R.string.wizard_explain_percent, totalBeforePercentageAdjustment, percentageCorrection, calculatedTotalInsulin)
+        }
+        return message
     }
 
     private fun commonProcessing(ctx: Context) {
@@ -429,17 +461,17 @@ class BolusWizard @Inject constructor(
                     bolusCalculatorResult = createBolusCalculatorResult()
                     notes = this@BolusWizard.notes
                     if (insulin > 0 || carbs > 0) {
-                       val action = when {
+                        val action = when {
                             insulinAfterConstraints.equals(0.0) -> Action.CARBS
                             carbs.equals(0.0)                   -> Action.BOLUS
                             else                                -> Action.TREATMENT
                         }
                         uel.log(action, if (quickWizard) Sources.QuickWizard else Sources.WizardDialog,
-                            notes,
-                            ValueWithUnit.TherapyEventType(eventType.toDBbEventType()),
-                            ValueWithUnit.Insulin(insulinAfterConstraints).takeIf { insulinAfterConstraints != 0.0 },
-                            ValueWithUnit.Gram(this@BolusWizard.carbs).takeIf { this@BolusWizard.carbs != 0 },
-                            ValueWithUnit.Minute(carbTime).takeIf { carbTime != 0 })
+                                notes,
+                                ValueWithUnit.TherapyEventType(eventType.toDBbEventType()),
+                                ValueWithUnit.Insulin(insulinAfterConstraints).takeIf { insulinAfterConstraints != 0.0 },
+                                ValueWithUnit.Gram(this@BolusWizard.carbs).takeIf { this@BolusWizard.carbs != 0 },
+                                ValueWithUnit.Minute(carbTime).takeIf { carbTime != 0 })
                         commandQueue.bolus(this, object : Callback() {
                             override fun run() {
                                 if (!result.success) {
@@ -465,9 +497,9 @@ class BolusWizard @Inject constructor(
     private fun calcPercentageWithConstraints() {
         calculatedPercentage = 100.0
         if (totalBeforePercentageAdjustment != insulinFromCorrection)
-            calculatedPercentage = calculatedTotalInsulin/(totalBeforePercentageAdjustment-insulinFromCorrection) * 100
+            calculatedPercentage = calculatedTotalInsulin / (totalBeforePercentageAdjustment - insulinFromCorrection) * 100
         calculatedPercentage = max(calculatedPercentage, 10.0)
-        calculatedPercentage = min(calculatedPercentage,250.0)
+        calculatedPercentage = min(calculatedPercentage, 250.0)
     }
 
     private fun calcCorrectionWithConstraints() {

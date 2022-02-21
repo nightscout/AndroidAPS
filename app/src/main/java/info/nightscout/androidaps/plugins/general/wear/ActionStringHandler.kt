@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.general.wear
 
 import android.app.NotificationManager
 import android.content.Context
+import android.util.Log
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
@@ -39,11 +40,11 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.androidaps.utils.wizard.BolusWizard
+import info.nightscout.androidaps.utils.wizard.QuickWizard
 import info.nightscout.shared.SafeParse
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import java.text.DateFormat
-import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -71,6 +72,7 @@ class ActionStringHandler @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val iobCobCalculator: IobCobCalculator,
     private val localInsightPlugin: LocalInsightPlugin,
+    private val quickWizard: QuickWizard,
     private val danaRPlugin: DanaRPlugin,
     private val danaRKoreanPlugin: DanaRKoreanPlugin,
     private val danaRv2Plugin: DanaRv2Plugin,
@@ -79,7 +81,8 @@ class ActionStringHandler @Inject constructor(
     private val dateUtil: DateUtil,
     private val config: Config,
     private val repository: AppRepository,
-    private val uel: UserEntryLogger
+    private val uel: UserEntryLogger,
+    private val defaultValueHelper: DefaultValueHelper
 ) {
 
     private val timeout = 65 * 1000
@@ -107,9 +110,11 @@ class ActionStringHandler @Inject constructor(
 
     @Synchronized
     private fun handleInitiate(actionString: String) {
+        //TODO: i18n
+        Log.i("ActionStringHandler", "handleInitiate actionString=" + actionString)
         if (!sp.getBoolean(R.string.key_wear_control, false)) return
         lastBolusWizard = null
-        var rTitle = "CONFIRM" //TODO: i18n
+        var rTitle = rh.gs(R.string.confirm).uppercase()
         var rMessage = ""
         var rAction = ""
         // do the parsing and check constraints
@@ -136,6 +141,11 @@ class ActionStringHandler @Inject constructor(
             val carbs = SafeParse.stringToInt(act[2])
             val insulinAfterConstraints = constraintChecker.applyBolusConstraints(Constraint(insulin)).value()
             val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(carbs)).value()
+            val pump = activePlugin.activePump
+            if (insulinAfterConstraints > 0 && (!pump.isInitialized() || pump.isSuspended() || loop.isDisconnected)) {
+                sendError(rh.gs(R.string.wizard_pump_not_available))
+                return
+            }
             rMessage += rh.gs(R.string.bolus) + ": " + insulinAfterConstraints + "U\n"
             rMessage += rh.gs(R.string.carbs) + ": " + carbsAfterConstraints + "g"
             if (insulinAfterConstraints - insulin != 0.0 || carbsAfterConstraints - carbs != 0) {
@@ -143,32 +153,72 @@ class ActionStringHandler @Inject constructor(
             }
             rAction += "bolus $insulinAfterConstraints $carbsAfterConstraints"
         } else if ("temptarget" == act[0]) { ///////////////////////////////////////////////////////// TEMPTARGET
-            val isMGDL = java.lang.Boolean.parseBoolean(act[1])
-            if (profileFunction.getUnits() == GlucoseUnit.MGDL != isMGDL) {
-                sendError("Different units used on watch and phone!")
-                return
-            }
-            val duration = SafeParse.stringToInt(act[2])
-            if (duration == 0) {
-                rMessage += "Zero-Temp-Target - cancelling running Temp-Targets?"
+            aapsLogger.info(LTag.WEAR, "temptarget received: $act")
+            if ("cancel" == act[1]) {
+                rMessage += rh.gs(R.string.wear_action_tempt_cancel_message)
                 rAction = "temptarget true 0 0 0"
+            } else if ("preset" == act[1]) {
+                val presetIsMGDL = profileFunction.getUnits() == GlucoseUnit.MGDL
+                val preset = act[2]
+                when (preset) {
+                    "activity" -> {
+                        val activityTTDuration = defaultValueHelper.determineActivityTTDuration()
+                        val activityTT = defaultValueHelper.determineActivityTT()
+                        val reason = rh.gs(R.string.activity)
+                        rMessage += rh.gs(R.string.wear_action_tempt_preset_message, reason, activityTT, activityTTDuration)
+                        rAction = "temptarget $presetIsMGDL $activityTTDuration $activityTT $activityTT"
+                    }
+
+                    "hypo"     -> {
+                        val hypoTTDuration = defaultValueHelper.determineHypoTTDuration()
+                        val hypoTT = defaultValueHelper.determineHypoTT()
+                        val reason = rh.gs(R.string.hypo)
+                        rMessage += rh.gs(R.string.wear_action_tempt_preset_message, reason, hypoTT, hypoTTDuration)
+                        rAction = "temptarget $presetIsMGDL $hypoTTDuration $hypoTT $hypoTT"
+                    }
+
+                    "eating"   -> {
+                        val eatingSoonTTDuration = defaultValueHelper.determineEatingSoonTTDuration()
+                        val eatingSoonTT = defaultValueHelper.determineEatingSoonTT()
+                        val reason = rh.gs(R.string.eatingsoon)
+                        rMessage += rh.gs(R.string.wear_action_tempt_preset_message, reason, eatingSoonTT, eatingSoonTTDuration)
+                        rAction = "temptarget $presetIsMGDL $eatingSoonTTDuration $eatingSoonTT $eatingSoonTT"
+                    }
+
+                    else       -> {
+                        sendError(rh.gs(R.string.wear_action_tempt_preset_error, preset))
+                        return
+                    }
+                }
             } else {
-                var low = SafeParse.stringToDouble(act[3])
-                var high = SafeParse.stringToDouble(act[4])
-                if (!isMGDL) {
-                    low *= Constants.MMOLL_TO_MGDL
-                    high *= Constants.MMOLL_TO_MGDL
-                }
-                if (low < HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[0] || low > HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[1]) {
-                    sendError("Min-BG out of range!")
+                val isMGDL = java.lang.Boolean.parseBoolean(act[1])
+                if (profileFunction.getUnits() == GlucoseUnit.MGDL != isMGDL) {
+                    sendError(rh.gs(R.string.wear_action_tempt_unit_error))
                     return
                 }
-                if (high < HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[0] || high > HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[1]) {
-                    sendError("Max-BG out of range!")
-                    return
+                val duration = SafeParse.stringToInt(act[2])
+                if (duration == 0) {
+                    rMessage += rh.gs(R.string.wear_action_tempt_zero_message)
+                    rAction = "temptarget true 0 0 0"
+                } else {
+                    var low = SafeParse.stringToDouble(act[3])
+                    var high = SafeParse.stringToDouble(act[4])
+                    if (!isMGDL) {
+                        low *= Constants.MMOLL_TO_MGDL
+                        high *= Constants.MMOLL_TO_MGDL
+                    }
+                    if (low < HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[0] || low > HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[1]) {
+                        sendError(rh.gs(R.string.wear_action_tempt_min_bg_error))
+                        return
+                    }
+                    if (high < HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[0] || high > HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[1]) {
+                        sendError(rh.gs(R.string.wear_action_tempt_max_bg_error))
+                        return
+                    }
+                    rMessage += if (act[3] === act[4]) rh.gs(R.string.wear_action_tempt_manual_message, act[3], act[2])
+                    else rh.gs(R.string.wear_action_tempt_manual_range_message, act[3], act[4], act[2])
+                    rAction = actionString
                 }
-                rMessage += "Temptarget:\nMin: " + act[3] + "\nMax: " + act[4] + "\nDuration: " + act[2]
-                rAction = actionString
             }
         } else if ("status" == act[0]) { ////////////////////////////////////////////// STATUS
             rTitle = "STATUS"
@@ -186,10 +236,15 @@ class ActionStringHandler @Inject constructor(
             sendError("Update APP on Watch!")
             return
         } else if ("wizard2" == act[0]) { ////////////////////////////////////////////// WIZARD
+            val pump = activePlugin.activePump
+            if (!pump.isInitialized() || pump.isSuspended() || loop.isDisconnected) {
+                sendError(rh.gs(R.string.wizard_pump_not_available))
+                return
+            }
             val carbsBeforeConstraints = SafeParse.stringToInt(act[1])
             val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(carbsBeforeConstraints)).value()
             if (carbsAfterConstraints - carbsBeforeConstraints != 0) {
-                sendError("Carb constraint violation!")
+                sendError(rh.gs(R.string.wizard_carbs_constraint))
                 return
             }
             val useBG = sp.getBoolean(R.string.key_wearwizard_bg, true)
@@ -202,52 +257,94 @@ class ActionStringHandler @Inject constructor(
             val profile = profileFunction.getProfile()
             val profileName = profileFunction.getProfileName()
             if (profile == null) {
-                sendError("No profile found!")
+                sendError(rh.gs(R.string.wizard_no_active_profile))
                 return
             }
             val bgReading = iobCobCalculator.ads.actualBg()
             if (bgReading == null) {
-                sendError("No recent BG to base calculation on!")
+                sendError(rh.gs(R.string.wizard_no_actual_bg))
                 return
             }
             val cobInfo = iobCobCalculator.getCobInfo(false, "Wizard wear")
             if (cobInfo.displayCob == null) {
-                sendError("Unknown COB! BG reading missing or recent app restart?")
+                sendError(rh.gs(R.string.wizard_no_cob))
                 return
             }
-            val format = DecimalFormat("0.00")
-            val formatInt = DecimalFormat("0")
             val dbRecord = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
             val tempTarget = if (dbRecord is ValueWrapper.Existing) dbRecord.value else null
 
-            val bolusWizard = BolusWizard(injector).doCalc(profile, profileName, tempTarget,
-                carbsAfterConstraints, if (cobInfo.displayCob != null) cobInfo.displayCob!! else 0.0, bgReading.valueToUnits(profileFunction.getUnits()),
-                0.0, percentage, useBG, useCOB, useBolusIOB, useBasalIOB, false, useTT, useTrend, false)
-            if (abs(bolusWizard.insulinAfterConstraints - bolusWizard.calculatedTotalInsulin) >= 0.01) {
-                sendError("Insulin constraint violation!" +
-                    "\nCannot deliver " + format.format(bolusWizard.calculatedTotalInsulin) + "!")
+            val bolusWizard = BolusWizard(injector).doCalc(
+                profile, profileName, tempTarget,
+                carbsAfterConstraints, cobInfo.displayCob!!, bgReading.valueToUnits(profileFunction.getUnits()),
+                0.0, percentage, useBG, useCOB, useBolusIOB, useBasalIOB, false, useTT, useTrend, false
+            )
+            val insulinAfterConstraints = bolusWizard.insulinAfterConstraints
+            val minStep = pump.pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints)
+            if (abs(insulinAfterConstraints - bolusWizard.calculatedTotalInsulin) >= minStep) {
+                sendError(rh.gs(R.string.wizard_constraint_bolus_size, bolusWizard.calculatedTotalInsulin))
                 return
             }
             if (bolusWizard.calculatedTotalInsulin <= 0 && bolusWizard.carbs <= 0) {
                 rAction = "info"
-                rTitle = "INFO"
+                rTitle = rh.gs(R.string.info)
             } else {
                 rAction = actionString
             }
-            rMessage += "Carbs: " + bolusWizard.carbs + "g"
-            rMessage += "\nBolus: " + format.format(bolusWizard.calculatedTotalInsulin) + "U"
+            rMessage += rh.gs(R.string.wizard_result, bolusWizard.calculatedTotalInsulin, bolusWizard.carbs)
             rMessage += "\n_____________"
-            rMessage += "\nCalc (IC:" + DecimalFormatter.to1Decimal(bolusWizard.ic) + ", " + "ISF:" + DecimalFormatter.to1Decimal(bolusWizard.sens) + "): "
-            rMessage += "\nFrom Carbs: " + format.format(bolusWizard.insulinFromCarbs) + "U"
-            if (useCOB) rMessage += "\nFrom" + formatInt.format(cobInfo.displayCob) + "g COB : " + format.format(bolusWizard.insulinFromCOB) + "U"
-            if (useBG) rMessage += "\nFrom BG: " + format.format(bolusWizard.insulinFromBG) + "U"
-            if (useBolusIOB) rMessage += "\nBolus IOB: " + format.format(bolusWizard.insulinFromBolusIOB) + "U"
-            if (useBasalIOB) rMessage += "\nBasal IOB: " + format.format(bolusWizard.insulinFromBasalIOB) + "U"
-            if (useTrend) rMessage += "\nFrom 15' trend: " + format.format(bolusWizard.insulinFromTrend) + "U"
-            if (percentage != 100) {
-                rMessage += "\nPercentage: " + format.format(bolusWizard.totalBeforePercentageAdjustment) + "U * " + percentage + "% -> ~" + format.format(bolusWizard.calculatedTotalInsulin) + "U"
-            }
+            rMessage += "\n" + bolusWizard.explainShort()
             lastBolusWizard = bolusWizard
+        } else if ("quick_wizard" == act[0]) {
+            val guid = act[1]
+            val actualBg = iobCobCalculator.ads.actualBg()
+            val profile = profileFunction.getProfile()
+            val profileName = profileFunction.getProfileName()
+            val quickWizardEntry = quickWizard.get(guid)
+            Log.i("QuickWizard", "handleInitiate: quick_wizard " + quickWizardEntry?.buttonText() + " c " + quickWizardEntry?.carbs())
+            if (quickWizardEntry == null) {
+                sendError(rh.gs(R.string.quick_wizard_not_available))
+                return
+            }
+            if (actualBg == null) {
+                sendError(rh.gs(R.string.wizard_no_actual_bg))
+                return
+            }
+            if (profile == null) {
+                sendError(rh.gs(R.string.wizard_no_active_profile))
+                return
+            }
+            val cobInfo = iobCobCalculator.getCobInfo(false, "QuickWizard wear")
+            if (cobInfo.displayCob == null) {
+                sendError(rh.gs(R.string.wizard_no_cob))
+                return
+            }
+            val pump = activePlugin.activePump
+            if (!pump.isInitialized() || pump.isSuspended() || loop.isDisconnected) {
+                sendError(rh.gs(R.string.wizard_pump_not_available))
+                return
+            }
+
+            val wizard = quickWizardEntry.doCalc(profile, profileName, actualBg, true)
+
+            val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(quickWizardEntry.carbs())).value()
+            if (carbsAfterConstraints != quickWizardEntry.carbs()) {
+                sendError(rh.gs(R.string.wizard_carbs_constraint))
+                return
+            }
+            val insulinAfterConstraints = wizard.insulinAfterConstraints
+            val minStep = pump.pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints)
+            if (abs(insulinAfterConstraints - wizard.calculatedTotalInsulin) >= minStep) {
+                sendError(rh.gs(R.string.wizard_constraint_bolus_size, wizard.calculatedTotalInsulin))
+                return
+            }
+
+            rMessage = rh.gs(R.string.quick_wizard_message, quickWizardEntry.buttonText(), wizard.calculatedTotalInsulin, quickWizardEntry.carbs())
+            rAction = "bolus $insulinAfterConstraints $carbsAfterConstraints"
+            Log.i("QuickWizard", "handleInitiate: quick_wizard action=$rAction")
+
+            rMessage += "\n_____________"
+            rMessage += "\n" + wizard.explainShort()
+
         } else if ("opencpp" == act[0]) {
             val activeProfileSwitch = repository.getEffectiveProfileSwitchActiveAt(dateUtil.now()).blockingGet()
             if (activeProfileSwitch is ValueWrapper.Existing) { // read CPP values
@@ -331,7 +428,10 @@ class ActionStringHandler @Inject constructor(
             rAction = "cancelChangeRequest"
             wearPlugin.requestNotificationCancel(rAction)
             return
-        } else return
+        } else {
+            sendError(rh.gs(R.string.wear_unknown_action_string) + act[0])
+            return
+        }
         // send result
         wearPlugin.requestActionConfirmation(rTitle, rMessage, rAction)
         lastSentTimestamp = System.currentTimeMillis()
@@ -560,39 +660,45 @@ class ActionStringHandler @Inject constructor(
         }
         //send profile to pump
         uel.log(Action.PROFILE_SWITCH, Sources.Wear,
-            ValueWithUnit.Percent(percentage),
-            ValueWithUnit.Hour(timeshift).takeIf { timeshift != 0 })
+                ValueWithUnit.Percent(percentage),
+                ValueWithUnit.Hour(timeshift).takeIf { timeshift != 0 })
         profileFunction.createProfileSwitch(0, percentage, timeshift)
     }
 
     private fun generateTempTarget(duration: Int, low: Double, high: Double) {
         if (duration != 0) {
-            disposable += repository.runTransactionForResult(InsertAndCancelCurrentTemporaryTargetTransaction(
-                timestamp = System.currentTimeMillis(),
-                duration = TimeUnit.MINUTES.toMillis(duration.toLong()),
-                reason = TemporaryTarget.Reason.WEAR,
-                lowTarget = Profile.toMgdl(low, profileFunction.getUnits()),
-                highTarget = Profile.toMgdl(high, profileFunction.getUnits())
-            )).subscribe({ result ->
-                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temp target $it") }
-                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
-            }, {
-                aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
-            })
-            uel.log(Action.TT, Sources.Wear,
+            disposable += repository.runTransactionForResult(
+                InsertAndCancelCurrentTemporaryTargetTransaction(
+                    timestamp = System.currentTimeMillis(),
+                    duration = TimeUnit.MINUTES.toMillis(duration.toLong()),
+                    reason = TemporaryTarget.Reason.WEAR,
+                    lowTarget = Profile.toMgdl(low, profileFunction.getUnits()),
+                    highTarget = Profile.toMgdl(high, profileFunction.getUnits())
+                )
+            ).subscribe({ result ->
+                            result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temp target $it") }
+                            result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
+                        }, {
+                            aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
+                        })
+            uel.log(
+                Action.TT, Sources.Wear,
                 ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.WEAR),
                 ValueWithUnit.fromGlucoseUnit(low, profileFunction.getUnits().asText),
                 ValueWithUnit.fromGlucoseUnit(high, profileFunction.getUnits().asText).takeIf { low != high },
-                ValueWithUnit.Minute(duration))
+                ValueWithUnit.Minute(duration)
+            )
         } else {
             disposable += repository.runTransactionForResult(CancelCurrentTemporaryTargetIfAnyTransaction(System.currentTimeMillis()))
                 .subscribe({ result ->
-                    result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
-                }, {
-                    aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
-                })
-            uel.log(Action.CANCEL_TT, Sources.Wear,
-                ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.WEAR))
+                               result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
+                           }, {
+                               aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
+                           })
+            uel.log(
+                Action.CANCEL_TT, Sources.Wear,
+                ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.WEAR)
+            )
         }
     }
 
@@ -601,13 +707,15 @@ class ActionStringHandler @Inject constructor(
         detailedBolusInfo.insulin = amount
         detailedBolusInfo.bolusType = DetailedBolusInfo.BolusType.PRIMING
         uel.log(Action.PRIME_BOLUS, Sources.Wear,
-            ValueWithUnit.Insulin(amount).takeIf { amount != 0.0 })
+                ValueWithUnit.Insulin(amount).takeIf { amount != 0.0 })
         commandQueue.bolus(detailedBolusInfo, object : Callback() {
             override fun run() {
                 if (!result.success) {
-                    sendError(rh.gs(R.string.treatmentdeliveryerror) +
-                        "\n" +
-                        result.comment)
+                    sendError(
+                        rh.gs(R.string.treatmentdeliveryerror) +
+                            "\n" +
+                            result.comment
+                    )
                 }
             }
         })
@@ -615,9 +723,9 @@ class ActionStringHandler @Inject constructor(
 
     private fun doECarbs(carbs: Int, time: Long, duration: Int) {
         uel.log(if (duration == 0) Action.CARBS else Action.EXTENDED_CARBS, Sources.Wear,
-            ValueWithUnit.Timestamp(time),
-            ValueWithUnit.Gram(carbs),
-            ValueWithUnit.Hour(duration).takeIf { duration != 0 })
+                ValueWithUnit.Timestamp(time),
+                ValueWithUnit.Gram(carbs),
+                ValueWithUnit.Hour(duration).takeIf { duration != 0 })
         doBolus(0.0, carbs, time, duration)
     }
 
@@ -636,15 +744,17 @@ class ActionStringHandler @Inject constructor(
                 else               -> Action.TREATMENT
             }
             uel.log(action, Sources.Wear,
-                ValueWithUnit.Insulin(amount).takeIf { amount != 0.0 },
-                ValueWithUnit.Gram(carbs).takeIf { carbs != 0 },
-                ValueWithUnit.Hour(carbsDuration).takeIf { carbsDuration != 0 })
+                    ValueWithUnit.Insulin(amount).takeIf { amount != 0.0 },
+                    ValueWithUnit.Gram(carbs).takeIf { carbs != 0 },
+                    ValueWithUnit.Hour(carbsDuration).takeIf { carbsDuration != 0 })
             commandQueue.bolus(detailedBolusInfo, object : Callback() {
                 override fun run() {
                     if (!result.success) {
-                        sendError(rh.gs(R.string.treatmentdeliveryerror) +
-                            "\n" +
-                            result.comment)
+                        sendError(
+                            rh.gs(R.string.treatmentdeliveryerror) +
+                                "\n" +
+                                result.comment
+                        )
                     }
                 }
             })

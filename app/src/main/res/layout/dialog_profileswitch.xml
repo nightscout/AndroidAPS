@@ -25,7 +25,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/careportal_profileswitch"
+                android:importantForAccessibility="no"
                 app:srcCompat="@drawable/ic_actions_profileswitch" />
 
             <TextView
@@ -58,6 +58,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:width="120dp"
+                android:labelFor="@+id/profile"
                 android:padding="10dp"
                 android:text="@string/profile_label"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
@@ -95,6 +96,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/duration_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -108,7 +110,8 @@
             <info.nightscout.androidaps.utils.ui.MinutesNumberPicker
                 android:id="@+id/duration"
                 android:layout_width="130dp"
-                android:layout_height="40dp" />
+                android:layout_height="40dp"
+                app:customContentDescription="@string/careportal_newnstreatment_duration_label"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -129,6 +132,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/percentage_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -142,7 +146,8 @@
             <info.nightscout.androidaps.utils.ui.NumberPicker
                 android:id="@+id/percentage"
                 android:layout_width="130dp"
-                android:layout_height="40dp" />
+                android:layout_height="40dp"
+                app:customContentDescription="@string/careportal_newnstreatment_percentage_label"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -163,6 +168,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/timeshift_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -176,7 +182,8 @@
             <info.nightscout.androidaps.utils.ui.NumberPicker
                 android:id="@+id/timeshift"
                 android:layout_width="130dp"
-                android:layout_height="40dp" />
+                android:layout_height="40dp"
+                app:customContentDescription="@string/careportal_newnstreatment_timeshift_label"/>
 
             <TextView
                 android:layout_width="wrap_content"

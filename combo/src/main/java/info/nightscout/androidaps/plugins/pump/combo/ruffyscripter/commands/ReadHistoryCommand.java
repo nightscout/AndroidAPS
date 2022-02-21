@@ -6,27 +6,27 @@ import org.monkey.d.ruffy.ruffy.driver.display.MenuAttribute;
 import org.monkey.d.ruffy.ruffy.driver.display.MenuType;
 import org.monkey.d.ruffy.ruffy.driver.display.menu.MenuDate;
 import org.monkey.d.ruffy.ruffy.driver.display.menu.MenuTime;
-import org.slf4j.Logger;
 
 import java.util.Calendar;
 import java.util.Date;
 
-import info.nightscout.shared.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.Bolus;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.PumpAlert;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.PumpHistory;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.PumpHistoryRequest;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.Tbr;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.Tdd;
+import info.nightscout.shared.logging.AAPSLogger;
+import info.nightscout.shared.logging.LTag;
 
 public class ReadHistoryCommand extends BaseCommand {
-    private static final Logger log = StacktraceLoggerWrapper.getLogger(ReadHistoryCommand.class);
-
+    private final AAPSLogger aapsLogger;
     private final PumpHistoryRequest request;
     private final PumpHistory history = new PumpHistory();
 
-    public ReadHistoryCommand(PumpHistoryRequest request) {
+    public ReadHistoryCommand(PumpHistoryRequest request, AAPSLogger aapsLogger) {
         this.request = request;
+        this.aapsLogger = aapsLogger;
     }
 
     @Override
@@ -106,30 +106,28 @@ public class ReadHistoryCommand extends BaseCommand {
             }
         }
 
-        if (log.isDebugEnabled()) {
-            if (!history.bolusHistory.isEmpty()) {
-                log.debug("Read bolus history (" + history.bolusHistory.size() + "):");
-                for (Bolus bolus : history.bolusHistory) {
-                    log.debug(new Date(bolus.timestamp) + ": " + bolus.toString());
-                }
+        if (!history.bolusHistory.isEmpty()) {
+            aapsLogger.debug(LTag.PUMP, "Read bolus history (" + history.bolusHistory.size() + "):");
+            for (Bolus bolus : history.bolusHistory) {
+                aapsLogger.debug(LTag.PUMP, new Date(bolus.timestamp) + ": " + bolus.toString());
             }
-            if (!history.pumpAlertHistory.isEmpty()) {
-                log.debug("Read error history (" + history.pumpAlertHistory.size() + "):");
-                for (PumpAlert pumpAlert : history.pumpAlertHistory) {
-                    log.debug(new Date(pumpAlert.timestamp) + ": " + pumpAlert.toString());
-                }
+        }
+        if (!history.pumpAlertHistory.isEmpty()) {
+            aapsLogger.debug(LTag.PUMP, "Read error history (" + history.pumpAlertHistory.size() + "):");
+            for (PumpAlert pumpAlert : history.pumpAlertHistory) {
+                aapsLogger.debug(LTag.PUMP, new Date(pumpAlert.timestamp) + ": " + pumpAlert.toString());
             }
-            if (!history.tddHistory.isEmpty()) {
-                log.debug("Read TDD history (" + history.tddHistory.size() + "):");
-                for (Tdd tdd : history.tddHistory) {
-                    log.debug(new Date(tdd.timestamp) + ": " + tdd.toString());
-                }
+        }
+        if (!history.tddHistory.isEmpty()) {
+            aapsLogger.debug(LTag.PUMP, "Read TDD history (" + history.tddHistory.size() + "):");
+            for (Tdd tdd : history.tddHistory) {
+                aapsLogger.debug(LTag.PUMP, new Date(tdd.timestamp) + ": " + tdd.toString());
             }
-            if (!history.tbrHistory.isEmpty()) {
-                log.debug("Read TBR history (" + history.tbrHistory.size() + "):");
-                for (Tbr tbr : history.tbrHistory) {
-                    log.debug(new Date(tbr.timestamp) + ": " + tbr.toString());
-                }
+        }
+        if (!history.tbrHistory.isEmpty()) {
+            aapsLogger.debug(LTag.PUMP, "Read TBR history (" + history.tbrHistory.size() + "):");
+            for (Tbr tbr : history.tbrHistory) {
+                aapsLogger.debug(LTag.PUMP, new Date(tbr.timestamp) + ": " + tbr.toString());
             }
         }
 
@@ -147,9 +145,9 @@ public class ReadHistoryCommand extends BaseCommand {
             if (requestedTime != PumpHistoryRequest.FULL && tdd.timestamp < requestedTime) {
                 break;
             }
-            log.debug("Read TDD record #" + record + "/" + totalRecords);
+            aapsLogger.debug(LTag.PUMP, "Read TDD record #" + record + "/" + totalRecords);
             history.tddHistory.add(tdd);
-            log.debug("Parsed " + scripter.getCurrentMenu().toString() + " => " + tdd);
+            aapsLogger.debug(LTag.PUMP, "Parsed " + scripter.getCurrentMenu() + " => " + tdd);
             if (record == totalRecords) {
                 break;
             }
@@ -174,7 +172,7 @@ public class ReadHistoryCommand extends BaseCommand {
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, date.getMonth() - 1, date.getDay(), 0, 0, 0);
         long time = calendar.getTimeInMillis();
-        time = time - time%1000;
+        time = time - time % 1000;
         return new Tdd(time, dailyTotal);
     }
 
@@ -186,9 +184,9 @@ public class ReadHistoryCommand extends BaseCommand {
             if (requestedTime != PumpHistoryRequest.FULL && tbr.timestamp < requestedTime) {
                 break;
             }
-            log.debug("Read TBR record #" + record + "/" + totalRecords);
+            aapsLogger.debug(LTag.PUMP, "Read TBR record #" + record + "/" + totalRecords);
             history.tbrHistory.add(tbr);
-            log.debug("Parsed " + scripter.getCurrentMenu().toString() + " => " + tbr);
+            aapsLogger.debug(LTag.PUMP, "Parsed " + scripter.getCurrentMenu() + " => " + tbr);
             if (record == totalRecords) {
                 break;
             }
@@ -206,7 +204,7 @@ public class ReadHistoryCommand extends BaseCommand {
         Double percentage = (Double) scripter.getCurrentMenu().getAttribute(MenuAttribute.TBR);
         MenuTime durationTime = (MenuTime) scripter.getCurrentMenu().getAttribute(MenuAttribute.RUNTIME);
         int duration = durationTime.getHour() * 60 + durationTime.getMinute();
-        long tbrStartDate = readRecordDate() - duration * 60 * 1000;
+        long tbrStartDate = readRecordDate() - duration * 60L * 1000;
         return new Tbr(tbrStartDate, duration, percentage.intValue());
     }
 
@@ -218,9 +216,9 @@ public class ReadHistoryCommand extends BaseCommand {
             if (requestedTime != PumpHistoryRequest.FULL && bolus.timestamp < requestedTime) {
                 break;
             }
-            log.debug("Read bolus record #" + record + "/" + totalRecords);
+            aapsLogger.debug(LTag.PUMP, "Read bolus record #" + record + "/" + totalRecords);
             history.bolusHistory.add(bolus);
-            log.debug("Parsed " + scripter.getCurrentMenu().toString() + " => " + bolus);
+            aapsLogger.debug(LTag.PUMP, "Parsed " + scripter.getCurrentMenu() + " => " + bolus);
             if (record == totalRecords) {
                 break;
             }
@@ -240,9 +238,9 @@ public class ReadHistoryCommand extends BaseCommand {
             if (requestedTime != PumpHistoryRequest.FULL && error.timestamp < requestedTime) {
                 break;
             }
-            log.debug("Read alert record #" + record + "/" + totalRecords);
+            aapsLogger.debug(LTag.PUMP, "Read alert record #" + record + "/" + totalRecords);
             history.pumpAlertHistory.add(error);
-            log.debug("Parsed " + scripter.getCurrentMenu().toString() + " => " + error);
+            aapsLogger.debug(LTag.PUMP, "Parsed " + scripter.getCurrentMenu() + " => " + error);
             if (record == totalRecords) {
                 break;
             }
@@ -265,7 +263,7 @@ public class ReadHistoryCommand extends BaseCommand {
         return new PumpAlert(recordDate, warningCode, errorCode, message);
     }
 
-    @Override
+    @NonNull @Override
     public String toString() {
         return "ReadHistoryCommand{" +
                 "request=" + request +

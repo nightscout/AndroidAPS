@@ -173,7 +173,7 @@
     <string name="ic_isf">프로파일에서 ISF를 바꾸면, I:C ratio도 항상 바꿔줘야 합니다.</string>
     <string name="ic_label_exam">인슐린 대 탄수화물 비율 (I:C ratio)</string>
     <string name="ic_increasingvalue">높은 I:C ratio은 탄수화물 섭취 시 인슐린을 적게 주입하게 합니다.</string>
-    <string name="ic_decreasingvalue">높은 I:C ratio은 탄수화물 섭취 시 인슐린을 적게 주입하게 합니다.</string>
+    <string name="ic_decreasingvalue">낮은 I:C ratio은 탄수화물 섭취 시 인슐린을 적게 주입하게 합니다.</string>
     <string name="ic_noeffect">COB가 0 인 경우 IC 비율을 변경하면 혈당을 교정하기 위해 다른 양의 인슐린이 주입됩니다.</string>
     <string name="ic_different">Bread unit (교환 단위)를 10g 또는 12g으로 계산하면 IC 값도 달라지게 됩니다.</string>
     <string name="ic_meaning">IC: 1U의 인슐린으로 bread uits (교환 단위)를 얼마나 섭취할 수 있는 지를 의미합니다.</string>

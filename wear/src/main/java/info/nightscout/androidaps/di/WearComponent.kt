@@ -12,10 +12,10 @@ import javax.inject.Singleton
     modules = [
         AndroidInjectionModule::class,
         WearModule::class,
-        ServicesModule::class
+        WearServicesModule::class
     ]
 )
-interface AppComponent : AndroidInjector<Aaps> {
+interface WearComponent : AndroidInjector<Aaps> {
 
     @Component.Builder
     interface Builder {
@@ -23,6 +23,6 @@ interface AppComponent : AndroidInjector<Aaps> {
         @BindsInstance
         fun application(aaps: Aaps): Builder
 
-        fun build(): AppComponent
+        fun build(): WearComponent
     }
 }

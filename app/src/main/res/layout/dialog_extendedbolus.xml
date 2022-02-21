@@ -25,7 +25,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/virtualpump_extendedbolus_label"
+                android:importantForAccessibility="no"
                 app:srcCompat="@drawable/ic_actions_startextbolus" />
 
             <TextView
@@ -53,6 +53,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/insulin_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -65,7 +66,8 @@
             <info.nightscout.androidaps.utils.ui.NumberPicker
                 android:id="@+id/insulin"
                 android:layout_width="130dp"
-                android:layout_height="40dp" />
+                android:layout_height="40dp"
+                app:customContentDescription="@string/overview_insulin_label" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -86,6 +88,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/duration_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -98,7 +101,8 @@
             <info.nightscout.androidaps.utils.ui.MinutesNumberPicker
                 android:id="@+id/duration"
                 android:layout_width="130dp"
-                android:layout_height="40dp" />
+                android:layout_height="40dp"
+                app:customContentDescription="@string/careportal_newnstreatment_duration_label"  />
 
             <TextView
                 android:layout_width="wrap_content"
