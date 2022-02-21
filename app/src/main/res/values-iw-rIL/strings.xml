@@ -267,6 +267,7 @@
     <string name="configbuilder_shortname">CONF</string>
     <string name="loop_shortname">לולאה</string>
     <string name="oaps_shortname">OAPS</string>
+    <string name="dynisf_shortname">DynISF</string>
     <string name="localprofile_shortname">LP</string>
     <string name="overview_shortname">בית</string>
     <string name="virtualpump_shortname">VPUMP</string>
