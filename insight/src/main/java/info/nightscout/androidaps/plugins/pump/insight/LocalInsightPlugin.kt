@@ -148,8 +148,8 @@ class LocalInsightPlugin @Inject constructor(
         context.bindService(Intent(context, InsightConnectionService::class.java), serviceConnection, Context.BIND_AUTO_CREATE)
         context.bindService(Intent(context, InsightAlertService::class.java), serviceConnection, Context.BIND_AUTO_CREATE)
         createNotificationChannel()
-        lastBolusTimestamp = sp.getLong(R.string.key_insight_lastbolustimestamp, 0L)
-        lastBolusAmount = sp.getDouble(R.string.key_insight_lastbolusamount, 0.0)
+        lastBolusTimestamp = sp.getLong(R.string.key_insight_last_bolus_timestamp, 0L)
+        lastBolusAmount = sp.getDouble(R.string.key_insight_last_bolus_amount, 0.0)
     }
 
     private fun createNotificationChannel() {
@@ -1241,9 +1241,9 @@ class LocalInsightPlugin @Inject constructor(
                 pumpType = PumpType.ACCU_CHEK_INSIGHT,
                 pumpSerial = serial)
             lastBolusTimestamp = bolusID.timestamp
-            sp.putLong(R.string.key_insight_lastbolustimestamp, lastBolusTimestamp)
+            sp.putLong(R.string.key_insight_last_bolus_timestamp, lastBolusTimestamp)
             lastBolusAmount = event.immediateAmount
-            sp.putDouble(R.string.key_insight_lastbolusamount, lastBolusAmount)
+            sp.putDouble(R.string.key_insight_last_bolus_amount, lastBolusAmount)
         }
         if (event.bolusType == BolusType.EXTENDED || event.bolusType == BolusType.MULTIWAVE) {
             if (event.duration > 0 && profileFunction.getProfile(bolusID!!.timestamp) != null) pumpSync.syncExtendedBolusWithPumpId(
