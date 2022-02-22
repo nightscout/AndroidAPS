@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- do Chinese Translation -->
     <string name="objectives_button_start">开始</string>
     <string name="objectives_button_verify">验证</string>
     <string name="nth_objective">%1$d. 目标</string>

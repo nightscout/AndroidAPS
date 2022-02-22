@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    General-->
+    <!-- do Chinese Translation -->
+    <!-- General-->
     <string name="refresh">刷新</string>
     <string name="error">错误</string>
     <string name="not_set_short">没有设置</string>

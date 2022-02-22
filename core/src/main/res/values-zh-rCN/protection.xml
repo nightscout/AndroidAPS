@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Do zh_CN Translation  -->
     <string name="biometric_title">需要身份验证</string>
     <string name="biometric_description">将手指放在指纹读取器上以验证您的身份</string>
     <string name="settings_protection">参数设置保护</string>

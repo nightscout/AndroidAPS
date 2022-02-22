@@ -911,7 +911,6 @@
     <string name="openapsama_autosens_period_summary">灵敏度检测过去的小时数 (排除碳水化合物吸收时间)</string>
     <string name="openaps">OpenAPS</string>
     <string name="uploader">上传</string>
+    <!-- 由于防火墙的原因，谷歌NTP服务器在中国难以访问，更换为阿里云NTP服务器，解决学习计划的问题-->
     <string name="ntp_URL">ntp.aliyun.com</string>
-
-    <!-- SMS Communicator & OTP Authenticator -->
 </resources>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- do Chinese Translation -->
     <string name="dia_whatmeansdia">哪些是正确的胰岛素作用持续时间（DIA）?(4选3)</string>
     <string name="dia_label_exam">胰岛素作用持续时间（DIA）</string>
     <string name="dia_profile">您应该在profile用户配置文件中设置胰岛素作用持续时间（DIA）的值。</string>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- do Chinese Translation -->
     <string name="danars_pairing">配对</string>
     <string name="danars_nodeviceavailable">目前还没有发现任何设备</string>
     <string name="danars_pairingok">配对成功</string>

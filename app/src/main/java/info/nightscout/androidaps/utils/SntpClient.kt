@@ -42,10 +42,11 @@ import java.net.InetAddress
  */
 @Singleton
 class SntpClient @Inject constructor(
-    @Inject var rh: ResourceHelper,
     private val aapsLogger: AAPSLogger,
     private val dateUtil: DateUtil
 ) {
+
+    @Inject lateinit var rh: ResourceHelper
 
     companion object {
         //private final int REFERENCE_TIME_OFFSET = 16;
@@ -106,7 +107,7 @@ class SntpClient @Inject constructor(
     fun doNtpTime(callback: Callback) {
         aapsLogger.debug("Time detection started")
 
-        //Due to the firewall, Google's NTP website cannot be accessed in China.
+        //Due to the firewall, Google's NTP website can't be accessed in China，So Objective can't use too.
         callback.success = requestTime(rh.gs(R.string.ntp_URL), 5000)
         callback.time = ntpTime + SystemClock.elapsedRealtime() - ntpTimeReference
         aapsLogger.debug("Time detection ended: " + callback.success + " " + dateUtil.dateAndTimeString(ntpTime))

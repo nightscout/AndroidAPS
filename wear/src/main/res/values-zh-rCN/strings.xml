@@ -1,6 +1,162 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <string name="app_name">AAPS</string>
+    <string name="label_actions_activity">AAPS</string>
+
+    <string name="label_xdrip">AAPS</string>
+    <string name="label_xdrip_large">AAPS(大)</string>
+    <string name="label_xdrip_big_chart">AAPS(大图表)</string>
+    <string name="label_xdrip_no_chart">AAPS(无图表)</string>
+    <string name="label_xdrip_circle">AAPS(圆盘)</string>
     <string name="label_xdrip_v2">AAPSv2</string>
-    <string name="label_xdrip_cockpit">AAPS(Cockpit)</string>
-    <string name="label_xdrip_steampunk">AAPS(Steampunk)</string>
+    <string name="label_xdrip_cockpit">AAPS(驾驶)</string>
+    <string name="label_xdrip_steampunk">AAPS(机械模式)</string>
+    <string name="label_digitalstyle">AAPS(数字模式)</string>
+
+    <string name="label_warning_sync">无数据!</string>
+    <string name="label_warning_old">数据过期!</string>
+    <string name="label_warning_since">自从 %1$s</string>
+    <string name="label_warning_sync_aaps">与AAPS同步!</string>
+
+    <string name="msg_warning_sync">自从 %1$s 开始，没有收到数据，请检查手机上的AAPS应用是否正常同步数据。</string>
+    <string name="msg_warning_old">AAPS数据已经 %1$s 过期! 请检查传感器,xDrip+,NS,AAPS等是否存在故障!</string>
+
+    <string name="pref_vibrate_on_bolus">振动on Bolus</string>
+    <string name="pref_units_for_actions">单位for Actions</string>
+    <string name="pref_show_date">显示日期</string>
+    <string name="pref_show_iob">显示IOB</string>
+    <string name="pref_show_cob">显示COB</string>
+    <string name="pref_show_delta">显示变量</string>
+    <string name="pref_show_avgdelta">显示变量平均值</string>
+    <string name="pref_show_phone_battery">显示手机电量</string>
+    <string name="pref_show_rig_battery">Show Rig Battery</string>
+    <string name="pref_show_basal_rate">显示基础率</string>
+    <string name="pref_show_loop_status">显示闭环状态</string>
+    <string name="pref_show_bg">显示血糖</string>
+    <string name="pref_show_direction_arrow">显示趋势箭头</string>
+    <string name="pref_show_ago">显示时长</string>
+    <string name="pref_dark" comment="Enables dark visual theme">夜间模式</string>
+    <string name="pref_highlight_basals">基础率高亮</string>
+    <string name="pref_matching_divider"  comment="To make divider match its background with background of whole watchface">自适应表盘</string>
+    <string name="pref_chart_timeframe">Chart Timeframe</string>
+    <string name="pref_1_hour">1小时</string>
+    <string name="pref_2_hours">2小时</string>
+    <string name="pref_3_hours">3小时</string>
+    <string name="pref_4_hours">4小时</string>
+    <string name="pref_5_hours">5小时</string>
+    <string name="pref_input_design">输入布局</string>
+    <string name="pref_default">默认</string>
+    <string name="pref_quick_righty">右对齐</string>
+    <string name="pref_quick_lefty">左对齐</string>
+    <string name="pref_modern_sparse">两端分布</string>
+    <string name="pref_delta_granularity">变量精细度 (机械)</string>
+    <string name="pref_low">低</string>
+    <string name="pref_medium">中</string>
+    <string name="pref_high">高</string>
+    <string name="pref_auto">自动</string>
+    <string name="pref_big_numbers">大数字</string>
+    <string name="pref_ring_history">Ring History</string>
+    <string name="pref_light_ring_history">Light Ring History</string>
+    <string name="pref_animations">动画特效</string>
+    <string name="pref_wizard_in_menu">Wizard in Menu</string>
+    <string name="pref_prime_in_menu">Prime in Menu</string>
+    <string name="pref_single_target">单一目标</string>
+    <string name="pref_wizard_percentage">百分比向导</string>
+    <string name="pref_complication_tap_action">Complication Tap Action</string>
+    <string name="pref_unicode_in_complications">Unicode in Complications</string>
+    <string name="pref_version">版本:</string>
+    <string name="pref_moreWatchfaceSettings">更多手表设置</string>
+    <string name="pref_lookInYourWatchfaceConfiguration">请查看手表设置。</string>
+
+    <string name="menu_tempt">TempT</string>
+    <string name="menu_wizard">向导</string>
+    <string name="menu_bolus">剂量</string>
+    <string name="menu_ecarb">eCarb</string>
+    <string name="menu_settings">设置</string>
+    <string name="menu_status">状态</string>
+    <string name="menu_resync">重新同步</string>
+    <string name="menu_prime_fill">Prime/Fill</string>
+    <string name="menu_none">无</string>
+    <string name="menu_default">默认</string>
+    <string name="menu_menu">菜单</string>
+
+    <string name="action_duration">持续时长</string>
+    <string name="action_target" comment="In temp target menu, single target value">目标</string>
+    <string name="action_low" comment="In temp target menu, lower value from range">低</string>
+    <string name="action_high" comment="In temp target menu, higher value from range">高</string>
+    <string name="action_carbs">碳水</string>
+    <string name="action_percentage">百分比</string>
+    <string name="action_start_min">开始 [分钟]</string>
+    <string name="action_duration_h">持续 [小时]</string>
+    <string name="action_insulin">胰岛素</string>
+    <string name="action_preset_1">预设 1</string>
+    <string name="action_preset_2">预设 2</string>
+    <string name="action_preset_3">预设 3</string>
+    <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Free amount</string>
+    <string name="action_confirm">确认</string>
+    <string name="action_timeshift">时间调整</string>
+    <string name="action_bolus">大剂量</string>
+
+    <string name="bolus_progress">Bolus Progress</string>
+    <string name="press_to_cancel">按下取消</string>
+    <string name="cancel_bolus">取消大剂量</string>
+
+    <string name="status_pump">泵</string>
+    <string name="status_loop">闭环</string>
+    <string name="status_cpp">CPP</string>
+    <string name="status_tdd">TDD</string>
+
+    <string name="activity_carb">碳水</string>
+    <string name="activity_IOB">IOB</string>
+    <string name="activity_no_status">无状态</string>
+
+
+    <string name="color_name_red">红色</string>
+    <string name="color_name_pink">粉色</string>
+    <string name="color_name_purple">紫色</string>
+    <string name="color_name_deeppurple">深紫色</string>
+    <string name="color_name_indigo">靛蓝色</string>
+    <string name="color_name_blue">蓝色</string>
+    <string name="color_name_lightblue">浅蓝色</string>
+    <string name="color_name_cyan">青色</string>
+    <string name="color_name_teal">蓝绿色</string>
+    <string name="color_name_green">绿色</string>
+    <string name="color_name_lightgreen">浅绿色</string>
+    <string name="color_name_lime">绿黄色</string>
+    <string name="color_name_yellow">黄色</string>
+    <string name="color_name_amber">黄褐色</string>
+    <string name="color_name_orange">橙色</string>
+    <string name="color_name_deeporange">深橙色</string>
+    <string name="color_name_brown">棕色</string>
+    <string name="color_name_gray">灰色</string>
+    <string name="color_name_bluegray">蓝灰色</string>
+    <string name="color_name_white">白色</string>
+    <string name="color_name_black">黑色</string>
+    <string name="color_name_multicolor">彩色</string>
+    <string name="pref_simplify_ui">简化UI</string>
+    <string name="pref_simplify_ui_sum">只显示时间和背景</string>
+
+    <string name="pref_vibrate_hourly">每小时振动一次</string>
+    <string name="pref_show_weeknumber">显示周数</string>
+
+    <string name="digitalstyle_pref_your_style">你的风格:</string>
+    <string name="digitalstyle_style_none">无风格</string>
+    <string name="digitalstyle_style_minimal">简约风格</string>
+    <string name="digitalstyle_style_shape">模糊风格</string>
+    <string name="digitalstyle_style_full">完整风格</string>
+
+    <string name="digitalstyle_pref_your_color">你的颜色:</string>
+    <string name="digitalstyle_pref_your_color_saturation">你的颜色饱和度:</string>
+    <string name="digitalstyle_pref_your_color_opacity">你的颜色透明度:</string>
+    <string name="bolus_progress_channel_name">AAPS剂量改进</string>
+    <string name="bolus_progress_silent_channel_name">AAPS大剂量输注时禁音</string>
+    <string name="bolus_progress_channel_description">大剂量输注与取消</string>
+    <string name="bolus_progress_silent_channel_description">大剂量输注与取消时减少振动</string>
+
+    <string name="simple_ui_off">关闭</string>
+    <string name="simple_ui_charging">充电时</string>
+    <string name="simple_ui_always_on">常亮模式</string>
+    <string name="simple_ui_always_on_charging">充电时总是亮屏</string>
+
 </resources>
