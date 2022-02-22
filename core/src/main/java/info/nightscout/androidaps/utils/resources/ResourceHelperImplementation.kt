@@ -21,20 +21,21 @@ import javax.inject.Inject
  */
 class ResourceHelperImplementation @Inject constructor(private val context: Context, private val fabricPrivacy: FabricPrivacy) : ResourceHelper {
 
-    override fun gs(@StringRes id: Int): String = gs(id, null)
+    override fun gs(@StringRes id: Int): String = context.getString(id)
 
     override fun gs(@StringRes id: Int, vararg args: Any?) : String {
         return try {
             context.getString(id, *args)
         } catch (exception: Exception) {
-            val resourceName = context.resources.getResourceEntryName(id);
-            val currentLocale: Locale = context.resources.configuration.locale
-            fabricPrivacy.logMessage("Failed to get string for resource $resourceName ($id) for locale $currentLocale with args ${args.map{it.toString()}}")
+            val resourceName = context.resources.getResourceEntryName(id)
+            val resourceValue = context.getString(id)
+            val currentLocale: Locale = context.resources.configuration.locales[0]
+            fabricPrivacy.logMessage("Failed to get string for resource $resourceName ($id) '$resourceValue' for locale $currentLocale with args ${args.map{it.toString()}}")
             fabricPrivacy.logException(exception)
             try {
                 gsNotLocalised(id, *args)
             } catch (exceptionNonLocalized: Exception) {
-                fabricPrivacy.logMessage("Fallback failed to get string for resource $resourceName ($id) with args ${args.map { it.toString() }}")
+                fabricPrivacy.logMessage("Fallback failed to get string for resource $resourceName ($id) '$resourceValue' with args ${args.map { it.toString() }}")
                 fabricPrivacy.logException(exceptionNonLocalized)
                 "FAILED to get string $resourceName"
             }
