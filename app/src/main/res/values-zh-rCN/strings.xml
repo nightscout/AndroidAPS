@@ -1,7 +1,7 @@
 <resources>
     <string name="treatmentssafety_title">治疗安全配置</string>
-    <string name="treatmentssafety_maxbolus_title">允许的最大胰岛素大剂量[U]</string>
-    <string name="treatmentssafety_maxcarbs_title">允许的最大碳水值[克]</string>
+    <string name="treatmentssafety_maxbolus_title">治疗时允许的最大常规剂量[U]</string>
+    <string name="treatmentssafety_maxcarbs_title">治疗时允许的最大碳水化合物[克]</string>
     <string name="nav_preferences_plugin">%1$s 参数选项</string>
     <string name="nav_preferences">参数选项</string>
     <string name="nav_refreshtreatments">从Nightscout网站刷新治疗数据</string>
@@ -137,8 +137,8 @@
     <string name="nav_import">导入配置</string>
     <string name="openapsma_maxbasal_title">请设置允许的最大临时基础率U/h(单位/小时)</string>
     <string name="openapsma_maxbasal_summary">这个数值在OpenAPS中被称为max basal最大基础率</string>
-    <string name="openapsma_maxiob_title">OpenAPS允许输注的最大IOB剂量(面板胰岛素总量)[单位U]</string>
-    <string name="openapsma_maxiob_summary">这个值在OpenAPS中被成为最大IOB\n这是APS单次可以输注的胰岛素的最大值[单位U]。</string>
+    <string name="openapsma_maxiob_title">OpenAPS允许输注的最大IOB(面板胰岛素)[单位U]</string>
+    <string name="openapsma_maxiob_summary">这个值在OpenAPS中被称为最大IOB(面板胰岛素)\n这是APS在概览页统计到的已输注胰岛素的总量，超过此数值后，APS算法会停止胰岛素输注建议[单位U]。</string>
     <string name="password_preferences_encrypt_prompt">请您输入主密码，该密码将用于加密导出的配置文件。</string>
     <string name="password_preferences_decrypt_prompt">请您输入主密码，该密码将用于解密导入的配置文件。</string>
     <string name="preferences_export_canceled">Export canceled! Preferences were NOT exported!</string>
@@ -286,7 +286,7 @@
     <string name="openapsama_autosens_adjusttargets">敏感度功能也会自动调整血糖目标值</string>
     <string name="openapsama_autosens_adjusttargets_summary">默认值:开启\n除了胰岛素敏感度ISF和基础率之外，本选项还允许调整血糖临时目标值。</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">默认值:2\n剂量忽略功能在你输注餐时大剂量之后进行，因此，当你刚吃过东西时，闭环不会马上将面板活性胰岛素与吸收碳水抵消，举个例子：默认值为2，所以3小时的DIA胰岛素作用时长意味着在(3DIA/2)约1.5小时后，面板残留的活性胰岛素会逐步淘汰。</string>
-    <string name="openapsama_min_5m_carbimpact_summary">默认值:3.0(AMA算法)或8.0(SMB算法)。\n这是默认的碳水化合物吸收速度，计量单位是(毫克/分升/每5分钟)。在算法预测未来的血糖值时，如果血糖下降幅度超过预期或上升幅度未达到预期，这个数值影响COB(已摄入面板碳水)的衰减速度。</string>
+    <string name="openapsama_min_5m_carbimpact_summary">默认值:3.0(AMA算法)或8.0(SMB算法)。\n这是默认的碳水化合物吸收速度，计量单位是(毫克/分升/每5分钟)。在算法预测未来的血糖值时，如果血糖下降幅度超过预期或上升幅度未达到预期，这个数值影响COB(面板碳水)的衰减速度。</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">请注意!\n正常情况下，您不必更改下面的这些值。请单击此处通过网站阅读说明，并确保在更改之前理解这些值的意思。</string>
     <string name="smscommunicator_invalidphonennumber">无效的短信手机号</string>
     <string name="overview_calibration">校准</string>
@@ -715,7 +715,7 @@
     <string name="new_version_warning">New version for at least %1$d days available! Fallback to LGS after %2$d days, loop will be disabled after %3$d days</string>
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
-    <string name="description_source_dexcom">从BYODA接收血糖数据\'Build Your Own Dexcom App\'。</string>
+    <string name="description_source_dexcom">从BYODA德康app接收血糖数据\'Build Your Own Dexcom App\'。</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="bolusconstraintappliedwarn">Bolus constraint applied: %1$.2f U to %2$.2f U</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Slow carbs absorption detected: %2$d%% of time. Double check your calculation. COB can be overestimated thus more insulin could be given !!!!!</font>]]></string>
