@@ -155,7 +155,7 @@
     <string name="check_preferences_before_import">Před importem zkontrolujte předvolby:</string>
     <string name="check_preferences_cannot_import">Předvolby nelze importovat!</string>
     <string name="check_preferences_dangerous_import">Předvolby by neměly být importovány!</string>
-    <string name="check_preferences_details_btn">Vysvětlení problémy při importu…</string>
+    <string name="check_preferences_details_btn">Vysvětlení problémů při importu…</string>
     <string name="check_preferences_details_title">Detaily problémů importu</string>
     <string name="check_preferences_import_btn">Import</string>
     <string name="check_preferences_import_anyway_btn">Přesto importovat (NEBEZPEČNÉ!)</string>
@@ -268,6 +268,7 @@
     <string name="configbuilder_shortname">KONF</string>
     <string name="loop_shortname">SMYČ</string>
     <string name="oaps_shortname">OAPS</string>
+    <string name="dynisf_shortname">DYNSENZ</string>
     <string name="localprofile_shortname">MPRF</string>
     <string name="overview_shortname">PŘEH</string>
     <string name="virtualpump_shortname">VPUM</string>
