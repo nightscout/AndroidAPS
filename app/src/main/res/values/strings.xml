@@ -80,6 +80,7 @@
     <string name="description_ns_client">Synchronizes your data with Nightscout</string>
     <string name="description_ama">State of the algorithm in 2017</string>
     <string name="description_smb">Most recent algorithm for advanced users</string>
+    <string name="description_smb_dynamic_isf">Most recent algorithm for advanced users with dynamic/automatic ISF</string>
     <string name="description_overview">Displays the current state of your loop and buttons for most common actions</string>
     <string name="description_persistent_notification">Shows an ongoing notification with a short overview of what your loop is doing</string>
     <string name="description_profile_local">Define a profile which is available offline.</string>
@@ -535,6 +536,7 @@
     <string name="ns_localbroadcasts">Enable broadcasts to other apps (like xDrip+). Do not enable if you have more than one instance of AAPS or NSClient installed!</string>
     <string name="ns_localbroadcasts_title">Enable local Broadcasts.</string>
     <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openaps_smb_dynamic_isf">OpenAPS SMB Dynamic ISF</string>
     <string name="key_use_smb" translatable="false">use_smb</string>
     <string name="key_use_uam" translatable="false">use_uam</string>
     <string name="key_smb_enable_carbs_suggestions_threshold" translatable="false">smb_enable_carbs_suggestions_threshold</string>
