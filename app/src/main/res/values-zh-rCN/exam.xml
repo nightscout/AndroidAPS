@@ -2,11 +2,11 @@
 <resources>
     <string name="dia_whatmeansdia">哪些是正确的胰岛素作用持续时间（DIA）?(4选3)</string>
     <string name="dia_label_exam">胰岛素作用持续时间（DIA）</string>
-    <string name="dia_profile">您应该在profile配置文件中设置DIA的值。</string>
-    <string name="dia_minimumis5h">胰岛素作用持续时间最小允许值为5小时。</string>
+    <string name="dia_profile">您应该在profile用户配置文件中设置胰岛素作用持续时间（DIA）的值。</string>
+    <string name="dia_minimumis5h">胰岛素作用持续时间（DIA）最小允许值为5小时。</string>
     <string name="dia_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html?#insulin</string>
-    <string name="dia_meaningisequaltodiapump">在使用AndroidPS之前，您对胰岛素泵中使用的DIA值感觉良好，则在开始闭环时就无需更改该值。</string>
-    <string name="dia_valuemustbedetermined">你应该自行确定适当的胰岛素作用持续时间DIA。（各人体质不同，胰岛素作用时间的长短存在差异）</string>
+    <string name="dia_meaningisequaltodiapump">在使用AndroidPS之前，您对胰岛素泵中使用的胰岛素作用持续时间（DIA）值感觉良好，则在开始闭环时就无需更改该值。</string>
+    <string name="dia_valuemustbedetermined">你应该自行确定适当的胰岛素作用持续时间（DIA）。（各人体质不同，胰岛素作用时间的长短存在差异）</string>
     <string name="hypott_label">临时目标血糖范围</string>
     <string name="hypott_whenhypott">设定临时目标血糖范围的主要原因是什么？(4选1)</string>
     <string name="hypott_wrongbasal">纠正由不正确的胰岛素基础率，引起的低血糖。</string>
@@ -209,7 +209,6 @@
     <string name="basalhelp_diabetesteam">Your diabetes team</string>
     <string name="basalhelp_google">Google</string>
     <string name="basalhelp_facebook">Facebook</string>
-    <string name="blank"></string>
     <string name="other_medication_label">其他药物。请阅读下面的声明，然后勾选接受声明。</string>
     <string name="other_medication_text">AndroidAPS降低胰岛素基础率，暂停胰岛素泵会升高血糖值。而SGLT2抑制剂类药物（格列氟嗪）可防止血糖升高，因此可能导致危险的胰岛素缺乏DKA症状。\n常见的品牌包括: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®,Vokanamet®, Xigduo®.\n\n我在此承诺，不会在使用Androidps时服用此类药物，保证在使用此类药物前停用闭环。</string>
 </resources>
