@@ -12,7 +12,7 @@
     <string name="objectives_maxbasal_objective">了解你的开环，包括它的胰岛素基础率建议。</string>
     <string name="objectives_maxbasal_gate">根据这些经验，决定最大胰岛素基础率应该是多少，并将其设置为泵和AndroidAPS选项的限制值。(这项教学的目的是确认胰岛素基础率上限的安全阀值)</string>
     <string name="objectives_maxiobzero_objective">在Low Glucose Suspend低碳水模式下使用闭环功能</string>
-    <string name="objectives_maxiobzero_gate">在最大活性胰岛素值IOB=0的情况下闭环运行几天(修订为1天)，尽量避免低血糖事件。(这项教学的目的是真正了解自己基础率的最低胰岛素需求，在多次只吃1-5克碳水的情况下，将血糖平衡在6左右，不进行大剂量追加，此时的胰岛素基础率才符合自身。)</string>
+    <string name="objectives_maxiobzero_gate">在最大活性胰岛素值IOB=0的情况下闭环运行几天(修订为1天)，尽量避免低血糖事件。(这项教学的目的是真正了解自己基础率的最低胰岛素需求，在多次只吃1–5克碳水的情况下，将血糖平衡在6左右，不进行大剂量追加，此时的胰岛素基础率才符合自身。)</string>
     <string name="objectives_maxiob_objective">调整为闭环模式，将最大IOB提高到0以上，并逐渐降低目标血糖值范围。</string>
     <string name="objectives_maxiob_gate">运行几天，当至少一个晚上没有低血糖警报时，再下调目标血糖范围。</string>
     <string name="objectives_autosens_objective">如果有需要，调整胰岛素基础率和比率，然后启用自动敏感度功能。</string>
@@ -29,7 +29,7 @@
     <string name="objectives_usage_gate">在AndroidAPS中执行不同的操作</string>
     <string name="objectives_useprofileswitch">将LocalProfile配置参数设为90%，持续10分钟。（长按概览页上的LocalProfile名称）</string>
     <string name="objectives_usedisconnectpump">模拟淋浴，断开胰岛素泵1小时。(长按开环图标，选择断开胰岛素泵1小时图标)</string>
-    <string name="objectives_usereconnectpump">... 使用同样的方式，重新连接胰岛素泵。</string>
+    <string name="objectives_usereconnectpump">…使用同样的方式，重新连接胰岛素泵。</string>
     <string name="objectives_usetemptarget">创建持续时间为10分钟的自定义临时血糖目标值。（长按概览页当前的血糖目标范围）</string>
     <string name="objectives_useactions">在配置生成器中，启用手动操作功能插件,确保其在顶部菜单可见，并显示其内容。</string>
     <string name="objectives_useloop">隐藏闭环功能插件。(在配置生成器中，取消闭环显示的勾选-后方的勾)</string>
