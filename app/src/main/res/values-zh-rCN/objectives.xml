@@ -1,2 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="objectives_button_start">开始</string>
+    <string name="objectives_button_verify">验证</string>
+    <string name="nth_objective">%1$d. 目标</string>
+    <string name="objectivenotstarted">目标 %1$d 没开始</string>
+    <string name="objectivenotfinished">目标 %1$d 没完成</string>
+    <string name="objectives_0_objective">建立可实时监控的连续血糖监测系统，配置参数并确保其基础数据可用率。</string>
+    <string name="objectives_0_gate">确保BG(血糖数据)在Nightscout网站中可用，,并且胰岛素泵的数据可以正确上传。</string>
+    <string name="objectives_openloop_objective">从open loop开环模式开始</string>
+    <string name="objectives_openloop_gate">在开环模式下运行几天(修订为1天，原7天)，多次手动设定临时基础率，尝试调整使用临时血糖目标范围。（例如，运动或低血糖时少量补充碳水化合物）</string>
+    <string name="objectives_maxbasal_objective">了解你的开环，包括它的胰岛素基础率建议。</string>
+    <string name="objectives_maxbasal_gate">根据这些经验，决定最大胰岛素基础率应该是多少，并将其设置为泵和AndroidAPS选项的限制值。(这项教学的目的是确认胰岛素基础率上限的安全阀值)</string>
+    <string name="objectives_maxiobzero_objective">在Low Glucose Suspend低碳水模式下使用闭环功能</string>
+    <string name="objectives_maxiobzero_gate">在最大活性胰岛素值IOB=0的情况下闭环运行几天(修订为1天)，尽量避免低血糖事件。(这项教学的目的是真正了解自己基础率的最低胰岛素需求，在多次只吃1-5克碳水的情况下，将血糖平衡在6左右，不进行大剂量追加，此时的胰岛素基础率才符合自身。)</string>
+    <string name="objectives_maxiob_objective">调整为闭环模式，将最大IOB提高到0以上，并逐渐降低目标血糖值范围。</string>
+    <string name="objectives_maxiob_gate">运行几天，当至少一个晚上没有低血糖警报时，再下调目标血糖范围。</string>
+    <string name="objectives_autosens_objective">如果有需要，调整胰岛素基础率和比率，然后启用自动敏感度功能。</string>
+    <string name="objectives_autosens_gate">定时定量进行摄入碳水化合物，保证1星期7天的白天都能成功开启闭环功能。</string>
+    <string name="objectives_smb_objective">白天使用是开启其他算法功能，如SMB算法。</string>
+    <string name="objectives_auto_objective">实现全自动！恭喜您完成所有教学计划，您已可以使用胰岛素泵、血糖传感器和AndroidAPS来完成人工胰腺的大部分功能，只需要保持警惕和饮食节制，您可以与普通人一样享受饮食，生活，并拥有更好的身体健康。</string>
+    <string name="objectives_smb_gate">你需要阅读维基百科，并提升maxIOB最大活性胰岛素剂量，才能让SMB正常工作！一个好的开始是maxIOB值=餐时胰岛素大剂量平均值+3倍的最大基础率值</string>
+    <string name="objectives_auto_gate">阅读有关自动化工作原理的文档，设定你的第一个简单规则。让AAPS只显示通知，而不是操作。当您确定自动操作在正确的时间触发时，用实际操作替换通知。(https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
+    <string name="objectives_bgavailableinns">血糖值在NS站点可用</string>
+    <string name="objectives_pumpstatusavailableinns">泵的状态已上传NS</string>
+    <string name="objectives_manualenacts">操作完成次数</string>
+    <string name="accomplished">完成时间: %1$s</string>
+    <string name="objectives_usage_objective">学习如何控制AndroidAPS</string>
+    <string name="objectives_usage_gate">在AndroidAPS中执行不同的操作</string>
+    <string name="objectives_useprofileswitch">将LocalProfile配置参数设为90%，持续10分钟。（长按概览页上的LocalProfile名称）</string>
+    <string name="objectives_usedisconnectpump">模拟淋浴，断开胰岛素泵1小时。(长按开环图标，选择断开胰岛素泵1小时图标)</string>
+    <string name="objectives_usereconnectpump">... 使用同样的方式，重新连接胰岛素泵。</string>
+    <string name="objectives_usetemptarget">创建持续时间为10分钟的自定义临时血糖目标值。（长按概览页当前的血糖目标范围）</string>
+    <string name="objectives_useactions">在配置生成器中，启用手动操作功能插件,确保其在顶部菜单可见，并显示其内容。</string>
+    <string name="objectives_useloop">隐藏闭环功能插件。(在配置生成器中，取消闭环显示的勾选-后方的勾)</string>
+    <string name="objectives_usescale">通过长按血糖图表使用缩放功能</string>
+    <string name="objectives_button_enter">确认</string>
+    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">如果您至少有3个月的其他系统闭环经验，您可能有资格获得跳过学习目标的代码。参见 https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives for details.</string>
+    <string name="codeaccepted">学习计划验证码通过</string>
+    <string name="codeinvalid">学习计划验证码无效</string>
+    <string name="objectives_exam_objective">检验您的专业知识</string>
+    <string name="objectives_exam_gate">学习以下知识，并点击"未完成"回答问题。(已汉化题目并提示正确答案数量，请选择所有正确的选项，然后点击验证按键）</string>
+    <string name="answerdisabledto">答题功能禁用直到: %1$s</string>
+    <string name="wronganswer">回答错误!</string>
+    <string name="unfinshed_button">下一个未完成</string>
+    <string name="requestcode">需要学习计划验证码: %1$s</string>
+    <string name="objectives_hint">(检查所有正确答案)</string>
+    <string name="disconnectpump_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#config-builder</string>
+    <string name="usescale_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="notconnected">没有连接到网络</string>
+    <string name="failedretrievetime">时间校验失败</string>
+    <string name="requirementnotmet">学习计划目标要求未达到</string>
+</resources>

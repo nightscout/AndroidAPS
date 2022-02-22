@@ -1,2 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="biometric_title">需要身份验证</string>
+    <string name="biometric_description">将手指放在指纹读取器上以验证您的身份</string>
+    <string name="settings_protection">参数设置保护</string>
+    <string name="application_protection">应用程序保护</string>
+    <string name="bolus_protection">输注剂量保护</string>
+    <string name="master_password">主密码</string>
+    <string name="settings_password">参数设置密码</string>
+    <string name="application_password">应用程序密码</string>
+    <string name="bolus_password">输注剂量密码</string>
+    <string name="unlock_settings">未锁定设置</string>
+    <string name="biometric">指纹识别</string>
+    <string name="custom_password">自定义密码</string>
+    <string name="noprotection">无保护</string>
+    <string name="protection">保护</string>
+    <string name="master_password_missing">未设置主密码!\n\n请在首选项(%1$s &#8594; %2$s)中设置主密码</string>
+    <string name="unsecure_fallback_biometric">不安全的 Fallback</string>
+    <string name="unsecure_fallback_descriotion_biometric">基于有效性考虑，使用生物识别需要设置一个主密码以备不时之需。请设置主密码！</string>
+
+    <string name="password_set">密码已设置!</string>
+    <string name="password_not_set">没有设置密码</string>
+    <string name="password_not_changed">密码没有变更</string>
+    <string name="password_cleared">密码已清除!</string>
+    <string name="password_hint">在此处输入密码</string>
+</resources>
