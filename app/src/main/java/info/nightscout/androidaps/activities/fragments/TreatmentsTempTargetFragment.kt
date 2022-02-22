@@ -1,12 +1,9 @@
 package info.nightscout.androidaps.activities.fragments
 
 import android.annotation.SuppressLint
-import android.content.DialogInterface
-import android.graphics.Paint
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
@@ -30,6 +27,8 @@ import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.events.EventTreatmentUpdateGui
 import info.nightscout.androidaps.activities.fragments.TreatmentsTempTargetFragment.RecyclerViewAdapter.TempTargetsViewHolder
+import info.nightscout.androidaps.events.EventEffectiveProfileSwitchChanged
+import info.nightscout.androidaps.events.EventProfileSwitchChanged
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
@@ -40,6 +39,7 @@ import info.nightscout.androidaps.extensions.friendlyDescription
 import info.nightscout.androidaps.extensions.highValueToUnitsToString
 import info.nightscout.androidaps.extensions.lowValueToUnitsToString
 import info.nightscout.androidaps.extensions.toVisibility
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.sharedPreferences.SP
@@ -68,11 +68,14 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
     private val disposable = CompositeDisposable()
 
     private val millsToThePast = T.days(30).msecs()
+    private var selectedItems: MutableList<TemporaryTarget> = mutableListOf()
+    private var showInvalidated = false
+    private var toolbar: Toolbar? = null
+    private var removeActionMode: ActionMode? = null
 
     private var _binding: TreatmentsTemptargetFragmentBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
+    // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
@@ -80,42 +83,48 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.recyclerview.setHasFixedSize(true)
+        toolbar = activity?.findViewById(R.id.toolbar)
+        setHasOptionsMenu(true)
         binding.recyclerview.layoutManager = LinearLayoutManager(view.context)
-        binding.refreshFromNightscout.setOnClickListener {
-            context?.let { context ->
-                OKDialog.showConfirmation(context, rh.gs(R.string.refresheventsfromnightscout) + " ?", {
-                    uel.log(Action.TT_NS_REFRESH, Sources.Treatments)
-                    disposable += Completable.fromAction { repository.deleteAllTempTargetEntries() }
+    }
+
+    private fun refreshFromNightscout() {
+        activity?.let { activity ->
+            OKDialog.showConfirmation(activity, rh.gs(R.string.refresheventsfromnightscout) + "?") {
+                uel.log(Action.TREATMENTS_NS_REFRESH, Sources.Treatments)
+                disposable +=
+                    Completable.fromAction {
+                        repository.deleteAllEffectiveProfileSwitches()
+                        repository.deleteAllProfileSwitches()
+                    }
                         .subscribeOn(aapsSchedulers.io)
                         .observeOn(aapsSchedulers.main)
                         .subscribeBy(
                             onError = { aapsLogger.error("Error removing entries", it) },
-                            onComplete = { rxBus.send(EventTempTargetChange()) }
+                            onComplete = {
+                                rxBus.send(EventProfileSwitchChanged())
+                                rxBus.send(EventEffectiveProfileSwitchChanged(0L))
+                                rxBus.send(EventNewHistoryData(0, false))
+                            }
                         )
-
-                    rxBus.send(EventNSClientRestart())
-                })
+                rxBus.send(EventNSClientRestart())
             }
-        }
-        val nsUploadOnly = !sp.getBoolean(R.string.key_ns_receive_temp_target, false) || !buildHelper.isEngineeringMode()
-        if (nsUploadOnly) binding.refreshFromNightscout.visibility = View.INVISIBLE
-        binding.showInvalidated.setOnCheckedChangeListener { _, _ ->
-            rxBus.send(EventTreatmentUpdateGui())
         }
     }
 
     fun swapAdapter() {
         val now = System.currentTimeMillis()
-        if (binding.showInvalidated.isChecked)
-            repository
-                .getTemporaryTargetDataIncludingInvalidFromTime(now - millsToThePast, false)
-                .observeOn(aapsSchedulers.main)
-                .subscribe { list -> binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true) }
-        else
-            repository
-                .getTemporaryTargetDataFromTime(now - millsToThePast, false)
-                .observeOn(aapsSchedulers.main)
-                .subscribe { list -> binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true) }
+        disposable +=
+            if (showInvalidated)
+                repository
+                    .getTemporaryTargetDataIncludingInvalidFromTime(now - millsToThePast, false)
+                    .observeOn(aapsSchedulers.main)
+                    .subscribe { list -> binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true) }
+            else
+                repository
+                    .getTemporaryTargetDataFromTime(now - millsToThePast, false)
+                    .observeOn(aapsSchedulers.main)
+                    .subscribe { list -> binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true) }
     }
 
     @Synchronized
@@ -145,6 +154,7 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
     @Synchronized
     override fun onDestroyView() {
         super.onDestroyView()
+        removeActionMode?.let { it.finish() }
         binding.recyclerview.adapter = null // avoid leaks
         _binding = null
     }
@@ -163,8 +173,16 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
             val tempTarget = tempTargetList[position]
             holder.binding.ns.visibility = (tempTarget.interfaceIDs.nightscoutId != null).toVisibility()
             holder.binding.invalid.visibility = tempTarget.isValid.not().toVisibility()
-            holder.binding.remove.visibility = tempTarget.isValid.toVisibility()
-            val sameDayPrevious = position > 0 && dateUtil.isSameDay(tempTarget.timestamp, tempTargetList[position-1].timestamp)
+            holder.binding.cbRemove.visibility = (tempTarget.isValid && (removeActionMode != null)).toVisibility()
+            holder.binding.cbRemove.setOnCheckedChangeListener { _, value ->
+                if (value) {
+                    selectedItems.add(tempTarget)
+                } else {
+                    selectedItems.remove(tempTarget)
+                }
+                removeActionMode?.title = rh.gs(R.string.count_selected, selectedItems.size)
+            }
+            val sameDayPrevious = position > 0 && dateUtil.isSameDay(tempTarget.timestamp, tempTargetList[position - 1].timestamp)
             holder.binding.date.visibility = sameDayPrevious.not().toVisibility()
             holder.binding.date.text = dateUtil.dateString(tempTarget.timestamp)
             holder.binding.time.text = dateUtil.timeRangeString(tempTarget.timestamp, tempTarget.end)
@@ -177,43 +195,123 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
                     tempTarget.id == currentlyActiveTarget?.id -> rh.gc(R.color.colorActive)
                     tempTarget.timestamp > dateUtil.now()      -> rh.gc(R.color.colorScheduled)
                     else                                       -> holder.binding.reasonColon.currentTextColor
-                })
-            holder.binding.remove.tag = tempTarget
+                }
+            )
             val nextTimestamp = if (tempTargetList.size != position + 1) tempTargetList[position + 1].timestamp else 0L
             holder.binding.delimiter.visibility = dateUtil.isSameDay(tempTarget.timestamp, nextTimestamp).toVisibility()
         }
 
-        override fun getItemCount(): Int = tempTargetList.size
+        override fun getItemCount() = tempTargetList.size
 
         inner class TempTargetsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
             val binding = TreatmentsTemptargetItemBinding.bind(view)
 
-            init {
-                binding.remove.setOnClickListener { v: View ->
-                    val tempTarget = v.tag as TemporaryTarget
-                    context?.let { context ->
-                        OKDialog.showConfirmation(context, rh.gs(R.string.removerecord),
-                            """
-                        ${rh.gs(R.string.careportal_temporarytarget)}: ${tempTarget.friendlyDescription(profileFunction.getUnits(), rh)}
-                        ${dateUtil.dateAndTimeString(tempTarget.timestamp)}
-                        """.trimIndent(),
-                            { _: DialogInterface?, _: Int ->
-                                uel.log(Action.TT_REMOVED, Sources.Treatments,
-                                    ValueWithUnit.Timestamp(tempTarget.timestamp),
-                                    ValueWithUnit.TherapyEventTTReason(tempTarget.reason),
-                                    ValueWithUnit.Mgdl(tempTarget.lowTarget),
-                                    ValueWithUnit.Mgdl(tempTarget.highTarget).takeIf { tempTarget.lowTarget != tempTarget.highTarget },
-                                    ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tempTarget.duration).toInt()))
-                                disposable += repository.runTransactionForResult(InvalidateTemporaryTargetTransaction(tempTarget.id))
-                                    .subscribe(
-                                        { aapsLogger.debug(LTag.DATABASE, "Removed temp target $tempTarget") },
-                                        { aapsLogger.error(LTag.DATABASE, "Error while invalidating temporary target", it) })
-                            }, null)
-                    }
-                }
-                binding.remove.paintFlags = binding.remove.paintFlags or Paint.UNDERLINE_TEXT_FLAG
-            }
         }
     }
+
+    private fun removeSelected() {
+        // TODO check if item should not be delete val profile = profileFunction.getProfile(dateUtil.now()) == null
+        if (selectedItems.size > 0)
+            activity?.let { activity ->
+                OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord), getConfirmationText(), Runnable {
+                    selectedItems.forEach { tempTarget ->
+                        uel.log(
+                            Action.TT_REMOVED, Sources.Treatments,
+                            ValueWithUnit.Timestamp(tempTarget.timestamp),
+                            ValueWithUnit.TherapyEventTTReason(tempTarget.reason),
+                            ValueWithUnit.Mgdl(tempTarget.lowTarget),
+                            ValueWithUnit.Mgdl(tempTarget.highTarget).takeIf { tempTarget.lowTarget != tempTarget.highTarget },
+                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tempTarget.duration).toInt())
+                        )
+                        disposable += repository.runTransactionForResult(InvalidateTemporaryTargetTransaction(tempTarget.id))
+                            .subscribe(
+                                { aapsLogger.debug(LTag.DATABASE, "Removed temp target $tempTarget") },
+                                { aapsLogger.error(LTag.DATABASE, "Error while invalidating temporary target", it) })
+                    }
+                })
+            }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_treatments_temp_target, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        menu.findItem(R.id.nav_hide_invalidated)?.isVisible = showInvalidated
+        menu.findItem(R.id.nav_show_invalidated)?.isVisible = !showInvalidated
+        val nsUploadOnly = !sp.getBoolean(R.string.key_ns_receive_temp_target, false) || !buildHelper.isEngineeringMode()
+        menu.findItem(R.id.nav_refresh_ns)?.isVisible = !nsUploadOnly
+
+        return super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.nav_remove_items -> {
+                removeActionMode = toolbar?.startActionMode(RemoveActionModeCallback())
+                true
+            }
+
+            R.id.nav_show_invalidated -> {
+                showInvalidated = true
+                rxBus.send(EventTreatmentUpdateGui())
+                true
+            }
+
+            R.id.nav_hide_invalidated -> {
+                showInvalidated = false
+                rxBus.send(EventTreatmentUpdateGui())
+                true
+            }
+
+            R.id.nav_refresh_ns -> {
+                refreshFromNightscout()
+                true
+            }
+
+            else -> false
+        }
+    }
+
+    inner class RemoveActionModeCallback : ActionMode.Callback {
+
+        override fun onCreateActionMode(mode: ActionMode, menu: Menu?): Boolean {
+            mode.menuInflater.inflate(R.menu.menu_delete_selection, menu)
+            selectedItems = mutableListOf()
+            mode.title = rh.gs(R.string.count_selected, selectedItems.size)
+            binding.recyclerview.adapter?.notifyDataSetChanged()
+            return true
+        }
+
+        override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?) = false
+
+        override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
+            return when (item.itemId) {
+                R.id.remove_selected -> {
+                    removeSelected()
+                    mode.finish()
+                    true
+                }
+
+                else                 -> false
+            }
+        }
+
+        override fun onDestroyActionMode(mode: ActionMode?) {
+            removeActionMode = null
+            binding.recyclerview.adapter?.notifyDataSetChanged()
+        }
+    }
+
+    private fun getConfirmationText(): String {
+        if (selectedItems.size == 1) {
+            val tempTarget = selectedItems.first()
+            return "${rh.gs(R.string.careportal_temporarytarget)}: ${tempTarget.friendlyDescription(profileFunction.getUnits(), rh)}\n" +
+                dateUtil.dateAndTimeString(tempTarget.timestamp)
+        }
+        return rh.gs(R.string.confirm_remove_multiple_items, selectedItems.size)
+    }
+
 }
