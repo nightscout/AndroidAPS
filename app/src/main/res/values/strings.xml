@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="default_lang" translatable="false">System default</string>
     <string name="en_lang" translatable="false">English</string>
     <string name="cs_lang" translatable="false">Czech</string>
@@ -515,7 +515,7 @@
     <string name="configbuilder_sensitivity">Sensitivity detection</string>
     <string name="configbuilder_sensitivity_description">Which sensitivity algorithm should be used?</string>
     <string name="sensitivity_shortname">SENS</string>
-    <string name="sensitivityoref1">Sensitivity Oref1</string>
+    <string name="sensitivityoref1" tools:ignore="Typos">Sensitivity Oref1</string>
     <string name="sensitivityaaps">Sensitivity AAPS</string>
     <string name="absorptionsettings_title">Absorption settings</string>
 
@@ -1139,5 +1139,5 @@
     <string name="identification">Identification (email, FB or Discord nick etc)</string>
     <string name="identification_not_set">Identification not set in dev mode</string>
     <string name="not_available_full">Not available</string>
-
+    <string name="ntp_URL">time.google.com</string>
 </resources>

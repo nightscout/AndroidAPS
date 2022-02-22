@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.utils
 
 import android.os.SystemClock
+import info.nightscout.androidaps.R
 import javax.inject.Singleton
 import javax.inject.Inject
 import info.nightscout.shared.logging.AAPSLogger
@@ -8,6 +9,7 @@ import java.lang.Exception
 import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.InetAddress
+
 
 /*
  * Copyright (C) 2008 The Android Open Source Project
@@ -101,7 +103,9 @@ class SntpClient @Inject constructor(
 
     fun doNtpTime(callback: Callback) {
         aapsLogger.debug("Time detection started")
-        callback.success = requestTime("time.google.com", 5000)
+
+        //Due to the firewall, Google's NTP website cannot be accessed in China.
+        callback.success = requestTime(R.string.ntp_URL.toString(), 5000)
         callback.time = ntpTime + SystemClock.elapsedRealtime() - ntpTimeReference
         aapsLogger.debug("Time detection ended: " + callback.success + " " + dateUtil.dateAndTimeString(ntpTime))
         callback.run()
