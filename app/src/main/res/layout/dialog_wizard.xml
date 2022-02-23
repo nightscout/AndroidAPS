@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginVertical="6dp"
     android:focusableInTouchMode="true"
     android:minWidth="300dp"
     android:orientation="vertical"
@@ -20,7 +21,6 @@
             android:layout_gravity="center"
             android:background="@drawable/background_total"
             android:orientation="horizontal"
-            android:layout_marginTop="1dp"
             android:padding="5dp">
 
             <ImageView
@@ -108,8 +108,8 @@
                     android:id="@+id/carbs_input"
                     android:layout_width="130dp"
                     android:layout_height="40dp"
-                    android:layout_marginBottom="2dp"
                     android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="2dp"
                     app:customContentDescription="@string/treatments_wizard_carbs_label" />
 
                 <TextView
@@ -246,7 +246,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
         </LinearLayout>
-        
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -262,11 +262,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:scaleX="1.4"
-                android:scaleY="1.4"
                 android:button="@drawable/checkbox_bg_icon"
                 android:checked="true"
-                android:contentDescription="@string/treatments_wizard_bg_label" />
+                android:contentDescription="@string/treatments_wizard_bg_label"
+                android:scaleX="1.4"
+                android:scaleY="1.4" />
 
             <CheckBox
                 android:id="@+id/tt_checkbox_icon"
@@ -274,12 +274,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:scaleX="1.6"
-                android:scaleY="1.6"
                 android:button="@drawable/checkbox_tt_icon"
                 android:checked="true"
-                android:visibility="gone"
-                android:contentDescription="@string/treatments_wizard_tt_label" />
+                android:contentDescription="@string/treatments_wizard_tt_label"
+                android:scaleX="1.6"
+                android:scaleY="1.6"
+                android:visibility="gone" />
 
             <CheckBox
                 android:id="@+id/trend_checkbox_icon"
@@ -287,11 +287,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:scaleX="1.4"
-                android:scaleY="1.4"
                 android:button="@drawable/checkbox_trend_icon"
                 android:checked="true"
-                android:contentDescription="@string/bg_trend_label" />
+                android:contentDescription="@string/bg_trend_label"
+                android:scaleX="1.4"
+                android:scaleY="1.4" />
 
             <CheckBox
                 android:id="@+id/iob_checkbox_icon"
@@ -299,11 +299,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:scaleX="1.4"
-                android:scaleY="1.4"
                 android:button="@drawable/checkbox_iob_icon"
                 android:checked="true"
-                android:contentDescription="@string/iob" />
+                android:contentDescription="@string/iob"
+                android:scaleX="1.4"
+                android:scaleY="1.4" />
 
             <CheckBox
                 android:id="@+id/cob_checkbox_icon"
@@ -311,11 +311,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:scaleX="1.6"
-                android:scaleY="1.6"
                 android:button="@drawable/checkbox_cob_icon"
                 android:checked="true"
-                android:contentDescription="@string/treatments_wizard_cob_label" />
+                android:contentDescription="@string/treatments_wizard_cob_label"
+                android:scaleX="1.6"
+                android:scaleY="1.6" />
 
         </LinearLayout>
 
@@ -338,7 +338,7 @@
                 android:contentDescription="@string/show_calculation"
                 android:drawableEnd="@drawable/ic_visibility" />
 
-           <include
+            <include
                 android:id="@+id/okcancel"
                 layout="@layout/okcancel" />
 
