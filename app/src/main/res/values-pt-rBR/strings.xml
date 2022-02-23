@@ -18,11 +18,13 @@
     <string name="description_food">Exibe as predefinições de comida definidas no Nightscout</string>
     <string name="description_insulin_rapid">Predefinição de Insulina para Humalog e NovoRapid / NovoLog</string>
     <string name="description_insulin_ultra_rapid">Pré-ajuste de Insulina para Fiasp</string>
+    <string name="description_insulin_lyumjev">Configuração pre-definida para a Insulina Lyumyev</string>
     <string name="description_insulin_free_peak">Permite que você defina o pico da atividade de insulina, deve ser usado apenas por usuários avançados</string>
     <string name="description_loop">Ative ou desative a implementação ativando o loop.</string>
     <string name="description_ns_client">Sincroniza seus dados com o Nightscout</string>
     <string name="description_ama">Estado do algoritmo em 2017</string>
     <string name="description_smb">Algoritmo mais recente para usuários avançados</string>
+    <string name="description_smb_dynamic_isf">Algoritmo mais recente para usuários avançados com FS dinâmico/automático</string>
     <string name="description_overview">Exibe o estado atual do seu loop e botões para ações mais comuns</string>
     <string name="description_persistent_notification">Mostra uma notificação em curso com um breve resumo do que o seu loop está a fazer</string>
     <string name="description_profile_local">Defina um perfil que está disponível offline.</string>
