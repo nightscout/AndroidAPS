@@ -426,8 +426,6 @@
     <string name="keep_screen_on_summary">Nu permite telefonului să stingă ecranul. Când este activă, această opțiune consumă foarte multă baterie atunci când telefonul nu este la încărcat.</string>
     <string name="sensitivity_warning">Trebuie introduși toți carbo la pornirea Autosens. În caz contrar, acțiunea carbo va fi percepută ca schimbare a sensibilității!</string>
     <string name="sensitivityweightedaverage">Sensibilitate estimată prin mediere</string>
-    <string name="mdtp_ok">OK</string>
-    <string name="mdtp_cancel">Renunță</string>
     <string name="notloadedplugins">Nu s-au încărcat toate profilurile!</string>
     <string name="valuesnotstored">Nu s-au salvat valorile!</string>
     <string name="ns_localbroadcasts">Activați transmisiunile către alte aplicații (cum ar fi xDrip+). Nu activați dacă aveți mai mult de o instanță de AAPS sau NSClient instalat!</string>
