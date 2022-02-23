@@ -162,7 +162,6 @@
     <string name="end_user_license_agreement">Son Kullanıcı Lisans Sözleşmesi</string>
     <string name="end_user_license_agreement_text">TIBBİ KARAR VERMEK İÇİN KULLANILMAMALIDIR. UYGULANABİLİR YASANIN İZİN VERDİĞİ ÖLÇÜDE, PROGRAM İÇİN GARANTİ YOKTUR. TELİF HAKKI SAHİPLERİNİN VE / VEYA DİĞER TARAFLARIN YAZILI OLMASINA YÖNELİK BAŞKA HİÇBİR ŞEKİLDE BELİRTİLEN VEYA BELİRLİ BİR AMACA UYGUNLUK İLE İLGİLİ ZIMNİ GARANTİLER DE DAHİL OLMAK ÜZERE ANCAK BUNLARLA SINIRLI OLMAMAK ÜZERE AÇIK VEYA ZIMNİ HİÇBİR GARANTİ OLMAKSIZIN “OLDUĞU GİBİ” SAĞLAMAKTADIR. PROGRAMIN KALİTESİ VE PERFORMANSI İLE İLGİLİ TÜM RİSK SİZE AİTTİR. PROGRAMIN HASARLI OLMASI DURUMUNDA, TÜM GEREKLİ SERVİS, ONARIM VEYA DÜZELTME MALİYETİNİ KABUL ETMİŞ OLURSUNUZ.</string>
     <string name="end_user_license_agreement_i_understand">ANLADIM VE KABUL EDİYORUM</string>
-    <string name="save">Kaydet</string>
     <string name="reloadprofile">Profili yeniden yükle</string>
     <string name="smscommunicator">SMS Kominikatör</string>
     <string name="smscommunicator_allowednumbers">İzinli telefon numaraları</string>
@@ -430,14 +429,11 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="keep_screen_on_summary">Android\'in ekranı kapatmasını önleyin. Prize takılı değilken çok fazla enerji tüketir.</string>
     <string name="sensitivity_warning">Otoduyarlılık özelliğini açarsanız tüm yenen karbonhidratları girmeyi unutmayın. Aksi halde, karbonhidrat sapmaları duyarlılık değiştikçe yanlış tanımlanacaktır!!</string>
     <string name="sensitivityweightedaverage">Ağırlıklı ortalama duyarlılık</string>
-    <string name="mdtp_ok">Tamam</string>
-    <string name="mdtp_cancel">Vazgeç</string>
     <string name="notloadedplugins">Tüm profiller yüklenmedi!</string>
     <string name="valuesnotstored">Değerler kaydedilmedi!</string>
     <string name="ns_localbroadcasts">Diğer uygulamalara (xDrip+ gibi) yayınları etkinleştirin. Yüklü birden fazla APPS veya NSClient örneğiniz varsa etkinleştirmeyin!</string>
     <string name="ns_localbroadcasts_title">Yerel yayınları etkinleştirin.</string>
     <string name="openapssmb">OpenAPS SMB</string>
-    <string name="openaps_smb_dynamic_isf">OpenAPS SMB Dinamik İDF</string>
     <string name="enableuam">UAM etkinleştir</string>
     <string name="enablesmb">SMB (Super Micro Bolus) etkinleştir</string>
     <string name="enablesmb_summary">Daha hızlı bir etki için geçici bazal yerine Super Micro Bolus kullanın</string>
