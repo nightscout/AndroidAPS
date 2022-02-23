@@ -426,8 +426,6 @@
     <string name="keep_screen_on_summary">Impedir Android de desligar o ecrã. Isto irá consumir muita bateria quando não ligado ao carregador.</string>
     <string name="sensitivity_warning">Ao activar a função Autosense lembre-se de introduzir todos os hidratos de carbono (HC) que comeu. Caso contrário os desvios de hidratos serão erroneamente identificados como uma variação da sensibilidade !!</string>
     <string name="sensitivityweightedaverage">Média ponderada da Sensibilidade</string>
-    <string name="mdtp_ok">OK</string>
-    <string name="mdtp_cancel">Cancelar</string>
     <string name="notloadedplugins">Nem todos perfis foram carregados!</string>
     <string name="valuesnotstored">Valores não guardados!</string>
     <string name="ns_localbroadcasts">Activar transmissões para outras aplicações (como xDrip+). Não habilite se tiver mais de uma instância de AAPS ou ClienteNS instalado!</string>
