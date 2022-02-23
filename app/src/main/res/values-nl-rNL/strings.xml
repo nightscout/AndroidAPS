@@ -428,8 +428,6 @@
     <string name="keep_screen_on_summary">Voorkomen dat Android het scherm uitschakelt. Dit kost veel accuvoeding als je de telefoon niet aan de oplader hebt.</string>
     <string name="sensitivity_warning">Bij het gebruik van Autosense, vergeet niet alle opgenomen koolhydraten in te geven. Anders zullen BG wijzigingen door maaltijden foutief geïnterpreteerd worden !!</string>
     <string name="sensitivityweightedaverage">Gemiddelde gevoeligheid</string>
-    <string name="mdtp_ok">OK</string>
-    <string name="mdtp_cancel">Afbreken</string>
     <string name="notloadedplugins">Niet alle profielen zijn geladen!</string>
     <string name="valuesnotstored">Waarden niet opgeslagen!</string>
     <string name="ns_localbroadcasts">Schakel lokaal data delen met andere apps (zoals xDrip) in. Schakel dit niet in als er meer dan één installatie van AAPS of NSClient zijn geinstalleerd!</string>
