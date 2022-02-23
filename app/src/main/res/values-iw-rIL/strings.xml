@@ -428,8 +428,6 @@
     <string name="keep_screen_on_summary">מניעת כיבוי המסך. הדבר צורך הרבה כח סוללה.</string>
     <string name="sensitivity_warning">בהפעלת פונקציית ה-Autosens יש לזכור שחייבים להזין למערכת את כל הפחמימות שנאכלו. אחרת פחמימות לא יזוהו נכון כשינוי ברגישות!</string>
     <string name="sensitivityweightedaverage">רגישות משוקללת ממוצעת</string>
-    <string name="mdtp_ok">אישור</string>
-    <string name="mdtp_cancel">ביטול</string>
     <string name="notloadedplugins">לא כל הפרופילים נטענו!</string>
     <string name="valuesnotstored">הערכים לא נשמרו</string>
     <string name="ns_localbroadcasts">אפשר הפצה לאפליקציות אחרות (כגון xDrip). אין להפעיל אם מותקן לכם יותר ממופע אחד של AAPS או NSClient!</string>
