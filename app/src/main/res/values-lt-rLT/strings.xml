@@ -426,8 +426,6 @@
     <string name="keep_screen_on_summary">Neleidžia Android sistemai išjungti ekrano. Naudojama daug energijos, jei telefonas neprijungtas prie maitinimo šaltinio.</string>
     <string name="sensitivity_warning">Įjungę Autosens funkciją nepamirškite įvedinėti visus valgomus angliavandenius. To nedarant, angliavandenių sukeliami gliukozės svyravimai bus klaidingai identifikuojami kaip jautrumo pasikeitimai!</string>
     <string name="sensitivityweightedaverage">Jautrumas pagal svertinį vidurkį</string>
-    <string name="mdtp_ok">OK</string>
-    <string name="mdtp_cancel">Atšaukti</string>
     <string name="notloadedplugins">Ne visi profiliai įkelti!</string>
     <string name="valuesnotstored">Reikšmės neišsaugotos!</string>
     <string name="ns_localbroadcasts">Įgalinti perdavimą į kitas programas (pvz., xDrip+). Neįgalinkite, jei įdiegta daugiau nei vienas AAPS arba NSClient egzempliorius!</string>
