@@ -231,6 +231,8 @@
 <attr name="dialogTitleBackground" format="reference" />
 <attr name="dialogTitleColor" format="reference" />
 <attr name="dialogTitleIconTint" format="reference" />
+<attr name="fortyfiveup" format="reference" />
+
 
 <declare-styleable name="NumberPicker">
 <attr name="customContentDescription" format="string" />

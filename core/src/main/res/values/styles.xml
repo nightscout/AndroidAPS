@@ -253,6 +253,7 @@
         <item name="profilSwitch" >@color/black</item>
         <item name="automationTitleText" >@color/white</item>
         <item name="automationSelectedItemBackground" >@color/gray</item>
+        <item name="fortyfiveup" >@color/darkgrayVariant</item>
         <item name="objectivesBackground" >@color/darkgrayVariant</item>
         <item name="extendedBolus" >@color/cyan</item>
         <item name="TitleAndLabelTextColor" >@color/white</item>
