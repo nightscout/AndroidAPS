@@ -161,7 +161,6 @@
     <string name="end_user_license_agreement">лицензионное соглашение с пользователем</string>
     <string name="end_user_license_agreement_text">НЕ ДОЛЖНО ИСПОЛЬЗОВАТЬСЯ ДЛЯ ПРИНЯТИЯ МЕДИЦИНСКИХ РЕШЕНИЙ. ПРОГРАММА НЕ ДАЕТ ГАРАНТИЙ В РАМКАХ СУЩЕСТВУЮЩЕГО ЗАКОНОДАТЕЛЬСТВА. ПРЕДОСТАВЛЯЕТСЯ \"КАК ЕСТЬ\" БЕЗ ЯВНЫХ ИЛИ СКРЫТЫХ ГАРАНТИЙ ВКЛЮЧАЯ НО НЕ ОГРАНИЧИВАЯСЬ ВОЗМОЖНОСТЬЮ КОММЕРЧЕСКОГО ИСПОЛЬЗОВАНИ ИЛИ СООТВЕТСТВИЯ КАКИМ-ЛИБО ЦЕЛЯМ. ВСЕ РИСКИ ЛОЖАТСЯ НА ВАС. В СЛУЧАЕ НЕРАБОТОСПОСОБНОСТИ ПРОГРАММЫ ВЫ НЕСЕТЕ ВСЕ РАСХОДЫ СВЯЗАННЫЕ С ОБСЛУЖИВАНИЕМ РЕМОНТОМ ИЛИ КОРРЕКТИРОВКОЙ.  </string>
     <string name="end_user_license_agreement_i_understand">я понимаю и принимаю</string>
-    <string name="save">сохранить</string>
     <string name="reloadprofile">обновить профиль</string>
     <string name="smscommunicator">SMS коммуникатор</string>
     <string name="smscommunicator_allowednumbers">разрешенные телефонные номера</string>
@@ -426,8 +425,6 @@
     <string name="keep_screen_on_summary">Не давать системе Android отключать экран. Это увеличит потребление энергии при отключенной сети питания.</string>
     <string name="sensitivity_warning">Активируя Autosense не забывайте вводить все съеденные углеводы. Иначе отклонения в углеводах будут неверно определены как изменение чувствительности !!</string>
     <string name="sensitivityweightedaverage">Средневзвешенная чувствительность</string>
-    <string name="mdtp_ok">OK</string>
-    <string name="mdtp_cancel">отмена</string>
     <string name="notloadedplugins">не все профили загружены!</string>
     <string name="valuesnotstored">Данные не сохранены!</string>
     <string name="ns_localbroadcasts">Включить трансляцию для других приложений (например, xDrip). Не включайте, если установлено несколько экземпляров приложений AAPS или NSClient!</string>
