@@ -171,7 +171,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
             holder.binding.duration.text = if (therapyEvent.duration == 0L) "" else dateUtil.niceTimeScalar(therapyEvent.duration, rh)
             holder.binding.note.text = therapyEvent.note
             holder.binding.type.text = translator.translate(therapyEvent.type)
-            holder.binding.cbRemove.visibility = (therapyEvent.isValid && (removeActionMode != null)).toVisibility()
+            holder.binding.cbRemove.visibility = (therapyEvent.isValid && removeActionMode != null).toVisibility()
             holder.binding.cbRemove.setOnCheckedChangeListener { _, value ->
                 if (value) {
                     selectedItems.add(therapyEvent)
@@ -193,7 +193,6 @@ class TreatmentsCareportalFragment : DaggerFragment() {
 
     }
 
-    
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_treatments_careportal, menu)
         super.onCreateOptionsMenu(menu, inflater)
@@ -208,8 +207,8 @@ class TreatmentsCareportalFragment : DaggerFragment() {
         return super.onPrepareOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
             R.id.nav_remove_items          -> {
                 removeActionMode = toolbar?.startActionMode(RemoveActionModeCallback())
                 true
@@ -239,7 +238,6 @@ class TreatmentsCareportalFragment : DaggerFragment() {
 
             else                           -> false
         }
-    }
 
     inner class RemoveActionModeCallback : ActionMode.Callback {
 
