@@ -81,6 +81,7 @@
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>
+    <string name="a11y_autosenslabel">חישוב רגישות אוטומטי (Autosens)</string>
     <string name="deltacompared">%3$s %1$s %2$s</string>
     <string name="deltalabel">הפרש רמת סוכר</string>
     <string name="deltalabel_u">הפרש רמת סוכר [%1$s]</string>

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="objectives_maxbasal_objective">Entendendo o seu loop aberto, incluindo as suas recomendações de basais temporárias</string>
+    <string name="objectives_maxbasal_gate">Com base nessa experiência, decidir qual deve ser a basal máximo e configurá-lo na bomba e nas preferências</string>
     <string name="objectives_auto_gate">Leia os documentos de como a automação funciona. Configure suas primeiras regras simples. Em vez de efetuar uma ação deixe AAPS apresentar apenas uma notificação. Quando você tiver certeza de que a automação é acionada no momento certo substitua a notificação por uma ação real. (https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">Glicose disponível no NS</string>
     <string name="objectives_pumpstatusavailableinns">Status da Bomba disponível no NS</string>

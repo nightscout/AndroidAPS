@@ -48,6 +48,11 @@
     <string name="isf_label">ISF</string>
     <string name="basal_label">Basaal</string>
     <string name="target_label">Streefdoel</string>
+    <string name="dia_long_label">Duur van insuline activiteit</string>
+    <string name="ic_long_label">Insuline - Koolhydraat ratio</string>
+    <string name="isf_long_label">Insuline gevoeligheidsfactor</string>
+    <string name="basal_long_label">Basaalstand</string>
+    <string name="target_long_label">Bloedglucose doelwaarde</string>
     <string name="initializing">Initialiseren...</string>
     <string name="serialnumber">Serie nummer</string>
     <string name="battery_label">Batterij</string>
@@ -105,6 +110,7 @@
     <string name="notes_label">Notities</string>
     <string name="remove_button">Verwijder</string>
     <string name="addnew">Voeg nieuw toe</string>
+    <string name="addnew_above">Voeg nieuw hierboven toe</string>
     <string name="wrong_pump_data">Data komt van een andere pomp. Wijzig de pomp driver om de pomp status te resetten.</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Beperken van basaal tot max %1$.2f E/uur wegens de %2$s</string>
@@ -127,6 +133,7 @@
     <string name="location_not_found_message">Om Bluetooth discovery met nieuwere apparaten te laten werken moet locatie worden ingeschakeld. AAPS volgt je locatie niet en locatie kan ook weer worden uitgeschakeld nadat het koppelen is gelukt.</string>
     <!--    DateUtil-->
     <string name="minago">%1$d m geleden</string>
+    <string name="minago_long">%1$d minuten geleden</string>
     <string name="hoursago">%1$.1f u geleden</string>
     <string name="shorthour">u</string>
     <string name="days">dagen</string>
@@ -440,6 +447,8 @@
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="pump_paired" comment="26 characters max for translation">Pomp gekoppeld</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight actualiseren knop</string>
+    <string name="a11y_min_button_description">verlaag %1$s met %2$s</string>
+    <string name="a11y_plus_button_description">verhoog %1$s met %2$s</string>
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagen</item>

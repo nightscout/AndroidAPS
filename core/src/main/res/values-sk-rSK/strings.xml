@@ -48,6 +48,11 @@
     <string name="isf_label">Citlivosť</string>
     <string name="basal_label">Bazál</string>
     <string name="target_label">Cieľ</string>
+    <string name="dia_long_label">Doba pôsobenia inzulínu</string>
+    <string name="ic_long_label">Inzulíno-sacharidový pomer</string>
+    <string name="isf_long_label">Citlivosť na inzulín</string>
+    <string name="basal_long_label">Bazál</string>
+    <string name="target_long_label">Cieľová glykémia</string>
     <string name="initializing">Inicializácia ...</string>
     <string name="serialnumber">Sériové číslo</string>
     <string name="battery_label">Batéria</string>
@@ -105,6 +110,7 @@
     <string name="notes_label">Poznámky</string>
     <string name="remove_button">Vymazať</string>
     <string name="addnew">Pridať nový</string>
+    <string name="addnew_above">Pridať novú nad</string>
     <string name="wrong_pump_data">Dáta prichádzajú z inej pumpy. Zmeňte ovládač pre obnovenie stavu pumpy.</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Max bazál obmedzený na %1$.2f JI/h: %2$s</string>
@@ -127,6 +133,7 @@
     <string name="location_not_found_message">Pre vyhľadanie Bluetooth zariadení na novších telefónoch musí byť povolené zisťovanie polohy. AAPS vás nesleduje a po úspešnom spárovaní môžete túto voľbu opäť zakázať.</string>
     <!--    DateUtil-->
     <string name="minago">pred %1$d min</string>
+    <string name="minago_long">pred %1$d minútami</string>
     <string name="hoursago">pred %1$.1f h</string>
     <string name="shorthour">h</string>
     <string name="days">dní</string>
@@ -440,6 +447,8 @@
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="pump_paired" comment="26 characters max for translation">Pumpa spárovaná</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight Tlačítko Obnoviť</string>
+    <string name="a11y_min_button_description">zníženie %1$s o %2$s</string>
+    <string name="a11y_plus_button_description">zvýšenie %1$s o %2$s</string>
     <plurals name="days">
         <item quantity="one">%1$d deň</item>
         <item quantity="few">%1$d dní</item>
