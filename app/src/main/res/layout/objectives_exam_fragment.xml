@@ -44,7 +44,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/exam_reset"
-                style="@style/OkCancelButton"
+                style="@style/OkCancelButton.Text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/reset" />
@@ -57,14 +57,14 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/close"
-                style="@style/OkCancelButton"
+                style="@style/OkCancelButton.Text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/close" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/exam_verify"
-                style="@style/OkCancelButton"
+                style="@style/OkCancelButton.Text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/objectives_button_verify" />
@@ -124,7 +124,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/back_button"
-                style="@style/OkCancelButton"
+                style="@style/OkCancelButton.Text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/previous_button" />
@@ -137,14 +137,14 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/next_button"
-                style="@style/OkCancelButton"
+                style="@style/OkCancelButton.Text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/next_button" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/next_unanswered_button"
-                style="@style/OkCancelButton"
+                style="@style/OkCancelButton.Text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/unfinshed_button" />

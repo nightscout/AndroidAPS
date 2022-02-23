@@ -55,7 +55,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/verify"
-            style="@style/OkCancelButton"
+            style="@style/OkCancelButton.Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
@@ -63,7 +63,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/start"
-            style="@style/OkCancelButton"
+            style="@style/OkCancelButton.Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
@@ -71,7 +71,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/unfinish"
-            style="@style/OkCancelButton"
+            style="@style/OkCancelButton.Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
@@ -79,7 +79,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/unstart"
-            style="@style/OkCancelButton"
+            style="@style/OkCancelButton.Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
@@ -113,7 +113,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/enterbutton"
-                style="@style/OkCancelButton"
+                style="@style/OkCancelButton.Text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/objectives_button_enter" />
