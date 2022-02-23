@@ -191,7 +191,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
             holder.binding.emulatedSuspendFlag.visibility = (tempBasal.type == TemporaryBasal.Type.EMULATED_PUMP_SUSPEND).toVisibility()
             holder.binding.superBolusFlag.visibility = (tempBasal.type == TemporaryBasal.Type.SUPERBOLUS).toVisibility()
             if (abs(iob.basaliob) > 0.01) holder.binding.iob.setTextColor(rh.gc(R.color.colorActive)) else holder.binding.iob.setTextColor(holder.binding.duration.currentTextColor)
-            holder.binding.cbRemove.visibility = (tempBasal.isValid && (removeActionMode != null)).toVisibility()
+            holder.binding.cbRemove.visibility = (tempBasal.isValid && removeActionMode != null).toVisibility()
             holder.binding.cbRemove.setOnCheckedChangeListener { _, value ->
                 if (value) {
                     selectedItems.add(tempBasal)
@@ -226,8 +226,8 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
         return super.onPrepareOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
             R.id.nav_remove_items -> {
                 removeActionMode = toolbar?.startActionMode(RemoveActionModeCallback())
                 true
@@ -247,7 +247,6 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
 
             else -> false
         }
-    }
 
     inner class RemoveActionModeCallback : ActionMode.Callback {
 

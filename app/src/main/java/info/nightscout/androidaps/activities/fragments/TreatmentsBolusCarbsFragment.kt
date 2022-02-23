@@ -86,7 +86,6 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
     private var showInvalidated = false
     private var removeActionMode: ActionMode? = null
 
-    // val TAG = "TreatmentMenu"
     private var toolbar: Toolbar? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
@@ -128,34 +127,35 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
     fun swapAdapter() {
         val now = System.currentTimeMillis()
 
-        disposable += if (showInvalidated)
-            carbsMealLinksWithInvalid(now)
-                .zipWith(bolusMealLinksWithInvalid(now)) { first, second -> first + second }
-                .zipWith(calcResultMealLinksWithInvalid(now)) { first, second -> first + second }
-                .map { ml ->
-                    ml.sortedByDescending {
-                        it.carbs?.timestamp ?: it.bolus?.timestamp
-                        ?: it.bolusCalculatorResult?.timestamp
+        disposable += 
+            if (showInvalidated)
+                carbsMealLinksWithInvalid(now)
+                    .zipWith(bolusMealLinksWithInvalid(now)) { first, second -> first + second }
+                    .zipWith(calcResultMealLinksWithInvalid(now)) { first, second -> first + second }
+                    .map { ml ->
+                        ml.sortedByDescending {
+                            it.carbs?.timestamp ?: it.bolus?.timestamp
+                            ?: it.bolusCalculatorResult?.timestamp
+                        }
                     }
-                }
-                .observeOn(aapsSchedulers.main)
-                .subscribe { list ->
-                    binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true)
-                }
-        else
-            carbsMealLinks(now)
-                .zipWith(bolusMealLinks(now)) { first, second -> first + second }
-                .zipWith(calcResultMealLinks(now)) { first, second -> first + second }
-                .map { ml ->
-                    ml.sortedByDescending {
-                        it.carbs?.timestamp ?: it.bolus?.timestamp
-                        ?: it.bolusCalculatorResult?.timestamp
+                    .observeOn(aapsSchedulers.main)
+                    .subscribe { list ->
+                        binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true)
                     }
-                }
-                .observeOn(aapsSchedulers.main)
-                .subscribe { list ->
-                    binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true)
-                }
+            else
+                carbsMealLinks(now)
+                    .zipWith(bolusMealLinks(now)) { first, second -> first + second }
+                    .zipWith(calcResultMealLinks(now)) { first, second -> first + second }
+                    .map { ml ->
+                        ml.sortedByDescending {
+                            it.carbs?.timestamp ?: it.bolus?.timestamp
+                            ?: it.bolusCalculatorResult?.timestamp
+                        }
+                    }
+                    .observeOn(aapsSchedulers.main)
+                    .subscribe { list ->
+                        binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true)
+                    }
 
     }
 
@@ -262,10 +262,10 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                 }
                 removeActionMode?.title = rh.gs(R.string.count_selected, selectedItems.size)
             }
-            holder.binding.cbBolusRemove.visibility = ((ml.bolus?.isValid == true) && (removeActionMode != null)).toVisibility()
+            holder.binding.cbBolusRemove.visibility = ((ml.bolus?.isValid == true) && removeActionMode != null).toVisibility()
             holder.binding.cbBolusRemove.setOnCheckedChangeListener(onChange)
 
-            holder.binding.cbCarbsRemove.visibility = (ml.carbs?.isValid == true && (removeActionMode != null)).toVisibility()
+            holder.binding.cbCarbsRemove.visibility = (ml.carbs?.isValid == true && removeActionMode != null).toVisibility()
             holder.binding.cbCarbsRemove.setOnCheckedChangeListener(onChange)
 
             holder.binding.calculation.tag = ml
@@ -310,8 +310,8 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
         return super.onPrepareOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
             R.id.nav_remove_items     -> {
                 removeActionMode = toolbar?.startActionMode(RemoveActionModeCallback())
                 true
@@ -335,15 +335,14 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
             }
 
             R.id.nav_refresh_ns       -> {
-                refreshFromNightScout()
+                refreshFromNightscout()
                 true
             }
 
             else                      -> false
         }
-    }
 
-    private fun refreshFromNightScout() {
+    private fun refreshFromNightscout() {
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, rh.gs(R.string.refresheventsfromnightscout) + "?") {
                 uel.log(Action.TREATMENTS_NS_REFRESH, Sources.Treatments)
@@ -457,13 +456,11 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
             val mealLink = selectedItems.first()
             val bolus = mealLink.bolus
             if (bolus != null)
-                return rh.gs(R.string.configbuilder_insulin) + ": " +
-                    rh.gs(R.string.formatinsulinunits, bolus.amount) + "\n" +
+                return rh.gs(R.string.configbuilder_insulin) + ": " + rh.gs(R.string.formatinsulinunits, bolus.amount) + "\n" +
                     rh.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(bolus.timestamp)
             val carbs = mealLink.carbs
             if (carbs != null)
-                return rh.gs(R.string.carbs) + ": " +
-                    rh.gs(R.string.carbs) + ": " + rh.gs(R.string.format_carbs, carbs.amount.toInt()) + "\n" +
+                return rh.gs(R.string.carbs) + ": " + rh.gs(R.string.format_carbs, carbs.amount.toInt()) + "\n" +
                     rh.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(carbs.timestamp)
         }
         return rh.gs(R.string.confirm_remove_multiple_items, selectedItems.size)
@@ -499,9 +496,6 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                                 )
                         }
                     }
-                    selectedItems = mutableListOf()
-                }, Runnable {
-                    selectedItems = mutableListOf()
                 })
             }
     }

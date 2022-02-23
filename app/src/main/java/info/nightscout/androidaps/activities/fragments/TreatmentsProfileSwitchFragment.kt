@@ -188,7 +188,8 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
             holder.binding.date.text = dateUtil.dateString(profileSwitch.timestamp)
             holder.binding.time.text = dateUtil.timeString(profileSwitch.timestamp)
             holder.binding.duration.text = rh.gs(R.string.format_mins, T.msecs(profileSwitch.duration ?: 0L).mins())
-            holder.binding.name.text = if (profileSwitch is ProfileSealed.PS) profileSwitch.value.getCustomizedName() else if (profileSwitch is ProfileSealed.EPS) profileSwitch.value.originalCustomizedName else ""
+            holder.binding.name.text = if (profileSwitch is ProfileSealed.PS) profileSwitch.value.getCustomizedName() 
+                else if (profileSwitch is ProfileSealed.EPS) profileSwitch.value.originalCustomizedName else ""
             if (profileSwitch.isInProgress(dateUtil)) holder.binding.date.setTextColor(rh.gc(R.color.colorActive))
             else holder.binding.date.setTextColor(holder.binding.duration.currentTextColor)
             holder.binding.clone.tag = profileSwitch
@@ -282,8 +283,8 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
         return super.onPrepareOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
             R.id.nav_remove_items -> {
                 removeActionMode = toolbar?.startActionMode(RemoveActionModeCallback())
                 true
@@ -308,7 +309,6 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
 
             else -> false
         }
-    }
 
     inner class RemoveActionModeCallback : ActionMode.Callback {
 

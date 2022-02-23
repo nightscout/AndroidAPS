@@ -173,7 +173,7 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
             val tempTarget = tempTargetList[position]
             holder.binding.ns.visibility = (tempTarget.interfaceIDs.nightscoutId != null).toVisibility()
             holder.binding.invalid.visibility = tempTarget.isValid.not().toVisibility()
-            holder.binding.cbRemove.visibility = (tempTarget.isValid && (removeActionMode != null)).toVisibility()
+            holder.binding.cbRemove.visibility = (tempTarget.isValid && removeActionMode != null).toVisibility()
             holder.binding.cbRemove.setOnCheckedChangeListener { _, value ->
                 if (value) {
                     selectedItems.add(tempTarget)
@@ -211,7 +211,6 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
     }
 
     private fun removeSelected() {
-        // TODO check if item should not be delete val profile = profileFunction.getProfile(dateUtil.now()) == null
         if (selectedItems.size > 0)
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord), getConfirmationText(), Runnable {
@@ -247,8 +246,8 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
         return super.onPrepareOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
             R.id.nav_remove_items -> {
                 removeActionMode = toolbar?.startActionMode(RemoveActionModeCallback())
                 true
@@ -273,7 +272,6 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
 
             else -> false
         }
-    }
 
     inner class RemoveActionModeCallback : ActionMode.Callback {
 

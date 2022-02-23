@@ -53,8 +53,7 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
     private var showLoop = false
     private var _binding: TreatmentsUserEntryFragmentBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
+    // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
@@ -164,8 +163,8 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
         return super.onPrepareOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
             R.id.nav_show_loop -> {
                 showLoop = true
                 rxBus.send(EventTreatmentUpdateGui())
@@ -185,5 +184,4 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
 
             else               -> false
         }
-    }
 }

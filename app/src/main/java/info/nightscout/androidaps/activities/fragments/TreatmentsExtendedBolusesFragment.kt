@@ -67,7 +67,6 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
     private var showInvalidated = false
     private var removeActionMode: ActionMode? = null
     private var toolbar: Toolbar? = null
-    // val TAG = "TreatmentMenu"
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         TreatmentsExtendedbolusFragmentBinding.inflate(inflater, container, false).also { _binding = it }.root
@@ -149,7 +148,7 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
             holder.binding.iob.text = rh.gs(R.string.formatinsulinunits, iob.iob)
             holder.binding.ratio.text = rh.gs(R.string.pump_basebasalrate, extendedBolus.rate)
             if (iob.iob != 0.0) holder.binding.iob.setTextColor(rh.gc(R.color.colorActive)) else holder.binding.iob.setTextColor(holder.binding.insulin.currentTextColor)
-            holder.binding.cbRemove.visibility = (extendedBolus.isValid && (removeActionMode != null)).toVisibility()
+            holder.binding.cbRemove.visibility = (extendedBolus.isValid && removeActionMode != null).toVisibility()
             holder.binding.cbRemove.setOnCheckedChangeListener { _, value ->
                 if (value) {
                     selectedItems.add(extendedBolus)
