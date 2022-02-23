@@ -43,6 +43,7 @@ import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus
 import info.nightscout.androidaps.plugins.general.tidepool.TidepoolPlugin
 import info.nightscout.androidaps.plugins.general.wear.WearPlugin
 import info.nightscout.androidaps.plugins.pump.combo.ComboPlugin
+import info.nightscout.androidaps.plugins.pump.combov2.ComboV2Plugin
 import info.nightscout.androidaps.plugins.pump.eopatch.EopatchPumpPlugin
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
@@ -92,6 +93,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var danaRv2Plugin: DanaRv2Plugin
     @Inject lateinit var danaRSPlugin: DanaRSPlugin
     @Inject lateinit var comboPlugin: ComboPlugin
+    @Inject lateinit var combov2Plugin: ComboV2Plugin
     @Inject lateinit var insulinOrefFreePeakPlugin: InsulinOrefFreePeakPlugin
     @Inject lateinit var loopPlugin: LoopPlugin
     @Inject lateinit var localInsightPlugin: LocalInsightPlugin
@@ -205,6 +207,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             addPreferencesFromResourceIfEnabled(danaRSPlugin, rootKey, config.PUMPDRIVERS)
             addPreferencesFromResourceIfEnabled(localInsightPlugin, rootKey, config.PUMPDRIVERS)
             addPreferencesFromResourceIfEnabled(comboPlugin, rootKey, config.PUMPDRIVERS)
+            addPreferencesFromResourceIfEnabled(combov2Plugin, rootKey, config.PUMPDRIVERS)
             addPreferencesFromResourceIfEnabled(medtronicPumpPlugin, rootKey, config.PUMPDRIVERS)
             addPreferencesFromResourceIfEnabled(diaconnG8Plugin, rootKey, config.PUMPDRIVERS)
             addPreferencesFromResourceIfEnabled(eopatchPumpPlugin, rootKey, config.PUMPDRIVERS)

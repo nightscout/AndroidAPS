@@ -189,6 +189,7 @@ dependencies {
     implementation project(':implementation')
     implementation project(':database')
     implementation project(':pump:combo')
+    implementation project(':pump:combov2')
     implementation project(':pump:dana')
     implementation project(':pump:danars')
     implementation project(':pump:danar')

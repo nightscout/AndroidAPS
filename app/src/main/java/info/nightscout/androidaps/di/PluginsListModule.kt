@@ -28,6 +28,7 @@ import info.nightscout.androidaps.plugins.general.tidepool.TidepoolPlugin
 import info.nightscout.androidaps.plugins.general.wear.WearPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.pump.combo.ComboPlugin
+import info.nightscout.androidaps.plugins.pump.combov2.ComboV2Plugin
 import info.nightscout.androidaps.plugins.pump.eopatch.EopatchPumpPlugin
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
@@ -423,6 +424,12 @@ abstract class PluginsListModule {
     @IntoMap
     @IntKey(500)
     abstract fun bindThemeSwitcherPlugin(plugin: ThemeSwitcherPlugin): PluginBase
+
+    @Binds
+    @PumpDriver
+    @IntoMap
+    @IntKey(510)
+    abstract fun bindComboV2Plugin(plugin: ComboV2Plugin): PluginBase
 
     @Qualifier
     annotation class AllConfigs

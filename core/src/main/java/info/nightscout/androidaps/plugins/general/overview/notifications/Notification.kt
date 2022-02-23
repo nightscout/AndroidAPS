@@ -131,6 +131,8 @@ open class Notification {
         const val IDENTIFICATION_NOT_SET = 77
         const val PERMISSION_BT = 78
         const val EOELOW_PATCH_ALERTS = 79
+        const val COMBO_PUMP_SUSPENDED = 80
+        const val COMBO_UNKNOWN_TBR = 81
 
         const val USER_MESSAGE = 1000
 
