@@ -363,8 +363,6 @@
     <string name="keep_screen_on_summary">Impedir Android de desligar o ecrã. Isto irá consumir muita bateria quando não ligado ao carregador.</string>
     <string name="sensitivity_warning">Ao ativar a função Autosense lembre-se de introduzir todos os carboidratos (carbs) que comeu. Caso contra contrário os desvios de carbs serão erroneamente identificados como uma variação da sensibilidade!!</string>
     <string name="sensitivityweightedaverage">Média ponderada da Sensibilidade</string>
-    <string name="mdtp_ok">OK</string>
-    <string name="mdtp_cancel">Cancelar</string>
     <string name="notloadedplugins">Nem todos perfis foram carregados!</string>
     <string name="valuesnotstored">Valores não guardados!</string>
     <string name="ns_localbroadcasts_title">Ativar partilha local.</string>
