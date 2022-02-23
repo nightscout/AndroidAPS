@@ -310,8 +310,6 @@
     <string name="keep_screen_on_summary">Verhoed dat Android skerm afskakel. Dit sal baie meer energie vereis wanneer nie in krag prop is nie.</string>
     <string name="sensitivity_warning">Deur Autosense aan te skakel onthou om alle koolhidrate in te voer Andersins sal koolhidrate dwalinge verkeerdelik geïdentifiseer word as sensitiwiteit veranderinge!!</string>
     <string name="sensitivityweightedaverage">Sensitiwiteit GeweegdeGemiddelde</string>
-    <string name="mdtp_ok">OK</string>
-    <string name="mdtp_cancel">Kanselleer</string>
     <string name="notloadedplugins">Nie alle profiele gelaai!</string>
     <string name="valuesnotstored">Waardes nie gestoor!</string>
     <string name="ns_localbroadcasts_title">Aktiveer plaaslike Uitsaai.</string>
