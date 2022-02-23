@@ -428,8 +428,6 @@
     <string name="keep_screen_on_summary">Zabrániť Androidu, aby zhasínal obrazovku. Bez pripojenia nabíjačky vybije veľmi rýchlo batériu!</string>
     <string name="sensitivity_warning">Pri zapnutej automatickej detekcii citlivosti, nezabudnite vkladať všetky prijaté sacharidy. V opačnom prípade, budú odchýlky mylne vyhodnocované, ako zmena citlivosti !!</string>
     <string name="sensitivityweightedaverage">Citlivosť vážený priemer</string>
-    <string name="mdtp_ok">OK</string>
-    <string name="mdtp_cancel">Zrušiť</string>
     <string name="notloadedplugins">Nenačítané všetky profily!</string>
     <string name="valuesnotstored">Hodnoty nie sú uložené!</string>
     <string name="ns_localbroadcasts">Povoliť vysielanie do iných aplikácií (napr. xDrip+). Nepovoľujte, pokiaľ máte nainštalovanú viac ako jednu AAPS, alebo NSClient inštanciu!</string>
