@@ -125,7 +125,9 @@ class WizardDialog : DaggerDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         loadCheckedStates()
         processCobCheckBox()
-        binding.sbCheckbox.visibility = sp.getBoolean(R.string.key_usesuperbolus, false).toVisibility()
+        val useSuperBolus = sp.getBoolean(R.string.key_usesuperbolus, false)
+        binding.sbCheckbox.visibility = useSuperBolus.toVisibility()
+        binding.superBolusRow.visibility = useSuperBolus.toVisibility()
         binding.notesLayout.visibility = sp.getBoolean(R.string.key_show_notes_entry_dialogs, false).toVisibility()
 
         val maxCarbs = constraintChecker.getMaxCarbsAllowed().value()
