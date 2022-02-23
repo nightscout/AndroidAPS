@@ -32,6 +32,7 @@
     <string name="objectives2_internalstorage">Seu arquivo de configurações foi encontrado no armazenamento interno/AAPS/preferências do seu telefone.</string>
     <string name="objectives2_cloud">Copie seu arquivo de preferências para um local seguro fora de seu telefone (por exemplo, usando uma unidade na nuvem, conectando um cabo a um computador, e-mail, etc.)</string>
     <string name="objectives2_easyrestore">Se seu telefone ficar danificado ou se você perder-lo, existem maneiras fáceis de recuperar suas configurações remotamente sem um backup local.</string>
+    <string name="noisycgm_label">Leituras do CGM imprecisas</string>
     <string name="noisycgm_whattodo">O que deve ser feito se os dados do CGM são irregulares?</string>
     <string name="breadgrams_calc">Se os níveis de glicose no sangue estiverem fora dos limites aceitáveis (muito baixo ou muito alto) a calculadora de bolus pode ser usada para fornecer sugestões para correções de carboidrato ou insulina.</string>
     <string name="breadgrams_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
