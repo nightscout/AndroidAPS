@@ -430,8 +430,6 @@ Eversense-appen.</string>
     <string name="keep_screen_on_summary">Förhindrar att skärmen stängs av. Förbrukar mer batteri.</string>
     <string name="sensitivity_warning">Genom att slå på Autosens funktionen, kom ihåg att skriva in alla KH. Annars kommer programmet göra fel i beräkningar av känslighet (ISF)!!</string>
     <string name="sensitivityweightedaverage">WeightedAverage</string>
-    <string name="mdtp_ok">OK</string>
-    <string name="mdtp_cancel">Avbryt</string>
     <string name="notloadedplugins">Alla profiler laddades inte!</string>
     <string name="valuesnotstored">Alla värden sparades inte!</string>
     <string name="ns_localbroadcasts">Aktivera sändning till andra appar (som xDrip+) på denna telefon. Aktivera inte detta om du har fler än en förekomst av AAPS eller NSClient installerad!</string>
