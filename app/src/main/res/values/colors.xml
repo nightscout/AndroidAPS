@@ -50,6 +50,6 @@
     <color name="deviationred">#72FF0000</color>
     <color name="deviationblack">#72000000</color>
 
-    <color name="splashBackground">#2E2E2E</color>
+    <color name="splashBackground">#000000</color>
 
 </resources>

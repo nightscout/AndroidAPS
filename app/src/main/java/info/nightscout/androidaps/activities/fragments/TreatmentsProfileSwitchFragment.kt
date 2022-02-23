@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.activities.fragments.TreatmentsProfileSwitchFragment.RecyclerProfileViewAdapter.ProfileSwitchViewHolder
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.UserEntry.Action
@@ -18,20 +19,17 @@ import info.nightscout.androidaps.database.transactions.InvalidateProfileSwitchT
 import info.nightscout.androidaps.databinding.TreatmentsProfileswitchFragmentBinding
 import info.nightscout.androidaps.databinding.TreatmentsProfileswitchItemBinding
 import info.nightscout.androidaps.dialogs.ProfileViewerDialog
+import info.nightscout.androidaps.events.EventEffectiveProfileSwitchChanged
 import info.nightscout.androidaps.events.EventProfileSwitchChanged
+import info.nightscout.androidaps.events.EventTreatmentUpdateGui
 import info.nightscout.androidaps.extensions.getCustomizedName
 import info.nightscout.androidaps.extensions.toVisibility
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
-import info.nightscout.androidaps.events.EventTreatmentUpdateGui
-import info.nightscout.androidaps.activities.fragments.TreatmentsProfileSwitchFragment.RecyclerProfileViewAdapter.ProfileSwitchViewHolder
-import info.nightscout.androidaps.events.EventEffectiveProfileSwitchChanged
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
@@ -39,6 +37,8 @@ import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.Completable
 import io.reactivex.disposables.CompositeDisposable
@@ -186,7 +186,8 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
             holder.binding.date.text = dateUtil.dateString(profileSwitch.timestamp)
             holder.binding.time.text = dateUtil.timeString(profileSwitch.timestamp)
             holder.binding.duration.text = rh.gs(R.string.format_mins, T.msecs(profileSwitch.duration ?: 0L).mins())
-            holder.binding.name.text = if (profileSwitch is ProfileSealed.PS) profileSwitch.value.getCustomizedName() else if (profileSwitch is ProfileSealed.EPS) profileSwitch.value.originalCustomizedName else ""
+            holder.binding.name.text =
+                if (profileSwitch is ProfileSealed.PS) profileSwitch.value.getCustomizedName() else if (profileSwitch is ProfileSealed.EPS) profileSwitch.value.originalCustomizedName else ""
             if (profileSwitch.isInProgress(dateUtil)) holder.binding.date.setTextColor(rh.gc(R.color.colorActive))
             else holder.binding.date.setTextColor(holder.binding.duration.currentTextColor)
             holder.binding.remove.tag = profileSwitch
@@ -198,7 +199,6 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
             holder.binding.remove.visibility = (profileSwitch is ProfileSealed.PS).toVisibility()
             holder.binding.clone.visibility = (profileSwitch is ProfileSealed.PS).toVisibility()
             holder.binding.spacer.visibility = (profileSwitch is ProfileSealed.PS).toVisibility()
-            holder.binding.root.setBackgroundColor(rh.gc(if (profileSwitch is ProfileSealed.PS) R.color.defaultbackground else R.color.list_delimiter))
             val nextTimestamp = if (profileSwitchList.size != position + 1) profileSwitchList[position + 1].timestamp else 0L
             holder.binding.delimiter.visibility = dateUtil.isSameDay(profileSwitch.timestamp, nextTimestamp).toVisibility()
         }
@@ -216,31 +216,44 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
                     val profileSwitch = view.tag as ProfileSealed.PS
                     activity?.let { activity ->
                         OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord),
-                            rh.gs(R.string.careportal_profileswitch) + ": " + profileSwitch.profileName +
-                                "\n" + rh.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(profileSwitch.timestamp), Runnable {
-                            uel.log(Action.PROFILE_SWITCH_REMOVED, Sources.Treatments, profileSwitch.profileName,
-                                ValueWithUnit.Timestamp(profileSwitch.timestamp))
-                            disposable += repository.runTransactionForResult(InvalidateProfileSwitchTransaction(profileSwitch.id))
-                                .subscribe(
-                                    { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated ProfileSwitch $it") } },
-                                    { aapsLogger.error(LTag.DATABASE, "Error while invalidating ProfileSwitch", it) }
+                                                  rh.gs(R.string.careportal_profileswitch) + ": " + profileSwitch.profileName +
+                                                      "\n" + rh.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(profileSwitch.timestamp), Runnable {
+                                uel.log(
+                                    Action.PROFILE_SWITCH_REMOVED, Sources.Treatments, profileSwitch.profileName,
+                                    ValueWithUnit.Timestamp(profileSwitch.timestamp)
                                 )
-                        })
+                                disposable += repository.runTransactionForResult(InvalidateProfileSwitchTransaction(profileSwitch.id))
+                                    .subscribe(
+                                        { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated ProfileSwitch $it") } },
+                                        { aapsLogger.error(LTag.DATABASE, "Error while invalidating ProfileSwitch", it) }
+                                    )
+                            })
                     }
                 }
                 binding.clone.setOnClickListener {
                     activity?.let { activity ->
                         val profileSwitch = (it.tag as ProfileSealed.PS).value
                         val profileSealed = it.tag as ProfileSealed
-                        OKDialog.showConfirmation(activity, rh.gs(R.string.careportal_profileswitch), rh.gs(R.string.copytolocalprofile) + "\n" + profileSwitch.getCustomizedName() + "\n" + dateUtil.dateAndTimeString(profileSwitch.timestamp), Runnable {
-                            uel.log(Action.PROFILE_SWITCH_CLONED, Sources.Treatments,
-                                profileSwitch.getCustomizedName() + " " + dateUtil.dateAndTimeString(profileSwitch.timestamp).replace(".", "_"),
-                                ValueWithUnit.Timestamp(profileSwitch.timestamp),
-                                ValueWithUnit.SimpleString(profileSwitch.profileName))
-                            val nonCustomized = profileSealed.convertToNonCustomizedProfile(dateUtil)
-                            localProfilePlugin.addProfile(localProfilePlugin.copyFrom(nonCustomized, profileSwitch.getCustomizedName() + " " + dateUtil.dateAndTimeString(profileSwitch.timestamp).replace(".", "_")))
-                            rxBus.send(EventLocalProfileChanged())
-                        })
+                        OKDialog.showConfirmation(
+                            activity,
+                            rh.gs(R.string.careportal_profileswitch),
+                            rh.gs(R.string.copytolocalprofile) + "\n" + profileSwitch.getCustomizedName() + "\n" + dateUtil.dateAndTimeString(profileSwitch.timestamp),
+                            Runnable {
+                                uel.log(
+                                    Action.PROFILE_SWITCH_CLONED, Sources.Treatments,
+                                    profileSwitch.getCustomizedName() + " " + dateUtil.dateAndTimeString(profileSwitch.timestamp).replace(".", "_"),
+                                    ValueWithUnit.Timestamp(profileSwitch.timestamp),
+                                    ValueWithUnit.SimpleString(profileSwitch.profileName)
+                                )
+                                val nonCustomized = profileSealed.convertToNonCustomizedProfile(dateUtil)
+                                localProfilePlugin.addProfile(
+                                    localProfilePlugin.copyFrom(
+                                        nonCustomized,
+                                        profileSwitch.getCustomizedName() + " " + dateUtil.dateAndTimeString(profileSwitch.timestamp).replace(".", "_")
+                                    )
+                                )
+                                rxBus.send(EventLocalProfileChanged())
+                            })
                     }
                 }
                 binding.remove.paintFlags = binding.remove.paintFlags or Paint.UNDERLINE_TEXT_FLAG

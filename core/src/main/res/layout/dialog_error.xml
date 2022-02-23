@@ -50,7 +50,8 @@
         android:paddingRight="10dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
+        style="@style/GrayButton"
         android:id="@+id/mute_5min"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -60,7 +61,8 @@
         android:layout_marginRight="30dp"
         android:text="@string/mute5min" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
+        style="@style/GrayButton"
         android:id="@+id/mute"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -70,7 +72,8 @@
         android:layout_marginRight="30dp"
         android:text="@string/mute" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
+        style="@style/GrayButton"
         android:id="@+id/ok"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
