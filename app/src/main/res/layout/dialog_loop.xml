@@ -397,7 +397,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/cancel"
-            style="@style/OkCancelButton"
+            style="@style/OkCancelButton.Text"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
