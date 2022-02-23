@@ -3,10 +3,13 @@ package info.nightscout.androidaps.activities.fragments
 import android.annotation.SuppressLint
 import android.graphics.Paint
 import android.os.Bundle
+import android.util.Log
+import android.util.SparseArray
 import android.view.*
 import android.widget.CompoundButton
 import android.view.ActionMode
 import androidx.appcompat.widget.Toolbar
+import androidx.core.util.forEach
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
@@ -68,6 +71,10 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var activePlugin: ActivePlugin
 
+    private var _binding: TreatmentsBolusCarbsFragmentBinding? = null
+    // This property is only valid between onCreateView and onDestroyView.
+    private val binding get() = _binding!!
+
     class MealLink(
         val bolus: Bolus? = null,
         val carbs: Carbs? = null,
@@ -75,17 +82,11 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
     )
 
     private val disposable = CompositeDisposable()
-
     private val millsToThePast = T.days(30).msecs()
 
-    private var _binding: TreatmentsBolusCarbsFragmentBinding? = null
-
-    // This property is only valid between onCreateView and onDestroyView.
-    private val binding get() = _binding!!
-    private var selectedItems: MutableList<MealLink> = mutableListOf()
+    private var selectedItems: SparseArray<MealLink> = SparseArray()
     private var showInvalidated = false
     private var removeActionMode: ActionMode? = null
-
     private var toolbar: Toolbar? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
@@ -253,21 +254,22 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                 holder.binding.carbsPump.visibility = (carbs.interfaceIDs.pumpId != null).toVisibility()
                 holder.binding.carbsInvalid.visibility = carbs.isValid.not().toVisibility()
             }
-
-            val onChange = CompoundButton.OnCheckedChangeListener { _, value ->
-                if (value) {
-                    selectedItems.add(ml)
-                } else {
-                    selectedItems.remove(ml)
-                }
-                removeActionMode?.title = rh.gs(R.string.count_selected, selectedItems.size)
-            }
-            holder.binding.cbBolusRemove.visibility = ((ml.bolus?.isValid == true) && removeActionMode != null).toVisibility()
-            holder.binding.cbBolusRemove.setOnCheckedChangeListener(onChange)
-
+            holder.binding.cbBolusRemove.visibility = (ml.bolus?.isValid == true && removeActionMode != null).toVisibility()
             holder.binding.cbCarbsRemove.visibility = (ml.carbs?.isValid == true && removeActionMode != null).toVisibility()
-            holder.binding.cbCarbsRemove.setOnCheckedChangeListener(onChange)
-
+            if (removeActionMode != null) {
+                val onChange = CompoundButton.OnCheckedChangeListener { _, value ->
+                    if (value) {
+                        selectedItems.put(position, ml)
+                    } else {
+                        selectedItems.remove(position)
+                    }
+                    removeActionMode?.title = rh.gs(R.string.count_selected, selectedItems.size())
+                }
+                holder.binding.cbBolusRemove.setOnCheckedChangeListener(onChange)
+                holder.binding.cbBolusRemove.isChecked = selectedItems.get(position) != null
+                holder.binding.cbCarbsRemove.setOnCheckedChangeListener(onChange)
+                holder.binding.cbCarbsRemove.isChecked = selectedItems.get(position) != null
+            }
             holder.binding.calculation.tag = ml
             val nextTimestamp = if (mealLinks.size != position + 1) timestamp(mealLinks[position + 1]) else 0L
             holder.binding.delimiter.visibility = dateUtil.isSameDay(timestamp(ml), nextTimestamp).toVisibility()
@@ -425,8 +427,8 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
 
         override fun onCreateActionMode(mode: ActionMode, menu: Menu?): Boolean {
             mode.menuInflater.inflate(R.menu.menu_delete_selection, menu)
-            selectedItems = mutableListOf()
-            mode.title = rh.gs(R.string.count_selected, selectedItems.size)
+            selectedItems.clear()
+            mode.title = rh.gs(R.string.count_selected, selectedItems.size())
             binding.recyclerview.adapter?.notifyDataSetChanged()
             return true
         }
@@ -437,7 +439,6 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
             return when (item.itemId) {
                 R.id.remove_selected -> {
                     removeSelected()
-                    mode.finish()
                     true
                 }
 
@@ -452,8 +453,8 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
     }
 
     private fun getConfirmationText(): String {
-        if (selectedItems.size == 1) {
-            val mealLink = selectedItems.first()
+        if (selectedItems.size() == 1) {
+            val mealLink = selectedItems.valueAt(0)
             val bolus = mealLink.bolus
             if (bolus != null)
                 return rh.gs(R.string.configbuilder_insulin) + ": " + rh.gs(R.string.formatinsulinunits, bolus.amount) + "\n" +
@@ -463,14 +464,14 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                 return rh.gs(R.string.carbs) + ": " + rh.gs(R.string.format_carbs, carbs.amount.toInt()) + "\n" +
                     rh.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(carbs.timestamp)
         }
-        return rh.gs(R.string.confirm_remove_multiple_items, selectedItems.size)
+        return rh.gs(R.string.confirm_remove_multiple_items, selectedItems.size())
     }
 
     fun removeSelected() {
-        if (selectedItems.size > 0)
+        if (selectedItems.size() > 0)
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord), getConfirmationText(), Runnable {
-                    selectedItems.forEach { ml ->
+                    selectedItems.forEach {key, ml ->
                         ml.bolus?.let { bolus ->
                             uel.log(
                                 Action.BOLUS_REMOVED, Sources.Treatments,
@@ -496,7 +497,10 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                                 )
                         }
                     }
+                    removeActionMode?.finish()
                 })
             }
+        else
+            removeActionMode?.finish()
     }
 }

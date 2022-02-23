@@ -2,9 +2,11 @@ package info.nightscout.androidaps.activities.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.SparseArray
 import android.view.*
 import android.view.ActionMode
 import androidx.appcompat.widget.Toolbar
+import androidx.core.util.forEach
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
@@ -59,11 +61,10 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
     @Inject lateinit var repository: AppRepository
 
     private var _binding: TreatmentsExtendedbolusFragmentBinding? = null
-
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
 
-    private var selectedItems: MutableList<ExtendedBolus> = mutableListOf()
+    private var selectedItems: SparseArray<ExtendedBolus> = SparseArray()
     private var showInvalidated = false
     private var removeActionMode: ActionMode? = null
     private var toolbar: Toolbar? = null
@@ -149,13 +150,16 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
             holder.binding.ratio.text = rh.gs(R.string.pump_basebasalrate, extendedBolus.rate)
             if (iob.iob != 0.0) holder.binding.iob.setTextColor(rh.gc(R.color.colorActive)) else holder.binding.iob.setTextColor(holder.binding.insulin.currentTextColor)
             holder.binding.cbRemove.visibility = (extendedBolus.isValid && removeActionMode != null).toVisibility()
-            holder.binding.cbRemove.setOnCheckedChangeListener { _, value ->
-                if (value) {
-                    selectedItems.add(extendedBolus)
-                } else {
-                    selectedItems.remove(extendedBolus)
+            if (removeActionMode != null) {
+                holder.binding.cbRemove.setOnCheckedChangeListener { _, value ->
+                    if (value) {
+                        selectedItems.put(position, extendedBolus)
+                    } else {
+                        selectedItems.remove(position)
+                    }
+                    removeActionMode?.title = rh.gs(R.string.count_selected, selectedItems.size())
                 }
-                removeActionMode?.title = rh.gs(R.string.count_selected, selectedItems.size)
+                holder.binding.cbRemove.isChecked = selectedItems.get(position) != null
             }
             val nextTimestamp = if (extendedBolusList.size != position + 1) extendedBolusList[position + 1].timestamp else 0L
             holder.binding.delimiter.visibility = dateUtil.isSameDay(extendedBolus.timestamp, nextTimestamp).toVisibility()
@@ -209,8 +213,8 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
 
         override fun onCreateActionMode(mode: ActionMode, menu: Menu?): Boolean {
             mode.menuInflater.inflate(R.menu.menu_delete_selection, menu)
-            selectedItems = mutableListOf()
-            mode.title = rh.gs(R.string.count_selected, selectedItems.size)
+            selectedItems.clear()
+            mode.title = rh.gs(R.string.count_selected, selectedItems.size())
             binding.recyclerview.adapter?.notifyDataSetChanged()
             return true
         }
@@ -221,7 +225,6 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
             return when (item.itemId) {
                 R.id.remove_selected -> {
                     removeSelected()
-                    mode.finish()
                     true
                 }
 
@@ -236,18 +239,19 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
     }
 
     private fun getConfirmationText(): String {
-        if (selectedItems.size == 1) {
+        if (selectedItems.size() == 1) {
+            val bolus = selectedItems.valueAt(0)
             return rh.gs(R.string.extended_bolus) + "\n" +
-                "${rh.gs(R.string.date)}: ${dateUtil.dateAndTimeString(selectedItems.first().timestamp)}"
+                "${rh.gs(R.string.date)}: ${dateUtil.dateAndTimeString(bolus.timestamp)}"
         }
-        return rh.gs(R.string.confirm_remove_multiple_items, selectedItems.size)
+        return rh.gs(R.string.confirm_remove_multiple_items, selectedItems.size())
     }
 
     private fun removeSelected() {
-        if (selectedItems.size > 0)
+        if (selectedItems.size() > 0)
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord), getConfirmationText(), Runnable {
-                    selectedItems.forEach { extendedBolus ->
+                    selectedItems.forEach { _, extendedBolus ->
                         uel.log(
                             Action.EXTENDED_BOLUS_REMOVED, Sources.Treatments,
                             ValueWithUnit.Timestamp(extendedBolus.timestamp),
@@ -260,7 +264,10 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
                                 { aapsLogger.debug(LTag.DATABASE, "Removed extended bolus $extendedBolus") },
                                 { aapsLogger.error(LTag.DATABASE, "Error while invalidating extended bolus", it) })
                     }
+                    removeActionMode?.finish()
                 })
             }
+        else
+            removeActionMode?.finish()
     }
 }

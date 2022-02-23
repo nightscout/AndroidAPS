@@ -2,8 +2,10 @@ package info.nightscout.androidaps.activities.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.SparseArray
 import android.view.*
 import androidx.appcompat.widget.Toolbar
+import androidx.core.util.forEach
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
@@ -65,18 +67,16 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var repository: AppRepository
 
-    private val disposable = CompositeDisposable()
+    private var _binding: TreatmentsTemptargetFragmentBinding? = null
+    // This property is only valid between onCreateView and onDestroyView.
+    private val binding get() = _binding!!
 
+    private val disposable = CompositeDisposable()
     private val millsToThePast = T.days(30).msecs()
-    private var selectedItems: MutableList<TemporaryTarget> = mutableListOf()
+    private var selectedItems: SparseArray<TemporaryTarget> = SparseArray()
     private var showInvalidated = false
     private var toolbar: Toolbar? = null
     private var removeActionMode: ActionMode? = null
-
-    private var _binding: TreatmentsTemptargetFragmentBinding? = null
-
-    // This property is only valid between onCreateView and onDestroyView.
-    private val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         TreatmentsTemptargetFragmentBinding.inflate(inflater, container, false).also { _binding = it }.root
@@ -174,13 +174,16 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
             holder.binding.ns.visibility = (tempTarget.interfaceIDs.nightscoutId != null).toVisibility()
             holder.binding.invalid.visibility = tempTarget.isValid.not().toVisibility()
             holder.binding.cbRemove.visibility = (tempTarget.isValid && removeActionMode != null).toVisibility()
-            holder.binding.cbRemove.setOnCheckedChangeListener { _, value ->
-                if (value) {
-                    selectedItems.add(tempTarget)
-                } else {
-                    selectedItems.remove(tempTarget)
+            if (removeActionMode != null) {
+                holder.binding.cbRemove.setOnCheckedChangeListener { _, value ->
+                    if (value) {
+                        selectedItems.put(position, tempTarget)
+                    } else {
+                        selectedItems.remove(position)
+                    }
+                    removeActionMode?.title = rh.gs(R.string.count_selected, selectedItems.size())
                 }
-                removeActionMode?.title = rh.gs(R.string.count_selected, selectedItems.size)
+                holder.binding.cbRemove.isChecked = selectedItems.get(position) != null
             }
             val sameDayPrevious = position > 0 && dateUtil.isSameDay(tempTarget.timestamp, tempTargetList[position - 1].timestamp)
             holder.binding.date.visibility = sameDayPrevious.not().toVisibility()
@@ -211,10 +214,10 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
     }
 
     private fun removeSelected() {
-        if (selectedItems.size > 0)
+        if (selectedItems.size() > 0)
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord), getConfirmationText(), Runnable {
-                    selectedItems.forEach { tempTarget ->
+                    selectedItems.forEach { _, tempTarget ->
                         uel.log(
                             Action.TT_REMOVED, Sources.Treatments,
                             ValueWithUnit.Timestamp(tempTarget.timestamp),
@@ -228,8 +231,11 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
                                 { aapsLogger.debug(LTag.DATABASE, "Removed temp target $tempTarget") },
                                 { aapsLogger.error(LTag.DATABASE, "Error while invalidating temporary target", it) })
                     }
+                    removeActionMode?.finish()
                 })
             }
+        else
+            removeActionMode?.finish()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -277,8 +283,8 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
 
         override fun onCreateActionMode(mode: ActionMode, menu: Menu?): Boolean {
             mode.menuInflater.inflate(R.menu.menu_delete_selection, menu)
-            selectedItems = mutableListOf()
-            mode.title = rh.gs(R.string.count_selected, selectedItems.size)
+            selectedItems.clear()
+            mode.title = rh.gs(R.string.count_selected, selectedItems.size())
             binding.recyclerview.adapter?.notifyDataSetChanged()
             return true
         }
@@ -289,7 +295,6 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
             return when (item.itemId) {
                 R.id.remove_selected -> {
                     removeSelected()
-                    mode.finish()
                     true
                 }
 
@@ -304,12 +309,12 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
     }
 
     private fun getConfirmationText(): String {
-        if (selectedItems.size == 1) {
-            val tempTarget = selectedItems.first()
+        if (selectedItems.size() == 1) {
+            val tempTarget = selectedItems.valueAt(0)
             return "${rh.gs(R.string.careportal_temporarytarget)}: ${tempTarget.friendlyDescription(profileFunction.getUnits(), rh)}\n" +
                 dateUtil.dateAndTimeString(tempTarget.timestamp)
         }
-        return rh.gs(R.string.confirm_remove_multiple_items, selectedItems.size)
+        return rh.gs(R.string.confirm_remove_multiple_items, selectedItems.size())
     }
 
 }
