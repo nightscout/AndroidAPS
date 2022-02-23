@@ -1,9 +1,11 @@
 package info.nightscout.androidaps.activities.fragments
 
 import android.os.Bundle
+import android.util.SparseArray
 import android.view.*
 import android.view.ActionMode
 import androidx.appcompat.widget.Toolbar
+import androidx.core.util.forEach
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
@@ -56,18 +58,17 @@ class TreatmentsCareportalFragment : DaggerFragment() {
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var uel: UserEntryLogger
 
-    private val disposable = CompositeDisposable()
+    private var _binding: TreatmentsCareportalFragmentBinding? = null
+    // This property is only valid between onCreateView and onDestroyView.
+    private val binding get() = _binding!!
 
+    private val disposable = CompositeDisposable()
     private val millsToThePast = T.days(30).msecs()
-    private var selectedItems: MutableList<TherapyEvent> = mutableListOf()
+    private var selectedItems: SparseArray<TherapyEvent> = SparseArray()
     private var showInvalidated = false
     private var toolbar: Toolbar? = null
     private var removeActionMode: ActionMode? = null
 
-    private var _binding: TreatmentsCareportalFragmentBinding? = null
-
-    // This property is only valid between onCreateView and onDestroyView.
-    private val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         TreatmentsCareportalFragmentBinding.inflate(inflater, container, false).also { _binding = it }.root
@@ -172,13 +173,16 @@ class TreatmentsCareportalFragment : DaggerFragment() {
             holder.binding.note.text = therapyEvent.note
             holder.binding.type.text = translator.translate(therapyEvent.type)
             holder.binding.cbRemove.visibility = (therapyEvent.isValid && removeActionMode != null).toVisibility()
-            holder.binding.cbRemove.setOnCheckedChangeListener { _, value ->
-                if (value) {
-                    selectedItems.add(therapyEvent)
-                } else {
-                    selectedItems.remove(therapyEvent)
+            if (removeActionMode != null) {
+                holder.binding.cbRemove.setOnCheckedChangeListener { _, value ->
+                    if (value) {
+                        selectedItems.put(position, therapyEvent)
+                    } else {
+                        selectedItems.remove(position)
+                    }
+                    removeActionMode?.title = rh.gs(R.string.count_selected, selectedItems.size())
                 }
-                removeActionMode?.title = rh.gs(R.string.count_selected, selectedItems.size)
+                holder.binding.cbRemove.isChecked = selectedItems.get(position) != null
             }
             val nextTimestamp = if (therapyList.size != position + 1) therapyList[position + 1].timestamp else 0L
             holder.binding.delimiter.visibility = dateUtil.isSameDay(therapyEvent.timestamp, nextTimestamp).toVisibility()
@@ -243,8 +247,8 @@ class TreatmentsCareportalFragment : DaggerFragment() {
 
         override fun onCreateActionMode(mode: ActionMode, menu: Menu?): Boolean {
             mode.menuInflater.inflate(R.menu.menu_delete_selection, menu)
-            selectedItems = mutableListOf()
-            mode.title = rh.gs(R.string.count_selected, selectedItems.size)
+            selectedItems.clear()
+            mode.title = rh.gs(R.string.count_selected, selectedItems.size())
             binding.recyclerview.adapter?.notifyDataSetChanged()
             return true
         }
@@ -255,7 +259,6 @@ class TreatmentsCareportalFragment : DaggerFragment() {
             return when (item.itemId) {
                 R.id.remove_selected -> {
                     removeSelected()
-                    mode.finish()
                     true
                 }
 
@@ -270,20 +273,20 @@ class TreatmentsCareportalFragment : DaggerFragment() {
     }
 
     private fun getConfirmationText(): String {
-        if (selectedItems.size == 1) {
-            val therapyEvent = selectedItems.first()
+        if (selectedItems.size() == 1) {
+            val therapyEvent = selectedItems.valueAt(0)
             return rh.gs(R.string.eventtype) + ": " + translator.translate(therapyEvent.type) + "\n" +
                 rh.gs(R.string.notes_label) + ": " + (therapyEvent.note ?: "") + "\n" +
                 rh.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(therapyEvent.timestamp)
         }
-        return rh.gs(R.string.confirm_remove_multiple_items, selectedItems.size)
+        return rh.gs(R.string.confirm_remove_multiple_items, selectedItems.size())
     }
 
     private fun removeSelected() {
-        if (selectedItems.size > 0)
+        if (selectedItems.size() > 0)
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord), getConfirmationText(), Runnable {
-                    selectedItems.forEach { therapyEvent ->
+                    selectedItems.forEach { _, therapyEvent ->
                         uel.log(
                             Action.CAREPORTAL_REMOVED, Sources.Treatments, therapyEvent.note,
                             ValueWithUnit.Timestamp(therapyEvent.timestamp),
@@ -295,9 +298,11 @@ class TreatmentsCareportalFragment : DaggerFragment() {
                                 { aapsLogger.error(LTag.DATABASE, "Error while invalidating therapy event", it) }
                             )
                     }
-
+                    removeActionMode?.finish()
                 })
             }
+        else
+            removeActionMode?.finish()
     }
 
 }

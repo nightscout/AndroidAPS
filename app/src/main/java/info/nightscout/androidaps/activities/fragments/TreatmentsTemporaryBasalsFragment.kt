@@ -1,8 +1,11 @@
 package info.nightscout.androidaps.activities.fragments
 
 import android.os.Bundle
+import android.util.Log
+import android.util.SparseArray
 import android.view.*
 import androidx.appcompat.widget.Toolbar
+import androidx.core.util.forEach
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
@@ -62,15 +65,14 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
     @Inject lateinit var repository: AppRepository
 
     private var _binding: TreatmentsTempbasalsFragmentBinding? = null
+    // This property is only valid between onCreateView and onDestroyView.
+    private val binding get() = _binding!!
 
     private val millsToThePast = T.days(30).msecs()
-    private var selectedItems: MutableList<TemporaryBasal> = mutableListOf()
+    private var selectedItems: SparseArray<TemporaryBasal> = SparseArray()
     private var showInvalidated = false
     private var toolbar: Toolbar? = null
     private var removeActionMode: ActionMode? = null
-
-    // This property is only valid between onCreateView and onDestroyView.
-    private val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         TreatmentsTempbasalsFragmentBinding.inflate(inflater, container, false).also { _binding = it }.root
@@ -192,13 +194,16 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
             holder.binding.superBolusFlag.visibility = (tempBasal.type == TemporaryBasal.Type.SUPERBOLUS).toVisibility()
             if (abs(iob.basaliob) > 0.01) holder.binding.iob.setTextColor(rh.gc(R.color.colorActive)) else holder.binding.iob.setTextColor(holder.binding.duration.currentTextColor)
             holder.binding.cbRemove.visibility = (tempBasal.isValid && removeActionMode != null).toVisibility()
-            holder.binding.cbRemove.setOnCheckedChangeListener { _, value ->
-                if (value) {
-                    selectedItems.add(tempBasal)
-                } else {
-                    selectedItems.remove(tempBasal)
+            if (removeActionMode != null) {
+                holder.binding.cbRemove.setOnCheckedChangeListener { _, value ->
+                    if (value) {
+                        selectedItems.put(position, tempBasal)
+                    } else {
+                        selectedItems.remove(position)
+                    }
+                    removeActionMode?.title = rh.gs(R.string.count_selected, selectedItems.size())
                 }
-                removeActionMode?.title = rh.gs(R.string.count_selected, selectedItems.size)
+                holder.binding.cbRemove.isChecked = selectedItems.get(position) != null
             }
             val nextTimestamp = if (tempBasalList.size != position + 1) tempBasalList[position + 1].timestamp else 0L
             holder.binding.delimiter.visibility = dateUtil.isSameDay(tempBasal.timestamp, nextTimestamp).toVisibility()
@@ -252,8 +257,8 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
 
         override fun onCreateActionMode(mode: ActionMode, menu: Menu?): Boolean {
             mode.menuInflater.inflate(R.menu.menu_delete_selection, menu)
-            selectedItems = mutableListOf()
-            mode.title = rh.gs(R.string.count_selected, selectedItems.size)
+            selectedItems.clear()
+            mode.title = rh.gs(R.string.count_selected, selectedItems.size())
             binding.recyclerview.adapter?.notifyDataSetChanged()
             return true
         }
@@ -264,7 +269,6 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
             return when (item.itemId) {
                 R.id.remove_selected -> {
                     removeSelected()
-                    mode.finish()
                     true
                 }
 
@@ -279,23 +283,22 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
     }
 
     private fun getConfirmationText(): String {
-        if (selectedItems.size == 1) {
-            val tempBasal = selectedItems.first()
+        if (selectedItems.size() == 1) {
+            val tempBasal = selectedItems.valueAt(0)
             val isFakeExtended = tempBasal.type == TemporaryBasal.Type.FAKE_EXTENDED
             val profile = profileFunction.getProfile(dateUtil.now())
             if (profile != null)
                 return "${if (isFakeExtended) rh.gs(R.string.extended_bolus) else rh.gs(R.string.tempbasal_label)}: ${tempBasal.toStringFull(profile, dateUtil)}\n" +
                     "${rh.gs(R.string.date)}: ${dateUtil.dateAndTimeString(tempBasal.timestamp)}"
         }
-        return rh.gs(R.string.confirm_remove_multiple_items, selectedItems.size)
+        return rh.gs(R.string.confirm_remove_multiple_items, selectedItems.size())
     }
 
     private fun removeSelected() {
-        // TODO check if item should not be delete val profile = profileFunction.getProfile(dateUtil.now()) == null
-        if (selectedItems.size > 0)
+        if (selectedItems.size() > 0)
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord), getConfirmationText(), Runnable {
-                    selectedItems.forEach { tempBasal ->
+                    selectedItems.forEach {_, tempBasal ->
                         var extendedBolus: ExtendedBolus? = null
                         val isFakeExtended = tempBasal.type == TemporaryBasal.Type.FAKE_EXTENDED
                         if (isFakeExtended) {
@@ -327,7 +330,10 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
                                     { aapsLogger.error(LTag.DATABASE, "Error while invalidating temporary basal", it) })
                         }
                     }
+                    removeActionMode?.finish()
                 })
             }
+        else
+            removeActionMode?.finish()
     }
 }

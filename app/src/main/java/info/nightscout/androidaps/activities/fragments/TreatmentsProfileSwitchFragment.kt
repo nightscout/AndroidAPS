@@ -2,9 +2,11 @@ package info.nightscout.androidaps.activities.fragments
 
 import android.graphics.Paint
 import android.os.Bundle
+import android.util.SparseArray
 import android.view.*
 import android.view.ActionMode
 import androidx.appcompat.widget.Toolbar
+import androidx.core.util.forEach
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
@@ -61,17 +63,16 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
     @Inject lateinit var uel: UserEntryLogger
 
     private var _binding: TreatmentsProfileswitchFragmentBinding? = null
+    // This property is only valid between onCreateView and onDestroyView.
+    private val binding get() = _binding!!
 
     private val disposable = CompositeDisposable()
-
     private val millsToThePast = T.days(30).msecs()
-    private var selectedItems: MutableList<ProfileSealed> = mutableListOf()
+    private var selectedItems: SparseArray<ProfileSealed> = SparseArray()
     private var showInvalidated = false
     private var removeActionMode: ActionMode? = null
     private var toolbar: Toolbar? = null
 
-    // This property is only valid between onCreateView and onDestroyView.
-    private val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         TreatmentsProfileswitchFragmentBinding.inflate(inflater, container, false).also { _binding = it }.root
@@ -198,13 +199,16 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
             holder.binding.invalid.visibility = profileSwitch.isValid.not().toVisibility()
             holder.binding.duration.visibility = (profileSwitch.duration != 0L && profileSwitch.duration != null).toVisibility()
             holder.binding.cbRemove.visibility = (removeActionMode != null && profileSwitch is ProfileSealed.PS).toVisibility()
-            holder.binding.cbRemove.setOnCheckedChangeListener { _, value ->
-                if (value) {
-                    selectedItems.add(profileSwitch)
-                } else {
-                    selectedItems.remove(profileSwitch)
+            if (removeActionMode != null) {
+                holder.binding.cbRemove.setOnCheckedChangeListener { _, value ->
+                    if (value) {
+                        selectedItems.put(position, profileSwitch)
+                    } else {
+                        selectedItems.remove(position)
+                    }
+                    removeActionMode?.title = rh.gs(R.string.count_selected, selectedItems.size())
                 }
-                removeActionMode?.title = rh.gs(R.string.count_selected, selectedItems.size)
+                holder.binding.cbRemove.isChecked = selectedItems.get(position) != null
             }
             holder.binding.clone.visibility = (profileSwitch is ProfileSealed.PS).toVisibility()
             holder.binding.spacer.visibility = (profileSwitch is ProfileSealed.PS).toVisibility()
@@ -314,8 +318,8 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
 
         override fun onCreateActionMode(mode: ActionMode, menu: Menu?): Boolean {
             mode.menuInflater.inflate(R.menu.menu_delete_selection, menu)
-            selectedItems = mutableListOf()
-            mode.title = rh.gs(R.string.count_selected, selectedItems.size)
+            selectedItems.clear()
+            mode.title = rh.gs(R.string.count_selected, selectedItems.size())
             binding.recyclerview.adapter?.notifyDataSetChanged()
             return true
         }
@@ -326,7 +330,6 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
             return when (item.itemId) {
                 R.id.remove_selected -> {
                     removeSelected()
-                    mode.finish()
                     true
                 }
 
@@ -341,18 +344,18 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
     }
 
     private fun getConfirmationText(): String {
-        if (selectedItems.size == 1) {
-            val profileSwitch = selectedItems.first()
+        if (selectedItems.size() == 1) {
+            val profileSwitch = selectedItems.valueAt(0)
             return rh.gs(R.string.careportal_profileswitch) + ": " + profileSwitch.profileName + "\n" + rh.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(profileSwitch.timestamp)
         }
-        return rh.gs(R.string.confirm_remove_multiple_items, selectedItems.size)
+        return rh.gs(R.string.confirm_remove_multiple_items, selectedItems.size())
     }
 
     private fun removeSelected() {
-        if (selectedItems.size > 0)
+        if (selectedItems.size() > 0)
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord), getConfirmationText(), Runnable {
-                    selectedItems.forEach { profileSwitch ->
+                    selectedItems.forEach { _, profileSwitch ->
                         uel.log(
                             Action.PROFILE_SWITCH_REMOVED, Sources.Treatments, profileSwitch.profileName,
                             ValueWithUnit.Timestamp(profileSwitch.timestamp)
@@ -363,7 +366,10 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
                                 { aapsLogger.error(LTag.DATABASE, "Error while invalidating ProfileSwitch", it) }
                             )
                     }
+                    removeActionMode?.finish()
                 })
             }
+        else
+            removeActionMode?.finish()
     }
 }
