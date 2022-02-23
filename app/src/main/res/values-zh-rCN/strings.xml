@@ -17,6 +17,7 @@
     <string name="description_food">显示 Nightscout 中定义的食物预设</string>
     <string name="description_insulin_rapid">胰岛素预设为 Humalog(优泌乐) 和 NovoRapid(门冬)/NovoLog(诺和锐)</string>
     <string name="description_insulin_ultra_rapid">Fiasp 胰岛素预设</string>
+    <string name="description_insulin_lyumjev">预设为Lyumjev速效赖脯胰岛素</string>
     <string name="description_insulin_free_peak">允许您定义胰岛素作用的峰值, 并且只应由高级用户使用</string>
     <string name="description_loop">激活或停用这个工具触发闭环。</string>
     <string name="description_ns_client">将数据与 Nightscout 同步</string>
@@ -32,6 +33,7 @@
     <string name="description_source_glimp">从 Glimp 接收血糖值。</string>
     <string name="description_source_mm640g">从美敦力600Series 的AndroidUploader 接收血糖值。</string>
     <string name="description_source_ns_client">从 Nightscout 下载 血糖数据</string>
+    <string name="description_source_xdrip">从 xDrip+ 接收血糖值。</string>
     <string name="description_treatments">保存所做的所有治疗</string>
     <string name="description_wear">使用您的 WearOS 手表监视和控制 AndroidAPS。</string>
     <string name="description_xdrip_status_line">在 xDrip + 表盘上显示有关闭环的信息。</string>
