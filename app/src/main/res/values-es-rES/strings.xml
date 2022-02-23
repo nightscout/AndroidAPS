@@ -429,8 +429,6 @@
     <string name="keep_screen_on_summary">Evita que Android apague la pantalla. Consume mucha batería cuando el teléfono no está conectado al cargador</string>
     <string name="sensitivity_warning">Al activar Autosens, recuerda introducir todos carbohidratos que has comido, sino, las desviaciones de carbohidratos serán identificados incorrectamente, como un cambio de sensibilidad</string>
     <string name="sensitivityweightedaverage">Sensibilidad promedio ponderada</string>
-    <string name="mdtp_ok">Ok</string>
-    <string name="mdtp_cancel">Cancelar</string>
     <string name="notloadedplugins">Faltan perfiles por cargar!</string>
     <string name="valuesnotstored">Valores no guardados!</string>
     <string name="ns_localbroadcasts">Habilita las transmisiones a otras aplicaciones (como xDrip+). ¡No lo habilites si tienes más de una instancia de AAPS o NSClient instaladas!</string>
