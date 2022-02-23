@@ -1,4 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="hypott_label">低血糖临时目标</string>
+    <string name="hypott_whenhypott">设定低血糖临时目标的主要原因是什么？</string>
+    <string name="hypott_wrongbasal">纠正由于基础率设置不准确而引起的低血糖事件。</string>
+    <string name="hypott_preventoversmb">治疗低血糖时，防止AndroidAPS过度纠正因补充碳水引起的血糖速升事件。</string>
+    <string name="hypott_exercise">纠正由于运动引起的低血糖事件。</string>
+    <string name="hypott_0basal">在已设定0%临时基础率的基础上，进一步防止血糖降低。</string>
+    <string name="pumpdisconnect_label">在 AndroidAPS中应用\"断开泵\"的原因</string>
     <string name="pumpdisconnect_whattodo">泵断开连接时我们应做些什么?</string>
+    <string name="pumpdisconnect_unnecessary">这是没有必要的，如果胰岛素泵物理断开，胰岛素会无法输注。</string>
+    <string name="pumpdisconnect_missinginsulin">在胰岛素泵物理断开时，它可以防止AndroidAPS将未输注的胰岛素剂量进行统计。</string>
+    <string name="pumpdisconnect_notstop">如果胰岛素泵保持连接，就不会停止胰岛素输注。</string>
+    <string name="pumpdisconnect_openloop">它将让AndroidAPS进入开环模式。</string>
+    <string name="objectives_label">安卓APS设置</string>
+    <string name="objectives2_label">安卓APS设置</string>
+    <string name="objectives_howtosave">备份设置的最佳办法是什么?</string>
+    <string name="objectives_notesettings">你不需要导出你的设置，只要你对它们做了记录。</string>
+    <string name="objectives_afterobjective">在实现一个目标后导出您的设置。</string>
+    <string name="objectives_afterchange">在更改您的任何设置后导出您的设置。</string>
+    <string name="objectives_afterinitialsetup">在您完成初始化并设置了您的偏好选项后导出您的设置。</string>
+    <string name="objectives2_maintenance">使用维护菜单导出您的本地设置。</string>
+    <string name="objectives2_internalstorage">您的设置文件可以在手机上的文件夹内部存储/AAPS/preferences中找到。</string>
+    <string name="objectives2_cloud">将您的首选项文件复制到手机以外的安全位置(如使用云盘，用数据线传到计算机，电子邮箱等等)</string>
+    <string name="objectives2_easyrestore">如果您的手机损坏或丢失，在没有备份的情况下可以轻松的远程恢复您的设置。</string>
+    <string name="noisycgm_label">CGM数据噪音</string>
+    <string name="noisycgm_nothing">什么都不需要做，AAPS会处理的。</string>
+    <string name="noisycgm_pause">禁用闭环功能以避免胰岛素过量或不足。</string>
+    <string name="noisycgm_replacesensor">更换持续产生噪音或不准确数据的传感器。</string>
 </resources>
