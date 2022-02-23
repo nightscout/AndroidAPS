@@ -181,7 +181,6 @@
     <string name="wear">Wear</string>
     <string name="resend_all_data">Stuur alle Data weer</string>
     <string name="open_settings_on_wear">Oop instellings op Wear</string>
-    <string name="basal_rate">Basale waarde:</string>
     <string name="basalvaluebelowminimum">Basale waarde onder minimum. Profiel nie gestel nie!</string>
     <string name="sms_actualbg">BG:</string>
     <string name="sms_lastbg">Laaste BG:</string>
@@ -573,4 +572,5 @@
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="overview_show_predictions">Projeksies</string>
     <string name="prime">Prima</string>
+    <!-- WEAR OS-->
 </resources>

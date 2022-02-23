@@ -54,19 +54,15 @@
     <string name="pref_ring_history">Glikemijos istorija</string>
     <string name="pref_light_ring_history">Glikemijos istorija - šviesi</string>
     <string name="pref_animations">Animacijos</string>
-    <string name="pref_wizard_in_menu">Meniu vedlys</string>
     <string name="pref_prime_in_menu">Užpildyti per meniu</string>
     <string name="pref_single_target">Pavienis tikslas</string>
-    <string name="pref_wizard_percentage">Vedlys su %</string>
     <string name="pref_complication_tap_action">Elementų skirtuko veiksmai</string>
     <string name="pref_unicode_in_complications">Unikodas elementuose</string>
     <string name="pref_version">Versija:</string>
     <string name="pref_moreWatchfaceSettings">Daugiau laikrodžio ekrano nustatymų</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Prašom žiūrėti Watchface konfigūraciją.</string>
     <string name="menu_tempt">LaikinasTikslas</string>
-    <string name="menu_wizard">Vedlys</string>
     <string name="menu_bolus">Bolusas</string>
-    <string name="menu_ecarb">iAV</string>
     <string name="menu_settings">Parametrai</string>
     <string name="menu_status">Būsena</string>
     <string name="menu_resync">Suderinti dar kartą</string>
@@ -74,22 +70,12 @@
     <string name="menu_none">Nėra</string>
     <string name="menu_default">Numatytasis</string>
     <string name="menu_menu">Meniu</string>
-    <string name="action_duration">trukmė</string>
-    <string name="action_target" comment="In temp target menu, single target value">tikslas</string>
-    <string name="action_low" comment="In temp target menu, lower value from range">žemas</string>
-    <string name="action_high" comment="In temp target menu, higher value from range">aukštas</string>
-    <string name="action_carbs">AV</string>
-    <string name="action_percentage">procentais</string>
-    <string name="action_start_min">pradėti [min]</string>
-    <string name="action_duration_h">trukmė [h]</string>
-    <string name="action_insulin">insulinas</string>
     <string name="action_preset_1">Ruošinys 1</string>
     <string name="action_preset_2">Ruošinys 2</string>
     <string name="action_preset_3">Ruošinys 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Užpildymo kiekis</string>
     <string name="action_confirm">PATVIRTINTI</string>
     <string name="action_timeshift">laiko postūmis</string>
-    <string name="action_bolus">bolusas</string>
     <string name="bolus_progress">Leidžiamas bolusas</string>
     <string name="press_to_cancel">paspauskite atšaukimui</string>
     <string name="cancel_bolus">ATŠAUKTI BOLUSĄ</string>

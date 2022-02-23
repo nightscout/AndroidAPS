@@ -51,4 +51,10 @@
     <string name="combo_tbr_count">TBR (GBO) Geçici Bazal Oranı sayısı</string>
     <string name="bolusstopped">Bolus durdu</string>
     <string name="bolusstopping">Bolus durdurma</string>
+    <string name="pump_commerror_label">İletişim Hata sayısı</string>
+    <string name="show_comm_error_count_title">İletişim hata sayısını göster</string>
+    <string name="show_comm_error_count_summary">Ruffy ile iletişim kurarken hata sayısını gösterir. Genelde 0\'dan büyük sayılar, Ruffy iletişim sorunlarını belirtir (yeniden başlatma gerekebilir).</string>
+    <string name="combo_error_display_never">Asla</string>
+    <string name="combo_error_display_error">Hata Olduğunda</string>
+    <string name="combo_error_display_always">Her zaman</string>
 </resources>

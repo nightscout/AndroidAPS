@@ -245,7 +245,6 @@
     <string name="wear">Часовник</string>
     <string name="resend_all_data">Изпрати отново всички дани</string>
     <string name="open_settings_on_wear">Отвори настройките на часовника</string>
-    <string name="basal_rate">Базал:</string>
     <string name="basalvaluebelowminimum">Базалните стойности са под минимума. Не е зададен профил!</string>
     <string name="sms_actualbg">КЗ:</string>
     <string name="sms_lastbg">Последна КЗ:</string>
@@ -747,8 +746,6 @@
     <string name="profilenamecontainsdot">Името на профила съдържа точка.\nТова не се поддържа от НС.\nПрофилът не е качен в НС.</string>
     <string name="low_mark_comment">Ниската граница на диапазона (графика)</string>
     <string name="high_mark_comment">Високата граница на диапазона (графика)</string>
-    <string name="age">Възраст:</string>
-    <string name="weight_label">Тегло:</string>
     <string name="id">Номер:</string>
     <string name="submit">Изпрати</string>
     <string name="mostcommonprofile">Най-често използван профил:</string>
@@ -890,4 +887,5 @@
     <string name="recalculated_data_used">Рекалкулирани използвани данни</string>
     <string name="bg_too_close">КЗ близо до:\n%1$s\n%2$s</string>
     <string name="not_available_full">Недостъпно</string>
+    <!-- WEAR OS-->
 </resources>
