@@ -64,6 +64,7 @@
         </activity>
         <activity android:name=".activities.PreferencesActivity" />
         <activity android:name=".plugins.general.overview.activities.QuickWizardListActivity"
+            android:theme="@style/AppTheme"
             android:exported="false">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity" />
@@ -75,8 +76,7 @@
         <activity android:name=".activities.HistoryBrowseActivity" />
         <activity android:name=".activities.TreatmentsActivity" />
         <activity android:name=".activities.SurveyActivity" />
-        <activity android:name=".activities.ProfileHelperActivity"
-            android:theme="@style/ProfileHelperAppTheme" />
+        <activity android:name=".activities.ProfileHelperActivity" />
         <activity android:name=".activities.StatsActivity" />
         <activity
             android:name="com.google.firebase.auth.internal.FederatedSignInActivity"
@@ -229,8 +229,7 @@
         <activity
             android:name=".setupwizard.SetupWizardActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_setup_wizard"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_setup_wizard" />
 
         <activity
             android:name=".activities.SingleFragmentActivity"

@@ -11,7 +11,7 @@
         <Preference
             android:enabled="true"
             android:key="@string/key_rileylink_mac_address"
-            android:title="@string/omnipod_eros_preferences_riley_link_configuration">
+            android:title="@string/rileylink_configuration">
             <intent android:action="info.nightscout.androidaps.plugins.PumpCommon.dialog.RileyLinkBLEConfigActivity" />
         </Preference>
 

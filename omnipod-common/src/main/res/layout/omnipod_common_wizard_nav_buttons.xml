@@ -4,14 +4,16 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
-    <Button
+    <com.google.android.material.button.MaterialButton
+        style="@style/GrayButton"
         android:id="@+id/button_cancel"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="@string/omnipod_common_wizard_button_cancel" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
+        style="@style/GrayButton"
         android:id="@+id/button_next"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

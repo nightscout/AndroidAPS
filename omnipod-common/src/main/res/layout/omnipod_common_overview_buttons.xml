@@ -2,7 +2,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button_refresh_status"
         style="@style/ButtonSmallFontStyle"
         android:layout_width="match_parent"
@@ -12,7 +12,7 @@
         android:drawablePadding="@dimen/omnipod_icon_button_drawable_padding"
         android:text="@string/refresh" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button_pod_management"
         style="@style/ButtonSmallFontStyle"
         android:layout_width="match_parent"
@@ -22,7 +22,7 @@
         android:drawablePadding="@dimen/omnipod_icon_button_drawable_padding"
         android:text="@string/omnipod_common_overview_button_pod_management" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button_silence_alerts"
         style="@style/ButtonSmallFontStyle"
         android:layout_width="match_parent"
@@ -32,7 +32,7 @@
         android:drawablePadding="@dimen/omnipod_icon_button_drawable_padding"
         android:text="@string/omnipod_common_overview_button_silence_alerts" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button_set_time"
         style="@style/ButtonSmallFontStyle"
         android:layout_width="match_parent"
@@ -43,7 +43,7 @@
         android:text="@string/omnipod_common_overview_button_set_time"
         android:visibility="gone" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button_resume_delivery"
         style="@style/ButtonSmallFontStyle"
         android:layout_width="match_parent"
@@ -54,7 +54,7 @@
         android:text="@string/omnipod_common_overview_button_resume_delivery"
         android:visibility="gone" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button_suspend_delivery"
         style="@style/ButtonSmallFontStyle"
         android:layout_width="match_parent"

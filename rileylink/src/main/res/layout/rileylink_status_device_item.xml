@@ -13,7 +13,8 @@
         android:text="Command"
         android:textSize="12dp" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
+        style="@style/GrayButton"
         android:id="@+id/rileylink_device_action"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"

@@ -101,7 +101,8 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
+                style="@style/GrayButton"
                 android:id="@+id/save_alarm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -181,7 +182,8 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
+                style="@style/GrayButton"
                 android:id="@+id/save_lcd_on_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -262,7 +264,8 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
+                style="@style/GrayButton"
                 android:id="@+id/save_lang"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -323,7 +326,8 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
+                style="@style/GrayButton"
                 android:id="@+id/save_bolus_speed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
