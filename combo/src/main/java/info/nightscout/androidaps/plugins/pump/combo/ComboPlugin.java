@@ -1309,6 +1309,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
             if (ps.activeAlert != null && ps.activeAlert.errorCode != null) {
                 extendedJson.put("ErrorCode", ps.activeAlert.errorCode);
             }
+            extendedJson.put("BaseBasalRate", getBaseBasalRate());
             pumpJson.put("extended", extendedJson);
 
             JSONObject batteryJson = new JSONObject();
