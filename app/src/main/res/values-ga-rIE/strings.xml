@@ -140,8 +140,6 @@
     <string name="openaps">OpenAPS</string>
     <string name="openaps_short">OAPS</string>
     <string name="basal_short">BUN</string>
-    <string name="mdtp_ok">Ceart go leor</string>
-    <string name="mdtp_cancel">Cuir ar ceal</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
     <string name="lyumjev">Lyumjev</string>
