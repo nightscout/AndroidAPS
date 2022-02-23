@@ -426,8 +426,6 @@
     <string name="keep_screen_on_summary">Не давать системе Android отключать экран. Это увеличит потребление энергии при отключенной сети питания.</string>
     <string name="sensitivity_warning">Активируя Autosense не забывайте вводить все съеденные углеводы. Иначе отклонения в углеводах будут неверно определены как изменение чувствительности !!</string>
     <string name="sensitivityweightedaverage">Средневзвешенная чувствительность</string>
-    <string name="mdtp_ok">OK</string>
-    <string name="mdtp_cancel">отмена</string>
     <string name="notloadedplugins">не все профили загружены!</string>
     <string name="valuesnotstored">Данные не сохранены!</string>
     <string name="ns_localbroadcasts">Включить трансляцию для других приложений (например, xDrip). Не включайте, если установлено несколько экземпляров приложений AAPS или NSClient!</string>
