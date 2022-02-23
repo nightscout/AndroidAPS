@@ -376,6 +376,7 @@
     <string name="uel_stat_reset">RESET STATISTIK</string>
     <string name="uel_delete_logs">VYMAZAT LOGY</string>
     <string name="uel_delete_future_treatments">VYMAZAT BUDOUCÍ OŠETŘENÍ</string>
+    <string name="delete_future_treatments">Odstranit ošetření v budoucnu</string>
     <string name="uel_export_settings">EXPORTOVAT NASTAVENÍ</string>
     <string name="uel_import_settings">IMPORTOVAT NASTAVENÍ</string>
     <string name="uel_reset_databases">RESETOVAT DATABÁZE</string>
