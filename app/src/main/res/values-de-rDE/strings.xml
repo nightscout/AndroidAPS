@@ -427,8 +427,6 @@
     <string name="keep_screen_on_summary">Hindere Android daran, den Bildschirm abzuschalten. Dies erhöht den Energieverbrauch, wenn das Gerät nicht an einem Ladegerät angeschlossen ist.</string>
     <string name="sensitivity_warning">Stelle bei aktivierter Autosens-Funktion sicher, dass du alle eingenommenen Kohlenhydrate eingibst. Ansonsten können die Kohlenhydrat-Abweichungen zu falschen Sensitivitätswerten führen!</string>
     <string name="sensitivityweightedaverage">Durchschnittliche Sensitivität</string>
-    <string name="mdtp_ok">OK</string>
-    <string name="mdtp_cancel">Abbrechen</string>
     <string name="notloadedplugins">Es sind nicht alle Profile geladen!</string>
     <string name="valuesnotstored">Werte nicht gespeichert!</string>
     <string name="ns_localbroadcasts">Aktiviere die Datenübertragung zu anderen Apps (z.B. xDrip+). Nicht aktivieren, falls Du mehr als eine Instanz von AAPS oder NSClient installiert hast!</string>
