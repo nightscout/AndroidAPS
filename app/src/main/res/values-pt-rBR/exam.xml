@@ -37,7 +37,7 @@
     <string name="breadgrams_calc">Se os níveis de glicose no sangue estiverem fora dos limites aceitáveis (muito baixo ou muito alto) a calculadora de bolus pode ser usada para fornecer sugestões para correções de carboidrato ou insulina.</string>
     <string name="breadgrams_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
     <string name="extendedcarbs_label">Tópico: e-Carbs</string>
-    <string name="extendedcarbs_handling">Para que você possa usar os e-Carbs (carboidratos estendidos)?</string>
+    <string name="extendedcarbs_handling">Para que você possa usar os e-carbs (carboidratos estendidos)?</string>
     <string name="extendedcarbs_future">Para agendar carboidratos no futuro, possivelmente distribuídos num intervalo (semelhante a um bolus estendido que distribui insulina num intervalo).</string>
     <string name="extendedcarbs_free">Para registrar carboidratos de exercício \'gratuitos\' que deseja ocultar do AndroidAPS.</string>
     <string name="extendedcarbs_fat">Os e-carbs (distribuídos no futuro) podem ajudar o AndroidAPS a lidar com comidas ricas em gorduras/proteínas.</string>
