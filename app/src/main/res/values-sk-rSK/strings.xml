@@ -162,7 +162,6 @@
     <string name="end_user_license_agreement">Licenčná zmluva s koncovým používateľom</string>
     <string name="end_user_license_agreement_text">Tento program nemôže byť použitý na medicínske rozhodnutia. Na program neexistuje žiadna záruka, alebo garantovaná podpora v akejkoľvek podobe. Keď už sa rozhodneš pre používanie, tak jeho kvalita a celkové schopnosti tohto projektu závisia len na Tebe samotnom. Ak by sa ukázalo, že je program chybný, preberáš všetky potrebné náklady na liečbu, prípadne náklady na iné servisné služby, opravy, alebo korekcie.</string>
     <string name="end_user_license_agreement_i_understand">ROZUMIEM A POTVRDZUJEM</string>
-    <string name="save">Uložiť</string>
     <string name="reloadprofile">Obnoviť profil</string>
     <string name="smscommunicator">SMS komunikátor</string>
     <string name="smscommunicator_allowednumbers">Povolené telefónne čísla</string>
@@ -428,14 +427,11 @@
     <string name="keep_screen_on_summary">Zabrániť Androidu, aby zhasínal obrazovku. Bez pripojenia nabíjačky vybije veľmi rýchlo batériu!</string>
     <string name="sensitivity_warning">Pri zapnutej automatickej detekcii citlivosti, nezabudnite vkladať všetky prijaté sacharidy. V opačnom prípade, budú odchýlky mylne vyhodnocované, ako zmena citlivosti !!</string>
     <string name="sensitivityweightedaverage">Citlivosť vážený priemer</string>
-    <string name="mdtp_ok">OK</string>
-    <string name="mdtp_cancel">Zrušiť</string>
     <string name="notloadedplugins">Nenačítané všetky profily!</string>
     <string name="valuesnotstored">Hodnoty nie sú uložené!</string>
     <string name="ns_localbroadcasts">Povoliť vysielanie do iných aplikácií (napr. xDrip+). Nepovoľujte, pokiaľ máte nainštalovanú viac ako jednu AAPS, alebo NSClient inštanciu!</string>
     <string name="ns_localbroadcasts_title">Povoliť lokálne vysielanie.</string>
     <string name="openapssmb">OpenAPS SMB</string>
-    <string name="openaps_smb_dynamic_isf">OpenAPS SMB s dynamickým ISF</string>
     <string name="enableuam">Povoliť UAM</string>
     <string name="enablesmb">Povoliť SMB</string>
     <string name="enablesmb_summary">Použiť Super Mikro Bolusy namiesto dočasných bazálov, pre zrýchleniu účinku</string>
