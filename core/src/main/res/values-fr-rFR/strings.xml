@@ -376,6 +376,7 @@
     <string name="uel_stat_reset">RÉINITIALISATION DES STATS</string>
     <string name="uel_delete_logs">LOGS SUPPRIMÉS</string>
     <string name="uel_delete_future_treatments">TRAITEMENTS FUTURS SUPPRIMÉS</string>
+    <string name="delete_future_treatments">Supprimer traitements futurs</string>
     <string name="uel_export_settings">PARAMÈTRES EXPORTÉS</string>
     <string name="uel_import_settings">PARAMÈTRES IMPORTÉS</string>
     <string name="uel_reset_databases">BASE DE DONNÉES RÉINITIALISÉE</string>
