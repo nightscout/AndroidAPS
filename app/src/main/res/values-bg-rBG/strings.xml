@@ -424,8 +424,6 @@
     <string name="keep_screen_on_summary">Предотвратяване на андроид да изключва екрана. Това ще доведе до консумацията на много енергия, когато устройството не е включено в контакта.</string>
     <string name="sensitivity_warning">Когато включите Autosense feature трябва да въвеждате ВСИЧКИ въглехидрати. В противен случай те ще се изчисляват грешно като повишена чувствителност!!</string>
     <string name="sensitivityweightedaverage">чрез Среднопретеглената стойност</string>
-    <string name="mdtp_ok">ОК</string>
-    <string name="mdtp_cancel">Откажи</string>
     <string name="notloadedplugins">Не всички профили са заредени!</string>
     <string name="valuesnotstored">Стойностите не са запазени!</string>
     <string name="ns_localbroadcasts">Активира предаване на данни към други приложения (като xDrip+). Не активирайте, ако имате повече от един AAPS или имате инсталиран NSClient!</string>
