@@ -357,8 +357,6 @@
     <string name="keep_screen_on_summary">阻止 Android 系统关闭手机屏幕。这将非常耗电</string>
     <string name="sensitivity_warning">如果要打开 Autosense功能, 记住输入所有吃的碳水化合物。否则碳水化合物的偏差将被识别为错误的灵敏度变化!!</string>
     <string name="sensitivityweightedaverage">灵敏度 WeightedAverage</string>
-    <string name="mdtp_ok">确定</string>
-    <string name="mdtp_cancel">取消</string>
     <string name="notloadedplugins">配置文件加载不完整</string>
     <string name="valuesnotstored">值没有被存储</string>
     <string name="ns_localbroadcasts_title">启用本地广播。</string>
