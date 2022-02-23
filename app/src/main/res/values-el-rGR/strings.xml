@@ -312,8 +312,6 @@
     <string name="keep_screen_on_summary">Αποτρέψετε το Android να απενεργοποιήσει την οθόνη. Χωρίς σύνδεση με το φορτιστή, αποφορτίζει πολύ γρήγορα την μπαταρία.</string>
     <string name="sensitivity_warning">Ενεργοποιώντας το autosense θυμηθείτε να εισάγετε όλους τους υδατάνθρακες. Διαφορετικά, οι αποκλίσεις των υδατανθράκων θα εντοπιστούν λανθασμένα ως αλλαγή ευαισθησίας!!</string>
     <string name="sensitivityweightedaverage">Ευαισθησία WeightedAverage</string>
-    <string name="mdtp_ok">ΟΚ</string>
-    <string name="mdtp_cancel">Ακύρωση</string>
     <string name="notloadedplugins">Δεν έχουν φορτωθεί όλα τα προφίλ!</string>
     <string name="valuesnotstored">Οι τιμές δεν αποθηκεύτηκαν!</string>
     <string name="ns_localbroadcasts_title">Ενεργοποιήστε τις τοπικές αποστολές.</string>
