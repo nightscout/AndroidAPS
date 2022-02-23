@@ -255,6 +255,7 @@
         <item name="profilSwitch" >@color/lightblue</item>
         <item name="automationTitleText" >@color/white</item>
         <item name="automationSelectedItemBackground" >@color/gray</item>
+        <item name="fortyfiveup" >@color/white</item>
         <!---Round dialog corner only if sdk >= 28 -->
         <item name="android:dialogCornerRadius" ns2:targetApi="p">8dp</item>
         <item name="colorScheduled" >@color/squash</item>
@@ -363,6 +364,8 @@
     </style>
 
     <!-- Custom Theme -->
-    <style name="CustomTheme">
+    <style name="CustomTheme" parent="AppTheme.NoActionBar">
+        <!-- Customize your theme here. -->
     </style>
+
 </resources>
