@@ -54,19 +54,15 @@
     <string name="pref_ring_history">Ring BZ-Historie</string>
     <string name="pref_light_ring_history">Ring BZ-Historie light</string>
     <string name="pref_animations">Animationen</string>
-    <string name="pref_wizard_in_menu">Rechner im Menü</string>
     <string name="pref_prime_in_menu">Befüllung im Menü</string>
     <string name="pref_single_target">Einzelzielwert</string>
-    <string name="pref_wizard_percentage">Rechner mit %</string>
     <string name="pref_complication_tap_action">Tipp Komplikation</string>
     <string name="pref_unicode_in_complications">Unicode in Komplikationen</string>
     <string name="pref_version">Version:</string>
     <string name="pref_moreWatchfaceSettings">weitere Watchface Einstellungen</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Schaue Dir bitte die Watchface-Konfiguration an.</string>
     <string name="menu_tempt">Temp. Ziel</string>
-    <string name="menu_wizard">Rechner</string>
     <string name="menu_bolus">Bolus</string>
-    <string name="menu_ecarb">eCarb</string>
     <string name="menu_settings">Einstellung</string>
     <string name="menu_status">Status</string>
     <string name="menu_resync">Erneut synchronisieren</string>
@@ -74,22 +70,12 @@
     <string name="menu_none">Kein(e)</string>
     <string name="menu_default">Standard</string>
     <string name="menu_menu">Menü</string>
-    <string name="action_duration">Dauer</string>
-    <string name="action_target" comment="In temp target menu, single target value">Ziel</string>
-    <string name="action_low" comment="In temp target menu, lower value from range">niedrig</string>
-    <string name="action_high" comment="In temp target menu, higher value from range">hoch</string>
-    <string name="action_carbs">gKH</string>
-    <string name="action_percentage">%-Satz</string>
-    <string name="action_start_min">Start [min]</string>
-    <string name="action_duration_h">Dauer [h]</string>
-    <string name="action_insulin">Insulin</string>
     <string name="action_preset_1">Voreinstellung 1</string>
     <string name="action_preset_2">Voreinstellung 2</string>
     <string name="action_preset_3">Voreinstellung 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Freie Menge</string>
     <string name="action_confirm">BESTÄTIGEN</string>
     <string name="action_timeshift">Zeitverschiebung</string>
-    <string name="action_bolus">Bolus</string>
     <string name="bolus_progress">Bolusabgabe läuft </string>
     <string name="press_to_cancel">Zum Abbrechen drücken</string>
     <string name="cancel_bolus">Bolus löschen </string>

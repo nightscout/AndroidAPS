@@ -171,7 +171,7 @@
     <string name="isf_hint2">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html</string>
     <string name="ic_multiple">Profilinizde I:C oranı için birden fazla değer kullanabilirsiniz.</string>
     <string name="ic_isf">Profilinizde ISF\'nizi değiştirirseniz, her zaman I:C oranınızı da değiştirmelisiniz.</string>
-    <string name="ic_label_exam">İnsülin/Karbonhidrat Oranı (I:C oranı)</string>
+    <string name="ic_label_exam">Karbonhidrat insülin Oranı (I:C oranı)</string>
     <string name="ic_increasingvalue">Daha yüksek I:C oranları, belirli bir miktarda karbonhidrat için daha az insülin verilmesine yol açar.</string>
     <string name="ic_decreasingvalue">Daha düşük I:C oranları, belirli bir miktarda karbonhidrat için daha az insülin verilmesine yol açar.</string>
     <string name="ic_noeffect">0 COB\'niz varsa, IC oranını değiştirmek, belirli bir KŞ değerini düzeltmek için farklı insülin miktarına sebep olur.</string>

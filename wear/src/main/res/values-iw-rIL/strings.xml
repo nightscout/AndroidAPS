@@ -54,19 +54,15 @@
     <string name="pref_ring_history">היסטוריית צלצולים</string>
     <string name="pref_light_ring_history">היסטוריה של טבעת אור</string>
     <string name="pref_animations">אנימציות</string>
-    <string name="pref_wizard_in_menu">אשף בתפריט</string>
     <string name="pref_prime_in_menu">תיחול בתפריט</string>
     <string name="pref_single_target">מטרה יחידה</string>
-    <string name="pref_wizard_percentage">אחוז אשף</string>
     <string name="pref_complication_tap_action">פעולת הקשה על סיבוך</string>
     <string name="pref_unicode_in_complications">יוניקוד בסיבוכים</string>
     <string name="pref_version">גירסה:</string>
     <string name="pref_moreWatchfaceSettings">עוד הגדרות פני שעון</string>
     <string name="pref_lookInYourWatchfaceConfiguration">עיינו בהגדרות פני השעון בבקשה.</string>
     <string name="menu_tempt">מטרה זמנית</string>
-    <string name="menu_wizard">אשף</string>
     <string name="menu_bolus">בולוס</string>
-    <string name="menu_ecarb">פחמימות ממושכות</string>
     <string name="menu_settings">הגדרות</string>
     <string name="menu_status">סטטוס</string>
     <string name="menu_resync">סנכרן מחדש </string>
@@ -74,22 +70,12 @@
     <string name="menu_none">ללא</string>
     <string name="menu_default">ברירת מחדל</string>
     <string name="menu_menu">תפריט</string>
-    <string name="action_duration">משך</string>
-    <string name="action_target" comment="In temp target menu, single target value">מטרה</string>
-    <string name="action_low" comment="In temp target menu, lower value from range">נמוך</string>
-    <string name="action_high" comment="In temp target menu, higher value from range">גבוה</string>
-    <string name="action_carbs">פחמימות</string>
-    <string name="action_percentage">אחוז</string>
-    <string name="action_start_min">התחלה [min]</string>
-    <string name="action_duration_h">משך [h]</string>
-    <string name="action_insulin">אינסולין</string>
     <string name="action_preset_1">הגדרה מראש 1</string>
     <string name="action_preset_2">הגדרה מראש 2</string>
     <string name="action_preset_3">הגדרה מראש 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">כמות חופשית</string>
     <string name="action_confirm">אישור</string>
     <string name="action_timeshift">היסט זמן</string>
-    <string name="action_bolus">בולוס</string>
     <string name="bolus_progress">התקדמות הבולוס</string>
     <string name="press_to_cancel">לחצו לביטול</string>
     <string name="cancel_bolus">ביטול בולוס</string>
@@ -138,6 +124,7 @@
     <string name="bolus_progress_silent_channel_name">התקדמות בולוס שקטה</string>
     <string name="bolus_progress_channel_description">התקדמות הבולוס וביטול</string>
     <string name="bolus_progress_silent_channel_description">התקדמות הבולוס וביטול עם פחות רטט</string>
+    <string name="simple_ui_off">כבוי</string>
     <string name="simple_ui_charging">בזמן טעינה</string>
     <string name="simple_ui_always_on">מצב דלוק תמיד</string>
     <string name="simple_ui_always_on_charging">דלוק תמיד וטוען</string>

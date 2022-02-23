@@ -183,7 +183,6 @@
     <string name="wear">Wear</string>
     <string name="resend_all_data">Ξαναστείλτε όλα τα Δεδομένα</string>
     <string name="open_settings_on_wear">Ρυθμίσεις στο Wear</string>
-    <string name="basal_rate">Βασικός Ρυθμός:</string>
     <string name="basalvaluebelowminimum">Τιμή βασικού κάτω από το ελάχιστο. Δεν έχει ρυθμιστεί το προφίλ!</string>
     <string name="sms_actualbg">BG:</string>
     <string name="sms_lastbg">Τελευταία BG:</string>
@@ -578,4 +577,5 @@
     <string name="format_percent">%1$d%%</string>
     <string name="unit_minute_short">min</string>
     <!-- SMS Communicator & OTP Authenticator -->
+    <!-- WEAR OS-->
 </resources>

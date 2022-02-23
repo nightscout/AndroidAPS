@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/nav_show_loop"
+        android:title="@string/show_loop"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/nav_hide_loop"
+        android:title="@string/hide_loop"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/nav_export"
+        android:title="@string/ue_export_to_csv"
+        app:showAsAction="never" />
+
+</menu>
