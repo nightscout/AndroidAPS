@@ -86,9 +86,13 @@
     <string name="prerequisites2_label">先决条件</string>
     <string name="prerequisites2_what">什么是建立和使用 AndroidAPS的基本条件？</string>
     <string name="prerequisites2_profile">验证参数信息用于个人配置文件（如ISF胰岛素敏感度系数、I:C胰岛素碳水比率、基础率、DIA胰岛素作用持续时间等等）。</string>
+    <string name="prerequisites2_device">兼容的Android 设备 (例如：手机、安卓原生系统手表，或平板电脑)。</string>
+    <string name="prerequisites2_internet">AndroidAPS需要互联网连接才能启用闭环功能。</string>
+    <string name="prerequisites2_supportedcgm">一台安装了动态血糖监测应用或兼容软件的手机/设备，用于接收血糖数据。</string>
     <string name="prerequisites2_hint1">https://androidaps.readthedocs.io/en/latest/EN/Module/module.html</string>
     <string name="update_label">更新 AndroidAPS</string>
     <string name="whatistrue">检查所有正确的答案.</string>
+    <string name="update_git">您需要在您的计算机上安装和配置Git。</string>
     <string name="update_neverupdate">如果该系统运作良好，就不要去更新系统。</string>
     <string name="update_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#update-to-a-new-version-or-branch</string>
     <string name="troubleshooting_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
