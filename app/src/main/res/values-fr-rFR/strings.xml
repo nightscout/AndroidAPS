@@ -434,6 +434,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="ns_localbroadcasts">Active les diffusions vers d\'autres applications (comme xDrip+). Ne pas activer si plusieurs instances d\'AAPS ou de NSClient sont installées !</string>
     <string name="ns_localbroadcasts_title">Activer les transmissions locales</string>
     <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openaps_smb_dynamic_isf">SI dynamique</string>
     <string name="enableuam">Activer RNS</string>
     <string name="enablesmb">Activer SMB</string>
     <string name="enablesmb_summary">Utiliser les Super Micro Bolus au lieu des débits de base temporaires pour une action rapide</string>
@@ -663,7 +664,9 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="sensitivity_raises_target_title">Sensibilité augmente la cible</string>
     <string name="sensitivity_raises_target_summary">Quand une sensibilité est détectée, augmentation de la glycémie cible</string>
     <string name="careportal_removestartedevents">Réinitialiser AndroidAPS</string>
-    <string name="show_invalidated">Montrer les messages invalidés</string>
+    <string name="show_invalidated">Montrer les entrées invalides</string>
+    <string name="hide_invalidated">Masquer les entrées invalides</string>
+    <string name="remove_items">Supprimer des entrées</string>
     <string name="storedsettingsfound">Paramètres sauvegardés trouvés</string>
     <string name="allow_hardware_pump_text">ATTENTION : Si vous activez et connectez à une vraie pompe, AndroidAPS copiera les paramètres Basals du profil vers la pompe, écrasant le taux basal existant stocké sur la pompe. Assurez-vous d\'avoir correctement saisi et réglé les paramètres Basal dans AndroidAPS. Si vous ne savez pas ou si ne voulez pas écraser les paramètres Basal sur votre pompe, appuyez sur Annuler et reporter le passage à la pompe à une date ultérieure.</string>
     <string name="error_adding_treatment_title">Données de traitement incomplètes</string>
@@ -973,8 +976,13 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="app_default">Application par défaut</string>
     <string name="select_profile">Sélectionnez le profil à modifier</string>
     <string name="refresh_from_nightscout">Rafraîchir à partir de Nightscout</string>
+    <string name="remove_selected_items">Supprimer les entrées sélectionnées</string>
+    <string name="select_for_removal">Sélectionner pour suppression</string>
     <string name="profile_changes">Changements de profil</string>
+    <string name="tempt_targets">Cibles Temp</string>
     <string name="carbs_and_bolus">Glucides et bolus</string>
+    <string name="confirm_remove_multiple_items">Êtes-vous sûr de vouloir supprimer %1$d entrée(s)</string>
     <string name="hide_loop">Masquer la boucle</string>
-    <string name="show_loop">Afficher la boucle</string>
+    <string name="show_loop">Afficher les entrées boucle</string>
+    <string name="count_selected">%1$d sélectionnée(s)</string>
 </resources>
