@@ -10,38 +10,25 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <LinearLayout
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="start"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:hint="@string/select_profile"
+            android:textColorHint="@color/white"
+            app:boxStrokeColor="@color/list_delimiter">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                android:id="@+id/profileList"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:labelFor="@+id/spinner"
-                android:text="@string/selected_profile"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:clickable="true"
+                android:enabled="false"
+                tools:ignore="KeyboardInaccessibleWidget" />
 
-            <Spinner
-                android:id="@+id/spinner"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="10dp"
-                android:layout_weight="1" />
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="2dip"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:background="@color/list_delimiter" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -217,7 +204,7 @@
                     android:layout_height="40dp"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="10dp"
-                    app:customContentDescription="@string/dia"  />
+                    app:customContentDescription="@string/dia" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -320,21 +307,20 @@
 
         </LinearLayout>
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/profileswitch"
-            style="?android:attr/buttonStyle"
+            style="@style/GrayButton"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="3dp"
             android:layout_marginRight="10dp"
-            android:layout_marginBottom="3dp"
             android:layout_weight="1"
-            android:drawableStart="@drawable/ic_local_activate"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:text="@string/activate_profile" />
+            android:text="@string/activate_profile"
+            app:icon="@drawable/ic_local_activate"
+            app:iconTint="@color/ic_local_activate" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -342,37 +328,35 @@
             android:layout_gravity="center_horizontal"
             android:orientation="horizontal">
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/reset"
-                style="?android:attr/buttonStyle"
+                style="@style/GrayButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="3dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="3dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:layout_weight="1"
-                android:drawableStart="@drawable/ic_local_reset"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:text="@string/reset" />
+                android:paddingLeft="1dp"
+                android:paddingRight="1dp"
+                android:text="@string/reset"
+                app:icon="@drawable/ic_local_reset"
+                app:iconTint="@color/ic_local_reset" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/save"
-                style="?android:attr/buttonStyle"
+                style="@style/GrayButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="3dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="3dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:layout_weight="1"
-                android:drawableStart="@drawable/ic_local_save"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:text="@string/save" />
+                android:paddingLeft="1dp"
+                android:paddingRight="1dp"
+                android:text="@string/save"
+                app:icon="@drawable/ic_local_save"
+                app:iconTint="@color/ic_local_save" />
         </LinearLayout>
 
     </LinearLayout>

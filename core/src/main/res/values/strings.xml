@@ -68,6 +68,7 @@
     <!--    General-->
     <string name="refresh">Refresh</string>
     <string name="error">Error</string>
+    <string name="save">Save</string>
     <string name="not_set_short">Not set</string>
     <string name="failedupdatebasalprofile">Failed to update basal profile</string>
     <string name="profile_set_ok">Basal profile in pump updated</string>
@@ -469,6 +470,7 @@
     <string name="uel_stat_reset">STAT RESET</string>
     <string name="uel_delete_logs">DELETE LOGS</string>
     <string name="uel_delete_future_treatments">DELETE FUTURE TREATMENTS</string>
+    <string name="delete_future_treatments">Delete future treatments</string>
     <string name="uel_export_settings">EXPORT SETTINGS</string>
     <string name="uel_import_settings">IMPORT SETTINGS</string>
     <string name="uel_reset_databases">RESET DATABASES</string>

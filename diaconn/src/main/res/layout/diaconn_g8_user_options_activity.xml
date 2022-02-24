@@ -47,7 +47,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="5dp"></LinearLayout>
+            android:padding="5dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -86,14 +86,14 @@
                 android:id="@+id/beep_and_alarm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="right"
+                android:gravity="end"
                 android:minWidth="120dp" />
 
             <Spinner
                 android:id="@+id/alarm_intesity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="right"
+                android:gravity="end"
                 android:minWidth="120dp" />
 
             <View
@@ -101,11 +101,12 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
+                style="@style/OkCancelButton.Text"
                 android:id="@+id/save_alarm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Save" />
+                android:text="@string/save" />
 
         </LinearLayout>
 
@@ -113,7 +114,7 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:orientation="horizontal"
-            android:padding="5dp"></LinearLayout>
+            android:padding="5dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -154,7 +155,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checkedButton="@+id/pumpalarm_sound"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
                 <RadioButton
                     android:id="@+id/pumpscreentimeout_10"
@@ -181,11 +182,12 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
+                style="@style/OkCancelButton.Text"
                 android:id="@+id/save_lcd_on_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Save" />
+                android:text="@string/save" />
 
         </LinearLayout>
 
@@ -193,7 +195,7 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:orientation="horizontal"
-            android:padding="5dp"></LinearLayout>
+            android:padding="5dp" />
 
 
         <LinearLayout
@@ -235,7 +237,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checkedButton="@+id/pumpalarm_sound"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
                 <RadioButton
                     android:id="@+id/pumplang_english"
@@ -262,11 +264,12 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
+                style="@style/OkCancelButton.Text"
                 android:id="@+id/save_lang"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Save" />
+                android:text="@string/save" />
 
         </LinearLayout>
 
@@ -274,7 +277,7 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:orientation="horizontal"
-            android:padding="5dp"></LinearLayout>
+            android:padding="5dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -316,18 +319,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_marginTop="5dp"
-                android:paddingRight="5dp" />
+                android:paddingEnd="5dp"
+                tools:ignore="RtlSymmetry" />
 
             <View
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
+                style="@style/OkCancelButton.Text"
                 android:id="@+id/save_bolus_speed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Save" />
+                android:text="@string/save" />
 
         </LinearLayout>
 

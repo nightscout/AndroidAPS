@@ -82,13 +82,14 @@
         android:layout_above="@id/reload"
         android:layout_below="@+id/status" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/reload"
-        style="@style/Widget.AppCompat.Button"
+        style="@style/GrayButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:drawableStart="@drawable/ic_actions_refill"
-        android:text="@string/reload" />
+        android:text="@string/reload"
+        app:icon="@drawable/ic_actions_refill"
+        app:iconTint="@color/ic_actions_refill" />
 
 </RelativeLayout>

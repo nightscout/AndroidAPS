@@ -395,14 +395,14 @@
             android:layout_marginBottom="5dp"
             android:background="@color/list_delimiter" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/cancel"
-            style="@style/mdtp_ActionButton.Text"
+            style="@style/OkCancelButton.Text"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
-            android:text="@string/mdtp_cancel"
+            android:text="@string/cancel"
             android:padding="10dp"
             android:textAlignment="textEnd" />
 

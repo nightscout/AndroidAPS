@@ -10,94 +10,94 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/nav_logsettings"
-            style="?android:attr/buttonStyle"
+            style="@style/GrayButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="3dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_marginTop="3dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="3dp"
             android:layout_weight="0.5"
             android:text="@string/nav_logsettings"
             android:textColor="@color/colorTreatmentButton" />
 
-       <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/log_send"
-            style="?android:attr/buttonStyle"
+            style="@style/GrayButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="3dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_marginTop="3dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="3dp"
             android:layout_weight="0.5"
             android:text="@string/send_all_logs"
             android:textColor="@color/colorTreatmentButton" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/log_delete"
-            style="?android:attr/buttonStyle"
+            style="@style/GrayButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="3dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_marginTop="3dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="3dp"
             android:layout_weight="0.5"
             android:text="@string/delete_logs"
             android:textColor="@color/colorTreatmentButton" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/nav_export"
-            style="?android:attr/buttonStyle"
+            style="@style/GrayButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="3dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_marginTop="3dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="3dp"
             android:layout_weight="0.5"
             android:text="@string/nav_export"
             android:textColor="@color/colorTreatmentButton" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/nav_import"
-            style="?android:attr/buttonStyle"
+            style="@style/GrayButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="3dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_marginTop="3dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="3dp"
             android:layout_weight="0.5"
             android:text="@string/nav_import"
             android:textColor="@color/colorTreatmentButton" />
 
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/export_csv"
-            style="?android:attr/buttonStyle"
+            style="@style/GrayButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="3dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_marginTop="3dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="3dp"
             android:layout_weight="0.5"
             android:text="@string/ue_export_to_csv"
             android:textColor="@color/colorTreatmentButton" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/nav_resetdb"
-            style="?android:attr/buttonStyle"
+            style="@style/GrayButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="3dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_marginTop="3dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="3dp"
             android:layout_weight="0.5"
             android:text="@string/nav_resetdb"
             android:textColor="@color/colorTreatmentButton" />

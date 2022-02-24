@@ -48,6 +48,11 @@
     <string name="isf_label">ISF</string>
     <string name="basal_label">Basal</string>
     <string name="target_label">Ziel</string>
+    <string name="dia_long_label">Insulinwirkdauer (duration of insulin action)</string>
+    <string name="ic_long_label">Insulin-zu-KH-Faktor</string>
+    <string name="isf_long_label">ISF: Insulin Sensitivitäts-Faktor (\"Korrektur-Faktor\")</string>
+    <string name="basal_long_label">Basalrate</string>
+    <string name="target_long_label">BZ Ziel</string>
     <string name="initializing">Initialisierung...</string>
     <string name="serialnumber">Seriennummer</string>
     <string name="battery_label">Batterie</string>
@@ -105,6 +110,7 @@
     <string name="notes_label">Notizen</string>
     <string name="remove_button">Löschen</string>
     <string name="addnew">Weiteren hinzufügen</string>
+    <string name="addnew_above">Neu oben hinzufügen</string>
     <string name="wrong_pump_data">Daten kommen von einer anderen Pumpe. Wechsle den Pumpentreiber.</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Begrenzung der max. Basalrate auf %1$.2f IE/h wegen %2$s</string>
@@ -127,6 +133,7 @@
     <string name="location_not_found_message">Auf neueren Geräten muss für die Bluetooth-Erkennung der Standortdienst aktiviert sein. AAPS speichert keine Standortdaten und der Dienst kann nach erfolgreichem Pairing wieder deaktiviert werden.</string>
     <!--    DateUtil-->
     <string name="minago">vor %1$d Min.</string>
+    <string name="minago_long">vor %1$d Minuten</string>
     <string name="hoursago">vor %1$.1f Stunde</string>
     <string name="shorthour">h</string>
     <string name="days">Tage</string>
@@ -440,6 +447,8 @@
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="pump_paired" comment="26 characters max for translation">Pumpe gekoppelt</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight Refresh Button</string>
+    <string name="a11y_min_button_description">abnehmend %1$s mit %2$s</string>
+    <string name="a11y_plus_button_description">zunehmend %1$s mit %2$s</string>
     <plurals name="days">
         <item quantity="one">%1$d Tag</item>
         <item quantity="other">%1$d Tage</item>

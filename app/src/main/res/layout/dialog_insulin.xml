@@ -146,22 +146,25 @@
             android:orientation="horizontal"
             android:padding="5dp">
 
-            <Button
+            <com.google.android.material.button.MaterialButton
+                style="@style/GrayButton"
                 android:id="@+id/plus05"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:contentDescription="Increment insuline with 0.5"
+                android:contentDescription="Increment insulin with 0.5"
                 android:text="+0.5" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
+                style="@style/GrayButton"
                 android:id="@+id/plus10"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="+1.0" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
+                style="@style/GrayButton"
                 android:id="@+id/plus20"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

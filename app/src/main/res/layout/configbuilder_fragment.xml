@@ -5,11 +5,12 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/unlock"
+        style="@style/GrayButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
+        android:layout_gravity="center"
         android:text="@string/unlock_settings" />
 
     <androidx.core.widget.NestedScrollView

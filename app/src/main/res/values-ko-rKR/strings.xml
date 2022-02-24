@@ -242,7 +242,6 @@
     <string name="wear">워치</string>
     <string name="resend_all_data">모든 데이터 다시 보내기</string>
     <string name="open_settings_on_wear">워치에서 설정 열기</string>
-    <string name="basal_rate">Basal양:</string>
     <string name="basalvaluebelowminimum">Basal값이 최소값 이하입니다. 프로파일이 설정되지 않습니다!</string>
     <string name="sms_actualbg">BG:</string>
     <string name="sms_lastbg">Last BG:</string>
@@ -738,8 +737,6 @@
     <string name="profilenamecontainsdot">프로파일명에 점을 포함하고 있습니다.\n이는 NS에서 지원하지 않습니다.\n프로파일이 NS에 업로드되지 않습니다.</string>
     <string name="low_mark_comment">혈당 정상범위의 하한값(표시 전용)</string>
     <string name="high_mark_comment">혈당 정상범위의 상한값(표시 전용)</string>
-    <string name="age">나이:</string>
-    <string name="weight_label">몸무게:</string>
     <string name="id">ID:</string>
     <string name="submit">확인</string>
     <string name="mostcommonprofile">가장 많이 사용된 프로파일:</string>
@@ -860,4 +857,5 @@
     <string name="sms_timeout_while_wating">직전의 펌프 통신 종료를 기다리는 동안 타임 아웃</string>
     <string name="smscommunicator_another_bolus_in_queue">대기열에 또다른 bolus가 있습니다. 이후에 다시 시도하세요.</string>
     <string name="calculation_in_progress">계산 진행 중</string>
+    <!-- WEAR OS-->
 </resources>
