@@ -8,7 +8,7 @@
     android:layout_marginLeft="16dp"
     android:layout_marginTop="16dp"
     android:layout_marginRight="16dp"
-    app:cardBackgroundColor="@color/colorPrimary"
+    app:cardBackgroundColor="@color/cardColorBackground"
     app:cardCornerRadius="2dp"
     app:cardUseCompatPadding="true"
     app:contentPadding="16dp">
@@ -53,32 +53,36 @@
 
         </LinearLayout>
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/verify"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            style="@style/OkCancelButton.Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="end"
             android:text="@string/objectives_button_verify" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/start"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            style="@style/OkCancelButton.Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="end"
             android:text="@string/objectives_button_start" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/unfinish"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            style="@style/OkCancelButton.Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="end"
             android:text="@string/objectives_button_unfinish" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/unstart"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            style="@style/OkCancelButton.Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="end"
             android:text="@string/objectives_button_unstart" />
 
         <TextView
@@ -107,9 +111,9 @@
                 android:hint="XXXXXXXXXX"
                 android:inputType="text" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/enterbutton"
-                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                style="@style/OkCancelButton.Text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/objectives_button_enter" />

@@ -4,6 +4,7 @@
     <!--    General-->
     <string name="refresh">Yenile</string>
     <string name="error">Hata</string>
+    <string name="save">Kaydet</string>
     <string name="not_set_short">Ayarlanmadı</string>
     <string name="failedupdatebasalprofile">Bazal profiliniz güncellenemedi</string>
     <string name="profile_set_ok">Pompadaki Bazal profil güncellendi</string>
@@ -48,6 +49,11 @@
     <string name="isf_label">İDF</string>
     <string name="basal_label">Bazal</string>
     <string name="target_label">Hedef</string>
+    <string name="dia_long_label">İnsülin Etki Süresi</string>
+    <string name="ic_long_label">Karbonhidrat insülin Oranı (I:C oranı)</string>
+    <string name="isf_long_label">İnsülin Duyarlılık Faktörü</string>
+    <string name="basal_long_label">Bazal oranı</string>
+    <string name="target_long_label">Kan Şekeri Hedefi</string>
     <string name="initializing">Başlatılıyor ...</string>
     <string name="serialnumber">Seri numarası</string>
     <string name="battery_label">Pil</string>
@@ -105,6 +111,7 @@
     <string name="notes_label">Notlar</string>
     <string name="remove_button">Kaldır</string>
     <string name="addnew">Yeni ekle</string>
+    <string name="addnew_above">Yukarı yeni ekle</string>
     <string name="wrong_pump_data">Veriler farklı pompadan geliyor. Pompa durumunu sıfırlamak için pompa sürücüsünü değiştirin.</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">%2$s nedeniyle max bazal oranı %1$.2f Ü/s ile sınırlı</string>
@@ -127,6 +134,7 @@
     <string name="location_not_found_message">Bluetooth cihaz bulmanın daha yeni cihazlarda çalışması için konum etkinleştirilmelidir. AAPS konumunuzu izlemez ve eşleştirme başarılı olduktan sonra devre dışı bırakılabilir.</string>
     <!--    DateUtil-->
     <string name="minago">%1$d dak önce</string>
+    <string name="minago_long">%1$d dakika önce</string>
     <string name="hoursago">%1$.1f s önce</string>
     <string name="shorthour">s</string>
     <string name="days">gün</string>
@@ -369,6 +377,7 @@
     <string name="uel_stat_reset">İSTATİSK SIFIRLAMA</string>
     <string name="uel_delete_logs">GÜNLÜKLERİ SİL</string>
     <string name="uel_delete_future_treatments">GELECEK TEDAVİLERİ SİL</string>
+    <string name="delete_future_treatments">İleri tarihli tedavileri sil</string>
     <string name="uel_export_settings">AYARLARI DIŞA AKTAR</string>
     <string name="uel_import_settings">AYARLARI İÇE AKTAR</string>
     <string name="uel_reset_databases">VERİTABANLARINI SIFIRLA</string>
@@ -440,6 +449,8 @@
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="pump_paired" comment="26 characters max for translation">Pompa eşleştirildi</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight Yenileme Düğmesi</string>
+    <string name="a11y_min_button_description">%2$s\'dan %1$s\'a azalma</string>
+    <string name="a11y_plus_button_description">%2$s\'dan %1$s\'a artış</string>
     <plurals name="days">
         <item quantity="one">%1$d gün</item>
         <item quantity="other">%1$d gün</item>

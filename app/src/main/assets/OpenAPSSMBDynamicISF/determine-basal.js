@@ -284,18 +284,36 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
         else {
             console.error("Time now is "+now+"; ");
         }
+    console.error("                                            ");
+    console.error("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+    console.error("++ Dynamic ISF Beta 1.3 - Based on rolling 24 hours ++");
+    console.error("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+    console.error("                                            ");
+
     if (meal_data.TDDAIMI7){
         var tdd7 = meal_data.TDDAIMI7;
+            }
+        else{
+        var tdd7 = ((basal * 12)*100)/21;
         }
-    else{
-    var tdd7 = ((basal * 12)*100)/21;
-    }
-        var tdd_pump_now = meal_data.TDDPUMP;
-        var tdd_pump = ( tdd_pump_now / (now / 24));
-        var TDD = (tdd7 * 0.4) + (tdd_pump * 0.6);
-        console.error("Pump extrapolated TDD = "+tdd_pump+"; ");
+        console.error("7-day average TDD is: " +tdd7+ "; ");
+        console.error("                                            ");
+
+    if (meal_data.TDDLast24){
+        var tdd_24 = meal_data.TDDLast24;
+        }
+        else {
+        var tdd_24 = (( basal * 24 ) * 2.8);
+        }
+
+        var TDD = (tdd7 * 0.3) + (tdd_24 * 0.7);
+
+       console.error("Rolling 24 hour TDD = "+tdd_24+"; ");
+       console.error("                                            ");
+       console.error("Weighted Average TDD = "+TDD+"; ");
+       console.error("                                            ");
         //if (tdd7 > 0){
-        if ( tdd_pump > tdd7 && now < 5 || now < 7 && TDD < ( 0.8 * tdd7 ) ){
+        /*if ( tdd_pump > tdd7 && now < 5 || now < 7 && TDD < ( 0.8 * tdd7 ) ){
           TDD = ( 0.8 * tdd7 );
           console.log("Excess or too low insulin from pump so TDD set to "+TDD+" based on 75% of TDD7; ");
           rT.reason += "TDD: " +TDD+ " due to low or high tdd from pump; ";
@@ -316,12 +334,13 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
         else {
              console.log("TDD 7 ="+tdd7+", TDD Pump ="+tdd_pump+" and TDD = "+TDD+";");
              rT.reason += "TDD: " +TDD+ " based on standard pump 60/tdd7 40 split; ";
-             }
+             }*/
 
 
     var variable_sens = (277700 / (TDD * bg));
     variable_sens = round(variable_sens,1);
     console.log("Current sensitivity for predictions is " +variable_sens+" based on current bg");
+    console.error("                                            ");
 
     sens = variable_sens;
     if ( high_temptarget_raises_sensitivity && profile.temptargetSet && target_bg > normalTarget || profile.low_temptarget_lowers_sensitivity && profile.temptargetSet && target_bg < normalTarget ) {
@@ -389,7 +408,7 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
     if (iob_data.iob > 0) {
         var naive_eventualBG = round( bg - (iob_data.iob * sens) );
     } else { // if IOB is negative, be more conservative and use the lower of sens, profile.sens
-        naive_eventualBG = round( bg - (iob_data.iob * Math.min(sens, profile.sens) ) );
+        naive_eventualBG = round( bg - (iob_data.iob * sens ) );
     }
     // and adjust it for the deviation above
     var eventualBG = naive_eventualBG + deviation;

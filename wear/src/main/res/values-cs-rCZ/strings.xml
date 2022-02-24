@@ -11,6 +11,9 @@
     <string name="label_xdrip_cockpit">AAPS (Cockpit)</string>
     <string name="label_xdrip_steampunk">AAPS (Steampunk)</string>
     <string name="label_digitalstyle">AAPS (DigitalStyle)</string>
+    <string name="label_actions_tile">AAPS(Akce)</string>
+    <string name="label_temp_target_tile">AAPS(Doč. cíl)</string>
+    <string name="label_quick_wizard_tile">AAPS(Rychlý bolus)</string>
     <string name="label_warning_sync">Žádná data!</string>
     <string name="label_warning_old">Stará data!</string>
     <string name="label_warning_since">Od %1$s</string>
@@ -54,10 +57,10 @@
     <string name="pref_ring_history">Kroužek Historie</string>
     <string name="pref_light_ring_history">Světlý kroužek Historie</string>
     <string name="pref_animations">Animace</string>
-    <string name="pref_wizard_in_menu">Kalkulačka v nabídce</string>
+    <string name="pref_wizard_in_menu">Kalkulačka v menu</string>
     <string name="pref_prime_in_menu">Plnění v nabídce</string>
     <string name="pref_single_target">Jeden cíl</string>
-    <string name="pref_wizard_percentage">Procenta z kalkulátoru</string>
+    <string name="pref_wizard_percentage">Procento kalkulačky</string>
     <string name="pref_complication_tap_action">Akce po klepnutí na komplikaci</string>
     <string name="pref_unicode_in_complications">Znaky Unicode v komplikacích</string>
     <string name="pref_version">Verze:</string>
@@ -65,8 +68,11 @@
     <string name="pref_lookInYourWatchfaceConfiguration">Podívejte se na konfiguraci hodinek prosím.</string>
     <string name="menu_tempt">TempT</string>
     <string name="menu_wizard">Kalkulačka</string>
+    <string name="menu_wizard_short">Kalk</string>
+    <string name="menu_treatment">Ošetření</string>
+    <string name="menu_treatment_short">Ošetř</string>
     <string name="menu_bolus">Bolus</string>
-    <string name="menu_ecarb">eCarbs</string>
+    <string name="menu_ecarb">Sach</string>
     <string name="menu_settings">Nastavení</string>
     <string name="menu_status">Stav</string>
     <string name="menu_resync">Re-Sync</string>
@@ -74,22 +80,31 @@
     <string name="menu_none">Nic</string>
     <string name="menu_default">Výchozí</string>
     <string name="menu_menu">Menu</string>
-    <string name="action_duration">trvání</string>
-    <string name="action_target" comment="In temp target menu, single target value">cíl</string>
-    <string name="action_low" comment="In temp target menu, lower value from range">nízká</string>
-    <string name="action_high" comment="In temp target menu, higher value from range">vysoká</string>
-    <string name="action_carbs">sacharidy</string>
-    <string name="action_percentage">procento</string>
-    <string name="action_start_min">začátek [min]</string>
-    <string name="action_duration_h">trvání [h]</string>
-    <string name="action_insulin">inzulín</string>
+    <string name="quick_wizard_short">XL</string>
+    <string name="action_duration">Trvání</string>
+    <string name="action_tempt_confirmation">Požadován dočasný cíl</string>
+    <string name="action_quick_wizard_confirmation">Požadován rychlý bolus</string>
+    <string name="action_treatment_confirmation">Požadováno ošetření</string>
+    <string name="action_bolus_confirmation">Požadován bolus</string>
+    <string name="action_wizard_confirmation">Požadován kalkulátor</string>
+    <string name="action_fill_confirmation">Požadováno plnění</string>
+    <string name="action_ecarb_confirmation">Požadovány sacharidy</string>
+    <string name="action_cpp_confirmation">Požadován profil</string>
+    <string name="action_target" comment="In temp target menu, single target value">Cíl</string>
+    <string name="action_low" comment="In temp target menu, lower value from range">Nízký</string>
+    <string name="action_high" comment="In temp target menu, higher value from range">Vysoký</string>
+    <string name="action_carbs">Sacharidy</string>
+    <string name="action_percentage">Procento</string>
+    <string name="action_start_min">Začátek [min]</string>
+    <string name="action_duration_h">Trvání [h]</string>
+    <string name="action_insulin">Inzulín</string>
     <string name="action_preset_1">Předvolba 1</string>
     <string name="action_preset_2">Předvolba 2</string>
     <string name="action_preset_3">Předvolba 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Libovolné množství</string>
     <string name="action_confirm">POTVRDIT</string>
     <string name="action_timeshift">posun času</string>
-    <string name="action_bolus">bolus</string>
+    <string name="action_bolus">Bolus</string>
     <string name="bolus_progress">Průběh vydávání bolusu</string>
     <string name="press_to_cancel">stisknutím tlačítka akci zrušíte</string>
     <string name="cancel_bolus">ZRUŠIT BOLUS</string>
@@ -142,4 +157,13 @@
     <string name="simple_ui_charging">Při nabíjení</string>
     <string name="simple_ui_always_on">Vždy zapnuto</string>
     <string name="simple_ui_always_on_charging">Vždy zapnuto a nabíjení</string>
+    <string name="temp_target_eating_soon">Jídlo</string>
+    <string name="temp_target_hypo">Hypo</string>
+    <string name="temp_target_activity">Aktivita</string>
+    <string name="temp_target_manual">Ručně</string>
+    <string name="temp_target_cancel">Zrušit</string>
+    <string name="tile_none">Žádný</string>
+    <string name="tile_no_config">Není dostupná žádná konfigurace</string>
+    <string name="wear_control_not_enabled">Ovládání hodinkami vypnuto</string>
+    <string name="wear_control_no_data">Žádná data k dispozici</string>
 </resources>

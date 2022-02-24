@@ -14,7 +14,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
+        style="@style/GrayButton"
         android:id="@+id/login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -23,7 +24,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/status" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
+        style="@style/GrayButton"
         android:id="@+id/uploadnow"
         android:layout_width="113dp"
         android:layout_height="50dp"
@@ -32,7 +34,8 @@
         app:layout_constraintStart_toEndOf="@+id/login"
         app:layout_constraintTop_toBottomOf="@+id/status" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
+        style="@style/GrayButton"
         android:id="@+id/removeall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -42,7 +45,8 @@
         app:layout_constraintStart_toEndOf="@+id/uploadnow"
         app:layout_constraintTop_toBottomOf="@+id/status" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
+        style="@style/GrayButton"
         android:id="@+id/resertstart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

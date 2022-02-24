@@ -4,6 +4,7 @@
     <!--    General-->
     <string name="refresh">Obnovit</string>
     <string name="error">Chyba</string>
+    <string name="save">Uložit</string>
     <string name="not_set_short">Nenastaveno</string>
     <string name="failedupdatebasalprofile">Chyba při nastavení bazálního profilu</string>
     <string name="profile_set_ok">Bazální profil aktualizován</string>
@@ -48,6 +49,11 @@
     <string name="isf_label">Citlivost</string>
     <string name="basal_label">Bazál</string>
     <string name="target_label">Cíl</string>
+    <string name="dia_long_label">Doba působnosti inzulínu</string>
+    <string name="ic_long_label">Inzulíno-sacharidový poměr</string>
+    <string name="isf_long_label">Citlivost na inzulín</string>
+    <string name="basal_long_label">Bazál</string>
+    <string name="target_long_label">Cílová glykémie</string>
     <string name="initializing">Inicializuji ...</string>
     <string name="serialnumber">Sériové číslo</string>
     <string name="battery_label">Baterie</string>
@@ -105,6 +111,7 @@
     <string name="notes_label">Poznámky</string>
     <string name="remove_button">Odstranit</string>
     <string name="addnew">Přidat nový</string>
+    <string name="addnew_above">Přidat novou nad</string>
     <string name="wrong_pump_data">Data přicházejí z jiné pumpy. Změňte ovladač pro obnovení stavu pumpy.</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Max bazál omezen na %1$.2f U/h: %2$s</string>
@@ -127,6 +134,7 @@
     <string name="location_not_found_message">Pro vyhledání Bluetooth zařízení na novějších telefonech musí být povoleno zjišťování polohy. AAPS vás nesleduje a po provedení párování můžete tuto volbu opět zakázat.</string>
     <!--    DateUtil-->
     <string name="minago">před %1$d min</string>
+    <string name="minago_long">před %1$d minutamí</string>
     <string name="hoursago">před %1$.1f h</string>
     <string name="shorthour">h</string>
     <string name="days">dnů</string>
@@ -369,6 +377,7 @@
     <string name="uel_stat_reset">RESET STATISTIK</string>
     <string name="uel_delete_logs">VYMAZAT LOGY</string>
     <string name="uel_delete_future_treatments">VYMAZAT BUDOUCÍ OŠETŘENÍ</string>
+    <string name="delete_future_treatments">Odstranit ošetření v budoucnu</string>
     <string name="uel_export_settings">EXPORTOVAT NASTAVENÍ</string>
     <string name="uel_import_settings">IMPORTOVAT NASTAVENÍ</string>
     <string name="uel_reset_databases">RESETOVAT DATABÁZE</string>
@@ -440,6 +449,8 @@
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="pump_paired" comment="26 characters max for translation">Pumpa spárována</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight Tlačítko Obnovit</string>
+    <string name="a11y_min_button_description">snížení %1$s o %2$s</string>
+    <string name="a11y_plus_button_description">zvýšení %1$s o %2$s</string>
     <plurals name="days">
         <item quantity="one">%1$d den</item>
         <item quantity="few">%1$d dnů</item>

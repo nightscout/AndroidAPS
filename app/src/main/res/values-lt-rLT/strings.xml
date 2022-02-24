@@ -161,7 +161,6 @@
     <string name="end_user_license_agreement">Licencinė sutartis su vartotoju</string>
     <string name="end_user_license_agreement_text">PROGRAMA NEGALI BŪTI NAUDOJAMA GYDYMO SPRENDIMAMS PRIIMTI. PAGAL GALIOJANČIUS ĮSTATYMUS PROGRAMA NESUTEIKIA JOKIŲ GARANTIJŲ VARTOTOJUI. JEI RAŠTU NENURODYTA KITAIP, PROGRAMOS AUTORINIŲ TEISIŲ TURĖTOJAS IR/AR KITOS ŠALYS PATEIKIA PROGRAMĄ \"KAIP YRA\" BE JOKIŲ GARANTIJŲ, TIEK AKIVAIZDŽIŲ, TIEK NUMANOMŲ, ĮSKAITANT, BET NEAPSIRIBOJANT GALIMYBĘ NAUDOTI PROGRAMĄ KOMERCINIAMS AR KITOKIEMS DALINIAMS TIKSLAMS. RIZIKĄ, KYLANČIĄ NAUDOJANT PROGRAMĄ PRISIIMA PATS VARTOTOJAS. JEI PROGRAMA VEIKIA NETINKAMAI, IŠLAIDOS, SUSIJUSIOS SU PROGRAMOS SERVISU, TAISYMU AR KOREGAVIMU, TENKA VARTOTOJUI.</string>
     <string name="end_user_license_agreement_i_understand">SUPRATAU IR SUTINKU</string>
-    <string name="save">Išsaugoti</string>
     <string name="reloadprofile">Atnaujinti profilį</string>
     <string name="smscommunicator">SMS komunikatorius</string>
     <string name="smscommunicator_allowednumbers">Leidžiami telefono numeriai</string>
@@ -246,7 +245,6 @@
     <string name="wear">Išmanieji laikrodžiai</string>
     <string name="resend_all_data">Pakartotinai siųsti visus duomenis</string>
     <string name="open_settings_on_wear">Atidaryti išmaniojo laikrodžio nustatymus</string>
-    <string name="basal_rate">Valandinė bazė:</string>
     <string name="basalvaluebelowminimum">Valandinės bazės vertė mažesnė už minimalią. Profilis nenustatytas!</string>
     <string name="sms_actualbg">KG:</string>
     <string name="sms_lastbg">Paskutinė KG:</string>
@@ -427,8 +425,6 @@
     <string name="keep_screen_on_summary">Neleidžia Android sistemai išjungti ekrano. Naudojama daug energijos, jei telefonas neprijungtas prie maitinimo šaltinio.</string>
     <string name="sensitivity_warning">Įjungę Autosens funkciją nepamirškite įvedinėti visus valgomus angliavandenius. To nedarant, angliavandenių sukeliami gliukozės svyravimai bus klaidingai identifikuojami kaip jautrumo pasikeitimai!</string>
     <string name="sensitivityweightedaverage">Jautrumas pagal svertinį vidurkį</string>
-    <string name="mdtp_ok">OK</string>
-    <string name="mdtp_cancel">Atšaukti</string>
     <string name="notloadedplugins">Ne visi profiliai įkelti!</string>
     <string name="valuesnotstored">Reikšmės neišsaugotos!</string>
     <string name="ns_localbroadcasts">Įgalinti perdavimą į kitas programas (pvz., xDrip+). Neįgalinkite, jei įdiegta daugiau nei vienas AAPS arba NSClient egzempliorius!</string>
@@ -757,8 +753,6 @@
     <string name="profilenamecontainsdot">Profilio pavadinime yra taškų.\nŠios funkcijos NS nepalaiko.\nProfilis neįkeltas į NS.</string>
     <string name="low_mark_comment">Mažiausia tikslinės srities vertė (tik rodymui)</string>
     <string name="high_mark_comment">Didžiausia tikslinės srities vertė (tik rodymui)</string>
-    <string name="age">Amžius:</string>
-    <string name="weight_label">Svoris:</string>
     <string name="id">ID:</string>
     <string name="submit">Pateikti</string>
     <string name="mostcommonprofile">Dažniausiai naudojamas profilis:</string>
@@ -904,4 +898,5 @@
     <string name="identification">Identifikacija (el. paštas, FB, Discord slapyvardis ar kt.)</string>
     <string name="identification_not_set">Kūrėjo režime tapatybė nenustatyta</string>
     <string name="not_available_full">Negalimas</string>
+    <!-- WEAR OS-->
 </resources>

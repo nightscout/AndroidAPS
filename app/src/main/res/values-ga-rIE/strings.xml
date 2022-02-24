@@ -60,7 +60,6 @@
     <string name="nav_export">Socruithe Easpórtáil</string>
     <string name="nav_import">Socruithe Iompórtáil</string>
     <string name="check_preferences_import_btn">Iompórtáil</string>
-    <string name="save">Sábháil</string>
     <string name="reloadprofile">Athlódáil próifíl</string>
     <string name="smscommunicator_loophasbeendisabled">Is lúb díchumasaithe</string>
     <string name="smscommunicator_loophasbeenenabled">Is lúb cumasaithe</string>
@@ -78,7 +77,6 @@
     <string name="units_colon">Aonaid:</string>
     <string name="units">Aonaid</string>
     <string name="dia">DIA</string>
-    <string name="basal_rate">Bunaidh ráta:</string>
     <string name="sms_actualbg">BG:</string>
     <string name="sms_lastbg">GF deiridh:</string>
     <string name="mdi">MDI</string>
@@ -141,8 +139,6 @@
     <string name="openaps">OpenAPS</string>
     <string name="openaps_short">OAPS</string>
     <string name="basal_short">BUN</string>
-    <string name="mdtp_ok">Ceart go leor</string>
-    <string name="mdtp_cancel">Cuir ar ceal</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
     <string name="lyumjev">Lyumjev</string>
@@ -186,7 +182,7 @@
     <string name="dia_short">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
-    <string name="age">Aois:</string>
     <string name="randombg_short">BG</string>
     <!-- SMS Communicator & OTP Authenticator -->
+    <!-- WEAR OS-->
 </resources>

@@ -105,7 +105,8 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
         binding.from.setOnClickListener {
             context?.let {
                 TimePickerDialog(
-                    it, fromTimeSetListener,
+                    it, R.style.MaterialPickerTheme,
+                    fromTimeSetListener,
                     T.secs(fromSeconds.toLong()).hours().toInt(),
                     T.secs((fromSeconds % 3600).toLong()).mins().toInt(),
                     DateFormat.is24HourFormat(context)
@@ -123,7 +124,8 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
         binding.to.setOnClickListener {
             context?.let {
                 TimePickerDialog(
-                    it, toTimeSetListener,
+                    it, R.style.MaterialPickerTheme,
+                    toTimeSetListener,
                     T.secs(toSeconds.toLong()).hours().toInt(),
                     T.secs((toSeconds % 3600).toLong()).mins().toInt(),
                     DateFormat.is24HourFormat(context)

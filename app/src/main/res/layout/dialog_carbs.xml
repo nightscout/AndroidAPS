@@ -215,26 +215,33 @@
             android:orientation="horizontal"
             android:padding="5dp">
 
-            <Button
+            <com.google.android.material.button.MaterialButton
+                style="@style/GrayButton"
                 android:id="@+id/plus1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="+5" />
+                android:text="+5"
+                tools:ignore="HardcodedText" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
+                style="@style/GrayButton"
                 android:id="@+id/plus2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="+10" />
+                android:text="+10"
+                tools:ignore="HardcodedText" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
+                style="@style/GrayButton"
                 android:id="@+id/plus3"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="+20" />
+                android:text="+20"
+                tools:ignore="HardcodedText" />
+
 
         </LinearLayout>
 

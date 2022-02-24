@@ -42,7 +42,7 @@ class InputTimeRange(private val rh: ResourceHelper, private val dateUtil: DateU
                                 val cal = Calendar.getInstance()
                                 cal.timeInMillis = toMills(start)
                                 TimePickerDialog(
-                                    it,
+                                    it, R.style.MaterialPickerTheme,
                                     { _, hour, minute ->
                                         start = 60 * hour + minute
                                         text = dateUtil.timeString(toMills(start))
@@ -63,7 +63,7 @@ class InputTimeRange(private val rh: ResourceHelper, private val dateUtil: DateU
                             val cal = Calendar.getInstance()
                             cal.timeInMillis = toMills(end)
                             TimePickerDialog(
-                                it,
+                                it, R.style.MaterialPickerTheme,
                                 { _, hour, minute ->
                                     end = 60 * hour + minute
                                     text = dateUtil.timeString(toMills(end))

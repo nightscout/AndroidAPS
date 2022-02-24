@@ -165,7 +165,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     override fun updatePreferenceSummary(pref: Preference) {
         super.updatePreferenceSummary(pref)
         if (pref is EditTextPreference) {
-            if (pref.getKey().contains("smscommunicator_allowednumbers") && (pref.text == null || TextUtils.isEmpty(pref.text.trim { it <= ' ' }))) {
+            if (pref.getKey().contains("smscommunicator_allowednumbers") && (TextUtils.isEmpty(pref.text?.trim { it <= ' ' }))) {
                 pref.setSummary(rh.gs(R.string.smscommunicator_allowednumbers_summary))
             }
         }

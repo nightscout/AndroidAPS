@@ -125,7 +125,9 @@ class WizardDialog : DaggerDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         loadCheckedStates()
         processCobCheckBox()
-        binding.sbCheckbox.visibility = sp.getBoolean(R.string.key_usesuperbolus, false).toVisibility()
+        val useSuperBolus = sp.getBoolean(R.string.key_usesuperbolus, false)
+        binding.sbCheckbox.visibility = useSuperBolus.toVisibility()
+        binding.superBolusRow.visibility = useSuperBolus.toVisibility()
         binding.notesLayout.visibility = sp.getBoolean(R.string.key_show_notes_entry_dialogs, false).toVisibility()
 
         val maxCarbs = constraintChecker.getMaxCarbsAllowed().value()
@@ -146,7 +148,7 @@ class WizardDialog : DaggerDialogFragment() {
 
         if (correctionPercent) {
             calculatedPercentage = sp.getInt(R.string.key_boluswizard_percentage, 100).toDouble()
-            binding.correctionInput.setParams(calculatedPercentage, 10.0, 200.0, 1.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher)
+            binding.correctionInput.setParams(calculatedPercentage, 10.0, 200.0, 5.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher)
             binding.correctionInput.value = calculatedPercentage
             binding.correctionUnit.text = "%"
         } else {
@@ -175,9 +177,10 @@ class WizardDialog : DaggerDialogFragment() {
             dismiss()
         }
         binding.bgCheckboxIcon.setOnClickListener { binding.bgCheckbox.isChecked = !binding.bgCheckbox.isChecked }
+        binding.ttCheckboxIcon.setOnClickListener { binding.ttCheckbox.isChecked = !binding.ttCheckbox.isChecked }
         binding.trendCheckboxIcon.setOnClickListener { binding.bgTrendCheckbox.isChecked = !binding.bgTrendCheckbox.isChecked }
         binding.cobCheckboxIcon.setOnClickListener { binding.cobCheckbox.isChecked = !binding.cobCheckbox.isChecked; processCobCheckBox(); }
-        binding.iobCheckboxIcon.setOnClickListener { if (!binding.cobCheckbox.isChecked) binding.iobCheckbox.isChecked = !binding.iobCheckbox.isChecked }
+        binding.iobCheckboxIcon.setOnClickListener { binding.iobCheckbox.isChecked = !binding.iobCheckbox.isChecked; processIobCheckBox(); }
         // cancel button
         binding.okcancel.cancel.setOnClickListener {
             aapsLogger.debug(LTag.APS, "Dialog canceled: ${this.javaClass.name}")
@@ -212,7 +215,7 @@ class WizardDialog : DaggerDialogFragment() {
                 binding.correctionUnit.text = if (isChecked) "%" else rh.gs(R.string.insulin_unit_shortname)
                 correctionPercent = binding.correctionPercent.isChecked
                 if (correctionPercent) {
-                    binding.correctionInput.setParams(calculatedPercentage, 10.0, 200.0, 1.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher)
+                    binding.correctionInput.setParams(calculatedPercentage, 10.0, 200.0, 5.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher)
                     binding.correctionInput.customContentDescription = rh.gs(R.string.a11_correction_percentage)
                 } else {
                     binding.correctionInput.setParams(
@@ -265,35 +268,42 @@ class WizardDialog : DaggerDialogFragment() {
     private fun onCheckedChanged(buttonView: CompoundButton, @Suppress("UNUSED_PARAMETER") state: Boolean) {
         saveCheckedStates()
         binding.ttCheckbox.isEnabled = binding.bgCheckbox.isChecked && repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing
+        binding.ttCheckboxIcon.visibility = binding.ttCheckbox.isEnabled.toVisibility()
         if (buttonView.id == binding.cobCheckbox.id)
             processCobCheckBox()
+        if (buttonView.id == binding.iobCheckbox.id)
+            processIobCheckBox()
         processEnabledIcons()
         calculateInsulin()
     }
 
     private fun processCobCheckBox() {
         if (binding.cobCheckbox.isChecked) {
-            binding.iobCheckbox.isEnabled = false
-            binding.iobCheckboxIcon.isEnabled = false
             binding.iobCheckbox.isChecked = true
-        } else {
-            binding.iobCheckbox.isEnabled = true
-            binding.iobCheckboxIcon.isEnabled = true
+        }
+    }
+
+    private fun processIobCheckBox() {
+        if (!binding.iobCheckbox.isChecked) {
+            binding.cobCheckbox.isChecked = false
         }
     }
 
     private fun processEnabledIcons() {
         binding.bgCheckboxIcon.isChecked = binding.bgCheckbox.isChecked
+        binding.ttCheckboxIcon.isChecked = binding.ttCheckbox.isChecked
         binding.trendCheckboxIcon.isChecked = binding.bgTrendCheckbox.isChecked
         binding.iobCheckboxIcon.isChecked = binding.iobCheckbox.isChecked
         binding.cobCheckboxIcon.isChecked = binding.cobCheckbox.isChecked
 
         binding.bgCheckboxIcon.alpha = if (binding.bgCheckbox.isChecked) 1.0f else 0.2f
+        binding.ttCheckboxIcon.alpha = if (binding.ttCheckbox.isChecked) 1.0f else 0.2f
         binding.trendCheckboxIcon.alpha = if (binding.bgTrendCheckbox.isChecked) 1.0f else 0.2f
         binding.iobCheckboxIcon.alpha = if (binding.iobCheckbox.isChecked) 1.0f else 0.2f
         binding.cobCheckboxIcon.alpha = if (binding.cobCheckbox.isChecked) 1.0f else 0.2f
 
         binding.bgCheckboxIcon.visibility = binding.calculationCheckbox.isChecked.not().toVisibility()
+        binding.ttCheckboxIcon.visibility = (binding.calculationCheckbox.isChecked.not() && binding.ttCheckbox.isEnabled).toVisibility()
         binding.trendCheckboxIcon.visibility = binding.calculationCheckbox.isChecked.not().toVisibility()
         binding.iobCheckboxIcon.visibility = binding.calculationCheckbox.isChecked.not().toVisibility()
         binding.cobCheckboxIcon.visibility = binding.calculationCheckbox.isChecked.not().toVisibility()
@@ -345,7 +355,9 @@ class WizardDialog : DaggerDialogFragment() {
 
         // Set BG if not old
         binding.bgInput.value = iobCobCalculator.ads.actualBg()?.valueToUnits(units) ?: 0.0
+
         binding.ttCheckbox.isEnabled = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing
+        binding.ttCheckboxIcon.visibility = binding.ttCheckbox.isEnabled.toVisibility()
 
         // IOB calculation
         val bolusIob = iobCobCalculator.calculateIobFromBolus().round()

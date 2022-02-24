@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,7 @@ import dagger.android.support.DaggerFragment;
 import info.nightscout.androidaps.combo.R;
 import info.nightscout.androidaps.interfaces.CommandQueue;
 import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.pump.combo.data.ComboErrorUtil;
 import info.nightscout.androidaps.plugins.pump.combo.events.EventComboPumpUpdateGUI;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.PumpState;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.Bolus;
@@ -38,6 +40,7 @@ public class ComboFragment extends DaggerFragment {
     @Inject DateUtil dateUtil;
     @Inject FabricPrivacy fabricPrivacy;
     @Inject AapsSchedulers aapsSchedulers;
+    @Inject ComboErrorUtil errorUtil;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
 
@@ -52,6 +55,12 @@ public class ComboFragment extends DaggerFragment {
     private Button refreshButton;
     private TextView bolusCount;
     private TextView tbrCount;
+
+    private View errorCountDelimiter;
+    private LinearLayout errorCountLayout;
+    private TextView errorCountLabel;
+    private TextView errorCountDots;
+    private TextView errorCountValue;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -68,6 +77,12 @@ public class ComboFragment extends DaggerFragment {
         tempBasalText = view.findViewById(R.id.combo_temp_basal);
         bolusCount = view.findViewById(R.id.combo_bolus_count);
         tbrCount = view.findViewById(R.id.combo_tbr_count);
+
+        errorCountDelimiter = view.findViewById(R.id.combo_connection_error_delimiter);
+        errorCountLayout = view.findViewById(R.id.combo_connection_error_layout);
+        errorCountLabel = view.findViewById(R.id.combo_connection_error_label);
+        errorCountDots = view.findViewById(R.id.combo_connection_error_dots);
+        errorCountValue = view.findViewById(R.id.combo_connection_error_value);
 
         refreshButton = view.findViewById(R.id.combo_refresh_button);
         refreshButton.setOnClickListener(v -> {
@@ -240,6 +255,45 @@ public class ComboFragment extends DaggerFragment {
             // stats
             bolusCount.setText(String.valueOf(comboPlugin.getBolusesDelivered()));
             tbrCount.setText(String.valueOf(comboPlugin.getTbrsSet()));
+
+            updateErrorDisplay(false);
+        } else {
+            updateErrorDisplay(true);
+        }
+    }
+
+    private void updateErrorDisplay(boolean forceHide) {
+        int errorCount = -1;
+
+        if (!forceHide) {
+            ComboErrorUtil.DisplayType displayType = errorUtil.getDisplayType();
+
+            if (displayType== ComboErrorUtil.DisplayType.ON_ERROR || displayType== ComboErrorUtil.DisplayType.ALWAYS) {
+                int errorCountInternal = errorUtil.getErrorCount();
+
+                if (errorCountInternal>0) {
+                    errorCount = errorCountInternal;
+                } else if (displayType== ComboErrorUtil.DisplayType.ALWAYS) {
+                    errorCount = 0;
+                }
+            }
+        }
+
+        if (errorCount >=0) {
+            errorCountDelimiter.setVisibility(View.VISIBLE);
+            errorCountLayout.setVisibility(View.VISIBLE);
+            errorCountLabel.setVisibility(View.VISIBLE);
+            errorCountDots.setVisibility(View.VISIBLE);
+            errorCountValue.setVisibility(View.VISIBLE);
+            errorCountValue.setText(errorCount==0 ?
+                    "-" :
+                    ""+errorCount);
+        } else {
+            errorCountDelimiter.setVisibility(View.GONE);
+            errorCountLayout.setVisibility(View.GONE);
+            errorCountLabel.setVisibility(View.GONE);
+            errorCountDots.setVisibility(View.GONE);
+            errorCountValue.setVisibility(View.GONE);
         }
     }
 }

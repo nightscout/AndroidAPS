@@ -129,7 +129,6 @@
     <string name="end_user_license_agreement">Eindverbruiker Lisensie Ooreenkoms</string>
     <string name="end_user_license_agreement_text">MOET NIE GEBRUIK WORD OM MEDIESE BESLUITE TE MAAK NIE. DAAR IS GEEN WAARBORG DAT DIE PROGRAM, ONDERWORPE AAN TOEPASSELIKE WETTE EN WETGEWING. TENSY ANDERS GEMELD IN TEKS VOORSIEN DIE KOPIEREG-HOUERS EN / OF ANDER PARTYE DIE PROGRAM \"AS IS\" SONDER ËNIGE WAARBORG VAN ENIGE ORDE, UITDRUKKELIK OF IMPLISIET, INKLUSIEF, MAAR NIE BEPERK TOT DIE IMPLISIETE WAARBORG VAN TOEPAASBAARHEID OF NUT VIR EEN SPESIFIEKE DOEL. DIE TOTALE EN ALLE RISIKOVIR DIE KWALITEIT EN PRESTASIE VAN DIE PROGRAM RUS MET JOUSELF. VIR ENIGE PROGRAM DEFEKTIEWE OF FALINGS MOET JY PERSOONLIK DIE KOSTE EN REGSAANSPREEKLIKHEID DRA VAN ALLE NODIGE AKSIES, DIENS, REPARASIES OF KORREKSIES VIR USELF OF ENIGE DERDE PARTYE EN/OF AKSIES, DIENS, REPARASIES OF KORREKSIES WAT DEUR DIE PROGRAM GEDOEN WAS.</string>
     <string name="end_user_license_agreement_i_understand">EK VERSTAAN en STEM IN</string>
-    <string name="save">Stoor</string>
     <string name="reloadprofile">Herlaai profiel</string>
     <string name="smscommunicator">SMS Communicator</string>
     <string name="smscommunicator_allowednumbers">Toegelate telefoon nommers</string>
@@ -181,7 +180,6 @@
     <string name="wear">Wear</string>
     <string name="resend_all_data">Stuur alle Data weer</string>
     <string name="open_settings_on_wear">Oop instellings op Wear</string>
-    <string name="basal_rate">Basale waarde:</string>
     <string name="basalvaluebelowminimum">Basale waarde onder minimum. Profiel nie gestel nie!</string>
     <string name="sms_actualbg">BG:</string>
     <string name="sms_lastbg">Laaste BG:</string>
@@ -311,8 +309,6 @@
     <string name="keep_screen_on_summary">Verhoed dat Android skerm afskakel. Dit sal baie meer energie vereis wanneer nie in krag prop is nie.</string>
     <string name="sensitivity_warning">Deur Autosense aan te skakel onthou om alle koolhidrate in te voer Andersins sal koolhidrate dwalinge verkeerdelik geïdentifiseer word as sensitiwiteit veranderinge!!</string>
     <string name="sensitivityweightedaverage">Sensitiwiteit GeweegdeGemiddelde</string>
-    <string name="mdtp_ok">OK</string>
-    <string name="mdtp_cancel">Kanselleer</string>
     <string name="notloadedplugins">Nie alle profiele gelaai!</string>
     <string name="valuesnotstored">Waardes nie gestoor!</string>
     <string name="ns_localbroadcasts_title">Aktiveer plaaslike Uitsaai.</string>
@@ -573,4 +569,5 @@
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="overview_show_predictions">Projeksies</string>
     <string name="prime">Prima</string>
+    <!-- WEAR OS-->
 </resources>

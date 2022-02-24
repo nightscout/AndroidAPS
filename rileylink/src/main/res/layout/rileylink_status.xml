@@ -6,16 +6,18 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
 
-    tools:context=".plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity">
+    tools:context="info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/appbar_padding_top"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:paddingTop="@dimen/appbar_padding_top" >
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/rileylink_settings_tabs"
+            app:tabIndicatorColor="@color/tabSelectedTextColor"
+            app:tabTextColor="@color/tabTextColor"
+            app:tabSelectedTextColor="@color/tabSelectedTextColor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 

@@ -18,7 +18,7 @@
     <color name="warning">#ff1a1a</color>
     <color name="info">#77dd77</color>
     <color name="error_background">#66FC0000</color>
-    <color name="ok_background">#323232</color>
+    <color name="ok_background">@color/colorPrimaryDark</color>
 
     <color name="tempTargetBackground">#77dd77</color>
     <color name="exercise">#67DFE8</color>
@@ -50,6 +50,6 @@
     <color name="deviationred">#72FF0000</color>
     <color name="deviationblack">#72000000</color>
 
-    <color name="splashBackground">#2E2E2E</color>
+    <color name="splashBackground">#000000</color>
 
 </resources>

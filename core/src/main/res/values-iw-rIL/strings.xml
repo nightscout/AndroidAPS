@@ -48,6 +48,11 @@
     <string name="isf_label">ISF</string>
     <string name="basal_label">אינסולין בזאלי</string>
     <string name="target_label">ערך מטרה</string>
+    <string name="dia_long_label">משך פעילות האינסולין</string>
+    <string name="ic_long_label">יחס אינסולין-פחמימות </string>
+    <string name="isf_long_label">יחס התיקון (ISF)</string>
+    <string name="basal_long_label">מינון בזאלי</string>
+    <string name="target_long_label">ערך מטרה</string>
     <string name="initializing">מאתחל...</string>
     <string name="serialnumber">מספר סידורי</string>
     <string name="battery_label">סוללה</string>
@@ -105,6 +110,7 @@
     <string name="notes_label">הערות</string>
     <string name="remove_button">הסרה</string>
     <string name="addnew">הוסף חדש</string>
+    <string name="addnew_above">הוסף חדש למעלה</string>
     <string name="wrong_pump_data">הנתונים מגיעים ממשאבה אחרת. בחרו מחדש את סוג המשאבה כדי לאפס את מצב המשאבה.</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">מגביל את הקצב הבזאלי המרבי ל-%1$.2f יח\' לשעה בגלל %2$s</string>
@@ -127,6 +133,7 @@
     <string name="location_not_found_message">בכדי שסריקת בלוטות\' תעבוד יש לאפשר את שירות המיקום. AAPS לא עוקב אחר המיקום שלכם וניתן להפסיק את השירות לאחר סיום הצימוד.</string>
     <!--    DateUtil-->
     <string name="minago">לפני %1$d דקות</string>
+    <string name="minago_long">לפני %1$d דקות</string>
     <string name="hoursago">לפני %1$.1f שעות</string>
     <string name="shorthour">ש\'</string>
     <string name="days">ימים</string>

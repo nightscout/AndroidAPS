@@ -10,9 +10,9 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
+            style="@style/GrayButton"
             android:id="@+id/resend"
-            style="?android:attr/buttonStyle"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="3dp"
@@ -23,9 +23,9 @@
             android:text="@string/resend_all_data"
             android:textColor="@color/colorTreatmentButton" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
+            style="@style/GrayButton"
             android:id="@+id/opensettings"
-            style="?android:attr/buttonStyle"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="3dp"

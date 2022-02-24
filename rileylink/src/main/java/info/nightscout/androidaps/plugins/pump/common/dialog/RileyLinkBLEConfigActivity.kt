@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.common.dialog
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
@@ -11,16 +10,19 @@ import android.bluetooth.le.ScanFilter
 import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
 import android.content.Context
-import android.content.DialogInterface
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.ParcelUuid
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
-import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
+import android.widget.BaseAdapter
+import android.widget.TextView
+import android.widget.Toast
+import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.plugins.pump.common.ble.BlePreCheck
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.R
@@ -29,6 +31,9 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.GattAttributes
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.databinding.RileyLinkBleConfigActivityBinding
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpDevice
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import org.apache.commons.lang3.StringUtils
@@ -36,13 +41,15 @@ import java.util.*
 import javax.inject.Inject
 
 // IMPORTANT: This activity needs to be called from RileyLinkSelectPreference (see pref_medtronic.xml as example)
-class RileyLinkBLEConfigActivity : NoSplashAppCompatActivity() {
+class RileyLinkBLEConfigActivity : DaggerAppCompatActivity() {
 
     @Inject lateinit var sp: SP
     @Inject lateinit var blePreCheck: BlePreCheck
     @Inject lateinit var rileyLinkUtil: RileyLinkUtil
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var context: Context
+    @Inject lateinit var rh: ResourceHelper
+    @Inject lateinit var aapsLogger: AAPSLogger
 
     private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private val bluetoothAdapter: BluetoothAdapter? get() = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
@@ -64,6 +71,10 @@ class RileyLinkBLEConfigActivity : NoSplashAppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = RileyLinkBleConfigActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        title = rh.gs(R.string.rileylink_configuration)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
 
         // Initializes Bluetooth adapter.
         binding.rileyLinkBleConfigScanDeviceList.adapter = deviceListAdapter
@@ -92,18 +103,16 @@ class RileyLinkBLEConfigActivity : NoSplashAppCompatActivity() {
             }
         }
         binding.rileyLinkBleConfigButtonRemoveRileyLink.setOnClickListener {
-            AlertDialog.Builder(this)
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setTitle(getString(R.string.riley_link_ble_config_remove_riley_link_confirmation_title))
-                .setMessage(getString(R.string.riley_link_ble_config_remove_riley_link_confirmation))
-                .setPositiveButton(getString(R.string.riley_link_common_yes)) { _: DialogInterface?, _: Int ->
+            OKDialog.showConfirmation(
+                this@RileyLinkBLEConfigActivity,
+                rh.gs(R.string.riley_link_ble_config_remove_riley_link_confirmation_title),
+                rh.gs(R.string.riley_link_ble_config_remove_riley_link_confirmation),
+                Runnable {
                     rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkDisconnect, this@RileyLinkBLEConfigActivity)
                     sp.remove(RileyLinkConst.Prefs.RileyLinkAddress)
                     sp.remove(RileyLinkConst.Prefs.RileyLinkName)
                     updateCurrentlySelectedRileyLink()
-                }
-                .setNegativeButton(getString(R.string.riley_link_common_no), null)
-                .show()
+                })
         }
     }
 
@@ -134,6 +143,17 @@ class RileyLinkBLEConfigActivity : NoSplashAppCompatActivity() {
             rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkNewAddressSet, this) // Reconnect current RL
         }
     }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+                true
+            }
+
+            else              -> false
+        }
 
     private fun prepareForScanning() {
         val checkOK = blePreCheck.prerequisitesCheck(this)

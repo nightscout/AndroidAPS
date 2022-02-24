@@ -11,6 +11,9 @@
     <string name="label_xdrip_cockpit">AAPS(Cockpit)</string>
     <string name="label_xdrip_steampunk">AAPS(Steampunk)</string>
     <string name="label_digitalstyle">AAPS(DijitalStil)</string>
+    <string name="label_actions_tile">AAPS(Eylemler)</string>
+    <string name="label_temp_target_tile">AAPS(Geçici Hedef)</string>
+    <string name="label_quick_wizard_tile">AAPS(Hızlı Asistan)</string>
     <string name="label_warning_sync">Veri yok!</string>
     <string name="label_warning_old">Eski veri!</string>
     <string name="label_warning_since">%1$s den beri</string>
@@ -54,19 +57,22 @@
     <string name="pref_ring_history">Zil Geçmişi</string>
     <string name="pref_light_ring_history">Düşük zil Geçmişi</string>
     <string name="pref_animations">Animasyonlar</string>
-    <string name="pref_wizard_in_menu">Menüdeki Sihirbaz</string>
+    <string name="pref_wizard_in_menu">Menüdeki Hesap Makinesi</string>
     <string name="pref_prime_in_menu">Menüden Başlatma</string>
     <string name="pref_single_target">Tek hedef</string>
-    <string name="pref_wizard_percentage">Sihirbaz Yüzdesi</string>
+    <string name="pref_wizard_percentage">Hesap Makinesi Yüzdesi</string>
     <string name="pref_complication_tap_action">Komplikasyon Dokunma Eylemi</string>
     <string name="pref_unicode_in_complications">Komplikasyonlarda Unicode</string>
     <string name="pref_version">Versiyon:</string>
     <string name="pref_moreWatchfaceSettings">daha çok saatarayüz ayarı</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Lütfen, Saatarayüzü yapılandırmasına bakın.</string>
     <string name="menu_tempt">GeçiciH</string>
-    <string name="menu_wizard">Sihirbaz</string>
+    <string name="menu_wizard">Hesap makinesi</string>
+    <string name="menu_wizard_short">Hesap</string>
+    <string name="menu_treatment">Tedavi</string>
+    <string name="menu_treatment_short">Tedavi</string>
     <string name="menu_bolus">Bolus</string>
-    <string name="menu_ecarb">eCarb</string>
+    <string name="menu_ecarb">Karbonhidrat</string>
     <string name="menu_settings">Ayarlar</string>
     <string name="menu_status">Durum</string>
     <string name="menu_resync">Yen-Senkr</string>
@@ -74,22 +80,31 @@
     <string name="menu_none">Hiçbiri</string>
     <string name="menu_default">Varsayılan</string>
     <string name="menu_menu">Menü</string>
-    <string name="action_duration">süre</string>
-    <string name="action_target" comment="In temp target menu, single target value">hedef</string>
-    <string name="action_low" comment="In temp target menu, lower value from range">düşük</string>
-    <string name="action_high" comment="In temp target menu, higher value from range">yüksek</string>
-    <string name="action_carbs">karbonhidrat</string>
-    <string name="action_percentage">yüzde</string>
-    <string name="action_start_min">başlat [min]</string>
-    <string name="action_duration_h">süre [h]</string>
-    <string name="action_insulin">insülin</string>
+    <string name="quick_wizard_short">XL</string>
+    <string name="action_duration">Süre</string>
+    <string name="action_tempt_confirmation">Geçici hedef talebi</string>
+    <string name="action_quick_wizard_confirmation">Hızlı asistan talebi</string>
+    <string name="action_treatment_confirmation">Tedavi talebi</string>
+    <string name="action_bolus_confirmation">Bolus talebi</string>
+    <string name="action_wizard_confirmation">Hesaplama talebi</string>
+    <string name="action_fill_confirmation">Doldurma talebi</string>
+    <string name="action_ecarb_confirmation">Karonhidrat talebi</string>
+    <string name="action_cpp_confirmation">CPP talebi</string>
+    <string name="action_target" comment="In temp target menu, single target value">Hedef</string>
+    <string name="action_low" comment="In temp target menu, lower value from range">Düşük</string>
+    <string name="action_high" comment="In temp target menu, higher value from range">Yüksek</string>
+    <string name="action_carbs">Karbonhidrat</string>
+    <string name="action_percentage">Yüzde</string>
+    <string name="action_start_min">Başlat [min]</string>
+    <string name="action_duration_h">Süre [h]</string>
+    <string name="action_insulin">İnsülin</string>
     <string name="action_preset_1">Ön ayar 1</string>
     <string name="action_preset_2">Ön ayar 2</string>
     <string name="action_preset_3">Ön ayar 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Serbest miktar</string>
     <string name="action_confirm">ONAYLA</string>
     <string name="action_timeshift">vardiya</string>
-    <string name="action_bolus">bolus</string>
+    <string name="action_bolus">Bolus</string>
     <string name="bolus_progress">Bolus İlerlemesi</string>
     <string name="press_to_cancel">iptal etmek için basın</string>
     <string name="cancel_bolus">BOLUS İPTAL ET</string>
@@ -142,4 +157,13 @@
     <string name="simple_ui_charging">Şarj Olurken</string>
     <string name="simple_ui_always_on">Her Zaman Açık Modu</string>
     <string name="simple_ui_always_on_charging">Her Zaman Açık ve Şarj Oluyor</string>
+    <string name="temp_target_eating_soon">Yemek</string>
+    <string name="temp_target_hypo">Hipo</string>
+    <string name="temp_target_activity">Aktivite</string>
+    <string name="temp_target_manual">Manuel</string>
+    <string name="temp_target_cancel">İptal</string>
+    <string name="tile_none">Hiçbiri</string>
+    <string name="tile_no_config">Mevcut yapılandırma yok</string>
+    <string name="wear_control_not_enabled">Saat kontrolleri devre dışı</string>
+    <string name="wear_control_no_data">Veri yok</string>
 </resources>

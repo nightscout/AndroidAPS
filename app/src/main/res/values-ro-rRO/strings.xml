@@ -161,7 +161,6 @@
     <string name="end_user_license_agreement">Licență utilizator final</string>
     <string name="end_user_license_agreement_text">NU FOLOSIȚI PENTRU LUAREA DE DECIZII MEDICALE. NU EXISTĂ RĂSPUNDERE LEGALĂ SAU GARANȚIE PENTRU ACEST PROGRAM, ÎN LIMITA APLICABILĂ A LEGII. CU EXCEPTIA CAZURILOR SPECIAL MENȚIONATE, AUTORUL ȘI/SAU ALTE PERSOANE IMPLICATE PUN LA DISPOZIȚIE ACEST PROGRAM FĂRĂ NICIO GARANȚIE, IMPLICITĂ SAU EXPLICITĂ, INCLUZÂND, DAR FĂRĂ A SE LIMITA LA, GARANȚIILE LEGATE DE VĂNZAREA SAU POTRIVIREA PENTRU UN ANUME SCOP. ÎNTREGUL RISC LEGAT DE CALITATEA ȘI PERFORMANȚA ACESTUI PROGRAM CAD ÎN RESPONSABILITATEA DUMNEAVOASTRĂ. DACĂ PROGRAMUL SE DOVEDEȘTE A FI DEFECT, DUMNEAVOASTRĂ VĂ ASUMAȚI ÎNTREAGA RĂSPUNDERE, PRECUM ȘI TOATE COSTURILE LEGATE DE SERVICE, REPARAȚII SAU CORECȚII.</string>
     <string name="end_user_license_agreement_i_understand">ÎNȚELEG ȘI SUNT DE ACORD</string>
-    <string name="save">Salvează</string>
     <string name="reloadprofile">Reîncarcă profilul</string>
     <string name="smscommunicator">Comunicator SMS</string>
     <string name="smscommunicator_allowednumbers">Numere de telefon permise</string>
@@ -246,7 +245,6 @@
     <string name="wear">Ceas</string>
     <string name="resend_all_data">Retrimite toate datele</string>
     <string name="open_settings_on_wear">Deschide setările pe Wear</string>
-    <string name="basal_rate">Rată bazală:</string>
     <string name="basalvaluebelowminimum">Valoarea bazalei este sub minimul permis. Profilul nu este setat!</string>
     <string name="sms_actualbg">Glicemie:</string>
     <string name="sms_lastbg">Ultima glicemie:</string>
@@ -427,8 +425,6 @@
     <string name="keep_screen_on_summary">Nu permite telefonului să stingă ecranul. Când este activă, această opțiune consumă foarte multă baterie atunci când telefonul nu este la încărcat.</string>
     <string name="sensitivity_warning">Trebuie introduși toți carbo la pornirea Autosens. În caz contrar, acțiunea carbo va fi percepută ca schimbare a sensibilității!</string>
     <string name="sensitivityweightedaverage">Sensibilitate estimată prin mediere</string>
-    <string name="mdtp_ok">OK</string>
-    <string name="mdtp_cancel">Renunță</string>
     <string name="notloadedplugins">Nu s-au încărcat toate profilurile!</string>
     <string name="valuesnotstored">Nu s-au salvat valorile!</string>
     <string name="ns_localbroadcasts">Activați transmisiunile către alte aplicații (cum ar fi xDrip+). Nu activați dacă aveți mai mult de o instanță de AAPS sau NSClient instalat!</string>
@@ -757,8 +753,6 @@
     <string name="profilenamecontainsdot">Numele profilului conține puncte.\nAcest lucru nu este permis de NS.\nProfilul nu a fost înregistrat în NS.</string>
     <string name="low_mark_comment">Valoarea inferioară a intervalului țintă (doar afișare)</string>
     <string name="high_mark_comment">Valoarea superioară a intervalului țintă (doar afișare)</string>
-    <string name="age">Vârstă:</string>
-    <string name="weight_label">Greutate:</string>
     <string name="id">ID:</string>
     <string name="submit">Trimiteți</string>
     <string name="mostcommonprofile">Cel mai frecvent profil:</string>
@@ -905,4 +899,5 @@
     <string name="identification">Identificare (email, FB sau Discord etc)</string>
     <string name="identification_not_set">Identificarea nu este setată în modul dezvoltator</string>
     <string name="not_available_full">Nu este disponibil</string>
+    <!-- WEAR OS-->
 </resources>

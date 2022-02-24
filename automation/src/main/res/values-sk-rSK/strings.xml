@@ -81,6 +81,7 @@
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>
+    <string name="a11y_autosenslabel">Automatická detekcia citlivosti</string>
     <string name="deltacompared">%3$s %1$s %2$s</string>
     <string name="deltalabel">Rozdiel glykémie</string>
     <string name="deltalabel_u">Rozdiel glykémie [%1$s]</string>

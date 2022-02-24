@@ -23,9 +23,9 @@
             android:layout_weight="1"
             android:text="Enable fake time and progress" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/reset"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            style="@style/OkCancelButton.Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Reset" />

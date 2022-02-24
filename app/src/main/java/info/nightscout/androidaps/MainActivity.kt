@@ -320,7 +320,7 @@ class MainActivity : NoSplashAppCompatActivity() {
                 message += rh.gs(R.string.about_link_urls)
                 val messageSpanned = SpannableString(message)
                 Linkify.addLinks(messageSpanned, Linkify.WEB_URLS)
-                AlertDialog.Builder(this)
+                AlertDialog.Builder(this, R.style.DialogTheme)
                     .setTitle(rh.gs(R.string.app_name) + " " + BuildConfig.VERSION)
                     .setIcon(iconsProvider.getIcon())
                     .setMessage(messageSpanned)
