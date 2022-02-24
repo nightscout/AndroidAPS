@@ -21,7 +21,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@android:color/transparent"
-            app:tabIndicatorColor="#FFFFFF"
+            app:tabIndicatorColor="@color/tabSelectedTextColor"
+            app:tabTextColor="@color/tabTextColor"
+            app:tabSelectedTextColor="@color/tabSelectedTextColor"
             app:tabMode="scrollable" />
 
         <com.google.android.material.tabs.TabLayout
@@ -31,8 +33,11 @@
             android:background="@android:color/transparent"
             app:tabMinWidth="0dp"
             app:tabPadding="0dp"
-            app:tabIndicatorColor="#FFFFFF"
+            app:tabIndicatorColor="@color/tabSelectedTextColor"
+            app:tabTextColor="@color/tabTextColor"
+            app:tabSelectedTextColor="@color/tabSelectedTextColor"
             app:tabMode="scrollable" />
+
     </androidx.appcompat.widget.Toolbar>
 
     <androidx.drawerlayout.widget.DrawerLayout

@@ -673,7 +673,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/view_profile"
             style="@style/ButtonSmallFontStyle"
             android:layout_width="match_parent"
@@ -685,7 +685,7 @@
             android:text="@string/viewprofile" />
 
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/history"
             style="@style/ButtonSmallFontStyle"
             android:layout_width="match_parent"
@@ -697,7 +697,7 @@
             android:text="@string/pumphistory"
             tools:ignore="TooManyViews" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/stats"
             style="@style/ButtonSmallFontStyle"
             android:layout_width="match_parent"
@@ -708,7 +708,7 @@
             android:paddingRight="0dp"
             android:text="@string/stats" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/user_options"
             style="@style/ButtonSmallFontStyle"
             android:layout_width="match_parent"

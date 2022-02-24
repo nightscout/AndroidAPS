@@ -51,4 +51,10 @@
     <string name="combo_tbr_count">Отсчет временного базала TBR</string>
     <string name="bolusstopped">Болюс остановлен</string>
     <string name="bolusstopping">Остановка болюса</string>
+    <string name="pump_commerror_label">Ошибок связи</string>
+    <string name="show_comm_error_count_title">Показать количество ошибок связи</string>
+    <string name="show_comm_error_count_summary">Показывает количество ошибок связи с Ruffy. В большинстве случаев число выше 0 означает проблемы коммуникации с Ruffy (может потребоваться перезапуск).</string>
+    <string name="combo_error_display_never">Никогда</string>
+    <string name="combo_error_display_error">При ошибке</string>
+    <string name="combo_error_display_always">Всегда</string>
 </resources>

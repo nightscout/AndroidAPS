@@ -11,6 +11,9 @@
     <string name="label_xdrip_cockpit">AAPS (Cockpit)</string>
     <string name="label_xdrip_steampunk">AAPS (Steampunk)</string>
     <string name="label_digitalstyle">AAPS (Digital)</string>
+    <string name="label_actions_tile">AAPS(Acciones)</string>
+    <string name="label_temp_target_tile">AAPS(Objetivo Temporal)</string>
+    <string name="label_quick_wizard_tile">AAPS(Asistente Rápido)</string>
     <string name="label_warning_sync">Sin datos</string>
     <string name="label_warning_old">Datos antiguos</string>
     <string name="label_warning_since">Desde %1$s</string>
@@ -54,19 +57,22 @@
     <string name="pref_ring_history">Historial del aro</string>
     <string name="pref_light_ring_history">Historial de aro ligero</string>
     <string name="pref_animations">Animaciones</string>
-    <string name="pref_wizard_in_menu">Asistente en el menú</string>
+    <string name="pref_wizard_in_menu">Calculadora en el menú</string>
     <string name="pref_prime_in_menu">Cebar en menú</string>
     <string name="pref_single_target">Objetivo único</string>
-    <string name="pref_wizard_percentage">Porcentaje del asistente</string>
+    <string name="pref_wizard_percentage">Porcentaje en Calculadora</string>
     <string name="pref_complication_tap_action">Acción de Toque Complicación</string>
     <string name="pref_unicode_in_complications">Unicode en complicaciones</string>
     <string name="pref_version">Versión:</string>
     <string name="pref_moreWatchfaceSettings">Más ajustes de la esfera del reloj</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Mira en la configuración de la esfera del reloj, por favor</string>
     <string name="menu_tempt">Objetivo Temporal</string>
-    <string name="menu_wizard">Asistente</string>
+    <string name="menu_wizard">Calculadora</string>
+    <string name="menu_wizard_short">Calc</string>
+    <string name="menu_treatment">Tratamiento</string>
+    <string name="menu_treatment_short">Trata</string>
     <string name="menu_bolus">Bolo</string>
-    <string name="menu_ecarb">Carbohidratos</string>
+    <string name="menu_ecarb">Carbos</string>
     <string name="menu_settings">Configuración</string>
     <string name="menu_status">Estado</string>
     <string name="menu_resync">Re-sincronizar</string>
@@ -74,13 +80,22 @@
     <string name="menu_none">Ninguno</string>
     <string name="menu_default">Por defecto</string>
     <string name="menu_menu">Menú</string>
+    <string name="quick_wizard_short">XL</string>
     <string name="action_duration">Duración</string>
+    <string name="action_tempt_confirmation">Objetivo Temporal Solicitado</string>
+    <string name="action_quick_wizard_confirmation">Asistente Rápido Solicitado</string>
+    <string name="action_treatment_confirmation">Tratamiento Solicitado</string>
+    <string name="action_bolus_confirmation">Bolo Solicitado</string>
+    <string name="action_wizard_confirmation">Calculadora Solicitada</string>
+    <string name="action_fill_confirmation">Llenado Solicitado</string>
+    <string name="action_ecarb_confirmation">Carbohidratos Solicitados</string>
+    <string name="action_cpp_confirmation">CPP Solicitado</string>
     <string name="action_target" comment="In temp target menu, single target value">Objetivo</string>
     <string name="action_low" comment="In temp target menu, lower value from range">Bajo</string>
     <string name="action_high" comment="In temp target menu, higher value from range">Alto</string>
     <string name="action_carbs">Carbohidratos</string>
     <string name="action_percentage">Porcentaje</string>
-    <string name="action_start_min">Inicio [min]</string>
+    <string name="action_start_min">Iniciar [min]</string>
     <string name="action_duration_h">Duración [h]</string>
     <string name="action_insulin">Insulina</string>
     <string name="action_preset_1">Botón 1</string>
@@ -142,4 +157,13 @@
     <string name="simple_ui_charging">Durante la carga</string>
     <string name="simple_ui_always_on">Modo siempre encendido</string>
     <string name="simple_ui_always_on_charging">Siempre encendido y cargando</string>
+    <string name="temp_target_eating_soon">Comiendo</string>
+    <string name="temp_target_hypo">Hipo</string>
+    <string name="temp_target_activity">Actividad</string>
+    <string name="temp_target_manual">Manual</string>
+    <string name="temp_target_cancel">Cancelar</string>
+    <string name="tile_none">Ninguno</string>
+    <string name="tile_no_config">No hay configuración disponible</string>
+    <string name="wear_control_not_enabled">Controles Wear desactivados</string>
+    <string name="wear_control_no_data">No hay datos disponibles</string>
 </resources>

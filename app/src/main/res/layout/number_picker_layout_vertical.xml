@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="60dp"
     android:layout_height="100dp"
     android:background="@drawable/background_darkgray"
@@ -13,7 +14,8 @@
         android:padding="0dp"
         android:text="+"
         android:textColor="@color/mdtp_white"
-        android:textSize="25sp" />
+        android:textSize="25sp"
+        tools:ignore="HardcodedText" />
 
     <EditText
         android:id="@+id/display"
@@ -24,7 +26,8 @@
         android:imeOptions="actionDone"
         android:inputType="number"
         android:text="1"
-        android:textColor="@android:color/black" />
+        android:textColor="@android:color/black"
+        tools:ignore="HardcodedText" />
 
     <Button
         android:id="@+id/decrement"
@@ -32,8 +35,9 @@
         android:layout_height="30dp"
         android:background="@null"
         android:padding="0dp"
-        android:text="—"
+        android:text="-"
         android:textColor="@color/mdtp_white"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        tools:ignore="HardcodedText" />
 
 </LinearLayout>

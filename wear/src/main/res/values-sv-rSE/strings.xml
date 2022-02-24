@@ -11,6 +11,9 @@
     <string name="label_xdrip_cockpit">AAPS (Cockpit)</string>
     <string name="label_xdrip_steampunk">AAPS (Steampunk)</string>
     <string name="label_digitalstyle">AAPS (DigitalStyle)</string>
+    <string name="label_actions_tile">AAPS(Åtgärder)</string>
+    <string name="label_temp_target_tile">AAPS(Temp-mål)</string>
+    <string name="label_quick_wizard_tile">AAPS(Snabbsteg)</string>
     <string name="label_warning_sync">Inga data!</string>
     <string name="label_warning_old">Gamla data!</string>
     <string name="label_warning_since">Sedan %1$s</string>
@@ -54,19 +57,22 @@
     <string name="pref_ring_history">Ringhistorik</string>
     <string name="pref_light_ring_history">Ljus ringhistorik</string>
     <string name="pref_animations">Animationer</string>
-    <string name="pref_wizard_in_menu">Guide i menyn</string>
+    <string name="pref_wizard_in_menu">Kalkylator i menyn</string>
     <string name="pref_prime_in_menu">Förfyllning i menyn</string>
     <string name="pref_single_target">Enkelt målvärde</string>
-    <string name="pref_wizard_percentage">Procent av guiden</string>
+    <string name="pref_wizard_percentage">Kalkylator Procent</string>
     <string name="pref_complication_tap_action">Åtgärd för komplikation \"tryck\"</string>
     <string name="pref_unicode_in_complications">Unicode i komplikationer</string>
     <string name="pref_version">Version:</string>
     <string name="pref_moreWatchfaceSettings">fler watchface-inställningar</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Kontrollera watchface-konfigurationen, tack.</string>
     <string name="menu_tempt">Tempmål</string>
-    <string name="menu_wizard">Guide</string>
+    <string name="menu_wizard">Kalkylator</string>
+    <string name="menu_wizard_short">Kalk</string>
+    <string name="menu_treatment">Behandling</string>
+    <string name="menu_treatment_short">Beh</string>
     <string name="menu_bolus">Bolus</string>
-    <string name="menu_ecarb">eCarb</string>
+    <string name="menu_ecarb">KH</string>
     <string name="menu_settings">Inställningar</string>
     <string name="menu_status">Status</string>
     <string name="menu_resync">Synkronisera om</string>
@@ -74,22 +80,31 @@
     <string name="menu_none">Ingen</string>
     <string name="menu_default">Standardinställning</string>
     <string name="menu_menu">Meny</string>
-    <string name="action_duration">duration</string>
-    <string name="action_target" comment="In temp target menu, single target value">målvärde</string>
-    <string name="action_low" comment="In temp target menu, lower value from range">låg</string>
-    <string name="action_high" comment="In temp target menu, higher value from range">hög</string>
+    <string name="quick_wizard_short">Snabb</string>
+    <string name="action_duration">Duration</string>
+    <string name="action_tempt_confirmation">Temp-mål begärt</string>
+    <string name="action_quick_wizard_confirmation">Snabbsteg begärd</string>
+    <string name="action_treatment_confirmation">Behandling begärd</string>
+    <string name="action_bolus_confirmation">Bolus begärd</string>
+    <string name="action_wizard_confirmation">Kalkylator begärd</string>
+    <string name="action_fill_confirmation">Påfyllning begärd</string>
+    <string name="action_ecarb_confirmation">Kolhydrater begärda</string>
+    <string name="action_cpp_confirmation">CPP begärd</string>
+    <string name="action_target" comment="In temp target menu, single target value">Mål</string>
+    <string name="action_low" comment="In temp target menu, lower value from range">Låg</string>
+    <string name="action_high" comment="In temp target menu, higher value from range">Hög</string>
     <string name="action_carbs">KH</string>
-    <string name="action_percentage">procent</string>
-    <string name="action_start_min">start [min]</string>
-    <string name="action_duration_h">varaktighet [tim]</string>
-    <string name="action_insulin">insulin</string>
+    <string name="action_percentage">Procent</string>
+    <string name="action_start_min">Start [min]</string>
+    <string name="action_duration_h">Duration [tim]</string>
+    <string name="action_insulin">Insulin</string>
     <string name="action_preset_1">Förinställning 1</string>
     <string name="action_preset_2">Förinställning 2</string>
     <string name="action_preset_3">Förinställning 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Valfri mängd</string>
     <string name="action_confirm">BEKRÄFTA</string>
     <string name="action_timeshift">tidsförskjutning</string>
-    <string name="action_bolus">bolus</string>
+    <string name="action_bolus">Bolus</string>
     <string name="bolus_progress">Bolusförlopp</string>
     <string name="press_to_cancel">tryck för att avbryta</string>
     <string name="cancel_bolus">AVBRYT BOLUS</string>
@@ -142,4 +157,13 @@
     <string name="simple_ui_charging">Vid laddning</string>
     <string name="simple_ui_always_on">Alltid På-läge</string>
     <string name="simple_ui_always_on_charging">Alltid På och vid laddning</string>
+    <string name="temp_target_eating_soon">Äter</string>
+    <string name="temp_target_hypo">Hypo</string>
+    <string name="temp_target_activity">Träning</string>
+    <string name="temp_target_manual">Manuellt</string>
+    <string name="temp_target_cancel">Avbryt</string>
+    <string name="tile_none">Inget</string>
+    <string name="tile_no_config">Ingen konfiguration tillgänglig</string>
+    <string name="wear_control_not_enabled">Wear-kontroller inaktiverade</string>
+    <string name="wear_control_no_data">Ingen data tillgänglig</string>
 </resources>

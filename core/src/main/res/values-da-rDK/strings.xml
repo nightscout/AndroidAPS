@@ -48,6 +48,11 @@
     <string name="isf_label">ISF</string>
     <string name="basal_label">Basal</string>
     <string name="target_label">Målværdi</string>
+    <string name="dia_long_label">Varighed af insulin aktivitet</string>
+    <string name="ic_long_label">Insulin til kulhydrat forhold</string>
+    <string name="isf_long_label">Insulinfølsomhedsfaktor</string>
+    <string name="basal_long_label">Basal rate</string>
+    <string name="target_long_label">Blodsukker mål</string>
     <string name="initializing">Initialiserer ...</string>
     <string name="serialnumber">Serienummer</string>
     <string name="battery_label">Batteri</string>

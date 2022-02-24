@@ -180,7 +180,6 @@
     <string name="wear">手表</string>
     <string name="resend_all_data">重新发送所有数据</string>
     <string name="open_settings_on_wear">在手表上打开设置</string>
-    <string name="basal_rate">基础率比值：</string>
     <string name="basalvaluebelowminimum">基础率值低于泵支持的最小值。配置文件没有设定</string>
     <string name="sms_actualbg">血糖:</string>
     <string name="sms_lastbg">上次血糖：</string>
@@ -562,4 +561,5 @@
     <string name="very_old_version">非常旧版本</string>
     <string name="twohours">2小时</string>
     <!-- SMS Communicator & OTP Authenticator -->
+    <!-- WEAR OS-->
 </resources>

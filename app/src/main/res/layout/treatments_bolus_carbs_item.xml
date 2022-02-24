@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    card_view:cardBackgroundColor="?android:colorBackground">
+    card_view:cardBackgroundColor="@color/cardColorBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -161,14 +161,12 @@
                 android:text="@string/invalid"
                 android:textColor="@android:color/holo_red_light" />
 
-            <TextView
-                android:id="@+id/bolus_remove"
+            <CheckBox
+                android:id="@+id/cb_bolus_remove"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:text="@string/remove_button"
-                android:textAlignment="viewEnd"
-                android:textColor="@android:color/holo_orange_light" />
+                android:contentDescription="@string/select_for_removal"
+                android:visibility="gone" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -257,12 +255,20 @@
 
             <TextView
                 android:id="@+id/carbs_remove"
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
+
                 android:text="@string/remove_button"
                 android:textAlignment="viewEnd"
                 android:textColor="@android:color/holo_orange_light" />
+
+            <CheckBox
+            android:id="@+id/cb_carbs_remove"
+android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
             <TextView
                 android:layout_width="wrap_content"

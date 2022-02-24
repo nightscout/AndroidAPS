@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="130dp"
     android:layout_height="40dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -15,7 +16,8 @@
         android:background="@android:color/transparent"
         app:backgroundTint="@android:color/transparent"
         android:textStyle="bold"
-        android:text="—"/>
+        android:text="-"
+        tools:ignore="HardcodedText" />
 
     <EditText
         android:id="@+id/display"
@@ -27,7 +29,7 @@
         android:inputType="number"
         android:gravity="center"
         android:imeOptions="actionDone"
-        />
+        tools:ignore="HardcodedText" />
     <Button
         android:id="@+id/increment"
         android:layout_width="30dp"
@@ -38,5 +40,6 @@
         android:background="@android:color/transparent"
         app:backgroundTint="@android:color/transparent"
 
-        android:text="+"/>
+        android:text="+"
+        tools:ignore="HardcodedText" />
 </LinearLayout>
