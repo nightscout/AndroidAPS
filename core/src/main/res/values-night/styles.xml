@@ -622,6 +622,10 @@
         <item name="questionIconColor" >@color/darkgray</item>
         <!---History Icon Color-->
         <item name="historyIconColor" >@color/darkgray</item>
+        <!---Stats Icon Color-->
+        <item name="statsIconColor" >@color/darkgray</item>
+        <!---User Option Icon Color-->
+        <item name="userOptionsIconColor" >@color/darkgray</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
     </style>
 
@@ -736,6 +740,10 @@
         <item name="questionIconColor" >@color/white</item>
         <!---History Icon Color-->
         <item name="historyIconColor" >@color/white</item>
+        <!---Stats Icon Color-->
+        <item name="statsIconColor" >@color/white</item>
+        <!---User Option Icon Color-->
+        <item name="userOptionsIconColor" >@color/white</item>
         <!-- Color of dialogs -->
         <item name="android:alertDialogTheme">@style/APSDialogDarkside</item>
         <item name="android:dialogTheme">@style/APSDialogDarkside</item>
