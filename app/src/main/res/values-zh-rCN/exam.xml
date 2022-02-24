@@ -93,8 +93,12 @@
     <string name="update_label">更新 AndroidAPS</string>
     <string name="whatistrue">检查所有正确的答案.</string>
     <string name="update_git">您需要在您的计算机上安装和配置Git。</string>
+    <string name="update_asap">当更新的 AndroidAPS 版本发布时，先前的版本可能会在指定时间之后受到远程限制。</string>
+    <string name="update_keys">您应该保存并记住密钥的存储位置，并使用相同地签名密钥进行更新，与您以前的安装一样。</string>
     <string name="update_neverupdate">如果该系统运作良好，就不要去更新系统。</string>
+    <string name="update_askfriend">如果您在构建应用时遇到困难，您可以安装一个由朋友构建的应用程序。</string>
     <string name="update_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#update-to-a-new-version-or-branch</string>
+    <string name="troubleshooting_label">疑难解答</string>
     <string name="troubleshooting_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
     <string name="troubleshooting_hint3">https://gitter.im/MilosKozak/AndroidAPS</string>
