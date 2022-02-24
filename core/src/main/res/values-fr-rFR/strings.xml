@@ -4,6 +4,7 @@
     <!--    General-->
     <string name="refresh">Actualiser</string>
     <string name="error">Erreur</string>
+    <string name="save">Enregistrer</string>
     <string name="not_set_short">Non configuré</string>
     <string name="failedupdatebasalprofile">La mise à jour du profil basal a échouée</string>
     <string name="profile_set_ok">Profil Basal mise à jour dans la pompe</string>
@@ -376,6 +377,7 @@
     <string name="uel_stat_reset">RÉINITIALISATION DES STATS</string>
     <string name="uel_delete_logs">LOGS SUPPRIMÉS</string>
     <string name="uel_delete_future_treatments">TRAITEMENTS FUTURS SUPPRIMÉS</string>
+    <string name="delete_future_treatments">Supprimer traitements futurs</string>
     <string name="uel_export_settings">PARAMÈTRES EXPORTÉS</string>
     <string name="uel_import_settings">PARAMÈTRES IMPORTÉS</string>
     <string name="uel_reset_databases">BASE DE DONNÉES RÉINITIALISÉE</string>
