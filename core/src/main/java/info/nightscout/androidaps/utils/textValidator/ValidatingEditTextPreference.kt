@@ -27,10 +27,10 @@ class ValidatingEditTextPreference(ctx: Context, attrs: AttributeSet, defStyleAt
     constructor(ctx: Context, attrs: AttributeSet)
         : this(ctx, attrs, R.attr.editTextPreferenceStyle)
 
-    override fun onBindViewHolder(holder: PreferenceViewHolder?) {
+    override fun onBindViewHolder(holder: PreferenceViewHolder) {
         super.onBindViewHolder(holder)
-        holder?.isDividerAllowedAbove = false
-        holder?.isDividerAllowedBelow = false
+        holder.isDividerAllowedAbove = false
+        holder.isDividerAllowedBelow = false
     }
 
     private fun obtainValidatorParameters(attrs: AttributeSet): DefaultEditTextValidator.Parameters {
