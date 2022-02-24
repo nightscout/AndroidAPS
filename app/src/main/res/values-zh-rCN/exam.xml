@@ -125,6 +125,13 @@
     <string name="wrongcarbs_bolus">使用首页概览中的胰岛素(输注) 按钮输注大剂量胰岛素。</string>
     <string name="wronginsulin_label">胰岛素输注/记录错误</string>
     <string name="wronginsulin_whattodo">如果你实际吸收的胰岛素少于泵的历史记录你应该做些什么？例如：由于堵塞、插管失败或淋浴后忘记重新连接泵？</string>
+    <string name="wronginsulin_careportal">从Nightscout护理门户删除胰岛素数据，将其从泵的历史记录中删除。</string>
+    <string name="wronginsulin_compare">比较AndroidAPS和泵历史记录中的值(如果泵支持此功能)。</string>
+    <string name="wronginsulin_prime">通过注射器或胰岛素笔输注你计算出的“遗漏”胰岛素的一部分。</string>
+    <string name="wronginsulin_donothing">不做任何事情，允许AndroidAPS纠正高血糖导致的任何结果。</string>
+    <string name="iob_label">活性胰岛素(IOB)</string>
+    <string name="iob_which">选择所有正确的答案。</string>
+    <string name="iob_value">活性胰岛素IOB数值受发布的临时基础率影响。</string>
     <string name="breadgrams_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
     <string name="extendedcarbs_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Extended-Carbs.html</string>
     <string name="nsclient_hint1">https://androidaps.readthedocs.io/en/latest/EN/Children/Children.html</string>
