@@ -16,7 +16,7 @@
         <item name="colorOnError">@color/black</item>
         <item name="scrimBackground">@color/mtrl_scrim_color</item>
         <item name="android:textColorSecondary">@color/white</item>
-        <item name="android:textColorPrimary">@color/black</item>
+        <item name="android:textColorPrimary">@color/white</item>
         <item name="android:textColor">@color/white</item>
         <!-- Misc. colors -->
         <item name="android:navigationBarColor">?attr/colorPrimary</item>
@@ -173,21 +173,23 @@
         <item name="primefillIconColor" >@color/cyan_blue</item>
         <!---CGM insert Icon Color-->
         <item name="cgminsertIconColor" >@color/cyan_blue</item>
+        <!---CGM BOYDA Icon Color-->
+        <item name="boyda" >@color/colorLightGray</item>
+        <!---Pump Battery Icon Color-->
+        <item name="pumpBatteryIconColor" >@color/lightGreen</item>
         <!---Note Icon Color-->
         <item name="noteIconColor" >@color/carbsOrange</item>
+        <!---Exercise Icon Color-->
+        <item name="exerciseIconColor01" >@color/cyan_blue</item>
+        <item name="exerciseIconColor02" >@color/lightGreen</item>
+        <!---Announcement Icon Color-->
+        <item name="announcementIconColor" >@color/pastellPurple</item>
         <!---Question Icon Color-->
         <item name="questionIconColor" >@color/carbsOrange</item>
         <!---History Icon Color-->
         <item name="historyIconColor" >@color/cyan_blue</item>
         <!---Stats Icon Color-->
         <item name="statsIconColor" >@color/carbsOrange</item>
-        <!---Announcement Icon Color-->
-        <item name="announcementIconColor" >@color/pastellPurple</item>
-        <!---Exercise Icon Color-->
-        <item name="exerciseIconColor01" >@color/cyan_blue</item>
-        <item name="exerciseIconColor02" >@color/lightGreen</item>
-        <!---Pump Battery Icon Color-->
-        <item name="pumpBatteryIconColor" >@color/lightGreen</item>
         <!---User Option Icon Color-->
         <item name="userOptionsIconColor" >@color/calcGreen</item>
         <!---Refill Icon Color-->
@@ -334,7 +336,7 @@
     <style name="AppThemeWarningDialog" parent="AppTheme">
         <item name="alertDialogTheme">@style/AppThemeWarningDialogTheme</item>
         <item name="dialogTitleBackground">@color/warningAlertBackground</item>
-        <item name="dialogTitleColor">@color/black</item>
+        <item name="dialogTitleColor">@color/white</item>
         <item name="dialogTitleIconTint">@color/black</item>
     </style>
 
@@ -346,7 +348,7 @@
     <style name="AppThemeErrorDialog" parent="AppTheme">
         <item name="alertDialogTheme">@style/AppThemeErrorDialogTheme</item>
         <item name="dialogTitleBackground">@color/red</item>
-        <item name="dialogTitleColor">@color/black</item>
+        <item name="dialogTitleColor">@color/white</item>
         <item name="dialogTitleIconTint">@color/black</item>
     </style>
 
@@ -440,7 +442,7 @@
         <item name="colorOnBackground">@color/colorOnBackgroundPurple</item>
         <item name="colorOnSurface">@color/colorOnSurfacePurple</item>
         <item name="colorOnError">@color/colorOnErrorPurple</item>
-        <item name="android:textColorPrimary">@color/primaryTextColorPink</item>
+        <item name="android:textColorPrimary">@color/secondaryTextColorPink</item>
         <item name="android:textColorSecondary">@color/secondaryTextColorPink</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
         <item name="overviewPillColor">@color/overviewPillColorDeepPurple</item>
@@ -580,6 +582,46 @@
         <item name="colorPrimaryDark">@color/primaryDarkColorAmber</item>
         <item name="colorAccent">@color/secondaryColorAmber</item>
         <item name="overviewPillColor">@color/overviewPillColorAmber</item>
+        <!---Bolus Icon Color-->
+        <item name="bolusIconColor" >@color/darkgray</item>
+        <!---Carbs Icon Color-->
+        <item name="carbsIconColor" >@color/darkgray</item>
+        <!---Wizard Icon Color-->
+        <item name="wizardIconColor" >@color/darkgray</item>
+        <!---CGM BOYDA Icon Color-->
+        <item name="boyda" >@color/darkgray</item>
+        <!---Profile Switch Icon Color-->
+        <item name="profileswitchIconColor" >@color/darkgray</item>
+        <!---Temp target Icon Color-->
+        <item name="temptargetIconColor" >@color/darkgray</item>
+        <item name="temptargetIconColor1" >@color/darkgray</item>
+        <!---Start temp basal Icon Color-->
+        <item name="tempbasalIconColor" >@color/darkgray</item>
+        <!---Cancel temp basal Icon Color-->
+        <item name="canceltempbasalIconColor" >@color/darkgray</item>
+        <!---Start extended bolus Icon Color-->
+        <item name="startextbolusIconColor" >@color/darkgray</item>
+        <!---Cancel extended bolus Icon Color-->
+        <item name="cancelextbolusIconColor" >@color/darkgray</item>
+        <!---BG check Icon Color-->
+        <item name="bgcheckIconColor" >@color/darkgray</item>
+        <!---Prime fill Icon Color-->
+        <item name="primefillIconColor" >@color/darkgray</item>
+        <!---CGM insert Icon Color-->
+        <item name="cgminsertIconColor" >@color/darkgray</item>
+        <!---Pump Battery Icon Color-->
+        <item name="pumpBatteryIconColor" >@color/darkgray</item>
+        <!---Note Icon Color-->
+        <item name="noteIconColor" >@color/darkgray</item>
+        <!---Exercise Icon Color-->
+        <item name="exerciseIconColor01" >@color/darkgray</item>
+        <item name="exerciseIconColor02" >@color/darkgray</item>
+        <!---Announcement Icon Color-->
+        <item name="announcementIconColor" >@color/darkgray</item>
+        <!---Question Icon Color-->
+        <item name="questionIconColor" >@color/darkgray</item>
+        <!---History Icon Color-->
+        <item name="historyIconColor" >@color/darkgray</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
     </style>
 
@@ -654,6 +696,46 @@
         <item name="iconTreatment">@drawable/ic_treatments</item>
         <item name="android:backgroundDimAmount">0.2</item>
         <item name="android:textColorPrimary">@color/ios_blue_default</item>
+        <!---Bolus Icon Color-->
+        <item name="bolusIconColor" >@color/white</item>
+        <!---Carbs Icon Color-->
+        <item name="carbsIconColor" >@color/white</item>
+        <!---Wizard Icon Color-->
+        <item name="wizardIconColor" >@color/white</item>
+        <!---CGM BOYDA Icon Color-->
+        <item name="boyda" >@color/white</item>
+        <!---Profile Switch Icon Color-->
+        <item name="profileswitchIconColor" >@color/white</item>
+        <!---Temp target Icon Color-->
+        <item name="temptargetIconColor" >@color/white</item>
+        <item name="temptargetIconColor1" >@color/white</item>
+        <!---Start temp basal Icon Color-->
+        <item name="tempbasalIconColor" >@color/white</item>
+        <!---Cancel temp basal Icon Color-->
+        <item name="canceltempbasalIconColor" >@color/white</item>
+        <!---Start extended bolus Icon Color-->
+        <item name="startextbolusIconColor" >@color/white</item>
+        <!---Cancel extended bolus Icon Color-->
+        <item name="cancelextbolusIconColor" >@color/white</item>
+        <!---BG check Icon Color-->
+        <item name="bgcheckIconColor" >@color/white</item>
+        <!---Prime fill Icon Color-->
+        <item name="primefillIconColor" >@color/white</item>
+        <!---CGM insert Icon Color-->
+        <item name="cgminsertIconColor" >@color/white</item>
+        <!---Pump Battery Icon Color-->
+        <item name="pumpBatteryIconColor" >@color/white</item>
+        <!---Note Icon Color-->
+        <item name="noteIconColor" >@color/white</item>
+        <!---Exercise Icon Color-->
+        <item name="exerciseIconColor01" >@color/white</item>
+        <item name="exerciseIconColor02" >@color/white</item>
+        <!---Announcement Icon Color-->
+        <item name="announcementIconColor" >@color/white</item>
+        <!---Question Icon Color-->
+        <item name="questionIconColor" >@color/white</item>
+        <!---History Icon Color-->
+        <item name="historyIconColor" >@color/white</item>
         <!-- Color of dialogs -->
         <item name="android:alertDialogTheme">@style/APSDialogDarkside</item>
         <item name="android:dialogTheme">@style/APSDialogDarkside</item>

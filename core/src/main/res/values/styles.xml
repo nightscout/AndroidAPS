@@ -152,6 +152,8 @@
         <item name="calibrationIconColor" >@color/calibrationRed</item>
         <!---CGM Icon Color-->
         <item name="cgmIconColor" >@color/darkRed</item>
+        <!---CGM BOYDA Icon Color-->
+        <item name="boyda" >@color/colorLightGray</item>
         <!---QuickWizzard Icon Color-->
         <item name="quickwizzardIconColor" >@color/carbsOrange</item>
         <!---Temp target Icon Color-->

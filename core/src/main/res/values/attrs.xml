@@ -142,6 +142,8 @@
 <attr name="primefillIconColor" format="reference|color" />
 <!---CGM insert Icon Color-->
 <attr name="cgminsertIconColor" format="reference|color" />
+<!---CGM insert Icon Color-->
+<attr name="boyda" format="reference|color" />
 <!---Note Icon Color-->
 <attr name="noteIconColor" format="reference|color" />
 <!---Announcement Icon Color-->
@@ -237,7 +239,6 @@
 <attr name="dialogTitleColor" format="reference" />
 <attr name="dialogTitleIconTint" format="reference" />
 <attr name="fortyfiveup" format="reference" />
-
 
 <declare-styleable name="NumberPicker">
 <attr name="customContentDescription" format="string" />
