@@ -377,6 +377,7 @@
     <string name="uel_stat_reset">İSTATİSK SIFIRLAMA</string>
     <string name="uel_delete_logs">GÜNLÜKLERİ SİL</string>
     <string name="uel_delete_future_treatments">GELECEK TEDAVİLERİ SİL</string>
+    <string name="delete_future_treatments">İleri tarihli tedavileri sil</string>
     <string name="uel_export_settings">AYARLARI DIŞA AKTAR</string>
     <string name="uel_import_settings">AYARLARI İÇE AKTAR</string>
     <string name="uel_reset_databases">VERİTABANLARINI SIFIRLA</string>
