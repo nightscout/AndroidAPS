@@ -12,7 +12,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/nav_logsettings"
-            style="@style/GrayButton"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -24,7 +24,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/log_send"
-            style="@style/GrayButton"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -36,7 +36,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/log_delete"
-            style="@style/GrayButton"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -48,7 +48,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/nav_export"
-            style="@style/GrayButton"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -60,7 +60,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/nav_import"
-            style="@style/GrayButton"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -73,7 +73,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/export_csv"
-            style="@style/GrayButton"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -85,7 +85,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/nav_resetdb"
-            style="@style/GrayButton"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"

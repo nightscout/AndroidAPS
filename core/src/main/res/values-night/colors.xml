@@ -117,5 +117,9 @@
     <color name="tempTargetBackground">#FAFAE1</color>
 
     <!-- Custom Theme Colors -->
+    <color name="ic_local_activate">#67DFE8</color>
+    <color name="ic_local_reset">#E93057</color>
+    <color name="ic_local_save">#67E86A</color>
+    <color name="okButtonSelected">#33969696</color>
 
 </resources>

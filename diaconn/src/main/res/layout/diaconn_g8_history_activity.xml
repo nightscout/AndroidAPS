@@ -84,12 +84,12 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/reload"
-        style="@style/GrayButton"
+        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:text="@string/reload"
         app:icon="@drawable/ic_actions_refill"
-        app:iconTint="@color/ic_actions_refill" />
+        app:iconTint="?attr/ic_actions_refill" />
 
 </RelativeLayout>

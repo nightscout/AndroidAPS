@@ -205,8 +205,6 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
                 }
                 holder.binding.cbRemove.isChecked = selectedItems.get(position) != null
             }
-            val nextTimestamp = if (tempBasalList.size != position + 1) tempBasalList[position + 1].timestamp else 0L
-            holder.binding.delimiter.visibility = dateUtil.isSameDay(tempBasal.timestamp, nextTimestamp).toVisibility()
         }
 
         override fun getItemCount() = tempBasalList.size

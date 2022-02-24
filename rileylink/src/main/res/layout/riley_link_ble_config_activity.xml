@@ -38,7 +38,7 @@
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
-            style="@style/GrayButton"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
             android:id="@+id/riley_link_ble_config_button_remove_riley_link"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -60,14 +60,14 @@
             android:text="@string/riley_link_ble_config_scan_title" />
 
         <com.google.android.material.button.MaterialButton
-            style="@style/GrayButton"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
             android:id="@+id/riley_link_ble_config_scan_start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/riley_link_ble_config_button_scan_start" />
 
         <com.google.android.material.button.MaterialButton
-            style="@style/GrayButton"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
             android:id="@+id/riley_link_ble_config_button_scan_stop"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

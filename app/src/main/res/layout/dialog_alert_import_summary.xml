@@ -22,7 +22,7 @@
                 android:stretchColumns="2" />
 
             <com.google.android.material.button.MaterialButton
-                style="@style/GrayButton"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:id="@+id/summary_details_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -302,7 +302,7 @@ class LocalProfileFragment : DaggerFragment() {
         @Suppress("SetTextI18n")
         binding.units.text = rh.gs(R.string.units_colon) + " " + (if (currentProfile.mgdl) rh.gs(R.string.mgdl) else rh.gs(R.string.mmol))
 
-        binding.profileSwitchlocal.setOnClickListener {
+        binding.profileswitch.setOnClickListener {
             ProfileSwitchDialog()
                 .also { it.arguments = Bundle().also { bundle -> bundle.putInt("profileIndex", localProfilePlugin.currentProfileIndex) } }
                 .show(childFragmentManager, "ProfileSwitchDialog")
@@ -370,20 +370,18 @@ class LocalProfileFragment : DaggerFragment() {
         val isEdited = localProfilePlugin.isEdited
         if (isValid) {
             this.view?.setBackgroundColor(rh.getAttributeColor(context,R.attr.okBackground))
-            binding.spinner.isEnabled = true
 
             if (isEdited) {
                 //edited profile -> save first
-                binding.profileSwitchlocal.visibility = View.GONE
+                binding.profileswitch.visibility = View.GONE
                 binding.save.visibility = View.VISIBLE
             } else {
-                binding.profileSwitchlocal.visibility = View.VISIBLE
+                binding.profileswitch.visibility = View.VISIBLE
                 binding.save.visibility = View.GONE
             }
         } else {
             this.view?.setBackgroundColor(rh.getAttributeColor(context,R.attr.errorBackground))
-            binding.spinner.isEnabled = false
-            binding.profileSwitchlocal.visibility = View.GONE
+            binding.profileswitch.visibility = View.GONE
             binding.save.visibility = View.GONE //don't save an invalid profile
         }
 

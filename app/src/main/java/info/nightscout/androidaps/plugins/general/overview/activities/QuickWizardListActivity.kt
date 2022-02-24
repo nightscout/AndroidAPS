@@ -43,6 +43,7 @@ class QuickWizardListActivity : DaggerAppCompatActivityWithResult() {
     @Inject lateinit var quickWizard: QuickWizard
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var sp: SP
+    @Inject lateinit var rxBus: RxBus
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 

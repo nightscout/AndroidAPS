@@ -184,8 +184,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
                 }
                 holder.binding.cbRemove.isChecked = selectedItems.get(position) != null
             }
-            val nextTimestamp = if (therapyList.size != position + 1) therapyList[position + 1].timestamp else 0L
-            holder.binding.delimiter.visibility = dateUtil.isSameDay(therapyEvent.timestamp, nextTimestamp).toVisibility()
+
         }
 
         override fun getItemCount() = therapyList.size

@@ -19,7 +19,7 @@
             android:layout_marginEnd="5dp"
             android:hint="@string/select_profile"
             android:textColorHint="@color/white"
-            app:boxStrokeColor="@color/list_delimiter">
+            app:boxStrokeColor="?android:attr/dividerHorizontal">
 
             <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                 android:id="@+id/profileList"
@@ -315,7 +315,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/profileswitch"
-            style="@style/GrayButton"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_gravity="center_horizontal"
@@ -336,7 +336,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/reset"
-                style="@style/GrayButton"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -351,7 +351,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/save"
-                style="@style/GrayButton"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"

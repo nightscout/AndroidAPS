@@ -148,7 +148,7 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
             val iob = extendedBolus.iobCalc(System.currentTimeMillis(), profile, activePlugin.activeInsulin)
             holder.binding.iob.text = rh.gs(R.string.formatinsulinunits, iob.iob)
             holder.binding.ratio.text = rh.gs(R.string.pump_basebasalrate, extendedBolus.rate)
-            if (iob.iob != 0.0) holder.binding.iob.setTextColorrh.getAttributeColor(context, R.attr.treatmentActive)) else holder.binding.iob.setTextColor(holder.binding.insulin.currentTextColor)
+            if (iob.iob != 0.0) holder.binding.iob.setTextColor(rh.getAttributeColor(context, R.attr.treatmentActive)) else holder.binding.iob.setTextColor(holder.binding.insulin.currentTextColor)
             holder.binding.cbRemove.visibility = (extendedBolus.isValid && removeActionMode != null).toVisibility()
             if (removeActionMode != null) {
                 holder.binding.cbRemove.setOnCheckedChangeListener { _, value ->
@@ -161,8 +161,6 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
                 }
                 holder.binding.cbRemove.isChecked = selectedItems.get(position) != null
             }
-            val nextTimestamp = if (extendedBolusList.size != position + 1) extendedBolusList[position + 1].timestamp else 0L
-            holder.binding.delimiter.visibility = dateUtil.isSameDay(extendedBolus.timestamp, nextTimestamp).toVisibility()
         }
 
         override fun getItemCount() = extendedBolusList.size
