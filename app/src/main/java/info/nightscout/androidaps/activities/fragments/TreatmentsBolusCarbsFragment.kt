@@ -471,7 +471,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
         if (selectedItems.size() > 0)
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord), getConfirmationText(), Runnable {
-                    selectedItems.forEach {key, ml ->
+                    selectedItems.forEach { _, ml ->
                         ml.bolus?.let { bolus ->
                             uel.log(
                                 Action.BOLUS_REMOVED, Sources.Treatments,
