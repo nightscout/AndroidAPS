@@ -132,16 +132,45 @@
     <string name="iob_label">活性胰岛素(IOB)</string>
     <string name="iob_which">选择所有正确的答案。</string>
     <string name="iob_value">活性胰岛素IOB数值受发布的临时基础率影响。</string>
+    <string name="iob_hightemp">当您的血糖低于目标值时，不会被给予高临时基础率。</string>
+    <string name="iob_negiob">在没有运动的情况下，活性胰岛素IOB长时间负数表明你的个人配置太强，你需要在配置中减少的胰岛素用量。</string>
+    <string name="iob_posiob">长时间活性胰岛素IOB数值过高，表示可能存在胰岛素抵扣，或者没有记录的饮食。</string>
+    <string name="breadgrams_label">碳水记录和胰岛素输注</string>
+    <string name="breadgrams_grams">只能使用克来估算和记录消耗的碳水化合物。</string>
+    <string name="breadgrams_exchange">消耗的碳水化合物可以使用适当地交换份系统 (例如：正常饮食剂量调整DAFNE的“碳水化合物量CHO” 或者 欧洲“面包单位Bread Units”)进行记录。</string>
+    <string name="breadgrams_decay">AndroidAPS使用一个动态模型来估计碳水化合物的“衰减”并计算活性碳水化合物COB</string>
+    <string name="breadgrams_calc">如果血糖水平超出可接受值(过低或过高)，则可以使用大剂量向导计算器提供碳水化合物或胰岛素的校正建议。</string>
     <string name="breadgrams_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
+    <string name="extendedcarbs_label">扩展碳水化合物</string>
+    <string name="extendedcarbs_handling">你能使用碳水时间偏移功能 (扩展碳水化合物) 做什么？</string>
+    <string name="extendedcarbs_future">计划今后的碳水化合物，可以在未来一段时间内分布碳水值(类似于在一段时间内分配胰岛素的扩展大剂量功能)。</string>
+    <string name="extendedcarbs_free">通过记录“自由”运动的碳水化合物，你可以躲避AndroidAPS的统计。</string>
+    <string name="extendedcarbs_fat">通过扩展碳水化合物(将来分发统计) 可以帮助AndroidAPS 处理高脂肪/蛋白质的饮食。</string>
+    <string name="extendedcarbs_rescue">用于记录治疗低血糖的碳水化合物。</string>
     <string name="extendedcarbs_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Extended-Carbs.html</string>
+    <string name="nsclient_label">远程监控</string>
+    <string name="nsclient_howcanyou">你如何远程监控AndroidAPS(比如你的孩子)？</string>
+    <string name="nsclient_nightscout">NS客户端应用、Nightscout应用和Nightscout网页都允许您远程关注AndroidPS。</string>
+    <string name="nsclient_dexcomfollow">其他应用(如Dexcom follow、以follow模式运行的xDrip)允许您远程关注某些参数 (如血糖/传感器值)，但由于使用不同的算法，可能会有不准确的IOB或COB值。</string>
+    <string name="nsclient_data">要远程关注AndroidAPS ，两台设备都必须能够访问互联网 (例如通过Wi-Fi或移动数据网络)。</string>
+    <string name="nsclient_fullcontrol">NS客户端作为远程关注者使用时，将监控和提供对AndroidAPS的完全控制。</string>
     <string name="nsclient_hint1">https://androidaps.readthedocs.io/en/latest/EN/Children/Children.html</string>
+    <string name="isf_label_exam">胰岛素敏感系数(ISF)</string>
+    <string name="isf_increasingvalue">提高ISF值将导致更多的胰岛素输注，以消化特定数量的碳水化合物。</string>
+    <string name="isf_decreasingvalue">降低ISF值会导致更多的胰岛素输注，用于纠正高于目标的血糖值。</string>
+    <string name="isf_noeffect">当血糖水平低于目标值时，提高或降低ISF对胰岛素输送没有影响。</string>
+    <string name="isf_preferences">胰岛素敏感系数ISF应该在AndroidAPS 首选项配置中输入。</string>
     <string name="isf_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#insulin-sensitivity-factor-isf-mmol-l-u-or-mg-dl-u</string>
     <string name="isf_hint2">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html</string>
+    <string name="ic_multiple">在个人配置文件中可以使用一个以上的I:C比率。</string>
     <string name="ic_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#carbohydrate-to-insulin-ratio-cr-g-u</string>
     <string name="profileswitch_hint1" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profilewitch#profile-switch</string>
+    <string name="profileswitchtime_2">以增加2小时的方式，启动个人配置文件切换</string>
+    <string name="profileswitchtime__2">以减少2小时的方式，启动个人配置文件切换</string>
     <string name="profileswitchtime_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profilewitch#timeshift</string>
     <string name="basalhelp_hint1">https://androidaps.readthedocs.io/en/latest/EN/Module/module.html#good-individual-dosage-algorithm-for-your-diabetes-therapy</string>
     <string name="basalhelp_where">去哪里寻求胰岛素基础率等方面的帮助。</string>
+    <string name="basalhelp_diabetesteam">你的糖尿病团队</string>
     <string name="basalhelp_google">谷歌</string>
     <string name="basalhelp_facebook">Facebook</string>
 </resources>
