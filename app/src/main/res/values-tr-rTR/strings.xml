@@ -434,6 +434,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="ns_localbroadcasts">Diğer uygulamalara (xDrip+ gibi) yayınları etkinleştirin. Yüklü birden fazla APPS veya NSClient örneğiniz varsa etkinleştirmeyin!</string>
     <string name="ns_localbroadcasts_title">Yerel yayınları etkinleştirin.</string>
     <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openaps_smb_dynamic_isf">Dinamik İDF</string>
     <string name="enableuam">UAM etkinleştir</string>
     <string name="enablesmb">SMB (Super Micro Bolus) etkinleştir</string>
     <string name="enablesmb_summary">Daha hızlı bir etki için geçici bazal yerine Super Micro Bolus kullanın</string>
@@ -663,6 +664,9 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="sensitivity_raises_target_title">Duyarlılık hedefi yükseltir</string>
     <string name="sensitivity_raises_target_summary">Hassasiyet tespit edildiğinde, KŞ hedefini yükseltin</string>
     <string name="careportal_removestartedevents">Temiz AndroidAPS başladı</string>
+    <string name="show_invalidated">Geçersiz olanları göster</string>
+    <string name="hide_invalidated">Geçersiz olanları gizle</string>
+    <string name="remove_items">Öğeleri kaldır</string>
     <string name="storedsettingsfound">Saklanan ayarlar bulundu</string>
     <string name="allow_hardware_pump_text">Dikkat: Eğer bir donanım pompasını etkinleştirir ve bağlarsanız, AndroidAPS, bazal ayarları profilden pompaya aktaracaktır ve pompada kayıtlı mevcut bazal oranlarının üzerine yazacaktır. AndroidAPS\'de doğru ayarların olduğundan emin olun. Emin değilseniz veya pompanızdaki bazal ayarların üzerine yazmak istemiyorsanız, iptal tuşuna basın ve daha sonra tekrar deneyin.</string>
     <string name="error_adding_treatment_title">Tedavi verileri eksik</string>
