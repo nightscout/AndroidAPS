@@ -148,7 +148,7 @@
     <color name="colorOnBackgroundPink">#000000</color>
     <color name="colorOnSurfacePink">#FFFFFF</color>
     <color name="colorOnErrorPink">#FFFFFF</color>
-    <color name="primaryTextColorPink">#FFFFFF</color>
+    <color name="primaryTextColorPink">#000000</color>
     <color name="secondaryTextColorPink">#FFFFFF</color>
     <color name="overviewPillColorPink">#E91E63</color>
     <color name="bottomBarBackgroundPink">#f76dc9</color>
