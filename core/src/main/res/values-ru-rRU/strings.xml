@@ -376,6 +376,7 @@
     <string name="uel_stat_reset">СБРОС СТАТИСТИКИ</string>
     <string name="uel_delete_logs">УДАЛИТЬ ЖУРНАЛ</string>
     <string name="uel_delete_future_treatments">УДАЛИТЬ НАЗНАЧЕНИЯ ИЗ БУДУЩЕГО</string>
+    <string name="delete_future_treatments">Удалить назначения из будущего</string>
     <string name="uel_export_settings">ЭКСПОРТИРОВАТЬ НАСТРОЙКИ</string>
     <string name="uel_import_settings">ИМПОРТИРОВАТЬ НАСТРОЙКИ</string>
     <string name="uel_reset_databases">СБРОСИТЬ БАЗЫ ДАННЫХ</string>
