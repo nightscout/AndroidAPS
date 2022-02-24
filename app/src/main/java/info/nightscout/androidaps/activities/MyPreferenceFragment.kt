@@ -123,9 +123,11 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
 
     override fun onDestroy() {
         super.onDestroy()
-        PreferenceManager
-            .getDefaultSharedPreferences(context)
-            .unregisterOnSharedPreferenceChangeListener(this)
+        context?.let { context ->
+            PreferenceManager
+                .getDefaultSharedPreferences(context)
+                .unregisterOnSharedPreferenceChangeListener(this)
+        }
     }
 
     private fun addPreferencesFromResourceIfEnabled(p: PluginBase?, rootKey: String?, enabled: Boolean) {
@@ -139,9 +141,11 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        PreferenceManager
-            .getDefaultSharedPreferences(context)
-            .registerOnSharedPreferenceChangeListener(this)
+        context?.let { context ->
+            PreferenceManager
+                .getDefaultSharedPreferences(context)
+                .registerOnSharedPreferenceChangeListener(this)
+        }
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -263,19 +267,19 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
 
     @SuppressLint("RestrictedApi")
     private fun addPreferencesFromResource(@XmlRes preferencesResId: Int, key: String?) {
-        val xmlRoot = preferenceManager.inflateFromResource(context,
-            preferencesResId, null)
-        val root: Preference?
-        if (key != null) {
-            root = xmlRoot.findPreference(key)
-            if (root == null) return
-            require(root is PreferenceScreen) {
-                ("Preference object with key " + key
-                    + " is not a PreferenceScreen")
+        context?.let { context ->
+            val xmlRoot = preferenceManager.inflateFromResource(context, preferencesResId, null)
+            val root: Preference?
+            if (key != null) {
+                root = xmlRoot.findPreference(key)
+                if (root == null) return
+                require(root is PreferenceScreen) {
+                    ("Preference object with key $key is not a PreferenceScreen")
+                }
+                preferenceScreen = root
+            } else {
+                addPreferencesFromResource(preferencesResId)
             }
-            preferenceScreen = root
-        } else {
-            addPreferencesFromResource(preferencesResId)
         }
     }
 
@@ -305,15 +309,9 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
                 p.initialExpandedChildrenCount = Int.MAX_VALUE
             }
         } else {
-            if (p.key != null) {
-                visible = visible || p.key.contains(filter, true)
-            }
-            if (p.title != null) {
-                visible = visible || p.title.contains(filter, true)
-            }
-            if (p.summary != null) {
-                visible = visible || p.summary.contains(filter, true)
-            }
+                visible = visible || p.key?.contains(filter, true) == true
+                visible = visible || p.title?.contains(filter, true) == true
+                visible = visible || p.summary?.contains(filter, true) == true
         }
 
         p.isVisible = visible
@@ -393,32 +391,30 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     // We use Preference and custom editor instead of EditTextPreference
     // to hash password while it is saved and never have to show it, even hashed
 
-    override fun onPreferenceTreeClick(preference: Preference?): Boolean {
+    override fun onPreferenceTreeClick(preference: Preference): Boolean {
         context?.let { context ->
-            if (preference != null) {
-                if (preference.key == rh.gs(R.string.key_master_password)) {
-                    passwordCheck.queryPassword(context, R.string.current_master_password, R.string.key_master_password, {
-                        passwordCheck.setPassword(context, R.string.master_password, R.string.key_master_password)
-                    })
-                    return true
-                }
-                if (preference.key == rh.gs(R.string.key_settings_password)) {
-                    passwordCheck.setPassword(context, R.string.settings_password, R.string.key_settings_password)
-                    return true
-                }
-                if (preference.key == rh.gs(R.string.key_bolus_password)) {
-                    passwordCheck.setPassword(context, R.string.bolus_password, R.string.key_bolus_password)
-                    return true
-                }
-                if (preference.key == rh.gs(R.string.key_application_password)) {
-                    passwordCheck.setPassword(context, R.string.application_password, R.string.key_application_password)
-                    return true
-                }
-                // NSClient copy settings
-                if (preference.key == rh.gs(R.string.key_statuslights_copy_ns)) {
-                    nsSettingStatus.copyStatusLightsNsSettings(context)
-                    return true
-                }
+            if (preference.key == rh.gs(R.string.key_master_password)) {
+                passwordCheck.queryPassword(context, R.string.current_master_password, R.string.key_master_password, {
+                    passwordCheck.setPassword(context, R.string.master_password, R.string.key_master_password)
+                })
+                return true
+            }
+            if (preference.key == rh.gs(R.string.key_settings_password)) {
+                passwordCheck.setPassword(context, R.string.settings_password, R.string.key_settings_password)
+                return true
+            }
+            if (preference.key == rh.gs(R.string.key_bolus_password)) {
+                passwordCheck.setPassword(context, R.string.bolus_password, R.string.key_bolus_password)
+                return true
+            }
+            if (preference.key == rh.gs(R.string.key_application_password)) {
+                passwordCheck.setPassword(context, R.string.application_password, R.string.key_application_password)
+                return true
+            }
+            // NSClient copy settings
+            if (preference.key == rh.gs(R.string.key_statuslights_copy_ns)) {
+                nsSettingStatus.copyStatusLightsNsSettings(context)
+                return true
             }
         }
         return super.onPreferenceTreeClick(preference)

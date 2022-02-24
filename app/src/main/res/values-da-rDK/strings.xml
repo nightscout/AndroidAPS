@@ -161,7 +161,6 @@
     <string name="end_user_license_agreement">Slutbrugerlicensaftale</string>
     <string name="end_user_license_agreement_text">MÅ IKKE BRUGES TIL AT TRÆFFE MEDICINSKE BESLUTNINGER. DER ER INGEN GARANTI FOR PROGRAMMET, I DET OMFANG GÆLDENDE LOV TILLADER DET. UNDTAGEN NÅR DET ELLERS ER ANFØRT SKRIFTLIGT, AT RETTIGHEDSHAVERE OG / ELLER ANDRE PARTER LEVERER PROGRAMMET \"SOM BESET\" UDEN NOGEN FORM FOR GARANTI, HVERKEN UDTRYKT ELLER UNDERFORSTÅET, HERUNDER, MEN IKKE BEGRÆNSET TIL, DE UNDERFORSTÅELIGHEDER, DER ER FORBUNDET MED EGNETHED OG EGNETHED TIL ET BESTEMT FORMÅL. HELE RISIKOEN MED HENSYN TIL KVALITETEN OG YDEEVNEN AF PROGRAMMET ER DIN. HVIS PROGRAMMET VISER SIG AT VÆRE DEFEKT, BÆRER DU SELV OMKOSTNINGERNE VED ALLE NØDVENDIGE SERVICER, REPARATIONER ELLER KORREKTIONER SOM ER NØDVENDIGE.</string>
     <string name="end_user_license_agreement_i_understand">JEG FORSTÅR OG ER ENIG</string>
-    <string name="save">Gem</string>
     <string name="reloadprofile">Genindlæs profil</string>
     <string name="smscommunicator">SMS Kommunikator</string>
     <string name="smscommunicator_allowednumbers">Tilladte telefonnumre</string>
@@ -426,8 +425,6 @@
     <string name="keep_screen_on_summary">Forhindrer Android i at slukke for skærmen. Det vil forbruge meget energi, når den ikke er tilsluttet stikkontakt.</string>
     <string name="sensitivity_warning">Ved at slå funktionen Autosense til husk at indtaste alle spiste kulhydrater. Ellers vil kulhydrat afvigelser blive identificeret forkert som følsomheds ændring !!</string>
     <string name="sensitivityweightedaverage">Følsomhed Vægtet Gennemsnit</string>
-    <string name="mdtp_ok">OK</string>
-    <string name="mdtp_cancel">Annuller</string>
     <string name="notloadedplugins">Ikke alle profiler er indlæst!</string>
     <string name="valuesnotstored">Værdier ikke gemt!</string>
     <string name="ns_localbroadcasts">Aktiver udsendelse til andre apps (såsom xDrip+). Aktiver ikke hvis du har mere end én version af AAPS eller NSClient installeret!</string>
