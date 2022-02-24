@@ -4,6 +4,7 @@
     <!--    General-->
     <string name="refresh">Yenile</string>
     <string name="error">Hata</string>
+    <string name="save">Kaydet</string>
     <string name="not_set_short">Ayarlanmadı</string>
     <string name="failedupdatebasalprofile">Bazal profiliniz güncellenemedi</string>
     <string name="profile_set_ok">Pompadaki Bazal profil güncellendi</string>
