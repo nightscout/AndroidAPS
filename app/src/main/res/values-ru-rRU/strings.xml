@@ -246,7 +246,6 @@
     <string name="wear">Смарт-часы Wear</string>
     <string name="resend_all_data">повторить отправку всех данных</string>
     <string name="open_settings_on_wear">Открыть настройки на Wear</string>
-    <string name="basal_rate">Шаг базала:</string>
     <string name="basalvaluebelowminimum">значение базала ниже минимума. профиль не создан!</string>
     <string name="sms_actualbg">гликемия:</string>
     <string name="sms_lastbg">прошлый СК:</string>
@@ -757,8 +756,6 @@
     <string name="profilenamecontainsdot">Имя профиля содержит точки.\nЭто не поддерживается NS.\nПрофиль не выгружен в NS.</string>
     <string name="low_mark_comment">Меньшее значение диапазона целевых значений (только для дисплея)</string>
     <string name="high_mark_comment">Большее значение диапазона целевых значений (только для дисплея)</string>
-    <string name="age">Возраст:</string>
-    <string name="weight_label">Вес:</string>
     <string name="id">Идентификатор:</string>
     <string name="submit">Отправить</string>
     <string name="mostcommonprofile">Наиболее часто применяемый профиль:</string>
@@ -899,9 +896,36 @@
     <string name="errors">Ошибки</string>
     <string name="ns_sync_slow">Замедлить выгрузку</string>
     <string name="data_status">Состояние данных ГК</string>
+    <string name="statuslights_cannula_age">время, отработанное катетером помпы</string>
+    <string name="statuslights_patch_pump_age">время отработанное разовой помпой</string>
+    <string name="patch_pump">Разовая помпа</string>
     <string name="recalculated_data_used">Используются пересчитанные данные</string>
     <string name="bg_too_close">ГК слишком близко к \n%1$s\n%2$s</string>
     <string name="identification">Идентификация (электронная почта, ник в Facebook или Discord и т. п)</string>
     <string name="identification_not_set">Идентификация не задана в режиме разработчика</string>
+    <string name="a11y_dialog">диалог</string>
+    <string name="a11y_current_bg">текущий уровень гликемии</string>
+    <string name="a11_correction_percentage">корректный результат в %</string>
+    <string name="a11_correction_units">корректный результат в ед</string>
     <string name="not_available_full">Недоступно</string>
+    <string name="a11y_high">высокий</string>
+    <string name="a11y_inrange">в диапазоне</string>
+    <string name="a11y_low">низкий</string>
+    <string name="a11y_arrow_double_down">быстро падает</string>
+    <string name="a11y_arrow_single_down">падает</string>
+    <string name="a11y_arrow_forty_five_down">медленно падает</string>
+    <string name="a11y_arrow_flat">стабильный</string>
+    <string name="a11y_arrow_forty_five_up">медленно поднимается</string>
+    <string name="a11y_arrow_single_up">растет</string>
+    <string name="a11y_arrow_double_up">стремительно растет</string>
+    <string name="a11y_arrow_none">отсутствует</string>
+    <string name="a11y_arrow_unknown">неизвестно</string>
+    <string name="a11y_graph">график</string>
+    <string name="a11y_bg_quality">качество глюкозы в крови</string>
+    <string name="a11y_bg_quality_recalculated">пересчитано</string>
+    <string name="a11y_bg_quality_doubles">двойные записи</string>
+    <string name="a11y_insulin_label">инсулин</string>
+    <string name="a11y_blood_glucose">уровень глюкозы в крови (ГК)</string>
+    <string name="a11y_bg_outdated">устаревшие данные</string>
+    <!-- WEAR OS-->
 </resources>

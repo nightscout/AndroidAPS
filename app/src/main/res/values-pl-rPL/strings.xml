@@ -246,7 +246,6 @@
     <string name="wear">Oprogramowanie Wear (Smartwatch)</string>
     <string name="resend_all_data">Prześlij ponownie wszystkie dane</string>
     <string name="open_settings_on_wear">Otwórz ustawienia dla Wear</string>
-    <string name="basal_rate">Dawka bazowa:</string>
     <string name="basalvaluebelowminimum">Wartość bazy poniżej minimum. Nie ustawiono profilu!</string>
     <string name="sms_actualbg">BG:</string>
     <string name="sms_lastbg">Ostatnia BG:</string>
@@ -757,8 +756,6 @@
     <string name="profilenamecontainsdot">Nazwa profilu zawiera kropki.\nTo nie jest obsługiwane przez NS.\nProfil nie zostanie przesyłany do NS.</string>
     <string name="low_mark_comment">Dolna wartość zakresu docelowego (tylko do wyświetlania)</string>
     <string name="high_mark_comment">Górna wartość zakresu docelowego (tylko do wyświetlania)</string>
-    <string name="age">Czas:</string>
-    <string name="weight_label">Waga:</string>
     <string name="id">ID:</string>
     <string name="submit">Wyślij</string>
     <string name="mostcommonprofile">Najczęściej używany profil:</string>
@@ -904,4 +901,5 @@
     <string name="identification">Identyfikator (email, nick na FB lub Discordzie itp.)</string>
     <string name="identification_not_set">Identyfikator nie jest ustawiony w trybie dev</string>
     <string name="not_available_full">Niedostępne</string>
+    <!-- WEAR OS-->
 </resources>

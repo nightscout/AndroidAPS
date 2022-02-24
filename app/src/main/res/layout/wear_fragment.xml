@@ -10,9 +10,9 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <info.nightscout.androidaps.utils.ui.SingleClickButton
+        <com.google.android.material.button.MaterialButton
+            style="@style/GrayButton"
             android:id="@+id/resend"
-            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="3dp"
@@ -23,9 +23,9 @@
             android:textAlignment="center"
             android:text="@string/resend_all_data" />
 
-        <info.nightscout.androidaps.utils.ui.SingleClickButton
+        <com.google.android.material.button.MaterialButton
+            style="@style/GrayButton"
             android:id="@+id/opensettings"
-            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="3dp"

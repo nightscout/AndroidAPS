@@ -10,88 +10,88 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <info.nightscout.androidaps.utils.ui.SingleClickButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/nav_logsettings"
-            style="?android:attr/buttonStyle"
+            style="@style/GrayButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="3dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_marginTop="3dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="3dp"
             android:layout_weight="0.5"
             android:text="@string/nav_logsettings" />
 
-        <info.nightscout.androidaps.utils.ui.SingleClickButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/log_send"
-            style="?android:attr/buttonStyle"
+            style="@style/GrayButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="3dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_marginTop="3dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="3dp"
             android:layout_weight="0.5"
             android:text="@string/send_all_logs" />
 
-        <info.nightscout.androidaps.utils.ui.SingleClickButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/log_delete"
-            style="?android:attr/buttonStyle"
+            style="@style/GrayButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="3dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_marginTop="3dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="3dp"
             android:layout_weight="0.5"
             android:text="@string/delete_logs" />
 
-        <info.nightscout.androidaps.utils.ui.SingleClickButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/nav_export"
-            style="?android:attr/buttonStyle"
+            style="@style/GrayButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="3dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_marginTop="3dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="3dp"
             android:layout_weight="0.5"
             android:text="@string/nav_export" />
 
-        <info.nightscout.androidaps.utils.ui.SingleClickButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/nav_import"
-            style="?android:attr/buttonStyle"
+            style="@style/GrayButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="3dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_marginTop="3dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="3dp"
             android:layout_weight="0.5"
             android:text="@string/nav_import" />
 
 
-        <info.nightscout.androidaps.utils.ui.SingleClickButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/export_csv"
-            style="?android:attr/buttonStyle"
+            style="@style/GrayButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="3dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_marginTop="3dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="3dp"
             android:layout_weight="0.5"
             android:text="@string/ue_export_to_csv"/>
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/nav_resetdb"
-            style="?android:attr/buttonStyle"
+            style="@style/GrayButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="3dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_marginTop="3dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="3dp"
             android:layout_weight="0.5"
             android:text="@string/nav_resetdb" />
 

@@ -661,11 +661,6 @@
         android:layout_alignParentBottom="true"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/viewprofile"
                 style="@style/ButtonSmallFontStyle"

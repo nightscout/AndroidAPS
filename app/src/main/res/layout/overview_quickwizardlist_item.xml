@@ -54,21 +54,23 @@
                             android:id="@+id/overview_quickwizard_item_buttonText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:paddingLeft="10dp"
+                            android:paddingStart="10dp"
                             android:text="Sample button text"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                             android:textColor="@color/cardObjectiveText"
-                            android:textStyle="normal|bold" />
+                            android:textStyle="normal|bold"
+                            tools:ignore="HardcodedText,RtlSymmetry" />
 
                         <TextView
                             android:id="@+id/overview_quickwizard_item_carbs"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:paddingLeft="10dp"
+                            android:paddingStart="10dp"
                             android:text="36g"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                             android:textColor="@color/cardObjectiveText"
-                            android:textStyle="normal|bold" />
+                            android:textStyle="normal|bold"
+                            tools:ignore="HardcodedText,RtlSymmetry" />
 
                     </LinearLayout>
 
@@ -128,12 +130,14 @@
                         android:paddingEnd="10dp"
                         android:text="07:45"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textStyle="normal|bold" />
+                        android:textStyle="normal|bold"
+                        tools:ignore="HardcodedText,RtlSymmetry" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="-" />
+                        android:text="-"
+                        tools:ignore="HardcodedText" />
 
                     <TextView
                         android:id="@+id/overview_quickwizard_item_to"
@@ -143,7 +147,8 @@
                         android:paddingStart="10dp"
                         android:text="11:45"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textStyle="normal|bold" />
+                        android:textStyle="normal|bold"
+                        tools:ignore="HardcodedText,RtlSymmetry" />
 
                 </LinearLayout>
 
@@ -175,6 +180,7 @@
                 android:layout_marginEnd="2dp"
                 android:layout_weight="1"
                 android:text="@string/remove_button" />
+
         </LinearLayout>
 
     </LinearLayout>

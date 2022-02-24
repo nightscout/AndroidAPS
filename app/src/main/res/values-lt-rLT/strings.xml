@@ -246,7 +246,6 @@
     <string name="wear">Išmanieji laikrodžiai</string>
     <string name="resend_all_data">Pakartotinai siųsti visus duomenis</string>
     <string name="open_settings_on_wear">Atidaryti išmaniojo laikrodžio nustatymus</string>
-    <string name="basal_rate">Valandinė bazė:</string>
     <string name="basalvaluebelowminimum">Valandinės bazės vertė mažesnė už minimalią. Profilis nenustatytas!</string>
     <string name="sms_actualbg">KG:</string>
     <string name="sms_lastbg">Paskutinė KG:</string>
@@ -757,8 +756,6 @@
     <string name="profilenamecontainsdot">Profilio pavadinime yra taškų.\nŠios funkcijos NS nepalaiko.\nProfilis neįkeltas į NS.</string>
     <string name="low_mark_comment">Mažiausia tikslinės srities vertė (tik rodymui)</string>
     <string name="high_mark_comment">Didžiausia tikslinės srities vertė (tik rodymui)</string>
-    <string name="age">Amžius:</string>
-    <string name="weight_label">Svoris:</string>
     <string name="id">ID:</string>
     <string name="submit">Pateikti</string>
     <string name="mostcommonprofile">Dažniausiai naudojamas profilis:</string>
@@ -904,4 +901,5 @@
     <string name="identification">Identifikacija (el. paštas, FB, Discord slapyvardis ar kt.)</string>
     <string name="identification_not_set">Kūrėjo režime tapatybė nenustatyta</string>
     <string name="not_available_full">Negalimas</string>
+    <!-- WEAR OS-->
 </resources>

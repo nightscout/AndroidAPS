@@ -81,6 +81,7 @@
     <string name="wifissidcompared">SSID WiFi %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>
+    <string name="a11y_autosenslabel">Auto sens</string>
     <string name="deltacompared">%3$s %1$s %2$s</string>
     <string name="deltalabel">Diferencia de glucosa</string>
     <string name="deltalabel_u">Diferencia de glucosa %1$s</string>

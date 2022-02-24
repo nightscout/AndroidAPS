@@ -32,11 +32,12 @@
     <string name="objectives2_internalstorage">Seu arquivo de configurações foi encontrado no armazenamento interno/AAPS/preferências do seu telefone.</string>
     <string name="objectives2_cloud">Copie seu arquivo de preferências para um local seguro fora de seu telefone (por exemplo, usando uma unidade na nuvem, conectando um cabo a um computador, e-mail, etc.)</string>
     <string name="objectives2_easyrestore">Se seu telefone ficar danificado ou se você perder-lo, existem maneiras fáceis de recuperar suas configurações remotamente sem um backup local.</string>
+    <string name="noisycgm_label">Leituras do CGM imprecisas</string>
     <string name="noisycgm_whattodo">O que deve ser feito se os dados do CGM são irregulares?</string>
     <string name="breadgrams_calc">Se os níveis de glicose no sangue estiverem fora dos limites aceitáveis (muito baixo ou muito alto) a calculadora de bolus pode ser usada para fornecer sugestões para correções de carboidrato ou insulina.</string>
     <string name="breadgrams_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
     <string name="extendedcarbs_label">Tópico: e-Carbs</string>
-    <string name="extendedcarbs_handling">Para que você possa usar os e-Carbs (carboidratos estendidos)?</string>
+    <string name="extendedcarbs_handling">Para que você possa usar os e-carbs (carboidratos estendidos)?</string>
     <string name="extendedcarbs_future">Para agendar carboidratos no futuro, possivelmente distribuídos num intervalo (semelhante a um bolus estendido que distribui insulina num intervalo).</string>
     <string name="extendedcarbs_free">Para registrar carboidratos de exercício \'gratuitos\' que deseja ocultar do AndroidAPS.</string>
     <string name="extendedcarbs_fat">Os e-carbs (distribuídos no futuro) podem ajudar o AndroidAPS a lidar com comidas ricas em gorduras/proteínas.</string>
@@ -51,7 +52,7 @@
     <string name="nsclient_hint1">https://androidaps.readthedocs.io/en/latest/EN/Children/Children.html</string>
     <string name="isf_label_exam">Tópico: Fator de Sensibilidade à Insulina (ISF)</string>
     <string name="isf_increasingvalue">Aumentar os valores de ISF levará à administração de mais insulina para cobrir uma quantidade específica de carboidratos.</string>
-    <string name="isf_decreasingvalue">Reduzir os valores do ISF levará à adminstração de quantidades menores de insulina para corrigir uma glicose acima do alvo.</string>
+    <string name="isf_decreasingvalue">Reduzir os valores do ISF levará à adminstração de quantidades maiores de insulina para corrigir uma glicose acima do alvo.</string>
     <string name="isf_noeffect">Aumentar ou reduzir o ISF não tem efeito na administração de insulina quando os níveis de glicose estão abaixo do alvo.</string>
     <string name="isf_preferences">O ISF deve ser configurado nas Preferências do AndroidAPS.</string>
     <string name="isf_profile">Alterar o valor do ISF no seu perfil é o suficiente para aplicar a alteração.</string>
@@ -59,7 +60,6 @@
     <string name="isf_hint2">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html</string>
     <string name="ic_multiple">Você pode definir mais do que um valor para o rácio I:C no seu perfil.</string>
     <string name="ic_isf">Se você mudar o ISF no seu perfil, também deveria mudar o I:C.</string>
-    <string name="ic_label_exam">Tópico: Rácio Insulina:Carboidrato (racio I:C)</string>
     <string name="ic_increasingvalue">Rácios IC mais altos levam a menos insulina administrada por uma dada quantidade de carboidratos.</string>
     <string name="ic_decreasingvalue">Rácios IC mais baixos levam a menos insulina administrada por uma dada quantidade de carboidratos.</string>
     <string name="ic_noeffect">Se tiver 0 COB, alterar a proporção IC irá levar a uma quantidade diferente de insulina para corrigir um determinado valor da glicemia.</string>
@@ -70,8 +70,7 @@
     <string name="profileswitch_pctwillchange"> Ao especificar uma mudança de perfil de 90%, quais respostas são corretas?</string>
     <string name="profileswitch_basallower">Taxas de basal serão 10% menores.</string>
     <string name="profileswitch_isfhigher">O valor do ISF será 10% maior.</string>
-    <string name="profileswitch_iclower">O valor da proporção I:C será 10% menor.</string>
-    <string name="profileswitch_unchanged">O ISF e a I:C continuem iguas.</string>
+    <string name="profileswitch_unchanged">O ISF e a I:C não sofrem alterações.</string>
     <string name="profileswitch_hint1" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#profile-switch</string>
     <string name="profileswitch2_label">Tópico: Troca de Perfil</string>
     <string name="profileswitchtime_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#timeshift</string>

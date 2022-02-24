@@ -10,17 +10,9 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context=".plugins.general.overview.activities.QuickWizardListActivity">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="15dp"
-        android:text="@string/quickwizard"
-        android:textAlignment="center"
-        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large" />
-
     <com.google.android.material.button.MaterialButton
         android:id="@+id/add_button"
-        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+        style="@style/GrayButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="2dp"
