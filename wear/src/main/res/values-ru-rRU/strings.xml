@@ -54,19 +54,15 @@
     <string name="pref_ring_history">Показывать историю в кольце</string>
     <string name="pref_light_ring_history">Показывать историю в кольце менее подробно</string>
     <string name="pref_animations">Анимация</string>
-    <string name="pref_wizard_in_menu">Мастер в меню</string>
     <string name="pref_prime_in_menu">Первичное заполнение в меню</string>
     <string name="pref_single_target">Единичная цель</string>
-    <string name="pref_wizard_percentage">Процент мастера</string>
     <string name="pref_complication_tap_action">Действия при нажатии кнопки расширений</string>
     <string name="pref_unicode_in_complications">Юникод в репликации</string>
     <string name="pref_version">Версия:</string>
     <string name="pref_moreWatchfaceSettings">еще настройки циферблатов</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Смотрите конфигурацию циферблата.</string>
     <string name="menu_tempt">ВремЦ</string>
-    <string name="menu_wizard">Мастер настройки</string>
     <string name="menu_bolus">Болюс</string>
-    <string name="menu_ecarb">eCarbs/производные углеводы</string>
     <string name="menu_settings">Настройки</string>
     <string name="menu_status">Состояние</string>
     <string name="menu_resync">Синхронизировать повторно</string>
@@ -74,22 +70,12 @@
     <string name="menu_none">Не показывать</string>
     <string name="menu_default">По умолчанию</string>
     <string name="menu_menu">Menu</string>
-    <string name="action_duration">продолжительность</string>
-    <string name="action_target" comment="In temp target menu, single target value">целевое значение ГК:</string>
-    <string name="action_low" comment="In temp target menu, lower value from range">низкий</string>
-    <string name="action_high" comment="In temp target menu, higher value from range">высокий</string>
-    <string name="action_carbs">углеводы</string>
-    <string name="action_percentage">процент</string>
-    <string name="action_start_min">начало [min]</string>
-    <string name="action_duration_h">продолжительность [h]</string>
-    <string name="action_insulin">инсулин</string>
     <string name="action_preset_1">Предустановка 1</string>
     <string name="action_preset_2">Предустановка 2</string>
     <string name="action_preset_3">Предустановка 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Произвольное количество</string>
     <string name="action_confirm">ПОДТВЕРДИТЬ</string>
     <string name="action_timeshift">сдвиг по времени</string>
-    <string name="action_bolus">болюс</string>
     <string name="bolus_progress">Подается болюс</string>
     <string name="press_to_cancel">нажмите для отмены</string>
     <string name="cancel_bolus">ОТМЕНИТЬ БОЛЮС</string>

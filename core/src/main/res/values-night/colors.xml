@@ -132,6 +132,10 @@
     <color name="bottomBarBackgroundRed">#F44336</color>
     <color name="PillColorStartRed">#D32F2F</color>
     <color name="PillColorEndRed">#F44336</color>
+    <color name="ic_local_activate">#67DFE8</color>
+    <color name="ic_local_reset">#E93057</color>
+    <color name="ic_local_save">#67E86A</color>
+    <color name="okButtonSelected">#33969696</color>
 
     <!-- PINK Theme -->
     <color name="primaryColorPink">#f76dc9</color>

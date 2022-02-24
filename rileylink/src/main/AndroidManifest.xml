@@ -23,8 +23,7 @@
 
         <activity
             android:name="info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity"
-            android:label="@string/title_activity_rileylink_settings"
-            android:theme="@style/Theme.AppCompat.NoTitle" />
+            android:label="@string/title_activity_rileylink_settings" />
     </application>
 
 </manifest>

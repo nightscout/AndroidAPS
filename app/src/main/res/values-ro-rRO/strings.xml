@@ -246,7 +246,6 @@
     <string name="wear">Ceas</string>
     <string name="resend_all_data">Retrimite toate datele</string>
     <string name="open_settings_on_wear">Deschide setările pe Wear</string>
-    <string name="basal_rate">Rată bazală:</string>
     <string name="basalvaluebelowminimum">Valoarea bazalei este sub minimul permis. Profilul nu este setat!</string>
     <string name="sms_actualbg">Glicemie:</string>
     <string name="sms_lastbg">Ultima glicemie:</string>
@@ -757,8 +756,6 @@
     <string name="profilenamecontainsdot">Numele profilului conține puncte.\nAcest lucru nu este permis de NS.\nProfilul nu a fost înregistrat în NS.</string>
     <string name="low_mark_comment">Valoarea inferioară a intervalului țintă (doar afișare)</string>
     <string name="high_mark_comment">Valoarea superioară a intervalului țintă (doar afișare)</string>
-    <string name="age">Vârstă:</string>
-    <string name="weight_label">Greutate:</string>
     <string name="id">ID:</string>
     <string name="submit">Trimiteți</string>
     <string name="mostcommonprofile">Cel mai frecvent profil:</string>
@@ -905,4 +902,5 @@
     <string name="identification">Identificare (email, FB sau Discord etc)</string>
     <string name="identification_not_set">Identificarea nu este setată în modul dezvoltator</string>
     <string name="not_available_full">Nu este disponibil</string>
+    <!-- WEAR OS-->
 </resources>

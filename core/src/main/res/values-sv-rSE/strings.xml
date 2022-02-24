@@ -48,6 +48,11 @@
     <string name="isf_label">ISF</string>
     <string name="basal_label">Basal</string>
     <string name="target_label">Målvärde</string>
+    <string name="dia_long_label">Insulinets verkningstid</string>
+    <string name="ic_long_label">Insulin till kolhydratförhållande</string>
+    <string name="isf_long_label">Insulinkänslighetsfaktor</string>
+    <string name="basal_long_label">Basaldos</string>
+    <string name="target_long_label">Mål-BG</string>
     <string name="initializing">Startar...</string>
     <string name="serialnumber">Serienummer</string>
     <string name="battery_label">Batterinivå</string>
@@ -105,6 +110,7 @@
     <string name="notes_label">Anteckning</string>
     <string name="remove_button">Ta bort</string>
     <string name="addnew">Lägg till</string>
+    <string name="addnew_above">Lägg till nytt ovan</string>
     <string name="wrong_pump_data">Data kommer från en annan pump. Byt pumpdrivrutin för att återställa.</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Max basal: %1$.2f E/h pga %2$s</string>
@@ -127,6 +133,7 @@
     <string name="location_not_found_message">För att Bluetooth ska fungera med nyare enheter, måste platsdata vara aktiverat. AAPS sparar inte din plats och det kan stängas av efter att enheten har parkopplats.</string>
     <!--    DateUtil-->
     <string name="minago">%1$dm sedan</string>
+    <string name="minago_long">%1$d minuter sedan</string>
     <string name="hoursago">%1$.1f tim sedan</string>
     <string name="shorthour">h</string>
     <string name="days">dagar</string>
@@ -440,6 +447,8 @@
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="pump_paired" comment="26 characters max for translation">Pump parkopplad</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Uppdat. knapp för Insight</string>
+    <string name="a11y_min_button_description">minska %1$s med %2$s</string>
+    <string name="a11y_plus_button_description">öka %1$s med %2$s</string>
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagar</item>

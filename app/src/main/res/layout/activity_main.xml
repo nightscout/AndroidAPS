@@ -31,6 +31,8 @@
             app:tabIndicatorAnimationDuration="500"
             app:tabIndicatorFullWidth="false"
             app:tabUnboundedRipple="false"
+            app:tabMinWidth="0dp"
+            app:tabPadding="0dp"
             android:layout_height="28dp"
             android:layout_width="wrap_content" />
 
@@ -43,6 +45,8 @@
             app:tabIndicatorAnimationDuration="500"
             app:tabIndicatorFullWidth="false"
             app:tabUnboundedRipple="false"
+            app:tabMinWidth="0dp"
+            app:tabPadding="0dp"
             android:layout_height="24dp"
             android:layout_width="wrap_content" />
     </com.google.android.material.appbar.MaterialToolbar>

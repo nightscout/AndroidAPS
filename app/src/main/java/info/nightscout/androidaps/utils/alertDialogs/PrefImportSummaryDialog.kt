@@ -28,7 +28,7 @@ object PrefImportSummaryDialog {
     @SuppressLint("InflateParams")
     fun showSummary(context: Context, importOk: Boolean, importPossible: Boolean, prefs: Prefs, ok: (() -> Unit)?, cancel: (() -> Unit)? = null) {
 
-        @StyleRes val theme: Int = if (importOk) R.style.AppTheme else {
+        @StyleRes val theme: Int = if (importOk) R.style.DialogTheme else {
             if (importPossible) R.style.AppThemeWarningDialog else R.style.AppThemeErrorDialog
         }
 
@@ -92,7 +92,7 @@ object PrefImportSummaryDialog {
                 webView.setBackgroundColor(Color.TRANSPARENT)
                 webView.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null)
 
-                AlertDialogHelper.Builder(context, R.style.AppTheme)
+                AlertDialogHelper.Builder(context, R.style.DialogTheme)
                     .setCustomTitle(
                         AlertDialogHelper.buildCustomTitle(
                             context,

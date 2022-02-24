@@ -5,4 +5,5 @@
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="ns_wifi_ssids">WiFi SSID</string>
     <!-- SMS Communicator & OTP Authenticator -->
+    <!-- WEAR OS-->
 </resources>

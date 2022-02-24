@@ -14,6 +14,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        style="@style/mdtp_ActionButton.Text"
+        style="@style/OkCancelButton.Text"
         android:text="@string/close" />
 </LinearLayout>

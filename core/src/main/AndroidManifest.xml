@@ -14,10 +14,10 @@
             android:theme="@style/AppTheme"/>
         <activity
             android:name="info.nightscout.androidaps.activities.BolusProgressHelperActivity"
-            android:theme="@style/Theme.AppCompat.Translucent" />
+            android:theme="@style/Theme.MaterialComponents.Translucent" />
         <activity
             android:name="info.nightscout.androidaps.activities.ErrorHelperActivity"
-            android:theme="@style/Theme.AppCompat.Translucent" />
+            android:theme="@style/Theme.MaterialComponents.Translucent" />
 
     </application>
 </manifest>

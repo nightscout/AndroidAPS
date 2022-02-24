@@ -53,7 +53,7 @@ class OpenAPSSMBFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.runAma.setOnClickListener {
+        binding.run.setOnClickListener {
             activePlugin.activeAPS.invoke("OpenAPSSMB button", false)
         }
     }

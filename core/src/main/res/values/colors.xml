@@ -74,7 +74,6 @@
     <color name="notificationLow">#ff827c</color>
     <color name="metadataTextError">#FFFF5555</color>
 
-
     <!-- Yellow Colors -->
     <color name="lightyellow">#FFFF00</color>
     <color name="midyellow">#BABA00</color>
@@ -472,4 +471,8 @@
     <color name="ios_blue_default">#0A84FF</color>
 
     <color name="colorButton">#00000000</color>
+    <color name="ic_local_activate">#67DFE8</color>
+    <color name="ic_local_reset">#E93057</color>
+    <color name="ic_local_save">#67E86A</color>
+    <color name="okButtonSelected">#33969696</color>
 </resources>
