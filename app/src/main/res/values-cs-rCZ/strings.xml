@@ -162,7 +162,6 @@
     <string name="end_user_license_agreement">Licenční ujednání</string>
     <string name="end_user_license_agreement_text">MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
     <string name="end_user_license_agreement_i_understand">ROZUMÍM A POTVRZUJI</string>
-    <string name="save">Uložit</string>
     <string name="reloadprofile">Obnovit profil</string>
     <string name="smscommunicator">SMS komunikátor</string>
     <string name="smscommunicator_allowednumbers">Povolená tel. čísla</string>
@@ -429,14 +428,12 @@
     <string name="keep_screen_on_summary">Zabránit Androidu ve zhasínání obrazovky. Bez připojení do nabíječky vybije velice rychle baterii!</string>
     <string name="sensitivity_warning">Při zapnuté detekci sensitivity nezapomeňte vkládat všechny sacharidy. Jinak budou odchylky mylně vyhodnocovány jako změna sensitivity !!</string>
     <string name="sensitivityweightedaverage">Sensitivita vážený průměr</string>
-    <string name="mdtp_ok">OK</string>
-    <string name="mdtp_cancel">Zrušit</string>
     <string name="notloadedplugins">Všechny profily nenačteny!</string>
     <string name="valuesnotstored">Hodnoty nejsou uloženy!</string>
     <string name="ns_localbroadcasts">Povolit vysílání do jiných aplikací (například xDrip+). Nepovolujte, pokud máte instalovánu více než jednu instanci AAPS nebo NSClient!</string>
     <string name="ns_localbroadcasts_title">Povolení odesílaní</string>
     <string name="openapssmb">OpenAPS SMB</string>
-    <string name="openaps_smb_dynamic_isf">OpenAPS SMB s dynamickým ISF</string>
+    <string name="openaps_smb_dynamic_isf">Dynamická ISF</string>
     <string name="enableuam">Povolit UAM</string>
     <string name="enablesmb">Povolit SMB</string>
     <string name="enablesmb_summary">Použít super mikro bolusy místo dočasných bazálů pro zrychlení účinku</string>
@@ -666,6 +663,9 @@
     <string name="sensitivity_raises_target_title">Citlivost zvyšuje cíl</string>
     <string name="sensitivity_raises_target_summary">Je-li zjištěna vyšší citlivost, zvýší nastavenou cílovou glykémii</string>
     <string name="careportal_removestartedevents">Vyčistit události \"AndroidAPS restartován\"</string>
+    <string name="show_invalidated">Zobrazit neplatné</string>
+    <string name="hide_invalidated">Skrýt zneplatněné</string>
+    <string name="remove_items">Odstranit položky</string>
     <string name="storedsettingsfound">Nalezeno uložené nastavení</string>
     <string name="allow_hardware_pump_text">POZOR: Pokud aktivuje a připojíte skutečnou pumpu, AndroidAPS nakopíruje (a bude udržovat) nastavení bazálu z aktivního profilu do pumpy. Nastavení bazálu v pumpě bude přepsáno. Pokud si nejste jistí nebo nechcete přepsat bazály v pumpě, stiskněte Zrušit a opakujte přepnutí na jinou pumpu později.</string>
     <string name="error_adding_treatment_title">Data ošetření neúplná</string>
@@ -974,4 +974,15 @@
     <string name="wear_unknown_action_string">Neznámý příkaz k akci:</string>
     <string name="overview_editquickwizard_percentage">Procentní podíl</string>
     <string name="app_default">Výchozí nastavení aplikace</string>
+    <string name="select_profile">Vyberte profil pro úpravu</string>
+    <string name="refresh_from_nightscout">Obnovit z Nightscoutu</string>
+    <string name="remove_selected_items">Odstranit zvolené položky</string>
+    <string name="select_for_removal">Vyberte pro odstranění</string>
+    <string name="profile_changes">Změny profilu</string>
+    <string name="tempt_targets">Dočasné cíle</string>
+    <string name="carbs_and_bolus">Sacharidy a bolusy</string>
+    <string name="confirm_remove_multiple_items">Opravdu chcete odstranit %1$d položku(y)</string>
+    <string name="hide_loop">Skrýt smyčku</string>
+    <string name="show_loop">Zobrazit smyčku</string>
+    <string name="count_selected">Vybráno: %1$d</string>
 </resources>

@@ -161,7 +161,6 @@
     <string name="end_user_license_agreement">Endbenutzervereinbarung</string>
     <string name="end_user_license_agreement_text">DAS PROGRAMM DARF NICHT FÜR MEDIZINISCHE ENTSCHEIDUNGEN BENUTZT WERDEN. ES GIBT IN DIESEM PROJEKT KEINE GEWÄHRLEISTUNG ODER GARANTIERTE UNTERSTÜTZUNG IN IRGENDEINER ART. WENN DU DICH ENTSCHEIDEST, ES ZU NUTZEN, HÄNGT DIE QUALITÄT UND LEISTUNGSFÄHIGKEIT DIESES PROJEKTES VON DIR SELBST AB. ES WIRD \"WIE BESEHEN\" ZUR VERFÜGUNG GESTELLT. SOLLTE SICH DAS PROGRAMM ALS FEHLERHAFT ERWEISEN, ÜBERNIMMST DU ALLE NOTWENDIGEN KRANKHEITSKOSTEN, SERVICELEISTUNGEN, REPARATUREN ODER KORREKTUREN.</string>
     <string name="end_user_license_agreement_i_understand">Ich verstehe und stimme zu.</string>
-    <string name="save">Speichern</string>
     <string name="reloadprofile">Profil neuladen</string>
     <string name="smscommunicator">SMS-Kommunikator</string>
     <string name="smscommunicator_allowednumbers">Erlaubte Telefonnummern</string>
@@ -427,8 +426,6 @@
     <string name="keep_screen_on_summary">Hindere Android daran, den Bildschirm abzuschalten. Dies erhöht den Energieverbrauch, wenn das Gerät nicht an einem Ladegerät angeschlossen ist.</string>
     <string name="sensitivity_warning">Stelle bei aktivierter Autosens-Funktion sicher, dass du alle eingenommenen Kohlenhydrate eingibst. Ansonsten können die Kohlenhydrat-Abweichungen zu falschen Sensitivitätswerten führen!</string>
     <string name="sensitivityweightedaverage">Durchschnittliche Sensitivität</string>
-    <string name="mdtp_ok">OK</string>
-    <string name="mdtp_cancel">Abbrechen</string>
     <string name="notloadedplugins">Es sind nicht alle Profile geladen!</string>
     <string name="valuesnotstored">Werte nicht gespeichert!</string>
     <string name="ns_localbroadcasts">Aktiviere die Datenübertragung zu anderen Apps (z.B. xDrip+). Nicht aktivieren, falls Du mehr als eine Instanz von AAPS oder NSClient installiert hast!</string>
