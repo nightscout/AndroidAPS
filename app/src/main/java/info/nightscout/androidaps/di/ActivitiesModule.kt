@@ -8,6 +8,7 @@ import info.nightscout.androidaps.activities.HistoryBrowseActivity
 import info.nightscout.androidaps.plugins.general.maintenance.activities.LogSettingActivity
 import info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity
 import info.nightscout.androidaps.plugins.general.smsCommunicator.activities.SmsCommunicatorOtpActivity
+import info.nightscout.androidaps.plugins.general.themeselector.ScrollingActivity
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity
 
 @Module
@@ -27,5 +28,6 @@ abstract class ActivitiesModule {
     @ContributesAndroidInjector abstract fun contributesStatsActivity(): StatsActivity
     @ContributesAndroidInjector abstract fun contributesSurveyActivity(): SurveyActivity
     @ContributesAndroidInjector abstract fun contributesDefaultProfileActivity(): ProfileHelperActivity
+    @ContributesAndroidInjector abstract fun contributesScrollingActivity(): ScrollingActivity
 
 }

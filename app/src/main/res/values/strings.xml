@@ -1216,4 +1216,7 @@
     <string name="wear_unknown_action_string">Unknown action command:</string>
     <string name="overview_editquickwizard_percentage">Percentage</string>
     <string name="app_default">Application default</string>
+
+    <string name="nav_themeselector">Set Colors</string>
+    <string name="theme_save">Save</string>
 </resources>

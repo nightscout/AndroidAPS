@@ -13,7 +13,8 @@
     <uses-permission android:name="android.permission.LOCAL_MAC_ADDRESS" />
 
     <application>
-        <activity android:name="info.nightscout.androidaps.plugins.pump.common.dialog.RileyLinkBLEConfigActivity">
+        <activity android:name="info.nightscout.androidaps.plugins.pump.common.dialog.RileyLinkBLEConfigActivity"
+            android:exported="false">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.plugins.PumpCommon.dialog.RileyLinkBLEConfigActivity" />
                 <category android:name="android.intent.category.DEFAULT" />

@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="?attr/fragmentbackground"
     tools:context=".plugins.general.overview.OverviewFragment">
 
     <ScrollView
@@ -38,11 +39,14 @@
                     android:layout_marginEnd="5dp"
                     android:layout_weight="1"
                     android:gravity="center_vertical|center_horizontal"
-                    android:paddingTop="6dp"
-                    android:paddingBottom="6dp"
+                    android:paddingStart="6dp"
+                    android:paddingEnd="4dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
                     android:hint="active profile"
                     android:text="Profile"
                     android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:background="@drawable/ic_concinnity_pille"
                     app:drawableStartCompat="@drawable/ic_user_white"
                     tools:ignore="HardcodedText" />
 
@@ -53,11 +57,14 @@
                     android:layout_gravity="end"
                     android:layout_weight="1"
                     android:gravity="center_vertical|center_horizontal"
-                    android:paddingTop="6dp"
-                    android:paddingBottom="6dp"
+                    android:paddingStart="6dp"
+                    android:paddingEnd="4dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
                     android:hint="temp target"
                     android:text="@string/notavailable"
                     android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:background="@drawable/ic_concinnity_pille"
                     app:drawableStartCompat="@drawable/ic_zielkreuz_white"
                     tools:ignore="HardcodedText" />
 

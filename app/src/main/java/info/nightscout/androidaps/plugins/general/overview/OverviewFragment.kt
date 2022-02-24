@@ -7,8 +7,10 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.PorterDuff
 import android.graphics.drawable.AnimationDrawable
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -768,15 +770,15 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val units = profileFunction.getUnits()
         binding.infoLayout.bg.text = overviewData.lastBg?.valueToUnitsString(units)
             ?: rh.gs(R.string.notavailable)
-        binding.infoLayout.bg.setTextColor(overviewData.lastBgColor)
+        binding.infoLayout.bg.setTextColor(overviewData.getlastBgColor(context))
         binding.infoLayout.arrow.setImageResource(trendCalculator.getTrendArrow(overviewData.lastBg).directionToIcon())
-        binding.infoLayout.arrow.setColorFilter(overviewData.lastBgColor)
+        binding.infoLayout.arrow.setColorFilter(overviewData.getlastBgColor(context))
         binding.infoLayout.arrow.contentDescription = overviewData.lastBgDescription + " " + rh.gs(R.string.and) + " " + trendCalculator.getTrendDescription(overviewData.lastBg)
 
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData
         if (glucoseStatus != null) {
             binding.infoLayout.deltaLarge.text = Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
-            binding.infoLayout.deltaLarge.setTextColor(overviewData.lastBgColor)
+            binding.infoLayout.deltaLarge.setTextColor(overviewData.getlastBgColor(context))
             binding.infoLayout.delta.text = Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
             binding.infoLayout.avgDelta.text = Profile.toSignedUnitsString(glucoseStatus.shortAvgDelta, glucoseStatus.shortAvgDelta * Constants.MGDL_TO_MMOLL, units)
             binding.infoLayout.longAvgDelta.text = Profile.toSignedUnitsString(glucoseStatus.longAvgDelta, glucoseStatus.longAvgDelta * Constants.MGDL_TO_MMOLL, units)
@@ -813,6 +815,25 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         }
     }
 
+    fun setPillStyle(textView: TextView, colorStart: Int, colorEnd: Int, colorText: Int  ){
+        val drawableLeft: Array<Drawable?> = textView.compoundDrawables
+        val theme = requireContext().theme
+        if (theme != null) {
+            // create a gradient drawable
+            val typedValueStart = TypedValue()
+            theme.resolveAttribute(colorStart, typedValueStart, true)
+            val typedValueEnd = TypedValue()
+            theme.resolveAttribute(colorEnd, typedValueEnd, true)
+            val colors = intArrayOf(typedValueStart.data, typedValueEnd.data)
+            val gradientDrawable = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, colors)
+            gradientDrawable.shape = GradientDrawable.RECTANGLE
+            gradientDrawable.cornerRadius = 40f
+            textView.background = gradientDrawable
+            if (drawableLeft[0] != null) rh.gc(colorText).let { drawableLeft[0]!!.setTint(it) }
+            rh.gc(colorText).let { textView.setTextColor(it) }
+        }
+    }
+
     @Suppress("UNUSED_PARAMETER")
     fun updateProfile(from: String) {
         val profileBackgroundColor =
@@ -842,10 +863,11 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             } ?: rh.getAttributeColor(context, R.attr.defaultPillTextColor)
 
         binding.activeProfile.text = profileFunction.getProfileNameWithRemainingTime()
-        binding.activeProfile.setBackgroundColor(profileBackgroundColor)
         binding.activeProfile.setTextColor(profileTextColor)
+        val drawable: Drawable = binding.activeProfile.background
         val drawableLeft: Array<Drawable?> = binding.activeProfile.compoundDrawables
-        if (drawableLeft[0] != null) rh.getAttributeColor(context, R.attr.defaultPillTextColor).let { drawableLeft[0]!!.setTint(it) }
+        if (drawableLeft[0] != null) profileTextColor.let { drawableLeft[0]!!.setTint(it) }
+        drawable.setColorFilter(profileBackgroundColor, PorterDuff.Mode.SRC_IN)
     }
 
     @Suppress("UNUSED_PARAMETER")
@@ -927,13 +949,14 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     fun updateTemporaryTarget(from: String) {
         val units = profileFunction.getUnits()
         if (overviewData.temporaryTarget?.isInProgress(dateUtil) == false) overviewData.temporaryTarget = null
+        val drawable: Drawable = binding.tempTarget.background
+        val drawableLeft: Array<Drawable?> = binding.tempTarget.compoundDrawables
         val tempTarget = overviewData.temporaryTarget
         if (tempTarget != null) {
             binding.tempTarget.setTextColor(rh.getAttributeColor(context, R.attr.ribbonTextWarning))
-            binding.tempTarget.setBackgroundColor(rh.getAttributeColor(context, R.attr.ribbonWarning))
             binding.tempTarget.text = Profile.toTargetRangeString(tempTarget.lowTarget, tempTarget.highTarget, GlucoseUnit.MGDL, units) + " " + dateUtil.untilString(tempTarget.end, rh)
-            val drawableLeft: Array<Drawable?> = binding.tempTarget.compoundDrawables
             if (drawableLeft[0] != null) rh.getAttributeColor(context, R.attr.ribbonTextWarning).let { drawableLeft[0]!!.setTint(it) }
+            drawable.setColorFilter(resources.getColor(R.color.ribbonWarning, requireContext().theme), PorterDuff.Mode.SRC_IN)
         } else {
             // If the target is not the same as set in the profile then oref has overridden it
             profileFunction.getProfile()?.let { profile ->
@@ -943,15 +966,13 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     aapsLogger.debug("Adjusted target. Profile: ${profile.getTargetMgdl()} APS: $targetUsed")
                     binding.tempTarget.text = Profile.toTargetRangeString(targetUsed, targetUsed, GlucoseUnit.MGDL, units)
                     binding.tempTarget.setTextColor(rh.getAttributeColor(context, R.attr.ribbonTextWarning))
-                    binding.tempTarget.setBackgroundColor(rh.getAttributeColor(context, R.attr.ribbonWarning))
-                    val drawableLeft: Array<Drawable?> = binding.tempTarget.compoundDrawables
                     if (drawableLeft[0] != null) rh.getAttributeColor(context, R.attr.ribbonTextWarning).let { drawableLeft[0]!!.setTint(it) }
+                    drawable.setColorFilter(resources.getColor(R.color.ribbonWarning, requireContext().theme), PorterDuff.Mode.SRC_IN)
                 } else {
                     binding.tempTarget.setTextColor(rh.getAttributeColor(context, R.attr.defaultPillTextColor))
-                    binding.tempTarget.setBackgroundColor(rh.getAttributeColor(context, R.attr.ribbonDefault))
                     binding.tempTarget.text = Profile.toTargetRangeString(profile.getTargetLowMgdl(), profile.getTargetHighMgdl(), GlucoseUnit.MGDL, units)
-                    val drawableLeft: Array<Drawable?> = binding.tempTarget.compoundDrawables
                     if (drawableLeft[0] != null) rh.getAttributeColor(context, R.attr.defaultPillTextColor).let { drawableLeft[0]!!.setTint(it) }
+                    drawable.setColorFilter(resources.getColor(R.color.ribbonDefault, requireContext().theme), PorterDuff.Mode.SRC_IN)
                 }
             }
         }

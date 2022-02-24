@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.dialogs
 
+import android.content.res.Resources
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.LayoutInflater
@@ -21,9 +22,11 @@ import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
+import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import javax.inject.Inject
@@ -37,6 +40,7 @@ class BolusProgressDialog : DaggerDialogFragment() {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var uel: UserEntryLogger
+    @Inject lateinit var sp: SP
 
     private val disposable = CompositeDisposable()
 
@@ -82,6 +86,15 @@ class BolusProgressDialog : DaggerDialogFragment() {
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
         isCancelable = false
         dialog?.setCanceledOnTouchOutside(false)
+
+        val themeToSet = sp.getInt("theme", ThemeUtil.THEME_DARKSIDE)
+        try {
+            val theme: Resources.Theme? = context?.theme
+            // https://stackoverflow.com/questions/11562051/change-activitys-theme-programmatically
+            theme?.applyStyle(ThemeUtil.getThemeId(themeToSet), true)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
 
         _binding = DialogBolusprogressBinding.inflate(inflater, container, false)
         return binding.root

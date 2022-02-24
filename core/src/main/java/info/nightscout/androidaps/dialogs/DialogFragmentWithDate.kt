@@ -3,7 +3,9 @@ package info.nightscout.androidaps.dialogs
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.app.TimePickerDialog
+import android.content.res.Resources
 import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.format.DateFormat
@@ -26,6 +28,7 @@ import javax.inject.Inject
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import android.view.LayoutInflater
 import androidx.core.content.ContextCompat
+import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 
 abstract class DialogFragmentWithDate : DaggerDialogFragment() {
@@ -77,9 +80,21 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
         isCancelable = true
         dialog?.setCanceledOnTouchOutside(false)
 
+        val themeToSet = sp.getInt("theme", ThemeUtil.THEME_DARKSIDE)
+        try {
+            val theme: Resources.Theme? = context?.getTheme()
+            // https://stackoverflow.com/questions/11562051/change-activitys-theme-programmatically
+            if (theme != null) {
+                theme.applyStyle(ThemeUtil.getThemeId(themeToSet), true)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
         val drawable: Drawable? = context?.let { ContextCompat.getDrawable(it, R.drawable.dialog) }
         if (drawable != null) {
             drawable.setColorFilter( rh.getAttributeColor(context, R.attr.windowBackground ), PorterDuff.Mode.SRC_IN)
+           // drawable.setColorFilter( PorterDuffColorFilter(rh.getAttributeColor(context, R.attr.windowBackground ), PorterDuff.Mode.MULTIPLY))
         }
         dialog?.window?.setBackgroundDrawable(drawable)
     }

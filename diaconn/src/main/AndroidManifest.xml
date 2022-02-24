@@ -12,7 +12,8 @@
     <application>
         <activity android:name="info.nightscout.androidaps.diaconn.activities.DiaconnG8HistoryActivity" />
         <activity android:name="info.nightscout.androidaps.diaconn.activities.DiaconnG8UserOptionsActivity" />
-        <activity android:name="info.nightscout.androidaps.diaconn.activities.DiaconnG8BLEScanActivity">
+        <activity android:name="info.nightscout.androidaps.diaconn.activities.DiaconnG8BLEScanActivity"
+            android:exported="false">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.plugins.PumpDiaconnG8.activities.DiaconnG8BLEScanActivity" />
                 <category android:name="android.intent.category.DEFAULT" />

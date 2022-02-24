@@ -3,10 +3,13 @@ package info.nightscout.androidaps.plugins.general.overview
 import android.content.Context
 import android.graphics.DashPathEffect
 import android.graphics.Paint
+import androidx.core.content.res.ResourcesCompat
 import com.jjoe64.graphview.series.BarGraphSeries
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.MainActivity
+import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.database.AppRepository
@@ -139,12 +142,13 @@ class OverviewData @Inject constructor(
             lastBg.valueToUnits(profileFunction.getUnits()) > defaultValueHelper.determineHighLine()
         } ?: false
 
-    val lastBgColor: Int
-        get() = when {
-            isLow  -> rh.getAttributeColor( null ,R.attr.bgLow )
-            isHigh -> rh.getAttributeColor( null ,R.attr.bgHigh )
-            else   -> rh.getAttributeColor( null ,R.attr.bgInRange )
+     fun getlastBgColor(context: Context?): Int {
+        return  when {
+            isLow  -> rh.getAttributeColor(context, R.attr.bgLow)
+            isHigh -> rh.getAttributeColor(context, R.attr.bgHigh)
+            else   -> rh.getAttributeColor(context, R.attr.bgInRange)
         }
+    }
 
     val lastBgDescription: String
         get() = when {

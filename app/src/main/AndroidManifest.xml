@@ -64,6 +64,7 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".plugins.general.themeselector.ScrollingActivity" />
         <activity android:name=".activities.PreferencesActivity"
             android:theme="@style/AppTheme" />
         <activity android:name=".plugins.general.overview.activities.QuickWizardListActivity" android:exported="false">
@@ -242,7 +243,8 @@
             android:theme="@style/AppTheme" />
         <activity android:name=".plugins.general.maintenance.activities.LogSettingActivity" />
         <activity android:name=".activities.RequestDexcomPermissionActivity" />
-        <activity android:name=".plugins.general.smsCommunicator.activities.SmsCommunicatorOtpActivity">
+        <activity android:name=".plugins.general.smsCommunicator.activities.SmsCommunicatorOtpActivity"
+            android:exported="false">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.plugins.general.smsCommunicator.activities.SmsCommunicatorOtpActivity" />
 

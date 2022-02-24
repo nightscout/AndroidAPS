@@ -3,6 +3,7 @@ package info.nightscout.androidaps
 import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.text.SpannableString
@@ -20,7 +21,9 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.TaskStackBuilder
 import androidx.core.view.GravityCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
@@ -43,6 +46,8 @@ import info.nightscout.androidaps.plugins.constraints.signatureVerifier.Signatur
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
+import info.nightscout.androidaps.plugins.general.themeselector.ScrollingActivity
+import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity
 import info.nightscout.androidaps.utils.AndroidPermission
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -62,7 +67,7 @@ import java.util.*
 import javax.inject.Inject
 import kotlin.system.exitProcess
 
-class MainActivity : NoSplashAppCompatActivity() {
+open class MainActivity : NoSplashAppCompatActivity() {
 
     private val disposable = CompositeDisposable()
 
@@ -91,10 +96,48 @@ class MainActivity : NoSplashAppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
+    // change to selected theme in theme manager
+    fun changeTheme(newTheme: Int) {
+        setNewTheme(newTheme)
+        refreshActivities()
+    }
+
+    // change to a new theme selected in theme manager
+    fun setNewTheme(newTheme: Int) {
+        sp.putInt("theme", newTheme)
+
+        if ( sp.getBoolean(R.string.key_use_dark_mode, true)) {
+            val cd = ColorDrawable(sp.getInt("darkBackgroundColor", info.nightscout.androidaps.core.R.color.background_dark))
+            if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawable(cd)
+        } else {
+            val cd = ColorDrawable(sp.getInt("lightBackgroundColor", info.nightscout.androidaps.core.R.color.background_light))
+            if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawable(cd)
+        }
+        setTheme(newTheme)
+        ThemeUtil.setActualTheme(newTheme)
+    }
+
+    // restart activities if something like theme change happens
+    fun refreshActivities() {
+        TaskStackBuilder.create(this)
+            .addNextIntent(Intent(this, MainActivity::class.java))
+            .addNextIntent(this.intent)
+            .startActivities()
+        recreate()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Iconify.with(FontAwesomeModule())
-        setTheme(R.style.CustomTheme)
+        if ( sp.getBoolean(R.string.key_use_dark_mode, true)) {
+            val cd = ColorDrawable(sp.getInt("darkBackgroundColor", info.nightscout.androidaps.core.R.color.background_dark))
+            if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawable(cd)
+        } else {
+            val cd = ColorDrawable(sp.getInt("lightBackgroundColor", info.nightscout.androidaps.core.R.color.background_light))
+            if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawable(cd)
+        }
+        setTheme(ThemeUtil.getThemeId(sp.getInt("theme", ThemeUtil.THEME_DARKSIDE)))
+        ThemeUtil.setActualTheme(ThemeUtil.getThemeId(sp.getInt("theme", ThemeUtil.THEME_DARKSIDE)))
         LocaleHelper.update(applicationContext)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -275,6 +318,35 @@ class MainActivity : NoSplashAppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        //show all selected plugins not selected for hamburger menu in option menu
+        this.menu = menu
+        var itemId = 0
+        for (p in activePlugin.getPluginsList()) {
+            if (p.hasFragment() && !p.isFragmentVisible() && p.isEnabled(p.pluginDescription.mainType) && !p.pluginDescription.neverVisible) {
+                val menuItem = menu.add(Menu.NONE, itemId++, Menu.NONE, p.name )
+                if(p.menuIcon != -1) {
+                    menuItem.setIcon(p.menuIcon)
+                } else
+                {
+                    menuItem.setIcon(R.drawable.ic_settings)
+                }
+                menuItem.setOnMenuItemClickListener {
+                    val intent = Intent(this, SingleFragmentActivity::class.java)
+                    intent.putExtra("plugin", activePlugin.getPluginsList().indexOf(p))
+                    startActivity(intent)
+                    true
+                }
+            }
+        }
+        menuInflater.inflate(R.menu.menu_main, menu)
+        pluginPreferencesMenuItem = menu.findItem(R.id.nav_plugin_preferences)
+        setPluginPreferenceMenuName()
+        checkPluginPreferences(binding.mainPager)
+        return true
+    }
+
+    /*
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         this.menu = menu
         menuInflater.inflate(R.menu.menu_main, menu)
         pluginPreferencesMenuItem = menu.findItem(R.id.nav_plugin_preferences)
@@ -282,6 +354,7 @@ class MainActivity : NoSplashAppCompatActivity() {
         checkPluginPreferences(binding.mainPager)
         return true
     }
+     */
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
@@ -301,6 +374,11 @@ class MainActivity : NoSplashAppCompatActivity() {
 
             R.id.nav_treatments         -> {
                 startActivity(Intent(this, TreatmentsActivity::class.java))
+                return true
+            }
+
+            R.id.nav_themeselector -> {
+                startActivity(Intent(this, ScrollingActivity::class.java))
                 return true
             }
 

@@ -101,4 +101,7 @@ dependencies {
     // Phone checker
     // updating to 0.0.9 prevents AAPS from build
     api 'com.scottyab:rootbeer-lib:0.0.8'
+
+    //Color Picker
+    api "com.github.skydoves:colorpickerview:2.1.7"
 }

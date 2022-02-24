@@ -23,6 +23,11 @@
         app:showAsAction="never"
         android:title="@string/nav_setupwizard" />
     <item
+        android:id="@+id/nav_themeselector"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_palette"
+        android:title="@string/nav_themeselector" />
+    <item
         android:id="@+id/nav_stats"
         app:showAsAction="never"
         android:title="@string/statistics" />

@@ -6,16 +6,18 @@ import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.events.EventThemeSwitch
 import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.locale.LocaleHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import javax.inject.Inject
 
 
 open class NoSplashAppCompatActivity : DaggerAppCompatActivityWithResult() {
-
+    @Inject lateinit var spSplash: SP
     @Inject lateinit var rxBus: RxBus
 
     private val compositeDisposable = CompositeDisposable()
@@ -25,7 +27,15 @@ open class NoSplashAppCompatActivity : DaggerAppCompatActivityWithResult() {
         setTheme(R.style.AppTheme_NoActionBar)
 
         compositeDisposable.add(rxBus.toObservable(EventThemeSwitch::class.java).subscribe {
-            theme.applyStyle(R.style.CustomTheme,true)
+            var themeToSet = spSplash.getInt("theme", ThemeUtil.THEME_DARKSIDE)
+            try {
+                setTheme(themeToSet)
+                val theme = super.getTheme()
+                // https://stackoverflow.com/questions/11562051/change-activitys-theme-programmatically
+                theme.applyStyle(ThemeUtil.getThemeId(themeToSet), true)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
             recreate()
         })
 
