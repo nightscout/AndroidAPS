@@ -143,7 +143,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
                     binding.reusebutton.text = rh.gs(R.string.reuse_profile_pct_hours, profile.value.originalPercentage, T.msecs(profile.value.originalTimeshift).hours().toInt())
                     binding.reusebutton.setOnClickListener {
                         binding.percentage.value = profile.value.originalPercentage.toDouble()
-                        binding.timeshift.value = profile.value.originalTimeshift.toDouble()
+                        binding.timeshift.value = T.msecs(profile.value.originalTimeshift).hours().toDouble()
                     }
                 }
         }
