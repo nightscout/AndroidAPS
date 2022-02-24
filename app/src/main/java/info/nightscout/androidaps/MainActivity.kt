@@ -66,6 +66,7 @@ import io.reactivex.rxkotlin.plusAssign
 import java.util.*
 import javax.inject.Inject
 import kotlin.system.exitProcess
+import com.ms_square.etsyblur.BlurSupport
 
 open class MainActivity : NoSplashAppCompatActivity() {
 
@@ -149,6 +150,9 @@ open class MainActivity : NoSplashAppCompatActivity() {
             binding.mainDrawerLayout.addDrawerListener(it)
             it.syncState()
         }
+
+        //bluring for navigation drawer
+        BlurSupport.addTo( binding.mainDrawerLayout)
 
         // initialize screen wake lock
         processPreferenceChange(EventPreferenceChange(rh.gs(R.string.key_keep_screen_on)))

@@ -62,6 +62,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
+        <!-- needed w/this id for EtsyBlur Lib to work -->
+        <com.ms_square.etsyblur.BlurringView
+            android:id="@id/blurring_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </com.ms_square.etsyblur.BlurringView>
+
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/main_navigation_view"
             android:layout_width="wrap_content"
