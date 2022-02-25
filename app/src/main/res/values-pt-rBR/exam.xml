@@ -2,9 +2,12 @@
 <resources>
     <string name="dia_whatmeansdia">O que é verdade sobre o DIA?</string>
     <string name="dia_label_exam">Duração da Atividade da Insulina (DIA)</string>
+    <string name="dia_profile">Você deve definir o valor para a DAI no seu perfil.</string>
+    <string name="dia_minimumis5h">A menor duração permitida é de 5 horas.</string>
     <string name="dia_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html?#insulin</string>
     <string name="dia_meaningisequaltodiapump">Se você estiver satisfeito com um valor da DIA que funcionava bem na sua bomba antes do AndroidAPS, não há necessidade de modificar esse valor quando você começa o loop.</string>
     <string name="dia_valuemustbedetermined">Você deve determinar por si mesmo o valor apropriado para a DIA.</string>
+    <string name="hypott_label">Alvo Temporário para hipoglicemia</string>
     <string name="hypott_wrongbasal">Corrigir hipoglicemias causadas por configurações incorretas da dose basal.</string>
     <string name="hypott_preventoversmb">Evitar que o AndroidAPS corrija excessivamente um aumento de glicose causado pelos carboidratos de ação rápida que trataram a hipoglicemia.</string>
     <string name="hypott_exercise">Corrigir uma hipoglicemia causada por exercícios físicos.</string>
@@ -32,8 +35,16 @@
     <string name="objectives2_internalstorage">Seu arquivo de configurações foi encontrado no armazenamento interno/AAPS/preferências do seu telefone.</string>
     <string name="objectives2_cloud">Copie seu arquivo de preferências para um local seguro fora de seu telefone (por exemplo, usando uma unidade na nuvem, conectando um cabo a um computador, e-mail, etc.)</string>
     <string name="objectives2_easyrestore">Se seu telefone ficar danificado ou se você perder-lo, existem maneiras fáceis de recuperar suas configurações remotamente sem um backup local.</string>
+    <string name="objectives_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/ExportImportSettings.html</string>
+    <string name="objectives_hint2">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
     <string name="noisycgm_label">Leituras do CGM imprecisas</string>
     <string name="noisycgm_whattodo">O que deve ser feito se os dados do CGM são irregulares?</string>
+    <string name="noisycgm_nothing">Nada, AndroidAPS vai lidar com isso.</string>
+    <string name="noisycgm_pause">Desative o loop fechado para evitar uma possível dosagem maior ou menor que a necessária.</string>
+    <string name="noisycgm_replacesensor">Troque sensores que apresentam erros ou medições imprecisas.</string>
+    <string name="noisycgm_checksmoothing">Verifique se seu aplicativo CGM fornece dados suavizados.</string>
+    <string name="noisycgm_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Smoothing-Blood-Glucose-Data-in-xDrip.html#smoothing-blood-glucose-data</string>
+    <string name="exercise_settt">Alguns minutos antes de iniciar o exercício, defina um alvo de glicemia.</string>
     <string name="breadgrams_calc">Se os níveis de glicose no sangue estiverem fora dos limites aceitáveis (muito baixo ou muito alto) a calculadora de bolus pode ser usada para fornecer sugestões para correções de carboidrato ou insulina.</string>
     <string name="breadgrams_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
     <string name="extendedcarbs_label">Tópico: e-Carbs</string>

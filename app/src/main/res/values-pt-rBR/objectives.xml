@@ -1,7 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="objectives_button_start">Iniciar</string>
+    <string name="objectives_button_verify">Verificar</string>
+    <string name="nth_objective">%1$d. Objetivo</string>
+    <string name="objectivenotstarted">Objetivo %1$d não iniciado</string>
+    <string name="objectivenotfinished">Objetivo %1$d não concluido</string>
+    <string name="objectives_0_objective">Configurando a visualização e monitoramento, e analisando basais e relações</string>
+    <string name="objectives_0_gate">Verificar se a Glicemia está disponível no Nightscout, e se os dados de insulina da bomba estão sendo transferidos</string>
+    <string name="objectives_openloop_objective">Iniciando em um loop aberto</string>
+    <string name="objectives_openloop_gate">Utilize o modo Loop Aberto por alguns dias e execute manualmente várias basais temporárias. Configure e use alvos temporários e defina alvos temporários padrão (por exemplo, para exercício ou tratamento hipos com carboidratos)</string>
     <string name="objectives_maxbasal_objective">Entendendo o seu loop aberto, incluindo as suas recomendações de basais temporárias</string>
     <string name="objectives_maxbasal_gate">Com base nessa experiência, decidir qual deve ser a basal máximo e configurá-lo na bomba e nas preferências</string>
+    <string name="objectives_maxiobzero_objective">Comece a fechar loop com Suspensão por Glicose Baixa</string>
+    <string name="objectives_maxiobzero_gate">Utilizar em close loop com IOB máx = 0 por alguns dias sem muitas situações de Suspensão por Baixa Glicose</string>
+    <string name="objectives_maxiob_objective">Ajustar o loop fechado, aumentar a IOB máximo acima de 0 e reduzir gradualmente os alvos de glicemia</string>
+    <string name="objectives_maxiob_gate">Utilizar por alguns dias e pelo menos uma noite sem alarmes de glicose baixa, antes de baixar a glicemia</string>
+    <string name="objectives_autosens_objective">Ajuste as basais e os parâmetros, se necessário, e, em seguida, ative o auto-sens</string>
+    <string name="objectives_smb_objective">Ativando recursos adicionais para uso durante o dia, como SMB</string>
+    <string name="objectives_auto_objective">Ativando a automação</string>
     <string name="objectives_auto_gate">Leia os documentos de como a automação funciona. Configure suas primeiras regras simples. Em vez de efetuar uma ação deixe AAPS apresentar apenas uma notificação. Quando você tiver certeza de que a automação é acionada no momento certo substitua a notificação por uma ação real. (https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">Glicose disponível no NS</string>
     <string name="objectives_pumpstatusavailableinns">Status da Bomba disponível no NS</string>

@@ -81,4 +81,5 @@
     </plurals>
     <string name="orange_use_scanning_level">Использовать сканирование</string>
     <string name="orange_use_scanning_level_summary">Используйте сканирование перед сопряжением с OrangeLink, это должно улучшить качество связи (при необходимости можно применять и в других клонах RileyLink)</string>
+    <string name="rileylink_configuration">Конфигурация RileyLink</string>
 </resources>
