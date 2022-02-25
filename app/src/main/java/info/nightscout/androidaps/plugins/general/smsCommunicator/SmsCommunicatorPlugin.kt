@@ -67,7 +67,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
-    private val smsManager: SmsManager,
+    private val smsManager: SmsManager?,
     private val aapsSchedulers: AapsSchedulers,
     private val sp: SP,
     private val constraintChecker: ConstraintChecker,
@@ -1100,10 +1100,10 @@ class SmsCommunicatorPlugin @Inject constructor(
         sms.text = stripAccents(sms.text)
         try {
             aapsLogger.debug(LTag.SMS, "Sending SMS to " + sms.phoneNumber + ": " + sms.text)
-            if (sms.text.toByteArray().size <= 140) smsManager.sendTextMessage(sms.phoneNumber, null, sms.text, null, null)
+            if (sms.text.toByteArray().size <= 140) smsManager?.sendTextMessage(sms.phoneNumber, null, sms.text, null, null)
             else {
-                val parts = smsManager.divideMessage(sms.text)
-                smsManager.sendMultipartTextMessage(sms.phoneNumber, null, parts,
+                val parts = smsManager?.divideMessage(sms.text)
+                smsManager?.sendMultipartTextMessage(sms.phoneNumber, null, parts,
                     null, null)
             }
             messages.add(sms)
