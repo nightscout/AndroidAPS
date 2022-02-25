@@ -69,8 +69,12 @@
     </style>
 
     <style name="MaterialPickerTheme" parent="android:Theme.Material.Dialog.Alert">
-        <item name="buttonBarPositiveButtonStyle">@style/PickerTextButton</item>
-        <item name="buttonBarNegativeButtonStyle">@style/PickerTextButton</item>
+        <item name="android:buttonBarPositiveButtonStyle">@style/PickerTextButton</item>
+        <item name="android:buttonBarNegativeButtonStyle">@style/PickerTextButton</item>
+        <item name="android:textColorPrimary">@color/okButtonText</item>
+        <item name="android:colorPrimary">@color/okButtonText</item>
+        <item name="android:calendarTextColor">@color/okButtonText</item>
+        <item name="android:colorAccent">@color/okButtonText</item>
     </style>
     <style name="PickerTextButton" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
         <item name="android:textColor">@color/okButtonText</item>
