@@ -286,7 +286,7 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
         }
     console.error("                                            ");
     console.error("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-    console.error("++ Dynamic ISF Beta 1.3 - Based on rolling 24 hours ++");
+    console.error("++ Dynamic ISF Beta 1.4  ++");
     console.error("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
     console.error("                                            ");
 
@@ -313,7 +313,7 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
         var tdd_pump = (( basal * 24 ) * 2.8);
         }
 
-        var TDD = (tdd7 * 0.3) + (tdd_24 * 0.7);
+        //var TDD = (tdd7 * 0.3) + (tdd_24 * 0.7);
 
        /*console.error("Rolling 24 hour TDD = "+tdd_24+"; ");
        console.error("                                            ");
