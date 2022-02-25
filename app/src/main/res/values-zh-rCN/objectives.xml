@@ -6,11 +6,11 @@
     <string name="objectivenotstarted">目标 %1$d 未开始</string>
     <string name="objectivenotfinished">目标 %1$d 未完成</string>
     <string name="objectives_0_objective">设置可视化的连续血糖监测系统，并且分析胰岛素基础率和比率。</string>
-    <string name="objectives_0_gate">验证 Nightscout 中的血糖是否可用以及正在上传泵的胰岛素数据</string>
+    <string name="objectives_0_gate">验证Nightscout中血糖(BG) 数据可用，并且泵的胰岛素数据正在上传。</string>
     <string name="objectives_openloop_objective">开始开环</string>
-    <string name="objectives_openloop_gate">在开环模式下运行几天，并在手机上手动设定多次临时基础率。设置和使用临时目标和默认的临时目标 (例如, 用于云动或处理碳水化合物)</string>
+    <string name="objectives_openloop_gate">在开环模式下运行几天，手动设定多次临时基础率。设置临时目标默认值并使用临时目标功能（例如，在运动或低血糖补充碳水化合物时）</string>
     <string name="objectives_maxbasal_objective">了解你的开环，包括它的临时基础率建议</string>
-    <string name="objectives_maxbasal_gate">基于以上的经验，决定适合自己的最大基础率，在泵和软件的参数选项上设置</string>
+    <string name="objectives_maxbasal_gate">基于使用开环的经验，决定基础率的最大值，在胰岛素泵和AAPS的参数选项上设置它</string>
     <string name="objectives_maxiobzero_objective">从低血糖维持模式(用于测算基础率) 开始闭环功能</string>
     <string name="objectives_maxiobzero_gate">在闭环模式下运行，设置最大IOB = 0 运行几天，确保没有太多的低血糖事件</string>
     <string name="objectives_maxiob_objective">优化闭环，逐渐增加最大IOB，并逐渐降低目标血糖值</string>
