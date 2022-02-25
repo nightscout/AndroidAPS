@@ -21,5 +21,5 @@ open class CoreModule {
     fun provideResources(context: Context, fabricPrivacy: FabricPrivacy): ResourceHelper = ResourceHelperImplementation(context, fabricPrivacy)
 
     @Provides
-    fun smsManager(context: Context) : SmsManager = context.getSystemService(SmsManager::class.java)
+    fun smsManager(context: Context) : SmsManager? = context.getSystemService(SmsManager::class.java)
 }
