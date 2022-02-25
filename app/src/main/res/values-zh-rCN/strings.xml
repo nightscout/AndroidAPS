@@ -468,11 +468,14 @@
     <string name="ignore5m">忽略5分钟</string>
     <string name="ignore15m">忽略 15分钟</string>
     <string name="ignore30m">忽略30分钟</string>
+    <string name="required">要</string>
     <string name="nav_historybrowser">历史浏览</string>
     <string name="wear_notifysmb_title">在 SMB 上通知</string>
     <string name="wear_notifysmb_summary">在手表上像显示常规大剂量一样显示SMB微型大剂量</string>
     <string name="ns_create_announcements_from_errors_title">创建错误公告</string>
+    <string name="ns_create_announcements_from_carbs_req_title">从碳水需求警报创建NS公告</string>
     <string name="ns_create_announcements_from_errors_summary">为错误对话框和本地警报创建Nightscout公告(在治疗标签下的护理记录里也可查看)</string>
+    <string name="ns_create_announcements_from_carbs_req_summary">为碳水化合物需求警报创建Nightscout网站的公告</string>
     <string name="wear_predictions_summary">在手表的表盘上显示预测</string>
     <string name="wear_predictions_title">预测</string>
     <string name="data_choices">数据选择</string>
@@ -486,8 +489,10 @@
     <string name="do_not_bolus_record_only">不打大剂量，只记录</string>
     <string name="category">类别</string>
     <string name="subcategory">子类别</string>
+    <string name="bolusrecordedonly">仅记录大剂量数值(泵不会输注)</string>
     <string name="loop_smbsetbypump_label">通过泵设置SMB微型大剂量</string>
     <string name="overview_show_activity">活动</string>
+    <string name="overview_show_bgi">血糖影响</string>
     <string name="overview_show_sensitivity">灵敏度</string>
     <string name="overview_show_deviations">偏差</string>
     <string name="overview_show_cob">活性碳水化合物</string>
