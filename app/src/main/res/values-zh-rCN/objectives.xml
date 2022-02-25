@@ -27,29 +27,29 @@
     <string name="accomplished">已完成: %1$s</string>
     <string name="objectives_usage_objective">学习如何控制 AndroidAPS</string>
     <string name="objectives_usage_gate">在 AndroidAPS 中执行不同的操作</string>
-    <string name="objectives_useprofileswitch">设置配置文件 90% ( 10 分钟 ) ( 长按配置文件名称 )</string>
-    <string name="objectives_usedisconnectpump">模拟淋浴。 将泵断开连接 1h (长按开环)</string>
+    <string name="objectives_useprofileswitch">将个人配置文件设置为90%持续10分钟 (长按首页概览左上角的配置文件名称)</string>
+    <string name="objectives_usedisconnectpump">模拟淋浴。 将泵断开连接1个小时(长按开环图标)</string>
     <string name="objectives_usereconnectpump">... 然后以同样的方式重新连接</string>
     <string name="objectives_usetemptarget">创建具有 10 分钟持续时间的定制临时目标 (当前目标上长按 )</string>
-    <string name="objectives_useactions">在配置构建器中，启用 \" 操作 \" 插件，使其可视并从顶部菜单显示其内容</string>
-    <string name="objectives_useloop">显示循环插件的内容</string>
-    <string name="objectives_usescale">通过长按 BG 图表使用比例函数</string>
+    <string name="objectives_useactions">在配置生成器中启用Actions(常用操作) 插件，使其可视并在顶部菜单显示其内容</string>
+    <string name="objectives_useloop">显示闭环插件的内容</string>
+    <string name="objectives_usescale">长按血糖图来使用缩放功能</string>
     <string name="objectives_button_enter">输入</string>
     <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">如果您有至少3个月的其他系统闭环经验，您可能有资格获得跳过学习目标的代码。参见 https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives for details。</string>
     <string name="codeaccepted">已接受代码</string>
     <string name="codeinvalid">代码无效</string>
     <string name="objectives_exam_objective">证明你的知识</string>
     <string name="objectives_exam_gate">研究这些问题。每个问题都有四个可能的答案。答案可能不止一个。请选择所有正确的选项，然后点击验证。</string>
-    <string name="answerdisabledto">解答已禁用直到： %1$s</string>
+    <string name="answerdisabledto">禁止答题，直到： %1$s</string>
     <string name="wronganswer">错误答案！</string>
     <string name="unfinshed_button">下一个未完成的</string>
     <string name="requestcode">请求码： %1$s</string>
-    <string name="objectives_hint">(检查所有正确的答案)</string>
+    <string name="objectives_hint">(选择所有正确的答案)</string>
     <string name="disconnectpump_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
     <string name="usetemptarget_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="useaction_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#config-builder</string>
     <string name="usescale_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="notconnected">未连接到网络</string>
-    <string name="failedretrievetime">获取时间失败</string>
-    <string name="requirementnotmet">目标要求未得到满足。</string>
+    <string name="failedretrievetime">时间同步失败</string>
+    <string name="requirementnotmet">未满足目标要求。</string>
 </resources>
