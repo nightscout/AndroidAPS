@@ -306,6 +306,13 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
         var tdd_24 = (( basal * 24 ) * 2.8);
         }
 
+    if (meal_data.TDDPUMP){
+        var tdd_pump = ( (meal_data.TDDPUMP / now ) * 24);
+        }
+        else {
+        var tdd_pump = (( basal * 24 ) * 2.8);
+        }
+
         var TDD = (tdd7 * 0.3) + (tdd_24 * 0.7);
 
        /*console.error("Rolling 24 hour TDD = "+tdd_24+"; ");
