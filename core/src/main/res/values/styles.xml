@@ -273,6 +273,8 @@
         <item name="ic_local_reset" >@color/calibrationRed</item>
         <item name="ic_local_activate" >@color/ic_local_activate</item>
         <item name="okButtonSelected" >@color/okButtonSelected</item>
+        <!---Number Picker Text Color-->
+        <item name="numPickerText" >@color/black</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>
