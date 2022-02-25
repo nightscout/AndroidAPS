@@ -286,7 +286,7 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
         }
     console.error("                                            ");
     console.error("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-    console.error("++ Dynamic ISF Beta 1.4  ++");
+    console.error("++ Dynamic ISF Beta 1.3 - Based on rolling 24 hours ++");
     console.error("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
     console.error("                                            ");
 
@@ -306,21 +306,14 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
         var tdd_24 = (( basal * 24 ) * 2.8);
         }
 
-    if (meal_data.TDDPUMP){
-        var tdd_pump = ( (meal_data.TDDPUMP / now ) * 24);
-        }
-        else {
-        var tdd_pump = (( basal * 24 ) * 2.8);
-        }
+        var TDD = (tdd7 * 0.3) + (tdd_24 * 0.7);
 
-        //var TDD = (tdd7 * 0.3) + (tdd_24 * 0.7);
-
-       /*console.error("Rolling 24 hour TDD = "+tdd_24+"; ");
+       console.error("Rolling 24 hour TDD = "+tdd_24+"; ");
        console.error("                                            ");
        console.error("Weighted Average TDD = "+TDD+"; ");
        console.error("                                            ");
-        //if (tdd7 > 0){*/
-        if ( tdd_pump > tdd7 && now < 5 || now < 7 && TDD < ( 0.8 * tdd7 ) ){
+        //if (tdd7 > 0){
+        /*if ( tdd_pump > tdd7 && now < 5 || now < 7 && TDD < ( 0.8 * tdd7 ) ){
           TDD = ( 0.8 * tdd7 );
           console.log("Excess or too low insulin from pump so TDD set to "+TDD+" based on 75% of TDD7; ");
           rT.reason += "TDD: " +TDD+ " due to low or high tdd from pump; ";
@@ -341,7 +334,7 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
         else {
              console.log("TDD 7 ="+tdd7+", TDD Pump ="+tdd_pump+" and TDD = "+TDD+";");
              rT.reason += "TDD: " +TDD+ " based on standard pump 60/tdd7 40 split; ";
-             }
+             }*/
 
 
     var variable_sens = (277700 / (TDD * bg));
