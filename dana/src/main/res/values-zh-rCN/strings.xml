@@ -1,2 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="danars_pairing">配对中</string>
+    <string name="danars_nodeviceavailable">迄今未找到任何设备</string>
+    <string name="danars_pairingok">配对成功</string>
+    <string name="danars_pairingtimedout">配对超时</string>
+    <string name="danars_waitingforpairing">等待泵配对</string>
+    <string name="danarspump">丹纳-i/RS</string>
+    <string name="danarspump_shortname">丹纳泵</string>
+    <string name="description_pump_dana_rs">与丹纳-RS或丹纳-i泵集成。</string>
+    <string name="maxbolusviolation">超出最大大剂量的限制</string>
+    <string name="commanderror">命令错误</string>
+    <string name="speederror">速度错误</string>
+    <string name="insulinlimitviolation">违反胰岛素限制</string>
+    <string name="boluserrorcode">已请求: %1$.2fU 已输注: %2$.2fU 错误代码: %3$s</string>
+    <string name="danar_valuenotsetproperly">数值设定的不正确</string>
+    <string name="danar_setbasalstep001">将基础率的步进值设定为 0.01 U/小时</string>
+    <string name="resetpairing">重置配对信息?</string>
+    <string name="dana_model">%1$s\n型号: %2$02X\n协议: %3$02X\n代码: %4$02X</string>
+    <string name="processinghistory">正在处理事件</string>
+    <string name="danar_enableextendedbolus">在泵上启用扩展大剂量</string>
+    <string name="overview_bolusprogress_delivered">已输注</string>
+    <string name="overview_bolusprogress_stoped">已停止</string>
+    <string name="unsupportedfirmware">不支持的泵固件</string>
+    <string name="pumperror">泵错误</string>
+    <string name="lowbattery">电池电量低</string>
+    <string name="basalcompare">输注剂量低于预设基础率</string>
+    <string name="pumpshutdown">泵关机</string>
+    <string name="batterydischarged">泵电池被拆卸了</string>
+    <string name="occlusion">堵管</string>
+    <string name="emptyreservoir">储药器空了</string>
+    <string name="checkshaft">检查螺旋杆</string>
+    <string name="basalmax">最大基础率</string>
+    <string name="dailymax">最大日剂量</string>
+    <string name="bloodsugarmeasurementalert">血糖测量警报</string>
+    <string name="remaininsulinalert">剩余胰岛素数量</string>
+    <string name="missedbolus">缺失大剂量</string>
+    <string name="invalidpairing">无效的配对信息，请重新配对</string>
+    <string name="gettingpumpstatus">正在获取泵的状态</string>
+    <string name="gettingextendedbolusstatus">正在获取扩展大剂量状态</string>
+</resources>
