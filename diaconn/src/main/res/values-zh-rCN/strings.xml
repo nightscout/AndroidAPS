@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="resetpairing">重新配对</string>
+    <string name="diaconn_nodeviceavailable">没有可用设备</string>
+    <string name="diaconn_pairing">断开泵配对</string>
     <string name="pumperror">泵错误</string>
+    <string name="diaconn_g8_pairingok">配对成功</string>
+    <string name="diaconn_g8_waitingforpairing">等待配对</string>
+    <string name="diaconn_firmware_version">版本</string>
     <string name="gettingpumpsettings">正在获取泵设置</string>
     <string name="gettingpumptime">正在获取泵时间</string>
     <string name="largetimediff">手机和泵的时间相差很大\n泵上的时间已经偏离１. ５小时\n请在泵上手动调整时间，并且确定可以顺利读取泵历史，没有出现意外的行为。\n如果可能的话，在更改泵时间之前从泵上删除历史。或者禁用闭环至少一个DIA的时间，也就是胰岛素作用时间。</string>
@@ -21,4 +27,13 @@
     <string name="bolus_step">大剂量步值</string>
     <string name="basal_step">基础率步值</string>
     <string name="pairfirst">请将您的泵与您的手机配对!</string>
+    <string name="diaconn_g8_pumpalarm_silent">静音</string>
+    <string name="diaconn_g8_pumpalarmlevel">报警强度</string>
+    <string name="diaconn_g8_screentimeout_10">"10 "</string>
+    <string name="diaconn_g8_pumpscreentimeout_10">10</string>
+    <string name="diaconn_g8_pumpscreentimeout_20">20</string>
+    <string name="diaconn_g8_pumpscreentimeout_30">30</string>
+    <string name="diaconn_g8_logbatteryshorage">电池电量低</string>
+    <string name="diaconn_g8_reasoncomplete">完成</string>
+    <string name="diaconn_g8_reasonbatteryshortage">电池电量低</string>
 </resources>
