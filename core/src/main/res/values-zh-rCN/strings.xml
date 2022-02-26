@@ -2,10 +2,19 @@
 <resources>
     <!--    Keys-->
     <!--    General-->
+    <string name="save">保存</string>
+    <string name="waiting_for_disconnection">正在等待连接</string>
     <string name="pump_basebasalrate">%1$.2f U/h</string>
+    <string name="dia_long_label">胰岛素作用持续时间DIA</string>
+    <string name="ic_long_label">碳水化合物系数（ICR）</string>
+    <string name="isf_long_label">胰岛素敏感系数ISF</string>
+    <string name="basal_long_label">基础率</string>
+    <string name="target_long_label">血糖目标</string>
+    <string name="shortpercent">%</string>
     <string name="yes">是</string>
     <string name="no">否</string>
     <string name="loopdisabled">按约束条件禁用循环</string>
+    <string name="bolusdelivered">成功输注大剂量%1$.2fU</string>
     <string name="novalidbasalrate">从泵中无法读取有效的基础率</string>
     <string name="limitingmaxiob">由于 %2$s, 将最大 IOB(活性胰岛素) 限制为 %1$.1f U</string>
     <string name="unsafeusage">不安全的用法</string>
@@ -25,11 +34,16 @@
     <string name="name_short">名称:</string>
     <string name="time">时间</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="loading">正在加载…</string>
     <string name="addnew">添加新条目</string>
+    <string name="addnew_above">在顶部新增</string>
+    <string name="wrong_pump_data">数据来自不同的胰岛素泵，修改泵的驱动配置用来重置泵的状态。</string>
     <!--    Constraints-->
     <!--    Dialogs-->
     <!--    BlePreCheck-->
+    <string name="ble_not_supported_or_not_paired">蓝牙低电量或设备未配对。</string>
     <!--    DateUtil-->
+    <string name="minago_long">%1$d 分钟前</string>
     <!--    Protection-->
     <!--    Profile-->
     <!--    ProfileFunction-->
@@ -39,7 +53,17 @@
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    TDD-->
+    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f U</b> 大剂量: <b>%3$.2f U</b> 基础率: <b>%4$.2f U(%5$.0f%%)</b>]]></string>
+    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f U</b> 大剂量: <b>%3$.2f U</b> 基础率: <b>%4$.2f U(%5$.0f%%)</b> 碳水s: <b>%6$.0f g</b>]]></string>
+    <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> 在 <b>%3$d</b> 天内<br>]]></string>
     <!--    Translator-->
+    <string name="careportal_announcement_message">公告: %1$s</string>
+    <string name="careportal_note_message">备注： %1$s</string>
+    <string name="careportal_question_message">问题 : %1$s</string>
+    <string name="careportal_exercise_message">运动 : %1$s</string>
+    <string name="careportal_cgm_sensor_stop">CGM 传感器停止</string>
+    <string name="careportal_dad_alert">D.A.D. 警告</string>
+    <string name="careportal_temporarytargetvalue">临时目标值</string>
     <string name="boluswizard">大剂量向导</string>
     <string name="eatingsoon">很快吃饭</string>
     <string name="hypo">低</string>
@@ -47,6 +71,9 @@
     <string name="wear">手表</string>
     <string name="automation">自动操作</string>
     <string name="custom">自定义</string>
+    <string name="ns">NS</string>
+    <string name="record">记录</string>
+    <string name="pump_icon">泵图标</string>
     <!--    Command-->
     <!--    PumpEnactResult-->
     <!--    CarbsReq-->
@@ -63,7 +90,9 @@
     <string name="metadata_format_debug">新调试格式 (未加密)</string>
     <string name="metadata_format_other">未知的导出格式</string>
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">已导出 %1$s</string>
+    <string name="exported_at" comment="at placeholder we add export date">导出 %1$s</string>
     <string name="exported_less_than_hour_ago">不到 1 小时前更新过</string>
+    <string name="in_directory" comment="placeholder is for exported file path">目录: %1$s</string>
     <string name="preferences_import_list_title">选择要导入的文件</string>
     <string name="metadata_warning_different_flavour">使用 AAPS 的不同版本创建首选项 (%1$s) 而你有 %2$s\n\n某些设置可能缺失或无效 - 导入后，请检查并更新首选项。</string>
     <string name="metadata_warning_different_device">首选项是在不同的设备上创建的。 如果要从较旧/不同的电话导入，但确保导入的首选项正确 !</string>
@@ -77,6 +106,7 @@
     <string name="prefdecrypt_settings_unencrypted">使用不安全且未加密的设置格式</string>
     <string name="prefdecrypt_wrong_json">JSON 格式错误，缺少必填字段 (格式，内容，元数据或安全性)</string>
     <string name="prefdecrypt_wrong_password">解密错误，该密码无法解密文件</string>
+    <string name="prefdecrypt_issue_missing_file_hash">缺少文件校验码（哈希值），无法验证设置的真实性！</string>
     <string name="prefdecrypt_issue_modified">导出后文件已修改 !</string>
     <string name="prefdecrypt_issue_parsing">解密错误，解析首选项失败!</string>
     <string name="prefdecrypt_issue_wrong_pass">解密错误，提供的密码无效或设置文件已修改! 导入的文件可能是使用其他主密码导出的。</string>
@@ -86,9 +116,38 @@
     <string name="signature_verifier">验证签名</string>
     <string name="running_invalid_version">我们检测到您运行的版本无效。 已禁用循环!</string>
     <string name="versionavailable">版本 %1$s 可用</string>
+    <string name="version_expire">版本 %1$s 将在 %2$s 过期</string>
     <!-- Permissions -->
     <!-- WeekdayPicker -->
+    <string name="monday_short">周一</string>
+    <string name="tuesday_short">周二</string>
+    <string name="wednesday_short">周三</string>
+    <string name="thursday_short">周四</string>
+    <string name="friday_short">周五</string>
+    <string name="saturday_short">周六</string>
+    <string name="sunday_short">周日</string>
     <!-- User Entry -->
+    <string name="uel_bolus">大剂量</string>
+    <string name="uel_bolus_calculator">大剂量向导</string>
+    <string name="uel_bolus_advisor">大剂量顾问</string>
+    <string name="uel_extended_bolus">扩展大剂量</string>
+    <string name="uel_superbolus_tbr">超级大剂量TBR</string>
+    <string name="uel_carbs">碳水</string>
+    <string name="uel_extended_carbs">扩展碳水</string>
+    <string name="uel_temp_basal">临时基础率</string>
+    <string name="uel_tt">临时目标</string>
+    <string name="uel_new_profile">新配置文件</string>
+    <string name="uel_clone_profile">克隆配置文件</string>
+    <string name="uel_objective_unstarted">目标未开始</string>
+    <string name="uel_objectives_skipped">目标已跳过</string>
+    <string name="uel_stat_reset">统计重置</string>
+    <string name="uel_delete_logs">删除日志</string>
+    <string name="uel_delete_future_treatments">删除未来的治疗</string>
+    <string name="delete_future_treatments">删除未来的治疗</string>
+    <string name="uel_export_settings">导出设置</string>
+    <string name="uel_import_settings">导入设置</string>
+    <string name="uel_reset_databases">重置数据库</string>
+    <string name="uel_export_databases">导出数据库</string>
     <!-- HardLimits -->
     <string name="valuelimitedto">%1$.2f 超过 %2$.2f的限制</string>
     <!-- Command Queue + readStatus reasons -->
