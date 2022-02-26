@@ -573,6 +573,10 @@
     <string name="startobjective">开始你的第一个目标</string>
     <string name="permission">权限</string>
     <string name="askforpermission">请求权限</string>
+    <string name="needsystemwindowpermission">应用程序需要悬浮窗权限用于发送通知。</string>
+    <string name="needlocationpermission">应用程序需要定位权限，才能进行蓝牙扫描及WIFI识别。</string>
+    <string name="needstoragepermission">应用程序需要文件存储权限，才能存储日志文件及导出设置。</string>
+    <string name="needconnectpermission">应用程序需要蓝牙权限。</string>
     <string name="request">请求</string>
     <string name="open_navigation">打开导航栏</string>
     <string name="close_navigation">关闭导航栏</string>
@@ -582,12 +586,21 @@
     <string name="time_elapsed">已用时间</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">从 Poctech app 接收血糖值。</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">从Glunovo应用接收血糖数据。</string>
     <string name="description_source_tomato">从番茄app(喵喵设备) 接收血糖值</string>
     <string name="high_temptarget_raises_sensitivity_title">高临时目标增加灵敏度</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[当临时目标 >=100 mg/dl (5.5 mmol/l) 时提高灵敏度]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">低临时目标降低灵敏度</string>
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[当临时目标 ＜= 100 mg/dl (5.5 mmol/l) 时降低灵敏度]]></string>
+    <string name="resistance_lowers_target_title">抗药时降低目标</string>
+    <string name="resistance_lowers_target_summary">当检测到胰岛素抵抗时，降低血糖的目标值。</string>
+    <string name="sensitivity_raises_target_title">敏感时提高目标</string>
+    <string name="sensitivity_raises_target_summary">当检测到胰岛素敏感时，提高血糖的目标值。</string>
     <string name="careportal_removestartedevents">Clean AndroidAPS 启动了</string>
+    <string name="show_invalidated">显示无效项</string>
+    <string name="hide_invalidated">隐藏失效项</string>
+    <string name="remove_items">删除项目</string>
     <string name="storedsettingsfound">发现曾经保存过的设置</string>
     <string name="allow_hardware_pump_text">注意：如果你激活并且连接到了一个硬件泵，AndroidAPS将会从配置文件复制基础率到泵上。覆盖泵上已有的基础率。请确定你已经在AndroidAPS上设置了正确的基础率。如果你不确定或者不想覆盖泵上的基础率设置，按取消键，以后再切换激活配置文件。</string>
     <string name="error_adding_treatment_title">治疗数据不完整</string>
@@ -605,6 +618,7 @@
     <string name="resettodefaults">重置为默认值</string>
     <string name="nsmalfunction">NSClient故障。 考虑Nightscout和NSClient重启。</string>
     <string name="time_offset">时区偏移</string>
+    <string name="bolus_reminder">稍后提醒输注大剂量</string>
     <string name="setupwizard_preferred_aps_mode">首选的APS模式</string>
     <string name="treatments_wizard_total_label">总计</string>
     <string name="calculation_short">计算</string>
@@ -633,13 +647,25 @@
     <string name="storage">内部储存空间不足</string>
     <string name="diskfull">至少 剩余%1$d MB 内部存储！闭环已禁用！</string>
     <string name="wrongformat">格式错误</string>
+    <string name="wrongTbrDuration">TBR(临时基础率) 的持续时间必须是 %1$d 分钟的倍数，且大于0。</string>
     <string name="sms_wrongcode">错误的代码。命令取消</string>
     <string name="notconfigured">未配置</string>
     <string name="profileswitchcreated">配置文件切换已创建</string>
     <string name="versionChecker">版本检查器</string>
     <string name="old_version">旧版本</string>
     <string name="very_old_version">非常旧版本</string>
+    <string name="application_expired">应用版本已过期。</string>
     <string name="twohours">2小时</string>
+    <string name="dexcom_app_patched">BYODA德康补丁版(构建你自己的德康应用Build Your Own Dexcom App)</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">从德康补丁版接收血糖数据(Build Your Own Dexcom App)。</string>
+    <string name="cobvsiob">活性碳水vs活性胰岛素</string>
+    <string name="bolusconstraintappliedwarn">大剂量约束应用为： %1$.2f U 到 %2$.2f U</string>
+    <string name="copytolocalprofile">是否复制这个配置文件的参数来创新一个新的配置文件？</string>
+    <string name="age">年龄</string>
+    <string name="weight_label">权重</string>
+    <string name="invalidpct">输入的百分比无效</string>
+    <string name="show_removed">显示已删除</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <!-- WEAR OS-->
 </resources>
