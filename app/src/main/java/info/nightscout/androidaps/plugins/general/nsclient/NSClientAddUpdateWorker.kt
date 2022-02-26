@@ -310,7 +310,7 @@ class NSClientAddUpdateWorker(
                         } ?: aapsLogger.error("Error parsing TherapyEvent json $json")
                     }
                 eventType == TherapyEvent.Type.COMBO_BOLUS.text             ->
-                    if (config.NSCLIENT) {
+                    if (buildHelper.isEngineeringMode() && sp.getBoolean(R.string.key_ns_receive_tbr_eb, false) || config.NSCLIENT) {
                         extendedBolusFromJson(json)?.let { extendedBolus ->
                             repository.runTransactionForResult(SyncNsExtendedBolusTransaction(extendedBolus))
                                 .doOnError {
@@ -356,7 +356,7 @@ class NSClientAddUpdateWorker(
                         } ?: aapsLogger.error("Error parsing ExtendedBolus json $json")
                     }
                 eventType == TherapyEvent.Type.TEMPORARY_BASAL.text         ->
-                    if (config.NSCLIENT) {
+                    if (buildHelper.isEngineeringMode() && sp.getBoolean(R.string.key_ns_receive_tbr_eb, false) || config.NSCLIENT) {
                         temporaryBasalFromJson(json)?.let { temporaryBasal ->
                             repository.runTransactionForResult(SyncNsTemporaryBasalTransaction(temporaryBasal))
                                 .doOnError {
