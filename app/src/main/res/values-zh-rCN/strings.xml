@@ -666,6 +666,18 @@
     <string name="weight_label">权重</string>
     <string name="invalidpct">输入的百分比无效</string>
     <string name="show_removed">显示已删除</string>
+    <string name="phonechecker">手机号验证器</string>
+    <string name="chartmenu">图表菜单</string>
+    <string name="loop_smbrequest_time_label">SMB 请求时间</string>
+    <string name="loop_smbexecution_time_label">SMB持续时长</string>
+    <string name="loop_tbrrequest_time_label">临时基础率请求时间</string>
+    <string name="loop_tbrexecution_time_label">临时基础率持续时长</string>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">从验证码生成器应用获取%1$s的随机码，并附加PIN码</string>
+    <string name="smscommunicator_otp_pin">验证码末尾强制附加的PIN码</string>
+    <string name="smscommunicator_otp_pin_summary">在每次生成的一次性随机密码末尾，需要记住并强制附加的数字。</string>
+    <string name="smscomunicator_tab_otp_label">验证码生成器设置</string>
+    <string name="smscommunicator_code_verify_label">验证码检查：</string>
+    <string name="smscommunicator_code_verify_hint">OTP随机 + PIN固定</string>
     <!-- WEAR OS-->
 </resources>
