@@ -679,5 +679,33 @@
     <string name="smscomunicator_tab_otp_label">验证码生成器设置</string>
     <string name="smscommunicator_code_verify_label">验证码检查：</string>
     <string name="smscommunicator_code_verify_hint">OTP随机 + PIN固定</string>
+    <string name="smscommunicator_code_verify_info">验证码包含6位数字，由验证器应用程序生成（称为OTP），然后再包含3位或3位以上的必填数字PIN码。</string>
+    <string name="smscommunicator_otp_reset_btn">重置身份验证器</string>
+    <string name="smscommunicator_otp_reset_title">重置身份验证器的密钥</string>
+    <string name="smscommunicator_otp_reset_prompt">你确定要重置验证器密钥吗？它将导致以前配置的OTP随机验证码无效，您需要重新设置它们(在遥控手机的OTP应用上)。</string>
+    <string name="smscommunicator_otp_reset_successful">生成了新的身份验证器密钥！请使用更新的二维码设置验证器。</string>
+    <string name="smscommunicator_otp_export_title">导出OTP密钥</string>
+    <string name="smscommunicator_otp_export_prompt">你确定要将OTP密钥复制到剪贴板？\n\n只有在验证器应用扫描二维码出现问题时，你才需要这么做。可能你想手动输入二维码，或者使用专用的应用程序配置硬件OTP令牌。</string>
+    <string name="smscommunicator_otp_export_successful">将OTP密钥 (Base32 格式) 导出并复制到剪贴板。粘贴它到身份验证器或硬件OTP中！</string>
+    <string name="smscommunicator_otp_step1_install_header">1. 安装身份验证器app</string>
+    <string name="trend_arrow">趋势箭头</string>
+    <string name="cannula">输注导管</string>
+    <string name="userentry">用户条目</string>
+    <string name="common_values">\n选择您三餐的最大碳水值和最大胰岛素剂量\n</string>
+    <string name="summary_email_for_crash_report">此项为选填信息，会附在反馈的崩溃报告中，以便我们在紧急情况下与您联系。</string>
+    <string name="email_address">电子邮件地址</string>
+    <string name="privacy_settings">隐私设置</string>
+    <string name="privacy_summary">如果你想得到应用程序重大缺陷的通知，你可以选择提供电子邮件地址、Facebook或Discord等信息。这不是一项自动化的服务。在可能存在危险时，开发人员才会联系您。</string>
+    <string name="full_sync">完全同步</string>
+    <string name="full_sync_comment">完全同步数据? 这可能需要很长时间，在完成以前你将无法在NS中看到新数据。</string>
+    <string name="ns_sync_options">同步</string>
+    <string name="ns_upload_summary">将用户配置，大剂量，碳水化合物，临时基础率的数据上传到NS网站</string>
+    <string name="ns_upload">上传数据到NS网站</string>
+    <string name="ns_receive_profile_store">接收存储用户配置</string>
+    <string name="ns_receive_profile_store_summary">同步NS配置文件编辑器的用户配置到本地。</string>
+    <string name="ns_receive_temp_target">接收临时目标</string>
+    <string name="ns_receive_temp_target_summary">允许通过NS或NS客户端接收血糖的临时目标值。</string>
+    <string name="ns_receive_profile_switch">接收用户配置文件切换</string>
+    <string name="ns_receive_profile_switch_summary">允许通过NS或NS客户端接收用户配置文件切换。</string>
     <!-- WEAR OS-->
 </resources>
