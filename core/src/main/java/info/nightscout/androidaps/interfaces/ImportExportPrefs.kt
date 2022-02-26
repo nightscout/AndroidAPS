@@ -4,7 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.plugins.general.maintenance.PrefsFile
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Single
 
 interface ImportExportPrefs {
 

@@ -162,7 +162,6 @@
     <string name="end_user_license_agreement">Acuerdo de licencia de usuario final</string>
     <string name="end_user_license_agreement_text">NO DEBE UTILIZARSE PARA TOMAR DECISIONES MÉDICAS. NO HAY NINGUNA GARANTÍA EN EL PROGRAMA, EN LA MEDIDA PERMITIDA POR LA LEY APLICABLE. EXCEPTO CUANDO SE INDIQUE LO CONTRARIO POR ESCRITO, LOS TITULARES DE LOS DERECHOS DE AUTOR Y/O OTRAS PARTES, PROPORCIONAN EL PROGRAMA \"TAL CUAL\", SIN GARANTÍA DE NINGÚN TIPO, YA SEA EXPRESA O IMPLÍCITA, INCLUIDAS, ENTRE OTRAS, LAS GARANTÍAS IMPLÍCITAS DE COMERCIABILIDAD Y ADECUACIÓN PARA UN PROPÓSITO EN PARTICULAR. TODO EL RIESGO EN CUANTO A LA CALIDAD Y EL RENDIMIENTO DEL PROGRAMA ES SUYA. SI EL PROGRAMA TUVIERA UN ERROR, USTED ASUME EL COSTE DE TODOS LOS SERVICIOS, REPARACIONES O CORRECCIONES NECESARIAS.</string>
     <string name="end_user_license_agreement_i_understand">LO ENTIENDO Y ACEPTO</string>
-    <string name="save">Guardar</string>
     <string name="reloadprofile">Recargar Perfil</string>
     <string name="smscommunicator">Comunicador SMS</string>
     <string name="smscommunicator_allowednumbers">Números de teléfono permitidos</string>
@@ -429,14 +428,11 @@
     <string name="keep_screen_on_summary">Evita que Android apague la pantalla. Consume mucha batería cuando el teléfono no está conectado al cargador</string>
     <string name="sensitivity_warning">Al activar Autosens, recuerda introducir todos carbohidratos que has comido, sino, las desviaciones de carbohidratos serán identificados incorrectamente, como un cambio de sensibilidad</string>
     <string name="sensitivityweightedaverage">Sensibilidad promedio ponderada</string>
-    <string name="mdtp_ok">Ok</string>
-    <string name="mdtp_cancel">Cancelar</string>
     <string name="notloadedplugins">Faltan perfiles por cargar!</string>
     <string name="valuesnotstored">Valores no guardados!</string>
     <string name="ns_localbroadcasts">Habilita las transmisiones a otras aplicaciones (como xDrip+). ¡No lo habilites si tienes más de una instancia de AAPS o NSClient instaladas!</string>
     <string name="ns_localbroadcasts_title">Habilitar la emisión de mensajes localmente.</string>
     <string name="openapssmb">OpenAPS SMB</string>
-    <string name="openaps_smb_dynamic_isf">OpenAPS SMB ISF Dinámico</string>
     <string name="enableuam">Activar UAM</string>
     <string name="enablesmb">Activar SMB</string>
     <string name="enablesmb_summary">Usar microbolos en lugar de basales temporales, para corregir más rápidamente</string>

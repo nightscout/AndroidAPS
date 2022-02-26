@@ -25,6 +25,7 @@
     <string name="description_ns_client">Synchronise vos données avec Nightscout</string>
     <string name="description_ama">État de l’algorithme en 2017</string>
     <string name="description_smb">Algorithme le plus récent pour les utilisateurs avancés</string>
+    <string name="description_smb_dynamic_isf">Algorithme le plus récent pour les utilisateurs avancés avec SI dynamique/automatique</string>
     <string name="description_overview">Affiche l’état actuel de votre Boucle et des boutons d’actions les plus courantes</string>
     <string name="description_persistent_notification">Affiche une notification en cours avec un bref aperçu de ce que fait votre Boucle</string>
     <string name="description_profile_local">Définissez un profil qui est disponible hors ligne.</string>
@@ -162,7 +163,6 @@
     <string name="end_user_license_agreement_text">NE DOIT PAS ÊTRE UTILISÉ POUR PRENDRE DES DÉCISIONS MÉDICALES. IL N\'Y A AUCUNE GARANTIE POUR LE PROGRAMME, DANS LA LIMITE PERMISE PAR LA LOI APPLICABLE. SAUF S\'IL EST INDIQUÉ LE CONTRAIRE PAR ÉCRIT. LES TITULAIRES DU DROIT D\'AUTEUR ET / OU D\'AUTRES PARTIES FOURNISSENT LE PROGRAMME «EN L\'ÉTAT» SANS GARANTIE D\'AUCUNE SORTE, EXPLICITE OU IMPLICITE, Y COMPRIS MAIS NON SEULEMENT AUX GARANTIES IMPLICITES DE QUALITÉ MARCHANDE ET D\'ADÉQUATION À UN USAGE PARTICULIER
 L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME SONT DE VOTRE RESPONSABILITÉ. SI LE PROGRAMME EST DÉFECTUEUX, VOUS ASSUMEZ LE COÛT DE TOUS LES SERVICES, RÉPARATIONS OU CORRECTIONS NÉCESSAIRES.</string>
     <string name="end_user_license_agreement_i_understand">JE COMPRENDS ET J\'ACCEPTE LES CONDITIONS DU CONTRAT</string>
-    <string name="save">Sauvegarder</string>
     <string name="reloadprofile">Actualiser le profil</string>
     <string name="smscommunicator">Communicateur SMS</string>
     <string name="smscommunicator_allowednumbers">Numéros de tél autorisés</string>
@@ -268,6 +268,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="configbuilder_shortname">CONF</string>
     <string name="loop_shortname">BOUCLE</string>
     <string name="oaps_shortname">OAPS</string>
+    <string name="dynisf_shortname">DynSI</string>
     <string name="localprofile_shortname">PL</string>
     <string name="overview_shortname">ACCUEIL</string>
     <string name="virtualpump_shortname">POMPEV</string>
@@ -428,13 +429,12 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="keep_screen_on_summary">Empêcher Android d\'éteindre l\'écran. Ceci consommera beaucoup de batterie lorsque vous n’êtes pas connecté à une prise de courant.</string>
     <string name="sensitivity_warning">En activant la fonction Autosens, n’oubliez pas de rentrer tous les glucides consommés. Sinon les déviations de glucides seront incorrectement identifiées pour les changements de sensibilité !!</string>
     <string name="sensitivityweightedaverage">Sensibilité avec moyenne pondérée</string>
-    <string name="mdtp_ok">OK</string>
-    <string name="mdtp_cancel">Annuler</string>
     <string name="notloadedplugins">Les profils ne sont pas tous téléchargés !</string>
     <string name="valuesnotstored">Valeurs non enregistrées !</string>
     <string name="ns_localbroadcasts">Active les diffusions vers d\'autres applications (comme xDrip+). Ne pas activer si plusieurs instances d\'AAPS ou de NSClient sont installées !</string>
     <string name="ns_localbroadcasts_title">Activer les transmissions locales</string>
     <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openaps_smb_dynamic_isf">SI dynamique</string>
     <string name="enableuam">Activer RNS</string>
     <string name="enablesmb">Activer SMB</string>
     <string name="enablesmb_summary">Utiliser les Super Micro Bolus au lieu des débits de base temporaires pour une action rapide</string>
@@ -664,6 +664,9 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="sensitivity_raises_target_title">Sensibilité augmente la cible</string>
     <string name="sensitivity_raises_target_summary">Quand une sensibilité est détectée, augmentation de la glycémie cible</string>
     <string name="careportal_removestartedevents">Réinitialiser AndroidAPS</string>
+    <string name="show_invalidated">Montrer les entrées invalides</string>
+    <string name="hide_invalidated">Masquer les entrées invalides</string>
+    <string name="remove_items">Supprimer des entrées</string>
     <string name="storedsettingsfound">Paramètres sauvegardés trouvés</string>
     <string name="allow_hardware_pump_text">ATTENTION : Si vous activez et connectez à une vraie pompe, AndroidAPS copiera les paramètres Basals du profil vers la pompe, écrasant le taux basal existant stocké sur la pompe. Assurez-vous d\'avoir correctement saisi et réglé les paramètres Basal dans AndroidAPS. Si vous ne savez pas ou si ne voulez pas écraser les paramètres Basal sur votre pompe, appuyez sur Annuler et reporter le passage à la pompe à une date ultérieure.</string>
     <string name="error_adding_treatment_title">Données de traitement incomplètes</string>
@@ -971,4 +974,15 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="wear_unknown_action_string">Commande inconnue :</string>
     <string name="overview_editquickwizard_percentage">Pourcentage</string>
     <string name="app_default">Application par défaut</string>
+    <string name="select_profile">Sélectionnez le profil à modifier</string>
+    <string name="refresh_from_nightscout">Rafraîchir à partir de Nightscout</string>
+    <string name="remove_selected_items">Supprimer les entrées sélectionnées</string>
+    <string name="select_for_removal">Sélectionner pour suppression</string>
+    <string name="profile_changes">Changements de profil</string>
+    <string name="tempt_targets">Cibles Temp</string>
+    <string name="carbs_and_bolus">Glucides et bolus</string>
+    <string name="confirm_remove_multiple_items">Êtes-vous sûr de vouloir supprimer %1$d entrée(s)</string>
+    <string name="hide_loop">Masquer la boucle</string>
+    <string name="show_loop">Afficher les entrées boucle</string>
+    <string name="count_selected">%1$d sélectionnée(s)</string>
 </resources>

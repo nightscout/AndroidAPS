@@ -10,9 +10,9 @@ import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.userEntry.UserEntryMapper
 import info.nightscout.androidaps.utils.userEntry.ValueWithUnitMapper
 import info.nightscout.shared.logging.AAPSLogger
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
-import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
+import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -31,7 +31,7 @@ class UserEntryLogger @Inject constructor(
     fun log(action: Action, source: Sources, vararg listvalues: ValueWithUnit?) = log(action, source,"", listvalues.toList())
 
     fun log(action: Action, source: Sources, note: String? ="", listvalues: List<ValueWithUnit?> = listOf()) {
-        val filteredValues = listvalues.toList().filter { it != null}
+        val filteredValues = listvalues.toList().filterNotNull()
         compositeDisposable += repository.runTransaction(UserEntryTransaction(
             action = action,
             source = source,

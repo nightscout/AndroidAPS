@@ -33,7 +33,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.androidaps.utils.wizard.BolusWizard
-import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import java.text.DecimalFormat
 import java.util.*
 import javax.inject.Inject
