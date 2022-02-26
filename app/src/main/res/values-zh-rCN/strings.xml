@@ -707,5 +707,35 @@
     <string name="ns_receive_temp_target_summary">允许通过NS或NS客户端接收血糖的临时目标值。</string>
     <string name="ns_receive_profile_switch">接收用户配置文件切换</string>
     <string name="ns_receive_profile_switch_summary">允许通过NS或NS客户端接收用户配置文件切换。</string>
+    <string name="ns_receive_offline_event">接收 APS 离线事件</string>
+    <string name="ns_receive_offline_event_summary">允许通过NS或NS客户端接收APS 离线事件。</string>
+    <string name="ns_receive_insulin">接收胰岛素输注</string>
+    <string name="ns_receive_insulin_summary">允许通过NS或 NS客户端接收胰岛素输注 (它并不会输注胰岛素，只计算为活性胰岛素IOB)</string>
+    <string name="ns_receive_carbs">接收碳水化合物</string>
+    <string name="ns_receive_carbs_summary">允许通过NS或NS客户端接收碳水化合物输入。</string>
+    <string name="ns_receive_therapy_events">接收治疗事件</string>
+    <string name="ns_receive_therapy_events_summary">允许通过NS或NS客户端接收(导管更换、胰岛素更换、电池更换等) 护理事件</string>
+    <string name="ns_receive_cgm">接收/回填CGM数据</string>
+    <string name="ns_receive_cgm_summary">接受来自NS 的 CGM 数据</string>
+    <string name="sms_timeout_while_wating">等待上一次胰岛素泵通信完成时超时</string>
+    <string name="smscommunicator_another_bolus_in_queue">队列中在执行另一个大剂量命令，请稍后再试。</string>
+    <string name="calculation_in_progress">正在进行计算</string>
+    <string name="missing_profile_name">缺少配置文件名称</string>
+    <string name="error_in_ic_values">IC数值错误</string>
+    <string name="error_in_basal_values">基础率数值错误</string>
+    <string name="error_in_target_values">目标数值错误</string>
+    <string name="error_in_isf_values">ISF数值错误</string>
+    <string name="run_question">运行 %s？</string>
+    <string name="invalid_profile_not_accepted">不接受来自NS的无效配置文件%1$s</string>
+    <string name="view">查看</string>
+    <string name="ns_sync_slow">放慢上传速度</string>
+    <string name="data_status">血糖数据状态</string>
+    <string name="statuslights_cannula_age">导管年龄</string>
+    <string name="statuslights_patch_pump_age">patch 泵年龄</string>
+    <string name="patch_pump">Patch 泵</string>
+    <string name="recalculated_data_used">重新计算的数据</string>
+    <string name="bg_too_close">血糖间隔太近:\n%1$s\n%2$s</string>
+    <string name="identification">身份识别 (email邮件地址, FaceBook账号 或 Discord账号等等)</string>
+    <string name="identification_not_set">开发模式下未设置身份识别联系方式</string>
     <!-- WEAR OS-->
 </resources>
