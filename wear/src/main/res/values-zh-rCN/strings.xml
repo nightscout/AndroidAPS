@@ -64,9 +64,54 @@
     <string name="pref_complication_tap_action">折叠Tap操作</string>
     <string name="pref_unicode_in_complications">折叠中的代码</string>
     <string name="pref_version">版本</string>
+    <string name="pref_moreWatchfaceSettings">更多手表表盘设置</string>
+    <string name="pref_lookInYourWatchfaceConfiguration">请查看手表表盘配置。</string>
+    <string name="menu_tempt">临时目标</string>
+    <string name="menu_wizard">计算器</string>
+    <string name="menu_wizard_short">计算</string>
+    <string name="menu_treatment">治疗</string>
+    <string name="menu_treatment_short">治疗</string>
+    <string name="menu_bolus">大剂量</string>
+    <string name="menu_ecarb">碳水</string>
+    <string name="menu_settings">设置</string>
+    <string name="menu_status">状态</string>
+    <string name="menu_resync">再次同步</string>
+    <string name="menu_prime_fill">充盈/输注</string>
+    <string name="menu_none">无</string>
+    <string name="menu_default">默认 </string>
+    <string name="menu_menu">菜单</string>
+    <string name="quick_wizard_short">XL</string>
+    <string name="action_duration">时长</string>
+    <string name="action_tempt_confirmation">临时目标请求</string>
+    <string name="action_quick_wizard_confirmation">快速向导请求</string>
+    <string name="action_treatment_confirmation">治疗请求</string>
+    <string name="action_bolus_confirmation">大剂量请求</string>
+    <string name="action_wizard_confirmation">计算请求</string>
+    <string name="action_fill_confirmation">Fill 充盈请求</string>
+    <string name="action_ecarb_confirmation">碳水化合物请求</string>
     <string name="action_cpp_confirmation">CPP请求</string>
+    <string name="action_target" comment="In temp target menu, single target value">目标</string>
+    <string name="action_low" comment="In temp target menu, lower value from range">低</string>
+    <string name="action_high" comment="In temp target menu, higher value from range">高</string>
+    <string name="action_carbs">碳水</string>
+    <string name="action_percentage">百分比</string>
+    <string name="action_start_min">启动 [min]</string>
+    <string name="action_duration_h">持续时长 [h]</string>
+    <string name="action_insulin">胰岛素</string>
+    <string name="action_preset_1">预设1</string>
+    <string name="action_preset_2">预设2</string>
+    <string name="action_preset_3">预设3</string>
+    <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">可用数值</string>
+    <string name="action_confirm">确认</string>
+    <string name="action_timeshift">时间偏移</string>
+    <string name="action_bolus">大剂量</string>
+    <string name="bolus_progress">大剂量进度</string>
+    <string name="press_to_cancel">按下以取消</string>
+    <string name="cancel_bolus">取消大剂量</string>
+    <string name="status_pump">胰岛素泵</string>
     <string name="status_loop">闭环</string>
     <string name="status_cpp">CPP</string>
+    <string name="status_tdd">日总量</string>
     <string name="activity_carb">碳水化合物</string>
     <string name="activity_IOB">活性胰岛素</string>
     <string name="activity_no_status">无状态</string>
