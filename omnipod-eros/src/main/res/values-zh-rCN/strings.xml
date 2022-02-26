@@ -1,12 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Omnipod Eros - Description -->
+    <string name="omnipod_eros_pump_description">Omnipod Eros的泵集成 (带有透明针帽的旧款)。需要固件版本至少为2.0的RileyLink 设备。</string>
     <!-- Omnipod Eros - Keys -->
     <!-- Omnipod Eros - Overview -->
     <!-- Omnipod Eros - Preferences -->
+    <string name="omnipod_eros_preferences_pulse_log_button_enabled">在Pod管理菜单中显示Pulse日志按钮</string>
+    <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">在Pod管理菜单中显示RileyLink状态按键</string>
+    <string name="omnipod_eros_preferences_battery_change_logging_enabled">在操作中启用电池更改记录</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_tbr_sound_enabled">临时基础率TBR不确定时启用声音通知</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_smb_sound_enabled">微型大剂量SMB不确定时启用声音通知</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_bolus_sound_enabled">常规大剂量不确定时启用声音通知</string>
     <!-- Omnipod Eros - History -->
+    <string name="omnipod_eros_history_title">Pod 历史</string>
+    <string name="omnipod_eros_history_item_description">描述</string>
+    <string name="omnipod_eros_history_item_source">来源</string>
+    <string name="omnipod_eros_history_type">类型：</string>
+    <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f U, 碳水=%2$.1f 克</string>
+    <string name="omnipod_eros_history_tbr_value">速率： %1$.2f U，持续时间： %2$d 分钟</string>
     <!-- Omnipod Eros - Short Status -->
+    <string name="omnipod_eros_short_status_riley_link_battery">RileyLink电量: %1$d</string>
     <!-- Omnipod Eros - Error -->
+    <string name="omnipod_eros_error_riley_link_address_invalid">RileyLink 地址无效。</string>
     <!-- Omnipod Eros - Pod Management -->
     <!-- Omnipod Eros - Pod Activation Wizard -->
     <!-- Omnipod Eros - Other -->
