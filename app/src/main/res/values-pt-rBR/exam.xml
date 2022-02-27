@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="dia_whatmeansdia">O que é verdade sobre o DAI?</string>
+    <string name="dia_label_exam">Duração da Atividade da Insulina (DAI)</string>
     <string name="dia_profile">Você deve definir o valor para a DAI no seu perfil.</string>
     <string name="dia_minimumis5h">A menor duração permitida é de 5 horas.</string>
     <string name="dia_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html?#insulin</string>
@@ -122,6 +124,21 @@
     <string name="sensitivity_time">Algumas opções de plugin têm intervalos de tempo que podem ser configurados pelo usuário.</string>
     <string name="sensitivity_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="wrongcarbs_label">Tópico: Erros de Entrada de Carboidratos</string>
+    <string name="wrongcarbs_whattodo">O que deve fazer se tiver feito uma entrada incorreta de carboidratos?</string>
+    <string name="wrongcarbs_treatmentstab">Exclua a entrada incorreta em Tratamentos e insira o novo valor de carboidratos correto.</string>
+    <string name="wrongcarbs_addinsulin">Dê um bólus com insulina usando o menu ações -> purgar/preencher.</string>
+    <string name="wrongcarbs_donothing">Não faça nada – o AndroidAPS fará os ajustes apropriados.</string>
+    <string name="wrongcarbs_bolus">Dê um Bolus com insulina usando o botão Insulina (bolus) no menu Visão Geral.</string>
+    <string name="wronginsulin_label">Tópico: Erros de entrada/administração de insulina</string>
+    <string name="wronginsulin_whattodo">O que você deveria fazer se você receber menos insulina do que o histórico da bomba sugere por exemplo, devido a uma oclusão, um canula falhada ou esquecendo de reconectar a bomba após um banho? </string>
+    <string name="wronginsulin_careportal">Exclua dados de insulina do Nightscout Careportal para removê-los do histórico da bomba.</string>
+    <string name="wronginsulin_compare">Comparar valores no histórico do AndroidAPS e a bomba (se a bomba possui esta opção).</string>
+    <string name="wronginsulin_prime">Dê uma porção do bolus calculado não administrado por meio de seringa/caneta ou usando o menu ações -> purgar/preencher.</string>
+    <string name="wronginsulin_donothing">Não faça nada e permita que o AndroidAPS corrija qualquer nível de glicose elevado resultante.</string>
+    <string name="iob_label">Insulina ativa</string>
+    <string name="iob_which">Marque todas as respostas corretas.</string>
+    <string name="iob_value">O valor de IA é afetado por basais temporárias efetuadas.</string>
+    <string name="iob_hightemp">Um basal alto temporário não será efetuado quando sua glicose estiver abaixo do alvo.</string>
     <string name="breadgrams_calc">Se os níveis de glicose no sangue estiverem fora dos limites aceitáveis (muito baixo ou muito alto) a calculadora de bolus pode ser usada para fornecer sugestões para correções de carboidrato ou insulina.</string>
     <string name="breadgrams_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
     <string name="extendedcarbs_label">Tópico: e-Carbs</string>
