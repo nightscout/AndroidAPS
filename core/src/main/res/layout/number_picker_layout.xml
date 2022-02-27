@@ -37,7 +37,6 @@
         android:textSize="25sp"
         android:background="@android:color/transparent"
         app:backgroundTint="@android:color/transparent"
-
         android:text="+"
         tools:ignore="HardcodedText" />
 </LinearLayout>

@@ -279,6 +279,7 @@
         <item name="okButtonSelected" >@color/okButtonSelected</item>
         <!---Number Picker Text Color-->
         <item name="numPickerText" >@color/black</item>
+        <item name="numPickerBackground" >@color/white</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>
@@ -531,6 +532,52 @@
         <item name="iconColor">@color/sphere_plastic_grey</item>
         <item name="overviewPillColor">@color/overviewPillColorPink</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
+        <!---Bolus Icon Color-->
+        <item name="bolusIconColor" >@color/white</item>
+        <!---Carbs Icon Color-->
+        <item name="carbsIconColor" >@color/white</item>
+        <!---Wizard Icon Color-->
+        <item name="wizardIconColor" >@color/white</item>
+        <!---CGM BOYDA Icon Color-->
+        <item name="boyda" >@color/white</item>
+        <!---Profile Switch Icon Color-->
+        <item name="profileswitchIconColor" >@color/white</item>
+        <!---Temp target Icon Color-->
+        <item name="temptargetIconColor" >@color/white</item>
+        <item name="temptargetIconColor1" >@color/white</item>
+        <!---Start temp basal Icon Color-->
+        <item name="tempbasalIconColor" >@color/white</item>
+        <!---Cancel temp basal Icon Color-->
+        <item name="canceltempbasalIconColor" >@color/white</item>
+        <!---Start extended bolus Icon Color-->
+        <item name="startextbolusIconColor" >@color/white</item>
+        <!---Cancel extended bolus Icon Color-->
+        <item name="cancelextbolusIconColor" >@color/white</item>
+        <!---BG check Icon Color-->
+        <item name="bgcheckIconColor" >@color/white</item>
+        <!---Prime fill Icon Color-->
+        <item name="primefillIconColor" >@color/white</item>
+        <!---CGM insert Icon Color-->
+        <item name="cgminsertIconColor" >@color/white</item>
+        <!---Pump Battery Icon Color-->
+        <item name="pumpBatteryIconColor" >@color/white</item>
+        <!---Note Icon Color-->
+        <item name="noteIconColor" >@color/white</item>
+        <!---Exercise Icon Color-->
+        <item name="exerciseIconColor01" >@color/white</item>
+        <item name="exerciseIconColor02" >@color/white</item>
+        <!---Announcement Icon Color-->
+        <item name="announcementIconColor" >@color/white</item>
+        <!---Question Icon Color-->
+        <item name="questionIconColor" >@color/white</item>
+        <!---History Icon Color-->
+        <item name="historyIconColor" >@color/white</item>
+        <!---Stats Icon Color-->
+        <item name="statsIconColor" >@color/white</item>
+        <!---User Option Icon Color-->
+        <item name="userOptionsIconColor" >@color/white</item>
+        <!---Target Hypo Icon Color-->
+        <item name="targetHypoBgIconColor" >@color/white</item>
         <item name="android:windowBackground">@drawable/black_pink</item>
         <item name="PillColorStart">@color/primaryColorPinkVariant</item>
         <item name="PillColorEnd">@color/primaryColorPink</item>
@@ -1019,7 +1066,7 @@
         <item name="android:textColorSecondary">@color/white</item>
         <item name="android:textColorPrimary">@color/ios_blue_default</item>
         <item name="android:background">@color/transparent</item>
-        <item name="android:backgroundTint">@color/black_alpha_70</item>
+        <item name="android:backgroundTint">@color/black_alpha_80</item>
         <item name="android:backgroundTintMode">multiply</item>
     </style>
 

@@ -244,6 +244,7 @@
 <attr name="ic_local_activate" format="reference" />
 <attr name="okButtonSelected" format="reference" />
 <attr name="numPickerText" format="reference" />
+<attr name="numPickerBackground" format="reference" />
 
 <declare-styleable name="NumberPicker">
 <attr name="customContentDescription" format="string" />
