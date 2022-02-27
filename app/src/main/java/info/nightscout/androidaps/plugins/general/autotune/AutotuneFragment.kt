@@ -222,12 +222,12 @@ class AutotuneFragment : DaggerFragment() {
         if (!profile.isValid) return resourceHelper.gs(R.string.autotune_profile_invalid)
         if (profile.icSize > 1) {
             //warning = nl + "Autotune works with only one IC value, your profile has " + profile.getIcSize() + " values. Average value is " + profile.ic + "g/U";
-            warning = nl + resourceHelper.gs(R.string.format_autotune_ic_warning, profile.icSize, profile.ic)
+            warning += nl + resourceHelper.gs(R.string.format_autotune_ic_warning, profile.icSize, profile.ic)
             nl = "\n"
         }
         if (profile.isfSize > 1) {
             //warning = nl + "Autotune works with only one ISF value, your profile has " + profile.getIsfSize() + " values. Average value is " + profile.isf/toMgDl + profileFunction.getUnits() + "/U";
-            warning = nl + resourceHelper.gs(R.string.format_autotune_isf_warning, profile.isfSize, Profile.fromMgdlToUnits(profile.isf, profileFunction.getUnits()), profileFunction.getUnits())
+            warning += nl + resourceHelper.gs(R.string.format_autotune_isf_warning, profile.isfSize, Profile.fromMgdlToUnits(profile.isf, profileFunction.getUnits()), profileFunction.getUnits().asText)
         }
         return warning
     }
