@@ -286,7 +286,7 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
         }
     console.error("                                            ");
     console.error("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-    console.error("++ Dynamic ISF Beta 1.3 - Based on rolling 24 hours ++");
+    console.error("++ Dynamic ISF Beta 1.4 - Linear Extrapolation/TDD7 ++");
     console.error("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
     console.error("                                            ");
 
@@ -341,29 +341,7 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
              }
 
        console.error("                                            ");
-        //if (tdd7 > 0){
-        /*if ( tdd_pump > tdd7 && now < 5 || now < 7 && TDD < ( 0.8 * tdd7 ) ){
-          TDD = ( 0.8 * tdd7 );
-          console.log("Excess or too low insulin from pump so TDD set to "+TDD+" based on 75% of TDD7; ");
-          rT.reason += "TDD: " +TDD+ " due to low or high tdd from pump; ";
-          }
 
-        else if (tdd_pump > (1.75 * tdd7)) {
-              TDD = tdd7;
-              console.error("TDD set to TDD7 due to high pump usage reported. TDD = "+TDD+"; ");
-              rT.reason += "TDD set to TDD7 due to high pump usage reported. TDD = "+TDD+"; ";
-              }
-
-        else if (tdd_pump < (0.33 * tdd7)){
-           TDD = (tdd7 * 0.25) + (tdd_pump * 0.75);
-           console.error("TDD weighted to pump due to low insulin usage. TDD = "+TDD+"; ");
-           rT.reason += "TDD weighted to pump due to low insulin usage. TDD = "+TDD+"; ";
-           }
-
-        else {
-             console.log("TDD 7 ="+tdd7+", TDD Pump ="+tdd_pump+" and TDD = "+TDD+";");
-             rT.reason += "TDD: " +TDD+ " based on standard pump 60/tdd7 40 split; ";
-             }*/
 
     var variable_sens = (277700 / (TDD * bg));
     variable_sens = round(variable_sens,1);
