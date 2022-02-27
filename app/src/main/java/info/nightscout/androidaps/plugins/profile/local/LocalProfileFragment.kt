@@ -34,8 +34,8 @@ import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.ui.TimeListEdit
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.logging.AAPSLogger
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import javax.inject.Inject
@@ -61,7 +61,7 @@ class LocalProfileFragment : DaggerFragment() {
     private val save = Runnable {
         doEdit()
         basalView?.updateLabel(rh.gs(R.string.basal_label) + ": " + sumLabel())
-        localProfilePlugin.profile?.getSpecificProfile(binding.profileList.text.toString())?.let {
+        localProfilePlugin.getEditedProfile()?.let {
             binding.basalGraph.show(ProfileSealed.Pure(it))
             binding.icGraph.show(ProfileSealed.Pure(it))
             binding.isfGraph.show(ProfileSealed.Pure(it))
@@ -81,7 +81,7 @@ class LocalProfileFragment : DaggerFragment() {
     }
 
     private fun sumLabel(): String {
-        val profile = localProfilePlugin.getEditProfile()
+        val profile = localProfilePlugin.getEditedProfile()
         val sum = profile?.let { ProfileSealed.Pure(profile).baseBasalSum() } ?: 0.0
         return " ∑" + DecimalFormatter.to2Decimal(sum) + rh.gs(R.string.insulin_unit_shortname)
     }
@@ -237,10 +237,7 @@ class LocalProfileFragment : DaggerFragment() {
                             localProfilePlugin.currentProfileIndex = position
                             localProfilePlugin.isEdited = false
                             build()
-                        }, {
-                            val selection = localProfilePlugin.currentProfileIndex
-                            if (selection in 0 until (binding.profileList.adapter?.count ?: -1)) binding.profileList.setSelection(selection)
-                        }
+                        }, null
                     )
                 }
             } else {
@@ -248,7 +245,7 @@ class LocalProfileFragment : DaggerFragment() {
                 build()
             }
         }
-        localProfilePlugin.profile?.getSpecificProfile(binding.profileList.text.toString())?.let {
+        localProfilePlugin.getEditedProfile()?.let {
             binding.basalGraph.show(ProfileSealed.Pure(it))
             binding.icGraph.show(ProfileSealed.Pure(it))
             binding.isfGraph.show(ProfileSealed.Pure(it))

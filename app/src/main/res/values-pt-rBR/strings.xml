@@ -91,7 +91,7 @@
     <string name="loop_constraintsprocessed_label">Depois das restrições processadas</string>
     <string name="loop_tbrsetbypump_label">Basal temporária definida pela bomba</string>
     <string name="noapsselected">SEM APS SELECIONADO OU RESULTADO FORNECIDO</string>
-    <string name="safety">Segurança</string>
+    <string name="safety">Seguro</string>
     <string name="openapsma_disabled">Plugin está desativado</string>
     <string name="constraints_violation">Violação das restrições</string>
     <string name="setbasalquestion">Aceitar nova basal temporária:</string>

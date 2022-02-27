@@ -52,7 +52,7 @@ class QueueThread internal constructor(
                 val secondsElapsed = (System.currentTimeMillis() - connectionStartTime) / 1000
                 val pump = activePlugin.activePump
                 //  Manifest.permission.BLUETOOTH_CONNECT
-                if (config.PUMPDRIVERS && Build.VERSION.SDK_INT >= /*Build.VERSION_CODES.S*/31)
+                if (config.PUMPDRIVERS && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
                     if (androidPermission.permissionNotGranted(context, "android.permission.BLUETOOTH_CONNECT")) {
                         aapsLogger.debug(LTag.PUMPQUEUE, "no permission")
                         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTING))
