@@ -271,6 +271,8 @@
         <item name="ic_local_reset" >@color/calibrationRed</item>
         <item name="ic_local_activate" >@color/ic_local_activate</item>
         <item name="okButtonSelected" >@color/okButtonSelected</item>
+        <!---Number Picker Text Color-->
+        <item name="numPickerText" >@color/black</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>
@@ -400,7 +402,7 @@
     </style>
 
     <style name="DialogOkCancelButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
-
+        <item name="android:textColor">?android:textColorPrimary</item>
     </style>
 
     <style name="AppThemeWarningDialog" parent="DialogTheme">
@@ -464,10 +466,11 @@
     <style name="ProfileHelperAppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar"/>
 
     <style name="MaterialPickerTheme" parent="android:Theme.Material.Dialog.Alert">
-        <item name="buttonBarPositiveButtonStyle">@style/PickerTextButton</item>
-        <item name="buttonBarNegativeButtonStyle">@style/PickerTextButton</item>
+        <item name="android:buttonBarPositiveButtonStyle">@style/PickerTextButton</item>
+        <item name="android:buttonBarNegativeButtonStyle">@style/PickerTextButton</item>
     </style>
     <style name="PickerTextButton" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">?android:textColorPrimary</item>
     </style>
 
     <!-- BolusProgress, Error -->

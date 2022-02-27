@@ -275,7 +275,8 @@
         <item name="ic_local_reset" >@color/calibrationRed</item>
         <item name="ic_local_activate" >@color/ic_local_activate</item>
         <item name="okButtonSelected" >@color/okButtonSelected</item>
-
+        <!---Number Picker Text Color-->
+        <item name="numPickerText" >@color/black</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>
@@ -368,11 +369,51 @@
         <item name="android:textSize">10sp</item>
     </style>
 
-    <style name="MaterialPickerTheme" parent="android:Theme.Material.Dialog.Alert">
-        <item name="buttonBarPositiveButtonStyle">@style/PickerTextButton</item>
-        <item name="buttonBarNegativeButtonStyle">@style/PickerTextButton</item>
+    <!-- Alert Dialogs -->
+    <style name="DialogTheme" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
+        <item name="buttonBarNegativeButtonStyle">@style/DialogOkCancelButtonStyle</item>
+        <item name="buttonBarPositiveButtonStyle">@style/DialogOkCancelButtonStyle</item>
+        <item name="buttonBarNeutralButtonStyle">@style/DialogOkCancelButtonStyle</item>
     </style>
+
+    <style name="DialogOkCancelButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">?android:textColorPrimary</item>
+    </style>
+
+
+    <!--    Buttons from MaterialDateTimePicker    -->
+    <dimen name="mdtp_material_button_height">48dp</dimen>
+    <dimen name="mdtp_material_button_textsize">14sp</dimen>
+    <dimen name="mdtp_material_button_minwidth">64dp</dimen>
+    <dimen name="mdtp_material_button_textpadding_horizontal">8dp</dimen>
+
+    <style name="mdtp_ActionButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/mdtp_material_button_height</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:focusable">true</item>
+    </style>
+
+    <style name="mdtp_ActionButton.Text" ns2:ignore="NewApi">
+        <item name="android:textSize">@dimen/mdtp_material_button_textsize</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:gravity">center</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:minWidth">@dimen/mdtp_material_button_minwidth</item>
+        <item name="android:paddingStart">@dimen/mdtp_material_button_textpadding_horizontal</item>
+        <item name="android:paddingEnd">@dimen/mdtp_material_button_textpadding_horizontal</item>
+        <item name="android:textColor">@color/mdtp_button_color</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="MaterialPickerTheme" parent="android:Theme.Material.Dialog.Alert">
+        <item name="android:buttonBarPositiveButtonStyle">@style/PickerTextButton</item>
+        <item name="android:buttonBarNegativeButtonStyle">@style/PickerTextButton</item>
+    </style>
+
     <style name="PickerTextButton" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">?android:textColorPrimary</item>
     </style>
 
     <!-- BolusProgress, Error -->

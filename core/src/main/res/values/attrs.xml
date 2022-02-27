@@ -236,7 +236,7 @@
 <attr name="ic_local_reset" format="reference" />
 <attr name="ic_local_activate" format="reference" />
 <attr name="okButtonSelected" format="reference" />
-
+<attr name="numPickerText" format="reference" />
 
 <declare-styleable name="NumberPicker">
 <attr name="customContentDescription" format="string" />

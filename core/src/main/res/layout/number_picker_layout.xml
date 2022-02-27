@@ -27,6 +27,7 @@
         android:inputType="number"
         android:gravity="center"
         android:imeOptions="actionDone"
+        android:textColor="?attr/numPickerText"
         tools:ignore="HardcodedText" />
     <Button
         android:id="@+id/increment"
