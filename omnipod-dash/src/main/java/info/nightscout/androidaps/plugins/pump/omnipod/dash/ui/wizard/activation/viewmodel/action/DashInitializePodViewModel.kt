@@ -18,9 +18,9 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.I8n
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.sharedPreferences.SP
-import io.reactivex.Single
-import io.reactivex.rxkotlin.plusAssign
-import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.kotlin.plusAssign
+import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
 class DashInitializePodViewModel @Inject constructor(

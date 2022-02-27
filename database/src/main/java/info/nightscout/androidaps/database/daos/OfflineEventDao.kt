@@ -6,8 +6,8 @@ import info.nightscout.androidaps.database.TABLE_GLUCOSE_VALUES
 import info.nightscout.androidaps.database.TABLE_OFFLINE_EVENTS
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.entities.OfflineEvent
-import io.reactivex.Maybe
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Single
 
 @Suppress("FunctionName")
 @Dao

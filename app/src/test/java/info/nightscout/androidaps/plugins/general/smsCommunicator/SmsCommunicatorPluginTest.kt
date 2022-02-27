@@ -31,7 +31,7 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.XDripBroadcast
 import info.nightscout.shared.sharedPreferences.SP
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Single
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

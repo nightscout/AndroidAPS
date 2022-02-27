@@ -16,7 +16,7 @@ import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.androidaps.utils.textValidator.DefaultEditTextValidator
 import info.nightscout.androidaps.utils.textValidator.EditTextValidator
-import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 import kotlin.experimental.xor
 

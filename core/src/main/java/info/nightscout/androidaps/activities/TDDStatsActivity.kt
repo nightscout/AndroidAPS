@@ -33,7 +33,7 @@ import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.sharedPreferences.SP
-import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import java.text.DateFormat
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat

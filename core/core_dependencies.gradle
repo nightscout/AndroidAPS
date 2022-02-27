@@ -32,9 +32,9 @@ dependencies {
     api 'com.google.firebase:firebase-database-ktx'
 
     //RxBus
-    api "io.reactivex.rxjava2:rxjava:$rxjava_version"
-    api "io.reactivex.rxjava2:rxkotlin:$rxkotlin_version"
-    api "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
+    api "io.reactivex.rxjava3:rxjava:$rxjava_version"
+    api "io.reactivex.rxjava3:rxkotlin:$rxkotlin_version"
+    api "io.reactivex.rxjava3:rxandroid:$rxandroid_version"
     api "org.apache.commons:commons-lang3:$commonslang3_version"
     api "commons-codec:commons-codec:$commonscodec_version"
     api "com.uber.rxdogtag:rxdogtag:1.0.1"
@@ -61,14 +61,14 @@ dependencies {
     //WorkManager
     api "androidx.work:work-runtime:$work_version"
     api "androidx.work:work-runtime-ktx:$work_version"
-    api "androidx.work:work-rxjava2:$work_version"
+    api "androidx.work:work-rxjava3:$work_version"
     api 'com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava'
 
     // new for tidepool
     api "com.squareup.okhttp3:okhttp:$okhttp3_version"
     api "com.squareup.okhttp3:logging-interceptor:$okhttp3_version"
     api "com.squareup.retrofit2:retrofit:$retrofit2_version"
-    api "com.squareup.retrofit2:adapter-rxjava2:$retrofit2_version"
+    api "com.squareup.retrofit2:adapter-rxjava3:$retrofit2_version"
     api "com.squareup.retrofit2:converter-gson:$retrofit2_version"
 
     api "com.joanzapata.iconify:android-iconify-fontawesome:2.2.2"
