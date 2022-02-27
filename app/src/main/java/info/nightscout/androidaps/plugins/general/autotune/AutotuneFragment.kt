@@ -30,8 +30,9 @@ import info.nightscout.androidaps.utils.MidnightTime
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog.showConfirmation
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
 import org.slf4j.LoggerFactory
 import java.util.*
 import javax.inject.Inject
@@ -167,21 +168,21 @@ class AutotuneFragment : DaggerFragment() {
     @Synchronized
     override fun onResume() {
         super.onResume()
-        disposable.add(rxBus
+        disposable += rxBus
             .toObservable(EventAutotuneUpdateGui::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 updateGui()
             }, { fabricPrivacy.logException(it) })
-        )
-        disposable.add(rxBus
+
+        disposable += rxBus
             .toObservable(EventAutotuneUpdateResult::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 tempResult = it.result
                 updateGui()
             }, { fabricPrivacy.logException(it) })
-        )
+
         updateGui()
     }
 
