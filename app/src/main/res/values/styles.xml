@@ -1,19 +1,10 @@
 <resources>
 
     <!-- The launcher theme. It sets the main window background to the launch_screen drawable -->
-    <style name="AppTheme.Launcher"  parent="Theme.AppCompat.NoActionBar">
+    <style name="AppTheme.Launcher"  parent="Theme.MaterialComponents.NoActionBar">
         <item name="android:windowBackground">@drawable/launch_screen</item>
         <!-- Optional, on Android 5+ you can modify the colorPrimaryDark color to match the windowBackground color for further branding-->
         <!-- <item name="colorPrimaryDark">@android:color/white</item> -->
-    </style>
-
-    <style name="AppTheme" parent="Theme.AppCompat">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="dialogTitleBackground">@color/dialog_title_background</item>
-        <item name="dialogTitleColor">@color/dialog_title_color</item>
-        <item name="dialogTitleIconTint">@color/dialog_title_icon_tint</item>
     </style>
 
     <style name="section_header_label">
@@ -36,5 +27,4 @@
         <item name="android:textColor">#ff0000</item>
     </style>
 
-    <style name="ProfileHelperAppTheme" parent="Theme.MaterialComponents.NoActionBar"/>
 </resources>

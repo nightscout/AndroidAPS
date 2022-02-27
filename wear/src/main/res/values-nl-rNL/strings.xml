@@ -11,6 +11,9 @@
     <string name="label_xdrip_cockpit">AAPS(Cockpit)</string>
     <string name="label_xdrip_steampunk">AAPS(Steampunk)</string>
     <string name="label_digitalstyle">AAPS (DigitalStyle)</string>
+    <string name="label_actions_tile">AAPS(Acties)</string>
+    <string name="label_temp_target_tile">AAPS(Tijdelijk Streefdoel)</string>
+    <string name="label_quick_wizard_tile">AAPS(Quick Wizard)</string>
     <string name="label_warning_sync">Geen gegevens!</string>
     <string name="label_warning_old">Oude gegevens!</string>
     <string name="label_warning_since">Sinds %1$s</string>
@@ -54,19 +57,22 @@
     <string name="pref_ring_history">Ring geschiedenis</string>
     <string name="pref_light_ring_history">Lichte ring geschiedenis</string>
     <string name="pref_animations">Animaties</string>
-    <string name="pref_wizard_in_menu">Wizard in menu</string>
+    <string name="pref_wizard_in_menu">Calculator in Menu</string>
     <string name="pref_prime_in_menu">Ontlucht/vul in menu</string>
     <string name="pref_single_target">Enkel streefdoel</string>
-    <string name="pref_wizard_percentage">Wizardpercentage</string>
+    <string name="pref_wizard_percentage">Calculator percentage</string>
     <string name="pref_complication_tap_action">Complicatie tik voor actie</string>
     <string name="pref_unicode_in_complications">Unicode in complicaties</string>
     <string name="pref_version">Versie:</string>
     <string name="pref_moreWatchfaceSettings">meer Watchface instellingen</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Kijk naar de Watchface configuratie, alsjeblieft.</string>
     <string name="menu_tempt">TijdStreefd</string>
-    <string name="menu_wizard">Wizard</string>
+    <string name="menu_wizard">Calculator</string>
+    <string name="menu_wizard_short">Calc</string>
+    <string name="menu_treatment">Behandeling</string>
+    <string name="menu_treatment_short">Behandel</string>
     <string name="menu_bolus">Bolus</string>
-    <string name="menu_ecarb">eCarb</string>
+    <string name="menu_ecarb">Koolhydraten</string>
     <string name="menu_settings">Instellingen</string>
     <string name="menu_status">Status</string>
     <string name="menu_resync">Opnieuw synchroniseren</string>
@@ -74,22 +80,31 @@
     <string name="menu_none">Geen</string>
     <string name="menu_default">Standaard</string>
     <string name="menu_menu">Menu</string>
-    <string name="action_duration">tijdsduur</string>
-    <string name="action_target" comment="In temp target menu, single target value">doel</string>
-    <string name="action_low" comment="In temp target menu, lower value from range">laag</string>
-    <string name="action_high" comment="In temp target menu, higher value from range">hoog</string>
-    <string name="action_carbs">khd</string>
-    <string name="action_percentage">percentage</string>
-    <string name="action_start_min">start [min]</string>
-    <string name="action_duration_h">duur [h]</string>
-    <string name="action_insulin">insuline</string>
+    <string name="quick_wizard_short">XL</string>
+    <string name="action_duration">Duur</string>
+    <string name="action_tempt_confirmation">Tijdelijk streefdoel aangevraagd</string>
+    <string name="action_quick_wizard_confirmation">QuickWizard aangevraagd</string>
+    <string name="action_treatment_confirmation">Behandeling aangevraagd</string>
+    <string name="action_bolus_confirmation">Bolus aangevraagd</string>
+    <string name="action_wizard_confirmation">Berekening aangevraagd</string>
+    <string name="action_fill_confirmation">Vullen aangevraagd</string>
+    <string name="action_ecarb_confirmation">Koolhydraten aangevraagd</string>
+    <string name="action_cpp_confirmation">CPP aangevraagd</string>
+    <string name="action_target" comment="In temp target menu, single target value">Doel</string>
+    <string name="action_low" comment="In temp target menu, lower value from range">Laag</string>
+    <string name="action_high" comment="In temp target menu, higher value from range">Hoog</string>
+    <string name="action_carbs">Koolhydraten</string>
+    <string name="action_percentage">Percentage</string>
+    <string name="action_start_min">Start [min]</string>
+    <string name="action_duration_h">Duur [h]</string>
+    <string name="action_insulin">Insuline</string>
     <string name="action_preset_1">Voorinstelling 1</string>
     <string name="action_preset_2">Voorinstelling 2</string>
     <string name="action_preset_3">Voorinstelling 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Vrije hoeveelheid</string>
     <string name="action_confirm">BEVESTIGEN</string>
     <string name="action_timeshift">tijdsverschuiving</string>
-    <string name="action_bolus">bolus</string>
+    <string name="action_bolus">Bolus</string>
     <string name="bolus_progress">Bolus voortgang</string>
     <string name="press_to_cancel">druk om te annuleren</string>
     <string name="cancel_bolus">BOLUS ANNULEREN</string>
@@ -142,4 +157,13 @@
     <string name="simple_ui_charging">Tijdens Opladen</string>
     <string name="simple_ui_always_on">Altijd Aan modus</string>
     <string name="simple_ui_always_on_charging">Altijd Aan en Opladen</string>
+    <string name="temp_target_eating_soon">Eten</string>
+    <string name="temp_target_hypo">Hypo</string>
+    <string name="temp_target_activity">Activiteit</string>
+    <string name="temp_target_manual">Handmatig</string>
+    <string name="temp_target_cancel">Afbreken</string>
+    <string name="tile_none">Geen</string>
+    <string name="tile_no_config">Geen configuratie beschikbaar</string>
+    <string name="wear_control_not_enabled">Wear OS besturing uitgeschakeld</string>
+    <string name="wear_control_no_data">Geen data beschikbaar</string>
 </resources>

@@ -239,6 +239,10 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
             }
             ToastUtils.showToastInUiThread(this, R.string.invalidinput)
         }
+        binding.age.editText?.id?.let { binding.ageLabel.labelFor = it }
+        binding.tdd.editText?.id?.let { binding.tddLabel.labelFor = it }
+        binding.weight.editText?.id?.let { binding.weightLabel.labelFor = it }
+        binding.basalpctfromtdd.editText?.id?.let { binding.basalpctfromtddLabel.labelFor = it }
 
         switchTab(0, typeSelected[0], false)
     }
@@ -279,7 +283,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
 
         tabSelected = tab
         typeSelected[tabSelected] = newContent
-        binding.profiletypeTitle.defaultHintTextColor = ColorStateList.valueOf(rh.gc(if (tab == 0) R.color.tabBgColorSelected else R.color.examinedProfile))
+        binding.profiletypeTitle.defaultHintTextColor = ColorStateList.valueOf(rh.gc(if (tab == 0) R.color.helperProfile else R.color.examinedProfile))
 
         // show new content
         binding.profiletype.setText(
@@ -310,7 +314,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
     }
 
     private fun setBackgroundColorOnSelected(tab: Int) {
-        binding.menu1.setBackgroundColor(rh.gc(if (tab == 1) R.color.defaultbackground else R.color.tempbasal))
+        binding.menu1.setBackgroundColor(rh.gc(if (tab == 1) R.color.defaultbackground else R.color.helperProfile))
         binding.menu2.setBackgroundColor(rh.gc(if (tab == 0) R.color.defaultbackground else R.color.examinedProfile))
     }
 }

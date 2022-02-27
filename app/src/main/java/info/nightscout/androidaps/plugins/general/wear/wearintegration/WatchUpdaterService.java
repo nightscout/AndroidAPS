@@ -46,6 +46,7 @@ import info.nightscout.androidaps.interfaces.Loop;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
+import info.nightscout.androidaps.utils.wizard.QuickWizardEntry;
 import info.nightscout.shared.logging.AAPSLogger;
 import info.nightscout.shared.logging.LTag;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
@@ -62,6 +63,7 @@ import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.DefaultValueHelper;
 import info.nightscout.androidaps.utils.TrendCalculator;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.wizard.QuickWizard;
 import info.nightscout.shared.sharedPreferences.SP;
 
 public class WatchUpdaterService extends WearableListenerService implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
@@ -81,6 +83,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
     @Inject ReceiverStatusStore receiverStatusStore;
     @Inject Config config;
     @Inject public TrendCalculator trendCalculator;
+    @Inject public QuickWizard quickWizard;
 
     public static final String ACTION_RESEND = WatchUpdaterService.class.getName().concat(".Resend");
     public static final String ACTION_OPEN_SETTINGS = WatchUpdaterService.class.getName().concat(".OpenSettings");
@@ -101,12 +104,14 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
     private static final String OPEN_SETTINGS_PATH = "/openwearsettings";
     private static final String NEW_STATUS_PATH = "/sendstatustowear";
     private static final String NEW_PREFERENCES_PATH = "/sendpreferencestowear";
+    private static final String QUICK_WIZARD_PATH = "/send_quick_wizard";
     public static final String BASAL_DATA_PATH = "/nightscout_watch_basal";
     public static final String BOLUS_PROGRESS_PATH = "/nightscout_watch_bolusprogress";
     public static final String ACTION_CONFIRMATION_REQUEST_PATH = "/nightscout_watch_actionconfirmationrequest";
     public static final String ACTION_CHANGECONFIRMATION_REQUEST_PATH = "/nightscout_watch_changeconfirmationrequest";
     public static final String ACTION_CANCELNOTIFICATION_REQUEST_PATH = "/nightscout_watch_cancelnotificationrequest";
 
+    String TAG = "WatchUpdateService";
 
     private static boolean lastLoopStatus;
 
@@ -156,7 +161,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
     public int onStartCommand(Intent intent, int flags, int startId) {
         String action = intent != null ? intent.getAction() : null;
 
-        // Log.d(TAG, logPrefix + "onStartCommand: " + action);
+        // Log.d(TAG, "onStartCommand: " + action);
 
         if (wearIntegration()) {
             handler.post(() -> {
@@ -235,7 +240,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
         super.onPeerConnected(peer);
         String id = peer.getId();
         String name = peer.getDisplayName();
-        // Log.d(TAG, logPrefix + "onPeerConnected peer name & ID: " + name + "|" + id);
+        Log.d(TAG, "onPeerConnected peer name & ID: " + name + "|" + id);
     }
 
 
@@ -244,14 +249,14 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
         super.onPeerDisconnected(peer);
         String id = peer.getId();
         String name = peer.getDisplayName();
-        // Log.d(TAG, logPrefix + "onPeerDisconnected peer name & ID: " + name + "|" + id);
+        Log.d(TAG, "onPeerDisconnected peer name & ID: " + name + "|" + id);
     }
 
 
     @Override
     public void onMessageReceived(MessageEvent event) {
 
-        // Log.d(TAG, logPrefix + "onMessageRecieved: " + event);
+        // Log.d(TAG, "onMessageRecieved: " + event);
 
         if (wearIntegration()) {
             if (event != null && event.getPath().equals(WEARABLE_RESEND_PATH)) {
@@ -283,7 +288,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
     private void sendData() {
 
         GlucoseValue lastBG = iobCobCalculator.getAds().lastBg();
-        // Log.d(TAG, logPrefix + "LastBg=" + lastBG);
+        // Log.d(TAG, "LastBg=" + lastBG);
         if (lastBG != null) {
             GlucoseStatus glucoseStatus = glucoseStatusProvider.getGlucoseStatusData();
 
@@ -364,6 +369,10 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
         if (googleApiClient != null && !googleApiClient.isConnected() && !googleApiClient.isConnecting()) {
             googleApiConnect();
         }
+
+        sendPreferences();
+        sendQuickWizard();
+
         long startTime = System.currentTimeMillis() - (long) (60000 * 60 * 5.5);
         GlucoseValue last_bg = iobCobCalculator.getAds().lastBg();
 
@@ -382,7 +391,6 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             entries.putDataMapArrayList("entries", dataMaps);
             (new SendToDataLayerThread(WEARABLE_DATA_PATH, googleApiClient)).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, entries);
         }
-        sendPreferences();
         sendBasals();
         sendStatus();
     }
@@ -720,17 +728,60 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
     private void sendPreferences() {
         if (googleApiClient != null && googleApiClient.isConnected()) {
 
+            GlucoseUnit units = profileFunction.getUnits();
             boolean wearcontrol = sp.getBoolean(R.string.key_wear_control, false);
-
+            boolean mgdl = units.equals(GlucoseUnit.MGDL);
+            int percentage = sp.getInt(R.string.key_boluswizard_percentage, 100);
+            int maxCarbs = sp.getInt(R.string.key_treatmentssafety_maxcarbs, 48);
+            double maxBolus = sp.getDouble(R.string.key_treatmentssafety_maxbolus, 3.0);
             PutDataMapRequest dataMapRequest = PutDataMapRequest.create(NEW_PREFERENCES_PATH);
             //unique content
             dataMapRequest.getDataMap().putLong("timestamp", System.currentTimeMillis());
             dataMapRequest.getDataMap().putBoolean(rh.gs(R.string.key_wear_control), wearcontrol);
+            dataMapRequest.getDataMap().putBoolean(rh.gs(R.string.key_units_mgdl), mgdl);
+            dataMapRequest.getDataMap().putInt(rh.gs(R.string.key_boluswizard_percentage), percentage);
+            dataMapRequest.getDataMap().putInt(rh.gs(R.string.key_treatmentssafety_maxcarbs), maxCarbs);
+            dataMapRequest.getDataMap().putDouble(rh.gs(R.string.key_treatmentssafety_maxbolus),maxBolus);
             PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
             Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);
         } else {
-            Log.e("SendStatus", "No connection to wearable available!");
+            Log.e("SendPreferences", "No connection to wearable available!");
         }
+    }
+
+    private void sendQuickWizard() {
+        if (googleApiClient != null && googleApiClient.isConnected()) {
+            int size = quickWizard.size();
+            ArrayList<DataMap> entities = new ArrayList<>();
+            for(int i=0; i < size; i++) {
+                QuickWizardEntry q = quickWizard.get(i);
+                if (q.forDevice(QuickWizardEntry.DEVICE_WATCH)) {
+                    entities.add(quickMap(q));
+                }
+            }
+
+            PutDataMapRequest dataMapRequest = PutDataMapRequest.create(QUICK_WIZARD_PATH);
+
+            DataMap dm = dataMapRequest.getDataMap();
+            dm.putLong("timestamp", System.currentTimeMillis());
+            dm.putDataMapArrayList("quick_wizard", entities);
+
+            PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
+            Log.i(TAG, "sendQuickWizard: " + putDataRequest);
+            Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);
+        } else {
+            Log.e("sendQuickWizard", "No connection to wearable available!");
+        }
+    }
+
+    private DataMap quickMap(QuickWizardEntry q) {
+        DataMap dm = new DataMap();
+        dm.putString("guid", q.guid());
+        dm.putString("button_text", q.buttonText());
+        dm.putInt("carbs", q.carbs());
+        dm.putInt("from", q.validFrom());
+        dm.putInt("to", q.validTo());
+        return dm;
     }
 
     @NonNull

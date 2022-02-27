@@ -5,7 +5,7 @@ import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.transactions.CancelCurrentOfflineEventIfAnyTransaction
 import info.nightscout.androidaps.database.transactions.Transaction
 import info.nightscout.androidaps.queue.Callback
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Single
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

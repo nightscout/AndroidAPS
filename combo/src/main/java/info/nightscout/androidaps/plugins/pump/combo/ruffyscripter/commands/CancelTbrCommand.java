@@ -3,15 +3,19 @@ package info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.commands;
 import androidx.annotation.NonNull;
 
 import org.monkey.d.ruffy.ruffy.driver.display.MenuType;
-import org.slf4j.Logger;
 
-import info.nightscout.shared.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.PumpState;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.PumpWarningCodes;
+import info.nightscout.shared.logging.AAPSLogger;
+import info.nightscout.shared.logging.LTag;
 
 public class CancelTbrCommand extends BaseCommand {
-    private static final Logger log = StacktraceLoggerWrapper.getLogger(CancelTbrCommand.class);
+    private final AAPSLogger aapsLogger;
 
+    public CancelTbrCommand(AAPSLogger aapsLogger) {
+        this.aapsLogger = aapsLogger;
+    }
+    
     @Override
     public Integer getReconnectWarningId() {
         return PumpWarningCodes.TBR_CANCELLED;
@@ -28,9 +32,9 @@ public class CancelTbrCommand extends BaseCommand {
             return;
         }
 
-        log.debug("Cancelling active TBR of " + pumpState.tbrPercent
+        aapsLogger.debug(LTag.PUMP, "Cancelling active TBR of " + pumpState.tbrPercent
                 + "% with " + pumpState.tbrRemainingDuration + " min remaining");
-        SetTbrCommand setTbrCommand = new SetTbrCommand(100, 0);
+        SetTbrCommand setTbrCommand = new SetTbrCommand(100, 0, aapsLogger);
         setTbrCommand.setScripter(scripter);
         setTbrCommand.execute();
         result = setTbrCommand.result;

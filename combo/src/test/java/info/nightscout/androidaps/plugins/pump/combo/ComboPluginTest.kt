@@ -8,6 +8,7 @@ import info.nightscout.androidaps.combo.R
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.RuffyScripter
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.Bolus
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -28,6 +29,7 @@ class ComboPluginTest : TestBase() {
     @Mock lateinit var sp: SP
     @Mock lateinit var context: Context
     @Mock lateinit var dateUtil: DateUtil
+    @Mock lateinit var ruffyScripter: RuffyScripter
 
     val injector = HasAndroidInjector {
         AndroidInjector {
@@ -43,7 +45,7 @@ class ComboPluginTest : TestBase() {
     fun prepareMocks() {
         `when`(rh.gs(R.string.novalidbasalrate)).thenReturn("No valid basal rate read from pump")
         `when`(rh.gs(R.string.combo_pump_unsupported_operation)).thenReturn("Requested operation not supported by pump")
-        comboPlugin = ComboPlugin(injector, aapsLogger, RxBus(aapsSchedulers, aapsLogger), rh, profileFunction, sp, commandQueue, context, pumpSync, dateUtil)
+        comboPlugin = ComboPlugin(injector, aapsLogger, RxBus(aapsSchedulers, aapsLogger), rh, profileFunction, sp, commandQueue, context, pumpSync, dateUtil, ruffyScripter)
     }
 
     @Test

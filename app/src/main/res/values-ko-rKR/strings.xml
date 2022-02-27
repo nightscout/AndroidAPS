@@ -157,7 +157,6 @@
     <string name="end_user_license_agreement">최종 사용자 라이선스 동의서</string>
     <string name="end_user_license_agreement_text">이 프로그램을 의학적 결정을 내리는 데 사용해서는 안되며, 여기에 대한 어떠한 보증도 없습니다. 이 프로그램의 품질과 성능에 관한 모든 위험은 사용자에게 있습니다.\nMUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
     <string name="end_user_license_agreement_i_understand">모두 이해하였고 동의합니다.</string>
-    <string name="save">저장</string>
     <string name="reloadprofile">프로파일 새로고침</string>
     <string name="smscommunicator">SMS 통신기</string>
     <string name="smscommunicator_allowednumbers">허가된 전화번호</string>
@@ -242,7 +241,6 @@
     <string name="wear">워치</string>
     <string name="resend_all_data">모든 데이터 다시 보내기</string>
     <string name="open_settings_on_wear">워치에서 설정 열기</string>
-    <string name="basal_rate">Basal양:</string>
     <string name="basalvaluebelowminimum">Basal값이 최소값 이하입니다. 프로파일이 설정되지 않습니다!</string>
     <string name="sms_actualbg">BG:</string>
     <string name="sms_lastbg">Last BG:</string>
@@ -421,8 +419,6 @@
     <string name="keep_screen_on_summary">안드로이드의 화면이 꺼지는 것을 방지합니다. 전원이 공급되어 있지 않으면 전력소모가 큽니다.</string>
     <string name="sensitivity_warning">Autosense 기능을 켜면 모든 섭취된 탄수화물양을 입력하십시오. 그렇지 않으면 탄수화물 편차(deviations)가 민감도 변화로 잘못 인식될것입니다!!</string>
     <string name="sensitivityweightedaverage">민감도 가중평균</string>
-    <string name="mdtp_ok">네</string>
-    <string name="mdtp_cancel">취소</string>
     <string name="notloadedplugins">모든 프로파일이 로드되지 않았습니다.</string>
     <string name="valuesnotstored">값이 저장되지 않았습니다!</string>
     <string name="ns_localbroadcasts">다른 앱 (예: xDrip)으로 데이터 전송을 활성화합니다. AAPS 또는 NSClient를 두 개 이상 설치 한 경우 활성화하지 마세요!</string>
@@ -738,8 +734,6 @@
     <string name="profilenamecontainsdot">프로파일명에 점을 포함하고 있습니다.\n이는 NS에서 지원하지 않습니다.\n프로파일이 NS에 업로드되지 않습니다.</string>
     <string name="low_mark_comment">혈당 정상범위의 하한값(표시 전용)</string>
     <string name="high_mark_comment">혈당 정상범위의 상한값(표시 전용)</string>
-    <string name="age">나이:</string>
-    <string name="weight_label">몸무게:</string>
     <string name="id">ID:</string>
     <string name="submit">확인</string>
     <string name="mostcommonprofile">가장 많이 사용된 프로파일:</string>
@@ -860,4 +854,5 @@
     <string name="sms_timeout_while_wating">직전의 펌프 통신 종료를 기다리는 동안 타임 아웃</string>
     <string name="smscommunicator_another_bolus_in_queue">대기열에 또다른 bolus가 있습니다. 이후에 다시 시도하세요.</string>
     <string name="calculation_in_progress">계산 진행 중</string>
+    <!-- WEAR OS-->
 </resources>

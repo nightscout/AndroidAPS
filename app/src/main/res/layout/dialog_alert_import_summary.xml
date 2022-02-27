@@ -21,17 +21,17 @@
                 android:layout_marginEnd="8dp"
                 android:stretchColumns="2" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
+                style="@style/GrayButton"
                 android:id="@+id/summary_details_btn"
-                style="?android:attr/buttonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:gravity="bottom"
+                android:gravity="center"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
-                android:layout_marginBottom="3dp"
+                android:layout_marginBottom="10dp"
                 android:text="@string/check_preferences_details_btn"
                 android:textColor="@color/colorTreatmentButton"
                 android:visibility="gone" />

@@ -1,14 +1,10 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="5dp"
     tools:context="info.nightscout.androidaps.diaconn.DiaconnG8Fragment">
 
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -65,7 +61,8 @@
                         android:paddingEnd="2dp"
                         android:paddingStart="2dp"
                         android:text=":"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        tools:ignore="HardcodedText" />
 
                     <TextView
                         android:id="@+id/serial_number"
@@ -73,7 +70,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:textColor="@android:color/white"
                         android:textSize="14sp" />
 
@@ -100,7 +97,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/diaconn_g8_bluetooth_status"
                         android:textSize="14sp" />
 
@@ -112,7 +109,8 @@
                         android:paddingEnd="2dp"
                         android:paddingStart="2dp"
                         android:text=":"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        tools:ignore="HardcodedText" />
 
                     <com.joanzapata.iconify.widget.IconTextView
                         android:id="@+id/btconnection"
@@ -120,10 +118,11 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:text="{fa-bluetooth-b}"
                         android:textColor="@android:color/white"
-                        android:textSize="20dp" />
+                        android:textSize="20dp"
+                        tools:ignore="HardcodedText" />
 
 
                 </LinearLayout>
@@ -133,7 +132,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="content"
-                    android:textAlignment="center" />
+                    android:textAlignment="center"
+                    tools:ignore="HardcodedText" />
 
                 <View
                     android:layout_width="fill_parent"
@@ -155,7 +155,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/battery_label"
                         android:textSize="14sp" />
 
@@ -167,7 +167,8 @@
                         android:paddingEnd="2dp"
                         android:paddingStart="2dp"
                         android:text=":"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        tools:ignore="HardcodedText" />
 
                     <com.joanzapata.iconify.widget.IconTextView
                         android:id="@+id/battery"
@@ -175,9 +176,9 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:textColor="@android:color/white"
-                        android:textSize="20dp" />
+                        android:textSize="20sp" />
 
 
                 </LinearLayout>
@@ -202,7 +203,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/lastconnection_label"
                         android:textSize="14sp" />
 
@@ -214,7 +215,8 @@
                         android:paddingEnd="2dp"
                         android:paddingStart="2dp"
                         android:text=":"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        tools:ignore="HardcodedText" />
 
                     <TextView
                         android:id="@+id/lastconnection"
@@ -222,7 +224,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:textColor="@android:color/white"
                         android:textSize="14sp" />
 
@@ -248,7 +250,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/lastbolus_label"
                         android:textSize="14sp" />
 
@@ -260,7 +262,8 @@
                         android:paddingEnd="2dp"
                         android:paddingStart="2dp"
                         android:text=":"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        tools:ignore="HardcodedText" />
 
                     <TextView
                         android:id="@+id/lastbolus"
@@ -268,7 +271,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:textColor="@android:color/white"
                         android:textSize="14sp" />
 
@@ -294,7 +297,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/dailyunits"
                         android:textSize="14sp" />
 
@@ -306,7 +309,8 @@
                         android:paddingEnd="2dp"
                         android:paddingStart="2dp"
                         android:text=":"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        tools:ignore="HardcodedText" />
 
                     <TextView
                         android:id="@+id/dailyunits"
@@ -314,7 +318,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:textColor="@android:color/white"
                         android:textSize="14sp" />
 
@@ -340,7 +344,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/basebasalrate_label"
                         android:textSize="14sp" />
 
@@ -352,7 +356,8 @@
                         android:paddingEnd="2dp"
                         android:paddingStart="2dp"
                         android:text=":"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        tools:ignore="HardcodedText" />
 
                     <TextView
                         android:id="@+id/basabasalrate"
@@ -360,7 +365,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:textColor="@android:color/white"
                         android:textSize="14sp" />
 
@@ -386,7 +391,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/tempbasal_label"
                         android:textSize="14sp" />
 
@@ -398,7 +403,8 @@
                         android:paddingEnd="2dp"
                         android:paddingStart="2dp"
                         android:text=":"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        tools:ignore="HardcodedText" />
 
                     <TextView
                         android:id="@+id/tempbasal"
@@ -406,7 +412,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:textColor="@android:color/white"
                         android:textSize="14sp" />
 
@@ -432,7 +438,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/virtualpump_extendedbolus_label"
                         android:textSize="14sp" />
 
@@ -444,7 +450,8 @@
                         android:paddingEnd="2dp"
                         android:paddingStart="2dp"
                         android:text=":"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        tools:ignore="HardcodedText" />
 
                     <TextView
                         android:id="@+id/extendedbolus"
@@ -452,7 +459,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:textColor="@android:color/white"
                         android:textSize="14sp" />
 
@@ -478,7 +485,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/reservoir_label"
                         android:textSize="14sp" />
 
@@ -490,7 +497,8 @@
                         android:paddingEnd="2dp"
                         android:paddingStart="2dp"
                         android:text=":"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        tools:ignore="HardcodedText" />
 
                     <TextView
                         android:id="@+id/reservoir"
@@ -498,7 +506,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:textColor="@android:color/white"
                         android:textSize="14sp" />
 
@@ -524,7 +532,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/basal_step"
                         android:textSize="14sp" />
 
@@ -536,7 +544,8 @@
                         android:paddingEnd="2dp"
                         android:paddingStart="2dp"
                         android:text=":"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        tools:ignore="HardcodedText" />
 
                     <TextView
                         android:id="@+id/basalstep"
@@ -544,7 +553,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:textColor="@android:color/white"
                         android:textSize="14sp" />
 
@@ -570,7 +579,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/bolus_step"
                         android:textSize="14sp" />
 
@@ -582,7 +591,8 @@
                         android:paddingEnd="2dp"
                         android:paddingStart="2dp"
                         android:text=":"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        tools:ignore="HardcodedText" />
 
                     <TextView
                         android:id="@+id/bolusstep"
@@ -590,7 +600,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:textColor="@android:color/white"
                         android:textSize="14sp" />
 
@@ -616,7 +626,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/pump_firmware_label"
                         android:textSize="14sp" />
 
@@ -628,7 +638,8 @@
                         android:paddingEnd="2dp"
                         android:paddingStart="2dp"
                         android:text=":"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        tools:ignore="HardcodedText" />
 
                     <TextView
                         android:id="@+id/firmware"
@@ -636,7 +647,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:textColor="@android:color/white"
                         android:textSize="14sp" />
 
@@ -674,19 +685,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-<!--                <Button-->
-<!--                    android:id="@+id/viewprofile"-->
-<!--                    style="@style/ButtonSmallFontStyle"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    android:layout_weight="1"-->
-<!--                    android:drawableTop="@drawable/ic_danarprofile"-->
-<!--                    android:paddingLeft="0dp"-->
-<!--                    android:paddingRight="0dp"-->
-<!--                    android:text="@string/viewprofile" />-->
-
-
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/history"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="match_parent"
@@ -697,7 +696,7 @@
                     android:paddingRight="0dp"
                     android:text="@string/pumphistory" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/stats"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="match_parent"
@@ -708,7 +707,7 @@
                     android:paddingRight="0dp"
                     android:text="@string/stats" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/user_options"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="match_parent"
@@ -723,6 +722,4 @@
 
         </LinearLayout>
 
-    </RelativeLayout>
-
-</FrameLayout>
+</RelativeLayout>

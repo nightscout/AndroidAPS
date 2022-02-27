@@ -11,6 +11,9 @@
     <string name="label_xdrip_cockpit">AAPS (Cockpit)</string>
     <string name="label_xdrip_steampunk">AAPS (Steampunk)</string>
     <string name="label_digitalstyle">AAPS (Digital)</string>
+    <string name="label_actions_tile">AAPS (Actions)</string>
+    <string name="label_temp_target_tile">AAPS(Cible Temp)</string>
+    <string name="label_quick_wizard_tile">AAPS(Assistant rapide)</string>
     <string name="label_warning_sync">Pas de données !</string>
     <string name="label_warning_old">Données anciennes!</string>
     <string name="label_warning_since">Depuis %1$s</string>
@@ -54,10 +57,10 @@
     <string name="pref_ring_history">Historique (Cercle)</string>
     <string name="pref_light_ring_history">Historique Léger (Cercle)</string>
     <string name="pref_animations">Animations (Cercle)</string>
-    <string name="pref_wizard_in_menu">Assistant dans Menu</string>
+    <string name="pref_wizard_in_menu">Assistant dans le menu</string>
     <string name="pref_prime_in_menu">Amorcer dans Menu</string>
     <string name="pref_single_target">Cible Unique</string>
-    <string name="pref_wizard_percentage">Assistant Pourcentage</string>
+    <string name="pref_wizard_percentage">Pourcentage de l\'Assistant</string>
     <string name="pref_complication_tap_action">Action Appui Complication</string>
     <string name="pref_unicode_in_complications">Unicode dans Complications</string>
     <string name="pref_version">Version:</string>
@@ -65,8 +68,11 @@
     <string name="pref_lookInYourWatchfaceConfiguration">Veuillez regardez dans la configuration du cadran.</string>
     <string name="menu_tempt">Cible Temp</string>
     <string name="menu_wizard">Assistant</string>
+    <string name="menu_wizard_short">Assist.</string>
+    <string name="menu_treatment">Traitement</string>
+    <string name="menu_treatment_short">Trait.</string>
     <string name="menu_bolus">Bolus</string>
-    <string name="menu_ecarb">eGlucides</string>
+    <string name="menu_ecarb">Glucides</string>
     <string name="menu_settings">Paramètres</string>
     <string name="menu_status">États</string>
     <string name="menu_resync">Re-sync</string>
@@ -74,22 +80,31 @@
     <string name="menu_none">Aucun</string>
     <string name="menu_default">Défaut</string>
     <string name="menu_menu">Menu</string>
-    <string name="action_duration">durée</string>
-    <string name="action_target" comment="In temp target menu, single target value">cible</string>
-    <string name="action_low" comment="In temp target menu, lower value from range">bas</string>
-    <string name="action_high" comment="In temp target menu, higher value from range">haut</string>
-    <string name="action_carbs">glucides</string>
-    <string name="action_percentage">pourcentage</string>
-    <string name="action_start_min">début [min]</string>
-    <string name="action_duration_h">durée [h]</string>
-    <string name="action_insulin">insuline</string>
+    <string name="quick_wizard_short">XL</string>
+    <string name="action_duration">Durée</string>
+    <string name="action_tempt_confirmation">Cible Temp demandée</string>
+    <string name="action_quick_wizard_confirmation">Assistant rapide demandé</string>
+    <string name="action_treatment_confirmation">Traitement demandé</string>
+    <string name="action_bolus_confirmation">Bolus demandé</string>
+    <string name="action_wizard_confirmation">Calcul demandé</string>
+    <string name="action_fill_confirmation">Remplissage demandé</string>
+    <string name="action_ecarb_confirmation">Glucides requis</string>
+    <string name="action_cpp_confirmation">Profil demandé</string>
+    <string name="action_target" comment="In temp target menu, single target value">Cible</string>
+    <string name="action_low" comment="In temp target menu, lower value from range">Bas</string>
+    <string name="action_high" comment="In temp target menu, higher value from range">Élevé</string>
+    <string name="action_carbs">Glucides</string>
+    <string name="action_percentage">Pourcentage</string>
+    <string name="action_start_min">Début [min]</string>
+    <string name="action_duration_h">Durée [h]</string>
+    <string name="action_insulin">Insuline</string>
     <string name="action_preset_1">Quantité 1</string>
     <string name="action_preset_2">Quantité 2</string>
     <string name="action_preset_3">Quantité 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Quantité libre</string>
     <string name="action_confirm">CONFIRMER</string>
     <string name="action_timeshift">décalage</string>
-    <string name="action_bolus">bolus</string>
+    <string name="action_bolus">Bolus</string>
     <string name="bolus_progress">Bolus en cours</string>
     <string name="press_to_cancel">Click pour annuler</string>
     <string name="cancel_bolus">ANNULER BOLUS</string>
@@ -142,4 +157,13 @@
     <string name="simple_ui_charging">Pendant la charge</string>
     <string name="simple_ui_always_on">Toujours allumé</string>
     <string name="simple_ui_always_on_charging">Toujours allumé et pendant la charge</string>
+    <string name="temp_target_eating_soon">Repas</string>
+    <string name="temp_target_hypo">Hypo</string>
+    <string name="temp_target_activity">Activité</string>
+    <string name="temp_target_manual">Manuel</string>
+    <string name="temp_target_cancel">Annuler</string>
+    <string name="tile_none">Aucun</string>
+    <string name="tile_no_config">Aucune configuration disponible</string>
+    <string name="wear_control_not_enabled">Contrôles Wear désactivés</string>
+    <string name="wear_control_no_data">Aucune donnée disponible</string>
 </resources>

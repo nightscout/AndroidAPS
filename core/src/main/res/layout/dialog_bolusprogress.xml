@@ -73,7 +73,8 @@
         android:maxHeight="5dp"
         android:minHeight="3dp" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
+        style="@style/GrayButton"
         android:id="@+id/stop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -13,7 +13,9 @@
     <uses-permission android:name="android.permission.LOCAL_MAC_ADDRESS" />
 
     <application>
-        <activity android:name="info.nightscout.androidaps.plugins.pump.common.dialog.RileyLinkBLEConfigActivity">
+        <activity android:name="info.nightscout.androidaps.plugins.pump.common.dialog.RileyLinkBLEConfigActivity"
+            android:theme="@style/AppTheme"
+            android:exported="false">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.plugins.PumpCommon.dialog.RileyLinkBLEConfigActivity" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -22,8 +24,7 @@
 
         <activity
             android:name="info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity"
-            android:label="@string/title_activity_rileylink_settings"
-            android:theme="@style/Theme.AppCompat.NoTitle" />
+            android:label="@string/title_activity_rileylink_settings" />
     </application>
 
 </manifest>

@@ -41,7 +41,7 @@ class PasswordCheck @Inject constructor(
         }
 
         val promptsView = LayoutInflater.from(context).inflate(R.layout.passwordprompt, null)
-        val alertDialogBuilder = AlertDialogHelper.Builder(context)
+        val alertDialogBuilder = AlertDialogHelper.Builder(context, R.style.DialogTheme)
         alertDialogBuilder.setView(promptsView)
 
         val userInput = promptsView.findViewById<View>(R.id.password_prompt_pass) as EditText
@@ -76,7 +76,7 @@ class PasswordCheck @Inject constructor(
     @SuppressLint("InflateParams")
     fun setPassword(context: Context, @StringRes labelId: Int, @StringRes preference: Int, ok: ((String) -> Unit)? = null, cancel: (() -> Unit)? = null, clear: (() -> Unit)? = null) {
         val promptsView = LayoutInflater.from(context).inflate(R.layout.passwordprompt, null)
-        val alertDialogBuilder = AlertDialogHelper.Builder(context)
+        val alertDialogBuilder = AlertDialogHelper.Builder(context, R.style.DialogTheme)
         alertDialogBuilder.setView(promptsView)
 
         val userInput = promptsView.findViewById<View>(R.id.password_prompt_pass) as EditText
@@ -130,7 +130,7 @@ class PasswordCheck @Inject constructor(
                          @StringRes passwordWarning: Int?, ok: ((String) -> Unit)?, cancel: (() -> Unit)? = null) {
 
         val promptsView = LayoutInflater.from(context).inflate(R.layout.passwordprompt, null)
-        val alertDialogBuilder = AlertDialogHelper.Builder(context)
+        val alertDialogBuilder = AlertDialogHelper.Builder(context, R.style.DialogTheme)
         alertDialogBuilder.setView(promptsView)
         passwordExplanation?.let { alertDialogBuilder.setMessage(it) }
 

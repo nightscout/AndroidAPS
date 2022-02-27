@@ -48,6 +48,11 @@
     <string name="isf_label">ISF (чувствительность к инсулину)</string>
     <string name="basal_label">базал</string>
     <string name="target_label">Целевое значение СК:</string>
+    <string name="dia_long_label">Продолжительность действия инсулина</string>
+    <string name="ic_long_label">Соотношение инсулин/углеводы I: C</string>
+    <string name="isf_long_label">Фактор Чувствительности к Инсулину (ISF)</string>
+    <string name="basal_long_label">Скорость базала</string>
+    <string name="target_long_label">Целевая ГК</string>
     <string name="initializing">инициализация...</string>
     <string name="serialnumber">Серийный номер</string>
     <string name="battery_label">батарея</string>
@@ -105,6 +110,7 @@
     <string name="notes_label">Заметки</string>
     <string name="remove_button">Удалить</string>
     <string name="addnew">Добавить новый</string>
+    <string name="addnew_above">Добавить строку сверху</string>
     <string name="wrong_pump_data">Данные поступают с другой помпы. Измените драйвер помпы, чтобы сбросить ее состояние.</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Макс базальный уровень ограничен до %1$.2f ед/ч вследствие %2$s</string>
@@ -127,6 +133,7 @@
     <string name="location_not_found_message">Для обнаружения Bluetooth на новых устройствах необходимо включить геолокацию. AAPS не отслеживает ваше местоположение и может быть отключен после успешного сопряжения.</string>
     <!--    DateUtil-->
     <string name="minago">%1$d мин. назад</string>
+    <string name="minago_long">%1$d минут назад</string>
     <string name="hoursago">%1$.1fч. назад</string>
     <string name="shorthour">ч</string>
     <string name="days">дн</string>
@@ -369,6 +376,7 @@
     <string name="uel_stat_reset">СБРОС СТАТИСТИКИ</string>
     <string name="uel_delete_logs">УДАЛИТЬ ЖУРНАЛ</string>
     <string name="uel_delete_future_treatments">УДАЛИТЬ НАЗНАЧЕНИЯ ИЗ БУДУЩЕГО</string>
+    <string name="delete_future_treatments">Удалить назначения из будущего</string>
     <string name="uel_export_settings">ЭКСПОРТИРОВАТЬ НАСТРОЙКИ</string>
     <string name="uel_import_settings">ИМПОРТИРОВАТЬ НАСТРОЙКИ</string>
     <string name="uel_reset_databases">СБРОСИТЬ БАЗЫ ДАННЫХ</string>
@@ -440,6 +448,8 @@
     <string name="bolus_ok" comment="26 characters max for translation">болюс ОК</string>
     <string name="pump_paired" comment="26 characters max for translation">Помпа сопряжена</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Кнопка \"Обновить Insight\"</string>
+    <string name="a11y_min_button_description">снижение %1$s на %2$s</string>
+    <string name="a11y_plus_button_description">увеличение %1$s на %2$s</string>
     <plurals name="days">
         <item quantity="one">%1$d день</item>
         <item quantity="few">%1$d дня</item>

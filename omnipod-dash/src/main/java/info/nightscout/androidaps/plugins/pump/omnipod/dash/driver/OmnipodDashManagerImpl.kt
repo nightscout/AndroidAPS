@@ -17,9 +17,9 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
 import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import io.reactivex.Observable
-import io.reactivex.functions.Action
-import io.reactivex.functions.Consumer
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.functions.Action
+import io.reactivex.rxjava3.functions.Consumer
 import java.time.Duration
 import java.time.ZonedDateTime
 import java.util.*

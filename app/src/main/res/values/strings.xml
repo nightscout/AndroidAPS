@@ -80,6 +80,7 @@
     <string name="description_ns_client">Synchronizes your data with Nightscout</string>
     <string name="description_ama">State of the algorithm in 2017</string>
     <string name="description_smb">Most recent algorithm for advanced users</string>
+    <string name="description_smb_dynamic_isf">Most recent algorithm for advanced users with dynamic/automatic ISF</string>
     <string name="description_overview">Displays the current state of your loop and buttons for most common actions</string>
     <string name="description_persistent_notification">Shows an ongoing notification with a short overview of what your loop is doing</string>
     <string name="description_profile_local">Define a profile which is available offline.</string>
@@ -227,7 +228,6 @@
     <string name="end_user_license_agreement">End User License Agreement</string>
     <string name="end_user_license_agreement_text">MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
     <string name="end_user_license_agreement_i_understand">I UNDERSTAND AND AGREE</string>
-    <string name="save">Save</string>
     <string name="reloadprofile">Reload profile</string>
     <string name="smscommunicator">SMS Communicator</string>
     <string name="smscommunicator_allowednumbers">Allowed phone numbers</string>
@@ -313,7 +313,7 @@
     <string name="wear">Wear</string>
     <string name="resend_all_data">Resend All Data</string>
     <string name="open_settings_on_wear">Open Settings on Wear</string>
-    <string name="basal_rate">Basal rate:</string>
+    <string name="basal_rate">Basal rate</string>
     <string name="basalvaluebelowminimum">Basal value below minimum. Profile not set!</string>
     <string name="sms_actualbg">BG:</string>
     <string name="sms_lastbg">Last BG:</string>
@@ -334,6 +334,7 @@
     <string name="configbuilder_shortname">CONF</string>
     <string name="loop_shortname">LOOP</string>
     <string name="oaps_shortname">OAPS</string>
+    <string name="dynisf_shortname">DYNISF</string>
     <string name="localprofile_shortname">LP</string>
     <string name="overview_shortname">HOME</string>
     <string name="virtualpump_shortname">VPUMP</string>
@@ -528,13 +529,12 @@
     <string name="keep_screen_on_summary">Prevent Android to turn screen off. It will consume lot of energy when not plugged to power outlet.</string>
     <string name="sensitivity_warning">By turning on Autosense feature remember to enter all eated carbs. Otherwise carbs deviations will be identified wrong as sensitivity change !!</string>
     <string name="sensitivityweightedaverage">Sensitivity WeightedAverage</string>
-    <string name="mdtp_ok">OK</string>
-    <string name="mdtp_cancel">Cancel</string>
     <string name="notloadedplugins">Not all profiles loaded!</string>
     <string name="valuesnotstored">Values not stored!</string>
     <string name="ns_localbroadcasts">Enable broadcasts to other apps (like xDrip+). Do not enable if you have more than one instance of AAPS or NSClient installed!</string>
     <string name="ns_localbroadcasts_title">Enable local Broadcasts.</string>
     <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openaps_smb_dynamic_isf">Dynamic ISF</string>
     <string name="key_use_smb" translatable="false">use_smb</string>
     <string name="key_use_uam" translatable="false">use_uam</string>
     <string name="key_smb_enable_carbs_suggestions_threshold" translatable="false">smb_enable_carbs_suggestions_threshold</string>
@@ -616,6 +616,7 @@
     <string name="negativeonly">Negative only</string>
     <string name="overview_editquickwizard_usecob">COB calculation</string>
     <string name="overview_editquickwizard_usetemptarget">Temporary target calculation</string>
+    <string name="overview_editquickwizard_usepercentage">Percentage calculation</string>
     <string name="loopenabled">Loop enabled</string>
     <string name="apsselected">APS selected</string>
     <string name="nsclienthaswritepermission">NSClient has write permission</string>
@@ -822,6 +823,9 @@
     <string name="sensitivity_raises_target_summary">When sensitivity is detected, raise the target glucose</string>
     <string name="key_keep_screen_on" translatable="false">keep_screen_on</string>
     <string name="careportal_removestartedevents">Clean AndroidAPS started</string>
+    <string name="show_invalidated">Show invalidated</string>
+    <string name="hide_invalidated">Hide invalidated</string>
+    <string name="remove_items">Remove items</string>
     <string name="storedsettingsfound">Stored settings found</string>
     <string name="allow_hardware_pump_text">Attention: If you activate and connect to a hardware pump, AndroidAPS will copy the basal settings from the profile to the pump, overwriting the existing basal rate stored on the pump. Make sure you have the correct basal setting in AndroidAPS. If you are not sure or don\'t want to overwrite the basal settings on your pump, press cancel and repeat switching to the pump at a later time.</string>
     <string name="error_adding_treatment_title">Treatment data incomplete</string>
@@ -1006,8 +1010,8 @@
     <string name="low_mark_comment">Lower value of in range area (display only)</string>
     <string name="high_mark_comment">Higher value of in range area (display only)</string>
 
-    <string name="age">Age:</string>
-    <string name="weight_label">Weight:</string>
+    <string name="age">Age</string>
+    <string name="weight_label">Weight</string>
     <string name="id">ID:</string>
     <string name="submit">Submit</string>
     <string name="mostcommonprofile">Most common profile:</string>
@@ -1159,6 +1163,8 @@
     <string name="ns_receive_profile_switch_summary">Accept profile switches entered through NS or NSClient</string>
     <string name="ns_receive_offline_event">Receive APS offline events</string>
     <string name="ns_receive_offline_event_summary">Accept APS Offline events entered through NS or NSClient</string>
+    <string name="ns_receive_tbr_eb">Receive TBR and EB</string>
+    <string name="ns_receive_tbr_eb_summary">Accept TBR and EB entered through another instance</string>
     <string name="key_ns_receive_insulin" translatable="false">ns_receive_insulin</string>
     <string name="ns_receive_insulin">Receive insulin</string>
     <string name="ns_receive_insulin_summary">Accept insulin entered through NS or NSClient (it\'s not delivered, only calculated towards IOB)</string>
@@ -1166,6 +1172,7 @@
     <string name="ns_receive_carbs">Receive carbs</string>
     <string name="ns_receive_carbs_summary">Accept carbs entered through NS or NSClient</string>
     <string name="key_ns_receive_therapy_events" translatable="false">ns_receive_therapy_events</string>
+    <string name="key_ns_receive_tbr_eb" translatable="false">ns_receive_tbr_eb</string>
     <string name="ns_receive_therapy_events">Receive therapy events</string>
     <string name="ns_receive_therapy_events_summary">Accept therapy events (cannula, insulin, battery change etc) entered through NS or NSClient</string>
     <string name="key_ns_receive_cgm" translatable="false">ns_receive_cgm</string>
@@ -1217,5 +1224,55 @@
     <string name="a11y_insulin_label">insulin</string>
     <string name="a11y_blood_glucose">blood glucose</string>
     <string name="a11y_bg_outdated">outdated</string>
+    <string name="a11y_carb_reminder">set reminder</string>
+    <string name="a11y_add_new_profile">add new profile</string>
+    <string name="a11y_clone_profile">clone current profile</string>
+    <string name="a11y_delete_current_profile">delete current profile</string>
+    <string name="a11y_add_new_to_list">add new to list</string>
 
+    <!-- WEAR OS-->
+    <string name="wear_action_tempt_preset_error">Temptarget unknown preset: %1$s</string>
+    <string name="wear_action_tempt_cancel_message">Cancelling running Temp-Targets?</string>
+    <string name="wear_action_tempt_unit_error">Different units used on watch and phone!</string>
+    <string name="wear_action_tempt_zero_message">Zero-Temp-Target - cancelling running Temp-Targets?</string>
+    <string name="wear_action_tempt_min_bg_error">Min-BG out of range!</string>
+    <string name="wear_action_tempt_max_bg_error">Max-BG out of range!</string>
+    <string name="wear_action_tempt_manual_range_message">Temptarget:\nMin: %1$s\nMax: %2$s\nDuration: %3$s</string>
+    <string name="wear_action_tempt_manual_message">Temptarget:\nTarget: %1$s\nDuration: %2$s</string>
+    <string name="wear_action_tempt_preset_message">Temptarget:\Reason: %1$s\nTarget: %2$s\nDuration: %3$s</string>
+    <string name="quick_wizard_message">QuickWizard: %1$s\nInsulin: %2$.2fU\nCarbs: %3$dg</string>
+    <string name="wizard_result">Calc. Wizard:\nInsulin: %1$.2fU\nCarbs: %2$dg</string>
+    <string name="overview_editquickwizard_show_on_device">Show entry on device:</string>
+    <string name="quick_wizard_not_available">Selected quickwizard no longer available, please refresh your tile</string>
+    <string name="wizard_no_actual_bg">No recent BG to base calculation on!</string>
+    <string name="wizard_no_active_profile">No active profile set!</string>
+    <string name="wizard_no_cob">Unknown COB! BG reading missing or recent app restart?</string>
+    <string name="wizard_carbs_constraint">Carb constraint violation!</string>
+    <string name="wizard_explain_calc">Calc (IC: %2$.1f, ISF: %2$.1f) from:"</string>
+    <string name="wizard_explain_carbs">Carbs: %1$.2fU</string>
+    <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fU</string>
+    <string name="wizard_explain_bg">BG: %1$.2fU</string>
+    <string name="wizard_explain_basal_iob">Basal IOB: %1$.2fU</string>
+    <string name="wizard_explain_bolus_iob">Bolus IOB: %1$.2fU</string>
+    <string name="wizard_explain_superbolus">Superbolus: %1$.2fU</string>
+    <string name="wizard_explain_trend">15\' trend: %1$.2fU</string>
+    <string name="wizard_explain_percent">Percentage: %1$.2fU x %2$d%% ≈ %3$.2fU</string>
+    <string name="wizard_constraint_bolus_size">Insulin constraint violation!\nCannot deliver %1$.2fU</string>
+    <string name="wizard_explain_tt">TempT: %1$s</string>
+    <string name="wizard_explain_tt_to">%1$s to %2$s</string>
+    <string name="wizard_pump_not_available">No pump available!</string>
+    <string name="wear_unknown_action_string">Unknown action command:</string>
+    <string name="overview_editquickwizard_percentage">Percentage</string>
+    <string name="app_default">Application default</string>
+    <string name="select_profile">Select profile to edit</string>
+    <string name="refresh_from_nightscout">Refresh from Nightscout</string>
+    <string name="remove_selected_items">Remove selected items</string>
+    <string name="select_for_removal">Select for removal</string>
+    <string name="profile_changes">Profile changes</string>
+    <string name="tempt_targets">Temp Targets</string>
+    <string name="carbs_and_bolus">Carbs and bolus</string>
+    <string name="confirm_remove_multiple_items">Are you sure you want to remove %1$d items</string>
+    <string name="hide_loop">Hide loop</string>
+    <string name="show_loop">Show loop</string>
+    <string name="count_selected">%1$d selected</string>
 </resources>

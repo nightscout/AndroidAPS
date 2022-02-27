@@ -147,14 +147,12 @@
                 android:text="@string/invalid"
                 android:textColor="@android:color/holo_red_light" />
 
-            <TextView
-                android:id="@+id/remove"
+            <CheckBox
+                android:id="@+id/cb_remove"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:text="@string/remove_button"
-                android:textAlignment="viewEnd"
-                android:textColor="@android:color/holo_orange_light" />
+                android:contentDescription="@string/select_for_removal"
+                android:visibility="gone" />
 
         </LinearLayout>
 

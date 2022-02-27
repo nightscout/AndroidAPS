@@ -161,7 +161,6 @@
     <string name="end_user_license_agreement">Umowa licencyjna użytkownika końcowego</string>
     <string name="end_user_license_agreement_text">NIE MOŻE BY WYKORZYSTYWANY DO PODEJMOWANIA DECYZJI MEDYCZNYCH. NIE MA ŻADNEJ GWARANCJI NA PROGRAM, W ZAKRESIE DOZWOLONYM PRZEZ OBOWIĄZUJĄCE PRAWO. Z WYJĄTKIEM PRZYPADKÓW, GDY W INNY SPOSÓB PISMO OŚWIADCZENIA PRAW AUTORSKICH I / LUB INNYCH STRON, PRZEDSTAWIAĆ PROGRAM \"W STANIE TAKIM, W JAKIM SIĘ ZNAJDUJE\" BEZ JAKIEJKOLWIEK GWARANCJI, WYRAŹNEJ LUB DOMNIEMANEJ, W TYM MIĘDZY INNYMI DOMNIEMANYCH GWARANCJI PRZYDATNOŚCI HANDLOWEJ I PRZYDATNOŚCI DO OKREŚLONEGO CELU. CAŁKOWITE RYZYKO ZWIĄZANE Z JAKOŚCIĄ I WYNIKIEM PROGRAMU JEST PO PAŃSTWA STRONIE. W PRZYPADKU USZKODZENIA PROGRAMU UŻYTKOWNIK PONOSI KOSZT CAŁEGO NIEZBĘDNEGO SERWISU, NAPRAWY LUB POPRAWEK. W PRZYPADKU NIEPOROZUMIEŃ ZASTOSOWANIE PRAWNE MA UMOWA W ANGIELSKIEJ WERSJI JĘZYKOWEJ!!!</string>
     <string name="end_user_license_agreement_i_understand">ROZUMIEM I WYRAŻAM ZGODĘ</string>
-    <string name="save">ZACHOWAJ</string>
     <string name="reloadprofile">Załaduj profil ponownie</string>
     <string name="smscommunicator">Komunikator SMS</string>
     <string name="smscommunicator_allowednumbers">Dozwolone numery telefonów</string>
@@ -246,7 +245,6 @@
     <string name="wear">Oprogramowanie Wear (Smartwatch)</string>
     <string name="resend_all_data">Prześlij ponownie wszystkie dane</string>
     <string name="open_settings_on_wear">Otwórz ustawienia dla Wear</string>
-    <string name="basal_rate">Dawka bazowa:</string>
     <string name="basalvaluebelowminimum">Wartość bazy poniżej minimum. Nie ustawiono profilu!</string>
     <string name="sms_actualbg">BG:</string>
     <string name="sms_lastbg">Ostatnia BG:</string>
@@ -427,8 +425,6 @@
     <string name="keep_screen_on_summary">Nie pozwól, aby system Android wyłączał ekran. Zwiększy to zużycie energii, gdy zasilanie sieciowe jest wyłączone.</string>
     <string name="sensitivity_warning">Przy włączonej funkcji Autosens pamiętaj, żeby wprowadzać wszystkie węglowodany. W innym wypadku odchylenia węglowodanów będą błędnie identyfikowane jako zmiany wrażliwości !!</string>
     <string name="sensitivityweightedaverage">Wrażliwość ŚredniaWażona</string>
-    <string name="mdtp_ok">OK</string>
-    <string name="mdtp_cancel">Anuluj</string>
     <string name="notloadedplugins">Nie wszystkie profile zostały załadowane!</string>
     <string name="valuesnotstored">Wartości nie są przechowywane!</string>
     <string name="ns_localbroadcasts">Włącz rozgłaszanie do innych aplikacji (takich jak xDrip+). Nie należy włączać, jeśli zainstalowana jest więcej niż jedna instancja AAPS lub NSClient!</string>
@@ -757,8 +753,6 @@
     <string name="profilenamecontainsdot">Nazwa profilu zawiera kropki.\nTo nie jest obsługiwane przez NS.\nProfil nie zostanie przesyłany do NS.</string>
     <string name="low_mark_comment">Dolna wartość zakresu docelowego (tylko do wyświetlania)</string>
     <string name="high_mark_comment">Górna wartość zakresu docelowego (tylko do wyświetlania)</string>
-    <string name="age">Czas:</string>
-    <string name="weight_label">Waga:</string>
     <string name="id">ID:</string>
     <string name="submit">Wyślij</string>
     <string name="mostcommonprofile">Najczęściej używany profil:</string>
@@ -904,4 +898,5 @@
     <string name="identification">Identyfikator (email, nick na FB lub Discordzie itp.)</string>
     <string name="identification_not_set">Identyfikator nie jest ustawiony w trybie dev</string>
     <string name="not_available_full">Niedostępne</string>
+    <!-- WEAR OS-->
 </resources>

@@ -54,19 +54,15 @@
     <string name="pref_ring_history">История</string>
     <string name="pref_light_ring_history">Олекотена история</string>
     <string name="pref_animations">Анимации</string>
-    <string name="pref_wizard_in_menu">Калкулатор в менюто</string>
     <string name="pref_prime_in_menu">Пълнене в менюто</string>
     <string name="pref_single_target">Единична цел</string>
-    <string name="pref_wizard_percentage">Калкулатор с %</string>
     <string name="pref_complication_tap_action">Допълнителни действия при почукване</string>
     <string name="pref_unicode_in_complications">Unicode кодиране</string>
     <string name="pref_version">Версия:</string>
     <string name="pref_moreWatchfaceSettings">Настройки на Watchface</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Погледнете в конфигурацията, моля.</string>
     <string name="menu_tempt">Врем цел</string>
-    <string name="menu_wizard">Калкулатор</string>
     <string name="menu_bolus">Болус</string>
-    <string name="menu_ecarb">уд. въгл.</string>
     <string name="menu_settings">Настройки</string>
     <string name="menu_status">Статус</string>
     <string name="menu_resync">Ре-синхр.</string>
@@ -74,22 +70,12 @@
     <string name="menu_none">Без</string>
     <string name="menu_default">Стандартен</string>
     <string name="menu_menu">Меню</string>
-    <string name="action_duration">продължителност</string>
-    <string name="action_target" comment="In temp target menu, single target value">цел</string>
-    <string name="action_low" comment="In temp target menu, lower value from range">ниско</string>
-    <string name="action_high" comment="In temp target menu, higher value from range">висока</string>
-    <string name="action_carbs">вълехидрати</string>
-    <string name="action_percentage">% от профила</string>
-    <string name="action_start_min">старт [min]</string>
-    <string name="action_duration_h">прод [h]</string>
-    <string name="action_insulin">инсулин</string>
     <string name="action_preset_1">Шаблон 1</string>
     <string name="action_preset_2">Шаблон 2</string>
     <string name="action_preset_3">Шаблон 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Неограничено кол</string>
     <string name="action_confirm">ПОТВЪРДИ</string>
     <string name="action_timeshift">отместване</string>
-    <string name="action_bolus">болус</string>
     <string name="bolus_progress">Болус прогрес</string>
     <string name="press_to_cancel">натиснете за отмяна</string>
     <string name="cancel_bolus">СПРИ БОЛУС</string>
