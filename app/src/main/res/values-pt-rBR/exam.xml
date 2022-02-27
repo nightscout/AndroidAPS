@@ -139,6 +139,12 @@
     <string name="iob_which">Marque todas as respostas corretas.</string>
     <string name="iob_value">O valor de IA é afetado por basais temporárias efetuadas.</string>
     <string name="iob_hightemp">Um basal alto temporário não será efetuado quando sua glicose estiver abaixo do alvo.</string>
+    <string name="iob_negiob">Insulina Ativa (IA) negativa por um período substancial na ausência de exercícios, sugere que seu perfil é muito agressivo e menos insulina deve ser considerada nas suas configurações.</string>
+    <string name="iob_posiob">Insulina Ativa (IA) positiva durante um período substancial sugere resistência à insulina ou refeições não anunciadas.</string>
+    <string name="breadgrams_label">Tópico: Entrada de carboidratos e bólus</string>
+    <string name="breadgrams_grams">Apenas a unidade \"gramas\" deve ser utilizada para estimar e gravar os carboidratos consumidos.</string>
+    <string name="breadgrams_exchange">Carboidratos consumidos podem ser gravados usando um sistema de conversão apropriada (por exemplo, câmbio de \"CHO\" DAFNE ou Unidades de Pão Europeas\").</string>
+    <string name="breadgrams_decay">O AndroidAPS usa um modelo dinâmico para estimar a \"degradação\" de carboidratos e calcular o Carboidratos Ativos (CA).</string>
     <string name="breadgrams_calc">Se os níveis de glicose no sangue estiverem fora dos limites aceitáveis (muito baixo ou muito alto) a calculadora de bolus pode ser usada para fornecer sugestões para correções de carboidrato ou insulina.</string>
     <string name="breadgrams_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
     <string name="extendedcarbs_label">Tópico: e-Carbs</string>
