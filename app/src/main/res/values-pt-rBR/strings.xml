@@ -680,6 +680,7 @@
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">Receber valores de glicemia do \'Build Your Own Dexcom App\'.</string>
+    <string name="cobvsiob">CA vs IA</string>
     <string name="bolusconstraintappliedwarn">Restrição de bólus aplicada: %1$.2f U para %2$.2f U</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Absorção lenta de hidratos detectada: %2$d%% do tempo. Verifique o seu cálculo. COB pode estar sobreestimado, assim mais insulina pode ser dada !!!</font>]]></string>
     <string name="partialboluswizard">Entregue esta parte do resultado do assistente de bólus [%]</string>
@@ -689,6 +690,8 @@
     <string name="smscommunicator_messagebody">Corpo da mensagem inválido</string>
     <string name="format_bg_isf">%1$s FSI: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="format_percent">%1$d%%</string>
+    <string name="unit_minute_short">min</string>
     <string name="profile_name">Nome do Perfil:</string>
     <string name="selected_profile">Seleccionado:</string>
     <string name="unitsnosemicolon">Unidades</string>
@@ -701,18 +704,25 @@
     <string name="ic_short">IC</string>
     <string name="isf_short">FSI</string>
     <string name="target_short">ALV</string>
+    <string name="clone_label">Clonar</string>
     <string name="saveorresetchangesfirst">Guardar ou repor as alterações atuais primeiro</string>
     <string name="deletecurrentprofile">Eliminar perfil atual?</string>
+    <string name="copytolocalprofile">Criar novo perfil local a partir deste perfil?</string>
     <string name="profilenamecontainsdot">Nome do perfil contém pontos.\nIsso não é suportado pelo NS.\nPerfil não foi enviado para o NS.</string>
     <string name="low_mark_comment">Valor mais baixo da área de intervalo (apenas exibição)</string>
     <string name="high_mark_comment">Valor mais alto da área de intervalo (apenas exibição)</string>
+    <string name="age">Idade</string>
+    <string name="weight_label">Peso</string>
+    <string name="id">ID:</string>
     <string name="submit">Enviar</string>
     <string name="mostcommonprofile">Perfil mais comum:</string>
     <string name="survey_comment">Nota: Apenas os dados visíveis neste ecrã serão enviados anonimamente. O ID é atribuído a esta instalação do AndroidAPS. Você pode enviar dados novamente se o perfil principal for alterado, mas deixá-lo rodar pelo menos uma semana para tornar o resultado visível no intervalo de tempo. Sua ajuda é apreciada.</string>
     <string name="invalidage">Entrada de idade inválida</string>
     <string name="invalidweight">Entrada de peso inválida</string>
+    <string name="invalidpct">Entrada % inválida</string>
     <string name="tirformat"><![CDATA[<b>%1$s:</b> Hipo: <b>%2$02d%%</b> Dentro: <b>%3$02d%%</b> Hiper: <b>%4$02d%%</b>]]></string>
     <string name="average">Média</string>
+    <string name="tir">TIR</string>
     <string name="activitymonitor">Monitor de atividade</string>
     <string name="doyouwantresetstats">Quer reiniciar as estatísticas de atividade?</string>
     <string name="statistics">Estatísticas</string>
@@ -721,6 +731,7 @@
     <string name="randombg_short">GLIC</string>
     <string name="tools">Ferramentas</string>
     <string name="show_calculation">Mostrar Localização</string>
+    <string name="show_removed">Mostrar removido(a)s</string>
     <string name="clearqueueconfirm">Limpar fila? Todos os dados na fila serão perdidos!</string>
     <string name="ebstopsloop">O uso do Bólus Estendido irá parar o modo Closed Loop no tempo do bólus estendido. Quer realmente isso?</string>
     <string name="closed_loop_disabled_with_eb">Closed Loop desabilitado por causa da execução do Bólus Estendido</string>
@@ -731,12 +742,20 @@
     <string name="loop_tbrrequest_time_label">Hora de solicitação Basal Temp</string>
     <string name="loop_tbrexecution_time_label">Hora de execução Basal Temp</string>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">do aplicativo Autenticador para: %1$s seguido por PIN</string>
+    <string name="smscommunicator_otp_pin">PIN adicional obrigatório no fim do token</string>
     <string name="smscommunicator_otp_pin_summary">Dígitos adicionais que devem ser memorizados e colados no final de cada Uma-Password-Única que seja gerada</string>
     <string name="smscomunicator_tab_otp_label">Configuração do Autenticador</string>
+    <string name="smscommunicator_code_verify_label">Código para verificar:</string>
+    <string name="smscommunicator_code_verify_hint">CÓDIGO + PIN</string>
+    <string name="smscommunicator_code_verify_info">O código de verificação consiste em 6 dígitos exibidos pelo app Autenticador (conhecido como OTP) seguido por 3 ou mais dígitos do PIN obrigatório.</string>
     <string name="smscommunicator_otp_reset_btn">Repor Autenticadores</string>
     <string name="smscommunicator_otp_reset_title">Repor Chave Autenticador</string>
     <string name="smscommunicator_otp_reset_prompt">Tem certeza de redefinir chave Authenticador? Ele tornará todos os Authenticators configurados atualmente como inválidos, e precisará de os configurar novamente.</string>
     <string name="smscommunicator_otp_reset_successful">Nova Chave do Autenticador foi gerada! Por favor, use o QRCode atualizado para os autenticadores.</string>
+    <string name="smscommunicator_otp_export_title">Exportando senha OTP</string>
+    <string name="smscommunicator_otp_export_prompt">Tem certeza de que deseja copiar a senha OTP para a área de transferência?\n\nGeralmente, isso somente é necessário se o aplicativo autenticador apresenta problemas para escanear o QRCode, se você quer inserir a senha manualmente ou se você deseja configurar um token físico (hardware) de OTP usando um aplicativo dedicado.</string>
+    <string name="smscommunicator_otp_export_successful">Senha OTP (no formato Base32) exportada e copiada para a área de transferência. Cole-a em um aplicativo autenticador ou gravador de dispositivo OTP físico!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Instalar Autenticador</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Pesquise o código para configurar os códigos OTP do AndroidAPS</string>
     <string name="smscommunicator_otp_step3_test_header">3. Teste Uma-Password-Única</string>
@@ -749,10 +768,42 @@
     <string name="overview_show_absinsulin">Insulina absoluta</string>
     <string name="master_password_summary">Password Mestre é usada para encriptação da cópia de segurança e substituir segurança na aplicação. Lembre-se dela ou guarde-a em um lugar seguro.</string>
     <string name="current_master_password">Senha mestra atual</string>
+    <string name="statuslights">Luzes de estado</string>
     <string name="statuslights_copy_ns">Copiar definições do NS</string>
+    <string name="copyexistingvalues">Copiar configurações do NS (se existirem)?</string>
     <string name="classic_description">Tema original</string>
+    <string name="lowres_description">Design de baixa resolução</string>
     <string name="buttonson_description">Botões são sempre exibidos na parte inferior da tela</string>
     <string name="largedisplay_description">Mostrador Grande</string>
     <string name="skin">Tema</string>
+    <string name="comapareprofile">Comparar perfis</string>
+    <string name="nav_profilehelper">Assistente de perfil</string>
+    <string name="motoldefaultprofile">Perfil padrão</string>
+    <string name="currentprofile">Perfil atual</string>
+    <string name="availableprofile">Perfis disponíveis</string>
+    <string name="profiletype">Tipo de perfil</string>
+    <string name="formatwithtdd">Idade: %1$.0f TDD: %2$.0f U</string>
+    <string name="formatwittddandpct">Idade: %1$.0f TDD: %2$.0f U %3$d%%</string>
+    <string name="formatwithweight">Idade: %1$.0f Peso: %2$.0f kg</string>
+    <string name="basalpctfromtdd_label">% da basal</string>
+    <string name="dpvdefaultprofile">Perfil padrão DPV</string>
+    <string name="setupwizard_pump_riley_link_status">Estado do RileyLink:</string>
+    <string name="filter">Filtros</string>
+    <string name="copytolocalprofile_invalid">Não foi possível criar o perfil. Perfil inválido.</string>
+    <string name="cta_dont_kill_my_app_info">Não encerre meu aplicativo?</string>
+    <string name="smscommunicator_report_pump_ureachable_summary">Enviar SMS se um evento de bomba inacessível for identificado</string>
+    <string name="smscommunicator_pump_ureachable">Reportar bomba inacessível</string>
+    <string name="advisoralarm">Disparar alarme quando for a hora de comer</string>
+    <string name="alarminxmin">Disparar alarme em %1$d min</string>
+    <string name="bolusadvisor">Assistente de bolus</string>
+    <string name="bolusadvisormessage">Sua glicemia está alta. Em vez de comer agora, é recomendado esperar por uma glicemia melhor. Quer fazer um bolus de correção agora e ser lembrado de quando for hora de comer? Neste caso, nenhum carboidrato será registrado e você deverá usar o assistente novamente quando lembrarmos você.</string>
+    <string name="enablebolusadvisor">Ativar o assistente de bolus</string>
+    <string name="time_to_eat">Hora de comer!\nAbra o assistente de bolus e faça o cálculo novamente.</string>
+    <string name="timetoeat">Hora de comer</string>
+    <string name="bolusreminder">Lembrete de bolus</string>
+    <string name="enablebolusreminder">Ativar lembrete de bolus</string>
+    <string name="enablebolusreminder_summary">Usar lembrete para adiar o bolus com o assistente
+        (\"pós-bolus\")</string>
+    <string name="time_to_bolus">Hora do bolus!\nAbra o assistente de bolus e faça o cálculo novamente.</string>
     <!-- WEAR OS-->
 </resources>
