@@ -55,6 +55,7 @@ class ScrollingActivity : MainActivity(), View.OnClickListener {
         prepareThemeData()
         actualTheme = sp.getInt("theme", THEME_DARKSIDE)
         val themeView = findViewById<ThemeView>(R.id.theme_selected)
+        if ( mThemeList.getOrNull(actualTheme) == null ) sp.putInt("theme", THEME_DARKSIDE)
         themeView.setTheme(mThemeList[actualTheme], actualTheme)
         setBackground()
     }
