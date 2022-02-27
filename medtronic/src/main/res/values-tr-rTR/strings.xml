@@ -7,7 +7,7 @@
     <string name="medtronic_pump_type">Pompa Tipi</string>
     <string name="medtronic_pump_frequency">Pompa Frekansı</string>
     <string name="medtronic_pump_bolus_delay">Bolus göndermeden önceki bekleme süresi (sn)</string>
-    <string name="medtronic_pump_max_bolus">Pompadaki Maks Bolus (U)</string>
+    <string name="medtronic_pump_max_bolus">Pompadaki Maks Bolus (Ü)</string>
     <string name="medtronic_pump_max_basal">Pompadaki Maks Bazal (Ü/s)</string>
     <string name="medtronic_pump_encoding">Medtronic Kodlama</string>
     <string name="medtronic_pump_frequency_us_ca">ABD &amp; Kanada (916 MHz)</string>

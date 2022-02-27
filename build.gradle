@@ -3,11 +3,11 @@
 buildscript {
     ext {
         kotlin_version = '1.6.10'
-        core_version = '1.6.0'
-        rxjava_version = '2.2.21'
-        rxandroid_version = '2.1.1'
-        rxkotlin_version = '2.4.0'
-        room_version = '2.3.0'
+        core_version = '1.7.0'
+        rxjava_version = '3.1.3'
+        rxandroid_version = '3.0.0'
+        rxkotlin_version = '3.0.1'
+        room_version = '2.4.2'
         lifecycle_version = '2.3.1'
         dagger_version = '2.41'
         coroutines_version = '1.4.1'
@@ -15,10 +15,10 @@ buildscript {
         fragmentktx_version = '1.3.6'
         ormLite_version = '4.46'
         nav_version = '2.3.5'
-        appcompat_version = '1.3.1'
+        appcompat_version = '1.4.1'
         material_version = '1.4.0'
         constraintlayout_version = '2.1.0'
-        preferencektx_version = '1.1.1'
+        preferencektx_version = '1.2.0'
         commonslang3_version = '3.11'
         commonscodec_version = '1.15'
         jodatime_version = '2.10.13'
@@ -30,7 +30,7 @@ buildscript {
         dexmaker_version = "1.2"
         retrofit2_version = '2.9.0'
         okhttp3_version = '4.9.0'
-        byteBuddy_version = '1.12.3'
+        byteBuddy_version = '1.12.8'
 
         androidx_junit_version = '1.1.2'
         androidx_rules_version = '1.4.0'
@@ -41,7 +41,7 @@ buildscript {
         maven { url "https://plugins.gradle.org/m2/" } // jacoco 0.2
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.1.0'
+        classpath 'com.android.tools.build:gradle:7.1.2'
         classpath 'com.google.gms:google-services:4.3.10'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.8.1'
 

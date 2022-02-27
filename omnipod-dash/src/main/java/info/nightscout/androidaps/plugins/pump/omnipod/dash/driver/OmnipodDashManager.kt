@@ -7,7 +7,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definitio
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BasalProgram
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BeepType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.ResponseType
-import io.reactivex.Observable
+import io.reactivex.rxjava3.core.Observable
 import java.util.*
 import java.util.concurrent.CountDownLatch
 

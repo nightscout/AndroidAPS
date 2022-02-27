@@ -25,6 +25,7 @@
     <string name="description_ns_client">Sincronizza i tuoi dati con Nightscout</string>
     <string name="description_ama">Stato dell\'algoritmo nel 2017</string>
     <string name="description_smb">Algoritmo più recente per utenti avanzati</string>
+    <string name="description_smb_dynamic_isf">Algoritmo più recente per utenti avanzati con ISF dinamico/automatico</string>
     <string name="description_overview">Visualizza lo stato corrente del tuo loop e i tasti per le azioni più comuni</string>
     <string name="description_persistent_notification">Mostra una notifica persistente con una breve panoramica di ciò che sta facendo il tuo loop</string>
     <string name="description_profile_local">Definisci un profilo che è disponibile offline.</string>
@@ -161,7 +162,6 @@
     <string name="end_user_license_agreement">Contratto di licenza per l\'utente</string>
     <string name="end_user_license_agreement_text">NON DEVE ESSERE USATO PER PRENDERE DECISIONI MEDICHE. NON ESISTE ALCUNA GARANZIA PER IL PROGRAMMA, NELLA MISURA CONSENTITA DALLA LEGGE APPLICABILE. TRANNE QUANDO DIVERSAMENTE INDICATO PER ISCRITTO, I DETENTORI DEL COPYRIGHT E/O ALTRE PARTI FORNISCONO IL PROGRAMMA \"COSÌ COM\'È\" SENZA GARANZIA DI ALCUN TIPO, ESPLICITA O IMPLICITA, INCLUSE, MA NON LIMITATAMENTE A, GARANZIE IMPLICITE DI COMMERCIABILITÀ E IDONEITÀ PER UN SCOPO PARTICOLARE. L\'INTERO RISCHIO RIGUARDO LA QUALITÀ E LE PRESTAZIONI DEL PROGRAMMA È TUO. SE IL PROGRAMMA DOVESSE RISULTARE DIFETTOSO, TI ASSUMI IL COSTO DI TUTTE LE NECESSARIE MANUTENZIONI, RIPARAZIONI O CORREZIONI.</string>
     <string name="end_user_license_agreement_i_understand">COMPRENDO E ACCETTO</string>
-    <string name="save">Salva</string>
     <string name="reloadprofile">Ricarica profilo</string>
     <string name="smscommunicator">Comunicazioni SMS</string>
     <string name="smscommunicator_allowednumbers">Numeri di telefono consentiti</string>
@@ -246,7 +246,7 @@
     <string name="wear">Smartwatch</string>
     <string name="resend_all_data">Invia di nuovo tutti i dati</string>
     <string name="open_settings_on_wear">Apri impostazioni sullo smartwatch</string>
-    <string name="basal_rate">Velocità basale:</string>
+    <string name="basal_rate">Velocità basale</string>
     <string name="basalvaluebelowminimum">Valore basale inferiore al minimo. Profilo non impostato!</string>
     <string name="sms_actualbg">BG:</string>
     <string name="sms_lastbg">Ultimo BG:</string>
@@ -427,13 +427,12 @@
     <string name="keep_screen_on_summary">Evita che Android spenga lo schermo. Consumerà molta energia quando non è collegato alla presa di corrente.</string>
     <string name="sensitivity_warning">Attivando la funzione Autosense, ricorda di inserire tutti i carboidrati assunti. Altrimenti le deviazioni di glicemia dovute ai carboidrati saranno identificate erroneamente come variazione di sensibilità !!</string>
     <string name="sensitivityweightedaverage">Sensibilità WeightedAverage</string>
-    <string name="mdtp_ok">OK</string>
-    <string name="mdtp_cancel">Annulla</string>
     <string name="notloadedplugins">Non tutti i profili caricati!</string>
     <string name="valuesnotstored">Valori non memorizzati!</string>
     <string name="ns_localbroadcasts">Abilita trasmissioni ad altre app (come xDrip+). Non abilitare se hai installato più di un\'istanza di AAPS o NSClient!</string>
     <string name="ns_localbroadcasts_title">Abilita trasmissioni locali</string>
     <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openaps_smb_dynamic_isf">ISF Dinamico</string>
     <string name="enableuam">Abilita UAM</string>
     <string name="enablesmb">Abilita SMB</string>
     <string name="enablesmb_summary">Usa super-micro-boli al posto della basale temporanea per un\'azione più veloce</string>
@@ -662,6 +661,8 @@
     <string name="sensitivity_raises_target_title">La sensibilità aumenta il target</string>
     <string name="sensitivity_raises_target_summary">Quando viene rilevata sensibilità, aumentare la glicemia target</string>
     <string name="careportal_removestartedevents">Rimuovi gli eventi \"AndroidAPS avviato\"</string>
+    <string name="show_invalidated">Mostra invalidato</string>
+    <string name="hide_invalidated">Nascondi invalidato</string>
     <string name="storedsettingsfound">Trovate impostazioni memorizzate</string>
     <string name="allow_hardware_pump_text">Attenzione: se attivi e connetti un micro, AndroidAPS copierà le impostazioni della basale dal profilo al micro, sovrascrivendo la velocità basale esistente memorizzata sul micro. Assicurati di avere la giusta impostazione della basale in AndroidAPS. Se non sei sicuro o non vuoi sovrascrivere le impostazioni della basale sul micro, premi annulla e ripeti il processo in un altro momento.</string>
     <string name="error_adding_treatment_title">Dati trattamento incompleti</string>
@@ -757,8 +758,8 @@
     <string name="profilenamecontainsdot">Il nome profilo contiene dei punti.\nQuesto non è supportato da NS.\nIl profilo non viene caricato in NS.</string>
     <string name="low_mark_comment">Valore più basso per l\'intervallo di visualizzazione dell\'area \"in range\"</string>
     <string name="high_mark_comment">Valore più alto per l\'intervallo di visualizzazione dell\'area \"in range\"</string>
-    <string name="age">Età:</string>
-    <string name="weight_label">Peso:</string>
+    <string name="age">Età</string>
+    <string name="weight_label">Peso</string>
     <string name="id">ID:</string>
     <string name="submit">Invia</string>
     <string name="mostcommonprofile">Profilo più comune:</string>
@@ -904,5 +905,34 @@
     <string name="bg_too_close">BG troppo vicino:\n%1$s\n%2$s</string>
     <string name="identification">Identificazione (email, nick Discord o FB, etc)</string>
     <string name="identification_not_set">Identificazione non impostata in modalità dev</string>
+    <string name="a11y_dialog">dialogo</string>
+    <string name="a11y_current_bg">glicemia corrente</string>
     <string name="not_available_full">Non disponibile</string>
+    <string name="a11y_high">alto</string>
+    <string name="a11y_inrange">in range</string>
+    <string name="a11y_low">basso</string>
+    <string name="a11y_arrow_flat">stabile</string>
+    <string name="a11y_arrow_unknown">sconosciuto</string>
+    <string name="a11y_graph">grafico</string>
+    <string name="a11y_bg_quality">qualità glicemia</string>
+    <string name="a11y_bg_quality_recalculated">ricalcolato</string>
+    <string name="a11y_insulin_label">insulina</string>
+    <string name="a11y_blood_glucose">glicemia</string>
+    <!-- WEAR OS-->
+    <string name="wizard_explain_carbs">CHO: %1$.2fU</string>
+    <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fU</string>
+    <string name="wizard_explain_bg">BG: %1$.2fU</string>
+    <string name="wizard_explain_basal_iob">IOB da basale: %1$.2fU</string>
+    <string name="wizard_explain_bolus_iob">IOB da bolo: %1$.2fU</string>
+    <string name="wizard_explain_superbolus">Superbolo: %1$.2fU</string>
+    <string name="wizard_explain_percent">Percentuale: %1$.2fU x %2$d%% ≈ %3$.2fU</string>
+    <string name="wizard_explain_tt">TempT: %1$s</string>
+    <string name="wizard_explain_tt_to">%1$s a %2$s</string>
+    <string name="wizard_pump_not_available">Nessun micro disponibile!</string>
+    <string name="overview_editquickwizard_percentage">Percentuale</string>
+    <string name="remove_selected_items">Rimuovi elementi selezionati</string>
+    <string name="select_for_removal">Seleziona per la rimozione</string>
+    <string name="profile_changes">Modifiche al profilo</string>
+    <string name="hide_loop">Nascondi loop</string>
+    <string name="show_loop">Mostra loop</string>
 </resources>

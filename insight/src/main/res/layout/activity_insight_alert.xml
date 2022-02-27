@@ -48,17 +48,17 @@
             android:layout_height="match_parent"
             android:layout_weight="1" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/mute"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            style="@style/OkCancelButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="muteClicked"
             android:text="@string/mute_alert" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/confirm"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            style="@style/OkCancelButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="confirmClicked"

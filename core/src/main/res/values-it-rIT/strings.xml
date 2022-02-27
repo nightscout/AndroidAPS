@@ -4,6 +4,7 @@
     <!--    General-->
     <string name="refresh">Aggiorna</string>
     <string name="error">Errore</string>
+    <string name="save">Salva</string>
     <string name="not_set_short">Non impostato</string>
     <string name="failedupdatebasalprofile">Impossibile aggiornare il profilo basale</string>
     <string name="profile_set_ok">Profilo basale aggiornato nel micro</string>
@@ -48,6 +49,7 @@
     <string name="isf_label">ISF</string>
     <string name="basal_label">Basale</string>
     <string name="target_label">Target</string>
+    <string name="basal_long_label">Velocità basale</string>
     <string name="initializing">Inizializzazione...</string>
     <string name="serialnumber">Numero seriale</string>
     <string name="battery_label">Batteria</string>

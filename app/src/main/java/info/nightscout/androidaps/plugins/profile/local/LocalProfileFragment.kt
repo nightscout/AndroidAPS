@@ -24,16 +24,18 @@ import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
-import info.nightscout.androidaps.utils.*
+import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.DecimalFormatter
+import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.androidaps.utils.ui.SpinnerHelper
 import info.nightscout.androidaps.utils.ui.TimeListEdit
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.logging.AAPSLogger
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import javax.inject.Inject
@@ -54,12 +56,12 @@ class LocalProfileFragment : DaggerFragment() {
     private var disposable: CompositeDisposable = CompositeDisposable()
 
     private var basalView: TimeListEdit? = null
-    private var spinner: SpinnerHelper? = null
+//    private var spinner: SpinnerHelper? = null
 
     private val save = Runnable {
         doEdit()
         basalView?.updateLabel(rh.gs(R.string.basal_label) + ": " + sumLabel())
-        localProfilePlugin.profile?.getSpecificProfile(spinner?.selectedItem.toString())?.let {
+        localProfilePlugin.getEditedProfile()?.let {
             binding.basalGraph.show(ProfileSealed.Pure(it))
             binding.icGraph.show(ProfileSealed.Pure(it))
             binding.isfGraph.show(ProfileSealed.Pure(it))
@@ -79,7 +81,7 @@ class LocalProfileFragment : DaggerFragment() {
     }
 
     private fun sumLabel(): String {
-        val profile = localProfilePlugin.getEditProfile()
+        val profile = localProfilePlugin.getEditedProfile()
         val sum = profile?.let { ProfileSealed.Pure(profile).baseBasalSum() } ?: 0.0
         return " ∑" + DecimalFormatter.to2Decimal(sum) + rh.gs(R.string.insulin_unit_shortname)
     }
@@ -135,56 +137,115 @@ class LocalProfileFragment : DaggerFragment() {
         binding.name.addTextChangedListener(textWatch)
         binding.dia.setParams(currentProfile.dia, hardLimits.minDia(), hardLimits.maxDia(), 0.1, DecimalFormat("0.0"), false, null, textWatch)
         binding.dia.tag = "LP_DIA"
-        TimeListEdit(context, aapsLogger, dateUtil, view, R.id.ic_holder, "IC", rh.gs(R.string.ic_long_label), currentProfile.ic, null, doubleArrayOf(hardLimits.minIC(), hardLimits.maxIC()), null, 0.1, DecimalFormat ("0.0"), save)
-        basalView = TimeListEdit(context, aapsLogger, dateUtil, view, R.id.basal_holder, "BASAL", rh.gs(R.string.basal_long_label) + ": " + sumLabel(), currentProfile.basal, null, doubleArrayOf(pumpDescription.basalMinimumRate, pumpDescription.basalMaximumRate), null, 0.01, DecimalFormat("0.00"), save)
+        TimeListEdit(
+            context,
+            aapsLogger,
+            dateUtil,
+            view,
+            R.id.ic_holder,
+            "IC",
+            rh.gs(R.string.ic_long_label),
+            currentProfile.ic,
+            null,
+            doubleArrayOf(hardLimits.minIC(), hardLimits.maxIC()),
+            null,
+            0.1,
+            DecimalFormat("0.0"),
+            save
+        )
+        basalView =
+            TimeListEdit(
+                context,
+                aapsLogger,
+                dateUtil,
+                view,
+                R.id.basal_holder,
+                "BASAL",
+                rh.gs(R.string.basal_long_label) + ": " + sumLabel(),
+                currentProfile.basal,
+                null,
+                doubleArrayOf(pumpDescription.basalMinimumRate, pumpDescription.basalMaximumRate),
+                null,
+                0.01,
+                DecimalFormat("0.00"),
+                save
+            )
         if (units == Constants.MGDL) {
             val isfRange = doubleArrayOf(HardLimits.MIN_ISF, HardLimits.MAX_ISF)
-            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.isf_holder, "ISF", rh.gs(R.string.isf_long_label), currentProfile.isf, null, isfRange , null, 1.0, DecimalFormat("0"), save)
-            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.target_holder, "TARGET", rh.gs(R.string.target_long_label), currentProfile.targetLow, currentProfile.targetHigh, HardLimits.VERY_HARD_LIMIT_MIN_BG, HardLimits.VERY_HARD_LIMIT_TARGET_BG, 1.0, DecimalFormat("0"), save)
+            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.isf_holder, "ISF", rh.gs(R.string.isf_long_label), currentProfile.isf, null, isfRange, null, 1.0, DecimalFormat("0"), save)
+            TimeListEdit(
+                context,
+                aapsLogger,
+                dateUtil,
+                view,
+                R.id.target_holder,
+                "TARGET",
+                rh.gs(R.string.target_long_label),
+                currentProfile.targetLow,
+                currentProfile.targetHigh,
+                HardLimits.VERY_HARD_LIMIT_MIN_BG,
+                HardLimits.VERY_HARD_LIMIT_TARGET_BG,
+                1.0,
+                DecimalFormat("0"),
+                save
+            )
         } else {
-            val isfRange = doubleArrayOf(roundUp(Profile.fromMgdlToUnits(HardLimits.MIN_ISF, GlucoseUnit.MMOL)), 
-                roundDown(Profile.fromMgdlToUnits(HardLimits.MAX_ISF, GlucoseUnit.MMOL)))
-            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.isf_holder, "ISF", rh.gs(R.string.isf_long_label), currentProfile.isf, null,isfRange , null, 0.1, DecimalFormat("0.0"), save)
-            val range1 = doubleArrayOf(roundUp(Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_MIN_BG[0], GlucoseUnit.MMOL)),
-                roundDown(Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_MIN_BG[1], GlucoseUnit.MMOL)))
-            val range2 = doubleArrayOf(roundUp(Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_MAX_BG[0], GlucoseUnit.MMOL)),
-                roundDown(Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_MAX_BG[1], GlucoseUnit.MMOL)))
-            Log.i("TimeListEdit", "build: range1" + range1[0] + " " + range1[1]   + " range2" + range2[0] + " " + range2[1])
-            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.target_holder, "TARGET", rh.gs(R.string.target_long_label), currentProfile.targetLow, currentProfile.targetHigh, range1 , range2, 0.1, DecimalFormat("0.0"), save)
+            val isfRange = doubleArrayOf(
+                roundUp(Profile.fromMgdlToUnits(HardLimits.MIN_ISF, GlucoseUnit.MMOL)),
+                roundDown(Profile.fromMgdlToUnits(HardLimits.MAX_ISF, GlucoseUnit.MMOL))
+            )
+            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.isf_holder, "ISF", rh.gs(R.string.isf_long_label), currentProfile.isf, null, isfRange, null, 0.1, DecimalFormat("0.0"), save)
+            val range1 = doubleArrayOf(
+                roundUp(Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_MIN_BG[0], GlucoseUnit.MMOL)),
+                roundDown(Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_MIN_BG[1], GlucoseUnit.MMOL))
+            )
+            val range2 = doubleArrayOf(
+                roundUp(Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_MAX_BG[0], GlucoseUnit.MMOL)),
+                roundDown(Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_MAX_BG[1], GlucoseUnit.MMOL))
+            )
+            Log.i("TimeListEdit", "build: range1" + range1[0] + " " + range1[1] + " range2" + range2[0] + " " + range2[1])
+            TimeListEdit(
+                context,
+                aapsLogger,
+                dateUtil,
+                view,
+                R.id.target_holder,
+                "TARGET",
+                rh.gs(R.string.target_long_label),
+                currentProfile.targetLow,
+                currentProfile.targetHigh,
+                range1,
+                range2,
+                0.1,
+                DecimalFormat("0.0"),
+                save
+            )
         }
 
         // Spinner
-        spinner = SpinnerHelper(binding.spinner)
         context?.let { context ->
             val profileList: ArrayList<CharSequence> = localProfilePlugin.profile?.getProfileList() ?: ArrayList()
-            spinner?.adapter = ArrayAdapter(context, R.layout.spinner_centered, profileList)
-            val selection = localProfilePlugin.currentProfileIndex
-            if (selection in 0 until profileList.size) spinner?.setSelection(selection)
+            binding.profileList.setAdapter(ArrayAdapter(context, R.layout.spinner_centered, profileList))
         } ?: return
-        spinner?.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-            }
 
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                if (localProfilePlugin.isEdited) {
-                    activity?.let { activity ->
-                        OKDialog.showConfirmation(activity, rh.gs(R.string.doyouwantswitchprofile), {
+        binding.profileList.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+            if (localProfilePlugin.isEdited) {
+                activity?.let { activity ->
+                    OKDialog.showConfirmation(
+                        activity, rh.gs(R.string.doyouwantswitchprofile),
+                        {
                             localProfilePlugin.currentProfileIndex = position
                             localProfilePlugin.isEdited = false
                             build()
-                        }, {
-                            val selection = localProfilePlugin.currentProfileIndex
-                            if (selection in 0 until (spinner?.adapter?.count ?: -1)) spinner?.setSelection(selection)
-                            }
-                        )
-                    }
-                } else {
-                    localProfilePlugin.currentProfileIndex = position
-                    build()
+                        }, null
+                    )
                 }
+            } else {
+                localProfilePlugin.currentProfileIndex = position
+                build()
             }
-        })
-        localProfilePlugin.profile?.getSpecificProfile(spinner?.selectedItem.toString())?.let {
+        }
+        localProfilePlugin.getEditedProfile()?.let {
             binding.basalGraph.show(ProfileSealed.Pure(it))
             binding.icGraph.show(ProfileSealed.Pure(it))
             binding.isfGraph.show(ProfileSealed.Pure(it))
@@ -206,8 +267,12 @@ class LocalProfileFragment : DaggerFragment() {
             if (localProfilePlugin.isEdited) {
                 activity?.let { OKDialog.show(it, "", rh.gs(R.string.saveorresetchangesfirst)) }
             } else {
-                uel.log(Action.CLONE_PROFILE, Sources.LocalProfile, ValueWithUnit.SimpleString(localProfilePlugin.currentProfile()?.name
-                    ?: ""))
+                uel.log(
+                    Action.CLONE_PROFILE, Sources.LocalProfile, ValueWithUnit.SimpleString(
+                        localProfilePlugin.currentProfile()?.name
+                            ?: ""
+                    )
+                )
                 localProfilePlugin.cloneProfile()
                 build()
             }
@@ -216,8 +281,12 @@ class LocalProfileFragment : DaggerFragment() {
         binding.profileRemove.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, rh.gs(R.string.deletecurrentprofile), {
-                    uel.log(Action.PROFILE_REMOVED, Sources.LocalProfile, ValueWithUnit.SimpleString(localProfilePlugin.currentProfile()?.name
-                        ?: ""))
+                    uel.log(
+                        Action.PROFILE_REMOVED, Sources.LocalProfile, ValueWithUnit.SimpleString(
+                            localProfilePlugin.currentProfile()?.name
+                                ?: ""
+                        )
+                    )
                     localProfilePlugin.removeCurrentProfile()
                     build()
                 }, null)
@@ -245,8 +314,12 @@ class LocalProfileFragment : DaggerFragment() {
             if (!localProfilePlugin.isValidEditState(activity)) {
                 return@setOnClickListener  //Should not happen as saveButton should not be visible if not valid
             }
-            uel.log(Action.STORE_PROFILE, Sources.LocalProfile, ValueWithUnit.SimpleString(localProfilePlugin.currentProfile()?.name
-                ?: ""))
+            uel.log(
+                Action.STORE_PROFILE, Sources.LocalProfile, ValueWithUnit.SimpleString(
+                    localProfilePlugin.currentProfile()?.name
+                        ?: ""
+                )
+            )
             localProfilePlugin.storeSettings(activity)
             build()
         }
@@ -294,7 +367,7 @@ class LocalProfileFragment : DaggerFragment() {
         val isEdited = localProfilePlugin.isEdited
         if (isValid) {
             this.view?.setBackgroundColor(rh.gc(R.color.ok_background))
-            binding.spinner.isEnabled = true
+            binding.profileList.isEnabled = true
 
             if (isEdited) {
                 //edited profile -> save first
@@ -306,7 +379,7 @@ class LocalProfileFragment : DaggerFragment() {
             }
         } else {
             this.view?.setBackgroundColor(rh.gc(R.color.error_background))
-            binding.spinner.isEnabled = false
+            binding.profileList.isEnabled = false
             binding.profileswitch.visibility = View.GONE
             binding.save.visibility = View.GONE //don't save an invalid profile
         }

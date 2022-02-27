@@ -21,8 +21,6 @@ import info.nightscout.androidaps.events.EventTempBasalChange
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Pump
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.queue.events.EventQueueChanged
 import info.nightscout.androidaps.utils.DateUtil
@@ -30,10 +28,12 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.WarnColors
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
 
 class DiaconnG8Fragment : DaggerFragment() {
@@ -48,6 +48,7 @@ class DiaconnG8Fragment : DaggerFragment() {
     @Inject lateinit var sp: SP
     @Inject lateinit var warnColors: WarnColors
     @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -67,8 +68,7 @@ class DiaconnG8Fragment : DaggerFragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = DiaconnG8FragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -92,47 +92,48 @@ class DiaconnG8Fragment : DaggerFragment() {
         handler.postDelayed(refreshLoop, T.mins(1).msecs())
         disposable += rxBus
             .toObservable(EventInitializationChanged::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({ updateGUI() }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventDiaconnG8NewStatus::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({ updateGUI() }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventExtendedBolusChange::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({ updateGUI() }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventTempBasalChange::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({ updateGUI() }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventQueueChanged::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({ updateGUI() }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventPumpStatusChanged::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({
-                when (it.status) {
-                    EventPumpStatusChanged.Status.CONNECTING   ->
-                        @Suppress("SetTextI18n")
-                        binding.btconnection.text = "{fa-bluetooth-b spin} ${it.secondsElapsed}s"
-                    EventPumpStatusChanged.Status.CONNECTED    ->
-                        @Suppress("SetTextI18n")
-                        binding.btconnection.text = "{fa-bluetooth}"
-                    EventPumpStatusChanged.Status.DISCONNECTED ->
-                        @Suppress("SetTextI18n")
-                        binding.btconnection.text = "{fa-bluetooth-b}"
-                    else                                       -> {}
-                }
-                if (it.getStatus(rh) != "") {
-                    binding.diaconnG8Pumpstatus.text = it.getStatus(rh)
-                    binding.diaconnG8Pumpstatuslayout.visibility = View.VISIBLE
-                } else {
-                    binding.diaconnG8Pumpstatuslayout.visibility = View.GONE
-                }
-            }, fabricPrivacy::logException)
+                           when (it.status) {
+                               EventPumpStatusChanged.Status.CONNECTING   ->
+                                   @Suppress("SetTextI18n")
+                                   binding.btconnection.text = "{fa-bluetooth-b spin} ${it.secondsElapsed}s"
+                               EventPumpStatusChanged.Status.CONNECTED    ->
+                                   @Suppress("SetTextI18n")
+                                   binding.btconnection.text = "{fa-bluetooth}"
+                               EventPumpStatusChanged.Status.DISCONNECTED ->
+                                   @Suppress("SetTextI18n")
+                                   binding.btconnection.text = "{fa-bluetooth-b}"
+
+                               else                                       -> {}
+                           }
+                           if (it.getStatus(rh) != "") {
+                               binding.diaconnG8Pumpstatus.text = it.getStatus(rh)
+                               binding.diaconnG8Pumpstatuslayout.visibility = View.VISIBLE
+                           } else {
+                               binding.diaconnG8Pumpstatuslayout.visibility = View.GONE
+                           }
+                       }, fabricPrivacy::logException)
         updateGUI()
     }
 
@@ -175,15 +176,15 @@ class DiaconnG8Fragment : DaggerFragment() {
         val todayInsulinLimitAmount = (pump.maxBasal.toInt() * 24) + pump.maxBolusePerDay.toInt()
         binding.dailyunits.text = rh.gs(R.string.reservoirvalue, todayInsulinAmount, todayInsulinLimitAmount)
         warnColors.setColor(binding.dailyunits, todayInsulinAmount, todayInsulinLimitAmount * 0.75, todayInsulinLimitAmount * 0.9)
-        binding.basabasalrate.text = pump.baseInjAmount.toString() +" / "+ rh.gs(R.string.pump_basebasalrate, plugin.baseBasalRate)
+        binding.basabasalrate.text = pump.baseInjAmount.toString() + " / " + rh.gs(R.string.pump_basebasalrate, plugin.baseBasalRate)
 
         binding.tempbasal.text = diaconnG8Pump.temporaryBasalToString()
         binding.extendedbolus.text = diaconnG8Pump.extendedBolusToString()
         binding.reservoir.text = rh.gs(R.string.reservoirvalue, pump.systemRemainInsulin, 307)
-        warnColors.setColorInverse(binding.reservoir, pump.systemRemainInsulin , 50.0, 20.0)
-        binding.battery.text = "{fa-battery-" + pump.systemRemainBattery / 25  + "}" + " ("+ pump.systemRemainBattery + " %)"
+        warnColors.setColorInverse(binding.reservoir, pump.systemRemainInsulin, 50.0, 20.0)
+        binding.battery.text = "{fa-battery-" + pump.systemRemainBattery / 25 + "}" + " (" + pump.systemRemainBattery + " %)"
         warnColors.setColorInverse(binding.battery, pump.systemRemainBattery.toDouble(), 51.0, 26.0)
-        binding.firmware.text = rh.gs(R.string.diaconn_g8_pump) + "\nVersion: " + pump.majorVersion.toString() + "." +  pump.minorVersion.toString() + "\nCountry: "+pump.country.toString() + "\nProductType: "+ pump.productType.toString() + "\nManufacture: " + pump.makeYear + "." + pump.makeMonth + "." + pump.makeDay
+        binding.firmware.text = rh.gs(R.string.diaconn_g8_pump) + "\nVersion: " + pump.majorVersion.toString() + "." + pump.minorVersion.toString() + "\nCountry: " + pump.country.toString() + "\nProductType: " + pump.productType.toString() + "\nManufacture: " + pump.makeYear + "." + pump.makeMonth + "." + pump.makeDay
         binding.basalstep.text = pump.basalStep.toString()
         binding.bolusstep.text = pump.bolusStep.toString()
         binding.serialNumber.text = pump.serialNo.toString()

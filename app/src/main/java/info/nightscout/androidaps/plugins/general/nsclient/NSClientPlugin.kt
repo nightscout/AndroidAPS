@@ -38,7 +38,7 @@ import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.sharedPreferences.SP
-import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -159,6 +159,7 @@ class NSClientPlugin @Inject constructor(
 //            preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_receive_carbs))?.isVisible = buildHelper.isEngineeringMode()
 //            preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_receive_temp_target))?.isVisible = buildHelper.isEngineeringMode()
         }
+        preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_receive_tbr_eb))?.isVisible = buildHelper.isEngineeringMode()
     }
 
     private val mConnection: ServiceConnection = object : ServiceConnection {

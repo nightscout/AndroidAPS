@@ -160,7 +160,6 @@
     <string name="end_user_license_agreement">Лицензионно споразумение с краен потребител</string>
     <string name="end_user_license_agreement_text">НЕ ТРЯБВА ДА СЕ ИЗПОЛЗВА ЗА ВЗЕМАНЕ НА МЕДИЦИНСКИ РЕШЕНИЯ. НЯМА ГАРАНЦИЯ ЗА ПРОГРАМАТА, ДО СТЕПЕНТА, ПОЗВОЛЕНА ОТ ПРИЛОЖИМОТО ПРАВО. ОСВЕН КОГАТО Е ПОСОЧЕНО ДРУГО В ПИСМЕН ВИД, ПРИТЕЖАТЕЛИТЕ НА АВТОРСКОТО ПРАВО И/ИЛИ ДРУГИ СТРАНИ ПРЕДОСТАВЯТ ПРОГРАМАТА \"КАКТО Е\", БЕЗ ГАРАНЦИИ ОТ ВСЯКАКЪВ ВИД,  ИЗРАЗЕНИ ИЛИ ПОДРАЗБИРАЩИ СЕ, ВКЛЮЧИТЕЛНО, НО НЕ САМО, ПОДРАЗБИРАЩИ СЕ ГАРАНЦИИ ЗА ПРОДАВАЕМОСТ И ПРИГОДНОСТ ЗА  КОНКРЕТНА ЦЕЛ. ЦЕЛИЯ РИСК ПО ОТНОШЕНИЕ НА КАЧЕСТВОТО И ЕФЕКТИВНОСТТА НА ПРОГРАМАТА Е САМО ВАШ. АКО ПРОГРАМАТА НЕ СРАБОТИ, ВИЕ ПОЕМАТЕ  ВСИЧКИ НЕОБХОДИМИ РАЗХОДИ ЗА ОБСЛУЖВАНЕ, РЕМОНТ ИЛИ КОРЕКЦИЯ.</string>
     <string name="end_user_license_agreement_i_understand">Разбирам и приемам</string>
-    <string name="save">Съхрани</string>
     <string name="reloadprofile">Презареди профил</string>
     <string name="smscommunicator">SMS комуникатор</string>
     <string name="smscommunicator_allowednumbers">Разрешени телефонни номера</string>
@@ -245,7 +244,6 @@
     <string name="wear">Часовник</string>
     <string name="resend_all_data">Изпрати отново всички дани</string>
     <string name="open_settings_on_wear">Отвори настройките на часовника</string>
-    <string name="basal_rate">Базал:</string>
     <string name="basalvaluebelowminimum">Базалните стойности са под минимума. Не е зададен профил!</string>
     <string name="sms_actualbg">КЗ:</string>
     <string name="sms_lastbg">Последна КЗ:</string>
@@ -425,8 +423,6 @@
     <string name="keep_screen_on_summary">Предотвратяване на андроид да изключва екрана. Това ще доведе до консумацията на много енергия, когато устройството не е включено в контакта.</string>
     <string name="sensitivity_warning">Когато включите Autosense feature трябва да въвеждате ВСИЧКИ въглехидрати. В противен случай те ще се изчисляват грешно като повишена чувствителност!!</string>
     <string name="sensitivityweightedaverage">чрез Среднопретеглената стойност</string>
-    <string name="mdtp_ok">ОК</string>
-    <string name="mdtp_cancel">Откажи</string>
     <string name="notloadedplugins">Не всички профили са заредени!</string>
     <string name="valuesnotstored">Стойностите не са запазени!</string>
     <string name="ns_localbroadcasts">Активира предаване на данни към други приложения (като xDrip+). Не активирайте, ако имате повече от един AAPS или имате инсталиран NSClient!</string>
@@ -747,8 +743,6 @@
     <string name="profilenamecontainsdot">Името на профила съдържа точка.\nТова не се поддържа от НС.\nПрофилът не е качен в НС.</string>
     <string name="low_mark_comment">Ниската граница на диапазона (графика)</string>
     <string name="high_mark_comment">Високата граница на диапазона (графика)</string>
-    <string name="age">Възраст:</string>
-    <string name="weight_label">Тегло:</string>
     <string name="id">Номер:</string>
     <string name="submit">Изпрати</string>
     <string name="mostcommonprofile">Най-често използван профил:</string>
@@ -890,4 +884,5 @@
     <string name="recalculated_data_used">Рекалкулирани използвани данни</string>
     <string name="bg_too_close">КЗ близо до:\n%1$s\n%2$s</string>
     <string name="not_available_full">Недостъпно</string>
+    <!-- WEAR OS-->
 </resources>

@@ -42,9 +42,9 @@
             android:padding="4dp"
             app:layout_constraintTop_toBottomOf="@+id/exam_disabledto">
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/exam_reset"
-                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                style="@style/OkCancelButton.Text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/reset" />
@@ -55,16 +55,16 @@
                 android:layout_weight="1"
                 android:text="" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/close"
-                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                style="@style/OkCancelButton.Text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/close" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/exam_verify"
-                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                style="@style/OkCancelButton.Text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/objectives_button_verify" />
@@ -122,9 +122,9 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/buttons">
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/back_button"
-                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                style="@style/OkCancelButton.Text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/previous_button" />
@@ -135,16 +135,16 @@
                 android:layout_weight="1"
                 android:text="" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/next_button"
-                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                style="@style/OkCancelButton.Text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/next_button" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/next_unanswered_button"
-                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                style="@style/OkCancelButton.Text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/unfinshed_button" />

@@ -228,7 +228,6 @@
     <string name="end_user_license_agreement">End User License Agreement</string>
     <string name="end_user_license_agreement_text">MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
     <string name="end_user_license_agreement_i_understand">I UNDERSTAND AND AGREE</string>
-    <string name="save">Save</string>
     <string name="reloadprofile">Reload profile</string>
     <string name="smscommunicator">SMS Communicator</string>
     <string name="smscommunicator_allowednumbers">Allowed phone numbers</string>
@@ -335,6 +334,7 @@
     <string name="configbuilder_shortname">CONF</string>
     <string name="loop_shortname">LOOP</string>
     <string name="oaps_shortname">OAPS</string>
+    <string name="dynisf_shortname">DYNISF</string>
     <string name="localprofile_shortname">LP</string>
     <string name="overview_shortname">HOME</string>
     <string name="virtualpump_shortname">VPUMP</string>
@@ -529,14 +529,12 @@
     <string name="keep_screen_on_summary">Prevent Android to turn screen off. It will consume lot of energy when not plugged to power outlet.</string>
     <string name="sensitivity_warning">By turning on Autosense feature remember to enter all eated carbs. Otherwise carbs deviations will be identified wrong as sensitivity change !!</string>
     <string name="sensitivityweightedaverage">Sensitivity WeightedAverage</string>
-    <string name="mdtp_ok">OK</string>
-    <string name="mdtp_cancel">Cancel</string>
     <string name="notloadedplugins">Not all profiles loaded!</string>
     <string name="valuesnotstored">Values not stored!</string>
     <string name="ns_localbroadcasts">Enable broadcasts to other apps (like xDrip+). Do not enable if you have more than one instance of AAPS or NSClient installed!</string>
     <string name="ns_localbroadcasts_title">Enable local Broadcasts.</string>
     <string name="openapssmb">OpenAPS SMB</string>
-    <string name="openaps_smb_dynamic_isf">OpenAPS SMB Dynamic ISF</string>
+    <string name="openaps_smb_dynamic_isf">Dynamic ISF</string>
     <string name="key_use_smb" translatable="false">use_smb</string>
     <string name="key_use_uam" translatable="false">use_uam</string>
     <string name="key_smb_enable_carbs_suggestions_threshold" translatable="false">smb_enable_carbs_suggestions_threshold</string>
@@ -826,6 +824,9 @@
     <string name="sensitivity_raises_target_summary">When sensitivity is detected, raise the target glucose</string>
     <string name="key_keep_screen_on" translatable="false">keep_screen_on</string>
     <string name="careportal_removestartedevents">Clean AndroidAPS started</string>
+    <string name="show_invalidated">Show invalidated</string>
+    <string name="hide_invalidated">Hide invalidated</string>
+    <string name="remove_items">Remove items</string>
     <string name="storedsettingsfound">Stored settings found</string>
     <string name="allow_hardware_pump_text">Attention: If you activate and connect to a hardware pump, AndroidAPS will copy the basal settings from the profile to the pump, overwriting the existing basal rate stored on the pump. Make sure you have the correct basal setting in AndroidAPS. If you are not sure or don\'t want to overwrite the basal settings on your pump, press cancel and repeat switching to the pump at a later time.</string>
     <string name="error_adding_treatment_title">Treatment data incomplete</string>
@@ -1109,6 +1110,8 @@
     <string name="ns_receive_profile_switch_summary">Accept profile switches entered through NS or NSClient</string>
     <string name="ns_receive_offline_event">Receive APS offline events</string>
     <string name="ns_receive_offline_event_summary">Accept APS Offline events entered through NS or NSClient</string>
+    <string name="ns_receive_tbr_eb">Receive TBR and EB</string>
+    <string name="ns_receive_tbr_eb_summary">Accept TBR and EB entered through another instance</string>
     <string name="key_ns_receive_insulin" translatable="false">ns_receive_insulin</string>
     <string name="ns_receive_insulin">Receive insulin</string>
     <string name="ns_receive_insulin_summary">Accept insulin entered through NS or NSClient (it\'s not delivered, only calculated towards IOB)</string>
@@ -1116,6 +1119,7 @@
     <string name="ns_receive_carbs">Receive carbs</string>
     <string name="ns_receive_carbs_summary">Accept carbs entered through NS or NSClient</string>
     <string name="key_ns_receive_therapy_events" translatable="false">ns_receive_therapy_events</string>
+    <string name="key_ns_receive_tbr_eb" translatable="false">ns_receive_tbr_eb</string>
     <string name="ns_receive_therapy_events">Receive therapy events</string>
     <string name="ns_receive_therapy_events_summary">Accept therapy events (cannula, insulin, battery change etc) entered through NS or NSClient</string>
     <string name="key_ns_receive_cgm" translatable="false">ns_receive_cgm</string>
@@ -1207,4 +1211,15 @@
     <string name="wear_unknown_action_string">Unknown action command:</string>
     <string name="overview_editquickwizard_percentage">Percentage</string>
     <string name="app_default">Application default</string>
+    <string name="select_profile">Select profile to edit</string>
+    <string name="refresh_from_nightscout">Refresh from Nightscout</string>
+    <string name="remove_selected_items">Remove selected items</string>
+    <string name="select_for_removal">Select for removal</string>
+    <string name="profile_changes">Profile changes</string>
+    <string name="tempt_targets">Temp Targets</string>
+    <string name="carbs_and_bolus">Carbs and bolus</string>
+    <string name="confirm_remove_multiple_items">Are you sure you want to remove %1$d items</string>
+    <string name="hide_loop">Hide loop</string>
+    <string name="show_loop">Show loop</string>
+    <string name="count_selected">%1$d selected</string>
 </resources>

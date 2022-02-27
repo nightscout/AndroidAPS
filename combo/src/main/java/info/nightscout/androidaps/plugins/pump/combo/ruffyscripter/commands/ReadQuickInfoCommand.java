@@ -1,24 +1,27 @@
 package info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.commands;
 
+import androidx.annotation.NonNull;
+
 import org.monkey.d.ruffy.ruffy.driver.display.MenuAttribute;
 import org.monkey.d.ruffy.ruffy.driver.display.MenuType;
-import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import info.nightscout.shared.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.Bolus;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.PumpHistory;
+import info.nightscout.shared.logging.AAPSLogger;
+import info.nightscout.shared.logging.LTag;
 
 public class ReadQuickInfoCommand extends BaseCommand {
-    private static final Logger log = StacktraceLoggerWrapper.getLogger(ReadQuickInfoCommand.class);
+    private final AAPSLogger aapsLogger;
 
     private final int numberOfBolusRecordsToRetrieve;
 
-    public ReadQuickInfoCommand(int numberOfBolusRecordsToRetrieve) {
+    public ReadQuickInfoCommand(int numberOfBolusRecordsToRetrieve, AAPSLogger aapsLogger) {
         this.numberOfBolusRecordsToRetrieve = numberOfBolusRecordsToRetrieve;
+        this.aapsLogger = aapsLogger;
     }
 
     @Override
@@ -53,12 +56,10 @@ public class ReadQuickInfoCommand extends BaseCommand {
                     record = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.CURRENT_RECORD);
                 }
             }
-            if (log.isDebugEnabled()) {
-                if (!result.history.bolusHistory.isEmpty()) {
-                    log.debug("Read bolus history (" + result.history.bolusHistory.size() + "):");
-                    for (Bolus bolus : result.history.bolusHistory) {
-                        log.debug(new Date(bolus.timestamp) + ": " + bolus.toString());
-                    }
+            if (!result.history.bolusHistory.isEmpty()) {
+                aapsLogger.debug(LTag.PUMP, "Read bolus history (" + result.history.bolusHistory.size() + "):");
+                for (Bolus bolus : result.history.bolusHistory) {
+                    aapsLogger.debug(LTag.PUMP, new Date(bolus.timestamp) + ": " + bolus);
                 }
             }
         }
@@ -71,7 +72,7 @@ public class ReadQuickInfoCommand extends BaseCommand {
         return false;
     }
 
-    @Override
+    @NonNull @Override
     public String toString() {
         return "ReadQuickInfoCommand{}";
     }

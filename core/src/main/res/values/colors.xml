@@ -1,18 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Default theme color -->
+    <!-- This section describes the main theme colors -->
     <color name="colorPrimary">#212121</color>
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#40bbaa</color>
-    <color name="mdtp_button_selected">#33969696</color>
-    <color name="mdtp_button_color">@color/colorAccent</color>
     <color name="mdtp_white">#ffffff</color>
     <color name="mdtp_line_dark">#808080</color>
     <color name="colorLightGray">#d8d8d8</color>
-    <color name="cardColorBackground">#121212</color>
+    <color name="cardColorBackground">#212121</color>
     <color name="black_overlay">#66000000</color>
+    <color name="gray">#BBBBBB</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="primaryColorDefault">#222222</color>
+    <color name="primaryLightColorDefault">#bbb9bb</color>
+    <color name="primaryDarkColorDefault">#222222</color>
+    <color name="secondaryColorDefault">#03dac6</color>
+    <color name="secondaryLightColorDefault">#e3e3e3</color>
+    <color name="secondaryDarkColorDefault">#848484</color>
+    <color name="primaryTextColorDefault">#ffffff</color>
+    <color name="secondaryTextColorDefault">#000000</color>
+    <color name="overviewPillColorDefault">#1c171c</color>
+    <color name="colorOnPrimaryDefault">#FFFFFF</color>
 
     <color name="defaultbackground">#424242</color>
     <color name="defaulttextcolor">#B3FFFFFF</color>
+
+    <!--    Tabs-->
+    <color name="tabTextColor">#d0d0d0</color>
+    <color name="tabSelectedTextColor">@color/white</color>
+
+    <!--    Buttons-->
+    <color name="buttonBackground">#555555</color>
+    <color name="buttonText">#ffffff</color>
+    <color name="okButtonText">@color/colorAccent</color>
+    <color name="okButtonSelected">#33969696</color>
+
+    <color name="ic_actions_refill">#E93057</color>
+    <color name="ic_local_activate">#67DFE8</color>
+    <color name="ic_local_reset">#E93057</color>
+    <color name="ic_local_save">#67E86A</color>
+
 
     <!--    Fragments-->
     <color name="pumpStatusBackground">#505050</color>
@@ -27,6 +57,7 @@
     <color name="warningAccentText">#FFFB8C00</color>
     <color name="errorAlertBackground">#FFFF5555</color>
     <color name="errorAlertHeaderText">#FF000000</color>
+    <color name="helperProfile">#C803A9F4</color>
     <color name="examinedProfile">#FFFF5555</color>
     <color name="defaulttext">#BBBBBB</color>
 
@@ -54,7 +85,6 @@
     <color name="carbs">#FFFB8C00</color>
     <color name="uam">#c9bd60</color>
     <color name="zt">#00d2d2</color>
-    <color name="white">#ffffff</color>
     <color name="calibration">#E83258</color>
 
     <color name="ribbonDefault">#5a595b</color>

@@ -161,7 +161,6 @@
     <string name="end_user_license_agreement">Slutbrugerlicensaftale</string>
     <string name="end_user_license_agreement_text">MÅ IKKE BRUGES TIL AT TRÆFFE MEDICINSKE BESLUTNINGER. DER ER INGEN GARANTI FOR PROGRAMMET, I DET OMFANG GÆLDENDE LOV TILLADER DET. UNDTAGEN NÅR DET ELLERS ER ANFØRT SKRIFTLIGT, AT RETTIGHEDSHAVERE OG / ELLER ANDRE PARTER LEVERER PROGRAMMET \"SOM BESET\" UDEN NOGEN FORM FOR GARANTI, HVERKEN UDTRYKT ELLER UNDERFORSTÅET, HERUNDER, MEN IKKE BEGRÆNSET TIL, DE UNDERFORSTÅELIGHEDER, DER ER FORBUNDET MED EGNETHED OG EGNETHED TIL ET BESTEMT FORMÅL. HELE RISIKOEN MED HENSYN TIL KVALITETEN OG YDEEVNEN AF PROGRAMMET ER DIN. HVIS PROGRAMMET VISER SIG AT VÆRE DEFEKT, BÆRER DU SELV OMKOSTNINGERNE VED ALLE NØDVENDIGE SERVICER, REPARATIONER ELLER KORREKTIONER SOM ER NØDVENDIGE.</string>
     <string name="end_user_license_agreement_i_understand">JEG FORSTÅR OG ER ENIG</string>
-    <string name="save">Gem</string>
     <string name="reloadprofile">Genindlæs profil</string>
     <string name="smscommunicator">SMS Kommunikator</string>
     <string name="smscommunicator_allowednumbers">Tilladte telefonnumre</string>
@@ -246,7 +245,6 @@
     <string name="wear">Ur</string>
     <string name="resend_all_data">Send alle data igen</string>
     <string name="open_settings_on_wear">Åbn indstillinger på ur</string>
-    <string name="basal_rate">Basal rate:</string>
     <string name="basalvaluebelowminimum">Basal værdi under minimum. Profil ikke angivet!</string>
     <string name="sms_actualbg">BG:</string>
     <string name="sms_lastbg">Sidste BG:</string>
@@ -427,8 +425,6 @@
     <string name="keep_screen_on_summary">Forhindrer Android i at slukke for skærmen. Det vil forbruge meget energi, når den ikke er tilsluttet stikkontakt.</string>
     <string name="sensitivity_warning">Ved at slå funktionen Autosense til husk at indtaste alle spiste kulhydrater. Ellers vil kulhydrat afvigelser blive identificeret forkert som følsomheds ændring !!</string>
     <string name="sensitivityweightedaverage">Følsomhed Vægtet Gennemsnit</string>
-    <string name="mdtp_ok">OK</string>
-    <string name="mdtp_cancel">Annuller</string>
     <string name="notloadedplugins">Ikke alle profiler er indlæst!</string>
     <string name="valuesnotstored">Værdier ikke gemt!</string>
     <string name="ns_localbroadcasts">Aktiver udsendelse til andre apps (såsom xDrip+). Aktiver ikke hvis du har mere end én version af AAPS eller NSClient installeret!</string>
@@ -757,8 +753,6 @@
     <string name="profilenamecontainsdot">Profilnavn indeholder punktum.\nDette understøttes ikke af NS.\nProfilen er ikke uploadet til NS.</string>
     <string name="low_mark_comment">Nedre værdi for målområde (kun visning)</string>
     <string name="high_mark_comment">Øvre værdi for målområde (kun visning)</string>
-    <string name="age">Alder:</string>
-    <string name="weight_label">Vægt:</string>
     <string name="id">ID:</string>
     <string name="submit">Send</string>
     <string name="mostcommonprofile">Mest almindelige profil:</string>
@@ -900,9 +894,13 @@
     <string name="errors">Fejl</string>
     <string name="ns_sync_slow">Reducer upload hastighed</string>
     <string name="data_status">BG data status</string>
+    <string name="statuslights_cannula_age">Indstik alder</string>
+    <string name="statuslights_patch_pump_age">patch pumpe alder</string>
+    <string name="patch_pump">Patch pumpe</string>
     <string name="recalculated_data_used">Genberegnede data anvendt</string>
     <string name="bg_too_close">BG for tæt:\n%1$s\n%2$s</string>
     <string name="identification">Identifikation (e-mail, FB eller Discord alias osv.)</string>
     <string name="identification_not_set">Identifikation ikke indstillet i udvikler-tilstand</string>
     <string name="not_available_full">Ikke tilgængelig</string>
+    <!-- WEAR OS-->
 </resources>

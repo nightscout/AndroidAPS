@@ -1,11 +1,11 @@
 package info.nightscout.androidaps.activities.fragments
 
-import android.content.DialogInterface
-import android.graphics.Paint
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.Log
+import android.util.SparseArray
+import android.view.*
+import androidx.appcompat.widget.Toolbar
+import androidx.core.util.forEach
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
@@ -36,14 +36,15 @@ import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.activities.fragments.TreatmentsTemporaryBasalsFragment.RecyclerViewAdapter.TempBasalsViewHolder
+import info.nightscout.androidaps.events.EventTreatmentUpdateGui
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.math.abs
@@ -64,18 +65,22 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
     @Inject lateinit var repository: AppRepository
 
     private var _binding: TreatmentsTempbasalsFragmentBinding? = null
+    // This property is only valid between onCreateView and onDestroyView.
+    private val binding get() = _binding!!
 
     private val millsToThePast = T.days(30).msecs()
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
+    private var selectedItems: SparseArray<TemporaryBasal> = SparseArray()
+    private var showInvalidated = false
+    private var toolbar: Toolbar? = null
+    private var removeActionMode: ActionMode? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         TreatmentsTempbasalsFragmentBinding.inflate(inflater, container, false).also { _binding = it }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        toolbar = activity?.findViewById(R.id.toolbar)
+        setHasOptionsMenu(true)
         binding.recyclerview.setHasFixedSize(true)
         binding.recyclerview.layoutManager = LinearLayoutManager(view.context)
     }
@@ -98,7 +103,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
         val now = System.currentTimeMillis()
         disposable +=
             if (activePlugin.activePump.isFakingTempsByExtendedBoluses) {
-                if (binding.showInvalidated.isChecked)
+                if (showInvalidated)
                     tempBasalsWithInvalid(now)
                         .zipWith(extendedBolusesWithInvalid(now)) { first, second -> first + second }
                         .map { list -> list.filterNotNull() }
@@ -113,7 +118,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
                         .observeOn(aapsSchedulers.main)
                         .subscribe { list -> binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true) }
             } else {
-                if (binding.showInvalidated.isChecked)
+                if (showInvalidated)
                     tempBasalsWithInvalid(now)
                         .observeOn(aapsSchedulers.main)
                         .subscribe { list -> binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true) }
@@ -150,6 +155,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
     @Synchronized
     override fun onDestroyView() {
         super.onDestroyView()
+        removeActionMode?.let { it.finish() }
         binding.recyclerview.adapter = null // avoid leaks
         _binding = null
     }
@@ -164,7 +170,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
             holder.binding.ns.visibility = (tempBasal.interfaceIDs.nightscoutId != null).toVisibility()
             holder.binding.invalid.visibility = tempBasal.isValid.not().toVisibility()
             holder.binding.ph.visibility = (tempBasal.interfaceIDs.pumpId != null).toVisibility()
-            val sameDayPrevious = position > 0 && dateUtil.isSameDay(tempBasal.timestamp, tempBasalList[position-1].timestamp)
+            val sameDayPrevious = position > 0 && dateUtil.isSameDay(tempBasal.timestamp, tempBasalList[position - 1].timestamp)
             holder.binding.date.visibility = sameDayPrevious.not().toVisibility()
             holder.binding.date.text = dateUtil.dateString(tempBasal.timestamp)
             if (tempBasal.isInProgress) {
@@ -187,62 +193,147 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
             holder.binding.emulatedSuspendFlag.visibility = (tempBasal.type == TemporaryBasal.Type.EMULATED_PUMP_SUSPEND).toVisibility()
             holder.binding.superBolusFlag.visibility = (tempBasal.type == TemporaryBasal.Type.SUPERBOLUS).toVisibility()
             if (abs(iob.basaliob) > 0.01) holder.binding.iob.setTextColor(rh.gc(R.color.colorActive)) else holder.binding.iob.setTextColor(holder.binding.duration.currentTextColor)
-            holder.binding.remove.tag = tempBasal
-
+            holder.binding.cbRemove.visibility = (tempBasal.isValid && removeActionMode != null).toVisibility()
+            if (removeActionMode != null) {
+                holder.binding.cbRemove.setOnCheckedChangeListener { _, value ->
+                    if (value) {
+                        selectedItems.put(position, tempBasal)
+                    } else {
+                        selectedItems.remove(position)
+                    }
+                    removeActionMode?.title = rh.gs(R.string.count_selected, selectedItems.size())
+                }
+                holder.binding.cbRemove.isChecked = selectedItems.get(position) != null
+            }
             val nextTimestamp = if (tempBasalList.size != position + 1) tempBasalList[position + 1].timestamp else 0L
             holder.binding.delimiter.visibility = dateUtil.isSameDay(tempBasal.timestamp, nextTimestamp).toVisibility()
         }
 
-        override fun getItemCount(): Int = tempBasalList.size
+        override fun getItemCount() = tempBasalList.size
 
         inner class TempBasalsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
             val binding = TreatmentsTempbasalsItemBinding.bind(itemView)
 
-            init {
-                binding.remove.setOnClickListener { v: View ->
-                    val tempBasal = v.tag as TemporaryBasal
-                    var extendedBolus: ExtendedBolus? = null
-                    val isFakeExtended = tempBasal.type == TemporaryBasal.Type.FAKE_EXTENDED
-                    if (isFakeExtended) {
-                        val eb = repository.getExtendedBolusActiveAt(tempBasal.timestamp).blockingGet()
-                        extendedBolus = if (eb is ValueWrapper.Existing) eb.value else null
-                    }
-                    val profile = profileFunction.getProfile(dateUtil.now())
-                        ?: return@setOnClickListener
-                    context?.let {
-                        OKDialog.showConfirmation(it, rh.gs(R.string.removerecord),
-                            """
-                ${if (isFakeExtended) rh.gs(R.string.extended_bolus) else rh.gs(R.string.tempbasal_label)}: ${tempBasal.toStringFull(profile, dateUtil)}
-                ${rh.gs(R.string.date)}: ${dateUtil.dateAndTimeString(tempBasal.timestamp)}
-                """.trimIndent(),
-                            { _: DialogInterface?, _: Int ->
-                                if (isFakeExtended && extendedBolus != null) {
-                                    uel.log(Action.EXTENDED_BOLUS_REMOVED, Sources.Treatments,
-                                        ValueWithUnit.Timestamp(extendedBolus.timestamp),
-                                        ValueWithUnit.Insulin(extendedBolus.amount),
-                                        ValueWithUnit.UnitPerHour(extendedBolus.rate),
-                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(extendedBolus.duration).toInt()))
-                                    disposable += repository.runTransactionForResult(InvalidateExtendedBolusTransaction(extendedBolus.id))
-                                        .subscribe(
-                                            { aapsLogger.debug(LTag.DATABASE, "Removed extended bolus $extendedBolus") },
-                                            { aapsLogger.error(LTag.DATABASE, "Error while invalidating extended bolus", it) })
-                                } else if (!isFakeExtended) {
-                                    uel.log(Action.TEMP_BASAL_REMOVED, Sources.Treatments,
-                                        ValueWithUnit.Timestamp(tempBasal.timestamp),
-                                        if (tempBasal.isAbsolute) ValueWithUnit.UnitPerHour(tempBasal.rate) else ValueWithUnit.Percent(tempBasal.rate.toInt()),
-                                        ValueWithUnit.Minute(T.msecs(tempBasal.duration).mins().toInt()))
-                                    disposable += repository.runTransactionForResult(InvalidateTemporaryBasalTransaction(tempBasal.id))
-                                        .subscribe(
-                                            { aapsLogger.debug(LTag.DATABASE, "Removed temporary basal $tempBasal") },
-                                            { aapsLogger.error(LTag.DATABASE, "Error while invalidating temporary basal", it) })
-                                }
-                            }, null)
-                    }
+        }
+
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_treatments_temp_basal, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        menu.findItem(R.id.nav_hide_invalidated)?.isVisible = showInvalidated
+        menu.findItem(R.id.nav_show_invalidated)?.isVisible = !showInvalidated
+
+        return super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
+            R.id.nav_remove_items -> {
+                removeActionMode = toolbar?.startActionMode(RemoveActionModeCallback())
+                true
+            }
+
+            R.id.nav_show_invalidated -> {
+                showInvalidated = true
+                rxBus.send(EventTreatmentUpdateGui())
+                true
+            }
+
+            R.id.nav_hide_invalidated -> {
+                showInvalidated = false
+                rxBus.send(EventTreatmentUpdateGui())
+                true
+            }
+
+            else -> false
+        }
+
+    inner class RemoveActionModeCallback : ActionMode.Callback {
+
+        override fun onCreateActionMode(mode: ActionMode, menu: Menu?): Boolean {
+            mode.menuInflater.inflate(R.menu.menu_delete_selection, menu)
+            selectedItems.clear()
+            mode.title = rh.gs(R.string.count_selected, selectedItems.size())
+            binding.recyclerview.adapter?.notifyDataSetChanged()
+            return true
+        }
+
+        override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?) = false
+
+        override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
+            return when (item.itemId) {
+                R.id.remove_selected -> {
+                    removeSelected()
+                    true
                 }
-                binding.remove.paintFlags = binding.remove.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+
+                else                 -> false
             }
         }
 
+        override fun onDestroyActionMode(mode: ActionMode?) {
+            removeActionMode = null
+            binding.recyclerview.adapter?.notifyDataSetChanged()
+        }
+    }
+
+    private fun getConfirmationText(): String {
+        if (selectedItems.size() == 1) {
+            val tempBasal = selectedItems.valueAt(0)
+            val isFakeExtended = tempBasal.type == TemporaryBasal.Type.FAKE_EXTENDED
+            val profile = profileFunction.getProfile(dateUtil.now())
+            if (profile != null)
+                return "${if (isFakeExtended) rh.gs(R.string.extended_bolus) else rh.gs(R.string.tempbasal_label)}: ${tempBasal.toStringFull(profile, dateUtil)}\n" +
+                    "${rh.gs(R.string.date)}: ${dateUtil.dateAndTimeString(tempBasal.timestamp)}"
+        }
+        return rh.gs(R.string.confirm_remove_multiple_items, selectedItems.size())
+    }
+
+    private fun removeSelected() {
+        if (selectedItems.size() > 0)
+            activity?.let { activity ->
+                OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord), getConfirmationText(), Runnable {
+                    selectedItems.forEach {_, tempBasal ->
+                        var extendedBolus: ExtendedBolus? = null
+                        val isFakeExtended = tempBasal.type == TemporaryBasal.Type.FAKE_EXTENDED
+                        if (isFakeExtended) {
+                            val eb = repository.getExtendedBolusActiveAt(tempBasal.timestamp).blockingGet()
+                            extendedBolus = if (eb is ValueWrapper.Existing) eb.value else null
+                        }
+                        if (isFakeExtended && extendedBolus != null) {
+                            uel.log(
+                                Action.EXTENDED_BOLUS_REMOVED, Sources.Treatments,
+                                ValueWithUnit.Timestamp(extendedBolus.timestamp),
+                                ValueWithUnit.Insulin(extendedBolus.amount),
+                                ValueWithUnit.UnitPerHour(extendedBolus.rate),
+                                ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(extendedBolus.duration).toInt())
+                            )
+                            disposable += repository.runTransactionForResult(InvalidateExtendedBolusTransaction(extendedBolus.id))
+                                .subscribe(
+                                    { aapsLogger.debug(LTag.DATABASE, "Removed extended bolus $extendedBolus") },
+                                    { aapsLogger.error(LTag.DATABASE, "Error while invalidating extended bolus", it) })
+                        } else if (!isFakeExtended) {
+                            uel.log(
+                                Action.TEMP_BASAL_REMOVED, Sources.Treatments,
+                                ValueWithUnit.Timestamp(tempBasal.timestamp),
+                                if (tempBasal.isAbsolute) ValueWithUnit.UnitPerHour(tempBasal.rate) else ValueWithUnit.Percent(tempBasal.rate.toInt()),
+                                ValueWithUnit.Minute(T.msecs(tempBasal.duration).mins().toInt())
+                            )
+                            disposable += repository.runTransactionForResult(InvalidateTemporaryBasalTransaction(tempBasal.id))
+                                .subscribe(
+                                    { aapsLogger.debug(LTag.DATABASE, "Removed temporary basal $tempBasal") },
+                                    { aapsLogger.error(LTag.DATABASE, "Error while invalidating temporary basal", it) })
+                        }
+                    }
+                    removeActionMode?.finish()
+                })
+            }
+        else
+            removeActionMode?.finish()
     }
 }

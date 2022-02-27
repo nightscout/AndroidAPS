@@ -1,12 +1,12 @@
 package info.nightscout.androidaps.activities.fragments
 
 import android.annotation.SuppressLint
-import android.content.DialogInterface
-import android.graphics.Paint
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.SparseArray
+import android.view.*
+import android.view.ActionMode
+import androidx.appcompat.widget.Toolbar
+import androidx.core.util.forEach
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
@@ -27,18 +27,19 @@ import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.activities.fragments.TreatmentsExtendedBolusesFragment.RecyclerViewAdapter.ExtendedBolusesViewHolder
+import info.nightscout.androidaps.events.EventTreatmentUpdateGui
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
+import info.nightscout.shared.logging.LTag
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -60,23 +61,27 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
     @Inject lateinit var repository: AppRepository
 
     private var _binding: TreatmentsExtendedbolusFragmentBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
+    // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View =
+    private var selectedItems: SparseArray<ExtendedBolus> = SparseArray()
+    private var showInvalidated = false
+    private var removeActionMode: ActionMode? = null
+    private var toolbar: Toolbar? = null
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         TreatmentsExtendedbolusFragmentBinding.inflate(inflater, container, false).also { _binding = it }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        setHasOptionsMenu(true)
+        toolbar = activity?.findViewById(R.id.toolbar)
         binding.recyclerview.setHasFixedSize(true)
         binding.recyclerview.layoutManager = LinearLayoutManager(view.context)
     }
 
     fun swapAdapter() {
         val now = System.currentTimeMillis()
-        if (binding.showInvalidated.isChecked)
+        disposable += if (showInvalidated)
             repository
                 .getExtendedBolusDataIncludingInvalidFromTime(now - millsToThePast, false)
                 .observeOn(aapsSchedulers.main)
@@ -109,6 +114,7 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
     @Synchronized
     override fun onDestroyView() {
         super.onDestroyView()
+        removeActionMode?.let { it.finish() }
         binding.recyclerview.adapter = null // avoid leaks
         _binding = null
     }
@@ -125,7 +131,7 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
             holder.binding.ns.visibility = (extendedBolus.interfaceIDs.nightscoutId != null).toVisibility()
             holder.binding.ph.visibility = (extendedBolus.interfaceIDs.pumpId != null).toVisibility()
             holder.binding.invalid.visibility = extendedBolus.isValid.not().toVisibility()
-            val sameDayPrevious = position > 0 && dateUtil.isSameDay(extendedBolus.timestamp, extendedBolusList[position-1].timestamp)
+            val sameDayPrevious = position > 0 && dateUtil.isSameDay(extendedBolus.timestamp, extendedBolusList[position - 1].timestamp)
             holder.binding.date.visibility = sameDayPrevious.not().toVisibility()
             holder.binding.date.text = dateUtil.dateString(extendedBolus.timestamp)
             @SuppressLint("SetTextI18n")
@@ -143,41 +149,125 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
             holder.binding.iob.text = rh.gs(R.string.formatinsulinunits, iob.iob)
             holder.binding.ratio.text = rh.gs(R.string.pump_basebasalrate, extendedBolus.rate)
             if (iob.iob != 0.0) holder.binding.iob.setTextColor(rh.gc(R.color.colorActive)) else holder.binding.iob.setTextColor(holder.binding.insulin.currentTextColor)
-            holder.binding.remove.tag = extendedBolus
+            holder.binding.cbRemove.visibility = (extendedBolus.isValid && removeActionMode != null).toVisibility()
+            if (removeActionMode != null) {
+                holder.binding.cbRemove.setOnCheckedChangeListener { _, value ->
+                    if (value) {
+                        selectedItems.put(position, extendedBolus)
+                    } else {
+                        selectedItems.remove(position)
+                    }
+                    removeActionMode?.title = rh.gs(R.string.count_selected, selectedItems.size())
+                }
+                holder.binding.cbRemove.isChecked = selectedItems.get(position) != null
+            }
             val nextTimestamp = if (extendedBolusList.size != position + 1) extendedBolusList[position + 1].timestamp else 0L
             holder.binding.delimiter.visibility = dateUtil.isSameDay(extendedBolus.timestamp, nextTimestamp).toVisibility()
         }
 
-        override fun getItemCount(): Int = extendedBolusList.size
+        override fun getItemCount() = extendedBolusList.size
 
         inner class ExtendedBolusesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
             val binding = TreatmentsExtendedbolusItemBinding.bind(itemView)
+        }
 
-            init {
-                binding.remove.setOnClickListener { v: View ->
-                    val extendedBolus = v.tag as ExtendedBolus
-                    context?.let { context ->
-                        OKDialog.showConfirmation(context, rh.gs(R.string.removerecord),
-                            """
-                ${rh.gs(R.string.extended_bolus)}
-                ${rh.gs(R.string.date)}: ${dateUtil.dateAndTimeString(extendedBolus.timestamp)}
-                """.trimIndent(), { _: DialogInterface, _: Int ->
-                            uel.log(Action.EXTENDED_BOLUS_REMOVED, Sources.Treatments,
-                                ValueWithUnit.Timestamp(extendedBolus.timestamp),
-                                ValueWithUnit.Insulin(extendedBolus.amount),
-                                ValueWithUnit.UnitPerHour(extendedBolus.rate),
-                                ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(extendedBolus.duration).toInt()))
-                            disposable += repository.runTransactionForResult(InvalidateExtendedBolusTransaction(extendedBolus.id))
-                                .subscribe(
-                                    { aapsLogger.debug(LTag.DATABASE, "Removed extended bolus $extendedBolus") },
-                                    { aapsLogger.error(LTag.DATABASE, "Error while invalidating extended bolus", it) })
-                        }, null)
-                    }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_treatments_extended_bolus, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        menu.findItem(R.id.nav_hide_invalidated)?.isVisible = showInvalidated
+        menu.findItem(R.id.nav_show_invalidated)?.isVisible = !showInvalidated
+
+        return super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.nav_remove_items -> {
+                removeActionMode = toolbar?.startActionMode(RemoveActionModeCallback())
+                true
+            }
+
+            R.id.nav_show_invalidated -> {
+                showInvalidated = true
+                rxBus.send(EventTreatmentUpdateGui())
+                true
+            }
+
+            R.id.nav_hide_invalidated -> {
+                showInvalidated = false
+                rxBus.send(EventTreatmentUpdateGui())
+                true
+            }
+
+            else -> false
+        }
+    }
+
+    inner class RemoveActionModeCallback : ActionMode.Callback {
+
+        override fun onCreateActionMode(mode: ActionMode, menu: Menu?): Boolean {
+            mode.menuInflater.inflate(R.menu.menu_delete_selection, menu)
+            selectedItems.clear()
+            mode.title = rh.gs(R.string.count_selected, selectedItems.size())
+            binding.recyclerview.adapter?.notifyDataSetChanged()
+            return true
+        }
+
+        override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?) = false
+
+        override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
+            return when (item.itemId) {
+                R.id.remove_selected -> {
+                    removeSelected()
+                    true
                 }
-                binding.remove.paintFlags = binding.remove.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+
+                else                 -> false
             }
         }
 
+        override fun onDestroyActionMode(mode: ActionMode?) {
+            removeActionMode = null
+            binding.recyclerview.adapter?.notifyDataSetChanged()
+        }
+    }
+
+    private fun getConfirmationText(): String {
+        if (selectedItems.size() == 1) {
+            val bolus = selectedItems.valueAt(0)
+            return rh.gs(R.string.extended_bolus) + "\n" +
+                "${rh.gs(R.string.date)}: ${dateUtil.dateAndTimeString(bolus.timestamp)}"
+        }
+        return rh.gs(R.string.confirm_remove_multiple_items, selectedItems.size())
+    }
+
+    private fun removeSelected() {
+        if (selectedItems.size() > 0)
+            activity?.let { activity ->
+                OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord), getConfirmationText(), Runnable {
+                    selectedItems.forEach { _, extendedBolus ->
+                        uel.log(
+                            Action.EXTENDED_BOLUS_REMOVED, Sources.Treatments,
+                            ValueWithUnit.Timestamp(extendedBolus.timestamp),
+                            ValueWithUnit.Insulin(extendedBolus.amount),
+                            ValueWithUnit.UnitPerHour(extendedBolus.rate),
+                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(extendedBolus.duration).toInt())
+                        )
+                        disposable += repository.runTransactionForResult(InvalidateExtendedBolusTransaction(extendedBolus.id))
+                            .subscribe(
+                                { aapsLogger.debug(LTag.DATABASE, "Removed extended bolus $extendedBolus") },
+                                { aapsLogger.error(LTag.DATABASE, "Error while invalidating extended bolus", it) })
+                    }
+                    removeActionMode?.finish()
+                })
+            }
+        else
+            removeActionMode?.finish()
     }
 }

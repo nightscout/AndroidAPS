@@ -4,6 +4,7 @@
     <!--    General-->
     <string name="refresh">Actualiser</string>
     <string name="error">Erreur</string>
+    <string name="save">Enregistrer</string>
     <string name="not_set_short">Non configuré</string>
     <string name="failedupdatebasalprofile">La mise à jour du profil basal a échouée</string>
     <string name="profile_set_ok">Profil Basal mise à jour dans la pompe</string>
@@ -48,6 +49,11 @@
     <string name="isf_label">SI</string>
     <string name="basal_label">Basal</string>
     <string name="target_label">Cible</string>
+    <string name="dia_long_label">Durée d\'Action de l\'Insuline</string>
+    <string name="ic_long_label">Rapport Glucides / Insuline</string>
+    <string name="isf_long_label">Facteur de sensibilité à l\'insuline (SI)</string>
+    <string name="basal_long_label">Débit de Basal</string>
+    <string name="target_long_label">Glycémie cible</string>
     <string name="initializing">En cours d\'initialisation...</string>
     <string name="serialnumber">Numéro de série</string>
     <string name="battery_label">Niveau batterie</string>
@@ -105,6 +111,7 @@
     <string name="notes_label">Notes</string>
     <string name="remove_button">Supprimer</string>
     <string name="addnew">Ajouter</string>
+    <string name="addnew_above">Ajouter le nouveau au-dessus</string>
     <string name="wrong_pump_data">Les données proviennent de différentes pompes. Changer le pilote de la pompe pour réinitialiser l\'état de la pompe.</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiter le débit de basal max à %1$.2f U/h à cause de %2$s</string>
@@ -127,6 +134,7 @@
     <string name="location_not_found_message">La localisation doit être activée sur les nouveaux appareils pour que la recherche Bluetooth fonctionne. AAPS n\'enregistre pas votre localisation et la localisation peut être désactivée après l\'appairage.</string>
     <!--    DateUtil-->
     <string name="minago">il y a %1$d m</string>
+    <string name="minago_long">Il y a %1$d minutes</string>
     <string name="hoursago">il y a %1$.1f h</string>
     <string name="shorthour">h</string>
     <string name="days">jours</string>
@@ -369,6 +377,7 @@
     <string name="uel_stat_reset">RÉINITIALISATION DES STATS</string>
     <string name="uel_delete_logs">LOGS SUPPRIMÉS</string>
     <string name="uel_delete_future_treatments">TRAITEMENTS FUTURS SUPPRIMÉS</string>
+    <string name="delete_future_treatments">Supprimer traitements futurs</string>
     <string name="uel_export_settings">PARAMÈTRES EXPORTÉS</string>
     <string name="uel_import_settings">PARAMÈTRES IMPORTÉS</string>
     <string name="uel_reset_databases">BASE DE DONNÉES RÉINITIALISÉE</string>
@@ -440,6 +449,8 @@
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="pump_paired" comment="26 characters max for translation">Pompe appairée</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Actualisation état Insight</string>
+    <string name="a11y_min_button_description">réduire %1$s par %2$s</string>
+    <string name="a11y_plus_button_description">incrémenter %1$s par %2$s</string>
     <plurals name="days">
         <item quantity="one">%1$d jour</item>
         <item quantity="other">%1$d jours</item>

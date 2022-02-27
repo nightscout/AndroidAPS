@@ -12,7 +12,7 @@ import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.automation.elements.InputString
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import io.reactivex.Completable
+import io.reactivex.rxjava3.core.Completable
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

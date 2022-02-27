@@ -25,6 +25,7 @@
     <string name="description_ns_client">מסנכרן את נתוניכם עם Nightscout</string>
     <string name="description_ama">הישאר עם האלגוריתם של 2017</string>
     <string name="description_smb">האלגוריתם העדכני ביותר, עבור משתמשים מתקדמים בלבד</string>
+    <string name="description_smb_dynamic_isf">האלגוריתם העדכני ביותר, נועד למשתמשים מתקדמים עם רגישות (ISF) דינאמית\\אוטומטית</string>
     <string name="description_overview">מציג את המצב הנוכחי של הלולאה ולחצני פעולות שימושיות</string>
     <string name="description_persistent_notification">מציג הודעה קבועה עם סקירה קצרה של מה שהלולאה שלכם עושה</string>
     <string name="description_profile_local">הגדירו פרופיל שזמין באופן לא מקוון.</string>
@@ -161,7 +162,6 @@
     <string name="end_user_license_agreement">הסכם רישיון למשתמש</string>
     <string name="end_user_license_agreement_text">לא מיועד לשימוש למטרת קבלת החלטות רפואיות. בעלי הזכויות מספקים את התוכנית כפי שהיא - \"AS IS\", ללא אחריות מכל סוג שהוא. כל סיכון הנובע מאיכות ו\\או ביצועי התוכנה הוא באחריותך בלבד. במידה ותימצא תקלה בתוכנית, אתם תשאו בכל עלויות שיגרמו לך בשל התקלה.</string>
     <string name="end_user_license_agreement_i_understand">אני מבין\\ה ומסכים\\ה</string>
-    <string name="save">שמור</string>
     <string name="reloadprofile">טעינה מחדש של הפרופיל</string>
     <string name="smscommunicator">תקשורת SMS</string>
     <string name="smscommunicator_allowednumbers">מספרי טלפון מורשים</string>
@@ -246,7 +246,6 @@
     <string name="wear">Wear</string>
     <string name="resend_all_data">שלח מחדש את כל הנתונים</string>
     <string name="open_settings_on_wear">פתיחת הגדרות Wear</string>
-    <string name="basal_rate">מינונים בזאליים:</string>
     <string name="basalvaluebelowminimum">ערך הבסיס מתחת למינימום. פרופיל אינו מוגדר!</string>
     <string name="sms_actualbg">ערכי סוכר בדם:</string>
     <string name="sms_lastbg">ערכי סוכר אחרונים:</string>
@@ -260,13 +259,14 @@
     <string name="array_of_elements">מערך של %1$d אלמנטים. \n ערך נוכחי:</string>
     <string name="openapsma_autosensdata_label">נתוני חישוב רגישות אוטו\'</string>
     <string name="openapsma_scriptdebugdata_label">תיקון באגים בסקריפט</string>
-    <string name="openapsama_useautosens">אפשר חישוב רגישות אוטומטית (Autosens)</string>
+    <string name="openapsama_useautosens">אפשר חישוב רגישות אוטומטי (Autosens)</string>
     <string name="refresheventsfromnightscout">רענון אירועים מנייטסקאוט</string>
     <string name="deletefuturetreatments">מחיקת טיפולים עתידיים</string>
     <string name="actions_shortname">ACT</string>
     <string name="configbuilder_shortname">CONF</string>
     <string name="loop_shortname">לולאה</string>
     <string name="oaps_shortname">OAPS</string>
+    <string name="dynisf_shortname">DynISF</string>
     <string name="localprofile_shortname">LP</string>
     <string name="overview_shortname">בית</string>
     <string name="virtualpump_shortname">VPUMP</string>
@@ -280,8 +280,8 @@
     <string name="profile">פרופיל</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">ערך ברירת מחדל: 3 מנגנון הגנה עיקרי של OpenAPS. מגביל את המינון הבזאלי לעד פי 3 מהמינון הבזאלי הגבוה ביותר שהוגדר. ברוב המקרים אין צורך לשנות ערך זה, אך יש לזכור שזו המשמעות של “3x max daily; 4x current” בדיון על מנגנוני הגנה.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">ערך ברירת מחדל: 4 זהו החצי השני של מנגנון הגנה עיקרי של OpenAPS, והחצי השני של \"3x max daily; 4x current\" במנגנוני ההגנה. המשמעות היא שהמינון הבזאלי, ללא קשר למקסימום שנקבע במשאבה, אינו יכול להיות גבוה יותר ממספר זה כפול הקצב הבזאלי הנוכחי. מיועד למנוע כניסה לתחומים מסוכנים ע\"י קביעת קצב בזאלי גבוה לפני הבנה של פעולת האלגוריתם. שוב: ברירת המחדל היא x4, רוב המשתמשים לעולם אינם צריכים לשנות ערך זה ואם הם מרגישים שמנגנון הגנה זה מפריע להם, הפתרון הוא בשינוי של הגדרות אחרות.</string>
-    <string name="openapsama_autosens_max_summary">ערך ברירת מחדל: 1.2\nזוהי מגבלת המכפיל של autosens (ובקרוב autotune) שמגדירה 20%% כיחס מקסימלי של autosens, אשר קובע בתורו את גובה הבזאלי המקסימלי, גובהו המינימלי של יחס התיקון, ואת המינימום של ערכי המטרה האפשריים.</string>
-    <string name="openapsama_autosens_min_summary">ערך ברירת מחדל: 0.7\nבצד השני של מגבלות הבטיחות של autosens, ערך זה מגביל את יכולתו של autosens להוריד את הערכים הבזאליים ועד כמה יכול להעלות את יחס התיקון ואת ערכי מטרת הסוכר בדם.</string>
+    <string name="openapsama_autosens_max_summary">ערך ברירת מחדל: 1.2\nזוהי מגבלת המכפיל של Autosens (ובקרוב Autotune) שמגדירה 20% כיחס מקסימלי של autosens, אשר קובע בתורו את גובה הבזאלי המקסימלי, גובהו המינימלי של יחס התיקון, ואת המינימום של ערכי המטרה האפשריים.</string>
+    <string name="openapsama_autosens_min_summary">ערך ברירת מחדל: 0.7\nבצד השני של מגבלות הבטיחות של Autosens, ערך זה מגביל את יכולתו של autosens להוריד את הערכים הבזאליים ועד כמה יכול להעלות את יחס התיקון ואת ערכי מטרת הסוכר בדם.</string>
     <string name="openapsama_autosens_adjusttargets">וויסות ערכי מטרה ע\"י Autosens</string>
     <string name="openapsama_autosens_adjusttargets_summary">ערך ברירת מחדל: התאמה מדויקת\n נועד לאפשר ל-Autosens לשנות את המטרה של ערכי הסוכר, בנוסף ליחס התיקון והבזאלים.</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">ערך ברירת מחדל: 2\n מעכב בולוס מופעל אחרי שאתם מזריקים בולוס ארוחה, כך שהלולאה לא תפצה ע\"י בזאלי זמני נמוך אחרי הארוחה. הדוגמה כאן וברירת המחדל היא 2; כך שהגדרה של משך פעילות אינסולין של 3 שעות משמעה שהעיכוב יחלוף בהדרגה בתוך 1.5 שעות (3 ש\' לחלק ל-2).</string>
@@ -427,8 +427,6 @@
     <string name="keep_screen_on_summary">מניעת כיבוי המסך. הדבר צורך הרבה כח סוללה.</string>
     <string name="sensitivity_warning">בהפעלת פונקציית ה-Autosens יש לזכור שחייבים להזין למערכת את כל הפחמימות שנאכלו. אחרת פחמימות לא יזוהו נכון כשינוי ברגישות!</string>
     <string name="sensitivityweightedaverage">רגישות משוקללת ממוצעת</string>
-    <string name="mdtp_ok">אישור</string>
-    <string name="mdtp_cancel">ביטול</string>
     <string name="notloadedplugins">לא כל הפרופילים נטענו!</string>
     <string name="valuesnotstored">הערכים לא נשמרו</string>
     <string name="ns_localbroadcasts">אפשר הפצה לאפליקציות אחרות (כגון xDrip). אין להפעיל אם מותקן לכם יותר ממופע אחד של AAPS או NSClient!</string>
@@ -757,8 +755,6 @@
     <string name="profilenamecontainsdot">שם הפרופיל מכיל נקודות.\nשם כזה אינו נתמך ע\"י Nightscout \n הפרופיל לא הועלה ל-Nightscout.</string>
     <string name="low_mark_comment">ערך נמוך יותר באזור הטווח (הצגה בלבד)</string>
     <string name="high_mark_comment">ערך גבוה יותר באזור הטווח (הצגה בלבד)</string>
-    <string name="age">גיל:</string>
-    <string name="weight_label">משקל:</string>
     <string name="id">מס\' זיהוי:</string>
     <string name="submit">עדכן</string>
     <string name="mostcommonprofile">הפרופיל הנפוץ ביותר:</string>
@@ -900,9 +896,36 @@
     <string name="errors">שגיאות</string>
     <string name="ns_sync_slow">האט העלאות</string>
     <string name="data_status">מצב נתוני הסוכר</string>
+    <string name="statuslights_cannula_age">גיל הצינורית</string>
+    <string name="statuslights_patch_pump_age">גיל משאבה</string>
+    <string name="patch_pump">משאבה ללא צינורית</string>
     <string name="recalculated_data_used">משתמש בנתונים מחושבים מחדש</string>
     <string name="bg_too_close">רמת הסוכר קרובה מדי:\n%1$s\n%2$s</string>
     <string name="identification">אמצעי זיהוי (מייל, פייסבוק או דיסקורד וכו\')</string>
     <string name="identification_not_set">אמצעי הזיהוי אינו מוגדר במצב מפתחים</string>
+    <string name="a11y_dialog">תיבת דו-שיח</string>
+    <string name="a11y_current_bg">רמת סוכר נוכחית</string>
+    <string name="a11_correction_percentage">תיקון עם %</string>
+    <string name="a11_correction_units">תיקון עם יחידות</string>
     <string name="not_available_full">לא זמין</string>
+    <string name="a11y_high">גבוה</string>
+    <string name="a11y_inrange">בטווח</string>
+    <string name="a11y_low">נמוך</string>
+    <string name="a11y_arrow_double_down">ירידה מהירה</string>
+    <string name="a11y_arrow_single_down">ירידה</string>
+    <string name="a11y_arrow_forty_five_down">ירידה איטית</string>
+    <string name="a11y_arrow_flat">יציב</string>
+    <string name="a11y_arrow_forty_five_up">עלייה איטית</string>
+    <string name="a11y_arrow_single_up">עלייה</string>
+    <string name="a11y_arrow_double_up">עלייה מהירה</string>
+    <string name="a11y_arrow_none">אין</string>
+    <string name="a11y_arrow_unknown">לא ידוע</string>
+    <string name="a11y_graph">גרף</string>
+    <string name="a11y_bg_quality">איכות נתוני סוכר</string>
+    <string name="a11y_bg_quality_recalculated">חושב מחדש</string>
+    <string name="a11y_bg_quality_doubles">רישומים כפולים</string>
+    <string name="a11y_insulin_label">אינסולין</string>
+    <string name="a11y_blood_glucose">ערכי סוכר בדם</string>
+    <string name="a11y_bg_outdated">לא עדכני</string>
+    <!-- WEAR OS-->
 </resources>

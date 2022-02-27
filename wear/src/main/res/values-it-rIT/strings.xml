@@ -54,19 +54,18 @@
     <string name="pref_ring_history">Ring History</string>
     <string name="pref_light_ring_history">Light Ring History</string>
     <string name="pref_animations">Animazioni</string>
-    <string name="pref_wizard_in_menu">Wizard in Menu</string>
     <string name="pref_prime_in_menu">Carica in Menu</string>
     <string name="pref_single_target">Target singolo</string>
-    <string name="pref_wizard_percentage">Percentuale Wizard</string>
     <string name="pref_complication_tap_action">Complication Tap Action</string>
     <string name="pref_unicode_in_complications">Unicode in Complications</string>
     <string name="pref_version">Versione:</string>
     <string name="pref_moreWatchfaceSettings">più impostazioni watchface</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Controlla configurazione watchface.</string>
     <string name="menu_tempt">TempT</string>
-    <string name="menu_wizard">Wizard</string>
+    <string name="menu_wizard">Calcolatore</string>
+    <string name="menu_treatment">Trattamento</string>
     <string name="menu_bolus">Bolo</string>
-    <string name="menu_ecarb">eCarb</string>
+    <string name="menu_ecarb">CHO</string>
     <string name="menu_settings">Impostazioni</string>
     <string name="menu_status">Stato</string>
     <string name="menu_resync">Re-Sincronizza</string>
@@ -74,22 +73,24 @@
     <string name="menu_none">Nessuno</string>
     <string name="menu_default">Default</string>
     <string name="menu_menu">Menu</string>
-    <string name="action_duration">durata</string>
-    <string name="action_target" comment="In temp target menu, single target value">target</string>
-    <string name="action_low" comment="In temp target menu, lower value from range">basso</string>
-    <string name="action_high" comment="In temp target menu, higher value from range">alto</string>
+    <string name="quick_wizard_short">XL</string>
+    <string name="action_duration">Durata</string>
+    <string name="action_bolus_confirmation">Bolo richiesto</string>
+    <string name="action_target" comment="In temp target menu, single target value">Target</string>
+    <string name="action_low" comment="In temp target menu, lower value from range">Basso</string>
+    <string name="action_high" comment="In temp target menu, higher value from range">Alto</string>
     <string name="action_carbs">CHO</string>
-    <string name="action_percentage">percentuale</string>
-    <string name="action_start_min">avvio [min]</string>
-    <string name="action_duration_h">durata [h]</string>
-    <string name="action_insulin">insulina</string>
+    <string name="action_percentage">Percentuale</string>
+    <string name="action_start_min">Avvio [min]</string>
+    <string name="action_duration_h">Durata [h]</string>
+    <string name="action_insulin">Insulina</string>
     <string name="action_preset_1">Preset 1</string>
     <string name="action_preset_2">Preset 2</string>
     <string name="action_preset_3">Preset 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Quantità libera</string>
     <string name="action_confirm">CONFERMA</string>
     <string name="action_timeshift">timeshift</string>
-    <string name="action_bolus">bolo</string>
+    <string name="action_bolus">Bolo</string>
     <string name="bolus_progress">Progresso bolo</string>
     <string name="press_to_cancel">premi per cancellare</string>
     <string name="cancel_bolus">CANCELLA BOLO</string>
@@ -142,4 +143,5 @@
     <string name="simple_ui_charging">Durante la ricarica</string>
     <string name="simple_ui_always_on">Modalità Always On</string>
     <string name="simple_ui_always_on_charging">Always On e Ricarica</string>
+    <string name="temp_target_manual">Manuale</string>
 </resources>
