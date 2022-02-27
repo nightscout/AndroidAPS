@@ -21,7 +21,6 @@
         android:layout_height="40dp"
         android:background="@drawable/border_gray"
         android:gravity="center"
-        android:textColor="?attr/numPickerText"
         android:imeOptions="actionDone"
         android:inputType="number"
         android:textColor="?attr/numPickerText"
