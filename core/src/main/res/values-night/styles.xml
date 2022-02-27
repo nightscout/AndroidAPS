@@ -872,6 +872,80 @@
         <item name="android:dialogTheme">@style/APSDialogDarkside</item>
     </style>
 
+    <style name="AppTheme.DARKSIDE" parent="AppTheme.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="bgInRange">@color/blue_default</item>
+        <item name="colorPrimary">@color/primaryColorDarkside</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColorDarkside</item>
+        <item name="colorAccent">@color/secondaryColorDarkside</item>
+        <item name="colorSecondary">@color/secondaryColorDarkside</item>
+        <item name="colorPrimaryVariant">@color/primaryLightColorDarkside</item>
+        <item name="colorSecondaryVariant">@color/secondaryLightColorDarkside</item>
+        <item name="colorOnPrimary">@color/primaryTextColorDarkside</item>
+        <item name="colorSurface">@color/black_alpha_60</item>
+        <item name="colorOnSurface">@color/white</item>
+        <item name="android:popupBackground">@color/black_alpha_80</item>
+        <item name="android:windowBackground">@drawable/carbonfiber03</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
+        <!-- Icons of bottom naviagtion bar -->
+        <item name="iconInsulin">@drawable/pumpe_white_shadow</item>
+        <item name="iconCarbs">@drawable/carb_white_shadow</item>
+        <item name="iconWizzard">@drawable/calculator_white_shadow</item>
+        <item name="iconCgm">@drawable/blooddrop_white_shadow</item>
+        <item name="iconTreatment">@drawable/ic_treatments</item>
+        <item name="android:backgroundDimAmount">0.2</item>
+        <item name="android:textColorPrimary">@color/ios_blue_default</item>
+        <item name="numPickerText">@color/ios_blue_default</item>
+        <!---Bolus Icon Color-->
+        <item name="bolusIconColor" >@color/white</item>
+        <!---Carbs Icon Color-->
+        <item name="carbsIconColor" >@color/white</item>
+        <!---Wizard Icon Color-->
+        <item name="wizardIconColor" >@color/white</item>
+        <!---CGM BOYDA Icon Color-->
+        <item name="boyda" >@color/white</item>
+        <!---Profile Switch Icon Color-->
+        <item name="profileswitchIconColor" >@color/white</item>
+        <!---Temp target Icon Color-->
+        <item name="temptargetIconColor" >@color/white</item>
+        <item name="temptargetIconColor1" >@color/white</item>
+        <!---Start temp basal Icon Color-->
+        <item name="tempbasalIconColor" >@color/white</item>
+        <!---Cancel temp basal Icon Color-->
+        <item name="canceltempbasalIconColor" >@color/white</item>
+        <!---Start extended bolus Icon Color-->
+        <item name="startextbolusIconColor" >@color/white</item>
+        <!---Cancel extended bolus Icon Color-->
+        <item name="cancelextbolusIconColor" >@color/white</item>
+        <!---BG check Icon Color-->
+        <item name="bgcheckIconColor" >@color/white</item>
+        <!---Prime fill Icon Color-->
+        <item name="primefillIconColor" >@color/white</item>
+        <!---CGM insert Icon Color-->
+        <item name="cgminsertIconColor" >@color/white</item>
+        <!---Pump Battery Icon Color-->
+        <item name="pumpBatteryIconColor" >@color/white</item>
+        <!---Note Icon Color-->
+        <item name="noteIconColor" >@color/white</item>
+        <!---Exercise Icon Color-->
+        <item name="exerciseIconColor01" >@color/white</item>
+        <item name="exerciseIconColor02" >@color/white</item>
+        <!---Announcement Icon Color-->
+        <item name="announcementIconColor" >@color/white</item>
+        <!---Question Icon Color-->
+        <item name="questionIconColor" >@color/white</item>
+        <!---History Icon Color-->
+        <item name="historyIconColor" >@color/white</item>
+        <!---Stats Icon Color-->
+        <item name="statsIconColor" >@color/white</item>
+        <!---User Option Icon Color-->
+        <item name="userOptionsIconColor" >@color/white</item>
+        <!-- Color of dialogs -->
+        <item name="android:alertDialogTheme">@style/APSDialogDarkside</item>
+        <item name="android:dialogTheme">@style/APSDialogDarkside</item>
+    </style>
+
     <style name="APSDialogDarkside" parent="Theme.MaterialComponents.Dialog">
         <!-- Customize your theme here. -->
         <item name="android:dialogCornerRadius">10dp</item>
