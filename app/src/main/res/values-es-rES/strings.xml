@@ -433,6 +433,7 @@
     <string name="ns_localbroadcasts">Habilita las transmisiones a otras aplicaciones (como xDrip+). ¡No lo habilites si tienes más de una instancia de AAPS o NSClient instaladas!</string>
     <string name="ns_localbroadcasts_title">Habilitar la emisión de mensajes localmente.</string>
     <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openaps_smb_dynamic_isf">ISF Dinámico</string>
     <string name="enableuam">Activar UAM</string>
     <string name="enablesmb">Activar SMB</string>
     <string name="enablesmb_summary">Usar microbolos en lugar de basales temporales, para corregir más rápidamente</string>
@@ -878,6 +879,8 @@
     <string name="ns_receive_profile_switch_summary">Aceptar cambios de perfil registrados mediante Nightscout o NSClient</string>
     <string name="ns_receive_offline_event">Recibir eventos de desconexión de APS</string>
     <string name="ns_receive_offline_event_summary">Aceptar eventos de desconexión de APS registrados mediante Nightscout o NSClient</string>
+    <string name="ns_receive_tbr_eb">Recibir TBR y EB</string>
+    <string name="ns_receive_tbr_eb_summary">Aceptar TBR y EB ingresados mediante otra instancia</string>
     <string name="ns_receive_insulin">Recibir insulina</string>
     <string name="ns_receive_insulin_summary">Aceptar insulina registrada mediante Nightscout o NSClient (no se entrega, sólo se calcula para IOB)</string>
     <string name="ns_receive_carbs">Recibir carbohidratos</string>
