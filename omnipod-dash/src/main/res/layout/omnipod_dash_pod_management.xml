@@ -49,7 +49,7 @@
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/button_activate_pod"
-                style="?android:attr/buttonStyle"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:drawableTop="@drawable/ic_pod_management_activate_pod"
@@ -70,7 +70,7 @@
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/button_deactivate_pod"
-                style="?android:attr/buttonStyle"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:drawableTop="@drawable/ic_pod_management_deactivate_pod"
@@ -99,7 +99,7 @@
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/button_play_test_beep"
-                style="?android:attr/buttonStyle"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:drawableTop="@drawable/ic_pod_management_play_test_beep"
@@ -113,7 +113,7 @@
 
            <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/button_pod_history"
-                style="?android:attr/buttonStyle"
+               style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:drawableTop="@drawable/ic_pod_management_pod_history"
@@ -134,7 +134,7 @@
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button_discard_pod"
-                style="?android:attr/buttonStyle"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:drawableTop="@drawable/ic_pod_management_discard_pod"

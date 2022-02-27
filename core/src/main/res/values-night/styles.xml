@@ -509,6 +509,8 @@
         <item name="statsIconColor" >@color/white</item>
         <!---User Option Icon Color-->
         <item name="userOptionsIconColor" >@color/white</item>
+        <!---Target Hypo Icon Color-->
+        <item name="targetHypoBgIconColor" >@color/white</item>
         <item name="android:windowBackground">@drawable/ferrari3</item>
     </style>
 
@@ -637,6 +639,8 @@
         <item name="statsIconColor" >@color/white</item>
         <!---User Option Icon Color-->
         <item name="userOptionsIconColor" >@color/white</item>
+        <!---Target Hypo Icon Color-->
+        <item name="targetHypoBgIconColor" >@color/white</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
     </style>
 
@@ -690,6 +694,8 @@
         <item name="statsIconColor" >@color/white</item>
         <!---User Option Icon Color-->
         <item name="userOptionsIconColor" >@color/white</item>
+        <!---Target Hypo Icon Color-->
+        <item name="targetHypoBgIconColor" >@color/white</item>
         <item name="android:windowBackground">@drawable/black_blue</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
     </style>
@@ -776,6 +782,8 @@
         <item name="statsIconColor" >@color/white</item>
         <!---User Option Icon Color-->
         <item name="userOptionsIconColor" >@color/white</item>
+        <!---Target Hypo Icon Color-->
+        <item name="targetHypoBgIconColor" >@color/white</item>
         <item name="android:popupBackground">@color/black_alpha_80</item>
         <item name="android:windowBackground">@drawable/green_domina</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
@@ -831,6 +839,8 @@
         <item name="statsIconColor" >@color/white</item>
         <!---User Option Icon Color-->
         <item name="userOptionsIconColor" >@color/white</item>
+        <!---Target Hypo Icon Color-->
+        <item name="targetHypoBgIconColor" >@color/white</item>
         <item name="android:windowBackground">@drawable/buggati</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
     </style>
@@ -885,6 +895,8 @@
         <item name="statsIconColor" >@color/white</item>
         <!---User Option Icon Color-->
         <item name="userOptionsIconColor" >@color/white</item>
+        <!---Target Hypo Icon Color-->
+        <item name="targetHypoBgIconColor" >@color/white</item>
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.Colored</item>
     </style>
 
@@ -980,6 +992,8 @@
         <item name="statsIconColor" >@color/white</item>
         <!---User Option Icon Color-->
         <item name="userOptionsIconColor" >@color/white</item>
+        <!---Target Hypo Icon Color-->
+        <item name="targetHypoBgIconColor" >@color/white</item>
         <!-- Color of dialogs -->
         <item name="android:alertDialogTheme">@style/APSDialogDarkside</item>
         <item name="android:dialogTheme">@style/APSDialogDarkside</item>

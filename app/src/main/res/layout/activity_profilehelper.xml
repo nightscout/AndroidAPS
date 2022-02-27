@@ -178,7 +178,7 @@
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/copytolocalprofile"
-                style="?android:attr/buttonStyle"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_clone_48"
@@ -257,7 +257,7 @@
 
         <info.nightscout.androidaps.utils.ui.SingleClickButton
             android:id="@+id/compareprofile"
-            style="?android:attr/buttonStyle"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableStart="@drawable/ic_compare_profiles"

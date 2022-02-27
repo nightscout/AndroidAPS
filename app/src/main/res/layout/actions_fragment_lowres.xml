@@ -27,7 +27,7 @@
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/actions_profileswitch"
-                style="?android:attr/buttonStyle"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:drawableTop="@drawable/ic_actions_profileswitch"
@@ -44,7 +44,7 @@
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/actions_temptarget"
-                style="?android:attr/buttonStyle"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:drawableTop="@drawable/ic_temptarget_high"
@@ -61,7 +61,7 @@
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/actions_settempbasal"
-                style="?android:attr/buttonStyle"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:drawableTop="@drawable/ic_actions_starttempbasal"
@@ -78,7 +78,7 @@
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/actions_canceltempbasal"
-                style="?android:attr/buttonStyle"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:drawableTop="@drawable/ic_cancelbasal"
@@ -96,7 +96,7 @@
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/actions_extendedbolus"
-                style="?android:attr/buttonStyle"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:drawableTop="@drawable/ic_actions_startextbolus"
@@ -113,7 +113,7 @@
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/actions_extendedbolus_cancel"
-                style="?android:attr/buttonStyle"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:drawableTop="@drawable/ic_actions_cancelextbolus"
@@ -153,7 +153,7 @@
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/actions_bgcheck"
-                style="?android:attr/buttonStyle"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
                 android:drawableTop="@drawable/ic_cp_bgcheck"
@@ -170,7 +170,7 @@
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/actions_fill"
-                style="?android:attr/buttonStyle"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:drawableTop="@drawable/ic_cp_pump_canula"
@@ -187,7 +187,7 @@
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/actions_cgmsensorinsert"
-                style="?android:attr/buttonStyle"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
                 android:drawableTop="@drawable/ic_cp_cgm_insert"
@@ -204,7 +204,7 @@
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/actions_pumpbatterychange"
-                style="?android:attr/buttonStyle"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
                 android:drawableTop="@drawable/ic_cp_pump_battery"
@@ -221,7 +221,7 @@
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/actions_note"
-                style="?android:attr/buttonStyle"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
                 android:drawableTop="@drawable/ic_cp_note"
@@ -238,7 +238,7 @@
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/actions_exercise"
-                style="?android:attr/buttonStyle"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
                 android:drawableTop="@drawable/ic_cp_exercise"
@@ -255,7 +255,7 @@
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/actions_announcement"
-                style="?android:attr/buttonStyle"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
                 android:drawableTop="@drawable/ic_cp_announcement"
@@ -272,7 +272,7 @@
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/actions_question"
-                style="?android:attr/buttonStyle"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
                 android:drawableTop="@drawable/ic_cp_question"
@@ -304,7 +304,7 @@
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/actions_historybrowser"
-                style="?android:attr/buttonStyle"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:drawableTop="@drawable/ic_pump_history"
@@ -321,7 +321,7 @@
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/actions_tddstats"
-                style="?android:attr/buttonStyle"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:drawableTop="@drawable/ic_cp_stats"

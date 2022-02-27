@@ -93,7 +93,7 @@
                 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/reusebutton"
-                style="?android:attr/buttonStyle"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:drawablePadding="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
