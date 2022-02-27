@@ -6,10 +6,7 @@ import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.events.EventThemeSwitch
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.sharedPreferences.SP
-import io.reactivex.rxkotlin.plusAssign
 import info.nightscout.androidaps.utils.locale.LocaleHelper
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
