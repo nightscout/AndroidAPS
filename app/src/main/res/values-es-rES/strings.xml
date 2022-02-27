@@ -663,6 +663,9 @@
     <string name="sensitivity_raises_target_title">Sensibilidad aumenta el objetivo</string>
     <string name="sensitivity_raises_target_summary">Cuando se detecta sensibilidad a la insulina, aumenta el objetivo de glucosa</string>
     <string name="careportal_removestartedevents">Comenzar la limpieza de AndroidAPS</string>
+    <string name="show_invalidated">Mostrar invalidados</string>
+    <string name="hide_invalidated">Ocultar invalidados</string>
+    <string name="remove_items">Eliminar elementos</string>
     <string name="storedsettingsfound">Encontrados ajustes de configuración</string>
     <string name="allow_hardware_pump_text">Atención: si activas y conectas la bomba con AndroidAPS, AndroidAPS sobrescribirá los ajustes de basales del perfil de la bomba, con los establecidos en el perfil de AndroidAPS. Comprueba que tengas el perfil basal correcto en AndroidAPS. Si no estás seguro, o no quieres sobrescribir los ajustes basales en la bomba, presiona cancelar y repite la vinculación más adelante.</string>
     <string name="error_adding_treatment_title">Datos de tratamiento incompletos</string>
@@ -973,4 +976,15 @@
     <string name="wear_unknown_action_string">Comando de acción desconocido:</string>
     <string name="overview_editquickwizard_percentage">Porcentaje</string>
     <string name="app_default">Aplicación por defecto</string>
+    <string name="select_profile">Seleccione el perfil a editar</string>
+    <string name="refresh_from_nightscout">Actualizar de Nightscout</string>
+    <string name="remove_selected_items">Borrar elementos seleccionados</string>
+    <string name="select_for_removal">Selecciona para eliminar</string>
+    <string name="profile_changes">Cambios de perfil</string>
+    <string name="tempt_targets">Objetivos temporales</string>
+    <string name="carbs_and_bolus">Carbohidratos y bolos</string>
+    <string name="confirm_remove_multiple_items">¿Está seguro de que quiere eliminar %1$d elementos?</string>
+    <string name="hide_loop">Ocultar bucle</string>
+    <string name="show_loop">Mostrar bucle</string>
+    <string name="count_selected">%1$d selecionado</string>
 </resources>
