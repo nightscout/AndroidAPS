@@ -306,11 +306,40 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
         var tdd_24 = (( basal * 24 ) * 2.8);
         }
 
-        var TDD = (tdd7 * 0.3) + (tdd_24 * 0.7);
+   if (meal_data.TDDPUMP){
+        var tdd_pump = ( (meal_data.TDDPUMP / now ) * 24);
+        }
+        else {
+        var tdd_pump = (( basal * 24 ) * 2.8);
+        }
+        var TDD = (tdd7 * 0.4) + (tdd_pump * 0.6);
 
-       console.error("Rolling 24 hour TDD = "+tdd_24+"; ");
-       console.error("                                            ");
-       console.error("Weighted Average TDD = "+TDD+"; ");
+       console.error("Pump extrapolated TDD = "+tdd_pump+"; ");
+        //if (tdd7 > 0){
+        if ( tdd_pump > tdd7 && now < 5 || now < 7 && TDD < ( 0.8 * tdd7 ) ){
+          TDD = ( 0.8 * tdd7 );
+          console.log("Excess or too low insulin from pump so TDD set to "+TDD+" based on 75% of TDD7; ");
+          rT.reason += "TDD: " +TDD+ " due to low or high tdd from pump; ";
+          }
+
+       else if (tdd_pump > (1.75 * tdd7)){
+           TDD = tdd7;
+           console.error("TDD set to TDD7 due to high pump usage reported. TDD = "+TDD+"; ");
+           rT.reason += "TDD set to TDD7 due to high pump usage reported. TDD = "+TDD+"; ";
+           }
+
+
+        else if (tdd_pump < (0.33 * tdd7)){
+           TDD = (tdd7 * 0.25) + (tdd_pump * 0.75);
+           console.error("TDD weighted to pump due to low insulin usage. TDD = "+TDD+"; ");
+           rT.reason += "TDD weighted to pump due to low insulin usage. TDD = "+TDD+"; ";
+           }
+
+        else {
+             console.log("TDD = " +TDD+ " based on standard pump 60/tdd7 40 split; ");
+             rT.reason += "TDD: " +TDD+ " based on standard pump 60/tdd7 40 split; ";
+             }
+
        console.error("                                            ");
         //if (tdd7 > 0){
         /*if ( tdd_pump > tdd7 && now < 5 || now < 7 && TDD < ( 0.8 * tdd7 ) ){
@@ -336,7 +365,7 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
              rT.reason += "TDD: " +TDD+ " based on standard pump 60/tdd7 40 split; ";
              }*/
 
-
+304edd87ebda8207e705ee3fa8f794a4828a2607
     var variable_sens = (277700 / (TDD * bg));
     variable_sens = round(variable_sens,1);
     console.log("Current sensitivity for predictions is " +variable_sens+" based on current bg");
