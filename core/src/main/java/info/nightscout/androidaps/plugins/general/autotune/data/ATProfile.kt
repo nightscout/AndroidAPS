@@ -5,6 +5,7 @@ import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.data.PureProfile
 import info.nightscout.androidaps.database.data.Block
+import info.nightscout.androidaps.extensions.blockValueBySeconds
 import info.nightscout.androidaps.extensions.pureProfileFromJson
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.plugins.bus.RxBus
@@ -12,6 +13,7 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.MidnightTime
 import info.nightscout.androidaps.utils.Round
+import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.sharedPreferences.SP
@@ -26,8 +28,9 @@ class ATProfile(profile: Profile?, val injector: HasAndroidInjector) {
     var profile: ProfileSealed
     var profilename: String? = profile?.profileName
     private val pv: Profile.ProfileValue? = null
+    private var srcbasal: List<Block>? = null
     var basal = DoubleArray(24)
-    var basalUntuned = DoubleArray(24)
+    var basalUntuned = IntArray(24)
     var ic = 0.0
     private var srcic: List<Block>? = null
     var isf = 0.0
@@ -236,6 +239,10 @@ class ATProfile(profile: Profile?, val injector: HasAndroidInjector) {
             //initialize tuned value with current profile values
             if (srcic == null) srcic = profile.icBlocks
             if (srcisf == null) srcisf = profile.isfBlocks
+            if (srcbasal == null) {
+                srcbasal = profile.basalBlocks
+                for(h in 0..23) { basal[h] = srcbasal!!.blockValueBySeconds(T.hours(h.toLong()).secs().toInt(), 1.0, 0)}
+            }
             ic = avgIC
             isf = avgISF
             dia = profile.dia

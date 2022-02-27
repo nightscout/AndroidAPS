@@ -456,7 +456,7 @@ class AutotuneIob(
             extendedBolus = t
             val profile = profileFunction.getProfile(date)
             isFakeExtended = true
-            _NsTreatment(t.toTemporaryBasal(profile!!))
+            profile?.let { _NsTreatment(t.toTemporaryBasal(it)) }
         }
 
         private fun _NsTreatment(t: TemporaryBasal) {
