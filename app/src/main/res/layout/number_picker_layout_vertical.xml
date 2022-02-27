@@ -24,6 +24,7 @@
         android:textColor="?attr/numPickerText"
         android:imeOptions="actionDone"
         android:inputType="number"
+        android:textColor="?attr/numPickerText"
         android:text="1" />
 
     <Button
