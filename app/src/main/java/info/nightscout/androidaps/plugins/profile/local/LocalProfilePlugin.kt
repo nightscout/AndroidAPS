@@ -170,7 +170,7 @@ class LocalProfilePlugin @Inject constructor(
     }
 
     @Synchronized
-    fun getEditProfile(): PureProfile? {
+    fun getEditedProfile(): PureProfile? {
         val profile = JSONObject()
         with(profiles[currentProfileIndex]) {
             profile.put("dia", dia)

@@ -97,7 +97,7 @@ class AndroidPermission @Inject constructor(
 
     @Synchronized
     fun notifyForBtConnectPermission(activity: FragmentActivity) {
-        if (Build.VERSION.SDK_INT >= /*Build.VERSION_CODES.S*/31) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             //  Manifest.permission.BLUETOOTH_CONNECT
             if (permissionNotGranted(activity, "android.permission.BLUETOOTH_CONNECT") || permissionNotGranted(activity, "android.permission.BLUETOOTH_SCAN")) {
                 val notification = NotificationWithAction(injector, Notification.PERMISSION_BT, rh.gs(R.string.needconnectpermission), Notification.URGENT)

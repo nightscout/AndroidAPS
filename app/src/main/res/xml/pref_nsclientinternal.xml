@@ -84,6 +84,12 @@
                 android:summary="@string/ns_receive_offline_event_summary"
                 android:title="@string/ns_receive_offline_event" />
 
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="@string/key_ns_receive_tbr_eb"
+                android:summary="@string/ns_receive_tbr_eb_summary"
+                android:title="@string/ns_receive_tbr_eb" />
+
         </androidx.preference.PreferenceScreen>>
 
         <androidx.preference.PreferenceScreen
