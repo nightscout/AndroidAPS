@@ -79,10 +79,10 @@
     <string name="yes">是</string>
     <string name="no">否</string>
     <string name="loopdisabled">按约束条件禁用循环</string>
-    <string name="bolusdelivered">成功输注大剂量%1$.2fU</string>
+    <string name="bolusdelivered">成功输注大剂量 %1$.2f U</string>
     <string name="virtualpump_resultok">确定</string>
     <string name="novalidbasalrate">从泵中无法读取有效的基础率</string>
-    <string name="limitingmaxiob">由于 %2$s, 将最大 IOB(活性胰岛素) 限制为 %1$.1f U</string>
+    <string name="limitingmaxiob">由于 %2$s 将最大 IOB活性胰岛素限制为 %1$.1f U</string>
     <string name="unsafeusage">不安全的用法</string>
     <string name="pump_unreachable">泵无法连接</string>
     <string name="extended_bolus">扩展大剂量(方波)</string>
@@ -116,7 +116,7 @@
     <!--    Constraints-->
     <string name="limitingbasalratio">最大基础率被限定为 %1$.2f U/h 由于 %2$s</string>
     <string name="pumplimit">泵限制</string>
-    <string name="limitingpercentrate">由于 %2$s, 将最大百分比限制为 %1$d%</string>
+    <string name="limitingpercentrate">由于 %2$s, 将最大百分比限制为 %1$d%%</string>
     <string name="itmustbepositivevalue">它必须是正数</string>
     <string name="limitingbolus">由于 %2$s, 将大剂量限制为 %1$.1f U</string>
     <string name="pumpNotInitializedProfileNotSet">泵未初始化, 配置文件未设置!</string>
