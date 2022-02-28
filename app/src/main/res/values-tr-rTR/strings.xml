@@ -162,7 +162,6 @@
     <string name="end_user_license_agreement">Son Kullanıcı Lisans Sözleşmesi</string>
     <string name="end_user_license_agreement_text">TIBBİ KARAR VERMEK İÇİN KULLANILMAMALIDIR. UYGULANABİLİR YASANIN İZİN VERDİĞİ ÖLÇÜDE, PROGRAM İÇİN GARANTİ YOKTUR. TELİF HAKKI SAHİPLERİNİN VE / VEYA DİĞER TARAFLARIN YAZILI OLMASINA YÖNELİK BAŞKA HİÇBİR ŞEKİLDE BELİRTİLEN VEYA BELİRLİ BİR AMACA UYGUNLUK İLE İLGİLİ ZIMNİ GARANTİLER DE DAHİL OLMAK ÜZERE ANCAK BUNLARLA SINIRLI OLMAMAK ÜZERE AÇIK VEYA ZIMNİ HİÇBİR GARANTİ OLMAKSIZIN “OLDUĞU GİBİ” SAĞLAMAKTADIR. PROGRAMIN KALİTESİ VE PERFORMANSI İLE İLGİLİ TÜM RİSK SİZE AİTTİR. PROGRAMIN HASARLI OLMASI DURUMUNDA, TÜM GEREKLİ SERVİS, ONARIM VEYA DÜZELTME MALİYETİNİ KABUL ETMİŞ OLURSUNUZ.</string>
     <string name="end_user_license_agreement_i_understand">ANLADIM VE KABUL EDİYORUM</string>
-    <string name="save">Kaydet</string>
     <string name="reloadprofile">Profili yeniden yükle</string>
     <string name="smscommunicator">SMS Kominikatör</string>
     <string name="smscommunicator_allowednumbers">İzinli telefon numaraları</string>
@@ -430,14 +429,12 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="keep_screen_on_summary">Android\'in ekranı kapatmasını önleyin. Prize takılı değilken çok fazla enerji tüketir.</string>
     <string name="sensitivity_warning">Otoduyarlılık özelliğini açarsanız tüm yenen karbonhidratları girmeyi unutmayın. Aksi halde, karbonhidrat sapmaları duyarlılık değiştikçe yanlış tanımlanacaktır!!</string>
     <string name="sensitivityweightedaverage">Ağırlıklı ortalama duyarlılık</string>
-    <string name="mdtp_ok">Tamam</string>
-    <string name="mdtp_cancel">Vazgeç</string>
     <string name="notloadedplugins">Tüm profiller yüklenmedi!</string>
     <string name="valuesnotstored">Değerler kaydedilmedi!</string>
     <string name="ns_localbroadcasts">Diğer uygulamalara (xDrip+ gibi) yayınları etkinleştirin. Yüklü birden fazla APPS veya NSClient örneğiniz varsa etkinleştirmeyin!</string>
     <string name="ns_localbroadcasts_title">Yerel yayınları etkinleştirin.</string>
     <string name="openapssmb">OpenAPS SMB</string>
-    <string name="openaps_smb_dynamic_isf">OpenAPS SMB Dinamik İDF</string>
+    <string name="openaps_smb_dynamic_isf">Dinamik İDF</string>
     <string name="enableuam">UAM etkinleştir</string>
     <string name="enablesmb">SMB (Super Micro Bolus) etkinleştir</string>
     <string name="enablesmb_summary">Daha hızlı bir etki için geçici bazal yerine Super Micro Bolus kullanın</string>
@@ -667,6 +664,9 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="sensitivity_raises_target_title">Duyarlılık hedefi yükseltir</string>
     <string name="sensitivity_raises_target_summary">Hassasiyet tespit edildiğinde, KŞ hedefini yükseltin</string>
     <string name="careportal_removestartedevents">Temiz AndroidAPS başladı</string>
+    <string name="show_invalidated">Geçersiz olanları göster</string>
+    <string name="hide_invalidated">Geçersiz olanları gizle</string>
+    <string name="remove_items">Öğeleri kaldır</string>
     <string name="storedsettingsfound">Saklanan ayarlar bulundu</string>
     <string name="allow_hardware_pump_text">Dikkat: Eğer bir donanım pompasını etkinleştirir ve bağlarsanız, AndroidAPS, bazal ayarları profilden pompaya aktaracaktır ve pompada kayıtlı mevcut bazal oranlarının üzerine yazacaktır. AndroidAPS\'de doğru ayarların olduğundan emin olun. Emin değilseniz veya pompanızdaki bazal ayarların üzerine yazmak istemiyorsanız, iptal tuşuna basın ve daha sonra tekrar deneyin.</string>
     <string name="error_adding_treatment_title">Tedavi verileri eksik</string>
@@ -975,4 +975,15 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="wear_unknown_action_string">Bilinmeyen eylem komutu:</string>
     <string name="overview_editquickwizard_percentage">Yüzde</string>
     <string name="app_default">Uygulama varsayılanı</string>
+    <string name="select_profile">Düzenlenecek profili seç</string>
+    <string name="refresh_from_nightscout">Nightscout\'tan Yenile</string>
+    <string name="remove_selected_items">Seçili nesneleri kaldır</string>
+    <string name="select_for_removal">Silmek için seçin</string>
+    <string name="profile_changes">Profil değişiklikleri</string>
+    <string name="tempt_targets">Geçici Hedefler</string>
+    <string name="carbs_and_bolus">Karbonhidrat ve bolus</string>
+    <string name="confirm_remove_multiple_items">%1$d öğeyi kaldırmak istediğinizden emin misiniz</string>
+    <string name="hide_loop">Döngüyü gizle</string>
+    <string name="show_loop">Döngüyü göster</string>
+    <string name="count_selected">%1$d seçildi</string>
 </resources>

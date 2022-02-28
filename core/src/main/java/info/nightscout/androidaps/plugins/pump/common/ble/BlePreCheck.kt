@@ -42,7 +42,7 @@ class BlePreCheck @Inject constructor(
                 ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), PERMISSION_REQUEST_COARSE_LOCATION)
             }
             // change after SDK = 31+
-            if (Build.VERSION.SDK_INT >= /*Build.VERSION_CODES.S*/31) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 if (ContextCompat.checkSelfPermission(context, "android.permission.BLUETOOTH_CONNECT") != PackageManager.PERMISSION_GRANTED ||
                     ContextCompat.checkSelfPermission(context, "android.permission.BLUETOOTH_SCAN") != PackageManager.PERMISSION_GRANTED
                 ) {

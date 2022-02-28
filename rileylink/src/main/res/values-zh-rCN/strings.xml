@@ -2,6 +2,19 @@
 <resources>
     <!-- RL keys -->
     <!-- RL BLE Config -->
+    <string name="riley_link_ble_config_button_scan_start">扫描</string>
+    <string name="riley_link_ble_config_scan_stop">停止</string>
+    <string name="riley_link_ble_config_scan_selected">已选择</string>
+    <string name="riley_link_ble_config_scan_title">RileyLink 扫描</string>
+    <string name="riley_link_ble_config_scan_scanning">扫描中</string>
+    <string name="riley_link_ble_config_scan_finished">扫描完成</string>
+    <string name="riley_link_ble_config_scan_error">扫描错误: %1$d</string>
+    <string name="riley_link_ble_config_connected_never">从不</string>
+    <string name="riley_link_ble_config_scan_currently_selected_riley_link">当前选定的RileyLink</string>
+    <string name="riley_link_ble_config_remove_riley_link">删除</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation">您确定要删除RileLink吗？</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation_title">删除 RileyLink</string>
+    <string name="riley_link_ble_config_no_riley_link_selected">没有选定 RileyLink</string>
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">设置</string>
     <string name="rileylink_settings_tab2">历史</string>
@@ -9,7 +22,24 @@
     <string name="medtronic_pump_status">泵状态</string>
     <string name="title_activity_rileylink_settings">RileyLink 设置</string>
     <string name="rileylink_title">RileyLink</string>
+    <string name="rileylink_address">地址：</string>
+    <string name="rileylink_name">名称:</string>
+    <string name="rileylink_battery_level">电池电量：</string>
+    <string name="rileylink_battery_level_value">%1$d %</string>
+    <string name="rileylink_connection_status">连接状态:</string>
+    <string name="rileylink_connection_error">连接错误:</string>
     <string name="rileylink_device">设备</string>
+    <string name="rileylink_device_type">设备类型:</string>
+    <string name="rileylink_configured_device_model">配置的设备型号：</string>
+    <string name="rileylink_connected_device_model">连接的设备型号：</string>
+    <string name="rileylink_last_used_frequency">上次使用频率:</string>
+    <string name="rileylink_last_device_contact">上传连接设备：</string>
+    <string name="rileylink_firmware_version">固件版本：</string>
+    <string name="rileylink_firmware_version_value">BLE113: %1$s\nCC110: %2$s</string>
+    <string name="rileylink_firmware_version_value_orange">Fw: %1$s\nHw: %2$s</string>
+    <string name="rileylink_pump_serial_number">泵序列号:</string>
+    <string name="rileylink_pump_frequency">泵频率:</string>
+    <string name="rileylink_pump_frequency_value">%1$.2f MHz</string>
     <!-- RL State -->
     <string name="rileylink_state_bt_init">蓝牙初始化…</string>
     <string name="rileylink_state_bt_error">蓝牙错误</string>
@@ -19,14 +49,31 @@
     <string name="rileylink_state_rl_error">RileyLink 错误</string>
     <string name="rileylink_state_pc_tune_up">调整 RileyLink 和泵</string>
     <string name="rileylink_state_pc_error">连接至泵时出现问题</string>
+    <string name="rileylink_state_connected">已连接</string>
+    <string name="rileylink_state_rl_ready">RileyLink 就绪</string>
     <!-- RL Errors -->
     <string name="rileylink_error_not_rl">设备不是 RileyLink</string>
     <string name="rileylink_error_unreachable">无法访问 RileyLink</string>
     <string name="rileylink_error_bt_disabled">蓝牙已禁用</string>
     <string name="rileylink_error_no_bt_adapter">未找到蓝牙适配器</string>
     <string name="rileylink_error_tuneup_failed">调整失败</string>
+    <string name="rileylink_error_pump_unreachable">泵无法连接</string>
     <string name="rileylink_error_pod_unreachable">无法连接主机</string>
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">美敦力泵</string>
+    <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
+    <string name="riley_link_common_yes">是</string>
+    <string name="riley_link_common_no">否</string>
     <!-- RileyLink - Preferences -->
+    <string name="riley_link_show_battery_level">通过OrangeLink/EmaLink/DiaLink报告电池电量</string>
+    <string name="riley_link_show_battery_level_summary">不适用于原始RileyLink。可能无法与其他RileyLink 替代品一起使用。</string>
+    <plurals name="duration_days">
+        <item quantity="other">%1$d　天</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="other">%1$d 小时</item>
+    </plurals>
+    <string name="orange_use_scanning_level">使用扫描</string>
+    <string name="orange_use_scanning_level_summary">在连接到OrangeLink之前进行扫描，它应该可以改善连接 (如果需要，也可以用于其他RileyLink 克隆版本)</string>
+    <string name="rileylink_configuration">RileyLink 配置</string>
 </resources>

@@ -49,10 +49,10 @@ import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
-import io.reactivex.Completable
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
-import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
+import io.reactivex.rxjava3.kotlin.subscribeBy
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -471,7 +471,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
         if (selectedItems.size() > 0)
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord), getConfirmationText(), Runnable {
-                    selectedItems.forEach {key, ml ->
+                    selectedItems.forEach { _, ml ->
                         ml.bolus?.let { bolus ->
                             uel.log(
                                 Action.BOLUS_REMOVED, Sources.Treatments,

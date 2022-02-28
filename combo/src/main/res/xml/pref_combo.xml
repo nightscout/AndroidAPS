@@ -9,7 +9,7 @@
         app:initialExpandedChildrenCount="0">
 
         <ListPreference
-            android:defaultValue="@string/combo_error_display_error"
+            android:defaultValue="@string/key_combo_error_display_error"
             android:entries="@array/comboErrorDisplay"
             android:entryValues="@array/comboErrorDisplayValues"
             android:key="@string/key_show_comm_error_count"

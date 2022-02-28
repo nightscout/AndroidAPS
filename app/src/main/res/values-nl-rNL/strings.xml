@@ -162,7 +162,6 @@
     <string name="end_user_license_agreement">Eind gebruiker overeenkomst</string>
     <string name="end_user_license_agreement_text">MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
     <string name="end_user_license_agreement_i_understand">Begrepen en goedgekeurd</string>
-    <string name="save">Opslaan</string>
     <string name="reloadprofile">Herlaad profiel</string>
     <string name="smscommunicator">SMS Commando\'s</string>
     <string name="smscommunicator_allowednumbers">Geautoriseerde telefoon nummers</string>
@@ -268,6 +267,7 @@
     <string name="configbuilder_shortname">CONF</string>
     <string name="loop_shortname">LOOP</string>
     <string name="oaps_shortname">OAPS</string>
+    <string name="dynisf_shortname">DYNISF</string>
     <string name="localprofile_shortname">LP</string>
     <string name="overview_shortname">OVZ</string>
     <string name="virtualpump_shortname">VPUMP</string>
@@ -428,14 +428,12 @@
     <string name="keep_screen_on_summary">Voorkomen dat Android het scherm uitschakelt. Dit kost veel accuvoeding als je de telefoon niet aan de oplader hebt.</string>
     <string name="sensitivity_warning">Bij het gebruik van Autosense, vergeet niet alle opgenomen koolhydraten in te geven. Anders zullen BG wijzigingen door maaltijden foutief geïnterpreteerd worden !!</string>
     <string name="sensitivityweightedaverage">Gemiddelde gevoeligheid</string>
-    <string name="mdtp_ok">OK</string>
-    <string name="mdtp_cancel">Afbreken</string>
     <string name="notloadedplugins">Niet alle profielen zijn geladen!</string>
     <string name="valuesnotstored">Waarden niet opgeslagen!</string>
     <string name="ns_localbroadcasts">Schakel lokaal data delen met andere apps (zoals xDrip) in. Schakel dit niet in als er meer dan één installatie van AAPS of NSClient zijn geinstalleerd!</string>
     <string name="ns_localbroadcasts_title">Activeer locaal delen.</string>
     <string name="openapssmb">OpenAPS SMB</string>
-    <string name="openaps_smb_dynamic_isf">OpenAPS SMB Dynamische ISF</string>
+    <string name="openaps_smb_dynamic_isf">Dynamische ISF</string>
     <string name="enableuam">Activeer UAM</string>
     <string name="enablesmb">Activeer SMB</string>
     <string name="enablesmb_summary">SMB in plaats van tijdelijke basalen voor snellere reactie</string>
@@ -665,6 +663,9 @@
     <string name="sensitivity_raises_target_title">Gevoeligheid verhoogt het doel</string>
     <string name="sensitivity_raises_target_summary">Wanneer insulinegevoeligheid wordt gedetecteerd, wordt het BG streefdoel verhoogd</string>
     <string name="careportal_removestartedevents">Verwijder AndroidAPS start-meldingen</string>
+    <string name="show_invalidated">Toon ongeldig</string>
+    <string name="hide_invalidated">Verberg ongeldig</string>
+    <string name="remove_items">Items verwijderen</string>
     <string name="storedsettingsfound">Opgeslagen instellingen gevonden</string>
     <string name="allow_hardware_pump_text">Let op: als u activeert en verbinding maakt met een hardwarepomp, kopieert AndroidAPS de basale instellingen van het profiel naar de pomp en overschrijft de bestaande basaal snelheid die op de pomp is opgeslagen. Zorg ervoor dat u de juiste basaal instelling hebt in AndroidAPS. Als u niet zeker weet of niet wilt dat de basaal instellingen op uw pomp worden overschreven, drukt u op Annuleren en herhaalt u het overschakelen naar de pomp op een later tijdstip.</string>
     <string name="error_adding_treatment_title">Behandelingen data incompleet</string>
@@ -881,6 +882,8 @@
     <string name="ns_receive_profile_switch_summary">Accepteer profielwissels zoals ingevoerd in NS of NSClient</string>
     <string name="ns_receive_offline_event">Ontvang APS offline gebeurtenissen</string>
     <string name="ns_receive_offline_event_summary">Accepteer APS offline gebeurtenissen die zijn ingevoerd via NS of NSClient</string>
+    <string name="ns_receive_tbr_eb">Ontvang TBR en EB</string>
+    <string name="ns_receive_tbr_eb_summary">Accepteer TBR en EB ingevoerd vanaf een andere bron</string>
     <string name="ns_receive_insulin">Ontvang insuline</string>
     <string name="ns_receive_insulin_summary">Accepteer insuline zoals ingevoerd in NS of NSClient (insuline wordt niet toegediend, het wordt alleen in IOB calculatie meegenomen)</string>
     <string name="ns_receive_carbs">Ontvang koolhydraten</string>
@@ -973,4 +976,15 @@
     <string name="wear_unknown_action_string">Onbekend actie commando:</string>
     <string name="overview_editquickwizard_percentage">Percentage</string>
     <string name="app_default">Applicatie standaardwaarden</string>
+    <string name="select_profile">Kies profiel om te bewerken</string>
+    <string name="refresh_from_nightscout">Vernieuw vanaf Nightscout</string>
+    <string name="remove_selected_items">Geselecteerde items verwijderen</string>
+    <string name="select_for_removal">Selecteer om te verwijderen</string>
+    <string name="profile_changes">Profiel wijzigingen</string>
+    <string name="tempt_targets">Tijdelijke streefdoelen</string>
+    <string name="carbs_and_bolus">Koolhydraten en bolus</string>
+    <string name="confirm_remove_multiple_items">Weet je zeker dat je %1$d items wilt verwijderen</string>
+    <string name="hide_loop">Verberg loop</string>
+    <string name="show_loop">Toon loop</string>
+    <string name="count_selected">%1$d geselecteerd</string>
 </resources>

@@ -32,8 +32,8 @@ import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
 import java.text.DecimalFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -143,7 +143,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
                     binding.reusebutton.text = rh.gs(R.string.reuse_profile_pct_hours, profile.value.originalPercentage, T.msecs(profile.value.originalTimeshift).hours().toInt())
                     binding.reusebutton.setOnClickListener {
                         binding.percentage.value = profile.value.originalPercentage.toDouble()
-                        binding.timeshift.value = profile.value.originalTimeshift.toDouble()
+                        binding.timeshift.value = T.msecs(profile.value.originalTimeshift).hours().toDouble()
                     }
                 }
         }

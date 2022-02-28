@@ -4,6 +4,7 @@
     <!--    General-->
     <string name="refresh">Vernieuwen</string>
     <string name="error">Fout</string>
+    <string name="save">Opslaan</string>
     <string name="not_set_short">Niet ingesteld</string>
     <string name="failedupdatebasalprofile">Update basaal profiel mislukt</string>
     <string name="profile_set_ok">Basaal profiel in pomp bijgewerkt</string>
@@ -376,6 +377,7 @@
     <string name="uel_stat_reset">STATISTIEKEN RESET</string>
     <string name="uel_delete_logs">VERWIJDER LOGS</string>
     <string name="uel_delete_future_treatments">VERWIJDER TOEKOMSTIGE BEHANDELINGEN</string>
+    <string name="delete_future_treatments">Verwijder behandelingen in de toekomst</string>
     <string name="uel_export_settings">EXPORTEER INSTELLINGEN</string>
     <string name="uel_import_settings">IMPORT INSTELLINGEN</string>
     <string name="uel_reset_databases">RESET DATABASES</string>

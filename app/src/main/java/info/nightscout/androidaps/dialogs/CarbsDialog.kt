@@ -28,8 +28,8 @@ import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
 import java.text.DecimalFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -72,7 +72,7 @@ class CarbsDialog : DialogFragmentWithDate() {
     private fun validateInputs() {
         val maxCarbs = constraintChecker.getMaxCarbsAllowed().value().toDouble()
         val time = binding.time.value.toInt()
-        if (time > 12 * 60 || time < -12 * 60) {
+        if (time > 12 * 60 || time < -7 * 24 * 60) {
             binding.time.value = 0.0
             ToastUtils.showToastInUiThread(ctx, rh.gs(R.string.constraintapllied))
         }
@@ -125,7 +125,7 @@ class CarbsDialog : DialogFragmentWithDate() {
         val maxCarbs = constraintChecker.getMaxCarbsAllowed().value().toDouble()
         binding.time.setParams(
             savedInstanceState?.getDouble("time")
-                ?: 0.0, -12 * 60.0, 12 * 60.0, 5.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher
+                ?: 0.0, -7 * 24 * 60.0, 12 * 60.0, 5.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher
         )
 
         binding.duration.setParams(
