@@ -91,7 +91,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/reload"
-        android:layout_below="@+id/status" />
+        android:layout_below="@+id/status"
+        tools:layout_editor_absoluteX="2dp"
+        tools:layout_editor_absoluteY="-16dp" />
 
     <info.nightscout.androidaps.utils.ui.SingleClickButton
         android:id="@+id/reload"
@@ -101,14 +103,16 @@
         android:layout_alignParentBottom="true"
         android:layout_marginStart="2dp"
         android:layout_marginEnd="2dp"
-        app:icon="@drawable/ic_actions_refill"
-        app:iconTint="?attr/iconColorToolbar"
-        app:iconGravity="start"
-        android:textAlignment="center"
         android:text="@string/reload"
+        android:textAlignment="center"
+        app:icon="@drawable/ic_actions_refill"
+        app:iconGravity="start"
+        app:iconTint="?attr/iconColorToolbar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerview" />
+        app:layout_constraintTop_toBottomOf="@+id/recyclerview"
+        app:layout_constraintVertical_bias="1.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
