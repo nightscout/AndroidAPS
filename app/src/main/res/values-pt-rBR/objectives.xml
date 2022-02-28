@@ -16,8 +16,10 @@
     <string name="objectives_maxiob_objective">Ajustar o loop fechado, aumentar a IOB máximo acima de 0 e reduzir gradualmente os alvos de glicemia</string>
     <string name="objectives_maxiob_gate">Utilizar por alguns dias e pelo menos uma noite sem alarmes de glicose baixa, antes de baixar a glicemia</string>
     <string name="objectives_autosens_objective">Ajuste as basais e os parâmetros, se necessário, e, em seguida, ative o auto-sens</string>
+    <string name="objectives_autosens_gate">1 semana de looping durante o dia com sucesso com entrada regular de carboidratos</string>
     <string name="objectives_smb_objective">Ativando recursos adicionais para uso durante o dia, como SMB</string>
     <string name="objectives_auto_objective">Ativando a automação</string>
+    <string name="objectives_smb_gate">Deverá ler a wiki e aumentar a I.A máx para que os SMBs funcionem corretamente! Inicialmente poderá considerar maxI.A=média dos bólus + 3 x a basal diária máxima</string>
     <string name="objectives_auto_gate">Leia os documentos de como a automação funciona. Configure suas primeiras regras simples. Em vez de efetuar uma ação deixe AAPS apresentar apenas uma notificação. Quando você tiver certeza de que a automação é acionada no momento certo substitua a notificação por uma ação real. (https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">Glicose disponível no NS</string>
     <string name="objectives_pumpstatusavailableinns">Status da Bomba disponível no NS</string>
@@ -48,6 +50,6 @@
     <string name="useaction_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#config-builder</string>
     <string name="usescale_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="notconnected">Não está ligado à internet</string>
-    <string name="failedretrievetime">Falha ao recuperar tempo</string>
+    <string name="failedretrievetime">Falha no tempo de recuperação</string>
     <string name="requirementnotmet">Requisitos de objetivo não cumpridos</string>
 </resources>
