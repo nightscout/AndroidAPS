@@ -681,13 +681,14 @@ class OmnipodDashPumpPlugin @Inject constructor(
         if (bolusCanceled && podStateManager.activeCommand != null) {
             var errorGettingStatus: Throwable? = null
             for (tries in 1..BOLUS_RETRIES) {
-                getPodStatus()
-                    .doOnError {
-                        errorGettingStatus = it
-                        aapsLogger.debug(LTag.PUMP, "waitForBolusDeliveryToComplete errorGettingStatus=$errorGettingStatus")
-                        Thread.sleep(BOLUS_RETRY_INTERVAL_MS) // retry every 2 sec
-                    }
-                    .blockingSubscribe()
+                try {
+                    getPodStatus().blockingAwait()
+                    break
+                } catch (err: Throwable) {
+                    errorGettingStatus = err
+                    aapsLogger.debug(LTag.PUMP, "waitForBolusDeliveryToComplete errorGettingStatus=$errorGettingStatus")
+                    Thread.sleep(BOLUS_RETRY_INTERVAL_MS) // retry every 2 sec
+                }
             }
             if (errorGettingStatus != null) {
                 // requestedBolusAmount will be updated later, via pumpSync
