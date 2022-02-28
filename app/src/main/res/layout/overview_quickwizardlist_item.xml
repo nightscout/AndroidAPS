@@ -165,7 +165,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/overview_quickwizard_item_edit_button"
-                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="2dp"
@@ -175,7 +175,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/overview_quickwizard_item_remove_button"
-                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="2dp"

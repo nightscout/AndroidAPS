@@ -24,7 +24,7 @@
             app:drawableTopCompat="@drawable/ic_insight" />
 
         <com.google.android.material.button.MaterialButton
-            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+            style="@style/Widget.MaterialComponents.Button"
             android:id="@+id/refresh"
             android:layout_width="match_parent"
             android:layout_height="100dp"
@@ -33,7 +33,7 @@
             android:visibility="gone" />
 
         <com.google.android.material.button.MaterialButton
-            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+            style="@style/Widget.MaterialComponents.Button"
             android:id="@+id/operating_mode"
             android:layout_width="match_parent"
             android:layout_height="100dp"
@@ -41,7 +41,7 @@
             android:visibility="gone" />
 
         <com.google.android.material.button.MaterialButton
-            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+            style="@style/Widget.MaterialComponents.Button"
             android:id="@+id/tbr_over_notification"
             android:layout_width="match_parent"
             android:layout_height="100dp"

@@ -52,7 +52,7 @@
         android:paddingEnd="50dp">
 
         <com.google.android.material.button.MaterialButton
-            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+            style="@style/Widget.MaterialComponents.Button"
             android:id="@+id/omnipod_wizard_button_deactivate_pod"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -61,7 +61,7 @@
             android:visibility="gone" />
 
         <com.google.android.material.button.MaterialButton
-            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+            style="@style/Widget.MaterialComponents.Button"
             android:id="@+id/omnipod_wizard_button_discard_pod"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -70,7 +70,7 @@
             android:visibility="gone" />
 
         <com.google.android.material.button.MaterialButton
-            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+            style="@style/Widget.MaterialComponents.Button"
             android:id="@+id/omnipod_wizard_button_retry"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

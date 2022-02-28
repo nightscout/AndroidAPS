@@ -365,7 +365,7 @@
         <item name="android:textSize">15sp</item>
     </style>
 
-    <style name="ButtonSmallFontStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+    <style name="ButtonSmallFontStyle" parent="Widget.MaterialComponents.Button">
         <item name="android:textSize">10sp</item>
     </style>
 

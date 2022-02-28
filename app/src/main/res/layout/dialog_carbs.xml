@@ -218,7 +218,7 @@
             android:padding="5dp">
 
             <com.google.android.material.button.MaterialButton
-                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                style="@style/Widget.MaterialComponents.Button"
                 android:id="@+id/plus1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -228,7 +228,7 @@
                 tools:ignore="HardcodedText" />
 
             <com.google.android.material.button.MaterialButton
-                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                style="@style/Widget.MaterialComponents.Button"
                 android:id="@+id/plus2"
                 android:layout_marginEnd="2dp"
                 android:layout_width="match_parent"
@@ -238,7 +238,7 @@
                 tools:ignore="HardcodedText" />
 
             <com.google.android.material.button.MaterialButton
-                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                style="@style/Widget.MaterialComponents.Button"
                 android:id="@+id/plus3"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
