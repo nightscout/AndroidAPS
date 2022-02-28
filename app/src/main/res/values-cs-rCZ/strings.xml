@@ -882,6 +882,8 @@
     <string name="ns_receive_profile_switch_summary">Přijmout přepnutí profilu zadané prostřednictvím NS nebo NSClienta</string>
     <string name="ns_receive_offline_event">Přijímat události APS offline</string>
     <string name="ns_receive_offline_event_summary">Přijmout APS offline události zadané prostřednictvím NS nebo NSClienta</string>
+    <string name="ns_receive_tbr_eb">Přijímat dočasný bazál a kombinovany bolus</string>
+    <string name="ns_receive_tbr_eb_summary">Přijmout dočasný bazál a kombo bolus zadaný přes jinou instanci</string>
     <string name="ns_receive_insulin">Přijímat inzulín</string>
     <string name="ns_receive_insulin_summary">Přijmout inzulín vložený přes NS nebo NSClient (není dodán, pouze započítán do IOB)</string>
     <string name="ns_receive_carbs">Přijímat sacharidy</string>
