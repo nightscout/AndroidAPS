@@ -26,15 +26,16 @@ import javax.inject.Inject
 class ATProfile(profile: Profile?, val injector: HasAndroidInjector) {
 
     var profile: ProfileSealed
+    var pumpProfile: ProfileSealed? = null
     var profilename: String? = profile?.profileName
     private val pv: Profile.ProfileValue? = null
-    private var srcbasal: List<Block>? = null
+    var pumpProfileBasal = DoubleArray(24)
     var basal = DoubleArray(24)
     var basalUntuned = IntArray(24)
+    var pumpProfileIc = 0.0
+    var pumpProfileIsf = 0.0
     var ic = 0.0
-    private var srcic: List<Block>? = null
     var isf = 0.0
-    private var srcisf: List<Block>? = null
     var dia = 0.0
     var isValid: Boolean = false
     var from: Long = 0
@@ -144,8 +145,8 @@ class ATProfile(profile: Profile?, val injector: HasAndroidInjector) {
         try {
             json.put("dia", dia)
             if (src) {
-                json.put("sens", getArray(srcisf))
-                json.put("carbratio", getArray(srcic))
+                json.put("sens", getArray(profile.isfBlocks))
+                json.put("carbratio", getArray(profile.icBlocks))
             } else {
                 json.put(
                     "sens", JSONArray().put(
@@ -230,18 +231,18 @@ class ATProfile(profile: Profile?, val injector: HasAndroidInjector) {
         }
     }
 
-    //Todo add Autotune Injector
-    init {
+   init {
         injector.androidInjector().inject(this)
         this.profile = profile as ProfileSealed
         isValid = profile.isValid
         if (isValid) {
             //initialize tuned value with current profile values
-            if (srcic == null) srcic = profile.icBlocks
-            if (srcisf == null) srcisf = profile.isfBlocks
-            if (srcbasal == null) {
-                srcbasal = profile.basalBlocks
-                for(h in 0..23) { basal[h] = srcbasal!!.blockValueBySeconds(T.hours(h.toLong()).secs().toInt(), 1.0, 0)}
+            if (pumpProfile ==  null) {
+                pumpProfile = this.profile
+                for(h in 0..23) { basal[h] = profile.basalBlocks.blockValueBySeconds(T.hours(h.toLong()).secs().toInt(), 1.0, 0)}
+                pumpProfileBasal = basal
+                pumpProfileIc = avgIC
+                pumpProfileIsf = avgISF
             }
             ic = avgIC
             isf = avgISF
