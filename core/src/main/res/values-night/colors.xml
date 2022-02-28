@@ -15,7 +15,7 @@
 
     <!-- Default theme color -->
     <!-- This section describes the main theme colors -->
-    <color name="primaryColorDefault">#333333</color>
+    <color name="primaryColorDefault">#383838</color>
     <color name="primaryLightColorDefault">#bbb9bb</color>
     <color name="primaryDarkColorDefault">#222222</color>
     <color name="secondaryColorDefault">#03dac6</color>
