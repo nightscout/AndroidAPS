@@ -4,6 +4,7 @@
     <!--    General-->
     <string name="refresh">Actualizar</string>
     <string name="error">Error</string>
+    <string name="save">Guardar</string>
     <string name="not_set_short">No configurado</string>
     <string name="failedupdatebasalprofile">Error al actualizar el perfil basal</string>
     <string name="profile_set_ok">Perfil basal actualizado en la bomba</string>
@@ -376,6 +377,7 @@
     <string name="uel_stat_reset">RESTABLECER ESTADÍSTICAS</string>
     <string name="uel_delete_logs">ELIMINAR REGISTROS</string>
     <string name="uel_delete_future_treatments">ELIMINAR TRATAMIENTOS FUTUROS</string>
+    <string name="delete_future_treatments">Eliminar tratamientos futuros</string>
     <string name="uel_export_settings">EXPORTAR AJUSTES</string>
     <string name="uel_import_settings">IMPORTAR AJUSTES</string>
     <string name="uel_reset_databases">RESTABLECER BASES DE DATOS</string>

@@ -22,9 +22,12 @@
     <string name="medtronic_pump_battery_alkaline">Alkaline (扩展视图)</string>
     <string name="medtronic_pump_battery_lithium">锂(扩展视图)</string>
     <string name="medtronic_pump_battery_nizn">锂(扩展视图)</string>
+    <string name="medtronic_pump_battery_nimh">镍氢电池 (扩展视图)</string>
     <string name="medtronic_bolus_debugging">大剂量/治疗调试</string>
     <!-- MDT Fragment -->
+    <string name="rl_battery_label">RileyLink 电池</string>
     <!-- MDT Errors -->
+    <string name="medtronic_errors">错误</string>
     <string name="medtronic_error_serial_not_set">未设置序列号。</string>
     <string name="medtronic_error_serial_invalid">序列号无效。</string>
     <string name="medtronic_error_pump_type_not_set">未设置泵类型。</string>
@@ -47,6 +50,7 @@
     <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
+    <string name="medtronic_pump_history">美敦力泵历史记录</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <string name="medtronic_cmd_cancel_bolus_not_supported">大剂量在泵上设置之后，取消大剂量。由于 美敦力泵 不支持取消，因此您需要手动将其取消。 将泵置于暂停状态，然后执行恢复 (如果仍要取消)。 应用程序将在下次更新 ( 不到 5 分钟) 中提取更改。</string>
     <string name="medtronic_cmd_cant_read_tbr">无法读取当前 TBR。</string>
@@ -61,15 +65,30 @@
     <string name="medtronic_cmd_desc_get_history">获取历史记录 - 页面 %1$d (%2$d/16)</string>
     <string name="medtronic_cmd_desc_get_history_request">获取历史记录 - 页面 %1$d</string>
     <string name="medtronic_cmd_desc_get_time">获取泵时间</string>
+    <string name="medtronic_cmd_desc_set_time">设置泵时间</string>
+    <string name="medtronic_cmd_desc_get_battery_status">获取电池状态</string>
     <string name="medtronic_cmd_desc_get_settings">获取设置</string>
     <string name="medtronic_cmd_desc_get_model">获取泵模式</string>
     <string name="medtronic_cmd_desc_get_basal_profile">获得基础率</string>
     <string name="medtronic_cmd_desc_set_basal_profile">获得基础率配置文件</string>
     <string name="medtronic_cmd_desc_get_tbr">获取临时基础率</string>
     <string name="medtronic_cmd_desc_set_tbr">设置临时基础率</string>
+    <string name="medtronic_cmd_desc_cancel_tbr">取消临时基础率</string>
     <string name="medtronic_cmd_desc_set_bolus">设置大剂量</string>
+    <string name="medtronic_cmd_desc_get_remaining_insulin">获取剩余胰岛素</string>
+    <string name="medtronic_pump_status_pump_unreachable">泵无法连接</string>
+    <string name="medtronic_warning">警告</string>
     <!-- medtronic_warning -->
+    <string name="medtronic_pump_connected_now">现在</string>
     <!-- combo_pump_connected_now -->
+    <string name="ago">之前</string>
+    <string name="medtronic_notification_check_time_date">泵的时间需要更新</string>
     <!-- combo_notification_check_time_date -->
+    <string name="common_on">开启</string>
+    <string name="common_off">关闭</string>
     <string name="pump_time_updated">泵时间已经更新</string>
+    <string name="set_neutral_temps_title">设置中性临时基础率</string>
+    <string name="set_neutral_temps_summary">如果启用，它将在每小时结束前取消临时基础率。 此方法可帮助阻止某些泵在一小时内进行蜂鸣/振动。</string>
+    <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d 分钟剩余)</string>
+    <string name="invalid_history_data">检测到无效的泵历史数据。打开新问题并提供日志。</string>
 </resources>
