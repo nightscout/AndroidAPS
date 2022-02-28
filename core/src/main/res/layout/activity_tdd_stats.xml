@@ -158,17 +158,12 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/connection_status"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center_horizontal" />
-
-        <TextView
             android:id="@+id/message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_marginStart="2dp"
+            android:layout_marginBottom="2dp"
             android:background="@drawable/pillborder"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
@@ -181,20 +176,27 @@
             android:layout_width="match_parent"
             android:layout_height="5dp" />
 
+        <TextView
+            android:id="@+id/connection_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal" />
+
     </LinearLayout>
 
     <info.nightscout.androidaps.utils.ui.SingleClickButton
         android:id="@+id/reload"
-        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+        style="@style/Widget.MaterialComponents.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="2dp"
         android:layout_marginEnd="2dp"
-        app:icon="@drawable/ic_actions_refill"
-        app:iconTint="?attr/iconColorToolbar"
-        app:iconGravity="start"
+        android:text="@string/reload"
         android:textAlignment="center"
-        android:text="@string/reload" />
+        app:icon="@drawable/ic_actions_refill"
+        app:iconGravity="start"
+        app:iconTint="?attr/iconColorToolbar" />
 
 </RelativeLayout>

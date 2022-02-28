@@ -11,7 +11,7 @@
         android:orientation="vertical">
 
         <com.google.android.material.button.MaterialButton
-            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+            style="@style/Widget.MaterialComponents.Button"
             android:id="@+id/resend"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -24,7 +24,7 @@
             android:text="@string/resend_all_data" />
 
         <com.google.android.material.button.MaterialButton
-            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+            style="@style/Widget.MaterialComponents.Button"
             android:id="@+id/opensettings"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

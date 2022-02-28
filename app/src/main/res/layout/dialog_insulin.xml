@@ -147,7 +147,7 @@
             android:padding="5dp">
 
             <com.google.android.material.button.MaterialButton
-                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                style="@style/Widget.MaterialComponents.Button"
                 android:id="@+id/plus05"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -157,7 +157,7 @@
                 android:text="+0.5" />
 
             <com.google.android.material.button.MaterialButton
-                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                style="@style/Widget.MaterialComponents.Button"
                 android:id="@+id/plus10"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -167,7 +167,7 @@
                 android:text="+1.0" />
 
             <com.google.android.material.button.MaterialButton
-                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                style="@style/Widget.MaterialComponents.Button"
                 android:id="@+id/plus20"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

@@ -4,7 +4,7 @@
 
     <info.nightscout.androidaps.utils.ui.SingleClickButton
         android:id="@+id/button_refresh_status"
-        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+        style="@style/Widget.MaterialComponents.Button"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -17,7 +17,7 @@
 
     <info.nightscout.androidaps.utils.ui.SingleClickButton
         android:id="@+id/button_pod_management"
-        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+        style="@style/Widget.MaterialComponents.Button"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -30,7 +30,7 @@
 
     <info.nightscout.androidaps.utils.ui.SingleClickButton
         android:id="@+id/button_silence_alerts"
-        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+        style="@style/Widget.MaterialComponents.Button"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -43,7 +43,7 @@
 
     <info.nightscout.androidaps.utils.ui.SingleClickButton
         android:id="@+id/button_set_time"
-        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+        style="@style/Widget.MaterialComponents.Button"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -57,7 +57,7 @@
 
     <info.nightscout.androidaps.utils.ui.SingleClickButton
         android:id="@+id/button_resume_delivery"
-        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+        style="@style/Widget.MaterialComponents.Button"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -71,7 +71,7 @@
 
     <info.nightscout.androidaps.utils.ui.SingleClickButton
         android:id="@+id/button_suspend_delivery"
-        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+        style="@style/Widget.MaterialComponents.Button"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"

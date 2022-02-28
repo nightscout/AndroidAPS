@@ -6,7 +6,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button_cancel"
-        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+        style="@style/Widget.MaterialComponents.Button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="2dp"
@@ -17,7 +17,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button_next"
-        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+        style="@style/Widget.MaterialComponents.Button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="2dp"

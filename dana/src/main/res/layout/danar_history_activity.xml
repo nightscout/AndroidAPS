@@ -91,11 +91,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/reload"
-        android:layout_below="@+id/status" />
+        android:layout_below="@+id/status"
+        tools:layout_editor_absoluteX="2dp"
+        tools:layout_editor_absoluteY="-16dp" />
 
     <info.nightscout.androidaps.utils.ui.SingleClickButton
         android:id="@+id/reload"
-        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+        style="@style/Widget.MaterialComponents.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
