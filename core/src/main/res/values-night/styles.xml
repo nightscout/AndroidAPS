@@ -9,7 +9,7 @@
         <item name="colorPrimaryVariant">@color/primaryLightColorDefault</item>
         <item name="colorSecondaryVariant">@color/secondaryLightColorDefault</item>
         <item name="colorOnPrimary">@color/primaryTextColorDefault</item>
-        <item name="colorSurface">@color/black_alpha_90</item>
+        <item name="colorSurface">@color/black</item>
         <item name="colorOnSurface">@color/gray</item>
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorOnBackground">@color/white</item>

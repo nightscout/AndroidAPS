@@ -9,13 +9,13 @@
     <color name="background_stats_color">#666666</color>
 
     <!---Android Dark and Light Theme Base colors-->
-    <color name="background_dark">#262626</color>
+    <color name="background_dark">#161616</color>
     <color name="background_light">#FFFFFF</color>
     <color name="splashBackground">#000000</color>
 
     <!-- Default theme color -->
     <!-- This section describes the main theme colors -->
-    <color name="primaryColorDefault">#222222</color>
+    <color name="primaryColorDefault">#333333</color>
     <color name="primaryLightColorDefault">#bbb9bb</color>
     <color name="primaryDarkColorDefault">#222222</color>
     <color name="secondaryColorDefault">#03dac6</color>
