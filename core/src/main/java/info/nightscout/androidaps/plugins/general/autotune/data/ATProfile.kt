@@ -10,8 +10,6 @@ import info.nightscout.androidaps.extensions.pureProfileFromJson
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.HardLimits
-import info.nightscout.androidaps.utils.MidnightTime
 import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -26,14 +24,9 @@ import javax.inject.Inject
 class ATProfile(profile: Profile?, val injector: HasAndroidInjector) {
 
     var profile: ProfileSealed
-    var pumpProfile: ProfileSealed? = null
     var profilename: String? = profile?.profileName
-    private val pv: Profile.ProfileValue? = null
-    var pumpProfileBasal = DoubleArray(24)
     var basal = DoubleArray(24)
     var basalUntuned = IntArray(24)
-    var pumpProfileIc = 0.0
-    var pumpProfileIsf = 0.0
     var ic = 0.0
     var isf = 0.0
     var dia = 0.0
@@ -44,7 +37,6 @@ class ATProfile(profile: Profile?, val injector: HasAndroidInjector) {
     @Inject lateinit var sp: SP
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var hardLimits: HardLimits
     @Inject lateinit var config: Config
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var rh: ResourceHelper
@@ -57,8 +49,6 @@ class ATProfile(profile: Profile?, val injector: HasAndroidInjector) {
         profile = ProfileSealed.Pure(data!!)
     }
 
-    val tunedProfile: Profile?
-        get() = data?.let { ProfileSealed.Pure(it)}
     val icSize: Int
         get() = profile.getIcsValues().size
     val isfSize: Int
@@ -67,19 +57,6 @@ class ATProfile(profile: Profile?, val injector: HasAndroidInjector) {
         get() = if (profile.getIsfsMgdlValues().size == 1) profile.getIsfsMgdlValues().get(0).value else Round.roundTo(averageProfileValue(profile.getIsfsMgdlValues()), 0.01)
     val avgIC: Double
         get() = if (profile.getIcsValues().size == 1) profile.getIcsValues().get(0).value else Round.roundTo(averageProfileValue(profile.getIcsValues()), 0.01)
-
-
-
-    fun getBasal(hour: Int): Double {
-        if (!isValid) return 0.0
-        val secondfrommidnight = hour * 60 * 60
-        return profile.getBasalTimeFromMidnight(secondfrommidnight)
-    }
-
-    fun setBasal(time: Long, value: Double) {
-        val hour = ((time - MidnightTime.calc(time)) / 60 / 60 / 1000) as Int
-        basal[hour] = value
-    }
 
     //Export json string with oref0 format used for autotune
     fun profiletoOrefJSON(): String {
@@ -130,8 +107,7 @@ class ATProfile(profile: Profile?, val injector: HasAndroidInjector) {
             json.put("units", profileFunction.getUnits().asText)
             json.put("timezone", TimeZone.getDefault().id)
             jsonString = json.toString(2).replace("\\/", "/")
-        } catch (e: JSONException) {
-        }
+        } catch (e: JSONException) {}
         return jsonString
     }
 
@@ -237,13 +213,7 @@ class ATProfile(profile: Profile?, val injector: HasAndroidInjector) {
         isValid = profile.isValid
         if (isValid) {
             //initialize tuned value with current profile values
-            if (pumpProfile ==  null) {
-                pumpProfile = this.profile
-                for(h in 0..23) { basal[h] = profile.basalBlocks.blockValueBySeconds(T.hours(h.toLong()).secs().toInt(), 1.0, 0)}
-                pumpProfileBasal = basal
-                pumpProfileIc = avgIC
-                pumpProfileIsf = avgISF
-            }
+            for(h in 0..23) { basal[h] = profile.basalBlocks.blockValueBySeconds(T.hours(h.toLong()).secs().toInt(), 1.0, 0)}
             ic = avgIC
             isf = avgISF
             dia = profile.dia
