@@ -77,4 +77,5 @@
     </plurals>
     <string name="orange_use_scanning_level">Bruk Skanning</string>
     <string name="orange_use_scanning_level_summary">Skann før du kobler til OrangeLink, det bør forbedre tilkoblingene (kan også brukes med andre RileyLink enheter, hvis nødvendig)</string>
+    <string name="rileylink_configuration">RileyLink konfigurasjon</string>
 </resources>
