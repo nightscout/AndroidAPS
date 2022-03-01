@@ -174,14 +174,14 @@ class AutotunePlugin @Inject constructor(
                 if (i < daysBack - 1) {
                     atLog("Partial result for day ${i + 1}".trimIndent())
                     Thread(Runnable {
-                        result = rh.gs(R.string.format_autotune_partialresult, i + 1, daysBack, showResults(tunedProfile!!))
+                        result = rh.gs(R.string.format_autotune_partialresult, i + 1, daysBack, showResults(tunedProfile!!, pumpprofile))
                         rxBus.send(EventAutotuneUpdateResult(result))
                     }).start()
                 }
             }
         }
         return if (tunedProfile!!.profile != null) {
-            result = showResults(tunedProfile!!)
+            result = showResults(tunedProfile!!, pumpprofile)
             autotuneFS!!.exportResult(result)
             autotuneFS!!.exportLogAndZip(lastRun, logString)
             profileSwitchButtonVisibility = View.VISIBLE
@@ -217,7 +217,7 @@ class AutotunePlugin @Inject constructor(
         } else "No Result"
     }
 
-    private fun showResults(tunedProfile: ATProfile): String {
+    private fun showResults(tunedProfile: ATProfile, pumpProfile: ATProfile): String {
         var toMgDl = 1.0
         if (profileFunction.getUnits() == GlucoseUnit.MMOL) toMgDl = Constants.MMOLL_TO_MGDL
         val line = rh.gs(R.string.format_autotune_separator)
@@ -227,18 +227,18 @@ class AutotunePlugin @Inject constructor(
         var totalBasal = 0.0
         var totalTuned = 0.0
         for (i in 0..23) {
-            totalBasal += tunedProfile.pumpProfileBasal[i]
+            totalBasal += pumpProfile.basal[i]
             totalTuned += tunedProfile.basal[i]
-            val percentageChangeValue = tunedProfile.basal[i] / tunedProfile.pumpProfileBasal[i] * 100 - 100
-            strResult += rh.gs(R.string.format_autotune_basal, i.toDouble(), tunedProfile.pumpProfileBasal[i], tunedProfile.basal[i], tunedProfile.basalUntuned[i], percentageChangeValue)
+            val percentageChangeValue = tunedProfile.basal[i] / pumpProfile.basal[i] * 100 - 100
+            strResult += rh.gs(R.string.format_autotune_basal, i.toDouble(), pumpProfile.basal[i], tunedProfile.basal[i], tunedProfile.basalUntuned[i], percentageChangeValue)
         }
         strResult += line
         strResult += rh.gs(R.string.format_autotune_sum_basal, totalBasal, totalTuned)
         strResult += line
         // show ISF and CR
-        strResult += rh.gs(R.string.format_autotune_isf, rh.gs(R.string.isf_short), tunedProfile.pumpProfileIsf / toMgDl, tunedProfile.isf / toMgDl)
+        strResult += rh.gs(R.string.format_autotune_isf, rh.gs(R.string.isf_short), pumpProfile.isf / toMgDl, tunedProfile.isf / toMgDl)
         strResult += line
-        strResult += rh.gs(R.string.format_autotune_ic, rh.gs(R.string.ic_short), tunedProfile.pumpProfileIc, tunedProfile.ic)
+        strResult += rh.gs(R.string.format_autotune_ic, rh.gs(R.string.ic_short), pumpProfile.ic, tunedProfile.ic)
         strResult += line
         atLog(strResult)
         return strResult
