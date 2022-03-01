@@ -122,7 +122,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             createFakeTBRWhenNoActivePod()
                 .subscribeOn(aapsSchedulers.io)
                 .doOnError { aapsLogger.warn(LTag.PUMP, "Error on createFakeTBRWhenNoActivePod=$it") }
-                .blockingAwait()
+                .blockingSubscribe()
             handler.postDelayed(statusChecker, STATUS_CHECK_INTERVAL_MS)
         }
     }
@@ -249,7 +249,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     omnipodManager.connect(it).ignoreElements()
                         .doOnError { aapsLogger.info(LTag.PUMPCOMM, "connect error=$it") }
                         .doOnComplete { podStateManager.incrementSuccessfulConnectionAttemptsAfterRetries() }
-                        .blockingAwait()
+                        .blockingSubscribe()
                 }
             } finally {
                 synchronized(this) {
@@ -293,7 +293,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             .doOnError {
                 aapsLogger.error(LTag.PUMP, "Error in getPumpStatus", it)
             }
-            .blockingAwait()
+            .blockingSubscribe()
     }
 
     private fun getPodStatus(): Completable = Completable.concat(
@@ -681,13 +681,14 @@ class OmnipodDashPumpPlugin @Inject constructor(
         if (bolusCanceled && podStateManager.activeCommand != null) {
             var errorGettingStatus: Throwable? = null
             for (tries in 1..BOLUS_RETRIES) {
-                getPodStatus()
-                    .doOnError {
-                        errorGettingStatus = it
-                        aapsLogger.debug(LTag.PUMP, "waitForBolusDeliveryToComplete errorGettingStatus=$errorGettingStatus")
-                        Thread.sleep(BOLUS_RETRY_INTERVAL_MS) // retry every 2 sec
-                    }
-                    .blockingAwait()
+                try {
+                    getPodStatus().blockingAwait()
+                    break
+                } catch (err: Throwable) {
+                    errorGettingStatus = err
+                    aapsLogger.debug(LTag.PUMP, "waitForBolusDeliveryToComplete errorGettingStatus=$errorGettingStatus")
+                    Thread.sleep(BOLUS_RETRY_INTERVAL_MS) // retry every 2 sec
+                }
             }
             if (errorGettingStatus != null) {
                 // requestedBolusAmount will be updated later, via pumpSync
@@ -727,7 +728,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     aapsLogger.debug(LTag.PUMP, "waitForBolusDeliveryToComplete errorGettingStatus=$errorGettingStatus")
                     Thread.sleep(BOLUS_RETRY_INTERVAL_MS) // retry every 3 sec
                 }
-                .blockingAwait()
+                .blockingSubscribe()
             if (errorGettingStatus != null) {
                 continue
             }

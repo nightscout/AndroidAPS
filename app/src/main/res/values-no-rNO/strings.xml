@@ -433,6 +433,7 @@
     <string name="ns_localbroadcasts">Aktiver kringkasting til andre apper (som xDrip+). Ikke aktiver dette hvis du har mer enn en AAPS eller NSClient installert!</string>
     <string name="ns_localbroadcasts_title">Aktiver lokale sendinger.</string>
     <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openaps_smb_dynamic_isf">Dynamisk ISF</string>
     <string name="enableuam">Aktiver UAM</string>
     <string name="enablesmb">Aktiver SMB</string>
     <string name="enablesmb_summary">Bruk Super Mikro Solen i stedet for temp basal for raskere resultat</string>
@@ -662,6 +663,9 @@
     <string name="sensitivity_raises_target_title">Sensitivitet øker BS målverdi</string>
     <string name="sensitivity_raises_target_summary">Når systemet oppdager økt insulinsensitivitet, vil BS målverdi økes</string>
     <string name="careportal_removestartedevents">Basis AndroidAPS startet</string>
+    <string name="show_invalidated">Vis ugyldige oppføringer</string>
+    <string name="hide_invalidated">Skjul ugyldige oppføringer</string>
+    <string name="remove_items">Fjern oppføringer</string>
     <string name="storedsettingsfound">Lagrede innstillinger funnet</string>
     <string name="allow_hardware_pump_text">Varsel: Hvis du aktiverer og kobler til en pumpe, så vil AndroidAPS kopiere basal innstillinger fra din profil over til pumpen og overskrive verdiene som er lagret der. Sjekk at du har riktige basal verdier i AndroidAPS. Hvis du ikke er sikker eller ikke ønsker å overskrive basal verdiene i pumpen, trykk avbryt og koble til pumpen senere.</string>
     <string name="error_adding_treatment_title">Behandlingsdata er ufullstendige</string>
@@ -878,6 +882,8 @@
     <string name="ns_receive_profile_switch_summary">Aksepter profilbytter som er angitt via NS eller NSClient</string>
     <string name="ns_receive_offline_event">Motta APS offline hendelser</string>
     <string name="ns_receive_offline_event_summary">Aksepter APS offline hendelser lagt inn gjennom NS eller NSKlient</string>
+    <string name="ns_receive_tbr_eb">Motta TBR og EB</string>
+    <string name="ns_receive_tbr_eb_summary">Godta TBR og EB beregninger fra tilleggsmodul</string>
     <string name="ns_receive_insulin">Motta insulin</string>
     <string name="ns_receive_insulin_summary">Aksepter insulin angitt via NS eller NSClient (enhetene er ikke dosert, kun beregnet mot IOB)</string>
     <string name="ns_receive_carbs">Motta karbohydrater</string>
@@ -970,4 +976,15 @@
     <string name="wear_unknown_action_string">Ukjent kommando:</string>
     <string name="overview_editquickwizard_percentage">Prosent</string>
     <string name="app_default">Standardverdi</string>
+    <string name="select_profile">Velg profil du vil redigere</string>
+    <string name="refresh_from_nightscout">Oppdater fra Nightscout</string>
+    <string name="remove_selected_items">Fjern valgte elementer</string>
+    <string name="select_for_removal">Velg hva som skal fjernes</string>
+    <string name="profile_changes">Profil endringer</string>
+    <string name="tempt_targets">Temp Target</string>
+    <string name="carbs_and_bolus">Karbohydrater og bolus</string>
+    <string name="confirm_remove_multiple_items">Er du sikker på at du vil fjerne %1$d elementer</string>
+    <string name="hide_loop">Skjul loop</string>
+    <string name="show_loop">Vis loop</string>
+    <string name="count_selected">%1$d valgt</string>
 </resources>
