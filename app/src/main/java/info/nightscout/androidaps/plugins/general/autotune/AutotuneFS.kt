@@ -85,7 +85,7 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
     }
 
     fun exportTunedProfile(tunedProfile: ATProfile) {
-        createAutotunefile(TUNEDPROFILE + formatDate(Date(tunedProfile.from)) + ".json", tunedProfile.profiletoOrefJSON())
+        createAutotunefile(TUNEDPROFILE + formatDate(tunedProfile.from) + ".json", tunedProfile.profiletoOrefJSON())
         try {
             createAutotunefile(resourceHelper.gs(R.string.autotune_tunedprofile_name) + ".json", tunedProfile.profiletoOrefJSON() /*.replace("\\/", "/") */, true)
         } catch (e: JSONException) {
@@ -94,20 +94,20 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
 
     fun exportEntries(autotuneIob: AutotuneIob) {
         try {
-            createAutotunefile(ENTRIESPREF + formatDate(Date(autotuneIob.startBG)) + ".json", autotuneIob.glucosetoJSON().toString(2).replace("\\/", "/"))
+            createAutotunefile(ENTRIESPREF + formatDate(autotuneIob.startBG) + ".json", autotuneIob.glucosetoJSON().toString(2).replace("\\/", "/"))
         } catch (e: JSONException) {
         }
     }
 
     fun exportTreatments(autotuneIob: AutotuneIob) {
         try {
-            createAutotunefile(TREATMENTSPREF + formatDate(Date(autotuneIob.startBG)) + ".json", autotuneIob.nsHistorytoJSON().toString(2).replace("\\/", "/"))
+            createAutotunefile(TREATMENTSPREF + formatDate(autotuneIob.startBG) + ".json", autotuneIob.nsHistorytoJSON().toString(2).replace("\\/", "/"))
         } catch (e: JSONException) {
         }
     }
 
     fun exportPreppedGlucose(preppedGlucose: PreppedGlucose) {
-        createAutotunefile(PREPPEDPREF + formatDate(Date(preppedGlucose.from)) + ".json", preppedGlucose.toString(2))
+        createAutotunefile(PREPPEDPREF + formatDate(preppedGlucose.from) + ".json", preppedGlucose.toString(2))
     }
 
     fun exportResult(result: String) {
@@ -138,16 +138,6 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
                 //log.error("Unhandled exception", e);
             }
         }
-    }
-
-    private fun profilName(daterun: Date?): String {
-        var strdate = ""
-        var prefixe = "aaps-"
-        if (daterun != null) {
-            prefixe = "aaps-new"
-            strdate = "." + formatDate(daterun)
-        }
-        return "$prefixe$PROFIL$strdate.json"
     }
 
     /**********************************************************************************
@@ -195,7 +185,7 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
             }
         }
 
-        fun formatDate(date: Date?): String {
+        fun formatDate(date: Long): String {
             val dateFormat = SimpleDateFormat("yyyy-MM-dd")
             return dateFormat.format(date)
         }
