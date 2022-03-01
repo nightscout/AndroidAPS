@@ -44,7 +44,7 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
 
     /*****************************************************************************
      * Create autotune folder for all files created during an autotune session
-     */
+     *****************************************************************************/
     fun createAutotuneFolder() {
         //create autotune subfolder for autotune files if not exists
         autotunePath = File(loggerUtils.logDirectory, AUTOTUNEFOLDER)
@@ -61,7 +61,7 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
 
     /*****************************************************************************
      * between each run of autotune, clean autotune folder content
-     */
+     *****************************************************************************/
     fun deleteAutotuneFiles() {
         for (file in autotunePath.listFiles()) {
             if (file.isFile) file.delete()
@@ -74,7 +74,7 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
 
     /*****************************************************************************
      * Create a JSON autotune files or settings files
-     */
+     *****************************************************************************/
     fun exportSettings(settings: String) {
         createAutotunefile(SETTINGS, settings, true)
     }
@@ -87,21 +87,21 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
     fun exportTunedProfile(tunedProfile: ATProfile) {
         createAutotunefile(TUNEDPROFILE + formatDate(tunedProfile.from) + ".json", tunedProfile.profiletoOrefJSON())
         try {
-            createAutotunefile(resourceHelper.gs(R.string.autotune_tunedprofile_name) + ".json", tunedProfile.profiletoOrefJSON() /*.replace("\\/", "/") */, true)
+            createAutotunefile(resourceHelper.gs(R.string.autotune_tunedprofile_name) + ".json", tunedProfile.profiletoOrefJSON(), true)
         } catch (e: JSONException) {
         }
     }
 
     fun exportEntries(autotuneIob: AutotuneIob) {
         try {
-            createAutotunefile(ENTRIESPREF + formatDate(autotuneIob.startBG) + ".json", autotuneIob.glucosetoJSON().toString(2).replace("\\/", "/"))
+            createAutotunefile(ENTRIESPREF + formatDate(autotuneIob.startBG) + ".json", autotuneIob.glucosetoJSON())
         } catch (e: JSONException) {
         }
     }
 
     fun exportTreatments(autotuneIob: AutotuneIob) {
         try {
-            createAutotunefile(TREATMENTSPREF + formatDate(autotuneIob.startBG) + ".json", autotuneIob.nsHistorytoJSON().toString(2).replace("\\/", "/"))
+            createAutotunefile(TREATMENTSPREF + formatDate(autotuneIob.startBG) + ".json", autotuneIob.nsHistorytoJSON())
         } catch (e: JSONException) {
         }
     }
@@ -120,29 +120,25 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
         zipAutotune(lastRun)
     }
 
-    private fun createAutotunefile(fileName: String?, stringFile: String, isSettingFile: Boolean = false) {
-        //var stringFile = stringFile
-        if (fileName != null && !fileName.isEmpty()) {
-            //if (stringFile.isEmpty()) stringFile = ""
-            val autotuneFile = File(if (isSettingFile) autotuneSettings.absolutePath else autotunePath.absolutePath, fileName)
-            try {
-                val fw = FileWriter(autotuneFile)
-                val pw = PrintWriter(fw)
-                pw.println(stringFile)
-                pw.close()
-                fw.close()
-                log("Create " + fileName + " file in " + (if (isSettingFile) SETTINGSFOLDER else AUTOTUNEFOLDER) + " folder")
-            } catch (e: FileNotFoundException) {
-                //log.error("Unhandled exception", e);
-            } catch (e: IOException) {
-                //log.error("Unhandled exception", e);
-            }
+    private fun createAutotunefile(fileName: String, stringFile: String, isSettingFile: Boolean = false) {
+        val autotuneFile = File(if (isSettingFile) autotuneSettings.absolutePath else autotunePath.absolutePath, fileName)
+        try {
+            val fw = FileWriter(autotuneFile)
+            val pw = PrintWriter(fw)
+            pw.println(stringFile)
+            pw.close()
+            fw.close()
+            log("Create " + fileName + " file in " + (if (isSettingFile) SETTINGSFOLDER else AUTOTUNEFOLDER) + " folder")
+        } catch (e: FileNotFoundException) {
+            //log.error("Unhandled exception", e);
+        } catch (e: IOException) {
+            //log.error("Unhandled exception", e);
         }
     }
 
     /**********************************************************************************
      * create a zip file with all autotune files and settings in autotune folder at the end of run
-     */
+     **********************************************************************************/
     fun zipAutotune(lastRun: Long) {
         try {
             val zipFileName = ZIPPREF + dateUtil.toISOString(lastRun, "yyyy-MM-dd_HH-mm-ss", null) + ".zip"
@@ -154,6 +150,7 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
             out.close()
             log("Create $zipFileName file in ${loggerUtils.logDirectory} folder")
         } catch (e: IOException) {
+            //log.error("Unhandled exception", e);
         }
     }
 
@@ -177,10 +174,10 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
                     var read: Int
                     while (bis.read(bytesIn).also { read = it } != -1) {
                         out.write(bytesIn, 0, read)
-                        //bytesRead += read;
                     }
                     out.closeEntry()
                 } catch (e: IOException) {
+                    //log.error("Unhandled exception", e);
                 }
             }
         }

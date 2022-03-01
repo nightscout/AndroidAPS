@@ -84,8 +84,8 @@ class AutotuneFragment : DaggerFragment() {
                 Thread(Runnable {
                     autotunePlugin.aapsAutotune(daysBack, false)
                 }).start()
-                lastRunTxt = if (autotunePlugin.lastRun != null) "" + dateUtil.dateAndTimeString(autotunePlugin.lastRun) else ""
-                lastRun = if (autotunePlugin.lastRun != null) autotunePlugin.lastRun else 0
+                lastRunTxt = dateUtil.dateAndTimeString(autotunePlugin.lastRun)
+                lastRun = autotunePlugin.lastRun
                 updateGui()
             } else binding.tuneResult.text = resourceHelper.gs(R.string.autotune_min_days)
         }
@@ -119,7 +119,6 @@ class AutotuneFragment : DaggerFragment() {
         }
 
         binding.autotuneProfileswitch.setOnClickListener{
-            //val name = resourceHelper.gs(R.string.autotune_tunedprofile_name)
             val tunedProfile = autotunePlugin.tunedProfile
             tunedProfile?.let { tunedP ->
                 val profileStore = tunedP.profileStore

@@ -343,7 +343,7 @@ class AutotuneIob(
     }
 
     /** */
-    fun glucosetoJSON(): JSONArray {
+    fun glucosetoJSON(): String {
         val glucoseJson = JSONArray()
         val utcOffset = T.msecs(TimeZone.getDefault().getOffset(dateUtil.now()).toLong()).hours()
         try {
@@ -362,15 +362,15 @@ class AutotuneIob(
             }
         } catch (e: JSONException) {
         }
-        return glucoseJson
+        return glucoseJson.toString(2)
     }
 
-    fun nsHistorytoJSON(): JSONArray {
+    fun nsHistorytoJSON(): String {
         val json = JSONArray()
         for (t in nsTreatments) {
             if (t.isValid) json.put(t.toJson())
         }
-        return json
+        return json.toString(2).replace("\\/", "/")
     }
 
     /** */ //I add this internal class to be able to export easily ns-treatment files with same containt and format than NS query used by oref0-autotune
