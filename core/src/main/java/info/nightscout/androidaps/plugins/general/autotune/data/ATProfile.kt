@@ -64,6 +64,9 @@ class ATProfile(profile: Profile?, val injector: HasAndroidInjector) {
         // Include min_5m_carbimpact, insulin type, single value for carb_ratio and isf
         var jsonString = ""
         val json = JSONObject()
+        //val json = profile.toPureNsJson(dateUtil)
+        //jsonString = json.toString(2).replace("\\/", "/")
+
         val basalIncrement = 60
         val insulinInterface: Insulin = activePlugin.activeInsulin
         try {
@@ -108,6 +111,7 @@ class ATProfile(profile: Profile?, val injector: HasAndroidInjector) {
             json.put("timezone", TimeZone.getDefault().id)
             jsonString = json.toString(2).replace("\\/", "/")
         } catch (e: JSONException) {}
+
         return jsonString
     }
 

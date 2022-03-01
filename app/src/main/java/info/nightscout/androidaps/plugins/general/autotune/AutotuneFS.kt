@@ -38,8 +38,8 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
     val TUNEDPROFILE = "newaapsprofile."
     val LOGPREF = "autotune."
     val ZIPPREF = "autotune_"
-    var autotunePath: File? = null
-    var autotuneSettings: File? = null
+    lateinit var autotunePath: File
+    lateinit var autotuneSettings: File
 
 
     /*****************************************************************************
@@ -48,13 +48,13 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
     fun createAutotuneFolder() {
         //create autotune subfolder for autotune files if not exists
         autotunePath = File(loggerUtils.logDirectory, AUTOTUNEFOLDER)
-        if (!(autotunePath!!.exists() && autotunePath!!.isDirectory)) {
-            autotunePath!!.mkdir()
+        if (!(autotunePath.exists() && autotunePath.isDirectory)) {
+            autotunePath.mkdir()
             log("Create $AUTOTUNEFOLDER subfolder in ${loggerUtils.logDirectory}")
         }
         autotuneSettings = File(loggerUtils.logDirectory, SETTINGSFOLDER)
-        if (!(autotuneSettings!!.exists() && autotuneSettings!!.isDirectory)) {
-            autotuneSettings!!.mkdir()
+        if (!(autotuneSettings.exists() && autotuneSettings.isDirectory)) {
+            autotuneSettings.mkdir()
             log("Create $SETTINGSFOLDER subfolder in ${loggerUtils.logDirectory}")
         }
     }
@@ -63,10 +63,10 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
      * between each run of autotune, clean autotune folder content
      */
     fun deleteAutotuneFiles() {
-        for (file in autotunePath!!.listFiles()) {
+        for (file in autotunePath.listFiles()) {
             if (file.isFile) file.delete()
         }
-        for (file in autotuneSettings!!.listFiles()) {
+        for (file in autotuneSettings.listFiles()) {
             if (file.isFile) file.delete()
         }
         log("Delete previous Autotune files")
@@ -87,7 +87,7 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
     fun exportTunedProfile(tunedProfile: ATProfile) {
         createAutotunefile(TUNEDPROFILE + formatDate(Date(tunedProfile.from)) + ".json", tunedProfile.profiletoOrefJSON())
         try {
-            createAutotunefile(resourceHelper.gs(R.string.autotune_tunedprofile_name) + ".json", tunedProfile.data!!.toString().replace("\\/", "/"), true)
+            createAutotunefile(resourceHelper.gs(R.string.autotune_tunedprofile_name) + ".json", tunedProfile.profiletoOrefJSON() /*.replace("\\/", "/") */, true)
         } catch (e: JSONException) {
         }
     }
@@ -124,7 +124,7 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
         //var stringFile = stringFile
         if (fileName != null && !fileName.isEmpty()) {
             //if (stringFile.isEmpty()) stringFile = ""
-            val autotuneFile = File(if (isSettingFile) autotuneSettings!!.absolutePath else autotunePath!!.absolutePath, fileName)
+            val autotuneFile = File(if (isSettingFile) autotuneSettings.absolutePath else autotunePath.absolutePath, fileName)
             try {
                 val fw = FileWriter(autotuneFile)
                 val pw = PrintWriter(fw)
@@ -154,18 +154,16 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
      * create a zip file with all autotune files and settings in autotune folder at the end of run
      */
     fun zipAutotune(lastRun: Long) {
-        if (lastRun != null) {
-            try {
-                val zipFileName = ZIPPREF + dateUtil.toISOString(lastRun) + ".zip"
-                val zipFile = File(loggerUtils.logDirectory, zipFileName)
-                val out = ZipOutputStream(BufferedOutputStream(FileOutputStream(zipFile)))
-                if (autotunePath != null) zipDirectory(autotunePath!!, autotunePath!!.name, out)
-                if (autotuneSettings != null) zipDirectory(autotuneSettings!!, autotuneSettings!!.name, out)
-                out.flush()
-                out.close()
-                log("Create $zipFileName file in ${loggerUtils.logDirectory} folder")
-            } catch (e: IOException) {
-            }
+        try {
+            val zipFileName = ZIPPREF + dateUtil.toISOString(lastRun, "yyyy-MM-dd_HH-mm-ss", null) + ".zip"
+            val zipFile = File(loggerUtils.logDirectory, zipFileName)
+            val out = ZipOutputStream(BufferedOutputStream(FileOutputStream(zipFile)))
+            zipDirectory(autotunePath, autotunePath.name, out)
+            zipDirectory(autotuneSettings, autotuneSettings.name, out)
+            out.flush()
+            out.close()
+            log("Create $zipFileName file in ${loggerUtils.logDirectory} folder")
+        } catch (e: IOException) {
         }
     }
 
