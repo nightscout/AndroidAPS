@@ -207,7 +207,7 @@ class ATProfile(profile: Profile?, val injector: HasAndroidInjector) {
             val json = JSONObject()
             val store = JSONObject()
             try {
-                store.put(rh.gs(R.string.autotune_tunedprofile_name), data)
+                store.put(rh.gs(R.string.autotune_tunedprofile_name), profile.toPureNsJson(dateUtil))
                 json.put("defaultProfile", rh.gs(R.string.autotune_tunedprofile_name))
                 json.put("store", store)
                 json.put("startDate", dateUtil.toISOAsUTC(dateUtil.now()))

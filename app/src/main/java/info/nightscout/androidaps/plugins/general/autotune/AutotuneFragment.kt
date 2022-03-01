@@ -120,31 +120,36 @@ class AutotuneFragment : DaggerFragment() {
 
         binding.autotuneProfileswitch.setOnClickListener{
             //val name = resourceHelper.gs(R.string.autotune_tunedprofile_name)
-            val profileStore = autotunePlugin.tunedProfile!!.profileStore
-            log("ProfileSwitch pressed")
-            if (profileStore != null) {
-                showConfirmation(requireContext(), resourceHelper.gs(R.string.activate_profile) + ": " + autotunePlugin.tunedProfile!!.profilename + " ?", Runnable {
-                    val now = dateUtil.now()
-                    if (profileFunction.createProfileSwitch(
-                            autotunePlugin.tunedProfile!!.profileStore!!,
-                            profileName = autotunePlugin.tunedProfile!!.profilename!!,
-                            durationInMinutes = 0,
-                            percentage = 100,
-                            timeShiftInHours = 0,
-                            timestamp = now
-                        )
-                    ) {
-                        uel.log(
-                            UserEntry.Action.PROFILE_SWITCH,
-                            UserEntry.Sources.ProfileSwitchDialog,
-                            "Autotune AutoSwitch",
-                            ValueWithUnit.SimpleString(autotunePlugin.tunedProfile!!.profilename!!))
-                    }
-                    rxBus.send(EventLocalProfileChanged())
-                    autotunePlugin.profileSwitchButtonVisibility = View.GONE
-                    updateGui()
-                })
-            } else log("ProfileStore is null!")
+            val tunedProfile = autotunePlugin.tunedProfile
+            tunedProfile?.let { tunedP ->
+                val profileStore = tunedP.profileStore
+                log("ProfileSwitch pressed")
+                if (profileStore != null) {
+                    showConfirmation(requireContext(), resourceHelper.gs(R.string.activate_profile) + ": " + tunedP.profilename + " ?", Runnable {
+                        val now = dateUtil.now()
+                        if (profileFunction.createProfileSwitch(
+                                profileStore,
+                                profileName = tunedP.profilename!!,
+                                durationInMinutes = 0,
+                                percentage = 100,
+                                timeShiftInHours = 0,
+                                timestamp = now
+                            )
+                        ) {
+                            uel.log(
+                                UserEntry.Action.PROFILE_SWITCH,
+                                UserEntry.Sources.ProfileSwitchDialog,
+                                "Autotune AutoSwitch",
+                                ValueWithUnit.SimpleString(autotunePlugin.tunedProfile!!.profilename!!))
+                        }
+                        rxBus.send(EventLocalProfileChanged())
+                        autotunePlugin.profileSwitchButtonVisibility = View.GONE
+                        updateGui()
+                    })
+                } else log("ProfileStore is null!")
+
+            }
+
         }
 
         lastRun = autotunePlugin.lastRun
