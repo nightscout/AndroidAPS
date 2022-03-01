@@ -883,6 +883,8 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="ns_receive_profile_switch_summary">NS veya NSClient aracılığıyla girilen profil değişimlerini kabul edin</string>
     <string name="ns_receive_offline_event">APS çevrimdışı olaylarını alın</string>
     <string name="ns_receive_offline_event_summary">NS veya NSClient aracılığıyla girilen APS çevrimdışı olaylarını kabul edin</string>
+    <string name="ns_receive_tbr_eb">GBO ve EB (Yayma Bolus) alın</string>
+    <string name="ns_receive_tbr_eb_summary">Başka bir örnek üzerinden girilen GBO ve EB (Yayma Bolusu) kabul edin</string>
     <string name="ns_receive_insulin">İnsülinleri alın</string>
     <string name="ns_receive_insulin_summary">NS veya NSClient aracılığıyla girilen insülini kabul edin (iletilmez, yalnızca aktif insüline göre (IOB) hesaplanır)</string>
     <string name="ns_receive_carbs">Karbonhidratları alın</string>
