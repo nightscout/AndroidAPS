@@ -51,4 +51,6 @@
     <string name="combo_tbr_count">Conteggio TBR</string>
     <string name="bolusstopped">Bolo stoppato</string>
     <string name="bolusstopping">Stop del bolo in corso</string>
+    <string name="combo_error_display_never">Mai</string>
+    <string name="combo_error_display_always">Sempre</string>
 </resources>

@@ -4,6 +4,7 @@
     <!--    General-->
     <string name="refresh">Aktualisieren</string>
     <string name="error">Fehler</string>
+    <string name="save">Speichern</string>
     <string name="not_set_short">Nicht angegeben</string>
     <string name="failedupdatebasalprofile">Fehler beim Aktualisieren des Basalprofils</string>
     <string name="profile_set_ok">Basal-Profil in der Pumpe aktualisiert</string>
@@ -376,6 +377,7 @@
     <string name="uel_stat_reset">STATISTIKEN ZURÜCKGESETZT</string>
     <string name="uel_delete_logs">LOGS LÖSCHEN</string>
     <string name="uel_delete_future_treatments">BEHANDLUNGEN IN DER ZUKUNFT ENTFERNEN</string>
+    <string name="delete_future_treatments">Zukünftige Behandlungen löschen</string>
     <string name="uel_export_settings">EINSTELLUNGEN EXPORTIEREN</string>
     <string name="uel_import_settings">EINSTELLUNGEN IMPORTIEREN</string>
     <string name="uel_reset_databases">DATENBANK ZURÜCKSETZEN</string>
