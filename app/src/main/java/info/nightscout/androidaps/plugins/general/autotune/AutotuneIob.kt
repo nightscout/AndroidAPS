@@ -13,7 +13,6 @@ import info.nightscout.androidaps.database.entities.*
 import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.extensions.durationInMinutes
 import info.nightscout.androidaps.extensions.iobCalc
-import info.nightscout.androidaps.extensions.toJson
 import info.nightscout.androidaps.extensions.toTemporaryBasal
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.plugins.bus.RxBus
@@ -108,14 +107,14 @@ class AutotuneIob(
         initializeTempBasalData(from - range(), to)
         initializeExtendedBolusData(from - range(), to)
         Collections.sort(tempBasals2) { o1: TemporaryBasal, o2: TemporaryBasal -> (o2.timestamp - o1.timestamp).toInt() }
-        // Todo: add neutral TBR for oref0 Autotune (ProfileSwitches not taken into account)
+        addNeutralTempBasal(from - range(), to)
+        Collections.sort(tempBasals2) { o1: TemporaryBasal, o2: TemporaryBasal -> (o2.timestamp - o1.timestamp).toInt() }
         Collections.sort(nsTreatments) { o1: NsTreatment, o2: NsTreatment -> (o2.date - o1.date).toInt() }
 
         log.debug("D/AutotunePlugin: Nb Treatments: " + nsTreatments.size + " Nb meals: " + meals.size)
     }
 
     private fun initializeBgreadings(from: Long, to: Long) {
-        //glucose.clear()
         glucose = repository.compatGetBgReadingsDataFromTime(from, to, false).blockingGet();
     }
 
@@ -182,6 +181,38 @@ class AutotuneIob(
             }
         }
         log.debug("D/AutotunePlugin: tempBasal+extended bolus size: " + tempBasals2.size)
+    }
+
+    private fun addNeutralTempBasal(from: Long, to: Long) {
+        var previousStart = to
+        for (i in tempBasals2.indices.reversed()) {
+            val newStart = tempBasals2[i].timestamp + tempBasals2[i].duration
+            if (previousStart > newStart) {
+                val neutraltb = TemporaryBasal(
+                    isValid = true,
+                    isAbsolute = false,
+                    timestamp = newStart,
+                    rate = 100.0,
+                    duration = previousStart - newStart,
+                    id = newStart,
+                    type = TemporaryBasal.Type.NORMAL
+                )
+                toRoundedTimestampTB(neutraltb)
+            }
+            previousStart = tempBasals2[i].timestamp
+        }
+        if (previousStart > from) {
+            val neutraltb = TemporaryBasal(
+                isValid = true,
+                isAbsolute = false,
+                timestamp = from,
+                rate = 100.0,
+                duration = previousStart - from,
+                id = from,
+                type = TemporaryBasal.Type.NORMAL
+            )
+            toRoundedTimestampTB(neutraltb)
+        }
     }
 
     private fun toRoundedTimestampTB(tb: TemporaryBasal) {
