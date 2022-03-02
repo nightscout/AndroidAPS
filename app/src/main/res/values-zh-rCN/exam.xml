@@ -119,7 +119,7 @@
     <string name="sensitivity_label">敏感度插件</string>
     <string name="sensitivity_which">选择所有正确的答案。</string>
     <string name="sensitivity_adjust">灵敏度插件允许AndroidAPS临时调整胰岛素敏感度的短暂变化(例如激素变化或与输液部位吸收相关的问题)。</string>
-    <string name="sensitivity_edit">灵敏度插件为用户提供基础率、 I:C比率和 ISF 的更改建议，可用来编辑配置文件。</string>
+    <string name="sensitivity_edit">灵敏度插件为用户提供basal基础率，I:C碳水化合物系数和ISF胰岛素敏感系数的更改建议，可用来编辑配置文件。</string>
     <string name="sensitivity_cannula">记录输注导管更换会将Autosens比率重置回100%。</string>
     <string name="sensitivity_time">一些插件选项具有可配置的时间范围，可由用户设置。</string>
     <string name="sensitivity_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Sensitivity-detection-and-COB.html</string>
