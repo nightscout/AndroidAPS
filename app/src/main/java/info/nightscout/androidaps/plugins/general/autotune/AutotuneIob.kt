@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.round
 
 @Singleton
 class AutotuneIob(
@@ -105,15 +106,15 @@ class AutotuneIob(
         startBG = from
         endBG = to
         nsTreatments.clear()
+        tempBasals2 = ArrayList<TemporaryBasal>()
         initializeBgreadings(from, to)
         initializeTreatmentData(from - range(), to)
         initializeTempBasalData(from - range(), to)
         initializeExtendedBolusData(from - range(), to)
-        //initializeTempTargetData(from, to);
-        //initializeProfileSwitchData(from-range(), to);
-        //NsTreatment is used to export all "ns-treatments" for cross execution of oref0-autotune on a virtual machine
-        //it contains traitments, tempbasals and extendedbolus data (profileswitch data also included in ns-treatment files are not used by oref0-autotune)
+        Collections.sort(tempBasals2) { o1: TemporaryBasal, o2: TemporaryBasal -> (o2.timestamp - o1.timestamp).toInt() }
+        // Todo: add neutral TBR for oref0 Autotune (ProfileSwitches not taken into account)
         Collections.sort(nsTreatments) { o1: NsTreatment, o2: NsTreatment -> (o2.date - o1.date).toInt() }
+
         log.debug("D/AutotunePlugin: Nb Treatments: " + nsTreatments.size + " Nb meals: " + meals.size)
     }
 
@@ -165,86 +166,64 @@ class AutotuneIob(
     //nsTreatment is used only for export data
     private fun initializeTempBasalData(from: Long, to: Long) {
         val temp = repository.getTemporaryBasalsDataFromTimeToTime(from - range(), to, false).blockingGet()
-        // Initialize tempBasals according to TreatmentsPlugin
-        //tempBasals.(temp)
-        //first keep only valid data
-        //log.debug("D/AutotunePlugin Start inisalize Tempbasal from: " + dateUtil.dateAndTimeAndSecondsString(from) + " number of entries:" + tmpCarbs.size());
-        run {
-            var i = 0
-            while (i < temp.size) {
-                //if (!temp[i].isValid) temp.removeAt(i--)
-                i++
-            }
-        }
         val temp2: MutableList<TemporaryBasal> = ArrayList()
-        //log.debug("D/AutotunePlugin after cleaning number of entries:" + tmpCarbs.size());
-        //Then add neutral TBR if start of next TBR is after the end of previous one
-        var previousend = temp[temp.size - 1].timestamp + temp[temp.size - 1].duration
+        log.debug("D/AutotunePlugin tempBasal size before cleaning:" + temp.size);
         for (i in temp.indices.reversed()) {
-            val tb = temp[i]
-            //log.debug("D/AutotunePlugin previous end: " + dateUtil.dateAndTimeAndSecondsString(previousend) + " new entry start:" + dateUtil.dateAndTimeAndSecondsString(tb.date) + " new entry duration:" + tb.getRealDuration() + " test:" + (tb.date < previousend + 60 * 1000));
-            if (tb.timestamp < previousend) {                         // 1 min is minimum duration for TBR
-                nsTreatments.add(NsTreatment(tb))
-                temp2.add(0, tb)
-                previousend = tb.timestamp + tb.durationInMinutes * 60 * 1000
-            } else {
-                var minutesToFill = (tb.timestamp - previousend).toInt() / (60 * 1000)
-                //log.debug("D/AutotunePlugin Minutes to fill: "+ minutesToFill);
-                while (minutesToFill > 0) {
-                    val profile = profileFunction.getProfile(previousend)
-                    if (Profile.secondsFromMidnight(tb.timestamp) / 3600 == Profile.secondsFromMidnight(previousend) / 3600) {  // next tbr is in the same hour
-                        val neutralTbr = TemporaryBasal(
-                            isValid = true,
-                            isAbsolute = true,
-                            timestamp = previousend + 1000,
-                            rate = profile!!.getBasal(previousend),
-                            duration = (minutesToFill * 60 * 1000).toLong(),
-                            type = TemporaryBasal.Type.NORMAL
-                        )
-
-                        minutesToFill = 0
-                        previousend += minutesToFill * 60 * 1000.toLong()
-                        nsTreatments.add(NsTreatment(neutralTbr))
-                        temp2.add(0, neutralTbr)
-                        //log.debug("D/AutotunePlugin fill neutral start: " + dateUtil.dateAndTimeAndSecondsString(neutralTbr.date) + " duration:" + neutralTbr.durationInMinutes + " absolute:" + neutralTbr.absoluteRate);
-                    } else {  //fill data until the end of current hour
-                        val minutesFilled = 60 - Profile.secondsFromMidnight(previousend) / 60 % 60
-                        //log.debug("D/AutotunePlugin remaining time before next hour: "+ minutesFilled);
-                        val neutralTbr = TemporaryBasal(
-                            isValid = true,
-                            isAbsolute = true,
-                            timestamp = previousend + 1000,
-                            rate = profile!!.getBasal(previousend),
-                            duration = (minutesToFill * 60 * 1000).toLong(),
-                            type = TemporaryBasal.Type.NORMAL
-                        )
-
-                        minutesToFill -= minutesFilled
-                        previousend = MidnightTime.calc(previousend) + (Profile.secondsFromMidnight(previousend) / 3600 + 1) * 3600 * 1000L //previousend is updated at the beginning of next hour
-                        nsTreatments.add(NsTreatment(neutralTbr))
-                        temp2.add(0, neutralTbr)
-                        //log.debug("D/AutotunePlugin fill neutral start: " + dateUtil.dateAndTimeAndSecondsString(neutralTbr.date) + " duration:" + neutralTbr.durationInMinutes + " absolute:" + neutralTbr.absoluteRate);
-                    }
-                }
-                nsTreatments.add(NsTreatment(tb))
-                temp2.add(0, tb)
-                previousend = tb.timestamp + tb.duration
-            }
+            toRoundedTimestampTB(temp[i])
         }
-        Collections.sort(temp2) { o1: TemporaryBasal, o2: TemporaryBasal -> (o2.timestamp - o1.timestamp).toInt() }
-        // Initialize tempBasals with neutral TBR added
-        tempBasals2 = ArrayList<TemporaryBasal>()
-        tempBasals2.addAll(temp2)
         log.debug("D/AutotunePlugin: tempBasal size: " + tempBasals2.size)
     }
 
     //nsTreatment is used only for export data
     private fun initializeExtendedBolusData(from: Long, to: Long) {
         extendedBoluses = repository.getExtendedBolusDataFromTimeToTime(from - range(), to, false).blockingGet()
+        log.debug("D/AutotunePlugin tempBasal size before cleaning:" + extendedBoluses.size);
         //extendedBoluses.addAll(temp)
         for (i in extendedBoluses.indices) {
             val eb = extendedBoluses[i]
-            nsTreatments.add(NsTreatment(eb))
+            profileFunction.getProfile(eb.timestamp)?.let {
+                toRoundedTimestampTB(eb.toTemporaryBasal(it))
+            }
+        }
+        log.debug("D/AutotunePlugin: tempBasal+extended bolus size: " + tempBasals2.size)
+    }
+
+    private fun toRoundedTimestampTB(tb: TemporaryBasal) {
+        var roundedTimestamp = (tb.timestamp / T.mins(1).msecs()) * T.mins(1).msecs()
+        var roundedDuration = tb.durationInMinutes
+        if (tb.isValid && tb.durationInMinutes > 0) {
+            val endTimastamp = roundedTimestamp + roundedDuration * T.mins(1).msecs()
+            while (roundedDuration > 0) {
+                if (Profile.secondsFromMidnight(roundedTimestamp) / 3600 == Profile.secondsFromMidnight(endTimastamp) / 3600) {
+                    val newtb = TemporaryBasal(
+                        isValid = true,
+                        isAbsolute = true,
+                        timestamp = roundedTimestamp,
+                        rate = tb.rate,
+                        duration = (roundedDuration * 60 * 1000),
+                        interfaceIDs_backing = tb.interfaceIDs_backing,
+                        type = tb.type
+                    )
+                    tempBasals2.add(newtb)
+                    nsTreatments.add(NsTreatment(newtb))
+                    roundedDuration = 0
+                } else {
+                    val durationFilled = 60 - Profile.secondsFromMidnight(roundedTimestamp) / 60 % 60
+                    val newtb = TemporaryBasal(
+                        isValid = true,
+                        isAbsolute = true,
+                        timestamp = roundedTimestamp,
+                        rate = tb.rate,
+                        duration = (durationFilled * 60 * 1000).toLong(),
+                        interfaceIDs_backing = tb.interfaceIDs_backing,
+                        type = tb.type
+                    )
+                    tempBasals2.add(newtb)
+                    nsTreatments.add(NsTreatment(newtb))
+                    roundedTimestamp += durationFilled * 60 * 1000
+                    roundedDuration -= durationFilled * 60 * 1000
+                }
+            }
         }
     }
 
@@ -476,6 +455,7 @@ class AutotuneIob(
             isAbsolute = true
         }
 
+        // I use here a specific export to be sure format is 100% compatible with json files used by oref0/autotune
         fun toJson(): JSONObject {
             val cPjson = JSONObject()
             try {
