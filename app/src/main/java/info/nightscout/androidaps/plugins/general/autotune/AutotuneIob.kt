@@ -6,11 +6,9 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.*
 import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.db.*
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
-import info.nightscout.androidaps.activities.TreatmentsActivity
 import info.nightscout.androidaps.database.entities.*
 import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.extensions.durationInMinutes
@@ -24,7 +22,6 @@ import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.MidnightTime
 import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -39,7 +36,6 @@ import org.slf4j.LoggerFactory
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.math.round
 
 @Singleton
 class AutotuneIob(
@@ -190,17 +186,17 @@ class AutotuneIob(
 
     private fun toRoundedTimestampTB(tb: TemporaryBasal) {
         var roundedTimestamp = (tb.timestamp / T.mins(1).msecs()) * T.mins(1).msecs()
-        var roundedDuration = tb.durationInMinutes
+        var roundedDuration = tb.durationInMinutes.toInt()
         if (tb.isValid && tb.durationInMinutes > 0) {
-            val endTimastamp = roundedTimestamp + roundedDuration * T.mins(1).msecs()
+            val endTimestamp = roundedTimestamp + roundedDuration * T.mins(1).msecs()
             while (roundedDuration > 0) {
-                if (Profile.secondsFromMidnight(roundedTimestamp) / 3600 == Profile.secondsFromMidnight(endTimastamp) / 3600) {
+                if (Profile.secondsFromMidnight(roundedTimestamp) / 3600 == Profile.secondsFromMidnight(endTimestamp) / 3600) {
                     val newtb = TemporaryBasal(
                         isValid = true,
-                        isAbsolute = true,
+                        isAbsolute = tb.isAbsolute,
                         timestamp = roundedTimestamp,
                         rate = tb.rate,
-                        duration = (roundedDuration * 60 * 1000),
+                        duration = roundedDuration.toLong() * 60 * 1000,
                         interfaceIDs_backing = tb.interfaceIDs_backing,
                         type = tb.type
                     )
@@ -211,17 +207,17 @@ class AutotuneIob(
                     val durationFilled = 60 - Profile.secondsFromMidnight(roundedTimestamp) / 60 % 60
                     val newtb = TemporaryBasal(
                         isValid = true,
-                        isAbsolute = true,
+                        isAbsolute = tb.isAbsolute,
                         timestamp = roundedTimestamp,
                         rate = tb.rate,
-                        duration = (durationFilled * 60 * 1000).toLong(),
+                        duration = durationFilled.toLong() * 60 * 1000,
                         interfaceIDs_backing = tb.interfaceIDs_backing,
                         type = tb.type
                     )
                     tempBasals2.add(newtb)
                     nsTreatments.add(NsTreatment(newtb))
                     roundedTimestamp += durationFilled * 60 * 1000
-                    roundedDuration -= durationFilled * 60 * 1000
+                    roundedDuration = roundedDuration - durationFilled
                 }
             }
         }
@@ -414,31 +410,8 @@ class AutotuneIob(
             created_at = dateUtil.toISOString(t.timestamp)
         }
 
-        constructor(t: TherapyEvent) {
-            careportalEvent = t
-            _id = t.interfaceIDs.nightscoutId ?:t.timestamp.toString()
-            date = t.timestamp
-            created_at = dateUtil.toISOString(t.timestamp)
-            eventType = t.type
-            duration = Math.round(t.duration / 60f / 1000).toInt()
-            isValid = t.isValid
-            json = t.toJson(true, dateUtil).toString(2)
-        }
-
         constructor(t: TemporaryBasal) {
             temporaryBasal = t
-            isFakeExtended = false
-            _NsTreatment(t)
-        }
-
-        constructor(t: ExtendedBolus) {
-            extendedBolus = t
-            val profile = profileFunction.getProfile(date)
-            isFakeExtended = true
-            profile?.let { _NsTreatment(t.toTemporaryBasal(it)) }
-        }
-
-        private fun _NsTreatment(t: TemporaryBasal) {
             _id = t.interfaceIDs.nightscoutId ?:t.timestamp.toString()
             date = t.timestamp
             if (t.isAbsolute)
@@ -451,6 +424,7 @@ class AutotuneIob(
             eventType = TherapyEvent.Type.TEMPORARY_BASAL
             enteredBy = "openaps://" + resourceHelper.gs(R.string.app_name)
             duration = t.durationInMinutes.toInt()
+            isFakeExtended = (t.type == TemporaryBasal.Type.FAKE_EXTENDED)
             created_at = dateUtil.toISOString(t.timestamp)
             isAbsolute = true
         }
