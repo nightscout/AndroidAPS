@@ -267,6 +267,7 @@
     <string name="configbuilder_shortname">KONF</string>
     <string name="loop_shortname">OKRUH</string>
     <string name="oaps_shortname">OAPS</string>
+    <string name="dynisf_shortname">DYNISF</string>
     <string name="localprofile_shortname">LPRF</string>
     <string name="overview_shortname">PREH</string>
     <string name="virtualpump_shortname">VPUM</string>
@@ -432,6 +433,7 @@
     <string name="ns_localbroadcasts">Povoliť vysielanie do iných aplikácií (napr. xDrip+). Nepovoľujte, pokiaľ máte nainštalovanú viac ako jednu AAPS, alebo NSClient inštanciu!</string>
     <string name="ns_localbroadcasts_title">Povoliť lokálne vysielanie.</string>
     <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openaps_smb_dynamic_isf">Dynamická ISF</string>
     <string name="enableuam">Povoliť UAM</string>
     <string name="enablesmb">Povoliť SMB</string>
     <string name="enablesmb_summary">Použiť Super Mikro Bolusy namiesto dočasných bazálov, pre zrýchleniu účinku</string>
@@ -661,6 +663,9 @@
     <string name="sensitivity_raises_target_title">Citlivosť zvyšuje cieľ</string>
     <string name="sensitivity_raises_target_summary">Ak je zistená vyššia citlivosť, zvýši cieľovú hladinu glykémie</string>
     <string name="careportal_removestartedevents">Vymazať udalosti \"AndroidAPS reštartovaný\"</string>
+    <string name="show_invalidated">Zobraziť neplatné</string>
+    <string name="hide_invalidated">Skryť zneplatnené</string>
+    <string name="remove_items">Odstrániť položky</string>
     <string name="storedsettingsfound">Nájdené uložené nastavenia</string>
     <string name="allow_hardware_pump_text">POZOR: Pokiaľ aktivujete a pripojíte skutočnú pumpu, AndroidAPS nakopíruje (a bude udržiavať) nastavenie bazálu z aktívneho profilu do pumpy. Nastavenie bazálu v pumpe bude prepísané. Pokiaľ si nieste istí, alebo nechcete prepísať bazály v pumpe, stlačte Zrušiť a opakujte prepnutie na inú pumpu neskôr.</string>
     <string name="error_adding_treatment_title">Dáta ošetrení neúplné</string>
@@ -877,6 +882,8 @@
     <string name="ns_receive_profile_switch_summary">Prijať prepnutia profilov zadané prostredníctvom NS, alebo NSClienta</string>
     <string name="ns_receive_offline_event">Prijímať udalosti APS offline</string>
     <string name="ns_receive_offline_event_summary">Prijať APS offline udalosti zadané prostredníctvom NS, alebo NSClienta</string>
+    <string name="ns_receive_tbr_eb">Prijímať dočasný bazál a predĺžený bolus</string>
+    <string name="ns_receive_tbr_eb_summary">Prijať dočasný bazál a predĺžený bolus zadaný cez inú inštanciu</string>
     <string name="ns_receive_insulin">Prijímať inzulín</string>
     <string name="ns_receive_insulin_summary">Prijať inzulín vložený cez NS, alebo NSClient (nie je dodaný, iba započítaný do IOB)</string>
     <string name="ns_receive_carbs">Prijímať sacharidy</string>
@@ -969,4 +976,15 @@
     <string name="wear_unknown_action_string">Neznámy príkaz k akcii:</string>
     <string name="overview_editquickwizard_percentage">Percentuálny podiel</string>
     <string name="app_default">Predvolené aplikáciou</string>
+    <string name="select_profile">Vyberte profil pre úpravu</string>
+    <string name="refresh_from_nightscout">Obnoviť z Nightscoutu</string>
+    <string name="remove_selected_items">Odstrániť vybrané položky</string>
+    <string name="select_for_removal">Vyberte pre odstránenie</string>
+    <string name="profile_changes">Zmeny profilu</string>
+    <string name="tempt_targets">Dočasné ciele</string>
+    <string name="carbs_and_bolus">Sacharidy a bolusy</string>
+    <string name="confirm_remove_multiple_items">Naozaj chcete odstrániť %1$d položku(y)</string>
+    <string name="hide_loop">Skryť uzavretý okruh</string>
+    <string name="show_loop">Zobraziť uzavretý okruh</string>
+    <string name="count_selected">Vybrané: %1$d</string>
 </resources>
