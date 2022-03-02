@@ -4,6 +4,7 @@
     <!--    General-->
     <string name="refresh">Obnoviť</string>
     <string name="error">Chyba</string>
+    <string name="save">Uložiť</string>
     <string name="not_set_short">Nenastavené</string>
     <string name="failedupdatebasalprofile">Chyba pri aktualizovaní bazálneho profilu</string>
     <string name="profile_set_ok">Bazálny profil v pumpe aktualizovaný</string>
@@ -376,6 +377,7 @@
     <string name="uel_stat_reset">RESET ŠTATISTÍK</string>
     <string name="uel_delete_logs">VYMAZAŤ LOGY</string>
     <string name="uel_delete_future_treatments">VYMAZAŤ BUDÚCE OŠETRENIA</string>
+    <string name="delete_future_treatments">Odstrániť ošetrenia v budúcnosti</string>
     <string name="uel_export_settings">EXPORTOVAŤ NASTAVENIA</string>
     <string name="uel_import_settings">IMPORTOVAŤ NASTAVENIA</string>
     <string name="uel_reset_databases">RESETOVAŤ DATABÁZY</string>
