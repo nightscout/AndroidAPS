@@ -95,7 +95,7 @@ class ATProfile(profile: Profile?, val injector: HasAndroidInjector) {
                 basals.put(JSONObject().put("start", time).put("minutes", h * basalIncrement).put("rate", profile.getBasalTimeFromMidnight(secondfrommidnight)))
             }
             json.put("basalprofile", basals)
-            val isfvalue = Profile.fromMgdlToUnits(profile.getIsfMgdl(), profile.units)
+            val isfvalue = Profile.fromMgdlToUnits(avgISF, profile.units)
             json.put(
                 "isfProfile",
                 JSONObject().put(
@@ -104,7 +104,7 @@ class ATProfile(profile: Profile?, val injector: HasAndroidInjector) {
                 )
             )
             // json.put("carbratio", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", previousResult.optDouble("carb_ratio", 0d))));
-            json.put("carb_ratio", profile.getIc())
+            json.put("carb_ratio", avgIC)
             json.put("autosens_max", SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_autosens_max, "1.2")))
             json.put("autosens_min", SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_autosens_min, "0.7")))
             json.put("units", profileFunction.getUnits().asText)

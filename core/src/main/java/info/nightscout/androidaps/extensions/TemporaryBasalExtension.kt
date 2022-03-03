@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.extensions
 
+import info.nightscout.androidaps.data.Iob
 import info.nightscout.androidaps.data.IobTotal
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.database.entities.TemporaryBasal
@@ -9,6 +9,7 @@ import info.nightscout.androidaps.database.entities.TemporaryBasal.Type.Companio
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.interfaces.Insulin
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter.to0Decimal
@@ -157,6 +158,48 @@ fun TemporaryBasal.iobCalc(time: Long, profile: Profile, insulinInterface: Insul
                     type = Bolus.Type.NORMAL
                 )
                 val aIOB = insulinInterface.iobCalcForTreatment(tempBolusPart, time, dia)
+                result.basaliob += aIOB.iobContrib
+                result.activity += aIOB.activityContrib
+                result.netbasalinsulin += tempBolusPart.amount
+                if (tempBolusPart.amount > 0) {
+                    result.hightempinsulin += tempBolusPart.amount
+                }
+            }
+        }
+    }
+    result.netInsulin = netBasalAmount
+    return result
+}
+
+// Add specific calculation for Autotune (reference basal is not profile basal but 4 hours average basal rate from pumpprofile)
+fun TemporaryBasal.iobCalc(time: Long, profile: Profile, insulinInterface: Insulin, currentBasal: Double): IobTotal {
+    val result = IobTotal(time)
+    val realDuration = getPassedDurationToTimeInMinutes(time)
+    var netBasalAmount = 0.0
+    if (realDuration > 0) {
+        var netBasalRate: Double
+        val dia: Double = profile.dia
+        val diaAgo = time - dia * 60 * 60 * 1000
+        val aboutFiveMinIntervals = Math.ceil(realDuration / 5.0).toInt()
+        val tempBolusSpacing = (realDuration / aboutFiveMinIntervals).toDouble()
+        for (j in 0L until aboutFiveMinIntervals) {
+            // find middle of the interval
+            val calcDate = (timestamp + j * tempBolusSpacing * 60 * 1000 + 0.5 * tempBolusSpacing * 60 * 1000).toLong()
+            val basalRate = profile.getBasal(calcDate)
+            netBasalRate = if (isAbsolute) {
+                rate - currentBasal
+            } else {
+                rate / 100.0 * basalRate - currentBasal
+            }
+            if (calcDate > diaAgo && calcDate <= time) {
+                val tempBolusSize = netBasalRate * tempBolusSpacing / 60.0
+                netBasalAmount += tempBolusSize
+                val tempBolusPart = Bolus(
+                    timestamp = calcDate,
+                    amount = tempBolusSize,
+                    type = Bolus.Type.NORMAL
+                )
+                val aIOB: Iob = insulinInterface.iobCalcForTreatment(tempBolusPart, time, dia)
                 result.basaliob += aIOB.iobContrib
                 result.activity += aIOB.activityContrib
                 result.netbasalinsulin += tempBolusPart.amount

@@ -13,6 +13,7 @@ import info.nightscout.androidaps.database.entities.*
 import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.extensions.durationInMinutes
 import info.nightscout.androidaps.extensions.iobCalc
+import info.nightscout.androidaps.extensions.toJson
 import info.nightscout.androidaps.extensions.toTemporaryBasal
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.plugins.bus.RxBus
@@ -53,7 +54,6 @@ class AutotuneIob(
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var autotunePlugin: AutotunePlugin
     @Inject lateinit var sp: SP
-    //@Inject lateinit var treatmentsActivity: TreatmentsActivity
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var activePlugin: ActivePlugin
@@ -64,15 +64,9 @@ class AutotuneIob(
     var boluses: MutableList<Bolus> = ArrayList()
     var meals = ArrayList<Carbs>()
     lateinit var glucose: List<GlucoseValue> // newest at index 0
-    //var glucose: MutableList<GlucoseValue> = ArrayList()
     private lateinit var tempBasals: MutableList<TemporaryBasal>
-    private lateinit var tempBasals2: MutableList<TemporaryBasal>
-    private lateinit var extendedBoluses: List<ExtendedBolus>
-    //private val tempTargets: Intervals<TempTarget> = OverlappingIntervals()
-    private lateinit var profiles: MutableList<ProfileSwitch>
     var startBG: Long = 0
     var endBG: Long = 0
-    private val iobTable = LongSparseArray<IobTotal>() // oldest at index 0
     private fun range(): Long {
         var dia = Constants.defaultDIA
         if (profileFunction.getProfile() != null) dia = profileFunction.getProfile()!!.dia
@@ -101,14 +95,15 @@ class AutotuneIob(
         startBG = from
         endBG = to
         nsTreatments.clear()
-        tempBasals2 = ArrayList<TemporaryBasal>()
+        tempBasals = ArrayList<TemporaryBasal>()
         initializeBgreadings(from, to)
         initializeTreatmentData(from - range(), to)
         initializeTempBasalData(from - range(), to)
         initializeExtendedBolusData(from - range(), to)
-        Collections.sort(tempBasals2) { o1: TemporaryBasal, o2: TemporaryBasal -> (o2.timestamp - o1.timestamp).toInt() }
+        Collections.sort(tempBasals) { o1: TemporaryBasal, o2: TemporaryBasal -> (o2.timestamp - o1.timestamp).toInt() }
+        // Without Neutral TBR, Autotune Web will take PumpProfile basal rate to calculate iob for periods without TBR running
         addNeutralTempBasal(from - range(), to)
-        Collections.sort(tempBasals2) { o1: TemporaryBasal, o2: TemporaryBasal -> (o2.timestamp - o1.timestamp).toInt() }
+        Collections.sort(tempBasals) { o1: TemporaryBasal, o2: TemporaryBasal -> (o2.timestamp - o1.timestamp).toInt() }
         Collections.sort(nsTreatments) { o1: NsTreatment, o2: NsTreatment -> (o2.date - o1.date).toInt() }
 
         log.debug("D/AutotunePlugin: Nb Treatments: " + nsTreatments.size + " Nb meals: " + meals.size)
@@ -127,7 +122,7 @@ class AutotuneIob(
         meals.clear()
         boluses.clear()
         var nbCarbs = 0
-        for (i in tmpCarbs.indices) {
+        for (i in tmpCarbs.indices.reversed()) {
             val tp = tmpCarbs[i]
             if (tp.isValid) {
                 nsTreatments.add(NsTreatment(tp))
@@ -140,7 +135,7 @@ class AutotuneIob(
         val tmpBolus = repository.getBolusesDataFromTimeToTime(from, to, true).blockingGet()
         var nbSMB = 0
         var nbBolus = 0
-        for (i in tmpBolus.indices) {
+        for (i in tmpBolus.indices.reversed()) {
             val tp = tmpBolus[i]
             if (tp.isValid) {
                 boluses.add(tp)
@@ -154,7 +149,6 @@ class AutotuneIob(
                 }
             }
         }
-
         log.debug("AutotunePlugin Nb Meals: $nbCarbs Nb Bolus: $nbBolus Nb SMB: $nbSMB")
     }
 
@@ -166,27 +160,28 @@ class AutotuneIob(
         for (i in temp.indices.reversed()) {
             toRoundedTimestampTB(temp[i])
         }
-        log.debug("D/AutotunePlugin: tempBasal size: " + tempBasals2.size)
+        log.debug("D/AutotunePlugin: tempBasal size: " + tempBasals.size)
     }
 
     //nsTreatment is used only for export data
     private fun initializeExtendedBolusData(from: Long, to: Long) {
-        extendedBoluses = repository.getExtendedBolusDataFromTimeToTime(from - range(), to, false).blockingGet()
+        val extendedBoluses = repository.getExtendedBolusDataFromTimeToTime(from - range(), to, false).blockingGet()
         log.debug("D/AutotunePlugin tempBasal size before cleaning:" + extendedBoluses.size);
-        //extendedBoluses.addAll(temp)
         for (i in extendedBoluses.indices) {
             val eb = extendedBoluses[i]
             profileFunction.getProfile(eb.timestamp)?.let {
                 toRoundedTimestampTB(eb.toTemporaryBasal(it))
             }
         }
-        log.debug("D/AutotunePlugin: tempBasal+extended bolus size: " + tempBasals2.size)
+        log.debug("D/AutotunePlugin: tempBasal+extended bolus size: " + tempBasals.size)
     }
 
+    // addNeutralTempBasal will add a fake neutral TBR (100%) to have correct basal rate in exported file for periods without TBR running
+    // to be able to compare results between oref0 algo and aaps
     private fun addNeutralTempBasal(from: Long, to: Long) {
         var previousStart = to
-        for (i in tempBasals2.indices.reversed()) {
-            val newStart = tempBasals2[i].timestamp + tempBasals2[i].duration
+        for (i in tempBasals.indices.reversed()) {
+            val newStart = tempBasals[i].timestamp + tempBasals[i].duration
             if (previousStart > newStart) {
                 val neutraltb = TemporaryBasal(
                     isValid = true,
@@ -199,7 +194,7 @@ class AutotuneIob(
                 )
                 toRoundedTimestampTB(neutraltb)
             }
-            previousStart = tempBasals2[i].timestamp
+            previousStart = tempBasals[i].timestamp
         }
         if (previousStart > from) {
             val neutraltb = TemporaryBasal(
@@ -215,6 +210,9 @@ class AutotuneIob(
         }
     }
 
+    // toRoundedTimestampTB will round all beginning timestamp and duration to minutes
+    // it will also split all TBR accross hours in different TBR with correct absolute value to be sure to have correct basal rate
+    // even if profile rate is not the same
     private fun toRoundedTimestampTB(tb: TemporaryBasal) {
         var roundedTimestamp = (tb.timestamp / T.mins(1).msecs()) * T.mins(1).msecs()
         var roundedDuration = tb.durationInMinutes.toInt()
@@ -231,7 +229,7 @@ class AutotuneIob(
                         interfaceIDs_backing = tb.interfaceIDs_backing,
                         type = tb.type
                     )
-                    tempBasals2.add(newtb)
+                    tempBasals.add(newtb)
                     nsTreatments.add(NsTreatment(newtb))
                     roundedDuration = 0
                 } else {
@@ -245,7 +243,7 @@ class AutotuneIob(
                         interfaceIDs_backing = tb.interfaceIDs_backing,
                         type = tb.type
                     )
-                    tempBasals2.add(newtb)
+                    tempBasals.add(newtb)
                     nsTreatments.add(NsTreatment(newtb))
                     roundedTimestamp += durationFilled * 60 * 1000
                     roundedDuration = roundedDuration - durationFilled
@@ -265,7 +263,6 @@ class AutotuneIob(
     fun getCalculationToTimeTreatments(time: Long): IobTotal {
         val total = IobTotal(time)
         val profile = profileFunction.getProfile(time) ?: return total
-        val pumpInterface = activePlugin.activePump
         val dia = profile.dia
         for (pos in boluses.indices) {
             val t = boluses[pos]
@@ -284,20 +281,13 @@ class AutotuneIob(
                 total.bolussnooze += bIOB.iobContrib
             }
         }
-        if (!pumpInterface.isFakingTempsByExtendedBoluses) for (pos in 0 until extendedBoluses.size) {
-            val e = extendedBoluses[pos]
-            if (e.timestamp > time) continue
-            val calc = e.iobCalc(time, profile, activePlugin.activeInsulin)
-            total.plus(calc)
-        }
         return total
     }
 
     fun getCalculationToTimeTempBasals(time: Long, truncate: Boolean, truncateTime: Long, currentBasal: Double): IobTotal {
         val total = IobTotal(time)
-        val pumpInterface = activePlugin.activePump
-        for (pos in 0 until tempBasals2.size) {
-            val t = tempBasals2[pos]
+        for (pos in 0 until tempBasals.size) {
+            val t = tempBasals[pos]
             if (t.timestamp > time) continue
             var calc: IobTotal?
             val profile = profileFunction.getProfile(t.timestamp) ?: continue
@@ -310,40 +300,12 @@ class AutotuneIob(
                     isAbsolute = true,
                     duration = truncateTime - t.timestamp
                 )
-                dummyTemp.iobCalc(time, profile, activePlugin.activeInsulin)
+                dummyTemp.iobCalc(time, profile, activePlugin.activeInsulin, currentBasal)
             } else {
-                t.iobCalc(time, profile, activePlugin.activeInsulin)
+                t.iobCalc(time, profile, activePlugin.activeInsulin, currentBasal)
             }
             //log.debug("BasalIOB " + new Date(time) + " >>> " + calc.basaliob);
             total.plus(calc)
-        }
-        if (pumpInterface.isFakingTempsByExtendedBoluses) {
-            val totalExt = IobTotal(time)
-            for (pos in 0 until extendedBoluses.size) {
-                val e = extendedBoluses[pos]
-                if (e.timestamp > time) continue
-                var calc: IobTotal?
-                val profile = profileFunction.getProfile(e.timestamp) ?: continue
-                calc = if (truncate && e.end > truncateTime) {
-                    val dummyExt = ExtendedBolus(
-                        id = e.id,
-                        timestamp = e.timestamp,
-                        duration = e.duration,
-                        amount = e.amount
-                    )
-                    //dummyExt.cutEndTo(truncateTime)
-                    dummyExt.iobCalc(time, profile, activePlugin.activeInsulin)
-                } else {
-                    e.iobCalc(time, profile, activePlugin.activeInsulin)
-                }
-                totalExt.plus(calc)
-            }
-            // Convert to basal iob
-            totalExt.basaliob = totalExt.iob
-            totalExt.iob = 0.0
-            totalExt.netbasalinsulin = totalExt.extendedBolusInsulin
-            totalExt.hightempinsulin = totalExt.extendedBolusInsulin
-            total.plus(totalExt)
         }
         return total
     }
@@ -351,23 +313,8 @@ class AutotuneIob(
     /** */
     fun glucosetoJSON(): String {
         val glucoseJson = JSONArray()
-        val utcOffset = T.msecs(TimeZone.getDefault().getOffset(dateUtil.now()).toLong()).hours()
-        try {
-            for (bgreading in glucose) {
-                val bgjson = JSONObject()
-                bgjson.put("_id", bgreading.interfaceIDs.nightscoutId ?:bgreading.timestamp.toString())
-                bgjson.put("device", "AndroidAPS")
-                bgjson.put("date", bgreading.timestamp)
-                bgjson.put("dateString", dateUtil.toISOString(bgreading.timestamp))
-                bgjson.put("sgv", bgreading.value)
-                bgjson.put("direction", bgreading.trendArrow)
-                bgjson.put("type", "sgv")
-                bgjson.put("systime", dateUtil.toISOString(bgreading.timestamp))
-                bgjson.put("utcOffset", utcOffset)
-                glucoseJson.put(bgjson)
-            }
-        } catch (e: JSONException) {
-        }
+        for (bgreading in glucose)
+            glucoseJson.put(bgreading.toJson(true, dateUtil))
         return glucoseJson.toString(2)
     }
 
@@ -400,50 +347,43 @@ class AutotuneIob(
         //TemporayBasal or ExtendedBolus properties
         var temporaryBasal: TemporaryBasal? = null
         var absoluteRate: Double? = null
-        var isEndingEvent = false
-        var duration=0 // msec converted in minutes = 0
+        var duration = 0 // msec converted in minutes = 0
         var isFakeExtended = false
         var enteredBy: String? = null
-        var percentRate = 0
         var isAbsolute = false
         var extendedBolus: ExtendedBolus? = null
-        private val origin: String? = null
-
-        //CarePortalEvents
-        var careportalEvent: TherapyEvent? = null
-        var json: String? = null
 
         constructor(t: Carbs) {
             carbsTreatment = t
-            _id = t.interfaceIDs.nightscoutId ?:t.timestamp.toString()
+            _id = t.interfaceIDs.nightscoutId ?: t.timestamp.toString()
             date = t.timestamp
             carbs = t.amount
             insulin = 0.0
             isSMB = false
             isValid = t.isValid
             mealBolus = false // t.mealBolus
-            eventType = TherapyEvent.Type.CARBS_CORRECTION  //if (insulin > 0 && carbs > 0) CareportalEvent.BOLUSWIZARD else if (carbs > 0) CareportalEvent.CARBCORRECTION else CareportalEvent
-                // .CORRECTIONBOLUS
+            eventType =
+                TherapyEvent.Type.CARBS_CORRECTION  //if (insulin > 0 && carbs > 0) CareportalEvent.BOLUSWIZARD else if (carbs > 0) CareportalEvent.CARBCORRECTION else CareportalEvent.CORRECTIONBOLUS
             created_at = dateUtil.toISOString(t.timestamp)
         }
 
         constructor(t: Bolus) {
             bolusTreatment = t
-            _id = t.interfaceIDs.nightscoutId ?:t.timestamp.toString()
+            _id = t.interfaceIDs.nightscoutId ?: t.timestamp.toString()
             date = t.timestamp
             carbs = 0.0
             insulin = t.amount
             isSMB = t.type == Bolus.Type.SMB
             isValid = t.isValid
             mealBolus = false //t.mealBolus
-            eventType = TherapyEvent.Type.CORRECTION_BOLUS //if (insulin > 0 && carbs > 0) CareportalEvent.BOLUSWIZARD else if (carbs > 0) CareportalEvent.CARBCORRECTION else CareportalEvent
-            // .CORRECTIONBOLUS
+            eventType =
+                TherapyEvent.Type.CORRECTION_BOLUS //if (insulin > 0 && carbs > 0) CareportalEvent.BOLUSWIZARD else if (carbs > 0) CareportalEvent.CARBCORRECTION else CareportalEvent.CORRECTIONBOLUS
             created_at = dateUtil.toISOString(t.timestamp)
         }
 
         constructor(t: TemporaryBasal) {
             temporaryBasal = t
-            _id = t.interfaceIDs.nightscoutId ?:t.timestamp.toString()
+            _id = t.interfaceIDs.nightscoutId ?: t.timestamp.toString()
             date = t.timestamp
             if (t.isAbsolute)
                 absoluteRate = Round.roundTo(t.rate, 0.001)
@@ -460,6 +400,25 @@ class AutotuneIob(
             isAbsolute = true
         }
 
+        fun toJson2(): JSONObject? {
+            val cPjson = JSONObject()
+            return when (eventType) {
+                TherapyEvent.Type.TEMPORARY_BASAL  ->
+                    temporaryBasal?.let {
+                        val profile = profileFunction.getProfile(it.timestamp)
+                        it.toJson(true, profile!!, dateUtil)
+                    }
+                TherapyEvent.Type.COMBO_BOLUS      ->
+                    extendedBolus?.let {
+                        val profile = profileFunction.getProfile(it.timestamp)
+                        it.toJson(true, profile!!, dateUtil)
+                    }
+                TherapyEvent.Type.CORRECTION_BOLUS -> bolusTreatment?.toJson(true, dateUtil)
+                TherapyEvent.Type.CARBS_CORRECTION -> carbsTreatment?.toJson(true, dateUtil)
+                else                               -> cPjson
+            }
+        }
+
         // I use here a specific export to be sure format is 100% compatible with json files used by oref0/autotune
         fun toJson(): JSONObject {
             val cPjson = JSONObject()
@@ -472,7 +431,6 @@ class AutotuneIob(
                 cPjson.put("carbs", if (carbs > 0) carbs else JSONObject.NULL)
                 if (eventType === TherapyEvent.Type.TEMPORARY_BASAL) {
                     cPjson.put("duration", duration)
-                    //cPjson.put("absolute", absoluteRate)
                     cPjson.put("rate", absoluteRate)
                     cPjson.put("isFakeExtended", isFakeExtended)
                     cPjson.put("enteredBy", enteredBy)

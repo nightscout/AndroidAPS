@@ -235,7 +235,7 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
                     val crEndBG = glucoseDatum.value
                     val crEndTime = glucoseDatum.date
                     log("CREndIOB: " + crEndIOB + " CREndBG: " + crEndBG + " CREndTime: " + dateUtil.toISOString(crEndTime))
-                    val crDatum = CRDatum()
+                    val crDatum = CRDatum(dateUtil)
                     crDatum.crInitialBG = crInitialBG
                     crDatum.crInitialIOB = crInitialIOB
                     crDatum.crInitialCarbTime = crInitialCarbTime
