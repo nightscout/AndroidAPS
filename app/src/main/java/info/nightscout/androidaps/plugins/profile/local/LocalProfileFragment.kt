@@ -29,6 +29,7 @@ import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.ui.TimeListEdit
@@ -49,6 +50,7 @@ class LocalProfileFragment : DaggerFragment() {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var localProfilePlugin: LocalProfilePlugin
     @Inject lateinit var hardLimits: HardLimits
+    @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var uel: UserEntryLogger
@@ -88,8 +90,7 @@ class LocalProfileFragment : DaggerFragment() {
 
     private var _binding: LocalprofileFragmentBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
+    // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -124,6 +125,23 @@ class LocalProfileFragment : DaggerFragment() {
             binding.target.visibility = View.VISIBLE
         }
         binding.dia.editText?.id?.let { binding.diaLabel.labelFor = it }
+
+        if (protectionCheck.isLocked(ProtectionCheck.Protection.PREFERENCES)) {
+            binding.mainLayout.visibility = View.GONE
+        } else {
+            binding.unlock.visibility = View.GONE
+        }
+
+        binding.unlock.setOnClickListener {
+            activity?.let { activity ->
+                protectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, {
+                    activity.runOnUiThread {
+                        binding.mainLayout.visibility = View.VISIBLE
+                        binding.unlock.visibility = View.GONE
+                    }
+                })
+            }
+        }
     }
 
     fun build() {

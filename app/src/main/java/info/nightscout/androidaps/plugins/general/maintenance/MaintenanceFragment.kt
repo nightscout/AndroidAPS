@@ -27,6 +27,7 @@ import info.nightscout.androidaps.plugins.general.overview.OverviewData
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.database.DashHistoryDatabase
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.database.ErosHistoryDatabase
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.rxjava3.core.Completable.fromAction
@@ -48,6 +49,7 @@ class MaintenanceFragment : DaggerFragment() {
     @Inject lateinit var diaconnDatabase: DiaconnHistoryDatabase
     @Inject lateinit var erosDatabase: ErosHistoryDatabase
     @Inject lateinit var dashDatabase: DashHistoryDatabase
+    @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var dataSyncSelector: DataSyncSelector
     @Inject lateinit var pumpSync: PumpSync
@@ -126,6 +128,23 @@ class MaintenanceFragment : DaggerFragment() {
                     uel.log(Action.EXPORT_CSV, Sources.Maintenance)
                     importExportPrefs.exportUserEntriesCsv(activity)
                 }
+            }
+        }
+
+        if (protectionCheck.isLocked(ProtectionCheck.Protection.PREFERENCES)) {
+            binding.mainLayout.visibility = View.GONE
+        } else {
+            binding.unlock.visibility = View.GONE
+        }
+
+        binding.unlock.setOnClickListener {
+            activity?.let { activity ->
+                protectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, {
+                    activity.runOnUiThread {
+                        binding.mainLayout.visibility = View.VISIBLE
+                        binding.unlock.visibility = View.GONE
+                    }
+                })
             }
         }
     }
