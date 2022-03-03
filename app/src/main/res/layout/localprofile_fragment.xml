@@ -10,353 +10,369 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-            android:layout_width="match_parent"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/unlock"
+            style="@style/GrayButton"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
-            android:hint="@string/select_profile"
-            android:textColorHint="@color/white"
-            app:boxStrokeColor="@color/list_delimiter">
-
-            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                android:id="@+id/profileList"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:enabled="false"
-                tools:ignore="KeyboardInaccessibleWidget" />
-
-        </com.google.android.material.textfield.TextInputLayout>
+            android:layout_gravity="center"
+            android:text="@string/unlock_settings" />
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginBottom="10dp"
-                android:labelFor="@+id/name"
-                android:text="@string/profile_name"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-            <EditText
-                android:id="@+id/name"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_weight="1"
-                android:ems="10"
-                android:importantForAutofill="no"
-                android:inputType="text" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
-            android:gravity="start"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/units"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="10dp"
-                android:text="@string/units_colon"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1" />
-
-            <ImageView
-                android:id="@+id/profile_add"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="15dp"
-                android:contentDescription="@string/a11y_add_new_profile"
-                app:srcCompat="@drawable/ic_add" />
-
-            <ImageView
-                android:id="@+id/profile_clone"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="15dp"
-                android:contentDescription="@string/a11y_clone_profile"
-                app:srcCompat="@drawable/ic_clone" />
-
-            <ImageView
-                android:id="@+id/profile_remove"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="15dp"
-                android:contentDescription="@string/a11y_delete_current_profile"
-                android:scaleX="1"
-                android:scaleY="1"
-                app:srcCompat="@drawable/ic_remove" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:paddingBottom="10dp"
-            android:weightSum="5">
-
-            <TextView
-                android:id="@+id/dia_tab"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/dia_short"
-                android:textAlignment="center"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/ic_tab"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/ic_short"
-                android:textAlignment="center"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/isf_tab"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/isf_short"
-                android:textAlignment="center"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/basal_tab"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/basal_short"
-                android:textAlignment="center"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/target_tab"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/target_short"
-                android:textAlignment="center"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/dia_placeholder"
+            android:id="@+id/main_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:text="@string/dia_long_label"
-                android:textColor="@android:color/white"
-                android:textSize="20sp" />
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:hint="@string/select_profile"
+                android:textColorHint="@color/white"
+                app:boxStrokeColor="@color/list_delimiter">
+
+                <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                    android:id="@+id/profileList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:enabled="false"
+                    tools:ignore="KeyboardInaccessibleWidget" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal"
-                android:paddingTop="5dp">
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/dia_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginEnd="10dp"
-                    android:text="@string/dia"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:labelFor="@+id/name"
+                    android:text="@string/profile_name"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                <info.nightscout.androidaps.utils.ui.NumberPicker
-                    android:id="@+id/dia"
-                    android:layout_width="130dp"
-                    android:layout_height="40dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginBottom="10dp"
-                    app:customContentDescription="@string/dia" />
-
-                <TextView
-                    android:layout_width="wrap_content"
+                <EditText
+                    android:id="@+id/name"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="@string/hours"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:importantForAutofill="no"
+                    android:inputType="text" />
 
             </LinearLayout>
 
-            <info.nightscout.androidaps.plugins.insulin.ActivityGraph
-                android:id="@+id/insulin_graph"
-                android:layout_width="match_parent"
-                android:layout_height="100dip"
-                android:layout_margin="20dp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ic"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
             <LinearLayout
-                android:id="@+id/ic_holder"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="10dp"
-                android:orientation="vertical" />
+                android:gravity="start"
+                android:orientation="horizontal">
 
-            <info.nightscout.androidaps.utils.ui.IcProfileGraph
-                android:id="@+id/ic_graph"
-                android:layout_width="match_parent"
-                android:layout_height="100dip"
-                android:layout_margin="20dp" />
+                <TextView
+                    android:id="@+id/units"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="10dp"
+                    android:text="@string/units_colon"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        </LinearLayout>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1" />
 
-        <LinearLayout
-            android:id="@+id/isf"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+                <ImageView
+                    android:id="@+id/profile_add"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="15dp"
+                    android:contentDescription="@string/a11y_add_new_profile"
+                    app:srcCompat="@drawable/ic_add" />
 
-            <LinearLayout
-                android:id="@+id/isf_holder"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="10dp"
-                android:orientation="vertical" />
+                <ImageView
+                    android:id="@+id/profile_clone"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="15dp"
+                    android:contentDescription="@string/a11y_clone_profile"
+                    app:srcCompat="@drawable/ic_clone" />
 
-            <info.nightscout.androidaps.utils.ui.IsfProfileGraph
-                android:id="@+id/isf_graph"
-                android:layout_width="match_parent"
-                android:layout_height="100dip"
-                android:layout_margin="20dp" />
+                <ImageView
+                    android:id="@+id/profile_remove"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="15dp"
+                    android:contentDescription="@string/a11y_delete_current_profile"
+                    android:scaleX="1"
+                    android:scaleY="1"
+                    app:srcCompat="@drawable/ic_remove" />
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/basal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:id="@+id/basal_holder"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="10dp"
-                android:orientation="vertical" />
-
-            <info.nightscout.androidaps.utils.ui.BasalProfileGraph
-                android:id="@+id/basal_graph"
-                android:layout_width="match_parent"
-                android:layout_height="100dip"
-                android:layout_margin="20dp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/target"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/target_holder"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="10dp"
-                android:orientation="vertical" />
+                android:orientation="horizontal"
+                android:paddingBottom="10dp"
+                android:weightSum="5">
 
-            <info.nightscout.androidaps.utils.ui.TargetBgProfileGraph
-                android:id="@+id/target_graph"
+                <TextView
+                    android:id="@+id/dia_tab"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/dia_short"
+                    android:textAlignment="center"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/ic_tab"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/ic_short"
+                    android:textAlignment="center"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/isf_tab"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/isf_short"
+                    android:textAlignment="center"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/basal_tab"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/basal_short"
+                    android:textAlignment="center"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/target_tab"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/target_short"
+                    android:textAlignment="center"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/dia_placeholder"
                 android:layout_width="match_parent"
-                android:layout_height="100dip"
-                android:layout_margin="20dp" />
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-        </LinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="@string/dia_long_label"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/profileswitch"
-            style="@style/GrayButton"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_weight="1"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:text="@string/activate_profile"
-            app:icon="@drawable/ic_local_activate"
-            app:iconTint="@color/ic_local_activate" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal"
+                    android:paddingTop="5dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/dia_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="10dp"
+                        android:text="@string/dia"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                    <info.nightscout.androidaps.utils.ui.NumberPicker
+                        android:id="@+id/dia"
+                        android:layout_width="130dp"
+                        android:layout_height="40dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginBottom="10dp"
+                        app:customContentDescription="@string/dia" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="@string/hours"
+                        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                </LinearLayout>
+
+                <info.nightscout.androidaps.plugins.insulin.ActivityGraph
+                    android:id="@+id/insulin_graph"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dip"
+                    android:layout_margin="20dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/ic_holder"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="vertical" />
+
+                <info.nightscout.androidaps.utils.ui.IcProfileGraph
+                    android:id="@+id/ic_graph"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dip"
+                    android:layout_margin="20dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/isf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/isf_holder"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="vertical" />
+
+                <info.nightscout.androidaps.utils.ui.IsfProfileGraph
+                    android:id="@+id/isf_graph"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dip"
+                    android:layout_margin="20dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/basal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/basal_holder"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="vertical" />
+
+                <info.nightscout.androidaps.utils.ui.BasalProfileGraph
+                    android:id="@+id/basal_graph"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dip"
+                    android:layout_margin="20dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/target"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/target_holder"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="vertical" />
+
+                <info.nightscout.androidaps.utils.ui.TargetBgProfileGraph
+                    android:id="@+id/target_graph"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dip"
+                    android:layout_margin="20dp" />
+
+            </LinearLayout>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/reset"
+                android:id="@+id/profileswitch"
                 style="@style/GrayButton"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="@string/activate_profile"
+                app:icon="@drawable/ic_local_activate"
+                app:iconTint="@color/ic_local_activate" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_weight="1"
-                android:paddingLeft="1dp"
-                android:paddingRight="1dp"
-                android:text="@string/reset"
-                app:icon="@drawable/ic_local_reset"
-                app:iconTint="@color/ic_local_reset" />
+                android:orientation="horizontal">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/save"
-                style="@style/GrayButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_weight="1"
-                android:paddingLeft="1dp"
-                android:paddingRight="1dp"
-                android:text="@string/save"
-                app:icon="@drawable/ic_local_save"
-                app:iconTint="@color/ic_local_save" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/reset"
+                    style="@style/GrayButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:paddingLeft="1dp"
+                    android:paddingRight="1dp"
+                    android:text="@string/reset"
+                    app:icon="@drawable/ic_local_reset"
+                    app:iconTint="@color/ic_local_reset" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/save"
+                    style="@style/GrayButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:paddingLeft="1dp"
+                    android:paddingRight="1dp"
+                    android:text="@string/save"
+                    app:icon="@drawable/ic_local_save"
+                    app:iconTint="@color/ic_local_save" />
+            </LinearLayout>
+
         </LinearLayout>
 
     </LinearLayout>
