@@ -1,17 +1,11 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.dagger
 
-import android.app.Application
-import android.content.Context
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import info.nightscout.androidaps.plugins.pump.eopatch.ble.*
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.Alarms
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.NormalBasalManager
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchConfig
-import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchState
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.TempBasalManager
-import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Singleton
 
 @Module
@@ -24,13 +18,13 @@ class EopatchPrefModule {
 
     @Provides
     @Singleton
-    internal fun provideNormalBasalManager(sp: SP): NormalBasalManager {
+    internal fun provideNormalBasalManager(): NormalBasalManager {
         return NormalBasalManager()
     }
 
     @Provides
     @Singleton
-    internal fun provideTempBasalManager(sp: SP): TempBasalManager {
+    internal fun provideTempBasalManager(): TempBasalManager {
         return TempBasalManager()
     }
 

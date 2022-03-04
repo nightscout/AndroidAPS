@@ -1,13 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.vo
 
-import android.os.Parcel
-import android.os.Parcelable
 import info.nightscout.androidaps.plugins.pump.eopatch.code.PatchLifecycle
 import com.google.android.gms.common.internal.Preconditions
 
-/**
- * 이 객체는 Immutable객체로 사용할 것
- */
 class PatchLifecycleEvent {
 
     var lifeCycle: PatchLifecycle = PatchLifecycle.SHUTDOWN
@@ -64,7 +59,7 @@ class PatchLifecycleEvent {
         }
 
         @JvmStatic
-        fun createbonded(): PatchLifecycleEvent {
+        fun createBonded(): PatchLifecycleEvent {
             return PatchLifecycleEvent(PatchLifecycle.BONDED)
         }
 
@@ -97,12 +92,5 @@ class PatchLifecycleEvent {
         fun createActivated(): PatchLifecycleEvent {
             return PatchLifecycleEvent(PatchLifecycle.ACTIVATED)
         }
-
-        // @JvmField val CREATOR: Parcelable.Creator<PatchLifecycleEvent> = object : Parcelable.Creator<PatchLifecycleEvent> {
-        //     override fun createFromParcel(source: Parcel) = TREntityUtils.createFromBundle(source.readBundle(javaClass.classLoader), PatchLifecycleEvent::class.java)
-        //     override fun newArray(size: Int): Array<PatchLifecycleEvent?> = arrayOfNulls(size)
-        // }
     }
-
-
 }

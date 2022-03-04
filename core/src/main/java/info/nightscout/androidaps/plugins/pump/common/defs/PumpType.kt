@@ -330,6 +330,7 @@ enum class PumpType {
         baseBasalStep = 0.05,
         baseBasalSpecialSteps = null,
         pumpCapability = PumpCapability.EopatchCapabilities,
+        isPatchPump = true,
         source = Sources.EOPatch2);
 
     val description: String

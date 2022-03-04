@@ -13,8 +13,7 @@ import io.reactivex.Single;
 
 @Singleton
 public class StopTempBasalTask extends TaskBase {
-
-    private TempBasalScheduleStop TEMP_BASAL_SCHEDULE_STOP;
+    private final TempBasalScheduleStop TEMP_BASAL_SCHEDULE_STOP;
 
     @Inject
     public StopTempBasalTask() {
@@ -25,7 +24,7 @@ public class StopTempBasalTask extends TaskBase {
 
     public Single<PatchBooleanResponse> stop() {
         return isReady().concatMapSingle(v -> stopJob()).firstOrError()
-                .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, e.getMessage()));
+                .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, (e.getMessage() != null) ? e.getMessage() : "StopTempBasalTask error"));
     }
 
     public Single<PatchBooleanResponse> stopJob() {

@@ -5,11 +5,9 @@
 
     <data>
         <import type="info.nightscout.androidaps.plugins.pump.eopatch.code.PatchStep" />
-
         <variable
             name="viewModel"
             type="info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchViewModel" />
-
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -28,7 +26,7 @@
             android:layout_marginEnd="5dp"
             android:text="@string/patch_basal_schedule"
             android:gravity="center_horizontal"
-            android:textSize="24dp"
+            android:textSize="24sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -42,7 +40,7 @@
             android:layout_marginEnd="5dp"
             android:gravity="center"
             android:text="@{viewModel.programEnabledMessage}"
-            android:textSize="16dp"
+            android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_patch_basal_schedule"
@@ -60,7 +58,7 @@
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
             android:text="@string/patch_basal_schedule_desc_2"
-            android:textSize="16dp"
+            android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_patch_basal_schedule_desc_1" />

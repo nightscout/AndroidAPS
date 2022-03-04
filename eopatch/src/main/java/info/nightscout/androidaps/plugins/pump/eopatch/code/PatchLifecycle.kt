@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.code
 
-enum class PatchLifecycle private constructor(val rawValue: Int) {
+enum class PatchLifecycle constructor(val rawValue: Int) {
     SHUTDOWN(1),
     BONDED(2),
     SAFETY_CHECK(3),
@@ -16,15 +16,4 @@ enum class PatchLifecycle private constructor(val rawValue: Int) {
     val isActivated: Boolean
         get() = this == ACTIVATED
 
-    companion object {
-        @JvmStatic
-        fun ofRaw(rawValue: Int): PatchLifecycle {
-            for (type in values()) {
-                if (type.rawValue == rawValue) {
-                    return type
-                }
-            }
-            return SHUTDOWN
-        }
-    }
 }

@@ -54,7 +54,7 @@ class PatchConfig: IPreference<PatchConfig> {
 
     /* 패치와 API 통신으로 업데이트 값을 여기에 기록 중복 API 호출이 생기면 안되는 경우 여기에 */
     // SET_LOW_RESERVOIR_TASK
-    var LowReservoirAlertAmount = 10
+    var lowReservoirAlertAmount = 10
     var patchExpireAlertTime = 4
     var infoReminder = false
 
@@ -93,7 +93,7 @@ class PatchConfig: IPreference<PatchConfig> {
         get() = this.lifecycleEvent.isBasalSetting
 
     val isDeactivated: Boolean
-        get() = hasMacAddress() == false
+        get() = !hasMacAddress()
 
     val isInBasalPausedTime: Boolean
         get() = this.basalPauseFinishTimestamp > 0 && basalPauseFinishTimestamp > System.currentTimeMillis()
@@ -144,7 +144,7 @@ class PatchConfig: IPreference<PatchConfig> {
         this.standardBolusInjectCount = 0
         this.extendedBolusInjectCount = 0
         this.basalInjectCount = 0
-        this.LowReservoirAlertAmount = 10
+        this.lowReservoirAlertAmount = 10
         this.patchExpireAlertTime = 4
         this.remainedInsulin = 0f
     }
@@ -152,7 +152,7 @@ class PatchConfig: IPreference<PatchConfig> {
     fun patchFirmwareVersionString(): String? {
         patchFirmwareVersion?.let {
             var count = 0
-            var i: Int = 0
+            var i = 0
             while (i < it.length) {
                 if (it[i] == '.') {
                     count++
@@ -225,8 +225,6 @@ class PatchConfig: IPreference<PatchConfig> {
                 this.lastIndex = 0
                 this.needSetBasalSchedule = false
             }
-            else -> {
-            }
         }
     }
 
@@ -293,7 +291,7 @@ class PatchConfig: IPreference<PatchConfig> {
         standardBolusInjectCount = other.standardBolusInjectCount
         extendedBolusInjectCount = other.extendedBolusInjectCount
         basalInjectCount = other.basalInjectCount
-        LowReservoirAlertAmount = other.LowReservoirAlertAmount
+        lowReservoirAlertAmount = other.lowReservoirAlertAmount
         patchExpireAlertTime = other.patchExpireAlertTime
         remainedInsulin = other.remainedInsulin
 
@@ -313,7 +311,7 @@ class PatchConfig: IPreference<PatchConfig> {
 
 
     override fun toString(): String {
-        return "PatchConfig(securityValue=${securityValue.contentToString()}, macAddress=$macAddress, lifecycleEvent=$lifecycleEvent, bolusNormalStartTimestamp=$bolusNormalStartTimestamp, bolusNormalEndTimestamp=$bolusNormalEndTimestamp, bolusNormalDoseU=$bolusNormalDoseU, bolusExStartTimestamp=$bolusExStartTimestamp, bolusExEndTimestamp=$bolusExEndTimestamp, bolusExDoseU=$bolusExDoseU, injectCount=$injectCount, bgReminderMinute=$bgReminderMinute, lastIndex=$lastIndex, lastDisconnectedTimestamp=$lastDisconnectedTimestamp, standardBolusInjectCount=$standardBolusInjectCount, extendedBolusInjectCount=$extendedBolusInjectCount, basalInjectCount=$basalInjectCount, patchFirmwareVersion=$patchFirmwareVersion, patchSerialNumber='$patchSerialNumber', patchLotNumber=$patchLotNumber, patchModelName=$patchModelName, patchWakeupTimestamp=$patchWakeupTimestamp, activatedTimestamp=$activatedTimestamp, expireDurationMilli=$expireDurationMilli, basalPauseFinishTimestamp=$basalPauseFinishTimestamp, needleInsertionTryCount=$needleInsertionTryCount, LowReservoirAlertAmount=$LowReservoirAlertAmount, patchExpireAlertTime=$patchExpireAlertTime, isEnterPrimaryScreen=$isEnterPrimaryScreen, needSetBasalSchedule=$needSetBasalSchedule, sharedKey=${sharedKey?.contentToString()}, seq15=$seq15, rotateKnobNeedleSensingError=$rotateKnobNeedleSensingError, remainedInsulin=$remainedInsulin)"
+        return "PatchConfig(securityValue=${securityValue.contentToString()}, macAddress=$macAddress, lifecycleEvent=$lifecycleEvent, bolusNormalStartTimestamp=$bolusNormalStartTimestamp, bolusNormalEndTimestamp=$bolusNormalEndTimestamp, bolusNormalDoseU=$bolusNormalDoseU, bolusExStartTimestamp=$bolusExStartTimestamp, bolusExEndTimestamp=$bolusExEndTimestamp, bolusExDoseU=$bolusExDoseU, injectCount=$injectCount, bgReminderMinute=$bgReminderMinute, lastIndex=$lastIndex, lastDisconnectedTimestamp=$lastDisconnectedTimestamp, standardBolusInjectCount=$standardBolusInjectCount, extendedBolusInjectCount=$extendedBolusInjectCount, basalInjectCount=$basalInjectCount, patchFirmwareVersion=$patchFirmwareVersion, patchSerialNumber='$patchSerialNumber', patchLotNumber=$patchLotNumber, patchModelName=$patchModelName, patchWakeupTimestamp=$patchWakeupTimestamp, activatedTimestamp=$activatedTimestamp, expireDurationMilli=$expireDurationMilli, basalPauseFinishTimestamp=$basalPauseFinishTimestamp, needleInsertionTryCount=$needleInsertionTryCount, LowReservoirAlertAmount=$lowReservoirAlertAmount, patchExpireAlertTime=$patchExpireAlertTime, isEnterPrimaryScreen=$isEnterPrimaryScreen, needSetBasalSchedule=$needSetBasalSchedule, sharedKey=${sharedKey?.contentToString()}, seq15=$seq15, rotateKnobNeedleSensingError=$rotateKnobNeedleSensingError, remainedInsulin=$remainedInsulin)"
     }
 
     override fun equals(other: Any?): Boolean {
@@ -347,7 +345,7 @@ class PatchConfig: IPreference<PatchConfig> {
         if (expireDurationMilli != other.expireDurationMilli) return false
         if (basalPauseFinishTimestamp != other.basalPauseFinishTimestamp) return false
         if (needleInsertionTryCount != other.needleInsertionTryCount) return false
-        if (LowReservoirAlertAmount != other.LowReservoirAlertAmount) return false
+        if (lowReservoirAlertAmount != other.lowReservoirAlertAmount) return false
         if (patchExpireAlertTime != other.patchExpireAlertTime) return false
         if (isEnterPrimaryScreen != other.isEnterPrimaryScreen) return false
         if (needSetBasalSchedule != other.needSetBasalSchedule) return false
@@ -388,7 +386,7 @@ class PatchConfig: IPreference<PatchConfig> {
         result = 31 * result + expireDurationMilli.hashCode()
         result = 31 * result + basalPauseFinishTimestamp.hashCode()
         result = 31 * result + needleInsertionTryCount
-        result = 31 * result + LowReservoirAlertAmount
+        result = 31 * result + lowReservoirAlertAmount
         result = 31 * result + patchExpireAlertTime
         result = 31 * result + isEnterPrimaryScreen.hashCode()
         result = 31 * result + needSetBasalSchedule.hashCode()

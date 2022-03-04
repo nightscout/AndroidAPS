@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.ble.task;
 
+import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager;
 import info.nightscout.shared.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.TempBasalScheduleStart;
 
@@ -13,8 +14,8 @@ import io.reactivex.schedulers.Schedulers;
 
 @Singleton
 public class StartTempBasalTask extends TaskBase {
-
-    private TempBasalScheduleStart TEMP_BASAL_SCHEDULE_START;
+    @Inject IPreferenceManager pm;
+    private final TempBasalScheduleStart TEMP_BASAL_SCHEDULE_START;
 
     @Inject
     public StartTempBasalTask() {
@@ -30,10 +31,12 @@ public class StartTempBasalTask extends TaskBase {
                 .firstOrError()
                 .observeOn(Schedulers.io())
                 .doOnSuccess(v -> onTempBasalStarted(tempBasal))
-                .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, e.getMessage()));
+                .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, (e.getMessage() != null) ? e.getMessage() : "StartTempBasalTask error"));
     }
 
     private void onTempBasalStarted(TempBasal tempBasal) {
+        pm.getTempBasalManager().updateBasalRunning(tempBasal);
+        pm.flushTempBasalManager();
         enqueue(TaskFunc.UPDATE_CONNECTION);
     }
 

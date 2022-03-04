@@ -3,8 +3,6 @@ package info.nightscout.androidaps.plugins.pump.eopatch.ble;
 import android.content.Context;
 import android.content.Intent;
 
-import com.polidea.rxandroidble2.exceptions.BleException;
-
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -51,16 +49,12 @@ import info.nightscout.androidaps.plugins.pump.eopatch.vo.TempBasal;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.shared.logging.AAPSLogger;
-import info.nightscout.shared.logging.LTag;
 import info.nightscout.shared.sharedPreferences.SP;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.OnErrorNotImplementedException;
-import io.reactivex.exceptions.UndeliverableException;
-import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.schedulers.Schedulers;
 
 @Singleton
@@ -81,29 +75,11 @@ public class PatchManager implements IPatchManager {
     @Inject RxAction rxAction;
 
     private IPatchScanner patchScanner;
-    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
+    private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
     private Disposable mConnectingDisposable = null;
 
     @Inject
-    public PatchManager() {
-        setupRxAndroidBle();
-    }
-
-    private void setupRxAndroidBle() {
-        RxJavaPlugins.setErrorHandler(throwable -> {
-            if (throwable instanceof UndeliverableException) {
-                if (throwable.getCause() instanceof BleException) {
-                    return;
-                }
-                aapsLogger.error(LTag.PUMPBTCOMM, "rx UndeliverableException Error Handler");
-                return;
-            } else if (throwable instanceof OnErrorNotImplementedException) {
-                aapsLogger.error(LTag.PUMPBTCOMM, "rx exception Error Handler");
-                return;
-            }
-            throw new RuntimeException("Unexpected Throwable in RxJavaPlugins error handler", throwable);
-        });
-    }
+    public PatchManager() {}
 
     @Inject
     void onInit() {
@@ -155,7 +131,6 @@ public class PatchManager implements IPatchManager {
 
     @Override
     public void init() {
-        initBasalSchedule();
         setConnection();
     }
 
@@ -272,7 +247,27 @@ public class PatchManager implements IPatchManager {
     }
 
     public Single<Boolean> patchActivation(long timeout) {
-        return patchManager.patchActivation(timeout);
+        return patchManager.patchActivation(timeout)
+                .doOnSuccess(success -> {
+                    if (success) {
+                        pumpSync.insertTherapyEventIfNewWithTimestamp(
+                                getPatchConfig().getPatchWakeupTimestamp(),
+                                DetailedBolusInfo.EventType.CANNULA_CHANGE,
+                                null,
+                                null,
+                                PumpType.EOFLOW_EOPATCH2,
+                                getPatchConfig().getPatchSerialNumber()
+                        );
+                        pumpSync.insertTherapyEventIfNewWithTimestamp(
+                                getPatchConfig().getPatchWakeupTimestamp(),
+                                DetailedBolusInfo.EventType.INSULIN_CHANGE,
+                                null,
+                                null,
+                                PumpType.EOFLOW_EOPATCH2,
+                                getPatchConfig().getPatchSerialNumber()
+                        );
+                    }
+                });
     }
 
     public Single<BasalScheduleSetResponse> startBasal(NormalBasal basal) {
@@ -305,8 +300,8 @@ public class PatchManager implements IPatchManager {
     }
 
 
-    public Single<? extends BolusResponse> startQuickBolus(float nowDoseU,
-                                                           float exDoseU, BolusExDuration exDuration) {
+    public Single<? extends BolusResponse> startQuickBolus(float nowDoseU, float exDoseU,
+                                                           BolusExDuration exDuration) {
         return patchManager.startQuickBolus(nowDoseU, exDoseU, exDuration);
     }
 
@@ -334,10 +329,6 @@ public class PatchManager implements IPatchManager {
         return patchManager.deactivate(timeout, force);
     }
 
-    public Single<PatchBooleanResponse> stopBuzz() {
-        return patchManager.stopBuzz();
-    }
-
     public Single<PatchBooleanResponse> infoReminderSet(boolean infoReminder) {
         return patchManager.infoReminderSet(infoReminder);
     }
@@ -359,14 +350,6 @@ public class PatchManager implements IPatchManager {
         patchManager.updateMacAddress("", false);
         pm.getPatchConfig().setMacAddress("");
         return patchScanner.scan(timeout);
-    }
-
-    @Override
-    public void initBasalSchedule() {
-        if(pm.getNormalBasalManager().getNormalBasal() == null){
-            pm.getNormalBasalManager().setNormalBasal(profileFunction.getProfile());
-            pm.flushNormalBasalManager();
-        }
     }
 
     @Override
@@ -399,12 +382,12 @@ public class PatchManager implements IPatchManager {
         boolean buzzer = sp.getBoolean(SettingKeys.Companion.getBUZZER_REMINDERS(), false);
         if(pm.getPatchConfig().getInfoReminder() != buzzer) {
             if (isActivated()) {
-                infoReminderSet(buzzer)
+                mCompositeDisposable.add(infoReminderSet(buzzer)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(patchBooleanResponse -> {
                             pm.getPatchConfig().setInfoReminder(buzzer);
                             pm.flushPatchConfig();
-                        });
+                        }));
             } else {
                 pm.getPatchConfig().setInfoReminder(buzzer);
                 pm.flushPatchConfig();
@@ -414,18 +397,18 @@ public class PatchManager implements IPatchManager {
 
     @Override
     public void changeReminderSetting() {
-        int doseUnit = sp.getInt(SettingKeys.Companion.getLOW_RESERVIOR_REMINDERS(), 0);
+        int doseUnit = sp.getInt(SettingKeys.Companion.getLOW_RESERVOIR_REMINDERS(), 0);
         int hours = sp.getInt(SettingKeys.Companion.getEXPIRATION_REMINDERS(), 0);
         PatchConfig pc = pm.getPatchConfig();
         if(pc.getLowReservoirAlertAmount() != doseUnit || pc.getPatchExpireAlertTime() != hours) {
             if (isActivated()) {
-                setLowReservoir(doseUnit, hours)
+                mCompositeDisposable.add(setLowReservoir(doseUnit, hours)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(patchBooleanResponse -> {
                         pc.setLowReservoirAlertAmount(doseUnit);
                         pc.setPatchExpireAlertTime(hours);
                         pm.flushPatchConfig();
-                    });
+                    }));
             } else {
                 pc.setLowReservoirAlertAmount(doseUnit);
                 pc.setPatchExpireAlertTime(hours);
@@ -437,11 +420,9 @@ public class PatchManager implements IPatchManager {
     @Override
     public void checkActivationProcess(){
         if(getPatchConfig().getLifecycleEvent().isSubStepRunning()
-                && !pm.getAlarms().isOccuring(AlarmCode.A005)
-                && !pm.getAlarms().isOccuring(AlarmCode.A020)) {
-            rxAction.runOnMainThread(() -> {
-                rxBus.send(new EventPatchActivationNotComplete());
-            });
+                && !pm.getAlarms().isOccurring(AlarmCode.A005)
+                && !pm.getAlarms().isOccurring(AlarmCode.A020)) {
+            rxAction.runOnMainThread(() -> rxBus.send(new EventPatchActivationNotComplete()));
         }
     }
 }

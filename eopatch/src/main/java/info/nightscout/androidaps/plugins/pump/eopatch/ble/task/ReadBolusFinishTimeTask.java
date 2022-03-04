@@ -15,8 +15,7 @@ import io.reactivex.Single;
 
 @Singleton
 public class ReadBolusFinishTimeTask extends BolusTask {
-
-    private BolusFinishTimeGet BOLUS_FINISH_TIME_GET;
+    private final BolusFinishTimeGet BOLUS_FINISH_TIME_GET;
 
     @Inject
     public ReadBolusFinishTimeTask() {
@@ -30,7 +29,7 @@ public class ReadBolusFinishTimeTask extends BolusTask {
                 .firstOrError()
                 .doOnSuccess(this::checkResponse)
                 .doOnSuccess(this::onResponse)
-                .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, e.getMessage()));
+                .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, (e.getMessage() != null) ? e.getMessage() : "ReadBolusFinishTimeTask error"));
     }
 
     void onResponse(BolusFinishTimeResponse response) {

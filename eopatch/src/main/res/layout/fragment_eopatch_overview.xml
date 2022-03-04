@@ -99,7 +99,6 @@
                     android:layout_marginBottom="5dp"
                     android:background="@color/list_delimiter" />
 
-                <!-- serial -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -139,7 +138,6 @@
                         android:textSize="16sp" />
                 </LinearLayout>
 
-                <!-- Lot -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -219,7 +217,6 @@
 
                 </LinearLayout>
 
-                <!-- Pod Expires -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -260,7 +257,6 @@
 
                 </LinearLayout>
 
-                <!-- Pod Status -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -538,8 +534,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:enabled="@{viewmodel.alarms.occured.size() == 0}"
-                app:text="@{viewmodel.patchState.isNormalBasalPaused ? @string/string_resume : @string/string_suspend}"
+                android:enabled="@{viewmodel.alarms.occurred.size() == 0}"
+                app:text="@{viewmodel.pauseBtnStr}"
                 app:visibleOrGone="@{viewmodel.patchConfig.activated}"
                 app:onSafeClick="@{() -> viewmodel.onClickSuspendOrResume()}"/>
         </LinearLayout>

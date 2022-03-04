@@ -27,13 +27,6 @@ import io.reactivex.Observable;
 import io.reactivex.Single;
 
 public interface IPatchManager {
-
-    /*
-    @Deprecated
-    static IPatchManager shared() {
-        return BaseApplication.instance.getDataComponent().getPatchManager();
-    }
-     */
     void init();
 
     IPreferenceManager getPreferenceManager();
@@ -74,8 +67,7 @@ public interface IPatchManager {
 
     Single<ComboBolusStopResponse> stopComboBolus();
 
-    Single<? extends BolusResponse> startQuickBolus(float nowDoseU, float exDoseU,
-                                                    BolusExDuration exDuration);
+    Single<? extends BolusResponse> startQuickBolus(float nowDoseU, float exDoseU, BolusExDuration exDuration);
 
     Single<? extends BolusResponse> startCalculatorBolus(DetailedBolusInfo detailedBolusInfo);
 
@@ -115,8 +107,6 @@ public interface IPatchManager {
     Single<PatchBooleanResponse> stopTempBasal();
 
     Single<TemperatureResponse> getTemperature();
-
-    void initBasalSchedule();
 
     void addBolusToHistory(DetailedBolusInfo originalDetailedBolusInfo);
 

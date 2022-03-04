@@ -4,8 +4,7 @@ import android.content.Context
 import android.content.DialogInterface
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.EopatchActivity.Companion.createIntentForCheckConnection
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.EopatchActivity.Companion.createIntentForDiscarded
-import info.nightscout.androidaps.plugins.pump.eopatch.ui.EopatchActivity.Companion.createIntentForChangePatch
-import info.nightscout.androidaps.plugins.pump.eopatch.ui.EopatchActivity.Companion.createIntentForCanularInsertionError
+import info.nightscout.androidaps.plugins.pump.eopatch.ui.EopatchActivity.Companion.createIntentForCannulaInsertionError
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPatchManager
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode.*
 import android.content.Intent
@@ -13,7 +12,6 @@ import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.eopatch.R
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.EopatchActivity
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.BaseResponse
-import info.nightscout.androidaps.plugins.pump.eopatch.code.DeactivationStatus
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.TemperatureResponse
 import info.nightscout.androidaps.plugins.pump.eopatch.event.EventDialog
 import info.nightscout.androidaps.plugins.pump.eopatch.event.EventProgressDialog
@@ -40,13 +38,12 @@ class AlarmProcess(val patchManager: IPatchManager, val rxBus: RxBus) : IAlarmPr
             A002, A003, A004, A005, A018, A019,
             A020, A022, A023, A034, A041, A042,
             A043, A044, A106, A107, A108, A116,
-            A117, A118 -> patchDeactivationAction(context, true)
+            A117, A118 -> patchDeactivationAction(context)
             A007 -> inappropriateTemperatureAction(context)
             A016 -> needleInsertionErrorAction(context)
             B003, B018 -> Single.just(IAlarmProcess.ALARM_HANDLED)
             B005, B006 ->  Single.just(IAlarmProcess.ALARM_HANDLED)
             B012 -> Single.just(IAlarmProcess.ALARM_HANDLED)
-            else -> Single.just(IAlarmProcess.ALARM_HANDLED)
         }
     }
 
@@ -56,11 +53,11 @@ class AlarmProcess(val patchManager: IPatchManager, val rxBus: RxBus) : IAlarmPr
     }
 
     private fun showCommunicationFailedDialog(onConfirmed: Runnable) {
-        var dialog = CommonDialog().apply {
+        val dialog = CommonDialog().apply {
            title = R.string.patch_communication_failed
            message = R.string.patch_communication_check_helper_1
            positiveBtn = R.string.string_communication_check
-           positiveListener = DialogInterface.OnClickListener { dialog, which ->
+           positiveListener = DialogInterface.OnClickListener { _, _ ->
                onConfirmed.run()
                dismiss()
            }
@@ -80,7 +77,7 @@ class AlarmProcess(val patchManager: IPatchManager, val rxBus: RxBus) : IAlarmPr
             Single.fromCallable {
                 showCommunicationFailedDialog {
                     startActivityWithSingleTop(context,
-                        createIntentForCheckConnection(context, true, true))
+                        createIntentForCheckConnection(context, goHomeAfterDiscard = true, forceDiscard = true))
                 }
                 IAlarmProcess.ALARM_PAUSE
             }
@@ -95,28 +92,21 @@ class AlarmProcess(val patchManager: IPatchManager, val rxBus: RxBus) : IAlarmPr
         }
     }
 
-    private fun patchDeactivationAction(context: Context, goHome: Boolean): Single<Int> {
+    private fun patchDeactivationAction(context: Context): Single<Int> {
         return actionWithPatchCheckConnection(context) {
             rxBus.send(EventProgressDialog(true, R.string.string_in_progress))
             patchManager.deactivate(6000, true)
                 .doFinally {
                     rxBus.send(EventProgressDialog(false, R.string.string_in_progress))
-                    startActivityWithSingleTop(context, createIntentForDiscarded(context, goHome))
+                    startActivityWithSingleTop(context, createIntentForDiscarded(context))
                 }
-                .flatMap { ok: DeactivationStatus? -> Single.just(IAlarmProcess.ALARM_HANDLED) }
-        }
-    }
-
-    private fun changPatchAction(context: Context): Single<Int> {
-        return Single.fromCallable {
-            startActivityWithSingleTop(context, createIntentForChangePatch(context))
-            IAlarmProcess.ALARM_HANDLED
+                .flatMap { Single.just(IAlarmProcess.ALARM_HANDLED) }
         }
     }
 
     private fun needleInsertionErrorAction(context: Context): Single<Int> {
         return Single.fromCallable {
-            startActivityWithSingleTop(context, createIntentForCanularInsertionError(context))
+            startActivityWithSingleTop(context, createIntentForCannulaInsertionError(context))
             IAlarmProcess.ALARM_HANDLED
         }
     }

@@ -21,6 +21,6 @@ class OnSafeClickListener(
     }
     companion object {
         // 중복 클릭 방지 시간 설정
-        private val MIN_CLICK_INTERVAL: Long = 1000
+        private const val MIN_CLICK_INTERVAL: Long = 1000
     }
 }

@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.vo
 
-import android.content.Context
 import info.nightscout.androidaps.plugins.pump.eopatch.AppConstant
 import info.nightscout.androidaps.plugins.pump.eopatch.GsonHelper
 import info.nightscout.androidaps.plugins.pump.eopatch.core.code.BolusType
@@ -179,16 +178,4 @@ class BolusCurrent(): IPreference<BolusCurrent> {
     override fun toString(): String {
         return "BolusCurrent(nowBolus=$nowBolus, extBolus=$extBolus)"
     }
-
-    companion object {
-
-        const val NAME = "BOLUS_CURRENT"
-
-        @JvmStatic
-        fun createEmpty(): BolusCurrent {
-            return BolusCurrent()
-        }
-
-    }
-
 }

@@ -14,9 +14,8 @@ import io.reactivex.Observable;
 
 @Singleton
 public class PrimingTask extends TaskBase {
-
-    private UpdateConnection UPDATE_CONNECTION;
-    private StartPriming START_PRIMING;
+    private final UpdateConnection UPDATE_CONNECTION;
+    private final StartPriming START_PRIMING;
 
     @Inject
     public PrimingTask() {
@@ -31,25 +30,25 @@ public class PrimingTask extends TaskBase {
                 .doOnNext(this::checkResponse)
                 .flatMap(v -> observePrimingSuccess(count))
                 .takeUntil(value -> (value == count))
-                .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, e.getMessage()));
+                .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, (e.getMessage() != null) ? e.getMessage() : "PrimingTask error"));
     }
 
     private Observable<Long> observePrimingSuccess(long count) {
 
         return Observable.merge(
                 Observable.interval(1, TimeUnit.SECONDS).take(count + 10)
-                        .map(v -> v * 3) // 현재 20초 니깐 60 정도에서 꽉 채워짐. *4 도 괜찮을 듯.
+                        .map(v -> v * 3)
                         .doOnNext(v -> {
                             if (v >= count) {
                                 throw new Exception("Priming failed");
                             }
-                        }), // 프로그래스바 용.
+                        }),
 
                 Observable.interval(3, TimeUnit.SECONDS)
                         .concatMapSingle(v -> UPDATE_CONNECTION.get())
                         .map(response -> PatchState.Companion.create(response.getPatchState(), System.currentTimeMillis()))
-                        .filter(patchState -> patchState.isPrimingSuccess())
-                        .map(result -> count) // 프라이밍 체크 용 성공시 count 값 리턴
+                        .filter(PatchState::isPrimingSuccess)
+                        .map(result -> count)
         );
     }
 }

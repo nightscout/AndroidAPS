@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.ble.task;
 
 import info.nightscout.shared.logging.LTag;
-import info.nightscout.androidaps.plugins.pump.eopatch.core.api.BasalScheduleSetBig;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.SetKey;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.BaseResponse;
 
@@ -17,15 +16,11 @@ import io.reactivex.schedulers.Schedulers;
 public class ActivateTask extends TaskBase {
     @Inject StartNormalBasalTask startBasalTask;
 
-    private SetKey SET_KEY;
-    private BasalScheduleSetBig BASAL_SCHEDULE_SET_BIG;
-
+    private final SetKey SET_KEY = new SetKey();
 
     @Inject
     public ActivateTask() {
         super(TaskFunc.ACTIVATE);
-        SET_KEY = new SetKey();
-        BASAL_SCHEDULE_SET_BIG = new BasalScheduleSetBig();
     }
 
     public Single<Boolean> start() {
@@ -35,9 +30,9 @@ public class ActivateTask extends TaskBase {
                 .doOnNext(this::checkResponse)
                 .firstOrError()
                 .observeOn(Schedulers.io()).doOnSuccess(this::onActivated)
-                .flatMap(v -> startBasalTask.start(enabled, false))
+                .flatMap(v -> startBasalTask.start(enabled))
                 .map(BaseResponse::isSuccess)
-                .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, e.getMessage()));
+                .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, (e.getMessage() != null) ? e.getMessage() : "ActivateTask error"));
     }
 
     private void onActivated(BaseResponse response) {

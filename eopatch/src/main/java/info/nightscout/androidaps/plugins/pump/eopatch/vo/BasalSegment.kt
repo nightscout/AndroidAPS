@@ -17,11 +17,11 @@ data class BasalSegment (var start: Long, var end: Long, var doseUnitPerHour: Fl
         this.endMinute = end
     }
 
-    internal override fun duplicate(startMinute: Long, endMinute: Long): BasalSegment {
+    override fun duplicate(startMinute: Long, endMinute: Long): BasalSegment {
         return BasalSegment(startMinute, endMinute, doseUnitPerHour)
     }
 
-    internal override fun deep(): BasalSegment {
+    override fun deep(): BasalSegment {
         return BasalSegment(startMinute, endMinute, doseUnitPerHour)
     }
 
@@ -29,8 +29,8 @@ data class BasalSegment (var start: Long, var end: Long, var doseUnitPerHour: Fl
         segment.doseUnitPerHour = doseUnitPerHour
     }
 
-    internal override fun equalValue(segment: BasalSegment): Boolean {
-        return segment != null && doseUnitPerHour == segment.doseUnitPerHour
+    override fun equalValue(segment: BasalSegment): Boolean {
+        return doseUnitPerHour == segment.doseUnitPerHour
     }
 
     companion object {

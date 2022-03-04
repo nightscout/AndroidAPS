@@ -25,17 +25,16 @@ import io.reactivex.subjects.BehaviorSubject;
 
 @Singleton
 public class StopBasalTask extends TaskBase {
-
     @Inject IPreferenceManager pm;
     @Inject CommandQueue commandQueue;
     @Inject AAPSLogger aapsLogger;
     @Inject PumpSync pumpSync;
     @Inject UserEntryLogger uel;
 
-    private BasalStop BASAL_STOP;
-    private BehaviorSubject<Boolean> bolusCheckSubject = BehaviorSubject.create();
-    private BehaviorSubject<Boolean> exbolusCheckSubject = BehaviorSubject.create();
-    private BehaviorSubject<Boolean> basalCheckSubject = BehaviorSubject.create();
+    private final BasalStop BASAL_STOP;
+    private final BehaviorSubject<Boolean> bolusCheckSubject = BehaviorSubject.create();
+    private final BehaviorSubject<Boolean> exbolusCheckSubject = BehaviorSubject.create();
+    private final BehaviorSubject<Boolean> basalCheckSubject = BehaviorSubject.create();
 
     @Inject
     public StopBasalTask() {
@@ -89,16 +88,15 @@ public class StopBasalTask extends TaskBase {
             basalCheckSubject.onNext(true);
         }
 
-        return Observable.zip(getBolusSebject(), getExbolusSebject(), getBasalSebject(), (bolusReady, exbolusReady, basalReady) -> {
-                    return (bolusReady && exbolusReady && basalReady);
-                })
+        return Observable.zip(getBolusSebject(), getExbolusSebject(), getBasalSebject(), (bolusReady, exbolusReady, basalReady)
+                    -> (bolusReady && exbolusReady && basalReady))
                 .filter(ready -> ready)
                 .flatMap(v -> isReady())
 				.concatMapSingle(v -> BASAL_STOP.stop())
                 .doOnNext(this::checkResponse)
                 .firstOrError()
                 .doOnSuccess(this::onBasalStopped)
-                .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, e.getMessage()));
+                .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, (e.getMessage() != null) ? e.getMessage() : "StopBasalTask error"));
     }
 
     private void onBasalStopped(BasalStopResponse response) {

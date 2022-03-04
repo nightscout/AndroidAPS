@@ -14,11 +14,9 @@ import io.reactivex.Single;
 
 @Singleton
 public class SetLowReservoirTask extends TaskBase {
+    @Inject IPreferenceManager pm;
 
-    @Inject
-    IPreferenceManager pm;
-
-    private SetLowReservoirLevelAndExpireAlert SET_LOW_RESERVOIR_N_EXPIRE_ALERT;
+    private final SetLowReservoirLevelAndExpireAlert SET_LOW_RESERVOIR_N_EXPIRE_ALERT;
 
     @Inject
     public SetLowReservoirTask() {
@@ -33,7 +31,7 @@ public class SetLowReservoirTask extends TaskBase {
                         hours))
                 .doOnNext(this::checkResponse)
                 .firstOrError()
-                .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, e.getMessage()));
+                .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, (e.getMessage() != null) ? e.getMessage() : "SetLowReservoirTask error"));
     }
 
     public synchronized void enqueue() {

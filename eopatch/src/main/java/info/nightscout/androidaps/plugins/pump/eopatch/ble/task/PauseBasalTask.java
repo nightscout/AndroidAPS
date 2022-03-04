@@ -18,13 +18,9 @@ import info.nightscout.shared.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode;
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.IAlarmRegistry;
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager;
-import info.nightscout.androidaps.plugins.pump.eopatch.core.define.IPatchConstant;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchState;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.BasalPause;
-import info.nightscout.androidaps.plugins.pump.eopatch.core.api.BolusStop;
-import info.nightscout.androidaps.plugins.pump.eopatch.core.api.TempBasalScheduleStop;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.PatchBooleanResponse;
-import info.nightscout.androidaps.plugins.pump.eopatch.vo.TempBasal;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.commands.Command;
 import io.reactivex.Observable;
@@ -40,33 +36,28 @@ public class PauseBasalTask extends BolusTask {
     @Inject PumpSync pumpSync;
     @Inject UserEntryLogger uel;
 
-    private BasalPause BASAL_PAUSE;
-    private BolusStop BOLUS_STOP;
-    private TempBasalScheduleStop TEMP_BASAL_SCHEDULE_STOP;
+    private final BasalPause BASAL_PAUSE;
 
-    private BehaviorSubject<Boolean> bolusCheckSubject = BehaviorSubject.create();
-    private BehaviorSubject<Boolean> exbolusCheckSubject = BehaviorSubject.create();
-    private BehaviorSubject<Boolean> basalCheckSubject = BehaviorSubject.create();
-
+    private final BehaviorSubject<Boolean> bolusCheckSubject = BehaviorSubject.create();
+    private final BehaviorSubject<Boolean> extendedBolusCheckSubject = BehaviorSubject.create();
+    private final BehaviorSubject<Boolean> basalCheckSubject = BehaviorSubject.create();
 
     @Inject
     public PauseBasalTask() {
         super(TaskFunc.PAUSE_BASAL);
 
         BASAL_PAUSE = new BasalPause();
-        BOLUS_STOP = new BolusStop();
-        TEMP_BASAL_SCHEDULE_STOP = new TempBasalScheduleStop();
     }
 
-    private Observable<Boolean> getBolusSebject(){
+    private Observable<Boolean> getBolusSubject(){
         return bolusCheckSubject.hide();
     }
 
-    private Observable<Boolean> getExbolusSebject(){
-        return exbolusCheckSubject.hide();
+    private Observable<Boolean> getExtendedBolusSubject(){
+        return extendedBolusCheckSubject.hide();
     }
 
-    private Observable<Boolean> getBasalSebject(){
+    private Observable<Boolean> getBasalSubject(){
         return basalCheckSubject.hide();
     }
 
@@ -90,11 +81,11 @@ public class PauseBasalTask extends BolusTask {
             commandQueue.cancelExtended(new Callback() {
                 @Override
                 public void run() {
-                    exbolusCheckSubject.onNext(true);
+                    extendedBolusCheckSubject.onNext(true);
                 }
             });
         }else{
-            exbolusCheckSubject.onNext(true);
+            extendedBolusCheckSubject.onNext(true);
         }
 
         if (pumpSync.expectedPumpState().getTemporaryBasal() != null) {
@@ -109,71 +100,35 @@ public class PauseBasalTask extends BolusTask {
             basalCheckSubject.onNext(true);
         }
 
-        return Observable.zip(getBolusSebject(), getExbolusSebject(), getBasalSebject(), (bolusReady, exbolusReady, basalReady) -> {
-                    return (bolusReady && exbolusReady && basalReady);
-                })
+        return Observable.zip(getBolusSubject(), getExtendedBolusSubject(), getBasalSubject(),
+                    (bolusReady, extendedBolusReady, basalReady) -> (bolusReady && extendedBolusReady && basalReady))
                 .filter(ready -> ready)
                 .flatMap(v -> isReady())
-                .concatMapSingle(v -> getSuspendedTime(pausedTimestamp, alarmCode))
-                .concatMapSingle(suspendedTimestamp -> pauseBasal(pauseDurationHour, suspendedTimestamp, alarmCode))
+                .concatMapSingle(v -> getSuspendedTime(pausedTimestamp))
+                .concatMapSingle(suspendedTimestamp -> pauseBasal(pauseDurationHour, alarmCode))
                 .firstOrError()
-                .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, e.getMessage()));
+                .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, (e.getMessage() != null) ? e.getMessage() : "PauseBasalTask error"));
     }
 
-    private Single<Long> getSuspendedTime(long pausedTimestamp, @Nullable AlarmCode alarmCode) {
+    private Single<Long> getSuspendedTime(long pausedTimestamp) {
         return Single.just(pausedTimestamp);
     }
 
-    private Single<Long> stopNowBolus(long pausedTimestamp, boolean isNowBolusActive) {
-        if (isNowBolusActive) {
-            return BOLUS_STOP.stop(IPatchConstant.NOW_BOLUS_ID)
-                       .doOnSuccess(this::checkResponse)
-                       .doOnSuccess(v -> onNowBolusStopped(v.getInjectedBolusAmount(), pausedTimestamp))
-                       .map(v -> pausedTimestamp);
-        }
-
-        return Single.just(pausedTimestamp);
-    }
-
-    private Single<Long> stopExtBolus(long pausedTimestamp, boolean isExtBolusActive) {
-        if (isExtBolusActive) {
-            return BOLUS_STOP.stop(IPatchConstant.EXT_BOLUS_ID)
-                       .doOnSuccess(this::checkResponse)
-                       .doOnSuccess(v -> onExtBolusStopped(v.getInjectedBolusAmount(), pausedTimestamp))
-                       .map(v -> pausedTimestamp);
-        }
-
-        return Single.just(pausedTimestamp);
-    }
-
-    private Single<Long> stopTempBasal(long pausedTimestamp, boolean isTempBasalActive) {
-        if (isTempBasalActive) {
-            return TEMP_BASAL_SCHEDULE_STOP.stop()
-                       .doOnSuccess(this::checkResponse)
-                       .doOnSuccess(v -> onTempBasalCanceled(pausedTimestamp))
-                       .map(v -> pausedTimestamp);
-        }
-
-        return Single.just(pausedTimestamp);
-    }
-
-    private Single<PatchBooleanResponse> pauseBasal(float pauseDurationHour, long suspendedTimestamp, @Nullable AlarmCode alarmCode) {
+    private Single<PatchBooleanResponse> pauseBasal(float pauseDurationHour, @Nullable AlarmCode alarmCode) {
         if(alarmCode == null)  {
             return BASAL_PAUSE.pause(pauseDurationHour)
                     .doOnSuccess(this::checkResponse)
-                    .doOnSuccess(v -> onBasalPaused(pauseDurationHour, suspendedTimestamp, null));
+                    .doOnSuccess(v -> onBasalPaused(pauseDurationHour, null));
         }
 
         // 정지 알람 발생 시 basal pause 커맨드 전달하지 않음 - 주입 정지 이력만 생성
-        onBasalPaused(pauseDurationHour, suspendedTimestamp, alarmCode);
+        onBasalPaused(pauseDurationHour, alarmCode);
 
         return Single.just(new PatchBooleanResponse(true));
     }
 
-    private void onBasalPaused(float pauseDurationHour, long suspendedTimestamp, @Nullable AlarmCode alarmCode) {
+    private void onBasalPaused(float pauseDurationHour, @Nullable AlarmCode alarmCode) {
         if (!pm.getNormalBasalManager().isSuspended()) {
-            String strCode = (alarmCode != null) ? alarmCode.name() : null;
-
             if (alarmCode != null) {
                 pm.getPatchConfig().updateNormalBasalPausedSilently();
             }
@@ -192,23 +147,6 @@ public class PauseBasalTask extends BolusTask {
         enqueue(TaskFunc.UPDATE_CONNECTION);
     }
 
-    private void onNowBolusStopped(int injectedBolusAmount, long suspendedTimestamp) {
-        updateNowBolusStopped(injectedBolusAmount, suspendedTimestamp);
-    }
-
-    private void onExtBolusStopped(int injectedBolusAmount, long suspendedTimestamp) {
-        updateExtBolusStopped(injectedBolusAmount, suspendedTimestamp);
-    }
-
-    private void onTempBasalCanceled(long suspendedTimestamp) {
-        TempBasal tempBasal = pm.getTempBasalManager().getStartedBasal();
-
-        if (tempBasal != null) {
-            pm.getTempBasalManager().updateBasalStopped();
-            pm.flushTempBasalManager();
-        }
-    }
-
     public synchronized void enqueue(float pauseDurationHour, long pausedTime, @Nullable AlarmCode alarmCode) {
         boolean ready = (disposable == null || disposable.isDisposed());
 
@@ -217,7 +155,7 @@ public class PauseBasalTask extends BolusTask {
                 .timeout(TASK_ENQUEUE_TIME_OUT, TimeUnit.SECONDS)
                 .subscribe(v -> {
                     bolusCheckSubject.onNext(false);
-                    exbolusCheckSubject.onNext(false);
+                    extendedBolusCheckSubject.onNext(false);
                     basalCheckSubject.onNext(false);
                 });
         }

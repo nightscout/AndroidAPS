@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="lowReserviorArray">
+    <string-array name="lowReservoirArray">
         <item>10 U</item>
         <item>15 U</item>
         <item>20 U</item>
@@ -12,7 +12,7 @@
         <item>50 U</item>
     </string-array>
 
-    <string-array name="lowReserviorValues">
+    <string-array name="lowReservoirValues">
         <item>10</item>
         <item>15</item>
         <item>20</item>

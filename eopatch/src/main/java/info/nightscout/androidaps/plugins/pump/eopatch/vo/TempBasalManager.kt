@@ -21,11 +21,6 @@ class TempBasalManager : IPreference<TempBasalManager>{
 
     var unit = UnitOrPercent.P
 
-    init {
-
-    }
-
-
     fun clear(){
         startedBasal = null
         startTimestamp = 0L
@@ -37,37 +32,13 @@ class TempBasalManager : IPreference<TempBasalManager>{
 
         this.startedBasal = CommonUtils.clone(tempBasal)
         this.startedBasal?.running = true
+        this.startTimestamp = System.currentTimeMillis()
     }
-
-
-    /**
-     * 특정 베이젤의 인덱스 찾기
-     *
-     * @param basal
-     * @return
-     */
-
 
     fun updateBasalStopped() {
-        // 모두 정지
         this.startedBasal?.running = false
         this.startedBasal?.startTimestamp = 0
-        // subject.onNext(this)
     }
-
-    fun updateForDeactivation() {
-        // deactivation할때는 모두 정지
-        updateBasalStopped()
-        // subject.onNext(this)
-    }
-
-
-
-    fun updateDeactivation() {
-        updateBasalStopped()
-    }
-
-
 
     fun update(other: TempBasalManager){
         this.startedBasal = other.startedBasal
@@ -89,13 +60,4 @@ class TempBasalManager : IPreference<TempBasalManager>{
     override fun toString(): String {
         return "TempBasalManager(startedBasal=$startedBasal, startTimestamp=$startTimestamp, endTimestamp=$endTimestamp, unit=$unit)"
     }
-
-    companion object {
-
-        const val NAME = "TEMP_BASAL_MANAGER"
-
-        val MAX_BASAL_SEQ = 20
-        val MANUAL_BASAL_SEQ = MAX_BASAL_SEQ + 1
-    }
-
 }

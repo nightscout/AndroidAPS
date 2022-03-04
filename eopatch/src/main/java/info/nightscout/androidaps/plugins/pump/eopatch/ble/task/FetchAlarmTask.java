@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.pump.eopatch.ble.task;
 
 import info.nightscout.shared.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBus;
-import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode;
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.IAlarmRegistry;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.GetErrorCodes;
 
@@ -13,18 +12,13 @@ import javax.inject.Singleton;
 
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.AeCodeResponse;
 import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 
 @Singleton
 public class FetchAlarmTask extends TaskBase {
+    @Inject RxBus rxBus;
+    @Inject IAlarmRegistry alarmRegistry;
 
-    @Inject
-    RxBus rxBus;
-
-    @Inject
-    IAlarmRegistry alarmRegistry;
-
-    private GetErrorCodes ALARM_ALERT_ERROR_CODE_GET;
+    private final GetErrorCodes ALARM_ALERT_ERROR_CODE_GET;
 
     @Inject
     public FetchAlarmTask() {
@@ -38,7 +32,7 @@ public class FetchAlarmTask extends TaskBase {
                 .doOnNext(this::checkResponse)
                 .firstOrError()
                 .doOnSuccess(aeCodeResponse -> alarmRegistry.add(aeCodeResponse.getAlarmCodes()))
-                .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, e.getMessage()));
+                .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, (e.getMessage() != null) ? e.getMessage() : "FetchAlarmTask error"));
     }
 
     public synchronized void enqueue() {

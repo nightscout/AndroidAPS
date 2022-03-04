@@ -10,20 +10,11 @@ enum class BasalStatus constructor(val rawValue: Int) {
     val isStarted: Boolean
         get() = this == STARTED
 
-    val isPaused: Boolean
-        get() = this == PAUSED
-
     val isSuspended: Boolean
         get() = this == SUSPENDED
 
     val isStopped: Boolean
         get() = this == STOPPED
-
-    val isSelected: Boolean
-        get() = this == SELECTED
-
-    val isSelectedGroup: Boolean
-        get() = isStarted || isPaused || isSuspended || isSelected
 
     companion object {
         @JvmStatic

@@ -8,7 +8,7 @@ import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import java.util.*
 
-class Alarms(): IPreference<Alarms> {
+class Alarms: IPreference<Alarms> {
     @Transient
     private val subject: BehaviorSubject<Alarms> = BehaviorSubject.create()
 
@@ -24,7 +24,7 @@ class Alarms(): IPreference<Alarms> {
 
     var registered = HashMap<AlarmCode, AlarmItem>()
 
-    var occured = HashMap<AlarmCode, AlarmItem>()
+    var occurred = HashMap<AlarmCode, AlarmItem>()
 
     init {
         initObject()
@@ -35,52 +35,52 @@ class Alarms(): IPreference<Alarms> {
 
     fun clear(){
         registered.clear()
-        occured.clear()
+        occurred.clear()
     }
 
     fun update(other: Alarms) {
         registered = other.registered
-        occured = other.occured
+        occurred = other.occurred
     }
 
-    fun register(alarmcode: AlarmCode, triggerAfter: Long) {
+    fun register(alarmCode: AlarmCode, triggerAfter: Long) {
         val item = AlarmItem().apply {
-            alarmCode = alarmcode
+            this.alarmCode = alarmCode
             createTimestamp = System.currentTimeMillis()
             triggerTimeMilli = createTimestamp + triggerAfter
         }
-        if (isRegistered(alarmcode)){
-            registered.remove(alarmcode)
+        if (isRegistered(alarmCode)){
+            registered.remove(alarmCode)
         }
-        registered.put(alarmcode, item)
+        registered.put(alarmCode, item)
 
     }
 
-    fun unregister(alarmcode: AlarmCode) {
-        if (isRegistered(alarmcode)){
-            registered.remove(alarmcode)
+    fun unregister(alarmCode: AlarmCode) {
+        if (isRegistered(alarmCode)){
+            registered.remove(alarmCode)
         }
     }
 
-    fun occured(alarmcode: AlarmCode) {
-        val item: AlarmItem? = registered.get(alarmcode)
-        if (!isOccuring(alarmcode) && item != null)
-            occured.put(alarmcode, item)
-        if (isRegistered(alarmcode))
-            registered.remove(alarmcode)
+    fun occurred(alarmCode: AlarmCode) {
+        val item: AlarmItem? = registered.get(alarmCode)
+        if (!isOccurring(alarmCode) && item != null)
+            occurred.put(alarmCode, item)
+        if (isRegistered(alarmCode))
+            registered.remove(alarmCode)
     }
 
-    fun handle(alarmcode: AlarmCode) {
-        if (isOccuring(alarmcode))
-            occured.remove(alarmcode)
+    fun handle(alarmCode: AlarmCode) {
+        if (isOccurring(alarmCode))
+            occurred.remove(alarmCode)
     }
 
-    fun isRegistered(alarmcode: AlarmCode): Boolean{
-        return registered.containsKey(alarmcode)
+    private fun isRegistered(alarmCode: AlarmCode): Boolean{
+        return registered.containsKey(alarmCode)
     }
 
-    fun isOccuring(alarmcode: AlarmCode): Boolean{
-        return occured.containsKey(alarmcode)
+    fun isOccurring(alarmCode: AlarmCode): Boolean{
+        return occurred.containsKey(alarmCode)
     }
 
     override fun observe(): Observable<Alarms> {
@@ -94,15 +94,6 @@ class Alarms(): IPreference<Alarms> {
     }
 
     override fun toString(): String {
-        return "Alarms(subject=$subject, registered=${registered.keys}, occured=${occured.keys}"
+        return "Alarms(subject=$subject, registered=${registered.keys}, occurred=${occurred.keys}"
     }
-
-    companion object {
-        const val NAME = "ALARMS"
-        @JvmStatic
-        fun createEmpty(): Alarms {
-            return Alarms()
-        }
-    }
-
 }

@@ -16,8 +16,7 @@ import io.reactivex.Single;
 
 @Singleton
 public class StopComboBolusTask extends BolusTask {
-
-    private BolusStop BOLUS_STOP;
+    private final BolusStop BOLUS_STOP;
 
     @Inject
     public StopComboBolusTask() {
@@ -31,7 +30,7 @@ public class StopComboBolusTask extends BolusTask {
                 .firstOrError()
                 .doOnSuccess(this::checkResponse)
                 .doOnSuccess(this::onComboBolusStopped)
-                .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, e.getMessage()));
+                .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, (e.getMessage() != null) ? e.getMessage() : "StopComboBolusTask error"));
     }
 
     public Single<ComboBolusStopResponse> stopJob() {

@@ -5,7 +5,6 @@
 
     <data>
         <import type="info.nightscout.androidaps.plugins.pump.eopatch.code.PatchStep" />
-
         <variable
             name="viewModel"
             type="info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchViewModel" />
@@ -29,10 +28,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-
                 android:text="@string/patch_remove_needle_cap"
-
-                android:textSize="24dp"
+                android:textSize="24sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -44,8 +41,7 @@
                 android:layout_marginTop="7dp"
                 android:gravity="center"
                 android:text="@string/patch_remove_needle_cap_step"
-
-                android:textSize="12dp"
+                android:textSize="12sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/text_patch_remove_needle_cap" />
@@ -55,27 +51,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="42dp"
-
                 android:text="@string/patch_remove_needle_cap_desc_1"
-
-                android:textSize="16dp"
+                android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/text_patch_remove_needle_cap_progress" />
-
-         <!--   <com.airbnb.lottie.LottieAnimationView
-                android:id="@+id/img_on_boarding_06"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:adjustViewBounds="true"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_patch_remove_needle_cap_desc_1"
-                app:layout_constraintBottom_toTopOf="@+id/text_patch_remove_needle_cap_desc_2"
-                app:lottie_autoPlay="true"
-                app:lottie_loop="true"
-                app:lottie_rawRes="@raw/img_onboard_06" />-->
 
             <ImageView
                 android:id="@+id/image_patch_remove_needle_cap_desc_2"
@@ -93,7 +73,7 @@
                 android:layout_marginStart="7dp"
                 android:layout_marginTop="24dp"
                 android:text="@string/patch_remove_needle_cap_desc_2"
-                android:textSize="16dp"
+                android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/image_patch_remove_needle_cap_desc_2"
                 app:layout_constraintTop_toBottomOf="@+id/image_patch_remove_needle_cap_desc_2" />
@@ -114,7 +94,7 @@
                 android:layout_marginStart="7dp"
                 android:layout_marginTop="5dp"
                 android:text="@string/patch_remove_needle_cap_desc_3"
-                android:textSize="16dp"
+                android:textSize="16sp"
                 app:layout_constraintStart_toEndOf="@+id/image_patch_remove_needle_cap"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/text_patch_remove_needle_cap_desc_2" />
@@ -170,7 +150,6 @@
                     app:layout_constraintStart_toEndOf="@id/guideline_button"
                     app:layout_constraintTop_toTopOf="parent"
                     app:onSafeClick="@{() -> viewModel.moveStep(PatchStep.REMOVE_PROTECTION_TAPE)}" />
-
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -26,17 +26,15 @@ import io.reactivex.schedulers.Schedulers;
 
 @Singleton
 public class GetPatchInfoTask extends TaskBase {
+    @Inject UpdateConnectionTask updateConnectionTask;
 
-    @Inject
-    UpdateConnectionTask updateConnectionTask;
-
-    private SetGlobalTime SET_GLOBAL_TIME;
-    private GetSerialNumber SERIAL_NUMBER_GET;
-    private GetLOT LOT_NUMBER_GET;
-    private GetFirmwareVersion FIRMWARE_VERSION_GET;
-    private GetWakeUpTime WAKE_UP_TIME_GET;
-    private GetPumpDuration PUMP_DURATION_GET;
-    private GetModelName GET_MODEL_NAME;
+    private final SetGlobalTime SET_GLOBAL_TIME;
+    private final GetSerialNumber SERIAL_NUMBER_GET;
+    private final GetLOT LOT_NUMBER_GET;
+    private final GetFirmwareVersion FIRMWARE_VERSION_GET;
+    private final GetWakeUpTime WAKE_UP_TIME_GET;
+    private final GetPumpDuration PUMP_DURATION_GET;
+    private final GetModelName GET_MODEL_NAME;
 
     @Inject
     public GetPatchInfoTask() {
@@ -61,17 +59,16 @@ public class GetPatchInfoTask extends TaskBase {
                 PUMP_DURATION_GET.get().doOnSuccess(this::onPumpDurationResponse),
                 GET_MODEL_NAME.get().doOnSuccess(this::onModelNameResponse)))
                 .map(BaseResponse::isSuccess)
-                .filter(v -> !v) // fail 시 false 가 아래로 내려간다.
+                .filter(v -> !v)
                 .first(true);
 
         return isReady()
                 .concatMapSingle(it -> tasks)
                 .firstOrError()
-//                .flatMap(v -> updateConnectionTask.update()).map(v -> true)
                 .observeOn(Schedulers.io())
                 .doOnSuccess(this::onPatchWakeupSuccess)
                 .doOnError(this::onPatchWakeupFailed)
-                .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, e.getMessage()));
+                .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, (e.getMessage() != null) ? e.getMessage() : "GetPatchInfoTask error"));
     }
 
     private void onSerialNumberResponse(SerialNumberResponse v) {
@@ -91,23 +88,21 @@ public class GetPatchInfoTask extends TaskBase {
     }
 
     private void onPumpDurationResponse(PumpDurationResponse v) {
-        pm.getPatchConfig().setPumpDurationLargeMilli(v.getDurationL() * 100); // 0.1 초 단위
-        pm.getPatchConfig().setPumpDurationMediumMilli(v.getDurationM() * 100);
-        pm.getPatchConfig().setPumpDurationSmallMilli(v.getDurationS() * 100);
+        pm.getPatchConfig().setPumpDurationLargeMilli(v.getDurationL() * 100L);
+        pm.getPatchConfig().setPumpDurationMediumMilli(v.getDurationM() * 100L);
+        pm.getPatchConfig().setPumpDurationSmallMilli(v.getDurationS() * 100L);
     }
 
     private void onModelNameResponse(ModelNameResponse modelNameResponse) {
         pm.getPatchConfig().setPatchModelName(modelNameResponse.getModelName());
     }
 
-    /* Schedulers.io() */
     private void onPatchWakeupSuccess(Boolean result) {
         synchronized (lock) {
         	pm.flushPatchConfig();
         }
     }
 
-    /* Schedulers.io() */
     private void onPatchWakeupFailed(Throwable e) {
         patch.setSeq(-1);
         pm.getPatchConfig().updateDeactivated();

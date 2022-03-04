@@ -4,9 +4,9 @@
     <PreferenceCategory android:title="@string/category_alerts">
         <ListPreference
             android:defaultValue="10"
-            android:entries="@array/lowReserviorArray"
-            android:entryValues="@array/lowReserviorValues"
-            android:key="@string/key_eopatch_low_reservior_reminders"
+            android:entries="@array/lowReservoirArray"
+            android:entryValues="@array/lowReservoirValues"
+            android:key="@string/key_eopatch_low_reservoir_reminders"
             android:title="@string/low_reservior" />
 
         <ListPreference

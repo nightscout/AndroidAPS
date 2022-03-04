@@ -24,12 +24,12 @@ class EopatchSafetyCheckFragment : EoBaseFragment<FragmentEopatchSafetyCheckBind
             viewModel?.apply {
                 initPatchStep()
 
-                setupStep.observe(viewLifecycleOwner, {
+                setupStep.observe(viewLifecycleOwner) {
                     when (it) {
-                        SAFETY_CHECK_FAILED -> checkCommunication ({ retrySafetyCheck() }, { moveStep(PatchStep.SAFETY_CHECK) })
-                        else  -> Unit
+                        SAFETY_CHECK_FAILED -> checkCommunication({ retrySafetyCheck() }, { moveStep(PatchStep.SAFETY_CHECK) })
+                        else                -> Unit
                     }
-                })
+                }
 
                 startSafetyCheck()
             }

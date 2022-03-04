@@ -18,10 +18,9 @@ import io.reactivex.Single;
 
 @Singleton
 public class SelfTestTask extends TaskBase {
-
-    private GetTemperature TEMPERATURE_GET;
-    private GetVoltageLevelB4Priming BATTERY_LEVEL_GET_BEFORE_PRIMING;
-    private GetGlobalTime GET_GLOBAL_TIME;
+    private final GetTemperature TEMPERATURE_GET;
+    private final GetVoltageLevelB4Priming BATTERY_LEVEL_GET_BEFORE_PRIMING;
+    private final GetGlobalTime GET_GLOBAL_TIME;
 
     @Inject
     public SelfTestTask() {
@@ -35,33 +34,17 @@ public class SelfTestTask extends TaskBase {
     public Single<PatchSelfTestResult> start() {
         Single<PatchSelfTestResult> tasks = Single.concat(Arrays.asList(
                 TEMPERATURE_GET.get()
-                        .map(TemperatureResponse::getResult)
-                        .doOnSuccess(this::onTemperatureResult),
+                        .map(TemperatureResponse::getResult),
                 BATTERY_LEVEL_GET_BEFORE_PRIMING.get()
-                        .map(BatteryVoltageLevelPairingResponse::getResult)
-                        .doOnSuccess(this::onBatteryResult),
+                        .map(BatteryVoltageLevelPairingResponse::getResult),
                 GET_GLOBAL_TIME.get(false)
-                        .map(GlobalTimeResponse::getResult)
-                        .doOnSuccess(this::onTimeResult)))
+                        .map(GlobalTimeResponse::getResult)))
                 .filter(result -> result != PatchSelfTestResult.TEST_SUCCESS)
                 .first(PatchSelfTestResult.TEST_SUCCESS);
 
         return isReady()
                 .concatMapSingle(v -> tasks)
                 .firstOrError()
-                .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, e.getMessage()));
-    }
-
-    private void onTemperatureResult(PatchSelfTestResult patchSelfTestResult) {
-        if (patchSelfTestResult != PatchSelfTestResult.TEST_SUCCESS) {
-        }
-    }
-
-    private void onBatteryResult(PatchSelfTestResult patchSelfTestResult) {
-        if (patchSelfTestResult != PatchSelfTestResult.TEST_SUCCESS) {
-        }
-    }
-
-    private void onTimeResult(PatchSelfTestResult patchSelfTestResult) {
+                .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, (e.getMessage() != null) ? e.getMessage() : "SelfTestTask error"));
     }
 }

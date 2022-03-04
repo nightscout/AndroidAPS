@@ -25,7 +25,9 @@ import info.nightscout.androidaps.plugins.pump.eopatch.ui.EoBaseNavigator
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.event.SingleLiveEvent
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.event.UIEvent
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchViewModel.SetupStep.*
+import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchConfig
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchLifecycleEvent
+import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchState
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
@@ -55,24 +57,19 @@ class EopatchViewModel @Inject constructor(
     var forceDiscard = false
     var connectionTryCnt = 0
 
-    val patchConfig = patchManager.patchConfig
-
-    val patchState = patchManager.patchState
+    val patchConfig: PatchConfig = patchManager.patchConfig
+    val patchState: PatchState = patchManager.patchState
 
     private val _isActivated = MutableLiveData(patchConfig.isActivated)
 
     private val _eventHandler = SingleLiveEvent<UIEvent<EventType>>()
-    val UIEventTypeHandler : LiveData<UIEvent<EventType>>
+    val eventHandler : LiveData<UIEvent<EventType>>
         get() = _eventHandler
-
-    fun onClickActivation(){
-        _eventHandler.postValue(UIEvent(EventType.ACTIVTION_CLICKED))
-    }
 
     val patchStep = MutableLiveData<PatchStep>()
 
-    val isActivated = MutableLiveData<Boolean>(patchManager.isActivated)
-    val isBolusActive = patchManager.getPatchState().isBolusActive
+    val isActivated = MutableLiveData(patchManager.isActivated)
+    val isBolusActive = patchManager.patchState.isBolusActive
     val isConnected = patchManager.patchConnectionState.isConnected
 
     val patchRemainedInsulin: LiveData<Int>
@@ -86,7 +83,7 @@ class EopatchViewModel @Inject constructor(
             }, 0)
         }
 
-    private val _patchExpirationTimestamp = MutableLiveData<Long>(patchManager.patchExpiredTime)
+    private val _patchExpirationTimestamp = MutableLiveData(patchManager.patchExpiredTime)
 
     val patchRemainedDays: LiveData<Int>
         get() = Transformations.map(_patchExpirationTimestamp) {
@@ -106,19 +103,11 @@ class EopatchViewModel @Inject constructor(
     val safetyCheckProgress: LiveData<Int>
         get() = _safetyCheckProgress
 
-    private val _patchExpirationReminderTime = MutableLiveData<String>()
-    val patchExpirationReminderTime: LiveData<String>
-        get() = _patchExpirationReminderTime
-
-    private val _patchExpirationTime = MutableLiveData<String>()
-    val patchExpirationTime: LiveData<String>
-        get() = _patchExpirationTime
-
     private val _isCommCheckFailed = MutableLiveData(false)
-    val isCommCheckFailed: LiveData<Boolean>
+    private val isCommCheckFailed: LiveData<Boolean>
         get() = _isCommCheckFailed
 
-    val isBonded: Boolean
+    private val isBonded: Boolean
         get() = !patchConfig.lifecycleEvent.isShutdown
 
     val commCheckCancelLabel: LiveData<String>
@@ -129,15 +118,11 @@ class EopatchViewModel @Inject constructor(
                 }
                 PatchStep.SAFE_DEACTIVATION -> R.string.patch_forced_discard
                 else -> R.string.cancel
-            }) ?: ""
+            })
         }
 
     val programEnabledMessage: String
-        // get() = """'기초1' program has been enabled."""
-        get() = rh.gs(R.string.patch_basal_schedule_desc_1,"기초1") ?: ""
-
-    val patchStepIsSafeDeactivation: Boolean
-        get() = patchStep.value?.isSafeDeactivation ?: false
+        get() = rh.gs(R.string.patch_basal_schedule_desc_1,"기초1")
 
     private val _isDiscardedWithNotConn = MutableLiveData(false)
     val isDiscardedWithNotConn: LiveData<Boolean>
@@ -151,8 +136,6 @@ class EopatchViewModel @Inject constructor(
 
     private val initPatchStepIsCheckConnection: Boolean
         get() = mInitPatchStep?.isCheckConnection ?: false
-
-    // private var mProgressDialog: PatchProgressDialog? = null
 
     private var mCommCheckDisposable: Disposable? = null
 
@@ -173,8 +156,6 @@ class EopatchViewModel @Inject constructor(
     private var mB012UpdateDisposable: Disposable? = null
 
     private val mB012UpdateSubject = PublishSubject.create<Unit>()
-
-    // private var mCurrentTextDialog: TextDialog? = null
 
     init {
         mB012UpdateDisposable = mB012UpdateSubject.hide()
@@ -222,20 +203,7 @@ class EopatchViewModel @Inject constructor(
 
     @Synchronized
     fun checkCommunication(onSuccessListener: () -> Unit, onCancelListener: (() -> Unit)? = null,
-                           onDiscardListener: (() -> Unit)? = null, doPreCheck: Boolean = false, doIntercept: Boolean = false) {
-        // mPatchCommCheckDialog?.let {
-        //     if (doIntercept) {
-        //         mOnCommCheckSuccessListener = onSuccessListener
-        //         mOnCommCheckCancelListener = onCancelListener
-        //         mOnCommCheckDiscardListener = onDiscardListener
-        //
-        //         if (_isCommCheckFailed.value == true) {
-        //             retryCheckCommunication()
-        //         }
-        //     }
-        //
-        // }
-
+                           onDiscardListener: (() -> Unit)? = null, doPreCheck: Boolean = false) {
         if (doPreCheck && patchManager.patchConnectionState.isConnected) {
             onSuccessListener.invoke()
             return
@@ -286,7 +254,7 @@ class EopatchViewModel @Inject constructor(
                 }
     }
 
-    fun showPatchCommCheckDialog(defaultFailedCondition: Boolean = false, @StringRes title: Int = R.string.string_connecting) {
+    private fun showPatchCommCheckDialog(defaultFailedCondition: Boolean = false, @StringRes title: Int = R.string.string_connecting) {
         _isCommCheckFailed.postValue(defaultFailedCondition)
         _eventHandler.postValue(UIEvent(EventType.SHOW_PATCH_COMM_DIALOG).apply {
             value = title
@@ -307,7 +275,7 @@ class EopatchViewModel @Inject constructor(
     }
 
     private fun dismissPatchCommCheckDialog() {
-        if (_isCommCheckFailed.value == false) {
+        if (isCommCheckFailed.value == false) {
             if (isBonded) {
                 _eventHandler.postValue(UIEvent(EventType.SHOW_BONDED_DIALOG))
             } else {
@@ -554,7 +522,7 @@ class EopatchViewModel @Inject constructor(
         }
     }
 
-    fun convertToPatchStep(lifecycle: PatchLifecycle) = when (lifecycle) {
+    private fun convertToPatchStep(lifecycle: PatchLifecycle) = when (lifecycle) {
         PatchLifecycle.SHUTDOWN -> patchConfig.isDeactivated.takeOne(
                 PatchStep.WAKE_UP, PatchStep.SAFE_DEACTIVATION)
         PatchLifecycle.BONDED -> PatchStep.CONNECT_NEW
@@ -567,13 +535,6 @@ class EopatchViewModel @Inject constructor(
     }
 
     private fun onClear() {
-        // _patchExpirationTime.value = null
-        // _rotateKnobRawRes.value = null
-        // _patchExpirationReminderTime.value = null
-        // _title.value = null
-        // mProgressDialog = null
-        // mPatchCommCheckDialog = null
-        // mCurrentTextDialog = null
         mOnCommCheckSuccessListener = null
         mOnCommCheckCancelListener = null
         mOnCommCheckDiscardListener = null
@@ -691,7 +652,7 @@ class EopatchViewModel @Inject constructor(
             .doOnSubscribe { updateSetupStep(BONDING_STARTED) }
             .filter { result -> result }
             .toSingle() // 실패시 에러 반환.
-            .doOnSuccess { patchManager.updatePatchLifeCycle(PatchLifecycleEvent.createbonded()) }
+            .doOnSuccess { patchManager.updatePatchLifeCycle(PatchLifecycleEvent.createBonded()) }
             .doOnError {
                 if (it is TimeoutException) {
                     moveStep(PatchStep.WAKE_UP)

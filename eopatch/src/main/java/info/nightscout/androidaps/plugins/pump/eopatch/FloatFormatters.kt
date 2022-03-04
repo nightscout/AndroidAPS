@@ -4,7 +4,7 @@ import java.util.*
 import java.util.function.Function
 
 object FloatFormatters {
-    val INSULIN = Function<Number, String>{ value -> String.format(Locale.US, CommonUtils.insulinFormat(), value.toFloat()) }
+    val INSULIN = Function<Number, String>{ value -> String.format(Locale.US, "%.2f", value.toFloat()) }
     val FAT = Function<Number, String>{ value -> String.format(Locale.US, "%.1f", value.toFloat()) }
     val DURATION = Function<Number, String>{ value -> String.format(Locale.US, "%.1f", value.toFloat()) }
 
@@ -16,19 +16,7 @@ object FloatFormatters {
         return if (CommonUtils.isStringEmpty(suffix)) {
             INSULIN.apply(value)
         } else {
-            INSULIN.apply(value).toString() +" "+ suffix!!
-        }
-    }
-
-    fun fat(value: Float): String {
-        return FAT.apply(value)
-    }
-
-    fun fat(value: Float, suffix: String?): String {
-        return if (CommonUtils.isStringEmpty(suffix)) {
-            FAT.apply(value)
-        } else {
-            FAT.apply(value).toString() + suffix!!
+            INSULIN.apply(value) +" "+ suffix!!
         }
     }
 
@@ -40,7 +28,7 @@ object FloatFormatters {
         return if (CommonUtils.isStringEmpty(suffix)) {
             DURATION.apply(value)
         } else {
-            DURATION.apply(value).toString() +" " + suffix!!
+            DURATION.apply(value) +" " + suffix!!
         }
     }
 }

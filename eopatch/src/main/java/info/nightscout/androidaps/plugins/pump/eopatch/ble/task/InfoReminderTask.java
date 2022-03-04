@@ -14,11 +14,9 @@ import io.reactivex.Single;
 
 @Singleton
 public class InfoReminderTask extends TaskBase {
+    @Inject IPreferenceManager pm;
 
-    @Inject
-    IPreferenceManager pm;
-
-    private InfoReminderSet INFO_REMINDER_SET;
+    private final InfoReminderSet INFO_REMINDER_SET;
 
     @Inject
     public InfoReminderTask() {
@@ -32,7 +30,7 @@ public class InfoReminderTask extends TaskBase {
                 .concatMapSingle(v -> INFO_REMINDER_SET.set(infoReminder))
                 .doOnNext(this::checkResponse)
                 .firstOrError()
-                .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, e.getMessage()));
+                .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, (e.getMessage() != null) ? e.getMessage() : "InfoReminderTask error"));
     }
 
     public synchronized void enqueue() {

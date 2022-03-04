@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.ui
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -73,13 +72,6 @@ abstract class EoBaseFragment<B : ViewDataBinding> : DaggerFragment(), EoBaseNav
 
     override fun finish(finishAffinity: Boolean) {
         baseActivity?.finish(finishAffinity)
-    }
-    override fun startActivityForResult(action: Context.() -> Intent, requestCode: Int, vararg params: Pair<String, Any?>) {
-        baseActivity?.startActivityForResult(action, requestCode, *params)
-    }
-
-    override fun checkCommunication(onSuccess: () -> Unit, onCancel: (() -> Unit)?, onDiscard: (() -> Unit)?, goHomeAfterDiscard: Boolean) {
-        baseActivity?.checkCommunication(onSuccess, onCancel, onDiscard, goHomeAfterDiscard)
     }
 
     fun Disposable.addTo() = addTo(compositeDisposable)

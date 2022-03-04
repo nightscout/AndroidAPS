@@ -11,22 +11,14 @@ class TempBasal {
    var durationMinutes: Long = 0L
    var doseUnitPerHour: Float = -1f
    var percent: Int = 0
-   var unitDefinition: UnitOrPercent? = null // percenr or U
-       set(_unitDefinition: UnitOrPercent?) {
-           field = _unitDefinition
-       }
+   var unitDefinition: UnitOrPercent? = null
 
-
-   var running =false
-
-    // val isGreaterThanMaxBasal: Boolean
-    //     get() = isGreaterThan(25f)  //todo
+    var running =false
 
     val percentUs: FloatArray
         get() {
-            val doseUs: FloatArray
 
-            doseUs = FloatArray((this.durationMinutes / 30).toInt())
+            val doseUs = FloatArray((this.durationMinutes / 30).toInt())
             for (i in doseUs.indices) {
                 doseUs[i] = this.percent.toFloat()
             }
@@ -34,22 +26,8 @@ class TempBasal {
             return doseUs
         }
 
-    val doseUnitPerHourArray: FloatArray
-        get() {
-            val doseUs: FloatArray
-
-            doseUs = FloatArray((this.durationMinutes / 30).toInt())
-
-            val value = FloatAdjusters.ROUND2_INSULIN.apply(doseUnitPerHour)
-            for (i in doseUs.indices) {
-                doseUs[i] = value
-            }
-            return doseUs
-        }
-
     val endTimestamp: Long
         get() = if (this.startTimestamp == 0L) 0 else this.startTimestamp + TimeUnit.MINUTES.toMillis(this.durationMinutes)
-
 
     val doseUnitText: String
         get() = String.format("%s U/hr", FloatFormatters.insulin(doseUnitPerHour))
@@ -83,15 +61,10 @@ class TempBasal {
         if (this.unitDefinition == UnitOrPercent.U) {
             maxTempBasal = this.doseUnitPerHour
         } else if (this.unitDefinition == UnitOrPercent.P) {
-            val normalBasal = normalBasalManager.normalBasal
-            if (normalBasal != null) {
-                val maxNormalBasal = normalBasal.getMaxBasal(durationMinutes)
-                maxTempBasal = FloatAdjusters.ROUND2_TEMP_BASAL_PROGRAM_RATE.apply(maxNormalBasal + getDoseUnitPerHourWithPercent(maxNormalBasal))
-            }
+            val maxNormalBasal = normalBasalManager.normalBasal.getMaxBasal(durationMinutes)
+            maxTempBasal = FloatAdjusters.ROUND2_TEMP_BASAL_PROGRAM_RATE.apply(maxNormalBasal + getDoseUnitPerHourWithPercent(maxNormalBasal))
         }
-        return if (maxTempBasal > maxBasal) {
-            true
-        } else false
+        return maxTempBasal > maxBasal
     }
 
     override fun toString(): String {

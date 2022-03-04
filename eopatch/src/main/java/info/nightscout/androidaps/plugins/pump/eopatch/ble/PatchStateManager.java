@@ -52,7 +52,7 @@ public class PatchStateManager {
         final PatchState oldState = pm.getPatchState();
 
         int diff = newState.currentTime() - oldState.currentTime();
-        if (0 <= diff && diff < 10) { // TODO 상수로 변경.
+        if (0 <= diff && diff < 10) {
             /* 10초 안에 같은 PatchState update 시 skip */
             if (oldState.equalState(newState)) {
                 return;
@@ -267,8 +267,7 @@ public class PatchStateManager {
     public synchronized void onBasalStarted(NormalBasal basal, long timestamp) {
         if (basal != null) {
             pm.getNormalBasalManager().updateBasalStarted();
-
-            basal.updateNormalBasalIndex();  //normal basal index를 업데이트하여 basal change 이력이 또 발생하는것을 방지(df_356)
+            basal.updateNormalBasalIndex();
         }
 
         pm.getPatchConfig().updateNormalBasalStarted(); // updateNormalBasalStarted 도 동일함...

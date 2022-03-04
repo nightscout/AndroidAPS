@@ -4,7 +4,7 @@ import info.nightscout.androidaps.plugins.pump.eopatch.R
 
 class SettingKeys {
     companion object{
-        val LOW_RESERVIOR_REMINDERS: Int = R.string.key_eopatch_low_reservior_reminders
+        val LOW_RESERVOIR_REMINDERS: Int = R.string.key_eopatch_low_reservoir_reminders
         val EXPIRATION_REMINDERS: Int = R.string.key_eopatch_expiration_reminders
         val BUZZER_REMINDERS: Int = R.string.key_eopatch_patch_buzzer_reminders
 

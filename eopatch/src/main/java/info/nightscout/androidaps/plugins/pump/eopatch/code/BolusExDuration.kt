@@ -1,10 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.code
 
-import android.content.Context
-import androidx.collection.SparseArrayCompat
-import info.nightscout.androidaps.plugins.pump.eopatch.CommonUtils
-import info.nightscout.androidaps.plugins.pump.eopatch.R
-import java.util.*
 import java.util.concurrent.TimeUnit
 
 enum class BolusExDuration constructor(val index: Int, val minute: Int, val hour: Float) {
@@ -26,34 +21,14 @@ enum class BolusExDuration constructor(val index: Int, val minute: Int, val hour
     MINUTE_450(15, 450, 7.5f),
     MINUTE_480(16, 480, 8.0f);
 
-    val isOff: Boolean
-        get() = this == OFF
-
-    val isNotOff: Boolean
-        get() = this != OFF
-
     fun milli(): Long {
         return TimeUnit.MINUTES.toMillis(this.minute.toLong())
     }
 
     companion object {
         @JvmStatic
-        fun getItemFromIndex(index: Int): BolusExDuration {
-            var reverseIndices = SparseArrayCompat<BolusExDuration>()
-            for (duration in values()) {
-                reverseIndices.put(duration.index, duration)
-            }
-            val result = reverseIndices.get(index)
-            return result ?: OFF
-        }
-
-        @JvmStatic
         fun ofRaw(rawValue: Int): BolusExDuration {
-            if (rawValue == null) {
-                return OFF
-            }
-
-            for (t in BolusExDuration.values()) {
+            for (t in values()) {
                 if (t.minute == rawValue) {
                     return t
                 }

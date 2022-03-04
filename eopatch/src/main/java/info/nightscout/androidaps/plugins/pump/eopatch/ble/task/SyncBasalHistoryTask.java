@@ -5,7 +5,6 @@ import info.nightscout.androidaps.plugins.pump.eopatch.core.api.BasalHistoryGetE
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.BasalHistoryIndexGet;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.TempBasalHistoryGetExBig;
 
-import java.sql.SQLException;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -19,13 +18,11 @@ import static info.nightscout.androidaps.plugins.pump.eopatch.core.define.IPatch
 
 @Singleton
 public class SyncBasalHistoryTask extends TaskBase {
+    @Inject IPreferenceManager pm;
 
-    @Inject
-    IPreferenceManager pm;
-
-    private BasalHistoryIndexGet BASAL_HISTORY_INDEX_GET;
-    private BasalHistoryGetExBig BASAL_HISTORY_GET_EX_BIG;
-    private TempBasalHistoryGetExBig TEMP_BASAL_HISTORY_GET_EX_BIG;
+    private final BasalHistoryIndexGet BASAL_HISTORY_INDEX_GET;
+    private final BasalHistoryGetExBig BASAL_HISTORY_GET_EX_BIG;
+    private final TempBasalHistoryGetExBig TEMP_BASAL_HISTORY_GET_EX_BIG;
 
     @Inject
     public SyncBasalHistoryTask() {
@@ -38,19 +35,10 @@ public class SyncBasalHistoryTask extends TaskBase {
 
     public Single<Integer> sync(int end) {
         return Single.just(1);  // 베이젤 싱크 사용 안함
-//        return isReady()
-//                .concatMapSingle(v -> syncBoth(pm.getPatchConfig().getLastIndex(), end))
-//                .firstOrError()
-//                .doOnSuccess(this::updatePatchLastIndex);
     }
 
     public Single<Integer> sync() {
         return Single.just(1);  // 베이젤 싱크 사용 안함
-//        return isReady()
-//                .concatMapSingle(v -> getLastIndex())
-//                .concatMapSingle(end -> syncBoth(pm.getPatchConfig().getLastIndex(), end))
-//                .firstOrError()
-//                .doOnSuccess(this::updatePatchLastIndex);
     }
 
     private Single<Integer> getLastIndex() {
@@ -94,7 +82,7 @@ public class SyncBasalHistoryTask extends TaskBase {
     }
 
     private int onBasalHistoryResponse(BasalHistoryResponse n, BasalHistoryResponse t,
-                                       int startRequested, int end) throws SQLException {
+                                       int startRequested, int end) {
 
         if (!n.isSuccess() || !t.isSuccess() || n.getSeq() != t.getSeq()) {
             return -1;
@@ -112,7 +100,7 @@ public class SyncBasalHistoryTask extends TaskBase {
         return updateInjected(normal, temp, start, end);
     }
 
-    public synchronized int updateInjected(float[] normal, float[] temp, int start, int end) throws SQLException {
+    public synchronized int updateInjected(float[] normal, float[] temp, int start, int end) {
         if (pm.getPatchState().isPatchInternalSuspended() && pm.getPatchConfig().isInBasalPausedTime() == false) {
             return -1;
         }

@@ -5,7 +5,6 @@ import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.code.BolusType;
 import info.nightscout.androidaps.plugins.pump.eopatch.code.DeactivationStatus;
 
-import java.sql.SQLException;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -14,7 +13,6 @@ import javax.inject.Singleton;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.DeActivation;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.BolusCurrent;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchLifecycleEvent;
-import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchState;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.TempBasal;
 import io.reactivex.Observable;
 import io.reactivex.Single;
@@ -22,14 +20,10 @@ import io.reactivex.schedulers.Schedulers;
 
 @Singleton
 public class DeactivateTask extends TaskBase {
+    @Inject StopBasalTask stopBasalTask;
+    @Inject IPreferenceManager pm;
 
-    @Inject
-    StopBasalTask stopBasalTask;
-
-    @Inject
-    IPreferenceManager pm;
-
-    private DeActivation DEACTIVATION;
+    private final DeActivation DEACTIVATION;
 
     @Inject
     public DeactivateTask() {
@@ -44,16 +38,16 @@ public class DeactivateTask extends TaskBase {
                         DEACTIVATION.start()
                                 .doOnSuccess(this::checkResponse)
                                 .observeOn(Schedulers.io())
-                                .doOnSuccess(response -> onDeactivated(false)))
+                                .doOnSuccess(response -> onDeactivated()))
                 .map(response -> DeactivationStatus.of(response.isSuccess(), forced))
                 .firstOrError()
-                .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, e.getMessage()))
+                .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, (e.getMessage() != null) ? e.getMessage() : "DeactivateTask error"))
                 .onErrorResumeNext(e -> {
                     if (forced) {
                         try {
-                            onDeactivated(true);
+                            onDeactivated();
                         } catch (Exception t) {
-                            aapsLogger.error(LTag.PUMPCOMM, e.getMessage());
+                            aapsLogger.error(LTag.PUMPCOMM, (e.getMessage() != null) ? e.getMessage() : "DeactivateTask error");
                         }
                     }
 
@@ -73,31 +67,27 @@ public class DeactivateTask extends TaskBase {
         return isReady();
     }
 
-    /* Schedulers.io() */
-    private void onDeactivated(boolean forced) throws SQLException {
+    private void onDeactivated() {
         synchronized (lock) {
             patch.updateMacAddress(null, false);
 
             if (pm.getPatchConfig().getLifecycleEvent().isShutdown()) {
                 return;
             }
-
             cleanUpRepository();
-
             pm.getNormalBasalManager().updateForDeactivation();
-
             pm.updatePatchLifeCycle(PatchLifecycleEvent.createShutdown());
 
         }
     }
 
-    private void cleanUpRepository() throws SQLException {
+    private void cleanUpRepository() {
         updateNowBolusStopped();
         updateExtBolusStopped();
         updateTempBasalStopped();
     }
 
-    private void updateTempBasalStopped() throws SQLException {
+    private void updateTempBasalStopped() {
         TempBasal tempBasal = pm.getTempBasalManager().getStartedBasal();
 
         if (tempBasal != null) {
@@ -106,7 +96,6 @@ public class DeactivateTask extends TaskBase {
         }
     }
 
-    /* copied from BolusTask. */
     private void updateNowBolusStopped() {
         BolusCurrent bolusCurrent = pm.getBolusCurrent();
         long nowID = bolusCurrent.historyId(BolusType.NOW);
@@ -117,7 +106,6 @@ public class DeactivateTask extends TaskBase {
         }
     }
 
-    /* copied from BolusTask. */
     private void updateExtBolusStopped() {
         BolusCurrent bolusCurrent = pm.getBolusCurrent();
         long extID = bolusCurrent.historyId(BolusType.EXT);
