@@ -13,8 +13,7 @@ import io.reactivex.Single;
 
 @Singleton
 public class ReadTempBasalFinishTimeTask extends TaskBase {
-
-    private TempBasalFinishTimeGet TEMP_BASAL_FINISH_TIME_GET;
+    private final TempBasalFinishTimeGet TEMP_BASAL_FINISH_TIME_GET;
 
     @Inject
     public ReadTempBasalFinishTimeTask() {
@@ -28,7 +27,7 @@ public class ReadTempBasalFinishTimeTask extends TaskBase {
                 .firstOrError()
                 .doOnSuccess(this::checkResponse)
                 .doOnSuccess(this::onResponse)
-                .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, e.getMessage()));
+                .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, (e.getMessage() != null) ? e.getMessage() : "ReadTempBasalFinishTimeTask error"));
     }
 
     private void onResponse(TempBasalFinishTimeResponse response) {

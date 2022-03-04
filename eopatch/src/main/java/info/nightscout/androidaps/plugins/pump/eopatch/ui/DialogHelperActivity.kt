@@ -18,8 +18,4 @@ class DialogHelperActivity : DialogAppCompatActivity() {
         dialog.message = intent.getStringExtra("message")?:""
         dialog.show(supportFragmentManager, "Dialog")
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-    }
 }

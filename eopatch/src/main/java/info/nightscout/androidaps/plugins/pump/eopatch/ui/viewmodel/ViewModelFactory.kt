@@ -30,6 +30,7 @@ class ViewModelFactory @Inject constructor(private val creators: Map<Class<out V
             throw IllegalArgumentException("unknown model class $modelClass")
         }
         try {
+            @Suppress("UNCHECKED_CAST")
             return creator.get() as T
         } catch (e: Exception) {
             throw IllegalStateException(e)

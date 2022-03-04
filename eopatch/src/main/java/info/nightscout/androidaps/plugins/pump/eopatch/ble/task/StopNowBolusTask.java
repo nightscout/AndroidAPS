@@ -15,13 +15,11 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 
 @Singleton
 public class StopNowBolusTask extends BolusTask {
-
-    private BolusStop BOLUS_STOP;
+    private final BolusStop BOLUS_STOP;
 
     @Inject
     public StopNowBolusTask() {
         super(TaskFunc.STOP_NOW_BOLUS);
-
         BOLUS_STOP = new BolusStop();
     }
 
@@ -29,7 +27,7 @@ public class StopNowBolusTask extends BolusTask {
         return isReady()
                 .observeOn(AndroidSchedulers.mainThread())
                 .concatMapSingle(v -> stopJob()).firstOrError()
-                .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, e.getMessage()));
+                .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, (e.getMessage() != null) ? e.getMessage() : "StopNowBolusTask error"));
     }
 
     public Single<BolusStopResponse> stopJob() {

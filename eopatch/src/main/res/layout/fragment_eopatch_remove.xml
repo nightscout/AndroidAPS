@@ -5,7 +5,6 @@
 
     <data>
         <import type="info.nightscout.androidaps.plugins.pump.eopatch.code.PatchStep" />
-
         <variable
             name="viewModel"
             type="info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchViewModel" />
@@ -34,7 +33,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginStart="9dp"
             android:text="@string/patch_discard_complete_desc"
-            android:textSize="16dp"
+            android:textSize="16sp"
             app:layout_constraintLeft_toRightOf="@+id/image_patch_remove"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

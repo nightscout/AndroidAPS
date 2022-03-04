@@ -14,12 +14,9 @@ import io.reactivex.Single;
 
 import static info.nightscout.androidaps.plugins.pump.eopatch.core.api.StartBonding.OPTION_NUMERIC;
 
-/**
- * (주의) API 호출 후 본딩을 위해서 밑단 연결이 끊어짐.
- */
 @Singleton
 public class StartBondTask extends TaskBase {
-    private StartBonding START_BOND;
+    private final StartBonding START_BOND;
 
     @Inject
     public StartBondTask() {
@@ -44,7 +41,7 @@ public class StartBondTask extends TaskBase {
                 .doOnNext(v -> prefSetMacAddress(mac))
                 .doOnError(e -> {
                     prefSetMacAddress("");
-                    aapsLogger.error(LTag.PUMPCOMM, e.getMessage());
+                    aapsLogger.error(LTag.PUMPCOMM, (e.getMessage() != null) ? e.getMessage() : "StartBondTask error");
                 })
                 .firstOrError();
     }

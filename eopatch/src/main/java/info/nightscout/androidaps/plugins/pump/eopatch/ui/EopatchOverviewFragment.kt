@@ -1,28 +1,23 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.ui
 
 import android.app.AlertDialog
-import android.app.ProgressDialog
-import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.lifecycle.Observer
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModelProvider
 import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.eopatch.R
-import info.nightscout.androidaps.plugins.pump.eopatch.EoPatchRxBus
 import info.nightscout.androidaps.plugins.pump.eopatch.core.code.BolusType
 import info.nightscout.androidaps.plugins.pump.eopatch.code.PatchStep
 import info.nightscout.androidaps.plugins.pump.eopatch.code.EventType
 import info.nightscout.androidaps.plugins.pump.eopatch.databinding.FragmentEopatchOverviewBinding
-import info.nightscout.androidaps.plugins.pump.eopatch.extension.fillExtras
-import info.nightscout.androidaps.plugins.pump.eopatch.extension.subscribeDefault
 import info.nightscout.androidaps.plugins.pump.eopatch.extension.takeOne
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchOverviewViewModel
-import info.nightscout.androidaps.plugins.pump.eopatch.vo.ActivityResultEvent
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
 import io.reactivex.disposables.CompositeDisposable
@@ -32,8 +27,11 @@ class EopatchOverviewFragment: EoBaseFragment<FragmentEopatchOverviewBinding>() 
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var aapsLogger: AAPSLogger
+    private lateinit var resultLauncherForResume: ActivityResultLauncher<Intent>
+    private lateinit var resultLauncherForPause: ActivityResultLauncher<Intent>
 
     private var disposable: CompositeDisposable = CompositeDisposable()
+    private var pauseDuration = 0.5f
 
     override fun getLayoutId(): Int = R.layout.fragment_eopatch_overview
 
@@ -48,21 +46,42 @@ class EopatchOverviewFragment: EoBaseFragment<FragmentEopatchOverviewBinding>() 
         binding.apply {
             viewmodel = ViewModelProvider(this@EopatchOverviewFragment, viewModelFactory).get(EopatchOverviewViewModel::class.java)
             viewmodel?.apply {
-                UIEventTypeHandler.observe(viewLifecycleOwner, Observer { evt ->
-                    when(evt.peekContent()){
-                        EventType.ACTIVTION_CLICKED   -> requireContext().let { startActivity(EopatchActivity.createIntentFromMenu(it, PatchStep.WAKE_UP)) }
-                        EventType.DEACTIVTION_CLICKED -> requireContext().let { startActivity(EopatchActivity.createIntentForChangePatch(it)) }
-                        EventType.SUSPEND_CLICKED     -> suspend()
+                eventHandler.observe(viewLifecycleOwner) { evt ->
+                    when (evt.peekContent()) {
+                        EventType.ACTIVATION_CLICKED   -> requireContext().apply { startActivity(EopatchActivity.createIntentFromMenu(this, PatchStep.WAKE_UP)) }
+                        EventType.DEACTIVATION_CLICKED -> requireContext().apply { startActivity(EopatchActivity.createIntentForChangePatch(this)) }
+                        EventType.SUSPEND_CLICKED      -> suspend()
                         EventType.RESUME_CLICKED      -> resume()
-                        EventType.INVALID_BASAL_RATE  -> Toast.makeText(activity, R.string.unsupported_basal_rate, Toast.LENGTH_SHORT).show()
-                        EventType.PROFILE_NOT_SET     -> Toast.makeText(activity, R.string.no_profile_selected, Toast.LENGTH_SHORT).show()
+                        EventType.INVALID_BASAL_RATE  -> showToast(R.string.unsupported_basal_rate)
+                        EventType.PROFILE_NOT_SET     -> showToast(R.string.no_profile_selected)
+                        EventType.PAUSE_BASAL_FAILED  -> showToast(R.string.string_pause_failed)
+                        EventType.RESUME_BASAL_FAILED -> showToast(R.string.string_resume_failed)
                         else                          -> Unit
                     }
-                })
+                }
+
+                resultLauncherForResume = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+                    when (it.resultCode) {
+                        DaggerAppCompatActivity.RESULT_OK       -> resumeBasal()
+                        DaggerAppCompatActivity.RESULT_CANCELED -> showToast(R.string.string_resume_failed)
+                    }
+                }
+
+                resultLauncherForPause = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+                    when (it.resultCode) {
+                        DaggerAppCompatActivity.RESULT_OK       -> {
+                            pauseBasal(pauseDuration)
+                            pauseDuration = 0.5f
+                        }
+                        DaggerAppCompatActivity.RESULT_CANCELED -> showToast(R.string.string_pause_failed)
+                    }
+                }
             }
         }
+    }
 
-
+    private fun showToast(@StringRes strId: Int){
+        Toast.makeText(requireContext(), strId, Toast.LENGTH_SHORT).show()
     }
 
     private fun suspend() {
@@ -73,12 +92,12 @@ class EopatchOverviewFragment: EoBaseFragment<FragmentEopatchOverviewBinding>() 
 
                 val dialog = builder.setTitle(R.string.string_suspend)
                     .setMessage(msg)
-                    .setPositiveButton(R.string.confirm, DialogInterface.OnClickListener { dialog, which ->
+                    .setPositiveButton(R.string.confirm) { _, _ ->
                         openPauseTimePicker()
-                    })
-                    .setNegativeButton(R.string.cancel, DialogInterface.OnClickListener { dialog, which ->
+                    }
+                    .setNegativeButton(R.string.cancel) { _, _ ->
 
-                    }).create()
+                    }.create()
                 dialog.show()
             }
         }
@@ -90,18 +109,16 @@ class EopatchOverviewFragment: EoBaseFragment<FragmentEopatchOverviewBinding>() 
                 val builder = AlertDialog.Builder(it)
                 val dialog = builder.setTitle(R.string.string_resume_insulin_delivery_title)
                     .setMessage(R.string.string_resume_insulin_delivery_message)
-                    .setPositiveButton(R.string.confirm, DialogInterface.OnClickListener { dialog, which ->
-                        if(isPatchConnected) {
+                    .setPositiveButton(R.string.confirm) { _, _ ->
+                        if (isPatchConnected) {
                             resumeBasal()
-                        }else{
-                            checkCommunication({
-                                resumeBasal()
-                            })
+                        } else {
+                            resultLauncherForResume.launch(EopatchActivity.createIntentForCheckConnection(requireContext(), true))
                         }
-                    })
-                    .setNegativeButton(R.string.cancel, DialogInterface.OnClickListener { dialog, which ->
+                    }
+                    .setNegativeButton(R.string.cancel) { _, _ ->
 
-                    }).create()
+                    }.create()
                 dialog.show()
             }
         }
@@ -114,21 +131,20 @@ class EopatchOverviewFragment: EoBaseFragment<FragmentEopatchOverviewBinding>() 
                 val listArr = requireContext().resources.getStringArray(R.array.suspend_duration_array)
                 var select = 0
                 val dialog = builder.setTitle(R.string.string_suspend_time_insulin_delivery_title)
-                    .setSingleChoiceItems(listArr, 0, DialogInterface.OnClickListener { dialog, which ->
+                    .setSingleChoiceItems(listArr, 0) { _, which ->
                         select = which
-                    })
-                    .setPositiveButton(R.string.confirm, DialogInterface.OnClickListener { dialog, which ->
+                    }
+                    .setPositiveButton(R.string.confirm) { _, _ ->
                         if (isPatchConnected) {
                             pauseBasal((select + 1) * 0.5f)
                         } else {
-                            checkCommunication({
-                                pauseBasal((select + 1) * 0.5f)
-                            })
+                            pauseDuration = (select + 1) * 0.5f
+                            resultLauncherForPause.launch(EopatchActivity.createIntentForCheckConnection(requireContext(), true))
                         }
-                    })
-                    .setNegativeButton(R.string.cancel, DialogInterface.OnClickListener { dialog, which ->
+                    }
+                    .setNegativeButton(R.string.cancel) { _, _ ->
 
-                    }).create()
+                    }.create()
                 dialog.show()
             }
         }
@@ -158,26 +174,4 @@ class EopatchOverviewFragment: EoBaseFragment<FragmentEopatchOverviewBinding>() 
         }
         return ""
     }
-
-    override fun startActivityForResult(action: Context.() -> Intent, requestCode: Int, vararg params: Pair<String, Any?>) {
-        val intent = action(requireContext())
-        if(params.isNotEmpty()) intent.fillExtras(params)
-        startActivityForResult(intent, requestCode)
-    }
-
-    override fun checkCommunication(onSuccess: () -> Unit, onCancel: (() -> Unit)?, onDiscard: (() -> Unit)?, goHomeAfterDiscard: Boolean) {
-        EoPatchRxBus.listen(ActivityResultEvent::class.java)
-            .doOnSubscribe { startActivityForResult({ EopatchActivity.createIntentForCheckConnection(this, goHomeAfterDiscard) }, 10001) }
-            .observeOn(aapsSchedulers.main)
-            .subscribeDefault(aapsLogger) {
-                if (it.requestCode == 10001) {
-                    when (it.resultCode) {
-                        DaggerAppCompatActivity.RESULT_OK       -> onSuccess.invoke()
-                        DaggerAppCompatActivity.RESULT_CANCELED -> onCancel?.invoke()
-                        EopatchActivity.RESULT_DISCARDED        -> onDiscard?.invoke()
-                    }
-                }
-            }.addTo()
-    }
-
 }

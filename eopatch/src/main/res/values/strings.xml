@@ -1,5 +1,5 @@
 <resources>
-    <string name="key_eopatch_low_reservior_reminders" translatable="false">eopatch_low_reservior_reminders</string>
+    <string name="key_eopatch_low_reservoir_reminders" translatable="false">eopatch_low_reservoir_reminders</string>
     <string name="key_eopatch_expiration_reminders" translatable="false">eopatch_expiration_reminders</string>
     <string name="key_eopatch_patch_buzzer_reminders" translatable="false">eopatch_patch_buzzer_reminders</string>
     <string name="key_eopatch_patch_config" translatable="false">eopatch_patch_config</string>
@@ -144,5 +144,7 @@
     <string name="finish">Finish</string>
     <string name="string_temp_basal_remained_hhmm">remaining time: %1$s:%2$s</string>
     <string name="next">Next</string>
-
+    <string name="patch_connection_fail">Retry after Patch communication check.</string>
+    <string name="string_pause_failed">Suspension failed.</string>
+    <string name="string_resume_failed">Resume failed.</string>
 </resources>

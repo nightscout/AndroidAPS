@@ -39,14 +39,14 @@ class EopatchRotateKnobFragment : EoBaseFragment<FragmentEopatchRotateKnobBindin
                     textRotateKnobDesc2NeedleInsertionError.visibility = View.VISIBLE
                 }
 
-                setupStep.observe(viewLifecycleOwner, {
+                setupStep.observe(viewLifecycleOwner) {
                     when (it) {
                         EopatchViewModel.SetupStep.NEEDLE_SENSING_FAILED -> {
                             checkCommunication({ startNeedleSensing() })
                         }
-                        else -> Unit
+                        else                                             -> Unit
                     }
-                })
+                }
             }
         }
     }

@@ -1,8 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.ui
 
-import android.app.AlertDialog
-import android.app.ProgressDialog
 import android.os.Bundle
+import androidx.appcompat.app.AlertDialog
 import info.nightscout.androidaps.activities.DialogAppCompatActivity
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.plugins.bus.RxBus
@@ -10,6 +9,7 @@ import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode
 import info.nightscout.androidaps.plugins.pump.eopatch.event.EventDialog
 import info.nightscout.androidaps.plugins.pump.eopatch.event.EventProgressDialog
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.dialogs.AlarmDialog
+import info.nightscout.androidaps.plugins.pump.eopatch.ui.dialogs.ProgressDialogHelper
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -20,7 +20,7 @@ class AlarmHelperActivity : DialogAppCompatActivity() {
     @Inject lateinit var rxBus: RxBus
 
     private var disposable: CompositeDisposable = CompositeDisposable()
-    private var mProgressDialog: ProgressDialog? = null
+    private var mProgressDialog: AlertDialog? = null
 
     @Override
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,10 +64,8 @@ class AlarmHelperActivity : DialogAppCompatActivity() {
 
     private fun showProgressDialog(resId: Int){
         if (mProgressDialog == null && resId != 0) {
-            mProgressDialog = ProgressDialog(this).apply {
-                setMessage(getString(resId))
+            mProgressDialog = ProgressDialogHelper.get(this, getString(resId)).apply {
                 setCancelable(false)
-                setProgressStyle(android.R.style.Widget_ProgressBar_Horizontal)
             }
             mProgressDialog?.show()
         }

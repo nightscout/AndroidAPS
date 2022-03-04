@@ -28,12 +28,12 @@ class CommonDialog : DaggerDialogFragment() {
                 if(title != 0) setTitle(title)
                 if(message != 0) setMessage(message)
                 setPositiveButton(positiveBtn,
-                positiveListener?:DialogInterface.OnClickListener { dialog, which ->
+                positiveListener?:DialogInterface.OnClickListener { _, _ ->
                     dismiss()
                 })
                 if(negativeBtn != 0) {
                     setNegativeButton(negativeBtn,
-                        negativeListener ?: DialogInterface.OnClickListener { dialog, which ->
+                        negativeListener ?: DialogInterface.OnClickListener { _, _ ->
                             dismiss()
                         })
                 }

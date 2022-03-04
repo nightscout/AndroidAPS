@@ -16,8 +16,7 @@ import io.reactivex.schedulers.Schedulers;
 
 @Singleton
 public class StartNormalBasalTask extends TaskBase {
-
-    private BasalScheduleSetBig BASAL_SCHEDULE_SET_BIG;
+    private final BasalScheduleSetBig BASAL_SCHEDULE_SET_BIG;
 
     @Inject
     PatchStateManager patchStateManager;
@@ -28,23 +27,25 @@ public class StartNormalBasalTask extends TaskBase {
         BASAL_SCHEDULE_SET_BIG = new BasalScheduleSetBig();
     }
 
-    public Single<BasalScheduleSetResponse> start(NormalBasal basal, boolean resume) {
-        return isReady().concatMapSingle(v -> startJob(basal, resume)).firstOrError();
+    public Single<BasalScheduleSetResponse> start(NormalBasal basal) {
+        return isReady().concatMapSingle(v -> startJob(basal)).firstOrError();
     }
 
-    public Single<BasalScheduleSetResponse> startJob(NormalBasal basal, boolean resume) {
+    public Single<BasalScheduleSetResponse> startJob(NormalBasal basal) {
         return BASAL_SCHEDULE_SET_BIG.set(basal.getDoseUnitPerSegmentArray())
                    .doOnSuccess(this::checkResponse)
                    .observeOn(Schedulers.io())
-                   .doOnSuccess(v -> onStartNormalBasalResponse(v, basal, resume))
-                   .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, e.getMessage()));
+                   .doOnSuccess(v -> onStartNormalBasalResponse(v, basal))
+                   .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, (e.getMessage() != null) ? e.getMessage() : "StartNormalBasalTask error"));
     }
 
-    private void onStartNormalBasalResponse(BasalScheduleSetResponse response,
-            NormalBasal basal, boolean resume) throws SQLException {
+    private void onStartNormalBasalResponse(BasalScheduleSetResponse response, NormalBasal basal) {
 
         long timeStamp = response.getTimestamp();
         patchStateManager.onBasalStarted(basal, timeStamp+1000);
+
+        pm.getNormalBasalManager().setNormalBasal(basal);
+        pm.flushNormalBasalManager();
         enqueue(TaskFunc.UPDATE_CONNECTION);
     }
 

@@ -51,10 +51,6 @@ public class OsAlarmService extends Service {
 
     public synchronized void startForeground() {
         if (!foreground) {
-////            CommonUtils.dispose(mNotificationDisposable);
-//            Notification builder = getNotification(this);
-//            startForeground(FOREGROUND_NOTIFICATION_ID, builder);
-//            startExerciseOrSleepMode(this);
             foreground = true;
         }
     }

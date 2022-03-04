@@ -4,19 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <import type="info.nightscout.androidaps.plugins.pump.eopatch.code.PatchStep" />
-
         <variable
             name="viewModel"
             type="info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchViewModel" />
-
     </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#FF000000"
+        android:background="@android:color/transparent"
         android:orientation="vertical"
         tools:context=".ui.EopatchActivity">
 
@@ -25,24 +22,12 @@
             android:layout_width="match_parent"
             android:layout_height="60dp">
 
-     <!--       <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="18dp"
-                android:src="@drawable/btn_navi_back"
-                android:contentDescription="@string/back"
-                app:onSafeClick="@{() -> viewModel.moveStep(viewModel.patchStep == PatchStep.SETTING_REMINDER_TIME ? PatchStep.BASAL_SCHEDULE : PatchStep.CANCEL)}"
-                app:visibleOrGone="@{viewModel.patchStep == PatchStep.SAFE_DEACTIVATION || viewModel.patchStep == PatchStep.SETTING_REMINDER_TIME}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />-->
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{viewModel.title}"
 
-                android:textSize="18dp"
+                android:textSize="18sp"
                 android:gravity="center_horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

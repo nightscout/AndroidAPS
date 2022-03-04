@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.pump.eopatch.ui.dialogs
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.os.HandlerThread
 import android.view.*
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.core.R
@@ -32,13 +33,13 @@ class AlarmDialog : DaggerDialogFragment() {
 
     var helperActivity: AlarmHelperActivity? = null
     var alarmCode: AlarmCode? = null
-    var code: String = ""
+    var code: String? = null
     var status: String = ""
     var title: String = ""
     var sound: Int = 0
 
     private lateinit var mAlarmProcess: IAlarmProcess
-    private var loopHandler = Handler()
+    private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
     private var _binding: DialogAlarmBinding? = null
     private var disposable: Disposable? = null
@@ -107,7 +108,7 @@ class AlarmDialog : DaggerDialogFragment() {
             aapsLogger.debug("USER ENTRY: Error dialog mute 5 min button pressed")
             stopAlarm()
             isMute = true
-            loopHandler.postDelayed(this::startAlarm, T.mins(5).msecs())
+            handler.postDelayed(this::startAlarm, T.mins(5).msecs())
         }
         startAlarm()
 
@@ -150,7 +151,7 @@ class AlarmDialog : DaggerDialogFragment() {
 
     override fun dismiss() {
         super.dismissAllowingStateLoss()
-        loopHandler.removeCallbacksAndMessages(null)
+        handler.removeCallbacksAndMessages(null)
         helperActivity?.finish()
     }
 

@@ -21,9 +21,6 @@ enum class PatchStep {
     BACK_TO_HOME,
     FINISH;
 
-    val isConnectNew: Boolean
-        get() = this == CONNECT_NEW
-
     val isSafeDeactivation: Boolean
         get() = this == SAFE_DEACTIVATION
 

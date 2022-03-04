@@ -1,8 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel
 
-import android.view.MotionEvent
-import android.view.View
-import androidx.annotation.Keep
 import androidx.lifecycle.ViewModel
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.EoBaseNavigator
 import io.reactivex.disposables.CompositeDisposable
@@ -24,10 +21,6 @@ abstract class EoBaseViewModel<N : EoBaseNavigator> : ViewModel() {
     override fun onCleared() {
         compositeDisposable.clear()
         super.onCleared()
-    }
-
-    fun blockTouchEvent(view: View, motionEvent: MotionEvent): Boolean {
-        return true
     }
 
     fun back() = navigator?.back()

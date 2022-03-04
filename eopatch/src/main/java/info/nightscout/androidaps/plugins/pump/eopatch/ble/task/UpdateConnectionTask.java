@@ -15,9 +15,7 @@ import io.reactivex.Single;
 
 @Singleton
 public class UpdateConnectionTask extends TaskBase {
-
-    @Inject
-    PatchStateManager patchStateManager;
+    @Inject PatchStateManager patchStateManager;
 
     private UpdateConnection UPDATE_CONNECTION;
 
@@ -38,7 +36,7 @@ public class UpdateConnectionTask extends TaskBase {
                 .map(UpdateConnectionResponse::getPatchState)
                 .map(bytes -> PatchState.Companion.create(bytes, System.currentTimeMillis()))
                 .doOnSuccess(state -> onUpdateConnection(state))
-                .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, e.getMessage()));
+                .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, (e.getMessage() != null) ? e.getMessage() : "UpdateConnectionTask error"));
     }
 
     private void onUpdateConnection(PatchState patchState) {

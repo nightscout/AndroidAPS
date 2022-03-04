@@ -148,12 +148,12 @@ class PreferenceManager @Inject constructor(): IPreferenceManager {
             aapsLogger.error(LTag.PUMP, ex.message?:"Alarms load error")
         }
 
-        aapsLogger.info(LTag.PUMP,"Load from PatchConfig preference: ${mPatchConfig}")
-        aapsLogger.info(LTag.PUMP,"Load from PatchState preference: ${mPatchState}")
-        aapsLogger.info(LTag.PUMP,"Load from BolusCurrent preference: ${mBolusCurrent}")
-        aapsLogger.info(LTag.PUMP,"Load from NormalBasal preference: ${mNormalBasalMgr}")
-        aapsLogger.info(LTag.PUMP,"Load from TempBasal preference: ${mTempBasalMgr}")
-        aapsLogger.info(LTag.PUMP,"Load from Alarms preference: ${mAlarms}")
+        aapsLogger.info(LTag.PUMP,"Load from PatchConfig preference: $mPatchConfig")
+        aapsLogger.info(LTag.PUMP,"Load from PatchState preference: $mPatchState")
+        aapsLogger.info(LTag.PUMP,"Load from BolusCurrent preference: $mBolusCurrent")
+        aapsLogger.info(LTag.PUMP,"Load from NormalBasal preference: $mNormalBasalMgr")
+        aapsLogger.info(LTag.PUMP,"Load from TempBasal preference: $mTempBasalMgr")
+        aapsLogger.info(LTag.PUMP,"Load from Alarms preference: $mAlarms")
         initialized = true
     }
 
@@ -179,9 +179,8 @@ class PreferenceManager @Inject constructor(): IPreferenceManager {
                 flushBolusCurrent()
                 mTempBasalMgr.clear()
                 flushTempBasalManager()
-                // mAlarms.clear()
-                // flushAlarms()
             }
+            else -> Unit
         }
 
     }

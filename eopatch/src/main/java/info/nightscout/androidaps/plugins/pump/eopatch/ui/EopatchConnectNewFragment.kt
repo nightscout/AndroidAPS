@@ -23,16 +23,16 @@ class EopatchConnectNewFragment : EoBaseFragment<FragmentEopatchConnectNewBindin
         binding.apply {
             viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(EopatchViewModel::class.java)
             viewModel?.apply {
-                setupStep.observe(viewLifecycleOwner, {
+                setupStep.observe(viewLifecycleOwner) {
                     when (it) {
                         SCAN_FAILED,
-                        BONDING_FAILED -> checkCommunication ({ retryScan() }, { moveStep(PatchStep.WAKE_UP) })
-                        GET_PATCH_INFO_FAILED -> checkCommunication ({ getPatchInfo() }, { moveStep(PatchStep.WAKE_UP) })
-                        SELF_TEST_FAILED -> checkCommunication ({ selfTest() }, { moveStep(PatchStep.WAKE_UP) })
-                        ACTIVATION_FAILED -> Toast.makeText(requireContext(), "Activation failed!", Toast.LENGTH_LONG).show()
-                        else -> Unit
+                        BONDING_FAILED        -> checkCommunication({ retryScan() }, { moveStep(PatchStep.WAKE_UP) })
+                        GET_PATCH_INFO_FAILED -> checkCommunication({ getPatchInfo() }, { moveStep(PatchStep.WAKE_UP) })
+                        SELF_TEST_FAILED      -> checkCommunication({ selfTest() }, { moveStep(PatchStep.WAKE_UP) })
+                        ACTIVATION_FAILED     -> Toast.makeText(requireContext(), "Activation failed!", Toast.LENGTH_LONG).show()
+                        else                  -> Unit
                     }
-                })
+                }
 
                 startScan()
             }

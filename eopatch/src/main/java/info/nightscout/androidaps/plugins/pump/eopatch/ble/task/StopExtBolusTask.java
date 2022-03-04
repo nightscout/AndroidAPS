@@ -14,19 +14,17 @@ import io.reactivex.Single;
 
 @Singleton
 public class StopExtBolusTask extends BolusTask {
-
-    private BolusStop BOLUS_STOP;
+    private final BolusStop BOLUS_STOP;
 
     @Inject
     public StopExtBolusTask() {
         super(TaskFunc.STOP_EXT_BOLUS);
-
         BOLUS_STOP = new BolusStop();
     }
 
     public Single<BolusStopResponse> stop() {
         return isReady().concatMapSingle(v -> stopJob()).firstOrError()
-                .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, e.getMessage()));
+                .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, (e.getMessage() != null) ? e.getMessage() : "StopExtBolusTask error"));
     }
 
     public Single<BolusStopResponse> stopJob() {

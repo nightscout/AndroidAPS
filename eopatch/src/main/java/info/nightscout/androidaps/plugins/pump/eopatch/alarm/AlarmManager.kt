@@ -26,10 +26,12 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.max
 
 interface IAlarmManager {
     fun init()
@@ -54,6 +56,7 @@ class AlarmManager @Inject constructor() : IAlarmManager {
     private lateinit var mAlarmProcess: AlarmProcess
 
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
+    private var alarmDisposable: Disposable? = null
 
     @Inject
     fun onInit() {
@@ -61,27 +64,27 @@ class AlarmManager @Inject constructor() : IAlarmManager {
     }
 
     override fun init(){
-        EoPatchRxBus.listen(EventEoPatchAlarm::class.java)
-            .map { it -> it.alarmCodes }
+        alarmDisposable = EoPatchRxBus.listen(EventEoPatchAlarm::class.java)
+            .map { it.alarmCodes }
             .doOnNext { aapsLogger.info(LTag.PUMP,"EventEoPatchAlarm Received") }
             .concatMap {
                 Observable.fromArray(it)
                     .observeOn(Schedulers.io())
                     .subscribeOn(AndroidSchedulers.mainThread())
                     .doOnNext { alarmCodes ->
-                        alarmCodes.forEach {
-                            aapsLogger.info(LTag.PUMP,"alarmCode: ${it.name}")
-                            val valid = isValid(it)
+                        alarmCodes.forEach { alarmCode ->
+                            aapsLogger.info(LTag.PUMP,"alarmCode: ${alarmCode.name}")
+                            val valid = isValid(alarmCode)
                             if (valid) {
-                                if (it.alarmCategory == AlarmCategory.ALARM || it == B012) {
-                                    showAlarmDialog(it)
+                                if (alarmCode.alarmCategory == AlarmCategory.ALARM || alarmCode == B012) {
+                                    showAlarmDialog(alarmCode)
                                 } else {
-                                    showNotification(it)
+                                    showNotification(alarmCode)
                                 }
 
-                                updateState(it, AlarmState.FIRED)
+                                updateState(alarmCode, AlarmState.FIRED)
                             }else{
-                                updateState(it, AlarmState.HANDLE)
+                                updateState(alarmCode, AlarmState.HANDLE)
                             }
                         }
                     }
@@ -92,17 +95,19 @@ class AlarmManager @Inject constructor() : IAlarmManager {
 
     override fun restartAll() {
         val now = System.currentTimeMillis()
-        val occuredAlarm = pm.getAlarms().occured.clone() as HashMap<AlarmCode, Alarms.AlarmItem>
+        @Suppress("UNCHECKED_CAST")
+        val occurredAlarm= pm.getAlarms().occurred.clone() as HashMap<AlarmCode, Alarms.AlarmItem>
+        @Suppress("UNCHECKED_CAST")
         val registeredAlarm = pm.getAlarms().registered.clone() as HashMap<AlarmCode, Alarms.AlarmItem>
         compositeDisposable.clear()
-        if(occuredAlarm.isNotEmpty()){
-            EoPatchRxBus.publish(EventEoPatchAlarm(occuredAlarm.keys))
+        if(occurredAlarm.isNotEmpty()){
+            EoPatchRxBus.publish(EventEoPatchAlarm(occurredAlarm.keys))
         }
 
         if(registeredAlarm.isNotEmpty()){
             registeredAlarm.forEach { raEntry ->
                 compositeDisposable.add(
-                    mAlarmRegistry.add(raEntry.key, Math.max(OS_REGISTER_GAP, raEntry.value.triggerTimeMilli - now))
+                    mAlarmRegistry.add(raEntry.key, max(OS_REGISTER_GAP, raEntry.value.triggerTimeMilli - now))
                         .subscribe()
                 )
             }
@@ -112,11 +117,11 @@ class AlarmManager @Inject constructor() : IAlarmManager {
     private fun isValid(code: AlarmCode): Boolean{
         return when(code){
             A005, A016, A020, B012 -> {
-                aapsLogger.info(LTag.PUMP,"Is ${code} valid? ${pm.getPatchConfig().hasMacAddress() && pm.getPatchConfig().lifecycleEvent.isSubStepRunning}")
+                aapsLogger.info(LTag.PUMP,"Is $code valid? ${pm.getPatchConfig().hasMacAddress() && pm.getPatchConfig().lifecycleEvent.isSubStepRunning}")
                 pm.getPatchConfig().hasMacAddress() && pm.getPatchConfig().lifecycleEvent.isSubStepRunning
             }
             else -> {
-                aapsLogger.info(LTag.PUMP,"Is ${code} valid? ${pm.getPatchConfig().isActivated}")
+                aapsLogger.info(LTag.PUMP,"Is $code valid? ${pm.getPatchConfig().isActivated}")
                 pm.getPatchConfig().isActivated
             }
         }
@@ -133,11 +138,11 @@ class AlarmManager @Inject constructor() : IAlarmManager {
     }
 
     private fun showNotification(alarmCode: AlarmCode, timeOffset: Long = 0L){
-        var occurredTimestamp: Long = pm.getPatchConfig().patchWakeupTimestamp + TimeUnit.SECONDS.toMillis(timeOffset)
         val notification = EONotification(Notification.EOELOW_PATCH_ALERTS + (alarmCode.aeCode + 10000), resourceHelper.gs(alarmCode.resId), Notification.URGENT)
 
         notification.action(R.string.confirm) {
-            Single.just(isValid(alarmCode))
+            compositeDisposable.add(
+                Single.just(isValid(alarmCode))
                 .flatMap { isValid ->
                     return@flatMap if(isValid) mAlarmProcess.doAction(context, alarmCode)
                     else Single.just(IAlarmProcess.ALARM_HANDLED)
@@ -148,17 +153,17 @@ class AlarmManager @Inject constructor() : IAlarmManager {
                     }else{
                         rxBus.send(EventNewNotification(notification))
                     }
-                }
+                })
         }
         notification.soundId = R.raw.error
-        notification.date = occurredTimestamp
+        notification.date =  pm.getPatchConfig().patchWakeupTimestamp + TimeUnit.SECONDS.toMillis(timeOffset)
         rxBus.send(EventNewNotification(notification))
     }
 
     private fun updateState(alarmCode: AlarmCode, state: AlarmState){
         when(state){
             AlarmState.REGISTER -> pm.getAlarms().register(alarmCode, 0)
-            AlarmState.FIRED    -> pm.getAlarms().occured(alarmCode)
+            AlarmState.FIRED    -> pm.getAlarms().occurred(alarmCode)
             AlarmState.HANDLE   -> pm.getAlarms().handle(alarmCode)
         }
         pm.flushAlarms()

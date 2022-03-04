@@ -16,9 +16,8 @@ import io.reactivex.Single;
 
 @Singleton
 public class SetGlobalTimeTask extends TaskBase {
-
-    private SetGlobalTime SET_GLOBAL_TIME;
-    private GetGlobalTime GET_GLOBAL_TIME;
+    private final SetGlobalTime SET_GLOBAL_TIME;
+    private final GetGlobalTime GET_GLOBAL_TIME;
 
     @Inject
     public SetGlobalTimeTask() {
@@ -37,24 +36,23 @@ public class SetGlobalTimeTask extends TaskBase {
                 .doOnNext(this::checkResponse)
                 .firstOrError()
                 .doOnSuccess(v -> onSuccess())
-                .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, e.getMessage()));
+                .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, (e.getMessage() != null) ? e.getMessage() : "SetGlobalTimeTask error"));
     }
 
-    private boolean checkPatchTime(GlobalTimeResponse response) throws Exception {
+    private void checkPatchTime(GlobalTimeResponse response) throws Exception {
 
         long newMilli = System.currentTimeMillis();
         long oldMilli = response.getGlobalTimeInMilli();
         long oldOffset = response.getTimeZoneOffset();
         int offset = TimeZone.getDefault().getOffset(newMilli);
         int minutes = (int) TimeUnit.MILLISECONDS.toMinutes(offset);
-        // TimeZoneOffset (8bit / signed): 타임존 offset 15분 단위을 1로 환산, Korea 의 경우 36값(+9:00)
         int newOffset = minutes / 15;
 
         long diff = Math.abs(oldMilli - newMilli);
 
         if (diff > 60000 || oldOffset != newOffset) {
             aapsLogger.debug(LTag.PUMPCOMM, String.format("checkPatchTime %s %s %s", diff, oldOffset, newOffset));
-            return true;
+            return;
         }
 
         throw new Exception("No time set required");

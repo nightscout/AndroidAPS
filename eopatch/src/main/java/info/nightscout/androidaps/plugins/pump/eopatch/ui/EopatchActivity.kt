@@ -1,14 +1,13 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.ui
 
 import android.app.Dialog
-import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
 import android.media.RingtoneManager
 import android.os.Bundle
 import android.view.MotionEvent
-import androidx.lifecycle.Observer
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import info.nightscout.androidaps.plugins.pump.eopatch.R
 import info.nightscout.androidaps.plugins.pump.eopatch.code.PatchLifecycle
@@ -17,6 +16,7 @@ import info.nightscout.androidaps.plugins.pump.eopatch.code.EventType
 import info.nightscout.androidaps.plugins.pump.eopatch.databinding.ActivityEopatchBinding
 import info.nightscout.androidaps.plugins.pump.eopatch.extension.replaceFragmentInActivity
 import info.nightscout.androidaps.plugins.pump.eopatch.extension.takeOne
+import info.nightscout.androidaps.plugins.pump.eopatch.ui.dialogs.ProgressDialogHelper
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchViewModel
 import info.nightscout.androidaps.utils.alertDialogs.AlertDialogHelper
 
@@ -24,7 +24,7 @@ class EopatchActivity : EoBaseActivity<ActivityEopatchBinding>() {
 
     private var mediaPlayer: MediaPlayer? = null
     private var mPatchCommCheckDialog: Dialog? = null
-    private var mProgressDialog: ProgressDialog? = null
+    private var mProgressDialog: AlertDialog? = null
 
     override fun getLayoutId(): Int = R.layout.activity_eopatch
 
@@ -44,59 +44,65 @@ class EopatchActivity : EoBaseActivity<ActivityEopatchBinding>() {
             viewModel?.apply {
                 processIntent(intent)
 
-                patchStep.observe(this@EopatchActivity, {
+                patchStep.observe(this@EopatchActivity) {
                     when (it) {
-                        PatchStep.SAFE_DEACTIVATION -> {
-                            if(isActivated.value?:false){
+                        PatchStep.SAFE_DEACTIVATION          -> {
+                            if (isActivated.value == true) {
                                 setupViewFragment(EopatchSafeDeactivationFragment.newInstance())
-                            }else{
+                            } else {
                                 this@EopatchActivity.finish()
                             }
                         }
+
                         PatchStep.MANUALLY_TURNING_OFF_ALARM -> setupViewFragment(EopatchTurningOffAlarmFragment.newInstance())
                         PatchStep.DISCARDED_FOR_CHANGE,
                         PatchStep.DISCARDED_FROM_ALARM,
-                        PatchStep.DISCARDED -> setupViewFragment(EopatchRemoveFragment.newInstance())
-                        PatchStep.WAKE_UP -> setupViewFragment(EopatchWakeUpFragment.newInstance())
-                        PatchStep.CONNECT_NEW -> setupViewFragment(EopatchConnectNewFragment.newInstance())
-                        PatchStep.REMOVE_NEEDLE_CAP -> setupViewFragment(EopatchRemoveNeedleCapFragment.newInstance())
-                        PatchStep.REMOVE_PROTECTION_TAPE -> setupViewFragment(EopatchRemoveProtectionTapeFragment.newInstance())
-                        PatchStep.SAFETY_CHECK -> setupViewFragment(EopatchSafetyCheckFragment.newInstance())
+                        PatchStep.DISCARDED                  -> setupViewFragment(EopatchRemoveFragment.newInstance())
+                        PatchStep.WAKE_UP                    -> setupViewFragment(EopatchWakeUpFragment.newInstance())
+                        PatchStep.CONNECT_NEW                -> setupViewFragment(EopatchConnectNewFragment.newInstance())
+                        PatchStep.REMOVE_NEEDLE_CAP          -> setupViewFragment(EopatchRemoveNeedleCapFragment.newInstance())
+                        PatchStep.REMOVE_PROTECTION_TAPE     -> setupViewFragment(EopatchRemoveProtectionTapeFragment.newInstance())
+                        PatchStep.SAFETY_CHECK               -> setupViewFragment(EopatchSafetyCheckFragment.newInstance())
                         PatchStep.ROTATE_KNOB_NEEDLE_INSERTION_ERROR,
-                        PatchStep.ROTATE_KNOB -> setupViewFragment(EopatchRotateKnobFragment.newInstance())
-                        PatchStep.BASAL_SCHEDULE -> setupViewFragment(EopatchBasalScheduleFragment.newInstance())
+                        PatchStep.ROTATE_KNOB                -> setupViewFragment(EopatchRotateKnobFragment.newInstance())
+                        PatchStep.BASAL_SCHEDULE             -> setupViewFragment(EopatchBasalScheduleFragment.newInstance())
                         // PatchStep.SETTING_REMINDER_TIME -> setupViewFragment(PatchExpirationReminderSettingFragment.newInstance())
-                        PatchStep.CHECK_CONNECTION -> {
-                            checkCommunication({
-                                setResult(RESULT_OK)
-                                this@EopatchActivity.finish()
-                            }, {
-                                setResult(RESULT_CANCELED)
-                                this@EopatchActivity.finish()
-                            }, {
-                                setResult(RESULT_DISCARDED)
+                        PatchStep.CHECK_CONNECTION           -> {
+                            checkCommunication(
+                                {
+                                   setResult(RESULT_OK)
+                                   this@EopatchActivity.finish()
+                                }, {
+                                   setResult(RESULT_CANCELED)
+                                   this@EopatchActivity.finish()
+                                }, {
+                                   setResult(RESULT_DISCARDED)
 
-                                if (intent.getBooleanExtra(EXTRA_GO_HOME, true)) {
-                                    backToHome(false)
-                                } else {
-                                    this@EopatchActivity.finish()
-                                }
-                            }, doIntercept = true)
+                                   if (intent.getBooleanExtra(EXTRA_GO_HOME, true)) {
+                                       backToHome(false)
+                                   } else {
+                                       this@EopatchActivity.finish()
+                                   }
+                                })
                         }
-                        PatchStep.COMPLETE -> backToHome(true)
-                        PatchStep.FINISH -> {
+
+                        PatchStep.COMPLETE                   -> backToHome(true)
+
+                        PatchStep.FINISH                     -> {
                             if (!intent.getBooleanExtra(EXTRA_START_FROM_MENU, false)
-                                || intent.getBooleanExtra(EXTRA_GO_HOME, true)) {
+                                || intent.getBooleanExtra(EXTRA_GO_HOME, true)
+                            ) {
                                 backToHome(false)
                             } else {
                                 this@EopatchActivity.finish()
                             }
                         }
-                        PatchStep.BACK_TO_HOME -> backToHome(false)
-                        PatchStep.CANCEL -> this@EopatchActivity.finish()
-                        else -> Unit
+
+                        PatchStep.BACK_TO_HOME               -> backToHome(false)
+                        PatchStep.CANCEL                     -> this@EopatchActivity.finish()
+                        else                                 -> Unit
                     }
-                })
+                }
             }
         }
     }
@@ -129,14 +135,12 @@ class EopatchActivity : EoBaseActivity<ActivityEopatchBinding>() {
                 }
             }
 
-            UIEventTypeHandler.observe(this@EopatchActivity, Observer { evt ->
+            eventHandler.observe(this@EopatchActivity) { evt ->
                 when (evt.peekContent()) {
                     EventType.SHOW_PATCH_COMM_DIALOG       -> {
                         if (mProgressDialog == null) {
-                            mProgressDialog = ProgressDialog(this@EopatchActivity).apply {
-                                setMessage(getString(evt.value as Int))
+                            mProgressDialog = ProgressDialogHelper.get(this@EopatchActivity, getString(evt.value as Int)).apply {
                                 setCancelable(false)
-                                setProgressStyle(android.R.style.Widget_ProgressBar_Horizontal)
                             }
                             mProgressDialog?.show()
                         }
@@ -149,33 +153,33 @@ class EopatchActivity : EoBaseActivity<ActivityEopatchBinding>() {
 
                     EventType.SHOW_PATCH_COMM_ERROR_DIALOG -> {
                         dismissRetryDialog()
-                        if (patchStep.value?.isSafeDeactivation?:false || connectionTryCnt >= 2) {
-                            val cancelLabel = commCheckCancelLabel.value?:getString(R.string.cancel)
+                        if (patchStep.value?.isSafeDeactivation == true || connectionTryCnt >= 2) {
+                            val cancelLabel = commCheckCancelLabel.value ?: getString(R.string.cancel)
                             val message = "${getString(R.string.patch_comm_error_during_discard_desc_2)}\n${getString(R.string.patch_communication_check_helper_2)}"
                             mPatchCommCheckDialog = AlertDialogHelper.Builder(this@EopatchActivity)
                                 .setTitle(R.string.patch_communication_failed)
                                 .setMessage(message)
                                 .setCancelable(false)
-                                .setPositiveButton(R.string.discard,  { dialog, which ->
+                                .setPositiveButton(R.string.discard) { _, _ ->
                                     discardPatch()
-                                })
-                                .setNegativeButton(cancelLabel, { dialog, which ->
+                                }
+                                .setNegativeButton(cancelLabel) { _, _ ->
                                     cancelPatchCommCheck()
-                                })
+                                }
                                 .show()
-                        }else{
-                            val cancelLabel = commCheckCancelLabel.value?:getString(R.string.cancel)
+                        } else {
+                            val cancelLabel = commCheckCancelLabel.value ?: getString(R.string.cancel)
                             val message = "${getString(R.string.patch_communication_check_helper_1)}\n${getString(R.string.patch_communication_check_helper_2)}"
                             mPatchCommCheckDialog = AlertDialogHelper.Builder(this@EopatchActivity)
                                 .setTitle(R.string.patch_communication_failed)
                                 .setMessage(message)
                                 .setCancelable(false)
-                                .setPositiveButton(R.string.retry,  { dialog, which ->
+                                .setPositiveButton(R.string.retry) { _, _ ->
                                     retryCheckCommunication()
-                                })
-                                .setNegativeButton(cancelLabel, { dialog, which ->
+                                }
+                                .setNegativeButton(cancelLabel) { _, _ ->
                                     cancelPatchCommCheck()
-                                })
+                                }
                                 .show()
                         }
                     }
@@ -185,31 +189,34 @@ class EopatchActivity : EoBaseActivity<ActivityEopatchBinding>() {
                         AlertDialogHelper.Builder(this@EopatchActivity)
                             .setTitle(R.string.patch_communication_succeed)
                             .setMessage(R.string.patch_communication_succeed_message)
-                            .setPositiveButton(R.string.confirm,  { dialog, which ->
+                            .setPositiveButton(R.string.confirm) { _, _ ->
                                 dismissPatchCommCheckDialogInternal(true)
-                            }).show()
+                            }.show()
                     }
 
                     EventType.SHOW_CHANGE_PATCH_DIALOG     -> {
                         AlertDialogHelper.Builder(this@EopatchActivity).apply {
                             setTitle(R.string.string_discard_patch)
-                            setMessage(when {
-                                patchState.isBolusActive && patchState.isTempBasalActive -> {
-                                    R.string.patch_change_confirm_bolus_and_temp_basal_are_active_desc
-                                }
-                                patchState.isBolusActive -> R.string.patch_change_confirm_bolus_is_active_desc
-                                patchState.isTempBasalActive -> R.string.patch_change_confirm_temp_basal_is_active_desc
-                                else -> R.string.patch_change_confirm_desc
-                            })
-                            setPositiveButton(R.string.string_discard_patch, { dialog, which ->
-                                deactivatePatch()
-                            })
-                            setNegativeButton(R.string.cancel, { dialog, which ->
+                            setMessage(
+                                when {
+                                    patchState.isBolusActive && patchState.isTempBasalActive -> {
+                                        R.string.patch_change_confirm_bolus_and_temp_basal_are_active_desc
+                                    }
 
-                            })
+                                    patchState.isBolusActive                                 -> R.string.patch_change_confirm_bolus_is_active_desc
+                                    patchState.isTempBasalActive                             -> R.string.patch_change_confirm_temp_basal_is_active_desc
+                                    else                                                     -> R.string.patch_change_confirm_desc
+                                }
+                            )
+                            setPositiveButton(R.string.string_discard_patch) { _, _ ->
+                                deactivatePatch()
+                            }
+                            setNegativeButton(R.string.cancel) { _, _ ->
+
+                            }
                         }.show()
                     }
-                    EventType.SHOW_BONDED_DIALOG           -> this@EopatchActivity.finish()
+                    // EventType.SHOW_BONDED_DIALOG           -> this@EopatchActivity.finish()
                     EventType.SHOW_DISCARD_DIALOG          -> {
                         AlertDialogHelper.Builder(this@EopatchActivity).apply {
                             setTitle(R.string.string_discard_patch)
@@ -218,7 +225,7 @@ class EopatchActivity : EoBaseActivity<ActivityEopatchBinding>() {
                             } else {
                                 setMessage(R.string.string_are_you_sure_to_discard_current_patch)
                             }
-                            setPositiveButton(R.string.discard, { dialog, which ->
+                            setPositiveButton(R.string.discard) { _, _ ->
                                 deactivate(true) {
                                     dismissPatchCommCheckDialogInternal()
 
@@ -228,17 +235,18 @@ class EopatchActivity : EoBaseActivity<ActivityEopatchBinding>() {
                                         this@EopatchActivity.finish()
                                     }
                                 }
-                            })
-                            setNegativeButton(R.string.cancel, { dialog, which ->
+                            }
+                            setNegativeButton(R.string.cancel) { _, _ ->
                                 dismissProgressDialog()
                                 updateIncompletePatchActivationReminder()
-                            })
+                            }
                         }.show()
 
                     }
-                    else  -> Unit
+
+                    else                                   -> Unit
                 }
-            })
+            }
         }
     }
 
@@ -302,9 +310,8 @@ class EopatchActivity : EoBaseActivity<ActivityEopatchBinding>() {
         const val EXTRA_START_WITH_COMM_CHECK = "EXTRA_START_WITH_COMM_CHECK"
         const val EXTRA_GO_HOME = "EXTRA_GO_HOME"
         const val EXTRA_FORCE_DISCARD = "EXTRA_FORCE_DISCARD"
-        @JvmField val PATCH_INITIAL_VOLTAGE_MIN = 2700
-        @JvmField val NORMAL_TEMPERATURE_MIN = 4
-        @JvmField val NORMAL_TEMPERATURE_MAX = 45
+        const val NORMAL_TEMPERATURE_MIN = 4
+        const val NORMAL_TEMPERATURE_MAX = 45
 
         @JvmStatic
         @JvmOverloads
@@ -314,11 +321,6 @@ class EopatchActivity : EoBaseActivity<ActivityEopatchBinding>() {
                 putExtra(EXTRA_GO_HOME, goHomeAfterDiscard)
                 putExtra(EXTRA_FORCE_DISCARD, forceDiscard)
             }
-        }
-
-        @JvmStatic
-        fun createIntentForActivatePatch(context: Context): Intent {
-            return createIntent(context, PatchStep.WAKE_UP, false)
         }
 
         @JvmStatic
@@ -335,7 +337,7 @@ class EopatchActivity : EoBaseActivity<ActivityEopatchBinding>() {
         }
 
         @JvmStatic
-        fun createIntentForCanularInsertionError(context: Context): Intent {
+        fun createIntentForCannulaInsertionError(context: Context): Intent {
             return createIntent(context, PatchStep.ROTATE_KNOB_NEEDLE_INSERTION_ERROR, false)
         }
 
@@ -383,7 +385,7 @@ class EopatchActivity : EoBaseActivity<ActivityEopatchBinding>() {
         }
     }
 
-    fun setupViewFragment(baseFragment: EoBaseFragment<*>) {
+    private fun setupViewFragment(baseFragment: EoBaseFragment<*>) {
         replaceFragmentInActivity(baseFragment, R.id.framelayout_fragment, false)
     }
 }

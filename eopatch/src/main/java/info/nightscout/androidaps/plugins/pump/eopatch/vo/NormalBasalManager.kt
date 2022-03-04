@@ -10,7 +10,7 @@ import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import java.util.concurrent.TimeUnit
 
-class NormalBasalManager() : IPreference<NormalBasalManager> {
+class NormalBasalManager : IPreference<NormalBasalManager> {
     @Transient
     private val subject: BehaviorSubject<NormalBasalManager> = BehaviorSubject.create()
 
@@ -29,16 +29,15 @@ class NormalBasalManager() : IPreference<NormalBasalManager> {
     }
 
     fun isEqual(profile: Profile?): Boolean{
-        if(profile == null) false
+        return profile?.let{
+            if(it.getBasalValues().size != normalBasal.list.size)
+                return false
 
-        if(profile?.getBasalValues()?.size?:0 != normalBasal.list.size) false
-
-        return profile?.let{prof ->
-            for(i in prof.getBasalValues().indices){
-                if(TimeUnit.SECONDS.toMinutes(prof.getBasalValues()[i].timeAsSeconds.toLong()) != normalBasal.list.get(i).start){
+            for(i in it.getBasalValues().indices){
+                if(TimeUnit.SECONDS.toMinutes(it.getBasalValues()[i].timeAsSeconds.toLong()) != normalBasal.list.get(i).start){
                     return false
                 }
-                if(CommonUtils.nearlyNotEqual(prof.getBasalValues()[i].value.toFloat(), normalBasal.list.get(i).doseUnitPerHour, 0.0000001f)){
+                if(CommonUtils.nearlyNotEqual(it.getBasalValues()[i].value.toFloat(), normalBasal.list.get(i).doseUnitPerHour, 0.0000001f)){
                     return false
                 }
             }
@@ -52,11 +51,11 @@ class NormalBasalManager() : IPreference<NormalBasalManager> {
 
         val size = profile.getBasalValues().size
         for(idx in profile.getBasalValues().indices){
-            val next_idx = if(idx == (size - 1)) 0 else idx + 1
-            val st_mins = TimeUnit.SECONDS.toMinutes(profile.getBasalValues()[idx].timeAsSeconds.toLong())
-            val et_mins = if(next_idx == 0) 1440 else TimeUnit.SECONDS.toMinutes(profile.getBasalValues()[next_idx].timeAsSeconds.toLong())
+            val nextIdx = if(idx == (size - 1)) 0 else idx + 1
+            val startTimeMinutes = TimeUnit.SECONDS.toMinutes(profile.getBasalValues()[idx].timeAsSeconds.toLong())
+            val endTimeMinutes = if(nextIdx == 0) 1440 else TimeUnit.SECONDS.toMinutes(profile.getBasalValues()[nextIdx].timeAsSeconds.toLong())
 
-            tmpNormalBasal.list.add(BasalSegment(st_mins, et_mins, profile.getBasalValues()[idx].value.toFloat()))
+            tmpNormalBasal.list.add(BasalSegment(startTimeMinutes, endTimeMinutes, profile.getBasalValues()[idx].value.toFloat()))
         }
 
         return tmpNormalBasal
@@ -67,11 +66,11 @@ class NormalBasalManager() : IPreference<NormalBasalManager> {
 
         val size = profile.getBasalValues().size
         for(idx in profile.getBasalValues().indices){
-            val next_idx = if(idx == (size - 1)) 0 else idx + 1
-            val st_mins = TimeUnit.SECONDS.toMinutes(profile.getBasalValues()[idx].timeAsSeconds.toLong())
-            val et_mins = if(next_idx == 0) 1440 else TimeUnit.SECONDS.toMinutes(profile.getBasalValues()[next_idx].timeAsSeconds.toLong())
+            val nextIdx = if(idx == (size - 1)) 0 else idx + 1
+            val startTimeMinutes = TimeUnit.SECONDS.toMinutes(profile.getBasalValues()[idx].timeAsSeconds.toLong())
+            val endTimeMinutes = if(nextIdx == 0) 1440 else TimeUnit.SECONDS.toMinutes(profile.getBasalValues()[nextIdx].timeAsSeconds.toLong())
 
-            normalBasal.list.add(BasalSegment(st_mins, et_mins, profile.getBasalValues()[idx].value.toFloat()))
+            normalBasal.list.add(BasalSegment(startTimeMinutes, endTimeMinutes, profile.getBasalValues()[idx].value.toFloat()))
         }
     }
 
@@ -96,18 +95,13 @@ class NormalBasalManager() : IPreference<NormalBasalManager> {
     }
 
     @Synchronized
-    fun updateBasalSelecteded(index: Int) {
-        normalBasal.status = BasalStatus.SELECTED
-    }
-
-    @Synchronized
-    fun updateBasalSelecteded() {
+    fun updateBasalSelected() {
         normalBasal.status = BasalStatus.SELECTED
     }
 
     fun updateForDeactivation() {
         // deactivation 할때는 SELECTED 상태로 변경
-        updateBasalSelecteded()
+        updateBasalSelected()
     }
 
     fun update(other: NormalBasalManager){

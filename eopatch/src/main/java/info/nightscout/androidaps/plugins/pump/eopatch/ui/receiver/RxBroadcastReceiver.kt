@@ -6,10 +6,8 @@ import android.content.Intent
 import android.content.IntentFilter
 import androidx.annotation.CheckResult
 import io.reactivex.android.MainThreadDisposable
-import info.nightscout.androidaps.plugins.pump.eopatch.ui.receiver.RxBroadcastReceiver.BroadcastReceiverObservable
 import io.reactivex.Observable
 import io.reactivex.Observer
-import java.lang.AssertionError
 
 class RxBroadcastReceiver private constructor() {
     internal class BroadcastReceiverObservable : Observable<Intent> {
@@ -31,7 +29,7 @@ class RxBroadcastReceiver private constructor() {
         }
 
         override fun subscribeActual(observer: Observer<in Intent>) {
-            val listener: Listener = Listener(context, observer)
+            val listener = Listener(context, observer)
             observer.onSubscribe(listener)
             context.registerReceiver(listener.receiver, intentFilter)
         }

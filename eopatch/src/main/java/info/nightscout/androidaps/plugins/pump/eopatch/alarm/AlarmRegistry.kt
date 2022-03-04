@@ -29,7 +29,7 @@ import javax.inject.Singleton
 interface IAlarmRegistry {
     fun add(alarmCode: AlarmCode, triggerAfter: Long, isFirst: Boolean = false): Maybe<AlarmCode>
     fun add(patchAeCodes: Set<PatchAeCode>)
-    fun remove(alarmKey: AlarmCode): Maybe<AlarmCode>
+    fun remove(alarmCode: AlarmCode): Maybe<AlarmCode>
 }
 
 @Singleton
@@ -60,29 +60,30 @@ class AlarmRegistry @Inject constructor() : IAlarmRegistry {
                     PatchLifecycle.SHUTDOWN -> {
                         val sources = ArrayList<Maybe<*>>()
                         sources.add(Maybe.just(true))
-                        pm.getAlarms().occured.let{
-                            if(it.isNotEmpty()){
-                                it.keys.forEach {
+                        pm.getAlarms().occurred.let{ occurredAlarms ->
+                            if(occurredAlarms.isNotEmpty()){
+                                occurredAlarms.keys.forEach { alarmCode ->
                                     sources.add(
-                                        Maybe.just(it)
+                                        Maybe.just(alarmCode)
                                             .observeOn(aapsSchedulers.main)
-                                            .doOnSuccess { rxBus.send(EventDismissNotification(Notification.EOELOW_PATCH_ALERTS + (it.aeCode + 10000))) }
+                                            .doOnSuccess { rxBus.send(EventDismissNotification(Notification.EOELOW_PATCH_ALERTS + (alarmCode.aeCode + 10000))) }
                                     )
                                 }
                             }
                         }
-                        pm.getAlarms().registered.let{
-                            if(it.isNotEmpty()){
-                                it.keys.forEach {
-                                    sources.add(remove(it))
+                        pm.getAlarms().registered.let{ registeredAlarms ->
+                            if(registeredAlarms.isNotEmpty()){
+                                registeredAlarms.keys.forEach { alarmCode ->
+                                    sources.add(remove(alarmCode))
                                 }
                             }
                         }
-                        Maybe.concat(sources)
+                        compositeDisposable.add(Maybe.concat(sources)
                             .subscribe {
                                 pm.getAlarms().clear()
                                 pm.flushAlarms()
                             }
+                        )
                     }
 
                     else -> Unit
@@ -91,7 +92,7 @@ class AlarmRegistry @Inject constructor() : IAlarmRegistry {
     }
 
     override fun add(alarmCode: AlarmCode, triggerAfter: Long, isFirst: Boolean): Maybe<AlarmCode> {
-        if(pm.getAlarms().occured.containsKey(alarmCode)){
+        if(pm.getAlarms().occurred.containsKey(alarmCode)){
             return Maybe.just(alarmCode)
         }else {
             val triggerTimeMilli = System.currentTimeMillis() + triggerAfter
@@ -110,7 +111,7 @@ class AlarmRegistry @Inject constructor() : IAlarmRegistry {
             Observable.fromIterable(patchAeCodes)
                .filter{patchAeCodeItem ->  AlarmCode.findByPatchAeCode(patchAeCodeItem.getAeValue()) != null}
                .observeOn(AndroidSchedulers.mainThread())
-               .filter { patchAeCodes -> AlarmCode.findByPatchAeCode(patchAeCodes.getAeValue()) != null }
+               .filter { aeCodes -> AlarmCode.findByPatchAeCode(aeCodes.getAeValue()) != null }
                .flatMapMaybe{aeCodeResponse -> add(AlarmCode.findByPatchAeCode(aeCodeResponse.getAeValue())!!,0L, true)}
                .subscribe()
         )
@@ -120,22 +121,21 @@ class AlarmRegistry @Inject constructor() : IAlarmRegistry {
         return Maybe.fromCallable {
             cancelOsAlarmInternal(alarmCode)
             val pendingIntent = createPendingIntent(alarmCode, 0)
-            val now = System.currentTimeMillis()
             mOsAlarmManager.setAlarmClock(AlarmClockInfo(triggerTime, pendingIntent), pendingIntent)
             alarmCode
         }
     }
 
     override fun remove(alarmCode: AlarmCode): Maybe<AlarmCode> {
-        if(pm.getAlarms().registered.containsKey(alarmCode)) {
-            return cancelOsAlarms(alarmCode)
+        return if(pm.getAlarms().registered.containsKey(alarmCode)) {
+            cancelOsAlarms(alarmCode)
                 .doOnSuccess {
                     pm.getAlarms().unregister(alarmCode)
                     pm.flushAlarms()
                 }
-                .map { integer: Int? -> alarmCode }
+                .map { alarmCode }
         }else{
-            return Maybe.just(alarmCode)
+            Maybe.just(alarmCode)
         }
     }
 
@@ -158,8 +158,8 @@ class AlarmRegistry @Inject constructor() : IAlarmRegistry {
         }
     }
 
-    private fun createPendingIntent(alarmCode: AlarmCode, flag: Int): PendingIntent {
+    private fun createPendingIntent(alarmCode: AlarmCode, flag: Int): PendingIntent? {
         val intent = Intent(mContext, OsAlarmReceiver::class.java).setData(getUri(alarmCode))
-        return PendingIntent.getBroadcast(mContext, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        return PendingIntent.getBroadcast(mContext, 1, intent, flag)
     }
 }

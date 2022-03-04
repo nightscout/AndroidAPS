@@ -3,7 +3,6 @@
     package="info.nightscout.androidaps.plugins.pump.eopatch">
 
     <application>
-
         <activity android:name=".ui.EopatchActivity" />
         <activity android:name=".ui.AlarmHelperActivity" />
         <activity android:name=".ui.DialogHelperActivity" />

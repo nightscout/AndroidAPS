@@ -163,6 +163,10 @@ android {
     }
 
     useLibrary "org.apache.http.legacy"
+
+    dataBinding {   //Deleting it causes a binding error
+        enabled = true
+    }
 }
 
 allprojects {

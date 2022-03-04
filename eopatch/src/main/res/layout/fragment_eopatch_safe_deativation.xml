@@ -5,7 +5,6 @@
 
     <data>
         <import type="info.nightscout.androidaps.plugins.pump.eopatch.code.PatchStep" />
-
         <variable
             name="viewModel"
             type="info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchViewModel" />
@@ -33,7 +32,7 @@
             android:layout_marginStart="9dp"
             android:layout_marginTop="5dp"
             android:text="@string/patch_safe_deactivation_desc"
-            android:textSize="16dp"
+            android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@+id/image_patch_safe_deactivation"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -51,7 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/patch_remaining_insulin"
-            android:textSize="16dp"
+            android:textSize="16sp"
             app:layout_constraintBottom_toTopOf="@+id/text_patch_safe_deactivation_remaining_usage_period"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -61,8 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="26dp"
             android:text="@string/patch_remaining_usage_period"
-
-            android:textSize="16dp"
+            android:textSize="16sp"
             app:layout_constraintBottom_toTopOf="@+id/text_patch_safe_deactivation_next"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -70,7 +68,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{Integer.toString(viewModel.patchRemainedInsulin > 50 ? 50 : (viewModel.patchRemainedInsulin &lt; 1 ? 1 : viewModel.patchRemainedInsulin))}"
-            android:textSize="16dp"
+            android:textSize="16sp"
             app:layout_constraintBottom_toTopOf="@+id/layout_patch_safe_deactivation_remaining_usage_period_value"
             app:layout_constraintEnd_toStartOf="@+id/text_patch_dose_unit"
             tools:text="50" />
@@ -80,7 +78,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/all_dose_unit"
-            android:textSize="16dp"
+            android:textSize="16sp"
             app:layout_constraintBottom_toTopOf="@+id/layout_patch_safe_deactivation_remaining_usage_period_value"
             app:layout_constraintEnd_toStartOf="@+id/text_patch_dose_plus" />
 
@@ -89,7 +87,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{viewModel.patchRemainedInsulin > 1 ? @string/symbol_plus : @string/symbol_minus}"
-            android:textSize="16dp"
+            android:textSize="16sp"
             app:visibleOrGone="@{(viewModel.patchRemainedInsulin &lt;= 0 || viewModel.patchRemainedInsulin >= 51)}"
             app:layout_constraintBottom_toTopOf="@+id/layout_patch_safe_deactivation_remaining_usage_period_value"
             app:layout_constraintEnd_toEndOf="parent"
@@ -109,7 +107,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{viewModel.patchRemainedDays.toString()}"
-                android:textSize="16dp"
+                android:textSize="16sp"
                 app:visibleOrGone="@{viewModel.patchRemainedDays > 0}"
                 tools:text="N"/>
 
@@ -118,7 +116,7 @@
                 android:layout_height="wrap_content"
                 android:text="@{viewModel.patchRemainedDays > 1 ? @string/symbol_days : @string/symbol_day}"
                 app:visibleOrGone="@{viewModel.patchRemainedDays > 0}"
-                android:textSize="16dp"
+                android:textSize="16sp"
                 tools:text="@string/symbol_days" />
 
             <TextView
@@ -126,7 +124,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:text="@{viewModel.patchRemainedTime}"
-                android:textSize="16dp"
+                android:textSize="16sp"
                 tools:text="NN:NN:NN" />
 
         </LinearLayout>

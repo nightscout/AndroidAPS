@@ -1,9 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.code
 
-import android.content.Context
-import info.nightscout.androidaps.plugins.pump.eopatch.R
-
-enum class PatchExpireAlertTime private constructor(val index: Int, val hour: Int) {
+enum class PatchExpireAlertTime constructor(val index: Int, val hour: Int) {
     HOUR_1(0, 1),
     HOUR_2(1, 2),
     HOUR_3(2, 3),
@@ -28,25 +25,4 @@ enum class PatchExpireAlertTime private constructor(val index: Int, val hour: In
     HOUR_22(21, 22),
     HOUR_23(22, 23),
     HOUR_24(23, 24);
-
-    companion object {
-
-        fun atIndex(index: Int): PatchExpireAlertTime {
-            for (i in values()) {
-                if (i.index == index) {
-                    return i
-                }
-            }
-            return HOUR_1
-        }
-
-        fun atHour(hour: Int): PatchExpireAlertTime {
-            for (i in values()) {
-                if (i.hour == hour) {
-                    return i
-                }
-            }
-            return HOUR_1
-        }
-    }
 }

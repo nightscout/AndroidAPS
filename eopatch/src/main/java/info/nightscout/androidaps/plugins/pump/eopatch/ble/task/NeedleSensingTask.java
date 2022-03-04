@@ -13,9 +13,7 @@ import io.reactivex.Single;
 
 @Singleton
 public class NeedleSensingTask extends TaskBase {
-
-    @Inject
-    IAlarmRegistry alarmRegistry;
+    @Inject IAlarmRegistry alarmRegistry;
 
     StartNeedleCheck START_NEEDLE_CHECK;
     UpdateConnection UPDATE_CONNECTION;
@@ -38,7 +36,7 @@ public class NeedleSensingTask extends TaskBase {
                 .doOnNext(this::onResponse)
                 .map(patchState -> !patchState.isNeedNeedleSensing())
                 .firstOrError()
-                .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, e.getMessage()));
+                .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, (e.getMessage() != null) ? e.getMessage() : "NeedleSensingTask error"));
     }
 
     private void onResponse(PatchState v) {

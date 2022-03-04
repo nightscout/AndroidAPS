@@ -4,6 +4,6 @@ import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.Observable
 
 interface IPreference<T>{
-    open fun flush(sp: SP)
-    open fun observe(): Observable<T>
+    fun flush(sp: SP)
+    fun observe(): Observable<T>
 }

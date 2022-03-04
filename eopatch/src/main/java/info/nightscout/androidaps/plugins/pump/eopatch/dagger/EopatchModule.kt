@@ -39,7 +39,6 @@ abstract class EopatchModule {
 
     }
 
-
     @Binds
     @Singleton
     abstract fun bindPatchManager(patchManager: PatchManager): IPatchManager

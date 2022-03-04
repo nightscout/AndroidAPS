@@ -21,6 +21,7 @@ import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlin.math.max
 import kotlin.math.roundToInt
 
 class EopatchOverviewViewModel @Inject constructor(
@@ -31,7 +32,7 @@ class EopatchOverviewViewModel @Inject constructor(
     private val aapsSchedulers: AapsSchedulers
 ) : EoBaseViewModel<EoBaseNavigator>() {
     private val _eventHandler = SingleLiveEvent<UIEvent<EventType>>()
-    val UIEventTypeHandler : LiveData<UIEvent<EventType>>
+    val eventHandler : LiveData<UIEvent<EventType>>
         get() = _eventHandler
 
     private val _patchConfig = SingleLiveEvent<PatchConfig>()
@@ -57,6 +58,10 @@ class EopatchOverviewViewModel @Inject constructor(
     private val _status = SingleLiveEvent<String>()
     val status : LiveData<String>
         get() = _status
+
+    private val _pauseBtnStr = SingleLiveEvent<String>()
+    val pauseBtnStr : LiveData<String>
+        get() = _pauseBtnStr
 
     private val _alarms = SingleLiveEvent<Alarms>()
     val alarms : LiveData<Alarms>
@@ -128,18 +133,18 @@ class EopatchOverviewViewModel @Inject constructor(
 
     private fun updatePatchStatus(){
         if(patchManager.isActivated){
-            var finishTimeMillis = patchConfig.value?.basalPauseFinishTimestamp?:System.currentTimeMillis()
-            var remainTimeMillis = Math.max(finishTimeMillis - System.currentTimeMillis(), 0L)
+            val finishTimeMillis = patchConfig.value?.basalPauseFinishTimestamp?:System.currentTimeMillis()
+            val remainTimeMillis = max(finishTimeMillis - System.currentTimeMillis(), 0L)
             val h =  TimeUnit.MILLISECONDS.toHours(remainTimeMillis)
             val m =  TimeUnit.MILLISECONDS.toMinutes(remainTimeMillis - TimeUnit.HOURS.toMillis(h))
             _status.value = if(patchManager.patchState.isNormalBasalPaused)
-                    "${rh.gs(R.string.string_suspended)}\n" +
-                        "${rh.gs(R.string.string_temp_basal_remained_hhmm, h.toString(), m.toString())}"
+                    "${rh.gs(R.string.string_suspended)}\n${rh.gs(R.string.string_temp_basal_remained_hhmm, h.toString(), m.toString())}"
                 else
                     rh.gs(R.string.string_running)
         }else{
             _status.value = ""
         }
+        _pauseBtnStr.value = if(patchManager.patchState.isNormalBasalPaused) rh.gs(R.string.string_resume) else rh.gs(R.string.string_suspend)
     }
 
     private fun updateBasalInfo(){
@@ -166,7 +171,7 @@ class EopatchOverviewViewModel @Inject constructor(
             patchManager.preferenceManager.getNormalBasalManager().setNormalBasal(profile)
             patchManager.preferenceManager.flushNormalBasalManager()
 
-            _eventHandler.postValue(UIEvent(EventType.ACTIVTION_CLICKED))
+            _eventHandler.postValue(UIEvent(EventType.ACTIVATION_CLICKED))
         }else if(profile != null && profile.getBasal() < 0.05){
             _eventHandler.postValue(UIEvent(EventType.INVALID_BASAL_RATE))
         }else{
@@ -175,7 +180,7 @@ class EopatchOverviewViewModel @Inject constructor(
     }
 
     fun onClickDeactivation(){
-        _eventHandler.postValue(UIEvent(EventType.DEACTIVTION_CLICKED))
+        _eventHandler.postValue(UIEvent(EventType.DEACTIVATION_CLICKED))
     }
 
     fun onClickSuspendOrResume(){
@@ -190,8 +195,8 @@ class EopatchOverviewViewModel @Inject constructor(
         patchManager.pauseBasal(pauseDurationHour)
             .subscribeOn(aapsSchedulers.io)
             .observeOn(aapsSchedulers.main)
-            .subscribe({
-                if (it.isSuccess) {
+            .subscribe({ response ->
+                if (response.isSuccess) {
                     navigator?.toast(R.string.string_suspended_insulin_delivery_message)
                     startPeriodicallyUpdate()
                 } else {

@@ -10,7 +10,6 @@ import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPatchManager
 import info.nightscout.androidaps.plugins.pump.eopatch.databinding.DialogCommonBinding
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.DialogHelperActivity
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.EopatchActivity
-import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
 class ActivationNotCompleteDialog : DaggerDialogFragment() {
@@ -24,7 +23,6 @@ class ActivationNotCompleteDialog : DaggerDialogFragment() {
     var title: String = ""
 
     private var _binding: DialogCommonBinding? = null
-    private var disposable: Disposable? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

@@ -15,10 +15,9 @@ import io.reactivex.Single;
 
 @Singleton
 public class StartQuickBolusTask extends BolusTask {
-
-    private BolusStart NOW_BOLUS_START;
-    private ExtBolusStart EXT_BOLUS_START;
-    private ComboBolusStart COMBO_BOLUS_START;
+    private final BolusStart NOW_BOLUS_START;
+    private final ExtBolusStart EXT_BOLUS_START;
+    private final ComboBolusStart COMBO_BOLUS_START;
 
     @Inject
     public StartQuickBolusTask() {
@@ -35,7 +34,7 @@ public class StartQuickBolusTask extends BolusTask {
                 .doOnNext(this::checkResponse)
                 .firstOrError()
                 .doOnSuccess(v -> onSuccess(nowDoseU, exDoseU, exDuration))
-                .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, e.getMessage()));
+                .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, (e.getMessage() != null) ? e.getMessage() : "StartQuickBolusTask error"));
     }
 
     private Single<? extends BolusResponse> startBolusImpl(float nowDoseU, float exDoseU,

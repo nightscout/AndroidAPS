@@ -42,7 +42,6 @@ import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.BleConnectionSt
 import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.IBleDevice;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.Patch;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.PatchSelfTestResult;
-import info.nightscout.androidaps.plugins.pump.eopatch.core.api.BasalStop;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.BuzzerStop;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.GetTemperature;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.PublicKeySend;
@@ -59,7 +58,6 @@ import info.nightscout.androidaps.plugins.pump.eopatch.code.DeactivationStatus;
 
 import java.math.BigInteger;
 import java.security.AlgorithmParameters;
-import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.KeyPair;
@@ -74,17 +72,13 @@ import java.security.spec.ECPoint;
 import java.security.spec.ECPublicKeySpec;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.crypto.KeyAgreement;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import info.nightscout.androidaps.plugins.pump.eopatch.core.util.HexString;
 import info.nightscout.androidaps.plugins.pump.eopatch.code.SettingKeys;
 import info.nightscout.androidaps.plugins.pump.eopatch.event.EventEoPatchAlarm;
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.receiver.RxBroadcastReceiver;
@@ -102,7 +96,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 @Singleton
-public class PatchManagerImpl/* implements IPatchConstant*/ {
+public class PatchManagerImpl{
     @Inject IPreferenceManager pm;
     @Inject Context context;
     @Inject SP sp;
@@ -115,29 +109,23 @@ public class PatchManagerImpl/* implements IPatchConstant*/ {
     @Inject NeedleSensingTask START_NEEDLE_CHECK;
 
     IBleDevice patch;
-    HexString hexString;
 
-    private CompositeDisposable compositeDisposable;
-
-    private Observable<Intent> dateTimeChanged;
+    private final CompositeDisposable compositeDisposable;
 
     private static final long DEFAULT_API_TIME_OUT = 10; // SECONDS
 
-    private BuzzerStop BUZZER_STOP;
-    private GetTemperature TEMPERATURE_GET;
-    private BasalStop BASAL_STOP;
-    private StopAeBeep ALARM_ALERT_ERROR_BEEP_STOP;
-    private PublicKeySend PUBLIC_KEY_SET;
-    private SequenceGet SEQUENCE_GET;
+    private final BuzzerStop BUZZER_STOP;
+    private final GetTemperature TEMPERATURE_GET;
+    private final StopAeBeep ALARM_ALERT_ERROR_BEEP_STOP;
+    private final PublicKeySend PUBLIC_KEY_SET;
+    private final SequenceGet SEQUENCE_GET;
 
     @Inject
     public PatchManagerImpl() {
         compositeDisposable = new CompositeDisposable();
-        hexString = new HexString();
 
         BUZZER_STOP = new BuzzerStop();
         TEMPERATURE_GET = new GetTemperature();
-        BASAL_STOP = new BasalStop();
         ALARM_ALERT_ERROR_BEEP_STOP = new StopAeBeep();
         PUBLIC_KEY_SET = new PublicKeySend();
         SEQUENCE_GET = new SequenceGet();
@@ -153,7 +141,7 @@ public class PatchManagerImpl/* implements IPatchConstant*/ {
         filter.addAction(ACTION_DATE_CHANGED);
         filter.addAction(ACTION_TIMEZONE_CHANGED);
 
-        dateTimeChanged = RxBroadcastReceiver.Companion.create(context, filter);
+        Observable<Intent> dateTimeChanged = RxBroadcastReceiver.Companion.create(context, filter);
 
         compositeDisposable.add(
             Observable.combineLatest(patch.observeConnected(), pm.observePatchLifeCycle(),
@@ -178,7 +166,7 @@ public class PatchManagerImpl/* implements IPatchConstant*/ {
 
         compositeDisposable.add(
                 patch.observeConnected()
-                        .doOnNext(it -> onPatchConnected(it))
+                        .doOnNext(this::onPatchConnected)
                         .subscribe());
 
         compositeDisposable.add(
@@ -190,22 +178,22 @@ public class PatchManagerImpl/* implements IPatchConstant*/ {
 
         compositeDisposable.add(
                 EoPatchRxBus.INSTANCE.listen(EventEoPatchAlarm.class)
-                        .filter(it -> it.isFirst())
+                        .filter(EventEoPatchAlarm::isFirst)
                         .filter(it -> !pm.getPatchConfig().isDeactivated())
                         .filter(it -> patch.getConnectionState().isConnected())
-                        .concatMapIterable(it -> it.getAlarmCodes())
-                        .filter(it -> it.isPatchOccurrenceAlert())
+                        .concatMapIterable(EventEoPatchAlarm::getAlarmCodes)
+                        .filter(AlarmCode::isPatchOccurrenceAlert)
                         .flatMap(it -> stopAeBeep(it.getAeCode()).toObservable())
                         .subscribe()
         );
 
         compositeDisposable.add(
                 EoPatchRxBus.INSTANCE.listen(EventEoPatchAlarm.class)
-                        .filter(it -> it.isFirst())
+                        .filter(EventEoPatchAlarm::isFirst)
                         .filter(it -> !pm.getPatchConfig().isDeactivated())
                         .filter(it -> patch.getConnectionState().isConnected())
-                        .concatMapIterable(it -> it.getAlarmCodes())
-                        .filter(it -> it.isPatchOccurrenceAlarm())
+                        .concatMapIterable(EventEoPatchAlarm::getAlarmCodes)
+                        .filter(AlarmCode::isPatchOccurrenceAlarm)
                         .flatMap(it -> pauseBasalImpl(0.0f, System.currentTimeMillis(), it).toObservable())
                         .subscribe()
         );
@@ -218,7 +206,7 @@ public class PatchManagerImpl/* implements IPatchConstant*/ {
     private void onPatchConnected(boolean connected) {
         boolean activated = pm.getPatchConfig().isActivated();
         boolean useEncryption = pm.getPatchConfig().getSharedKey() != null;
-        int doseUnit = sp.getInt(SettingKeys.Companion.getLOW_RESERVIOR_REMINDERS(), 0);
+        int doseUnit = sp.getInt(SettingKeys.Companion.getLOW_RESERVOIR_REMINDERS(), 0);
         int hours = sp.getInt(SettingKeys.Companion.getEXPIRATION_REMINDERS(), 0);
         boolean buzzer = sp.getBoolean(SettingKeys.Companion.getBUZZER_REMINDERS(), false);
         PatchConfig pc = pm.getPatchConfig();
@@ -256,7 +244,7 @@ public class PatchManagerImpl/* implements IPatchConstant*/ {
                             .subscribe());
         }
 
-        if(connected == false && activated == true){
+        if(!connected && activated){
             pm.getPatchConfig().updatetDisconnectedTime();
         }
     }
@@ -266,13 +254,15 @@ public class PatchManagerImpl/* implements IPatchConstant*/ {
                 patch.observeAlarmNotification()
                         .subscribe(
                                 this::onAlarmNotification,
-                                throwable -> aapsLogger.error(LTag.PUMP, throwable.getMessage())
+                                throwable -> aapsLogger.error(LTag.PUMP, throwable.getMessage() != null ?
+                                        throwable.getMessage() : "AlarmNotification observation error")
                         ),
                 patch.observeInfoNotification()
                         .filter(state -> pm.getPatchConfig().isActivated())
                         .subscribe(
                                 this::onInfoNotification,
-                                throwable -> aapsLogger.error(LTag.PUMP, throwable.getMessage())
+                                throwable -> aapsLogger.error(LTag.PUMP, throwable.getMessage() != null ?
+                                        throwable.getMessage() : "InfoNotification observation error")
                         )
         );
     }
@@ -294,8 +284,6 @@ public class PatchManagerImpl/* implements IPatchConstant*/ {
             consumer.accept(pm.getPatchConfig());
             if (needSave) {
                 pm.flushPatchConfig();
-            } else {
-                pm.flushPatchConfig();
             }
         }
     }
@@ -304,11 +292,8 @@ public class PatchManagerImpl/* implements IPatchConstant*/ {
 
         NormalBasal normalBasal = pm.getNormalBasalManager().getNormalBasal();
 
-        if (normalBasal != null) {
-            // 아래 코드를 실행하면 isDoseUChanged 가 false 가 된다.
-            if(normalBasal.updateNormalBasalIndex()) {
-                pm.flushNormalBasalManager();
-            }
+        if(normalBasal.updateNormalBasalIndex()) {
+            pm.flushNormalBasalManager();
         }
     }
 
@@ -363,7 +348,7 @@ public class PatchManagerImpl/* implements IPatchConstant*/ {
      * Activation Process task #4 NEEDLE SENSING
      * Fragment: fragment_patch_rotate_knob
      */
-    public Single<Boolean> checkNeedleSensing(long timeout) { //TODO: Timeout 추가?
+    public Single<Boolean> checkNeedleSensing(long timeout) {
         return START_NEEDLE_CHECK.start()
                 .timeout(timeout, TimeUnit.MILLISECONDS);
     }
@@ -398,7 +383,7 @@ public class PatchManagerImpl/* implements IPatchConstant*/ {
 
     public Single<BasalScheduleSetResponse> startBasal(NormalBasal basal) {
 
-        return startNormalBasalTask.start(basal, false)
+        return startNormalBasalTask.start(basal)
                 .timeout(DEFAULT_API_TIME_OUT, TimeUnit.SECONDS);
     }
 
@@ -425,22 +410,6 @@ public class PatchManagerImpl/* implements IPatchConstant*/ {
 
     private Single<? extends BaseResponse> pauseBasalImpl(float pauseDurationHour, long alarmOccurredTime, @Nullable AlarmCode alarmCode) {
         return pauseBasalTask.pause(pauseDurationHour, alarmOccurredTime, alarmCode);
-    }
-
-    private Single<BasalStopResponse> stopBasal() {
-        return BASAL_STOP.stop();
-    }
-
-    private void insertBasalStart() throws SQLException {
-        insertBasalStart(System.currentTimeMillis());
-    }
-
-    private void insertBasalStart(long timestamp) throws SQLException {
-        NormalBasal startedBasal = pm.getNormalBasalManager().getNormalBasal();
-        if (startedBasal != null) {
-            startedBasal.updateNormalBasalIndex();
-            pm.flushNormalBasalManager();
-        }
     }
 
     //==============================================================================================
@@ -504,34 +473,34 @@ public class PatchManagerImpl/* implements IPatchConstant*/ {
         return stopComboBolusTask.stop().timeout(DEFAULT_API_TIME_OUT, TimeUnit.SECONDS);
     }
 
-    private Single<? extends BaseResponse> stopNowAndExtBolus() {
-
-        boolean nowActive = pm.getPatchState().isNowBolusActive();
-        boolean extActive = pm.getPatchState().isExtBolusActive();
-
-        if (nowActive && extActive) {
-            return stopComboBolus();
-        } else if (nowActive) {
-            return stopNowBolus();
-        } else if (extActive) {
-            return stopExtBolus();
-        }
-
-        return Single.just(new PatchBooleanResponse(true));
-    }
+//    private Single<? extends BaseResponse> stopNowAndExtBolus() {
+//
+//        boolean nowActive = pm.getPatchState().isNowBolusActive();
+//        boolean extActive = pm.getPatchState().isExtBolusActive();
+//
+//        if (nowActive && extActive) {
+//            return stopComboBolus();
+//        } else if (nowActive) {
+//            return stopNowBolus();
+//        } else if (extActive) {
+//            return stopExtBolus();
+//        }
+//
+//        return Single.just(new PatchBooleanResponse(true));
+//    }
 
     //==============================================================================================
     // IPatchManager implementation [BOLUS]
     //==============================================================================================
 
-    public void readBolusStatusFromNotification(InfoNotification noti) {
-        if (noti.isBolusRegAct()) {
+    public void readBolusStatusFromNotification(InfoNotification infoNotification) {
+        if (infoNotification.isBolusRegAct()) {
             BolusCurrent bolusCurrent = pm.getBolusCurrent();
 
             Arrays.asList(BolusType.NOW, BolusType.EXT).forEach(type -> {
-                if (noti.isBolusRegAct(type)) { // 완료되었어도 업데이트 필요.
-                    int injectedPumpCount = noti.getInjected(type);
-                    int remainPumpCount = noti.getRemain(type);
+                if (infoNotification.isBolusRegAct(type)) { // 완료되었어도 업데이트 필요.
+                    int injectedPumpCount = infoNotification.getInjected(type);
+                    int remainPumpCount = infoNotification.getRemain(type);
                     bolusCurrent.updateBolusFromPatch(type, injectedPumpCount, remainPumpCount);
                 }
             });
@@ -545,29 +514,6 @@ public class PatchManagerImpl/* implements IPatchConstant*/ {
     // Patch Activation Tasks
     public Single<DeactivationStatus> deactivate(long timeout, boolean force) {
         return deactivateTask.run(force, timeout);
-    }
-
-    public Single<? extends BaseResponse> stopAll(){
-        List<Single<? extends BaseResponse>> sources = new ArrayList<>();
-
-        // 노멀볼루스 또는 확장볼루스가 동작중이면 정지
-
-        if (pm.getPatchState().isNowBolusActive() || pm.getPatchState().isExtBolusActive()) {
-            sources.add(stopNowAndExtBolus());
-        }
-
-        // 템프베이젤이 동작중이면 중지
-        if (pm.getPatchState().isTempBasalActive()) {
-            sources.add(stopTempBasal());
-        }
-
-        sources.add(stopBasal());
-
-        return Single.concat(sources).lastOrError();
-    }
-
-    public Single<PatchBooleanResponse> stopBuzz() {
-        return BUZZER_STOP.stop();
     }
 
     @Inject
@@ -677,8 +623,7 @@ public class PatchManagerImpl/* implements IPatchConstant*/ {
             ECGenParameterSpec ecSpec_named = new ECGenParameterSpec(SECP256R1);
             KeyPairGenerator kpg = KeyPairGenerator.getInstance(EC);
             kpg.initialize(ecSpec_named);
-            KeyPair pair = kpg.generateKeyPair();
-            return pair;
+            return kpg.generateKeyPair();
         });
     }
 
@@ -729,8 +674,7 @@ public class PatchManagerImpl/* implements IPatchConstant*/ {
     }
 
     public static ECPublicKey rawToEncodedECPublicKey(String curveName, byte[] rawBytes) throws
-            NoSuchAlgorithmException, InvalidKeySpecException, InvalidParameterSpecException,
-            InvalidAlgorithmParameterException {
+            NoSuchAlgorithmException, InvalidKeySpecException, InvalidParameterSpecException {
         KeyFactory kf = KeyFactory.getInstance(EC);
         int mid = rawBytes.length / 2;
         byte[] x = Arrays.copyOfRange(rawBytes, 0, mid);
@@ -740,7 +684,7 @@ public class PatchManagerImpl/* implements IPatchConstant*/ {
     }
 
     public static ECParameterSpec ecParameterSpecForCurve(String curveName) throws
-            NoSuchAlgorithmException, InvalidParameterSpecException, InvalidAlgorithmParameterException {
+            NoSuchAlgorithmException, InvalidParameterSpecException {
         AlgorithmParameters params = AlgorithmParameters.getInstance(EC);
         params.init(new ECGenParameterSpec(curveName));
         return params.getParameterSpec(ECParameterSpec.class);
@@ -755,7 +699,6 @@ public class PatchManagerImpl/* implements IPatchConstant*/ {
 
             return keyAgreement.generateSecret();
         } catch (InvalidKeyException | NoSuchAlgorithmException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             return null;
         }
@@ -768,8 +711,7 @@ public class PatchManagerImpl/* implements IPatchConstant*/ {
     private static final Scheduler SS = Schedulers.single();
 
     public BleConnectionState getPatchConnectionState() {
-        BleConnectionState result = patch.getConnectionState();
-        return result;
+        return patch.getConnectionState();
     }
 
     public Observable<BleConnectionState> observePatchConnectionState() {
@@ -778,16 +720,5 @@ public class PatchManagerImpl/* implements IPatchConstant*/ {
 
     public void updateMacAddress(String mac, boolean b){
         patch.updateMacAddress(mac, b);
-    }
-}
-
-class AlarmFiredEventInfo
-{
-    public AlarmCode code;
-    public long createTimestamp;
-
-    public AlarmFiredEventInfo(AlarmCode code, long createTimestamp)  {
-        this.code = code;
-        this.createTimestamp = createTimestamp;
     }
 }

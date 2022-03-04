@@ -9,9 +9,4 @@ annotation class EopatchPluginQualifier
 @MustBeDocumented
 @Scope
 @Retention(AnnotationRetention.RUNTIME)
-annotation class ActivityScope
-
-@MustBeDocumented
-@Scope
-@Retention(AnnotationRetention.RUNTIME)
 annotation class FragmentScope

@@ -33,11 +33,9 @@ public class TaskQueue {
 
     protected synchronized Observable<TaskFunc> isReady(final TaskFunc function) {
         return Observable.fromCallable(() -> publishTicket(function))
-                .concatMap(v -> {
-                    return ticketSubject
-                            .takeUntil(it -> it.number > v)
-                            .filter(it -> it.number == v);
-                })
+                .concatMap(v -> ticketSubject
+                        .takeUntil(it -> it.number > v)
+                        .filter(it -> it.number == v))
                 .doOnNext(v -> aapsLogger.debug(LTag.PUMPCOMM, String.format("Task #:%s started     func:%s", v.number, v.func.name())))
                 .observeOn(Schedulers.io())
                 .map(it -> it.func)
@@ -86,13 +84,13 @@ public class TaskQueue {
 
     public synchronized boolean has(TaskFunc func) {
         if (queue.size() > 1) {
-            Iterator<PatchTask> itor = queue.iterator();
+            Iterator<PatchTask> iterator = queue.iterator();
 
             /* remove 1st queue */
-            itor.next();
+            iterator.next();
 
-            while (itor.hasNext()) {
-                PatchTask item = itor.next();
+            while (iterator.hasNext()) {
+                PatchTask item = iterator.next();
                 if (item.func == func) {
                     return true;
                 }

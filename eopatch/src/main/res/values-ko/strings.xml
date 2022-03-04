@@ -90,7 +90,7 @@
     <string name="patch_activate_reminder_title">패치 적용 알림</string>
     <string name="patch_activate_reminder_desc">패치 적용이 완료되지 않았습니다.\n패치 적용을 시작합니다.</string>
     <string name="patch_communication_check">패치 통신 점검</string>
-    <string name="patch_communication_check_status_1">패치 통신 점검 중입니다...</string>
+    <string name="patch_communication_check_status_1">패치 통신 점검 중입니다…</string>
     <string name="patch_communication_check_helper_1">스마트 기기를 패치에 가까이 가져가세요.</string>
     <string name="patch_communication_check_helper_2">다른 장소로 이동 후 재시도하세요.</string>
     <string name="patch_communication_failed">패치 통신 오류</string>
@@ -133,5 +133,7 @@
     <string name="finish">완료</string>
     <string name="string_temp_basal_remained_hhmm">%1$s시간 %2$s분 남음</string>
     <string name="next">다음</string>
-
+    <string name="patch_connection_fail">패치 통신 점검 후 다시 시도하세요.</string>
+    <string name="string_pause_failed">주입 정지가 실패하였습니다.</string>
+    <string name="string_resume_failed">주입 재개가 실패하였습니다.</string>
 </resources>
