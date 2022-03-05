@@ -168,6 +168,7 @@ class MainActivity : NoSplashAppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        protectionCheck.resetAuthorization()
         if (!isProtectionCheckActive) {
             isProtectionCheckActive = true
             protectionCheck.queryProtection(this, ProtectionCheck.Protection.APPLICATION, UIRunnable { isProtectionCheckActive = false },
