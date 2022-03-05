@@ -1222,4 +1222,10 @@
     <string name="hide_loop">Hide loop</string>
     <string name="show_loop">Show loop</string>
     <string name="count_selected">%1$d selected</string>
+    <!-- Aidex Cgms -->
+    <string name="aidex">GlucoRx Aidex</string>
+    <string name="aidex_short">Aidex</string>
+    <string name="description_source_aidex">Receive BG values from GlucoRx Aidex CGMS.</string>
+
+
 </resources>
