@@ -5,6 +5,9 @@ import android.content.Context
 import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
+import android.view.WindowManager
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.StringRes
@@ -56,25 +59,43 @@ class PasswordCheck @Inject constructor(
         userInput.setAutofillHints(View.AUTOFILL_HINT_PASSWORD, "aaps_${autoFillHintPasswordKind}")
         userInput.importantForAutofill = View.IMPORTANT_FOR_AUTOFILL_YES
 
+        fun validatePassword(): Boolean {
+            val enteredPassword = userInput.text.toString()
+            if (cryptoUtil.checkPassword(enteredPassword, password)) {
+                val im = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                im.hideSoftInputFromWindow(userInput.windowToken, 0)
+                ok?.invoke(enteredPassword)
+                return true
+            }
+            val msg = if (pinInput) R.string.wrongpin else R.string.wrongpassword
+            ToastUtils.errorToast(context, context.getString(msg))
+            fail?.invoke()
+            return false
+        }
+
         alertDialogBuilder
             .setCancelable(false)
             .setCustomTitle(AlertDialogHelper.buildCustomTitle(context, context.getString(labelId), R.drawable.ic_header_key))
-            .setPositiveButton(context.getString(R.string.ok)) { _, _ ->
-                val enteredPassword = userInput.text.toString()
-                if (cryptoUtil.checkPassword(enteredPassword, password)) ok?.invoke(enteredPassword)
-                else {
-                    val msg = if (pinInput) R.string.wrongpin else R.string.wrongpassword
-                    ToastUtils.errorToast(context, context.getString(msg))
-                    fail?.invoke()
-                }
-            }
-            .setNegativeButton(context.getString(R.string.cancel)
-            ) { dialog, _ ->
+            .setPositiveButton(context.getString(R.string.ok)) { _, _ -> validatePassword() }
+            .setNegativeButton(context.getString(R.string.cancel)) { dialog, _ ->
                 cancel?.invoke()
                 dialog.cancel()
             }
 
-        alertDialogBuilder.create().show()
+        val alert = alertDialogBuilder.create().apply {
+            window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
+            show()
+        }
+
+        userInput.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                if (validatePassword())
+                    alert.dismiss()
+                true
+            } else {
+                false
+            }
+        }
     }
 
     @SuppressLint("InflateParams")
@@ -163,20 +184,35 @@ class PasswordCheck @Inject constructor(
         userInput.setAutofillHints(View.AUTOFILL_HINT_PASSWORD, "aaps_${autoFillHintPasswordKind}")
         userInput.importantForAutofill = View.IMPORTANT_FOR_AUTOFILL_YES
 
+        fun validatePassword() {
+            val enteredPassword = userInput.text.toString()
+            ok?.invoke(enteredPassword)
+        }
+
         alertDialogBuilder
             .setCancelable(false)
             .setCustomTitle(AlertDialogHelper.buildCustomTitle(context, context.getString(labelId), R.drawable.ic_header_key))
-            .setPositiveButton(context.getString(R.string.ok)) { _, _ ->
-                val enteredPassword = userInput.text.toString()
-                ok?.invoke(enteredPassword)
-            }
+            .setPositiveButton(context.getString(R.string.ok)) { _, _ -> validatePassword() }
             .setNegativeButton(context.getString(R.string.cancel)
             ) { dialog, _ ->
                 cancel?.invoke()
                 dialog.cancel()
             }
 
-        alertDialogBuilder.create().show()
+        val alert = alertDialogBuilder.create().apply {
+            window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
+            show()
+        }
+
+        userInput.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                validatePassword()
+                alert.dismiss()
+                true
+            } else {
+                false
+            }
+        }
     }
 
     /**
