@@ -51,4 +51,10 @@
     <string name="combo_tbr_count">Počet dočasných bazálov</string>
     <string name="bolusstopped">Bolus zastavený</string>
     <string name="bolusstopping">Zastavenie bolusu</string>
+    <string name="pump_commerror_label">Počet chýb komun.</string>
+    <string name="show_comm_error_count_title">Zobr. počet chýb komun.</string>
+    <string name="show_comm_error_count_summary">Zobrazí počet chýb pri komunikácii s Ruffy. Číslo vyšše, ako 0 obvykle naznačuje problémy s Ruffy (môže byť nutné reštartovať).</string>
+    <string name="combo_error_display_never">Nikdy</string>
+    <string name="combo_error_display_error">Keď dôjde k chybe</string>
+    <string name="combo_error_display_always">Vždy</string>
 </resources>

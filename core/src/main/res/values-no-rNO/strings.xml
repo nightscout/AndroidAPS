@@ -4,6 +4,7 @@
     <!--    General-->
     <string name="refresh">Oppdater</string>
     <string name="error">Feil</string>
+    <string name="save">Lagre</string>
     <string name="not_set_short">Ikke angitt</string>
     <string name="failedupdatebasalprofile">Kunne ikke oppdatere basal profil</string>
     <string name="profile_set_ok">Basal profil i pumpen er oppdatert</string>
@@ -376,6 +377,7 @@
     <string name="uel_stat_reset">TILBAKESTILL STATISTIKK</string>
     <string name="uel_delete_logs">SLETT LOGGER</string>
     <string name="uel_delete_future_treatments">SLETT FRAMTIDIG BEHANDLING</string>
+    <string name="delete_future_treatments">Slett behandlinger i fremtiden</string>
     <string name="uel_export_settings">EKSPORTER INNSTILLINGER</string>
     <string name="uel_import_settings">IMPORTER INNSTILLINGER</string>
     <string name="uel_reset_databases">TILBAKESTILL DATABASER</string>

@@ -60,10 +60,10 @@
     <string name="exercise_15g">等血糖值低于你的低血糖警戒线之后，吃15克速升的活性碳水合物。</string>
     <string name="exercise_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>
     <string name="suspendloop_label">禁用/暂停闭环</string>
-    <string name="suspendloop_doigetinsulin">在禁用/暂停闭环时，是否可以输注胰岛素?</string>
-    <string name="suspendloop_yes">是的，胰岛素基础率可以正常输注的。</string>
+    <string name="suspendloop_doigetinsulin">在禁用/暂停闭环时，我是否接收了胰岛素输注？</string>
+    <string name="suspendloop_yes">是的，胰岛素基础率仍在继续输注。</string>
     <string name="suspendloop_no">不，胰岛素停止输注。</string>
-    <string name="basaltest_label">Basal(基础率)，ISF(胰岛素敏感系数)和I:C(胰岛素:碳水)测试</string>
+    <string name="basaltest_label">Basal基础率，ISF胰岛素敏感系数，I:C或ICR碳水化合物系数的测试</string>
     <string name="basaltest_when">什么时候需要修订这些值？</string>
     <string name="basaltest_beforeloop">在开始闭环之前。</string>
     <string name="basaltest_havingregularhighlow">当经常出现高血糖或低血糖时。</string>
@@ -84,7 +84,7 @@
     <string name="prerequisites_own670g">一台 MiniMed 670G 泵。</string>
     <string name="prerequisites_hint1">https://androidaps.readthedocs.io/en/latest/EN/Module/module.html</string>
     <string name="prerequisites_smartwatch">一个智能手表.</string>
-    <string name="prerequisites_supportedcgm">一个可正常使用的 CGM。</string>
+    <string name="prerequisites_supportedcgm">受支持的CGM血糖监测产品</string>
     <string name="prerequisites2_label">先决条件</string>
     <string name="prerequisites2_what">什么是建立和使用 AndroidAPS的基本条件？</string>
     <string name="prerequisites2_profile">验证参数信息用于个人配置文件（如ISF胰岛素敏感度系数、I:C胰岛素碳水比率、基础率、DIA胰岛素作用持续时间等等）。</string>
@@ -93,9 +93,9 @@
     <string name="prerequisites2_supportedcgm">一台安装了动态血糖监测应用或兼容软件的手机/设备，用于接收血糖数据。</string>
     <string name="prerequisites2_hint1">https://androidaps.readthedocs.io/en/latest/EN/Module/module.html</string>
     <string name="update_label">更新 AndroidAPS</string>
-    <string name="whatistrue">检查所有正确的答案.</string>
+    <string name="whatistrue">选择所有正确的答案.</string>
     <string name="update_git">您需要在您的计算机上安装和配置Git。</string>
-    <string name="update_asap">当更新的 AndroidAPS 版本发布时，先前的版本可能会在指定时间之后受到远程限制。</string>
+    <string name="update_asap">当AndroidAPS更新发布正式版本时，先前的版本可能会在指定时间之后受到远程限制。</string>
     <string name="update_keys">您应该保存并记住密钥的存储位置，并使用相同地签名密钥进行更新，与您以前的安装一样。</string>
     <string name="update_neverupdate">如果该系统运作良好，就不要去更新系统。</string>
     <string name="update_askfriend">如果您在构建应用时遇到困难，您可以安装一个由朋友构建的应用程序。</string>
@@ -119,7 +119,7 @@
     <string name="sensitivity_label">敏感度插件</string>
     <string name="sensitivity_which">选择所有正确的答案。</string>
     <string name="sensitivity_adjust">灵敏度插件允许AndroidAPS临时调整胰岛素敏感度的短暂变化(例如激素变化或与输液部位吸收相关的问题)。</string>
-    <string name="sensitivity_edit">灵敏度插件为用户提供基础率、 I:C比率和 ISF 的更改建议，可用来编辑配置文件。</string>
+    <string name="sensitivity_edit">灵敏度插件为用户提供basal基础率，I:C碳水化合物系数和ISF胰岛素敏感系数的更改建议，可用来编辑配置文件。</string>
     <string name="sensitivity_cannula">记录输注导管更换会将Autosens比率重置回100%。</string>
     <string name="sensitivity_time">一些插件选项具有可配置的时间范围，可由用户设置。</string>
     <string name="sensitivity_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Sensitivity-detection-and-COB.html</string>
@@ -195,13 +195,13 @@
     <string name="profileswitchtime_iwant">如果您比平常早起 2 个小时，您应该如何通知AndroidAPS应对个人日程表中的更改?</string>
     <string name="profileswitchtime_2">以增加2小时的方式，启动个人配置文件切换</string>
     <string name="profileswitchtime__2">以减少2小时的方式，启动个人配置文件切换</string>
-    <string name="profileswitchtime_tt">设置一个马上吃饭的临时的目标血糖值。</string>
+    <string name="profileswitchtime_tt">设置一个马上吃饭，临时的血糖目标值。</string>
     <string name="profileswitchtime_100">将配置文件切换到100%以上。</string>
     <string name="profileswitchtime_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profilewitch#timeshift</string>
     <string name="profileswitch4_label">修改配置文件</string>
-    <string name="profileswitch4_rates">基础率、胰岛素敏感系数ISF、胰岛素和碳水比率I:C等，应在配置文件中设定。</string>
+    <string name="profileswitch4_rates">Basal基础率，ISF胰岛素敏感系数，I:C碳水化合物系数等，应该在配置文件中设定。</string>
     <string name="profileswitch4_internet">激活对Nightscout配置文件的更改，需要您的AndroidAPS 手机启用互联网连接。</string>
-    <string name="profileswitch4_sufficient">编辑配置文件并修改参数，足以进行任何更改。</string>
+    <string name="profileswitch4_sufficient">编辑配置文件进行参数的修改，足以适应任何变化。</string>
     <string name="profileswitch4_multi">可以设置和选择多个配置文件，以适应不断变化的环境(例如激素变化、轮班工作、工作日/周末生活方式)。</string>
     <string name="basalhelp_hint1">https://androidaps.readthedocs.io/en/latest/EN/Module/module.html#good-individual-dosage-algorithm-for-your-diabetes-therapy</string>
     <string name="basalhelp_label">帮助调整基础率</string>
