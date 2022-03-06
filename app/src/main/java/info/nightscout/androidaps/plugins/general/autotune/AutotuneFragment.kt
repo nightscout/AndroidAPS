@@ -205,7 +205,7 @@ class AutotuneFragment : DaggerFragment() {
         } else if (autotunePlugin.lastRunSuccess) {
             binding.autotuneRun.visibility = View.VISIBLE
             binding.tuneWarning.text = resourceHelper.gs(R.string.autotune_warning_after_run)
-            binding.tuneResult.text = tempResult // autotunePlugin.result
+            binding.tuneResult.text = autotunePlugin.result
             binding.autotuneCompare.visibility = View.VISIBLE
         } else {
             binding.tuneResult.text = tempResult // autotunePlugin.result
