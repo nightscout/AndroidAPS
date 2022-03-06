@@ -103,7 +103,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
             val adapterReason = ArrayAdapter(context, R.layout.spinner_centered, reasonList)
             binding.reason.adapter = adapterReason
 
-            binding.targetCancel.setOnClickListener { shortClick(it) }
+            binding.targetCancel.setOnClickListener { binding.duration.value = 0.0; shortClick(it) }
             binding.eatingSoon.setOnClickListener { shortClick(it) }
             binding.activity.setOnClickListener { shortClick(it) }
             binding.hypo.setOnClickListener { shortClick(it) }
@@ -148,10 +148,6 @@ class TempTargetDialog : DialogFragmentWithDate() {
                 binding.temptarget.value = defaultValueHelper.determineHypoTT()
                 binding.duration.value = defaultValueHelper.determineHypoTTDuration().toDouble()
                 binding.reason.setSelection(reasonList.indexOf(rh.gs(R.string.hypo)))
-            }
-
-            R.id.cancel      -> {
-                binding.duration.value = 0.0
             }
         }
     }
