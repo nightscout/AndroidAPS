@@ -47,7 +47,6 @@ class AutotuneFragment : DaggerFragment() {
     @Inject lateinit var autotunePlugin: Autotune
     @Inject lateinit var sp: SP
     @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
-    //@Inject lateinit var treatmentsActivity: TreatmentsActivity
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var activePlugin: ActivePlugin
@@ -165,7 +164,7 @@ class AutotuneFragment : DaggerFragment() {
             autotunePlugin.copyButtonVisibility = View.GONE
             binding.autotuneCompare.visibility = View.GONE
         }
-        lastRunTxt = if (autotunePlugin.lastRun != null) dateUtil.dateAndTimeString(autotunePlugin.lastRun) else ""
+        lastRunTxt = if (autotunePlugin.lastRun != 0L) dateUtil.dateAndTimeString(autotunePlugin.lastRun) else ""
         updateGui()
     }
 
@@ -202,14 +201,14 @@ class AutotuneFragment : DaggerFragment() {
             binding.autotuneRun.visibility = View.GONE
             binding.autotuneCompare.visibility = View.GONE
             binding.tuneWarning.text = resourceHelper.gs(R.string.autotune_warning_during_run)
-            binding.tuneResult.text = autotunePlugin.result
+            binding.tuneResult.text = tempResult // autotunePlugin.result
         } else if (autotunePlugin.lastRunSuccess) {
             binding.autotuneRun.visibility = View.VISIBLE
             binding.tuneWarning.text = resourceHelper.gs(R.string.autotune_warning_after_run)
-            binding.tuneResult.text = autotunePlugin.result
+            binding.tuneResult.text = tempResult // autotunePlugin.result
             binding.autotuneCompare.visibility = View.VISIBLE
         } else {
-            binding.tuneResult.text = autotunePlugin.result
+            binding.tuneResult.text = tempResult // autotunePlugin.result
             binding.autotuneRun.visibility = View.VISIBLE
         }
         if (autotunePlugin.tunedProfile == null || autotunePlugin.currentprofile == null)
