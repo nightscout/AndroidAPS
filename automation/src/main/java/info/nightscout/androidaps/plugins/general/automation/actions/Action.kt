@@ -70,7 +70,9 @@ abstract class Action(val injector: HasAndroidInjector) {
                 ActionProfileSwitch::class.java.name,
                 ActionProfileSwitch::class.java.simpleName        -> ActionProfileSwitch(injector).fromJSON(data.toString())
                 ActionProfileSwitchPercent::class.java.name,
-                ActionProfileSwitchPercent::class.java.simpleName -> ActionProfileSwitchPercent(injector).fromJSON(data.toString())
+                ActionProfileSwitchPercent::class.java.simpleName -> ActionRunAutotune(injector).fromJSON(data.toString())
+                ActionRunAutotune::class.java.name,
+                ActionRunAutotune::class.java.simpleName          -> ActionRunAutotune(injector).fromJSON(data.toString())
                 ActionSendSMS::class.java.name,
                 ActionSendSMS::class.java.simpleName              -> ActionSendSMS(injector).fromJSON(data.toString())
                 ActionStartTempTarget::class.java.name,

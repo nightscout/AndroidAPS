@@ -26,19 +26,23 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
         if(sp.getBoolean(R.string.key_autotune_auto, false)) {
             autotunePlugin.aapsAutotune()
             var message = R.string.autotune_run_with_autoswitch
+            /* Todo, get end result and send message according to succeed or not (rxbus to update)
             if (!autotunePlugin.lastRunSuccess) {
                 message = R.string.autotune_run_with_error
                 aapsLogger.error(LTag.AUTOMATION, "Error during Autotune Run")
             }
+             */
             callback.result(PumpEnactResult(injector).success(autotunePlugin.lastRunSuccess).comment(message))?.run()
             return
         } else {
             autotunePlugin.aapsAutotune()
             var message = R.string.autotune_run_without_autoswitch
+            /*
             if (!autotunePlugin.lastRunSuccess) {
                 message = R.string.autotune_run_with_error
                 aapsLogger.error(LTag.AUTOMATION, "Error during Autotune Run")
             }
+             */
             callback.result(PumpEnactResult(injector).success(autotunePlugin.lastRunSuccess).comment(message))?.run()
             return
         }

@@ -94,7 +94,9 @@ class AutotunePlugin @Inject constructor(
     override fun aapsAutotune() {
         val daysBack = sp.getInt(R.string.key_autotune_default_tune_days, 5)
         val autoSwitch = sp.getBoolean(R.string.key_autotune_auto, false)
-        aapsAutotune(daysBack, autoSwitch)
+        Thread(Runnable {
+            aapsAutotune(daysBack, autoSwitch)
+        }).start()
     }
 
     override fun aapsAutotune(daysBack: Int, autoSwitch: Boolean): String {
