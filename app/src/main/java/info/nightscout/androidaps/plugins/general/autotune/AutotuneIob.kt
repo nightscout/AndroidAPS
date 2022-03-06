@@ -252,10 +252,10 @@ class AutotuneIob(
         }
     }
 
-    fun getIOB(time: Long, currentBasal: Double): IobTotal {
+    fun getIOB(time: Long, currentBasal: Double, localInsulin: LocalInsulin): IobTotal {
         val bolusIob = getCalculationToTimeTreatments(time).round()
         // Calcul from specific tempBasals completed with neutral tbr
-        val basalIob = getCalculationToTimeTempBasals(time, true, endBG, currentBasal).round()
+        val basalIob = getCalculationToTimeTempBasals(time, true, endBG, currentBasal, localInsulin).round()
 //        log.debug("D/AutotunePlugin: CurrentBasal: " + currentBasal + " BolusIOB: " + bolusIob.iob + " CalculABS: " + basalIob.basaliob + " CalculSTD: " + basalIob2.basaliob + " testAbs: " + absbasaliob.basaliob + " activity " + absbasaliob.activity)
         return IobTotal.combine(bolusIob, basalIob).round()
     }
@@ -284,7 +284,7 @@ class AutotuneIob(
         return total
     }
 
-    fun getCalculationToTimeTempBasals(time: Long, truncate: Boolean, truncateTime: Long, currentBasal: Double): IobTotal {
+    fun getCalculationToTimeTempBasals(time: Long, truncate: Boolean, truncateTime: Long, currentBasal: Double, localInsulin: LocalInsulin): IobTotal {
         val total = IobTotal(time)
         for (pos in 0 until tempBasals.size) {
             val t = tempBasals[pos]
@@ -300,9 +300,9 @@ class AutotuneIob(
                     isAbsolute = true,
                     duration = truncateTime - t.timestamp
                 )
-                dummyTemp.iobCalc(time, profile, activePlugin.activeInsulin, currentBasal)
+                dummyTemp.iobCalc(time, profile, localInsulin, currentBasal)
             } else {
-                t.iobCalc(time, profile, activePlugin.activeInsulin, currentBasal)
+                t.iobCalc(time, profile, localInsulin, currentBasal)
             }
             //log.debug("BasalIOB " + new Date(time) + " >>> " + calc.basaliob);
             total.plus(calc)

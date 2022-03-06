@@ -5,6 +5,7 @@ import android.view.View
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.data.LocalInsulin
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 //import info.nightscout.androidaps.data.Profile
@@ -113,6 +114,18 @@ class AutotunePlugin @Inject constructor(
         lastNbDays = "" + daysBack
         val now = System.currentTimeMillis()
         profile = profileFunction.getProfile(now)
+        if (profile == null ) {
+            result = "Cannot tune a null profile"
+            atLog(result)
+            calculationRunning = false
+            Thread(Runnable {
+                rxBus.send(EventAutotuneUpdateResult(result))
+            }).start()
+            tunedProfile=null
+            return result
+        }
+        var localInsulin = LocalInsulin("PumpInsulin", activePlugin.activeInsulin.peak, profile!!.dia) // var because localInsulin could be updated later with Tune
+        // Insulin peak/dia
         lastRun = System.currentTimeMillis()
 
         atLog("Start Autotune with $daysBack days back")
@@ -155,7 +168,7 @@ class AutotunePlugin @Inject constructor(
                 autotuneFS.exportEntries(autotuneIob)
                 //<=> ns-treatments.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine (include treatments ,tempBasal and extended
                 autotuneFS.exportTreatments(autotuneIob)
-                preppedGlucose = autotunePrep.categorizeBGDatums(autotuneIob, tunedProfile!!, pumpprofile)
+                preppedGlucose = autotunePrep.categorizeBGDatums(autotuneIob, tunedProfile!!, pumpprofile, localInsulin)
                 //<=> autotune.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
                 if (preppedGlucose == null) {
                     result = rh.gs(R.string.autotune_error)
@@ -275,6 +288,7 @@ class AutotunePlugin @Inject constructor(
             jsonSettings.put("categorize_uam_as_basal", sp.getBoolean(R.string.key_autotune_categorize_uam_as_basal, false))
             jsonSettings.put("tune_insulin_curve", false)
 
+            val peaktime: Int = insulinInterface.peak
             if (insulinInterface.id === Insulin.InsulinType.OREF_ULTRA_RAPID_ACTING)
                 jsonSettings.put("curve","ultra-rapid")
             else if (insulinInterface.id === Insulin.InsulinType.OREF_RAPID_ACTING)
@@ -282,9 +296,8 @@ class AutotunePlugin @Inject constructor(
             else if (insulinInterface.id === Insulin.InsulinType.OREF_LYUMJEV) {
                 jsonSettings.put("curve", "ultra-rapid")
                 jsonSettings.put("useCustomPeakTime", true)
-                jsonSettings.put("insulinPeakTime", 45)
+                jsonSettings.put("insulinPeakTime", peaktime)
             } else if (insulinInterface.id === Insulin.InsulinType.OREF_FREE_PEAK) {
-                val peaktime: Int = sp.getInt(rh.gs(info.nightscout.androidaps.core.R.string.key_insulin_oref_peak), 75)
                 jsonSettings.put("curve", if (peaktime > 55) "rapid-acting" else "ultra-rapid")
                 jsonSettings.put("useCustomPeakTime", true)
                 jsonSettings.put("insulinPeakTime", peaktime)

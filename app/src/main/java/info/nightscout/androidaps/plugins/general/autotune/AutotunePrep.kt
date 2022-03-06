@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.general.autotune
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.data.LocalInsulin
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.interfaces.ProfileFunction
@@ -10,7 +11,6 @@ import info.nightscout.androidaps.plugins.general.autotune.data.BGDatum
 import info.nightscout.androidaps.plugins.general.autotune.data.CRDatum
 import info.nightscout.androidaps.plugins.general.autotune.data.PreppedGlucose
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
-import info.nightscout.androidaps.activities.TreatmentsActivity
 import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.database.entities.Carbs
 import info.nightscout.androidaps.utils.DateUtil
@@ -23,9 +23,6 @@ import javax.inject.Singleton
 @Singleton
 class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector) {
 
-    private val useNSData = false
-    var nsDataDownloaded = false
-
     //    private static Logger log = LoggerFactory.getLogger(AutotunePlugin.class);
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var autotunePlugin: AutotunePlugin
@@ -35,7 +32,7 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var repository: AppRepository
 
-    fun categorizeBGDatums(autotuneIob: AutotuneIob, tunedprofile: ATProfile, pumpprofile: ATProfile): PreppedGlucose? {
+    fun categorizeBGDatums(autotuneIob: AutotuneIob, tunedprofile: ATProfile, pumpprofile: ATProfile, localInsulin: LocalInsulin): PreppedGlucose? {
         //lib/meals is called before to get only meals data (in AAPS it's done in AutotuneIob)
         var treatments: MutableList<Carbs> = autotuneIob.meals
         var boluses: MutableList<Bolus> = autotuneIob.boluses
@@ -182,7 +179,7 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
             //var iob = getIOB(IOBInputs)[0];
             // in autotune iob is calculated with 6 hours of history data, tunedProfile and average pumpProfile basal rate...
             //log("currentBasal: " + currentBasal + " BGTime: " + BGTime + " / " + dateUtil!!.timeStringWithSeconds(BGTime) + "******************************************************************************************")
-            val iob = autotuneIob.getIOB(BGTime, currentPumpBasal)
+            val iob = autotuneIob.getIOB(BGTime, currentPumpBasal, localInsulin)    // add localInsulin to be independent to InsulinPlugin
             //log.debug("Bolus activity: " + bolusIob.activity + " Basal activity: " + basalIob.activity + " Total activity: " + iob.activity);
             //log.debug("treatmentsActivity Iob Activity: " + iob.activity + " Iob Basal: " + iob.basaliob + " Iob: " + iob.iob + " netbasalins: " + iob.netbasalinsulin + " netinsulin: " + iob.netInsulin);
 
