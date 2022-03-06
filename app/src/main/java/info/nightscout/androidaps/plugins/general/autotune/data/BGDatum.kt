@@ -29,7 +29,7 @@ class BGDatum {
         private set
     lateinit var dateUtil: DateUtil
 
-    constructor() {}
+    constructor(dateUtil: DateUtil) { this.dateUtil = dateUtil}
     constructor(json: JSONObject, dateUtil: DateUtil) {
         this.dateUtil = dateUtil
         try {

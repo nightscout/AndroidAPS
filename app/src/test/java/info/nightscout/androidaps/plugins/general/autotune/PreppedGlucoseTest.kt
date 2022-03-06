@@ -9,12 +9,7 @@ import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
 
-@RunWith(PowerMockRunner::class)
-@PrepareForTest(FabricPrivacy::class, MainApp::class, GlucoseStatus::class)
 class PreppedGlucoseTest : TestBase() {
 
     lateinit var prep1: PreppedGlucose
