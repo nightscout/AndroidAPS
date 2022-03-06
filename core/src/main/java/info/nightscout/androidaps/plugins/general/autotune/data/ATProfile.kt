@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.general.autotune.data
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.core.R
+import info.nightscout.androidaps.data.LocalInsulin
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.data.PureProfile
 import info.nightscout.androidaps.database.data.Block
@@ -21,7 +22,7 @@ import org.json.JSONObject
 import java.util.*
 import javax.inject.Inject
 
-class ATProfile(profile: Profile?, val injector: HasAndroidInjector) {
+class ATProfile(profile: Profile?, var localInsulin: LocalInsulin, val injector: HasAndroidInjector) {
 
     var profile: ProfileSealed
     var profilename: String? = profile?.profileName
@@ -30,6 +31,7 @@ class ATProfile(profile: Profile?, val injector: HasAndroidInjector) {
     var ic = 0.0
     var isf = 0.0
     var dia = 0.0
+    var peak = 0
     var isValid: Boolean = false
     var from: Long = 0
 
@@ -72,7 +74,7 @@ class ATProfile(profile: Profile?, val injector: HasAndroidInjector) {
         try {
             json.put("name", profilename)
             json.put("min_5m_carbimpact", sp.getDouble("openapsama_min_5m_carbimpact", 3.0))
-            json.put("dia", profile.dia)
+            json.put("dia", dia)
             if (insulinInterface.id === Insulin.InsulinType.OREF_ULTRA_RAPID_ACTING) json.put(
                 "curve",
                 "ultra-rapid"
@@ -220,7 +222,8 @@ class ATProfile(profile: Profile?, val injector: HasAndroidInjector) {
             for(h in 0..23) { basal[h] = profile.basalBlocks.blockValueBySeconds(T.hours(h.toLong()).secs().toInt(), 1.0, 0)}
             ic = avgIC
             isf = avgISF
-            dia = profile.dia
         }
+       dia = localInsulin.dia
+       peak = localInsulin.peak
     }
 }

@@ -503,7 +503,7 @@ class AutotuneCore(private val injector: HasAndroidInjector) {
         previousAutotune.basalUntuned = basalUntuned
         /* code prepared for future dia/peak integration
         previousAutotune.dia=newDia;
-        previousAutotune.insulinPeakTime = newPeak ;
+        previousAutotune.peak = newPeak ;
         if (diaDeviations || peakDeviations) {
             autotuneOutput.useCustomPeakTime = true;
         }

@@ -140,9 +140,9 @@ class AutotunePlugin @Inject constructor(
         if (endTime > now) endTime -= 24 * 60 * 60 * 1000L
         val starttime = endTime - daysBack * 24 * 60 * 60 * 1000L
         autotuneFS.exportSettings(settings(lastRun, daysBack, starttime, endTime))
-        tunedProfile = ATProfile(profile, injector)
+        tunedProfile = ATProfile(profile, localInsulin, injector)
         tunedProfile?.profilename = rh.gs(R.string.autotune_tunedprofile_name)
-        val pumpprofile = ATProfile(profile, injector)
+        val pumpprofile = ATProfile(profile, localInsulin, injector)
         pumpprofile.profilename = profileFunction.getProfileName()
         autotuneFS.exportPumpProfile(pumpprofile)
         if (daysBack < 1) {
@@ -184,6 +184,7 @@ class AutotunePlugin @Inject constructor(
                 }
                 autotuneFS.exportPreppedGlucose(preppedGlucose!!)
                 tunedProfile = autotuneCore.tuneAllTheThings(preppedGlucose!!, tunedProfile!!, pumpprofile)
+                // localInsulin = LocalInsulin("TunedInsulin", tunedProfile!!.peak, tunedProfile!!.dia)
                 //<=> newprofile.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
                 autotuneFS.exportTunedProfile(tunedProfile!!)
                 if (i < daysBack - 1) {

@@ -19,6 +19,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorP
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
 import info.nightscout.androidaps.activities.TreatmentsActivity
+import info.nightscout.androidaps.data.LocalInsulin
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.interfaces.Autotune
@@ -221,7 +222,7 @@ class AutotuneFragment : DaggerFragment() {
     private fun addWarnings(): String {
         var warning = resourceHelper.gs(R.string.autotune_warning_before_run)
         var nl = "\n"
-        val profile = ATProfile(profileFunction.getProfile(System.currentTimeMillis()), injector)
+        val profile = ATProfile(profileFunction.getProfile(System.currentTimeMillis()), LocalInsulin(""), injector)
         if (!profile.isValid) return resourceHelper.gs(R.string.autotune_profile_invalid)
         if (profile.icSize > 1) {
             //warning = nl + "Autotune works with only one IC value, your profile has " + profile.getIcSize() + " values. Average value is " + profile.ic + "g/U";
