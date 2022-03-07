@@ -99,7 +99,7 @@ class BgQualityCheckPlugin @Inject constructor(
         when (state) {
             State.UNKNOWN       -> 0
             State.FIVE_MIN_DATA -> 0
-            State.RECALCULATED  -> 0
+            State.RECALCULATED  -> 0 
             State.DOUBLED       -> R.drawable.ic_baseline_warning_24_red
         }
 }
