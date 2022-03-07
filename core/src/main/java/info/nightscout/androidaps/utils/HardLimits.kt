@@ -94,9 +94,9 @@ class HardLimits @Inject constructor(
         if (newValue < lowLimit || newValue > highLimit) {
             newValue = max(newValue, lowLimit)
             newValue = min(newValue, highLimit)
-            var msg = String.format(rh.gs(R.string.valueoutofrange), rh.gs(valueName))
+            var msg = rh.gs(R.string.valueoutofrange, rh.gs(valueName))
             msg += ".\n"
-            msg += String.format(rh.gs(R.string.valuelimitedto), value, newValue)
+            msg += rh.gs(R.string.valuelimitedto, value, newValue)
             aapsLogger.error(msg)
             disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(msg)).subscribe()
             ToastUtils.showToastInUiThread(context, rxBus, msg, R.raw.error)

@@ -438,10 +438,10 @@ class WizardDialog : DaggerDialogFragment() {
         )
 
         wizard?.let { wizard ->
-            binding.bg.text = String.format(rh.gs(R.string.format_bg_isf), valueToUnitsToString(Profile.toMgdl(bg, profileFunction.getUnits()), profileFunction.getUnits().asText), wizard.sens)
+            binding.bg.text = rh.gs(R.string.format_bg_isf, valueToUnitsToString(Profile.toMgdl(bg, profileFunction.getUnits()), profileFunction.getUnits().asText), wizard.sens)
             binding.bgInsulin.text = rh.gs(R.string.formatinsulinunits, wizard.insulinFromBG)
 
-            binding.carbs.text = String.format(rh.gs(R.string.format_carbs_ic), carbs.toDouble(), wizard.ic)
+            binding.carbs.text = rh.gs(R.string.format_carbs_ic, carbs.toDouble(), wizard.ic)
             binding.carbsInsulin.text = rh.gs(R.string.formatinsulinunits, wizard.insulinFromCarbs)
 
             binding.iobInsulin.text = rh.gs(R.string.formatinsulinunits, wizard.insulinFromBolusIOB + wizard.insulinFromBasalIOB)
@@ -464,7 +464,7 @@ class WizardDialog : DaggerDialogFragment() {
 
             // COB
             if (binding.cobCheckbox.isChecked) {
-                binding.cob.text = String.format(rh.gs(R.string.format_cob_ic), cob, wizard.ic)
+                binding.cob.text = rh.gs(R.string.format_cob_ic, cob, wizard.ic)
                 binding.cobInsulin.text = rh.gs(R.string.formatinsulinunits, wizard.insulinFromCOB)
             } else {
                 binding.cob.text = ""
