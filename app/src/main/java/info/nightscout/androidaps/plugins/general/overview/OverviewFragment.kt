@@ -876,13 +876,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             cannulaOrPatch.scaleX = if (isPatchPump) 1.4f else 2f
             cannulaOrPatch.scaleY = cannulaOrPatch.scaleX
             insulinAge.visibility = isPatchPump.not().toVisibility()
-            // Patch pumps discards batteries and do not need to shown the status battery light excepts for Omnipod Eros
-            batteryLayout.visibility = (!isPatchPump || pump is OmnipodErosPumpPlugin).toVisibility()
-            // Only show battery level if the action button change battery is available
-            val useBatteryAge = (pump is DiaconnG8Plugin && pump.pumpDescription.isBatteryReplaceable && !pump.isBatteryChangeLoggingEnabled())
-                || (pump.pumpDescription.isBatteryReplaceable || (pump is OmnipodErosPumpPlugin && pump.isUseRileyLinkBatteryLevel && pump.isBatteryChangeLoggingEnabled))
-            pbAge.visibility = useBatteryAge.toVisibility()
-            // Only show battery level when supported by pump or link
+            batteryLayout.visibility = (!isPatchPump || pump.pumpDescription.useHardwareLink).toVisibility()
+            pbAge.visibility = (pump.pumpDescription.isBatteryReplaceable || pump.isBatteryChangeLoggingEnabled()).toVisibility()
             val useBatteryLevel = (pump.model() == PumpType.OMNIPOD_EROS && pump is OmnipodErosPumpPlugin)
                 || (pump.model() != PumpType.ACCU_CHEK_COMBO && pump.model() != PumpType.OMNIPOD_DASH)
             batteryLevel.visibility = useBatteryLevel.toVisibility()

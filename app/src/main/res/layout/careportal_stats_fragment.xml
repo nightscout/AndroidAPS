@@ -288,20 +288,4 @@
 
     </TableRow>
 
-    <TableRow
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
-
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="2dip"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="2dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="2dp"
-            android:layout_span="5"
-            android:background="?android:attr/dividerHorizontal" />
-
-    </TableRow>
-
 </TableLayout>
