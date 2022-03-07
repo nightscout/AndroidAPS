@@ -1583,22 +1583,22 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
 
     @NonNull @Override
     public Constraint<Integer> applyBasalPercentConstraints(Constraint<Integer> percentRate, @NonNull Profile profile) {
-        percentRate.setIfGreater(getAapsLogger(), 0, String.format(rh.gs(R.string.limitingpercentrate), 0, rh.gs(R.string.itmustbepositivevalue)), this);
-        percentRate.setIfSmaller(getAapsLogger(), getPumpDescription().getMaxTempPercent(), String.format(rh.gs(R.string.limitingpercentrate), getPumpDescription().getMaxTempPercent(), rh.gs(R.string.pumplimit)), this);
+        percentRate.setIfGreater(getAapsLogger(), 0, rh.gs(R.string.limitingpercentrate, 0, rh.gs(R.string.itmustbepositivevalue)), this);
+        percentRate.setIfSmaller(getAapsLogger(), getPumpDescription().getMaxTempPercent(), rh.gs(R.string.limitingpercentrate, getPumpDescription().getMaxTempPercent(), rh.gs(R.string.pumplimit)), this);
         return percentRate;
     }
 
     @NonNull @Override
     public Constraint<Double> applyBolusConstraints(@NonNull Constraint<Double> insulin) {
         if (!limitsFetched) return insulin;
-        insulin.setIfSmaller(getAapsLogger(), maximumBolusAmount, String.format(rh.gs(R.string.limitingbolus), maximumBolusAmount, rh.gs(R.string.pumplimit)), this);
+        insulin.setIfSmaller(getAapsLogger(), maximumBolusAmount, rh.gs(R.string.limitingbolus, maximumBolusAmount, rh.gs(R.string.pumplimit)), this);
         if (insulin.value() < minimumBolusAmount) {
 
             //TODO: Add function to Constraints or use different approach
             // This only works if the interface of the InsightPlugin is called last.
             // If not, another constraint could theoretically set the value between 0 and minimumBolusAmount
 
-            insulin.set(getAapsLogger(), 0d, String.format(rh.gs(R.string.limitingbolus), minimumBolusAmount, rh.gs(R.string.pumplimit)), this);
+            insulin.set(getAapsLogger(), 0d, rh.gs(R.string.limitingbolus, minimumBolusAmount, rh.gs(R.string.pumplimit)), this);
         }
         return insulin;
     }
