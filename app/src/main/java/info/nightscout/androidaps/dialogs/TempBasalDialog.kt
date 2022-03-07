@@ -20,7 +20,10 @@ import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.shared.SafeParse
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.extensions.formatColor
+import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.shared.logging.LTag
 import java.text.DecimalFormat
 import java.util.*
 import javax.inject.Inject
@@ -35,6 +38,7 @@ class TempBasalDialog : DialogFragmentWithDate() {
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var ctx: Context
     @Inject lateinit var uel: UserEntryLogger
+    @Inject lateinit var protectionCheck: ProtectionCheck
 
     private var isPercentPump = true
 
@@ -140,5 +144,18 @@ class TempBasalDialog : DialogFragmentWithDate() {
             })
         }
         return true
+    }
+
+    override fun onResume() {
+        super.onResume()
+        activity?.let { activity ->
+            val cancelFail = {
+                aapsLogger.debug(LTag.APS, "Dialog canceled on resume protection: ${this.javaClass.name}")
+                ToastUtils.showToastInUiThread(ctx, R.string.dialog_cancled)
+                dismiss()
+            }
+
+            protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, {}, cancelFail, fail = cancelFail)
+        }
     }
 }

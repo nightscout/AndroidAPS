@@ -58,6 +58,9 @@ class ProtectionCheck @Inject constructor(
         R.string.bolus_pin)
 
     fun isLocked(protection: Protection): Boolean {
+        if (activeSession(protection)) {
+            return false
+        }
         return when (ProtectionType.values()[sp.getInt(protectionTypeResourceIDs[protection.ordinal], ProtectionType.NONE.ordinal)]) {
             ProtectionType.NONE            -> false
             ProtectionType.BIOMETRIC       -> true
