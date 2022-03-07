@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:layout_weight="1"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnError"
             android:maxLines="4"
             android:textStyle="bold"
             android:text="Notification text. Notification text. Notification text. Notification text. Notification text. Notification text. "

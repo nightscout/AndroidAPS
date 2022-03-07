@@ -7,4 +7,12 @@
     <declare-styleable name="NumberPicker">
         <attr name="customContentDescription" format="string" />
     </declare-styleable>
+
+    <!---Notification -->
+    <attr name="notificationUrgent" format="reference|color" />
+    <attr name="notificationNormal" format="reference|color" />
+    <attr name="notificationLow" format="reference|color" />
+    <attr name="notificationInfo" format="reference|color" />
+    <attr name="notificationAnnouncement" format="reference|color" />
+
 </resources>
