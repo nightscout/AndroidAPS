@@ -242,7 +242,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center|center_vertical"
             android:layout_marginTop="10dp"
@@ -256,6 +256,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
+                android:layout_weight="0.5"
                 android:button="@android:color/transparent"
                 android:checked="true"
                 android:contentDescription="@string/treatments_wizard_bg_label"
@@ -269,6 +270,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
+                android:layout_weight="0.5"
                 android:button="@android:color/transparent"
                 android:checked="true"
                 android:contentDescription="@string/treatments_wizard_tt_label"
@@ -283,6 +285,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
+                android:layout_weight="0.5"
                 android:button="@android:color/transparent"
                 android:checked="true"
                 android:contentDescription="@string/bg_trend_label"
@@ -296,6 +299,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
+                android:layout_weight="0.5"
                 android:button="@android:color/transparent"
                 android:checked="true"
                 android:contentDescription="@string/iob"
@@ -309,6 +313,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
+                android:layout_weight="0.5"
                 android:button="@android:color/transparent"
                 android:checked="true"
                 android:contentDescription="@string/treatments_wizard_cob_label"
