@@ -92,8 +92,14 @@
     <color name="weekdayOutline">#1ea3e5</color>
     <color name="weekendOutline">#1e88e5</color>
 
-    <!--    CareportalEvent-->
+    <!-- Notification-->
     <color name="notificationAnnouncement">#FF8C00</color>
+    <color name="notificationUrgent">#ff0400</color>
+    <color name="notificationNormal">#ff5e55</color>
+    <color name="notificationLow">#ff827c</color>
+
+    <!-- Green Colors -->
+    <color name="notificationInfo">#009705</color>
 
     <!--    Toasts-->
     <color name="toastBorder">#666666</color>
