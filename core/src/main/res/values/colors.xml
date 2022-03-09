@@ -5,6 +5,11 @@
     <color name="weekdayOutline">#1ea3e5</color>
     <color name="weekendOutline">#1e88e5</color>
 
+
+    <!--    Toasts-->
+    <color name="toastBorder">#666666</color>
+    <color name="toastBase">#ffffff</color>
+
     <!-- Black and White transparent - glass effect-->
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
@@ -15,7 +20,6 @@
     <color name="black_alpha_50">#80000000</color>
     <color name="black_alpha_60">#99000000</color>
     <color name="black_alpha_65">#A6000000</color>
-    <color name="black_alpha_70">#B3000000</color>
     <color name="black_alpha_80">#CC000000</color>
     <color name="black_alpha_90">#E6000000</color>
 
@@ -87,6 +91,7 @@
     <color name="warningAlertBackground">#FFFB8C00</color>
     <color name="statuslight_Warning" >#FF9900</color>
     <color name="notificationAnnouncement">#FF8C00</color>
+    <color name="notificationUrgent">#ff0400</color>
     <color name="metadataTextWarning">#FF8C00</color>
     <color name="cob">#f0a30a</color>
     <color name="carbsOrange">#C98301</color>
