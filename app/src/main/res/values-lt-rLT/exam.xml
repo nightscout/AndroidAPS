@@ -104,11 +104,9 @@
     <string name="troubleshooting_wheretoask">Kur galima ieškoti pagalbos su AndroidAPS?</string>
     <string name="troubleshooting_fb">Galite kreiptis patarimo AndroidAPS Users Facebook grupėje.</string>
     <string name="troubleshooting_wiki">Jūs turėtumėte skaityti (ir pakartotinai skaityti) AndroidAPS dokumentaciją.</string>
-    <string name="troubleshooting_gitter">AndroidAPS Gitter kambaryje galite paprašyti patarimo ir užregistruoti technines problemas ar klausimus.</string>
     <string name="troubleshooting_yourendo">Turėtumėte kreiptis į savo diabeto kliniką/endokrinologą.</string>
     <string name="troubleshooting_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
-    <string name="troubleshooting_hint3">https://gitter.im/MilosKozak/AndroidAPS</string>
     <string name="insulin_label">Insulino įskiepiai</string>
     <string name="insulin_ultrarapid">Kurį insuliną reikėtų naudoti su Ultra-Rapid Oref įskiepiu?</string>
     <string name="insulin_fiasp">Fiasp®</string>
