@@ -109,29 +109,29 @@ class SafetyPlugin @Inject constructor(
     }
 
     override fun applyBasalConstraints(absoluteRate: Constraint<Double>, profile: Profile): Constraint<Double> {
-        absoluteRate.setIfGreater(aapsLogger, 0.0, String.format(rh.gs(R.string.limitingbasalratio), 0.0, rh.gs(R.string.itmustbepositivevalue)), this)
+        absoluteRate.setIfGreater(aapsLogger, 0.0, rh.gs(R.string.limitingbasalratio, 0.0, rh.gs(R.string.itmustbepositivevalue)), this)
         if (config.APS) {
             var maxBasal = sp.getDouble(R.string.key_openapsma_max_basal, 1.0)
             if (maxBasal < profile.getMaxDailyBasal()) {
                 maxBasal = profile.getMaxDailyBasal()
                 absoluteRate.addReason(rh.gs(R.string.increasingmaxbasal), this)
             }
-            absoluteRate.setIfSmaller(aapsLogger, maxBasal, String.format(rh.gs(R.string.limitingbasalratio), maxBasal, rh.gs(R.string.maxvalueinpreferences)), this)
+            absoluteRate.setIfSmaller(aapsLogger, maxBasal,rh.gs(R.string.limitingbasalratio, maxBasal, rh.gs(R.string.maxvalueinpreferences)), this)
 
             // Check percentRate but absolute rate too, because we know real current basal in pump
             val maxBasalMultiplier = sp.getDouble(R.string.key_openapsama_current_basal_safety_multiplier, 4.0)
             val maxFromBasalMultiplier = floor(maxBasalMultiplier * profile.getBasal() * 100) / 100
-            absoluteRate.setIfSmaller(aapsLogger, maxFromBasalMultiplier, String.format(rh.gs(R.string.limitingbasalratio), maxFromBasalMultiplier, rh.gs(R.string.maxbasalmultiplier)), this)
+            absoluteRate.setIfSmaller(aapsLogger, maxFromBasalMultiplier, rh.gs(R.string.limitingbasalratio, maxFromBasalMultiplier, rh.gs(R.string.maxbasalmultiplier)), this)
             val maxBasalFromDaily = sp.getDouble(R.string.key_openapsama_max_daily_safety_multiplier, 3.0)
             val maxFromDaily = floor(profile.getMaxDailyBasal() * maxBasalFromDaily * 100) / 100
-            absoluteRate.setIfSmaller(aapsLogger, maxFromDaily, String.format(rh.gs(R.string.limitingbasalratio), maxFromDaily, rh.gs(R.string.maxdailybasalmultiplier)), this)
+            absoluteRate.setIfSmaller(aapsLogger, maxFromDaily,rh.gs(R.string.limitingbasalratio, maxFromDaily, rh.gs(R.string.maxdailybasalmultiplier)), this)
         }
-        absoluteRate.setIfSmaller(aapsLogger, hardLimits.maxBasal(), String.format(rh.gs(R.string.limitingbasalratio), hardLimits.maxBasal(), rh.gs(R.string.hardlimit)), this)
+        absoluteRate.setIfSmaller(aapsLogger, hardLimits.maxBasal(),rh.gs(R.string.limitingbasalratio, hardLimits.maxBasal(), rh.gs(R.string.hardlimit)), this)
         val pump = activePlugin.activePump
         // check for pump max
         if (pump.pumpDescription.tempBasalStyle == PumpDescription.ABSOLUTE) {
             val pumpLimit = pump.pumpDescription.pumpType.tbrSettings?.maxDose ?: 0.0
-            absoluteRate.setIfSmaller(aapsLogger, pumpLimit, String.format(rh.gs(R.string.limitingbasalratio), pumpLimit, rh.gs(R.string.pumplimit)), this)
+            absoluteRate.setIfSmaller(aapsLogger, pumpLimit, rh.gs(R.string.limitingbasalratio, pumpLimit, rh.gs(R.string.pumplimit)), this)
         }
 
         // do rounding
@@ -151,19 +151,19 @@ class SafetyPlugin @Inject constructor(
         val pump = activePlugin.activePump
         var percentRateAfterConst = java.lang.Double.valueOf(absoluteConstraint.value() / currentBasal * 100).toInt()
         percentRateAfterConst = if (percentRateAfterConst < 100) Round.ceilTo(percentRateAfterConst.toDouble(), pump.pumpDescription.tempPercentStep.toDouble()).toInt() else Round.floorTo(percentRateAfterConst.toDouble(), pump.pumpDescription.tempPercentStep.toDouble()).toInt()
-        percentRate.set(aapsLogger, percentRateAfterConst, String.format(rh.gs(R.string.limitingpercentrate), percentRateAfterConst, rh.gs(R.string.pumplimit)), this)
+        percentRate.set(aapsLogger, percentRateAfterConst, rh.gs(R.string.limitingpercentrate, percentRateAfterConst, rh.gs(R.string.pumplimit)), this)
         if (pump.pumpDescription.tempBasalStyle == PumpDescription.PERCENT) {
             val pumpLimit = pump.pumpDescription.pumpType.tbrSettings?.maxDose ?: 0.0
-            percentRate.setIfSmaller(aapsLogger, pumpLimit.toInt(), String.format(rh.gs(R.string.limitingbasalratio), pumpLimit, rh.gs(R.string.pumplimit)), this)
+            percentRate.setIfSmaller(aapsLogger, pumpLimit.toInt(), rh.gs(R.string.limitingbasalratio, pumpLimit, rh.gs(R.string.pumplimit)), this)
         }
         return percentRate
     }
 
     override fun applyBolusConstraints(insulin: Constraint<Double>): Constraint<Double> {
-        insulin.setIfGreater(aapsLogger, 0.0, String.format(rh.gs(R.string.limitingbolus), 0.0, rh.gs(R.string.itmustbepositivevalue)), this)
+        insulin.setIfGreater(aapsLogger, 0.0, rh.gs(R.string.limitingbolus, 0.0, rh.gs(R.string.itmustbepositivevalue)), this)
         val maxBolus = sp.getDouble(R.string.key_treatmentssafety_maxbolus, 3.0)
-        insulin.setIfSmaller(aapsLogger, maxBolus, String.format(rh.gs(R.string.limitingbolus), maxBolus, rh.gs(R.string.maxvalueinpreferences)), this)
-        insulin.setIfSmaller(aapsLogger, hardLimits.maxBolus(), String.format(rh.gs(R.string.limitingbolus), hardLimits.maxBolus(), rh.gs(R.string.hardlimit)), this)
+        insulin.setIfSmaller(aapsLogger, maxBolus, rh.gs(R.string.limitingbolus, maxBolus, rh.gs(R.string.maxvalueinpreferences)), this)
+        insulin.setIfSmaller(aapsLogger, hardLimits.maxBolus(), rh.gs(R.string.limitingbolus, hardLimits.maxBolus(), rh.gs(R.string.hardlimit)), this)
         val pump = activePlugin.activePump
         val rounded = pump.pumpDescription.pumpType.determineCorrectBolusSize(insulin.value())
         insulin.setIfDifferent(aapsLogger, rounded, rh.gs(R.string.pumplimit), this)
@@ -171,10 +171,10 @@ class SafetyPlugin @Inject constructor(
     }
 
     override fun applyExtendedBolusConstraints(insulin: Constraint<Double>): Constraint<Double> {
-        insulin.setIfGreater(aapsLogger, 0.0, String.format(rh.gs(R.string.limitingextendedbolus), 0.0, rh.gs(R.string.itmustbepositivevalue)), this)
+        insulin.setIfGreater(aapsLogger, 0.0, rh.gs(R.string.limitingextendedbolus, 0.0, rh.gs(R.string.itmustbepositivevalue)), this)
         val maxBolus = sp.getDouble(R.string.key_treatmentssafety_maxbolus, 3.0)
-        insulin.setIfSmaller(aapsLogger, maxBolus, String.format(rh.gs(R.string.limitingextendedbolus), maxBolus, rh.gs(R.string.maxvalueinpreferences)), this)
-        insulin.setIfSmaller(aapsLogger, hardLimits.maxBolus(), String.format(rh.gs(R.string.limitingextendedbolus), hardLimits.maxBolus(), rh.gs(R.string.hardlimit)), this)
+        insulin.setIfSmaller(aapsLogger, maxBolus, rh.gs(R.string.limitingextendedbolus, maxBolus, rh.gs(R.string.maxvalueinpreferences)), this)
+        insulin.setIfSmaller(aapsLogger, hardLimits.maxBolus(), rh.gs(R.string.limitingextendedbolus, hardLimits.maxBolus(), rh.gs(R.string.hardlimit)), this)
         val pump = activePlugin.activePump
         val rounded = pump.pumpDescription.pumpType.determineCorrectExtendedBolusSize(insulin.value())
         insulin.setIfDifferent(aapsLogger, rounded, rh.gs(R.string.pumplimit), this)
@@ -182,9 +182,9 @@ class SafetyPlugin @Inject constructor(
     }
 
     override fun applyCarbsConstraints(carbs: Constraint<Int>): Constraint<Int> {
-        carbs.setIfGreater(aapsLogger, 0, String.format(rh.gs(R.string.limitingcarbs), 0, rh.gs(R.string.itmustbepositivevalue)), this)
+        carbs.setIfGreater(aapsLogger, 0, rh.gs(R.string.limitingcarbs, 0, rh.gs(R.string.itmustbepositivevalue)), this)
         val maxCarbs = sp.getInt(R.string.key_treatmentssafety_maxcarbs, 48)
-        carbs.setIfSmaller(aapsLogger, maxCarbs, String.format(rh.gs(R.string.limitingcarbs), maxCarbs, rh.gs(R.string.maxvalueinpreferences)), this)
+        carbs.setIfSmaller(aapsLogger, maxCarbs, rh.gs(R.string.limitingcarbs, maxCarbs, rh.gs(R.string.maxvalueinpreferences)), this)
         return carbs
     }
 
@@ -192,11 +192,11 @@ class SafetyPlugin @Inject constructor(
         val apsMode = sp.getString(R.string.key_aps_mode, "open")
         val maxIobPref: Double = if (openAPSSMBPlugin.isEnabled() || OpenAPSSMBDynamicISFPlugin.isEnabled()) sp.getDouble(R.string.key_openapssmb_max_iob, 3.0) else sp.getDouble(R.string
         .key_openapsma_max_iob, 1.5)
-        maxIob.setIfSmaller(aapsLogger, maxIobPref, String.format(rh.gs(R.string.limitingiob), maxIobPref, rh.gs(R.string.maxvalueinpreferences)), this)
-        if (openAPSAMAPlugin.isEnabled()) maxIob.setIfSmaller(aapsLogger, hardLimits.maxIobAMA(), String.format(rh.gs(R.string.limitingiob), hardLimits.maxIobAMA(), rh.gs(R.string.hardlimit)), this)
-        if (openAPSSMBPlugin.isEnabled()) maxIob.setIfSmaller(aapsLogger, hardLimits.maxIobSMB(), String.format(rh.gs(R.string.limitingiob), hardLimits.maxIobSMB(), rh.gs(R.string.hardlimit)), this)
-        if (OpenAPSSMBDynamicISFPlugin.isEnabled()) maxIob.setIfSmaller(aapsLogger, hardLimits.maxIobSMB(), String.format(rh.gs(R.string.limitingiob), hardLimits.maxIobSMB(), rh.gs(R.string.hardlimit)), this)
-        if (apsMode == "lgs") maxIob.setIfSmaller(aapsLogger, HardLimits.MAX_IOB_LGS, String.format(rh.gs(R.string.limitingiob), HardLimits.MAX_IOB_LGS, rh.gs(R.string.lowglucosesuspend)), this)
+        maxIob.setIfSmaller(aapsLogger, maxIobPref, rh.gs(R.string.limitingiob, maxIobPref, rh.gs(R.string.maxvalueinpreferences)), this)
+        if (openAPSAMAPlugin.isEnabled()) maxIob.setIfSmaller(aapsLogger, hardLimits.maxIobAMA(), rh.gs(R.string.limitingiob, hardLimits.maxIobAMA(), rh.gs(R.string.hardlimit)), this)
+        if (openAPSSMBPlugin.isEnabled()) maxIob.setIfSmaller(aapsLogger, hardLimits.maxIobSMB(), rh.gs(R.string.limitingiob, hardLimits.maxIobSMB(), rh.gs(R.string.hardlimit)), this)
+        if (OpenAPSSMBDynamicISFPlugin.isEnabled()) maxIob.setIfSmaller(aapsLogger, hardLimits.maxIobSMB(), rh.gs(R.string.limitingiob, hardLimits.maxIobSMB(), rh.gs(R.string.hardlimit)), this)
+        if (apsMode == "lgs") maxIob.setIfSmaller(aapsLogger, HardLimits.MAX_IOB_LGS, rh.gs(R.string.limitingiob, HardLimits.MAX_IOB_LGS, rh.gs(R.string.lowglucosesuspend)), this)
         return maxIob
     }
 
