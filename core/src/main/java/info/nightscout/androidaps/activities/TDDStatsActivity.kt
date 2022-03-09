@@ -88,27 +88,27 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
         // add stats headers to tables
         binding.mainTable.addView(
             TableRow(this).also { trHead ->
-                trHead.setBackgroundColor(rh.getAttributeColor(null,R.attr.rowBackgroundEven))
+                trHead.setBackgroundColor(rh.gac(R.attr.rowBackgroundEven))
                 trHead.layoutParams = TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT)
                 trHead.addView(TextView(this).also { labelDate ->
                     labelDate.text = rh.gs(R.string.date)
-                    labelDate.setTextColor(rh.getAttributeColor(null,R.attr.rowTextColor))
+                    labelDate.setTextColor(rh.gac(R.attr.rowTextColor))
                 })
                 trHead.addView(TextView(this).also { labelBasalRate ->
                     labelBasalRate.text = rh.gs(R.string.basalrate)
-                    labelBasalRate.setTextColor(rh.getAttributeColor(null,R.attr.rowTextColor))
+                    labelBasalRate.setTextColor(rh.gac(R.attr.rowTextColor))
                 })
                 trHead.addView(TextView(this).also { labelBolus ->
                     labelBolus.text = rh.gs(R.string.bolus)
-                    labelBolus.setTextColor(rh.getAttributeColor(null,R.attr.rowTextColor))
+                    labelBolus.setTextColor(rh.gac(R.attr.rowTextColor))
                 })
                 trHead.addView(TextView(this).also { labelTdd ->
                     labelTdd.text = rh.gs(R.string.tdd)
-                    labelTdd.setTextColor(rh.getAttributeColor(null,R.attr.rowTextColor))
+                    labelTdd.setTextColor(rh.gac(R.attr.rowTextColor))
                 })
                 trHead.addView(TextView(this).also { labelRatio ->
                     labelRatio.text = rh.gs(R.string.ratio)
-                    labelRatio.setTextColor(rh.getAttributeColor(null,R.attr.rowTextColor))
+                    labelRatio.setTextColor(rh.gac(R.attr.rowTextColor))
                 })
             }, TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT)
         )
@@ -116,19 +116,19 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
         // cumulative table
         binding.cumulativeTable.addView(
             TableRow(this).also { ctrHead ->
-                ctrHead.setBackgroundColor(rh.getAttributeColor(null,R.attr.rowBackgroundEven))
+                ctrHead.setBackgroundColor(rh.gac(R.attr.rowBackgroundEven))
                 ctrHead.layoutParams = TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT)
                 ctrHead.addView(TextView(this).also { labelCumAmountDays ->
                     labelCumAmountDays.text = rh.gs(R.string.amount_days)
-                    labelCumAmountDays.setTextColor(rh.getAttributeColor(null,R.attr.rowTextColor))
+                    labelCumAmountDays.setTextColor(rh.gac(R.attr.rowTextColor))
                 })
                 ctrHead.addView(TextView(this).also { labelCumTdd ->
                     labelCumTdd.text = rh.gs(R.string.tdd)
-                    labelCumTdd.setTextColor(rh.getAttributeColor(null,R.attr.rowTextColor))
+                    labelCumTdd.setTextColor(rh.gac(R.attr.rowTextColor))
                 })
                 ctrHead.addView(TextView(this).also { labelCumRatio ->
                     labelCumRatio.text = rh.gs(R.string.ratio)
-                    labelCumRatio.setTextColor(rh.getAttributeColor(null,R.attr.rowTextColor))
+                    labelCumRatio.setTextColor(rh.gac(R.attr.rowTextColor))
                 })
             }, TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT)
         )
@@ -136,19 +136,19 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
         // exponential table
         binding.expweightTable.addView(
             TableRow(this).also { etrHead ->
-                etrHead.setBackgroundColor(rh.getAttributeColor(null,R.attr.rowBackgroundEven))
+                etrHead.setBackgroundColor(rh.gac(R.attr.rowBackgroundEven))
                 etrHead.layoutParams = TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT)
                 etrHead.addView(TextView(this).also { labelExpWeight ->
                     labelExpWeight.text = rh.gs(R.string.weight)
-                    labelExpWeight.setTextColor(rh.getAttributeColor(null,R.attr.rowTextColor))
+                    labelExpWeight.setTextColor(rh.gac(R.attr.rowTextColor))
                 })
                 etrHead.addView(TextView(this).also { labelExpTdd ->
                     labelExpTdd.text = rh.gs(R.string.tdd)
-                    labelExpTdd.setTextColor(rh.getAttributeColor(null,R.attr.rowTextColor))
+                    labelExpTdd.setTextColor(rh.gac(R.attr.rowTextColor))
                 })
                 etrHead.addView(TextView(this).also { labelExpRatio ->
                     labelExpRatio.text = rh.gs(R.string.ratio)
-                    labelExpRatio.setTextColor(rh.getAttributeColor(null,R.attr.rowTextColor))
+                    labelExpRatio.setTextColor(rh.gac(R.attr.rowTextColor))
                 })
             }, TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT)
         )
@@ -287,9 +287,9 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
                 binding.mainTable.addView(
                     TableRow(this@TDDStatsActivity).also { tr ->
                         if (i % 2 != 0) 
-                            tr.setBackgroundColor(rh.getAttributeColor(null,R.attr.rowBackgroundEven))
+                            tr.setBackgroundColor(rh.gac(R.attr.rowBackgroundEven))
                         else
-                            tr.setBackgroundColor(rh.getAttributeColor(null,R.attr.rowBackgroundOdd))
+                            tr.setBackgroundColor(rh.gac(R.attr.rowBackgroundOdd))
                         if (dummies.contains(record))
                             tr.setBackgroundColor(Color.argb(125, 255, 0, 0))
 
@@ -303,27 +303,27 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
                         tr.addView(TextView(this@TDDStatsActivity).also { labelDATE ->
                             labelDATE.id = 200 + i
                             labelDATE.text = df1.format(Date(record.timestamp))
-                            labelDATE.setTextColor(rh.getAttributeColor(null,R.attr.rowTextColor))
+                            labelDATE.setTextColor(rh.gac(R.attr.rowTextColor))
                         })
                         tr.addView(TextView(this@TDDStatsActivity).also { labelBASAL ->
                             labelBASAL.id = 300 + i
                             labelBASAL.text = rh.gs(R.string.formatinsulinunits, record.basalAmount)
-                            labelBASAL.setTextColor(rh.getAttributeColor(null,R.attr.rowTextColor))
+                            labelBASAL.setTextColor(rh.gac(R.attr.rowTextColor))
                         })
                         tr.addView(TextView(this@TDDStatsActivity).also { labelBOLUS ->
                             labelBOLUS.id = 400 + i
                             labelBOLUS.text = rh.gs(R.string.formatinsulinunits, record.bolusAmount)
-                            labelBOLUS.setTextColor(rh.getAttributeColor(null,R.attr.rowTextColor))
+                            labelBOLUS.setTextColor(rh.gac(R.attr.rowTextColor))
                         })
                         tr.addView(TextView(this@TDDStatsActivity).also { labelTDD ->
                             labelTDD.id = 500 + i
                             labelTDD.text = rh.gs(R.string.formatinsulinunits, tdd)
-                            labelTDD.setTextColor(rh.getAttributeColor(null,R.attr.rowTextColor))
+                            labelTDD.setTextColor(rh.gac(R.attr.rowTextColor))
                         })
                         tr.addView(TextView(this@TDDStatsActivity).also { labelRATIO ->
                             labelRATIO.id = 600 + i
                             labelRATIO.text = (100 * tdd / magicNumber).roundToInt().toString() + "%"
-                            labelRATIO.setTextColor(rh.getAttributeColor(null,R.attr.rowTextColor))
+                            labelRATIO.setTextColor(rh.gac(R.attr.rowTextColor))
                         })
                     }, TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT)
                 )
@@ -343,9 +343,9 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
                 binding.cumulativeTable.addView(
                     TableRow(this@TDDStatsActivity).also { ctr ->
                         if (i % 2 == 0) 
-                            ctr.setBackgroundColor(rh.getAttributeColor(null,R.attr.rowBackgroundEven))
+                            ctr.setBackgroundColor(rh.gac(R.attr.rowBackgroundEven))
                         else
-                            ctr.setBackgroundColor(rh.getAttributeColor(null,R.attr.rowBackgroundOdd))
+                            ctr.setBackgroundColor(rh.gac(R.attr.rowBackgroundOdd))
                         ctr.id = 700 + i
                         ctr.layoutParams = TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT)
 
@@ -353,19 +353,19 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
                         ctr.addView(TextView(this@TDDStatsActivity).also { labelDAYS ->
                             labelDAYS.id = 800 + i
                             labelDAYS.text = i.toString()
-                            labelDAYS.setTextColor(rh.getAttributeColor(null,R.attr.rowTextColor))
+                            labelDAYS.setTextColor(rh.gac(R.attr.rowTextColor))
                         })
 
                         ctr.addView(TextView(this@TDDStatsActivity).also { labelCUMTDD ->
                             labelCUMTDD.id = 900 + i
                             labelCUMTDD.text = rh.gs(R.string.formatinsulinunits, sum / i)
-                            labelCUMTDD.setTextColor(rh.getAttributeColor(null,R.attr.rowTextColor))
+                            labelCUMTDD.setTextColor(rh.gac(R.attr.rowTextColor))
                         })
 
                         ctr.addView(TextView(this@TDDStatsActivity).also { labelCUMRATIO ->
                             labelCUMRATIO.id = 1000 + i
                             labelCUMRATIO.text = (100 * sum / i / magicNumber).roundToInt().toString() + "%"
-                            labelCUMRATIO.setTextColor(rh.getAttributeColor(null,R.attr.rowTextColor))
+                            labelCUMRATIO.setTextColor(rh.gac(R.attr.rowTextColor))
                         })
                     }, TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT)
                 )
@@ -373,7 +373,7 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
             if (isOldData(historyList) && activePlugin.activePump.pumpDescription.needsManualTDDLoad) {
                 binding.message.visibility = View.VISIBLE
                 binding.message.text = rh.gs(R.string.olddata_Message)
-            } else binding.mainTable.setBackgroundColor(rh.getAttributeColor(null,R.attr.tddStatsActivityBackgroundColor))
+            } else binding.mainTable.setBackgroundColor(rh.gac(R.attr.tddStatsActivityBackgroundColor))
             if (historyList.isNotEmpty() && df1.format(Date(historyList[0].timestamp)) == df1.format(Date())) {
                 //Today should not be included
                 historyList.removeAt(0)
@@ -398,9 +398,9 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
             binding.expweightTable.addView(
                 TableRow(this@TDDStatsActivity).also { etr ->
                     if (i % 2 != 0)
-                        etr.setBackgroundColor(rh.getAttributeColor(null,R.attr.rowBackgroundEven))
+                        etr.setBackgroundColor(rh.gac(R.attr.rowBackgroundEven))
                     else
-                        etr.setBackgroundColor(rh.getAttributeColor(null,R.attr.rowBackgroundOdd))
+                        etr.setBackgroundColor(rh.gac(R.attr.rowBackgroundOdd))
                     etr.id = 1100 + i
                     etr.layoutParams = TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT)
 

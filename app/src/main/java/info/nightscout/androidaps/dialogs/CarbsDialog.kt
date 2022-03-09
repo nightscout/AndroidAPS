@@ -232,13 +232,13 @@ class CarbsDialog : DialogFragmentWithDate() {
 
         val activitySelected = binding.activityTt.isChecked
         if (activitySelected)
-            actions.add(rh.gs(R.string.temptargetshort) + ": " + (DecimalFormatter.to1Decimal(activityTT) + " " + unitLabel + " (" + rh.gs(R.string.format_mins, activityTTDuration) + ")").formatColorFromAttribute(rh.getAttributeColor(context,R.attr.tempTargetConfirmation )))
+            actions.add(rh.gs(R.string.temptargetshort) + ": " + (DecimalFormatter.to1Decimal(activityTT) + " " + unitLabel + " (" + rh.gs(R.string.format_mins, activityTTDuration) + ")").formatColorFromAttribute(rh.gac(context,R.attr.tempTargetConfirmation )))
         val eatingSoonSelected = binding.eatingSoonTt.isChecked
         if (eatingSoonSelected)
-            actions.add(rh.gs(R.string.temptargetshort) + ": " + (DecimalFormatter.to1Decimal(eatingSoonTT) + " " + unitLabel + " (" + rh.gs(R.string.format_mins, eatingSoonTTDuration) + ")").formatColorFromAttribute(rh.getAttributeColor(context,R.attr.tempTargetConfirmation )))
+            actions.add(rh.gs(R.string.temptargetshort) + ": " + (DecimalFormatter.to1Decimal(eatingSoonTT) + " " + unitLabel + " (" + rh.gs(R.string.format_mins, eatingSoonTTDuration) + ")").formatColorFromAttribute(rh.gac(context,R.attr.tempTargetConfirmation )))
         val hypoSelected = binding.hypoTt.isChecked
         if (hypoSelected)
-            actions.add(rh.gs(R.string.temptargetshort) + ": " + (DecimalFormatter.to1Decimal(hypoTT) + " " + unitLabel + " (" + rh.gs(R.string.format_mins, hypoTTDuration) + ")").formatColorFromAttribute(rh.getAttributeColor(context,R.attr.tempTargetConfirmation )))
+            actions.add(rh.gs(R.string.temptargetshort) + ": " + (DecimalFormatter.to1Decimal(hypoTT) + " " + unitLabel + " (" + rh.gs(R.string.format_mins, hypoTTDuration) + ")").formatColorFromAttribute(rh.gac(context,R.attr.tempTargetConfirmation )))
         val timeOffset = binding.time.value.toInt()
         if (useAlarm && carbs > 0 && timeOffset > 0)
             actions.add(rh.gs(R.string.alarminxmin, timeOffset).formatColorFromAttribute(R.attr.info))
@@ -246,9 +246,9 @@ class CarbsDialog : DialogFragmentWithDate() {
         if (duration > 0)
             actions.add(rh.gs(R.string.duration) + ": " + duration + rh.gs(R.string.shorthour))
         if (carbsAfterConstraints > 0) {
-            actions.add(rh.gs(R.string.carbs) + ": " + "<font color='" + rh.getAttributeColor(context,R.attr.carbsColor ) + "'>" + rh.gs(R.string.format_carbs, carbsAfterConstraints) + "</font>")
+            actions.add(rh.gs(R.string.carbs) + ": " + "<font color='" + rh.gac(context,R.attr.carbsColor ) + "'>" + rh.gs(R.string.format_carbs, carbsAfterConstraints) + "</font>")
             if (carbsAfterConstraints != carbs)
-                actions.add("<font color='" + rh.getAttributeColor(context,R.attr.dialogUrgent ) + "'>" + rh.gs(R.string.carbsconstraintapplied) + "</font>")
+                actions.add("<font color='" + rh.gac(context,R.attr.dialogUrgent ) + "'>" + rh.gs(R.string.carbsconstraintapplied) + "</font>")
         }
 
         val notes = binding.notesLayout.notes.text.toString()

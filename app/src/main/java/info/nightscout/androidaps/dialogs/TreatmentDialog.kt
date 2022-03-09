@@ -125,17 +125,17 @@ class TreatmentDialog : DialogFragmentWithDate() {
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(carbs)).value()
 
         if (insulinAfterConstraints > 0) {
-            actions.add(rh.gs(R.string.bolus) + ": " + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump, rh).formatColorFromAttribute( rh.getAttributeColor
+            actions.add(rh.gs(R.string.bolus) + ": " + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump, rh).formatColorFromAttribute( rh.gac
                 (context, R.attr.bolus )))
             if (recordOnlyChecked)
-                actions.add(rh.gs(R.string.bolusrecordedonly).formatColorFromAttribute( rh.getAttributeColor(context, R.attr.dialogUrgent )))
+                actions.add(rh.gs(R.string.bolusrecordedonly).formatColorFromAttribute( rh.gac(context, R.attr.dialogUrgent )))
             if (abs(insulinAfterConstraints - insulin) > pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))
-                actions.add(rh.gs(R.string.bolusconstraintappliedwarn, insulin, insulinAfterConstraints).formatColorFromAttribute( rh.getAttributeColor(context, R.attr.dialogUrgent )))
+                actions.add(rh.gs(R.string.bolusconstraintappliedwarn, insulin, insulinAfterConstraints).formatColorFromAttribute( rh.gac(context, R.attr.dialogUrgent )))
         }
         if (carbsAfterConstraints > 0) {
-            actions.add(rh.gs(R.string.carbs) + ": " + rh.gs(R.string.format_carbs, carbsAfterConstraints).formatColorFromAttribute( rh.getAttributeColor(context, R.attr.carbsColor )))
+            actions.add(rh.gs(R.string.carbs) + ": " + rh.gs(R.string.format_carbs, carbsAfterConstraints).formatColorFromAttribute( rh.gac(context, R.attr.carbsColor )))
             if (carbsAfterConstraints != carbs)
-                actions.add(rh.gs(R.string.carbsconstraintapplied).formatColorFromAttribute( rh.getAttributeColor(context, R.attr.dialogUrgent )))
+                actions.add(rh.gs(R.string.carbsconstraintapplied).formatColorFromAttribute( rh.gac(context, R.attr.dialogUrgent )))
         }
         if (insulinAfterConstraints > 0 || carbsAfterConstraints > 0) {
             activity?.let { activity ->

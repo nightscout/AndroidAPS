@@ -137,10 +137,10 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
             @SuppressLint("SetTextI18n")
             if (extendedBolus.isInProgress(dateUtil)) {
                 holder.binding.time.text = dateUtil.timeString(extendedBolus.timestamp)
-                holder.binding.time.setTextColor(rh.getAttributeColor(context, R.attr.treatmentActive))
+                holder.binding.time.setTextColor(rh.gac(context, R.attr.treatmentActive))
             } else {
                 holder.binding.time.text = dateUtil.timeRangeString(extendedBolus.timestamp, extendedBolus.end)
-                holder.binding.time.setTextColor(rh.getAttributeColor(context, R.attr.treatmentActive))
+                holder.binding.time.setTextColor(rh.gac(context, R.attr.treatmentActive))
             }
             val profile = profileFunction.getProfile(extendedBolus.timestamp) ?: return
             holder.binding.duration.text = rh.gs(R.string.format_mins, T.msecs(extendedBolus.duration).mins())
@@ -148,7 +148,7 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
             val iob = extendedBolus.iobCalc(System.currentTimeMillis(), profile, activePlugin.activeInsulin)
             holder.binding.iob.text = rh.gs(R.string.formatinsulinunits, iob.iob)
             holder.binding.ratio.text = rh.gs(R.string.pump_basebasalrate, extendedBolus.rate)
-            if (iob.iob != 0.0) holder.binding.iob.setTextColor(rh.getAttributeColor(context, R.attr.treatmentActive)) else holder.binding.iob.setTextColor(holder.binding.insulin.currentTextColor)
+            if (iob.iob != 0.0) holder.binding.iob.setTextColor(rh.gac(context, R.attr.treatmentActive)) else holder.binding.iob.setTextColor(holder.binding.insulin.currentTextColor)
             holder.binding.cbRemove.visibility = (extendedBolus.isValid && removeActionMode != null).toVisibility()
             if (removeActionMode != null) {
                 holder.binding.cbRemove.setOnCheckedChangeListener { _, value ->

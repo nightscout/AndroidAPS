@@ -111,7 +111,7 @@ class UserEntryPresentationHelper @Inject constructor(
         else             -> HtmlHelper.fromHtml(coloredAction(context, action))
     }
 
-    private fun coloredAction(context: Context , action: Action): String = "<font color='${rh.getAttributeColor(context, colorId(action.colorGroup))}'>${translator.translate(action)}</font>"
+    private fun coloredAction(context: Context , action: Action): String = "<font color='${rh.gac(context, colorId(action.colorGroup))}'>${translator.translate(action)}</font>"
 
     fun listToPresentationString(list: List<ValueWithUnit?>) =
         list.joinToString(separator = "  ", transform = this::toPresentationString)

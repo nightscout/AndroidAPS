@@ -241,5 +241,4 @@
 <declare-styleable name="NumberPicker">
 <attr name="customContentDescription" format="string" />
 </declare-styleable>
-
 </resources>

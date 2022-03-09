@@ -175,7 +175,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
             holder.binding.date.text = dateUtil.dateString(tempBasal.timestamp)
             if (tempBasal.isInProgress) {
                 holder.binding.time.text = dateUtil.timeString(tempBasal.timestamp)
-                holder.binding.time.setTextColor(rh.getAttributeColor(view?.context, R.attr.treatmentActive))
+                holder.binding.time.setTextColor(rh.gac(view?.context, R.attr.treatmentActive))
             } else {
                 holder.binding.time.text = dateUtil.timeRangeString(tempBasal.timestamp, tempBasal.end)
                 holder.binding.time.setTextColor(holder.binding.duration.currentTextColor)
@@ -192,7 +192,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
             holder.binding.suspendFlag.visibility = (tempBasal.type == TemporaryBasal.Type.PUMP_SUSPEND).toVisibility()
             holder.binding.emulatedSuspendFlag.visibility = (tempBasal.type == TemporaryBasal.Type.EMULATED_PUMP_SUSPEND).toVisibility()
             holder.binding.superBolusFlag.visibility = (tempBasal.type == TemporaryBasal.Type.SUPERBOLUS).toVisibility()
-            if (abs(iob.basaliob) > 0.01) holder.binding.iob.setTextColor(rh.getAttributeColor(view?.context, R.attr.treatmentActive)) else holder.binding.iob.setTextColor(holder.binding.duration.currentTextColor)
+            if (abs(iob.basaliob) > 0.01) holder.binding.iob.setTextColor(rh.gac(view?.context, R.attr.treatmentActive)) else holder.binding.iob.setTextColor(holder.binding.duration.currentTextColor)
             holder.binding.cbRemove.visibility = (tempBasal.isValid && removeActionMode != null).toVisibility()
             if (removeActionMode != null) {
                 holder.binding.cbRemove.setOnCheckedChangeListener { _, value ->

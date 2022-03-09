@@ -165,7 +165,7 @@ class AutosensData(injector: HasAndroidInjector) : DataPointWithLabelInterface {
     override val size = 0.5f
 
     override fun getColor(context: Context?): Int {
-       return rh.getAttributeColor(context,R.attr.cobColor)
+       return rh.gac(context,R.attr.cobColor)
     }
 
     init {

@@ -83,7 +83,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
 
         val drawable: Drawable? = context?.let { ContextCompat.getDrawable(it, R.drawable.dialog) }
         if (drawable != null) {
-            drawable.setColorFilter( rh.getAttributeColor(context, R.attr.windowBackground ), PorterDuff.Mode.SRC_IN)
+            drawable.setColorFilter( rh.gac(context, R.attr.windowBackground ), PorterDuff.Mode.SRC_IN)
         }
         dialog?.window?.setBackgroundDrawable(drawable)
 
@@ -216,20 +216,20 @@ class ProfileViewerDialog : DaggerDialogFragment() {
     }
 
     private fun formatColors(label: String, text1: String, text2: String, units: String): String {
-        var s = "<font color='${rh.getAttributeColor(context, R.attr.profilViewerLabel)}'>$label</font>"
+        var s = "<font color='${rh.gac(context, R.attr.profilViewerLabel)}'>$label</font>"
         s += "    "
-        s += "<font color='${rh.getAttributeColor(context, R.attr.lightblue)}'>$text1</font>"
+        s += "<font color='${rh.gac(context, R.attr.lightblue)}'>$text1</font>"
         s += "    "
-        s += "<font color='${rh.getAttributeColor(context, R.attr.dialogUrgent)}'>$text2</font>"
+        s += "<font color='${rh.gac(context, R.attr.dialogUrgent)}'>$text2</font>"
         s += "    "
-        s += "<font color='${rh.getAttributeColor(context, R.attr.profilViewerLabel)}'>$units</font>"
+        s += "<font color='${rh.gac(context, R.attr.profilViewerLabel)}'>$units</font>"
         return s
     }
 
     private fun formatColors(text1: String, text2: String): String {
-        var s = "<font color='${rh.getAttributeColor(context, R.attr.lightblue)}'>$text1</font>"
+        var s = "<font color='${rh.gac(context, R.attr.lightblue)}'>$text1</font>"
         s += "<BR/>"
-        s += "<font color='${rh.getAttributeColor(context, R.attr.dialogUrgent)}'>$text2</font>"
+        s += "<font color='${rh.gac(context, R.attr.dialogUrgent)}'>$text2</font>"
         return s
     }
 

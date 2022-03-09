@@ -89,7 +89,7 @@ class PrefImportListActivity : DaggerAppCompatActivity() {
                 prefFile.metadata[PrefsMetadataKey.AAPS_FLAVOUR]?.let {
                     metaVariantFormat.text = it.value
                     metaVariantFormat.setTextColor(
-                        if (it.status == PrefsStatus.OK) rh.getAttributeColor(null, R.attr.metadataOk) else rh.getAttributeColor(
+                        if (it.status == PrefsStatus.OK) rh.gac( R.attr.metadataOk) else rh.gac(
                             null,
                             R.attr.metadataTextWarning
                         )
@@ -103,7 +103,7 @@ class PrefImportListActivity : DaggerAppCompatActivity() {
                 prefFile.metadata[PrefsMetadataKey.AAPS_FLAVOUR]?.let {
                     metaVariantFormat.text = it.value
                     metaVariantFormat.setTextColor(
-                        if (it.status == PrefsStatus.OK) rh.getAttributeColor(null, R.attr.metadataOk) else rh.getAttributeColor(
+                        if (it.status == PrefsStatus.OK) rh.gac( R.attr.metadataOk) else rh.gac(
                             null,
                             R.attr.metadataTextWarning
                         )

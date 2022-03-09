@@ -24,5 +24,5 @@ class EffectiveProfileSwitchDataPoint @Inject constructor(
     override val duration = 0L
     override val shape = PointsWithLabelGraphSeries.Shape.PROFILE
     override val size = 10f
-    override fun getColor(context: Context?): Int = rh.getAttributeColor(context, R.attr.smbColor)
+    override fun getColor(context: Context?): Int = rh.gac(context, R.attr.smbColor)
 }

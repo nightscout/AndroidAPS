@@ -306,7 +306,7 @@ class BolusWizard @Inject constructor(
         val actions: LinkedList<String> = LinkedList()
         if (insulinAfterConstraints > 0) {
             val pct = if (percentageCorrection != 100) " ($percentageCorrection%)" else ""
-            actions.add(rh.gs(R.string.bolus) + ": " + rh.gs(R.string.formatinsulinunits, insulinAfterConstraints).formatColorFromAttribute( rh.getAttributeColor(null,R.attr.bolus )) + pct)
+            actions.add(rh.gs(R.string.bolus) + ": " + rh.gs(R.string.formatinsulinunits, insulinAfterConstraints).formatColorFromAttribute( rh.gac(R.attr.bolus )) + pct)
         }
         if (carbs > 0 && !advisor) {
             var timeShift = ""
@@ -315,23 +315,23 @@ class BolusWizard @Inject constructor(
             } else if (carbTime < 0) {
                 timeShift += " (" + rh.gs(R.string.mins, carbTime) + ")"
             }
-            actions.add(rh.gs(R.string.carbs) + ": " + rh.gs(R.string.format_carbs, carbs).formatColorFromAttribute(rh.getAttributeColor(null,R.attr.carbsColor ))  + timeShift)
+            actions.add(rh.gs(R.string.carbs) + ": " + rh.gs(R.string.format_carbs, carbs).formatColorFromAttribute(rh.gac(R.attr.carbsColor ))  + timeShift)
         }
         if (insulinFromCOB > 0) {
             actions.add(
-                rh.gs(R.string.cobvsiob) + ": " + rh.gs(R.string.formatsignedinsulinunits, insulinFromBolusIOB + insulinFromBasalIOB + insulinFromCOB + insulinFromBG).formatColorFromAttribute( rh.getAttributeColor(null, R.attr.cobAlert ))
+                rh.gs(R.string.cobvsiob) + ": " + rh.gs(R.string.formatsignedinsulinunits, insulinFromBolusIOB + insulinFromBasalIOB + insulinFromCOB + insulinFromBG).formatColorFromAttribute( rh.gac( R.attr.cobAlert ))
             )
             val absorptionRate = iobCobCalculator.ads.slowAbsorptionPercentage(60)
             if (absorptionRate > .25)
-                actions.add(rh.gs(R.string.slowabsorptiondetected, rh.getAttributeColor(null, R.attr.cobAlert), (absorptionRate * 100).toInt()))
+                actions.add(rh.gs(R.string.slowabsorptiondetected, rh.gac( R.attr.cobAlert), (absorptionRate * 100).toInt()))
         }
         if (abs(insulinAfterConstraints - calculatedTotalInsulin) > activePlugin.activePump.pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))
-            actions.add(rh.gs(R.string.bolusconstraintappliedwarn, calculatedTotalInsulin, insulinAfterConstraints).formatColorFromAttribute( rh.getAttributeColor(null, R.attr.dialogUrgent )))
+            actions.add(rh.gs(R.string.bolusconstraintappliedwarn, calculatedTotalInsulin, insulinAfterConstraints).formatColorFromAttribute( rh.gac( R.attr.dialogUrgent )))
         if (config.NSCLIENT && insulinAfterConstraints > 0)
-            actions.add(rh.gs(R.string.bolusrecordedonly).formatColorFromAttribute( rh.getAttributeColor(null, R.attr.dialogUrgent )))
+            actions.add(rh.gs(R.string.bolusrecordedonly).formatColorFromAttribute( rh.gac( R.attr.dialogUrgent )))
         if (useAlarm && !advisor && carbs > 0 && carbTime > 0)
-            actions.add(rh.gs(R.string.alarminxmin, carbTime).formatColorFromAttribute(rh.getAttributeColor(null, R.attr.info)))
-            actions.add(rh.gs(R.string.advisoralarm).formatColorFromAttribute(rh.getAttributeColor(null, R.attr.info)))
+            actions.add(rh.gs(R.string.alarminxmin, carbTime).formatColorFromAttribute(rh.gac( R.attr.info)))
+            actions.add(rh.gs(R.string.advisoralarm).formatColorFromAttribute(rh.gac( R.attr.info)))
 
         return HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions))
     }
