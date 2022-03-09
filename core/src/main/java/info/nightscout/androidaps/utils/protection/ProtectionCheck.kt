@@ -22,7 +22,8 @@ class ProtectionCheck @Inject constructor(
         NONE,
         BIOMETRIC,
         MASTER_PASSWORD,
-        CUSTOM_PASSWORD
+        CUSTOM_PASSWORD,
+        CUSTOM_PIN
     }
 
     private val passwordsResourceIDs = listOf(
@@ -30,15 +31,25 @@ class ProtectionCheck @Inject constructor(
         R.string.key_application_password,
         R.string.key_bolus_password)
 
+    private val pinsResourceIDs = listOf(
+        R.string.key_settings_pin,
+        R.string.key_application_pin,
+        R.string.key_bolus_pin)
+
     private val protectionTypeResourceIDs = listOf(
         R.string.key_settings_protection,
         R.string.key_application_protection,
         R.string.key_bolus_protection)
 
-    private val titleResourceIDs = listOf(
+    private val titlePassResourceIDs = listOf(
         R.string.settings_password,
         R.string.application_password,
         R.string.bolus_password)
+
+    private val titlePinResourceIDs = listOf(
+        R.string.settings_pin,
+        R.string.application_pin,
+        R.string.bolus_pin)
 
     fun isLocked(protection: Protection): Boolean {
         return when (ProtectionType.values()[sp.getInt(protectionTypeResourceIDs[protection.ordinal], ProtectionType.NONE.ordinal)]) {
@@ -46,6 +57,7 @@ class ProtectionCheck @Inject constructor(
             ProtectionType.BIOMETRIC       -> true
             ProtectionType.MASTER_PASSWORD -> sp.getString(R.string.key_master_password, "") != ""
             ProtectionType.CUSTOM_PASSWORD -> sp.getString(passwordsResourceIDs[protection.ordinal], "") != ""
+            ProtectionType.CUSTOM_PIN -> sp.getString(pinsResourceIDs[protection.ordinal], "") != ""
         }
     }
 
@@ -55,11 +67,13 @@ class ProtectionCheck @Inject constructor(
             ProtectionType.NONE            ->
                 ok?.run()
             ProtectionType.BIOMETRIC       ->
-                BiometricCheck.biometricPrompt(activity, titleResourceIDs[protection.ordinal], ok, cancel, fail, passwordCheck)
+                BiometricCheck.biometricPrompt(activity, titlePassResourceIDs[protection.ordinal], ok, cancel, fail, passwordCheck)
             ProtectionType.MASTER_PASSWORD ->
                 passwordCheck.queryPassword(activity, R.string.master_password, R.string.key_master_password, { ok?.run() }, { cancel?.run() }, { fail?.run() })
             ProtectionType.CUSTOM_PASSWORD ->
-                passwordCheck.queryPassword(activity, titleResourceIDs[protection.ordinal], passwordsResourceIDs[protection.ordinal], { ok?.run() }, { cancel?.run() }, { fail?.run() })
+                passwordCheck.queryPassword(activity, titlePassResourceIDs[protection.ordinal], passwordsResourceIDs[protection.ordinal], { ok?.run() }, { cancel?.run() }, { fail?.run() })
+            ProtectionType.CUSTOM_PIN ->
+                passwordCheck.queryPassword(activity, titlePinResourceIDs[protection.ordinal], pinsResourceIDs[protection.ordinal], { ok?.run() }, { cancel?.run() }, { fail?.run() }, true)
         }
     }
 }

@@ -111,7 +111,7 @@ class ActionStringHandler @Inject constructor(
     @Synchronized
     private fun handleInitiate(actionString: String) {
         //TODO: i18n
-        Log.i("ActionStringHandler", "handleInitiate actionString=" + actionString)
+        Log.i("ActionStringHandler", "handleInitiate actionString=$actionString")
         if (!sp.getBoolean(R.string.key_wear_control, false)) return
         lastBolusWizard = null
         var rTitle = rh.gs(R.string.confirm).uppercase()
@@ -640,10 +640,10 @@ class ActionStringHandler @Inject constructor(
         var msg = ""
         //check for validity
         if (percentage < Constants.CPP_MIN_PERCENTAGE || percentage > Constants.CPP_MAX_PERCENTAGE) {
-            msg += String.format(rh.gs(R.string.valueoutofrange), "Profile-Percentage") + "\n"
+            msg += rh.gs(R.string.valueoutofrange, "Profile-Percentage") + "\n"
         }
         if (timeshift < 0 || timeshift > 23) {
-            msg += String.format(rh.gs(R.string.valueoutofrange), "Profile-Timeshift") + "\n"
+            msg += rh.gs(R.string.valueoutofrange, "Profile-Timeshift") + "\n"
         }
         val profile = profileFunction.getProfile()
         if (profile == null) {

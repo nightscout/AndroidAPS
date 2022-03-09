@@ -89,3 +89,11 @@ class ResourceHelperImplementation @Inject constructor(private val context: Cont
         (context ?: ContextThemeWrapper(this.context, R.style.AppTheme)).getThemeColor(attributeId)
 }
 
+    override fun shortTextMode(): Boolean = !gb(R.bool.isTablet)
+
+    override fun gac(context: Context, attributeId: Int): Int =
+        context.getThemeColor(attributeId)
+
+    override fun gac(attributeId: Int): Int =
+        ContextThemeWrapper(this.context, R.style.AppTheme).getThemeColor(attributeId)
+}

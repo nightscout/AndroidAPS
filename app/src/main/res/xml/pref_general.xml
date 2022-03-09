@@ -44,9 +44,12 @@
                 android:title="@string/settings_protection" />
 
             <Preference
-                android:inputType="textPassword"
                 android:key="@string/key_settings_password"
                 android:title="@string/settings_password" />
+
+            <Preference
+                android:key="@string/key_settings_pin"
+                android:title="@string/settings_pin" />
 
             <ListPreference
                 android:defaultValue="0"
@@ -56,9 +59,12 @@
                 android:title="@string/application_protection" />
 
             <Preference
-                android:inputType="textPassword"
                 android:key="@string/key_application_password"
                 android:title="@string/application_password" />
+
+            <Preference
+                android:key="@string/key_application_pin"
+                android:title="@string/application_pin" />
 
             <ListPreference
                 android:defaultValue="0"
@@ -68,9 +74,12 @@
                 android:title="@string/bolus_protection" />
 
             <Preference
-                android:inputType="textPassword"
                 android:key="@string/key_bolus_password"
                 android:title="@string/bolus_password" />
+
+            <Preference
+                android:key="@string/key_bolus_pin"
+                android:title="@string/bolus_pin" />
 
         </PreferenceCategory>
 

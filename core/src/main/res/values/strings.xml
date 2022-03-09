@@ -222,7 +222,9 @@
 
     <!--    Protection-->
     <string name="wrongpassword">Wrong password</string>
+    <string name="wrongpin">Wrong PIN</string>
     <string name="passwords_dont_match">Passwords don\'t match</string>
+    <string name="pin_dont_match">PINs don\'t match</string>
 
     <!--    Profile-->
     <string name="basalprofilenotaligned">Basal values not aligned to hours: %1$s</string>

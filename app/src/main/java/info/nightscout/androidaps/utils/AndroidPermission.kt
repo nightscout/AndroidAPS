@@ -113,7 +113,7 @@ class AndroidPermission @Inject constructor(
     @Synchronized
     fun notifyForBatteryOptimizationPermission(activity: FragmentActivity) {
         if (permissionNotGranted(activity, Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)) {
-            val notification = NotificationWithAction(injector, Notification.PERMISSION_BATTERY, String.format(rh.gs(R.string.needwhitelisting), rh.gs(R.string.app_name)), Notification.URGENT)
+            val notification = NotificationWithAction(injector, Notification.PERMISSION_BATTERY, rh.gs(R.string.needwhitelisting, rh.gs(R.string.app_name)), Notification.URGENT)
             notification.action(R.string.request) { askForPermission(activity, arrayOf(Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)) }
             rxBus.send(EventNewNotification(notification))
         } else rxBus.send(EventDismissNotification(Notification.PERMISSION_BATTERY))
