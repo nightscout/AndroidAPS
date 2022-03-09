@@ -24,9 +24,6 @@ interface ResourceHelper {
     fun dpToPx(dp: Int): Int
     fun dpToPx(dp: Float): Int
     fun shortTextMode(): Boolean
-    fun getAttributeColor(context: Context?, attributeId: Int): Int
-}
-
     /**
      * Get Attribute Color based on theme style
      */
@@ -34,5 +31,5 @@ interface ResourceHelper {
     /**
      * Get Attribute Color based on theme style for specified context
      */
-    @ColorInt fun gac(context: Context, @AttrRes attributeId: Int): Int
+    @ColorInt fun gac(context: Context?, @AttrRes attributeId: Int): Int
 }

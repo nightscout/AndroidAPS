@@ -245,7 +245,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
                 rileyLinkServiceState.isError && rileyLinkError != null   -> "{fa-bluetooth-b}   " + rh.gs(rileyLinkError.getResourceId(RileyLinkTargetDevice.Omnipod))
                 else                                                      -> "{fa-bluetooth-b}   " + rh.gs(resourceId)
             }
-        rileyLinkStatusBinding.rileyLinkStatus.setTextColor(if (rileyLinkError != null) rh.getAttributeColor(context, R.attr.statuslightAlarm)  else rh.getAttributeColor(context, R.attr.defaultTextColor))
+        rileyLinkStatusBinding.rileyLinkStatus.setTextColor(if (rileyLinkError != null) rh.gac(context, R.attr.statuslightAlarm)  else rh.gac(context, R.attr.defaultTextColor))
     }
 
     private fun updateOmnipodStatus() {
@@ -273,11 +273,11 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
             podInfoBinding.firmwareVersion.text = PLACEHOLDER
             podInfoBinding.timeOnPod.text = PLACEHOLDER
             podInfoBinding.podExpiryDate.text = PLACEHOLDER
-            podInfoBinding.podExpiryDate.setTextColor(rh.getAttributeColor(context, R.attr.statuslightNormal))
+            podInfoBinding.podExpiryDate.setTextColor(rh.gac(context, R.attr.statuslightNormal))
             podInfoBinding.baseBasalRate.text = PLACEHOLDER
             podInfoBinding.totalDelivered.text = PLACEHOLDER
             podInfoBinding.reservoir.text = PLACEHOLDER
-            podInfoBinding.reservoir.setTextColor(rh.getAttributeColor(context, R.attr.statuslightNormal))
+            podInfoBinding.reservoir.setTextColor(rh.gac(context, R.attr.statuslightNormal))
             podInfoBinding.podActiveAlerts.text = PLACEHOLDER
         } else {
             podInfoBinding.uniqueId.text = podStateManager.address.toString()
@@ -287,20 +287,20 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
 
             podInfoBinding.timeOnPod.text = readableZonedTime(podStateManager.time)
             podInfoBinding.timeOnPod.setTextColor(if (podStateManager.timeDeviatesMoreThan(OmnipodConstants.TIME_DEVIATION_THRESHOLD)) {
-                rh.getAttributeColor(context, R.attr.statuslightAlarm)
+                rh.gac(context, R.attr.statuslightAlarm)
             } else {
-                rh.getAttributeColor(context, R.attr.statuslightNormal)
+                rh.gac(context, R.attr.statuslightNormal)
             })
             val expiresAt = podStateManager.expiresAt
             if (expiresAt == null) {
                 podInfoBinding.podExpiryDate.text = PLACEHOLDER
-                podInfoBinding.podExpiryDate.setTextColor(rh.getAttributeColor(context, R.attr.statuslightNormal))
+                podInfoBinding.podExpiryDate.setTextColor(rh.gac(context, R.attr.statuslightNormal))
             } else {
                 podInfoBinding.podExpiryDate.text = readableZonedTime(expiresAt)
                 podInfoBinding.podExpiryDate.setTextColor(if (DateTime.now().isAfter(expiresAt)) {
-                    rh.getAttributeColor(context, R.attr.statuslightAlarm)
+                    rh.gac(context, R.attr.statuslightAlarm)
                 } else {
-                    rh.getAttributeColor(context, R.attr.statuslightNormal)
+                    rh.gac(context, R.attr.statuslightNormal)
                 })
             }
 
@@ -326,16 +326,16 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
             // reservoir
             if (podStateManager.reservoirLevel == null) {
                 podInfoBinding.reservoir.text = rh.gs(R.string.omnipod_common_overview_reservoir_value_over50)
-                podInfoBinding.reservoir.setTextColor(rh.getAttributeColor(context, R.attr.statuslightNormal))
+                podInfoBinding.reservoir.setTextColor(rh.gac(context, R.attr.statuslightNormal))
             } else {
                 val lowReservoirThreshold = (omnipodAlertUtil.lowReservoirAlertUnits
                     ?: OmnipodConstants.DEFAULT_MAX_RESERVOIR_ALERT_THRESHOLD).toDouble()
 
                 podInfoBinding.reservoir.text = rh.gs(R.string.omnipod_common_overview_reservoir_value, podStateManager.reservoirLevel)
                 podInfoBinding.reservoir.setTextColor(if (podStateManager.reservoirLevel < lowReservoirThreshold) {
-                    rh.getAttributeColor(context, R.attr.statuslightAlarm)
+                    rh.gac(context, R.attr.statuslightAlarm)
                 } else {
-                    rh.getAttributeColor(context, R.attr.statuslightNormal)
+                    rh.gac(context, R.attr.statuslightNormal)
                 })
             }
 
@@ -348,10 +348,10 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
 
         if (errors.size == 0) {
             podInfoBinding.errors.text = PLACEHOLDER
-            podInfoBinding.errors.setTextColor(rh.getAttributeColor(context, R.attr.statuslightNormal))
+            podInfoBinding.errors.setTextColor(rh.gac(context, R.attr.statuslightNormal))
         } else {
             podInfoBinding.errors.text = StringUtils.join(errors, System.lineSeparator())
-            podInfoBinding.errors.setTextColor(rh.getAttributeColor(context, R.attr.statuslightAlarm))
+            podInfoBinding.errors.setTextColor(rh.gac(context, R.attr.statuslightAlarm))
         }
     }
 
@@ -360,13 +360,13 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
             podInfoBinding.lastConnection.text = readableDuration(podStateManager.lastSuccessfulCommunication)
             val lastConnectionColor =
                 if (omnipodErosPumpPlugin.isUnreachableAlertTimeoutExceeded(getPumpUnreachableTimeout().millis)) {
-                    rh.getAttributeColor(context, R.attr.statuslightAlarm)
+                    rh.gac(context, R.attr.statuslightAlarm)
                 } else {
-                    rh.getAttributeColor(context, R.attr.statuslightNormal)
+                    rh.gac(context, R.attr.statuslightNormal)
                 }
             podInfoBinding.lastConnection.setTextColor(lastConnectionColor)
         } else {
-            podInfoBinding.lastConnection.setTextColor(rh.getAttributeColor(context, R.attr.statuslightNormal))
+            podInfoBinding.lastConnection.setTextColor(rh.gac(context, R.attr.statuslightNormal))
             podInfoBinding.lastConnection.text = if (podStateManager.hasPodState() && podStateManager.lastSuccessfulCommunication != null) {
                 readableDuration(podStateManager.lastSuccessfulCommunication)
             } else {
@@ -411,9 +411,9 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
         }
 
         val podStatusColor = if (!podStateManager.isPodActivationCompleted || podStateManager.isPodDead || podStateManager.isSuspended || (podStateManager.isPodRunning && !podStateManager.isBasalCertain)) {
-            rh.getAttributeColor(context, R.attr.statuslightAlarm)
+            rh.gac(context, R.attr.statuslightAlarm)
         } else {
-            rh.getAttributeColor(context, R.attr.statuslightNormal)
+            rh.gac(context, R.attr.statuslightNormal)
         }
         podInfoBinding.podStatus.setTextColor(podStatusColor)
     }
@@ -430,9 +430,9 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
             val textColor: Int
 
             if (podStateManager.isLastBolusCertain) {
-                textColor = rh.getAttributeColor(context, R.attr.statuslightNormal)
+                textColor = rh.gac(context, R.attr.statuslightNormal)
             } else {
-                textColor = rh.getAttributeColor(context, R.attr.statuslightAlarm)
+                textColor = rh.gac(context, R.attr.statuslightAlarm)
                 text += " (" + rh.gs(R.string.omnipod_eros_uncertain) + ")"
             }
 
@@ -441,7 +441,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
 
         } else {
             podInfoBinding.lastBolus.text = PLACEHOLDER
-            podInfoBinding.lastBolus.setTextColor(rh.getAttributeColor(context, R.attr.statuslightNormal))
+            podInfoBinding.lastBolus.setTextColor(rh.gac(context, R.attr.statuslightNormal))
         }
     }
 
@@ -449,7 +449,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
         if (podStateManager.isPodActivationCompleted && podStateManager.isTempBasalRunning) {
             if (!podStateManager.hasTempBasal()) {
                 podInfoBinding.tempBasal.text = "???"
-                podInfoBinding.tempBasal.setTextColor(rh.getAttributeColor(context, R.attr.statuslightAlarm))
+                podInfoBinding.tempBasal.setTextColor(rh.gac(context, R.attr.statuslightAlarm))
             } else {
                 val now = DateTime.now()
 
@@ -463,9 +463,9 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
                 val textColor: Int
                 text = rh.gs(R.string.omnipod_common_overview_temp_basal_value, amount, dateUtil.timeString(startTime.millis), minutesRunning, duration.standardMinutes)
                 if (podStateManager.isTempBasalCertain) {
-                    textColor = rh.getAttributeColor(context, R.attr.statuslightNormal)
+                    textColor = rh.gac(context, R.attr.statuslightNormal)
                 } else {
-                    textColor = rh.getAttributeColor(context, R.attr.statuslightAlarm)
+                    textColor = rh.gac(context, R.attr.statuslightAlarm)
                     text += " (" + rh.gs(R.string.omnipod_eros_uncertain) + ")"
                 }
 
@@ -477,9 +477,9 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
             val textColor: Int
 
             if (!podStateManager.isPodActivationCompleted || podStateManager.isTempBasalCertain) {
-                textColor = rh.getAttributeColor(context, R.attr.statuslightNormal)
+                textColor = rh.gac(context, R.attr.statuslightNormal)
             } else {
-                textColor = rh.getAttributeColor(context, R.attr.statuslightAlarm)
+                textColor = rh.gac(context, R.attr.statuslightAlarm)
                 text += " (" + rh.gs(R.string.omnipod_eros_uncertain) + ")"
             }
 

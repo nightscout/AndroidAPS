@@ -30,7 +30,7 @@ class StaticLabel(private val rh: ResourceHelper) : Element() {
             LinearLayout(root.context).apply {
                 orientation = LinearLayout.HORIZONTAL
                 layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-                setBackgroundColor(rh.getAttributeColor(null, R.attr.labelBackground))
+                setBackgroundColor(rh.gac( R.attr.labelBackground))
                 addView(
                     TextView(root.context).apply {
                         text = label
@@ -39,7 +39,7 @@ class StaticLabel(private val rh: ResourceHelper) : Element() {
                         }
                         setPadding(px, px, px, px)
                         setTypeface(typeface, Typeface.BOLD)
-                        setTextColor(rh.getAttributeColor(null, R.attr.TitleAndLabelTextColor))
+                        setTextColor(rh.gac( R.attr.TitleAndLabelTextColor))
                     })
                 trigger?.let {
                     addView(it.createDeleteButton(root.context, it))

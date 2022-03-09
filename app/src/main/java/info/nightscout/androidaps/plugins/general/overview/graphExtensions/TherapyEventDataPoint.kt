@@ -62,11 +62,11 @@ class TherapyEventDataPoint @Inject constructor(
     override val size get() = if (rh.gb(R.bool.isTablet)) 12.0f else 10.0f
 
     override fun getColor(context: Context?): Int =           when (data.type) {
-        TherapyEvent.Type.ANNOUNCEMENT          -> rh.getAttributeColor(context, R.attr.therapyeventAnnouncement)
-        TherapyEvent.Type.NS_MBG                -> rh.getAttributeColor(context, R.attr.therapyeventNsmbg)
-        TherapyEvent.Type.FINGER_STICK_BG_VALUE -> rh.getAttributeColor(context, R.attr.therapyeventFingerstick)
-        TherapyEvent.Type.EXERCISE              -> rh.getAttributeColor(context, R.attr.therapyeventExercise)
-        TherapyEvent.Type.APS_OFFLINE           -> rh.getAttributeColor(context, R.attr.therapyeventAapsoffline)
-        else                                    -> rh.getAttributeColor(context, R.attr.therapyeventDefault)
+        TherapyEvent.Type.ANNOUNCEMENT          -> rh.gac(context, R.attr.therapyeventAnnouncement)
+        TherapyEvent.Type.NS_MBG                -> rh.gac(context, R.attr.therapyeventNsmbg)
+        TherapyEvent.Type.FINGER_STICK_BG_VALUE -> rh.gac(context, R.attr.therapyeventFingerstick)
+        TherapyEvent.Type.EXERCISE              -> rh.gac(context, R.attr.therapyeventExercise)
+        TherapyEvent.Type.APS_OFFLINE           -> rh.gac(context, R.attr.therapyeventAapsoffline)
+        else                                    -> rh.gac(context, R.attr.therapyeventDefault)
     }
 }

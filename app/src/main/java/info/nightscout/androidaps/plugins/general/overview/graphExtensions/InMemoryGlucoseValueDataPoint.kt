@@ -25,5 +25,5 @@ class InMemoryGlucoseValueDataPoint @Inject constructor(
     override val duration = 0L
     override val shape = PointsWithLabelGraphSeries.Shape.BUCKETED_BG
     override val size = 0.3f
-    override fun getColor(context: Context?): Int = rh.getAttributeColor(context, info.nightscout.androidaps.R.attr.InMemoryGlucoseValue)
+    override fun getColor(context: Context?): Int = rh.gac(context, info.nightscout.androidaps.R.attr.InMemoryGlucoseValue)
 }

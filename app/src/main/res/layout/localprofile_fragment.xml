@@ -12,7 +12,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/unlock"
-            style="@style/GrayButton"
+            style="@style/Widget.MaterialComponents.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -323,7 +323,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/profileswitch"
-                style="@style/GrayButton"
+                style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_gravity="center_horizontal"
@@ -344,7 +344,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/reset"
-                    style="@style/GrayButton"
+                    style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -359,7 +359,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/save"
-                    style="@style/GrayButton"
+                    style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"

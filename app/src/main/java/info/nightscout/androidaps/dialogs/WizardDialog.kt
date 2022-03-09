@@ -121,7 +121,7 @@ class WizardDialog : DaggerDialogFragment() {
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
         val drawable: Drawable? = context?.let { ContextCompat.getDrawable(it, info.nightscout.androidaps.core.R.drawable.dialog) }
         if (drawable != null) {
-            drawable.setColorFilter(rh.getAttributeColor(context, info.nightscout.androidaps.core.R.attr.windowBackground ), PorterDuff.Mode.SRC_IN)
+            drawable.setColorFilter(rh.gac(context, info.nightscout.androidaps.core.R.attr.windowBackground ), PorterDuff.Mode.SRC_IN)
         }
         dialog?.window?.setBackgroundDrawable(drawable)
         isCancelable = true
@@ -482,11 +482,11 @@ class WizardDialog : DaggerDialogFragment() {
 
             if (wizard.calculatedTotalInsulin > 0.0 || carbsAfterConstraint > 0.0) {
                 val insulinText = if (wizard.calculatedTotalInsulin > 0.0) rh.gs(R.string.formatinsulinunits, wizard.calculatedTotalInsulin).formatColor(rh, R.color.bolus) else ""
-                val carbsText = if (carbsAfterConstraint > 0.0) rh.gs(R.string.format_carbs, carbsAfterConstraint).formatColorFromAttribute(rh.getAttributeColor(context,R.attr.carbsColor )) else ""
+                val carbsText = if (carbsAfterConstraint > 0.0) rh.gs(R.string.format_carbs, carbsAfterConstraint).formatColorFromAttribute(rh.gac(context,R.attr.carbsColor )) else ""
                 binding.total.text = HtmlHelper.fromHtml(rh.gs(R.string.result_insulin_carbs, insulinText, carbsText))
                 binding.okcancel.ok.visibility = View.VISIBLE
             } else {
-                binding.total.text = HtmlHelper.fromHtml(rh.gs(R.string.missing_carbs, wizard.carbsEquivalent.toInt()).formatColorFromAttribute(rh.getAttributeColor(context,R.attr.carbsColor )))
+                binding.total.text = HtmlHelper.fromHtml(rh.gs(R.string.missing_carbs, wizard.carbsEquivalent.toInt()).formatColorFromAttribute(rh.gac(context,R.attr.carbsColor )))
                 binding.okcancel.ok.visibility = View.INVISIBLE
             }
             binding.percentUsed.text = rh.gs(R.string.format_percent, wizard.percentageCorrection)

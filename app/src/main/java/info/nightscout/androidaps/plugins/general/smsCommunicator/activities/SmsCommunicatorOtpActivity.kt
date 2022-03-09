@@ -56,10 +56,10 @@ class SmsCommunicatorOtpActivity : NoSplashAppCompatActivity() {
                 }
 
                 binding.otpVerifyLabel.setTextColor(when (checkResult) {
-                    OneTimePasswordValidationResult.OK                 -> rh.getAttributeColor(null, R.attr.smsCommunicatorOK )
-                    OneTimePasswordValidationResult.ERROR_WRONG_LENGTH -> rh.getAttributeColor(null, R.attr.smsCommunicatorWrongLength )
-                    OneTimePasswordValidationResult.ERROR_WRONG_PIN    -> rh.getAttributeColor(null, R.attr.smsCommunicatorWrongPin )
-                    OneTimePasswordValidationResult.ERROR_WRONG_OTP    -> rh.getAttributeColor(null, R.attr.smsCommunicatorOtp )
+                    OneTimePasswordValidationResult.OK                 -> rh.gac( R.attr.smsCommunicatorOK )
+                    OneTimePasswordValidationResult.ERROR_WRONG_LENGTH -> rh.gac( R.attr.smsCommunicatorWrongLength )
+                    OneTimePasswordValidationResult.ERROR_WRONG_PIN    -> rh.gac( R.attr.smsCommunicatorWrongPin )
+                    OneTimePasswordValidationResult.ERROR_WRONG_OTP    -> rh.gac( R.attr.smsCommunicatorOtp )
                 })
             }
 

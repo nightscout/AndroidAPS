@@ -125,7 +125,7 @@ class OverviewMenus @Inject constructor(
                         // we need a liitle bit space left and right of the string for better visualization
                         val s = SpannableString(" " + title + " ")
                         s.setSpan(ForegroundColorSpan(rh.gc(R.color.black)), 0, s.length, 0)
-                        s.setSpan(BackgroundColorSpan(rh.getAttributeColor(null,m.attrId)), 0, s.length, 0)
+                        s.setSpan(BackgroundColorSpan(rh.gac(m.attrId)), 0, s.length, 0)
                         item.title = s
                         item.isCheckable = true
                         item.isChecked = settingsCopy[g][m.ordinal]

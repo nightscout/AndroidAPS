@@ -79,7 +79,7 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
 
         val drawable: Drawable? = context?.let { ContextCompat.getDrawable(it, R.drawable.dialog) }
         if (drawable != null) {
-            drawable.setColorFilter( rh.getAttributeColor(context, R.attr.windowBackground ), PorterDuff.Mode.SRC_IN)
+            drawable.setColorFilter( rh.gac(context, R.attr.windowBackground ) , PorterDuff.Mode.SRC_IN)
         }
         dialog?.window?.setBackgroundDrawable(drawable)
     }

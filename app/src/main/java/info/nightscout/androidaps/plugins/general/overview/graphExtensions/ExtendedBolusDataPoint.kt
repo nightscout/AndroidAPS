@@ -21,7 +21,7 @@ class ExtendedBolusDataPoint @Inject constructor(
     override val duration get() = data.duration
     override val size = 10f
     override val shape = PointsWithLabelGraphSeries.Shape.EXTENDEDBOLUS
-    override fun getColor(context: Context?): Int =  rh.getAttributeColor(context, R.attr.smbColor)
+    override fun getColor(context: Context?): Int =  rh.gac(context, R.attr.smbColor)
 
     override fun setY(y: Double) {
         yValue = y

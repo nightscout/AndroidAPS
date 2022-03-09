@@ -127,7 +127,7 @@ class BGSourceFragment : DaggerFragment() {
                 val previous = glucoseValues[position - 1]
                 val diff = previous.timestamp - glucoseValue.timestamp
                 if (diff < T.secs(20).msecs())
-                    holder.binding.root.setBackgroundColor(rh.getAttributeColor(context, R.attr.errorAlertBackground))
+                    holder.binding.root.setBackgroundColor(rh.gac(context, R.attr.errorAlertBackground))
             }
         }
 

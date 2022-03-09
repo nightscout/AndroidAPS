@@ -36,20 +36,20 @@ class GlucoseValueDataPoint @Inject constructor(
         val highLine = defaultValueHelper.determineHighLine()
         return when {
             isPrediction                   -> predictionColor
-            valueToUnits(units) < lowLine  -> rh.getAttributeColor(context, R.attr.bgLow)
-            valueToUnits(units) > highLine -> rh.getAttributeColor(context, R.attr.bgHigh)
-            else                           -> rh.getAttributeColor(context, R.attr.bgInRange)
+            valueToUnits(units) < lowLine  -> rh.gac(context, R.attr.bgLow)
+            valueToUnits(units) > highLine -> rh.gac(context, R.attr.bgHigh)
+            else                           -> rh.gac(context, R.attr.bgInRange)
         }
     }
 
     val predictionColor: Int
         get() {
             return when (data.sourceSensor) {
-                GlucoseValue.SourceSensor.IOB_PREDICTION -> rh.getAttributeColor(null, R.attr.iobColor)
-                GlucoseValue.SourceSensor.COB_PREDICTION -> -0x7f000001 and rh.getAttributeColor(null, R.attr.cobColor)
-                GlucoseValue.SourceSensor.UAM_PREDICTION ->  rh.getAttributeColor(null, R.attr.uamColor)
-                GlucoseValue.SourceSensor.ZT_PREDICTION -> rh.getAttributeColor(null, R.attr.ztColor)
-                else                                      -> rh.getAttributeColor(null, R.attr.defaultColor)
+                GlucoseValue.SourceSensor.IOB_PREDICTION -> rh.gac( R.attr.iobColor)
+                GlucoseValue.SourceSensor.COB_PREDICTION -> -0x7f000001 and rh.gac( R.attr.cobColor)
+                GlucoseValue.SourceSensor.UAM_PREDICTION ->  rh.gac( R.attr.uamColor)
+                GlucoseValue.SourceSensor.ZT_PREDICTION -> rh.gac( R.attr.ztColor)
+                else                                      -> rh.gac( R.attr.defaultColor)
             }
         }
 

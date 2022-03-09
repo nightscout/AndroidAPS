@@ -30,9 +30,9 @@ class BolusDataPoint @Inject constructor(
         get() = if (data.type == Bolus.Type.SMB) PointsWithLabelGraphSeries.Shape.SMB else PointsWithLabelGraphSeries.Shape.BOLUS
 
     override fun getColor(context: Context?): Int =
-        if (data.type == Bolus.Type.SMB) rh.getAttributeColor(context, R.attr.smbColor)
+        if (data.type == Bolus.Type.SMB) rh.gac(context, R.attr.smbColor)
         else if (data.isValid) Color.CYAN
-        else rh.getAttributeColor(null, R.attr.statuslightAlarm)
+        else rh.gac( R.attr.statuslightAlarm)
 
     override fun setY(y: Double) {
         yValue = y

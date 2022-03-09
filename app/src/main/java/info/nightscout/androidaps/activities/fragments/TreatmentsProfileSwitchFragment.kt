@@ -191,7 +191,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
             holder.binding.duration.text = rh.gs(R.string.format_mins, T.msecs(profileSwitch.duration ?: 0L).mins())
             holder.binding.name.text =
                 if (profileSwitch is ProfileSealed.PS) profileSwitch.value.getCustomizedName() else if (profileSwitch is ProfileSealed.EPS) profileSwitch.value.originalCustomizedName else ""
-            if (profileSwitch.isInProgress(dateUtil)) holder.binding.date.setTextColor(rh.getAttributeColor(context, R.attr.treatmentActive))
+            if (profileSwitch.isInProgress(dateUtil)) holder.binding.date.setTextColor(rh.gac(context, R.attr.treatmentActive))
             else holder.binding.date.setTextColor(holder.binding.duration.currentTextColor)
             holder.binding.clone.tag = profileSwitch
             holder.binding.name.tag = profileSwitch
@@ -212,7 +212,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
             }
             holder.binding.clone.visibility = (profileSwitch is ProfileSealed.PS).toVisibility()
             holder.binding.spacer.visibility = (profileSwitch is ProfileSealed.PS).toVisibility()
-            holder.binding.root.setBackgroundColor(rh.getAttributeColor(view?.context, if (profileSwitch is ProfileSealed.PS) R.attr.colorSurface else R.attr.okBackground))
+            holder.binding.root.setBackgroundColor(rh.gac(view?.context, if (profileSwitch is ProfileSealed.PS) R.attr.colorSurface else R.attr.okBackground))
         }
 
         override fun getItemCount() = profileSwitchList.size
