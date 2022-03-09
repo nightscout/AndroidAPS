@@ -5,7 +5,16 @@
     android:paddingTop="2dp"
     tools:context=".plugins.general.maintenance.MaintenanceFragment">
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/unlock"
+        style="@style/GrayButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/unlock_settings" />
+
     <LinearLayout
+        android:id="@+id/main_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">

@@ -8,17 +8,17 @@ import android.os.Bundle
 import androidx.annotation.XmlRes
 import androidx.preference.*
 import dagger.android.support.AndroidSupportInjection
-import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
 import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.diaconn.DiaconnG8Plugin
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.events.EventRebuildTabs
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.PluginBase
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugin.general.openhumans.OpenHumansUploader
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
@@ -43,17 +43,12 @@ import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
-import info.nightscout.androidaps.plugins.source.DexcomPlugin
-import info.nightscout.androidaps.plugins.source.EversensePlugin
-import info.nightscout.androidaps.plugins.source.GlimpPlugin
-import info.nightscout.androidaps.plugins.source.PoctechPlugin
-import info.nightscout.androidaps.plugins.source.TomatoPlugin
-import info.nightscout.androidaps.plugins.source.GlunovoPlugin
-import info.nightscout.shared.SafeParse
+import info.nightscout.androidaps.plugins.source.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog.show
 import info.nightscout.androidaps.utils.protection.PasswordCheck
-import info.nightscout.androidaps.utils.protection.ProtectionCheck
+import info.nightscout.androidaps.utils.protection.ProtectionCheck.ProtectionType.*
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.shared.SafeParse
 import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 
@@ -239,7 +234,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
                 rh.gs(R.string.key_application_protection) == key ||
                 rh.gs(R.string.key_bolus_protection) == key) &&
             sp.getString(R.string.key_master_password, "") == "" &&
-            sp.getInt(key, ProtectionCheck.ProtectionType.NONE.ordinal) == ProtectionCheck.ProtectionType.BIOMETRIC.ordinal
+            sp.getInt(key, NONE.ordinal) == BIOMETRIC.ordinal
         ) {
             activity?.let {
                 val title = rh.gs(R.string.unsecure_fallback_biometric)
@@ -249,9 +244,9 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         }
 
         // Master password erased with activated Biometric protection
-        val isBiometricActivated = sp.getInt(R.string.key_settings_protection, ProtectionCheck.ProtectionType.NONE.ordinal) == ProtectionCheck.ProtectionType.BIOMETRIC.ordinal ||
-            sp.getInt(R.string.key_application_protection, ProtectionCheck.ProtectionType.NONE.ordinal) == ProtectionCheck.ProtectionType.BIOMETRIC.ordinal ||
-            sp.getInt(R.string.key_bolus_protection, ProtectionCheck.ProtectionType.NONE.ordinal) == ProtectionCheck.ProtectionType.BIOMETRIC.ordinal
+        val isBiometricActivated = sp.getInt(R.string.key_settings_protection, NONE.ordinal) == BIOMETRIC.ordinal ||
+            sp.getInt(R.string.key_application_protection, NONE.ordinal) == BIOMETRIC.ordinal ||
+            sp.getInt(R.string.key_bolus_protection, NONE.ordinal) == BIOMETRIC.ordinal
         if (rh.gs(R.string.key_master_password) == key && sp.getString(key, "") == "" && isBiometricActivated) {
             activity?.let {
                 val title = rh.gs(R.string.unsecure_fallback_biometric)
@@ -322,26 +317,35 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         if (pref is ListPreference) {
             pref.setSummary(pref.entry)
             // Preferences
-            // Preferences
             if (pref.getKey() == rh.gs(R.string.key_settings_protection)) {
                 val pass: Preference? = findPreference(rh.gs(R.string.key_settings_password))
-                if (pass != null) pass.isEnabled = pref.value == ProtectionCheck.ProtectionType.CUSTOM_PASSWORD.ordinal.toString()
+                val usePassword = pref.value == CUSTOM_PASSWORD.ordinal.toString()
+                pass?.let { it.isVisible = usePassword }
+                val pin: Preference? = findPreference(rh.gs(R.string.key_settings_pin))
+                val usePin = pref.value == CUSTOM_PIN.ordinal.toString()
+                pin?.let { it.isVisible = usePin }
             }
-            // Application
             // Application
             if (pref.getKey() == rh.gs(R.string.key_application_protection)) {
                 val pass: Preference? = findPreference(rh.gs(R.string.key_application_password))
-                if (pass != null) pass.isEnabled = pref.value == ProtectionCheck.ProtectionType.CUSTOM_PASSWORD.ordinal.toString()
+                val usePassword = pref.value == CUSTOM_PASSWORD.ordinal.toString()
+                pass?.let { it.isVisible = usePassword }
+                val pin: Preference? = findPreference(rh.gs(R.string.key_application_pin))
+                val usePin = pref.value == CUSTOM_PIN.ordinal.toString()
+                pin?.let { it.isVisible = usePin }
             }
-            // Bolus
             // Bolus
             if (pref.getKey() == rh.gs(R.string.key_bolus_protection)) {
                 val pass: Preference? = findPreference(rh.gs(R.string.key_bolus_password))
-                if (pass != null) pass.isEnabled = pref.value == ProtectionCheck.ProtectionType.CUSTOM_PASSWORD.ordinal.toString()
+                val usePassword = pref.value == CUSTOM_PASSWORD.ordinal.toString()
+                pass?.let { it.isVisible = usePassword }
+                val pin: Preference? = findPreference(rh.gs(R.string.key_bolus_pin))
+                val usePin = pref.value == CUSTOM_PIN.ordinal.toString()
+                pin?.let { it.isVisible = usePin }
             }
         }
         if (pref is EditTextPreference) {
-            if (pref.getKey().contains("password") || pref.getKey().contains("secret")) {
+            if (pref.getKey().contains("password") || pref.getKey().contains("pin") || pref.getKey().contains("secret")) {
                 pref.setSummary("******")
             } else if (pref.text != null) {
                 pref.dialogMessage = pref.dialogMessage
@@ -357,7 +361,10 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             rh.gs(R.string.key_bolus_password),
             rh.gs(R.string.key_master_password),
             rh.gs(R.string.key_application_password),
-            rh.gs(R.string.key_settings_password)
+            rh.gs(R.string.key_settings_password),
+            rh.gs(R.string.key_bolus_pin),
+            rh.gs(R.string.key_application_pin),
+            rh.gs(R.string.key_settings_pin)
         )
 
         if (pref is Preference) {
@@ -365,7 +372,11 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
                 if (sp.getString(pref.key, "").startsWith("hmac:")) {
                     pref.summary = "******"
                 } else {
-                    pref.summary = rh.gs(R.string.password_not_set)
+                    if (pref.getKey().contains("pin")) {
+                        pref.summary = rh.gs(R.string.pin_not_set)
+                    }else {
+                        pref.summary = rh.gs(R.string.password_not_set)
+                    }
                 }
             }
         }
@@ -409,6 +420,18 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             }
             if (preference.key == rh.gs(R.string.key_application_password)) {
                 passwordCheck.setPassword(context, R.string.application_password, R.string.key_application_password)
+                return true
+            }
+            if (preference.key == rh.gs(R.string.key_settings_pin)) {
+                passwordCheck.setPassword(context, R.string.settings_pin, R.string.key_settings_pin, pinInput = true)
+                return true
+            }
+            if (preference.key == rh.gs(R.string.key_bolus_pin)) {
+                passwordCheck.setPassword(context, R.string.bolus_pin, R.string.key_bolus_pin, pinInput = true)
+                return true
+            }
+            if (preference.key == rh.gs(R.string.key_application_pin)) {
+                passwordCheck.setPassword(context, R.string.application_pin, R.string.key_application_pin, pinInput = true)
                 return true
             }
             // NSClient copy settings

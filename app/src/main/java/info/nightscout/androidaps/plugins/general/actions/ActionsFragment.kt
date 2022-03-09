@@ -157,10 +157,20 @@ class ActionsFragment : DaggerFragment() {
         cannulaOrPatch = view.findViewById(R.id.cannula_or_patch)
 
         profileSwitch?.setOnClickListener {
-            ProfileSwitchDialog().show(childFragmentManager, "ProfileSwitchDialog")
+            activity?.let { activity ->
+                protectionCheck.queryProtection(
+                    activity,
+                    ProtectionCheck.Protection.BOLUS,
+                    UIRunnable { ProfileSwitchDialog().show(childFragmentManager, "ProfileSwitchDialog")})
+            }
         }
         tempTarget?.setOnClickListener {
-            TempTargetDialog().show(childFragmentManager, "Actions")
+            activity?.let { activity ->
+                protectionCheck.queryProtection(
+                    activity,
+                    ProtectionCheck.Protection.BOLUS,
+                    UIRunnable { TempTargetDialog().show(childFragmentManager, "Actions") })
+            }
         }
         extendedBolus?.setOnClickListener {
             activity?.let { activity ->
@@ -187,7 +197,12 @@ class ActionsFragment : DaggerFragment() {
             }
         }
         setTempBasal?.setOnClickListener {
-            TempBasalDialog().show(childFragmentManager, "Actions")
+            activity?.let { activity ->
+                protectionCheck.queryProtection(
+                    activity,
+                    ProtectionCheck.Protection.BOLUS,
+                    UIRunnable { TempBasalDialog().show(childFragmentManager, "Actions") })
+            }
         }
         cancelTempBasal?.setOnClickListener {
             if (iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil.now()) != null) {
