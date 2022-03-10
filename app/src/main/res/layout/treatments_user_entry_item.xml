@@ -15,7 +15,7 @@
         android:layout_marginTop="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginBottom="5dp"
-        android:background="@color/list_delimiter"
+        android:background="?android:attr/dividerHorizontal"
         android:gravity="center"
         android:text="1.1.2000"
         android:textAppearance="?android:attr/textAppearanceMedium"
@@ -93,7 +93,7 @@
         android:layout_marginTop="5dp"
         android:layout_marginEnd="5dp"
         android:layout_marginBottom="5dp"
-        android:background="@color/list_delimiter"
+        android:background="?android:attr/dividerHorizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/notes" />
 
