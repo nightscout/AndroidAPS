@@ -71,7 +71,7 @@ allprojects {
         kotlinOptions {
             freeCompilerArgs = [
                     // Ignore warning for  @ExperimentalCoroutinesApi
-                    "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi",
+                    "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
                     '-Xjvm-default=all'     //Support @JvmDefault
             ]
             jvmTarget = "11"
