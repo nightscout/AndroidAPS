@@ -153,7 +153,9 @@
     <string name="shortday">g</string>
     <!--    Protection-->
     <string name="wrongpassword">Hatalı parola</string>
+    <string name="wrongpin">Yanlış PIN</string>
     <string name="passwords_dont_match">Şifreler eşleşmiyor</string>
+    <string name="pin_dont_match">PIN\'ler eşleşmiyor</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Bazal değerler saatlerle uyumlu değil: %1$s</string>
     <string name="minimalbasalvaluereplaced">Bazal değeri minimum desteklenen değerle değiştirilir: %1$s</string>
