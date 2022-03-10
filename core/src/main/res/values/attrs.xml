@@ -177,8 +177,8 @@
 <attr name="smsCommunicatorWrongLength" format="reference|color" />
 <attr name="smsCommunicatorWrongPin" format="reference|color" />
 <attr name="smsCommunicatorOtp" format="reference|color" />
-    <!---Graph Viewport-->
-    <attr name="graphViwewportBackground" format="reference|color" />
+<!---Graph Viewport-->
+<attr name="graphViwewportBackground" format="reference|color" />
 <!---Misc -->
 <attr name="carbsColor" format="reference|color" />
 <attr name="smbColor" format="reference|color" />
