@@ -340,7 +340,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="0dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/list_delimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
         <LinearLayout
             android:id="@+id/result"
@@ -441,7 +441,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="0dp"
                     android:layout_marginBottom="5dp"
-                    android:background="@color/list_delimiter" />
+                    android:background="?android:attr/dividerHorizontal" />
 
                 <TableRow
                     android:layout_width="match_parent"
