@@ -92,12 +92,18 @@
     <string name="action_target" comment="In temp target menu, single target value">ערך מטרה</string>
     <string name="action_low" comment="In temp target menu, lower value from range">נמוך</string>
     <string name="action_high" comment="In temp target menu, higher value from range">גבוה</string>
+    <string name="action_carbs">פחמימות</string>
+    <string name="action_percentage">אחוז</string>
+    <string name="action_start_min">התחלה [min]</string>
+    <string name="action_duration_h">משך [h]</string>
+    <string name="action_insulin">אינסולין</string>
     <string name="action_preset_1">הגדרה מראש 1</string>
     <string name="action_preset_2">הגדרה מראש 2</string>
     <string name="action_preset_3">הגדרה מראש 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">כמות חופשית</string>
     <string name="action_confirm">אישור</string>
     <string name="action_timeshift">היסט זמן</string>
+    <string name="action_bolus">בולוס</string>
     <string name="bolus_progress">התקדמות הבולוס</string>
     <string name="press_to_cancel">לחצו לביטול</string>
     <string name="cancel_bolus">ביטול בולוס</string>
@@ -150,4 +156,13 @@
     <string name="simple_ui_charging">בזמן טעינה</string>
     <string name="simple_ui_always_on">מצב דלוק תמיד</string>
     <string name="simple_ui_always_on_charging">דלוק תמיד וטוען</string>
+    <string name="temp_target_eating_soon">אוכל בקרוב</string>
+    <string name="temp_target_hypo">היפו</string>
+    <string name="temp_target_activity">פעילות</string>
+    <string name="temp_target_manual">ידני</string>
+    <string name="temp_target_cancel">ביטול</string>
+    <string name="tile_none">ללא</string>
+    <string name="tile_no_config">אין הגדרה</string>
+    <string name="wear_control_not_enabled">שליטה משעון Wear אינה מאופשרת</string>
+    <string name="wear_control_no_data">אין נתונים זמינים</string>
 </resources>
