@@ -64,7 +64,7 @@
     <color name="tempbasal">#C803A9F4</color>
     <color name="list_delimiter">#505050</color>
     <color name="basal">#00ffff</color>
-    
+
     <!--    Loop     -->
     <color name="loopDisconnected">#939393</color>
     <color name="loopClosed">#00C03E</color>
