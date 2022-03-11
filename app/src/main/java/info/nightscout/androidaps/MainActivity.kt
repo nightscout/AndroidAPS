@@ -89,7 +89,7 @@ class MainActivity : NoSplashAppCompatActivity() {
     private var pluginPreferencesMenuItem: MenuItem? = null
     private var menu: Menu? = null
     private var menuOpen = false
-
+    private var isProtectionCheckActive = false
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -168,10 +168,13 @@ class MainActivity : NoSplashAppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        protectionCheck.queryProtection(this, ProtectionCheck.Protection.APPLICATION, null,
-                                        UIRunnable { OKDialog.show(this, "", rh.gs(R.string.authorizationfailed)) { finish() } },
-                                        UIRunnable { OKDialog.show(this, "", rh.gs(R.string.authorizationfailed)) { finish() } }
-        )
+        if (!isProtectionCheckActive) {
+            isProtectionCheckActive = true
+            protectionCheck.queryProtection(this, ProtectionCheck.Protection.APPLICATION, UIRunnable { isProtectionCheckActive = false },
+                                            UIRunnable { OKDialog.show(this, "", rh.gs(R.string.authorizationfailed)) { isProtectionCheckActive = false; finish() } },
+                                            UIRunnable { OKDialog.show(this, "", rh.gs(R.string.authorizationfailed)) { isProtectionCheckActive = false; finish() } }
+            )
+        }
     }
 
     private fun setWakeLock() {
@@ -417,6 +420,8 @@ class MainActivity : NoSplashAppCompatActivity() {
         // Add to crash log too
         FirebaseCrashlytics.getInstance().setCustomKey("HEAD", BuildConfig.HEAD)
         FirebaseCrashlytics.getInstance().setCustomKey("Version", BuildConfig.VERSION)
+        FirebaseCrashlytics.getInstance().setCustomKey("BuildType", BuildConfig.BUILD_TYPE)
+        FirebaseCrashlytics.getInstance().setCustomKey("BuildFlavor", BuildConfig.FLAVOR)
         FirebaseCrashlytics.getInstance().setCustomKey("Remote", remote)
         FirebaseCrashlytics.getInstance().setCustomKey("Committed", BuildConfig.COMMITTED)
         FirebaseCrashlytics.getInstance().setCustomKey("Hash", hashes[0])

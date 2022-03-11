@@ -302,7 +302,7 @@ class DanaRSPlugin @Inject constructor(
                     0x40 -> error = rh.gs(R.string.speederror)
                     0x80 -> error = rh.gs(R.string.insulinlimitviolation)
                 }
-                result.comment = String.format(rh.gs(R.string.boluserrorcode), detailedBolusInfo.insulin, t.insulin, error)
+                result.comment = rh.gs(R.string.boluserrorcode, detailedBolusInfo.insulin, t.insulin, error)
             } else result.comment = rh.gs(R.string.ok)
             aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)
             result

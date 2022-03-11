@@ -306,7 +306,7 @@ class DanaRSService : DaggerService() {
         val expectedEnd = bolusStart + bolusDurationInMSec + 2000
         while (System.currentTimeMillis() < expectedEnd) {
             val waitTime = expectedEnd - System.currentTimeMillis()
-            bolusingEvent.status = String.format(rh.gs(R.string.waitingforestimatedbolusend), waitTime / 1000)
+            bolusingEvent.status = rh.gs(R.string.waitingforestimatedbolusend, waitTime / 1000)
             rxBus.send(bolusingEvent)
             SystemClock.sleep(1000)
         }

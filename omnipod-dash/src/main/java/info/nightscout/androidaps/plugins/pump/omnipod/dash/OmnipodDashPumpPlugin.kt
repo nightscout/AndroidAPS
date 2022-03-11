@@ -16,8 +16,6 @@ import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.plannedRemainingMinutes
 import info.nightscout.androidaps.extensions.toStringFull
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.common.ManufacturerType
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
@@ -52,6 +50,8 @@ import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.TimeChangeType
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
@@ -119,10 +119,13 @@ class OmnipodDashPumpPlugin @Inject constructor(
             updatePodWarnings()
             aapsLogger.info(LTag.PUMP, "statusChecker")
 
-            createFakeTBRWhenNoActivePod()
-                .subscribeOn(aapsSchedulers.io)
-                .doOnError { aapsLogger.warn(LTag.PUMP, "Error on createFakeTBRWhenNoActivePod=$it") }
-                .blockingSubscribe()
+            try {
+                createFakeTBRWhenNoActivePod()
+                    .subscribeOn(aapsSchedulers.io)
+                    .blockingAwait()
+            } catch (e: Exception) {
+                aapsLogger.warn(LTag.PUMP, "Error on createFakeTBRWhenNoActivePod=$e")
+            }
             handler.postDelayed(statusChecker, STATUS_CHECK_INTERVAL_MS)
         }
     }
@@ -247,10 +250,11 @@ class OmnipodDashPumpPlugin @Inject constructor(
             try {
                 stopConnecting?.let {
                     omnipodManager.connect(it).ignoreElements()
-                        .doOnError { aapsLogger.info(LTag.PUMPCOMM, "connect error=$it") }
                         .doOnComplete { podStateManager.incrementSuccessfulConnectionAttemptsAfterRetries() }
-                        .blockingSubscribe()
+                        .blockingAwait()
                 }
+            } catch (e: Exception) {
+                aapsLogger.info(LTag.PUMPCOMM, "connect error=$e")
             } finally {
                 synchronized(this) {
                     stopConnecting = null
@@ -279,21 +283,21 @@ class OmnipodDashPumpPlugin @Inject constructor(
             return
         }
 
-        getPodStatus()
-            .doOnComplete {
-                aapsLogger.info(LTag.PUMP, "getPumpStatus executed with success")
-                if (!podStateManager.isActivationCompleted) {
-                    val msg = podStateManager.recoverActivationFromPodStatus()
-                    msg?.let {
-                        // TODO: show dialog with "try again, the pod is busy now"
-                        aapsLogger.info(LTag.PUMP, "recoverActivationFromPodStatus msg=$msg")
+        try {
+            getPodStatus()
+                .doOnComplete {
+                    aapsLogger.info(LTag.PUMP, "getPumpStatus executed with success")
+                    if (!podStateManager.isActivationCompleted) {
+                        val msg = podStateManager.recoverActivationFromPodStatus()
+                        msg?.let {
+                            // TODO: show dialog with "try again, the pod is busy now"
+                            aapsLogger.info(LTag.PUMP, "recoverActivationFromPodStatus msg=$msg")
+                        }
                     }
-                }
-            }
-            .doOnError {
-                aapsLogger.error(LTag.PUMP, "Error in getPumpStatus", it)
-            }
-            .blockingSubscribe()
+                }.blockingAwait()
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.PUMP, "Error in getPumpStatus", e)
+        }
     }
 
     private fun getPodStatus(): Completable = Completable.concat(
@@ -564,7 +568,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     .comment(rh.gs(R.string.omnipod_dash_not_enough_insulin))
             }
             if (podStateManager.deliveryStatus == DeliveryStatus.BOLUS_AND_BASAL_ACTIVE ||
-                podStateManager.deliveryStatus == DeliveryStatus.BOLUS_AND_TEMP_BASAL_ACTIVE) {
+                podStateManager.deliveryStatus == DeliveryStatus.BOLUS_AND_TEMP_BASAL_ACTIVE
+            ) {
                 return PumpEnactResult(injector)
                     .success(false)
                     .enacted(false)
@@ -722,13 +727,13 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 getPodStatus()
 
             var errorGettingStatus: Throwable? = null
-            cmd
-                .doOnError {
-                    errorGettingStatus = it
-                    aapsLogger.debug(LTag.PUMP, "waitForBolusDeliveryToComplete errorGettingStatus=$errorGettingStatus")
-                    Thread.sleep(BOLUS_RETRY_INTERVAL_MS) // retry every 3 sec
-                }
-                .blockingSubscribe()
+            try {
+                cmd.blockingAwait()
+            } catch (e: Exception) {
+                errorGettingStatus = e
+                aapsLogger.debug(LTag.PUMP, "waitForBolusDeliveryToComplete errorGettingStatus=$errorGettingStatus")
+                Thread.sleep(BOLUS_RETRY_INTERVAL_MS) // retry every 3 sec
+            }
             if (errorGettingStatus != null) {
                 continue
             }

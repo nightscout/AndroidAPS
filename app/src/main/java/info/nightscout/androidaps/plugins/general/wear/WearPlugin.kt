@@ -95,7 +95,7 @@ class WearPlugin @Inject constructor(
             .toObservable(EventBolusRequested::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event: EventBolusRequested ->
-                val status = String.format(rh.gs(R.string.bolusrequested), event.amount)
+                val status = rh.gs(R.string.bolusrequested, event.amount)
                 val intent = Intent(ctx, WatchUpdaterService::class.java).setAction(WatchUpdaterService.ACTION_SEND_BOLUSPROGRESS)
                 intent.putExtra("progresspercent", 0)
                 intent.putExtra("progressstatus", status)
