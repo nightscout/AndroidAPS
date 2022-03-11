@@ -24,6 +24,7 @@ object SMBDefaults {
     // USED IN DETERMINE_BASAL
     // const val low_temptarget_lowers_sensitivity = false // lower sensitivity for temptargets <= 99.
     const val high_temptarget_raises_sensitivity = false // raise sensitivity for temptargets >= 111.  synonym for exercise_mode
+    const val low_temptarget_lowers_sensitivity = false // lower sensitivity for temptargets < 100.  USed with eating soon
     const val sensitivity_raises_target = true // raise BG target when autosens detects sensitivity
     const val resistance_lowers_target = false // lower BG target when autosens detects resistance
     const val adv_target_adjustments = false // lower target automatically when BG and eventualBG are high
