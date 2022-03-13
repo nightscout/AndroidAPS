@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:validate="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
         android:key="@string/key_configbuilder_general_settings"
@@ -24,9 +25,8 @@
         <EditTextPreference
             android:inputType="textPersonName"
             android:key="@string/key_patient_name"
-            android:title="@string/patient_name"
             android:summary="@string/patient_name_summary"
-            />
+            android:title="@string/patient_name" />
 
         <PreferenceCategory
             android:key="@string/key_protection_settings"
@@ -35,8 +35,7 @@
             <Preference
                 android:inputType="textPassword"
                 android:key="@string/key_master_password"
-                android:title="@string/master_password"
-                />
+                android:title="@string/master_password" />
 
             <ListPreference
                 android:defaultValue="0"
@@ -82,6 +81,16 @@
             <Preference
                 android:key="@string/key_bolus_pin"
                 android:title="@string/bolus_pin" />
+
+            <EditTextPreference
+                android:inputType="number"
+                android:key="@string/key_protection_timeout"
+                android:title="@string/protection_timeout_title"
+                android:summary="@string/protection_timeout_summary"
+                app:defaultValue="0"
+                validate:maxNumber="180"
+                validate:minNumber="0"
+                validate:testType="numeric" />
 
         </PreferenceCategory>
 
