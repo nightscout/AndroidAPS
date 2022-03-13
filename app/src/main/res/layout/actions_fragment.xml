@@ -127,7 +127,7 @@
             android:text="@string/careportal" />
 
         <include
-            android:id="@+id/stats"
+            android:id="@+id/status"
             layout="@layout/careportal_stats_fragment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

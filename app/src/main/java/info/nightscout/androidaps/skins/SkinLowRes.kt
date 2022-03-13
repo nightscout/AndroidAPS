@@ -22,7 +22,7 @@ class SkinLowRes @Inject constructor(private val config: Config) : SkinInterface
         val isLandscape = screenHeight < screenWidth
 
         if (!isLandscape) {
-            binding.stats.apply {
+            binding.status.apply {
                 sensorAgeLabel.visibility = GONE
                 sensorAgeLabel.visibility = GONE
                 sensorLevelLabel.visibility = GONE

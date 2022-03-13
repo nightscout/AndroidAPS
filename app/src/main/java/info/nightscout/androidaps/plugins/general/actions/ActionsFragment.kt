@@ -19,7 +19,6 @@ import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.databinding.ActionsFragmentBinding
-import info.nightscout.androidaps.diaconn.DiaconnG8Plugin
 import info.nightscout.androidaps.dialogs.*
 import info.nightscout.androidaps.events.EventCustomActionsChanged
 import info.nightscout.androidaps.events.EventExtendedBolusChange
@@ -35,7 +34,6 @@ import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
 import info.nightscout.androidaps.plugins.general.overview.StatusLightHandler
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.skins.SkinProvider
 import info.nightscout.androidaps.utils.DateUtil
@@ -283,19 +281,21 @@ class ActionsFragment : DaggerFragment() {
         binding.tempTarget.visibility = (profile != null && !loop.isDisconnected).toVisibility()
         binding.tddStats.visibility = pump.pumpDescription.supportsTDDs.toVisibility()
         val isPatchPump = pump.pumpDescription.isPatchPump
-        binding.cannulaOrPatch.text = if (isPatchPump) rh.gs(R.string.patch_pump) else rh.gs(R.string.cannula)
-        val imageResource = if (isPatchPump) R.drawable.ic_patch_pump_outline else R.drawable.ic_cp_age_cannula
-        binding.cannulaOrPatch.setCompoundDrawablesWithIntrinsicBounds(imageResource, 0, 0, 0)
-        binding.batteryLayout.visibility = (!isPatchPump || pump.pumpDescription.useHardwareLink).toVisibility()
+        binding.status.apply {
+            cannulaOrPatch.text = if (isPatchPump) rh.gs(R.string.patch_pump) else rh.gs(R.string.cannula)
+            val imageResource = if (isPatchPump) R.drawable.ic_patch_pump_outline else R.drawable.ic_cp_age_cannula
+            cannulaOrPatch.setCompoundDrawablesWithIntrinsicBounds(imageResource, 0, 0, 0)
+            batteryLayout.visibility = (!isPatchPump || pump.pumpDescription.useHardwareLink).toVisibility()
 
-        if (!config.NSCLIENT) {
-            statusLightHandler.updateStatusLights(stats.cannulaAge, stats.insulinAge, stats.reservoirLevel, stats.sensorAge, stats.sensorLevel, stats.pbAge, stats.batteryLevel)
-            stats.sensorLevelLabel.text = if (activeBgSource.sensorBatteryLevel == -1) "" else rh.gs(R.string.careportal_level_label)
-        } else {
-            statusLightHandler.updateStatusLights(stats.cannulaAge, stats.insulinAge, null, stats.sensorAge, null, stats.pbAge, null)
-            stats.sensorLevelLabel.text = ""
-            stats.insulinLevelLabel.text = ""
-            stats.pbLevelLabel.text = ""
+            if (!config.NSCLIENT) {
+                statusLightHandler.updateStatusLights(cannulaAge, insulinAge, reservoirLevel, sensorAge, sensorLevel, pbAge, batteryLevel)
+                sensorLevelLabel.text = if (activeBgSource.sensorBatteryLevel == -1) "" else rh.gs(R.string.careportal_level_label)
+            } else {
+                statusLightHandler.updateStatusLights(cannulaAge, insulinAge, null, sensorAge, null, pbAge, null)
+                sensorLevelLabel.text = ""
+                insulinLevelLabel.text = ""
+                pbLevelLabel.text = ""
+            }
         }
         checkPumpCustomActions()
 
