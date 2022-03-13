@@ -253,22 +253,20 @@ class AutotuneIob(
     }
 
     fun getIOB(time: Long, currentBasal: Double, localInsulin: LocalInsulin): IobTotal {
-        val bolusIob = getCalculationToTimeTreatments(time).round()
+        val bolusIob = getCalculationToTimeTreatments(time, localInsulin).round()
         // Calcul from specific tempBasals completed with neutral tbr
         val basalIob = getCalculationToTimeTempBasals(time, true, endBG, currentBasal, localInsulin).round()
 //        log.debug("D/AutotunePlugin: CurrentBasal: " + currentBasal + " BolusIOB: " + bolusIob.iob + " CalculABS: " + basalIob.basaliob + " CalculSTD: " + basalIob2.basaliob + " testAbs: " + absbasaliob.basaliob + " activity " + absbasaliob.activity)
         return IobTotal.combine(bolusIob, basalIob).round()
     }
 
-    fun getCalculationToTimeTreatments(time: Long): IobTotal {
+    fun getCalculationToTimeTreatments(time: Long, localInsulin: LocalInsulin): IobTotal {
         val total = IobTotal(time)
-        val profile = profileFunction.getProfile(time) ?: return total
-        val dia = profile.dia
         for (pos in boluses.indices) {
             val t = boluses[pos]
             if (!t.isValid) continue
-            if (t.timestamp > time) continue
-            val tIOB = t.iobCalc(activePlugin, time, dia)
+            if (t.timestamp > time || t.timestamp < time - localInsulin.duration) continue
+            val tIOB = t.iobCalc(activePlugin, time, localInsulin)
             total.iob += tIOB.iobContrib
             total.activity += tIOB.activityContrib
             if (t.amount > 0 && t.timestamp > total.lastBolusTime) total.lastBolusTime = t.timestamp
@@ -277,7 +275,7 @@ class AutotuneIob(
                 // multiply the time the treatment is seen active.
                 val timeSinceTreatment = time - t.timestamp
                 val snoozeTime = t.timestamp + (timeSinceTreatment * sp.getDouble(R.string.key_openapsama_bolussnooze_dia_divisor, 2.0)).toLong()
-                val bIOB = t.iobCalc(activePlugin, snoozeTime, dia)
+                val bIOB = t.iobCalc(activePlugin, snoozeTime, localInsulin)
                 total.bolussnooze += bIOB.iobContrib
             }
         }
@@ -288,7 +286,7 @@ class AutotuneIob(
         val total = IobTotal(time)
         for (pos in 0 until tempBasals.size) {
             val t = tempBasals[pos]
-            if (t.timestamp > time) continue
+            if (t.timestamp > time || t.end < time - localInsulin.duration) continue
             var calc: IobTotal?
             val profile = profileFunction.getProfile(t.timestamp) ?: continue
             calc = if (truncate && t.end > truncateTime) {

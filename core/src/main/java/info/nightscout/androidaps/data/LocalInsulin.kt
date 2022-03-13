@@ -15,6 +15,9 @@ class LocalInsulin constructor(val name:String?, val peak:Int = DEFAULT_PEAK, pr
             }
         }
 
+    val duration
+        get() = (60 * 60 * 1000L * dia).toLong()
+
     fun iobCalcForTreatment(bolus: Bolus, time: Long): Iob {
         val result = Iob()
         if (bolus.amount != 0.0) {
