@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/nav_remove_items"
+        android:orderInCategory="0"
+        android:title="@string/remove_bg_readings"
+        app:showAsAction="never" />
+
+</menu>

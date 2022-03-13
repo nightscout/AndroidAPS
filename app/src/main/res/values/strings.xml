@@ -827,6 +827,7 @@
     <string name="show_invalidated">Show invalidated</string>
     <string name="hide_invalidated">Hide invalidated</string>
     <string name="remove_items">Remove items</string>
+    <string name="sort_items">Sort items</string>
     <string name="storedsettingsfound">Stored settings found</string>
     <string name="allow_hardware_pump_text">Attention: If you activate and connect to a hardware pump, AndroidAPS will copy the basal settings from the profile to the pump, overwriting the existing basal rate stored on the pump. Make sure you have the correct basal setting in AndroidAPS. If you are not sure or don\'t want to overwrite the basal settings on your pump, press cancel and repeat switching to the pump at a later time.</string>
     <string name="error_adding_treatment_title">Treatment data incomplete</string>
@@ -1139,6 +1140,7 @@
     <string name="errors">Errors</string>
     <string name="ns_sync_slow">Slow down uploads</string>
     <string name="data_status">BG data status</string>
+    <string name="remove_bg_readings">Remove BG readings</string>
     <string name="statuslights_cannula_age">cannula age</string>
     <string name="statuslights_patch_pump_age">patch pump age</string>
     <string name="patch_pump">Patch pump</string>
@@ -1222,4 +1224,6 @@
     <string name="hide_loop">Hide loop</string>
     <string name="show_loop">Show loop</string>
     <string name="count_selected">%1$d selected</string>
+    <string name="sort_label">Sort</string>
+    <string name="dialog_cancled">Dialog canceled</string>
 </resources>

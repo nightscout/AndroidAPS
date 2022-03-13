@@ -2,15 +2,21 @@ package info.nightscout.androidaps.utils.protection
 
 import androidx.fragment.app.FragmentActivity
 import info.nightscout.androidaps.core.R
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.shared.sharedPreferences.SP
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ProtectionCheck @Inject constructor(
     val sp: SP,
-    val passwordCheck: PasswordCheck
+    val passwordCheck: PasswordCheck,
+    val dateUtil: DateUtil
 ) {
+
+    private var lastAuthorization = mutableListOf(0L, 0L, 0L)
+    private val timeout = TimeUnit.SECONDS.toMillis(sp.getInt(R.string.key_protection_timeout, 0).toLong())
 
     enum class Protection {
         PREFERENCES,
@@ -52,6 +58,9 @@ class ProtectionCheck @Inject constructor(
         R.string.bolus_pin)
 
     fun isLocked(protection: Protection): Boolean {
+        if (activeSession(protection)) {
+            return false
+        }
         return when (ProtectionType.values()[sp.getInt(protectionTypeResourceIDs[protection.ordinal], ProtectionType.NONE.ordinal)]) {
             ProtectionType.NONE            -> false
             ProtectionType.BIOMETRIC       -> true
@@ -61,19 +70,38 @@ class ProtectionCheck @Inject constructor(
         }
     }
 
-    fun queryProtection(activity: FragmentActivity, protection: Protection,
-                        ok: Runnable?, cancel: Runnable? = null, fail: Runnable? = null) {
+    fun resetAuthorization() {
+        lastAuthorization = mutableListOf(0L, 0L, 0L)
+    }
+
+    private fun activeSession(protection: Protection): Boolean {
+        val last = lastAuthorization[protection.ordinal]
+        val diff = dateUtil.now() - last
+        return diff < timeout
+    }
+
+    private fun onOk(protection: Protection) {
+        lastAuthorization[protection.ordinal] = dateUtil.now()
+    }
+
+    fun queryProtection(activity: FragmentActivity, protection: Protection, ok: Runnable?, cancel: Runnable? = null, fail: Runnable? = null) {
+        if (activeSession(protection)) {
+            onOk(protection)
+            ok?.run()
+            return
+        }
+
         when (ProtectionType.values()[sp.getInt(protectionTypeResourceIDs[protection.ordinal], ProtectionType.NONE.ordinal)]) {
             ProtectionType.NONE            ->
                 ok?.run()
             ProtectionType.BIOMETRIC       ->
-                BiometricCheck.biometricPrompt(activity, titlePassResourceIDs[protection.ordinal], ok, cancel, fail, passwordCheck)
+                BiometricCheck.biometricPrompt(activity, titlePassResourceIDs[protection.ordinal], { onOk(protection); ok?.run() }, cancel, fail, passwordCheck)
             ProtectionType.MASTER_PASSWORD ->
-                passwordCheck.queryPassword(activity, R.string.master_password, R.string.key_master_password, { ok?.run() }, { cancel?.run() }, { fail?.run() })
+                passwordCheck.queryPassword(activity, R.string.master_password, R.string.key_master_password, { onOk(protection); ok?.run() }, { cancel?.run() }, { fail?.run() })
             ProtectionType.CUSTOM_PASSWORD ->
-                passwordCheck.queryPassword(activity, titlePassResourceIDs[protection.ordinal], passwordsResourceIDs[protection.ordinal], { ok?.run() }, { cancel?.run() }, { fail?.run() })
+                passwordCheck.queryPassword(activity, titlePassResourceIDs[protection.ordinal], passwordsResourceIDs[protection.ordinal], { onOk(protection); ok?.run() }, { cancel?.run() }, { fail?.run() })
             ProtectionType.CUSTOM_PIN ->
-                passwordCheck.queryPassword(activity, titlePinResourceIDs[protection.ordinal], pinsResourceIDs[protection.ordinal], { ok?.run() }, { cancel?.run() }, { fail?.run() }, true)
+                passwordCheck.queryPassword(activity, titlePinResourceIDs[protection.ordinal], pinsResourceIDs[protection.ordinal], { onOk(protection); ok?.run() }, { cancel?.run() }, { fail?.run() }, true)
         }
     }
 }
