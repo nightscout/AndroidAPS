@@ -240,7 +240,7 @@
             android:layout_marginTop="-10dp"
             android:gravity="center_vertical"
             android:text="(-5)"
-            android:textSize="20sp"
+            android:textSize="19sp"
             android:textStyle="bold"
             tools:ignore="HardcodedText" />
 
