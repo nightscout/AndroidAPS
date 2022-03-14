@@ -48,8 +48,10 @@ interface SkinInterface {
 
             if (isTablet) {
                 binding.infoLayout.apply {
-                    val texts = listOf(bg, time, timeAgoShort, iob, cob, baseBasal, extendedBolus, sensitivity)
+                    val texts = listOf(bg, iob, cob, baseBasal, extendedBolus, sensitivity)
                     for (v in texts) v.setTextSize(COMPLEX_UNIT_PX, v.textSize * 1.5f)
+                    val textsTime = listOf(time, timeAgoShort)
+                    for (v in textsTime) v.setTextSize(COMPLEX_UNIT_PX, v.textSize * 2.25f)
                 }
                 binding.apply {
                     val texts = listOf(pump, openaps, uploader)
