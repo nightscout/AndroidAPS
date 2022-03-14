@@ -153,7 +153,9 @@
     <string name="shortday">d</string>
     <!--    Protection-->
     <string name="wrongpassword">密码错误</string>
+    <string name="wrongpin">PIN 码错误</string>
     <string name="passwords_dont_match">密码不匹配</string>
+    <string name="pin_dont_match">PIN 码不匹配。</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">基础率值与小时数不一致:%1$s</string>
     <string name="minimalbasalvaluereplaced">基础率值被泵支持的最小值: %1$s 替换了</string>

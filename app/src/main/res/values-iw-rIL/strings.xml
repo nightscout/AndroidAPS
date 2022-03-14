@@ -660,6 +660,7 @@
     <string name="sensitivity_raises_target_title">רגישות מעלה את ערך המטרה</string>
     <string name="sensitivity_raises_target_summary">כשמזוהה רגישות, הגדל את ערך המטרה של הגלוקוז</string>
     <string name="careportal_removestartedevents">מחק אירועי \"AndroidAPS Started\"</string>
+    <string name="sort_items">מיין פריטים</string>
     <string name="storedsettingsfound">נמצאו הגדרות שמורות</string>
     <string name="allow_hardware_pump_text">שימו לב: אם אתם מפעילים ומתחברים למשאבה פיזית, AndroidAPS יעתיק את הפרופיל הבזאלי אל המשאבה תוך דריסת הפרופיל שכבר שמור על המשאבה. יש שההגדרות הבזאליות שב-AndroidAPS נכונות. אם אינכם בטוחים או אינכם רוצים לשנות את הגדרות הבזאליות שעל המשאבה, לחצו על \'ביטול\' וחזרו על תהליך המעבר אל המשאבה במועד מאוחר יותר.</string>
     <string name="error_adding_treatment_title">נתוני טיפול לא שלמים</string>
@@ -928,4 +929,5 @@
     <string name="a11y_blood_glucose">ערכי סוכר בדם</string>
     <string name="a11y_bg_outdated">לא עדכני</string>
     <!-- WEAR OS-->
+    <string name="sort_label">מיין</string>
 </resources>
