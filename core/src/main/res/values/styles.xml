@@ -115,6 +115,7 @@
     <style name="DialogTheme" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
         <item name="buttonBarNegativeButtonStyle">@style/DialogOkCancelButtonStyle</item>
         <item name="buttonBarPositiveButtonStyle">@style/DialogOkCancelButtonStyle</item>
+        <item name="dialogTitleBackground">@color/dialog_title_background</item>
         <item name="buttonBarNeutralButtonStyle">@style/DialogOkCancelButtonStyle</item>
     </style>
 
