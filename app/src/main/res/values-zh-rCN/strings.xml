@@ -666,6 +666,7 @@
     <string name="show_invalidated">显示无效项</string>
     <string name="hide_invalidated">隐藏失效项</string>
     <string name="remove_items">删除项目</string>
+    <string name="sort_items">项目排序</string>
     <string name="storedsettingsfound">发现曾经保存过的设置</string>
     <string name="allow_hardware_pump_text">注意：如果你激活并且连接到了一个硬件泵，AndroidAPS将会从配置文件复制基础率到泵上。覆盖泵上已有的基础率。请确定你已经在AndroidAPS上设置了正确的基础率。如果你不确定或者不想覆盖泵上的基础率设置，按取消键，以后再切换激活配置文件。</string>
     <string name="error_adding_treatment_title">治疗数据不完整</string>
