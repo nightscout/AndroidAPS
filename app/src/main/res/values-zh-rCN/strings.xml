@@ -907,6 +907,7 @@
     <string name="errors">错误</string>
     <string name="ns_sync_slow">放慢上传速度</string>
     <string name="data_status">血糖数据状态</string>
+    <string name="remove_bg_readings">删除血糖读数</string>
     <string name="statuslights_cannula_age">导管年龄</string>
     <string name="statuslights_patch_pump_age">patch 泵年龄</string>
     <string name="patch_pump">Patch 泵</string>
@@ -988,4 +989,6 @@
     <string name="hide_loop">隐藏闭环</string>
     <string name="show_loop">显示闭环</string>
     <string name="count_selected">已选中 %1$d</string>
+    <string name="sort_label">排序</string>
+    <string name="dialog_cancled">对话框已取消</string>
 </resources>
