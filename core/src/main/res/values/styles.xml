@@ -53,6 +53,8 @@
         <item name="cardItemBackgroundColor">@color/cardColorBackground</item>
         <!-- Carbs -->
         <item name="carbsColor">@color/carbs</item>
+        <!-- Exercise -->
+        <item name="exerciseColor">@color/exercise</item>
         <!-- BG low -->
         <item name="lowColor">@color/low</item>
         <!-- Temp Target -->
@@ -117,7 +119,6 @@
         <item name="windowActionModeOverlay">true</item>
         <item name="actionModeCloseDrawable">@drawable/ic_close</item>
     </style>
-
 
     <!-- BolusProgress, Error -->
     <style name="Theme.MaterialComponents.Translucent" parent="Theme.MaterialComponents.DayNight.NoActionBar">
@@ -193,6 +194,7 @@
 
     <!-- Alert Dialogs -->
     <style name="DialogTheme" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
+        <item name="backgroundColor">@color/dialog_title_background</item>
         <item name="buttonBarNegativeButtonStyle">@style/DialogOkCancelButtonStyle</item>
         <item name="buttonBarPositiveButtonStyle">@style/DialogOkCancelButtonStyle</item>
         <item name="dialogTitleBackground">@color/dialog_title_background</item>
