@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:background="@color/defaultbackground"
+            android:background="?attr/defaultbackground"
             android:orientation="horizontal">
 
             <TextView
@@ -47,8 +47,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/profiletype"
-            android:textColorHint="@color/tabBgColorSelected"
-            app:boxStrokeColor="@color/tabBgColorSelected">
+            android:textColorHint="?attr/tabBgColorSelected"
+            app:boxStrokeColor="?attr/tabBgColorSelected">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/profiletype"
@@ -205,8 +205,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/selected_profile"
-                android:textColorHint="@color/white"
-                app:boxStrokeColor="@color/white">
+                app:boxStrokeColor="?attr/boxStrokeColor">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/available_profile_list"
@@ -234,8 +233,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/careportal_profileswitch"
-                android:textColorHint="@color/white"
-                app:boxStrokeColor="@color/white">
+                app:boxStrokeColor="?attr/boxStrokeColor">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/profileswitch_list"

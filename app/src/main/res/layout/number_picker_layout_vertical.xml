@@ -3,19 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="60dp"
     android:layout_height="100dp"
-    android:background="@drawable/background_darkgray"
+    android:background="@drawable/background_total"
     android:orientation="vertical">
 
     <Button
         android:id="@+id/increment"
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:background="@null"
+        android:background="@color/transparent"
         android:padding="0dp"
         android:text="+"
-        android:textColor="@color/mdtp_white"
-        android:textSize="25sp"
-        tools:ignore="HardcodedText" />
+        android:textSize="20sp" />
 
     <EditText
         android:id="@+id/display"
@@ -25,19 +23,16 @@
         android:gravity="center"
         android:imeOptions="actionDone"
         android:inputType="number"
-        android:text="1"
-        android:textColor="@android:color/black"
-        tools:ignore="HardcodedText" />
+        android:textColor="?attr/numPickerText"
+        android:text="1" />
 
     <Button
         android:id="@+id/decrement"
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:background="@null"
+        android:background="@color/transparent"
         android:padding="0dp"
-        android:text="-"
-        android:textColor="@color/mdtp_white"
-        android:textStyle="bold"
-        tools:ignore="HardcodedText" />
+        android:text="—"
+        android:textStyle="bold" />
 
 </LinearLayout>

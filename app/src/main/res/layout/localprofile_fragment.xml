@@ -31,7 +31,6 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"
                 android:hint="@string/select_profile"
-                android:textColorHint="@color/white"
                 app:boxStrokeColor="@color/list_delimiter">
 
                 <androidx.appcompat.widget.AppCompatAutoCompleteTextView
@@ -193,7 +192,6 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:text="@string/dia_long_label"
-                    android:textColor="@android:color/white"
                     android:textSize="20sp" />
 
                 <LinearLayout

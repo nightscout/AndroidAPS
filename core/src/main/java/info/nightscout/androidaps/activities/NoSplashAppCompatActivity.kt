@@ -2,6 +2,8 @@ package info.nightscout.androidaps.activities
 
 import android.content.Context
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.utils.locale.LocaleHelper
 

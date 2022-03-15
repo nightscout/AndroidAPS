@@ -56,7 +56,6 @@
                 android:layout_weight="1"
                 android:gravity="start"
                 android:paddingStart="5dp"
-                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -82,7 +81,6 @@
                 android:gravity="center_horizontal"
                 android:paddingEnd="5dp"
                 android:text="@string/openapsma_inputparameters_label"
-                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -128,7 +126,6 @@
                 android:layout_weight="1"
                 android:gravity="start"
                 android:paddingStart="5dp"
-                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -174,7 +171,6 @@
                 android:layout_weight="1"
                 android:gravity="start"
                 android:paddingStart="5dp"
-                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -220,7 +216,6 @@
                 android:layout_weight="1"
                 android:gravity="start"
                 android:paddingStart="5dp"
-                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -266,7 +261,6 @@
                 android:layout_weight="1"
                 android:gravity="start"
                 android:paddingStart="5dp"
-                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -312,7 +306,6 @@
                 android:layout_weight="1"
                 android:gravity="start"
                 android:paddingStart="5dp"
-                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -358,7 +351,6 @@
                 android:layout_weight="1"
                 android:gravity="start"
                 android:paddingStart="5dp"
-                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -404,7 +396,6 @@
                 android:layout_weight="1"
                 android:gravity="start"
                 android:paddingStart="5dp"
-                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -430,7 +421,6 @@
                 android:gravity="center_horizontal"
                 android:paddingEnd="5dp"
                 android:text="@string/result"
-                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -485,7 +475,6 @@
                 android:layout_weight="1"
                 android:gravity="start"
                 android:paddingStart="5dp"
-                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -531,7 +520,6 @@
                 android:layout_weight="1"
                 android:gravity="start"
                 android:paddingStart="5dp"
-                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -577,7 +565,6 @@
                 android:layout_weight="1"
                 android:gravity="start"
                 android:paddingStart="5dp"
-                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
         </LinearLayout>

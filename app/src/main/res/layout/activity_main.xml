@@ -11,7 +11,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
+        android:background="?attr/colorPrimary"
         app:contentInsetEndWithActions="48dp"
         app:contentInsetStartWithNavigation="48dp"
         android:elevation="4dp">
@@ -21,9 +21,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@android:color/transparent"
-            app:tabIndicatorColor="@color/tabSelectedTextColor"
-            app:tabTextColor="@color/tabTextColor"
-            app:tabSelectedTextColor="@color/tabSelectedTextColor"
+            app:tabIndicatorColor="?attr/tabSelectedTextColor"
+            app:tabTextColor="?attr/tabTextColor"
+            app:tabSelectedTextColor="?attr/tabSelectedTextColor"
             app:tabMode="scrollable" />
 
         <com.google.android.material.tabs.TabLayout
@@ -33,9 +33,9 @@
             android:background="@android:color/transparent"
             app:tabMinWidth="0dp"
             app:tabPadding="0dp"
-            app:tabIndicatorColor="@color/tabSelectedTextColor"
-            app:tabTextColor="@color/tabTextColor"
-            app:tabSelectedTextColor="@color/tabSelectedTextColor"
+            app:tabIndicatorColor="?attr/tabSelectedTextColor"
+            app:tabTextColor="?attr/tabTextColor"
+            app:tabSelectedTextColor="?attr/tabSelectedTextColor"
             app:tabMode="scrollable" />
 
     </androidx.appcompat.widget.Toolbar>
@@ -58,8 +58,8 @@
             app:itemBackground="?attr/selectableItemBackground"
             android:fitsSystemWindows="true"
             android:layout_gravity="start"
-            app:itemIconTint="@android:color/white"
-            app:itemTextColor="@android:color/white"/>
+            app:itemIconTint="?android:textColorPrimary"
+            app:itemTextColor="?android:textColorPrimary"/>
     </androidx.drawerlayout.widget.DrawerLayout>
 
 </LinearLayout>

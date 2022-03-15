@@ -5,14 +5,13 @@
     android:layout_height="40dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
-    android:background="@drawable/background_darkgray">
+    android:background="@drawable/background_total">
 
     <Button
         android:id="@+id/decrement"
         android:layout_width="30dp"
         android:layout_height="match_parent"
         android:padding="0dp"
-        android:textColor="@color/mdtp_white"
         android:background="@android:color/transparent"
         app:backgroundTint="@android:color/transparent"
         android:textStyle="bold"
@@ -25,10 +24,10 @@
         android:background="@drawable/border_gray"
         android:layout_height="match_parent"
         android:text="1"
-        android:textColor="@android:color/black"
         android:inputType="number"
         android:gravity="center"
         android:imeOptions="actionDone"
+        android:textColor="?attr/numPickerText"
         tools:ignore="HardcodedText" />
     <Button
         android:id="@+id/increment"
@@ -36,10 +35,8 @@
         android:layout_height="match_parent"
         android:padding="0dp"
         android:textSize="25sp"
-        android:textColor="@color/mdtp_white"
         android:background="@android:color/transparent"
         app:backgroundTint="@android:color/transparent"
-
         android:text="+"
         tools:ignore="HardcodedText" />
 </LinearLayout>
