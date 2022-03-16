@@ -149,10 +149,14 @@ class DexcomPlugin @Inject constructor(
                             sourceSensor = sourceSensor
                         )
                 }
-                val sensorStartTime = if (sp.getBoolean(R.string.key_dexcom_lognssensorchange, false) && bundle.containsKey("sensorInsertionTime")) {
+                var sensorStartTime = if (sp.getBoolean(R.string.key_dexcom_lognssensorchange, false) && bundle.containsKey("sensorInsertionTime")) {
                     bundle.getLong("sensorInsertionTime", 0) * 1000
                 } else {
                     null
+                }
+                // check start time validity
+                sensorStartTime?.let {
+                    if (abs(it - now) > T.months(1).msecs() || it > now) sensorStartTime = null
                 }
                 repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, calibrations, sensorStartTime))
                     .doOnError {
