@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="automation_short">Auto</string>
-    <string name="automation">Automering</string>
-    <string name="automation_description">Brukerdefinerte automeringer</string>
+    <string name="automation">Automatisering</string>
+    <string name="automation_description">Bruker definerte automatiseringer</string>
     <string name="automation_missing_task_name">Angi et navn på oppgaven.</string>
     <string name="automation_missing_trigger">Oppgi minst en trigger.</string>
     <string name="automation_missing_action">Oppgi minst en aksjon.</string>
