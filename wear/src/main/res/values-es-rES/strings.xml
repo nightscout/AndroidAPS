@@ -72,7 +72,6 @@
     <string name="menu_treatment">Tratamiento</string>
     <string name="menu_treatment_short">Trata</string>
     <string name="menu_bolus">Bolo</string>
-    <string name="menu_ecarb">Carbos</string>
     <string name="menu_settings">Configuración</string>
     <string name="menu_status">Estado</string>
     <string name="menu_resync">Re-sincronizar</string>
