@@ -607,6 +607,10 @@
         <activity
             android:name=".interaction.actions.ECarbActivity"
             android:exported="true"
+            android:label="@string/action_ecarbs" />
+        <activity
+            android:name=".interaction.actions.CarbActivity"
+            android:exported="true"
             android:label="@string/action_carbs" />
         <activity
             android:name=".interaction.actions.TempTargetActivity"
