@@ -149,7 +149,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
     @Synchronized
     override fun onDestroyView() {
         super.onDestroyView()
-        removeActionMode?.let { it.finish() }
+        removeActionMode?.finish()
         binding.recyclerview.adapter = null // avoid leaks
         _binding = null
     }
@@ -165,9 +165,9 @@ class TreatmentsCareportalFragment : DaggerFragment() {
             val therapyEvent = therapyList[position]
             holder.binding.ns.visibility = (therapyEvent.interfaceIDs.nightscoutId != null).toVisibility()
             holder.binding.invalid.visibility = therapyEvent.isValid.not().toVisibility()
-            val sameDayPrevious = position > 0 && dateUtil.isSameDay(therapyEvent.timestamp, therapyList[position - 1].timestamp)
-            holder.binding.date.visibility = sameDayPrevious.not().toVisibility()
-            holder.binding.date.text = dateUtil.dateString(therapyEvent.timestamp)
+            val newDay = position == 0 || !dateUtil.isSameDayGroup(therapyEvent.timestamp, therapyList[position - 1].timestamp)
+            holder.binding.date.visibility = newDay.toVisibility()
+            holder.binding.date.text = if (newDay) dateUtil.dateStringRelative(therapyEvent.timestamp, rh) else ""
             holder.binding.time.text = dateUtil.timeString(therapyEvent.timestamp)
             holder.binding.duration.text = if (therapyEvent.duration == 0L) "" else dateUtil.niceTimeScalar(therapyEvent.duration, rh)
             holder.binding.note.text = therapyEvent.note
@@ -185,7 +185,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
                 holder.binding.cbRemove.isChecked = selectedItems.get(position) != null
             }
             val nextTimestamp = if (therapyList.size != position + 1) therapyList[position + 1].timestamp else 0L
-            holder.binding.delimiter.visibility = dateUtil.isSameDay(therapyEvent.timestamp, nextTimestamp).toVisibility()
+            holder.binding.delimiter.visibility = dateUtil.isSameDayGroup(therapyEvent.timestamp, nextTimestamp).toVisibility()
         }
 
         override fun getItemCount() = therapyList.size

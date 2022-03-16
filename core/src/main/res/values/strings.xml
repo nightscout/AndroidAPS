@@ -204,6 +204,10 @@
     <string name="minago">%1$d m ago</string>
     <string name="minago_long">%1$d minutes ago</string>
     <string name="hoursago">%1$.1f h ago</string>
+    <string name="days_ago">%1$.1f days ago</string>
+    <string name="days_ago_round">%1$.0f days ago</string>
+    <string name="in_days">in %1$.0f days</string>
+    <string name="in_days_round">in %1$.0f days</string>
     <string name="shorthour">h</string>
     <string name="days">days</string>
     <string name="hours">hours</string>
@@ -219,6 +223,10 @@
     <string name="unit_weeks">weeks</string>
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
+    <string name="later_today">Later today</string>
+    <string name="tomorrow">Tomorrow</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
 
     <!--    Protection-->
     <string name="wrongpassword">Wrong password</string>
