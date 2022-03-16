@@ -147,9 +147,9 @@ class BGSourceFragment : DaggerFragment() {
             val glucoseValue = glucoseValues[position]
             holder.binding.ns.visibility = (glucoseValue.interfaceIDs.nightscoutId != null).toVisibility()
             holder.binding.invalid.visibility = (!glucoseValue.isValid).toVisibility()
-            val sameDayPrevious = position > 0 && dateUtil.isSameDay(glucoseValue.timestamp, glucoseValues[position - 1].timestamp)
-            holder.binding.date.visibility = sameDayPrevious.not().toVisibility()
-            holder.binding.date.text = dateUtil.dateString(glucoseValue.timestamp)
+            val newDay = position == 0 || !dateUtil.isSameDay(glucoseValue.timestamp, glucoseValues[position - 1].timestamp)
+            holder.binding.date.visibility = newDay.toVisibility()
+            holder.binding.date.text = if (newDay) dateUtil.dateStringRelative(glucoseValue.timestamp, rh) else ""
             holder.binding.time.text = dateUtil.timeString(glucoseValue.timestamp)
             holder.binding.value.text = glucoseValue.valueToUnitsString(profileFunction.getUnits())
             holder.binding.direction.setImageResource(glucoseValue.trendArrow.directionToIcon())
