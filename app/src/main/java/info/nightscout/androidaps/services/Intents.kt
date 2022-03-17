@@ -32,27 +32,13 @@ interface Intents {
         const val TOMATO_BG = "com.fanqies.tomatofn.BgEstimate"
 
         // Aidex -> AAPS
-        var AIDEX_NEW_BG_ESTIMATE = "com.microtechmd.cgms.aidex.BgEstimate"
-
-        // DATA
-        // DATA
-        /**
-         * BG Type: Can be either mmol/l or mg/dl
-         */
+        var AIDEX_NEW_BG_ESTIMATE = "com.microtechmd.cgms.aidex.action.BgEstimate"
         var AIDEX_BG_TYPE = "com.microtechmd.cgms.aidex.BgType"
         var AIDEX_BG_VALUE = "com.microtechmd.cgms.aidex.BgValue"
-
-        /**
-         * BG Slope Name: following values are valid:
-         * "DoubleUp", "SingleUp", "FortyFiveUp", "Flat", "FortyFiveDown", "SingleDown",
-         * "DoubleDown", "NotComputable", "RateOutOfRange"
-         */
         var AIDEX_BG_SLOPE_NAME = "com.microtechmd.cgms.aidex.BgSlopeName"
         var AIDEX_TIMESTAMP = "com.microtechmd.cgms.aidex.Time" // epoch in ms
-
         var AIDEX_TRANSMITTER_SN = "com.microtechmd.cgms.aidex.TransmitterSerialNumber"
         var AIDEX_SENSOR_ID = "com.microtechmd.cgms.aidex.SensorId"
-
 
         // Broadcast status
         const val AAPS_BROADCAST = "info.nightscout.androidaps.status"

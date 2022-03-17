@@ -21,6 +21,7 @@ import info.nightscout.androidaps.services.Intents
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.log
 
 @Singleton
 class AidexPlugin @Inject constructor(
@@ -32,7 +33,7 @@ class AidexPlugin @Inject constructor(
     .fragmentClass(BGSourceFragment::class.java.name)
     .pluginIcon((R.drawable.ic_blooddrop_48))
     .pluginName(R.string.aidex)
-     .shortName(R.string.randombg_short)
+     .shortName(R.string.aidex_short)
     .description(R.string.description_source_aidex),
     aapsLogger, rh, injector
 ), BgSource {
@@ -76,9 +77,18 @@ class AidexPlugin @Inject constructor(
             if (bundle.containsKey(Intents.AIDEX_SENSOR_ID)) aapsLogger.debug(LTag.BGSOURCE, "sensorId: " + bundle.getString(Intents.AIDEX_SENSOR_ID))
 
             val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
+
+            val timestamp = bundle.getLong(Intents.AIDEX_TIMESTAMP, 0)
+            val bgType = bundle.getString(Intents.AIDEX_BG_TYPE, "mg/dl")
+            val bgValue = bundle.getDouble(Intents.AIDEX_BG_VALUE, 0.0)
+
+            val bgValueTarget = if (bgType.equals("mg/dl")) bgValue else bgValue * Constants.MMOLL_TO_MGDL
+
+            aapsLogger.debug(LTag.BGSOURCE, "Received Aidex broadcast [time=$timestamp, bgType=$bgType, value=$bgValue, targetValue=$bgValueTarget")
+
             glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(
-                timestamp = bundle.getLong(Intents.AIDEX_TIMESTAMP, 0),
-                value = if (bundle.getString(Intents.AIDEX_BG_TYPE, "mg/dl").equals("mg/dl")) bundle.getDouble(Intents.AIDEX_BG_VALUE, 0.0) else bundle.getDouble(Intents.AIDEX_BG_VALUE, 0.0) * Constants.MMOLL_TO_MGDL,
+                timestamp = timestamp,
+                value = bgValueTarget,
                 raw = null,
                 noise = null,
                 trendArrow = GlucoseValue.TrendArrow.fromString(bundle.getString(Intents.AIDEX_BG_SLOPE_NAME)),

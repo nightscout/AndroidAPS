@@ -109,6 +109,8 @@
                 <action android:name="com.china.poctech.data"/>
                 <!-- Receiver from Tomato -->
                 <action android:name="com.fanqies.tomatofn.BgEstimate"/>
+                <!-- Receiver from GlucoRx Aidex -->
+                <action android:name="com.microtechmd.cgms.aidex.action.BgEstimate"/>
             </intent-filter>
         </receiver>
 
