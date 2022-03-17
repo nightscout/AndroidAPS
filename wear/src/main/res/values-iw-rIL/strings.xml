@@ -72,7 +72,8 @@
     <string name="menu_treatment">טיפול</string>
     <string name="menu_treatment_short">טיפול</string>
     <string name="menu_bolus">בולוס</string>
-    <string name="menu_ecarb">פחמימות</string>
+    <string name="menu_carb">פחמימות</string>
+    <string name="menu_ecarb">פחמימות ממושכות</string>
     <string name="menu_settings">הגדרות</string>
     <string name="menu_status">סטטוס</string>
     <string name="menu_resync">סנכרן מחדש </string>
@@ -93,6 +94,7 @@
     <string name="action_low" comment="In temp target menu, lower value from range">נמוך</string>
     <string name="action_high" comment="In temp target menu, higher value from range">גבוה</string>
     <string name="action_carbs">פחמימות</string>
+    <string name="action_ecarbs">פחמימות ממושכות</string>
     <string name="action_percentage">אחוז</string>
     <string name="action_start_min">התחלה [min]</string>
     <string name="action_duration_h">משך [h]</string>
