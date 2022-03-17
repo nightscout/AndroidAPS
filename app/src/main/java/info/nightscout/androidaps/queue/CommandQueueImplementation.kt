@@ -2,6 +2,8 @@ package info.nightscout.androidaps.queue
 
 import android.content.Context
 import android.content.Intent
+import android.os.Handler
+import android.os.Looper
 import android.os.SystemClock
 import android.text.Spanned
 import androidx.appcompat.app.AppCompatActivity
@@ -295,7 +297,9 @@ class CommandQueueImplementation @Inject constructor(
             add(CommandBolus(injector, detailedBolusInfo, callback, type, carbsRunnable))
             if (type == CommandType.BOLUS) { // Bring up bolus progress dialog (start here, so the dialog is shown when the bolus is requested,
                 // not when the Bolus command is starting. The command closes the dialog upon completion).
-                showBolusProgressDialog(detailedBolusInfo)
+                Handler(Looper.getMainLooper()).postDelayed({
+                    showBolusProgressDialog(detailedBolusInfo)
+                }, 200)
                 // Notify Wear about upcoming bolus
                 rxBus.send(EventBolusRequested(detailedBolusInfo.insulin))
             }
