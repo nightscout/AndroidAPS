@@ -30,6 +30,7 @@
         <item name="notificationAnnouncement">@color/notificationAnnouncement</item>
 
         <item name="actionModeCloseDrawable">@drawable/ic_close</item>
+        <item name="alertDialogTheme">@style/DialogTheme</item>
     </style>
 
     <style name="AppTheme.NoActionBar" parent="Theme.MaterialComponents.NoActionBar">
