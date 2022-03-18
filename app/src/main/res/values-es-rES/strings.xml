@@ -782,7 +782,7 @@
     <string name="randombg_short">Glucosa</string>
     <string name="tools">Herramientas</string>
     <string name="show_calculation">Mostrar cálculo</string>
-    <string name="show_removed">Mostrar borrados</string>
+    <string name="show_removed">Mostrar eliminados</string>
     <string name="clearqueueconfirm">¿Borrar cola? ¡Se perderán todos los datos de la cola!</string>
     <string name="ebstopsloop">El uso de la función de bolo extendido detendrá el modo de bucle cerrado durante el tiempo de ejecución del bolo extendido. ¿Realmente quieres esto?</string>
     <string name="closed_loop_disabled_with_eb">Bucle cerrado inhabilitado debido a la ejecución del bolo extendido</string>
@@ -986,8 +986,8 @@
     <string name="tempt_targets">Objetivos temporales</string>
     <string name="carbs_and_bolus">Carbohidratos y bolos</string>
     <string name="confirm_remove_multiple_items">¿Está seguro de que quiere eliminar %1$d elementos?</string>
-    <string name="hide_loop">Ocultar bucle</string>
-    <string name="show_loop">Mostrar bucle</string>
+    <string name="hide_loop">Ocultar lazo</string>
+    <string name="show_loop">Mostrar lazo</string>
     <string name="count_selected">%1$d selecionado</string>
     <string name="sort_label">Ordenar</string>
     <string name="dialog_cancled">Diálogo cancelado</string>
