@@ -58,7 +58,7 @@
             android:layout_marginRight="20dp"
             android:layout_marginBottom="2dp"
             android:layout_span="3"
-            android:background="?android:attr/dividerHorizontal" />
+            android:background="@color/list_delimiter" />
 
     </TableRow>
 
@@ -114,7 +114,7 @@
             android:layout_marginRight="20dp"
             android:layout_marginBottom="2dp"
             android:layout_span="3"
-            android:background="?android:attr/dividerHorizontal" />
+            android:background="@color/list_delimiter" />
 
     </TableRow>
 
@@ -169,7 +169,7 @@
             android:layout_marginRight="20dp"
             android:layout_marginBottom="2dp"
             android:layout_span="3"
-            android:background="?android:attr/dividerHorizontal" />
+            android:background="@color/list_delimiter" />
 
     </TableRow>
 
@@ -225,7 +225,7 @@
             android:layout_marginRight="20dp"
             android:layout_marginBottom="2dp"
             android:layout_span="3"
-            android:background="?android:attr/dividerHorizontal" />
+            android:background="@color/list_delimiter" />
 
     </TableRow>
 

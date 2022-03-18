@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.activities.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.util.SparseArray
 import android.view.*
 import androidx.appcompat.widget.Toolbar
@@ -155,7 +154,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
     @Synchronized
     override fun onDestroyView() {
         super.onDestroyView()
-        removeActionMode?.let { it.finish() }
+        removeActionMode?.finish()
         binding.recyclerview.adapter = null // avoid leaks
         _binding = null
     }
@@ -172,7 +171,9 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
             holder.binding.ph.visibility = (tempBasal.interfaceIDs.pumpId != null).toVisibility()
             val sameDayPrevious = position > 0 && dateUtil.isSameDay(tempBasal.timestamp, tempBasalList[position - 1].timestamp)
             holder.binding.date.visibility = sameDayPrevious.not().toVisibility()
-            holder.binding.date.text = dateUtil.dateString(tempBasal.timestamp)
+            val newDay = position == 0 || !dateUtil.isSameDayGroup(tempBasal.timestamp, tempBasalList[position - 1].timestamp)
+            holder.binding.date.visibility = newDay.toVisibility()
+            holder.binding.date.text = if (newDay) dateUtil.dateStringRelative(tempBasal.timestamp, rh) else ""
             if (tempBasal.isInProgress) {
                 holder.binding.time.text = dateUtil.timeString(tempBasal.timestamp)
                 holder.binding.time.setTextColor(rh.gc(R.color.colorActive))
@@ -206,7 +207,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
                 holder.binding.cbRemove.isChecked = selectedItems.get(position) != null
             }
             val nextTimestamp = if (tempBasalList.size != position + 1) tempBasalList[position + 1].timestamp else 0L
-            holder.binding.delimiter.visibility = dateUtil.isSameDay(tempBasal.timestamp, nextTimestamp).toVisibility()
+            holder.binding.delimiter.visibility = dateUtil.isSameDayGroup(tempBasal.timestamp, nextTimestamp).toVisibility()
         }
 
         override fun getItemCount() = tempBasalList.size

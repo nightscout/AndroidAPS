@@ -47,6 +47,12 @@ class SafetyPluginTest : TestBaseWithProfile() {
 
     @Before
     fun prepare() {
+        `when`(rh.gs(R.string.hardlimit)).thenReturn("hard limit")
+        `when`(rh.gs(R.string.itmustbepositivevalue)).thenReturn("it must be positive value")
+        `when`(rh.gs(R.string.pumplimit)).thenReturn("pump limit")
+        `when`(rh.gs(R.string.maxvalueinpreferences)).thenReturn("max value in preferences")
+        `when`(rh.gs(R.string.maxbasalmultiplier)).thenReturn("max basal multiplier")
+        `when`(rh.gs(R.string.maxdailybasalmultiplier)).thenReturn("max daily basal multiplier")
         `when`(rh.gs(R.string.limitingbolus)).thenReturn("Limiting bolus to %1\$.1f U because of %2\$s")
         `when`(rh.gs(R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
         `when`(rh.gs(R.string.limitingiob)).thenReturn("Limiting IOB to %1\$.1f U because of %2\$s")
@@ -57,14 +63,8 @@ class SafetyPluginTest : TestBaseWithProfile() {
         `when`(rh.gs(R.string.smbdisabledinpreferences)).thenReturn("SMB disabled in preferences")
         `when`(rh.gs(R.string.closedmodedisabledinpreferences)).thenReturn("Closed loop mode disabled in preferences")
         `when`(rh.gs(R.string.closed_loop_disabled_on_dev_branch)).thenReturn("Running dev version. Closed loop is disabled.")
-        `when`(rh.gs(R.string.itmustbepositivevalue)).thenReturn("it must be positive value")
-        `when`(rh.gs(R.string.pumplimit)).thenReturn("pump limit")
         `when`(rh.gs(R.string.smbalwaysdisabled)).thenReturn("SMB always and after carbs disabled because active BG source doesn\\'t support advanced filtering")
         `when`(rh.gs(R.string.smbnotallowedinopenloopmode)).thenReturn("SMB not allowed in open loop mode")
-        `when`(rh.gs(R.string.maxvalueinpreferences)).thenReturn("max value in preferences")
-        `when`(rh.gs(R.string.maxbasalmultiplier)).thenReturn("max basal multiplier")
-        `when`(rh.gs(R.string.maxdailybasalmultiplier)).thenReturn("max daily basal multiplier")
-        `when`(rh.gs(R.string.hardlimit)).thenReturn("hard limit")
         `when`(rh.gs(R.string.key_child)).thenReturn("child")
 
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)

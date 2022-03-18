@@ -4,11 +4,11 @@ import android.util.DisplayMetrics
 import android.util.TypedValue.COMPLEX_UNIT_PX
 import android.view.View
 import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.databinding.ActionsFragmentBinding
+import info.nightscout.androidaps.databinding.OverviewFragmentBinding
 
 interface SkinInterface {
 
@@ -17,19 +17,19 @@ interface SkinInterface {
     val mainGraphHeight: Int // in dp
     val secondaryGraphHeight: Int // in dp
 
-    @LayoutRes
-    fun actionsLayout(isLandscape: Boolean, isSmallWidth: Boolean): Int = R.layout.actions_fragment
+    fun preProcessLandscapeActionsLayout(dm: DisplayMetrics, binding: ActionsFragmentBinding) {
+    }
 
-    fun preProcessLandscapeOverviewLayout(dm: DisplayMetrics, view: View, isLandscape: Boolean, isTablet: Boolean, isSmallHeight: Boolean) {
+    fun preProcessLandscapeOverviewLayout(dm: DisplayMetrics, binding: OverviewFragmentBinding, isLandscape: Boolean, isTablet: Boolean, isSmallHeight: Boolean) {
         // pre-process landscape mode
         val screenWidth = dm.widthPixels
         val screenHeight = dm.heightPixels
         val landscape = screenHeight < screenWidth
 
         if (landscape) {
-            val iobLayout = view.findViewById<LinearLayout>(R.id.iob_layout)
+            val iobLayout = binding.infoLayout.iobLayout
             val iobLayoutParams = iobLayout.layoutParams as ConstraintLayout.LayoutParams
-            val timeLayout = view.findViewById<LinearLayout>(R.id.time_layout)
+            val timeLayout = binding.infoLayout.timeLayout
             iobLayoutParams.startToStart = ConstraintLayout.LayoutParams.UNSET
             iobLayoutParams.startToEnd = timeLayout.id
             iobLayoutParams.topToBottom = ConstraintLayout.LayoutParams.UNSET
@@ -37,43 +37,36 @@ interface SkinInterface {
             val timeLayoutParams = timeLayout.layoutParams as ConstraintLayout.LayoutParams
             timeLayoutParams.endToEnd = ConstraintLayout.LayoutParams.UNSET
             timeLayoutParams.endToStart = iobLayout.id
-            val cobLayoutParams = view.findViewById<LinearLayout>(R.id.cob_layout).layoutParams as ConstraintLayout.LayoutParams
+            val cobLayoutParams = binding.infoLayout.cobLayout.layoutParams as ConstraintLayout.LayoutParams
             cobLayoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-            val basalLayoutParams = view.findViewById<LinearLayout>(R.id.basal_layout).layoutParams as ConstraintLayout.LayoutParams
+            val basalLayoutParams = binding.infoLayout.basalLayout.layoutParams as ConstraintLayout.LayoutParams
             basalLayoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-            val extendedLayoutParams = view.findViewById<LinearLayout>(R.id.extended_layout).layoutParams as ConstraintLayout.LayoutParams
+            val extendedLayoutParams = binding.infoLayout.extendedLayout.layoutParams as ConstraintLayout.LayoutParams
             extendedLayoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-            val asLayoutParams = view.findViewById<LinearLayout>(R.id.as_layout).layoutParams as ConstraintLayout.LayoutParams
+            val asLayoutParams = binding.infoLayout.asLayout.layoutParams as ConstraintLayout.LayoutParams
             asLayoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
 
             if (isTablet) {
-                for (v in listOf<TextView?>(
-                    view.findViewById(R.id.bg),
-                    view.findViewById(R.id.time),
-                    view.findViewById(R.id.time_ago_short),
-                    view.findViewById(R.id.iob),
-                    view.findViewById(R.id.cob),
-                    view.findViewById(R.id.base_basal),
-                    view.findViewById(R.id.extended_bolus),
-                    view.findViewById(R.id.sensitivity)
-                )) v?.setTextSize(COMPLEX_UNIT_PX, v.textSize * 1.5f)
-                for (v in listOf<TextView?>(
-                    view.findViewById(R.id.pump),
-                    view.findViewById(R.id.openaps),
-                    view.findViewById(R.id.uploader),
-                    view.findViewById(R.id.cannula_age),
-                    view.findViewById(R.id.insulin_age),
-                    view.findViewById(R.id.reservoir_level),
-                    view.findViewById(R.id.sensor_age),
-                    view.findViewById(R.id.pb_age),
-                    view.findViewById(R.id.battery_level)
-                )) v?.setTextSize(COMPLEX_UNIT_PX, v.textSize * 1.3f)
-                timeLayout?.orientation = LinearLayout.HORIZONTAL
-                view.findViewById<TextView>(R.id.time_ago_short)?.setTextSize(COMPLEX_UNIT_PX, view.findViewById<TextView>(R.id.time).textSize)
+                binding.infoLayout.apply {
+                    val texts = listOf(bg, iob, cob, baseBasal, extendedBolus, sensitivity)
+                    for (v in texts) v.setTextSize(COMPLEX_UNIT_PX, v.textSize * 1.5f)
+                    val textsTime = listOf(time, timeAgoShort)
+                    for (v in textsTime) v.setTextSize(COMPLEX_UNIT_PX, v.textSize * 2.25f)
+                }
+                binding.apply {
+                    val texts = listOf(pump, openaps, uploader)
+                    for (v in texts) v.setTextSize(COMPLEX_UNIT_PX, v.textSize * 1.3f)
+                }
+                binding.statusLightsLayout.apply {
+                    val texts = listOf(cannulaAge, insulinAge, reservoirLevel, sensorAge, pbAge, batteryLevel)
+                    for (v in texts) v.setTextSize(COMPLEX_UNIT_PX, v.textSize * 1.3f)
+                }
+                timeLayout.orientation = LinearLayout.HORIZONTAL
+                binding.infoLayout.timeAgoShort.setTextSize(COMPLEX_UNIT_PX, binding.infoLayout.time.textSize)
 
-                view.findViewById<TextView>(R.id.delta_large)?.visibility = View.VISIBLE
+                binding.infoLayout.deltaLarge.visibility = View.VISIBLE
             } else {
-                view.findViewById<TextView>(R.id.delta_large)?.visibility = View.GONE
+                binding.infoLayout.deltaLarge.visibility = View.GONE
             }
         }
     }
@@ -84,4 +77,5 @@ interface SkinInterface {
         val innerLayout = root.findViewById<LinearLayout>(R.id.inner_layout)
         innerLayout.addView(buttonsLayout)
     }
+
 }

@@ -16,15 +16,9 @@ import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.interaction.utils.PlusMinusEditText;
 import info.nightscout.shared.SafeParse;
 
-/**
- * Created by adrian on 04/08/18.
- */
-
-public class ECarbActivity extends ViewSelectorActivity {
+public class CarbActivity extends ViewSelectorActivity {
 
     PlusMinusEditText editCarbs;
-    PlusMinusEditText editStartTime;
-    PlusMinusEditText editDuration;
     int maxCarbs;
 
     @Override
@@ -44,7 +38,7 @@ public class ECarbActivity extends ViewSelectorActivity {
     private class MyGridViewPagerAdapter extends GridPagerAdapter {
         @Override
         public int getColumnCount(int arg0) {
-            return 4;
+            return 2;
         }
 
         @Override
@@ -66,40 +60,14 @@ public class ECarbActivity extends ViewSelectorActivity {
                 container.addView(view);
                 view.requestFocus();
                 return view;
-            } else if (col == 1) {
-                final View view = getInflatedPlusMinusView(container);
-                double def = 0;
-                if (editStartTime != null) {
-                    def = SafeParse.stringToDouble(editStartTime.editText.getText().toString());
-                }
-                editStartTime = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, -60d, 300d, 15d, new DecimalFormat("0"), false);
-                setLabelToPlusMinusView(view, getString(R.string.action_start_min));
-                container.addView(view);
-                return view;
-            } else if (col == 2) {
-                final View view = getInflatedPlusMinusView(container);
-                double def = 0;
-                if (editDuration != null) {
-                    def = SafeParse.stringToDouble(editDuration.editText.getText().toString());
-                }
-                editDuration = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 8d, 1d, new DecimalFormat("0"), false);
-                setLabelToPlusMinusView(view, getString(R.string.action_duration_h));
-                container.addView(view);
-                return view;
             } else {
-
                 final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_send_item, container, false);
                 final ImageView confirmbutton = view.findViewById(R.id.confirmbutton);
                 confirmbutton.setOnClickListener((View v) -> {
-
-                    //check if it can happen that the fagment is never created that hold data?
-                    // (you have to swipe past them anyways - but still)
-
-                    String actionstring = "ecarbs " + SafeParse.stringToInt(editCarbs.editText.getText().toString())
-                            + " " + SafeParse.stringToInt(editStartTime.editText.getText().toString())
-                            + " " + SafeParse.stringToInt(editDuration.editText.getText().toString());
-                    ListenerService.initiateAction(ECarbActivity.this, actionstring);
-                    confirmAction(ECarbActivity.this, R.string.action_ecarb_confirmation);
+                    // With start time 0 and duration 0
+                    String actionstring = "ecarbs " + SafeParse.stringToInt(editCarbs.editText.getText().toString()) + " 0 0";
+                    ListenerService.initiateAction(CarbActivity.this, actionstring);
+                    confirmAction(CarbActivity.this, R.string.action_ecarb_confirmation);
                     finishAffinity();
 
                 });
