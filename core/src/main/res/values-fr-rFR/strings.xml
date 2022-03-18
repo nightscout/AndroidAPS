@@ -153,7 +153,9 @@
     <string name="shortday">j</string>
     <!--    Protection-->
     <string name="wrongpassword">Mot de passe incorrect</string>
+    <string name="wrongpin">Code PIN incorrect</string>
     <string name="passwords_dont_match">Mots de passe différents</string>
+    <string name="pin_dont_match">Les codes PIN ne correspondent pas</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Valeurs des débits de basal non alignées sur des heures: %1$s</string>
     <string name="minimalbasalvaluereplaced">Valeur de basal remplacée par la valeur minimale autorisée : %1$s</string>

@@ -8,10 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.activities.HistoryBrowseActivity
@@ -20,7 +18,7 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
-import info.nightscout.androidaps.diaconn.DiaconnG8Plugin
+import info.nightscout.androidaps.databinding.ActionsFragmentBinding
 import info.nightscout.androidaps.dialogs.*
 import info.nightscout.androidaps.events.EventCustomActionsChanged
 import info.nightscout.androidaps.events.EventExtendedBolusChange
@@ -36,7 +34,6 @@ import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
 import info.nightscout.androidaps.plugins.general.overview.StatusLightHandler
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.skins.SkinProvider
 import info.nightscout.androidaps.utils.DateUtil
@@ -81,82 +78,30 @@ class ActionsFragment : DaggerFragment() {
 
     private val pumpCustomActions = HashMap<String, CustomAction>()
     private val pumpCustomButtons = ArrayList<SingleClickButton>()
-    private var smallWidth = false
-    private var smallHeight = false
     private lateinit var dm: DisplayMetrics
 
-    private var buttonsLayout: LinearLayout? = null
-    private var profileSwitch: SingleClickButton? = null
-    private var tempTarget: SingleClickButton? = null
-    private var extendedBolus: SingleClickButton? = null
-    private var extendedBolusCancel: SingleClickButton? = null
-    private var setTempBasal: SingleClickButton? = null
-    private var cancelTempBasal: SingleClickButton? = null
-    private var fill: SingleClickButton? = null
-    private var historyBrowser: SingleClickButton? = null
-    private var tddStats: SingleClickButton? = null
-    private var pumpBatteryChange: SingleClickButton? = null
+    private var _binding: ActionsFragmentBinding? = null
+    // This property is only valid between onCreateView and onDestroyView.
+    private val binding get() = _binding!!
 
-    private var cannulaAge: TextView? = null
-    private var insulinAge: TextView? = null
-    private var reservoirLevel: TextView? = null
-    private var sensorAge: TextView? = null
-    private var sensorLevel: TextView? = null
-    private var pbAge: TextView? = null
-    private var batteryLevel: TextView? = null
-    private var sensorLevelLabel: TextView? = null
-    private var insulinLevelLabel: TextView? = null
-    private var pbLevelLabel: TextView? = null
-    private var cannulaOrPatch: TextView? = null
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         //check screen width
         dm = DisplayMetrics()
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
             activity?.display?.getRealMetrics(dm)
-        else
+        } else {
             @Suppress("DEPRECATION") activity?.windowManager?.defaultDisplay?.getMetrics(dm)
-
-        val screenWidth = dm.widthPixels
-        val screenHeight = dm.heightPixels
-        smallWidth = screenWidth <= Constants.SMALL_WIDTH
-        smallHeight = screenHeight <= Constants.SMALL_HEIGHT
-        val landscape = screenHeight < screenWidth
-
-        return inflater.inflate(skinProvider.activeSkin().actionsLayout(landscape, smallWidth), container, false)
+        }
+        _binding = ActionsFragmentBinding.inflate(inflater, container, false)
+        return  binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        buttonsLayout = view.findViewById(R.id.action_buttons_layout)
-        profileSwitch = view.findViewById(R.id.actions_profileswitch)
-        tempTarget = view.findViewById(R.id.actions_temptarget)
-        extendedBolus = view.findViewById(R.id.actions_extendedbolus)
-        extendedBolusCancel = view.findViewById(R.id.actions_extendedbolus_cancel)
-        setTempBasal = view.findViewById(R.id.actions_settempbasal)
-        cancelTempBasal = view.findViewById(R.id.actions_canceltempbasal)
-        fill = view.findViewById(R.id.actions_fill)
-        historyBrowser = view.findViewById(R.id.actions_historybrowser)
-        tddStats = view.findViewById(R.id.actions_tddstats)
-        pumpBatteryChange = view.findViewById(R.id.actions_pumpbatterychange)
+        skinProvider.activeSkin().preProcessLandscapeActionsLayout(dm, binding)
 
-        cannulaAge = view.findViewById(R.id.cannula_age)
-        insulinAge = view.findViewById(R.id.insulin_age)
-        reservoirLevel = view.findViewById(R.id.reservoir_level)
-        sensorAge = view.findViewById(R.id.sensor_age)
-        sensorLevel = view.findViewById(R.id.sensor_level)
-        pbAge = view.findViewById(R.id.pb_age)
-        batteryLevel = view.findViewById(R.id.battery_level)
-        sensorLevelLabel = view.findViewById(R.id.sensor_level_label)
-        insulinLevelLabel = view.findViewById(R.id.insulin_level_label)
-        pbLevelLabel = view.findViewById(R.id.pb_level_label)
-        cannulaOrPatch = view.findViewById(R.id.cannula_or_patch)
-
-        profileSwitch?.setOnClickListener {
+        binding.profileSwitch.setOnClickListener {
             activity?.let { activity ->
                 protectionCheck.queryProtection(
                     activity,
@@ -164,7 +109,7 @@ class ActionsFragment : DaggerFragment() {
                     UIRunnable { ProfileSwitchDialog().show(childFragmentManager, "ProfileSwitchDialog")})
             }
         }
-        tempTarget?.setOnClickListener {
+        binding.tempTarget.setOnClickListener {
             activity?.let { activity ->
                 protectionCheck.queryProtection(
                     activity,
@@ -172,7 +117,7 @@ class ActionsFragment : DaggerFragment() {
                     UIRunnable { TempTargetDialog().show(childFragmentManager, "Actions") })
             }
         }
-        extendedBolus?.setOnClickListener {
+        binding.extendedBolus.setOnClickListener {
             activity?.let { activity ->
                 protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable {
                     OKDialog.showConfirmation(
@@ -184,7 +129,7 @@ class ActionsFragment : DaggerFragment() {
                 })
             }
         }
-        extendedBolusCancel?.setOnClickListener {
+        binding.extendedBolusCancel.setOnClickListener {
             if (iobCobCalculator.getExtendedBolus(dateUtil.now()) != null) {
                 uel.log(Action.CANCEL_EXTENDED_BOLUS, Sources.Actions)
                 commandQueue.cancelExtended(object : Callback() {
@@ -196,7 +141,7 @@ class ActionsFragment : DaggerFragment() {
                 })
             }
         }
-        setTempBasal?.setOnClickListener {
+        binding.setTempBasal.setOnClickListener {
             activity?.let { activity ->
                 protectionCheck.queryProtection(
                     activity,
@@ -204,7 +149,7 @@ class ActionsFragment : DaggerFragment() {
                     UIRunnable { TempBasalDialog().show(childFragmentManager, "Actions") })
             }
         }
-        cancelTempBasal?.setOnClickListener {
+        binding.cancelTempBasal.setOnClickListener {
             if (iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil.now()) != null) {
                 uel.log(Action.CANCEL_TEMP_BASAL, Sources.Actions)
                 commandQueue.cancelTempBasal(true, object : Callback() {
@@ -216,32 +161,32 @@ class ActionsFragment : DaggerFragment() {
                 })
             }
         }
-        fill?.setOnClickListener {
+        binding.fill.setOnClickListener {
             activity?.let { activity ->
                 protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { FillDialog().show(childFragmentManager, "FillDialog") })
             }
         }
-        historyBrowser?.setOnClickListener { startActivity(Intent(context, HistoryBrowseActivity::class.java)) }
-        tddStats?.setOnClickListener { startActivity(Intent(context, TDDStatsActivity::class.java)) }
-        view.findViewById<SingleClickButton>(R.id.actions_bgcheck).setOnClickListener {
+        binding.historyBrowser.setOnClickListener { startActivity(Intent(context, HistoryBrowseActivity::class.java)) }
+        binding.tddStats.setOnClickListener { startActivity(Intent(context, TDDStatsActivity::class.java)) }
+        binding.bgCheck.setOnClickListener {
             CareDialog().setOptions(CareDialog.EventType.BGCHECK, R.string.careportal_bgcheck).show(childFragmentManager, "Actions")
         }
-        view.findViewById<SingleClickButton>(R.id.actions_cgmsensorinsert).setOnClickListener {
+        binding.cgmSensorInsert.setOnClickListener {
             CareDialog().setOptions(CareDialog.EventType.SENSOR_INSERT, R.string.careportal_cgmsensorinsert).show(childFragmentManager, "Actions")
         }
-        pumpBatteryChange?.setOnClickListener {
+        binding.pumpBatteryChange.setOnClickListener {
             CareDialog().setOptions(CareDialog.EventType.BATTERY_CHANGE, R.string.careportal_pumpbatterychange).show(childFragmentManager, "Actions")
         }
-        view.findViewById<SingleClickButton>(R.id.actions_note).setOnClickListener {
+        binding.note.setOnClickListener {
             CareDialog().setOptions(CareDialog.EventType.NOTE, R.string.careportal_note).show(childFragmentManager, "Actions")
         }
-        view.findViewById<SingleClickButton>(R.id.actions_exercise).setOnClickListener {
+        binding.exercise.setOnClickListener {
             CareDialog().setOptions(CareDialog.EventType.EXERCISE, R.string.careportal_exercise).show(childFragmentManager, "Actions")
         }
-        view.findViewById<SingleClickButton>(R.id.actions_question).setOnClickListener {
+        binding.question.setOnClickListener {
             CareDialog().setOptions(CareDialog.EventType.QUESTION, R.string.careportal_question).show(childFragmentManager, "Actions")
         }
-        view.findViewById<SingleClickButton>(R.id.actions_announcement).setOnClickListener {
+        binding.announcement.setOnClickListener {
             CareDialog().setOptions(CareDialog.EventType.ANNOUNCEMENT, R.string.careportal_announcement).show(childFragmentManager, "Actions")
         }
 
@@ -280,13 +225,18 @@ class ActionsFragment : DaggerFragment() {
         disposable.clear()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     @Synchronized
     fun updateGui() {
 
         val profile = profileFunction.getProfile()
         val pump = activePlugin.activePump
 
-        profileSwitch?.visibility = (
+        binding.profileSwitch.visibility = (
             activePlugin.activeProfileSource.profile != null &&
                 pump.pumpDescription.isSetBasalProfileCapable &&
                 pump.isInitialized() &&
@@ -294,60 +244,58 @@ class ActionsFragment : DaggerFragment() {
                 !loop.isDisconnected).toVisibility()
 
         if (!pump.pumpDescription.isExtendedBolusCapable || !pump.isInitialized() || pump.isSuspended() || loop.isDisconnected || pump.isFakingTempsByExtendedBoluses || config.NSCLIENT) {
-            extendedBolus?.visibility = View.GONE
-            extendedBolusCancel?.visibility = View.GONE
+            binding.extendedBolus.visibility = View.GONE
+            binding.extendedBolusCancel.visibility = View.GONE
         } else {
             val activeExtendedBolus = repository.getExtendedBolusActiveAt(dateUtil.now()).blockingGet()
             if (activeExtendedBolus is ValueWrapper.Existing) {
-                extendedBolus?.visibility = View.GONE
-                extendedBolusCancel?.visibility = View.VISIBLE
+                binding.extendedBolus.visibility = View.GONE
+                binding.extendedBolusCancel.visibility = View.VISIBLE
                 @Suppress("SetTextI18n")
-                extendedBolusCancel?.text = rh.gs(R.string.cancel) + " " + activeExtendedBolus.value.toStringMedium(dateUtil)
+                binding.extendedBolusCancel.text = rh.gs(R.string.cancel) + " " + activeExtendedBolus.value.toStringMedium(dateUtil)
             } else {
-                extendedBolus?.visibility = View.VISIBLE
-                extendedBolusCancel?.visibility = View.GONE
+                binding.extendedBolus.visibility = View.VISIBLE
+                binding.extendedBolusCancel.visibility = View.GONE
             }
         }
 
         if (!pump.pumpDescription.isTempBasalCapable || !pump.isInitialized() || pump.isSuspended() || loop.isDisconnected || config.NSCLIENT) {
-            setTempBasal?.visibility = View.GONE
-            cancelTempBasal?.visibility = View.GONE
+            binding.setTempBasal.visibility = View.GONE
+            binding.cancelTempBasal.visibility = View.GONE
         } else {
             val activeTemp = iobCobCalculator.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())
             if (activeTemp != null) {
-                setTempBasal?.visibility = View.GONE
-                cancelTempBasal?.visibility = View.VISIBLE
+                binding.setTempBasal.visibility = View.GONE
+                binding.cancelTempBasal.visibility = View.VISIBLE
                 @Suppress("SetTextI18n")
-                cancelTempBasal?.text = rh.gs(R.string.cancel) + " " + activeTemp.toStringShort()
+                binding.cancelTempBasal.text = rh.gs(R.string.cancel) + " " + activeTemp.toStringShort()
             } else {
-                setTempBasal?.visibility = View.VISIBLE
-                cancelTempBasal?.visibility = View.GONE
+                binding.setTempBasal.visibility = View.VISIBLE
+                binding.cancelTempBasal.visibility = View.GONE
             }
         }
         val activeBgSource = activePlugin.activeBgSource
-        historyBrowser?.visibility = (profile != null).toVisibility()
-        fill?.visibility = (pump.pumpDescription.isRefillingCapable && pump.isInitialized() && !pump.isSuspended()).toVisibility()
-        if (pump is DiaconnG8Plugin) {
-            pumpBatteryChange?.visibility = (pump.pumpDescription.isBatteryReplaceable && !pump.isBatteryChangeLoggingEnabled()).toVisibility()
-        } else {
-            pumpBatteryChange?.visibility =
-                (pump.pumpDescription.isBatteryReplaceable || (pump is OmnipodErosPumpPlugin && pump.isUseRileyLinkBatteryLevel && pump.isBatteryChangeLoggingEnabled)).toVisibility()
-        }
-        tempTarget?.visibility = (profile != null && !loop.isDisconnected).toVisibility()
-        tddStats?.visibility = pump.pumpDescription.supportsTDDs.toVisibility()
+        binding.historyBrowser.visibility = (profile != null).toVisibility()
+        binding.fill.visibility = (pump.pumpDescription.isRefillingCapable && pump.isInitialized() && !pump.isSuspended()).toVisibility()
+        binding.pumpBatteryChange.visibility = (pump.pumpDescription.isBatteryReplaceable || pump.isBatteryChangeLoggingEnabled()).toVisibility()
+        binding.tempTarget.visibility = (profile != null && !loop.isDisconnected).toVisibility()
+        binding.tddStats.visibility = pump.pumpDescription.supportsTDDs.toVisibility()
+        val isPatchPump = pump.pumpDescription.isPatchPump
+        binding.status.apply {
+            cannulaOrPatch.text = if (isPatchPump) rh.gs(R.string.patch_pump) else rh.gs(R.string.cannula)
+            val imageResource = if (isPatchPump) R.drawable.ic_patch_pump_outline else R.drawable.ic_cp_age_cannula
+            cannulaOrPatch.setCompoundDrawablesWithIntrinsicBounds(imageResource, 0, 0, 0)
+            batteryLayout.visibility = (!isPatchPump || pump.pumpDescription.useHardwareLink).toVisibility()
 
-        cannulaOrPatch?.text = if (pump.pumpDescription.isPatchPump) rh.gs(R.string.patch_pump) else rh.gs(R.string.cannula)
-        val imageResource = if (pump.pumpDescription.isPatchPump) R.drawable.ic_patch_pump_outline else R.drawable.ic_cp_age_cannula
-        cannulaOrPatch?.setCompoundDrawablesWithIntrinsicBounds(imageResource, 0, 0, 0)
-
-        if (!config.NSCLIENT) {
-            statusLightHandler.updateStatusLights(cannulaAge, insulinAge, reservoirLevel, sensorAge, sensorLevel, pbAge, batteryLevel)
-            sensorLevelLabel?.text = if (activeBgSource.sensorBatteryLevel == -1) "" else rh.gs(R.string.careportal_level_label)
-        } else {
-            statusLightHandler.updateStatusLights(cannulaAge, insulinAge, null, sensorAge, null, pbAge, null)
-            sensorLevelLabel?.text = ""
-            insulinLevelLabel?.text = ""
-            pbLevelLabel?.text = ""
+            if (!config.NSCLIENT) {
+                statusLightHandler.updateStatusLights(cannulaAge, insulinAge, reservoirLevel, sensorAge, sensorLevel, pbAge, batteryLevel)
+                sensorLevelLabel.text = if (activeBgSource.sensorBatteryLevel == -1) "" else rh.gs(R.string.careportal_level_label)
+            } else {
+                statusLightHandler.updateStatusLights(cannulaAge, insulinAge, null, sensorAge, null, pbAge, null)
+                sensorLevelLabel.text = ""
+                insulinLevelLabel.text = ""
+                pbLevelLabel.text = ""
+            }
         }
         checkPumpCustomActions()
 
@@ -380,7 +328,7 @@ class ActionsFragment : DaggerFragment() {
             val top = activity?.let { ContextCompat.getDrawable(it, customAction.iconResourceId) }
             btn.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null)
 
-            buttonsLayout?.addView(btn)
+            binding.buttonsLayout.addView(btn)
 
             this.pumpCustomActions[rh.gs(customAction.name)] = customAction
             this.pumpCustomButtons.add(btn)
@@ -388,7 +336,7 @@ class ActionsFragment : DaggerFragment() {
     }
 
     private fun removePumpCustomActions() {
-        for (customButton in pumpCustomButtons) buttonsLayout?.removeView(customButton)
+        for (customButton in pumpCustomButtons) binding.buttonsLayout.removeView(customButton)
         pumpCustomButtons.clear()
     }
 }

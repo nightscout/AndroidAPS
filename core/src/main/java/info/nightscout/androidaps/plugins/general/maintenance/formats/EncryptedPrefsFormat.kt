@@ -35,6 +35,13 @@ class EncryptedPrefsFormat @Inject constructor(
         return if (file.absolutePath.endsWith(".json")) {
             val contents = preloadedContents ?: storage.getFileContents(file)
             FORMAT_TEST_REGEX.containsMatchIn(contents)
+            try {
+                // test valid JSON object
+                JSONObject(contents)
+                true
+            } catch (e: Exception) {
+                false
+            }
         } else {
             false
         }
@@ -219,8 +226,11 @@ class EncryptedPrefsFormat @Inject constructor(
 
     override fun loadMetadata(contents: String?): PrefMetadataMap {
         contents?.let {
-            val container = JSONObject(contents)
-            return loadMetadata(container)
+            return try {
+                loadMetadata(JSONObject(contents))
+            } catch (e: Exception) {
+                mutableMapOf()
+            }
         }
         return mutableMapOf()
     }

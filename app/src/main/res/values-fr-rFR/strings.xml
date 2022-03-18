@@ -882,6 +882,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="ns_receive_profile_switch_summary">Accepter les changements de profil entrés via NS ou NSClient</string>
     <string name="ns_receive_offline_event">Recevoir les événements APS hors ligne</string>
     <string name="ns_receive_offline_event_summary">Accepter les événements APS hors ligne entrés via NS ou NSClient</string>
+    <string name="ns_receive_tbr_eb">Recevoir des DBT et des BE</string>
+    <string name="ns_receive_tbr_eb_summary">Accepter le DBT et le BE entrés dans une autre instance</string>
     <string name="ns_receive_insulin">Recevoir l\'insuline</string>
     <string name="ns_receive_insulin_summary">Acceptez l\'insuline entrée via NS ou NSClient (elle n\'est pas injectée, uniquement pour le calcul pour IA)</string>
     <string name="ns_receive_carbs">Recevoir les glucides</string>

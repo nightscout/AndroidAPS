@@ -226,10 +226,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="-10dp"
-            android:layout_marginBottom="-10dp"
+            android:layout_marginTop="-5dp"
             android:text="8:00 PM"
-            android:textSize="40sp"
+            android:textSize="25sp"
             android:textStyle="bold"
             tools:ignore="HardcodedText" />
 
@@ -238,11 +237,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="-5dp"
-            android:layout_marginBottom="-5dp"
+            android:layout_marginTop="-10dp"
             android:gravity="center_vertical"
             android:text="(-5)"
-            android:textSize="30sp"
+            android:textSize="19sp"
             android:textStyle="bold"
             tools:ignore="HardcodedText" />
 

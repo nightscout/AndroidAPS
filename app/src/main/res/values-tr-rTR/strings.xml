@@ -667,6 +667,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="show_invalidated">Geçersiz olanları göster</string>
     <string name="hide_invalidated">Geçersiz olanları gizle</string>
     <string name="remove_items">Öğeleri kaldır</string>
+    <string name="sort_items">Öğeleri sırala</string>
     <string name="storedsettingsfound">Saklanan ayarlar bulundu</string>
     <string name="allow_hardware_pump_text">Dikkat: Eğer bir donanım pompasını etkinleştirir ve bağlarsanız, AndroidAPS, bazal ayarları profilden pompaya aktaracaktır ve pompada kayıtlı mevcut bazal oranlarının üzerine yazacaktır. AndroidAPS\'de doğru ayarların olduğundan emin olun. Emin değilseniz veya pompanızdaki bazal ayarların üzerine yazmak istemiyorsanız, iptal tuşuna basın ve daha sonra tekrar deneyin.</string>
     <string name="error_adding_treatment_title">Tedavi verileri eksik</string>
@@ -907,6 +908,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="errors">Hatalar</string>
     <string name="ns_sync_slow">Yüklemeleri yavaşlat</string>
     <string name="data_status">KŞ veri durumu</string>
+    <string name="remove_bg_readings">KŞ okumalarını kaldır</string>
     <string name="statuslights_cannula_age">kanül yaşı</string>
     <string name="statuslights_patch_pump_age">yama pompa yaşı</string>
     <string name="patch_pump">Yama pompa</string>
@@ -988,4 +990,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="hide_loop">Döngüyü gizle</string>
     <string name="show_loop">Döngüyü göster</string>
     <string name="count_selected">%1$d seçildi</string>
+    <string name="sort_label">Sırala</string>
+    <string name="dialog_cancled">İletişim kutusu iptal edildi</string>
 </resources>

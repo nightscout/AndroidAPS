@@ -1083,7 +1083,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         return aapsOmnipodErosManager.isShowRileyLinkBatteryLevel();
     }
 
-    public boolean isBatteryChangeLoggingEnabled() {
+    @Override public boolean isBatteryChangeLoggingEnabled() {
         return aapsOmnipodErosManager.isBatteryChangeLoggingEnabled();
     }
 

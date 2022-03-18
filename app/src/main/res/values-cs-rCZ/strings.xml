@@ -666,6 +666,7 @@
     <string name="show_invalidated">Zobrazit neplatné</string>
     <string name="hide_invalidated">Skrýt zneplatněné</string>
     <string name="remove_items">Odstranit položky</string>
+    <string name="sort_items">Seřadit položky</string>
     <string name="storedsettingsfound">Nalezeno uložené nastavení</string>
     <string name="allow_hardware_pump_text">POZOR: Pokud aktivuje a připojíte skutečnou pumpu, AndroidAPS nakopíruje (a bude udržovat) nastavení bazálu z aktivního profilu do pumpy. Nastavení bazálu v pumpě bude přepsáno. Pokud si nejste jistí nebo nechcete přepsat bazály v pumpě, stiskněte Zrušit a opakujte přepnutí na jinou pumpu později.</string>
     <string name="error_adding_treatment_title">Data ošetření neúplná</string>
@@ -906,6 +907,7 @@
     <string name="errors">Chyby</string>
     <string name="ns_sync_slow">Zpomalit odesílání</string>
     <string name="data_status">Stav glykémie</string>
+    <string name="remove_bg_readings">Odstranit glykémie</string>
     <string name="statuslights_cannula_age">stáří kanyly</string>
     <string name="statuslights_patch_pump_age">stáří náplasťové pumpy</string>
     <string name="patch_pump">Náplasťová pumpa</string>
@@ -987,4 +989,6 @@
     <string name="hide_loop">Skrýt smyčku</string>
     <string name="show_loop">Zobrazit smyčku</string>
     <string name="count_selected">Vybráno: %1$d</string>
+    <string name="sort_label">Seřadit</string>
+    <string name="dialog_cancled">Dialog zrušen</string>
 </resources>

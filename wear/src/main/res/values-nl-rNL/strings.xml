@@ -72,7 +72,6 @@
     <string name="menu_treatment">Behandeling</string>
     <string name="menu_treatment_short">Behandel</string>
     <string name="menu_bolus">Bolus</string>
-    <string name="menu_ecarb">Koolhydraten</string>
     <string name="menu_settings">Instellingen</string>
     <string name="menu_status">Status</string>
     <string name="menu_resync">Opnieuw synchroniseren</string>

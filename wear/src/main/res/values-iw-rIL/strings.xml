@@ -11,6 +11,9 @@
     <string name="label_xdrip_cockpit">AAPS (קוקפיט)</string>
     <string name="label_xdrip_steampunk">AAPS (סטימפאנק)</string>
     <string name="label_digitalstyle">AAPS (דיגיטלי)</string>
+    <string name="label_actions_tile">AAPS (פעולות)</string>
+    <string name="label_temp_target_tile">AAPS (מטרה זמנית)</string>
+    <string name="label_quick_wizard_tile">AAPS (אשף מהיר)</string>
     <string name="label_warning_sync">אין נתונים!</string>
     <string name="label_warning_old">נתונים ישנים!</string>
     <string name="label_warning_since">מאז %1$s</string>
@@ -54,15 +57,23 @@
     <string name="pref_ring_history">היסטוריית צלצולים</string>
     <string name="pref_light_ring_history">היסטוריה של טבעת אור</string>
     <string name="pref_animations">אנימציות</string>
+    <string name="pref_wizard_in_menu">מחשבון בתפריט</string>
     <string name="pref_prime_in_menu">תיחול בתפריט</string>
     <string name="pref_single_target">מטרה יחידה</string>
+    <string name="pref_wizard_percentage">אחוז החישוב</string>
     <string name="pref_complication_tap_action">פעולת הקשה על סיבוך</string>
     <string name="pref_unicode_in_complications">יוניקוד בסיבוכים</string>
     <string name="pref_version">גירסה:</string>
     <string name="pref_moreWatchfaceSettings">עוד הגדרות פני שעון</string>
     <string name="pref_lookInYourWatchfaceConfiguration">עיינו בהגדרות פני השעון בבקשה.</string>
     <string name="menu_tempt">מטרה זמנית</string>
+    <string name="menu_wizard">מחשבון</string>
+    <string name="menu_wizard_short">מחשבון</string>
+    <string name="menu_treatment">טיפול</string>
+    <string name="menu_treatment_short">טיפול</string>
     <string name="menu_bolus">בולוס</string>
+    <string name="menu_carb">פחמימות</string>
+    <string name="menu_ecarb">פחמימות ממושכות</string>
     <string name="menu_settings">הגדרות</string>
     <string name="menu_status">סטטוס</string>
     <string name="menu_resync">סנכרן מחדש </string>
@@ -70,12 +81,31 @@
     <string name="menu_none">ללא</string>
     <string name="menu_default">ברירת מחדל</string>
     <string name="menu_menu">תפריט</string>
+    <string name="quick_wizard_short">XL</string>
+    <string name="action_duration">משך</string>
+    <string name="action_tempt_confirmation">התבקש ערך מטרה זמני</string>
+    <string name="action_quick_wizard_confirmation">התבקש אשף מהיר</string>
+    <string name="action_treatment_confirmation">התבקש טיפול</string>
+    <string name="action_bolus_confirmation">התבקש בולוס</string>
+    <string name="action_wizard_confirmation">התבקש חישוב</string>
+    <string name="action_fill_confirmation">התבקש מילוי</string>
+    <string name="action_ecarb_confirmation">נדרשו פחמימות</string>
+    <string name="action_target" comment="In temp target menu, single target value">ערך מטרה</string>
+    <string name="action_low" comment="In temp target menu, lower value from range">נמוך</string>
+    <string name="action_high" comment="In temp target menu, higher value from range">גבוה</string>
+    <string name="action_carbs">פחמימות</string>
+    <string name="action_ecarbs">פחמימות ממושכות</string>
+    <string name="action_percentage">אחוז</string>
+    <string name="action_start_min">התחלה [min]</string>
+    <string name="action_duration_h">משך [h]</string>
+    <string name="action_insulin">אינסולין</string>
     <string name="action_preset_1">הגדרה מראש 1</string>
     <string name="action_preset_2">הגדרה מראש 2</string>
     <string name="action_preset_3">הגדרה מראש 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">כמות חופשית</string>
     <string name="action_confirm">אישור</string>
     <string name="action_timeshift">היסט זמן</string>
+    <string name="action_bolus">בולוס</string>
     <string name="bolus_progress">התקדמות הבולוס</string>
     <string name="press_to_cancel">לחצו לביטול</string>
     <string name="cancel_bolus">ביטול בולוס</string>
@@ -128,4 +158,13 @@
     <string name="simple_ui_charging">בזמן טעינה</string>
     <string name="simple_ui_always_on">מצב דלוק תמיד</string>
     <string name="simple_ui_always_on_charging">דלוק תמיד וטוען</string>
+    <string name="temp_target_eating_soon">אוכל בקרוב</string>
+    <string name="temp_target_hypo">היפו</string>
+    <string name="temp_target_activity">פעילות</string>
+    <string name="temp_target_manual">ידני</string>
+    <string name="temp_target_cancel">ביטול</string>
+    <string name="tile_none">ללא</string>
+    <string name="tile_no_config">אין הגדרה</string>
+    <string name="wear_control_not_enabled">שליטה משעון Wear אינה מאופשרת</string>
+    <string name="wear_control_no_data">אין נתונים זמינים</string>
 </resources>

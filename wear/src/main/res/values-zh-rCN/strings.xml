@@ -72,7 +72,6 @@
     <string name="menu_treatment">治疗</string>
     <string name="menu_treatment_short">治疗</string>
     <string name="menu_bolus">大剂量</string>
-    <string name="menu_ecarb">碳水</string>
     <string name="menu_settings">设置</string>
     <string name="menu_status">状态</string>
     <string name="menu_resync">再次同步</string>

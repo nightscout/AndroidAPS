@@ -184,9 +184,9 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
             val profileSwitch = profileSwitchList[position]
             holder.binding.ph.visibility = (profileSwitch is ProfileSealed.EPS).toVisibility()
             holder.binding.ns.visibility = (profileSwitch.interfaceIDs_backing?.nightscoutId != null).toVisibility()
-            val sameDayPrevious = position > 0 && dateUtil.isSameDay(profileSwitch.timestamp, profileSwitchList[position - 1].timestamp)
-            holder.binding.date.visibility = sameDayPrevious.not().toVisibility()
-            holder.binding.date.text = dateUtil.dateString(profileSwitch.timestamp)
+            val newDay = position == 0 || !dateUtil.isSameDayGroup(profileSwitch.timestamp, profileSwitchList[position - 1].timestamp)
+            holder.binding.date.visibility = newDay.toVisibility()
+            holder.binding.date.text = if (newDay) dateUtil.dateStringRelative(profileSwitch.timestamp, rh) else ""
             holder.binding.time.text = dateUtil.timeString(profileSwitch.timestamp)
             holder.binding.duration.text = rh.gs(R.string.format_mins, T.msecs(profileSwitch.duration ?: 0L).mins())
             holder.binding.name.text =
@@ -213,7 +213,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
             holder.binding.clone.visibility = (profileSwitch is ProfileSealed.PS).toVisibility()
             holder.binding.spacer.visibility = (profileSwitch is ProfileSealed.PS).toVisibility()
             val nextTimestamp = if (profileSwitchList.size != position + 1) profileSwitchList[position + 1].timestamp else 0L
-            holder.binding.delimiter.visibility = dateUtil.isSameDay(profileSwitch.timestamp, nextTimestamp).toVisibility()
+            holder.binding.delimiter.visibility = dateUtil.isSameDayGroup(profileSwitch.timestamp, nextTimestamp).toVisibility()
         }
 
         override fun getItemCount() = profileSwitchList.size

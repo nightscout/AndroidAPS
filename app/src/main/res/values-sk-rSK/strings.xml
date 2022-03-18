@@ -666,6 +666,7 @@
     <string name="show_invalidated">Zobraziť neplatné</string>
     <string name="hide_invalidated">Skryť zneplatnené</string>
     <string name="remove_items">Odstrániť položky</string>
+    <string name="sort_items">Zoradiť položky</string>
     <string name="storedsettingsfound">Nájdené uložené nastavenia</string>
     <string name="allow_hardware_pump_text">POZOR: Pokiaľ aktivujete a pripojíte skutočnú pumpu, AndroidAPS nakopíruje (a bude udržiavať) nastavenie bazálu z aktívneho profilu do pumpy. Nastavenie bazálu v pumpe bude prepísané. Pokiaľ si nieste istí, alebo nechcete prepísať bazály v pumpe, stlačte Zrušiť a opakujte prepnutie na inú pumpu neskôr.</string>
     <string name="error_adding_treatment_title">Dáta ošetrení neúplné</string>
@@ -987,4 +988,5 @@
     <string name="hide_loop">Skryť uzavretý okruh</string>
     <string name="show_loop">Zobraziť uzavretý okruh</string>
     <string name="count_selected">Vybrané: %1$d</string>
+    <string name="sort_label">Zoradiť</string>
 </resources>

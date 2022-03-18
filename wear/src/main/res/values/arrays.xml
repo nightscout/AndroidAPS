@@ -83,6 +83,7 @@
         <item>@string/menu_wizard</item>
         <item>@string/menu_treatment</item>
         <item>@string/menu_bolus</item>
+        <item>@string/menu_carb</item>
         <item>@string/menu_ecarb</item>
         <item>@string/menu_tempt</item>
         <item>@string/tile_none</item>
@@ -93,6 +94,7 @@
         <item>treatment</item>
         <item>bolus</item>
         <item>carbs</item>
+        <item>ecarbs</item>
         <item>temp_target</item>
         <item>none</item>
     </string-array>

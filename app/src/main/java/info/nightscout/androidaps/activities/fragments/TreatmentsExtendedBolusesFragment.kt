@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.activities.fragments
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.SparseArray
 import android.view.*
@@ -114,7 +113,7 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
     @Synchronized
     override fun onDestroyView() {
         super.onDestroyView()
-        removeActionMode?.let { it.finish() }
+        removeActionMode?.finish()
         binding.recyclerview.adapter = null // avoid leaks
         _binding = null
     }
@@ -131,10 +130,9 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
             holder.binding.ns.visibility = (extendedBolus.interfaceIDs.nightscoutId != null).toVisibility()
             holder.binding.ph.visibility = (extendedBolus.interfaceIDs.pumpId != null).toVisibility()
             holder.binding.invalid.visibility = extendedBolus.isValid.not().toVisibility()
-            val sameDayPrevious = position > 0 && dateUtil.isSameDay(extendedBolus.timestamp, extendedBolusList[position - 1].timestamp)
-            holder.binding.date.visibility = sameDayPrevious.not().toVisibility()
-            holder.binding.date.text = dateUtil.dateString(extendedBolus.timestamp)
-            @SuppressLint("SetTextI18n")
+            val newDay = position == 0 || !dateUtil.isSameDayGroup(extendedBolus.timestamp, extendedBolusList[position - 1].timestamp)
+            holder.binding.date.visibility = newDay.toVisibility()
+            holder.binding.date.text = if (newDay) dateUtil.dateStringRelative(extendedBolus.timestamp, rh) else ""
             if (extendedBolus.isInProgress(dateUtil)) {
                 holder.binding.time.text = dateUtil.timeString(extendedBolus.timestamp)
                 holder.binding.time.setTextColor(rh.gc(R.color.colorActive))
@@ -162,7 +160,7 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
                 holder.binding.cbRemove.isChecked = selectedItems.get(position) != null
             }
             val nextTimestamp = if (extendedBolusList.size != position + 1) extendedBolusList[position + 1].timestamp else 0L
-            holder.binding.delimiter.visibility = dateUtil.isSameDay(extendedBolus.timestamp, nextTimestamp).toVisibility()
+            holder.binding.delimiter.visibility = dateUtil.isSameDayGroup(extendedBolus.timestamp, nextTimestamp).toVisibility()
         }
 
         override fun getItemCount() = extendedBolusList.size
