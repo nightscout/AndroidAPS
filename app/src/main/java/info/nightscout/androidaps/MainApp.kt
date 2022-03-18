@@ -29,6 +29,7 @@ import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationStore
+import info.nightscout.androidaps.plugins.general.themes.ThemeSwitcherPlugin
 import info.nightscout.androidaps.receivers.BTReceiver
 import info.nightscout.androidaps.receivers.ChargingStateReceiver
 import info.nightscout.androidaps.receivers.KeepAliveReceiver.KeepAliveManager
@@ -74,6 +75,7 @@ class MainApp : DaggerApplication() {
     @Inject lateinit var alarmSoundServiceHelper: AlarmSoundServiceHelper
     @Inject lateinit var notificationStore: NotificationStore
     @Inject lateinit var processLifecycleListener: ProcessLifecycleListener
+    @Inject lateinit var profileSwitchPlugin: ThemeSwitcherPlugin
 
     override fun onCreate() {
         super.onCreate()
@@ -104,7 +106,7 @@ class MainApp : DaggerApplication() {
         disposable += compatDBHelper.dbChangeDisposable()
         registerActivityLifecycleCallbacks(activityMonitor)
         JodaTimeAndroid.init(this)
-        selectThemeMode()
+        profileSwitchPlugin.setThemeMode()
         aapsLogger.debug("Version: " + BuildConfig.VERSION_NAME)
         aapsLogger.debug("BuildVersion: " + BuildConfig.BUILDVERSION)
         aapsLogger.debug("Remote: " + BuildConfig.REMOTE)
@@ -123,16 +125,6 @@ class MainApp : DaggerApplication() {
         doMigrations()
         uel.log(UserEntry.Action.START_AAPS, UserEntry.Sources.Aaps)
         passwordCheck.passwordResetCheck(this)
-    }
-
-    private fun selectThemeMode() {
-       when(sp.getString(R.string.key_use_dark_mode, "dark")) {
-            sp.getString(R.string.value_dark_theme, "dark") -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-            sp.getString(R.string.value_light_theme, "light") -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-            else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-        }
-        // temp while switch is not public
-        setTheme(R.style.AppTheme)
     }
 
     private fun setRxErrorHandler() {
