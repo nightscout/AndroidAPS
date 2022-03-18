@@ -87,9 +87,9 @@
                 android:key="@string/key_protection_timeout"
                 android:title="@string/protection_timeout_title"
                 android:summary="@string/protection_timeout_summary"
-                app:defaultValue="0"
+                app:defaultValue="1"
                 validate:maxNumber="180"
-                validate:minNumber="0"
+                validate:minNumber="1"
                 validate:testType="numeric" />
 
         </PreferenceCategory>
