@@ -82,15 +82,18 @@
                 android:key="@string/key_bolus_pin"
                 android:title="@string/bolus_pin" />
 
-            <EditTextPreference
+            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+                android:defaultValue="1"
+                android:digits="0123456789"
                 android:inputType="number"
                 android:key="@string/key_protection_timeout"
-                android:title="@string/protection_timeout_title"
+                android:maxLines="1"
+                android:singleLine="true"
                 android:summary="@string/protection_timeout_summary"
-                app:defaultValue="1"
+                android:title="@string/protection_timeout_title"
                 validate:maxNumber="180"
                 validate:minNumber="1"
-                validate:testType="numeric" />
+                validate:testType="numericRange" />
 
         </PreferenceCategory>
 
