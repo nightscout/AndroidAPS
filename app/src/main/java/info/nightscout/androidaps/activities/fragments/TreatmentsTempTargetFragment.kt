@@ -154,7 +154,7 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
     @Synchronized
     override fun onDestroyView() {
         super.onDestroyView()
-        removeActionMode?.let { it.finish() }
+        removeActionMode?.finish()
         binding.recyclerview.adapter = null // avoid leaks
         _binding = null
     }
@@ -185,9 +185,9 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
                 }
                 holder.binding.cbRemove.isChecked = selectedItems.get(position) != null
             }
-            val sameDayPrevious = position > 0 && dateUtil.isSameDay(tempTarget.timestamp, tempTargetList[position - 1].timestamp)
-            holder.binding.date.visibility = sameDayPrevious.not().toVisibility()
-            holder.binding.date.text = dateUtil.dateString(tempTarget.timestamp)
+            val newDay = position == 0 || !dateUtil.isSameDayGroup(tempTarget.timestamp, tempTargetList[position - 1].timestamp)
+            holder.binding.date.visibility = newDay.toVisibility()
+            holder.binding.date.text = if (newDay) dateUtil.dateStringRelative(tempTarget.timestamp, rh) else ""
             holder.binding.time.text = dateUtil.timeRangeString(tempTarget.timestamp, tempTarget.end)
             holder.binding.duration.text = rh.gs(R.string.format_mins, T.msecs(tempTarget.duration).mins())
             holder.binding.low.text = tempTarget.lowValueToUnitsToString(units)

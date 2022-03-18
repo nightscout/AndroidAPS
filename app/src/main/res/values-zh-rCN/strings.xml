@@ -666,6 +666,7 @@
     <string name="show_invalidated">显示无效项</string>
     <string name="hide_invalidated">隐藏失效项</string>
     <string name="remove_items">删除项目</string>
+    <string name="sort_items">项目排序</string>
     <string name="storedsettingsfound">发现曾经保存过的设置</string>
     <string name="allow_hardware_pump_text">注意：如果你激活并且连接到了一个硬件泵，AndroidAPS将会从配置文件复制基础率到泵上。覆盖泵上已有的基础率。请确定你已经在AndroidAPS上设置了正确的基础率。如果你不确定或者不想覆盖泵上的基础率设置，按取消键，以后再切换激活配置文件。</string>
     <string name="error_adding_treatment_title">治疗数据不完整</string>
@@ -906,6 +907,7 @@
     <string name="errors">错误</string>
     <string name="ns_sync_slow">放慢上传速度</string>
     <string name="data_status">血糖数据状态</string>
+    <string name="remove_bg_readings">删除血糖读数</string>
     <string name="statuslights_cannula_age">导管年龄</string>
     <string name="statuslights_patch_pump_age">patch 泵年龄</string>
     <string name="patch_pump">Patch 泵</string>
@@ -987,4 +989,6 @@
     <string name="hide_loop">隐藏闭环</string>
     <string name="show_loop">显示闭环</string>
     <string name="count_selected">已选中 %1$d</string>
+    <string name="sort_label">排序</string>
+    <string name="dialog_cancled">对话框已取消</string>
 </resources>

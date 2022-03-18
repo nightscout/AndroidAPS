@@ -12,6 +12,8 @@
     <string name="application_pin">Application PIN</string>
     <string name="bolus_password">Bolus password</string>
     <string name="bolus_pin">Bolus PIN</string>
+    <string name="protection_timeout_title">Password and PIN retention [s]</string>
+    <string name="protection_timeout_summary">Time before the password or PIN should be entered</string>
     <string name="unlock_settings">Unlock settings</string>
     <string name="biometric">Biometric</string>
     <string name="custom_password">Custom password</string>
@@ -43,4 +45,5 @@
     <string name="key_settings_protection" translatable="false">settings_protection</string>
     <string name="key_application_protection" translatable="false">application_protection</string>
     <string name="key_bolus_protection" translatable="false">bolus_protection</string>
+    <string name="key_protection_timeout" translatable="false">protection_timeout</string>
 </resources>

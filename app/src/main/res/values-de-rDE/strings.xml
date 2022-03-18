@@ -943,6 +943,6 @@ Unerwartetes Verhalten.</string>
     <string name="profile_changes">Profilwechsel</string>
     <string name="tempt_targets">Temporäre Ziele</string>
     <string name="carbs_and_bolus">Kohlenhydrate &amp; Bolus</string>
-    <string name="confirm_remove_multiple_items">Sind Sie sicher, dass Sie diese(s) %1 Element(e) löschen möchten?</string>
+    <string name="confirm_remove_multiple_items">Sind Sie sicher, dass Sie diese(s) %1$d Element(e) löschen möchten?</string>
     <string name="count_selected">%1$d ausgewählt</string>
 </resources>

@@ -26,7 +26,7 @@ buildscript {
         tink_version = '1.5.0'
 
         junit_version = '4.13.2'
-        mockito_version = '4.3.1'
+        mockito_version = '4.4.0'
         dexmaker_version = "1.2"
         retrofit2_version = '2.9.0'
         okhttp3_version = '4.9.0'

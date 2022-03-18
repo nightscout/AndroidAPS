@@ -104,11 +104,9 @@
     <string name="troubleshooting_wheretoask">Dove puoi cercare aiuto con AndroidAPS?</string>
     <string name="troubleshooting_fb">Puoi chiedere consiglio nel gruppo Facebook degli utenti AndroidAPS.</string>
     <string name="troubleshooting_wiki">Dovresti leggere (e rileggere) la documentazione di AndroidAPS.</string>
-    <string name="troubleshooting_gitter">Puoi chiedere consigli e segnalare problemi tecnici nella stanza Gitter di AndroidAPS.</string>
     <string name="troubleshooting_yourendo">Dovresti chiedere al tuo endocrinologo/centro diabetologico.</string>
     <string name="troubleshooting_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/aapsitalia/</string>
-    <string name="troubleshooting_hint3">https://gitter.im/MilosKozak/AndroidAPS</string>
     <string name="insulin_label">Plugin insulina</string>
     <string name="insulin_ultrarapid">Quale insulina dovresti usare con il plugin Ultra-Rapid Oref?</string>
     <string name="insulin_fiasp">Fiasp®</string>

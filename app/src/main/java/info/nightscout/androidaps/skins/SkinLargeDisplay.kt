@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.LinearLayout
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.databinding.OverviewFragmentBinding
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -15,8 +16,8 @@ class SkinLargeDisplay @Inject constructor(private val config: Config): SkinInte
     override val mainGraphHeight: Int get() = 400
     override val secondaryGraphHeight: Int get() = 150
 
-    override fun preProcessLandscapeOverviewLayout(dm: DisplayMetrics, view: View, isLandscape: Boolean, isTablet: Boolean, isSmallHeight: Boolean) {
-        super.preProcessLandscapeOverviewLayout(dm, view, isLandscape, isTablet, isSmallHeight)
-        if (!config.NSCLIENT && (isSmallHeight || isLandscape)) moveButtonsLayout(view as LinearLayout)
+    override fun preProcessLandscapeOverviewLayout(dm: DisplayMetrics, binding: OverviewFragmentBinding, isLandscape: Boolean, isTablet: Boolean, isSmallHeight: Boolean) {
+        super.preProcessLandscapeOverviewLayout(dm, binding, isLandscape, isTablet, isSmallHeight)
+        if (!config.NSCLIENT && (isSmallHeight || isLandscape)) moveButtonsLayout(binding.root)
     }
 }

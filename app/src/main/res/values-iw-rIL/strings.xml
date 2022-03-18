@@ -246,6 +246,7 @@
     <string name="wear">Wear</string>
     <string name="resend_all_data">שלח מחדש את כל הנתונים</string>
     <string name="open_settings_on_wear">פתיחת הגדרות Wear</string>
+    <string name="basal_rate">מינון בזאלי</string>
     <string name="basalvaluebelowminimum">ערך הבסיס מתחת למינימום. פרופיל אינו מוגדר!</string>
     <string name="sms_actualbg">ערכי סוכר בדם:</string>
     <string name="sms_lastbg">ערכי סוכר אחרונים:</string>
@@ -432,6 +433,7 @@
     <string name="ns_localbroadcasts">אפשר הפצה לאפליקציות אחרות (כגון xDrip). אין להפעיל אם מותקן לכם יותר ממופע אחד של AAPS או NSClient!</string>
     <string name="ns_localbroadcasts_title">אפשר שידורים מקומיים.</string>
     <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openaps_smb_dynamic_isf">רגישות דינאמית</string>
     <string name="enableuam">הפעלת UAM</string>
     <string name="enablesmb">אפשר SMB</string>
     <string name="enablesmb_summary">השתמש בסופר מיקרו בולוסים במקום בבזאלי זמני לפעילות מהירה יותר</string>
@@ -500,6 +502,7 @@
     <string name="negativeonly">שלילי בלבד</string>
     <string name="overview_editquickwizard_usecob">חישוב פחמ\' פעילות</string>
     <string name="overview_editquickwizard_usetemptarget">חישוב ערך מטרה זמני</string>
+    <string name="overview_editquickwizard_usepercentage">חישוב אחוזים</string>
     <string name="loopenabled">הלולאה פעילה</string>
     <string name="apsselected">נבחר APS</string>
     <string name="nsclienthaswritepermission">ל-NSClient יש הרשאת כתיבה</string>
@@ -660,6 +663,8 @@
     <string name="sensitivity_raises_target_title">רגישות מעלה את ערך המטרה</string>
     <string name="sensitivity_raises_target_summary">כשמזוהה רגישות, הגדל את ערך המטרה של הגלוקוז</string>
     <string name="careportal_removestartedevents">מחק אירועי \"AndroidAPS Started\"</string>
+    <string name="remove_items">הסר פריטים</string>
+    <string name="sort_items">מיין פריטים</string>
     <string name="storedsettingsfound">נמצאו הגדרות שמורות</string>
     <string name="allow_hardware_pump_text">שימו לב: אם אתם מפעילים ומתחברים למשאבה פיזית, AndroidAPS יעתיק את הפרופיל הבזאלי אל המשאבה תוך דריסת הפרופיל שכבר שמור על המשאבה. יש שההגדרות הבזאליות שב-AndroidAPS נכונות. אם אינכם בטוחים או אינכם רוצים לשנות את הגדרות הבזאליות שעל המשאבה, לחצו על \'ביטול\' וחזרו על תהליך המעבר אל המשאבה במועד מאוחר יותר.</string>
     <string name="error_adding_treatment_title">נתוני טיפול לא שלמים</string>
@@ -755,6 +760,8 @@
     <string name="profilenamecontainsdot">שם הפרופיל מכיל נקודות.\nשם כזה אינו נתמך ע\"י Nightscout \n הפרופיל לא הועלה ל-Nightscout.</string>
     <string name="low_mark_comment">ערך נמוך יותר באזור הטווח (הצגה בלבד)</string>
     <string name="high_mark_comment">ערך גבוה יותר באזור הטווח (הצגה בלבד)</string>
+    <string name="age">גיל</string>
+    <string name="weight_label">משקל</string>
     <string name="id">מס\' זיהוי:</string>
     <string name="submit">עדכן</string>
     <string name="mostcommonprofile">הפרופיל הנפוץ ביותר:</string>
@@ -896,6 +903,7 @@
     <string name="errors">שגיאות</string>
     <string name="ns_sync_slow">האט העלאות</string>
     <string name="data_status">מצב נתוני הסוכר</string>
+    <string name="remove_bg_readings">הסר קריאות רמת הסוכר</string>
     <string name="statuslights_cannula_age">גיל הצינורית</string>
     <string name="statuslights_patch_pump_age">גיל משאבה</string>
     <string name="patch_pump">משאבה ללא צינורית</string>
@@ -927,5 +935,31 @@
     <string name="a11y_insulin_label">אינסולין</string>
     <string name="a11y_blood_glucose">ערכי סוכר בדם</string>
     <string name="a11y_bg_outdated">לא עדכני</string>
+    <string name="a11y_carb_reminder">קביעת תזכורת</string>
+    <string name="a11y_add_new_profile">הוסף פרופיל חדש</string>
+    <string name="a11y_clone_profile">שכפל את הפרופיל הנוכחי</string>
+    <string name="a11y_delete_current_profile">מחק את הפרופיל הנוכחי</string>
+    <string name="a11y_add_new_to_list">הוסף לרשימה</string>
     <!-- WEAR OS-->
+    <string name="wizard_carbs_constraint">הפרת מגבלות פחמימה!</string>
+    <string name="wizard_explain_carbs">פחמ\': %1$.2f יח\'</string>
+    <string name="wizard_explain_cob">פחמ\': %1$.0f גר\' %2$.2f יח\'</string>
+    <string name="wizard_explain_bg">סוכר: %1$.2f יח\'</string>
+    <string name="wizard_explain_superbolus">סופר בולוס: %1$.2f יח\'</string>
+    <string name="wizard_explain_trend">מגמת 15 דק\': %1$.2f יח\'</string>
+    <string name="overview_editquickwizard_percentage">אחוזים</string>
+    <string name="app_default">ברירת המחדל של היישום</string>
+    <string name="select_profile">בחרו פרופיל לעריכה</string>
+    <string name="refresh_from_nightscout">רענן מנייטסקאוט</string>
+    <string name="remove_selected_items">הסר פריטים נבחרים</string>
+    <string name="select_for_removal">בחרו להסרה</string>
+    <string name="profile_changes">שינויים בפרופיל</string>
+    <string name="tempt_targets">ערכי מטרה זמניים</string>
+    <string name="carbs_and_bolus">פחמ\' ובולוס</string>
+    <string name="confirm_remove_multiple_items">האם אתם בטוחים שברצונכם להסיר %1$d פריטים?</string>
+    <string name="hide_loop">החבא לולאה</string>
+    <string name="show_loop">הצג לולאה</string>
+    <string name="count_selected">%1$d נבחרו</string>
+    <string name="sort_label">מיין</string>
+    <string name="dialog_cancled">דו-שיח בוטל</string>
 </resources>

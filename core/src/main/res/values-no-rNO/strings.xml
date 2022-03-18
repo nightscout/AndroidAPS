@@ -153,7 +153,9 @@
     <string name="shortday">d</string>
     <!--    Protection-->
     <string name="wrongpassword">Feil passord</string>
+    <string name="wrongpin">Feil PIN-kode</string>
     <string name="passwords_dont_match">Passord stemmer ikke overens</string>
+    <string name="pin_dont_match">PIN-kodene samsvarer ikke</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Basal verdier er ikke angitt på hele timer: %1$s</string>
     <string name="minimalbasalvaluereplaced">Basal verdi erstattet med laveste tillate verdi: %1$s</string>

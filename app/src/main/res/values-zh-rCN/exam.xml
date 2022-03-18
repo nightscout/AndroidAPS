@@ -104,11 +104,11 @@
     <string name="troubleshooting_wheretoask">您在哪里可以寻找到AndroidAPS的帮助信息？</string>
     <string name="troubleshooting_fb">您可以在 AndroidAPS 用户 Facebook 群组中询问建议。</string>
     <string name="troubleshooting_wiki">您应该阅读(并多次阅读) AndroidAPS 文档。</string>
-    <string name="troubleshooting_gitter">您可以在AndroidAPS的Gitter房间询问建议，记录或讨论技术问题。</string>
+    <string name="troubleshooting_gitter">您可以在Discord的AndroidAPS聊天区询问建议或讨论技术问题。</string>
     <string name="troubleshooting_yourendo">您应该问您的糖尿病诊所/内分泌专家。</string>
     <string name="troubleshooting_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
-    <string name="troubleshooting_hint3">https://gitter.im/MilosKozak/AndroidAPS</string>
+    <string name="troubleshooting_hint3">https://discord.gg/4fQUWHZ4Mw</string>
     <string name="insulin_label">胰岛素插件</string>
     <string name="insulin_ultrarapid">在超速效Oref插件中你应该使用哪种胰岛素？</string>
     <string name="insulin_fiasp">Fiasp®速效门冬胰岛素(超速效)</string>

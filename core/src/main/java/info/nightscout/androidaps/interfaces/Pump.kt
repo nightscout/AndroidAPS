@@ -276,4 +276,9 @@ interface Pump {
      * if true APS set 100% basal before full hour to avoid pump beeping
      */
     fun setNeutralTempAtFullHour(): Boolean = false
+
+    /**
+     * Pumps with a hardware link can set via config "Battery Change Logging"
+     */
+    fun isBatteryChangeLoggingEnabled(): Boolean = false
 }

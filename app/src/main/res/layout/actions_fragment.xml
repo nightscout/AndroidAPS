@@ -7,7 +7,7 @@
     tools:context=".plugins.general.actions.ActionsFragment">
 
     <LinearLayout
-        android:id="@+id/action_buttons_layout"
+        android:id="@+id/buttons_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -27,7 +27,7 @@
             app:columnCount="2">
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
-                android:id="@+id/actions_profileswitch"
+                android:id="@+id/profileSwitch"
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -42,7 +42,7 @@
                 app:layout_row="0" />
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
-                android:id="@+id/actions_temptarget"
+                android:id="@+id/tempTarget"
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -57,7 +57,7 @@
                 app:layout_row="0" />
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
-                android:id="@+id/actions_settempbasal"
+                android:id="@+id/setTempBasal"
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -72,7 +72,7 @@
                 app:layout_row="1" />
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
-                android:id="@+id/actions_canceltempbasal"
+                android:id="@+id/cancelTempBasal"
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -88,7 +88,7 @@
                 app:layout_row="1" />
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
-                android:id="@+id/actions_extendedbolus"
+                android:id="@+id/extendedBolus"
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -103,7 +103,7 @@
                 app:layout_row="1" />
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
-                android:id="@+id/actions_extendedbolus_cancel"
+                android:id="@+id/extendedBolus_cancel"
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -128,7 +128,7 @@
             android:text="@string/careportal" />
 
         <include
-            android:id="@+id/careportal_stats"
+            android:id="@+id/status"
             layout="@layout/careportal_stats_fragment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -141,7 +141,7 @@
             app:columnCount="2">
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
-                android:id="@+id/actions_bgcheck"
+                android:id="@+id/Bgcheck"
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
@@ -156,7 +156,7 @@
                 app:layout_row="2" />
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
-                android:id="@+id/actions_fill"
+                android:id="@+id/fill"
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -171,7 +171,7 @@
                 app:layout_row="2" />
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
-                android:id="@+id/actions_cgmsensorinsert"
+                android:id="@+id/Cgmsensorinsert"
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
@@ -186,7 +186,7 @@
                 app:layout_row="3" />
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
-                android:id="@+id/actions_pumpbatterychange"
+                android:id="@+id/Pumpbatterychange"
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
@@ -201,7 +201,7 @@
                 app:layout_row="3" />
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
-                android:id="@+id/actions_note"
+                android:id="@+id/note"
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
@@ -216,7 +216,7 @@
                 app:layout_row="4" />
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
-                android:id="@+id/actions_exercise"
+                android:id="@+id/Exercise"
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
@@ -231,7 +231,7 @@
                 app:layout_row="4" />
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
-                android:id="@+id/actions_announcement"
+                android:id="@+id/Announcement"
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
@@ -246,7 +246,7 @@
                 app:layout_row="5" />
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
-                android:id="@+id/actions_question"
+                android:id="@+id/Question"
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
@@ -276,7 +276,7 @@
             app:columnCount="2">
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
-                android:id="@+id/actions_historybrowser"
+                android:id="@+id/Historybrowser"
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -291,7 +291,7 @@
                 app:layout_row="6" />
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
-                android:id="@+id/actions_tddstats"
+                android:id="@+id/Tddstats"
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

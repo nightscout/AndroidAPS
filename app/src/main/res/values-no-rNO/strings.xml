@@ -666,6 +666,7 @@
     <string name="show_invalidated">Vis ugyldige oppføringer</string>
     <string name="hide_invalidated">Skjul ugyldige oppføringer</string>
     <string name="remove_items">Fjern oppføringer</string>
+    <string name="sort_items">Sorter elementer</string>
     <string name="storedsettingsfound">Lagrede innstillinger funnet</string>
     <string name="allow_hardware_pump_text">Varsel: Hvis du aktiverer og kobler til en pumpe, så vil AndroidAPS kopiere basal innstillinger fra din profil over til pumpen og overskrive verdiene som er lagret der. Sjekk at du har riktige basal verdier i AndroidAPS. Hvis du ikke er sikker eller ikke ønsker å overskrive basal verdiene i pumpen, trykk avbryt og koble til pumpen senere.</string>
     <string name="error_adding_treatment_title">Behandlingsdata er ufullstendige</string>
@@ -906,6 +907,7 @@
     <string name="errors">Feil</string>
     <string name="ns_sync_slow">Reduser opplastingshastighet</string>
     <string name="data_status">BS data status</string>
+    <string name="remove_bg_readings">Fjern BS målinger</string>
     <string name="statuslights_cannula_age">kanyle alder</string>
     <string name="statuslights_patch_pump_age">patch pumpe alder</string>
     <string name="patch_pump">Patch pumpe</string>
@@ -987,4 +989,6 @@
     <string name="hide_loop">Skjul loop</string>
     <string name="show_loop">Vis loop</string>
     <string name="count_selected">%1$d valgt</string>
+    <string name="sort_label">Sorter</string>
+    <string name="dialog_cancled">Dialogvindu avbrutt</string>
 </resources>

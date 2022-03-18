@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="info.nightscout.androidaps.plugins.general.food.TreatmentsFoodFragment">
+    tools:context="info.nightscout.androidaps.plugins.general.food.FoodFragment">
 
     <info.nightscout.androidaps.utils.ui.SingleClickButton
         android:id="@+id/refresh_from_nightscout"

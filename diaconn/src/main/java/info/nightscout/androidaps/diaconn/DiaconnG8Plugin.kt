@@ -542,7 +542,7 @@ class DiaconnG8Plugin @Inject constructor(
     override fun executeCustomAction(customActionType: CustomActionType) {}
     override fun canHandleDST(): Boolean = false
 
-    fun isBatteryChangeLoggingEnabled():Boolean {
+    override fun isBatteryChangeLoggingEnabled():Boolean {
         return sp.getBoolean(R.string.key_diaconn_g8_logbatterychange, false)
     }
 

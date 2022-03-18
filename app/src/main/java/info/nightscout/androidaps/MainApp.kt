@@ -8,6 +8,7 @@ import android.net.wifi.WifiManager
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import android.os.Build
+import androidx.lifecycle.ProcessLifecycleOwner
 import com.uber.rxdogtag.RxDogTag
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
@@ -37,6 +38,7 @@ import info.nightscout.androidaps.receivers.TimeDateOrTZChangeReceiver
 import info.nightscout.androidaps.services.AlarmSoundServiceHelper
 import info.nightscout.androidaps.utils.ActivityMonitor
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.ProcessLifecycleListener
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.locale.LocaleHelper
 import info.nightscout.androidaps.utils.protection.PasswordCheck
@@ -72,6 +74,7 @@ class MainApp : DaggerApplication() {
     @Inject lateinit var passwordCheck: PasswordCheck
     @Inject lateinit var alarmSoundServiceHelper: AlarmSoundServiceHelper
     @Inject lateinit var notificationStore: NotificationStore
+    @Inject lateinit var processLifecycleListener: ProcessLifecycleListener
 
     override fun onCreate() {
         super.onCreate()
@@ -79,6 +82,7 @@ class MainApp : DaggerApplication() {
         RxDogTag.install()
         setRxErrorHandler()
         LocaleHelper.update(this)
+        ProcessLifecycleOwner.get().lifecycle.addObserver(processLifecycleListener)
 
         var gitRemote: String? = BuildConfig.REMOTE
         var commitHash: String? = BuildConfig.HEAD

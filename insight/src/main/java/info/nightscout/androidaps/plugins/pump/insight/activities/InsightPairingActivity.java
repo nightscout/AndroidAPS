@@ -9,6 +9,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.LayoutInflater;
@@ -20,6 +22,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -53,6 +57,8 @@ public class InsightPairingActivity extends NoSplashAppCompatActivity implements
     private Button exit;
     private RecyclerView deviceList;
     private final DeviceAdapter deviceAdapter = new DeviceAdapter();
+
+    private final int PERMISSION_REQUEST_BLUETOOTH = 30242;
 
     private InsightConnectionService service;
 
@@ -100,9 +106,18 @@ public class InsightPairingActivity extends NoSplashAppCompatActivity implements
         deviceList.setLayoutManager(new LinearLayoutManager(this));
         deviceList.setAdapter(deviceAdapter);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (ContextCompat.checkSelfPermission(context, "android.permission.BLUETOOTH_CONNECT") != PackageManager.PERMISSION_GRANTED ||
+                    ContextCompat.checkSelfPermission(context, "android.permission.BLUETOOTH_SCAN") != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(this, new String[]{"android.permission.BLUETOOTH_SCAN", "android.permission.BLUETOOTH_CONNECT"}, PERMISSION_REQUEST_BLUETOOTH);
+                finish();
+                return;
+            }
+        }
 
         bindService(new Intent(this, InsightConnectionService.class), serviceConnection, BIND_AUTO_CREATE);
-}
+    }
 
     @Override
     protected void onDestroy() {
@@ -110,8 +125,8 @@ public class InsightPairingActivity extends NoSplashAppCompatActivity implements
             service.withdrawConnectionRequest(InsightPairingActivity.this);
             service.unregisterStateCallback(InsightPairingActivity.this);
             service.unregisterExceptionCallback(InsightPairingActivity.this);
+            unbindService(serviceConnection);
         }
-        unbindService(serviceConnection);
         super.onDestroy();
     }
 
@@ -172,7 +187,7 @@ public class InsightPairingActivity extends NoSplashAppCompatActivity implements
 
     private void startBLScan() {
         if (!scanning) {
-            BluetoothAdapter bluetoothAdapter = ((BluetoothManager)context.getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
+            BluetoothAdapter bluetoothAdapter = ((BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
             if (bluetoothAdapter != null) {
                 if (!bluetoothAdapter.isEnabled()) bluetoothAdapter.enable();
                 IntentFilter intentFilter = new IntentFilter();
@@ -188,13 +203,14 @@ public class InsightPairingActivity extends NoSplashAppCompatActivity implements
     private void stopBLScan() {
         if (scanning) {
             unregisterReceiver(broadcastReceiver);
-            BluetoothAdapter bluetoothAdapter = ((BluetoothManager)context.getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
+            BluetoothAdapter bluetoothAdapter = ((BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
             if (bluetoothAdapter != null) {
                 bluetoothAdapter.cancelDiscovery();
             }
             scanning = false;
         }
     }
+
     @Override
     public void onClick(View v) {
         if (v == exit) finish();
@@ -216,7 +232,7 @@ public class InsightPairingActivity extends NoSplashAppCompatActivity implements
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (action.equals(BluetoothAdapter.ACTION_DISCOVERY_FINISHED))
-                ((BluetoothManager)context.getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter().startDiscovery();
+                ((BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter().startDiscovery();
             else if (action.equals(BluetoothDevice.ACTION_FOUND)) {
                 BluetoothDevice bluetoothDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 deviceAdapter.addDevice(bluetoothDevice);

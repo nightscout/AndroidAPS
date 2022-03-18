@@ -43,7 +43,7 @@ class ComboErrorUtil @Inject constructor(
     private val isErrorPresent: Boolean
         get() = errorMap.isNotEmpty()
     val errorCount: Int
-        get() = if (sp.contains(R.string.key_combo_error_count)) sp.getInt(R.string.key_combo_error_count, -1) else -1
+        get() = sp.getInt(R.string.key_combo_error_count, -1)
     val displayType: DisplayType
         get() = DisplayType.valueOf(sp.getString(R.string.key_show_comm_error_count, "ON_ERROR"))
 }

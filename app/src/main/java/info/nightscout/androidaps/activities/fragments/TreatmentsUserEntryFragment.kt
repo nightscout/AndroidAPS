@@ -128,9 +128,9 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
 
         override fun onBindViewHolder(holder: UserEntryViewHolder, position: Int) {
             val current = entries[position]
-            val sameDayPrevious = position > 0 && dateUtil.isSameDay(current.timestamp, entries[position - 1].timestamp)
-            holder.binding.date.visibility = sameDayPrevious.not().toVisibility()
-            holder.binding.date.text = dateUtil.dateString(current.timestamp)
+            val newDay = position == 0 || !dateUtil.isSameDayGroup(current.timestamp, entries[position - 1].timestamp)
+            holder.binding.date.visibility = newDay.toVisibility()
+            holder.binding.date.text = if (newDay) dateUtil.dateStringRelative(current.timestamp, rh) else ""
             holder.binding.time.text = dateUtil.timeStringWithSeconds(current.timestamp)
             holder.binding.action.text = context?.let { userEntryPresentationHelper.actionToColoredString(it, current.action) }
             holder.binding.notes.text = current.note
