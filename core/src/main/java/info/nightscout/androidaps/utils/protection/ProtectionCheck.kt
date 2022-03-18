@@ -16,7 +16,6 @@ class ProtectionCheck @Inject constructor(
 ) {
 
     private var lastAuthorization = mutableListOf(0L, 0L, 0L)
-    private val timeout = TimeUnit.SECONDS.toMillis(sp.getInt(R.string.key_protection_timeout, 0).toLong())
 
     enum class Protection {
         PREFERENCES,
@@ -75,6 +74,9 @@ class ProtectionCheck @Inject constructor(
     }
 
     private fun activeSession(protection: Protection): Boolean {
+        var timeout = TimeUnit.SECONDS.toMillis(sp.getInt(R.string.key_protection_timeout, 0).toLong())
+        // Default timeout to pass the resume check at start of an activity
+        timeout = if (timeout < 1000) 1000 else timeout
         val last = lastAuthorization[protection.ordinal]
         val diff = dateUtil.now() - last
         return diff < timeout
