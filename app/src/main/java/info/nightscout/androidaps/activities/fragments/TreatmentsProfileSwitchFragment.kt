@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.activities.fragments.TreatmentsProfileSwitchFragment.RecyclerProfileViewAdapter.ProfileSwitchViewHolder
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.UserEntry.Action
@@ -20,20 +21,17 @@ import info.nightscout.androidaps.database.transactions.InvalidateProfileSwitchT
 import info.nightscout.androidaps.databinding.TreatmentsProfileswitchFragmentBinding
 import info.nightscout.androidaps.databinding.TreatmentsProfileswitchItemBinding
 import info.nightscout.androidaps.dialogs.ProfileViewerDialog
+import info.nightscout.androidaps.events.EventEffectiveProfileSwitchChanged
 import info.nightscout.androidaps.events.EventProfileSwitchChanged
+import info.nightscout.androidaps.events.EventTreatmentUpdateGui
 import info.nightscout.androidaps.extensions.getCustomizedName
 import info.nightscout.androidaps.extensions.toVisibility
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
-import info.nightscout.androidaps.events.EventTreatmentUpdateGui
-import info.nightscout.androidaps.activities.fragments.TreatmentsProfileSwitchFragment.RecyclerProfileViewAdapter.ProfileSwitchViewHolder
-import info.nightscout.androidaps.events.EventEffectiveProfileSwitchChanged
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
@@ -41,6 +39,8 @@ import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -170,7 +170,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
     @Synchronized
     override fun onDestroyView() {
         super.onDestroyView()
-        removeActionMode?.let { it.finish() }
+        removeActionMode?.finish()
         binding.recyclerview.adapter = null // avoid leaks
         _binding = null
     }
@@ -189,8 +189,8 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
             holder.binding.date.text = dateUtil.dateString(profileSwitch.timestamp)
             holder.binding.time.text = dateUtil.timeString(profileSwitch.timestamp)
             holder.binding.duration.text = rh.gs(R.string.format_mins, T.msecs(profileSwitch.duration ?: 0L).mins())
-            holder.binding.name.text = if (profileSwitch is ProfileSealed.PS) profileSwitch.value.getCustomizedName() 
-                else if (profileSwitch is ProfileSealed.EPS) profileSwitch.value.originalCustomizedName else ""
+            holder.binding.name.text =
+                if (profileSwitch is ProfileSealed.PS) profileSwitch.value.getCustomizedName() else if (profileSwitch is ProfileSealed.EPS) profileSwitch.value.originalCustomizedName else ""
             if (profileSwitch.isInProgress(dateUtil)) holder.binding.date.setTextColor(rh.gc(R.color.colorActive))
             else holder.binding.date.setTextColor(holder.binding.duration.currentTextColor)
             holder.binding.clone.tag = profileSwitch
@@ -212,7 +212,6 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
             }
             holder.binding.clone.visibility = (profileSwitch is ProfileSealed.PS).toVisibility()
             holder.binding.spacer.visibility = (profileSwitch is ProfileSealed.PS).toVisibility()
-            holder.binding.root.setBackgroundColor(rh.gc(if (profileSwitch is ProfileSealed.PS) R.color.defaultbackground else R.color.list_delimiter))
             val nextTimestamp = if (profileSwitchList.size != position + 1) profileSwitchList[position + 1].timestamp else 0L
             holder.binding.delimiter.visibility = dateUtil.isSameDay(profileSwitch.timestamp, nextTimestamp).toVisibility()
         }
