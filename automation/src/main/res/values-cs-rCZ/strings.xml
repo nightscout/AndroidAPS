@@ -113,4 +113,11 @@
     <string name="automation_event">Událost automatizace</string>
     <string name="reorder_label">Změna pořadí</string>
     <string name="user_action">Uživatelská akce</string>
+    <string name="remove_automation">Odstranit automatizaci</string>
+    <string name="sort_automation">Seřadit automatizace</string>
+    <string name="remove_selected_items">Odstranit zvolené položky</string>
+    <string name="count_selected">Vybráno: %1$d</string>
+    <string name="confirm_remove_multiple_items">Opravdu chcete odstranit %1$d položek</string>
+    <string name="sort_label">Seřadit</string>
+    <string name="system_automation">Automatizace systému</string>
 </resources>
