@@ -569,5 +569,6 @@
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="overview_show_predictions">Projeksies</string>
     <string name="prime">Prima</string>
+    <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
 </resources>
