@@ -58,7 +58,6 @@ class LocalProfileFragment : DaggerFragment() {
     private var disposable: CompositeDisposable = CompositeDisposable()
 
     private var basalView: TimeListEdit? = null
-//    private var spinner: SpinnerHelper? = null
 
     private val save = Runnable {
         doEdit()
@@ -240,7 +239,6 @@ class LocalProfileFragment : DaggerFragment() {
             )
         }
 
-        // Spinner
         context?.let { context ->
             val profileList: ArrayList<CharSequence> = localProfilePlugin.profile?.getProfileList() ?: ArrayList()
             binding.profileList.setAdapter(ArrayAdapter(context, R.layout.spinner_centered, profileList))
