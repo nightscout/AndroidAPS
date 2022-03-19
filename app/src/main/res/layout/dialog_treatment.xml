@@ -18,9 +18,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@color/dialog_title_background"
+            android:background="?attr/dialogTitleBackground"
             android:orientation="horizontal"
-            android:padding="5dp">
+            android:padding="5dp"
+            android:layout_marginBottom="5dp">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -53,7 +54,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="5dp"
-                android:text="@string/do_not_bolus_record_only" />
+                android:text="@string/do_not_bolus_record_only"
+                tools:visibility="gone"/>
 
         </LinearLayout>
 
@@ -77,6 +79,7 @@
                 android:id="@+id/insulin"
                 android:layout_width="130dp"
                 android:layout_height="40dp"
+                android:layout_marginBottom="2dp"
                 app:customContentDescription="@string/overview_insulin_label" />
 
             <TextView

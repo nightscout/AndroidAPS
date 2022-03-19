@@ -55,6 +55,7 @@
             android:resource="@xml/automotive_app_desc" />
 
         <activity android:name=".MainActivity"
+            android:theme="@style/AppTheme"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -62,7 +63,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.PreferencesActivity" />
+        <activity android:name=".activities.PreferencesActivity"
+            android:theme="@style/AppTheme" />
         <activity android:name=".plugins.general.overview.activities.QuickWizardListActivity"
             android:theme="@style/AppTheme"
             android:exported="false">
@@ -72,12 +74,18 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".plugins.general.maintenance.activities.PrefImportListActivity" />
-        <activity android:name=".activities.HistoryBrowseActivity" />
-        <activity android:name=".activities.TreatmentsActivity" />
-        <activity android:name=".activities.SurveyActivity" />
-        <activity android:name=".activities.ProfileHelperActivity" />
-        <activity android:name=".activities.StatsActivity" />
+        <activity android:name=".plugins.general.maintenance.activities.PrefImportListActivity"
+            android:theme="@style/AppTheme" />
+        <activity android:name=".activities.HistoryBrowseActivity"
+            android:theme="@style/AppTheme" />
+        <activity android:name=".activities.TreatmentsActivity"
+            android:theme="@style/AppTheme" />
+        <activity android:name=".activities.SurveyActivity"
+            android:theme="@style/AppTheme" />
+        <activity android:name=".activities.ProfileHelperActivity"
+            android:theme="@style/AppTheme" />
+        <activity android:name=".activities.StatsActivity"
+            android:theme="@style/AppTheme" />
         <activity
             android:name="com.google.firebase.auth.internal.FederatedSignInActivity"
             android:excludeFromRecents="true"
@@ -229,6 +237,7 @@
         <activity
             android:name=".setupwizard.SetupWizardActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/AppTheme"
             android:label="@string/title_activity_setup_wizard" />
 
         <activity

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    card_view:cardBackgroundColor="@color/cardColorBackground"
+    card_view:cardBackgroundColor="?attr/cardItemBackgroundColor"
     card_view:cardUseCompatPadding="true">
 
     <LinearLayout
@@ -58,7 +58,7 @@
                 android:paddingStart="10dp"
                 android:text="NS"
                 android:textAlignment="viewEnd"
-                android:textColor="@color/colorSetTempButton" />
+                android:textColor="?attr/setTempButton" />
 
             <TextView
                 android:id="@+id/invalid"
@@ -66,8 +66,7 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="10dp"
                 android:text="@string/invalid"
-                android:textColor="@android:color/holo_red_light" />
-
+                android:textColor="?attr/alarmColor" />
 
         </LinearLayout>
 

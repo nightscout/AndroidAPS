@@ -50,6 +50,8 @@ class SetupWizardActivity : NoSplashAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // temp while switch is not public
+        setTheme(R.style.AppTheme)
         update(applicationContext)
         binding = ActivitySetupwizardBinding.inflate(layoutInflater)
         setContentView(binding.root)

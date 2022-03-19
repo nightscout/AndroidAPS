@@ -9,6 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/filter"
+        android:textColorHint="?attr/colorOnPrimary"
         app:endIconMode="clear_text">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -22,7 +23,8 @@
             android:autofillHints="@string/filter"
             android:gravity="start"
             android:textStyle="bold"
-            android:inputType="text" />
+            android:inputType="text"
+            android:background="@color/transparent"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
