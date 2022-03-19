@@ -111,7 +111,7 @@
             android:layout_weight="1"
             android:text="@string/clearlog"
             android:textAlignment="center"
-            android:textColor="@android:color/holo_orange_light"
+            android:textColor="?attr/actionButton"
             android:textStyle="normal|bold" />
 
         <TextView
@@ -121,7 +121,7 @@
             android:layout_weight="1"
             android:text="@string/restart"
             android:textAlignment="center"
-            android:textColor="@android:color/holo_orange_light"
+            android:textColor="?attr/actionButton"
             android:textStyle="normal|bold" />
 
         <TextView
@@ -131,7 +131,7 @@
             android:layout_weight="1"
             android:text="@string/deliver_now"
             android:textAlignment="center"
-            android:textColor="@android:color/holo_orange_light"
+            android:textColor="?attr/actionButton"
             android:textStyle="normal|bold" />
 
         <TextView
@@ -141,7 +141,7 @@
             android:layout_weight="1"
             android:text="@string/full_sync"
             android:textAlignment="center"
-            android:textColor="@android:color/holo_orange_light"
+            android:textColor="?attr/actionButton"
             android:textStyle="normal|bold" />
 
     </LinearLayout>

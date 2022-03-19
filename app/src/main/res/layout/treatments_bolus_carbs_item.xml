@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    card_view:cardBackgroundColor="@color/cardColorBackground">
+    card_view:cardBackgroundColor="?attr/cardItemBackgroundColor">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -141,7 +141,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:text="NS"
-                android:textColor="@color/colorSetTempButton"
+                android:textColor="?attr/setTempButton"
                 tools:ignore="HardcodedText" />
 
             <TextView
@@ -150,7 +150,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:text="PH"
-                android:textColor="@color/colorSetTempButton"
+                android:textColor="?attr/setTempButton"
                 tools:ignore="HardcodedText" />
 
             <TextView
@@ -233,7 +233,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:text="NS"
-                android:textColor="@color/colorSetTempButton"
+                android:textColor="?attr/setTempButton"
                 tools:ignore="HardcodedText" />
 
             <TextView
@@ -242,7 +242,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:text="PH"
-                android:textColor="@color/colorSetTempButton"
+                android:textColor="?attr/setTempButton"
                 tools:ignore="HardcodedText" />
 
             <TextView

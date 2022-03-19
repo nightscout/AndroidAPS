@@ -8,7 +8,7 @@
     android:layout_marginLeft="16dp"
     android:layout_marginTop="16dp"
     android:layout_marginRight="16dp"
-    app:cardBackgroundColor="@color/cardColorBackground"
+    app:cardBackgroundColor="?attr/cardItemBackgroundColor"
     app:cardCornerRadius="2dp"
     app:cardUseCompatPadding="true"
     app:contentPadding="16dp">
@@ -23,7 +23,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-medium"
-            android:textColor="#FFFFFF"
             android:textSize="20sp"
             tools:text="1. Title" />
 
@@ -32,7 +31,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:textColor="#FFFFFF"
             tools:text="Objective" />
 
         <TextView
@@ -40,7 +38,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:textColor="#FFFFFF"
             android:textStyle="bold"
             tools:text="Gate" />
 
@@ -125,7 +122,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:textColor="#FFFFFF"
             tools:text="Accomplished" />
 
     </LinearLayout>

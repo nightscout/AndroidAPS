@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@color/dialog_title_background"
+            android:background="?attr/dialogTitleBackground"
             android:orientation="horizontal"
             android:padding="5dp">
 
@@ -68,7 +68,7 @@
                 android:id="@+id/temptarget"
                 android:layout_width="130dp"
                 android:layout_height="40dp"
-                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="2dp"
                 app:customContentDescription="@string/target_label" />
 
             <TextView
@@ -163,7 +163,7 @@
                 android:paddingRight="5dp"
                 android:text="@string/cancel"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@color/tempTargetConfirmation"
+                android:textColor="?attr/tempTargetConfirmation"
                 android:textSize="11sp" />
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
@@ -178,7 +178,7 @@
                 android:paddingRight="5dp"
                 android:text="@string/eatingsoon"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@color/carbs"
+                android:textColor="?attr/carbsColor"
                 android:textSize="11sp" />
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
@@ -193,7 +193,7 @@
                 android:paddingRight="5dp"
                 android:text="@string/activity"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@color/exercise"
+                android:textColor="?attr/exerciseColor"
                 android:textSize="11sp" />
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
@@ -207,7 +207,7 @@
                 android:paddingRight="5dp"
                 android:text="@string/hypo"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@color/low"
+                android:textColor="?attr/lowColor"
                 android:textSize="11sp" />
 
         </LinearLayout>

@@ -2,13 +2,13 @@
 <resources>
     <!-- Default theme color -->
     <!-- This section describes the main theme colors -->
-    <color name="colorPrimary">#787878</color>
-    <color name="colorPrimaryDark">#676767</color>
+    <color name="colorPrimary">#212121</color>
+    <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#40bbaa</color>
     <color name="mdtp_white">#ffffff</color>
     <color name="mdtp_line_dark">#808080</color>
     <color name="colorLightGray">#d8d8d8</color>
-    <color name="cardColorBackground">#999999</color>
+    <color name="cardColorBackground">#212121</color>
     <color name="black_overlay">#66000000</color>
     <color name="gray">#BBBBBB</color>
     <color name="black">#FF000000</color>
@@ -25,7 +25,7 @@
     <color name="overviewPillColorDefault">#1c171c</color>
     <color name="colorOnPrimaryDefault">#FFFFFF</color>
 
-    <color name="defaultbackground">#999999</color>
+    <color name="defaultbackground">#424242</color>
     <color name="defaulttextcolor">#B3FFFFFF</color>
 
     <!--    Tabs-->
@@ -42,7 +42,6 @@
     <color name="ic_local_activate">#67DFE8</color>
     <color name="ic_local_reset">#E93057</color>
     <color name="ic_local_save">#67E86A</color>
-
 
     <!--    Fragments-->
     <color name="pumpStatusBackground">#505050</color>
@@ -168,7 +167,7 @@
     <color name="warning">#ff1a1a</color>
     <color name="info">#77dd77</color>
     <color name="error_background">#66FC0000</color>
-    <color name="ok_background">@color/black</color>
+    <color name="ok_background">@color/colorPrimaryDark</color>
 
     <color name="tempTargetBackground">#77dd77</color>
     <color name="exercise">#67DFE8</color>
@@ -199,7 +198,7 @@
     <color name="deviationred">#72FF0000</color>
     <color name="deviationblack">#72000000</color>
 
-    <color name="splashBackground">#FFFFFF</color>
+    <color name="splashBackground">#000000</color>
 
     <!-- Gray colors -->
     <color name="darkgray">#323232</color>

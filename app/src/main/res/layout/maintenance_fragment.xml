@@ -30,7 +30,7 @@
             android:layout_marginBottom="3dp"
             android:layout_weight="0.5"
             android:text="@string/nav_logsettings"
-            android:textColor="@color/colorTreatmentButton" />
+            android:textColor="?attr/treatmentButton" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/log_send"
@@ -43,7 +43,7 @@
             android:layout_marginBottom="3dp"
             android:layout_weight="0.5"
             android:text="@string/send_all_logs"
-            android:textColor="@color/colorTreatmentButton" />
+            android:textColor="?attr/treatmentButton" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/log_delete"
@@ -56,7 +56,7 @@
             android:layout_marginBottom="3dp"
             android:layout_weight="0.5"
             android:text="@string/delete_logs"
-            android:textColor="@color/colorTreatmentButton" />
+            android:textColor="?attr/treatmentButton" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/nav_export"
@@ -69,7 +69,7 @@
             android:layout_marginBottom="3dp"
             android:layout_weight="0.5"
             android:text="@string/nav_export"
-            android:textColor="@color/colorTreatmentButton" />
+            android:textColor="?attr/treatmentButton" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/nav_import"
@@ -82,7 +82,7 @@
             android:layout_marginBottom="3dp"
             android:layout_weight="0.5"
             android:text="@string/nav_import"
-            android:textColor="@color/colorTreatmentButton" />
+            android:textColor="?attr/treatmentButton" />
 
 
         <com.google.android.material.button.MaterialButton
@@ -96,7 +96,7 @@
             android:layout_marginBottom="3dp"
             android:layout_weight="0.5"
             android:text="@string/ue_export_to_csv"
-            android:textColor="@color/colorTreatmentButton" />
+            android:textColor="?attr/treatmentButton" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/nav_resetdb"
@@ -109,7 +109,7 @@
             android:layout_marginBottom="3dp"
             android:layout_weight="0.5"
             android:text="@string/nav_resetdb"
-            android:textColor="@color/colorTreatmentButton" />
+            android:textColor="?attr/treatmentButton" />
 
     </LinearLayout>
 

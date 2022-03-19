@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:background="@color/defaultbackground"
+            android:background="?attr/defaultbackground"
             android:orientation="horizontal">
 
             <TextView
@@ -47,8 +47,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/profiletype"
-            android:textColorHint="@color/tabBgColorSelected"
-            app:boxStrokeColor="@color/tabBgColorSelected">
+            android:textColorHint="?attr/tabBgColorSelected"
+            app:boxStrokeColor="?attr/tabBgColorSelected">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/profiletype"
@@ -90,6 +90,7 @@
                         android:id="@+id/age"
                         android:layout_width="130dp"
                         android:layout_height="40dp"
+                        android:layout_marginBottom="2dp"
                         app:customContentDescription="@string/age" />
 
                 </TableRow>
@@ -112,6 +113,7 @@
                         android:id="@+id/tdd"
                         android:layout_width="130dp"
                         android:layout_height="40dp"
+                        android:layout_marginBottom="2dp"
                         app:customContentDescription="@string/tdd_total" />
 
                 </TableRow>
@@ -134,6 +136,7 @@
                         android:id="@+id/weight"
                         android:layout_width="130dp"
                         android:layout_height="40dp"
+                        android:layout_marginBottom="2dp"
                         app:customContentDescription="@string/weight_label" />
 
                 </TableRow>
@@ -205,8 +208,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/selected_profile"
-                android:textColorHint="@color/white"
-                app:boxStrokeColor="@color/white">
+                app:boxStrokeColor="?attr/boxStrokeColor">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/available_profile_list"
@@ -234,8 +236,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/careportal_profileswitch"
-                android:textColorHint="@color/white"
-                app:boxStrokeColor="@color/white">
+                app:boxStrokeColor="?attr/boxStrokeColor">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/profileswitch_list"

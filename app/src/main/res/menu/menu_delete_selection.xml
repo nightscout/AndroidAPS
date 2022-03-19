@@ -4,7 +4,7 @@
     <item
         android:id="@+id/remove_selected"
         android:icon="@drawable/ic_trash"
-        android:iconTint="@color/white"
+        android:iconTint="?attr/trashBinTintColor"
         android:title="@string/remove_selected_items"
         app:showAsAction="always" />
 

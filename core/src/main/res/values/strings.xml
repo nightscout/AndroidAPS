@@ -64,6 +64,7 @@
     <string name="key_resistantadult" translatable="false">resistantadult</string>
     <string name="key_pregnant" translatable="false">pregnant</string>
     <string name="key_app_expiration" translatable="false">app_expiration</string>
+    <string name="key_use_dark_mode" translatable="false">use_dark_mode</string>
 
     <!--    General-->
     <string name="refresh">Refresh</string>

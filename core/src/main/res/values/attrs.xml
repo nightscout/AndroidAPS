@@ -1,18 +1,88 @@
 <resources>
-
-    <attr name="dialogTitleBackground" format="reference" />
-    <attr name="dialogTitleColor" format="reference" />
-    <attr name="dialogTitleIconTint" format="reference" />
-
+    <!---bolus color -->
+    <attr name="bolusColor" format="reference|color" />
+    <!---Treatment button color -->
+    <attr name="treatmentButton" format="reference|color" />
+    <!---Number Picker text color -->
+    <attr name="numPickerText" format="reference|color" />
+    <!---NS Client action text color -->
+    <attr name="actionButton" format="reference|color" />
+    <!---Text color for Quickwizard and more -->
+    <attr name="cardObjectiveText" format="reference|color" />
+    <!---Text color for misc buttons and texts -->
+    <attr name="alarmColor" format="reference|color" />
+    <!-- Number picker and more -->
+    <attr name="totalBackground" format="reference|color" />
+    <!-- BG source temp button -->
+    <attr name="setTempButton" format="reference|color" />
+    <!-- Card Item-->
+    <attr name="cardItemBackgroundColor" format="reference|color" />
+    <!-- Carbs -->
+    <attr name="carbsColor" format="reference|color" />
+    <!-- Exercise -->
+    <attr name="exerciseColor" format="reference|color" />
+    <!-- BG low -->
+    <attr name="lowColor" format="reference|color" />
+    <!-- Temp Target -->
+    <attr name="tempTargetConfirmation" format="reference|color" />
+    <!-- Treatments -->
+    <attr name="setExtendedButtonColor" format="reference|color" />
+    <!-- Carbs Button -->
+    <attr name="carbsButtonColor" format="reference|color" />
+    <!-- Temp Button Button -->
+    <attr name="acceptTempButtonColor" format="reference|color" />
+    <!-- Treatment Button -->
+    <attr name="treatmentButtonColor" format="reference|color" />
+    <!-- Insulin Button -->
+    <attr name="insulinButtonColor" format="reference|color" />
+    <!-- Calculator Button -->
+    <attr name="calculatorButtonColor" format="reference|color" />
+    <!-- Calibration Button -->
+    <attr name="calibrationButtonColor" format="reference|color" />
+    <!-- QuickWizard Button -->
+    <attr name="quickWizardButtonColor" format="reference|color" />
+    <!-- Pump -->
+    <attr name="pumpStatusBackground" format="reference|color" />
+    <!-- Objectives -->
+    <attr name="objectivesBackgroundColor" format="reference|color" />
+    <attr name="objectivesDisabledTextColor" format="reference|color" />
+    <!---Import List -->
+    <attr name="importListFileNameColor" format="reference|color" />
+    <attr name="importListAdditionalInfoColor" format="reference|color" />
+    <attr name="metadataTextWarningColor" format="reference|color" />
+    <attr name="metadataTextOkColor" format="reference|color" />
+    <!---Delete selection -->
+    <attr name="trashBinTintColor" format="reference|color" />
+    <attr name="dialogTitleBackground" format="reference|color" />
+    <attr name="dialogTitleColor" format="reference|color" />
+    <attr name="dialogTitleIconTint" format="reference|color" />
+    <!---Dialog  -->
+    <attr name="activity_title_backgroundColor" format="reference|color" />
+    <!---Automation  -->
+    <attr name="ribbonDefaultColor" format="reference|color" />
+    <!---Main Activity Tab  -->
+    <attr name="tabSelectedTextColor" format="reference|color" />
+    <attr name="tabTextColor" format="reference|color" />
+    <!---Background  -->
+    <attr name="defaultbackground" format="reference|color" />
+    <!---Toast  -->
+    <attr name="toastBaseTextColor" format="reference|color" />
+    <!---Input  -->
+    <attr name="boxStrokeColor" format="reference|color" />
+    <!---Profile Helper  -->
+    <attr name="tabBgColorSelected" format="reference|color" />
+    <!-- Fragment background for some themes default transparent  -->
+    <attr name="fragmentbackground" format="reference|color" />
     <declare-styleable name="NumberPicker">
         <attr name="customContentDescription" format="string" />
     </declare-styleable>
-
     <!---Notification -->
     <attr name="notificationUrgent" format="reference|color" />
     <attr name="notificationNormal" format="reference|color" />
     <attr name="notificationLow" format="reference|color" />
     <attr name="notificationInfo" format="reference|color" />
     <attr name="notificationAnnouncement" format="reference|color" />
+    <!---Splash Background  -->
+    <attr name="splashBackgroundColor" format="reference|color" />
 
 </resources>

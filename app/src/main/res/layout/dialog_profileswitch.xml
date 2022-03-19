@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@color/dialog_title_background"
+            android:background="?attr/dialogTitleBackground"
             android:orientation="horizontal"
             android:padding="5dp">
 
@@ -48,29 +48,25 @@
             android:orientation="horizontal"
             android:padding="5dp" />
 
-        <LinearLayout
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:hint="@string/profile"
+            app:boxStrokeColor="@color/list_delimiter">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                android:id="@+id/profileList"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:width="120dp"
-                android:labelFor="@+id/profile"
-                android:padding="10dp"
-                android:text="@string/profile_label"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textStyle="bold" />
+                android:clickable="true"
+                android:enabled="false"
+                tools:ignore="KeyboardInaccessibleWidget" />
 
-            <Spinner
-                android:id="@+id/profile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/reuselayout"
@@ -111,7 +107,8 @@
                 android:id="@+id/duration"
                 android:layout_width="130dp"
                 android:layout_height="40dp"
-                app:customContentDescription="@string/careportal_newnstreatment_duration_label"/>
+                android:layout_marginBottom="2dp"
+                app:customContentDescription="@string/careportal_newnstreatment_duration_label" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -147,7 +144,8 @@
                 android:id="@+id/percentage"
                 android:layout_width="130dp"
                 android:layout_height="40dp"
-                app:customContentDescription="@string/careportal_newnstreatment_percentage_label"/>
+                android:layout_marginBottom="2dp"
+                app:customContentDescription="@string/careportal_newnstreatment_percentage_label" />
 
             <TextView
                 android:layout_width="wrap_content"

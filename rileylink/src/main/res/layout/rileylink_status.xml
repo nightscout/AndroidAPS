@@ -15,9 +15,9 @@
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/rileylink_settings_tabs"
-            app:tabIndicatorColor="@color/tabSelectedTextColor"
-            app:tabTextColor="@color/tabTextColor"
-            app:tabSelectedTextColor="@color/tabSelectedTextColor"
+            app:tabIndicatorColor="?attr/tabSelectedTextColor"
+            app:tabTextColor="?attr/tabTextColor"
+            app:tabSelectedTextColor="?attr/tabSelectedTextColor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 

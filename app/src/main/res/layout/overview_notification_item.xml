@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:layout_margin="1dp"
-    card_view:cardBackgroundColor="@color/notificationUrgent"
+    card_view:cardBackgroundColor="?attr/notificationUrgent"
     card_view:cardCornerRadius="6dp">
 
     <LinearLayout
