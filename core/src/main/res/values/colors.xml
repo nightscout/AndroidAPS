@@ -25,7 +25,7 @@
     <color name="overviewPillColorDefault">#1c171c</color>
     <color name="colorOnPrimaryDefault">#FFFFFF</color>
 
-    <color name="defaultbackground">#999999</color>
+    <color name="defaultbackground">#424242</color>
     <color name="defaulttextcolor">#B3FFFFFF</color>
 
     <!--    Tabs-->
