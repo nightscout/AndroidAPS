@@ -941,6 +941,11 @@
     <string name="a11y_delete_current_profile">מחק את הפרופיל הנוכחי</string>
     <string name="a11y_add_new_to_list">הוסף לרשימה</string>
     <!-- Theme switcher dark and light mode-->
+    <string name="theme_switcher_summary">לבחירת ערכת נושא כהה, בהירה או ע\"פ ערכת הנושא של המכשיר</string>
+    <string name="app_color_scheme">סכמת צבעים</string>
+    <string name="dark_theme">ערכת נושא כהה</string>
+    <string name="light_theme">ערכת נושא בהירה</string>
+    <string name="follow_system_theme">השתמש בערכת הנושא של המכשיר</string>
     <!-- WEAR OS-->
     <string name="wizard_carbs_constraint">הפרת מגבלות פחמימה!</string>
     <string name="wizard_explain_carbs">פחמ\': %1$.2f יח\'</string>
