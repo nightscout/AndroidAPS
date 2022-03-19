@@ -574,5 +574,6 @@
     <string name="format_percent">%1$d%%</string>
     <string name="unit_minute_short">min</string>
     <!-- SMS Communicator & OTP Authenticator -->
+    <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
 </resources>
