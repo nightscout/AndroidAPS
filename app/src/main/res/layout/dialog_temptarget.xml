@@ -120,31 +120,24 @@
 
         </LinearLayout>
 
-        <LinearLayout
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:hint="@string/reason"
+            app:boxStrokeColor="@color/list_delimiter">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                android:id="@+id/reasonList"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:width="120dp"
-                android:padding="10dp"
-                android:labelFor="@+id/reason"
-                android:text="@string/reason"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textStyle="bold" />
+                android:clickable="true"
+                android:enabled="false"
+                tools:ignore="KeyboardInaccessibleWidget" />
 
-            <Spinner
-                android:id="@+id/reason"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp" />
-
-        </LinearLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

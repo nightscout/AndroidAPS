@@ -105,8 +105,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
                 rh.gs(R.string.activity),
                 rh.gs(R.string.hypo)
             )
-            val adapterReason = ArrayAdapter(context, R.layout.spinner_centered, reasonList)
-            binding.reason.adapter = adapterReason
+            binding.reasonList.setAdapter(ArrayAdapter(context, R.layout.spinner_centered, reasonList))
 
             binding.targetCancel.setOnClickListener { binding.duration.value = 0.0; shortClick(it) }
             binding.eatingSoon.setOnClickListener { shortClick(it) }
@@ -140,19 +139,19 @@ class TempTargetDialog : DialogFragmentWithDate() {
             R.id.eating_soon -> {
                 binding.temptarget.value = defaultValueHelper.determineEatingSoonTT()
                 binding.duration.value = defaultValueHelper.determineEatingSoonTTDuration().toDouble()
-                binding.reason.setSelection(reasonList.indexOf(rh.gs(R.string.eatingsoon)))
+                binding.reasonList.setText(rh.gs(R.string.eatingsoon), false)
             }
 
             R.id.activity    -> {
                 binding.temptarget.value = defaultValueHelper.determineActivityTT()
                 binding.duration.value = defaultValueHelper.determineActivityTTDuration().toDouble()
-                binding.reason.setSelection(reasonList.indexOf(rh.gs(R.string.activity)))
+                binding.reasonList.setText(rh.gs(R.string.activity), false)
             }
 
             R.id.hypo        -> {
                 binding.temptarget.value = defaultValueHelper.determineHypoTT()
                 binding.duration.value = defaultValueHelper.determineHypoTTDuration().toDouble()
-                binding.reason.setSelection(reasonList.indexOf(rh.gs(R.string.hypo)))
+                binding.reasonList.setText(rh.gs(R.string.hypo), false)
             }
         }
     }
@@ -166,7 +165,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
     override fun submit(): Boolean {
         if (_binding == null) return false
         val actions: LinkedList<String> = LinkedList()
-        var reason = binding.reason.selectedItem?.toString() ?: return false
+        var reason = binding.reasonList.text.toString()
         val unitResId = if (profileFunction.getUnits() == GlucoseUnit.MGDL) R.string.mgdl else R.string.mmol
         val target = binding.temptarget.value
         val duration = binding.duration.value.toInt()
