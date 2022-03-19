@@ -12,7 +12,6 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:text="@string/serialnumber" />
 
@@ -27,7 +26,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:text="@string/release_software_version" />
 
@@ -42,7 +40,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:text="@string/ui_processor_software_version" />
 
@@ -57,7 +54,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:text="@string/pc_processor_software_version" />
 
@@ -72,7 +68,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:text="@string/md_tel_processor_software_version" />
 
@@ -102,7 +97,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:text="@string/bt_info_page_version" />
 
@@ -117,7 +111,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:text="@string/bluetooth_address" />
 
@@ -132,7 +125,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:text="@string/system_id_appendix" />
 
@@ -147,7 +139,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:text="@string/manufacturing_date" />
 

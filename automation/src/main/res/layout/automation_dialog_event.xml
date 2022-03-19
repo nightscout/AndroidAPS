@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@color/dialog_title_background"
+            android:background="?attr/dialogTitleBackground"
             android:orientation="horizontal"
             android:padding="5dp">
 
@@ -114,7 +114,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:background="@color/ribbonDefault"
+                    android:background="?attr/activity_title_backgroundColor"
                     android:padding="8dp"
                     android:text="@string/edit_short" />
 
@@ -148,7 +148,7 @@
                 android:layout_height="2dip"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
-                android:background="@color/list_delimiter" />
+                android:background="?android:attr/dividerHorizontal" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -177,7 +177,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:background="@color/ribbonDefault"
+                    android:background="?attr/activity_title_backgroundColor"
                     android:padding="8dp"
                     android:text="@string/add_short" />
 

@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@color/dialog_title_background"
+            android:background="?attr/dialogTitleBackground"
             android:orientation="horizontal"
             android:padding="5dp">
 
@@ -72,6 +72,7 @@
                     android:id="@+id/bg_input"
                     android:layout_width="130dp"
                     android:layout_height="40dp"
+                    android:layout_marginBottom="2dp"
                     app:customContentDescription="@string/a11y_current_bg" />
 
                 <TextView
@@ -106,6 +107,7 @@
                     android:layout_width="130dp"
                     android:layout_height="40dp"
                     android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="2dp"
                     app:customContentDescription="@string/treatments_wizard_carbs_label" />
 
                 <TextView
@@ -182,7 +184,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="10dp"
-            android:background="@color/dialog_title_background"
+            android:background="?attr/dialogTitleBackground"
             android:gravity="center_horizontal"
             android:orientation="horizontal"
             android:paddingTop="5dp"
@@ -207,7 +209,7 @@
                 android:paddingRight="10dp"
                 android:text="50%"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="@color/bolus"
+                android:textColor="?attr/bolusColor"
                 tools:ignore="HardcodedText" />
 
         </LinearLayout>
@@ -242,77 +244,67 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center|center_vertical"
-            android:layout_marginTop="10dp"
-            android:background="@android:color/transparent"
-            android:orientation="horizontal"
-            android:padding="0dp">
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:paddingHorizontal="10dp">
 
-            <CheckBox
+            <ToggleButton
                 android:id="@+id/bg_checkbox_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:button="@android:color/transparent"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:checked="true"
                 android:contentDescription="@string/treatments_wizard_bg_label"
-                android:drawableStart="@drawable/checkbox_bg_icon"
+                android:drawableTop="@drawable/checkbox_bg_icon"
                 android:scaleX="1.4"
                 android:scaleY="1.4" />
 
-            <CheckBox
+            <ToggleButton
                 android:id="@+id/tt_checkbox_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:button="@android:color/transparent"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:checked="true"
                 android:contentDescription="@string/treatments_wizard_tt_label"
-                android:drawableStart="@drawable/checkbox_tt_icon"
+                android:drawableTop="@drawable/checkbox_tt_icon"
                 android:scaleX="1.6"
-                android:scaleY="1.6"
-                android:visibility="gone" />
+                android:scaleY="1.6" />
 
-            <CheckBox
+            <ToggleButton
                 android:id="@+id/trend_checkbox_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:button="@android:color/transparent"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:checked="true"
                 android:contentDescription="@string/bg_trend_label"
-                android:drawableStart="@drawable/checkbox_trend_icon"
+                android:drawableTop="@drawable/checkbox_trend_icon"
                 android:scaleX="1.4"
                 android:scaleY="1.4" />
 
-            <CheckBox
+            <ToggleButton
                 android:id="@+id/iob_checkbox_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:button="@android:color/transparent"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:checked="true"
                 android:contentDescription="@string/iob"
-                android:drawableStart="@drawable/checkbox_iob_icon"
+                android:drawableTop="@drawable/checkbox_iob_icon"
                 android:scaleX="1.4"
                 android:scaleY="1.4" />
 
-            <CheckBox
+            <ToggleButton
                 android:id="@+id/cob_checkbox_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:button="@android:color/transparent"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:checked="true"
                 android:contentDescription="@string/treatments_wizard_cob_label"
-                android:drawableStart="@drawable/checkbox_cob_icon"
+                android:drawableTop="@drawable/checkbox_cob_icon"
                 android:scaleX="1.6"
                 android:scaleY="1.6" />
 
@@ -350,7 +342,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="0dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/list_delimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
         <LinearLayout
             android:id="@+id/result"
@@ -411,21 +403,26 @@
                 android:layout_gravity="center_horizontal"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:labelFor="@id/profile"
-                    android:padding="10dp"
-                    android:text="@string/profile_label"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textStyle="bold" />
-
-                <Spinner
-                    android:id="@+id/profile"
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|center_horizontal"
-                    android:layout_weight="0.5" />
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:hint="@string/profile"
+                    android:paddingStart="7dp"
+                    android:layout_weight="0.5"
+                    app:boxStrokeColor="@color/list_delimiter">
+
+                    <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                        android:id="@+id/profileList"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:enabled="false"
+                        tools:ignore="KeyboardInaccessibleWidget" />
+
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <CheckBox
                     android:id="@+id/sb_checkbox"
@@ -451,7 +448,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="0dp"
                     android:layout_marginBottom="5dp"
-                    android:background="@color/list_delimiter" />
+                    android:background="?android:attr/dividerHorizontal" />
 
                 <TableRow
                     android:layout_width="match_parent"

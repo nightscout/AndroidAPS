@@ -4,6 +4,7 @@
     <!--    General-->
     <string name="refresh">Actualizar</string>
     <string name="error">Error</string>
+    <string name="save">Guardar</string>
     <string name="not_set_short">No configurado</string>
     <string name="failedupdatebasalprofile">Error al actualizar el perfil basal</string>
     <string name="profile_set_ok">Perfil basal actualizado en la bomba</string>
@@ -135,6 +136,10 @@
     <string name="minago">hace %1$d m</string>
     <string name="minago_long">Hace %1$d minutos</string>
     <string name="hoursago">hace %1$.1f h</string>
+    <string name="days_ago">Hace %1$.1f día</string>
+    <string name="days_ago_round">Hace %1$.0f días</string>
+    <string name="in_days">en %1$.0f días</string>
+    <string name="in_days_round">en %1$.0f días</string>
     <string name="shorthour">h</string>
     <string name="days">días</string>
     <string name="hours">horas</string>
@@ -150,9 +155,15 @@
     <string name="unit_weeks">semanas</string>
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
+    <string name="later_today">Más tarde hoy</string>
+    <string name="tomorrow">Mañana</string>
+    <string name="today">Hoy</string>
+    <string name="yesterday">Ayer</string>
     <!--    Protection-->
     <string name="wrongpassword">Contraseña incorrecta</string>
+    <string name="wrongpin">Pin erróneo</string>
     <string name="passwords_dont_match">Las ontraseñas no coinciden</string>
+    <string name="pin_dont_match">Los códigos PIN no coinciden</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Valores basales no alineados a las horas: %1$s</string>
     <string name="minimalbasalvaluereplaced">Valor basal reemplazado por el valor mínimo soportado: %1$s</string>
@@ -376,6 +387,7 @@
     <string name="uel_stat_reset">RESTABLECER ESTADÍSTICAS</string>
     <string name="uel_delete_logs">ELIMINAR REGISTROS</string>
     <string name="uel_delete_future_treatments">ELIMINAR TRATAMIENTOS FUTUROS</string>
+    <string name="delete_future_treatments">Eliminar tratamientos futuros</string>
     <string name="uel_export_settings">EXPORTAR AJUSTES</string>
     <string name="uel_import_settings">IMPORTAR AJUSTES</string>
     <string name="uel_reset_databases">RESTABLECER BASES DE DATOS</string>

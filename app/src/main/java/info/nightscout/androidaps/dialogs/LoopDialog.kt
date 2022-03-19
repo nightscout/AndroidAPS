@@ -38,6 +38,7 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -62,6 +63,7 @@ class LoopDialog : DaggerDialogFragment() {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var objectivePlugin: ObjectivesPlugin
+    @Inject lateinit var protectionCheck: ProtectionCheck
 
     private var showOkCancel: Boolean = true
     private var _binding: DialogLoopBinding? = null
@@ -435,6 +437,19 @@ class LoopDialog : DaggerDialogFragment() {
             }
         } catch (e: IllegalStateException) {
             aapsLogger.debug(e.localizedMessage ?: e.toString())
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        activity?.let { activity ->
+            val cancelFail = {
+                aapsLogger.debug(LTag.APS, "Dialog canceled on resume protection: ${this.javaClass.name}")
+                ToastUtils.showToastInUiThread(ctx, R.string.dialog_cancled)
+                dismiss()
+            }
+
+            protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, {}, cancelFail, fail = cancelFail)
         }
     }
 }

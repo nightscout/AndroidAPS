@@ -72,7 +72,6 @@
     <string name="menu_treatment">Behandling</string>
     <string name="menu_treatment_short">Beh</string>
     <string name="menu_bolus">Bolus</string>
-    <string name="menu_ecarb">KH</string>
     <string name="menu_settings">Inställningar</string>
     <string name="menu_status">Status</string>
     <string name="menu_resync">Synkronisera om</string>

@@ -104,11 +104,9 @@
     <string name="troubleshooting_wheretoask">어디에서 AndroidAPS에 대한 도움을 받을 수 있을까요?</string>
     <string name="troubleshooting_fb">Facebook의 AndrioidAPS 사용자 그룹에 조언을 요청할 수 있습니다.</string>
     <string name="troubleshooting_wiki">AndroidAPS 문서를 읽어야 (그리고 다시 읽어야) 합니다.</string>
-    <string name="troubleshooting_gitter">AndroidAPS Gitter room에 기술적 문제들을 기록하고, 조언을 요청할 수 있습니다.</string>
     <string name="troubleshooting_yourendo">당뇨병 클리닉/내분비내과의사에게 문의해야 합니다.</string>
     <string name="troubleshooting_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/ko/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
-    <string name="troubleshooting_hint3">https://gitter.im/MilosKozak/AndroidAPS</string>
     <string name="insulin_label">인슐린 플러그인</string>
     <string name="insulin_ultrarapid">어떤 인슐린에서 초-초속효성의 Oref 플러그인을 사용해야 할까요?</string>
     <string name="insulin_fiasp">피아스프(Fiasp®)</string>

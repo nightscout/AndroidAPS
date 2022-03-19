@@ -20,7 +20,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/list_delimiter"
+            android:background="?android:attr/dividerHorizontal"
             android:gravity="center"
             android:text="1.1.2000"
             android:textAppearance="?android:attr/textAppearanceMedium"
@@ -74,7 +74,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
                 android:text="NS"
-                android:textColor="@color/colorSetTempButton"
+                android:textColor="?attr/setTempButton"
                 tools:ignore="HardcodedText" />
 
             <TextView
@@ -84,7 +84,7 @@
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
                 android:text="@string/invalid"
-                android:textColor="@android:color/holo_red_light" />
+                android:textColor="?attr/alarmColor" />
 
         </LinearLayout>
 
@@ -129,7 +129,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginEnd="5dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/list_delimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
     </LinearLayout>
 

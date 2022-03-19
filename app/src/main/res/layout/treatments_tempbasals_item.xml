@@ -20,7 +20,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/list_delimiter"
+            android:background="?android:attr/dividerHorizontal"
             android:gravity="center"
             android:text="1.1.2000"
             android:textAppearance="?android:attr/textAppearanceMedium"
@@ -79,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:text="E"
-                android:textColor="@color/colorSetExtendedButton"
+                android:textColor="?attr/setExtendedButtonColor"
                 tools:ignore="HardcodedText,RtlSymmetry" />
 
             <TextView
@@ -88,7 +88,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:text="S"
-                android:textColor="@color/colorSetExtendedButton"
+                android:textColor="?attr/setExtendedButtonColor"
                 tools:ignore="HardcodedText,RtlSymmetry" />
 
             <TextView
@@ -97,7 +97,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:text="ES"
-                android:textColor="@color/colorSetExtendedButton"
+                android:textColor="?attr/setExtendedButtonColor"
                 tools:ignore="HardcodedText,RtlSymmetry" />
 
             <TextView
@@ -106,7 +106,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:text="SB"
-                android:textColor="@color/colorSetExtendedButton"
+                android:textColor="?attr/setExtendedButtonColor"
                 tools:ignore="HardcodedText,RtlSymmetry" />
 
             <TextView
@@ -115,7 +115,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:text="PH"
-                android:textColor="@color/colorSetTempButton"
+                android:textColor="?attr/setTempButton"
                 tools:ignore="HardcodedText" />
 
             <TextView
@@ -124,7 +124,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:text="NS"
-                android:textColor="@color/colorSetTempButton"
+                android:textColor="?attr/setTempButton"
                 tools:ignore="HardcodedText" />
 
             <TextView
@@ -170,7 +170,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:text="@string/invalid"
-                android:textColor="@android:color/holo_red_light" />
+                android:textColor="?attr/alarmColor" />
 
             <CheckBox
                 android:id="@+id/cb_remove"
@@ -195,7 +195,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/list_delimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
     </LinearLayout>
 

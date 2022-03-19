@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    card_view:cardBackgroundColor="?android:colorBackground">
+    card_view:cardBackgroundColor="?attr/cardItemBackgroundColor">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -30,7 +30,7 @@
                 android:layout_marginEnd="6dp"
                 android:layout_marginBottom="1dp"
                 card_view:srcCompat="@drawable/ic_meta_format"
-                app:tint="@color/importListFileName" />
+                app:tint="?attr/importListFileNameColor" />
 
             <TextView
                 android:id="@+id/filelist_name"
@@ -43,7 +43,7 @@
                 android:scrollHorizontally="false"
                 android:text="File name here"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/importListFileName"
+                android:textColor="?attr/importListFileNameColor"
                 tools:ignore="HardcodedText" />
 
 
@@ -68,7 +68,7 @@
                 android:scrollHorizontally="false"
                 android:text="File dir here"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/importListFileName"
+                android:textColor="?attr/importListFileNameColor"
                 android:textSize="11sp"
                 tools:ignore="HardcodedText" />
 
@@ -91,7 +91,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="1dp"
                 card_view:srcCompat="@drawable/ic_meta_name"
-                app:tint="@color/importListAdditionalInfo" />
+                app:tint="?attr/importListAdditionalInfoColor" />
 
             <TextView
                 android:id="@+id/meta_device_name"
@@ -100,7 +100,7 @@
                 android:layout_weight="1"
                 android:text="exported on this Patient phone"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/importListAdditionalInfo"
+                android:textColor="?attr/importListAdditionalInfoColor"
                 tools:ignore="HardcodedText" />
 
 
@@ -123,7 +123,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="1dp"
                 card_view:srcCompat="@drawable/ic_meta_date"
-                app:tint="@color/importListAdditionalInfo" />
+                app:tint="?attr/importListAdditionalInfoColor" />
 
             <TextView
                 android:id="@+id/meta_date_time"
@@ -132,7 +132,7 @@
                 android:layout_weight="1"
                 android:text="exported how long ago"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/importListAdditionalInfo"
+                android:textColor="?attr/importListAdditionalInfoColor"
                 tools:ignore="HardcodedText" />
 
             <TextView
@@ -141,7 +141,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
                 android:text="v10.10.10.10"
-                android:textColor="@color/metadataTextWarning"
+                android:textColor="?attr/metadataTextWarningColor"
                 tools:ignore="HardcodedText" />
 
             <TextView
@@ -150,7 +150,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
                 android:text="FLAVOUR"
-                android:textColor="@color/metadataOk"
+                android:textColor="?attr/metadataTextOkColor"
                 tools:ignore="HardcodedText" />
 
         </LinearLayout>
@@ -163,7 +163,7 @@
             android:layout_marginTop="7dp"
             android:layout_marginEnd="5dp"
             android:layout_marginBottom="3dp"
-            android:background="@color/list_delimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
     </LinearLayout>
 

@@ -64,6 +64,7 @@
     <string name="key_resistantadult" translatable="false">resistantadult</string>
     <string name="key_pregnant" translatable="false">pregnant</string>
     <string name="key_app_expiration" translatable="false">app_expiration</string>
+    <string name="key_use_dark_mode" translatable="false">use_dark_mode</string>
 
     <!--    General-->
     <string name="refresh">Refresh</string>
@@ -204,6 +205,10 @@
     <string name="minago">%1$d m ago</string>
     <string name="minago_long">%1$d minutes ago</string>
     <string name="hoursago">%1$.1f h ago</string>
+    <string name="days_ago">%1$.1f days ago</string>
+    <string name="days_ago_round">%1$.0f days ago</string>
+    <string name="in_days">in %1$.0f days</string>
+    <string name="in_days_round">in %1$.0f days</string>
     <string name="shorthour">h</string>
     <string name="days">days</string>
     <string name="hours">hours</string>
@@ -219,10 +224,16 @@
     <string name="unit_weeks">weeks</string>
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
+    <string name="later_today">Later today</string>
+    <string name="tomorrow">Tomorrow</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
 
     <!--    Protection-->
     <string name="wrongpassword">Wrong password</string>
+    <string name="wrongpin">Wrong PIN</string>
     <string name="passwords_dont_match">Passwords don\'t match</string>
+    <string name="pin_dont_match">PINs don\'t match</string>
 
     <!--    Profile-->
     <string name="basalprofilenotaligned">Basal values not aligned to hours: %1$s</string>

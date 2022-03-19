@@ -2,13 +2,11 @@ package info.nightscout.androidaps.plugins.general.automation
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
-import android.view.LayoutInflater
-import android.view.MotionEvent
-import android.view.View
-import android.view.ViewGroup
+import android.util.SparseArray
+import android.view.*
+import androidx.core.util.forEach
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
@@ -25,10 +23,6 @@ import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.automation.dialogs.EditEventDialog
-import info.nightscout.androidaps.plugins.general.automation.dragHelpers.ItemTouchHelperAdapter
-import info.nightscout.androidaps.plugins.general.automation.dragHelpers.ItemTouchHelperViewHolder
-import info.nightscout.androidaps.plugins.general.automation.dragHelpers.OnStartDragListener
-import info.nightscout.androidaps.plugins.general.automation.dragHelpers.SimpleItemTouchHelperCallback
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationDataChanged
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationUpdateGui
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector
@@ -37,6 +31,9 @@ import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import io.reactivex.rxjava3.kotlin.plusAssign
 import info.nightscout.androidaps.extensions.toVisibility
+import info.nightscout.androidaps.plugins.general.automation.dragHelpers.ItemTouchHelperAdapter
+import info.nightscout.androidaps.plugins.general.automation.dragHelpers.OnStartDragListener
+import info.nightscout.androidaps.plugins.general.automation.dragHelpers.SimpleItemTouchHelperCallback
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -55,13 +52,14 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
 
     private var disposable: CompositeDisposable = CompositeDisposable()
     private lateinit var eventListAdapter: EventListAdapter
-
-    private var itemTouchHelper: ItemTouchHelper? = null
+    private var selectedItems: SparseArray<AutomationEvent> = SparseArray()
+    private var removeActionMode: ActionMode? = null
+    private var sortActionMode: ActionMode? = null
+    private val itemTouchHelper = ItemTouchHelper(SimpleItemTouchHelperCallback())
 
     private var _binding: AutomationFragmentBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
+    // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -71,14 +69,15 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setHasOptionsMenu(true)
 
         eventListAdapter = EventListAdapter()
         binding.eventListView.layoutManager = LinearLayoutManager(context)
         binding.eventListView.adapter = eventListAdapter
-
         binding.logView.movementMethod = ScrollingMovementMethod()
-
         binding.fabAddEvent.setOnClickListener {
+            removeActionMode?.finish()
+            sortActionMode?.finish()
             val dialog = EditEventDialog()
             val args = Bundle()
             args.putString("event", AutomationEvent(injector).toJSON())
@@ -87,12 +86,10 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
             dialog.show(childFragmentManager, "EditEventDialog")
         }
 
-        val callback: ItemTouchHelper.Callback = SimpleItemTouchHelperCallback(eventListAdapter)
-        itemTouchHelper = ItemTouchHelper(callback)
-        itemTouchHelper?.attachToRecyclerView(binding.eventListView)
-
+        itemTouchHelper.attachToRecyclerView(binding.eventListView)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Synchronized
     override fun onResume() {
         super.onResume()
@@ -113,6 +110,8 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
 
     @Synchronized
     override fun onPause() {
+        removeActionMode?.finish()
+        sortActionMode?.finish()
         super.onPause()
         disposable.clear()
     }
@@ -120,7 +119,37 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
     @Synchronized
     override fun onDestroyView() {
         super.onDestroyView()
+        removeActionMode?.finish()
+        sortActionMode?.finish()
         _binding = null
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.menu_automation, menu)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        // Only show when tab automation is shown
+        menu.findItem(R.id.nav_remove_automation_items)?.isVisible = isResumed
+        menu.findItem(R.id.nav_sort_automation_items)?.isVisible = isResumed
+        super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.nav_remove_automation_items -> {
+                removeActionMode = activity?.startActionMode(RemoveActionModeCallback())
+                true
+            }
+
+            R.id.nav_sort_automation_items   -> {
+                sortActionMode = activity?.startActionMode(SortActionModeCallback())
+                true
+            }
+
+            else                             -> false
+        }
     }
 
     @Synchronized
@@ -134,7 +163,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
     }
 
     override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {
-        itemTouchHelper?.startDrag(viewHolder)
+        itemTouchHelper.startDrag(viewHolder)
     }
 
     fun fillIconSet(connector: TriggerConnector, set: HashSet<Int>) {
@@ -166,20 +195,22 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
 
         @SuppressLint("ClickableViewAccessibility")
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            val event = automationPlugin.at(position)
-            holder.binding.rootLayout.setBackgroundColor(rh.gc(
-                if (event.userAction) R.color.mdtp_line_dark
-                else if (event.areActionsValid()) R.color.ribbonDefault
-                else R.color.errorAlertBackground)
+            val automation = automationPlugin.at(position)
+            holder.binding.rootLayout.setBackgroundColor(
+                rh.gc(
+                    if (automation.userAction) R.color.mdtp_line_dark
+                    else if (automation.areActionsValid()) R.color.ribbonDefault
+                    else R.color.errorAlertBackground
+                )
             )
-            holder.binding.eventTitle.text = event.title
-            holder.binding.enabled.isChecked = event.isEnabled
-            holder.binding.enabled.isEnabled = !event.readOnly
+            holder.binding.eventTitle.text = automation.title
+            holder.binding.enabled.isChecked = automation.isEnabled
+            holder.binding.enabled.isEnabled = !automation.readOnly
             holder.binding.iconLayout.removeAllViews()
             // trigger icons
             val triggerIcons = HashSet<Int>()
-            if (event.userAction) triggerIcons.add(R.drawable.ic_danar_useropt)
-            fillIconSet(event.trigger, triggerIcons)
+            if (automation.userAction) triggerIcons.add(R.drawable.ic_danar_useropt)
+            fillIconSet(automation.trigger, triggerIcons)
             for (res in triggerIcons) {
                 addImage(res, holder.context, holder.binding.iconLayout)
             }
@@ -191,7 +222,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
             holder.binding.iconLayout.addView(iv)
             // action icons
             val actionIcons = HashSet<Int>()
-            for (action in event.actions) {
+            for (action in automation.actions) {
                 actionIcons.add(action.icon())
             }
             for (res in actionIcons) {
@@ -199,70 +230,133 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
             }
             // enabled event
             holder.binding.enabled.setOnClickListener {
-                event.isEnabled = holder.binding.enabled.isChecked
+                automation.isEnabled = holder.binding.enabled.isChecked
                 rxBus.send(EventAutomationDataChanged())
             }
-            // edit event
-            holder.binding.rootLayout.setOnClickListener {
-                val dialog = EditEventDialog()
-                val args = Bundle()
-                args.putString("event", event.toJSON())
-                args.putInt("position", position)
-                dialog.arguments = args
-                dialog.show(childFragmentManager, "EditEventDialog")
-            }
-            // Start a drag whenever the handle view it touched
-            holder.binding.iconSort.setOnTouchListener { v: View, motionEvent: MotionEvent ->
-                if (motionEvent.action == MotionEvent.ACTION_DOWN) {
-                    this@AutomationFragment.onStartDrag(holder)
-                    return@setOnTouchListener true
+            holder.binding.aapsLogo.visibility = (automation.systemAction).toVisibility()
+
+            fun updateSelection(selected: Boolean) {
+                if (selected) {
+                    selectedItems.put(position, automation)
+                } else {
+                    selectedItems.remove(position)
                 }
-                v.onTouchEvent(motionEvent)
+                removeActionMode?.title = rh.gs(R.string.count_selected, selectedItems.size())
             }
-            // remove event
-            holder.binding.iconTrash.setOnClickListener {
-                OKDialog.showConfirmation(requireContext(), rh.gs(R.string.removerecord) + " " + automationPlugin.at(position).title,
-                                          {
-                                              uel.log(Action.AUTOMATION_REMOVED, Sources.Automation, automationPlugin.at(position).title)
-                                              automationPlugin.removeAt(position)
-                                              notifyItemRemoved(position)
-                                          }, {
-                                              rxBus.send(EventAutomationUpdateGui())
-                                          })
+
+            holder.binding.rootLayout.setOnTouchListener { _, touchEvent ->
+                if (touchEvent.actionMasked == MotionEvent.ACTION_UP && sortActionMode == null && removeActionMode == null) {
+                    val dialog = EditEventDialog()
+                    val args = Bundle()
+                    args.putString("event", automation.toJSON())
+                    args.putInt("position", position)
+                    dialog.arguments = args
+                    dialog.show(childFragmentManager, "EditEventDialog")
+                }
+                if (touchEvent.actionMasked == MotionEvent.ACTION_DOWN && sortActionMode != null) {
+                    onStartDrag(holder)
+                }
+                if (touchEvent.actionMasked == MotionEvent.ACTION_UP && removeActionMode != null) {
+                    holder.binding.cbRemove.toggle()
+                    updateSelection(holder.binding.cbRemove.isChecked)
+                    removeActionMode?.title = rh.gs(R.string.count_selected, selectedItems.size())
+                }
+                return@setOnTouchListener true
             }
-            holder.binding.iconTrash.visibility = (!event.readOnly).toVisibility()
-            holder.binding.aapsLogo.visibility = (event.systemAction).toVisibility()
+            holder.binding.cbRemove.isChecked = selectedItems.get(position) != null
+            holder.binding.cbRemove.setOnCheckedChangeListener { _, value -> updateSelection(value) }
+            holder.binding.iconSort.visibility = (sortActionMode != null).toVisibility()
+            holder.binding.cbRemove.visibility = (removeActionMode != null).toVisibility()
+            holder.binding.cbRemove.isEnabled = !automation.readOnly
+            holder.binding.enabled.visibility = if (removeActionMode == null) View.VISIBLE else View.INVISIBLE
         }
 
         override fun getItemCount(): Int = automationPlugin.size()
 
         override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
             automationPlugin.swap(fromPosition, toPosition)
-            notifyItemMoved(fromPosition, toPosition)
             return true
         }
 
-        override fun onItemDismiss(position: Int) {
-            activity?.let { activity ->
-                OKDialog.showConfirmation(
-                    activity,
-                    rh.gs(R.string.removerecord) + " " + automationPlugin.at(position).title,
-                    {
-                        uel.log(Action.AUTOMATION_REMOVED, Sources.Automation, automationPlugin.at(position).title)
-                        automationPlugin.removeAt(position)
-                        notifyItemRemoved(position)
-                        rxBus.send(EventAutomationDataChanged())
-                    }, { rxBus.send(EventAutomationUpdateGui()) })
+        override fun onDrop() {
+            rxBus.send(EventAutomationDataChanged())
+        }
+
+        inner class ViewHolder(view: View, val context: Context) : RecyclerView.ViewHolder(view) {
+
+            val binding = AutomationEventItemBinding.bind(view)
+        }
+    }
+
+    inner class SortActionModeCallback : ActionMode.Callback {
+
+        override fun onCreateActionMode(mode: ActionMode, menu: Menu?): Boolean {
+            mode.title = rh.gs(R.string.sort_label)
+            binding.eventListView.adapter?.notifyDataSetChanged()
+            return true
+        }
+
+        override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?) = false
+
+        override fun onActionItemClicked(mode: ActionMode, item: MenuItem) = false
+
+        override fun onDestroyActionMode(mode: ActionMode?) {
+            sortActionMode = null
+            binding.eventListView.adapter?.notifyDataSetChanged()
+        }
+    }
+
+    inner class RemoveActionModeCallback : ActionMode.Callback {
+
+        override fun onCreateActionMode(mode: ActionMode, menu: Menu?): Boolean {
+            mode.menuInflater.inflate(R.menu.menu_delete_selection, menu)
+            selectedItems.clear()
+            mode.title = rh.gs(R.string.count_selected, selectedItems.size())
+            binding.eventListView.adapter?.notifyDataSetChanged()
+            return true
+        }
+
+        override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?) = false
+
+        override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
+            return when (item.itemId) {
+                R.id.remove_selected -> {
+                    removeSelected()
+                    true
+                }
+
+                else                 -> false
             }
         }
 
-        inner class ViewHolder(view: View, val context: Context) : RecyclerView.ViewHolder(view), ItemTouchHelperViewHolder {
+        override fun onDestroyActionMode(mode: ActionMode?) {
+            removeActionMode = null
+            binding.eventListView.adapter?.notifyDataSetChanged()
+        }
+    }
 
-            val binding = AutomationEventItemBinding.bind(view)
+    private fun getConfirmationText(): String {
+        if (selectedItems.size() == 1) {
+            val event = selectedItems.valueAt(0)
+            return rh.gs(R.string.removerecord) + " " + event.title
+        }
+        return rh.gs(R.string.confirm_remove_multiple_items, selectedItems.size())
+    }
 
-            override fun onItemSelected() = itemView.setBackgroundColor(Color.LTGRAY)
-
-            override fun onItemClear() = itemView.setBackgroundColor(rh.gc(R.color.ribbonDefault))
+    private fun removeSelected() {
+        if (selectedItems.size() > 0) {
+            activity?.let { activity ->
+                OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord), getConfirmationText(), Runnable {
+                    selectedItems.forEach { _, event ->
+                        uel.log(Action.AUTOMATION_REMOVED, Sources.Automation, event.title)
+                        automationPlugin.removeAt(event.position)
+                        rxBus.send(EventAutomationDataChanged())
+                    }
+                    removeActionMode?.finish()
+                })
+            }
+        } else {
+            removeActionMode?.finish()
         }
     }
 }

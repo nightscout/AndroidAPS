@@ -2,13 +2,13 @@
 <resources>
     <!-- Default theme color -->
     <!-- This section describes the main theme colors -->
-    <color name="colorPrimary">#212121</color>
-    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorPrimary">#787878</color>
+    <color name="colorPrimaryDark">#676767</color>
     <color name="colorAccent">#40bbaa</color>
     <color name="mdtp_white">#ffffff</color>
     <color name="mdtp_line_dark">#808080</color>
     <color name="colorLightGray">#d8d8d8</color>
-    <color name="cardColorBackground">#212121</color>
+    <color name="cardColorBackground">#999999</color>
     <color name="black_overlay">#66000000</color>
     <color name="gray">#BBBBBB</color>
     <color name="black">#FF000000</color>
@@ -29,8 +29,8 @@
     <color name="defaulttextcolor">#B3FFFFFF</color>
 
     <!--    Tabs-->
-    <color name="tabTextColor">#d0d0d0</color>
-    <color name="tabSelectedTextColor">@color/white</color>
+    <color name="tabText">#d0d0d0</color>
+    <color name="tabSelectedText">@color/white</color>
 
     <!--    Buttons-->
     <color name="buttonBackground">#555555</color>
@@ -92,8 +92,14 @@
     <color name="weekdayOutline">#1ea3e5</color>
     <color name="weekendOutline">#1e88e5</color>
 
-    <!--    CareportalEvent-->
+    <!-- Notification-->
     <color name="notificationAnnouncement">#FF8C00</color>
+    <color name="notificationUrgent">#ff0400</color>
+    <color name="notificationNormal">#ff5e55</color>
+    <color name="notificationLow">#ff827c</color>
+
+    <!-- Green Colors -->
+    <color name="notificationInfo">#009705</color>
 
     <!--    Toasts-->
     <color name="toastBorder">#666666</color>
@@ -127,6 +133,8 @@
     <color name="white_alpha_80">#CCFFFFFF</color>
     <color name="white_alpha_90">#E6FFFFFF</color>
 
+    <color name="transparent">#00000000</color>
+
     <!-- Maintenance -->
     <color name="metadataOk">#77dd77</color>
     <color name="metadataTextWarning">#FF8C00</color>
@@ -141,5 +149,69 @@
     <color name="ribbonTextDefault">#FFFFFF</color>
     <color name="ribbonTextWarning">#303030</color>
     <color name="tempTargetConfirmation">#77dd77</color>
+
+    <color name="prediction">#ff00ff</color>
+    <color name="iobPred">#00d2d2</color>
+    <color name="bolus">#1ea3e5</color>
+    <color name="ratio">#FFFFFF</color>
+    <color name="activity">#d3f166</color>
+    <color name="bgi">#00EEEE</color>
+    <color name="devslopepos">#FFFFFF00</color>
+    <color name="devslopeneg">#FFFF00FF</color>
+    <color name="actionsConfirm">#FFFF00</color>
+    <color name="tabBgColorSelected">#FF666666</color>
+    <color name="deviations">#FF0000</color>
+    <color name="cobAlert">#7484E2</color>
+    <color name="inrangebackground">#2800FF00</color>
+    <color name="basebasal">#C83F51B5</color>
+    <color name="graphgrid">#757575</color>
+    <color name="warning">#ff1a1a</color>
+    <color name="info">#77dd77</color>
+    <color name="error_background">#66FC0000</color>
+    <color name="ok_background">@color/black</color>
+
+    <color name="tempTargetBackground">#77dd77</color>
+    <color name="exercise">#67DFE8</color>
+
+    <color name="action">#ffffbb33</color>
+    <color name="alarm">#ffff4444</color>
+
+    <color name="cardObjectiveText">#779ECB</color>
+
+    <color name="colorAcceptTempButton">#f4d700</color>
+    <color name="colorTreatmentButton">#67dfe8</color>
+    <color name="colorInsulinButton">#67dfe8</color>
+    <color name="colorCarbsButton">#ffae01</color>
+    <color name="colorCalibrationButton">#e93057</color>
+    <color name="colorCalculatorButton">#67e86a</color>
+    <color name="colorQuickWizardButton">#ffae01</color>
+    <color name="colorSetTempButton">#FF478EFF</color>
+    <color name="colorSetExtendedButton">#FFDD7792</color>
+    <color name="colorProfileSwitchButton">#ca77dd</color>
+
+    <color name="colorObjectivesDisabledText">#FF5722</color>
+
+    <color name="colorScheduled">#de7550</color>
+    <color name="colorActive">#25912e</color>
+
+    <color name="deviationgrey">#c8666666</color>
+    <color name="deviationgreen">#7200FF00</color>
+    <color name="deviationred">#72FF0000</color>
+    <color name="deviationblack">#72000000</color>
+
+    <color name="splashBackground">#FFFFFF</color>
+
+    <!-- Gray colors -->
+    <color name="darkgray">#323232</color>
+    <color name="darkgrayVariant">#424242</color>
+    <color name="objectivesBackground">#3C3C3C</color>
+    <color name="plastic_grey">#666666</color>
+    <color name="sphere_plastic_grey">#8c8c8c</color>
+    <color name="lightSandGray">#72000000</color>
+    <color name="sandGray">#c8666666</color>
+    <color name="treatment">#B2B2B2</color>
+    <color name="lightgray">#4dB1B1B1</color>
+    <color name="mdtp_button_selected">#33969696</color>
+    <color name="plastic">#EBEBEA</color>
 
 </resources>
