@@ -114,7 +114,7 @@ class WizardDialog : DaggerDialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         this.arguments?.let { bundle ->
-            carbsPassedIntoWizard = bundle.getInt("carbs_input").toDouble()
+            carbsPassedIntoWizard = bundle.getDouble("carbs_input")
             notesPassedIntoWizard = bundle.getString("notes_input").toString()
         }
 
