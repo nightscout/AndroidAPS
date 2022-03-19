@@ -95,8 +95,6 @@ class MainActivity : NoSplashAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // temp while switch is not public
-        setTheme(R.style.AppTheme)
         Iconify.with(FontAwesomeModule())
         LocaleHelper.update(applicationContext)
         binding = ActivityMainBinding.inflate(layoutInflater)
