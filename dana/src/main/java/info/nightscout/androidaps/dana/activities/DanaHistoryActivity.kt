@@ -83,6 +83,7 @@ class DanaHistoryActivity : NoSplashAppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DanarHistoryActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setTheme(R.style.AppTheme)
 
         binding.recyclerview.setHasFixedSize(true)
         binding.recyclerview.layoutManager = LinearLayoutManager(this)
@@ -108,11 +109,10 @@ class DanaHistoryActivity : NoSplashAppCompatActivity() {
             typeList.add(TypeList(RecordTypes.RECORD_TYPE_REFILL, rh.gs(R.string.danar_history_refill)))
             typeList.add(TypeList(RecordTypes.RECORD_TYPE_SUSPEND, rh.gs(R.string.danar_history_syspend)))
         }
-        binding.spinner.adapter = ArrayAdapter(this, R.layout.spinner_centered, typeList)
+        binding.typeList.setAdapter(ArrayAdapter(this, R.layout.spinner_centered, typeList))
 
         binding.reload.setOnClickListener {
-            val selected = binding.spinner.selectedItem as TypeList?
-                ?: return@setOnClickListener
+            val selected = typeList.firstOrNull { it.name == binding.typeList.text.toString() } ?: return@setOnClickListener
             binding.reload.visibility = View.GONE
             binding.status.visibility = View.VISIBLE
             clearCardView()
@@ -126,16 +126,10 @@ class DanaHistoryActivity : NoSplashAppCompatActivity() {
                 }
             })
         }
-        binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val selected = typeList[position]
-                swapAdapter(selected.type)
-                showingType = selected.type
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                clearCardView()
-            }
+        binding.typeList.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+            val selected = typeList[position]
+            showingType = selected.type
+            swapAdapter(selected.type)
         }
     }
 
