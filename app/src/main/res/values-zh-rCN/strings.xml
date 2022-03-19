@@ -944,6 +944,7 @@
     <string name="a11y_clone_profile">克隆当前配置文件</string>
     <string name="a11y_delete_current_profile">删除当前配置文件</string>
     <string name="a11y_add_new_to_list">新增条目到列表</string>
+    <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">未预设的临时目标： %1$s</string>
     <string name="wear_action_tempt_cancel_message">取消正在运行的临时目标？</string>
