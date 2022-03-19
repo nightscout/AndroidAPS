@@ -940,6 +940,7 @@
     <string name="a11y_clone_profile">שכפל את הפרופיל הנוכחי</string>
     <string name="a11y_delete_current_profile">מחק את הפרופיל הנוכחי</string>
     <string name="a11y_add_new_to_list">הוסף לרשימה</string>
+    <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
     <string name="wizard_carbs_constraint">הפרת מגבלות פחמימה!</string>
     <string name="wizard_explain_carbs">פחמ\': %1$.2f יח\'</string>
