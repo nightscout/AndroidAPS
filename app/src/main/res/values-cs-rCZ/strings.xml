@@ -945,6 +945,11 @@
     <string name="a11y_delete_current_profile">odstranit aktuální profil</string>
     <string name="a11y_add_new_to_list">přidat nový do seznamu</string>
     <!-- Theme switcher dark and light mode-->
+    <string name="theme_switcher_summary">Vyberte téma tmavé, světlé nebo podle systémového motivu</string>
+    <string name="app_color_scheme">Barevné schéma</string>
+    <string name="dark_theme">Tmavé téma</string>
+    <string name="light_theme">Světlé téma</string>
+    <string name="follow_system_theme">Použít téma zařízení</string>
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">Dočasný cíl neznámá předvolba: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Zrušení běžícího dočasného cíle?</string>
