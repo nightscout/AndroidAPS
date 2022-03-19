@@ -315,5 +315,6 @@
     <string name="doprofileswitch">Canviar de perfil</string>
     <string name="careportal_sensor_label">Sensor</string>
     <!-- SMS Communicator & OTP Authenticator -->
+    <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
 </resources>
