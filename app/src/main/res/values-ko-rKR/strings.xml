@@ -854,5 +854,6 @@
     <string name="sms_timeout_while_wating">직전의 펌프 통신 종료를 기다리는 동안 타임 아웃</string>
     <string name="smscommunicator_another_bolus_in_queue">대기열에 또다른 bolus가 있습니다. 이후에 다시 시도하세요.</string>
     <string name="calculation_in_progress">계산 진행 중</string>
+    <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
 </resources>
