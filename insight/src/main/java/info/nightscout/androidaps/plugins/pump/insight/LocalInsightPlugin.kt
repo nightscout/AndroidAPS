@@ -1395,21 +1395,21 @@ class LocalInsightPlugin @Inject constructor(
     }
 
     override fun applyBasalPercentConstraints(percentRate: Constraint<Int>, profile: Profile): Constraint<Int> {
-        percentRate.setIfGreater(aapsLogger, 0, String.format(rh.gs(R.string.limitingpercentrate), 0, rh.gs(R.string.itmustbepositivevalue)), this)
-        percentRate.setIfSmaller(aapsLogger, pumpDescription.maxTempPercent, String.format(rh.gs(R.string.limitingpercentrate), pumpDescription.maxTempPercent, rh.gs(R.string.pumplimit))
+        percentRate.setIfGreater(aapsLogger, 0, rh.gs(R.string.limitingpercentrate, 0, rh.gs(R.string.itmustbepositivevalue)), this)
+        percentRate.setIfSmaller(aapsLogger, pumpDescription.maxTempPercent, rh.gs(R.string.limitingpercentrate, pumpDescription.maxTempPercent, rh.gs(R.string.pumplimit))
                                  , this)
         return percentRate
     }
 
     override fun applyBolusConstraints(insulin: Constraint<Double>): Constraint<Double> {
         if (!limitsFetched) return insulin
-        insulin.setIfSmaller(aapsLogger, maximumBolusAmount, String.format(rh.gs(R.string.limitingbolus), maximumBolusAmount, rh.gs(R.string.pumplimit)), this)
+        insulin.setIfSmaller(aapsLogger, maximumBolusAmount, rh.gs(R.string.limitingbolus, maximumBolusAmount, rh.gs(R.string.pumplimit)), this)
         if (insulin.value() < minimumBolusAmount) {
 
             //TODO: Add function to Constraints or use different approach
             // This only works if the interface of the InsightPlugin is called last.
             // If not, another constraint could theoretically set the value between 0 and minimumBolusAmount
-            insulin.set(aapsLogger, 0.0, String.format(rh.gs(R.string.limitingbolus), minimumBolusAmount, rh.gs(R.string.pumplimit)), this)
+            insulin.set(aapsLogger, 0.0, rh.gs(R.string.limitingbolus, minimumBolusAmount, rh.gs(R.string.pumplimit)), this)
         }
         return insulin
     }
