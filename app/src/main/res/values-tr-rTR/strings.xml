@@ -946,6 +946,11 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="a11y_delete_current_profile">mevcut profil sil</string>
     <string name="a11y_add_new_to_list">listeye yeni ekle</string>
     <!-- Theme switcher dark and light mode-->
+    <string name="theme_switcher_summary">Sistem teması veya koyu ve açık tema için seçim yapın.</string>
+    <string name="app_color_scheme">Uyg. Renk Şeması</string>
+    <string name="dark_theme">Koyu tema</string>
+    <string name="light_theme">Açık tema</string>
+    <string name="follow_system_theme">Cihaz temasını kullan</string>
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">Geiçici hedef bilinmeyen ön ayarı: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Çalışan Geçici-Hedefler iptal edilsin mi?</string>
