@@ -4,12 +4,16 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.content.*
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
@@ -21,7 +25,6 @@ import info.nightscout.androidaps.plugins.pump.insight.connection_service.Insigh
 import info.nightscout.androidaps.plugins.pump.insight.connection_service.InsightConnectionService.ExceptionCallback
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.InsightState
 import info.nightscout.androidaps.plugins.pump.insight.utils.ExceptionTranslator
-import java.util.*
 import javax.inject.Inject
 
 class InsightPairingActivity : NoSplashAppCompatActivity(), InsightConnectionService.StateCallback, View.OnClickListener, ExceptionCallback {
@@ -33,6 +36,9 @@ class InsightPairingActivity : NoSplashAppCompatActivity(), InsightConnectionSer
     private lateinit var binding: ActivityInsightPairingBinding
     private var scanning = false
     private val deviceAdapter = DeviceAdapter()
+
+    private val PERMISSION_REQUEST_BLUETOOTH = 30242
+
     private var service: InsightConnectionService? = null
     private val serviceConnection: ServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName, binder: IBinder) {
@@ -63,6 +69,15 @@ class InsightPairingActivity : NoSplashAppCompatActivity(), InsightConnectionSer
         binding.exit.setOnClickListener(this)
         binding.deviceList.setLayoutManager(LinearLayoutManager(this))
         binding.deviceList.setAdapter(deviceAdapter)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (ContextCompat.checkSelfPermission(context, "android.permission.BLUETOOTH_CONNECT") != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(context, "android.permission.BLUETOOTH_SCAN") != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(this, arrayOf("android.permission.BLUETOOTH_SCAN", "android.permission.BLUETOOTH_CONNECT"), PERMISSION_REQUEST_BLUETOOTH)
+                finish()
+                return
+            }
+        }
         bindService(Intent(this, InsightConnectionService::class.java), serviceConnection, BIND_AUTO_CREATE)
     }
 
