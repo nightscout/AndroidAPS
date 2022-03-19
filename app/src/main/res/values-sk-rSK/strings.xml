@@ -943,6 +943,7 @@
     <string name="a11y_clone_profile">klonovať aktuálny profil</string>
     <string name="a11y_delete_current_profile">zmazať aktuálny profil</string>
     <string name="a11y_add_new_to_list">pridať nový do zoznamu</string>
+    <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">Dočasný cieľ neznáma predvoľba: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Zrušenie bežiaceho dočasného cieľa?</string>
