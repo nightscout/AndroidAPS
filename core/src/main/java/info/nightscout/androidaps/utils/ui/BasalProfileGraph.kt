@@ -10,8 +10,8 @@ import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.utils.Round
 import java.text.NumberFormat
-import java.util.ArrayList
 import kotlin.math.max
+import kotlin.math.min
 
 class BasalProfileGraph : GraphView {
 
@@ -22,8 +22,9 @@ class BasalProfileGraph : GraphView {
         removeAllSeries()
         val basalArray: MutableList<DataPoint> = ArrayList()
         for (hour in 0..23) {
-            basalArray.add(DataPoint(hour.toDouble(), profile.getBasalTimeFromMidnight(hour * 60 * 60)))
-            basalArray.add(DataPoint((hour + 1).toDouble(), profile.getBasalTimeFromMidnight(hour * 60 * 60)))
+            val basal = profile.getBasalTimeFromMidnight(hour * 60 * 60)
+            basalArray.add(DataPoint(hour.toDouble(), basal))
+            basalArray.add(DataPoint((hour + 1).toDouble(), basal))
         }
         val basalDataPoints: Array<DataPoint> = Array(basalArray.size) { i -> basalArray[i] }
         val basalSeries: LineGraphSeries<DataPoint> = LineGraphSeries(basalDataPoints)
@@ -41,7 +42,7 @@ class BasalProfileGraph : GraphView {
 
         val nf: NumberFormat = NumberFormat.getInstance()
         nf.maximumFractionDigits = 1
-        gridLabelRenderer.setLabelFormatter(DefaultLabelFormatter(nf, nf))
+        gridLabelRenderer.labelFormatter = DefaultLabelFormatter(nf, nf)
     }
 
     fun show(profile1: Profile, profile2: Profile) {
@@ -49,9 +50,14 @@ class BasalProfileGraph : GraphView {
 
         // profile 1
         val basalArray1: MutableList<DataPoint> = ArrayList()
+        var minBasal = 1000.0
+        var maxBasal = 0.0
         for (hour in 0..23) {
-            basalArray1.add(DataPoint(hour.toDouble(), profile1.getBasalTimeFromMidnight(hour * 60 * 60)))
-            basalArray1.add(DataPoint((hour + 1).toDouble(), profile1.getBasalTimeFromMidnight(hour * 60 * 60)))
+            val basal = profile1.getBasalTimeFromMidnight(hour * 60 * 60)
+            minBasal = min(minBasal, basal)
+            maxBasal = max(maxBasal, basal)
+            basalArray1.add(DataPoint(hour.toDouble(), basal))
+            basalArray1.add(DataPoint((hour + 1).toDouble(), basal))
         }
         val basalSeries1: LineGraphSeries<DataPoint> = LineGraphSeries(Array(basalArray1.size) { i -> basalArray1[i] })
         addSeries(basalSeries1)
@@ -61,8 +67,11 @@ class BasalProfileGraph : GraphView {
         // profile 2
         val basalArray2: MutableList<DataPoint> = ArrayList()
         for (hour in 0..23) {
-            basalArray2.add(DataPoint(hour.toDouble(), profile2.getBasalTimeFromMidnight(hour * 60 * 60)))
-            basalArray2.add(DataPoint((hour + 1).toDouble(), profile2.getBasalTimeFromMidnight(hour * 60 * 60)))
+            val basal = profile2.getBasalTimeFromMidnight(hour * 60 * 60)
+            minBasal = min(minBasal, basal)
+            maxBasal = max(maxBasal, basal)
+            basalArray2.add(DataPoint(hour.toDouble(), basal))
+            basalArray2.add(DataPoint((hour + 1).toDouble(), basal))
         }
         val basalSeries2: LineGraphSeries<DataPoint> = LineGraphSeries(Array(basalArray2.size) { i -> basalArray2[i] })
         addSeries(basalSeries2)
@@ -75,8 +84,12 @@ class BasalProfileGraph : GraphView {
         viewport.setMinX(0.0)
         viewport.setMaxX(24.0)
         viewport.isYAxisBoundsManual = true
-        viewport.setMinY(0.0)
-        viewport.setMaxY(Round.ceilTo(max(profile1.getMaxDailyBasal(), profile2.getMaxDailyBasal()) * 1.1, 0.5))
+        viewport.setMinY(Round.floorTo(minBasal / 1.1, 0.5))
+        viewport.setMaxY(Round.ceilTo(maxBasal * 1.1, 0.5))
         gridLabelRenderer.numHorizontalLabels = 13
+
+        val nf: NumberFormat = NumberFormat.getInstance()
+        nf.maximumFractionDigits = 1
+        gridLabelRenderer.labelFormatter = DefaultLabelFormatter(nf, nf)
     }
 }
