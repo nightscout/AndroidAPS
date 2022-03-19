@@ -933,6 +933,7 @@
     <string name="a11y_insulin_label">инсулин</string>
     <string name="a11y_blood_glucose">уровень глюкозы в крови (ГК)</string>
     <string name="a11y_bg_outdated">устаревшие данные</string>
+    <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">Неизвестная конфигурация врем цели: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Отменить врем цели?</string>
