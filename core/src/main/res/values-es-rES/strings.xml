@@ -61,7 +61,7 @@
     <string name="lastbolus_label">Último bolo</string>
     <string name="dailyunits">Unidades diarias</string>
     <string name="basebasalrate_label">Dosis Basal</string>
-    <string name="tempbasal_label">Basal Temporal</string>
+    <string name="tempbasal_label">Basal temporal</string>
     <string name="virtualpump_extendedbolus_label">Bolo extendido</string>
     <string name="reservoir_label">Reservorio</string>
     <string name="pumphistory">Historial de la bomba</string>
