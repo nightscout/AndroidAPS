@@ -21,7 +21,7 @@ fun Bolus.iobCalc(activePlugin: ActivePlugin, time: Long, dia: Double): Iob {
 }
 
 // Add specific calculation for Autotune (reference localInsulin for Peak/dia)
-fun Bolus.iobCalc(activePlugin: ActivePlugin, time: Long, localInsulin: LocalInsulin): Iob {
+fun Bolus.iobCalc(time: Long, localInsulin: LocalInsulin): Iob {
     if (!isValid  || type == Bolus.Type.PRIMING ) return Iob()
     return localInsulin.iobCalcForTreatment(this, time)
 }

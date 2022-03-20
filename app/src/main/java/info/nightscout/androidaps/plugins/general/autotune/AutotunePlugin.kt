@@ -46,6 +46,7 @@ import javax.inject.Singleton
  *      use html table for results presentation
  * TODO: futur version: add profile selector in AutotuneFragment to allow running autotune plugin with other profiles than current
  * TODO: futur version (once first version validated): add DIA and Peak tune for insulin
+ * TODO: replace Thread by Worker to avoid conflict risks between manual and automation launch of Autotune
  */
 
 @Singleton
@@ -70,12 +71,12 @@ class AutotunePlugin @Inject constructor(
     .description(R.string.autotune_description),
     aapsLogger, resourceHelper, injector
 ), Autotune {
-    override var result: String = ""
-    override var calculationRunning: Boolean = false
-    override var lastRun: Long = 0
+    @Volatile override var result: String = ""
+    @Volatile override var calculationRunning: Boolean = false
+    @Volatile override var lastRun: Long = 0
     override var lastNbDays: String = ""
-    override var copyButtonVisibility: Int = 0
-    override var profileSwitchButtonVisibility: Int = 0
+    @Volatile override var copyButtonVisibility: Int = 0
+    @Volatile override var profileSwitchButtonVisibility: Int = 0
     override var lastRunSuccess: Boolean = false
     private var logString = ""
     private var preppedGlucose: PreppedGlucose? = null
@@ -118,9 +119,7 @@ class AutotunePlugin @Inject constructor(
             result = "Cannot tune a null profile"
             atLog(result)
             calculationRunning = false
-            Thread(Runnable {
-                rxBus.send(EventAutotuneUpdateResult(result))
-            }).start()
+            rxBus.send(EventAutotuneUpdateResult(result))
             tunedProfile=null
             return result
         }
@@ -150,9 +149,7 @@ class AutotunePlugin @Inject constructor(
             result = rh.gs(R.string.autotune_min_days)
             atLog(result)
             calculationRunning = false
-            Thread(Runnable {
-                rxBus.send(EventAutotuneUpdateResult(result))
-            }).start()
+            rxBus.send(EventAutotuneUpdateResult(result))
             tunedProfile=null
             return result
         } else {
@@ -174,9 +171,7 @@ class AutotunePlugin @Inject constructor(
                     result = rh.gs(R.string.autotune_error)
                     atLog(result)
                     calculationRunning = false
-                    Thread(Runnable {
-                        rxBus.send(EventAutotuneUpdateResult(result))
-                    }).start()
+                    rxBus.send(EventAutotuneUpdateResult(result))
                     tunedProfile=null
                     autotuneFS.exportResult(result)
                     autotuneFS.exportLogAndZip(lastRun, logString)
@@ -189,10 +184,8 @@ class AutotunePlugin @Inject constructor(
                 autotuneFS.exportTunedProfile(tunedProfile!!)
                 if (i < daysBack - 1) {
                     atLog("Partial result for day ${i + 1}".trimIndent())
-                    Thread(Runnable {
-                        result = rh.gs(R.string.format_autotune_partialresult, i + 1, daysBack, showResults(tunedProfile!!, pumpprofile))
-                        rxBus.send(EventAutotuneUpdateResult(result))
-                    }).start()
+                    result = rh.gs(R.string.format_autotune_partialresult, i + 1, daysBack, showResults(tunedProfile!!, pumpprofile))
+                    rxBus.send(EventAutotuneUpdateResult(result))
                 }
             }
         }
@@ -224,9 +217,7 @@ class AutotunePlugin @Inject constructor(
                 rxBus.send(EventLocalProfileChanged())
             }
             lastRunSuccess = true
-            Thread(Runnable {
-                rxBus.send(EventAutotuneUpdateResult(result))
-            }).start()
+            rxBus.send(EventAutotuneUpdateResult(result))
             calculationRunning = false
             currentprofile = pumpprofile
             result

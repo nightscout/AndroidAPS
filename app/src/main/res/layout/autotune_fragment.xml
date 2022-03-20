@@ -216,7 +216,7 @@
                 android:layout_gravity="center_horizontal"
                 android:orientation="horizontal">
 
-                <Button
+                <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/autotune_run"
                     style="?android:attr/buttonStyle"
                     android:layout_width="wrap_content"
@@ -230,7 +230,7 @@
                     android:drawableStart="@drawable/ic_local_reset"
                     android:text="@string/autotune_run" />
 
-                <Button
+                <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/autotune_compare"
                     style="?android:attr/buttonStyle"
                     android:layout_width="wrap_content"
@@ -252,7 +252,7 @@
                 android:layout_gravity="center_horizontal"
                 android:orientation="horizontal">
 
-                <Button
+                <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/autotune_copylocal"
                     style="?android:attr/buttonStyle"
                     android:layout_width="wrap_content"
@@ -266,7 +266,7 @@
                     android:drawableStart="@drawable/ic_local_save"
                     android:text="@string/autotune_copy_localprofile_button" />
 
-                <Button
+                <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/autotune_profileswitch"
                     style="?android:attr/buttonStyle"
                     android:layout_width="wrap_content"

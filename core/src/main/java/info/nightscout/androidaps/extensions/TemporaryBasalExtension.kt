@@ -16,6 +16,7 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter.to0Decimal
 import info.nightscout.androidaps.utils.DecimalFormatter.to2Decimal
 import info.nightscout.androidaps.utils.JsonHelper
+import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.T
 import org.json.JSONObject
 import kotlin.math.ceil
@@ -172,7 +173,73 @@ fun TemporaryBasal.iobCalc(time: Long, profile: Profile, insulinInterface: Insul
     return result
 }
 
-// Add specific calculation for Autotune (reference basal is not profile basal but 4 hours average basal rate from pumpprofile)
+// Add specific calculation for Autotune (calculation with oref0 method)
+fun TemporaryBasal.iobCalc(time: Long, profile: Profile, localInsulin: LocalInsulin, currentBasal: Double): IobTotal {
+    val result = IobTotal(time)
+    val realDuration = getPassedDurationToTimeInMinutes(time)
+    val basalRate = profile.getBasal(timestamp)
+    val netBasalRate = Round.roundTo(if (isAbsolute) {
+        rate - basalRate
+    } else {
+        rate / 100.0 * basalRate - basalRate
+    }, 0.001)
+    val tempBolusSize = if (netBasalRate < 0 ) -0.05 else 0.05
+    val netBasalAmount: Double = Round.roundTo(netBasalRate * realDuration / 60.0, 0.01)
+    val tempBolusCount : Int = (netBasalAmount / tempBolusSize).roundToInt()
+    if(tempBolusCount > 0) {
+        val tempBolusSpacing = realDuration * 60 * 1000 / tempBolusCount
+        var sep = ""
+        for (j in 0L until tempBolusCount) {
+            val calcDate = timestamp + j * tempBolusSpacing
+            val tempBolusPart = Bolus(
+                timestamp = calcDate,
+                amount = tempBolusSize,
+                type = Bolus.Type.NORMAL
+            )
+            val aIOB: Iob = localInsulin.iobCalcForTreatment(tempBolusPart, time)
+            result.basaliob += aIOB.iobContrib
+            result.activity += aIOB.activityContrib
+            result.logCalc += sep + "TBR Calc Contrib;$time;$timestamp;${convertedToAbsolute(timestamp, profile)};$netBasalRate;$realDuration;$calcDate;$tempBolusSize;${aIOB.iobContrib};${aIOB.activityContrib};$basalRate"
+            sep = "\n"
+            result.netbasalinsulin += tempBolusPart.amount
+            if (tempBolusPart.amount > 0) {
+                result.hightempinsulin += tempBolusPart.amount
+            }
+        }
+    }
+    result.netInsulin = netBasalAmount
+    return result
+}
+
+fun TemporaryBasal.convertToBoluses(profile: Profile): MutableList<Bolus> {
+    val result: MutableList<Bolus> = ArrayList()
+    val realDuration = durationInMinutes
+    val basalRate = profile.getBasal(timestamp)
+    val netBasalRate = Round.roundTo(if (isAbsolute) {
+        rate - basalRate
+    } else {
+        rate / 100.0 * basalRate - basalRate
+    }, 0.001)
+    val tempBolusSize = if (netBasalRate < 0 ) -0.05 else 0.05
+    val netBasalAmount: Double = Round.roundTo(netBasalRate * realDuration / 60.0, 0.01)
+    val tempBolusCount : Int = (netBasalAmount / tempBolusSize).roundToInt()
+    if(tempBolusCount > 0) {
+        val tempBolusSpacing = realDuration * 60 * 1000 / tempBolusCount
+        var sep = ""
+        for (j in 0L until tempBolusCount) {
+            val calcDate = timestamp + j * tempBolusSpacing
+            val tempBolusPart = Bolus(
+                timestamp = calcDate,
+                amount = tempBolusSize,
+                type = Bolus.Type.NORMAL
+            )
+            result.add(tempBolusPart)
+        }
+    }
+    return result
+}
+
+/*
 fun TemporaryBasal.iobCalc(time: Long, profile: Profile, localInsulin: LocalInsulin, currentBasal: Double): IobTotal {
     val result = IobTotal(time)
     val realDuration = getPassedDurationToTimeInMinutes(time)
@@ -183,6 +250,7 @@ fun TemporaryBasal.iobCalc(time: Long, profile: Profile, localInsulin: LocalInsu
         val diaAgo = time - dia * 60 * 60 * 1000
         val aboutFiveMinIntervals = Math.ceil(realDuration / 5.0).toInt()
         val tempBolusSpacing = (realDuration / aboutFiveMinIntervals).toDouble()
+        var sep = ""
         for (j in 0L until aboutFiveMinIntervals) {
             // find middle of the interval
             val calcDate = (timestamp + j * tempBolusSpacing * 60 * 1000 + 0.5 * tempBolusSpacing * 60 * 1000).toLong()
@@ -203,6 +271,8 @@ fun TemporaryBasal.iobCalc(time: Long, profile: Profile, localInsulin: LocalInsu
                 val aIOB: Iob = localInsulin.iobCalcForTreatment(tempBolusPart, time)
                 result.basaliob += aIOB.iobContrib
                 result.activity += aIOB.activityContrib
+                result.logCalc += sep + "TBR Calc Contrib;$time;$timestamp;$rate;$durationInMinutes;$calcDate;$tempBolusSize;${aIOB.iobContrib};${aIOB.activityContrib};${result.basaliob};${result.activity}"
+                sep = "\n"
                 result.netbasalinsulin += tempBolusPart.amount
                 if (tempBolusPart.amount > 0) {
                     result.hightempinsulin += tempBolusPart.amount
@@ -213,7 +283,7 @@ fun TemporaryBasal.iobCalc(time: Long, profile: Profile, localInsulin: LocalInsu
     result.netInsulin = netBasalAmount
     return result
 }
-
+*/
 fun TemporaryBasal.iobCalc(
     time: Long,
     profile: Profile,

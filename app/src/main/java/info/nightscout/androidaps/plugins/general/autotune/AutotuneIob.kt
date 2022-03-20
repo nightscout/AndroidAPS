@@ -11,12 +11,14 @@ import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.database.entities.*
 import info.nightscout.androidaps.database.interfaces.end
+import info.nightscout.androidaps.extensions.convertToBoluses
 import info.nightscout.androidaps.extensions.durationInMinutes
 import info.nightscout.androidaps.extensions.iobCalc
 import info.nightscout.androidaps.extensions.toJson
 import info.nightscout.androidaps.extensions.toTemporaryBasal
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.general.autotune.data.ATProfile
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
@@ -105,7 +107,7 @@ class AutotuneIob(
         addNeutralTempBasal(from - range(), to)
         Collections.sort(tempBasals) { o1: TemporaryBasal, o2: TemporaryBasal -> (o2.timestamp - o1.timestamp).toInt() }
         Collections.sort(nsTreatments) { o1: NsTreatment, o2: NsTreatment -> (o2.date - o1.date).toInt() }
-
+        Collections.sort(boluses) { o1: Bolus, o2: Bolus -> (o2.timestamp - o1.timestamp).toInt() }
         log.debug("D/AutotunePlugin: Nb Treatments: " + nsTreatments.size + " Nb meals: " + meals.size)
     }
 
@@ -117,12 +119,12 @@ class AutotuneIob(
     private fun initializeTreatmentData(from: Long, to: Long) {
         val oldestBgDate = if (glucose.size > 0) glucose[glucose.size - 1].timestamp else from
         log.debug("AutotunePlugin Check BG date: BG Size: " + glucose.size + " OldestBG: " + dateUtil.dateAndTimeAndSecondsString(oldestBgDate) + " to: " + dateUtil.dateAndTimeAndSecondsString(to))
-        val tmpCarbs = repository.getCarbsDataFromTimeToTimeExpanded(from, to, true).blockingGet()
+        val tmpCarbs = repository.getCarbsDataFromTimeToTimeExpanded(from, to, false).blockingGet()
         log.debug("AutotunePlugin Nb treatments after query: " + tmpCarbs.size)
         meals.clear()
         boluses.clear()
         var nbCarbs = 0
-        for (i in tmpCarbs.indices.reversed()) {
+        for (i in tmpCarbs.indices) {
             val tp = tmpCarbs[i]
             if (tp.isValid) {
                 nsTreatments.add(NsTreatment(tp))
@@ -132,12 +134,12 @@ class AutotuneIob(
                     nbCarbs++
             }
         }
-        val tmpBolus = repository.getBolusesDataFromTimeToTime(from, to, true).blockingGet()
+        val tmpBolus = repository.getBolusesDataFromTimeToTime(from, to, false).blockingGet()
         var nbSMB = 0
         var nbBolus = 0
-        for (i in tmpBolus.indices.reversed()) {
+        for (i in tmpBolus.indices) {
             val tp = tmpBolus[i]
-            if (tp.isValid) {
+            if (tp.isValid && tp.type != Bolus.Type.PRIMING) {
                 boluses.add(tp)
                 nsTreatments.add(NsTreatment(tp))
                 //only carbs after first BGReadings are taken into account in calculation of Autotune
@@ -157,7 +159,7 @@ class AutotuneIob(
         val temp = repository.getTemporaryBasalsDataFromTimeToTime(from - range(), to, false).blockingGet()
         val temp2: MutableList<TemporaryBasal> = ArrayList()
         log.debug("D/AutotunePlugin tempBasal size before cleaning:" + temp.size);
-        for (i in temp.indices.reversed()) {
+        for (i in temp.indices) {
             toRoundedTimestampTB(temp[i])
         }
         log.debug("D/AutotunePlugin: tempBasal size: " + tempBasals.size)
@@ -180,7 +182,7 @@ class AutotuneIob(
     // to be able to compare results between oref0 algo and aaps
     private fun addNeutralTempBasal(from: Long, to: Long) {
         var previousStart = to
-        for (i in tempBasals.indices.reversed()) {
+        for (i in tempBasals.indices) {
             val newStart = tempBasals[i].timestamp + tempBasals[i].duration
             if (previousStart > newStart) {
                 val neutraltb = TemporaryBasal(
@@ -232,6 +234,8 @@ class AutotuneIob(
                     tempBasals.add(newtb)
                     nsTreatments.add(NsTreatment(newtb))
                     roundedDuration = 0
+                    val profile = profileFunction.getProfile(newtb.timestamp) ?:continue
+                    boluses.addAll(newtb.convertToBoluses(profile))
                 } else {
                     val durationFilled = 60 - Profile.secondsFromMidnight(roundedTimestamp) / 60 % 60
                     val newtb = TemporaryBasal(
@@ -247,42 +251,54 @@ class AutotuneIob(
                     nsTreatments.add(NsTreatment(newtb))
                     roundedTimestamp += durationFilled * 60 * 1000
                     roundedDuration = roundedDuration - durationFilled
+                    val profile = profileFunction.getProfile(newtb.timestamp) ?:continue
+                    boluses.addAll(newtb.convertToBoluses(profile))
                 }
             }
         }
     }
 
-    fun getIOB(time: Long, currentBasal: Double, localInsulin: LocalInsulin): IobTotal {
-        val bolusIob = getCalculationToTimeTreatments(time, localInsulin).round()
+    fun getIOB(time: Long, currentBasal: Double, localInsulin: LocalInsulin, detailledLog: Boolean): IobTotal {
+        if (detailledLog) {
+            //log("End Iob Calc;time;time ISO;iob;activity")
+            //log("End Bolus IOBCalc;time;time ISO;bolus iob;activity")
+            log("Bolus Contrib;time;timestamp;timestamp ISO;Bol amount;Bol iob;Bol activity")
+        }
+        val bolusIob = getCalculationToTimeTreatments(time, localInsulin, detailledLog).round()
         // Calcul from specific tempBasals completed with neutral tbr
-        val basalIob = getCalculationToTimeTempBasals(time, true, endBG, currentBasal, localInsulin).round()
+        /*
+        if (detailledLog) {
+            log("current Basal: $currentBasal; Insulin Peak: ${localInsulin.peak}; Insulin DIA: ${localInsulin.dia}")
+            //log("End TBR IOBCalc;time;time ISO;currentBasal;basaliob;activity")
+            //log("TBR Contrib;time;TBR timestamp;timestamp ISO;TBR rate;TBR duration;TBR basaliob;TBR activity")
+            log("TBR Calc Contrib;time;TBR time;TBR rate;TBR duration;Temp Bol time;Temp Bol Size;Temp Bol iobContrib};temp Bol activityContrib;result.basaliob;result.activity")
+        }
+        val basalIob = getCalculationToTimeTempBasals(time, true, endBG, currentBasal, localInsulin, detailledLog).round()
 //        log.debug("D/AutotunePlugin: CurrentBasal: " + currentBasal + " BolusIOB: " + bolusIob.iob + " CalculABS: " + basalIob.basaliob + " CalculSTD: " + basalIob2.basaliob + " testAbs: " + absbasaliob.basaliob + " activity " + absbasaliob.activity)
-        return IobTotal.combine(bolusIob, basalIob).round()
+        val result = IobTotal.combine(bolusIob, basalIob).round()
+        //log("End Iob Calc;$time;${dateUtil.toISOString(time)};${result.iob};${result.activity}")
+
+         */
+        return bolusIob
     }
 
-    fun getCalculationToTimeTreatments(time: Long, localInsulin: LocalInsulin): IobTotal {
+    fun getCalculationToTimeTreatments(time: Long, localInsulin: LocalInsulin, detailledLog: Boolean): IobTotal {
         val total = IobTotal(time)
         for (pos in boluses.indices) {
             val t = boluses[pos]
             if (!t.isValid) continue
             if (t.timestamp > time || t.timestamp < time - localInsulin.duration) continue
-            val tIOB = t.iobCalc(activePlugin, time, localInsulin)
+            val tIOB = t.iobCalc(time, localInsulin)
             total.iob += tIOB.iobContrib
             total.activity += tIOB.activityContrib
-            if (t.amount > 0 && t.timestamp > total.lastBolusTime) total.lastBolusTime = t.timestamp
-            if (t.type != Bolus.Type.SMB) {
-                // instead of dividing the DIA that only worked on the bilinear curves,
-                // multiply the time the treatment is seen active.
-                val timeSinceTreatment = time - t.timestamp
-                val snoozeTime = t.timestamp + (timeSinceTreatment * sp.getDouble(R.string.key_openapsama_bolussnooze_dia_divisor, 2.0)).toLong()
-                val bIOB = t.iobCalc(activePlugin, snoozeTime, localInsulin)
-                total.bolussnooze += bIOB.iobContrib
-            }
+            if (detailledLog)
+                log("Bolus Contrib;$time;${t.timestamp};${dateUtil.toISOString(t.timestamp)};${t.amount};${tIOB.iobContrib};${tIOB.activityContrib}")
         }
+        //log("End Bolus IOBCalc;$time;${dateUtil.toISOString(time)};${total.iob};${total.activity}")
         return total
     }
 
-    fun getCalculationToTimeTempBasals(time: Long, truncate: Boolean, truncateTime: Long, currentBasal: Double, localInsulin: LocalInsulin): IobTotal {
+    fun getCalculationToTimeTempBasals(time: Long, truncate: Boolean, truncateTime: Long, currentBasal: Double, localInsulin: LocalInsulin, detailledLog: Boolean): IobTotal {
         val total = IobTotal(time)
         for (pos in 0 until tempBasals.size) {
             val t = tempBasals[pos]
@@ -298,13 +314,28 @@ class AutotuneIob(
                     isAbsolute = true,
                     duration = truncateTime - t.timestamp
                 )
-                dummyTemp.iobCalc(time, profile, localInsulin, currentBasal)
+                dummyTemp.iobCalc(time, profile, localInsulin, currentBasal).also {
+                    if (detailledLog)
+                        log(it.logCalc + ";TroncateBloc")
+                    //if (detailledLog)
+                    //    log("TBR Contrib;$time;${t.timestamp};${dateUtil.toISOString(t.timestamp)};${t.rate};${t.duration};${it.basaliob};${it.activity}")
+                }
             } else {
-                t.iobCalc(time, profile, localInsulin, currentBasal)
+                t.iobCalc(time, profile, localInsulin, currentBasal).also {
+                    if (detailledLog)
+                        log(it.logCalc)
+                    //if (detailledLog)
+                    //    log("TBR Contrib;$time;${t.timestamp};${dateUtil.toISOString(t.timestamp)};${t.rate};${t.duration};${it.basaliob};${it.activity}")
+                }
             }
             //log.debug("BasalIOB " + new Date(time) + " >>> " + calc.basaliob);
-            total.plus(calc)
+            total.plus(calc).also {
+                //if (detailledLog)
+                //    log("Temp TBR IOBCalc;$time;${dateUtil.toISOString(time)};$currentBasal;${it.basaliob};${it.activity}")
+            }
         }
+        //if (detailledLog)
+        //    log("End TBR IOBCalc;$time;${dateUtil.toISOString(time)};$currentBasal;${total.basaliob};${total.activity}")
         return total
     }
 
@@ -440,6 +471,12 @@ class AutotuneIob(
             }
             return cPjson
         }
+    }
+
+    private fun log(message: String) {
+
+        //autotunePlugin.atLog("[iob] $message")
+        autotunePlugin.atLog("$message")
     }
 
     companion object {

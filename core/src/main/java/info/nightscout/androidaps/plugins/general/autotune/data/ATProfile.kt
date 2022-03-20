@@ -48,7 +48,7 @@ class ATProfile(profile: Profile?, var localInsulin: LocalInsulin, val injector:
     }
 
     fun updateProfile() {
-        profile = ProfileSealed.Pure(data!!)
+        profile = ProfileSealed.Pure(getProfile())
     }
 
     val icSize: Int
@@ -84,7 +84,7 @@ class ATProfile(profile: Profile?, var localInsulin: LocalInsulin, val injector:
                 json.put("insulinPeakTime", 45)
             } else if (insulinInterface.id === Insulin.InsulinType.OREF_FREE_PEAK) {
                 val peaktime: Int = sp.getInt(rh.gs(R.string.key_insulin_oref_peak), 75)
-                json.put("curve", if (peaktime > 30) "rapid-acting" else "ultra-rapid")
+                json.put("curve", if (peaktime > 50) "rapid-acting" else "ultra-rapid")
                 json.put("useCustomPeakTime", true)
                 json.put("insulinPeakTime", peaktime)
             }
@@ -219,7 +219,7 @@ class ATProfile(profile: Profile?, var localInsulin: LocalInsulin, val injector:
         isValid = profile.isValid
         if (isValid) {
             //initialize tuned value with current profile values
-            for(h in 0..23) { basal[h] = profile.basalBlocks.blockValueBySeconds(T.hours(h.toLong()).secs().toInt(), 1.0, 0)}
+            for(h in 0..23) { basal[h] = Round.roundTo(profile.basalBlocks.blockValueBySeconds(T.hours(h.toLong()).secs().toInt(), 1.0, 0), 0.001) }
             ic = avgIC
             isf = avgISF
         }

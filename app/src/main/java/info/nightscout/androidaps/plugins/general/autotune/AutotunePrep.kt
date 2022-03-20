@@ -37,7 +37,7 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
         var treatments: MutableList<Carbs> = autotuneIob.meals
         var boluses: MutableList<Bolus> = autotuneIob.boluses
         val profileData = tunedprofile.profile
-
+        var detailledLog = false
         // Bloc between #21 and # 54 replaced by bloc below (just remove BG value below 39, Collections.sort probably not necessary because BG values already sorted...)
         val glucose = autotuneIob.glucose
         val glucoseData: MutableList<GlucoseValue> = ArrayList()
@@ -179,7 +179,7 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
             //var iob = getIOB(IOBInputs)[0];
             // in autotune iob is calculated with 6 hours of history data, tunedProfile and average pumpProfile basal rate...
             //log("currentBasal: " + currentBasal + " BGTime: " + BGTime + " / " + dateUtil!!.timeStringWithSeconds(BGTime) + "******************************************************************************************")
-            val iob = autotuneIob.getIOB(BGTime, currentPumpBasal, localInsulin)    // add localInsulin to be independent to InsulinPlugin
+            val iob = autotuneIob.getIOB(BGTime, currentPumpBasal, localInsulin, detailledLog)    // add localInsulin to be independent to InsulinPlugin
             //log.debug("Bolus activity: " + bolusIob.activity + " Basal activity: " + basalIob.activity + " Total activity: " + iob.activity);
             //log.debug("treatmentsActivity Iob Activity: " + iob.activity + " Iob Basal: " + iob.basaliob + " Iob: " + iob.iob + " netbasalins: " + iob.netbasalinsulin + " netinsulin: " + iob.netInsulin);
 
@@ -272,7 +272,7 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
                 }
                 // check previous "type" value, and if it wasn't csf, set a mealAbsorption start flag
                 //log.debug(type);
-                if (type !== "csf") {
+                if (type != "csf") {
                     glucoseDatum.mealAbsorption = "start"
                     log(glucoseDatum.mealAbsorption + " carb absorption")
                 }
@@ -282,24 +282,24 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
                 csfGlucoseData.add(glucoseDatum)
             } else {
                 // check previous "type" value, and if it was csf, set a mealAbsorption end flag
-                if (type === "csf") {
+                if (type == "csf") {
                     csfGlucoseData[csfGlucoseData.size - 1].mealAbsorption = "end"
                     log(csfGlucoseData[csfGlucoseData.size - 1].mealAbsorption + " carb absorption")
                 }
-                if (iob.iob > currentBasal || deviation > 6 || uam) {
+                if (iob.iob > 2 * currentBasal || deviation > 6 || uam) {
                     uam = if (deviation > 0) {
                         true
                     } else {
                         false
                     }
-                    if (type !== "uam") {
+                    if (type != "uam") {
                         glucoseDatum.uamAbsorption = "start"
                         log(glucoseDatum.uamAbsorption + " unannnounced meal absorption")
                     }
                     type = "uam"
                     uamGlucoseData.add(glucoseDatum)
                 } else {
-                    if (type === "uam") {
+                    if (type == "uam") {
                         log("end unannounced meal absorption")
                     }
 
@@ -325,8 +325,9 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
                 }
             }
             // debug line to print out all the things
-            log((if (absorbing) 1 else 0).toString() + " mealCOB: " + Round.roundTo(mealCOB, 0.1) + " mealCarbs: " + Math.round(mealCarbs) + " basalBGI: " + Round.roundTo(basalBGI, 0.1) + " BGI: " + Round.roundTo(BGI, 0.1) + " IOB: " + Round.roundTo(iob.iob, 0.01) + " Activity: " + Round.roundTo(iob.activity, 0.01) + " at " + dateUtil.timeStringWithSeconds(BGTime) + " dev: " + deviation + " avgDelta: " + avgDelta + " " + type)
-            //log((absorbing?1:0) + " mealCOB: "+ Round.roundTo(mealCOB,0.1)+" mealCarbs: "+Math.round(mealCarbs)+" basalBGI: "+Round.roundTo(basalBGI,0.001)+" BGI: "+ Round.roundTo(BGI,0.001) +" IOB: "+Round.roundTo(iob.iob,0.001) + " IOBbas: "+Round.roundTo(iob.basaliob,0.01) + " IOBbol: " +Round.roundTo(iob.iob-iob.basaliob,0.01)+ " at "+ dateUtil.timeStringWithSeconds(BGTime) +" dev: "+deviation+" avgDelta: "+avgDelta +" "+ type);
+            log((if (absorbing) 1 else 0).toString() + " mealCOB: " + Round.roundTo(mealCOB, 0.1) + " mealCarbs: " + Math.round(mealCarbs) + " basalBGI: " + Round.roundTo(basalBGI, 0.1) + " BGI: " + Round.roundTo(BGI, 0.1) + " IOB: " + iob.iob+ " Activity: " + iob.activity + " at " + dateUtil.timeStringWithSeconds(BGTime) + " dev: " + deviation + " avgDelta: " + avgDelta + " " + type)
+            detailledLog = false
+        //log((absorbing?1:0) + " mealCOB: "+ Round.roundTo(mealCOB,0.1)+" mealCarbs: "+Math.round(mealCarbs)+" basalBGI: "+Round.roundTo(basalBGI,0.001)+" BGI: "+ Round.roundTo(BGI,0.001) +" IOB: "+Round.roundTo(iob.iob,0.001) + " IOBbas: "+Round.roundTo(iob.basaliob,0.01) + " IOBbol: " +Round.roundTo(iob.iob-iob.basaliob,0.01)+ " at "+ dateUtil.timeStringWithSeconds(BGTime) +" dev: "+deviation+" avgDelta: "+avgDelta +" "+ type);
         }
 
 //****************************************************************************************************************************************
@@ -558,6 +559,7 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
         for (treatment in treatments) {
             if (treatment.amount != 0.0 && treatment.timestamp > start && treatment.timestamp <= end) {
                 insulinDosed += treatment.amount
+                //log("CRDATA;${dateUtil.toISOString(start)};${dateUtil.toISOString(end)};${treatment.timestamp};${treatment.amount};$insulinDosed")
             }
         }
         //log("insulin dosed: " + insulinDosed);

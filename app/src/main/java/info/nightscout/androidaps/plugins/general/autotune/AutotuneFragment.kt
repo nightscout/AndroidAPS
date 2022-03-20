@@ -81,6 +81,8 @@ class AutotuneFragment : DaggerFragment() {
             if (daysBack > 0) {
                 tempResult = ""
                 autotunePlugin.calculationRunning = true
+                autotunePlugin.copyButtonVisibility = View.GONE
+                autotunePlugin.profileSwitchButtonVisibility = View.GONE
                 Thread(Runnable {
                     autotunePlugin.aapsAutotune(daysBack, false)
                 }).start()
@@ -165,7 +167,6 @@ class AutotuneFragment : DaggerFragment() {
             autotunePlugin.copyButtonVisibility = View.GONE
             binding.autotuneCompare.visibility = View.GONE
         }
-        lastRunTxt = if (autotunePlugin.lastRun != 0L) dateUtil.dateAndTimeString(autotunePlugin.lastRun) else ""
         updateGui()
     }
 
@@ -216,6 +217,7 @@ class AutotuneFragment : DaggerFragment() {
             binding.autotuneCompare.visibility = View.GONE
         binding.autotuneCopylocal.visibility = autotunePlugin.copyButtonVisibility
         binding.autotuneProfileswitch.visibility = autotunePlugin.profileSwitchButtonVisibility
+        lastRunTxt = if (autotunePlugin.lastRun != 0L) dateUtil.dateAndTimeString(autotunePlugin.lastRun) else ""
         binding.tuneLastrun.text = lastRunTxt
     }
 

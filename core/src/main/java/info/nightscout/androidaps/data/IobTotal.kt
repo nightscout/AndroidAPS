@@ -16,6 +16,7 @@ class IobTotal(val time: Long) : DataPointWithLabelInterface {
     var basaliob = 0.0
     var netbasalinsulin = 0.0
     var hightempinsulin = 0.0
+    var logCalc = ""    //Add for debug
 
     // oref1
     var lastBolusTime: Long = 0
