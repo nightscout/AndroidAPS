@@ -945,6 +945,7 @@
     <string name="a11y_delete_current_profile">borrar el perfil actual</string>
     <string name="a11y_add_new_to_list">añadir nuevo a la lista</string>
     <!-- Theme switcher dark and light mode-->
+    <string name="theme_switcher_summary">Elegir tema oscuro, claro o seguir con el predeterminado del sistema</string>
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">Objetivo Temporal preestablecido desconocido: %1$s</string>
     <string name="wear_action_tempt_cancel_message">¿Cancelar la ejecución del objetivo temporal?</string>
