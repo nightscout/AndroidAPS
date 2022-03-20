@@ -36,12 +36,13 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.anyString
+import org.mockito.ArgumentMatchers.eq
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.anyLong
 import org.mockito.invocation.InvocationOnMock
-import java.util.*
 
 @Suppress("SpellCheckingInspection")
 class SmsCommunicatorPluginTest : TestBaseWithProfile() {
@@ -160,7 +161,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         `when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
 
         `when`(otp.name()).thenReturn("User")
-        `when`(otp.checkOTP(ArgumentMatchers.anyString())).thenReturn(OneTimePasswordValidationResult.OK)
+        `when`(otp.checkOTP(anyString())).thenReturn(OneTimePasswordValidationResult.OK)
 
         `when`(rh.gs(R.string.smscommunicator_remotecommandnotallowed)).thenReturn("Remote command is not allowed")
         `when`(rh.gs(R.string.sms_wrongcode)).thenReturn("Wrong code. Command cancelled.")
@@ -179,7 +180,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         `when`(rh.gs(R.string.loopisdisabled)).thenReturn("Loop is disabled")
         `when`(rh.gs(R.string.smscommunicator_loopisenabled)).thenReturn("Loop is enabled")
         `when`(rh.gs(R.string.wrongformat)).thenReturn("Wrong format")
-        `when`(rh.gs(ArgumentMatchers.eq(R.string.wrongTbrDuration), ArgumentMatchers.any())).thenAnswer { i: InvocationOnMock -> "TBR duration must be a multiple of " + i.arguments[1] + " minutes and greater than 0." }
+        `when`(rh.gs(eq(R.string.wrongTbrDuration), ArgumentMatchers.any())).thenAnswer { i: InvocationOnMock -> "TBR duration must be a multiple of " + i.arguments[1] + " minutes and greater than 0." }
         `when`(rh.gs(R.string.smscommunicator_loophasbeendisabled)).thenReturn("Loop has been disabled")
         `when`(rh.gs(R.string.smscommunicator_loophasbeenenabled)).thenReturn("Loop has been enabled")
         `when`(rh.gs(R.string.smscommunicator_tempbasalcanceled)).thenReturn("Temp basal canceled")
@@ -998,6 +999,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
     @Test fun processCarbsTest() {
         `when`(dateUtilMocked.now()).thenReturn(1000000L)
+        `when`(dateUtilMocked.timeString(anyLong())).thenReturn("03:01AM")
         `when`(sp.getBoolean(R.string.key_smscommunicator_remotecommandsallowed, false)).thenReturn(false)
         //CAL
         smsCommunicatorPlugin.messages = ArrayList()

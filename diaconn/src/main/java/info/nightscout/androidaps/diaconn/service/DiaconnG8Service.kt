@@ -406,7 +406,7 @@ class DiaconnG8Service : DaggerService() {
         val totalwaitTime = (expectedEnd - System.currentTimeMillis()) / 1000
         while (!diaconnG8Pump.bolusDone) {
             val waitTime = (expectedEnd - System.currentTimeMillis()) / 1000
-            bolusingEvent.status = String.format(rh.gs(R.string.waitingforestimatedbolusend), if (waitTime < 0) 0 else waitTime)
+            bolusingEvent.status = rh.gs(R.string.waitingforestimatedbolusend, if (waitTime < 0) 0 else waitTime)
             var progressPecent = 0
             if (totalwaitTime > waitTime) {
                 progressPecent = ((totalwaitTime - waitTime) * 100 / totalwaitTime).toInt()

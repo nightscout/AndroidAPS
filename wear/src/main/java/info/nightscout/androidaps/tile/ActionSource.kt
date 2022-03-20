@@ -2,11 +2,7 @@ package info.nightscout.androidaps.tile
 
 import android.content.res.Resources
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interaction.actions.BolusActivity
-import info.nightscout.androidaps.interaction.actions.TreatmentActivity
-import info.nightscout.androidaps.interaction.actions.ECarbActivity
-import info.nightscout.androidaps.interaction.actions.TempTargetActivity
-import info.nightscout.androidaps.interaction.actions.WizardActivity
+import info.nightscout.androidaps.interaction.actions.*
 
 object ActionSource : StaticTileSource() {
 
@@ -36,6 +32,12 @@ object ActionSource : StaticTileSource() {
                 settingName = "carbs",
                 buttonText = resources.getString(R.string.action_carbs),
                 iconRes = R.drawable.ic_carbs_orange,
+                activityClass = CarbActivity::class.java.name,
+            ),
+            StaticAction(
+                settingName = "ecarbs",
+                buttonText = resources.getString(R.string.action_ecarbs),
+                iconRes = R.drawable.ic_carbs_orange,
                 activityClass = ECarbActivity::class.java.name,
             ),
             StaticAction(
@@ -55,7 +57,7 @@ object ActionSource : StaticTileSource() {
         return mapOf(
             "tile_action_1" to "wizard",
             "tile_action_2" to "treatment",
-            "tile_action_3" to "carbs",
+            "tile_action_3" to "ecarbs",
             "tile_action_4" to "temp_target"
         )
     }

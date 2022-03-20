@@ -160,7 +160,7 @@ class RileyLinkBLE @Inject constructor(
             return
         }
         if (config.PUMPDRIVERS && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
-            ContextCompat.checkSelfPermission(context, "android.permission.BLUETOOTH_CONNECT") == PackageManager.PERMISSION_GRANTED
+            ContextCompat.checkSelfPermission(context, "android.permission.BLUETOOTH_CONNECT") != PackageManager.PERMISSION_GRANTED
         ) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "no permission")
             return

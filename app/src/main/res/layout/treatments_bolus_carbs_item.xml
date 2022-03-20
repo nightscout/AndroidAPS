@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    card_view:cardBackgroundColor="@color/cardColorBackground">
+    card_view:cardBackgroundColor="?attr/cardItemBackgroundColor">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,7 +20,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/list_delimiter"
+            android:background="?android:attr/dividerHorizontal"
             android:gravity="center"
             android:text="1.1.2000"
             android:textAppearance="?android:attr/textAppearanceMedium"
@@ -141,7 +141,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:text="NS"
-                android:textColor="@color/colorSetTempButton"
+                android:textColor="?attr/setTempButton"
                 tools:ignore="HardcodedText" />
 
             <TextView
@@ -150,7 +150,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:text="PH"
-                android:textColor="@color/colorSetTempButton"
+                android:textColor="?attr/setTempButton"
                 tools:ignore="HardcodedText" />
 
             <TextView
@@ -233,7 +233,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:text="NS"
-                android:textColor="@color/colorSetTempButton"
+                android:textColor="?attr/setTempButton"
                 tools:ignore="HardcodedText" />
 
             <TextView
@@ -242,7 +242,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:text="PH"
-                android:textColor="@color/colorSetTempButton"
+                android:textColor="?attr/setTempButton"
                 tools:ignore="HardcodedText" />
 
             <TextView
@@ -285,7 +285,7 @@ android:visibility="gone"
             android:layout_marginTop="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/list_delimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
     </LinearLayout>
 

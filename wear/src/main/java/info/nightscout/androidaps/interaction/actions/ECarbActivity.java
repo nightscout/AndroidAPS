@@ -72,7 +72,7 @@ public class ECarbActivity extends ViewSelectorActivity {
                 if (editStartTime != null) {
                     def = SafeParse.stringToDouble(editStartTime.editText.getText().toString());
                 }
-                editStartTime = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 300d, 15d, new DecimalFormat("0"), false);
+                editStartTime = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, -60d, 300d, 15d, new DecimalFormat("0"), false);
                 setLabelToPlusMinusView(view, getString(R.string.action_start_min));
                 container.addView(view);
                 return view;

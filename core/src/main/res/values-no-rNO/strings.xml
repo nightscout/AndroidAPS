@@ -136,6 +136,10 @@
     <string name="minago">%1$d min siden</string>
     <string name="minago_long">%1$d minutter siden</string>
     <string name="hoursago">%1$.1f timer siden</string>
+    <string name="days_ago">%1$.1f dager siden</string>
+    <string name="days_ago_round">%1$.0f dager siden</string>
+    <string name="in_days">om %1$.0f dager</string>
+    <string name="in_days_round">om %1$.0f dager</string>
     <string name="shorthour">t</string>
     <string name="days">dager</string>
     <string name="hours">timer</string>
@@ -151,9 +155,15 @@
     <string name="unit_weeks">uker</string>
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
+    <string name="later_today">Senere i dag</string>
+    <string name="tomorrow">I morgen</string>
+    <string name="today">Idag</string>
+    <string name="yesterday">I går</string>
     <!--    Protection-->
     <string name="wrongpassword">Feil passord</string>
+    <string name="wrongpin">Feil PIN-kode</string>
     <string name="passwords_dont_match">Passord stemmer ikke overens</string>
+    <string name="pin_dont_match">PIN-kodene samsvarer ikke</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Basal verdier er ikke angitt på hele timer: %1$s</string>
     <string name="minimalbasalvaluereplaced">Basal verdi erstattet med laveste tillate verdi: %1$s</string>

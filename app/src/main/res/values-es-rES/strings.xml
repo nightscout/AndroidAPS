@@ -224,7 +224,7 @@
     <string name="overview_editquickwizard_valid">Validar:</string>
     <string name="overview_editquickwizardlistactivity_add">Añadir</string>
     <string name="overview_quickwizard_item_edit_button">Editar</string>
-    <string name="mealbolus">COMIDA</string>
+    <string name="mealbolus">BOLO COMIDA</string>
     <string name="correctionbous">Corrección</string>
     <string name="actions">Acciones</string>
     <string name="ns_upload_only">(PELIGROSO DESHABILITAR) Sólo subida a Nightscout</string>
@@ -446,7 +446,7 @@
     <string name="lyumjev">Lyumjev</string>
     <string name="dia_too_short">DIA de %1$f demasiado corto - usando %2$f!</string>
     <string name="activate_profile">ACTIVAR PERFIL</string>
-    <string name="invalid">INVALIDO</string>
+    <string name="invalid">INVÁLIDO</string>
     <string name="careportal_newnstreatment_percentage_label">Porcentaje</string>
     <string name="careportal_newnstreatment_timeshift_label">Cambio de tiempo</string>
     <string name="default_temptargets">Objetivo temporal por defecto</string>
@@ -666,6 +666,7 @@
     <string name="show_invalidated">Mostrar invalidados</string>
     <string name="hide_invalidated">Ocultar invalidados</string>
     <string name="remove_items">Eliminar elementos</string>
+    <string name="sort_items">Ordenar elementos</string>
     <string name="storedsettingsfound">Encontrados ajustes de configuración</string>
     <string name="allow_hardware_pump_text">Atención: si activas y conectas la bomba con AndroidAPS, AndroidAPS sobrescribirá los ajustes de basales del perfil de la bomba, con los establecidos en el perfil de AndroidAPS. Comprueba que tengas el perfil basal correcto en AndroidAPS. Si no estás seguro, o no quieres sobrescribir los ajustes basales en la bomba, presiona cancelar y repite la vinculación más adelante.</string>
     <string name="error_adding_treatment_title">Datos de tratamiento incompletos</string>
@@ -769,7 +770,7 @@
     <string name="survey_comment">Nota: Sólo los datos visibles en esta pantalla se cargarán de forma anónima. El ID se asigna a esta instalación de AndroidAPS. Puede volver a enviar datos si cambia su perfil principal, pero deja que se ejecute al menos una semana para que el resultado sea visible en el tiempo en rango. Agradecemos su ayuda.</string>
     <string name="invalidage">Entrada de edad no válida</string>
     <string name="invalidweight">Peso no válido</string>
-    <string name="invalidpct">Entrada % invalida</string>
+    <string name="invalidpct">Entrada % inválida</string>
     <string name="tirformat"><![CDATA[<b>%1$s:</b> Low: <b>%2$02d%%</b> In: <b>%3$02d%%</b> High: <b>%4$02d%%</b>]]></string>
     <string name="average">Promedio</string>
     <string name="tir">Tiempo en rango</string>
@@ -781,7 +782,7 @@
     <string name="randombg_short">Glucosa</string>
     <string name="tools">Herramientas</string>
     <string name="show_calculation">Mostrar cálculo</string>
-    <string name="show_removed">Mostrar borrados</string>
+    <string name="show_removed">Mostrar eliminados</string>
     <string name="clearqueueconfirm">¿Borrar cola? ¡Se perderán todos los datos de la cola!</string>
     <string name="ebstopsloop">El uso de la función de bolo extendido detendrá el modo de bucle cerrado durante el tiempo de ejecución del bolo extendido. ¿Realmente quieres esto?</string>
     <string name="closed_loop_disabled_with_eb">Bucle cerrado inhabilitado debido a la ejecución del bolo extendido</string>
@@ -870,7 +871,7 @@
     <string name="privacy_summary">Puedes proporcionar una dirección de correo electrónico opcional si quieres ser notificado sobre fallos de la aplicación. Este no es un servicio automatizado. Los desarrolladores se comunicarán contigo en situaciones peligrosas.</string>
     <string name="full_sync">Sincronización completa</string>
     <string name="full_sync_comment">¿Sincronización completa? Puede tardar muchas horas y hasta que termine no verás nuevos datos en Nightscout</string>
-    <string name="prime">Cebar</string>
+    <string name="prime">CEBAR</string>
     <string name="ns_sync_options">Sincronización</string>
     <string name="ns_upload_summary">Perfiles, bolos, carbohidratos y basales temporales se suben a Nightscout</string>
     <string name="ns_upload">Subir datos a Nightscout</string>
@@ -906,6 +907,7 @@
     <string name="errors">Errores</string>
     <string name="ns_sync_slow">Ralentizar subidas</string>
     <string name="data_status">Estado de datos de glucosa</string>
+    <string name="remove_bg_readings">Eliminar lecturas de glucosa</string>
     <string name="statuslights_cannula_age">edad de la cánula</string>
     <string name="statuslights_patch_pump_age">edad del parche de la bomba</string>
     <string name="patch_pump">Bomba parche</string>
@@ -978,13 +980,15 @@
     <string name="app_default">Aplicación por defecto</string>
     <string name="select_profile">Seleccione el perfil a editar</string>
     <string name="refresh_from_nightscout">Actualizar de Nightscout</string>
-    <string name="remove_selected_items">Borrar elementos seleccionados</string>
+    <string name="remove_selected_items">Eliminar los elementos seleccionados</string>
     <string name="select_for_removal">Selecciona para eliminar</string>
     <string name="profile_changes">Cambios de perfil</string>
     <string name="tempt_targets">Objetivos temporales</string>
     <string name="carbs_and_bolus">Carbohidratos y bolos</string>
-    <string name="confirm_remove_multiple_items">¿Está seguro de que quiere eliminar %1$d elementos?</string>
-    <string name="hide_loop">Ocultar bucle</string>
-    <string name="show_loop">Mostrar bucle</string>
+    <string name="confirm_remove_multiple_items">¿Estás seguro de que quieres eliminar %1$d elementos?</string>
+    <string name="hide_loop">Ocultar lazo</string>
+    <string name="show_loop">Mostrar lazo</string>
     <string name="count_selected">%1$d selecionado</string>
+    <string name="sort_label">Ordenar</string>
+    <string name="dialog_cancled">Diálogo cancelado</string>
 </resources>

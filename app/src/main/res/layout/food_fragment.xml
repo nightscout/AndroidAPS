@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="info.nightscout.androidaps.plugins.general.food.TreatmentsFoodFragment">
+    tools:context="info.nightscout.androidaps.plugins.general.food.FoodFragment">
 
     <info.nightscout.androidaps.utils.ui.SingleClickButton
         android:id="@+id/refresh_from_nightscout"
@@ -49,44 +49,44 @@
             app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
     </LinearLayout>
 
-    <LinearLayout
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:orientation="horizontal">
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:hint="@string/category"
+        app:boxStrokeColor="@color/list_delimiter">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+            android:id="@+id/categoryList"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:text="@string/category" />
+            android:clickable="true"
+            android:enabled="false"
+            tools:ignore="KeyboardInaccessibleWidget" />
 
-        <Spinner
-            android:id="@+id/category"
-            android:layout_width="wrap_content"
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:hint="@string/subcategory"
+        app:boxStrokeColor="@color/list_delimiter">
+
+        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+            android:id="@+id/subcategoryList"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="end"
-            android:minWidth="100dp" />
+            android:clickable="true"
+            android:enabled="false"
+            tools:ignore="KeyboardInaccessibleWidget" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:text="@string/subcategory" />
-
-        <Spinner
-            android:id="@+id/subcategory"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="end"
-            android:minWidth="100dp" />
-
-    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview"

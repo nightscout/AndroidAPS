@@ -65,7 +65,6 @@
     <string name="menu_wizard">Calcolatore</string>
     <string name="menu_treatment">Trattamento</string>
     <string name="menu_bolus">Bolo</string>
-    <string name="menu_ecarb">CHO</string>
     <string name="menu_settings">Impostazioni</string>
     <string name="menu_status">Stato</string>
     <string name="menu_resync">Re-Sincronizza</string>

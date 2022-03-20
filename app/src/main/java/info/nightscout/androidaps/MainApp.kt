@@ -6,6 +6,8 @@ import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import android.os.Build
+import androidx.lifecycle.ProcessLifecycleOwner
+import androidx.appcompat.app.AppCompatDelegate
 import com.uber.rxdogtag.RxDogTag
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
@@ -27,6 +29,7 @@ import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationStore
+import info.nightscout.androidaps.plugins.general.themes.ThemeSwitcherPlugin
 import info.nightscout.androidaps.receivers.BTReceiver
 import info.nightscout.androidaps.receivers.ChargingStateReceiver
 import info.nightscout.androidaps.receivers.KeepAliveReceiver.KeepAliveManager
@@ -35,6 +38,7 @@ import info.nightscout.androidaps.receivers.TimeDateOrTZChangeReceiver
 import info.nightscout.androidaps.services.AlarmSoundServiceHelper
 import info.nightscout.androidaps.utils.ActivityMonitor
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.ProcessLifecycleListener
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.locale.LocaleHelper
 import info.nightscout.androidaps.utils.protection.PasswordCheck
@@ -70,6 +74,8 @@ class MainApp : DaggerApplication() {
     @Inject lateinit var passwordCheck: PasswordCheck
     @Inject lateinit var alarmSoundServiceHelper: AlarmSoundServiceHelper
     @Inject lateinit var notificationStore: NotificationStore
+    @Inject lateinit var processLifecycleListener: ProcessLifecycleListener
+    @Inject lateinit var profileSwitchPlugin: ThemeSwitcherPlugin
 
     override fun onCreate() {
         super.onCreate()
@@ -77,6 +83,7 @@ class MainApp : DaggerApplication() {
         RxDogTag.install()
         setRxErrorHandler()
         LocaleHelper.update(this)
+        ProcessLifecycleOwner.get().lifecycle.addObserver(processLifecycleListener)
 
         var gitRemote: String? = BuildConfig.REMOTE
         var commitHash: String? = BuildConfig.HEAD
@@ -99,6 +106,7 @@ class MainApp : DaggerApplication() {
         disposable += compatDBHelper.dbChangeDisposable()
         registerActivityLifecycleCallbacks(activityMonitor)
         JodaTimeAndroid.init(this)
+        profileSwitchPlugin.setThemeMode()
         aapsLogger.debug("Version: " + BuildConfig.VERSION_NAME)
         aapsLogger.debug("BuildVersion: " + BuildConfig.BUILDVERSION)
         aapsLogger.debug("Remote: " + BuildConfig.REMOTE)

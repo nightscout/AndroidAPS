@@ -20,7 +20,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/list_delimiter"
+            android:background="?android:attr/dividerHorizontal"
             android:gravity="center"
             android:text="1.1.2000"
             android:textAppearance="?android:attr/textAppearanceMedium"
@@ -68,7 +68,7 @@
                 android:paddingEnd="10dp"
                 android:text="PH"
                 android:textAlignment="viewEnd"
-                android:textColor="@color/colorSetTempButton"
+                android:textColor="?attr/setTempButton"
                 tools:ignore="HardcodedText,RtlSymmetry" />
 
             <TextView
@@ -77,7 +77,7 @@
                 android:layout_height="wrap_content"
                 android:paddingEnd="10dp"
                 android:text="NS"
-                android:textColor="@color/colorSetTempButton"
+                android:textColor="?attr/setTempButton"
                 tools:ignore="HardcodedText,RtlSymmetry" />
 
         </LinearLayout>
@@ -141,7 +141,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/list_delimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
     </LinearLayout>
 

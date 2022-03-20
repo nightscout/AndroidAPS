@@ -128,12 +128,12 @@ class OverviewData @Inject constructor(
 
     var lastBg: GlucoseValue? = null
 
-    val isLow: Boolean
+    private val isLow: Boolean
         get() = lastBg?.let { lastBg ->
             lastBg.valueToUnits(profileFunction.getUnits()) < defaultValueHelper.determineLowLine()
         } ?: false
 
-    val isHigh: Boolean
+    private val isHigh: Boolean
         get() = lastBg?.let { lastBg ->
             lastBg.valueToUnits(profileFunction.getUnits()) > defaultValueHelper.determineHighLine()
         } ?: false

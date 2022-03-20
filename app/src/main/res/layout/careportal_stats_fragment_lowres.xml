@@ -29,7 +29,6 @@
             android:gravity="center_vertical"
             android:paddingLeft="2dp"
             android:paddingRight="2dp"
-            android:textColor="@android:color/white"
             android:textSize="14sp" />
 
 
@@ -40,7 +39,6 @@
             android:layout_marginEnd="20dp"
             android:gravity="center_vertical"
             android:paddingStart="2dp"
-            android:textColor="@android:color/white"
             android:textSize="14sp"
             tools:ignore="RtlSymmetry" />
 
@@ -85,7 +83,6 @@
             android:gravity="center_vertical"
             android:paddingLeft="2dp"
             android:paddingRight="2dp"
-            android:textColor="@android:color/white"
             android:textSize="14sp" />
 
 
@@ -96,7 +93,6 @@
             android:layout_marginEnd="20dp"
             android:gravity="center_vertical"
             android:paddingStart="2dp"
-            android:textColor="@android:color/white"
             android:textSize="14sp"
             tools:ignore="RtlSymmetry" />
 
@@ -141,7 +137,6 @@
             android:gravity="center_vertical"
             android:paddingLeft="2dp"
             android:paddingRight="2dp"
-            android:textColor="@android:color/white"
             android:textSize="14sp" />
 
         <TextView
@@ -151,7 +146,6 @@
             android:gravity="center_vertical"
             android:paddingStart="2dp"
             android:text=""
-            android:textColor="@android:color/white"
             android:textSize="14sp"
             tools:ignore="RtlSymmetry" />
 
@@ -197,7 +191,6 @@
             android:gravity="center_vertical"
             android:paddingLeft="2dp"
             android:paddingRight="2dp"
-            android:textColor="@android:color/white"
             android:textSize="14sp" />
 
         <TextView
@@ -207,7 +200,6 @@
             android:layout_marginEnd="20dp"
             android:gravity="center_vertical"
             android:paddingStart="2dp"
-            android:textColor="@android:color/white"
             android:textSize="14sp"
             tools:ignore="RtlSymmetry" />
 

@@ -136,6 +136,10 @@
     <string name="minago">%1$d 分钟前</string>
     <string name="minago_long">%1$d 分钟前</string>
     <string name="hoursago">%1$.1f 小时前</string>
+    <string name="days_ago">%1$.1f 天前</string>
+    <string name="days_ago_round">%1$.0f 天前</string>
+    <string name="in_days">在 %1$.0f 天内</string>
+    <string name="in_days_round">在 %1$.0f 天内</string>
     <string name="shorthour">h</string>
     <string name="days">天</string>
     <string name="hours">小时</string>
@@ -151,9 +155,15 @@
     <string name="unit_weeks">周</string>
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
+    <string name="later_today">今天稍后</string>
+    <string name="tomorrow">明天</string>
+    <string name="today">今天</string>
+    <string name="yesterday">昨天</string>
     <!--    Protection-->
     <string name="wrongpassword">密码错误</string>
+    <string name="wrongpin">PIN 码错误</string>
     <string name="passwords_dont_match">密码不匹配</string>
+    <string name="pin_dont_match">PIN 码不匹配。</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">基础率值与小时数不一致:%1$s</string>
     <string name="minimalbasalvaluereplaced">基础率值被泵支持的最小值: %1$s 替换了</string>

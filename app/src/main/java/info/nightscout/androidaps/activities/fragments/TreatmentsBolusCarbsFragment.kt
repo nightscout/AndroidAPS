@@ -3,7 +3,6 @@ package info.nightscout.androidaps.activities.fragments
 import android.annotation.SuppressLint
 import android.graphics.Paint
 import android.os.Bundle
-import android.util.Log
 import android.util.SparseArray
 import android.view.*
 import android.widget.CompoundButton
@@ -190,7 +189,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
     @Synchronized
     override fun onDestroyView() {
         super.onDestroyView()
-        removeActionMode?.let { it.finish() }
+        removeActionMode?.finish()
         binding.recyclerview.adapter = null // avoid leaks
         _binding = null
     }
@@ -206,9 +205,9 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
             val profile = profileFunction.getProfile() ?: return
             val ml = mealLinks[position]
 
-            val sameDayPrevious = position > 0 && dateUtil.isSameDay(timestamp(ml), timestamp(mealLinks[position - 1]))
-            holder.binding.date.visibility = sameDayPrevious.not().toVisibility()
-            holder.binding.date.text = dateUtil.dateString(timestamp(ml))
+            val newDay = position == 0 || !dateUtil.isSameDayGroup(timestamp(ml), timestamp(mealLinks[position - 1]))
+            holder.binding.date.visibility = newDay.toVisibility()
+            holder.binding.date.text = if (newDay) dateUtil.dateStringRelative(timestamp(ml), rh) else ""
 
             // Metadata
             holder.binding.metadataLayout.visibility = (ml.bolusCalculatorResult != null && (ml.bolusCalculatorResult.isValid || showInvalidated)).toVisibility()
@@ -272,7 +271,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
             }
             holder.binding.calculation.tag = ml
             val nextTimestamp = if (mealLinks.size != position + 1) timestamp(mealLinks[position + 1]) else 0L
-            holder.binding.delimiter.visibility = dateUtil.isSameDay(timestamp(ml), nextTimestamp).toVisibility()
+            holder.binding.delimiter.visibility = dateUtil.isSameDayGroup(timestamp(ml), nextTimestamp).toVisibility()
         }
 
         override fun getItemCount() = mealLinks.size

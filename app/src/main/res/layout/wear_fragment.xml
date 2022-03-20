@@ -21,7 +21,7 @@
             android:layout_marginTop="3dp"
             android:layout_weight="0.5"
             android:text="@string/resend_all_data"
-            android:textColor="@color/colorTreatmentButton" />
+            android:textColor="?attr/treatmentButton" />
 
         <com.google.android.material.button.MaterialButton
             style="@style/GrayButton"
@@ -34,7 +34,7 @@
             android:layout_marginTop="3dp"
             android:layout_weight="0.5"
             android:text="@string/open_settings_on_wear"
-            android:textColor="@color/colorTreatmentButton" />
+            android:textColor="?attr/treatmentButton" />
 
     </LinearLayout>
 
