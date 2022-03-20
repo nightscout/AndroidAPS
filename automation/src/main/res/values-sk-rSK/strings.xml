@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="automation_short">Auto</string>
-    <string name="automation">Automatika</string>
+    <string name="automation">Automatizácia</string>
     <string name="automation_description">Automatické úlohy definované používateľom</string>
     <string name="automation_missing_task_name">Zadajte prosím názov úlohy.</string>
     <string name="automation_missing_trigger">Prosím, zadajte aspoň jednu podmienku.</string>
@@ -110,7 +110,14 @@
     <string name="triggers">Podmienky:</string>
     <string name="remove_label">VYMAZAŤ</string>
     <string name="preconditions">Predpoklady:</string>
-    <string name="automation_event">Udalosť automatiky</string>
+    <string name="automation_event">Udalosť automatizácie</string>
     <string name="reorder_label">Zmena poradia</string>
     <string name="user_action">Akcia užívateľa</string>
+    <string name="remove_automation">Odstrániť automatizáciu</string>
+    <string name="sort_automation">Zoradiť automatizácie</string>
+    <string name="remove_selected_items">Odstrániť vybrané položky</string>
+    <string name="count_selected">Vybrané: %1$d</string>
+    <string name="confirm_remove_multiple_items">Naozaj chcete odstrániť %1$d položiek</string>
+    <string name="sort_label">Zoradiť</string>
+    <string name="system_automation">Automatizácia systému</string>
 </resources>
