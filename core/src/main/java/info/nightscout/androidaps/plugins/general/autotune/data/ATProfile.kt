@@ -48,7 +48,7 @@ class ATProfile(profile: Profile?, var localInsulin: LocalInsulin, val injector:
     }
 
     fun updateProfile() {
-        profile = ProfileSealed.Pure(getProfile())
+        profile = ProfileSealed.Pure(data!!)
     }
 
     val icSize: Int
@@ -119,31 +119,23 @@ class ATProfile(profile: Profile?, var localInsulin: LocalInsulin, val injector:
 
     //json profile
     val data: PureProfile?
-        get() = getData(false)
-
-    //json profile
-    fun getData(src: Boolean): PureProfile? {
+        get() {
         val json: JSONObject = profile.toPureNsJson(dateUtil)
         try {
             json.put("dia", dia)
-            if (src) {
-                json.put("sens", getArray(profile.isfBlocks))
-                json.put("carbratio", getArray(profile.icBlocks))
-            } else {
-                json.put(
-                    "sens", JSONArray().put(
-                        JSONObject().put("time", "00:00").put(
-                            "timeAsSeconds", 0
-                        ).put(
-                            "value", Profile.fromMgdlToUnits(
-                                isf,
-                                profile.units
-                            )
+            json.put(
+                "sens", JSONArray().put(
+                    JSONObject().put("time", "00:00").put(
+                        "timeAsSeconds", 0
+                    ).put(
+                        "value", Profile.fromMgdlToUnits(
+                            isf,
+                            profile.units
                         )
                     )
                 )
-                json.put("carbratio", JSONArray().put(JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", ic)))
-            }
+            )
+            json.put("carbratio", JSONArray().put(JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", ic)))
             val basals = JSONArray()
             for (h in 0..23) {
                 val secondfrommidnight = h * 60 * 60
@@ -159,31 +151,6 @@ class ATProfile(profile: Profile?, var localInsulin: LocalInsulin, val injector:
     }
 
     fun getBasal(timestamp: Long):Double = basal[(Profile.secondsFromMidnight(timestamp)/T.hours(1).secs()).toInt()]
-
-    private fun getArray(pf: List<Block>?): JSONArray {
-        val json = JSONArray()
-        var timeAsSeconds = 0L
-        if (pf == null) return json
-        try {
-            for (i in pf.indices) {
-                val h: Long = timeAsSeconds / 60 / 60
-                var time: String
-                time = (if (h < 10) "0$h" else h).toString() + ":00"
-                json.put(
-                    JSONObject().put("time", time).put(
-                        "timeAsSeconds",
-                        timeAsSeconds
-                    ).put(
-                        "value",
-                        Profile.fromMgdlToUnits(pf[i].amount, profile.units)
-                    )
-                )
-                timeAsSeconds = timeAsSeconds + pf[i].duration / 1000
-            }
-        } catch (e: JSONException) {
-        }
-        return json
-    }
 
     val profileStore: ProfileStore?
         get() {
