@@ -158,6 +158,8 @@ class ATProfile(profile: Profile?, var localInsulin: LocalInsulin, val injector:
         return pureProfileFromJson(json, dateUtil, profile.units.asText)
     }
 
+    fun getBasal(timestamp: Long):Double = basal[(Profile.secondsFromMidnight(timestamp)/T.hours(1).secs()).toInt()]
+
     private fun getArray(pf: List<Block>?): JSONArray {
         val json = JSONArray()
         var timeAsSeconds = 0L

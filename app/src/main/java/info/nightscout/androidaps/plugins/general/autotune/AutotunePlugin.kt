@@ -160,7 +160,7 @@ class AutotunePlugin @Inject constructor(
                 atLog("Tune day " + (i + 1) + " of " + daysBack)
 
                 //autotuneIob contains BG and Treatments data from history (<=> query for ns-treatments and ns-entries)
-                autotuneIob.initializeData(from, to)
+                autotuneIob.initializeData(from, to, tunedProfile!!)
                //<=> ns-entries.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
                 autotuneFS.exportEntries(autotuneIob)
                 //<=> ns-treatments.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine (include treatments ,tempBasal and extended

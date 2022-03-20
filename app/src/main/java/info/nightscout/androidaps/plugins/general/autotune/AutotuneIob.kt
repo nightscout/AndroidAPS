@@ -75,7 +75,7 @@ class AutotuneIob(
         return (60 * 60 * 1000L * dia).toLong()
     }
 
-    fun initializeData(from: Long, to: Long) {
+    fun initializeData(from: Long, to: Long, tunedProfile: ATProfile) {
         iobCobCalculator =
             IobCobCalculatorPlugin(
                 injector,
@@ -100,11 +100,11 @@ class AutotuneIob(
         tempBasals = ArrayList<TemporaryBasal>()
         initializeBgreadings(from, to)
         initializeTreatmentData(from - range(), to)
-        initializeTempBasalData(from - range(), to)
-        initializeExtendedBolusData(from - range(), to)
+        initializeTempBasalData(from - range(), to, tunedProfile)
+        initializeExtendedBolusData(from - range(), to, tunedProfile)
         Collections.sort(tempBasals) { o1: TemporaryBasal, o2: TemporaryBasal -> (o2.timestamp - o1.timestamp).toInt() }
         // Without Neutral TBR, Autotune Web will take PumpProfile basal rate to calculate iob for periods without TBR running
-        addNeutralTempBasal(from - range(), to)
+        addNeutralTempBasal(from - range(), to, tunedProfile)
         Collections.sort(tempBasals) { o1: TemporaryBasal, o2: TemporaryBasal -> (o2.timestamp - o1.timestamp).toInt() }
         Collections.sort(nsTreatments) { o1: NsTreatment, o2: NsTreatment -> (o2.date - o1.date).toInt() }
         Collections.sort(boluses) { o1: Bolus, o2: Bolus -> (o2.timestamp - o1.timestamp).toInt() }
@@ -155,25 +155,25 @@ class AutotuneIob(
     }
 
     //nsTreatment is used only for export data
-    private fun initializeTempBasalData(from: Long, to: Long) {
+    private fun initializeTempBasalData(from: Long, to: Long, tunedProfile: ATProfile) {
         val tBRs = repository.getTemporaryBasalsDataFromTimeToTime(from - range(), to, false).blockingGet()
         //log.debug("D/AutotunePlugin tempBasal size before cleaning:" + tBRs.size);
         for (i in tBRs.indices) {
             if (tBRs[i].isValid)
-                toRoundedTimestampTB(tBRs[i])
+                toRoundedTimestampTB(tBRs[i], tunedProfile)
         }
         //log.debug("D/AutotunePlugin: tempBasal size: " + tempBasals.size)
     }
 
     //nsTreatment is used only for export data
-    private fun initializeExtendedBolusData(from: Long, to: Long) {
+    private fun initializeExtendedBolusData(from: Long, to: Long, tunedProfile: ATProfile) {
         val extendedBoluses = repository.getExtendedBolusDataFromTimeToTime(from - range(), to, false).blockingGet()
         //log.debug("D/AutotunePlugin tempBasal size before cleaning:" + extendedBoluses.size);
         for (i in extendedBoluses.indices) {
             val eb = extendedBoluses[i]
             if (eb.isValid)
                 profileFunction.getProfile(eb.timestamp)?.let {
-                    toRoundedTimestampTB(eb.toTemporaryBasal(it))
+                    toRoundedTimestampTB(eb.toTemporaryBasal(it), tunedProfile)
                 }
         }
         //log.debug("D/AutotunePlugin: tempBasal+extended bolus size: " + tempBasals.size)
@@ -181,7 +181,7 @@ class AutotuneIob(
 
     // addNeutralTempBasal will add a fake neutral TBR (100%) to have correct basal rate in exported file for periods without TBR running
     // to be able to compare results between oref0 algo and aaps
-    private fun addNeutralTempBasal(from: Long, to: Long) {
+    private fun addNeutralTempBasal(from: Long, to: Long, tunedProfile: ATProfile) {
         var previousStart = to
         for (i in tempBasals.indices) {
             val newStart = tempBasals[i].timestamp + tempBasals[i].duration
@@ -195,7 +195,7 @@ class AutotuneIob(
                     id = newStart,
                     type = TemporaryBasal.Type.NORMAL
                 )
-                toRoundedTimestampTB(neutraltb)
+                toRoundedTimestampTB(neutraltb, tunedProfile)
             }
             previousStart = tempBasals[i].timestamp
         }
@@ -209,14 +209,14 @@ class AutotuneIob(
                 id = from,
                 type = TemporaryBasal.Type.NORMAL
             )
-            toRoundedTimestampTB(neutraltb)
+            toRoundedTimestampTB(neutraltb, tunedProfile)
         }
     }
 
     // toRoundedTimestampTB will round all beginning timestamp and duration to minutes
     // it will also split all TBR accross hours in different TBR with correct absolute value to be sure to have correct basal rate
     // even if profile rate is not the same
-    private fun toRoundedTimestampTB(tb: TemporaryBasal) {
+    private fun toRoundedTimestampTB(tb: TemporaryBasal, tunedProfile: ATProfile) {
         var roundedTimestamp = (tb.timestamp / T.mins(1).msecs()) * T.mins(1).msecs()
         var roundedDuration = tb.durationInMinutes.toInt()
         if (tb.isValid && tb.durationInMinutes > 0) {
@@ -236,7 +236,7 @@ class AutotuneIob(
                     nsTreatments.add(NsTreatment(newtb))
                     roundedDuration = 0
                     val profile = profileFunction.getProfile(newtb.timestamp) ?:continue
-                    boluses.addAll(newtb.convertToBoluses(profile))
+                    boluses.addAll(newtb.convertToBoluses(profile, tunedProfile))
                 } else {
                     val durationFilled = 60 - Profile.secondsFromMidnight(roundedTimestamp) / 60 % 60
                     val newtb = TemporaryBasal(
@@ -253,7 +253,7 @@ class AutotuneIob(
                     roundedTimestamp += durationFilled * 60 * 1000
                     roundedDuration = roundedDuration - durationFilled
                     val profile = profileFunction.getProfile(newtb.timestamp) ?:continue
-                    boluses.addAll(newtb.convertToBoluses(profile))
+                    boluses.addAll(newtb.convertToBoluses(profile, tunedProfile))
                 }
             }
         }

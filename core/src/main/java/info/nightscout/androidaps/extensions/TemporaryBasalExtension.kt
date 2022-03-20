@@ -1,6 +1,8 @@
 package info.nightscout.androidaps.extensions
 
+import info.nightscout.androidaps.data.Iob
 import info.nightscout.androidaps.data.IobTotal
+import info.nightscout.androidaps.data.LocalInsulin
 import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.database.entities.TemporaryBasal
@@ -9,6 +11,7 @@ import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.interfaces.Insulin
 import info.nightscout.androidaps.interfaces.Profile
+import info.nightscout.androidaps.plugins.general.autotune.data.ATProfile
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter.to0Decimal
@@ -171,15 +174,15 @@ fun TemporaryBasal.iobCalc(time: Long, profile: Profile, insulinInterface: Insul
     return result
 }
 
-// Add convertion to bolus for Autotune (calculation with oref0 method)
-fun TemporaryBasal.convertToBoluses(profile: Profile): MutableList<Bolus> {
+fun TemporaryBasal.convertToBoluses(profile: Profile, tunedProfile: ATProfile): MutableList<Bolus> {
     val result: MutableList<Bolus> = ArrayList()
     val realDuration = durationInMinutes
     val basalRate = profile.getBasal(timestamp)
+    val tunedRate = tunedProfile.getBasal(timestamp)
     val netBasalRate = Round.roundTo(if (isAbsolute) {
-        rate - basalRate
+        rate - tunedRate
     } else {
-        rate / 100.0 * basalRate - basalRate
+        rate / 100.0 * basalRate - tunedRate
     }, 0.001)
     val tempBolusSize = if (netBasalRate < 0 ) -0.05 else 0.05
     val netBasalAmount: Double = Round.roundTo(netBasalRate * realDuration / 60.0, 0.01)
