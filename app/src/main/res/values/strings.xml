@@ -135,6 +135,11 @@
     <string name="overview">Overview</string>
     <string name="treatments">Treatments</string>
     <string name="virtualpump">Virtual Pump</string>
+    
+    <string name="remove_items">Remove Items</string>
+    <string name="sort_items">Sort Items</string>
+    <string name="show_invalidated">Show Invalidated</string>
+    <string name="hide_invalidated">Hide Invalidated</string>
 
 
     <string name="configbuilder_pump">Pump</string>
