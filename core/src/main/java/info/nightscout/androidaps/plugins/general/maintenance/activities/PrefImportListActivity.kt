@@ -32,8 +32,6 @@ class PrefImportListActivity : DaggerAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // temp while switch is not public
-        setTheme(R.style.AppTheme)
         binding = MaintenanceImportListActivityBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
