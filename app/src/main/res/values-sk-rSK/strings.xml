@@ -907,6 +907,7 @@
     <string name="errors">Chyby</string>
     <string name="ns_sync_slow">Spomaliť nahrávanie</string>
     <string name="data_status">Stav dát glykémie</string>
+    <string name="remove_bg_readings">Odstrániť glykémie</string>
     <string name="statuslights_cannula_age">vek kanyly</string>
     <string name="statuslights_patch_pump_age">vek náplasťovej pumpy</string>
     <string name="patch_pump">Náplasťová pumpa</string>
@@ -944,6 +945,11 @@
     <string name="a11y_delete_current_profile">zmazať aktuálny profil</string>
     <string name="a11y_add_new_to_list">pridať nový do zoznamu</string>
     <!-- Theme switcher dark and light mode-->
+    <string name="theme_switcher_summary">Vyber tmavú, svetlú, alebo systémovú tému</string>
+    <string name="app_color_scheme">Farebná schéma</string>
+    <string name="dark_theme">Tmavá téma</string>
+    <string name="light_theme">Svetlá téma</string>
+    <string name="follow_system_theme">Použiť tému zariadenia</string>
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">Dočasný cieľ neznáma predvoľba: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Zrušenie bežiaceho dočasného cieľa?</string>
@@ -990,4 +996,5 @@
     <string name="show_loop">Zobraziť uzavretý okruh</string>
     <string name="count_selected">Vybrané: %1$d</string>
     <string name="sort_label">Zoradiť</string>
+    <string name="dialog_cancled">Dialóg zrušený</string>
 </resources>
