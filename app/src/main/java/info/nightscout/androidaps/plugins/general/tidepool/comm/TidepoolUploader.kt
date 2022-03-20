@@ -48,7 +48,7 @@ class TidepoolUploader @Inject constructor(
         private const val INTEGRATION_BASE_URL = "https://int-api.tidepool.org"
         private const val PRODUCTION_BASE_URL = "https://api.tidepool.org"
         internal const val VERSION = "0.0.1"
-        const val PUMP_TYPE = "Tandem"
+        const val PUMP_TYPE = "Insulet"
     }
 
     private var retrofit: Retrofit? = null

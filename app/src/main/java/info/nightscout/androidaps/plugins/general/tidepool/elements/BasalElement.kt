@@ -30,10 +30,14 @@ class BasalElement(tbr: TemporaryBasal, private val profile: Profile, dateUtil: 
     @Expose
     internal var conversionOffset: Long = 0
 
+    @Expose
+    internal var InProgress: Boolean = false
+
     init {
         type = "basal"
         timestamp = tbr.timestamp
         rate = tbr.convertedToAbsolute(tbr.timestamp, profile)
         duration = tbr.duration
+        InProgress = tbr.isInProgress
     }
 }
