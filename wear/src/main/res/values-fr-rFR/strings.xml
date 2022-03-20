@@ -72,6 +72,7 @@
     <string name="menu_treatment">Traitement</string>
     <string name="menu_treatment_short">Trait.</string>
     <string name="menu_bolus">Bolus</string>
+    <string name="menu_carb">Glucides</string>
     <string name="menu_ecarb">eGlucides</string>
     <string name="menu_settings">Paramètres</string>
     <string name="menu_status">États</string>
