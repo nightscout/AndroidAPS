@@ -151,31 +151,32 @@ class AutotuneIob(
                 }
             }
         }
-        log.debug("AutotunePlugin Nb Meals: $nbCarbs Nb Bolus: $nbBolus Nb SMB: $nbSMB")
+        //log.debug("AutotunePlugin Nb Meals: $nbCarbs Nb Bolus: $nbBolus Nb SMB: $nbSMB")
     }
 
     //nsTreatment is used only for export data
     private fun initializeTempBasalData(from: Long, to: Long) {
-        val temp = repository.getTemporaryBasalsDataFromTimeToTime(from - range(), to, false).blockingGet()
-        val temp2: MutableList<TemporaryBasal> = ArrayList()
-        log.debug("D/AutotunePlugin tempBasal size before cleaning:" + temp.size);
-        for (i in temp.indices) {
-            toRoundedTimestampTB(temp[i])
+        val tBRs = repository.getTemporaryBasalsDataFromTimeToTime(from - range(), to, false).blockingGet()
+        //log.debug("D/AutotunePlugin tempBasal size before cleaning:" + tBRs.size);
+        for (i in tBRs.indices) {
+            if (tBRs[i].isValid)
+                toRoundedTimestampTB(tBRs[i])
         }
-        log.debug("D/AutotunePlugin: tempBasal size: " + tempBasals.size)
+        //log.debug("D/AutotunePlugin: tempBasal size: " + tempBasals.size)
     }
 
     //nsTreatment is used only for export data
     private fun initializeExtendedBolusData(from: Long, to: Long) {
         val extendedBoluses = repository.getExtendedBolusDataFromTimeToTime(from - range(), to, false).blockingGet()
-        log.debug("D/AutotunePlugin tempBasal size before cleaning:" + extendedBoluses.size);
+        //log.debug("D/AutotunePlugin tempBasal size before cleaning:" + extendedBoluses.size);
         for (i in extendedBoluses.indices) {
             val eb = extendedBoluses[i]
-            profileFunction.getProfile(eb.timestamp)?.let {
-                toRoundedTimestampTB(eb.toTemporaryBasal(it))
-            }
+            if (eb.isValid)
+                profileFunction.getProfile(eb.timestamp)?.let {
+                    toRoundedTimestampTB(eb.toTemporaryBasal(it))
+                }
         }
-        log.debug("D/AutotunePlugin: tempBasal+extended bolus size: " + tempBasals.size)
+        //log.debug("D/AutotunePlugin: tempBasal+extended bolus size: " + tempBasals.size)
     }
 
     // addNeutralTempBasal will add a fake neutral TBR (100%) to have correct basal rate in exported file for periods without TBR running
@@ -258,31 +259,12 @@ class AutotuneIob(
         }
     }
 
-    fun getIOB(time: Long, currentBasal: Double, localInsulin: LocalInsulin, detailledLog: Boolean): IobTotal {
-        if (detailledLog) {
-            //log("End Iob Calc;time;time ISO;iob;activity")
-            //log("End Bolus IOBCalc;time;time ISO;bolus iob;activity")
-            log("Bolus Contrib;time;timestamp;timestamp ISO;Bol amount;Bol iob;Bol activity")
-        }
-        val bolusIob = getCalculationToTimeTreatments(time, localInsulin, detailledLog).round()
-        // Calcul from specific tempBasals completed with neutral tbr
-        /*
-        if (detailledLog) {
-            log("current Basal: $currentBasal; Insulin Peak: ${localInsulin.peak}; Insulin DIA: ${localInsulin.dia}")
-            //log("End TBR IOBCalc;time;time ISO;currentBasal;basaliob;activity")
-            //log("TBR Contrib;time;TBR timestamp;timestamp ISO;TBR rate;TBR duration;TBR basaliob;TBR activity")
-            log("TBR Calc Contrib;time;TBR time;TBR rate;TBR duration;Temp Bol time;Temp Bol Size;Temp Bol iobContrib};temp Bol activityContrib;result.basaliob;result.activity")
-        }
-        val basalIob = getCalculationToTimeTempBasals(time, true, endBG, currentBasal, localInsulin, detailledLog).round()
-//        log.debug("D/AutotunePlugin: CurrentBasal: " + currentBasal + " BolusIOB: " + bolusIob.iob + " CalculABS: " + basalIob.basaliob + " CalculSTD: " + basalIob2.basaliob + " testAbs: " + absbasaliob.basaliob + " activity " + absbasaliob.activity)
-        val result = IobTotal.combine(bolusIob, basalIob).round()
-        //log("End Iob Calc;$time;${dateUtil.toISOString(time)};${result.iob};${result.activity}")
-
-         */
+    fun getIOB(time: Long, localInsulin: LocalInsulin): IobTotal {
+        val bolusIob = getCalculationToTimeTreatments(time, localInsulin).round()
         return bolusIob
     }
 
-    fun getCalculationToTimeTreatments(time: Long, localInsulin: LocalInsulin, detailledLog: Boolean): IobTotal {
+    fun getCalculationToTimeTreatments(time: Long, localInsulin: LocalInsulin): IobTotal {
         val total = IobTotal(time)
         for (pos in boluses.indices) {
             val t = boluses[pos]
@@ -291,55 +273,10 @@ class AutotuneIob(
             val tIOB = t.iobCalc(time, localInsulin)
             total.iob += tIOB.iobContrib
             total.activity += tIOB.activityContrib
-            if (detailledLog)
-                log("Bolus Contrib;$time;${t.timestamp};${dateUtil.toISOString(t.timestamp)};${t.amount};${tIOB.iobContrib};${tIOB.activityContrib}")
         }
-        //log("End Bolus IOBCalc;$time;${dateUtil.toISOString(time)};${total.iob};${total.activity}")
         return total
     }
 
-    fun getCalculationToTimeTempBasals(time: Long, truncate: Boolean, truncateTime: Long, currentBasal: Double, localInsulin: LocalInsulin, detailledLog: Boolean): IobTotal {
-        val total = IobTotal(time)
-        for (pos in 0 until tempBasals.size) {
-            val t = tempBasals[pos]
-            if (t.timestamp > time || t.end < time - localInsulin.duration) continue
-            var calc: IobTotal?
-            val profile = profileFunction.getProfile(t.timestamp) ?: continue
-            calc = if (truncate && t.end > truncateTime) {
-                val dummyTemp = TemporaryBasal(
-                    id = t.id,
-                    timestamp = t.timestamp,
-                    rate = t.rate,
-                    type = TemporaryBasal.Type.NORMAL,
-                    isAbsolute = true,
-                    duration = truncateTime - t.timestamp
-                )
-                dummyTemp.iobCalc(time, profile, localInsulin, currentBasal).also {
-                    if (detailledLog)
-                        log(it.logCalc + ";TroncateBloc")
-                    //if (detailledLog)
-                    //    log("TBR Contrib;$time;${t.timestamp};${dateUtil.toISOString(t.timestamp)};${t.rate};${t.duration};${it.basaliob};${it.activity}")
-                }
-            } else {
-                t.iobCalc(time, profile, localInsulin, currentBasal).also {
-                    if (detailledLog)
-                        log(it.logCalc)
-                    //if (detailledLog)
-                    //    log("TBR Contrib;$time;${t.timestamp};${dateUtil.toISOString(t.timestamp)};${t.rate};${t.duration};${it.basaliob};${it.activity}")
-                }
-            }
-            //log.debug("BasalIOB " + new Date(time) + " >>> " + calc.basaliob);
-            total.plus(calc).also {
-                //if (detailledLog)
-                //    log("Temp TBR IOBCalc;$time;${dateUtil.toISOString(time)};$currentBasal;${it.basaliob};${it.activity}")
-            }
-        }
-        //if (detailledLog)
-        //    log("End TBR IOBCalc;$time;${dateUtil.toISOString(time)};$currentBasal;${total.basaliob};${total.activity}")
-        return total
-    }
-
-    /** */
     fun glucosetoJSON(): String {
         val glucoseJson = JSONArray()
         for (bgreading in glucose)
@@ -355,7 +292,7 @@ class AutotuneIob(
         return json.toString(2).replace("\\/", "/")
     }
 
-    /** */ //I add this internal class to be able to export easily ns-treatment files with same containt and format than NS query used by oref0-autotune
+    //I add this internal class to be able to export easily ns-treatment files with same containt and format than NS query used by oref0-autotune
     private inner class NsTreatment {
 
         //Common properties
@@ -405,8 +342,7 @@ class AutotuneIob(
             isSMB = t.type == Bolus.Type.SMB
             isValid = t.isValid
             mealBolus = false //t.mealBolus
-            eventType =
-                TherapyEvent.Type.CORRECTION_BOLUS //if (insulin > 0 && carbs > 0) CareportalEvent.BOLUSWIZARD else if (carbs > 0) CareportalEvent.CARBCORRECTION else CareportalEvent.CORRECTIONBOLUS
+            eventType = TherapyEvent.Type.CORRECTION_BOLUS
             created_at = dateUtil.toISOString(t.timestamp)
         }
 

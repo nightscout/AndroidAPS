@@ -39,7 +39,7 @@ import java.util.*
 import javax.inject.Inject
 
 /**
- * Created by Rumen Georgiev on 1/29/2018.
+ * initialised by Rumen Georgiev on 1/29/2018.
  * Deep rework by philoul on 06/2020
  */
 // Todo: Reset results field and Switch/Copy button visibility when Nb of selected days is changed
@@ -105,9 +105,7 @@ class AutotuneFragment : DaggerFragment() {
 
         binding.autotuneCompare.setOnClickListener {
             val currentprofile = autotunePlugin.currentprofile
-            //log("profile : " + currentprofile?.profilename + "\n" + currentprofile?.data.toString())
             val tunedprofile = autotunePlugin.tunedProfile
-            //log("tunedprofile : " + AutotunePlugin.tunedProfile?.profilename + "\n" + tunedprofile?.data.toString())
             ProfileViewerDialog().also { pvd ->
                 pvd.arguments = Bundle().also {
                     it.putLong("time", dateUtil.now())
@@ -154,8 +152,8 @@ class AutotuneFragment : DaggerFragment() {
         }
 
         lastRun = autotunePlugin.lastRun
-        if (lastRun > MidnightTime.calc(System.currentTimeMillis() - autotunePlugin.autotuneStartHour * 3600 * 1000L) + autotunePlugin.autotuneStartHour * 3600 * 1000L && autotunePlugin.result !==
-            "") {
+        if (lastRun > MidnightTime.calc(System.currentTimeMillis() - autotunePlugin.autotuneStartHour * 3600 * 1000L) + autotunePlugin.autotuneStartHour * 3600 * 1000L && autotunePlugin.result !=="")
+        {
             binding.tuneWarning.text = resourceHelper.gs(R.string.autotune_warning_after_run)
             binding.tuneDays.setText(autotunePlugin.lastNbDays)
         } else { //if new day reinit result, default days, warning and button's visibility
@@ -203,14 +201,14 @@ class AutotuneFragment : DaggerFragment() {
             binding.autotuneRun.visibility = View.GONE
             binding.autotuneCompare.visibility = View.GONE
             binding.tuneWarning.text = resourceHelper.gs(R.string.autotune_warning_during_run)
-            binding.tuneResult.text = tempResult // autotunePlugin.result
+            binding.tuneResult.text = tempResult
         } else if (autotunePlugin.lastRunSuccess) {
             binding.autotuneRun.visibility = View.VISIBLE
             binding.tuneWarning.text = resourceHelper.gs(R.string.autotune_warning_after_run)
             binding.tuneResult.text = autotunePlugin.result
             binding.autotuneCompare.visibility = View.VISIBLE
         } else {
-            binding.tuneResult.text = tempResult // autotunePlugin.result
+            binding.tuneResult.text = tempResult
             binding.autotuneRun.visibility = View.VISIBLE
         }
         if (autotunePlugin.tunedProfile == null || autotunePlugin.currentprofile == null)
@@ -227,12 +225,10 @@ class AutotuneFragment : DaggerFragment() {
         val profile = ATProfile(profileFunction.getProfile(System.currentTimeMillis()), LocalInsulin(""), injector)
         if (!profile.isValid) return resourceHelper.gs(R.string.autotune_profile_invalid)
         if (profile.icSize > 1) {
-            //warning = nl + "Autotune works with only one IC value, your profile has " + profile.getIcSize() + " values. Average value is " + profile.ic + "g/U";
             warning += nl + resourceHelper.gs(R.string.format_autotune_ic_warning, profile.icSize, profile.ic)
             nl = "\n"
         }
         if (profile.isfSize > 1) {
-            //warning = nl + "Autotune works with only one ISF value, your profile has " + profile.getIsfSize() + " values. Average value is " + profile.isf/toMgDl + profileFunction.getUnits() + "/U";
             warning += nl + resourceHelper.gs(R.string.format_autotune_isf_warning, profile.isfSize, Profile.fromMgdlToUnits(profile.isf, profileFunction.getUnits()), profileFunction.getUnits().asText)
         }
         return warning

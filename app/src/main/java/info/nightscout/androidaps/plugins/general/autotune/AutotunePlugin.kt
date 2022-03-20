@@ -46,7 +46,7 @@ import javax.inject.Singleton
  *      use html table for results presentation
  * TODO: futur version: add profile selector in AutotuneFragment to allow running autotune plugin with other profiles than current
  * TODO: futur version (once first version validated): add DIA and Peak tune for insulin
- * TODO: replace Thread by Worker to avoid conflict risks between manual and automation launch of Autotune
+ * TODO: replace Thread by Worker
  */
 
 @Singleton
@@ -165,7 +165,7 @@ class AutotunePlugin @Inject constructor(
                 autotuneFS.exportEntries(autotuneIob)
                 //<=> ns-treatments.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine (include treatments ,tempBasal and extended
                 autotuneFS.exportTreatments(autotuneIob)
-                preppedGlucose = autotunePrep.categorizeBGDatums(autotuneIob, tunedProfile!!, pumpprofile, localInsulin)
+                preppedGlucose = autotunePrep.categorizeBGDatums(autotuneIob, tunedProfile!!, localInsulin)
                 //<=> autotune.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
                 if (preppedGlucose == null) {
                     result = rh.gs(R.string.autotune_error)
@@ -197,7 +197,6 @@ class AutotunePlugin @Inject constructor(
             copyButtonVisibility = View.VISIBLE
             if (autoSwitch) {
                 profileSwitchButtonVisibility = View.GONE //hide profilSwitch button in fragment
-                //activePlugin.activeTreatments.doProfileSwitch(tunedProfile!!.profileStore, tunedProfile!!.profilename, 0, 100, 0, dateUtil.now())
                 val now = dateUtil.now()
                 if (profileFunction.createProfileSwitch(
                         tunedProfile!!.profileStore!!,

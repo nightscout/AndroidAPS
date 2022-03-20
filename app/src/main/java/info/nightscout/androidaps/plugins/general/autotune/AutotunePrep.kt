@@ -32,12 +32,11 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var repository: AppRepository
 
-    fun categorizeBGDatums(autotuneIob: AutotuneIob, tunedprofile: ATProfile, pumpprofile: ATProfile, localInsulin: LocalInsulin): PreppedGlucose? {
+    fun categorizeBGDatums(autotuneIob: AutotuneIob, tunedprofile: ATProfile, localInsulin: LocalInsulin): PreppedGlucose? {
         //lib/meals is called before to get only meals data (in AAPS it's done in AutotuneIob)
         var treatments: MutableList<Carbs> = autotuneIob.meals
         var boluses: MutableList<Bolus> = autotuneIob.boluses
         val profileData = tunedprofile.profile
-        var detailledLog = false
         // Bloc between #21 and # 54 replaced by bloc below (just remove BG value below 39, Collections.sort probably not necessary because BG values already sorted...)
         val glucose = autotuneIob.glucose
         val glucoseData: MutableList<GlucoseValue> = ArrayList()
@@ -153,35 +152,28 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
 
             //sens = ISF
             val sens = profileData.getIsfMgdl(BGTime)
-            //log.debug("ISF data = " + sens);
 
             // for IOB calculations, use the average of the last 4 hours' basals to help convergence;
             // this helps since the basal this hour could be different from previous, especially if with autotune they start to diverge.
             // use the pumpbasalprofile to properly calculate IOB during periods where no temp basal is set
-            //Philoul oref0-autotune doesn't use profile switch information, I think current bg profile is better for iob calculation
-            //This part of code moved to AutotuneIob in getAbsoluteIOBTempBasals function
+            /* Note Philoul currentPumpBasal never used in oref0 Autotune code
             var currentPumpBasal = pumpprofile.profile.getBasal(BGTime)
             currentPumpBasal += pumpprofile.profile.getBasal(BGTime - 1 * 60 * 60 * 1000)
             currentPumpBasal += pumpprofile.profile.getBasal(BGTime - 2 * 60 * 60 * 1000)
             currentPumpBasal += pumpprofile.profile.getBasal(BGTime - 3 * 60 * 60 * 1000)
             currentPumpBasal = Round.roundTo(currentPumpBasal / 4, 0.001) //CurrentPumpBasal for iob calculation is average of 4 last pumpProfile Basal rate
-
+            */
             // this is the current autotuned basal, used for everything else besides IOB calculations
             val currentBasal = profileData.getBasal(BGTime)
 
-            //log.debug(currentBasal,basal1hAgo,basal2hAgo,basal3hAgo,IOBInputs.profile.currentBasal);
             // basalBGI is BGI of basal insulin activity.
             val basalBGI = Round.roundTo(currentBasal * sens / 60 * 5, 0.01) // U/hr * mg/dL/U * 1 hr / 60 minutes * 5 = mg/dL/5m
             //console.log(JSON.stringify(IOBInputs.profile));
             // call iob since calculated elsewhere
-//****************************************************************************************************************************************
-            //var getIOB = require('../iob');
             //var iob = getIOB(IOBInputs)[0];
             // in autotune iob is calculated with 6 hours of history data, tunedProfile and average pumpProfile basal rate...
             //log("currentBasal: " + currentBasal + " BGTime: " + BGTime + " / " + dateUtil!!.timeStringWithSeconds(BGTime) + "******************************************************************************************")
-            val iob = autotuneIob.getIOB(BGTime, currentPumpBasal, localInsulin, detailledLog)    // add localInsulin to be independent to InsulinPlugin
-            //log.debug("Bolus activity: " + bolusIob.activity + " Basal activity: " + basalIob.activity + " Total activity: " + iob.activity);
-            //log.debug("treatmentsActivity Iob Activity: " + iob.activity + " Iob Basal: " + iob.basaliob + " Iob: " + iob.iob + " netbasalins: " + iob.netbasalinsulin + " netinsulin: " + iob.netInsulin);
+            val iob = autotuneIob.getIOB(BGTime, localInsulin)    // add localInsulin to be independent to InsulinPlugin
 
             // activity times ISF times 5 minutes is BGI
             val BGI = Round.roundTo(-iob.activity * sens * 5, 0.01)
@@ -326,8 +318,6 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
             }
             // debug line to print out all the things
             log((if (absorbing) 1 else 0).toString() + " mealCOB: " + Round.roundTo(mealCOB, 0.1) + " mealCarbs: " + Math.round(mealCarbs) + " basalBGI: " + Round.roundTo(basalBGI, 0.1) + " BGI: " + Round.roundTo(BGI, 0.1) + " IOB: " + iob.iob+ " Activity: " + iob.activity + " at " + dateUtil.timeStringWithSeconds(BGTime) + " dev: " + deviation + " avgDelta: " + avgDelta + " " + type)
-            detailledLog = false
-        //log((absorbing?1:0) + " mealCOB: "+ Round.roundTo(mealCOB,0.1)+" mealCarbs: "+Math.round(mealCarbs)+" basalBGI: "+Round.roundTo(basalBGI,0.001)+" BGI: "+ Round.roundTo(BGI,0.001) +" IOB: "+Round.roundTo(iob.iob,0.001) + " IOBbas: "+Round.roundTo(iob.basaliob,0.01) + " IOBbol: " +Round.roundTo(iob.iob-iob.basaliob,0.01)+ " at "+ dateUtil.timeStringWithSeconds(BGTime) +" dev: "+deviation+" avgDelta: "+avgDelta +" "+ type);
         }
 
 //****************************************************************************************************************************************
