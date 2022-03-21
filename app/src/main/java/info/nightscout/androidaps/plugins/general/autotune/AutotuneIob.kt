@@ -56,17 +56,14 @@ class AutotuneIob(
 
     lateinit var iobCobCalculator: IobCobCalculatorPlugin
     private val nsTreatments = ArrayList<NsTreatment>()
+    private var dia: Double = Constants.defaultDIA
     var boluses: MutableList<Bolus> = ArrayList()
     var meals = ArrayList<Carbs>()
     lateinit var glucose: List<GlucoseValue> // newest at index 0
     private lateinit var tempBasals: MutableList<TemporaryBasal>
     var startBG: Long = 0
     var endBG: Long = 0
-    private fun range(): Long {
-        var dia = Constants.defaultDIA
-        if (profileFunction.getProfile() != null) dia = profileFunction.getProfile()!!.dia
-        return (60 * 60 * 1000L * dia).toLong()
-    }
+    private fun range(): Long = (60 * 60 * 1000L * dia).toLong()
 
     fun initializeData(from: Long, to: Long, tunedProfile: ATProfile) {
         iobCobCalculator =
@@ -86,7 +83,7 @@ class AutotuneIob(
                 dateUtil,
                 repository
             )
-
+        dia = tunedProfile.dia
         startBG = from
         endBG = to
         nsTreatments.clear()
