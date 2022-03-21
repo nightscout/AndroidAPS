@@ -44,34 +44,32 @@
         android:orientation="horizontal"
         android:padding="5dp" />
 
-    <LinearLayout
-        android:id="@+id/spinner_layout"
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:id="@+id/typeListLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:hint="@string/eventtype"
         android:layout_below="@+id/spacer"
-        android:orientation="horizontal">
+        app:boxStrokeColor="@color/list_delimiter" >
 
-        <TextView
-            android:layout_width="wrap_content"
+        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+            android:id="@+id/typeList"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="20dp"
-            android:text="@string/eventtype"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:clickable="true"
+            android:enabled="false"
+            tools:ignore="KeyboardInaccessibleWidget" />
 
-        <Spinner
-            android:id="@+id/spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="20dp" />
-
-    </LinearLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
         android:id="@+id/status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/spinner_layout"
+        android:layout_below="@id/typeListLayout"
         android:layout_gravity="center_horizontal"
         android:gravity="center_horizontal" />
 
