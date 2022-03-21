@@ -103,7 +103,6 @@
     <string name="overview_calculator_label">Assistant</string>
     <string name="constraintapllied">Restriction appliquée !</string>
     <string name="sms_bolus">Bolus:</string>
-    <string name="basal">Basal</string>
     <string name="sms_basal">Basal:</string>
     <string name="changeyourinput">Changez vos entrées !</string>
     <string name="configbuilder_bgsource">Source des glycémies</string>
@@ -772,7 +771,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="invalidage">Âge invalide</string>
     <string name="invalidweight">Poids invalide</string>
     <string name="invalidpct">% saisi invalide</string>
-    <string name="tirformat"><![CDATA[<b>%1$s:</b> Bas: <b>%2$02d%%</b> Cible: <b>%3$02d%%</b> Haut: <b>%4$02d%%</b>]]></string>
     <string name="average">Moyenne</string>
     <string name="tir">Cible Gly</string>
     <string name="activitymonitor">Moniteur d\'activité</string>
