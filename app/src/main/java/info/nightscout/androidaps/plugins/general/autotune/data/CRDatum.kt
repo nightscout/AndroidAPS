@@ -18,7 +18,7 @@ class CRDatum {
     var crCarbs = 0.0
     var crInsulin = 0.0
     var crInsulinTotal = 0.0
-    lateinit var dateUtil: DateUtil
+    var dateUtil: DateUtil
 
     constructor(dateUtil: DateUtil) { this.dateUtil = dateUtil}
     constructor(json: JSONObject, dateUtil: DateUtil) {
