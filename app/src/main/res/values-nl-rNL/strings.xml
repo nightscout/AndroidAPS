@@ -103,7 +103,6 @@
     <string name="overview_calculator_label">Bolus wizard</string>
     <string name="constraintapllied">Beperking toegepast!</string>
     <string name="sms_bolus">Bolus:</string>
-    <string name="basal">Basaal</string>
     <string name="sms_basal">Basaal:</string>
     <string name="changeyourinput">Wijzig het ingegevene!</string>
     <string name="configbuilder_bgsource">BG bron</string>
@@ -770,7 +769,6 @@
     <string name="invalidage">Ongeldige leeftijd invoer</string>
     <string name="invalidweight">Ongeldige gewicht invoer</string>
     <string name="invalidpct">Ongeldig % invoer</string>
-    <string name="tirformat"><![CDATA[<b>%1$s:</b> Laag: <b>%2$02d%%</b> In: <b>%3$02d%%</b> Hoog: <b>%4$02d%%</b>]]></string>
     <string name="average">Gemiddelde</string>
     <string name="tir">TIR</string>
     <string name="activitymonitor">Activiteitsmonitor</string>
