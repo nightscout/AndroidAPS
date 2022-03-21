@@ -945,6 +945,11 @@
     <string name="a11y_delete_current_profile">slett gjeldende profil</string>
     <string name="a11y_add_new_to_list">legg til ny i liste</string>
     <!-- Theme switcher dark and light mode-->
+    <string name="theme_switcher_summary">Velg mørk, lys eller bruk systemets fargetema</string>
+    <string name="app_color_scheme">App fargetema</string>
+    <string name="dark_theme">Mørkt tema</string>
+    <string name="light_theme">Lyst tema</string>
+    <string name="follow_system_theme">Bruk systemets fargetema</string>
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">Temptarget ukjent forhåndsinnstilling: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Avbryt gjeldende Temp Target?</string>
