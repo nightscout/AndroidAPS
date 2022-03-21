@@ -163,7 +163,6 @@
     <string name="overview_calculator_label">Calculator</string>
     <string name="constraintapllied">Constraint applied!</string>
     <string name="sms_bolus">Bolus:</string>
-    <string name="basal">Basal</string>
     <string name="sms_basal">Basal:</string>
     <string name="changeyourinput">Change your input!</string>
     <string name="configbuilder_bgsource">BG Source</string>
@@ -967,7 +966,6 @@
     <string name="invalidage">Invalid age entry</string>
     <string name="invalidweight">Invalid weight entry</string>
     <string name="invalidpct">Invalid % entry</string>
-    <string name="tirformat"><![CDATA[<b>%1$s:</b> Low: <b>%2$02d%%</b> In: <b>%3$02d%%</b> High: <b>%4$02d%%</b>]]></string>
     <string name="average">Average</string>
     <string name="tir">TIR</string>
     <string name="activitymonitor">Activity monitor</string>
@@ -1235,4 +1233,7 @@
     <string name="count_selected">%1$d selected</string>
     <string name="sort_label">Sort</string>
     <string name="dialog_cancled">Dialog canceled</string>
+    <string name="below">Below</string>
+    <string name="in_range">In range</string>
+    <string name="above">Above</string>
 </resources>

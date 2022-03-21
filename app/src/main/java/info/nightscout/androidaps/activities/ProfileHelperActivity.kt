@@ -7,6 +7,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.Menu
 import android.widget.PopupMenu
+import android.widget.TextView
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.data.PureProfile
@@ -66,6 +67,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
 
     private lateinit var binding: ActivityProfilehelperBinding
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityProfilehelperBinding.inflate(layoutInflater)
@@ -78,11 +80,11 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
             switchTab(1, typeSelected[1])
         }
 
-        binding.profiletype.setOnClickListener {
-            PopupMenu(this, binding.profiletype).apply {
+        binding.profileType.setOnClickListener {
+            PopupMenu(this, binding.profileType).apply {
                 menuInflater.inflate(R.menu.menu_profilehelper, menu)
                 setOnMenuItemClickListener { item ->
-                    binding.profiletype.setText(item.title)
+                    binding.profileType.setText(item.title)
                     when (item.itemId) {
                         R.id.menu_default       -> switchTab(tabSelected, ProfileType.MOTOL_DEFAULT)
                         R.id.menu_default_dpv   -> switchTab(tabSelected, ProfileType.DPV_DEFAULT)
@@ -129,7 +131,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
         }
 
         // Default profile
-        binding.copytolocalprofile.setOnClickListener {
+        binding.copyToLocalProfile.setOnClickListener {
             storeValues()
             val age = ageUsed[tabSelected]
             val weight = weightUsed[tabSelected]
@@ -167,20 +169,22 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
             }
         })
 
-        binding.basalpctfromtdd.setParams(32.0, 32.0, 37.0, 1.0, DecimalFormat("0"), false, null)
+        binding.basalPctFromTdd.setParams(32.0, 32.0, 37.0, 1.0, DecimalFormat("0"), false, null)
 
-        @SuppressLint("SetTextI18n")
-        binding.tdds.text = getString(R.string.tdd) + ": " + rh.gs(R.string.calculation_in_progress)
+        binding.tdds.addView(TextView(this).apply { text = rh.gs(R.string.tdd) + ": " + rh.gs(R.string.calculation_in_progress) })
         Thread {
-            val tdds = tddCalculator.stats()
-            runOnUiThread { binding.tdds.text = tdds }
+            val tdds = tddCalculator.stats(this)
+            runOnUiThread {
+                binding.tdds.removeAllViews()
+                binding.tdds.addView(tdds)
+            }
         }.start()
 
         // Current profile
         binding.currentProfileText.text = profileFunction.getProfileName()
 
         // General
-        binding.compareprofile.setOnClickListener {
+        binding.compareProfiles.setOnClickListener {
             storeValues()
             for (i in 0..1) {
                 if (typeSelected[i] == ProfileType.MOTOL_DEFAULT) {
@@ -241,7 +245,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
         binding.age.editText?.id?.let { binding.ageLabel.labelFor = it }
         binding.tdd.editText?.id?.let { binding.tddLabel.labelFor = it }
         binding.weight.editText?.id?.let { binding.weightLabel.labelFor = it }
-        binding.basalpctfromtdd.editText?.id?.let { binding.basalpctfromtddLabel.labelFor = it }
+        binding.basalPctFromTdd.editText?.id?.let { binding.basalPctFromTddLabel.labelFor = it }
 
         switchTab(0, typeSelected[0], false)
     }
@@ -272,7 +276,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
         ageUsed[tabSelected] = binding.age.value
         weightUsed[tabSelected] = binding.weight.value
         tddUsed[tabSelected] = binding.tdd.value
-        pctUsed[tabSelected] = binding.basalpctfromtdd.value
+        pctUsed[tabSelected] = binding.basalPctFromTdd.value
     }
 
     private fun switchTab(tab: Int, newContent: ProfileType, storeOld: Boolean = true) {
@@ -282,10 +286,10 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
 
         tabSelected = tab
         typeSelected[tabSelected] = newContent
-        binding.profiletypeTitle.defaultHintTextColor = ColorStateList.valueOf(rh.gc(if (tab == 0) R.color.helperProfile else R.color.examinedProfile))
+        binding.profileTypeTitle.defaultHintTextColor = ColorStateList.valueOf(rh.gc(if (tab == 0) R.color.helperProfile else R.color.examinedProfile))
 
         // show new content
-        binding.profiletype.setText(
+        binding.profileType.setText(
             when (typeSelected[tabSelected]) {
                 ProfileType.MOTOL_DEFAULT     -> rh.gs(R.string.motoldefaultprofile)
                 ProfileType.DPV_DEFAULT       -> rh.gs(R.string.dpvdefaultprofile)
@@ -303,9 +307,9 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
         binding.age.value = ageUsed[tabSelected]
         binding.weight.value = weightUsed[tabSelected]
         binding.tdd.value = tddUsed[tabSelected]
-        binding.basalpctfromtdd.value = pctUsed[tabSelected]
+        binding.basalPctFromTdd.value = pctUsed[tabSelected]
 
-        binding.basalpctfromtddRow.visibility = (newContent == ProfileType.DPV_DEFAULT).toVisibility()
+        binding.basalPctFromTddRow.visibility = (newContent == ProfileType.DPV_DEFAULT).toVisibility()
         if (profileList.isNotEmpty())
             binding.availableProfileList.setText(profileList[profileUsed[tabSelected]].toString())
         if (profileSwitch.isNotEmpty())

@@ -1,18 +1,25 @@
 package info.nightscout.androidaps.utils.stats
 
-import android.text.Spanned
+import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.Typeface
 import android.util.LongSparseArray
+import android.view.Gravity
+import android.view.ViewGroup
+import android.widget.TableLayout
+import android.widget.TableRow
+import android.widget.TextView
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.database.entities.TotalDailyDose
 import info.nightscout.androidaps.extensions.convertedToAbsolute
-import info.nightscout.androidaps.extensions.toText
+import info.nightscout.androidaps.extensions.toTableRow
+import info.nightscout.androidaps.extensions.toTableRowHeader
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.MidnightTime
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -186,24 +193,31 @@ class TddCalculator @Inject constructor(
         return totalTdd
     }
 
-    fun stats(): Spanned {
+    @SuppressLint("SetTextI18n")
+    fun stats(context: Context): TableLayout {
         val tdds = calculate(7)
         val averageTdd = averageTDD(tdds)
-        return HtmlHelper.fromHtml(
-            if (averageTdd != null) "<b>" + rh.gs(R.string.tdd) + ":</b><br>" +
-                toText(tdds, true) +
-                "<b>" + rh.gs(R.string.average) + ":</b><br>" +
-                averageTdd.toText(rh, tdds.size(), true)
-            else ""
-        )
-    }
-
-    @Suppress("SameParameterValue")
-    private fun toText(tdds: LongSparseArray<TotalDailyDose>, includeCarbs: Boolean): String {
-        var t = ""
-        for (i in 0 until tdds.size()) {
-            t += "${tdds.valueAt(i).toText(rh, dateUtil, includeCarbs)}<br>"
+        val lp = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT)
+        return TableLayout(context).also { layout ->
+            layout.layoutParams = TableLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
+            layout.addView(TextView(context).apply {
+                text = rh.gs(R.string.tdd)
+                setTypeface(typeface, Typeface.BOLD)
+                gravity = Gravity.CENTER_HORIZONTAL
+                setTextAppearance(android.R.style.TextAppearance_Material_Medium)
+            })
+            layout.addView(TotalDailyDose.toTableRowHeader(context, rh, includeCarbs = true))
+            for (i in 0 until tdds.size()) layout.addView(tdds.valueAt(i).toTableRow(context, rh, dateUtil, includeCarbs = true))
+            averageTdd?.let { averageTdd ->
+                layout.addView(TextView(context).apply {
+                    layoutParams = lp
+                    text = rh.gs(R.string.average)
+                    setTypeface(typeface, Typeface.BOLD)
+                    gravity = Gravity.CENTER_HORIZONTAL
+                    setTextAppearance(android.R.style.TextAppearance_Material_Medium)
+                })
+                layout.addView(averageTdd.toTableRow(context, rh, tdds.size(), includeCarbs = true))
+            }
         }
-        return t
     }
 }
