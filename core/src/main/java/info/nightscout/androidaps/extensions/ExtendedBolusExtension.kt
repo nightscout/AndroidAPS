@@ -196,3 +196,22 @@ fun ExtendedBolus.iobCalc(time: Long, profile: Profile, lastAutosensResult: Auto
     return result
 }
 
+fun ExtendedBolus.convertToBoluses(): MutableList<Bolus> {
+    val result: MutableList<Bolus> = ArrayList()
+    val tempBolusSize = 0.05
+    val tempBolusCount : Int = (amount / tempBolusSize).roundToInt()
+    if(tempBolusCount > 0) {
+        val tempBolusSpacing = duration / tempBolusCount
+        for (j in 0L until tempBolusCount) {
+            val calcDate = timestamp + j * tempBolusSpacing
+            val tempBolusPart = Bolus(
+                timestamp = calcDate,
+                amount = tempBolusSize,
+                type = Bolus.Type.NORMAL
+            )
+            result.add(tempBolusPart)
+        }
+    }
+    return result
+}
+
