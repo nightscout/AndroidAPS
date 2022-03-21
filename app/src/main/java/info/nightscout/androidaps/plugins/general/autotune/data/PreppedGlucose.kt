@@ -31,8 +31,9 @@ class PreppedGlucose {
         this.dateUtil = dateUtil
     }
 
-    constructor(json: JSONObject?) {
+    constructor(json: JSONObject?, dateUtil: DateUtil) {
         if (json == null) return
+        this.dateUtil = dateUtil
         crData = null
         csfGlucoseData = null
         isfGlucoseData = null

@@ -27,7 +27,7 @@ class BGDatum {
     var avgDelta = 0.0
     var bgReading: GlucoseValue? = null
         private set
-    lateinit var dateUtil: DateUtil
+    var dateUtil: DateUtil
 
     constructor(dateUtil: DateUtil) { this.dateUtil = dateUtil}
     constructor(json: JSONObject, dateUtil: DateUtil) {
