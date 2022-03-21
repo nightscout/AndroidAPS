@@ -162,6 +162,7 @@
     <string name="end_user_license_agreement">Licenční ujednání</string>
     <string name="end_user_license_agreement_text">MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
     <string name="end_user_license_agreement_i_understand">ROZUMÍM A POTVRZUJI</string>
+    <string name="save">Uložit</string>
     <string name="reloadprofile">Obnovit profil</string>
     <string name="smscommunicator">SMS komunikátor</string>
     <string name="smscommunicator_allowednumbers">Povolená tel. čísla</string>
@@ -434,6 +435,8 @@
     <string name="ns_localbroadcasts_title">Povolení odesílaní</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dynamická ISF</string>
+    <string name="DynISFAdjust_title">Korekční faktor pro DynamicISF v %</string>
+    <string name="DynISFAdjust_summary">Korekční faktor pro DynamicISF. Pro agresivnější korekční dávky nastavte hodnoty větší než 100%, a pro méně agresivní korekce menší než 100%.</string>
     <string name="enableuam">Povolit UAM</string>
     <string name="enablesmb">Povolit SMB</string>
     <string name="enablesmb_summary">Použít super mikro bolusy místo dočasných bazálů pro zrychlení účinku</string>
