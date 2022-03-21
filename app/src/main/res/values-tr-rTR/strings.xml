@@ -162,6 +162,7 @@
     <string name="end_user_license_agreement">Son Kullanıcı Lisans Sözleşmesi</string>
     <string name="end_user_license_agreement_text">TIBBİ KARAR VERMEK İÇİN KULLANILMAMALIDIR. UYGULANABİLİR YASANIN İZİN VERDİĞİ ÖLÇÜDE, PROGRAM İÇİN GARANTİ YOKTUR. TELİF HAKKI SAHİPLERİNİN VE / VEYA DİĞER TARAFLARIN YAZILI OLMASINA YÖNELİK BAŞKA HİÇBİR ŞEKİLDE BELİRTİLEN VEYA BELİRLİ BİR AMACA UYGUNLUK İLE İLGİLİ ZIMNİ GARANTİLER DE DAHİL OLMAK ÜZERE ANCAK BUNLARLA SINIRLI OLMAMAK ÜZERE AÇIK VEYA ZIMNİ HİÇBİR GARANTİ OLMAKSIZIN “OLDUĞU GİBİ” SAĞLAMAKTADIR. PROGRAMIN KALİTESİ VE PERFORMANSI İLE İLGİLİ TÜM RİSK SİZE AİTTİR. PROGRAMIN HASARLI OLMASI DURUMUNDA, TÜM GEREKLİ SERVİS, ONARIM VEYA DÜZELTME MALİYETİNİ KABUL ETMİŞ OLURSUNUZ.</string>
     <string name="end_user_license_agreement_i_understand">ANLADIM VE KABUL EDİYORUM</string>
+    <string name="save">Kaydet</string>
     <string name="reloadprofile">Profili yeniden yükle</string>
     <string name="smscommunicator">SMS Kominikatör</string>
     <string name="smscommunicator_allowednumbers">İzinli telefon numaraları</string>
@@ -435,6 +436,8 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="ns_localbroadcasts_title">Yerel yayınları etkinleştirin.</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dinamik İDF</string>
+    <string name="DynISFAdjust_title">DinamikİDF Ayar Faktörü %</string>
+    <string name="DynISFAdjust_summary">DinamikİDF için ayarlama faktörü. Daha agresif düzeltme dozları için %100\'den fazla ve daha az agresif düzeltmeler için %100\'den az ayarlayın.</string>
     <string name="enableuam">UAM etkinleştir</string>
     <string name="enablesmb">SMB (Super Micro Bolus) etkinleştir</string>
     <string name="enablesmb_summary">Daha hızlı bir etki için geçici bazal yerine Super Micro Bolus kullanın</string>
