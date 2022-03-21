@@ -12,14 +12,12 @@ import java.util.*
  * Created by Rumen Georgiev on 2/24/2018.
  */
 class BGDatum {
-
     //Added by Rumen for autotune
     var id: Long = 0
     var date = 0L
     var value = 0.0
     var direction: TrendArrow? = null
     var deviation = 0.0
-    // var raw: Double? = 0.0
     var bgi = 0.0
     var mealAbsorption = ""
     var mealCarbs = 0
@@ -47,11 +45,9 @@ class BGDatum {
     }
 
     constructor(glucoseValue: GlucoseValue, dateUtil: DateUtil) {
-        // Used like from NS sgv
         this.dateUtil = dateUtil
         date = glucoseValue.timestamp
         value = glucoseValue.value
-        // raw = glucoseValue.raw
         direction = glucoseValue.trendArrow
         id = glucoseValue.id
         this.bgReading = glucoseValue
@@ -59,7 +55,6 @@ class BGDatum {
 
     fun toJSON(mealData: Boolean): JSONObject {
         val bgjson = JSONObject()
-        val now = Date(System.currentTimeMillis())
         val utcOffset = T.msecs(TimeZone.getDefault().getOffset(dateUtil.now()).toLong()).hours()
         try {
             bgjson.put("_id", id)
@@ -85,7 +80,6 @@ class BGDatum {
 
     fun equals(obj: BGDatum): Boolean {
         var isEqual = true
-        //if (_id != obj._id) isEqual = false;
         if (date / 1000 != obj.date / 1000) isEqual = false
         if (deviation != obj.deviation) isEqual = false
         if (avgDelta != obj.avgDelta) isEqual = false
