@@ -96,7 +96,6 @@
     <string name="overview_calculator_label">Υπολογιστής</string>
     <string name="constraintapllied">Εφαρμόστηκαν Περιορισμοί!</string>
     <string name="sms_bolus">Bolus:</string>
-    <string name="basal">Βασικός Ρυθμός</string>
     <string name="sms_basal">Βασικός Ρυθμός:</string>
     <string name="changeyourinput">Αλλάξτε αυτό που εισάγατε!</string>
     <string name="configbuilder_bgsource">Πηγή BG</string>
