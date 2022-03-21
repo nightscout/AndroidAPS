@@ -103,7 +103,6 @@
     <string name="overview_calculator_label">מחשבון</string>
     <string name="constraintapllied">מגבלה הוחלה!</string>
     <string name="sms_bolus">בולוס:</string>
-    <string name="basal">אינסולין בזאלי</string>
     <string name="sms_basal">אינסולין בזאלי:</string>
     <string name="changeyourinput">שנה קלט!</string>
     <string name="configbuilder_bgsource">מקור ערכי הסוכר</string>
@@ -769,7 +768,6 @@
     <string name="invalidage">רשומת גיל לא חוקית</string>
     <string name="invalidweight">רשומת משקל לא חוקית</string>
     <string name="invalidpct">רשומת אחוזים לא חוקית</string>
-    <string name="tirformat"><![CDATA[<b>%1$s:</b> נמוך: <b>%2$02d%%</b> בטווח: <b>%3$02d%%</b> גבוה: <b>%4$02d%%</b>]]></string>
     <string name="average">ממוצע</string>
     <string name="tir">זמן בטווח</string>
     <string name="activitymonitor">מוניטור פעילות</string>
