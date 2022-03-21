@@ -103,7 +103,6 @@
     <string name="overview_calculator_label">Kalkulator</string>
     <string name="constraintapllied">Begrensning benyttet!</string>
     <string name="sms_bolus">Bolus:</string>
-    <string name="basal">Basal</string>
     <string name="sms_basal">Basal:</string>
     <string name="changeyourinput">Endre dine inndata!</string>
     <string name="configbuilder_bgsource">BS kilde</string>
@@ -771,7 +770,6 @@
     <string name="invalidage">Ugyldig alder</string>
     <string name="invalidweight">Ugyldig vekt</string>
     <string name="invalidpct">Ugyldig % oppføring</string>
-    <string name="tirformat"><![CDATA[<b>%1$s:</b> Lav: <b>%2$02d%%</b> Mål: <b>%3$02d%%</b> Høy: <b>%4$02d%%</b>]]></string>
     <string name="average">Gjennomsnitt</string>
     <string name="tir">TIR</string>
     <string name="activitymonitor">Overvåking av aktivitet</string>
