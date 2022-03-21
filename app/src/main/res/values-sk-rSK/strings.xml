@@ -103,7 +103,6 @@
     <string name="overview_calculator_label">Kalkulačka</string>
     <string name="constraintapllied">Aplikované obmedzenie!</string>
     <string name="sms_bolus">Bolus:</string>
-    <string name="basal">Bazál</string>
     <string name="sms_basal">Bazál:</string>
     <string name="changeyourinput">Zmeňte zadanie!</string>
     <string name="configbuilder_bgsource">Zdroj glykémie</string>
@@ -771,7 +770,6 @@
     <string name="invalidage">Neplatný záznam veku</string>
     <string name="invalidweight">Neplatný záznam váhy</string>
     <string name="invalidpct">Neplatný vstup %</string>
-    <string name="tirformat"><![CDATA[<b>%1$s:</b> Pod: <b>%2$02d%%</b> V: <b>%3$02d%%</b> Nad: <b>%4$02d%%</b>]]></string>
     <string name="average">Priemer</string>
     <string name="tir">Čas v rozsahu</string>
     <string name="activitymonitor">Monitor aktivity</string>
