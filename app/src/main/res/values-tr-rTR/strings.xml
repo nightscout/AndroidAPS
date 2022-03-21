@@ -103,7 +103,6 @@
     <string name="overview_calculator_label">Hesap makinesi</string>
     <string name="constraintapllied">Sınırlaması uygulanır!</string>
     <string name="sms_bolus">Bolus:</string>
-    <string name="basal">Bazal</string>
     <string name="sms_basal">Bazal:</string>
     <string name="changeyourinput">Girişinizi değiştirin!</string>
     <string name="configbuilder_bgsource">KŞ kaynağı</string>
@@ -775,7 +774,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="invalidage">Geçersiz yaş girişi</string>
     <string name="invalidweight">Geçersiz ağırlık girişi</string>
     <string name="invalidpct">Geçersiz % giriş</string>
-    <string name="tirformat"><![CDATA[<b>%1$s:</b> Düşük: <b>%2$02d%%</b> İçinde: <b>%3$02d%%</b> Yüksek: <b>%4$02d%%</b>]]></string>
     <string name="average">Ortalama</string>
     <string name="tir">TIR</string>
     <string name="activitymonitor">Aktivite monitörü</string>
