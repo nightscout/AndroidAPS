@@ -103,7 +103,6 @@
     <string name="overview_calculator_label">计算器</string>
     <string name="constraintapllied">应用约束!</string>
     <string name="sms_bolus">大剂量:</string>
-    <string name="basal">基础率</string>
     <string name="sms_basal">基础率:</string>
     <string name="changeyourinput">更改您的输入!</string>
     <string name="configbuilder_bgsource">血糖来源</string>
@@ -771,7 +770,6 @@
     <string name="invalidage">输入的年龄无效</string>
     <string name="invalidweight">输入的权重无效</string>
     <string name="invalidpct">输入的百分比无效</string>
-    <string name="tirformat"><![CDATA[<b>%1$s:</b> 低: <b>%2$02d%%</b> 中: <b>%3$02d%%</b> 高: <b>%4$02d%%</b>]]></string>
     <string name="average">平均</string>
     <string name="tir">TIR</string>
     <string name="activitymonitor">活动监视器</string>
