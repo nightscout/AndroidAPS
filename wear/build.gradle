@@ -121,7 +121,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
     testImplementation "junit:junit:$junit_version"
-    testImplementation 'org.json:json:20211205'
+    testImplementation 'org.json:json:20220320'
     testImplementation("org.mockito:mockito-core:${mockito_version}") {
         exclude group: 'net.bytebuddy', module: 'byte-buddy'
         exclude group: 'net.bytebuddy', module: 'byte-buddy-android'
