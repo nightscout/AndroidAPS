@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.PersistableBundle
 import android.text.SpannableString
 import android.text.method.LinkMovementMethod
+import android.text.style.ForegroundColorSpan
 import android.text.util.Linkify
 import android.util.TypedValue
 import android.view.Menu
@@ -116,6 +117,7 @@ class MainActivity : NoSplashAppCompatActivity() {
             override fun onPageSelected(position: Int) {
                 setPluginPreferenceMenuName()
                 checkPluginPreferences(binding.mainPager)
+                setDisabledMenuItemColorPluginPreferences()
             }
         })
 
@@ -256,6 +258,14 @@ class MainActivity : NoSplashAppCompatActivity() {
         return super.dispatchTouchEvent(event)
     }
 
+    private fun setDisabledMenuItemColorPluginPreferences() {
+        if( pluginPreferencesMenuItem?.isEnabled == false){
+            val spanString = SpannableString(this.menu?.findItem(R.id.nav_plugin_preferences)?.title.toString())
+            spanString.setSpan(ForegroundColorSpan(rh.gac(R.attr.disabledTextColor)), 0, spanString.length, 0)
+            this.menu?.findItem(R.id.nav_plugin_preferences)?.title = spanString
+        }
+    }
+
     private fun setPluginPreferenceMenuName() {
         if (binding.mainPager.currentItem >= 0) {
             val plugin = (binding.mainPager.adapter as TabPageAdapter).getPluginAt(binding.mainPager.currentItem)
@@ -284,6 +294,7 @@ class MainActivity : NoSplashAppCompatActivity() {
         pluginPreferencesMenuItem = menu.findItem(R.id.nav_plugin_preferences)
         setPluginPreferenceMenuName()
         checkPluginPreferences(binding.mainPager)
+        setDisabledMenuItemColorPluginPreferences()
         return true
     }
 
