@@ -435,6 +435,7 @@
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">ISF Dinámico</string>
     <string name="DynISFAdjust_title">Porcentaje del factor de ajuste de ISF Dinámico</string>
+    <string name="DynISFAdjust_summary">Factor de ajuste para ISF Dinámico. Configura valores por encima del 100% para dosis de corrección más agresivas y por debajo del 100% para correcciones menos agresivas</string>
     <string name="enableuam">Activar UAM</string>
     <string name="enablesmb">Activar SMB</string>
     <string name="enablesmb_summary">Usar microbolos en lugar de basales temporales, para corregir más rápidamente</string>
