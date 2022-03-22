@@ -169,7 +169,7 @@ else
     cp -up settings/pumpprofile.json settings/profile.json || die "Cannot copy settings/pumpprofile.json"
 fi
 # If a previous valid settings/autotune.json exists, use that; otherwise start from settings/profile.json
-cp settings/autotune.json autotune/profile.json && cat autotune/profile.json | jq . | grep -q start || cp autotune/profile.pump.json autotune/profile.json
+cp autotune/profile.pump.json autotune/newaapsprofile.json
 cd autotune
 
 # Turn on stderr logging, if enabled (default to true)
@@ -227,7 +227,7 @@ do
 
 
     # Do iterative runs over date range, save autotune.json (prepped data) and input/output profile.json
-    cp profile.json profile.$i.json
+    # cp newaapsprofile.json newaapsprofile.$i.json
     # Autotune Prep (required args, <pumphistory.json> <profile.json> <glucose.json>), output prepped glucose 
     # data or <autotune/glucose.json> below
     if [[ $CATEGORIZE_UAM_AS_BASAL = "true" ]]; then
@@ -242,28 +242,35 @@ do
         TUNE_INSULIN_CURVE_OPT=
     fi
 
-    echo "oref0-autotune-prep $CATEGORIZE_UAM_AS_BASAL_OPT $TUNE_INSULIN_CURVE_OPT ns-treatments.$i.json profile.json ns-entries.$i.json profile.pump.json > autotune.$i.json"
-    #oref0-autotune-prep $CATEGORIZE_UAM_AS_BASAL_OPT $TUNE_INSULIN_CURVE_OPT ns-treatments.$i.json profile.json ns-entries.$i.json profile.pump.json > autotune.$i.json \
+    # echo "oref0-autotune-prep $CATEGORIZE_UAM_AS_BASAL_OPT $TUNE_INSULIN_CURVE_OPT ns-treatments.$i.json profile.json ns-entries.$i.json profile.pump.json > autotune.$i.json"
+    #oref0-autotune-prep $CATEGORIZE_UAM_AS_BASAL_OPT $TUNE_INSULIN_CURVE_OPT aaps-treatments.$i.json aapsorefprofile.json aaps-entries.$i.json profile.pump.json > autotune.$i.json \
     #    || die "Could not run oref0-autotune-prep ns-treatments.$i.json profile.json ns-entries.$i.json"
     #
     # Autotune  (required args, <autotune/glucose.json> <autotune/autotune.json> <settings/profile.json>), 
     # output autotuned profile or what will be used as <autotune/autotune.json> in the next iteration
-    echo "oref0-autotune-core aaps-autotune.$i.json profile.json profile.pump.json > newprofile.$i.json"
-    if ! oref0-autotune-core aaps-autotune.$i.json profile.json profile.pump.json > newprofile.$i.json; then
-        if cat profile.json | jq --exit-status .carb_ratio==null; then
-            echo "ERROR: profile.json contains null carb_ratio: using profile.pump.json"
-            cp profile.pump.json profile.json
+    echo "oref0-autotune-core aaps-autotune.$i.json newaapsprofile.json profile.pump.json > newaapsorefprofile.$i.json"
+    if ! oref0-autotune-core aaps-autotune.$i.json newaapsprofile.json profile.pump.json > newaapsorefprofile.$i.json; then
+        if cat newaapsprofile.json | jq --exit-status .carb_ratio==null; then
+            echo "ERROR: newaapsprofile.json contains null carb_ratio: using profile.pump.json"
+            # cp profile.pump.json newaapsprofile.json
             exit
         else
             die "Could not run oref0-autotune-core aaps-autotune.$i.json profile.json profile.pump.json"
         fi
     else
-        # Copy tuned profile produced by autotune to profile.json for use with next day of data
-        if cat newprofile.$i.json | jq . | grep -q start; then
-            cp newprofile.$i.json profile.json
+        # Copy tuned profile produced by autotune to newaapsorefprofile.json report
+        if cat newaapsorefprofile.$i.json | jq . | grep -q start; then
+            cp newaapsorefprofile.$i.json newaapsorefprofile.json
         else
-            jq -c newprofile.$i.json
-            die "newprofile.$i.json invalid"
+            jq -c newaapsprofile.$i.json
+            die "newaapsprofile.$i.json invalid"
+        fi		
+        # Copy tuned profile produced by AAPS to newaapsprofile.json for use with next day of data
+        if cat newaapsprofile.$i.json | jq . | grep -q start; then
+            cp newaapsprofile.$i.json newaapsprofile.json
+        else
+            jq -c newaapsprofile.$i.json
+            die "newaapsprofile.$i.json invalid"
         fi
     fi
 
@@ -277,7 +284,7 @@ do
     if [[ $RECOMMENDS_REPORT == "true" ]]; then
         # Set the report file name, so we can let the user know where it is and cat
         # it to the screen
-        report_file=$directory/autotune/autotune_recommendations.log
+        report_file=$directory/autotune/aapsorefautotune_recommendations.log
 
         echo
         echo "Autotune pump profile recommendations:"
@@ -288,7 +295,7 @@ do
         echo
 
         # Run the Autotune Recommends Report
-        oref0-autotune-recommends-report $directory
+        aaps-autotune-recommends-report $directory
 
         # Go ahead and echo autotune_recommendations.log to the terminal, minus blank lines
         cat $report_file | egrep -v "\| *\| *$"
