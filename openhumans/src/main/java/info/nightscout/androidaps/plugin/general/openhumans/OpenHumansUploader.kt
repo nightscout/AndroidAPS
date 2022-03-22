@@ -233,10 +233,11 @@ class OpenHumansUploader @Inject internal constructor(
         tags.add("DeviceInfo")
 
         val displayMetrics = DisplayMetrics()
+        @Suppress("DEPRECATION")
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R)
             context.display?.getRealMetrics(displayMetrics)
         else
-            @Suppress("DEPRECATION") (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.getMetrics(displayMetrics)
+            (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.getMetrics(displayMetrics)
 
         val displayInfo = JSONObject()
         displayInfo.put("height", displayMetrics.heightPixels)
