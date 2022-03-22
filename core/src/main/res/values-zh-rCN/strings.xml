@@ -457,6 +457,9 @@
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight刷新按钮</string>
     <string name="a11y_min_button_description">将%1$s 减少 %2$s</string>
     <string name="a11y_plus_button_description">将%1$s 增加 %2$s</string>
+    <string name="formatPercent">%1$.0f%%</string>
+    <string name="basal">基础率</string>
+    <string name="basalpct">基础率 %</string>
     <plurals name="days">
         <item quantity="other">%1$d　天</item>
     </plurals>
