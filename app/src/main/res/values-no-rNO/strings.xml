@@ -161,6 +161,7 @@
     <string name="end_user_license_agreement">Sluttbrukeravtale</string>
     <string name="end_user_license_agreement_text">MÅ IKKE BENYTTES TIL Å TA MEDISINSKE BESLUTNINGER. DET FINNES INGEN GARANTI FOR PROGRAMMET I DEN UTSTREKNING SOM TILLATES AV GJELDENDE LOV. SÅFREMT IKKE ANNET ER ANGITT SKRIFTLIG LEVERES PROGRAMMET HELT UTEN GARANTIER I NOEN SOM HELST FORM, VERKEN UTTRYKT ELLER INNEFORSTÅTT, INKLUSIV MEN IKKE BEGRENSET TIL SALGBARHET ELLER EGNETHET TIL VISSE FORMÅL. ALL RISIKO KNYTTET TIL KVALITET AV PROGRAMMETS FUNKSJONALITET ER HOS DEG SOM BRUKER. OM PROGRAMMET VISER SEG Å VÆRE DEFEKT, ER DET BRUKEREN SOM MÅ TA ALT ANSVAR FOR KOSTNADER KNYTTET TIL ALL SERVICE, REPERASJON ELLER RETTELSE.</string>
     <string name="end_user_license_agreement_i_understand">JEG FORSTÅR OG GODTAR</string>
+    <string name="save">Lagre</string>
     <string name="reloadprofile">Les inn profil på nytt</string>
     <string name="smscommunicator">SMS tjeneste</string>
     <string name="smscommunicator_allowednumbers">Godkjente mobilnumre</string>
@@ -433,6 +434,8 @@
     <string name="ns_localbroadcasts_title">Aktiver lokale sendinger.</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dynamisk ISF</string>
+    <string name="DynISFAdjust_title">DynamiskISF justeringsfaktor %</string>
+    <string name="DynISFAdjust_summary">Justeringsfaktor for dynamisk ISF. Verdier over 100% vil gi mer aggressive korreksjonsdoser, mens verdier under 100% vil gi mildere korreksjonsdoser.</string>
     <string name="enableuam">Aktiver UAM</string>
     <string name="enablesmb">Aktiver SMB</string>
     <string name="enablesmb_summary">Bruk Super Mikro Solen i stedet for temp basal for raskere resultat</string>
@@ -995,4 +998,7 @@
     <string name="count_selected">%1$d valgt</string>
     <string name="sort_label">Sorter</string>
     <string name="dialog_cancled">Dialogvindu avbrutt</string>
+    <string name="below">Under</string>
+    <string name="in_range">I målområdet</string>
+    <string name="above">Over</string>
 </resources>
