@@ -143,3 +143,12 @@ note oref0 autotune doesn't manage profile-switch so it could have some gap on i
 - Tune of specific days of the week is not available
 - You cannot select a specific profile to tune (calculation done with current active profile in aaps)
   - be carefull, you shouldn't have a Temporary Profile Switch with "percent"
+
+## Further improvements
+
+- Include Insulin tuning (for Peak and DIA) will be easier if we manage Insulin in Profile (not only DIA)
+- Apply ISF and IC percentage (autotune calculated on average values if circadian profile for ISF and IC) on circadian ISF and IC (it's not an circadian autotune, but we can keep circadian adjustment made by the user and apply average modifications proposed by Autotune)
+- Improve Results presentation (html format)
+- Allow selection of profile to tune (in user interface and in automation rule)
+- Allow an "Automatic update" of Source profile
+- Allow week days selection (to be able to tune working days, WE days, training days with dedicated profiles) in user interface and in automation rule
