@@ -457,6 +457,7 @@
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight actualiseren knop</string>
     <string name="a11y_min_button_description">verlaag %1$s met %2$s</string>
     <string name="a11y_plus_button_description">verhoog %1$s met %2$s</string>
+    <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basaal</string>
     <string name="basalpct">Basaal %</string>
     <plurals name="days">
