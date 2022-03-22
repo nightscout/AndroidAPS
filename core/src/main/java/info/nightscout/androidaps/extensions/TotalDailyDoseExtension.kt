@@ -42,7 +42,7 @@ fun TotalDailyDose.toTableRow(context: Context, rh: ResourceHelper, dateUtil: Da
             row.addView(TextView(context).apply { layoutParams = lp.apply { column = 3 }; text = rh.gs(R.string.formatinsulinunits1, basalAmount) })
             row.addView(TextView(context).apply { layoutParams = lp.apply { column = 4 }; text = rh.gs(R.string.formatPercent, basalPct) })
             if (includeCarbs)
-                row.addView(TextView(context).apply { layoutParams = lp.apply { column = 5 }; text = rh.gs(R.string.formatinsulinunits1, carbs) })
+                row.addView(TextView(context).apply { layoutParams = lp.apply { column = 5 }; text = rh.gs(R.string.format_carbs, carbs.toInt()) })
         }
     }
 
@@ -59,6 +59,6 @@ fun TotalDailyDose.toTableRow(context: Context, rh: ResourceHelper, days: Int, i
             row.addView(TextView(context).apply { layoutParams = lp.apply { column = 3 }; text = rh.gs(R.string.formatinsulinunits1, basalAmount) })
             row.addView(TextView(context).apply { layoutParams = lp.apply { column = 4 }; text = rh.gs(R.string.formatPercent, basalPct) })
             if (includeCarbs)
-                row.addView(TextView(context).apply { layoutParams = lp.apply { column = 5 }; text = rh.gs(R.string.formatinsulinunits1, carbs) })
+                row.addView(TextView(context).apply { layoutParams = lp.apply { column = 5 }; text = rh.gs(R.string.format_carbs, carbs.toInt()) })
         }
     }
