@@ -65,8 +65,8 @@ class TherapyEventDataPoint @Inject constructor(
                 TherapyEvent.Type.ANNOUNCEMENT          -> rh.gc(R.color.notificationAnnouncement)
                 TherapyEvent.Type.NS_MBG                -> Color.RED
                 TherapyEvent.Type.FINGER_STICK_BG_VALUE -> Color.RED
-                TherapyEvent.Type.EXERCISE              -> Color.BLUE
+                TherapyEvent.Type.EXERCISE              -> Color.MAGENTA
                 TherapyEvent.Type.APS_OFFLINE           -> Color.GRAY and -0x7f000001
-                else                                    -> Color.GRAY
+                else                                    -> Color.CYAN
             }
 }
