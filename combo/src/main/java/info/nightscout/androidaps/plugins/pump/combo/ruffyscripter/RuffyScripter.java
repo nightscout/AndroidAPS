@@ -510,7 +510,7 @@ public class RuffyScripter implements RuffyCommands {
      * This reads the state of the pump, which is whatever is currently displayed on the display,
      * no actions are performed.
      */
-    public PumpState readPumpStateInternal() {
+    @SuppressWarnings("deprecation") public PumpState readPumpStateInternal() {
         PumpState state = new PumpState();
         state.timestamp = System.currentTimeMillis();
         Menu menu = currentMenu;
@@ -626,8 +626,7 @@ public class RuffyScripter implements RuffyCommands {
         return menu;
     }
 
-    @Nullable
-    private String getCurrentMenuName() {
+    @NonNull private String getCurrentMenuName() {
         Menu menu = this.currentMenu;
         return menu != null ? menu.getType().toString() : "<none>";
     }
@@ -785,7 +784,7 @@ public class RuffyScripter implements RuffyCommands {
             waitForScreenUpdate();
             retries--;
             if (retries == 0) {
-                throw new CommandException("Failed to read blinkng value: " + attribute + "=" + value + " type=" + value);
+                throw new CommandException("Failed to read blinking value: " + attribute + "=" + value + " type=" + value);
             }
         }
         return (T) value;

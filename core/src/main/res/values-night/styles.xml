@@ -109,6 +109,8 @@
         <item name="materialAlertDialogTheme">@style/DialogTheme</item>
         <item name="android:alertDialogTheme">@style/DialogTheme</item>
         <item name="alertDialogTheme">@style/DialogTheme</item>
+        <!---Disabled Text Color  -->
+        <item name="disabledTextColor">@color/sandGray</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>

@@ -34,7 +34,6 @@ import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.databinding.OverviewFragmentBinding
-import info.nightscout.androidaps.diaconn.DiaconnG8Plugin
 import info.nightscout.androidaps.dialogs.*
 import info.nightscout.androidaps.events.EventAcceptOpenLoopChange
 import info.nightscout.androidaps.events.EventInitializationChanged
@@ -46,7 +45,6 @@ import info.nightscout.androidaps.extensions.isInProgress
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.extensions.valueToUnitsString
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.aps.loop.events.EventNewOpenLoopNotification
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.DetermineBasalResultSMB
@@ -76,16 +74,16 @@ import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.androidaps.utils.ui.SingleClickButton
 import info.nightscout.androidaps.utils.ui.UIRunnable
 import info.nightscout.androidaps.utils.wizard.QuickWizard
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 import kotlin.math.abs
 import kotlin.math.min
 
@@ -152,10 +150,11 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             _binding = it
             //check screen width
             dm = DisplayMetrics()
+            @Suppress("DEPRECATION")
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
                 activity?.display?.getRealMetrics(dm)
             else
-                @Suppress("DEPRECATION") activity?.windowManager?.defaultDisplay?.getMetrics(dm)
+                activity?.windowManager?.defaultDisplay?.getMetrics(dm)
         }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -16,7 +16,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/defaultbackground"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingBottom="10dp">
 
             <TextView
                 android:id="@+id/menu1"
@@ -26,7 +27,8 @@
                 android:gravity="center"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
-                android:text="1" />
+                android:text="1"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/menu2"
@@ -36,12 +38,13 @@
                 android:gravity="center"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
-                android:text="2" />
+                android:text="2"
+                tools:ignore="HardcodedText" />
 
         </LinearLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/profiletype_title"
+            android:id="@+id/profile_type_title"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -51,7 +54,7 @@
             app:boxStrokeColor="?attr/tabBgColorSelected">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/profiletype"
+                android:id="@+id/profile_type"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="true"
@@ -145,13 +148,13 @@
                 </TableRow>
 
                 <TableRow
-                    android:id="@+id/basalpctfromtdd_row"
+                    android:id="@+id/basal_pct_from_tdd_row"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical">
 
                     <TextView
-                        android:id="@+id/basalpctfromtdd_label"
+                        android:id="@+id/basal_pct_from_tdd_label"
                         android:layout_width="150dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
@@ -159,7 +162,7 @@
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
                     <info.nightscout.androidaps.utils.ui.NumberPicker
-                        android:id="@+id/basalpctfromtdd"
+                        android:id="@+id/basal_pct_from_tdd"
                         android:layout_width="130dp"
                         android:layout_height="40dp"
                         app:customContentDescription="@string/basalpctfromtdd_label" />
@@ -168,15 +171,15 @@
 
             </TableLayout>
 
-            <TextView
+            <LinearLayout
                 android:id="@+id/tdds"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                android:orientation="vertical" />
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
-                android:id="@+id/copytolocalprofile"
+                android:id="@+id/copy_to_local_profile"
                 style="?android:attr/buttonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -257,7 +260,7 @@
         </LinearLayout>
 
         <info.nightscout.androidaps.utils.ui.SingleClickButton
-            android:id="@+id/compareprofile"
+            android:id="@+id/compare_profiles"
             style="?android:attr/buttonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

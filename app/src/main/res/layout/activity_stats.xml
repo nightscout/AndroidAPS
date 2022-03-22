@@ -47,51 +47,53 @@
             android:orientation="horizontal"
             android:padding="5dp" />
 
-        <TextView
+        <LinearLayout
             android:id="@+id/tdds"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+            android:orientation="vertical" />
 
-        <TextView
+        <LinearLayout
             android:id="@+id/tir"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+            android:layout_marginTop="20dp"
+            android:orientation="vertical" />
 
-        <TextView
+        <LinearLayout
             android:id="@+id/activity"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+            android:layout_marginTop="20dp"
+            android:orientation="vertical" />
 
         <LinearLayout
             android:id="@+id/done_background"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:orientation="horizontal"
+            android:layout_gravity="center_vertical"
             android:background="@android:color/transparent"
             android:gravity="end"
-            android:layout_gravity="center_vertical"
+            android:orientation="horizontal"
             android:paddingBottom="8dp">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/reset"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:layout_marginEnd="8dp"
                 style="@style/OkCancelButton.Text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
                 android:text="@string/reset" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/ok"
+                style="@style/OkCancelButton.Text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
-                style="@style/OkCancelButton.Text"
                 android:text="@string/ok" />
 
         </LinearLayout>

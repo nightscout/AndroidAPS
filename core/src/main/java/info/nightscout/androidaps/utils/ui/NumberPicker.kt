@@ -20,6 +20,7 @@ import android.view.accessibility.AccessibilityManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.LinearLayout
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.utils.ToastUtils
@@ -39,8 +40,8 @@ open class NumberPicker(context: Context, attrs: AttributeSet? = null) : LinearL
     }
 
     var editText: EditText? = null
-    private var minusButton: Button? = null
-    private var plusButton: Button? = null
+    private var minusButton: ImageButton? = null
+    private var plusButton: ImageButton? = null
     var currentValue = 0.0
     var minValue = 0.0
     var maxValue = 1.0

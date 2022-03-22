@@ -43,9 +43,9 @@ class SurveyActivity : NoSplashAppCompatActivity() {
         val profileList = profileStore?.getProfileList() ?: return
         binding.spinner.adapter = ArrayAdapter(this, R.layout.spinner_centered, profileList)
 
-        binding.tdds.text = tddCalculator.stats()
-        binding.tir.text = tirCalculator.stats()
-        binding.activity.text = activityMonitor.stats()
+        //binding.tdds.text = tddCalculator.stats()
+        //binding.tir.text = tirCalculator.stats()
+        //binding.activity.text = activityMonitor.stats()
 
         binding.profile.setOnClickListener {
             val age = SafeParse.stringToDouble(binding.age.text.toString())
