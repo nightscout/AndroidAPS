@@ -434,8 +434,8 @@
     <string name="ns_localbroadcasts_title">Habilitar la emisión de mensajes localmente.</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">ISF Dinámico</string>
-    <string name="DynISFAdjust_title">Porcentaje del factor de ajuste de ISF Dinámico</string>
-    <string name="DynISFAdjust_summary">Factor de ajuste para ISF Dinámico. Configura valores por encima del 100% para dosis de corrección más agresivas y por debajo del 100% para correcciones menos agresivas</string>
+    <string name="DynISFAdjust_title">Factor de ajuste de ISF Dinámico %</string>
+    <string name="DynISFAdjust_summary">Porcentaje del factor de ajuste para ISF Dinámico. Establece valores por encima del 100%, para correcciones más agresivas y por debajo para correcciones menos agresivas</string>
     <string name="enableuam">Activar UAM</string>
     <string name="enablesmb">Activar SMB</string>
     <string name="enablesmb_summary">Usar microbolos en lugar de basales temporales, para corregir más rápidamente</string>
@@ -998,7 +998,7 @@
     <string name="count_selected">%1$d selecionado</string>
     <string name="sort_label">Ordenar</string>
     <string name="dialog_cancled">Diálogo cancelado</string>
-    <string name="below">Por debajo</string>
+    <string name="below">Bajo</string>
     <string name="in_range">En rango</string>
-    <string name="above">Por encima</string>
+    <string name="above">Alto</string>
 </resources>
