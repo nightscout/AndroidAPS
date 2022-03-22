@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.MenuItem
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceScreen
 import info.nightscout.androidaps.R
@@ -61,5 +62,15 @@ class PreferencesActivity : NoSplashAppCompatActivity(), PreferenceFragmentCompa
 
     private fun filterPreferences() {
         myPreferenceFragment?.setFilter(binding.prefFilter.text.toString())
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.getItemId()) {
+            android.R.id.home -> {
+                onBackPressed()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }
