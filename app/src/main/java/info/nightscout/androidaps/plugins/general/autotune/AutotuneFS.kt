@@ -101,8 +101,11 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
 
     fun exportTreatments(autotuneIob: AutotuneIob) {
         try {
+            autotunePlugin.atLog("[FS] Start treatment export for day ${formatDate(autotuneIob.startBG)}")
             createAutotunefile(TREATMENTSPREF + formatDate(autotuneIob.startBG) + ".json", autotuneIob.nsHistorytoJSON())
+            autotunePlugin.atLog("[FS] End treatment export for day ${formatDate(autotuneIob.startBG)}")
         } catch (e: JSONException) {
+            autotunePlugin.atLog("[FS] Catch treatment export for day ${formatDate(autotuneIob.startBG)}")
         }
     }
 
