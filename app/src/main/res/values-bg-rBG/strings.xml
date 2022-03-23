@@ -101,7 +101,6 @@
     <string name="overview_calculator_label">Калкулатор</string>
     <string name="constraintapllied">Приложено ограничение!</string>
     <string name="sms_bolus">Болус:</string>
-    <string name="basal">Базал</string>
     <string name="sms_basal">Базал:</string>
     <string name="changeyourinput">Променете данните!</string>
     <string name="configbuilder_bgsource">Източник на данни за КЗ</string>
@@ -750,7 +749,6 @@
     <string name="invalidage">Невалидна възраст</string>
     <string name="invalidweight">Невалидно тегло</string>
     <string name="invalidpct">Невалидна стойност в %</string>
-    <string name="tirformat"><![CDATA[<b>%1$s:</b> Ниски: <b>%2$02d%%</b> В: <b>%3$02d%%</b> Вис: <b>%4$02d%%</b>]]></string>
     <string name="average">Средно</string>
     <string name="tir">Време в границите</string>
     <string name="activitymonitor">Мониторинг на активност</string>
@@ -884,5 +882,6 @@
     <string name="recalculated_data_used">Рекалкулирани използвани данни</string>
     <string name="bg_too_close">КЗ близо до:\n%1$s\n%2$s</string>
     <string name="not_available_full">Недостъпно</string>
+    <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
 </resources>
