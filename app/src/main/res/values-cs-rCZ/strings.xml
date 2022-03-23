@@ -990,5 +990,5 @@
     <string name="show_loop">Zobrazit smyčku</string>
     <string name="count_selected">Vybráno: %1$d</string>
     <string name="sort_label">Seřadit</string>
-    <string name="dialog_cancled">Dialog zrušen</string>
+    <string name="dialog_canceled">Dialog zrušen</string>
 </resources>

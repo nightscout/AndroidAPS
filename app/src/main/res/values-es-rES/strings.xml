@@ -990,5 +990,5 @@
     <string name="show_loop">Mostrar lazo</string>
     <string name="count_selected">%1$d selecionado</string>
     <string name="sort_label">Ordenar</string>
-    <string name="dialog_cancled">Diálogo cancelado</string>
+    <string name="dialog_canceled">Diálogo cancelado</string>
 </resources>

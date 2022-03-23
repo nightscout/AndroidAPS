@@ -1236,7 +1236,7 @@
     <string name="show_loop">Show loop</string>
     <string name="count_selected">%1$d selected</string>
     <string name="sort_label">Sort</string>
-    <string name="dialog_cancled">Dialog canceled</string>
+    <string name="dialog_canceled">Dialog canceled</string>
     <string name="below">Below</string>
     <string name="in_range">In range</string>
     <string name="above">Above</string>

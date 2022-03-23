@@ -22,6 +22,7 @@ import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
+import info.nightscout.androidaps.utils.protection.ProtectionCheck.Protection.BOLUS
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.shared.logging.LTag
 import java.text.DecimalFormat
@@ -40,12 +41,11 @@ class TempBasalDialog : DialogFragmentWithDate() {
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var protectionCheck: ProtectionCheck
 
+    private var queryingProtection = false
     private var isPercentPump = true
-
     private var _binding: DialogTempbasalBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
+    // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
@@ -55,8 +55,7 @@ class TempBasalDialog : DialogFragmentWithDate() {
         savedInstanceState.putDouble("basalAbsoluteInput", binding.basalAbsoluteInput.value)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         onCreateViewGeneral()
         _binding = DialogTempbasalBinding.inflate(inflater, container, false)
         return binding.root
@@ -148,14 +147,17 @@ class TempBasalDialog : DialogFragmentWithDate() {
 
     override fun onResume() {
         super.onResume()
-        activity?.let { activity ->
-            val cancelFail = {
-                aapsLogger.debug(LTag.APS, "Dialog canceled on resume protection: ${this.javaClass.name}")
-                ToastUtils.showToastInUiThread(ctx, R.string.dialog_cancled)
-                dismiss()
+        if(!queryingProtection) {
+            queryingProtection = true
+            activity?.let { activity ->
+                val cancelFail = {
+                    queryingProtection = false
+                    aapsLogger.debug(LTag.APS, "Dialog canceled on resume protection: ${this.javaClass.name}")
+                    ToastUtils.showToastInUiThread(ctx, R.string.dialog_canceled)
+                    dismiss()
+                }
+                protectionCheck.queryProtection(activity, BOLUS, { queryingProtection = false }, cancelFail, cancelFail)
             }
-
-            protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, {}, cancelFail, fail = cancelFail)
         }
     }
 }
