@@ -30,6 +30,7 @@ import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
+import info.nightscout.androidaps.utils.protection.ProtectionCheck.Protection.BOLUS
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -48,12 +49,11 @@ class FillDialog : DialogFragmentWithDate() {
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var protectionCheck: ProtectionCheck
 
+    private var queryingProtection = false
     private val disposable = CompositeDisposable()
-
     private var _binding: DialogFillBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
+    // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
@@ -202,14 +202,17 @@ class FillDialog : DialogFragmentWithDate() {
 
     override fun onResume() {
         super.onResume()
-        activity?.let { activity ->
-            val cancelFail = {
-                aapsLogger.debug(LTag.APS, "Dialog canceled on resume protection: ${this.javaClass.name}")
-                ToastUtils.showToastInUiThread(ctx, R.string.dialog_cancled)
-                dismiss()
+        if(!queryingProtection) {
+            queryingProtection = true
+            activity?.let { activity ->
+                val cancelFail = {
+                    queryingProtection = false
+                    aapsLogger.debug(LTag.APS, "Dialog canceled on resume protection: ${this.javaClass.name}")
+                    ToastUtils.showToastInUiThread(ctx, R.string.dialog_canceled)
+                    dismiss()
+                }
+                protectionCheck.queryProtection(activity, BOLUS, { queryingProtection = false }, cancelFail, cancelFail)
             }
-
-            protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, {}, cancelFail, fail = cancelFail)
         }
     }
 }

@@ -991,5 +991,5 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="show_loop">Döngüyü göster</string>
     <string name="count_selected">%1$d seçildi</string>
     <string name="sort_label">Sırala</string>
-    <string name="dialog_cancled">İletişim kutusu iptal edildi</string>
+    <string name="dialog_canceled">İletişim kutusu iptal edildi</string>
 </resources>

@@ -31,6 +31,7 @@ import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
+import info.nightscout.androidaps.utils.protection.ProtectionCheck.Protection.BOLUS
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.wizard.BolusWizard
@@ -62,15 +63,20 @@ class WizardDialog : DaggerDialogFragment() {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var protectionCheck: ProtectionCheck
 
+    private var queryingProtection = false
     private var wizard: BolusWizard? = null
     private var calculatedPercentage = 100.0
     private var calculatedCorrection = 0.0
     private var correctionPercent = false
     private var carbsPassedIntoWizard = 0.0
     private var notesPassedIntoWizard = ""
+    private var okClicked: Boolean = false // one shot guards
+    private var disposable: CompositeDisposable = CompositeDisposable()
+    private var bolusStep = 0.0
+    private var _binding: DialogWizardBinding? = null
 
-    //one shot guards
-    private var okClicked: Boolean = false
+    // This property is only valid between onCreateView and onDestroyView.
+    private val binding get() = _binding!!
 
     private val textWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable) {}
@@ -88,15 +94,6 @@ class WizardDialog : DaggerDialogFragment() {
             binding.alarm.isChecked = binding.carbTimeInput.value > 0
         }
     }
-
-    private var disposable: CompositeDisposable = CompositeDisposable()
-    private var bolusStep = 0.0
-
-    private var _binding: DialogWizardBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
 
     override fun onStart() {
         super.onStart()
@@ -498,14 +495,17 @@ class WizardDialog : DaggerDialogFragment() {
 
     override fun onResume() {
         super.onResume()
-        activity?.let { activity ->
-            val cancelFail = {
-                aapsLogger.debug(LTag.APS, "Dialog canceled on resume protection: ${this.javaClass.name}")
-                ToastUtils.showToastInUiThread(ctx, R.string.dialog_cancled)
-                dismiss()
+        if(!queryingProtection) {
+            queryingProtection = true
+            activity?.let { activity ->
+                val cancelFail = {
+                    queryingProtection = false
+                    aapsLogger.debug(LTag.APS, "Dialog canceled on resume protection: ${this.javaClass.name}")
+                    ToastUtils.showToastInUiThread(ctx, R.string.dialog_canceled)
+                    dismiss()
+                }
+                protectionCheck.queryProtection(activity, BOLUS, { queryingProtection = false }, cancelFail, cancelFail)
             }
-
-            protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, {}, cancelFail, fail = cancelFail)
         }
     }
 }
