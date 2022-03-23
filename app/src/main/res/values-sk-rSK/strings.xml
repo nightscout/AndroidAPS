@@ -103,7 +103,6 @@
     <string name="overview_calculator_label">Kalkulačka</string>
     <string name="constraintapllied">Aplikované obmedzenie!</string>
     <string name="sms_bolus">Bolus:</string>
-    <string name="basal">Bazál</string>
     <string name="sms_basal">Bazál:</string>
     <string name="changeyourinput">Zmeňte zadanie!</string>
     <string name="configbuilder_bgsource">Zdroj glykémie</string>
@@ -771,7 +770,6 @@
     <string name="invalidage">Neplatný záznam veku</string>
     <string name="invalidweight">Neplatný záznam váhy</string>
     <string name="invalidpct">Neplatný vstup %</string>
-    <string name="tirformat"><![CDATA[<b>%1$s:</b> Pod: <b>%2$02d%%</b> V: <b>%3$02d%%</b> Nad: <b>%4$02d%%</b>]]></string>
     <string name="average">Priemer</string>
     <string name="tir">Čas v rozsahu</string>
     <string name="activitymonitor">Monitor aktivity</string>
@@ -907,6 +905,7 @@
     <string name="errors">Chyby</string>
     <string name="ns_sync_slow">Spomaliť nahrávanie</string>
     <string name="data_status">Stav dát glykémie</string>
+    <string name="remove_bg_readings">Odstrániť glykémie</string>
     <string name="statuslights_cannula_age">vek kanyly</string>
     <string name="statuslights_patch_pump_age">vek náplasťovej pumpy</string>
     <string name="patch_pump">Náplasťová pumpa</string>
@@ -943,6 +942,12 @@
     <string name="a11y_clone_profile">klonovať aktuálny profil</string>
     <string name="a11y_delete_current_profile">zmazať aktuálny profil</string>
     <string name="a11y_add_new_to_list">pridať nový do zoznamu</string>
+    <!-- Theme switcher dark and light mode-->
+    <string name="theme_switcher_summary">Vyber tmavú, svetlú, alebo systémovú tému</string>
+    <string name="app_color_scheme">Farebná schéma</string>
+    <string name="dark_theme">Tmavá téma</string>
+    <string name="light_theme">Svetlá téma</string>
+    <string name="follow_system_theme">Použiť tému zariadenia</string>
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">Dočasný cieľ neznáma predvoľba: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Zrušenie bežiaceho dočasného cieľa?</string>
