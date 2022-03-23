@@ -100,7 +100,6 @@
     <string name="overview_calculator_label">계산기</string>
     <string name="constraintapllied">제한 적용!</string>
     <string name="sms_bolus">Bolus:</string>
-    <string name="basal">Basal</string>
     <string name="sms_basal">Basal:</string>
     <string name="changeyourinput">입력값을 변경하세요!</string>
     <string name="configbuilder_bgsource">혈당 출처</string>
@@ -741,7 +740,6 @@
     <string name="invalidage">유효하지 않은 나이입니다</string>
     <string name="invalidweight">유효하지 않은 몸무게입니다</string>
     <string name="invalidpct">유효하지 않은 % 입력</string>
-    <string name="tirformat"><![CDATA[<b>%1$s:</b> Low: <b>%2$02d%%</b> In: <b>%3$02d%%</b> High: <b>%4$02d%%</b>]]></string>
     <string name="average">평균</string>
     <string name="tir">TIR</string>
     <string name="activitymonitor">활동 모니터</string>
@@ -854,5 +852,6 @@
     <string name="sms_timeout_while_wating">직전의 펌프 통신 종료를 기다리는 동안 타임 아웃</string>
     <string name="smscommunicator_another_bolus_in_queue">대기열에 또다른 bolus가 있습니다. 이후에 다시 시도하세요.</string>
     <string name="calculation_in_progress">계산 진행 중</string>
+    <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
 </resources>
