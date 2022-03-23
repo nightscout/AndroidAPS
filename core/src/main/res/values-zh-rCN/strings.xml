@@ -186,10 +186,6 @@
     <string name="zerovalueinprofile">无效的配置文件：%1$s</string>
     <!--    Temptarget-->
     <string name="mins">%1$d 分钟</string>
-    <!--    TDD-->
-    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f U</b> 大剂量: <b>%3$.2f U</b> 基础率: <b>%4$.2f U(%5$.0f%%)</b>]]></string>
-    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f U</b> 大剂量: <b>%3$.2f U</b> 基础率: <b>%4$.2f U(%5$.0f%%)</b> 碳水s: <b>%6$.0f g</b>]]></string>
-    <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> 在 <b>%3$d</b> 天内<br>]]></string>
     <!--    Translator-->
     <string name="careportal">护理记录</string>
     <string name="careportal_bgcheck">指血检查</string>
@@ -461,6 +457,9 @@
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight刷新按钮</string>
     <string name="a11y_min_button_description">将%1$s 减少 %2$s</string>
     <string name="a11y_plus_button_description">将%1$s 增加 %2$s</string>
+    <string name="formatPercent">%1$.0f%%</string>
+    <string name="basal">基础率</string>
+    <string name="basalpct">基础率 %</string>
     <plurals name="days">
         <item quantity="other">%1$d　天</item>
     </plurals>
