@@ -41,7 +41,6 @@ import kotlin.math.abs
 class FillDialog : DialogFragmentWithDate() {
 
     @Inject lateinit var constraintChecker: ConstraintChecker
-    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var ctx: Context
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var activePlugin: ActivePlugin

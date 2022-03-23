@@ -43,7 +43,6 @@ import kotlin.math.abs
 class TreatmentDialog : DialogFragmentWithDate() {
 
     @Inject lateinit var constraintChecker: ConstraintChecker
-    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var ctx: Context

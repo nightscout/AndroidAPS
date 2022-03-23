@@ -1,5 +1,9 @@
 package info.nightscout.androidaps.dialogs
 
+import android.content.Context
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.LayoutInflater
@@ -7,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import androidx.core.content.ContextCompat
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.activities.BolusProgressHelperActivity
 import info.nightscout.androidaps.core.R
@@ -24,6 +29,7 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewB
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -37,6 +43,7 @@ class BolusProgressDialog : DaggerDialogFragment() {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var uel: UserEntryLogger
+    @Inject lateinit var sp: SP
 
     private val disposable = CompositeDisposable()
 
@@ -82,6 +89,15 @@ class BolusProgressDialog : DaggerDialogFragment() {
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
         isCancelable = false
         dialog?.setCanceledOnTouchOutside(false)
+
+        val drawable: Drawable? = context?.let { ContextCompat.getDrawable(it, R.drawable.dialog) }
+        if ( sp.getBoolean(R.string.key_use_dark_mode, true)) {
+            drawable?.setColorFilter(PorterDuffColorFilter((rh.gc(R.color.background_dark)), PorterDuff.Mode.SRC_IN))
+        } else {
+            drawable?.setColorFilter(PorterDuffColorFilter((rh.gc(R.color.background_light)), PorterDuff.Mode.SRC_IN))
+        }
+
+        dialog?.window?.setBackgroundDrawable(drawable)
 
         _binding = DialogBolusprogressBinding.inflate(inflater, container, false)
         return binding.root

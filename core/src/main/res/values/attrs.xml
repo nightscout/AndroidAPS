@@ -86,5 +86,7 @@
     <attr name="splashBackgroundColor" format="reference|color" />
     <!---Disabled Text Color  -->
     <attr name="disabledTextColor" format="reference|color" />
+    <!---Dialogfragment Background Color  -->
+    <attr name="dialogFragmentBackground" format="reference|color" />
 
 </resources>

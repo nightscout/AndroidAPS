@@ -112,6 +112,9 @@
         <item name="splashBackgroundColor">@color/splashBackground</item>
         <!---Application Background Color  -->
         <item name="android:windowBackground">@color/white</item>
+        <!---Dialogfragment Background Color  -->
+        <item name="dialogFragmentBackground">@color/background_light</item>
+        <item name="android:dialogCornerRadius">12dp</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>

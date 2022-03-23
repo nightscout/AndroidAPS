@@ -2,6 +2,9 @@ package info.nightscout.androidaps.dialogs
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -13,6 +16,7 @@ import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.CompoundButton
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerDialogFragment
@@ -119,6 +123,11 @@ class WizardDialog : DaggerDialogFragment() {
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
         isCancelable = true
         dialog?.setCanceledOnTouchOutside(false)
+
+        val drawable: Drawable? = context?.let { ContextCompat.getDrawable(it, info.nightscout.androidaps.core.R.drawable.dialog) }
+        drawable?.setColorFilter(PorterDuffColorFilter((context?.let { rh.gac(it, info.nightscout.androidaps.core.R.attr.dialogFragmentBackground) }!!), PorterDuff.Mode.SRC_IN))
+
+        dialog?.window?.setBackgroundDrawable(drawable)
 
         _binding = DialogWizardBinding.inflate(inflater, container, false)
         return binding.root
