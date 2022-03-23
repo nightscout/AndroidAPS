@@ -997,7 +997,7 @@
     <string name="show_loop">Toon loop</string>
     <string name="count_selected">%1$d geselecteerd</string>
     <string name="sort_label">Sorteren</string>
-    <string name="below">Onder</string>
+    <string name="below" comment="below &quot;in range&quot;">Onder</string>
     <string name="in_range">Binnen bereik</string>
-    <string name="above">Boven</string>
+    <string name="above" comment="above &quot;in range&quot;">Boven</string>
 </resources>
