@@ -457,6 +457,9 @@
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight Tlačítko Obnovit</string>
     <string name="a11y_min_button_description">snížení %1$s o %2$s</string>
     <string name="a11y_plus_button_description">zvýšení %1$s o %2$s</string>
+    <string name="formatPercent">%1$.0f%%</string>
+    <string name="basal">Bazál</string>
+    <string name="basalpct">Bazál %</string>
     <plurals name="days">
         <item quantity="one">%1$d den</item>
         <item quantity="few">%1$d dnů</item>
