@@ -118,4 +118,6 @@
     <string name="remove_selected_items">Geselecteerde items verwijderen</string>
     <string name="count_selected">%1$d geselecteerd</string>
     <string name="confirm_remove_multiple_items">Weet je zeker dat je %1$d items wilt verwijderen</string>
+    <string name="sort_label">Sorteren</string>
+    <string name="system_automation">Systeem automatisering</string>
 </resources>
