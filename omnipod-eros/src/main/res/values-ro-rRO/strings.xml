@@ -5,7 +5,6 @@
     <!-- Omnipod Eros - Keys -->
     <!-- Omnipod Eros - Overview -->
     <!-- Omnipod Eros - Preferences -->
-    <string name="omnipod_eros_preferences_riley_link_configuration">Configurare RileyLink</string>
     <string name="omnipod_eros_preferences_category_notifications">Notificări</string>
     <string name="omnipod_eros_preferences_pulse_log_button_enabled">Afişare buton Jurnal Puls în meniul Gestionare Pod-uri</string>
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Afişare buton Stare RileyLink în meniul Gestionare Pod-uri</string>
