@@ -5,7 +5,6 @@
     <!-- Omnipod Eros - Keys -->
     <!-- Omnipod Eros - Overview -->
     <!-- Omnipod Eros - Preferences -->
-    <string name="omnipod_eros_preferences_riley_link_configuration">Konfigurácia RileyLinku</string>
     <string name="omnipod_eros_preferences_category_notifications">Notifikácie</string>
     <string name="omnipod_eros_preferences_pulse_log_button_enabled">Zobraziť tlačítko Pulzný Log v menu Správa Podu</string>
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Zobraziť tlačítko Štatistika RileyLink v menu Správa Podu</string>
