@@ -103,14 +103,16 @@
         <item name="boxStrokeColor">@color/white</item>
         <!---Profile Helper  -->
         <item name="tabBgColorSelected">@color/tabBgColorSelected</item>
-        <!---Splash Background  -->
-        <item name="splashBackgroundColor">@color/splashBackground</item>
         <!---Dialog Helper  -->
         <item name="materialAlertDialogTheme">@style/DialogTheme</item>
         <item name="android:alertDialogTheme">@style/DialogTheme</item>
         <item name="alertDialogTheme">@style/DialogTheme</item>
         <!---Disabled Text Color  -->
         <item name="disabledTextColor">@color/sandGray</item>
+        <!---Splash Background  -->
+        <item name="splashBackgroundColor">@color/splashBackground</item>
+        <!---Application Background Color  -->
+        <item name="android:windowBackground">@color/black</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>
