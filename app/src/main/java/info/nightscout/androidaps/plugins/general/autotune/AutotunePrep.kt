@@ -45,6 +45,11 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
                 glucoseData.add(glucose[i])
             }
         }
+        if (glucose.size == 0 || glucoseData.size == 0 ) {
+            log("No BG value received")
+            return null
+        }
+
         glucoseData.sortWith(object: Comparator<GlucoseValue>{ override fun compare(o1: GlucoseValue, o2: GlucoseValue): Int = (o2.timestamp - o1.timestamp).toInt() })
 
         // Bloc below replace bloc between #55 and #71
@@ -52,11 +57,11 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
         // IOBInputs are for iob calculation (done here in AutotuneIob Class)
         //val boluses = 0
         //val maxCarbs = 0
-        if (treatments.size < 1) {
+        if (treatments.size == 0) {
             log("No Carbs entries")
             //return null
         }
-        if (autotuneIob.boluses.size < 1) {
+        if (autotuneIob.boluses.size == 0) {
             log("No treatment received")
             return null
         }
