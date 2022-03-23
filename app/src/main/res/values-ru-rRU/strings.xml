@@ -952,7 +952,7 @@
     <string name="hide_loop">Скрыть цикл</string>
     <string name="show_loop">Показать цикл</string>
     <string name="count_selected">%1$d выбрано</string>
-    <string name="below">Ниже целевых</string>
+    <string name="below" comment="below &quot;in range&quot;">Ниже целевых</string>
     <string name="in_range">В целевом диапазоне</string>
     <string name="above" comment="above &quot;in range&quot;">Выше целевых</string>
 </resources>
