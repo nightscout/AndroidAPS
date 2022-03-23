@@ -161,6 +161,7 @@
     <string name="end_user_license_agreement">Licenčná zmluva s koncovým používateľom</string>
     <string name="end_user_license_agreement_text">Tento program nemôže byť použitý na medicínske rozhodnutia. Na program neexistuje žiadna záruka, alebo garantovaná podpora v akejkoľvek podobe. Keď už sa rozhodneš pre používanie, tak jeho kvalita a celkové schopnosti tohto projektu závisia len na Tebe samotnom. Ak by sa ukázalo, že je program chybný, preberáš všetky potrebné náklady na liečbu, prípadne náklady na iné servisné služby, opravy, alebo korekcie.</string>
     <string name="end_user_license_agreement_i_understand">ROZUMIEM A POTVRDZUJEM</string>
+    <string name="save">Uložiť</string>
     <string name="reloadprofile">Obnoviť profil</string>
     <string name="smscommunicator">SMS komunikátor</string>
     <string name="smscommunicator_allowednumbers">Povolené telefónne čísla</string>
@@ -433,6 +434,8 @@
     <string name="ns_localbroadcasts_title">Povoliť lokálne vysielanie.</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dynamická ISF</string>
+    <string name="DynISFAdjust_title">Korekčný faktor pre Dynamickú ISF v %</string>
+    <string name="DynISFAdjust_summary">Korekčný faktor pre dynamickú ISF. Pre agresivnejšie korekčné dávky nastavte hodnoty väčšie ako 100%, a pre menej agresivne korekcie menšie než 100%.</string>
     <string name="enableuam">Povoliť UAM</string>
     <string name="enablesmb">Povoliť SMB</string>
     <string name="enablesmb_summary">Použiť Super Mikro Bolusy namiesto dočasných bazálov, pre zrýchleniu účinku</string>
@@ -994,4 +997,8 @@
     <string name="show_loop">Zobraziť uzavretý okruh</string>
     <string name="count_selected">Vybrané: %1$d</string>
     <string name="sort_label">Zoradiť</string>
+    <string name="dialog_canceled">Dialóg zrušený</string>
+    <string name="below" comment="below &quot;in range&quot;">Nižšie</string>
+    <string name="in_range">V rozsahu</string>
+    <string name="above" comment="above &quot;in range&quot;">Vyššie</string>
 </resources>
