@@ -28,6 +28,10 @@
     <color name="defaultbackground">#424242</color>
     <color name="defaulttextcolor">#B3FFFFFF</color>
 
+    <!---Android Dark ans Light Theme Base colors-->
+    <color name="background_dark">#262626</color>
+    <color name="background_light">#FFFFFF</color>
+
     <!--    Tabs-->
     <color name="tabText">#d0d0d0</color>
     <color name="tabSelectedText">@color/white</color>
@@ -48,7 +52,7 @@
     <color name="pumpStatusBackground">#505050</color>
 
     <!--    Dialogs-->
-    <color name="dialog_title_background">#303030</color>
+    <color name="dialog_title_background">#CCCCCC</color>
     <color name="activity_title_background">#121212</color>
     <color name="dialog_title_color">#FFFFFF</color>
     <color name="dialog_title_icon_tint">#FFFFFF</color>

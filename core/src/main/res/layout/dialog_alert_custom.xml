@@ -4,17 +4,15 @@
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/StyleDialog"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <RelativeLayout
+        style="@style/StyleDialogHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="?dialogTitleBackground"
-        android:orientation="horizontal"
-        android:padding="5dp">
+        android:layout_gravity="center" >
 
         <ImageView
             android:id="@+id/alertdialog_icon"
