@@ -285,7 +285,7 @@ class AutotuneIob(
     fun nsHistorytoJSON(): String {
         val json = JSONArray()
         for (t in nsTreatments) {
-            if (t.isValid) json.put(t.toJson())
+            json.put(t.toJson())
         }
         return json.toString(2).replace("\\/", "/")
     }
@@ -293,7 +293,6 @@ class AutotuneIob(
     //I add this internal class to be able to export easily ns-treatment files with same containt and format than NS query used by oref0-autotune
     private inner class NsTreatment {
         var date: Long = 0
-        var isValid = true
         var eventType: TherapyEvent.Type? = null
         var carbsTreatment: Carbs? = null
         var bolusTreatment: Bolus? = null
