@@ -327,9 +327,11 @@ class AutotuneIob(
             val cPjson = JSONObject()
             return when (eventType) {
                 TherapyEvent.Type.TEMPORARY_BASAL  ->
-                    temporaryBasal?.let {
-                        val profile = profileFunction.getProfile(it.timestamp)
-                        it.toJson(true, profile!!, dateUtil)
+                    temporaryBasal?.let {   tbr ->
+                        val profile = profileFunction.getProfile(tbr.timestamp)
+                        profile?.let { profile ->
+                            tbr.toJson(true, profile, dateUtil)
+                        }
                     }
                 TherapyEvent.Type.COMBO_BOLUS      ->
                     extendedBolus?.let {
