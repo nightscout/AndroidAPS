@@ -104,7 +104,6 @@ Eversense-appen.</string>
     <string name="overview_calculator_label">Kalkylator</string>
     <string name="constraintapllied">Begränsning nådd</string>
     <string name="sms_bolus">Bolus:</string>
-    <string name="basal">Basal</string>
     <string name="sms_basal">Basal:</string>
     <string name="changeyourinput">Ändra inmatning</string>
     <string name="configbuilder_bgsource">BG-källa</string>
@@ -767,7 +766,6 @@ Eversense-appen.</string>
     <string name="invalidage">Ogiltig inmatning (ålder)</string>
     <string name="invalidweight">Ogiltig inmatning (vikt)</string>
     <string name="invalidpct">Ogiltig %-inmatning</string>
-    <string name="tirformat"><![CDATA[<b>%1$s:</b> Låg: <b>%2$02d%%</b> Mål: <b>%3$02d%%</b> Hög: <b>%4$02d%%</b>]]></string>
     <string name="average">Medel</string>
     <string name="tir">TIR</string>
     <string name="activitymonitor">Aktivitetsövervakare</string>
@@ -937,6 +935,7 @@ Eversense-appen.</string>
     <string name="a11y_clone_profile">klona nuvarande profil</string>
     <string name="a11y_delete_current_profile">ta bort aktuell profil</string>
     <string name="a11y_add_new_to_list">lägg till ny i listan</string>
+    <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">Tempmål okänd förinställning: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Avbryt temp-mål?</string>

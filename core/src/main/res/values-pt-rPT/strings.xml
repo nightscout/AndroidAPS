@@ -166,10 +166,6 @@
     <string name="zerovalueinprofile">Perfil inválido: %1$s</string>
     <!--    Temptarget-->
     <string name="mins">%1$d min</string>
-    <!--    TDD-->
-    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f U</b> Ból: <b>%3$.2f U</b> Bas: <b>%4$.2f U(%5$.0f%%)</b>]]></string>
-    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f U</b> Ból: <b>%3$.2f U</b> Bas: <b>%4$.2f U(%5$.0f%%)</b> Hidratos: <b>%6$.0f g</b>]]></string>
-    <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> em <b>%3$d</b> dias<br>]]></string>
     <!--    Translator-->
     <string name="careportal_bgcheck">Verificar Glicose</string>
     <string name="careportal_mbg">Glicose Manual or Calibração</string>

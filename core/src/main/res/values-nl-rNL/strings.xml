@@ -136,6 +136,10 @@
     <string name="minago">%1$d m geleden</string>
     <string name="minago_long">%1$d minuten geleden</string>
     <string name="hoursago">%1$.1f u geleden</string>
+    <string name="days_ago">%1$.1f dagen geleden</string>
+    <string name="days_ago_round">%1$.0f dagen geleden</string>
+    <string name="in_days">over %1$.0f dagen</string>
+    <string name="in_days_round">over %1$.0f dagen</string>
     <string name="shorthour">u</string>
     <string name="days">dagen</string>
     <string name="hours">uren</string>
@@ -151,9 +155,15 @@
     <string name="unit_weeks">weken</string>
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
+    <string name="later_today">Later Vandaag</string>
+    <string name="tomorrow">Morgen</string>
+    <string name="today">Vandaag</string>
+    <string name="yesterday">Gisteren</string>
     <!--    Protection-->
     <string name="wrongpassword">Verkeerd wachtwoord</string>
+    <string name="wrongpin">Onjuiste PIN-code</string>
     <string name="passwords_dont_match">Wachtwoorden komen niet overeen</string>
+    <string name="pin_dont_match">PIN-codes komen niet overeen</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Basaalstanden niet ingesteld in hele uren: %1$s</string>
     <string name="minimalbasalvaluereplaced">Basale waarde vervangen door minimaal ondersteunde waarde; %1$s</string>
@@ -176,10 +186,6 @@
     <string name="zerovalueinprofile">Ongeldig profiel: %1$s</string>
     <!--    Temptarget-->
     <string name="mins">%1$d min</string>
-    <!--    TDD-->
-    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f E</b> Bol: <b>%3$.2f E</b> Bas: <b>%4$.2f E(%5$.0f%%)</b>]]></string>
-    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f E</b> Bol: <b>%3$.2f E</b> Bas: <b>%4$.2f E(%5$.0f%%)</b> Koolh. <b>%6$.0f g</b>]]></string>
-    <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> in <b>%3$d</b> dagen<br>]]></string>
     <!--    Translator-->
     <string name="careportal">Zorgportaal</string>
     <string name="careportal_bgcheck">BG Controle</string>
@@ -451,6 +457,9 @@
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight actualiseren knop</string>
     <string name="a11y_min_button_description">verlaag %1$s met %2$s</string>
     <string name="a11y_plus_button_description">verhoog %1$s met %2$s</string>
+    <string name="formatPercent">%1$.0f%%</string>
+    <string name="basal">Basaal</string>
+    <string name="basalpct">Basaal %</string>
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagen</item>
