@@ -114,7 +114,6 @@
         <!---Application Background Color  -->
         <item name="android:windowBackground">@color/black</item>
         <!---Dialogfragment Background Color  -->
-        <item name="dialogFragmentBackground">@color/background_dark</item>
         <item name="android:dialogCornerRadius">12dp</item>
     </style>
 

@@ -46,6 +46,7 @@ import kotlin.collections.ArrayList
 
 class ProfileSwitchDialog : DialogFragmentWithDate() {
 
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var repository: AppRepository

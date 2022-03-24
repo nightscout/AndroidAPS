@@ -2,9 +2,6 @@ package info.nightscout.androidaps.dialogs
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.format.DateFormat
 import android.view.View
@@ -13,7 +10,6 @@ import android.view.Window
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.core.R
@@ -21,7 +17,6 @@ import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.extensions.toVisibility
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import java.util.*
 import javax.inject.Inject
@@ -31,7 +26,6 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var sp: SP
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var rh: ResourceHelper
 
     fun interface OnValueChangedListener {
         fun onValueChanged(value: Long)
@@ -74,11 +68,6 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
         isCancelable = true
         dialog?.setCanceledOnTouchOutside(false)
-
-        val drawable: Drawable? = context?.let { ContextCompat.getDrawable(it, info.nightscout.androidaps.core.R.drawable.dialog) }
-        drawable?.setColorFilter(PorterDuffColorFilter((context?.let { rh.gac(it, info.nightscout.androidaps.core.R.attr.dialogFragmentBackground) }!!), PorterDuff.Mode.SRC_IN))
-
-        dialog?.window?.setBackgroundDrawable(drawable)
     }
 
     fun updateDateTime(timeMs: Long) {

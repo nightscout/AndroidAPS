@@ -27,6 +27,7 @@ import javax.inject.Inject
 class CalibrationDialog : DialogFragmentWithDate() {
 
     @Inject lateinit var injector: HasAndroidInjector
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var xDripBroadcast: XDripBroadcast
     @Inject lateinit var uel: UserEntryLogger

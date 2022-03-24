@@ -35,6 +35,7 @@ import kotlin.math.abs
 class ExtendedBolusDialog : DialogFragmentWithDate() {
 
     @Inject lateinit var ctx: Context
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var activePlugin: ActivePlugin
