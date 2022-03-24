@@ -167,10 +167,6 @@
     <string name="zerovalueinprofile">유효하지 않은 프로파일: %1$s</string>
     <!--    Temptarget-->
     <string name="mins">%1$d 분</string>
-    <!--    TDD-->
-    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f U</b> Bol: <b>%3$.2f U</b> Bas: <b>%4$.2f U(%5$.0f%%)</b>]]></string>
-    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f U</b> Bol: <b>%3$.2f U</b> Bas: <b>%4$.2f U(%5$.0f%%)</b> Carbs: <b>%6$.0f g</b>]]></string>
-    <string name="activitymonitorformat"><![CDATA[<b>%3$d</b> 일<br>에 <b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b>]]></string>
     <!--    Translator-->
     <string name="careportal_bgcheck">혈당 체크</string>
     <string name="careportal_mbg">수동 BG 값 입력 또는 보정</string>

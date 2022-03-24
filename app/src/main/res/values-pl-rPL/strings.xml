@@ -102,7 +102,6 @@
     <string name="overview_calculator_label">Kalkulator</string>
     <string name="constraintapllied">Ograniczenie nałożone!</string>
     <string name="sms_bolus">Bolus:</string>
-    <string name="basal">Baza</string>
     <string name="sms_basal">Baza:</string>
     <string name="changeyourinput">Zmień wprowadzone dane!</string>
     <string name="configbuilder_bgsource">Źródło BG</string>
@@ -760,7 +759,6 @@
     <string name="invalidage">Nieprawidłowy wpis wieku</string>
     <string name="invalidweight">Nieprawidłowy wpis wagi</string>
     <string name="invalidpct">Nieprawidłowa wartość procentowa</string>
-    <string name="tirformat"><![CDATA[<b>%1$s:</b> Od: <b>%2$02d%%</b> Cel: <b>%3$02d%%</b> Do: <b>%4$02d%%</b>]]></string>
     <string name="average">Średnio</string>
     <string name="tir">TIR</string>
     <string name="activitymonitor">Monitor aktywności</string>
@@ -898,5 +896,6 @@
     <string name="identification">Identyfikator (email, nick na FB lub Discordzie itp.)</string>
     <string name="identification_not_set">Identyfikator nie jest ustawiony w trybie dev</string>
     <string name="not_available_full">Niedostępne</string>
+    <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
 </resources>

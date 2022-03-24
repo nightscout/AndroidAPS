@@ -103,7 +103,6 @@
     <string name="overview_calculator_label">מחשבון</string>
     <string name="constraintapllied">מגבלה הוחלה!</string>
     <string name="sms_bolus">בולוס:</string>
-    <string name="basal">אינסולין בזאלי</string>
     <string name="sms_basal">אינסולין בזאלי:</string>
     <string name="changeyourinput">שנה קלט!</string>
     <string name="configbuilder_bgsource">מקור ערכי הסוכר</string>
@@ -434,6 +433,7 @@
     <string name="ns_localbroadcasts_title">אפשר שידורים מקומיים.</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">רגישות דינאמית</string>
+    <string name="DynISFAdjust_summary">כיוונון פקטור הרגישות הדינאמית. הגדירו יותר מ-100% לקבלת תיקונים אגרסיביים יותר ופחות מ-100% לקבלת תיקונים עדינים יותר.</string>
     <string name="enableuam">הפעלת UAM</string>
     <string name="enablesmb">אפשר SMB</string>
     <string name="enablesmb_summary">השתמש בסופר מיקרו בולוסים במקום בבזאלי זמני לפעילות מהירה יותר</string>
@@ -769,7 +769,6 @@
     <string name="invalidage">רשומת גיל לא חוקית</string>
     <string name="invalidweight">רשומת משקל לא חוקית</string>
     <string name="invalidpct">רשומת אחוזים לא חוקית</string>
-    <string name="tirformat"><![CDATA[<b>%1$s:</b> נמוך: <b>%2$02d%%</b> בטווח: <b>%3$02d%%</b> גבוה: <b>%4$02d%%</b>]]></string>
     <string name="average">ממוצע</string>
     <string name="tir">זמן בטווח</string>
     <string name="activitymonitor">מוניטור פעילות</string>
@@ -940,6 +939,12 @@
     <string name="a11y_clone_profile">שכפל את הפרופיל הנוכחי</string>
     <string name="a11y_delete_current_profile">מחק את הפרופיל הנוכחי</string>
     <string name="a11y_add_new_to_list">הוסף לרשימה</string>
+    <!-- Theme switcher dark and light mode-->
+    <string name="theme_switcher_summary">לבחירת ערכת נושא כהה, בהירה או ע\"פ ערכת הנושא של המכשיר</string>
+    <string name="app_color_scheme">סכמת צבעים</string>
+    <string name="dark_theme">ערכת נושא כהה</string>
+    <string name="light_theme">ערכת נושא בהירה</string>
+    <string name="follow_system_theme">השתמש בערכת הנושא של המכשיר</string>
     <!-- WEAR OS-->
     <string name="wizard_carbs_constraint">הפרת מגבלות פחמימה!</string>
     <string name="wizard_explain_carbs">פחמ\': %1$.2f יח\'</string>
@@ -961,5 +966,4 @@
     <string name="show_loop">הצג לולאה</string>
     <string name="count_selected">%1$d נבחרו</string>
     <string name="sort_label">מיין</string>
-    <string name="dialog_cancled">דו-שיח בוטל</string>
 </resources>

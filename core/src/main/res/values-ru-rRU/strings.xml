@@ -175,10 +175,6 @@
     <string name="zerovalueinprofile">Недопустимый профиль: %1$s</string>
     <!--    Temptarget-->
     <string name="mins">%1$d мин.</string>
-    <!--    TDD-->
-    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fед</b> Бол:<b>%3$.2fед</b> Баз: <b>%4$.2fед(%5$.0f%%)</b>]]></string>
-    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s</b>∑: <b>%2$.2fед</b> Бол: <b>%3$.2fед</b> Баз: <b>%4$.2fед(%5$.0f%%)</b> Угл: <b>%6$.0fг</b>]]></string>
-    <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s</span></b> <b>%2$s</b>через<b>%3$d</b> дней<br>]]></string>
     <!--    Translator-->
     <string name="careportal">Портал терапии</string>
     <string name="careportal_bgcheck">Проверка ГК</string>
@@ -450,6 +446,9 @@
     <string name="insight_refresh_button" comment="26 characters max for translation">Кнопка \"Обновить Insight\"</string>
     <string name="a11y_min_button_description">снижение %1$s на %2$s</string>
     <string name="a11y_plus_button_description">увеличение %1$s на %2$s</string>
+    <string name="formatPercent">%1$.0f%%</string>
+    <string name="basal">Базал</string>
+    <string name="basalpct">Базал %</string>
     <plurals name="days">
         <item quantity="one">%1$d день</item>
         <item quantity="few">%1$d дня</item>

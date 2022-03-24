@@ -103,7 +103,6 @@
     <string name="overview_calculator_label">Kalkulačka</string>
     <string name="constraintapllied">Aplikováno omezení!</string>
     <string name="sms_bolus">Bolus:</string>
-    <string name="basal">Bazál</string>
     <string name="sms_basal">Bazál:</string>
     <string name="changeyourinput">Změňte zadání!</string>
     <string name="configbuilder_bgsource">Zdroj glykémie</string>
@@ -162,6 +161,7 @@
     <string name="end_user_license_agreement">Licenční ujednání</string>
     <string name="end_user_license_agreement_text">MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
     <string name="end_user_license_agreement_i_understand">ROZUMÍM A POTVRZUJI</string>
+    <string name="save">Uložit</string>
     <string name="reloadprofile">Obnovit profil</string>
     <string name="smscommunicator">SMS komunikátor</string>
     <string name="smscommunicator_allowednumbers">Povolená tel. čísla</string>
@@ -434,6 +434,8 @@
     <string name="ns_localbroadcasts_title">Povolení odesílaní</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dynamická ISF</string>
+    <string name="DynISFAdjust_title">Korekční faktor pro DynamicISF v %</string>
+    <string name="DynISFAdjust_summary">Korekční faktor pro DynamicISF. Pro agresivnější korekční dávky nastavte hodnoty větší než 100%, a pro méně agresivní korekce menší než 100%.</string>
     <string name="enableuam">Povolit UAM</string>
     <string name="enablesmb">Povolit SMB</string>
     <string name="enablesmb_summary">Použít super mikro bolusy místo dočasných bazálů pro zrychlení účinku</string>
@@ -771,7 +773,6 @@
     <string name="invalidage">Neplatná položka věku</string>
     <string name="invalidweight">Neplatná položka váhy</string>
     <string name="invalidpct">Neplatný vstup %</string>
-    <string name="tirformat"><![CDATA[<b>%1$s:</b> Pod: <b>%2$02d%%</b> V: <b>%3$02d%%</b> Nad: <b>%4$02d%%</b>]]></string>
     <string name="average">Průměr</string>
     <string name="tir">Čas v rozsahu</string>
     <string name="activitymonitor">Monitor aktivity</string>
@@ -944,6 +945,12 @@
     <string name="a11y_clone_profile">klonovat aktuální profil</string>
     <string name="a11y_delete_current_profile">odstranit aktuální profil</string>
     <string name="a11y_add_new_to_list">přidat nový do seznamu</string>
+    <!-- Theme switcher dark and light mode-->
+    <string name="theme_switcher_summary">Vyberte téma tmavé, světlé nebo podle systémového motivu</string>
+    <string name="app_color_scheme">Barevné schéma</string>
+    <string name="dark_theme">Tmavé téma</string>
+    <string name="light_theme">Světlé téma</string>
+    <string name="follow_system_theme">Použít téma zařízení</string>
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">Dočasný cíl neznámá předvolba: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Zrušení běžícího dočasného cíle?</string>
@@ -990,5 +997,8 @@
     <string name="show_loop">Zobrazit smyčku</string>
     <string name="count_selected">Vybráno: %1$d</string>
     <string name="sort_label">Seřadit</string>
-    <string name="dialog_cancled">Dialog zrušen</string>
+    <string name="dialog_canceled">Dialog zrušen</string>
+    <string name="below" comment="below &quot;in range&quot;">Pod</string>
+    <string name="in_range">V rozsahu</string>
+    <string name="above" comment="above &quot;in range&quot;">Nad</string>
 </resources>

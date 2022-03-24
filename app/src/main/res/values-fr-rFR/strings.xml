@@ -103,7 +103,6 @@
     <string name="overview_calculator_label">Assistant</string>
     <string name="constraintapllied">Restriction appliquée !</string>
     <string name="sms_bolus">Bolus:</string>
-    <string name="basal">Basal</string>
     <string name="sms_basal">Basal:</string>
     <string name="changeyourinput">Changez vos entrées !</string>
     <string name="configbuilder_bgsource">Source des glycémies</string>
@@ -667,6 +666,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="show_invalidated">Montrer les entrées invalides</string>
     <string name="hide_invalidated">Masquer les entrées invalides</string>
     <string name="remove_items">Supprimer des entrées</string>
+    <string name="sort_items">Trier les objets</string>
     <string name="storedsettingsfound">Paramètres sauvegardés trouvés</string>
     <string name="allow_hardware_pump_text">ATTENTION : Si vous activez et connectez à une vraie pompe, AndroidAPS copiera les paramètres Basals du profil vers la pompe, écrasant le taux basal existant stocké sur la pompe. Assurez-vous d\'avoir correctement saisi et réglé les paramètres Basal dans AndroidAPS. Si vous ne savez pas ou si ne voulez pas écraser les paramètres Basal sur votre pompe, appuyez sur Annuler et reporter le passage à la pompe à une date ultérieure.</string>
     <string name="error_adding_treatment_title">Données de traitement incomplètes</string>
@@ -771,7 +771,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="invalidage">Âge invalide</string>
     <string name="invalidweight">Poids invalide</string>
     <string name="invalidpct">% saisi invalide</string>
-    <string name="tirformat"><![CDATA[<b>%1$s:</b> Bas: <b>%2$02d%%</b> Cible: <b>%3$02d%%</b> Haut: <b>%4$02d%%</b>]]></string>
     <string name="average">Moyenne</string>
     <string name="tir">Cible Gly</string>
     <string name="activitymonitor">Moniteur d\'activité</string>
@@ -906,6 +905,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="errors">Erreurs</string>
     <string name="ns_sync_slow">Ralentir les téléchargements</string>
     <string name="data_status">État des données Gly</string>
+    <string name="remove_bg_readings">Supprimer des Glycémies</string>
     <string name="statuslights_cannula_age">âge canule</string>
     <string name="statuslights_patch_pump_age">âge pompe patch</string>
     <string name="patch_pump">Pompe patch</string>
@@ -942,6 +942,12 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="a11y_clone_profile">dupliquer le profil actuel</string>
     <string name="a11y_delete_current_profile">supprimer le profil actuel</string>
     <string name="a11y_add_new_to_list">ajouter un nouveau à la liste</string>
+    <!-- Theme switcher dark and light mode-->
+    <string name="theme_switcher_summary">Choisissez le thème sombre, clair ou pour suivre le thème système</string>
+    <string name="app_color_scheme">Thèmes de couleurs de l\'appli</string>
+    <string name="dark_theme">Thème sombre</string>
+    <string name="light_theme">Thème clair</string>
+    <string name="follow_system_theme">Utiliser le thème de l’appareil</string>
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">Préréglage inconnu de la cible temporaire : %1$s</string>
     <string name="wear_action_tempt_cancel_message">Annuler l\'exécution des cibles Temp?</string>
@@ -987,4 +993,5 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="hide_loop">Masquer la boucle</string>
     <string name="show_loop">Afficher les entrées boucle</string>
     <string name="count_selected">%1$d sélectionnée(s)</string>
+    <string name="sort_label">Trier</string>
 </resources>

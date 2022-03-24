@@ -103,7 +103,6 @@
     <string name="overview_calculator_label">Kalkulačka</string>
     <string name="constraintapllied">Aplikované obmedzenie!</string>
     <string name="sms_bolus">Bolus:</string>
-    <string name="basal">Bazál</string>
     <string name="sms_basal">Bazál:</string>
     <string name="changeyourinput">Zmeňte zadanie!</string>
     <string name="configbuilder_bgsource">Zdroj glykémie</string>
@@ -162,6 +161,7 @@
     <string name="end_user_license_agreement">Licenčná zmluva s koncovým používateľom</string>
     <string name="end_user_license_agreement_text">Tento program nemôže byť použitý na medicínske rozhodnutia. Na program neexistuje žiadna záruka, alebo garantovaná podpora v akejkoľvek podobe. Keď už sa rozhodneš pre používanie, tak jeho kvalita a celkové schopnosti tohto projektu závisia len na Tebe samotnom. Ak by sa ukázalo, že je program chybný, preberáš všetky potrebné náklady na liečbu, prípadne náklady na iné servisné služby, opravy, alebo korekcie.</string>
     <string name="end_user_license_agreement_i_understand">ROZUMIEM A POTVRDZUJEM</string>
+    <string name="save">Uložiť</string>
     <string name="reloadprofile">Obnoviť profil</string>
     <string name="smscommunicator">SMS komunikátor</string>
     <string name="smscommunicator_allowednumbers">Povolené telefónne čísla</string>
@@ -434,6 +434,8 @@
     <string name="ns_localbroadcasts_title">Povoliť lokálne vysielanie.</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dynamická ISF</string>
+    <string name="DynISFAdjust_title">Korekčný faktor pre Dynamickú ISF v %</string>
+    <string name="DynISFAdjust_summary">Korekčný faktor pre dynamickú ISF. Pre agresivnejšie korekčné dávky nastavte hodnoty väčšie ako 100%, a pre menej agresivne korekcie menšie než 100%.</string>
     <string name="enableuam">Povoliť UAM</string>
     <string name="enablesmb">Povoliť SMB</string>
     <string name="enablesmb_summary">Použiť Super Mikro Bolusy namiesto dočasných bazálov, pre zrýchleniu účinku</string>
@@ -771,7 +773,6 @@
     <string name="invalidage">Neplatný záznam veku</string>
     <string name="invalidweight">Neplatný záznam váhy</string>
     <string name="invalidpct">Neplatný vstup %</string>
-    <string name="tirformat"><![CDATA[<b>%1$s:</b> Pod: <b>%2$02d%%</b> V: <b>%3$02d%%</b> Nad: <b>%4$02d%%</b>]]></string>
     <string name="average">Priemer</string>
     <string name="tir">Čas v rozsahu</string>
     <string name="activitymonitor">Monitor aktivity</string>
@@ -907,6 +908,7 @@
     <string name="errors">Chyby</string>
     <string name="ns_sync_slow">Spomaliť nahrávanie</string>
     <string name="data_status">Stav dát glykémie</string>
+    <string name="remove_bg_readings">Odstrániť glykémie</string>
     <string name="statuslights_cannula_age">vek kanyly</string>
     <string name="statuslights_patch_pump_age">vek náplasťovej pumpy</string>
     <string name="patch_pump">Náplasťová pumpa</string>
@@ -943,6 +945,12 @@
     <string name="a11y_clone_profile">klonovať aktuálny profil</string>
     <string name="a11y_delete_current_profile">zmazať aktuálny profil</string>
     <string name="a11y_add_new_to_list">pridať nový do zoznamu</string>
+    <!-- Theme switcher dark and light mode-->
+    <string name="theme_switcher_summary">Vyber tmavú, svetlú, alebo systémovú tému</string>
+    <string name="app_color_scheme">Farebná schéma</string>
+    <string name="dark_theme">Tmavá téma</string>
+    <string name="light_theme">Svetlá téma</string>
+    <string name="follow_system_theme">Použiť tému zariadenia</string>
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">Dočasný cieľ neznáma predvoľba: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Zrušenie bežiaceho dočasného cieľa?</string>
@@ -989,4 +997,8 @@
     <string name="show_loop">Zobraziť uzavretý okruh</string>
     <string name="count_selected">Vybrané: %1$d</string>
     <string name="sort_label">Zoradiť</string>
+    <string name="dialog_canceled">Dialóg zrušený</string>
+    <string name="below" comment="below &quot;in range&quot;">Nižšie</string>
+    <string name="in_range">V rozsahu</string>
+    <string name="above" comment="above &quot;in range&quot;">Vyššie</string>
 </resources>

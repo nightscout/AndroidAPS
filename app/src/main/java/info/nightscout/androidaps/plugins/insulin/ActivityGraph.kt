@@ -44,6 +44,9 @@ class ActivityGraph : GraphView {
         viewport.isXAxisBoundsManual = true
         viewport.setMinX(0.0)
         viewport.setMaxX((hours * 60).toDouble())
+        viewport.isYAxisBoundsManual = true
+        viewport.setMinY(0.0)
+        viewport.setMaxY(0.01)
         gridLabelRenderer.numHorizontalLabels = (hours + 1).toInt()
         gridLabelRenderer.horizontalAxisTitle = "[min]"
         secondScale.addSeries(LineGraphSeries(Array(iobArray.size) { i -> iobArray[i] }).also {

@@ -25,8 +25,12 @@
     <color name="overviewPillColorDefault">#1c171c</color>
     <color name="colorOnPrimaryDefault">#FFFFFF</color>
 
-    <color name="defaultbackground">#424242</color>
+    <color name="defaultbackground">#000000</color>
     <color name="defaulttextcolor">#B3FFFFFF</color>
+
+    <!---Android Dark ans Light Theme Base colors-->
+    <color name="background_dark">#262626</color>
+    <color name="background_light">#FFFFFF</color>
 
     <!--    Tabs-->
     <color name="tabText">#d0d0d0</color>

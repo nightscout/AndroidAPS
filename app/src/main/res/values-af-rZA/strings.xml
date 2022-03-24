@@ -94,7 +94,6 @@
     <string name="overview_calculator_label">Rekenaar</string>
     <string name="constraintapllied">Beperking toegepas!</string>
     <string name="sms_bolus">Bolus:</string>
-    <string name="basal">Basale</string>
     <string name="sms_basal">Basale:</string>
     <string name="changeyourinput">Verander jou insette!</string>
     <string name="configbuilder_bgsource">BG bron</string>
@@ -569,5 +568,6 @@
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="overview_show_predictions">Projeksies</string>
     <string name="prime">Prima</string>
+    <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
 </resources>

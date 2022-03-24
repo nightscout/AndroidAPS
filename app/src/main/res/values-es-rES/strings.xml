@@ -103,7 +103,6 @@
     <string name="overview_calculator_label">Calculadora</string>
     <string name="constraintapllied">Restricción aplicada!</string>
     <string name="sms_bolus">Bolo:</string>
-    <string name="basal">Dosis basal</string>
     <string name="sms_basal">Dosis Basal:</string>
     <string name="changeyourinput">¡Cambiar datos!</string>
     <string name="configbuilder_bgsource">Origen de Glucosa</string>
@@ -162,6 +161,7 @@
     <string name="end_user_license_agreement">Acuerdo de licencia de usuario final</string>
     <string name="end_user_license_agreement_text">NO DEBE UTILIZARSE PARA TOMAR DECISIONES MÉDICAS. NO HAY NINGUNA GARANTÍA EN EL PROGRAMA, EN LA MEDIDA PERMITIDA POR LA LEY APLICABLE. EXCEPTO CUANDO SE INDIQUE LO CONTRARIO POR ESCRITO, LOS TITULARES DE LOS DERECHOS DE AUTOR Y/O OTRAS PARTES, PROPORCIONAN EL PROGRAMA \"TAL CUAL\", SIN GARANTÍA DE NINGÚN TIPO, YA SEA EXPRESA O IMPLÍCITA, INCLUIDAS, ENTRE OTRAS, LAS GARANTÍAS IMPLÍCITAS DE COMERCIABILIDAD Y ADECUACIÓN PARA UN PROPÓSITO EN PARTICULAR. TODO EL RIESGO EN CUANTO A LA CALIDAD Y EL RENDIMIENTO DEL PROGRAMA ES SUYA. SI EL PROGRAMA TUVIERA UN ERROR, USTED ASUME EL COSTE DE TODOS LOS SERVICIOS, REPARACIONES O CORRECCIONES NECESARIAS.</string>
     <string name="end_user_license_agreement_i_understand">LO ENTIENDO Y ACEPTO</string>
+    <string name="save">Guardar</string>
     <string name="reloadprofile">Recargar Perfil</string>
     <string name="smscommunicator">Comunicador SMS</string>
     <string name="smscommunicator_allowednumbers">Números de teléfono permitidos</string>
@@ -434,6 +434,8 @@
     <string name="ns_localbroadcasts_title">Habilitar la emisión de mensajes localmente.</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">ISF Dinámico</string>
+    <string name="DynISFAdjust_title">Factor de ajuste de ISF Dinámico %</string>
+    <string name="DynISFAdjust_summary">Porcentaje del factor de ajuste para ISF Dinámico. Establece valores por encima del 100%, para correcciones más agresivas y por debajo para correcciones menos agresivas</string>
     <string name="enableuam">Activar UAM</string>
     <string name="enablesmb">Activar SMB</string>
     <string name="enablesmb_summary">Usar microbolos en lugar de basales temporales, para corregir más rápidamente</string>
@@ -771,7 +773,6 @@
     <string name="invalidage">Entrada de edad no válida</string>
     <string name="invalidweight">Peso no válido</string>
     <string name="invalidpct">Entrada % inválida</string>
-    <string name="tirformat"><![CDATA[<b>%1$s:</b> Low: <b>%2$02d%%</b> In: <b>%3$02d%%</b> High: <b>%4$02d%%</b>]]></string>
     <string name="average">Promedio</string>
     <string name="tir">Tiempo en rango</string>
     <string name="activitymonitor">Monitor de actividad</string>
@@ -944,6 +945,12 @@
     <string name="a11y_clone_profile">clonar el perfil actual</string>
     <string name="a11y_delete_current_profile">borrar el perfil actual</string>
     <string name="a11y_add_new_to_list">añadir nuevo a la lista</string>
+    <!-- Theme switcher dark and light mode-->
+    <string name="theme_switcher_summary">Elegir tema oscuro, claro o seguir con el predeterminado del sistema</string>
+    <string name="app_color_scheme">Esquema de color de aplicación</string>
+    <string name="dark_theme">Tema oscuro</string>
+    <string name="light_theme">Tema claro</string>
+    <string name="follow_system_theme">Usar tema del dispositivo</string>
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">Objetivo Temporal preestablecido desconocido: %1$s</string>
     <string name="wear_action_tempt_cancel_message">¿Cancelar la ejecución del objetivo temporal?</string>
@@ -990,5 +997,8 @@
     <string name="show_loop">Mostrar lazo</string>
     <string name="count_selected">%1$d selecionado</string>
     <string name="sort_label">Ordenar</string>
-    <string name="dialog_cancled">Diálogo cancelado</string>
+    <string name="dialog_canceled">Diálogo cancelado</string>
+    <string name="below" comment="below &quot;in range&quot;">Bajo</string>
+    <string name="in_range">En rango</string>
+    <string name="above" comment="above &quot;in range&quot;">Alto</string>
 </resources>
