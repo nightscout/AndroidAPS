@@ -90,17 +90,12 @@ class AutotuneIob(
         tempBasals = ArrayList<TemporaryBasal>()
         initializeBgreadings(from, to)
         initializeTreatmentData(from - range(), to)
-        log("Meals size: ${meals.size}, Boluses size: ${boluses.size}")
         initializeTempBasalData(from - range(), to, tunedProfile)
-        log("TBR size: ${tempBasals.size}")
         initializeExtendedBolusData(from - range(), to, tunedProfile)
-        log("With Extended Bolus TBR size: ${tempBasals.size}, Boluses size: ${boluses.size}")
         Collections.sort(tempBasals) { o1: TemporaryBasal, o2: TemporaryBasal -> (o2.timestamp - o1.timestamp).toInt() }
         // Without Neutral TBR, Autotune Web will ignore iob for periods without TBR running
         addNeutralTempBasal(from - range(), to, tunedProfile)
-        log("With Neutral TBR size: ${tempBasals.size}")
         Collections.sort(nsTreatments) { o1: NsTreatment, o2: NsTreatment -> (o2.date - o1.date).toInt() }
-        log("nsTreatment size: ${nsTreatments.size}")
         Collections.sort(boluses) { o1: Bolus, o2: Bolus -> (o2.timestamp - o1.timestamp).toInt() }
         log.debug("D/AutotunePlugin: Nb Treatments: " + nsTreatments.size + " Nb meals: " + meals.size)
     }
@@ -290,11 +285,7 @@ class AutotuneIob(
     fun nsHistorytoJSON(): String {
         val json = JSONArray()
         for (t in nsTreatments) {
-            if (t.isValid) {
-                log("add ${t.eventType?.text}")
-                json.put(t.toJson())
-                log("json entry added")
-            }
+            if (t.isValid) json.put(t.toJson())
         }
         return json.toString(2).replace("\\/", "/")
     }
