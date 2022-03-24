@@ -5,7 +5,6 @@ import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.data.LocalInsulin
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.data.PureProfile
-import info.nightscout.androidaps.database.data.Block
 import info.nightscout.androidaps.extensions.blockValueBySeconds
 import info.nightscout.androidaps.extensions.pureProfileFromJson
 import info.nightscout.androidaps.interfaces.*
@@ -97,7 +96,7 @@ class ATProfile(profile: Profile?, var localInsulin: LocalInsulin, val injector:
                 basals.put(JSONObject().put("start", time).put("minutes", h * basalIncrement).put("rate", profile.getBasalTimeFromMidnight(secondfrommidnight)))
             }
             json.put("basalprofile", basals)
-            val isfvalue = Profile.fromMgdlToUnits(avgISF, profile.units)
+            val isfvalue = Round.roundTo(avgISF, 0.001)
             json.put(
                 "isfProfile",
                 JSONObject().put(
@@ -109,7 +108,7 @@ class ATProfile(profile: Profile?, var localInsulin: LocalInsulin, val injector:
             json.put("carb_ratio", avgIC)
             json.put("autosens_max", SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_autosens_max, "1.2")))
             json.put("autosens_min", SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_autosens_min, "0.7")))
-            json.put("units", profileFunction.getUnits().asText)
+            json.put("units", GlucoseUnit.MGDL.asText)
             json.put("timezone", TimeZone.getDefault().id)
             jsonString = json.toString(2).replace("\\/", "/")
         } catch (e: JSONException) {}
