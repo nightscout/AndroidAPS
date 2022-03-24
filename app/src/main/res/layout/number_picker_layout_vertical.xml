@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:background="@color/transparent"
-        android:src="@drawable/ic_minus" />
+        android:src="@drawable/ic_plus" />
 
     <EditText
         android:id="@+id/display"
@@ -29,6 +29,6 @@
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:background="@color/transparent"
-        android:src="@drawable/ic_plus" />
+        android:src="@drawable/ic_minus" />
 
 </LinearLayout>
