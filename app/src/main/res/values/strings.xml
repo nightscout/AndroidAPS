@@ -1208,6 +1208,12 @@
     <string name="below" comment="below &quot;in range&quot;">Below</string>
     <string name="in_range">In range</string>
     <string name="above" comment="above &quot;in range&quot;">Above</string>
+    <string name="maintenance_export_email">The email address to use when emailing exported settings.</string>
+    <string name="key_maintenance_export_email">key_maintenance_export_email</string>
+    <string name="nav_export_and_email">Export and Email Settings</string>
+    <string name="nav_export_email">Email Exported Settings</string>
+    <string name="nav_export_email_description">Do you want to email the exported settings?</string>
+    <string name="maintenance_export_email_subject">AndroidAPS Preferences Backup</string>
     <string name="show_loop_records">Show loop records</string>
     <string name="show_hide_records">Hide loop records</string>
     <string name="widget_description">AndroidAPS widget</string>

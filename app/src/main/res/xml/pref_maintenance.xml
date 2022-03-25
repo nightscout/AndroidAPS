@@ -18,6 +18,15 @@
             validate:testType="email"/>
 
         <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+            android:defaultValue="update.export.email.address@settings.aaps"
+            android:dialogMessage="@string/maintenance_export_email"
+            android:inputType="textEmailAddress"
+            android:key="@string/key_maintenance_export_email"
+            android:selectAllOnFocus="true"
+            android:title="@string/maintenance_export_email"
+            validate:testType="email"/>
+
+        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
             android:defaultValue="2"
             android:inputType="number"
             android:key="@string/key_maintenance_logs_amount"
