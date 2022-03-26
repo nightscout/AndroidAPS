@@ -292,8 +292,10 @@ class AutomationPlugin @Inject constructor(
 
     @Synchronized
     fun removeAt(index: Int) {
-        automationEvents.removeAt(index)
-        rxBus.send(EventAutomationDataChanged())
+        if (index >= 0 && index < automationEvents.size) {
+            automationEvents.removeAt(index)
+            rxBus.send(EventAutomationDataChanged())
+        }
     }
 
     @Synchronized
