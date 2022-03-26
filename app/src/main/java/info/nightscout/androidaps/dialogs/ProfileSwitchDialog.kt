@@ -59,7 +59,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
     @Inject lateinit var protectionCheck: ProtectionCheck
 
     private var queryingProtection = false
-    private var profileIndex: Int? = null
+    private var profileName: String? = null
     private val disposable = CompositeDisposable()
     private var _binding: DialogProfileswitchBinding? = null
 
@@ -90,7 +90,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
     ): View {
         onCreateViewGeneral()
         arguments?.let { bundle ->
-            profileIndex = bundle.getInt("profileIndex", 0)
+            profileName = bundle.getString("profileName", null)
         }
         _binding = DialogProfileswitchBinding.inflate(inflater, container, false)
         return binding.root
@@ -130,8 +130,8 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
             }
             binding.profileList.setAdapter(ArrayAdapter(context, R.layout.spinner_centered, profileList))
             // set selected to actual profile
-            if (profileIndex != null)
-                binding.profileList.setText(profileList[profileIndex as Int], false)
+            if (profileName != null)
+                binding.profileList.setText(profileName, false)
             else {
                 binding.profileList.setText(profileList[0], false)
                 for (p in profileList.indices)

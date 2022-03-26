@@ -308,7 +308,7 @@ class LocalProfileFragment : DaggerFragment() {
 
         binding.profileswitch.setOnClickListener {
             ProfileSwitchDialog()
-                .also { it.arguments = Bundle().also { bundle -> bundle.putInt("profileIndex", localProfilePlugin.currentProfileIndex) } }
+                .also { it.arguments = Bundle().also { bundle -> bundle.putString("profileName", localProfilePlugin.currentProfile()?.name) } }
                 .show(childFragmentManager, "ProfileSwitchDialog")
         }
 
