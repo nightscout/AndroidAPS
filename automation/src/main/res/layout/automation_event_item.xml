@@ -30,7 +30,7 @@
         android:contentDescription="@string/system_automation"
         android:scaleX="0.9"
         android:scaleY="0.9"
-        android:src="@drawable/ic_notif_aaps"
+        android:src="@drawable/ic_aaps"
         app:layout_constraintBottom_toTopOf="@+id/iconLayout"
         app:layout_constraintEnd_toStartOf="@+id/eventTitle"
         app:layout_constraintStart_toEndOf="@+id/enabled"

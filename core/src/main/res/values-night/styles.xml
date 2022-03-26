@@ -8,7 +8,7 @@
         <item name="dialogTitleBackground">@color/dialog_title_background</item>
         <item name="dialogTitleColor">@color/dialog_title_color</item>
         <item name="dialogTitleIconTint">@color/dialog_title_icon_tint</item>
-        <!-- New MaterialComponents attributes. -->dialogTitleBackground
+        <!-- New MaterialComponents attributes. -->
         <item name="colorSecondary">@color/secondaryColorDefault</item>
         <item name="colorPrimaryVariant">@color/primaryLightColorDefault</item>
         <item name="colorSecondaryVariant">@color/secondaryLightColorDefault</item>
@@ -205,7 +205,7 @@
 
     <!-- Alert Dialogs -->
     <style name="DialogTheme" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
-        <item name="backgroundColor">@color/background_dark</item>
+        <item name="colorSurface">#212121</item> <!-- workaround; color compensated elevation -->
         <item name="buttonBarNegativeButtonStyle">@style/DialogOkCancelButtonStyle</item>
         <item name="buttonBarPositiveButtonStyle">@style/DialogOkCancelButtonStyle</item>
         <item name="buttonBarNeutralButtonStyle">@style/DialogOkCancelButtonStyle</item>
