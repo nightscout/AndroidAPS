@@ -8,7 +8,6 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.LocalInsulin
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.ValueWithUnit
-//import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.shared.logging.AAPSLogger
@@ -196,24 +195,28 @@ class AutotunePlugin @Inject constructor(
             profileSwitchButtonVisibility = View.VISIBLE
             copyButtonVisibility = View.VISIBLE
             if (autoSwitch) {
+                val circadian = sp.getBoolean(R.string.key_autotune_circadian_ic_isf, false)
                 profileSwitchButtonVisibility = View.GONE //hide profilSwitch button in fragment
                 val now = dateUtil.now()
-                if (profileFunction.createProfileSwitch(
-                        tunedProfile!!.profileStore!!,
-                        profileName = tunedProfile!!.profilename!!,
-                        durationInMinutes = 0,
-                        percentage = 100,
-                        timeShiftInHours = 0,
-                        timestamp = now
-                    )
-                ) {
-                    uel.log(
-                        UserEntry.Action.PROFILE_SWITCH,
-                        UserEntry.Sources.ProfileSwitchDialog,
-                        "Autotune AutoSwitch",
-                        ValueWithUnit.SimpleString(tunedProfile!!.profilename!!))
+                val profileStore = tunedProfile?.profileStore(circadian)
+                profileStore?.let {
+                    if (profileFunction.createProfileSwitch(
+                            it,
+                            profileName = tunedProfile!!.profilename!!,
+                            durationInMinutes = 0,
+                            percentage = 100,
+                            timeShiftInHours = 0,
+                            timestamp = now
+                        )
+                    ) {
+                        uel.log(
+                            UserEntry.Action.PROFILE_SWITCH,
+                            UserEntry.Sources.ProfileSwitchDialog,
+                            "Autotune AutoSwitch",
+                            ValueWithUnit.SimpleString(tunedProfile!!.profilename!!))
+                    }
+                    rxBus.send(EventLocalProfileChanged())
                 }
-                rxBus.send(EventLocalProfileChanged())
             }
             lastRunSuccess = true
             rxBus.send(EventAutotuneUpdateResult(result))

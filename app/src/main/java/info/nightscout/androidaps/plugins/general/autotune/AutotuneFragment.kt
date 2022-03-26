@@ -18,7 +18,6 @@ import info.nightscout.androidaps.plugins.general.autotune.events.EventAutotuneU
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
-import info.nightscout.androidaps.activities.TreatmentsActivity
 import info.nightscout.androidaps.data.LocalInsulin
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.ValueWithUnit
@@ -94,9 +93,10 @@ class AutotuneFragment : DaggerFragment() {
 
         binding.autotuneCopylocal.setOnClickListener {
             val localName = resourceHelper.gs(R.string.autotune_tunedprofile_name) + " " + dateUtil.dateAndTimeString(autotunePlugin.lastRun)
+            val circadian = sp.getBoolean(R.string.key_autotune_circadian_ic_isf, false)
             showConfirmation(requireContext(), resourceHelper.gs(R.string.autotune_copy_localprofile_button), resourceHelper.gs(R.string.autotune_copy_local_profile_message) + "\n" + localName + " " + dateUtil.dateAndTimeString(lastRun),
                 Runnable {
-                    localProfilePlugin.addProfile(localProfilePlugin.copyFrom(autotunePlugin.tunedProfile!!.getProfile(), localName))
+                    localProfilePlugin.addProfile(localProfilePlugin.copyFrom(autotunePlugin.tunedProfile!!.getProfile(circadian), localName))
                     rxBus.send(EventLocalProfileChanged())
                     autotunePlugin.copyButtonVisibility = View.GONE
                     updateGui()
@@ -105,13 +105,14 @@ class AutotuneFragment : DaggerFragment() {
 
         binding.autotuneCompare.setOnClickListener {
             val currentprofile = autotunePlugin.currentprofile
-            val tunedprofile = autotunePlugin.tunedProfile
+            val circadian = sp.getBoolean(R.string.key_autotune_circadian_ic_isf, false)
+            val tunedprofile = if (circadian) autotunePlugin.tunedProfile?.circadianProfile else autotunePlugin.tunedProfile?.profile
             ProfileViewerDialog().also { pvd ->
                 pvd.arguments = Bundle().also {
                     it.putLong("time", dateUtil.now())
                     it.putInt("mode", ProfileViewerDialog.Mode.PROFILE_COMPARE.ordinal)
                     it.putString("customProfile", currentprofile?.profile?.toPureNsJson(dateUtil).toString())
-                    it.putString("customProfile2", tunedprofile?.profile?.toPureNsJson(dateUtil).toString())
+                    it.putString("customProfile2", tunedprofile?.toPureNsJson(dateUtil).toString())
                     it.putString("customProfileUnits", profileFunction.getUnits().asText)
                     it.putString("customProfileName", currentprofile?.profilename + "\n" + autotunePlugin.tunedProfile?.profilename)
                 }
@@ -120,14 +121,15 @@ class AutotuneFragment : DaggerFragment() {
 
         binding.autotuneProfileswitch.setOnClickListener{
             val tunedProfile = autotunePlugin.tunedProfile
+            val circadian = sp.getBoolean(R.string.key_autotune_circadian_ic_isf, false)
             tunedProfile?.let { tunedP ->
-                val profileStore = tunedP.profileStore
+                val profileStore = tunedP.profileStore(circadian)
                 log("ProfileSwitch pressed")
-                if (profileStore != null) {
+                profileStore?.let {
                     showConfirmation(requireContext(), resourceHelper.gs(R.string.activate_profile) + ": " + tunedP.profilename + " ?", Runnable {
                         val now = dateUtil.now()
                         if (profileFunction.createProfileSwitch(
-                                profileStore,
+                                it,
                                 profileName = tunedP.profilename!!,
                                 durationInMinutes = 0,
                                 percentage = 100,
@@ -145,7 +147,8 @@ class AutotuneFragment : DaggerFragment() {
                         autotunePlugin.profileSwitchButtonVisibility = View.GONE
                         updateGui()
                     })
-                } else log("ProfileStore is null!")
+                }
+                    ?: log("ProfileStore is null!")
 
             }
 

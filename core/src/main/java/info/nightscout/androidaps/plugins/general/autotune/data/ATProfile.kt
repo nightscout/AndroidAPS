@@ -5,8 +5,12 @@ import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.data.LocalInsulin
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.data.PureProfile
+import info.nightscout.androidaps.database.data.Block
+import info.nightscout.androidaps.database.embedments.InsulinConfiguration
 import info.nightscout.androidaps.extensions.blockValueBySeconds
 import info.nightscout.androidaps.extensions.pureProfileFromJson
+import info.nightscout.androidaps.extensions.shiftBlock
+import info.nightscout.androidaps.extensions.shiftTargetBlock
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.DateUtil
@@ -18,12 +22,15 @@ import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
+import java.text.DecimalFormat
 import java.util.*
 import javax.inject.Inject
 
 class ATProfile(profile: Profile?, var localInsulin: LocalInsulin, val injector: HasAndroidInjector) {
 
     var profile: ProfileSealed
+    var circadianProfile: ProfileSealed
+    lateinit var pumpProfile: ProfileSealed
     var profilename: String? = profile?.profileName
     var basal = DoubleArray(24)
     var basalUntuned = IntArray(24)
@@ -42,12 +49,16 @@ class ATProfile(profile: Profile?, var localInsulin: LocalInsulin, val injector:
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var rh: ResourceHelper
 
-    fun getProfile(): PureProfile {
-        return profile.convertToNonCustomizedProfile(dateUtil)
+    fun getProfile(circadian: Boolean = false): PureProfile {
+        return if (circadian)
+            circadianProfile.convertToNonCustomizedProfile(dateUtil)
+        else
+            profile.convertToNonCustomizedProfile(dateUtil)
     }
 
     fun updateProfile() {
-        profile = ProfileSealed.Pure(data!!)
+        data()?.let { profile = ProfileSealed.Pure(it) }
+        data(true)?.let { circadianProfile = ProfileSealed.Pure(it) }
     }
 
     val icSize: Int
@@ -58,6 +69,8 @@ class ATProfile(profile: Profile?, var localInsulin: LocalInsulin, val injector:
         get() = if (profile.getIsfsMgdlValues().size == 1) profile.getIsfsMgdlValues().get(0).value else Round.roundTo(averageProfileValue(profile.getIsfsMgdlValues()), 0.01)
     val avgIC: Double
         get() = if (profile.getIcsValues().size == 1) profile.getIcsValues().get(0).value else Round.roundTo(averageProfileValue(profile.getIcsValues()), 0.01)
+    var pumpProfileAvgISF = 0.0
+    var pumpProfileAvgIC = 0.0
 
     //Export json string with oref0 format used for autotune
     fun profiletoOrefJSON(): String {
@@ -65,11 +78,7 @@ class ATProfile(profile: Profile?, var localInsulin: LocalInsulin, val injector:
         // Include min_5m_carbimpact, insulin type, single value for carb_ratio and isf
         var jsonString = ""
         val json = JSONObject()
-        //val json = profile.toPureNsJson(dateUtil)
-        //jsonString = json.toString(2).replace("\\/", "/")
-
-        val basalIncrement = 60
-        val insulinInterface: Insulin = activePlugin.activeInsulin
+       val insulinInterface: Insulin = activePlugin.activeInsulin
         try {
             json.put("name", profilename)
             json.put("min_5m_carbimpact", sp.getDouble("openapsama_min_5m_carbimpact", 3.0))
@@ -91,9 +100,15 @@ class ATProfile(profile: Profile?, var localInsulin: LocalInsulin, val injector:
             for (h in 0..23) {
                 val secondfrommidnight = h * 60 * 60
                 var time: String
-                time = (if (h < 10) "0$h" else h).toString() + ":00:00"
-                //basals.put(new JSONObject().put("start", time).put("minutes", h * basalIncrement).put("rate", getProfileBasal(h)));
-                basals.put(JSONObject().put("start", time).put("minutes", h * basalIncrement).put("rate", profile.getBasalTimeFromMidnight(secondfrommidnight)))
+                time = DecimalFormat("00").format(h) + ":00:00"
+                basals.put(
+                    JSONObject()
+                        .put("start", time)
+                        .put("minutes", h * 60)
+                        .put(
+                            "rate", profile.getBasalTimeFromMidnight(secondfrommidnight)
+                        )
+                )
             }
             json.put("basalprofile", basals)
             val isfvalue = Round.roundTo(avgISF, 0.001)
@@ -104,7 +119,6 @@ class ATProfile(profile: Profile?, var localInsulin: LocalInsulin, val injector:
                     JSONArray().put(JSONObject().put("i", 0).put("start", "00:00:00").put("sensitivity", isfvalue).put("offset", 0).put("x", 0).put("endoffset", 1440))
                 )
             )
-            // json.put("carbratio", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", previousResult.optDouble("carb_ratio", 0d))));
             json.put("carb_ratio", avgIC)
             json.put("autosens_max", SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_autosens_max, "1.2")))
             json.put("autosens_min", SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_autosens_min, "0.7")))
@@ -117,30 +131,66 @@ class ATProfile(profile: Profile?, var localInsulin: LocalInsulin, val injector:
     }
 
     //json profile
-    val data: PureProfile?
-        get() {
+    fun data(circadian: Boolean = false): PureProfile? {
         val json: JSONObject = profile.toPureNsJson(dateUtil)
         try {
             json.put("dia", dia)
-            json.put(
-                "sens", JSONArray().put(
-                    JSONObject().put("time", "00:00").put(
-                        "timeAsSeconds", 0
-                    ).put(
-                        "value", Profile.fromMgdlToUnits(
-                            isf,
-                            profile.units
+            if (circadian) {
+                val sens = JSONArray()
+                var elapsedHours = 0L
+                pumpProfile.isfBlocks.forEach {
+                    val isfValue = pumpProfile.isfBlocks.blockValueBySeconds(T.hours(elapsedHours).secs().toInt(), avgISF/pumpProfileAvgISF, 0)
+                    sens.put(JSONObject()
+                                 .put("time", DecimalFormat("00").format(elapsedHours) + ":00")
+                                 .put("timeAsSeconds", T.hours(elapsedHours).secs())
+                                 .put("value", Profile.fromMgdlToUnits(
+                                     isfValue,
+                                     profile.units
+                                 ))
+                    )
+                    elapsedHours += T.msecs(it.duration).hours()
+                }
+                json.put("sens", sens)
+                val carbratio = JSONArray()
+                elapsedHours = 0L
+                pumpProfile.icBlocks.forEach {
+                    val icValue = pumpProfile.icBlocks.blockValueBySeconds(T.hours(elapsedHours).secs().toInt(), avgIC/pumpProfileAvgIC, 0)
+                    carbratio.put(JSONObject()
+                                      .put("time", DecimalFormat("00").format(elapsedHours) + ":00")
+                                      .put("timeAsSeconds", T.hours(elapsedHours).secs())
+                                      .put("value", icValue)
+                    )
+                    elapsedHours += T.msecs(it.duration).hours()
+                }
+                json.put("carbratio", carbratio)
+            } else {
+                json.put(
+                    "sens", JSONArray().put(
+                        JSONObject().put("time", "00:00").put(
+                            "timeAsSeconds", 0
+                        ).put(
+                            "value", Profile.fromMgdlToUnits(
+                                isf,
+                                profile.units
+                            )
                         )
                     )
                 )
-            )
-            json.put("carbratio", JSONArray().put(JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", ic)))
+                json.put(
+                    "carbratio",
+                    JSONArray().put(
+                        JSONObject()
+                            .put("time", "00:00")
+                            .put("timeAsSeconds", 0)
+                            .put("value", ic)
+                    )
+                )
+            }
             val basals = JSONArray()
             for (h in 0..23) {
                 val secondfrommidnight = h * 60 * 60
                 var time: String
                 time = (if (h < 10) "0$h" else h).toString() + ":00"
-                //basals.put(new JSONObject().put("start", time).put("minutes", h * basalIncrement).put("rate", getProfileBasal(h)));
                 basals.put(JSONObject().put("time", time).put("timeAsSeconds", secondfrommidnight).put("value", basal[h]))
             }
             json.put("basal", basals)
@@ -149,15 +199,16 @@ class ATProfile(profile: Profile?, var localInsulin: LocalInsulin, val injector:
         return pureProfileFromJson(json, dateUtil, profile.units.asText)
     }
 
-    fun getBasal(timestamp: Long):Double = basal[(Profile.secondsFromMidnight(timestamp)/T.hours(1).secs()).toInt()]
+    fun getBasal(timestamp: Long): Double = basal[(Profile.secondsFromMidnight(timestamp) / T.hours(1).secs()).toInt()]
 
-    val profileStore: ProfileStore?
-        get() {
+    fun profileStore(circadian: Boolean = false): ProfileStore?
+        {
             var profileStore: ProfileStore? = null
             val json = JSONObject()
             val store = JSONObject()
+            val tunedProfile = if (circadian) circadianProfile else profile
             try {
-                store.put(rh.gs(R.string.autotune_tunedprofile_name), profile.toPureNsJson(dateUtil))
+                store.put(rh.gs(R.string.autotune_tunedprofile_name), tunedProfile.toPureNsJson(dateUtil))
                 json.put("defaultProfile", rh.gs(R.string.autotune_tunedprofile_name))
                 json.put("store", store)
                 json.put("startDate", dateUtil.toISOAsUTC(dateUtil.now()))
@@ -181,17 +232,23 @@ class ATProfile(profile: Profile?, var localInsulin: LocalInsulin, val injector:
         }
     }
 
-   init {
+    init {
         injector.androidInjector().inject(this)
         this.profile = profile as ProfileSealed
+        circadianProfile = profile
         isValid = profile.isValid
         if (isValid) {
             //initialize tuned value with current profile values
-            for(h in 0..23) { basal[h] = Round.roundTo(profile.basalBlocks.blockValueBySeconds(T.hours(h.toLong()).secs().toInt(), 1.0, 0), 0.001) }
+            for (h in 0..23) {
+                basal[h] = Round.roundTo(profile.basalBlocks.blockValueBySeconds(T.hours(h.toLong()).secs().toInt(), 1.0, 0), 0.001)
+            }
             ic = avgIC
             isf = avgISF
+            pumpProfile = profile
+            pumpProfileAvgIC = avgIC
+            pumpProfileAvgISF = avgISF
         }
-       dia = localInsulin.dia
-       peak = localInsulin.peak
+        dia = localInsulin.dia
+        peak = localInsulin.peak
     }
 }

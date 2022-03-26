@@ -25,5 +25,11 @@
             android:summary="@string/autotune_default_tune_days_summary"
             android:title="@string/autotune_default_tune_days_title" />
 
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_autotune_circadian_ic_isf"
+            android:summary="@string/autotune_circadian_ic_isf_summary"
+            android:title="@string/autotune_circadian_ic_isf_title" />
+
     </PreferenceCategory>
 </androidx.preference.PreferenceScreen>
