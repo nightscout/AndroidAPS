@@ -272,7 +272,7 @@ class AutotuneIob(
             if (t.timestamp > time || t.timestamp < time - localInsulin.duration) continue
             val tIOB = t.iobCalc(time, localInsulin)
             if (detailedLog)
-                log("iobCalc;${t.interfaceIDs.nightscoutId};$time;${t.timestamp};${tIOB.iobContrib};${tIOB.activityContrib};${dateUtil.dateString(time)};${dateUtil.dateString(t.timestamp)}")
+                log("iobCalc;${t.interfaceIDs.nightscoutId};$time;${t.timestamp};${tIOB.iobContrib};${tIOB.activityContrib};${dateUtil.dateAndTimeAndSecondsString(time)};${dateUtil.dateAndTimeAndSecondsString(t.timestamp)}")
             total.iob += tIOB.iobContrib
             total.activity += tIOB.activityContrib
         }
