@@ -37,11 +37,6 @@ import org.slf4j.LoggerFactory
 import java.util.*
 import javax.inject.Inject
 
-/**
- * initialised by Rumen Georgiev on 1/29/2018.
- * Deep rework by philoul on 06/2020
- */
-// Todo: Reset results field and Switch/Copy button visibility when Nb of selected days is changed
 class AutotuneFragment : DaggerFragment() {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var autotunePlugin: Autotune
