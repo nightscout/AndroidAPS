@@ -212,7 +212,6 @@
 
     <!-- Alert Dialogs -->
     <style name="DialogTheme" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
-        <item name="backgroundColor">@color/dialog_title_background</item>
         <item name="buttonBarNegativeButtonStyle">@style/DialogOkCancelButtonStyle</item>
         <item name="buttonBarPositiveButtonStyle">@style/DialogOkCancelButtonStyle</item>
         <item name="dialogTitleBackground">@color/dialog_title_background</item>
