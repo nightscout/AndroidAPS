@@ -12,7 +12,6 @@ import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONException
 import java.io.*
 import java.text.SimpleDateFormat
-import java.util.*
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 import javax.inject.Inject
@@ -31,6 +30,7 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
     val RECOMMENDATIONS = "autotune_recommendations.log"
     val ENTRIESPREF = "aaps-entries."
     val TREATMENTSPREF = "aaps-treatments."
+    val AAPSBOLUSESPREF = "aaps-boluses."
     val PREPPEDPREF = "aaps-autotune."
     val SETTINGS = "settings.json"
     val PROFIL = "profil"
@@ -94,14 +94,15 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
 
     fun exportEntries(autotuneIob: AutotuneIob) {
         try {
-            createAutotunefile(ENTRIESPREF + formatDate(autotuneIob.startBG) + ".json", autotuneIob.glucosetoJSON())
+            createAutotunefile(ENTRIESPREF + formatDate(autotuneIob.startBG) + ".json", autotuneIob.glucoseToJSON())
         } catch (e: JSONException) {
         }
     }
 
     fun exportTreatments(autotuneIob: AutotuneIob) {
         try {
-            createAutotunefile(TREATMENTSPREF + formatDate(autotuneIob.startBG) + ".json", autotuneIob.nsHistorytoJSON())
+            createAutotunefile(TREATMENTSPREF + formatDate(autotuneIob.startBG) + ".json", autotuneIob.nsHistoryToJSON())
+            createAutotunefile(AAPSBOLUSESPREF + formatDate(autotuneIob.startBG) + ".json", autotuneIob.bolusesToJSON())
         } catch (e: JSONException) {
         }
     }

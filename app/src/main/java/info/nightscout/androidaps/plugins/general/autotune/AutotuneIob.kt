@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.general.autotune
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
+import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.*
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.interfaces.ActivePlugin
@@ -264,25 +265,35 @@ class AutotuneIob(
 
     fun getCalculationToTimeTreatments(time: Long, localInsulin: LocalInsulin): IobTotal {
         val total = IobTotal(time)
+        val detailedLog = sp.getBoolean(R.string.key_autotune_additional_log, false)
         for (pos in boluses.indices) {
             val t = boluses[pos]
             if (!t.isValid) continue
             if (t.timestamp > time || t.timestamp < time - localInsulin.duration) continue
             val tIOB = t.iobCalc(time, localInsulin)
+            if (detailedLog)
+                log("iobCalc;${t.interfaceIDs.nightscoutId};$time;${t.timestamp};${tIOB.iobContrib};${tIOB.activityContrib};${dateUtil.dateString(time)};${dateUtil.dateString(t.timestamp)}")
             total.iob += tIOB.iobContrib
             total.activity += tIOB.activityContrib
         }
         return total
     }
 
-    fun glucosetoJSON(): String {
+    fun glucoseToJSON(): String {
         val glucoseJson = JSONArray()
         for (bgreading in glucose)
             glucoseJson.put(bgreading.toJson(true, dateUtil))
         return glucoseJson.toString(2)
     }
 
-    fun nsHistorytoJSON(): String {
+    fun bolusesToJSON(): String {
+        val bolusesJson = JSONArray()
+        for (bolus in boluses)
+            bolusesJson.put(bolus.toJson(true, dateUtil))
+        return bolusesJson.toString(2)
+    }
+
+    fun nsHistoryToJSON(): String {
         val json = JSONArray()
         for (t in nsTreatments) {
             json.put(t.toJson())

@@ -191,7 +191,9 @@ fun TemporaryBasal.convertToBoluses(profile: Profile, tunedProfile: ATProfile): 
         val tempBolusSpacing = realDuration * 60 * 1000 / tempBolusCount
         for (j in 0L until tempBolusCount) {
             val calcDate = timestamp + j * tempBolusSpacing
+            val bolusInterfaceIDs = InterfaceIDs().also { it.nightscoutId = interfaceIDs.nightscoutId + "_tbr_$j" }
             val tempBolusPart = Bolus(
+                interfaceIDs_backing = bolusInterfaceIDs,
                 timestamp = calcDate,
                 amount = tempBolusSize,
                 type = Bolus.Type.NORMAL

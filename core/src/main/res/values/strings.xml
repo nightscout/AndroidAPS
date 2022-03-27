@@ -569,12 +569,15 @@
     <string name="key_autotune_categorize_uam_as_basal" translatable="false">categorize_uam_as_basal</string>
     <string name="key_autotune_default_tune_days" translatable="false">autotune_default_tune_days</string>
     <string name="key_autotune_circadian_ic_isf" translatable="false">autotune_circadian_ic_isf</string>
+    <string name="key_autotune_additional_log" translatable="false">autotune_additional_log</string>
     <string name="key_autotune_auto" translatable="false">autotune_auto</string>
     <string name="key_autotune_plugin" translatable="false">key_autotune_plugin</string>
     <string name="autotune_categorize_uam_as_basal_title">Categorize UAM as basal</string>
     <string name="autotune_categorize_uam_as_basal_summary">Enable only if you have reliably entered all carbs eaten, with this option sudden rises seen by Autotune will be used to recommend changes to the basal rate.</string>
     <string name="autotune_circadian_ic_isf_title">Apply average result in circadian IC/ISF</string>
     <string name="autotune_circadian_ic_isf_summary">Autotune will not tune circadian variations, this option only apply the average tuning of IC and ISF to your circadian input profile</string>
+    <string name="autotune_additional_log_title">Include more log information for debugging</string>
+    <string name="autotune_additional_log_summary">Switch on if requested by dev to send more log information to help debugging autotune plugin</string>
     <string name="autotune_default_tune_days_title">Number of days of data</string>
     <string name="autotune_default_tune_days_summary">Default number of days of data to be processed by Autotune (up to xx)</string>
     <string name="autotune_tunedprofile_name">Tuned</string>

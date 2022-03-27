@@ -204,7 +204,9 @@ fun ExtendedBolus.convertToBoluses(): MutableList<Bolus> {
         val tempBolusSpacing = duration / tempBolusCount
         for (j in 0L until tempBolusCount) {
             val calcDate = timestamp + j * tempBolusSpacing
+            val bolusInterfaceIDs = InterfaceIDs().also { it.nightscoutId = interfaceIDs.nightscoutId + "_eb_$j" }
             val tempBolusPart = Bolus(
+                interfaceIDs_backing = bolusInterfaceIDs,
                 timestamp = calcDate,
                 amount = tempBolusSize,
                 type = Bolus.Type.NORMAL
