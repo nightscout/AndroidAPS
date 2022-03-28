@@ -103,7 +103,6 @@
     <string name="overview_calculator_label">Calculadora</string>
     <string name="constraintapllied">Restrição aplicada!</string>
     <string name="sms_bolus">Bolus:</string>
-    <string name="basal">Basal</string>
     <string name="sms_basal">Basal:</string>
     <string name="changeyourinput">Altere sua entrada!</string>
     <string name="configbuilder_bgsource">Fonte de BG</string>
@@ -720,7 +719,6 @@
     <string name="invalidage">Entrada de idade inválida</string>
     <string name="invalidweight">Entrada de peso inválida</string>
     <string name="invalidpct">Entrada % inválida</string>
-    <string name="tirformat"><![CDATA[<b>%1$s:</b> Hipo: <b>%2$02d%%</b> Dentro: <b>%3$02d%%</b> Hiper: <b>%4$02d%%</b>]]></string>
     <string name="average">Média</string>
     <string name="tir">TIR</string>
     <string name="activitymonitor">Monitor de atividade</string>
@@ -842,6 +840,7 @@
     <string name="a11y_clone_profile">clonar perfil atual</string>
     <string name="a11y_delete_current_profile">excluir perfil atual</string>
     <string name="a11y_add_new_to_list">adicionar novo à lista</string>
+    <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">Alvo temporário pré-definido desconhecido: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Cancelando Alvos temporários em execução?</string>

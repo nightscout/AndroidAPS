@@ -103,7 +103,6 @@
     <string name="overview_calculator_label">计算器</string>
     <string name="constraintapllied">应用约束!</string>
     <string name="sms_bolus">大剂量:</string>
-    <string name="basal">基础率</string>
     <string name="sms_basal">基础率:</string>
     <string name="changeyourinput">更改您的输入!</string>
     <string name="configbuilder_bgsource">血糖来源</string>
@@ -162,6 +161,7 @@
     <string name="end_user_license_agreement">最终用户许可协议</string>
     <string name="end_user_license_agreement_text">不得用于制定医疗决定。在适用法律允许的范围内，对该程序不作任何保证。除非另有书面授权的版权所有者和/或其他方均按原样提供程序，不附带明示或暗示的任何形式的担保，包括但不限于对适销性和适用于特定用途的默示担保。对您的程序的质量和性能的完整风险。如果程序存在缺陷，您应承担所有必要维修，修理或更正的代价.</string>
     <string name="end_user_license_agreement_i_understand">我理解并同意</string>
+    <string name="save">保存</string>
     <string name="reloadprofile">重新加载配置文件</string>
     <string name="smscommunicator">SMS短信通讯器</string>
     <string name="smscommunicator_allowednumbers">允许的手机号码</string>
@@ -434,6 +434,8 @@
     <string name="ns_localbroadcasts_title">启用本地广播。</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">动态ISF(胰岛素敏感系数)</string>
+    <string name="DynISFAdjust_title">动态ISF 调整因数 %</string>
+    <string name="DynISFAdjust_summary">动态ISF的调整因子。设置100%以上用于更积极的校正，100%以下则不那么积极校正。</string>
     <string name="enableuam">启用 UAM</string>
     <string name="enablesmb">启用微型大剂量</string>
     <string name="enablesmb_summary">使用微型大剂量代替使用临时基础率，更快的干预</string>
@@ -771,7 +773,6 @@
     <string name="invalidage">输入的年龄无效</string>
     <string name="invalidweight">输入的权重无效</string>
     <string name="invalidpct">输入的百分比无效</string>
-    <string name="tirformat"><![CDATA[<b>%1$s:</b> 低: <b>%2$02d%%</b> 中: <b>%3$02d%%</b> 高: <b>%4$02d%%</b>]]></string>
     <string name="average">平均</string>
     <string name="tir">TIR</string>
     <string name="activitymonitor">活动监视器</string>
@@ -944,6 +945,12 @@
     <string name="a11y_clone_profile">克隆当前配置文件</string>
     <string name="a11y_delete_current_profile">删除当前配置文件</string>
     <string name="a11y_add_new_to_list">新增条目到列表</string>
+    <!-- Theme switcher dark and light mode-->
+    <string name="theme_switcher_summary">选择暗色，亮色，或跟随系统主题</string>
+    <string name="app_color_scheme">App颜色主题</string>
+    <string name="dark_theme">暗色主题</string>
+    <string name="light_theme">亮色主题</string>
+    <string name="follow_system_theme">跟随系统主题</string>
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">未预设的临时目标： %1$s</string>
     <string name="wear_action_tempt_cancel_message">取消正在运行的临时目标？</string>
@@ -990,5 +997,7 @@
     <string name="show_loop">显示闭环</string>
     <string name="count_selected">已选中 %1$d</string>
     <string name="sort_label">排序</string>
-    <string name="dialog_cancled">对话框已取消</string>
+    <string name="below" comment="below &quot;in range&quot;">底部</string>
+    <string name="in_range">在范围内</string>
+    <string name="above" comment="above &quot;in range&quot;">上方</string>
 </resources>

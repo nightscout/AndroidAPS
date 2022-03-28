@@ -102,7 +102,6 @@
     <string name="overview_calculator_label">Skaičiuotuvas</string>
     <string name="constraintapllied">Taikomas ribojimas!</string>
     <string name="sms_bolus">Bolusas:</string>
-    <string name="basal">Valandinė bazė</string>
     <string name="sms_basal">Valandinė bazė:</string>
     <string name="changeyourinput">Pakeiskite įvestus duomenis!</string>
     <string name="configbuilder_bgsource">Glikemijos šaltinis</string>
@@ -760,7 +759,6 @@
     <string name="invalidage">Neteisingas amžiaus įrašas</string>
     <string name="invalidweight">Neteisingas svorio įrašas</string>
     <string name="invalidpct">Netinkamas % įrašas</string>
-    <string name="tirformat"><![CDATA[<b>%1$s:</b> Žemas: <b>%2$02d%%</b> Norma: <b>%3$02d%%</b> Aukštas: <b>%4$02d%%</b>]]></string>
     <string name="average">Vidutinis</string>
     <string name="tir">TIR (Laikas normos ribose)</string>
     <string name="activitymonitor">Aktyvumo stebėjimas</string>
@@ -898,5 +896,6 @@
     <string name="identification">Identifikacija (el. paštas, FB, Discord slapyvardis ar kt.)</string>
     <string name="identification_not_set">Kūrėjo režime tapatybė nenustatyta</string>
     <string name="not_available_full">Negalimas</string>
+    <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
 </resources>

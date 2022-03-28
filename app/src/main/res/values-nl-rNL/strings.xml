@@ -103,7 +103,6 @@
     <string name="overview_calculator_label">Bolus wizard</string>
     <string name="constraintapllied">Beperking toegepast!</string>
     <string name="sms_bolus">Bolus:</string>
-    <string name="basal">Basaal</string>
     <string name="sms_basal">Basaal:</string>
     <string name="changeyourinput">Wijzig het ingegevene!</string>
     <string name="configbuilder_bgsource">BG bron</string>
@@ -162,6 +161,7 @@
     <string name="end_user_license_agreement">Eind gebruiker overeenkomst</string>
     <string name="end_user_license_agreement_text">MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
     <string name="end_user_license_agreement_i_understand">Begrepen en goedgekeurd</string>
+    <string name="save">Opslaan</string>
     <string name="reloadprofile">Herlaad profiel</string>
     <string name="smscommunicator">SMS Commando\'s</string>
     <string name="smscommunicator_allowednumbers">Geautoriseerde telefoon nummers</string>
@@ -434,6 +434,8 @@
     <string name="ns_localbroadcasts_title">Activeer locaal delen.</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dynamische ISF</string>
+    <string name="DynISFAdjust_title">Dynamische ISF aanpassingsfactor %</string>
+    <string name="DynISFAdjust_summary">Aanpassingsfactor voor DynamicISF. Stel meer dan 100% in voor agressievere correctie doses en minder dan 100% voor minder agressieve correcties.</string>
     <string name="enableuam">Activeer UAM</string>
     <string name="enablesmb">Activeer SMB</string>
     <string name="enablesmb_summary">SMB in plaats van tijdelijke basalen voor snellere reactie</string>
@@ -666,6 +668,7 @@
     <string name="show_invalidated">Toon ongeldig</string>
     <string name="hide_invalidated">Verberg ongeldig</string>
     <string name="remove_items">Items verwijderen</string>
+    <string name="sort_items">Sorteer items</string>
     <string name="storedsettingsfound">Opgeslagen instellingen gevonden</string>
     <string name="allow_hardware_pump_text">Let op: als u activeert en verbinding maakt met een hardwarepomp, kopieert AndroidAPS de basale instellingen van het profiel naar de pomp en overschrijft de bestaande basaal snelheid die op de pomp is opgeslagen. Zorg ervoor dat u de juiste basaal instelling hebt in AndroidAPS. Als u niet zeker weet of niet wilt dat de basaal instellingen op uw pomp worden overschreven, drukt u op Annuleren en herhaalt u het overschakelen naar de pomp op een later tijdstip.</string>
     <string name="error_adding_treatment_title">Behandelingen data incompleet</string>
@@ -770,7 +773,6 @@
     <string name="invalidage">Ongeldige leeftijd invoer</string>
     <string name="invalidweight">Ongeldige gewicht invoer</string>
     <string name="invalidpct">Ongeldig % invoer</string>
-    <string name="tirformat"><![CDATA[<b>%1$s:</b> Laag: <b>%2$02d%%</b> In: <b>%3$02d%%</b> Hoog: <b>%4$02d%%</b>]]></string>
     <string name="average">Gemiddelde</string>
     <string name="tir">TIR</string>
     <string name="activitymonitor">Activiteitsmonitor</string>
@@ -906,6 +908,7 @@
     <string name="errors">Foutmeldingen</string>
     <string name="ns_sync_slow">Vertraag uploads</string>
     <string name="data_status">BG data status</string>
+    <string name="remove_bg_readings">Verwijder BG metingen</string>
     <string name="statuslights_cannula_age">canule leeftijd</string>
     <string name="statuslights_patch_pump_age">patchpomp leeftijd</string>
     <string name="patch_pump">Patchpomp</string>
@@ -942,6 +945,12 @@
     <string name="a11y_clone_profile">huidig profiel dupliceren</string>
     <string name="a11y_delete_current_profile">huidig profiel verwijderen</string>
     <string name="a11y_add_new_to_list">nieuwe toevoegen aan lijst</string>
+    <!-- Theme switcher dark and light mode-->
+    <string name="theme_switcher_summary">Kies donker, licht of volg het systeemthema</string>
+    <string name="app_color_scheme">Kleurenschema</string>
+    <string name="dark_theme">Donker thema</string>
+    <string name="light_theme">Licht thema</string>
+    <string name="follow_system_theme">Gebruik apparaat thema</string>
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">Tijdelijke doel onbekende preset: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Huidige tijdelijk streefdoel annuleren?</string>
@@ -987,4 +996,8 @@
     <string name="hide_loop">Verberg loop</string>
     <string name="show_loop">Toon loop</string>
     <string name="count_selected">%1$d geselecteerd</string>
+    <string name="sort_label">Sorteren</string>
+    <string name="below" comment="below &quot;in range&quot;">Onder</string>
+    <string name="in_range">Binnen bereik</string>
+    <string name="above" comment="above &quot;in range&quot;">Boven</string>
 </resources>

@@ -186,10 +186,6 @@
     <string name="zerovalueinprofile">Chybný profil: %1$s</string>
     <!--    Temptarget-->
     <string name="mins">%1$d min</string>
-    <!--    TDD-->
-    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f U</b> Bol: <b>%3$.2f U</b> Baz: <b>%4$.2f U(%5$.0f%%)</b>]]></string>
-    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f U</b> Bol: <b>%3$.2f U</b> Baz: <b>%4$.2f U(%5$.0f%%)</b> Sach.: <b>%6$.0f g</b>]]></string>
-    <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> ve <b>%3$d</b> dnech<br>]]></string>
     <!--    Translator-->
     <string name="careportal">Péče</string>
     <string name="careportal_bgcheck">Kontrola glykémie</string>
@@ -461,6 +457,9 @@
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight Tlačítko Obnovit</string>
     <string name="a11y_min_button_description">snížení %1$s o %2$s</string>
     <string name="a11y_plus_button_description">zvýšení %1$s o %2$s</string>
+    <string name="formatPercent">%1$.0f%%</string>
+    <string name="basal">Bazál</string>
+    <string name="basalpct">Bazál %</string>
     <plurals name="days">
         <item quantity="one">%1$d den</item>
         <item quantity="few">%1$d dnů</item>

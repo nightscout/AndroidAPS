@@ -63,8 +63,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.PreferencesActivity"
-            android:theme="@style/AppTheme" />
+        <activity android:name=".activities.PreferencesActivity" />
         <activity android:name=".plugins.general.overview.activities.QuickWizardListActivity"
             android:theme="@style/AppTheme"
             android:exported="false">

@@ -102,7 +102,6 @@
     <string name="overview_calculator_label">Calculator</string>
     <string name="constraintapllied">Limitare aplicată!</string>
     <string name="sms_bolus">Bolus:</string>
-    <string name="basal">Rate bazale</string>
     <string name="sms_basal">Bazală:</string>
     <string name="changeyourinput">Schimbați ceea ce ați introdus!</string>
     <string name="configbuilder_bgsource">Sursă glicemie</string>
@@ -760,7 +759,6 @@
     <string name="invalidage">Valoare vârstă invalidă</string>
     <string name="invalidweight">Valoare greutate invalidă</string>
     <string name="invalidpct">Intrare % invalidă</string>
-    <string name="tirformat"><![CDATA[<b>%1$s:</b> Hipo: <b>%2$02d%%</b> Normal: <b>%3$02d%%</b> Hiper: <b>%4$02d%%</b>]]></string>
     <string name="average">Medie</string>
     <string name="tir">Timp în țintă</string>
     <string name="activitymonitor">Monitorizare activitate</string>
@@ -899,5 +897,6 @@
     <string name="identification">Identificare (email, FB sau Discord etc)</string>
     <string name="identification_not_set">Identificarea nu este setată în modul dezvoltator</string>
     <string name="not_available_full">Nu este disponibil</string>
+    <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
 </resources>

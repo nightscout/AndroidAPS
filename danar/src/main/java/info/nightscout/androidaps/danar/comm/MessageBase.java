@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.os.Build;
 
 import org.joda.time.DateTime;
+import org.joda.time.IllegalInstantException;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -144,8 +145,7 @@ public class MessageBase {
     }
 
     public int getCommand() {
-        int command = byteFromRawBuff(buffer, 5) | (byteFromRawBuff(buffer, 4) << 8);
-        return command;
+        return byteFromRawBuff(buffer, 5) | (byteFromRawBuff(buffer, 4) << 8);
     }
 
     public int byteFromRawBuff(byte[] buff, int offset) {
@@ -180,15 +180,29 @@ public class MessageBase {
     }
 
     public synchronized long dateTimeSecFromBuff(byte[] buff, int offset) {
-        return
-                new DateTime(
-                        2000 + intFromBuff(buff, offset, 1),
-                        intFromBuff(buff, offset + 1, 1),
-                        intFromBuff(buff, offset + 2, 1),
-                        intFromBuff(buff, offset + 3, 1),
-                        intFromBuff(buff, offset + 4, 1),
-                        intFromBuff(buff, offset + 5, 1)
-                ).getMillis();
+
+        try {
+            return new DateTime(
+                    2000 + intFromBuff(buff, offset, 1),
+                    intFromBuff(buff, offset + 1, 1),
+                    intFromBuff(buff, offset + 2, 1),
+                    intFromBuff(buff, offset + 3, 1),
+                    intFromBuff(buff, offset + 4, 1),
+                    intFromBuff(buff, offset + 5, 1)
+            ).getMillis();
+        } catch (IllegalInstantException e) {
+            // expect
+            // org.joda.time.IllegalInstantException: Illegal instant due to time zone offset transition (daylight savings time 'gap')
+            // add 1 hour
+            return new DateTime(
+                    2000 + intFromBuff(buff, offset, 1),
+                    intFromBuff(buff, offset + 1, 1),
+                    intFromBuff(buff, offset + 2, 1),
+                    intFromBuff(buff, offset + 3, 1) + 1,
+                    intFromBuff(buff, offset + 4, 1),
+                    intFromBuff(buff, offset + 5, 1)
+            ).getMillis();
+        }
     }
 
     public long dateFromBuff(byte[] buff, int offset) {
@@ -204,18 +218,18 @@ public class MessageBase {
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public static String stringFromBuff(byte[] buff, int offset, int length) {
-        byte[] strbuff = new byte[length];
-        System.arraycopy(buff, offset + 6, strbuff, 0, length);
-        return new String(strbuff, StandardCharsets.UTF_8);
+        byte[] strBuff = new byte[length];
+        System.arraycopy(buff, offset + 6, strBuff, 0, length);
+        return new String(strBuff, StandardCharsets.UTF_8);
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public static String asciiStringFromBuff(byte[] buff, int offset, int length) {
-        byte[] strbuff = new byte[length];
-        System.arraycopy(buff, offset + 6, strbuff, 0, length);
+        byte[] strBuff = new byte[length];
+        System.arraycopy(buff, offset + 6, strBuff, 0, length);
         for (int pos = 0; pos < length; pos++)
-            strbuff[pos] += 65; // "A"
-        return new String(strbuff, StandardCharsets.UTF_8);
+            strBuff[pos] += 65; // "A"
+        return new String(strBuff, StandardCharsets.UTF_8);
     }
 
     public static String toHexString(byte[] buff) {

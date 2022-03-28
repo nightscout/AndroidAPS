@@ -8,7 +8,7 @@
         <item name="dialogTitleBackground">@color/dialog_title_background</item>
         <item name="dialogTitleColor">@color/dialog_title_color</item>
         <item name="dialogTitleIconTint">@color/dialog_title_icon_tint</item>
-        <!-- New MaterialComponents attributes. -->dialogTitleBackground
+        <!-- New MaterialComponents attributes. -->
         <item name="colorSecondary">@color/secondaryColorDefault</item>
         <item name="colorPrimaryVariant">@color/primaryLightColorDefault</item>
         <item name="colorSecondaryVariant">@color/secondaryLightColorDefault</item>
@@ -19,9 +19,6 @@
         <item name="colorOnBackground">@color/white</item>
         <item name="colorOnError">@color/black</item>
         <item name="scrimBackground">@color/mtrl_scrim_color</item>
-        <item name="android:textColorSecondary">@color/white</item>
-        <item name="android:textColorPrimary">@color/white</item>
-        <item name="android:textColor">@color/white</item>
         <item name="popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
         <item name="actionOverflowMenuStyle">@style/Widget.MaterialComponents.PopupMenu.Overflow</item>
         <!-- Fragment background for some themes default transparent  -->
@@ -36,8 +33,6 @@
         <item name="actionModeCloseDrawable">@drawable/ic_close</item>
         <!---bolus color -->
         <item name="bolusColor">@color/bolus</item>
-        <!---Treatment button color -->
-        <item name="treatmentButton">@color/colorTreatmentButton</item>
         <!---Number Picker text color -->
         <item name="numPickerText">@color/black</item>
         <!---NS Client action text color -->
@@ -62,12 +57,14 @@
         <item name="tempTargetConfirmation">@color/tempTargetConfirmation</item>
         <!-- Treatments -->
         <item name="setExtendedButtonColor">@color/colorSetExtendedButton</item>
+        <item name="activeColor">@color/colorActive</item>
+        <item name="scheduledColor">@color/colorScheduled</item>
         <!-- Carbs Button -->
         <item name="carbsButtonColor">@color/colorCarbsButton</item>
         <!-- Temp Button Button -->
         <item name="acceptTempButtonColor">@color/colorAcceptTempButton</item>
         <!-- Treatment Button -->
-        <item name="treatmentButtonColor">@color/colorTreatmentButton</item>
+        <item name="treatmentButton">@color/colorTreatmentButton</item>
         <!-- Insulin Button -->
         <item name="insulinButtonColor">@color/colorInsulinButton</item>
         <!-- Calculator Button -->
@@ -92,6 +89,10 @@
         <item name="activity_title_backgroundColor">@color/activity_title_background</item>
         <!---Automation  -->
         <item name="ribbonDefaultColor">@color/ribbonDefault</item>
+        <item name="ribbonWarningColor">@color/ribbonWarning</item>
+        <item name="ribbonCriticalColor">@color/ribbonCritical</item>
+        <item name="ribbonTextDefaultColor">@color/ribbonTextDefault</item>
+        <item name="ribbonTextWarningColor">@color/ribbonTextWarning</item>
         <!---Main Activity Tab  -->
         <item name="tabSelectedTextColor">@color/tabSelectedText</item>
         <item name="tabTextColor">@color/tabText</item>
@@ -103,12 +104,35 @@
         <item name="boxStrokeColor">@color/white</item>
         <!---Profile Helper  -->
         <item name="tabBgColorSelected">@color/tabBgColorSelected</item>
-        <!---Splash Background  -->
-        <item name="splashBackgroundColor">@color/splashBackground</item>
         <!---Dialog Helper  -->
         <item name="materialAlertDialogTheme">@style/DialogTheme</item>
         <item name="android:alertDialogTheme">@style/DialogTheme</item>
         <item name="alertDialogTheme">@style/DialogTheme</item>
+        <!---Disabled Text Color  -->
+        <item name="disabledTextColor">@color/sandGray</item>
+        <!---Splash Background  -->
+        <item name="splashBackgroundColor">@color/splashBackground</item>
+        <!---Application Background Color  -->
+        <item name="android:windowBackground">@color/black</item>
+        <!---Dialogfragment Background Color  -->
+        <item name="android:dialogCornerRadius">12dp</item>
+        <!---Overview and Historybrowser  -->
+        <item name="graphgrid">@color/graphgrid</item>
+        <item name="viewPortbackgroundColor">@color/white_alpha_20</item>
+        <item name="tempTargetBackgroundColor">@color/tempTargetBackground</item>
+        <!---CGM source-->
+        <item name="cgmdexColor">@color/colorLightGray</item>
+        <item name="cgmxdripColor">@color/colorCalibrationButton</item>
+        <!---BG color-->
+        <item name="bgLow">@color/low</item>
+        <item name="bgHigh">@color/high</item>
+        <item name="bgInRange">@color/inrange</item>
+        <!---Profile Helper -->
+        <item name="helperProfileColor">@color/helperProfile</item>
+        <item name="examinedProfileColor">@color/examinedProfile</item>
+        <!---Local profile -->
+        <item name="okBackgroundColor">@color/ok_background</item>
+        <item name="errorBackgroundColor">@color/error_background</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>
@@ -199,7 +223,7 @@
 
     <!-- Alert Dialogs -->
     <style name="DialogTheme" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
-        <item name="backgroundColor">@color/dialog_title_background</item>
+        <item name="colorSurface">#212121</item> <!-- workaround; color compensated elevation -->
         <item name="buttonBarNegativeButtonStyle">@style/DialogOkCancelButtonStyle</item>
         <item name="buttonBarPositiveButtonStyle">@style/DialogOkCancelButtonStyle</item>
         <item name="buttonBarNeutralButtonStyle">@style/DialogOkCancelButtonStyle</item>

@@ -150,8 +150,10 @@ class AutomationPlugin @Inject constructor(
 
     private fun storeToSP() {
         val array = JSONArray()
+        val iterator = automationEvents.iterator()
         try {
-            for (event in automationEvents) {
+            while (iterator.hasNext()) {
+                val event = iterator.next()
                 array.put(JSONObject(event.toJSON()))
             }
         } catch (e: JSONException) {
@@ -292,8 +294,10 @@ class AutomationPlugin @Inject constructor(
 
     @Synchronized
     fun removeAt(index: Int) {
-        automationEvents.removeAt(index)
-        rxBus.send(EventAutomationDataChanged())
+        if (index >= 0 && index < automationEvents.size) {
+            automationEvents.removeAt(index)
+            rxBus.send(EventAutomationDataChanged())
+        }
     }
 
     @Synchronized

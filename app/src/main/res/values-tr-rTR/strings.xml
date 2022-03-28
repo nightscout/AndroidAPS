@@ -103,7 +103,6 @@
     <string name="overview_calculator_label">Hesap makinesi</string>
     <string name="constraintapllied">Sınırlaması uygulanır!</string>
     <string name="sms_bolus">Bolus:</string>
-    <string name="basal">Bazal</string>
     <string name="sms_basal">Bazal:</string>
     <string name="changeyourinput">Girişinizi değiştirin!</string>
     <string name="configbuilder_bgsource">KŞ kaynağı</string>
@@ -162,6 +161,7 @@
     <string name="end_user_license_agreement">Son Kullanıcı Lisans Sözleşmesi</string>
     <string name="end_user_license_agreement_text">TIBBİ KARAR VERMEK İÇİN KULLANILMAMALIDIR. UYGULANABİLİR YASANIN İZİN VERDİĞİ ÖLÇÜDE, PROGRAM İÇİN GARANTİ YOKTUR. TELİF HAKKI SAHİPLERİNİN VE / VEYA DİĞER TARAFLARIN YAZILI OLMASINA YÖNELİK BAŞKA HİÇBİR ŞEKİLDE BELİRTİLEN VEYA BELİRLİ BİR AMACA UYGUNLUK İLE İLGİLİ ZIMNİ GARANTİLER DE DAHİL OLMAK ÜZERE ANCAK BUNLARLA SINIRLI OLMAMAK ÜZERE AÇIK VEYA ZIMNİ HİÇBİR GARANTİ OLMAKSIZIN “OLDUĞU GİBİ” SAĞLAMAKTADIR. PROGRAMIN KALİTESİ VE PERFORMANSI İLE İLGİLİ TÜM RİSK SİZE AİTTİR. PROGRAMIN HASARLI OLMASI DURUMUNDA, TÜM GEREKLİ SERVİS, ONARIM VEYA DÜZELTME MALİYETİNİ KABUL ETMİŞ OLURSUNUZ.</string>
     <string name="end_user_license_agreement_i_understand">ANLADIM VE KABUL EDİYORUM</string>
+    <string name="save">Kaydet</string>
     <string name="reloadprofile">Profili yeniden yükle</string>
     <string name="smscommunicator">SMS Kominikatör</string>
     <string name="smscommunicator_allowednumbers">İzinli telefon numaraları</string>
@@ -435,6 +435,8 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="ns_localbroadcasts_title">Yerel yayınları etkinleştirin.</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dinamik İDF</string>
+    <string name="DynISFAdjust_title">DinamikİDF Ayar Faktörü %</string>
+    <string name="DynISFAdjust_summary">DinamikİDF için ayarlama faktörü. Daha agresif düzeltme dozları için %100\'den fazla ve daha az agresif düzeltmeler için %100\'den az ayarlayın.</string>
     <string name="enableuam">UAM etkinleştir</string>
     <string name="enablesmb">SMB (Super Micro Bolus) etkinleştir</string>
     <string name="enablesmb_summary">Daha hızlı bir etki için geçici bazal yerine Super Micro Bolus kullanın</string>
@@ -772,7 +774,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="invalidage">Geçersiz yaş girişi</string>
     <string name="invalidweight">Geçersiz ağırlık girişi</string>
     <string name="invalidpct">Geçersiz % giriş</string>
-    <string name="tirformat"><![CDATA[<b>%1$s:</b> Düşük: <b>%2$02d%%</b> İçinde: <b>%3$02d%%</b> Yüksek: <b>%4$02d%%</b>]]></string>
     <string name="average">Ortalama</string>
     <string name="tir">TIR</string>
     <string name="activitymonitor">Aktivite monitörü</string>
@@ -945,6 +946,12 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="a11y_clone_profile">mevcut profili klonla</string>
     <string name="a11y_delete_current_profile">mevcut profil sil</string>
     <string name="a11y_add_new_to_list">listeye yeni ekle</string>
+    <!-- Theme switcher dark and light mode-->
+    <string name="theme_switcher_summary">Sistem teması veya koyu ve açık tema için seçim yapın.</string>
+    <string name="app_color_scheme">Uyg. Renk Şeması</string>
+    <string name="dark_theme">Koyu tema</string>
+    <string name="light_theme">Açık tema</string>
+    <string name="follow_system_theme">Cihaz temasını kullan</string>
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">Geiçici hedef bilinmeyen ön ayarı: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Çalışan Geçici-Hedefler iptal edilsin mi?</string>
@@ -991,5 +998,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="show_loop">Döngüyü göster</string>
     <string name="count_selected">%1$d seçildi</string>
     <string name="sort_label">Sırala</string>
-    <string name="dialog_cancled">İletişim kutusu iptal edildi</string>
+    <string name="below" comment="below &quot;in range&quot;">Altında</string>
+    <string name="in_range">Aralık içinde</string>
+    <string name="above" comment="above &quot;in range&quot;">Üstünde</string>
 </resources>

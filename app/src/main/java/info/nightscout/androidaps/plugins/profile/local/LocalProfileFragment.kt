@@ -12,12 +12,14 @@ import android.widget.ArrayAdapter
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.activities.SingleFragmentActivity
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.databinding.LocalprofileFragmentBinding
 import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
+import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Profile
@@ -56,7 +58,8 @@ class LocalProfileFragment : DaggerFragment() {
     @Inject lateinit var uel: UserEntryLogger
 
     private var disposable: CompositeDisposable = CompositeDisposable()
-
+    private var inMenu = false
+    private var queryingProtection = false
     private var basalView: TimeListEdit? = null
 
     private val save = Runnable {
@@ -99,6 +102,9 @@ class LocalProfileFragment : DaggerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val parentClass = this.activity?.let { it::class.java }
+        inMenu = parentClass == SingleFragmentActivity::class.java
+        updateProtectedUi()
         // activate DIA tab
         processVisibilityOnClick(binding.diaTab)
         binding.diaPlaceholder.visibility = View.VISIBLE
@@ -125,22 +131,7 @@ class LocalProfileFragment : DaggerFragment() {
         }
         binding.dia.editText?.id?.let { binding.diaLabel.labelFor = it }
 
-        if (protectionCheck.isLocked(ProtectionCheck.Protection.PREFERENCES)) {
-            binding.mainLayout.visibility = View.GONE
-        } else {
-            binding.unlock.visibility = View.GONE
-        }
-
-        binding.unlock.setOnClickListener {
-            activity?.let { activity ->
-                protectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, {
-                    activity.runOnUiThread {
-                        binding.mainLayout.visibility = View.VISIBLE
-                        binding.unlock.visibility = View.GONE
-                    }
-                })
-            }
-        }
+        binding.unlock.setOnClickListener { queryProtection() }
     }
 
     fun build() {
@@ -317,7 +308,7 @@ class LocalProfileFragment : DaggerFragment() {
 
         binding.profileswitch.setOnClickListener {
             ProfileSwitchDialog()
-                .also { it.arguments = Bundle().also { bundle -> bundle.putInt("profileIndex", localProfilePlugin.currentProfileIndex) } }
+                .also { it.arguments = Bundle().also { bundle -> bundle.putString("profileName", localProfilePlugin.currentProfile()?.name) } }
                 .show(childFragmentManager, "ProfileSwitchDialog")
         }
 
@@ -345,6 +336,7 @@ class LocalProfileFragment : DaggerFragment() {
     @Synchronized
     override fun onResume() {
         super.onResume()
+        if (inMenu) queryProtection() else updateProtectedUi()
         disposable += rxBus
             .toObservable(EventLocalProfileChanged::class.java)
             .observeOn(aapsSchedulers.main)
@@ -382,7 +374,7 @@ class LocalProfileFragment : DaggerFragment() {
         val isValid = localProfilePlugin.isValidEditState(activity)
         val isEdited = localProfilePlugin.isEdited
         if (isValid) {
-            this.view?.setBackgroundColor(rh.gc(R.color.ok_background))
+            this.view?.setBackgroundColor(rh.gac(context, R.attr.okBackgroundColor))
             binding.profileList.isEnabled = true
 
             if (isEdited) {
@@ -394,7 +386,7 @@ class LocalProfileFragment : DaggerFragment() {
                 binding.save.visibility = View.GONE
             }
         } else {
-            this.view?.setBackgroundColor(rh.gc(R.color.error_background))
+            this.view?.setBackgroundColor(rh.gac(context, R.attr.errorBackgroundColor))
             binding.profileList.isEnabled = false
             binding.profileswitch.visibility = View.GONE
             binding.save.visibility = View.GONE //don't save an invalid profile
@@ -409,16 +401,33 @@ class LocalProfileFragment : DaggerFragment() {
     }
 
     private fun processVisibilityOnClick(selected: View) {
-        binding.diaTab.setBackgroundColor(rh.gc(R.color.defaultbackground))
-        binding.icTab.setBackgroundColor(rh.gc(R.color.defaultbackground))
-        binding.isfTab.setBackgroundColor(rh.gc(R.color.defaultbackground))
-        binding.basalTab.setBackgroundColor(rh.gc(R.color.defaultbackground))
-        binding.targetTab.setBackgroundColor(rh.gc(R.color.defaultbackground))
-        selected.setBackgroundColor(rh.gc(R.color.tabBgColorSelected))
+        binding.diaTab.setBackgroundColor(rh.gac(context, R.attr.defaultbackground))
+        binding.icTab.setBackgroundColor(rh.gac(context, R.attr.defaultbackground))
+        binding.isfTab.setBackgroundColor(rh.gac(context, R.attr.defaultbackground))
+        binding.basalTab.setBackgroundColor(rh.gac(context, R.attr.defaultbackground))
+        binding.targetTab.setBackgroundColor(rh.gac(context, R.attr.defaultbackground))
+        selected.setBackgroundColor(rh.gac(context, R.attr.tabBgColorSelected))
         binding.diaPlaceholder.visibility = View.GONE
         binding.ic.visibility = View.GONE
         binding.isf.visibility = View.GONE
         binding.basal.visibility = View.GONE
         binding.target.visibility = View.GONE
+    }
+
+    private fun updateProtectedUi() {
+        val isLocked = protectionCheck.isLocked(ProtectionCheck.Protection.PREFERENCES)
+        binding.mainLayout.visibility = isLocked.not().toVisibility()
+        binding.unlock.visibility = isLocked.toVisibility()
+    }
+
+    private fun queryProtection() {
+        val isLocked = protectionCheck.isLocked(ProtectionCheck.Protection.PREFERENCES)
+        if (isLocked && !queryingProtection) {
+            activity?.let { activity ->
+                queryingProtection = true
+                val doUpdate = { activity.runOnUiThread { queryingProtection = false; updateProtectedUi() } }
+                protectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, doUpdate, doUpdate, doUpdate)
+            }
+        }
     }
 }

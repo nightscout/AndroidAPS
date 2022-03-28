@@ -186,10 +186,6 @@
     <string name="zerovalueinprofile">פרופיל לא חוקי: %1$s</string>
     <!--    Temptarget-->
     <string name="mins">%1$d דק\'</string>
-    <!--    TDD-->
-    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f יחידות</b> בולוס: <b>%3$.2f יחידות</b> בזאלי: <b>%4$.2f יחידות(%5$.0f%%)</b>]]></string>
-    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f יחידות</b> בולוס: <b>%3$.2f יחידות</b> בזאלי: <b>%4$.2f יחידות(%5$.0f%%)</b> פחמ: <b>%6$.0f גרם</b>]]></string>
-    <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> ב- <b>%3$d</b> ימים<br>]]></string>
     <!--    Translator-->
     <string name="careportal">פורטל טיפולים</string>
     <string name="careportal_bgcheck">בדיקת רמת סוכר בדם</string>
