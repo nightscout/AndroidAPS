@@ -225,7 +225,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                 holder.binding.bolusInvalid.visibility = bolus.isValid.not().toVisibility()
                 val iob = bolus.iobCalc(activePlugin, System.currentTimeMillis(), profile.dia)
                 if (iob.iobContrib > 0.01) {
-                    holder.binding.iob.setTextColor(rh.gc(R.color.colorActive))
+                    holder.binding.iob.setTextColor(rh.gac(context , R.attr.activeColor))
                     holder.binding.iob.text = rh.gs(R.string.formatinsulinunits, iob.iobContrib)
                     holder.binding.iobLabel.visibility = View.VISIBLE
                     holder.binding.iob.visibility = View.VISIBLE
@@ -235,7 +235,8 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                     holder.binding.iobLabel.visibility = View.GONE
                     holder.binding.iob.visibility = View.GONE
                 }
-                if (bolus.timestamp > dateUtil.now()) holder.binding.date.setTextColor(rh.gc(R.color.colorScheduled)) else holder.binding.date.setTextColor(holder.binding.carbs.currentTextColor)
+                if (bolus.timestamp > dateUtil.now()) holder.binding.date.setTextColor(rh.gac(context, R.attr.scheduledColor)) else holder.binding.date.setTextColor(holder.binding.carbs
+                                                                                                                                                                       .currentTextColor)
                 holder.binding.mealOrCorrection.text =
                     when (ml.bolus.type) {
                         Bolus.Type.SMB     -> "SMB"

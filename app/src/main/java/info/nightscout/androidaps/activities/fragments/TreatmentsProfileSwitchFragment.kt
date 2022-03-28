@@ -191,7 +191,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
             holder.binding.duration.text = rh.gs(R.string.format_mins, T.msecs(profileSwitch.duration ?: 0L).mins())
             holder.binding.name.text =
                 if (profileSwitch is ProfileSealed.PS) profileSwitch.value.getCustomizedName() else if (profileSwitch is ProfileSealed.EPS) profileSwitch.value.originalCustomizedName else ""
-            if (profileSwitch.isInProgress(dateUtil)) holder.binding.date.setTextColor(rh.gc(R.color.colorActive))
+            if (profileSwitch.isInProgress(dateUtil)) holder.binding.date.setTextColor(rh.gac(context , R.attr.activeColor))
             else holder.binding.date.setTextColor(holder.binding.duration.currentTextColor)
             holder.binding.clone.tag = profileSwitch
             holder.binding.name.tag = profileSwitch

@@ -33,8 +33,6 @@
         <item name="actionModeCloseDrawable">@drawable/ic_close</item>
         <!---bolus color -->
         <item name="bolusColor">@color/bolus</item>
-        <!---Treatment button color -->
-        <item name="treatmentButton">@color/colorTreatmentButton</item>
         <!---Number Picker text color -->
         <item name="numPickerText">@color/black</item>
         <!---NS Client action text color -->
@@ -59,12 +57,14 @@
         <item name="tempTargetConfirmation">@color/tempTargetConfirmation</item>
         <!-- Treatments -->
         <item name="setExtendedButtonColor">@color/colorSetExtendedButton</item>
+        <item name="activeColor">@color/colorActive</item>
+        <item name="scheduledColor">@color/colorScheduled</item>
         <!-- Carbs Button -->
         <item name="carbsButtonColor">@color/colorCarbsButton</item>
         <!-- Temp Button Button -->
         <item name="acceptTempButtonColor">@color/colorAcceptTempButton</item>
         <!-- Treatment Button -->
-        <item name="treatmentButtonColor">@color/colorTreatmentButton</item>
+        <item name="treatmentButton">@color/colorTreatmentButton</item>
         <!-- Insulin Button -->
         <item name="insulinButtonColor">@color/colorInsulinButton</item>
         <!-- Calculator Button -->
@@ -127,6 +127,12 @@
         <item name="bgLow">@color/low</item>
         <item name="bgHigh">@color/high</item>
         <item name="bgInRange">@color/inrange</item>
+        <!---Profile Helper -->
+        <item name="helperProfileColor">@color/helperProfile</item>
+        <item name="examinedProfileColor">@color/examinedProfile</item>
+        <!---Local profile -->
+        <item name="okBackgroundColor">@color/ok_background</item>
+        <item name="errorBackgroundColor">@color/error_background</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>
