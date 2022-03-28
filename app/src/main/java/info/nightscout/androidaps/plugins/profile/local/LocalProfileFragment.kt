@@ -374,7 +374,7 @@ class LocalProfileFragment : DaggerFragment() {
         val isValid = localProfilePlugin.isValidEditState(activity)
         val isEdited = localProfilePlugin.isEdited
         if (isValid) {
-            this.view?.setBackgroundColor(rh.gc(R.color.ok_background))
+            this.view?.setBackgroundColor(rh.gac(context, R.attr.okBackgroundColor))
             binding.profileList.isEnabled = true
 
             if (isEdited) {
@@ -386,7 +386,7 @@ class LocalProfileFragment : DaggerFragment() {
                 binding.save.visibility = View.GONE
             }
         } else {
-            this.view?.setBackgroundColor(rh.gc(R.color.error_background))
+            this.view?.setBackgroundColor(rh.gac(context, R.attr.errorBackgroundColor))
             binding.profileList.isEnabled = false
             binding.profileswitch.visibility = View.GONE
             binding.save.visibility = View.GONE //don't save an invalid profile
@@ -401,12 +401,12 @@ class LocalProfileFragment : DaggerFragment() {
     }
 
     private fun processVisibilityOnClick(selected: View) {
-        binding.diaTab.setBackgroundColor(rh.gc(R.color.defaultbackground))
-        binding.icTab.setBackgroundColor(rh.gc(R.color.defaultbackground))
-        binding.isfTab.setBackgroundColor(rh.gc(R.color.defaultbackground))
-        binding.basalTab.setBackgroundColor(rh.gc(R.color.defaultbackground))
-        binding.targetTab.setBackgroundColor(rh.gc(R.color.defaultbackground))
-        selected.setBackgroundColor(rh.gc(R.color.tabBgColorSelected))
+        binding.diaTab.setBackgroundColor(rh.gac(context, R.attr.defaultbackground))
+        binding.icTab.setBackgroundColor(rh.gac(context, R.attr.defaultbackground))
+        binding.isfTab.setBackgroundColor(rh.gac(context, R.attr.defaultbackground))
+        binding.basalTab.setBackgroundColor(rh.gac(context, R.attr.defaultbackground))
+        binding.targetTab.setBackgroundColor(rh.gac(context, R.attr.defaultbackground))
+        selected.setBackgroundColor(rh.gac(context, R.attr.tabBgColorSelected))
         binding.diaPlaceholder.visibility = View.GONE
         binding.ic.visibility = View.GONE
         binding.isf.visibility = View.GONE

@@ -1,8 +1,6 @@
 <resources>
     <!---bolus color -->
     <attr name="bolusColor" format="reference|color" />
-    <!---Treatment button color -->
-    <attr name="treatmentButton" format="reference|color" />
     <!---Number Picker text color -->
     <attr name="numPickerText" format="reference|color" />
     <!---NS Client action text color -->
@@ -31,8 +29,10 @@
     <attr name="carbsButtonColor" format="reference|color" />
     <!-- Temp Button Button -->
     <attr name="acceptTempButtonColor" format="reference|color" />
-    <!-- Treatment Button -->
-    <attr name="treatmentButtonColor" format="reference|color" />
+    <!---Treatment -->
+    <attr name="treatmentButton" format="reference|color" />
+    <attr name="activeColor" format="reference|color" />
+    <attr name="scheduledColor" format="reference|color" />
     <!-- Insulin Button -->
     <attr name="insulinButtonColor" format="reference|color" />
     <!-- Calculator Button -->
@@ -101,4 +101,10 @@
     <attr name="bgLow" format="reference|color" />
     <attr name="bgHigh" format="reference|color" />
     <attr name="bgInRange" format="reference|color" />
+    <!---Profile Helper -->
+    <attr name="helperProfileColor" format="reference|color" />
+    <attr name="examinedProfileColor" format="reference|color" />
+    <!---Local profile -->
+    <attr name="okBackgroundColor" format="reference|color" />
+    <attr name="errorBackgroundColor" format="reference|color" />
 </resources>

@@ -195,8 +195,8 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
             holder.binding.reason.text = translator.translate(tempTarget.reason)
             holder.binding.time.setTextColor(
                 when {
-                    tempTarget.id == currentlyActiveTarget?.id -> rh.gc(R.color.colorActive)
-                    tempTarget.timestamp > dateUtil.now()      -> rh.gc(R.color.colorScheduled)
+                    tempTarget.id == currentlyActiveTarget?.id -> rh.gac(context , R.attr.activeColor)
+                    tempTarget.timestamp > dateUtil.now()      -> rh.gac(context , R.attr.scheduledColor)
                     else                                       -> holder.binding.reasonColon.currentTextColor
                 }
             )

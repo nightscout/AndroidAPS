@@ -8,7 +8,7 @@
     <color name="mdtp_white">#ffffff</color>
     <color name="mdtp_line_dark">#808080</color>
     <color name="colorLightGray">#d8d8d8</color>
-    <color name="cardColorBackground">#999999</color>
+    <color name="cardColorBackground">@color/lightgray</color>
     <color name="black_overlay">#66000000</color>
     <color name="gray">#BBBBBB</color>
     <color name="black">#FF000000</color>
@@ -25,8 +25,8 @@
     <color name="overviewPillColorDefault">#1c171c</color>
     <color name="colorOnPrimaryDefault">#FFFFFF</color>
 
-    <color name="defaultbackground">#424242</color>
-    <color name="defaulttextcolor">#B3FFFFFF</color>
+    <color name="defaultbackground">#FFFFFF</color>
+    <color name="defaulttextcolor">#000000</color>
 
     <!---Android Dark ans Light Theme Base colors-->
     <color name="background_dark">#262626</color>
@@ -172,7 +172,7 @@
     <color name="warning">#ff1a1a</color>
     <color name="info">#77dd77</color>
     <color name="error_background">#66FC0000</color>
-    <color name="ok_background">@color/black</color>
+    <color name="ok_background">@color/white</color>
 
     <color name="tempTargetBackground">#77dd77</color>
     <color name="exercise">#67DFE8</color>
