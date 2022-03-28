@@ -10,7 +10,10 @@ import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.common.f
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.deactivation.PodDeactivationWizardActivity
 
 abstract class PodActivationActionFragmentBase : ActionFragmentBase() {
-
+/*
+ * Removed by Milos. It's causing
+ * android.content.ActivityNotFoundException: Unable to find explicit activity class {info.nightscout.androidaps/info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.deactivation.PodDeactivationWizardActivity}; have you declared this activity in your AndroidManifest.xml?
+ *
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -21,7 +24,7 @@ abstract class PodActivationActionFragmentBase : ActionFragmentBase() {
             }
         }
     }
-
+*/
     override fun onFailure() {
         (viewModel as? PodActivationActionViewModelBase)?.let { viewModel ->
             if (viewModel.isPodDeactivatable() and (viewModel.isPodInAlarm() or viewModel.isPodActivationTimeExceeded())) {
