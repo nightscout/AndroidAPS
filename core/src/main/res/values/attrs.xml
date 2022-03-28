@@ -60,6 +60,10 @@
     <attr name="activity_title_backgroundColor" format="reference|color" />
     <!---Automation  -->
     <attr name="ribbonDefaultColor" format="reference|color" />
+    <attr name="ribbonWarningColor" format="reference|color" />
+    <attr name="ribbonCriticalColor" format="reference|color" />
+    <attr name="ribbonTextDefaultColor" format="reference|color" />
+    <attr name="ribbonTextWarningColor" format="reference|color" />
     <!---Main Activity Tab  -->
     <attr name="tabSelectedTextColor" format="reference|color" />
     <attr name="tabTextColor" format="reference|color" />
@@ -86,5 +90,15 @@
     <attr name="splashBackgroundColor" format="reference|color" />
     <!---Disabled Text Color  -->
     <attr name="disabledTextColor" format="reference|color" />
-
+    <!---Overview and Historybrowser  -->
+    <attr name="graphgrid" format="reference|color" />
+    <attr name="viewPortbackgroundColor" format="reference|color" />
+    <attr name="tempTargetBackgroundColor" format="reference|color" />
+    <!---CGM source-->
+    <attr name="cgmdexColor" format="reference|color" />
+    <attr name="cgmxdripColor" format="reference|color" />
+    <!---BG color-->
+    <attr name="bgLow" format="reference|color" />
+    <attr name="bgHigh" format="reference|color" />
+    <attr name="bgInRange" format="reference|color" />
 </resources>

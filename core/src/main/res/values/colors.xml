@@ -150,7 +150,7 @@
 
     <color name="ribbonWarning">#f4d700</color>
     <color name="ribbonCritical">#ff0400</color>
-    <color name="ribbonTextDefault">#FFFFFF</color>
+    <color name="ribbonTextDefault">#000000</color>
     <color name="ribbonTextWarning">#303030</color>
     <color name="tempTargetConfirmation">#77dd77</color>
 

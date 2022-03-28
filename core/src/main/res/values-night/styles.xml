@@ -92,6 +92,10 @@
         <item name="activity_title_backgroundColor">@color/activity_title_background</item>
         <!---Automation  -->
         <item name="ribbonDefaultColor">@color/ribbonDefault</item>
+        <item name="ribbonWarningColor">@color/ribbonWarning</item>
+        <item name="ribbonCriticalColor">@color/ribbonCritical</item>
+        <item name="ribbonTextDefaultColor">@color/ribbonTextDefault</item>
+        <item name="ribbonTextWarningColor">@color/ribbonTextWarning</item>
         <!---Main Activity Tab  -->
         <item name="tabSelectedTextColor">@color/tabSelectedText</item>
         <item name="tabTextColor">@color/tabText</item>
@@ -115,6 +119,17 @@
         <item name="android:windowBackground">@color/black</item>
         <!---Dialogfragment Background Color  -->
         <item name="android:dialogCornerRadius">12dp</item>
+        <!---Overview and Historybrowser  -->
+        <item name="graphgrid">@color/graphgrid</item>
+        <item name="viewPortbackgroundColor">@color/white_alpha_20</item>
+        <item name="tempTargetBackgroundColor">@color/tempTargetBackground</item>
+        <!---CGM source-->
+        <item name="cgmdexColor">@color/colorLightGray</item>
+        <item name="cgmxdripColor">@color/colorCalibrationButton</item>
+        <!---BG color-->
+        <item name="bgLow">@color/low</item>
+        <item name="bgHigh">@color/high</item>
+        <item name="bgInRange">@color/inrange</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>
