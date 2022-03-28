@@ -19,9 +19,6 @@
         <item name="colorOnBackground">@color/white</item>
         <item name="colorOnError">@color/black</item>
         <item name="scrimBackground">@color/white</item>
-        <item name="android:textColorSecondary">@color/black</item>
-        <item name="android:textColorPrimary">@color/black</item>
-        <item name="android:textColor">@color/black</item>
         <item name="popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
         <item name="actionOverflowMenuStyle">@style/Widget.MaterialComponents.PopupMenu.Overflow</item>
         <!---Notification -->

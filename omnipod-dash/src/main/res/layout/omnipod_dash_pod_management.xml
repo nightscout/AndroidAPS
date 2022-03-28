@@ -19,7 +19,6 @@
             android:layout_marginLeft="10dp"
             android:layout_marginTop="20dp"
             android:layout_marginRight="10dp"
-
             android:gravity="center"
             android:text="@string/omnipod_common_pod_management_title"
             android:textAlignment="center"
@@ -35,7 +34,6 @@
             android:text="@string/omnipod_common_pod_management_heading_actions" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-
             android:id="@+id/Actions_Row_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -49,7 +47,6 @@
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/button_activate_pod"
-                style="?android:attr/buttonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:drawableTop="@drawable/ic_pod_management_activate_pod"
@@ -70,7 +67,6 @@
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/button_deactivate_pod"
-                style="?android:attr/buttonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:drawableTop="@drawable/ic_pod_management_deactivate_pod"
@@ -99,7 +95,6 @@
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/button_play_test_beep"
-                style="?android:attr/buttonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:drawableTop="@drawable/ic_pod_management_play_test_beep"
@@ -111,9 +106,8 @@
                 app:layout_constraintRight_toLeftOf="@+id/Actions_Col_1_Row_2_vertical_guideline"
                 app:layout_constraintTop_toTopOf="parent" />
 
-           <info.nightscout.androidaps.utils.ui.SingleClickButton
+            <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/button_pod_history"
-                style="?android:attr/buttonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:drawableTop="@drawable/ic_pod_management_pod_history"
@@ -132,9 +126,8 @@
                 android:orientation="vertical"
                 app:layout_constraintGuide_percent="0.5" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/button_discard_pod"
-                style="?android:attr/buttonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:drawableTop="@drawable/ic_pod_management_discard_pod"
@@ -148,5 +141,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
     </LinearLayout>
+
 </ScrollView>
