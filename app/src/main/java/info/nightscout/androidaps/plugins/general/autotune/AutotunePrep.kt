@@ -156,7 +156,7 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
             glucoseDatum.avgDelta = avgDelta
 
             //sens = ISF
-            val sens = profileData.getIsfMgdl(BGTime)
+            val sens = tunedprofile.isf
 
             // for IOB calculations, use the average of the last 4 hours' basals to help convergence;
             // this helps since the basal this hour could be different from previous, especially if with autotune they start to diverge.
