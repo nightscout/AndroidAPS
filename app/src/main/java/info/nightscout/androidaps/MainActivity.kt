@@ -20,11 +20,10 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.joanzapata.iconify.Iconify
@@ -335,7 +334,7 @@ class MainActivity : NoSplashAppCompatActivity() {
                 message += rh.gs(R.string.about_link_urls)
                 val messageSpanned = SpannableString(message)
                 Linkify.addLinks(messageSpanned, Linkify.WEB_URLS)
-                AlertDialog.Builder(this, R.style.DialogTheme)
+                MaterialAlertDialogBuilder(this, R.style.DialogTheme)
                     .setTitle(rh.gs(R.string.app_name) + " " + BuildConfig.VERSION)
                     .setIcon(iconsProvider.getIcon())
                     .setMessage(messageSpanned)
