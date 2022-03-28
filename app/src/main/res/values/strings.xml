@@ -1206,4 +1206,6 @@
     <string name="below" comment="below &quot;in range&quot;">Below</string>
     <string name="in_range">In range</string>
     <string name="above" comment="above &quot;in range&quot;">Above</string>
+    <string name="show_loop_records">Show loop records</string>
+    <string name="show_hide_records">Hide loop records</string>
 </resources>
