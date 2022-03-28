@@ -173,7 +173,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         binding.notifications.setHasFixedSize(false)
         binding.notifications.layoutManager = LinearLayoutManager(view.context)
         axisWidth = if (dm.densityDpi <= 120) 3 else if (dm.densityDpi <= 160) 10 else if (dm.densityDpi <= 320) 35 else if (dm.densityDpi <= 420) 50 else if (dm.densityDpi <= 560) 70 else 80
-        binding.graphsLayout.bgGraph.gridLabelRenderer?.gridColor = rh.gac(context , R.attr.graphgrid)
+        binding.graphsLayout.bgGraph.gridLabelRenderer?.gridColor = rh.gac(context, R.attr.graphgrid)
         binding.graphsLayout.bgGraph.gridLabelRenderer?.reloadStyles()
         binding.graphsLayout.bgGraph.gridLabelRenderer?.labelVerticalWidth = axisWidth
         binding.graphsLayout.bgGraph.layoutParams?.height = rh.dpToPx(skinProvider.activeSkin().mainGraphHeight)
@@ -416,14 +416,15 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                             loop.invoke("Accept temp button", false)
                             if (lastRun?.lastAPSRun != null && lastRun.constraintsProcessed?.isChangeRequested == true) {
                                 protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable {
-                                    OKDialog.showConfirmation(activity, rh.gs(R.string.tempbasal_label), lastRun.constraintsProcessed?.toSpanned()
-                                        ?: "".toSpanned(), {
-                                                                  uel.log(Action.ACCEPTS_TEMP_BASAL, Sources.Overview)
-                                                                  (context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?)?.cancel(Constants.notificationID)
-                                                                  rxBus.send(EventWearInitiateAction("cancelChangeRequest"))
-                                                                  Thread { loop.acceptChangeRequest() }.run()
-                                                                  binding.buttonsLayout.acceptTempButton.visibility = View.GONE
-                                                              })
+                                    if (isAdded)
+                                        OKDialog.showConfirmation(activity, rh.gs(R.string.tempbasal_label), lastRun.constraintsProcessed?.toSpanned()
+                                            ?: "".toSpanned(), {
+                                                                      uel.log(Action.ACCEPTS_TEMP_BASAL, Sources.Overview)
+                                                                      (context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?)?.cancel(Constants.notificationID)
+                                                                      rxBus.send(EventWearInitiateAction("cancelChangeRequest"))
+                                                                      Thread { loop.acceptChangeRequest() }.run()
+                                                                      binding.buttonsLayout.acceptTempButton.visibility = View.GONE
+                                                                  })
                                 })
                             }
                         }
@@ -583,11 +584,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                             it.text = event.title
 
                             it.setOnClickListener {
-                                OKDialog.showConfirmation(
-                                    context,
-                                    rh.gs(R.string.run_question, event.title),
-                                    { handler.post { automationPlugin.processEvent(event) } }
-                                )
+                                OKDialog.showConfirmation(context, rh.gs(R.string.run_question, event.title), { handler.post { automationPlugin.processEvent(event) } })
                             }
                             binding.buttonsLayout.userButtonsLayout.addView(it)
                         }
@@ -722,12 +719,12 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 val graph = GraphView(context)
                 graph.layoutParams =
                     LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, rh.dpToPx(skinProvider.activeSkin().secondaryGraphHeight)).also { it.setMargins(0, rh.dpToPx(15), 0, rh.dpToPx(10)) }
-                graph.gridLabelRenderer?.gridColor = rh.gac(context , R.attr.graphgrid)
+                graph.gridLabelRenderer?.gridColor = rh.gac(context, R.attr.graphgrid)
                 graph.gridLabelRenderer?.reloadStyles()
                 graph.gridLabelRenderer?.isHorizontalLabelsVisible = false
                 graph.gridLabelRenderer?.labelVerticalWidth = axisWidth
                 graph.gridLabelRenderer?.numVerticalLabels = 3
-                graph.viewport.backgroundColor = rh.gac(context , R.attr.viewPortbackgroundColor)
+                graph.viewport.backgroundColor = rh.gac(context, R.attr.viewPortbackgroundColor)
                 relativeLayout.addView(graph)
 
                 val label = TextView(context)
@@ -817,13 +814,13 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 if (it is ProfileSealed.EPS) {
                     if (it.value.originalPercentage != 100 || it.value.originalTimeshift != 0L || it.value.originalDuration != 0L)
                         rh.gac(context, R.attr.ribbonWarningColor)
-                    else   rh.gac(context, R.attr.ribbonDefaultColor)
+                    else rh.gac(context, R.attr.ribbonDefaultColor)
                 } else if (it is ProfileSealed.PS) {
                     rh.gac(context, R.attr.ribbonDefaultColor)
                 } else {
                     rh.gac(context, R.attr.ribbonDefaultColor)
                 }
-            } ?:  rh.gac(context, R.attr.ribbonCriticalColor)
+            } ?: rh.gac(context, R.attr.ribbonCriticalColor)
 
         val profileTextColor =
             profileFunction.getProfile()?.let {
@@ -836,7 +833,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 } else {
                     rh.gac(context, R.attr.ribbonTextDefaultColor)
                 }
-            } ?:  rh.gac(context, R.attr.ribbonTextDefaultColor)
+            } ?: rh.gac(context, R.attr.ribbonTextDefaultColor)
 
         binding.activeProfile.text = profileFunction.getProfileNameWithRemainingTime()
         binding.activeProfile.setBackgroundColor(profileBackgroundColor)
