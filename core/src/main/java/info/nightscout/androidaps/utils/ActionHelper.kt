@@ -77,22 +77,28 @@ class ActionHelper<T>(val rh: ResourceHelper, val activity: FragmentActivity?) {
         menu.findItem(R.id.nav_sort_items)?.isVisible = enableSort
     }
 
-    fun startAction() {
-        if (actionMode == null) {
+    fun startAction(): Boolean {
+        if (isNoAction) {
             actionMode = activity?.startActionMode(ActionModeCallback())
+            return true
         }
+        return false
     }
 
-    fun startRemove() {
+    fun startRemove(): Boolean {
         if (removeActionMode == null) {
             removeActionMode = activity?.startActionMode(RemoveActionModeCallback())
+            return true
         }
+        return false
     }
 
-    fun startSort() {
+    fun startSort(): Boolean {
         if (sortActionMode == null) {
             sortActionMode = activity?.startActionMode(SortActionModeCallback())
+            return true
         }
+        return false
     }
 
     fun isSelected(position: Int) =

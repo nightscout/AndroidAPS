@@ -147,10 +147,12 @@ class BGSourceFragment : DaggerFragment() {
             }
 
             holder.binding.root.setOnLongClickListener {
-                actionHelper.startRemove()
-                holder.binding.cbRemove.toggle()
-                actionHelper.updateSelection(position, glucoseValue, holder.binding.cbRemove.isChecked)
-                true
+                if (actionHelper.startRemove()) {
+                    holder.binding.cbRemove.toggle()
+                    actionHelper.updateSelection(position, glucoseValue, holder.binding.cbRemove.isChecked)
+                    return@setOnLongClickListener true
+                }
+                false
             }
             holder.binding.root.setOnClickListener {
                 if (actionHelper.isRemoving) {

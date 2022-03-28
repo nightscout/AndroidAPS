@@ -26,9 +26,6 @@ import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.automation.dialogs.EditEventDialog
-import info.nightscout.androidaps.utils.dragHelpers.ItemTouchHelperAdapter
-import info.nightscout.androidaps.utils.dragHelpers.OnStartDragListener
-import info.nightscout.androidaps.utils.dragHelpers.SimpleItemTouchHelperCallback
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationDataChanged
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationUpdateGui
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector
@@ -36,6 +33,9 @@ import info.nightscout.androidaps.utils.ActionHelper
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.androidaps.utils.dragHelpers.ItemTouchHelperAdapter
+import info.nightscout.androidaps.utils.dragHelpers.OnStartDragListener
+import info.nightscout.androidaps.utils.dragHelpers.SimpleItemTouchHelperCallback
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -206,22 +206,14 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
             for (res in actionIcons) {
                 addImage(res, holder.context, holder.binding.iconLayout)
             }
-            // enabled event
+            holder.binding.aapsLogo.visibility = (automation.systemAction).toVisibility()
+            // Enabled events
             holder.binding.enabled.setOnClickListener {
                 automation.isEnabled = holder.binding.enabled.isChecked
                 rxBus.send(EventAutomationDataChanged())
             }
-            holder.binding.aapsLogo.visibility = (automation.systemAction).toVisibility()
-
-            var longPress = false
-            val handler = Handler(Looper.getMainLooper())
-            val mLongPressed = Runnable {
-                longPress = true
-                actionHelper.startAction()
-            }
-
-            fun click() {
-                if (actionHelper.isNoAction && !longPress) {
+            holder.binding.rootLayout.setOnClickListener {
+                if (actionHelper.isNoAction) {
                     val dialog = EditEventDialog()
                     val args = Bundle()
                     args.putString("event", automation.toJSON())
@@ -233,40 +225,21 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
                     actionHelper.updateSelection(position, automation, holder.binding.cbRemove.isChecked)
                 }
             }
-            // Implement click listeners and touch handler for accessibility, unfortunately drag and drop for sorting can not be made accessible
-            holder.binding.rootLayout.setOnClickListener {
-                click()
-            }
             holder.binding.rootLayout.setOnLongClickListener {
                 actionHelper.startAction()
-                true
             }
-            holder.binding.rootLayout.setOnTouchListener { _, touchEvent ->
-                when (touchEvent.actionMasked) {
-                    MotionEvent.ACTION_UP   -> {
-                        handler.removeCallbacks(mLongPressed)
-                        click()
-                        longPress = false
-                    }
-
-                    MotionEvent.ACTION_DOWN -> {
-                        if (actionHelper.isSorting) {
-                            onStartDrag(holder)
-                        }
-                        if (actionHelper.isNoAction && !actionHelper.inMenu) {
-                            handler.postDelayed(mLongPressed, ViewConfiguration.getLongPressTimeout().toLong())
-                        }
-                    }
-
+            holder.binding.sortHandle.setOnTouchListener { _, touchEvent ->
+                if (touchEvent.actionMasked == MotionEvent.ACTION_DOWN) {
+                    onStartDrag(holder)
+                    return@setOnTouchListener true
                 }
-                return@setOnTouchListener true
+                return@setOnTouchListener false
             }
-
-            holder.binding.cbRemove.isChecked = actionHelper.isSelected(position)
             holder.binding.cbRemove.setOnCheckedChangeListener { _, value ->
                 actionHelper.updateSelection(position, automation, value)
             }
-            holder.binding.iconSort.visibility = actionHelper.isSorting.toVisibility()
+            holder.binding.cbRemove.isChecked = actionHelper.isSelected(position)
+            holder.binding.sortHandle.visibility = actionHelper.isSorting.toVisibility()
             holder.binding.cbRemove.visibility = actionHelper.isRemoving.toVisibility()
             holder.binding.cbRemove.isEnabled = automation.readOnly.not()
             holder.binding.enabled.visibility = if (actionHelper.isRemoving) View.INVISIBLE else View.VISIBLE

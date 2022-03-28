@@ -55,12 +55,12 @@
         android:contentDescription="@string/remove_label"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/iconLayout"
-        app:layout_constraintEnd_toStartOf="@+id/iconSort"
+        app:layout_constraintEnd_toStartOf="@+id/sortHandle"
         app:layout_constraintStart_toEndOf="@+id/eventTitle"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/iconSort"
+        android:id="@+id/sortHandle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"

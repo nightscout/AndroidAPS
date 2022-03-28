@@ -77,8 +77,7 @@ class QuickWizardListActivity : DaggerAppCompatActivityWithResult(), OnStartDrag
                     }
                 )
             }
-
-            fun click() {
+            holder.binding.root.setOnClickListener {
                 if (actionHelper.isNoAction) {
                     val manager = fragmentManager
                     val editQuickWizardDialog = EditQuickWizardDialog()
@@ -91,23 +90,18 @@ class QuickWizardListActivity : DaggerAppCompatActivityWithResult(), OnStartDrag
                     actionHelper.updateSelection(position, entry, holder.binding.cbRemove.isChecked)
                 }
             }
-            // For accessibility add click lister too, unfortunately sort can not made accessible
-            holder.binding.root.setOnClickListener {
-                click()
-            }
-            holder.binding.root.setOnTouchListener { _, event ->
-                if (event.actionMasked == MotionEvent.ACTION_UP) {
-                    click()
-                } else if (event.actionMasked == MotionEvent.ACTION_DOWN && actionHelper.isSorting) {
+            holder.binding.sortHandle.setOnTouchListener { _, event ->
+                if (event.actionMasked == MotionEvent.ACTION_DOWN) {
                     onStartDrag(holder)
+                    return@setOnTouchListener true
                 }
-                return@setOnTouchListener true
+                return@setOnTouchListener false
             }
             holder.binding.cbRemove.isChecked = actionHelper.isSelected(position)
             holder.binding.cbRemove.setOnCheckedChangeListener { _, value ->
                 actionHelper.updateSelection(position, entry, value)
             }
-            holder.binding.handleView.visibility = actionHelper.isSorting.toVisibility()
+            holder.binding.sortHandle.visibility = actionHelper.isSorting.toVisibility()
             holder.binding.cbRemove.visibility = actionHelper.isRemoving.toVisibility()
         }
 

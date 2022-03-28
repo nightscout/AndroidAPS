@@ -81,7 +81,7 @@
                         tools:ignore="RtlSymmetry" />
 
                     <ImageView
-                        android:id="@+id/handleView"
+                        android:id="@+id/sortHandle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:adjustViewBounds="false"
