@@ -25,7 +25,7 @@ import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.utils.ActionHelper
+import info.nightscout.androidaps.utils.ActionModeHelper
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
@@ -54,7 +54,7 @@ class BGSourceFragment : DaggerFragment() {
 
     private val disposable = CompositeDisposable()
     private val millsToThePast = T.hours(36).msecs()
-    private lateinit var actionHelper: ActionHelper<GlucoseValue>
+    private lateinit var actionHelper: ActionModeHelper<GlucoseValue>
     private var _binding: BgsourceFragmentBinding? = null
 
     // This property is only valid between onCreateView and onDestroyView.
@@ -65,7 +65,7 @@ class BGSourceFragment : DaggerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        actionHelper = ActionHelper(rh, activity)
+        actionHelper = ActionModeHelper(rh, activity)
         actionHelper.setUpdateListHandler { binding.recyclerview.adapter?.notifyDataSetChanged() }
         actionHelper.setOnRemoveHandler { removeSelected(it) }
         setHasOptionsMenu(actionHelper.inMenu)

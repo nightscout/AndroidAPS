@@ -3,8 +3,6 @@ package info.nightscout.androidaps.plugins.general.automation
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.method.ScrollingMovementMethod
 import android.util.SparseArray
 import android.view.*
@@ -29,7 +27,7 @@ import info.nightscout.androidaps.plugins.general.automation.dialogs.EditEventDi
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationDataChanged
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationUpdateGui
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector
-import info.nightscout.androidaps.utils.ActionHelper
+import info.nightscout.androidaps.utils.ActionModeHelper
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
@@ -54,7 +52,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
 
     private var disposable: CompositeDisposable = CompositeDisposable()
     private lateinit var eventListAdapter: EventListAdapter
-    private lateinit var actionHelper: ActionHelper<AutomationEvent>
+    private lateinit var actionHelper: ActionModeHelper<AutomationEvent>
     private val itemTouchHelper = ItemTouchHelper(SimpleItemTouchHelperCallback())
     private var _binding: AutomationFragmentBinding? = null
 
@@ -63,7 +61,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = AutomationFragmentBinding.inflate(inflater, container, false)
-        actionHelper = ActionHelper(rh, activity)
+        actionHelper = ActionModeHelper(rh, activity)
         actionHelper.setUpdateListHandler { binding.eventListView.adapter?.notifyDataSetChanged() }
         actionHelper.setOnRemoveHandler { removeSelected(it) }
         actionHelper.enableSort = true

@@ -47,7 +47,6 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
     @Inject lateinit var userEntryPresentationHelper: UserEntryPresentationHelper
 
     private val disposable = CompositeDisposable()
-
     private val millsToThePastFiltered = T.days(30).msecs()
     private val millsToThePastUnFiltered = T.days(3).msecs()
     private var showLoop = false
@@ -94,7 +93,6 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
     override fun onResume() {
         super.onResume()
         swapAdapter()
-
         disposable += rxBus
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)

@@ -20,7 +20,7 @@ import info.nightscout.androidaps.utils.dragHelpers.OnStartDragListener
 import info.nightscout.androidaps.utils.dragHelpers.SimpleItemTouchHelperCallback
 import info.nightscout.androidaps.plugins.general.overview.dialogs.EditQuickWizardDialog
 import info.nightscout.androidaps.plugins.general.overview.events.EventQuickWizardChange
-import info.nightscout.androidaps.utils.ActionHelper
+import info.nightscout.androidaps.utils.ActionModeHelper
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
@@ -42,7 +42,7 @@ class QuickWizardListActivity : DaggerAppCompatActivityWithResult(), OnStartDrag
     @Inject lateinit var sp: SP
 
     private var disposable: CompositeDisposable = CompositeDisposable()
-    private lateinit var actionHelper: ActionHelper<QuickWizardEntry>
+    private lateinit var actionHelper: ActionModeHelper<QuickWizardEntry>
     private val itemTouchHelper = ItemTouchHelper(SimpleItemTouchHelperCallback())
     private lateinit var binding: OverviewQuickwizardlistActivityBinding
 
@@ -121,7 +121,7 @@ class QuickWizardListActivity : DaggerAppCompatActivityWithResult(), OnStartDrag
         binding = OverviewQuickwizardlistActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        actionHelper = ActionHelper(rh, this)
+        actionHelper = ActionModeHelper(rh, this)
         actionHelper.setUpdateListHandler { binding.recyclerview.adapter?.notifyDataSetChanged() }
         actionHelper.setOnRemoveHandler { removeSelected(it) }
         actionHelper.enableSort = true

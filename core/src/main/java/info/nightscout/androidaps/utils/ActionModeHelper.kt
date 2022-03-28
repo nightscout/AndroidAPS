@@ -10,7 +10,7 @@ import info.nightscout.androidaps.core.R
 
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 
-class ActionHelper<T>(val rh: ResourceHelper, val activity: FragmentActivity?) {
+class ActionModeHelper<T>(val rh: ResourceHelper, val activity: FragmentActivity?) {
 
     var enableSort = false
     private var selectedItems: SparseArray<T> = SparseArray()
