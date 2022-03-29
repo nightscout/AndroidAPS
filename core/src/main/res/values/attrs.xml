@@ -107,4 +107,13 @@
     <!---Local profile -->
     <attr name="okBackgroundColor" format="reference|color" />
     <attr name="errorBackgroundColor" format="reference|color" />
+    <!---Warning  -->
+    <attr name="warningColor" format="reference|color" />
+    <!---TextColor -->
+    <attr name="defaultTextColor" format="reference|color" />
+    <!---Profile viewer TempBasal -->
+    <attr name="tempBasalColor" format="reference|color" />
+    <attr name="infoColor" format="reference|color" />
+    <!---Bolus wizard -->
+    <attr name="cobAlertColor" format="reference|color" />
 </resources>
