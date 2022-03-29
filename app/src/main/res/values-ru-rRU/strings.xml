@@ -161,6 +161,7 @@
     <string name="end_user_license_agreement">лицензионное соглашение с пользователем</string>
     <string name="end_user_license_agreement_text">НЕ ДОЛЖНО ИСПОЛЬЗОВАТЬСЯ ДЛЯ ПРИНЯТИЯ МЕДИЦИНСКИХ РЕШЕНИЙ. ПРОГРАММА НЕ ДАЕТ ГАРАНТИЙ В РАМКАХ СУЩЕСТВУЮЩЕГО ЗАКОНОДАТЕЛЬСТВА. ПРЕДОСТАВЛЯЕТСЯ \"КАК ЕСТЬ\" БЕЗ ЯВНЫХ ИЛИ СКРЫТЫХ ГАРАНТИЙ ВКЛЮЧАЯ НО НЕ ОГРАНИЧИВАЯСЬ ВОЗМОЖНОСТЬЮ КОММЕРЧЕСКОГО ИСПОЛЬЗОВАНИ ИЛИ СООТВЕТСТВИЯ КАКИМ-ЛИБО ЦЕЛЯМ. ВСЕ РИСКИ ЛОЖАТСЯ НА ВАС. В СЛУЧАЕ НЕРАБОТОСПОСОБНОСТИ ПРОГРАММЫ ВЫ НЕСЕТЕ ВСЕ РАСХОДЫ СВЯЗАННЫЕ С ОБСЛУЖИВАНИЕМ РЕМОНТОМ ИЛИ КОРРЕКТИРОВКОЙ.  </string>
     <string name="end_user_license_agreement_i_understand">я понимаю и принимаю</string>
+    <string name="save">Сохранить</string>
     <string name="reloadprofile">обновить профиль</string>
     <string name="smscommunicator">SMS коммуникатор</string>
     <string name="smscommunicator_allowednumbers">разрешенные телефонные номера</string>
@@ -432,6 +433,7 @@
     <string name="ns_localbroadcasts_title">Активировать локальную передачу</string>
     <string name="openapssmb">Супер микро болюс OpenAPS</string>
     <string name="openaps_smb_dynamic_isf">Динамический ISF</string>
+    <string name="DynISFAdjust_title">Коэффициент регулировки динамического диапазона чувствительности ISF %</string>
     <string name="enableuam">Включить непредвиденный прием пищи UAM</string>
     <string name="enablesmb">Включить супер микро болюс SMB</string>
     <string name="enablesmb_summary">Для ускорения действия используйте супер микро болюсы SMB вместо временного базала</string>
