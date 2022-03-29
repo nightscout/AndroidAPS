@@ -1,7 +1,12 @@
 package info.nightscout.androidaps.plugins.iob.iobCobCalculator
 
+import android.content.Context
 import android.os.SystemClock
 import androidx.collection.LongSparseArray
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
@@ -27,6 +32,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHi
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
+import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -62,7 +68,9 @@ class IobCobCalculatorPlugin @Inject constructor(
     private val sensitivityWeightedAveragePlugin: SensitivityWeightedAveragePlugin,
     private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil,
-    private val repository: AppRepository
+    private val repository: AppRepository,
+    private val context: Context,
+    private val dataWorker: DataWorker
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
@@ -81,8 +89,9 @@ class IobCobCalculatorPlugin @Inject constructor(
     override var ads: AutosensDataStore = AutosensDataStore()
 
     private val dataLock = Any()
-    var stopCalculationTrigger = false
     private var thread: Thread? = null
+
+    private val jobGroupName = "calculation"
 
     override fun onStart() {
         super.onStart()
@@ -168,10 +177,9 @@ class IobCobCalculatorPlugin @Inject constructor(
         return oldestTime
     }
 
-    fun calculateDetectionStart(from: Long, limitDataToOldestAvailable: Boolean): Long {
+    override fun calculateDetectionStart(from: Long, limitDataToOldestAvailable: Boolean): Long {
         val profile = profileFunction.getProfile(from)
-        var dia = Constants.defaultDIA
-        if (profile != null) dia = profile.dia
+        val dia = profile?.dia ?: Constants.defaultDIA
         val oldestDataAvailable = oldestDataAvailable()
         val getBGDataFrom: Long
         if (limitDataToOldestAvailable) {
@@ -367,24 +375,31 @@ class IobCobCalculatorPlugin @Inject constructor(
     }
 
     fun stopCalculation(from: String) {
-        if (thread?.state != Thread.State.TERMINATED) {
-            stopCalculationTrigger = true
-            aapsLogger.debug(LTag.AUTOSENS, "Stopping calculation thread: $from")
-            while (thread != null && thread?.state != Thread.State.TERMINATED) {
-                SystemClock.sleep(100)
-            }
-            aapsLogger.debug(LTag.AUTOSENS, "Calculation thread stopped: $from")
-        }
+        aapsLogger.debug(LTag.AUTOSENS, "Stopping calculation thread: $from")
+        WorkManager.getInstance(context).cancelUniqueWork(jobGroupName)
+        val workStatus = WorkManager.getInstance(context).getWorkInfosForUniqueWork(jobGroupName).get()
+        while (workStatus.size >= 1 && workStatus[0].state == WorkInfo.State.RUNNING)
+            SystemClock.sleep(100)
+        aapsLogger.debug(LTag.AUTOSENS, "Calculation thread stopped: $from")
     }
 
     fun runCalculation(from: String, end: Long, bgDataReload: Boolean, limitDataToOldestAvailable: Boolean, cause: Event?) {
-        aapsLogger.debug(LTag.AUTOSENS, "Starting calculation thread: " + from + " to " + dateUtil.dateAndTimeAndSecondsString(end))
-        if (thread == null || thread?.state == Thread.State.TERMINATED) {
-            thread =
-                if (sensitivityOref1Plugin.isEnabled()) IobCobOref1Thread(injector, this, from, end, bgDataReload, limitDataToOldestAvailable, cause)
-                else IobCobThread(injector, this, from, end, bgDataReload, limitDataToOldestAvailable, cause)
-            thread?.start()
-        }
+        aapsLogger.debug(LTag.AUTOSENS, "Starting calculation worker: $from to ${dateUtil.dateAndTimeAndSecondsString(end)}")
+
+        val iobCalculation =
+            if (sensitivityOref1Plugin.isEnabled())
+                OneTimeWorkRequest.Builder(IobCobOref1Worker::class.java)
+                    .setInputData(
+                        dataWorker.storeInputData(IobCobOref1Worker.IobCobOref1WorkerData(injector, this, from, end, bgDataReload, limitDataToOldestAvailable, cause))
+                    ).build()
+            else
+                OneTimeWorkRequest.Builder(IobCobOref1Worker::class.java)
+                    .setInputData(
+                        dataWorker.storeInputData(IobCobOrefWorker.IobCobOrefWorkerData(injector, this, from, end, bgDataReload, limitDataToOldestAvailable, cause))
+                    ).build()
+
+        WorkManager.getInstance(context)
+            .enqueueUniqueWork(jobGroupName, ExistingWorkPolicy.REPLACE, iobCalculation)
     }
 
     // Limit rate of EventNewHistoryData
