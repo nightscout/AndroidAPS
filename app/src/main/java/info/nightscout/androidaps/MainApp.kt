@@ -7,7 +7,6 @@ import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import android.os.Build
 import androidx.lifecycle.ProcessLifecycleOwner
-import androidx.appcompat.app.AppCompatDelegate
 import com.uber.rxdogtag.RxDogTag
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
@@ -22,8 +21,6 @@ import info.nightscout.androidaps.di.StaticInjector
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.ConfigBuilder
 import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
@@ -41,7 +38,8 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.ProcessLifecycleListener
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.locale.LocaleHelper
-import info.nightscout.androidaps.utils.protection.PasswordCheck
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.exceptions.UndeliverableException
@@ -71,7 +69,6 @@ class MainApp : DaggerApplication() {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var staticInjector: StaticInjector// TODO avoid , here fake only to initialize
     @Inject lateinit var uel: UserEntryLogger
-    @Inject lateinit var passwordCheck: PasswordCheck
     @Inject lateinit var alarmSoundServiceHelper: AlarmSoundServiceHelper
     @Inject lateinit var notificationStore: NotificationStore
     @Inject lateinit var processLifecycleListener: ProcessLifecycleListener
@@ -124,7 +121,6 @@ class MainApp : DaggerApplication() {
         keepAliveManager.setAlarm(this)
         doMigrations()
         uel.log(UserEntry.Action.START_AAPS, UserEntry.Sources.Aaps)
-        passwordCheck.passwordResetCheck(this)
     }
 
     private fun setRxErrorHandler() {
