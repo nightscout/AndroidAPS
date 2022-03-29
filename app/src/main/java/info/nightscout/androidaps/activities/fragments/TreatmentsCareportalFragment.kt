@@ -3,39 +3,34 @@ package info.nightscout.androidaps.activities.fragments
 import android.os.Bundle
 import android.util.SparseArray
 import android.view.*
-import android.view.ActionMode
-import androidx.appcompat.widget.Toolbar
 import androidx.core.util.forEach
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.activities.fragments.TreatmentsCareportalFragment.RecyclerViewAdapter.TherapyEventsViewHolder
 import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.InvalidateAAPSStartedTherapyEventTransaction
 import info.nightscout.androidaps.database.transactions.InvalidateTherapyEventTransaction
 import info.nightscout.androidaps.databinding.TreatmentsCareportalFragmentBinding
 import info.nightscout.androidaps.databinding.TreatmentsCareportalItemBinding
 import info.nightscout.androidaps.events.EventTherapyEventChange
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.androidaps.events.EventTreatmentUpdateGui
+import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
-import info.nightscout.androidaps.events.EventTreatmentUpdateGui
-import info.nightscout.androidaps.activities.fragments.TreatmentsCareportalFragment.RecyclerViewAdapter.TherapyEventsViewHolder
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.Translator
+import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
-import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -59,23 +54,23 @@ class TreatmentsCareportalFragment : DaggerFragment() {
     @Inject lateinit var uel: UserEntryLogger
 
     private var _binding: TreatmentsCareportalFragmentBinding? = null
+
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
-
+    private var menu: Menu? = null
     private val disposable = CompositeDisposable()
     private val millsToThePast = T.days(30).msecs()
-    private var selectedItems: SparseArray<TherapyEvent> = SparseArray()
+    private lateinit var actionHelper: ActionModeHelper<TherapyEvent>
     private var showInvalidated = false
-    private var toolbar: Toolbar? = null
-    private var removeActionMode: ActionMode? = null
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         TreatmentsCareportalFragmentBinding.inflate(inflater, container, false).also { _binding = it }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        toolbar = activity?.findViewById(R.id.toolbar)
+        actionHelper = ActionModeHelper(rh, activity)
+        actionHelper.setUpdateListHandler { binding.recyclerview.adapter?.notifyDataSetChanged() }
+        actionHelper.setOnRemoveHandler { removeSelected(it) }
         setHasOptionsMenu(true)
         binding.recyclerview.setHasFixedSize(true)
         binding.recyclerview.layoutManager = LinearLayoutManager(view.context)
@@ -143,13 +138,13 @@ class TreatmentsCareportalFragment : DaggerFragment() {
     @Synchronized
     override fun onPause() {
         super.onPause()
+        actionHelper.finish()
         disposable.clear()
     }
 
     @Synchronized
     override fun onDestroyView() {
         super.onDestroyView()
-        removeActionMode?.finish()
         binding.recyclerview.adapter = null // avoid leaks
         _binding = null
     }
@@ -172,18 +167,15 @@ class TreatmentsCareportalFragment : DaggerFragment() {
             holder.binding.duration.text = if (therapyEvent.duration == 0L) "" else dateUtil.niceTimeScalar(therapyEvent.duration, rh)
             holder.binding.note.text = therapyEvent.note
             holder.binding.type.text = translator.translate(therapyEvent.type)
-            holder.binding.cbRemove.visibility = (therapyEvent.isValid && removeActionMode != null).toVisibility()
-            if (removeActionMode != null) {
-                holder.binding.cbRemove.setOnCheckedChangeListener { _, value ->
-                    if (value) {
-                        selectedItems.put(position, therapyEvent)
-                    } else {
-                        selectedItems.remove(position)
-                    }
-                    removeActionMode?.title = rh.gs(R.string.count_selected, selectedItems.size())
-                }
-                holder.binding.cbRemove.isChecked = selectedItems.get(position) != null
+            holder.binding.cbRemove.visibility = (therapyEvent.isValid && actionHelper.isRemoving).toVisibility()
+            holder.binding.cbRemove.setOnCheckedChangeListener { _, value ->
+                actionHelper.updateSelection(position, therapyEvent, value)
             }
+            holder.binding.root.setOnClickListener {
+                holder.binding.cbRemove.toggle()
+                actionHelper.updateSelection(position, therapyEvent, holder.binding.cbRemove.isChecked)
+            }
+            holder.binding.cbRemove.isChecked = actionHelper.isSelected(position)
             val nextTimestamp = if (therapyList.size != position + 1) therapyList[position + 1].timestamp else 0L
             holder.binding.delimiter.visibility = dateUtil.isSameDayGroup(therapyEvent.timestamp, nextTimestamp).toVisibility()
         }
@@ -198,34 +190,40 @@ class TreatmentsCareportalFragment : DaggerFragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        this.menu = menu
         inflater.inflate(R.menu.menu_treatments_careportal, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
-        menu.findItem(R.id.nav_hide_invalidated)?.isVisible = showInvalidated
-        menu.findItem(R.id.nav_show_invalidated)?.isVisible = !showInvalidated
+        updateMenuVisibility()
         val nsUploadOnly = !sp.getBoolean(R.string.key_ns_receive_therapy_events, false) || !buildHelper.isEngineeringMode()
         menu.findItem(R.id.nav_refresh_ns)?.isVisible = !nsUploadOnly
 
         return super.onPrepareOptionsMenu(menu)
     }
 
+    private fun updateMenuVisibility() {
+        menu?.findItem(R.id.nav_hide_invalidated)?.isVisible = showInvalidated
+        menu?.findItem(R.id.nav_show_invalidated)?.isVisible = !showInvalidated
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
         when (item.itemId) {
-            R.id.nav_remove_items          -> {
-                removeActionMode = toolbar?.startActionMode(RemoveActionModeCallback())
-                true
-            }
+            R.id.nav_remove_items          -> actionHelper.startRemove()
 
             R.id.nav_show_invalidated      -> {
                 showInvalidated = true
+                updateMenuVisibility()
+                ToastUtils.showToastInUiThread(context, rh.gs(R.string.show_invalidated_records))
                 rxBus.send(EventTreatmentUpdateGui())
                 true
             }
 
             R.id.nav_hide_invalidated      -> {
                 showInvalidated = false
+                updateMenuVisibility()
+                ToastUtils.showToastInUiThread(context, rh.gs(R.string.hide_invalidated_records))
                 rxBus.send(EventTreatmentUpdateGui())
                 true
             }
@@ -243,36 +241,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
             else                           -> false
         }
 
-    inner class RemoveActionModeCallback : ActionMode.Callback {
-
-        override fun onCreateActionMode(mode: ActionMode, menu: Menu?): Boolean {
-            mode.menuInflater.inflate(R.menu.menu_delete_selection, menu)
-            selectedItems.clear()
-            mode.title = rh.gs(R.string.count_selected, selectedItems.size())
-            binding.recyclerview.adapter?.notifyDataSetChanged()
-            return true
-        }
-
-        override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?) = false
-
-        override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
-            return when (item.itemId) {
-                R.id.remove_selected -> {
-                    removeSelected()
-                    true
-                }
-
-                else                 -> false
-            }
-        }
-
-        override fun onDestroyActionMode(mode: ActionMode?) {
-            removeActionMode = null
-            binding.recyclerview.adapter?.notifyDataSetChanged()
-        }
-    }
-
-    private fun getConfirmationText(): String {
+    private fun getConfirmationText(selectedItems: SparseArray<TherapyEvent>): String {
         if (selectedItems.size() == 1) {
             val therapyEvent = selectedItems.valueAt(0)
             return rh.gs(R.string.eventtype) + ": " + translator.translate(therapyEvent.type) + "\n" +
@@ -282,27 +251,24 @@ class TreatmentsCareportalFragment : DaggerFragment() {
         return rh.gs(R.string.confirm_remove_multiple_items, selectedItems.size())
     }
 
-    private fun removeSelected() {
-        if (selectedItems.size() > 0)
-            activity?.let { activity ->
-                OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord), getConfirmationText(), Runnable {
-                    selectedItems.forEach { _, therapyEvent ->
-                        uel.log(
-                            Action.CAREPORTAL_REMOVED, Sources.Treatments, therapyEvent.note,
-                            ValueWithUnit.Timestamp(therapyEvent.timestamp),
-                            ValueWithUnit.TherapyEventType(therapyEvent.type)
+    private fun removeSelected(selectedItems: SparseArray<TherapyEvent>) {
+        activity?.let { activity ->
+            OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord), getConfirmationText(selectedItems), Runnable {
+                selectedItems.forEach { _, therapyEvent ->
+                    uel.log(
+                        Action.CAREPORTAL_REMOVED, Sources.Treatments, therapyEvent.note,
+                        ValueWithUnit.Timestamp(therapyEvent.timestamp),
+                        ValueWithUnit.TherapyEventType(therapyEvent.type)
+                    )
+                    disposable += repository.runTransactionForResult(InvalidateTherapyEventTransaction(therapyEvent.id))
+                        .subscribe(
+                            { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated therapy event $it") } },
+                            { aapsLogger.error(LTag.DATABASE, "Error while invalidating therapy event", it) }
                         )
-                        disposable += repository.runTransactionForResult(InvalidateTherapyEventTransaction(therapyEvent.id))
-                            .subscribe(
-                                { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated therapy event $it") } },
-                                { aapsLogger.error(LTag.DATABASE, "Error while invalidating therapy event", it) }
-                            )
-                    }
-                    removeActionMode?.finish()
-                })
-            }
-        else
-            removeActionMode?.finish()
+                }
+                actionHelper.finish()
+            })
+        }
     }
 
 }

@@ -156,8 +156,9 @@
             <CheckBox
                 android:id="@+id/cb_remove"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="19dp"
                 android:contentDescription="@string/select_for_removal"
+                android:minWidth="0dp"
                 android:visibility="gone" />
 
             <TextView

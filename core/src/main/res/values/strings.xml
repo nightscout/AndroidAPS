@@ -556,6 +556,11 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basal</string>
     <string name="basalpct">Basal %</string>
+    <string name="count_selected">%1$d selected</string>
+    <string name="sort_label">Sort</string>
+    <string name="remove_items">Remove Items</string>
+    <string name="sort_items">Sort Items</string>
+    <string name="remove_selected_items">Remove Selected Items</string>
 
     <plurals name="days">
         <item quantity="one">%1$d day</item>
