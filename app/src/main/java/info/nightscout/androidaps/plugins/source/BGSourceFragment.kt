@@ -153,6 +153,7 @@ class BGSourceFragment : DaggerFragment() {
                                 R.string.poctech            -> Sources.PocTech
                                 R.string.tomato             -> Sources.Tomato
                                 R.string.glunovo            -> Sources.Glunovo
+                                R.string.aidex              -> Sources.Aidex
                                 R.string.xdrip              -> Sources.Xdrip
                                 else                        -> Sources.Unknown
                             }
