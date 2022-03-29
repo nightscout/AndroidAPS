@@ -116,4 +116,6 @@
     <attr name="infoColor" format="reference|color" />
     <!---Bolus wizard -->
     <attr name="cobAlertColor" format="reference|color" />
+    <!---Fill dialog -->
+    <attr name="actionsConfirmColor" format="reference|color" />
 </resources>

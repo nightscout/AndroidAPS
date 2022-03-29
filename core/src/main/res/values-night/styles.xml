@@ -142,6 +142,8 @@
         <item name="infoColor">@color/info</item>
         <!---Bolus wizard -->
         <item name="cobAlertColor">@color/cobAlert</item>
+        <!---Fill dialog -->
+        <item name="actionsConfirmColor">@color/actionsConfirm</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>
