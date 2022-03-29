@@ -309,8 +309,9 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
             }
 
             if (podStateManager.isPodFaulted) {
-                val faultEventCode = podStateManager.faultEventCode
-                errors.add(rh.gs(R.string.omnipod_common_pod_status_pod_fault_description, faultEventCode.value, faultEventCode.name))
+                podStateManager.faultEventCode?.let { faultEventCode ->
+                    errors.add(rh.gs(R.string.omnipod_common_pod_status_pod_fault_description, faultEventCode.value, faultEventCode.name))
+                }
             }
 
             // base basal rate
