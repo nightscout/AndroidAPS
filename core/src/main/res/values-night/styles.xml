@@ -133,6 +133,15 @@
         <!---Local profile -->
         <item name="okBackgroundColor">@color/ok_background</item>
         <item name="errorBackgroundColor">@color/error_background</item>
+        <!---Warning  -->
+        <item name="warningColor">@color/warning</item>
+        <!---TextColor -->
+        <item name="defaultTextColor">@color/white</item>
+        <!---TempBasal -->
+        <item name="tempBasalColor">@color/tempbasal</item>
+        <item name="infoColor">@color/info</item>
+        <!---Bolus wizard -->
+        <item name="cobAlertColor">@color/cobAlert</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>

@@ -93,7 +93,7 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
         actions.add(rh.gs(R.string.formatinsulinunits, insulinAfterConstraint))
         actions.add(rh.gs(R.string.duration) + ": " + rh.gs(R.string.format_mins, durationInMinutes))
         if (abs(insulinAfterConstraint - insulin) > 0.01)
-            actions.add(rh.gs(R.string.constraintapllied).formatColor(rh, R.color.warning))
+            actions.add(rh.gs(R.string.constraintapllied).formatColor(context, rh, R.attr.warningColor))
 
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, rh.gs(R.string.extended_bolus), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
