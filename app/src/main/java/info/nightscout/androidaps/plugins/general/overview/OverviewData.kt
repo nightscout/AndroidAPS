@@ -63,7 +63,7 @@ class OverviewData @Inject constructor(
 
     fun reset() {
         pumpStatus = ""
-        calcProgress = ""
+        calcProgressPct = 100
         lastBg = null
         bolusIob = null
         basalIob = null
@@ -121,7 +121,7 @@ class OverviewData @Inject constructor(
      * CALC PROGRESS
      */
 
-    var calcProgress: String = ""
+    var calcProgressPct: Int = 100
 
     /*
      * BG

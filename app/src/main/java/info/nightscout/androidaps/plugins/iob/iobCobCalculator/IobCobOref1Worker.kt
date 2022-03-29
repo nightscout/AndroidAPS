@@ -109,7 +109,7 @@ class IobCobOref1Worker(
             // start from oldest to be able sub cob
             for (i in bucketedData.size - 4 downTo 0) {
                 val progress = i.toString() + if (buildHelper.isDev()) " (${data.from})" else ""
-                rxBus.send(EventIobCalculationProgress(progress, data.cause))
+                rxBus.send(EventIobCalculationProgress(100 - (100.0 * i / bucketedData.size).toInt(), data.cause))
                 if (isStopped) {
                     aapsLogger.debug(LTag.AUTOSENS, "Aborting calculation thread (trigger): ${data.from}")
                     return Result.failure(workDataOf("Error" to "Aborting calculation thread (trigger): ${data.from}"))
@@ -338,7 +338,7 @@ class IobCobOref1Worker(
                 rxBus.send(EventAutosensCalculationFinished(data.cause))
             }.start()
         } finally {
-            rxBus.send(EventIobCalculationProgress("", data.cause))
+            rxBus.send(EventIobCalculationProgress(100, data.cause))
             aapsLogger.debug(LTag.AUTOSENS, "AUTOSENSDATA thread ended: ${data.from}")
             profiler.log(LTag.AUTOSENS, "IobCobOref1Thread", start)
         }

@@ -1029,7 +1029,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
     @Suppress("UNUSED_PARAMETER")
     fun updateCalcProgress(from: String) {
-        binding.graphsLayout.iobCalculationProgress.text = overviewData.calcProgress
+        binding.progressBar.progress = overviewData.calcProgressPct
+        binding.progressBar.visibility = (overviewData.calcProgressPct != 100).toVisibility()
     }
 
     @Suppress("UNUSED_PARAMETER")

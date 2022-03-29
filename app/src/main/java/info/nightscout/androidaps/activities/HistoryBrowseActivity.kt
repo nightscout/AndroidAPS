@@ -242,7 +242,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
             .observeOn(aapsSchedulers.main)
             .subscribe({
                            if (it.cause is EventCustomCalculationFinished)
-                               binding.overviewIobcalculationprogess.text = it.progress
+                               binding.overviewIobcalculationprogess.text = it.progressPct.toString() + "%"
                        }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventRefreshOverview::class.java)
