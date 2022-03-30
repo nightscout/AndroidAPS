@@ -54,7 +54,6 @@
                     android:layout_weight="1"
                     android:gravity="start"
                     android:paddingLeft="5dp"
-                    android:textColor="@android:color/white"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -65,8 +64,7 @@
                 android:layout_marginBottom="5dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/list_delimiter" />
+                android:layout_marginTop="5dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -99,7 +97,6 @@
                     android:layout_weight="1"
                     android:gravity="start"
                     android:paddingLeft="5dp"
-                    android:textColor="@android:color/white"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -109,8 +106,7 @@
                 android:layout_marginBottom="5dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/list_delimiter" />
+                android:layout_marginTop="5dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -149,7 +145,6 @@
                     android:gravity="start|center_vertical"
                     android:inputType="number"
                     android:paddingLeft="5dp"
-                    android:textColor="@android:color/white"
                     android:textSize="14sp"
                     android:text="1" />
 
@@ -161,8 +156,7 @@
                 android:layout_marginBottom="5dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/list_delimiter" />
+                android:layout_marginTop="5dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -195,7 +189,6 @@
                     android:layout_weight="1"
                     android:gravity="start"
                     android:paddingLeft="5dp"
-                    android:textColor="@android:color/white"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -207,8 +200,7 @@
                 android:layout_marginBottom="5dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/list_delimiter" />
+                android:layout_marginTop="5dp" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
