@@ -161,6 +161,7 @@
     <string name="end_user_license_agreement">лицензионное соглашение с пользователем</string>
     <string name="end_user_license_agreement_text">НЕ ДОЛЖНО ИСПОЛЬЗОВАТЬСЯ ДЛЯ ПРИНЯТИЯ МЕДИЦИНСКИХ РЕШЕНИЙ. ПРОГРАММА НЕ ДАЕТ ГАРАНТИЙ В РАМКАХ СУЩЕСТВУЮЩЕГО ЗАКОНОДАТЕЛЬСТВА. ПРЕДОСТАВЛЯЕТСЯ \"КАК ЕСТЬ\" БЕЗ ЯВНЫХ ИЛИ СКРЫТЫХ ГАРАНТИЙ ВКЛЮЧАЯ НО НЕ ОГРАНИЧИВАЯСЬ ВОЗМОЖНОСТЬЮ КОММЕРЧЕСКОГО ИСПОЛЬЗОВАНИ ИЛИ СООТВЕТСТВИЯ КАКИМ-ЛИБО ЦЕЛЯМ. ВСЕ РИСКИ ЛОЖАТСЯ НА ВАС. В СЛУЧАЕ НЕРАБОТОСПОСОБНОСТИ ПРОГРАММЫ ВЫ НЕСЕТЕ ВСЕ РАСХОДЫ СВЯЗАННЫЕ С ОБСЛУЖИВАНИЕМ РЕМОНТОМ ИЛИ КОРРЕКТИРОВКОЙ.  </string>
     <string name="end_user_license_agreement_i_understand">я понимаю и принимаю</string>
+    <string name="save">Сохранить</string>
     <string name="reloadprofile">обновить профиль</string>
     <string name="smscommunicator">SMS коммуникатор</string>
     <string name="smscommunicator_allowednumbers">разрешенные телефонные номера</string>
@@ -432,6 +433,8 @@
     <string name="ns_localbroadcasts_title">Активировать локальную передачу</string>
     <string name="openapssmb">Супер микро болюс OpenAPS</string>
     <string name="openaps_smb_dynamic_isf">Динамический ISF</string>
+    <string name="DynISFAdjust_title">Коэффициент регулировки динамического диапазона чувствительности ISF %</string>
+    <string name="DynISFAdjust_summary">Коэффициент корректировки динамического диапазона чувствительности ISF. Установите более 100% для более агрессивных доз коррекции и менее 100% для менее агрессивной коррекции.</string>
     <string name="enableuam">Включить непредвиденный прием пищи UAM</string>
     <string name="enablesmb">Включить супер микро болюс SMB</string>
     <string name="enablesmb_summary">Для ускорения действия используйте супер микро болюсы SMB вместо временного базала</string>
@@ -664,6 +667,7 @@
     <string name="show_invalidated">Показать недействительные</string>
     <string name="hide_invalidated">Скрыть недействительные</string>
     <string name="remove_items">Удалить элементы</string>
+    <string name="sort_items">Сортировать элементы</string>
     <string name="storedsettingsfound">Найдены сохраненные параметры</string>
     <string name="allow_hardware_pump_text">Внимание: Если вы активируете подключение к невиртуальной помпе, AndroidAPS скопирует настройки базала в профиль помпы, перезаписывая существующие настройки, хранящиеся в ней. Убедитесь, что настройки базала в AndroidAPS корректны. Если вы не уверены или не хотите перезаписать настройки базала на помпу, нажмите отменить и повторите подключение в другое время.</string>
     <string name="error_adding_treatment_title">Данные терапии неполные</string>
@@ -878,6 +882,7 @@
     <string name="ns_receive_profile_switch_summary">Принимать переключения профиля, введенные через NS или NSClient</string>
     <string name="ns_receive_offline_event">Принимать события APS автономно</string>
     <string name="ns_receive_offline_event_summary">Принимать события APS введенные через NS или клиент NS автономно</string>
+    <string name="ns_receive_tbr_eb">Получать временную базальную скорость TBR и пролонгированный болюс EB</string>
     <string name="ns_receive_insulin">Принимать инсулин</string>
     <string name="ns_receive_insulin_summary">Принимать инсулин, введенный через NS или NSClient (не подается, только рассчитывается как активный IOB)</string>
     <string name="ns_receive_carbs">Принимать углеводы</string>

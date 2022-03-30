@@ -128,16 +128,16 @@ class TreatmentDialog : DialogFragmentWithDate() {
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(carbs)).value()
 
         if (insulinAfterConstraints > 0) {
-            actions.add(rh.gs(R.string.bolus) + ": " + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump, rh).formatColor(rh, R.color.bolus))
+            actions.add(rh.gs(R.string.bolus) + ": " + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump, rh).formatColor(context, rh, R.attr.bolusColor))
             if (recordOnlyChecked)
-                actions.add(rh.gs(R.string.bolusrecordedonly).formatColor(rh, R.color.warning))
+                actions.add(rh.gs(R.string.bolusrecordedonly).formatColor(context, rh, R.attr.warningColor))
             if (abs(insulinAfterConstraints - insulin) > pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))
-                actions.add(rh.gs(R.string.bolusconstraintappliedwarn, insulin, insulinAfterConstraints).formatColor(rh, R.color.warning))
+                actions.add(rh.gs(R.string.bolusconstraintappliedwarn, insulin, insulinAfterConstraints).formatColor(context, rh, R.attr.warningColor))
         }
         if (carbsAfterConstraints > 0) {
-            actions.add(rh.gs(R.string.carbs) + ": " + rh.gs(R.string.format_carbs, carbsAfterConstraints).formatColor(rh, R.color.carbs))
+            actions.add(rh.gs(R.string.carbs) + ": " + rh.gs(R.string.format_carbs, carbsAfterConstraints).formatColor(context, rh, R.attr.carbsColor))
             if (carbsAfterConstraints != carbs)
-                actions.add(rh.gs(R.string.carbsconstraintapplied).formatColor(rh, R.color.warning))
+                actions.add(rh.gs(R.string.carbsconstraintapplied).formatColor(context, rh, R.attr.warningColor))
         }
         if (insulinAfterConstraints > 0 || carbsAfterConstraints > 0) {
             activity?.let { activity ->
