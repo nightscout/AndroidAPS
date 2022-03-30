@@ -62,7 +62,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
-        android:background="@color/black_overlay"
+        android:background="@color/black_alpha_40"
         android:orientation="horizontal"
         android:paddingLeft="16dp"
         android:paddingRight="16dp">

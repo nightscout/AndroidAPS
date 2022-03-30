@@ -125,7 +125,7 @@
         <item name="cgmxdripColor">@color/colorCalibrationButton</item>
         <!---BG color-->
         <item name="bgLow">@color/low</item>
-        <item name="bgHigh">@color/high</item>
+        <item name="highColor">@color/high</item>
         <item name="bgInRange">@color/inrange</item>
         <!---Profile Helper -->
         <item name="helperProfileColor">@color/helperProfile</item>
@@ -144,6 +144,31 @@
         <item name="cobAlertColor">@color/cobAlert</item>
         <!---Fill dialog -->
         <item name="actionsConfirmColor">@color/actionsConfirm</item>
+        <!-- dash and eros colors -->
+        <item name="omniMagentaColor">@color/prediction</item>
+        <item name="omniYellowColor">@color/omni_yellow</item>
+        <item name="omniCyanColor">@color/omni_cyan</item>
+        <item name="omniGreenColor">@color/omni_green</item>
+        <item name="omniGrayColor">@color/midgray</item>
+        <item name="omniWizardFinishButtonColor">@color/omnipod_wizard_finish_button</item>
+        <!---Warning Colors : WarnColors.kt-->
+        <item name="warnColor">@color/omni_yellow</item>
+        <item name="urgentColor">@color/alarm</item>
+
+        <!---Automation -->
+        <item name="userAction">@color/mdtp_line_dark</item>
+        <item name="validActions">@color/ribbonDefault</item>
+        <item name="actionsError">@color/errorAlertBackground</item>
+        <item name="automationBackgroundColor">@color/black</item>
+        <item name="automationOverlayColor">@color/black_alpha_40</item>
+        <!---BG source -->
+        <item name="bgsourceError">@color/errorAlertBackground</item>
+        <!---TDD-statistics -->
+        <item name="tddHeaderBackground">@android:color/darker_gray</item>
+        <item name="mainTableBackground">@android:color/transparent</item>
+        <item name="dummyBackground">@color/dummy_background</item>
+        <!-- Icon Colors -->
+        <item name="icCheckboxTrendColor">@color/white</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>

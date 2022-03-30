@@ -9,7 +9,6 @@
     <color name="mdtp_line_dark">#808080</color>
     <color name="colorLightGray">#d8d8d8</color>
     <color name="cardColorBackground">@color/lightgray</color>
-    <color name="black_overlay">#66000000</color>
     <color name="gray">#BBBBBB</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
@@ -81,7 +80,7 @@
     <!--    BgReading-->
     <color name="inrange">#00FF00</color>
     <color name="low">#FF0000</color>
-    <color name="high">#FFFF00</color>
+    <color name="high">#FFFB8C00</color>
     <color name="iob">#1e88e5</color>
     <color name="extendedBolus">#67DFE8</color>
     <color name="iobPredAS">#1ea3e5</color>
@@ -173,6 +172,7 @@
     <color name="info">#77dd77</color>
     <color name="error_background">#66FC0000</color>
     <color name="ok_background">@color/white</color>
+    <color name="dummy_background">#7DFF0000</color>
 
     <color name="tempTargetBackground">#77dd77</color>
     <color name="exercise">#67DFE8</color>
@@ -213,9 +213,77 @@
     <color name="sphere_plastic_grey">#8c8c8c</color>
     <color name="lightSandGray">#72000000</color>
     <color name="sandGray">#c8666666</color>
-    <color name="treatment">#B2B2B2</color>
+    <color name="midgray">#B2B2B2</color>
     <color name="lightgray">#4dB1B1B1</color>
     <color name="mdtp_button_selected">#33969696</color>
     <color name="plastic">#EBEBEA</color>
+
+    <!-- dash and eros colors -->
+    <color name="omni_yellow">#FFFF00</color>
+    <color name="omni_cyan">#00FFFF</color>
+    <color name="omni_green">#00FF00</color>
+
+    <!-- Button icons - general -->
+    <color name="pod_icon_outline">#9E9E9E</color>
+
+    <!-- Omnipod Wizard -->
+    <color name="omnipod_wizard_progress_bar">#0099CC</color>
+    <color name="omnipod_wizard_finish_button">#ff669900</color>
+    <color name="icon_omnipod_wizard_success">#77DD77</color>
+
+    <!-- Omnipod tab - Button icons -->
+    <color name="ic_omnipod_overview_acknowledge_alerts">#FF4444</color>
+    <color name="ic_omnipod_overview_acknowledge_alerts_outline">@color/pod_icon_outline</color>
+    <color name="ic_omnipod_overview_pod_management">#4CAF50</color>
+    <color name="ic_omnipod_overview_pod_management_graph">@color/pod_icon_outline</color>
+    <color name="ic_omnipod_overview_pod_management_outline">@color/pod_icon_outline</color>
+    <color name="ic_omnipod_overview_refresh_pod_status">#42A5F5</color>
+    <color name="ic_omnipod_overview_refresh_pod_status_outline">@color/pod_icon_outline</color>
+    <color name="ic_omnipod_overview_resume_delivery">#67E86A</color>
+    <color name="ic_omnipod_overview_resume_delivery_outline">@color/pod_icon_outline</color>
+    <color name="ic_omnipod_overview_set_time">#B39DDB</color>
+    <color name="ic_omnipod_overview_set_time_outline">@color/pod_icon_outline</color>
+    <color name="ic_omnipod_overview_suspend_delivery">#ffbf00</color>
+    <color name="ic_omnipod_overview_suspend_delivery_outline">@color/pod_icon_outline</color>
+
+    <!-- Pod Management - Button icons -->
+    <color name="ic_pod_management_activate_pod">#67E86A</color>
+    <color name="ic_pod_management_activate_pod_outline">@color/pod_icon_outline</color>
+    <color name="ic_pod_management_deactivate_pod">#FF4444</color>
+    <color name="ic_pod_management_deactivate_pod_outline">@color/pod_icon_outline</color>
+    <color name="ic_pod_management_discard_pod">#85F803</color>
+    <color name="ic_pod_management_discard_pod_outline">@color/pod_icon_outline</color>
+    <color name="ic_pod_management_play_test_beep">#ffbf00</color>
+    <color name="ic_pod_management_play_test_beep_outline">@color/pod_icon_outline</color>
+    <color name="ic_pod_management_pulse_log">#4DD0E1</color>
+    <color name="ic_pod_management_pulse_log_outline">@color/pod_icon_outline</color>
+    <color name="ic_pod_management_pod_history">#FB8C00</color>
+    <color name="ic_pod_management_pod_history_outline">@color/pod_icon_outline</color>
+
+    <!-- Button icons - general -->
+    <color name="rl_icon_outline">#b9d2d2</color>
+    <color name="rl_board_shape">#66BB6A</color>
+    <color name="rl_antenna_shape">#FF7043</color>
+
+    <!-- Actions tab - Button icons -->
+    <color name="ic_pod_activity_reset_rileylink_config">@color/rl_board_shape</color>
+    <color name="ic_pod_activity_reset_rileylink_config_outline">@color/rl_icon_outline</color>
+
+    <!-- Pod Management - Button icons -->
+    <color name="ic_pod_management_rl_stats">@color/rl_board_shape</color>
+    <color name="ic_pod_management_rl_stats_outline">@color/rl_icon_outline</color>
+
+    <!---Example light theme colors -->
+    <color name="aaps_theme_light_primary">#1D5FA5</color>
+    <color name="aaps_theme_light_onPrimary">#FFFFFF</color>
+    <color name="aaps_theme_light_secondary">#5954A8</color>
+    <color name="aaps_theme_light_onSecondary">#FFFFFF</color>
+    <color name="aaps_theme_light_error">#B3261E</color>
+    <color name="aaps_theme_light_onError">#FFFFFF</color>
+    <color name="aaps_theme_light_background">#FFFBFE</color>
+    <color name="aaps_theme_light_onBackground">#1C1B1F</color>
+    <color name="aaps_theme_light_surface">#FFFBFE</color>
+    <color name="aaps_theme_light_onSurface">#1C1B1F</color>
+    <color name="aaps_theme_light_surfaceVariant">#E7E0EC</color>
 
 </resources>

@@ -179,7 +179,7 @@
 
         <info.nightscout.androidaps.utils.ui.SingleClickButton
             android:id="@+id/reload"
-            style="@style/ButtonSmallFontStyle"
+            style="?android:attr/buttonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
