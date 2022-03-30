@@ -38,7 +38,6 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var defaultProfile: DefaultProfile
     @Inject lateinit var defaultProfileDPV: DefaultProfileDPV
     @Inject lateinit var localProfilePlugin: LocalProfilePlugin
-    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var repository: AppRepository
