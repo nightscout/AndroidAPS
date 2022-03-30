@@ -986,6 +986,8 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="wear_unknown_action_string">Bilinmeyen eylem komutu:</string>
     <string name="overview_editquickwizard_percentage">Yüzde</string>
     <string name="app_default">Uygulama varsayılanı</string>
+    <string name="show_invalidated_records">Geçersiz kılınan / kaldırılan kayıtları göster</string>
+    <string name="hide_invalidated_records">Geçersiz kılınan / kaldırılan kayıtları gizle</string>
     <string name="select_profile">Düzenlenecek profili seç</string>
     <string name="refresh_from_nightscout">Nightscout\'tan Yenile</string>
     <string name="remove_selected_items">Seçili nesneleri kaldır</string>
@@ -998,7 +1000,10 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="show_loop">Döngüyü göster</string>
     <string name="count_selected">%1$d seçildi</string>
     <string name="sort_label">Sırala</string>
+    <string name="dialog_canceled">İletişim kutusu iptal edildi</string>
     <string name="below" comment="below &quot;in range&quot;">Altında</string>
     <string name="in_range">Aralık içinde</string>
     <string name="above" comment="above &quot;in range&quot;">Üstünde</string>
+    <string name="show_loop_records">Döngü kayıtlarını göster</string>
+    <string name="show_hide_records">Döngü kayıtlarını gizle</string>
 </resources>

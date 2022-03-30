@@ -460,6 +460,11 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Bazal</string>
     <string name="basalpct">Bazal %</string>
+    <string name="count_selected">%1$d seçildi</string>
+    <string name="sort_label">Sırala</string>
+    <string name="remove_items">Öğeleri kaldır</string>
+    <string name="sort_items">Öğeleri Sırala</string>
+    <string name="remove_selected_items">Seçilen öğeleri kaldır</string>
     <plurals name="days">
         <item quantity="one">%1$d gün</item>
         <item quantity="other">%1$d gün</item>
