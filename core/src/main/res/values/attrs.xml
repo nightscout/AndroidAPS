@@ -129,4 +129,18 @@
     <attr name="omniGreenColor" format="reference|color" />
     <attr name="omniGrayColor" format="reference|color" />
     <attr name="omniWizardFinishButtonColor" format="reference|color" />
+    <!---Automation -->
+    <attr name="userAction" format="reference|color" />
+    <attr name="validActions" format="reference|color" />
+    <attr name="actionsError" format="reference|color" />
+    <attr name="automationBackgroundColor" format="reference|color" />
+    <attr name="automationOverlayColor" format="reference|color" />
+    <!---BG source -->
+    <attr name="bgsourceError" format="reference|color" />
+    <!---TDD-statistics -->
+    <attr name="tddHeaderBackground" format="reference|color" />
+    <attr name="mainTableBackground" format="reference|color" />
+    <attr name="dummyBackground" format="reference|color" />
+    <!-- Icon Colors -->
+    <attr name="icCheckboxTrendColor" format="reference|color" />
 </resources>
