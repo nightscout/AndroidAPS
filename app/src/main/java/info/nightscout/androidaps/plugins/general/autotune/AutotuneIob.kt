@@ -5,6 +5,7 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.*
 import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
@@ -191,7 +192,7 @@ class AutotuneIob(
                     timestamp = newStart,
                     rate = 100.0,
                     duration = previousStart - newStart,
-                    id = newStart,
+                    interfaceIDs_backing = InterfaceIDs(nightscoutId = newStart.toString()),
                     type = TemporaryBasal.Type.NORMAL
                 )
                 toRoundedTimestampTB(neutralTbr, tunedProfile)
@@ -205,7 +206,7 @@ class AutotuneIob(
                 timestamp = from,
                 rate = 100.0,
                 duration = previousStart - from,
-                id = from,
+                interfaceIDs_backing = InterfaceIDs(nightscoutId = from.toString()),
                 type = TemporaryBasal.Type.NORMAL
             )
             toRoundedTimestampTB(neutralTbr, tunedProfile)
