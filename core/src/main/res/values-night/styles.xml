@@ -169,6 +169,13 @@
         <item name="dummyBackground">@color/dummy_background</item>
         <!-- Icon Colors -->
         <item name="icCheckboxTrendColor">@color/white</item>
+        <!-- Overview Buttons -->
+        <item name="icBolusColor">@color/colorInsulinButton</item>
+        <item name="icBolusCarbsColor">@color/colorCarbsButton</item>
+        <item name="icCalculatorColor">@color/colorCalculatorButton</item>
+        <item name="icQuickWizardColor">@color/colorQuickWizardButton</item>
+        <item name="icCalibrationColor">@color/colorCalibrationButton</item>
+        <item name="icTreatmentColor">@color/colorTreatmentButton</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>

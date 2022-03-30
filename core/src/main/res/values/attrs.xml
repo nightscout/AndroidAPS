@@ -143,4 +143,11 @@
     <attr name="dummyBackground" format="reference|color" />
     <!-- Icon Colors -->
     <attr name="icCheckboxTrendColor" format="reference|color" />
+    <!-- Overview Buttons -->
+    <attr name="icBolusColor" format="reference|color" />
+    <attr name="icBolusCarbsColor" format="reference|color" />
+    <attr name="icCalculatorColor" format="reference|color" />
+    <attr name="icQuickWizardColor" format="reference|color" />
+    <attr name="icCalibrationColor" format="reference|color" />
+    <attr name="icTreatmentColor" format="reference|color" />
 </resources>
