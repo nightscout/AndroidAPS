@@ -36,7 +36,6 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
         //lib/meals is called before to get only meals data (in AAPS it's done in AutotuneIob)
         var treatments: MutableList<Carbs> = autotuneIob.meals
         var boluses: MutableList<Bolus> = autotuneIob.boluses
-        val profileData = tunedprofile.profile
         // Bloc between #21 and # 54 replaced by bloc below (just remove BG value below 39, Collections.sort probably not necessary because BG values already sorted...)
         val glucose = autotuneIob.glucose
         val glucoseData: MutableList<GlucoseValue> = ArrayList()
@@ -169,7 +168,7 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
             currentPumpBasal = Round.roundTo(currentPumpBasal / 4, 0.001) //CurrentPumpBasal for iob calculation is average of 4 last pumpProfile Basal rate
             */
             // this is the current autotuned basal, used for everything else besides IOB calculations
-            val currentBasal = profileData.getBasal(BGTime)
+            val currentBasal = tunedprofile.basal(BGTime)
 
             // basalBGI is BGI of basal insulin activity.
             val basalBGI = Round.roundTo(currentBasal * sens / 60 * 5, 0.01) // U/hr * mg/dL/U * 1 hr / 60 minutes * 5 = mg/dL/5m

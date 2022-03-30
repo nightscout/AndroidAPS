@@ -49,6 +49,8 @@ class ATProfile(profile: Profile?, var localInsulin: LocalInsulin, val injector:
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var rh: ResourceHelper
 
+    fun basal(time: Long) = basal[Profile.secondsFromMidnight(time)/3600]
+
     fun getProfile(circadian: Boolean = false): PureProfile {
         return if (circadian)
             circadianProfile.convertToNonCustomizedProfile(dateUtil)
