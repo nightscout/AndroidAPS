@@ -99,7 +99,7 @@
     <attr name="cgmxdripColor" format="reference|color" />
     <!---BG color-->
     <attr name="bgLow" format="reference|color" />
-    <attr name="bgHigh" format="reference|color" />
+    <attr name="highColor" format="reference|color" />
     <attr name="bgInRange" format="reference|color" />
     <!---Profile Helper -->
     <attr name="helperProfileColor" format="reference|color" />
@@ -109,6 +109,10 @@
     <attr name="errorBackgroundColor" format="reference|color" />
     <!---Warning  -->
     <attr name="warningColor" format="reference|color" />
+    <!---Warning Colors : WarnColors.kt-->
+    <attr name="normalColor" format="reference|color" />
+    <attr name="warnColor" format="reference|color" />
+    <attr name="urgentColor" format="reference|color" />
     <!---TextColor -->
     <attr name="defaultTextColor" format="reference|color" />
     <!---Profile viewer TempBasal -->
@@ -118,4 +122,11 @@
     <attr name="cobAlertColor" format="reference|color" />
     <!---Fill dialog -->
     <attr name="actionsConfirmColor" format="reference|color" />
+    <!-- dash and eros colors -->
+    <attr name="omniMagentaColor" format="reference|color" />
+    <attr name="omniYellowColor" format="reference|color" />
+    <attr name="omniCyanColor" format="reference|color" />
+    <attr name="omniGreenColor" format="reference|color" />
+    <attr name="omniGrayColor" format="reference|color" />
+    <attr name="omniWizardFinishButtonColor" format="reference|color" />
 </resources>

@@ -92,7 +92,7 @@ class MedtronicFragment : DaggerFragment() {
 
         binding.rlStatus.text = rh.gs(RileyLinkServiceState.NotStarted.resourceId)
 
-        binding.pumpStatusIcon.setTextColor(Color.WHITE)
+        binding.pumpStatusIcon.setTextColor(rh.gac(context,R.attr.defaultTextColor))
         @SuppressLint("SetTextI18n")
         binding.pumpStatusIcon.text = "{fa-bed}"
 
@@ -200,7 +200,7 @@ class MedtronicFragment : DaggerFragment() {
                 rileyLinkServiceData.rileyLinkServiceState.isError && rileyLinkError != null   -> "{fa-bluetooth-b}   " + rh.gs(rileyLinkError.getResourceId(RileyLinkTargetDevice.MedtronicPump))
                 else                                                                           -> "{fa-bluetooth-b}   " + rh.gs(resourceId)
             }
-        binding.rlStatus.setTextColor(if (rileyLinkError != null) Color.RED else Color.WHITE)
+        binding.rlStatus.setTextColor(rh.gac( context, if (rileyLinkError != null) R.attr.warningColor else R.attr.defaultTextColor))
 
         binding.errors.text =
             rileyLinkServiceData.rileyLinkError?.let {
@@ -272,7 +272,7 @@ class MedtronicFragment : DaggerFragment() {
             val min = (System.currentTimeMillis() - medtronicPumpStatus.lastConnection) / 1000 / 60
             if (medtronicPumpStatus.lastConnection + 60 * 1000 > System.currentTimeMillis()) {
                 binding.lastConnection.setText(R.string.medtronic_pump_connected_now)
-                binding.lastConnection.setTextColor(Color.WHITE)
+                binding.lastConnection.setTextColor(rh.gac(context,R.attr.defaultTextColor))
             } else if (medtronicPumpStatus.lastConnection + 30 * 60 * 1000 < System.currentTimeMillis()) {
 
                 if (min < 60) {
@@ -288,10 +288,10 @@ class MedtronicFragment : DaggerFragment() {
                     binding.lastConnection.text = (rh.gq(R.plurals.duration_days, d, d) + " "
                         + rh.gs(R.string.ago))
                 }
-                binding.lastConnection.setTextColor(Color.RED)
+                binding.lastConnection.setTextColor(rh.gac(context,R.attr.warningColor))
             } else {
                 binding.lastConnection.text = minAgo
-                binding.lastConnection.setTextColor(Color.WHITE)
+                binding.lastConnection.setTextColor(rh.gac(context,R.attr.defaultTextColor))
             }
         }
 
