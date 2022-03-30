@@ -192,7 +192,7 @@ class AutotuneIob(
                     timestamp = newStart,
                     rate = 100.0,
                     duration = previousStart - newStart,
-                    interfaceIDs_backing = InterfaceIDs(nightscoutId = newStart.toString()),
+                    interfaceIDs_backing = InterfaceIDs(nightscoutId = "neutral_" + newStart.toString()),
                     type = TemporaryBasal.Type.NORMAL
                 )
                 toRoundedTimestampTB(neutralTbr, tunedProfile)
@@ -206,7 +206,7 @@ class AutotuneIob(
                 timestamp = from,
                 rate = 100.0,
                 duration = previousStart - from,
-                interfaceIDs_backing = InterfaceIDs(nightscoutId = from.toString()),
+                interfaceIDs_backing = InterfaceIDs(nightscoutId = "neutral_" + from.toString()),
                 type = TemporaryBasal.Type.NORMAL
             )
             toRoundedTimestampTB(neutralTbr, tunedProfile)
