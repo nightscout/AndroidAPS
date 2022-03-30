@@ -38,7 +38,6 @@ import javax.inject.Inject
 
 class DanaHistoryActivity : NoSplashAppCompatActivity() {
 
-    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var activePlugin: ActivePlugin
