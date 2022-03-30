@@ -163,10 +163,8 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
             double x = graphWidth * ratX;
 
             // overdraw
-            boolean overdraw = false;
-            if (x > graphWidth) { // end right
-                overdraw = true;
-            }
+            boolean overdraw = x > graphWidth;
+            // end right
             if (y < 0) { // end bottom
                 overdraw = true;
             }

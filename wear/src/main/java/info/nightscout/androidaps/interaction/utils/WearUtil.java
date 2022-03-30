@@ -76,7 +76,7 @@ public class WearUtil {
         PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AAPS::" + name);
         wl.acquire(millis);
         if (debug_wakelocks)
-            aapsLogger.debug(LTag.WEAR, "getWakeLock: " + name + " " + wl.toString());
+            aapsLogger.debug(LTag.WEAR, "getWakeLock: " + name + " " + wl);
         return wl;
     }
 

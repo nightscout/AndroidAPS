@@ -372,7 +372,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
                 if (sp.getString(pref.key, "").startsWith("hmac:")) {
                     pref.summary = "******"
                 } else {
-                    if (pref.getKey().contains("pin")) {
+                    if (pref.key.contains("pin")) {
                         pref.summary = rh.gs(R.string.pin_not_set)
                     }else {
                         pref.summary = rh.gs(R.string.password_not_set)
