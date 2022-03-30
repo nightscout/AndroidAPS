@@ -9,7 +9,7 @@ class MsgSettingUserOptions(
 
 
     init {
-        SetCommand(0x320B)
+        setCommand(0x320B)
         aapsLogger.debug(LTag.PUMPCOMM, "New message")
     }
 

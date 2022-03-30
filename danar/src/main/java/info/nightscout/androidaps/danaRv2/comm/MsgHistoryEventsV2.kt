@@ -21,21 +21,21 @@ class MsgHistoryEventsV2 constructor(
     }
 
     init {
-        SetCommand(0xE003)
+        setCommand(0xE003)
         if (from > dateUtil.now()) {
             aapsLogger.error("Asked to load from the future")
             from = 0
         }
         if (from == 0L) {
-            AddParamByte(0.toByte())
-            AddParamByte(1.toByte())
-            AddParamByte(1.toByte())
-            AddParamByte(0.toByte())
-            AddParamByte(0.toByte())
+            addParamByte(0.toByte())
+            addParamByte(1.toByte())
+            addParamByte(1.toByte())
+            addParamByte(0.toByte())
+            addParamByte(0.toByte())
         } else {
             val gFrom = GregorianCalendar()
             gFrom.timeInMillis = from
-            AddParamDate(gFrom)
+            addParamDate(gFrom)
         }
         aapsLogger.debug(LTag.PUMPCOMM, "Loading event history from: " + dateUtil.dateAndTimeString(from))
         danaPump.historyDoneReceived = false
