@@ -9,7 +9,6 @@
     <color name="mdtp_line_dark">#808080</color>
     <color name="colorLightGray">#d8d8d8</color>
     <color name="cardColorBackground">@color/lightgray</color>
-    <color name="black_overlay">#66000000</color>
     <color name="gray">#BBBBBB</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
@@ -173,6 +172,7 @@
     <color name="info">#77dd77</color>
     <color name="error_background">#66FC0000</color>
     <color name="ok_background">@color/white</color>
+    <color name="dummy_background">#7DFF0000</color>
 
     <color name="tempTargetBackground">#77dd77</color>
     <color name="exercise">#67DFE8</color>
@@ -272,5 +272,18 @@
     <!-- Pod Management - Button icons -->
     <color name="ic_pod_management_rl_stats">@color/rl_board_shape</color>
     <color name="ic_pod_management_rl_stats_outline">@color/rl_icon_outline</color>
+
+    <!---Example light theme colors -->
+    <color name="aaps_theme_light_primary">#1D5FA5</color>
+    <color name="aaps_theme_light_onPrimary">#FFFFFF</color>
+    <color name="aaps_theme_light_secondary">#5954A8</color>
+    <color name="aaps_theme_light_onSecondary">#FFFFFF</color>
+    <color name="aaps_theme_light_error">#B3261E</color>
+    <color name="aaps_theme_light_onError">#FFFFFF</color>
+    <color name="aaps_theme_light_background">#FFFBFE</color>
+    <color name="aaps_theme_light_onBackground">#1C1B1F</color>
+    <color name="aaps_theme_light_surface">#FFFBFE</color>
+    <color name="aaps_theme_light_onSurface">#1C1B1F</color>
+    <color name="aaps_theme_light_surfaceVariant">#E7E0EC</color>
 
 </resources>

@@ -2,22 +2,26 @@
 <resources xmlns:ns2="http://schemas.android.com/tools">
 
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
+        <!---Example light theme colors -->
+        <item name="colorPrimary">@color/lightSandGray</item>
+        <item name="colorOnPrimary">@color/aaps_theme_light_onPrimary</item>
+        <item name="colorSecondary">@color/aaps_theme_light_secondary</item>
+        <item name="colorOnSecondary">@color/aaps_theme_light_onSecondary</item>
+        <item name="colorError">@color/aaps_theme_light_error</item>
+        <item name="colorOnError">@color/aaps_theme_light_onError</item>
+        <item name="android:colorBackground">@color/aaps_theme_light_background</item>
+        <item name="colorOnBackground">@color/aaps_theme_light_onBackground</item>
+        <item name="colorSurface">@color/aaps_theme_light_surface</item>
+        <item name="colorOnSurface">@color/aaps_theme_light_onSurface</item>
+
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@android:color/holo_blue_light</item>
+        <item name="colorAccent">@color/aaps_theme_light_secondary</item>
         <item name="dialogTitleBackground">@color/dialog_title_background</item>
         <item name="dialogTitleColor">@color/dialog_title_color</item>
         <item name="dialogTitleIconTint">@color/dialog_title_icon_tint</item>
         <!-- New MaterialComponents attributes. -->
-        <item name="colorSecondary">@android:color/holo_blue_light</item>
         <item name="colorPrimaryVariant">@color/primaryLightColorDefault</item>
         <item name="colorSecondaryVariant">@color/secondaryLightColorDefault</item>
-        <item name="colorOnPrimary">@color/primaryTextColorDefault</item>
-        <item name="colorSurface">@color/white</item>
-        <item name="colorOnSurface">@color/gray</item>
-        <item name="colorOnSecondary">@color/black</item>
-        <item name="colorOnBackground">@color/white</item>
-        <item name="colorOnError">@color/black</item>
         <item name="scrimBackground">@color/white</item>
         <item name="popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
         <item name="actionOverflowMenuStyle">@style/Widget.MaterialComponents.PopupMenu.Overflow</item>
@@ -120,7 +124,7 @@
         <item name="viewPortbackgroundColor">@color/white_alpha_20</item>
         <item name="tempTargetBackgroundColor">@color/tempTargetBackground</item>
         <!---CGM source-->
-        <item name="cgmdexColor">@color/colorLightGray</item>
+        <item name="cgmdexColor">@color/mdtp_line_dark</item>
         <item name="cgmxdripColor">@color/colorCalibrationButton</item>
         <!---BG color-->
         <item name="bgLow">@color/low</item>
@@ -153,6 +157,21 @@
         <!---Warning Colors : WarnColors.kt-->
         <item name="warnColor">@color/high</item>
         <item name="urgentColor">@color/alarm</item>
+        <!---Automation -->
+        <item name="userAction">@color/mdtp_line_dark</item>
+        <item name="validActions">@color/ribbonDefault</item>
+        <item name="actionsError">@color/errorAlertBackground</item>
+        <item name="automationBackgroundColor">@color/black</item>
+        <item name="automationOverlayColor">@color/black_alpha_40</item>
+        <!---BG source -->
+        <item name="bgsourceError">@color/errorAlertBackground</item>
+        <!---TDD-statistics -->
+        <item name="tddHeaderBackground">@android:color/darker_gray</item>
+        <item name="mainTableBackground">@android:color/transparent</item>
+        <item name="dummyBackground">@color/dummy_background</item>
+        <!-- Icon Colors -->
+        <!-- Trend Arrow -->
+        <item name="icCheckboxTrendColor">@color/black</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>
