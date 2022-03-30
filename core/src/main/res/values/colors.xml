@@ -48,7 +48,7 @@
 
 
     <!--    Fragments-->
-    <color name="pumpStatusBackground">#505050</color>
+    <color name="pumpStatusBackground">#CCCCCC</color>
 
     <!--    Dialogs-->
     <color name="dialog_title_background">#CCCCCC</color>
@@ -149,7 +149,7 @@
 
     <color name="ribbonWarning">#f4d700</color>
     <color name="ribbonCritical">#ff0400</color>
-    <color name="ribbonTextDefault">#000000</color>
+    <color name="ribbonTextDefault">#FFFFFF</color>
     <color name="ribbonTextWarning">#303030</color>
     <color name="tempTargetConfirmation">#77dd77</color>
 
@@ -182,13 +182,13 @@
 
     <color name="cardObjectiveText">#779ECB</color>
 
-    <color name="colorAcceptTempButton">#f4d700</color>
+    <color name="colorAcceptTempButton">#ffffbb33</color>
     <color name="colorTreatmentButton">#67dfe8</color>
     <color name="colorInsulinButton">#67dfe8</color>
-    <color name="colorCarbsButton">#ffae01</color>
+    <color name="colorCarbsButton">#E19701</color>
     <color name="colorCalibrationButton">#e93057</color>
-    <color name="colorCalculatorButton">#67e86a</color>
-    <color name="colorQuickWizardButton">#ffae01</color>
+    <color name="colorCalculatorButton">#66BB6A</color>
+    <color name="colorQuickWizardButton">#E19701</color>
     <color name="colorSetTempButton">#FF478EFF</color>
     <color name="colorSetExtendedButton">#FFDD7792</color>
     <color name="colorProfileSwitchButton">#ca77dd</color>
