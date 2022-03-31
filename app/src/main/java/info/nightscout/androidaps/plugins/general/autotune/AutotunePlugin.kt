@@ -165,7 +165,7 @@ class AutotunePlugin @Inject constructor(
                 autotuneFS.exportTreatments(autotuneIob)
                 preppedGlucose = autotunePrep.categorizeBGDatums(autotuneIob, tunedProfile!!, localInsulin)
                 //<=> autotune.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
-                if (preppedGlucose == null) {
+                if (preppedGlucose == null || tunedProfile == null) {
                     result = rh.gs(R.string.autotune_error)
                     atLog(result)
                     calculationRunning = false
