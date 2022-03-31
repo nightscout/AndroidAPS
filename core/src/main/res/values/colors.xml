@@ -32,11 +32,11 @@
     <color name="background_light">#FFFFFF</color>
 
     <!--    Tabs-->
-    <color name="tabText">#d0d0d0</color>
-    <color name="tabSelectedText">@color/white</color>
+    <color name="tabText">@color/black_alpha_90</color>
+    <color name="tabSelectedText">@color/black_alpha_90</color>
 
     <!--    Buttons-->
-    <color name="buttonBackground">#555555</color>
+    <color name="buttonBackground">#888888</color>
     <color name="buttonText">#ffffff</color>
     <color name="okButtonText">@color/colorAccent</color>
     <color name="okButtonSelected">#33969696</color>
@@ -82,7 +82,7 @@
     <color name="low">#FF0000</color>
     <color name="high">#FFFB8C00</color>
     <color name="iob">#1e88e5</color>
-    <color name="extendedBolus">#67DFE8</color>
+    <color name="extendedBolus">#1e88e5</color>
     <color name="iobPredAS">#1ea3e5</color>
     <color name="cob">#FFFB8C00</color>
     <color name="carbs">#FFFB8C00</color>
@@ -151,7 +151,7 @@
     <color name="ribbonCritical">#ff0400</color>
     <color name="ribbonTextDefault">#FFFFFF</color>
     <color name="ribbonTextWarning">#303030</color>
-    <color name="tempTargetConfirmation">#77dd77</color>
+    <color name="tempTargetConfirmation">#6BD16B</color>
 
     <color name="prediction">#ff00ff</color>
     <color name="iobPred">#00d2d2</color>
@@ -175,7 +175,7 @@
     <color name="dummy_background">#7DFF0000</color>
 
     <color name="tempTargetBackground">#77dd77</color>
-    <color name="exercise">#67DFE8</color>
+    <color name="exercise">#42A5F5</color>
 
     <color name="action">#ffffbb33</color>
     <color name="alarm">#ffff4444</color>
@@ -204,6 +204,16 @@
     <color name="deviationblack">#72000000</color>
 
     <color name="splashBackground">#FFFFFF</color>
+
+    <color name="extBolusStop">#FEAF05</color>
+    <color name="actionBasal">#CF8BFE</color>
+    <color name="pumpCanula">#42A5F5</color>
+    <color name="cgmInsert">#42A5F5</color>
+    <color name="pumpBattery">#66BB6A</color>
+    <color name="note">#FEAF05</color>
+    <color name="announcement">#CF8BFE</color>
+    <color name="question">#FEAF05</color>
+    <color name="pumpHistory">#42A5F5</color>
 
     <!-- Gray colors -->
     <color name="darkgray">#323232</color>

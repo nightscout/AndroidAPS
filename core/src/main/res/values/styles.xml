@@ -3,7 +3,7 @@
 
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <!---Example light theme colors -->
-        <item name="colorPrimary">@color/lightSandGray</item>
+        <item name="colorPrimary">@color/plastic</item>
         <item name="colorOnPrimary">@color/aaps_theme_light_onPrimary</item>
         <item name="colorSecondary">@color/aaps_theme_light_secondary</item>
         <item name="colorOnSecondary">@color/aaps_theme_light_onSecondary</item>
@@ -13,7 +13,6 @@
         <item name="colorOnBackground">@color/aaps_theme_light_onBackground</item>
         <item name="colorSurface">@color/aaps_theme_light_surface</item>
         <item name="colorOnSurface">@color/aaps_theme_light_onSurface</item>
-
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/aaps_theme_light_secondary</item>
         <item name="dialogTitleBackground">@color/dialog_title_background</item>
@@ -25,6 +24,9 @@
         <item name="scrimBackground">@color/white</item>
         <item name="popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
         <item name="actionOverflowMenuStyle">@style/Widget.MaterialComponents.PopupMenu.Overflow</item>
+        <!---Text Colors -->
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="android:textColor">@color/black</item>
         <!---Notification -->
         <item name="notificationUrgent">@color/notificationUrgent</item>
         <item name="notificationNormal">@color/notificationNormal</item>
@@ -50,14 +52,10 @@
         <item name="setTempButton">@color/colorSetTempButton</item>
         <!-- Card Item-->
         <item name="cardItemBackgroundColor">@color/cardColorBackground</item>
-        <!-- Carbs -->
-        <item name="carbsColor">@color/carbs</item>
         <!-- Exercise -->
         <item name="exerciseColor">@color/exercise</item>
         <!-- BG low -->
         <item name="lowColor">@color/low</item>
-        <!-- Temp Target -->
-        <item name="tempTargetConfirmation">@color/tempTargetConfirmation</item>
         <!-- Treatments -->
         <item name="setExtendedButtonColor">@color/colorSetExtendedButton</item>
         <item name="activeColor">@color/colorActive</item>
@@ -129,7 +127,7 @@
         <!---BG color-->
         <item name="bgLow">@color/low</item>
         <item name="highColor">@color/high</item>
-        <item name="bgInRange">@color/inrange</item>
+        <item name="bgInRange">@color/tempTargetConfirmation</item>
         <!---Profile Helper -->
         <item name="helperProfileColor">@color/helperProfile</item>
         <item name="examinedProfileColor">@color/examinedProfile</item>
@@ -179,7 +177,39 @@
         <item name="icQuickWizardColor">@color/colorQuickWizardButton</item>
         <item name="icCalibrationColor">@color/colorCalibrationButton</item>
         <item name="icTreatmentColor">@color/bolus</item>
-
+        <!-- IOB -->
+        <item name="iobColor">@color/iob</item>
+        <!-- Basal -->
+        <item name="basal">@color/basal</item>
+        <!-- Carbs -->
+        <item name="carbsColor">@color/carbs</item>
+        <!-- Temp Target -->
+        <item name="tempTargetConfirmation">@color/tempTargetConfirmation</item>
+        <!---Loop Icon-->
+        <!---Loop Paused Icon Color-->
+        <item name="loopPaused">@color/loopSuspended</item>
+        <!---Loop Closed Icon Color-->
+        <item name="loopClosed">@color/loopClosed</item>
+        <!---Loop Disabled Icon Color-->
+        <item name="loopDisabled">@color/loopDisabled</item>
+        <!---Loop Disconnected Icon Color-->
+        <item name="loopDisconnected">@color/loopDisconnected</item>
+        <!---Loop Opened Icon Color-->
+        <item name="loopOpened">@color/loopOpened</item>
+        <!---Loop Super Bolus Icon Color-->
+        <item name="loopSuperBolus">@color/carbs</item>
+        <!---Action Icons Color-->
+        <item name="extBolusColor">@color/extendedBolus</item>
+        <item name="extBolusStopColor">@color/extBolusStop</item>
+        <item name="basalstartColor">@color/actionBasal</item>
+        <item name="basalCancelColor">@color/actionBasal</item>
+        <item name="pumpCanulaColor">@color/pumpCanula</item>
+        <item name="cgmInsertColor">@color/cgmInsert</item>
+        <item name="pumpBatteryColor">@color/pumpBattery</item>
+        <item name="noteColor">@color/note</item>
+        <item name="announcementColor">@color/announcement</item>
+        <item name="questionColor">@color/question</item>
+        <item name="pumpHistoryColor">@color/pumpHistory</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>

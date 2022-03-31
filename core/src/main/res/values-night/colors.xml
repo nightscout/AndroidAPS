@@ -204,6 +204,16 @@
 
     <color name="splashBackground">#000000</color>
 
+    <color name="extBolusStop">#FEAF05</color>
+    <color name="actionBasal">#CF8BFE</color>
+    <color name="pumpCanula">#67dfe8</color>
+    <color name="cgmInsert">#67dfe8</color>
+    <color name="pumpBattery">#36FF00</color>
+    <color name="note">#FEAF05</color>
+    <color name="announcement">#CF8BFE</color>
+    <color name="question">#FEAF05</color>
+    <color name="pumpHistory">#67DFE8</color>
+
     <!-- Gray colors -->
     <color name="darkgray">#323232</color>
     <color name="darkgrayVariant">#424242</color>
