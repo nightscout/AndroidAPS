@@ -115,6 +115,12 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
         createAutotunefile(RECOMMENDATIONS, result)
     }
 
+    fun exportLog(lastRun: Long, logString: String, index: Int = 0) {
+        val suffix = if (index == 0) "" else "_" + index
+        log("Create " + LOGPREF + formatDate(lastRun) + suffix + ".log" + " file in " + AUTOTUNEFOLDER + " folder")
+        createAutotunefile(LOGPREF + formatDate(lastRun) + suffix + ".log", logString)
+    }
+
     fun exportLogAndZip(lastRun: Long, logString: String) {
         log("Create " + LOGPREF + formatDate(lastRun) + ".log" + " file in " + AUTOTUNEFOLDER + " folder")
         createAutotunefile(LOGPREF + formatDate(lastRun) + ".log", logString)

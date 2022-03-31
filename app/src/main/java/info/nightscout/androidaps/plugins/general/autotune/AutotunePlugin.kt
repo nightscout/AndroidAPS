@@ -103,6 +103,7 @@ class AutotunePlugin @Inject constructor(
         autotunePrep = AutotunePrep(injector)
         autotuneCore = AutotuneCore(injector)
         autotuneIob = AutotuneIob(injector)
+        val detailedLog = sp.getBoolean(R.string.key_autotune_additional_log, false)
         profileSwitchButtonVisibility = View.GONE
         copyButtonVisibility = View.GONE
         lastRunSuccess = false
@@ -184,44 +185,51 @@ class AutotunePlugin @Inject constructor(
                     result = rh.gs(R.string.format_autotune_partialresult, i + 1, daysBack, showResults(tunedProfile!!, pumpprofile))
                     rxBus.send(EventAutotuneUpdateResult(result))
                 }
-            }
-        }
-        return if (tunedProfile!!.profile != null) {
-            result = showResults(tunedProfile!!, pumpprofile)
-            autotuneFS.exportResult(result)
-            autotuneFS.exportLogAndZip(lastRun, logString)
-            profileSwitchButtonVisibility = View.VISIBLE
-            copyButtonVisibility = View.VISIBLE
-            if (autoSwitch) {
-                val circadian = sp.getBoolean(R.string.key_autotune_circadian_ic_isf, false)
-                profileSwitchButtonVisibility = View.GONE //hide profilSwitch button in fragment
-                val now = dateUtil.now()
-                val profileStore = tunedProfile?.profileStore(circadian)
-                profileStore?.let {
-                    if (profileFunction.createProfileSwitch(
-                            it,
-                            profileName = tunedProfile!!.profilename!!,
-                            durationInMinutes = 0,
-                            percentage = 100,
-                            timeShiftInHours = 0,
-                            timestamp = now
-                        )
-                    ) {
-                        uel.log(
-                            UserEntry.Action.PROFILE_SWITCH,
-                            UserEntry.Sources.ProfileSwitchDialog,
-                            "Autotune AutoSwitch",
-                            ValueWithUnit.SimpleString(tunedProfile!!.profilename!!))
-                    }
-                    rxBus.send(EventLocalProfileChanged())
+                if (detailedLog) {
+                    autotuneFS.exportLog(lastRun, logString, i + 1)
+                    logString = ""
                 }
             }
-            lastRunSuccess = true
-            rxBus.send(EventAutotuneUpdateResult(result))
-            calculationRunning = false
-            currentprofile = pumpprofile
-            result
-        } else "No Result"
+            result = showResults(tunedProfile!!, pumpprofile)
+            if (!detailedLog)
+                autotuneFS.exportLog(lastRun, logString)
+            autotuneFS.exportResult(result)
+            autotuneFS.zipAutotune(lastRun)
+            profileSwitchButtonVisibility = View.VISIBLE
+            copyButtonVisibility = View.VISIBLE
+        }
+        if (autoSwitch) {
+            val circadian = sp.getBoolean(R.string.key_autotune_circadian_ic_isf, false)
+            profileSwitchButtonVisibility = View.GONE //hide profilSwitch button in fragment
+            val now = dateUtil.now()
+            val profileStore = tunedProfile?.profileStore(circadian)
+            profileStore?.let {
+                if (profileFunction.createProfileSwitch(
+                        it,
+                        profileName = tunedProfile!!.profilename,
+                        durationInMinutes = 0,
+                        percentage = 100,
+                        timeShiftInHours = 0,
+                        timestamp = now
+                    )
+                ) {
+                    uel.log(
+                        UserEntry.Action.PROFILE_SWITCH,
+                        UserEntry.Sources.ProfileSwitchDialog,
+                        "Autotune AutoSwitch",
+                        ValueWithUnit.SimpleString(tunedProfile!!.profilename))
+                }
+                rxBus.send(EventLocalProfileChanged())
+            }
+        }
+        lastRunSuccess = true
+        rxBus.send(EventAutotuneUpdateResult(result))
+        calculationRunning = false
+        currentprofile = pumpprofile
+        tunedProfile?.let {
+            return result
+        }
+        return "No Result"
     }
 
     private fun showResults(tunedProfile: ATProfile, pumpProfile: ATProfile): String {

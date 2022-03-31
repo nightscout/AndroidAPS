@@ -71,7 +71,7 @@ class AutotuneFragment : DaggerFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.autotuneRun.setOnClickListener {
-            val daysBack = binding.tuneDays.text.toString().toInt()
+            val daysBack = try { binding.tuneDays.text.toString().toInt() } catch (e:Exception) { 0 }
             if (daysBack > 0) {
                 tempResult = ""
                 autotunePlugin.calculationRunning = true
@@ -125,7 +125,7 @@ class AutotuneFragment : DaggerFragment() {
                         val now = dateUtil.now()
                         if (profileFunction.createProfileSwitch(
                                 it,
-                                profileName = tunedP.profilename!!,
+                                profileName = tunedP.profilename,
                                 durationInMinutes = 0,
                                 percentage = 100,
                                 timeShiftInHours = 0,
@@ -136,10 +136,10 @@ class AutotuneFragment : DaggerFragment() {
                                 UserEntry.Action.PROFILE_SWITCH,
                                 UserEntry.Sources.ProfileSwitchDialog,
                                 "Autotune AutoSwitch",
-                                ValueWithUnit.SimpleString(autotunePlugin.tunedProfile!!.profilename!!))
+                                ValueWithUnit.SimpleString(autotunePlugin.tunedProfile!!.profilename))
                         }
                         rxBus.send(EventLocalProfileChanged())
-                        autotunePlugin.profileSwitchButtonVisibility = View.GONE
+                        //autotunePlugin.profileSwitchButtonVisibility = View.GONE
                         updateGui()
                     })
                 }
