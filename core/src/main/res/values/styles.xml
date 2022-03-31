@@ -124,7 +124,7 @@
         <item name="viewPortbackgroundColor">@color/white_alpha_20</item>
         <item name="tempTargetBackgroundColor">@color/tempTargetBackground</item>
         <!---CGM source-->
-        <item name="cgmdexColor">@color/mdtp_line_dark</item>
+        <item name="cgmdexColor">@color/byodagray</item>
         <item name="cgmxdripColor">@color/colorCalibrationButton</item>
         <!---BG color-->
         <item name="bgLow">@color/low</item>

@@ -209,6 +209,7 @@
     <color name="darkgrayVariant">#424242</color>
     <color name="objectivesBackground">#3C3C3C</color>
     <color name="plastic_grey">#666666</color>
+    <color name="byodagray">#999999</color>
     <color name="sphere_plastic_grey">#8c8c8c</color>
     <color name="lightSandGray">#72000000</color>
     <color name="sandGray">#c8666666</color>
