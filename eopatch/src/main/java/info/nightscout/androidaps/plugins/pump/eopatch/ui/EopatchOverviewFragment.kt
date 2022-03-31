@@ -80,6 +80,16 @@ class EopatchOverviewFragment: EoBaseFragment<FragmentEopatchOverviewBinding>() 
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        binding.viewmodel?.stopBasalRateUpdate()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.viewmodel?.startBasalRateUpdate()
+    }
+
     private fun showToast(@StringRes strId: Int){
         Toast.makeText(requireContext(), strId, Toast.LENGTH_SHORT).show()
     }

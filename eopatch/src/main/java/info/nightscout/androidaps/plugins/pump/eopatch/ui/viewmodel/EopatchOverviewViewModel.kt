@@ -19,6 +19,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
+import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.math.max
@@ -69,7 +70,8 @@ class EopatchOverviewViewModel @Inject constructor(
 
     private val _patchRemainingInsulin = MutableLiveData(0f)
 
-    private var mDisposable: Disposable? = null
+    private var mPauseTimeDisposable: Disposable? = null
+    private var mBasalRateDisposable: Disposable? = null
 
     val patchRemainingInsulin: LiveData<String>
         get() = Transformations.map(_patchRemainingInsulin) { insulin ->
@@ -125,7 +127,7 @@ class EopatchOverviewViewModel @Inject constructor(
             .addTo()
 
         if(preferenceManager.getPatchState().isNormalBasalPaused){
-            startPeriodicallyUpdate()
+            startPauseTimeUpdate()
         }else {
             updateBasalInfo()
         }
@@ -198,7 +200,7 @@ class EopatchOverviewViewModel @Inject constructor(
             .subscribe({ response ->
                 if (response.isSuccess) {
                     navigator?.toast(R.string.string_suspended_insulin_delivery_message)
-                    startPeriodicallyUpdate()
+                    startPauseTimeUpdate()
                 } else {
                     UIEvent(EventType.PAUSE_BASAL_FAILED).apply { value = pauseDurationHour }.let { _eventHandler.postValue(it) }
                 }
@@ -214,7 +216,7 @@ class EopatchOverviewViewModel @Inject constructor(
             .subscribe({
                 if (it.isSuccess) {
                     navigator?.toast(R.string.string_resumed_insulin_delivery_message)
-                    stopPeriodicallyUpdate()
+                    stopPauseTimeUpdate()
                 } else {
                     _eventHandler.postValue(UIEvent(EventType.RESUME_BASAL_FAILED))
                 }
@@ -223,16 +225,33 @@ class EopatchOverviewViewModel @Inject constructor(
             }).addTo()
     }
 
-    private fun startPeriodicallyUpdate(){
-        if(mDisposable == null) {
-            mDisposable = Observable.interval(30, TimeUnit.SECONDS)
+    private fun startPauseTimeUpdate(){
+        if(mPauseTimeDisposable == null) {
+            mPauseTimeDisposable = Observable.interval(30, TimeUnit.SECONDS)
                 .observeOn(aapsSchedulers.main)
                 .subscribe { updatePatchStatus() }
         }
     }
 
-    private fun stopPeriodicallyUpdate(){
-        mDisposable?.dispose()
-        mDisposable = null
+    private fun stopPauseTimeUpdate(){
+        mPauseTimeDisposable?.dispose()
+        mPauseTimeDisposable = null
+    }
+
+    fun startBasalRateUpdate(){
+        val initialDelaySecs = Calendar.getInstance().let { c ->
+            (60 - c.get(Calendar.MINUTE) - 1) * 60 + (60 - c.get(Calendar.SECOND))
+        }
+        if(mBasalRateDisposable == null) {
+            mBasalRateDisposable = Observable.interval(initialDelaySecs.toLong(), 3600L, TimeUnit.SECONDS)
+                .observeOn(aapsSchedulers.main)
+                .subscribe { updateBasalInfo() }
+        }
+        updateBasalInfo()
+    }
+
+    fun stopBasalRateUpdate(){
+        mBasalRateDisposable?.dispose()
+        mBasalRateDisposable = null
     }
 }
