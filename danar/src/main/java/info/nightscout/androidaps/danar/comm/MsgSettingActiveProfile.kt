@@ -8,7 +8,7 @@ class MsgSettingActiveProfile(
 ) : MessageBase(injector) {
 
     init {
-        SetCommand(0x320C)
+        setCommand(0x320C)
         aapsLogger.debug(LTag.PUMPCOMM, "New message")
     }
 

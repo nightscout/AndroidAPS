@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.general.automation.dragHelpers
+package info.nightscout.androidaps.utils.dragHelpers
 
 import androidx.recyclerview.widget.RecyclerView
 

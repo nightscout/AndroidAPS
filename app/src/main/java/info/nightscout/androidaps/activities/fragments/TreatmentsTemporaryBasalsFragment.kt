@@ -1,14 +1,15 @@
 package info.nightscout.androidaps.activities.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.SparseArray
 import android.view.*
-import androidx.appcompat.widget.Toolbar
 import androidx.core.util.forEach
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.activities.fragments.TreatmentsTemporaryBasalsFragment.RecyclerViewAdapter.TempBasalsViewHolder
 import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
@@ -24,24 +25,25 @@ import info.nightscout.androidaps.databinding.TreatmentsTempbasalsFragmentBindin
 import info.nightscout.androidaps.databinding.TreatmentsTempbasalsItemBinding
 import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.events.EventTempBasalChange
+import info.nightscout.androidaps.events.EventTreatmentUpdateGui
 import info.nightscout.androidaps.extensions.iobCalc
 import info.nightscout.androidaps.extensions.toStringFull
 import info.nightscout.androidaps.extensions.toTemporaryBasal
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.activities.fragments.TreatmentsTemporaryBasalsFragment.RecyclerViewAdapter.TempBasalsViewHolder
-import info.nightscout.androidaps.events.EventTreatmentUpdateGui
+import info.nightscout.androidaps.utils.ActionModeHelper
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.util.concurrent.TimeUnit
@@ -64,21 +66,23 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
     @Inject lateinit var repository: AppRepository
 
     private var _binding: TreatmentsTempbasalsFragmentBinding? = null
+
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
-
+    private var menu: Menu? = null
+    private lateinit var actionHelper: ActionModeHelper<TemporaryBasal>
     private val millsToThePast = T.days(30).msecs()
-    private var selectedItems: SparseArray<TemporaryBasal> = SparseArray()
     private var showInvalidated = false
-    private var toolbar: Toolbar? = null
-    private var removeActionMode: ActionMode? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         TreatmentsTempbasalsFragmentBinding.inflate(inflater, container, false).also { _binding = it }.root
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        toolbar = activity?.findViewById(R.id.toolbar)
+        actionHelper = ActionModeHelper(rh, activity)
+        actionHelper.setUpdateListHandler { binding.recyclerview.adapter?.notifyDataSetChanged() }
+        actionHelper.setOnRemoveHandler { removeSelected(it) }
         setHasOptionsMenu(true)
         binding.recyclerview.setHasFixedSize(true)
         binding.recyclerview.layoutManager = LinearLayoutManager(view.context)
@@ -133,28 +137,31 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
     override fun onResume() {
         super.onResume()
         swapAdapter()
-
         disposable += rxBus
             .toObservable(EventTempBasalChange::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ swapAdapter() }, fabricPrivacy::logException)
-
         disposable += rxBus
             .toObservable(EventAutosensCalculationFinished::class.java)
             .observeOn(aapsSchedulers.main)
+            .subscribe({ swapAdapter() }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventTreatmentUpdateGui::class.java) // TODO join with above
+            .observeOn(aapsSchedulers.io)
+            .debounce(1L, TimeUnit.SECONDS)
             .subscribe({ swapAdapter() }, fabricPrivacy::logException)
     }
 
     @Synchronized
     override fun onPause() {
         super.onPause()
+        actionHelper.finish()
         disposable.clear()
     }
 
     @Synchronized
     override fun onDestroyView() {
         super.onDestroyView()
-        removeActionMode?.finish()
         binding.recyclerview.adapter = null // avoid leaks
         _binding = null
     }
@@ -176,7 +183,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
             holder.binding.date.text = if (newDay) dateUtil.dateStringRelative(tempBasal.timestamp, rh) else ""
             if (tempBasal.isInProgress) {
                 holder.binding.time.text = dateUtil.timeString(tempBasal.timestamp)
-                holder.binding.time.setTextColor(rh.gc(R.color.colorActive))
+                holder.binding.time.setTextColor(rh.gac(context , R.attr.activeColor))
             } else {
                 holder.binding.time.text = dateUtil.timeRangeString(tempBasal.timestamp, tempBasal.end)
                 holder.binding.time.setTextColor(holder.binding.duration.currentTextColor)
@@ -193,18 +200,17 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
             holder.binding.suspendFlag.visibility = (tempBasal.type == TemporaryBasal.Type.PUMP_SUSPEND).toVisibility()
             holder.binding.emulatedSuspendFlag.visibility = (tempBasal.type == TemporaryBasal.Type.EMULATED_PUMP_SUSPEND).toVisibility()
             holder.binding.superBolusFlag.visibility = (tempBasal.type == TemporaryBasal.Type.SUPERBOLUS).toVisibility()
-            if (abs(iob.basaliob) > 0.01) holder.binding.iob.setTextColor(rh.gc(R.color.colorActive)) else holder.binding.iob.setTextColor(holder.binding.duration.currentTextColor)
-            holder.binding.cbRemove.visibility = (tempBasal.isValid && removeActionMode != null).toVisibility()
-            if (removeActionMode != null) {
+            if (abs(iob.basaliob) > 0.01) holder.binding.iob.setTextColor(rh.gac(context , R.attr.activeColor)) else holder.binding.iob.setTextColor(holder.binding.duration.currentTextColor)
+            holder.binding.cbRemove.visibility = (tempBasal.isValid && actionHelper.isRemoving).toVisibility()
+            if (actionHelper.isRemoving) {
                 holder.binding.cbRemove.setOnCheckedChangeListener { _, value ->
-                    if (value) {
-                        selectedItems.put(position, tempBasal)
-                    } else {
-                        selectedItems.remove(position)
-                    }
-                    removeActionMode?.title = rh.gs(R.string.count_selected, selectedItems.size())
+                    actionHelper.updateSelection(position, tempBasal, value)
                 }
-                holder.binding.cbRemove.isChecked = selectedItems.get(position) != null
+                holder.binding.root.setOnClickListener {
+                    holder.binding.cbRemove.toggle()
+                    actionHelper.updateSelection(position, tempBasal, holder.binding.cbRemove.isChecked)
+                }
+                holder.binding.cbRemove.isChecked = actionHelper.isSelected(position)
             }
             val nextTimestamp = if (tempBasalList.size != position + 1) tempBasalList[position + 1].timestamp else 0L
             holder.binding.delimiter.visibility = dateUtil.isSameDayGroup(tempBasal.timestamp, nextTimestamp).toVisibility()
@@ -221,32 +227,38 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        this.menu = menu
         inflater.inflate(R.menu.menu_treatments_temp_basal, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
+    private fun updateMenuVisibility() {
+        menu?.findItem(R.id.nav_hide_invalidated)?.isVisible = showInvalidated
+        menu?.findItem(R.id.nav_show_invalidated)?.isVisible = !showInvalidated
+    }
+
     override fun onPrepareOptionsMenu(menu: Menu) {
-        menu.findItem(R.id.nav_hide_invalidated)?.isVisible = showInvalidated
-        menu.findItem(R.id.nav_show_invalidated)?.isVisible = !showInvalidated
+        updateMenuVisibility()
 
         return super.onPrepareOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
         when (item.itemId) {
-            R.id.nav_remove_items -> {
-                removeActionMode = toolbar?.startActionMode(RemoveActionModeCallback())
-                true
-            }
+            R.id.nav_remove_items -> actionHelper.startRemove()
 
             R.id.nav_show_invalidated -> {
                 showInvalidated = true
+                updateMenuVisibility()
+                ToastUtils.showToastInUiThread(context, rh.gs(R.string.show_invalidated_records))
                 rxBus.send(EventTreatmentUpdateGui())
                 true
             }
 
             R.id.nav_hide_invalidated -> {
                 showInvalidated = false
+                updateMenuVisibility()
+                ToastUtils.showToastInUiThread(context, rh.gs(R.string.hide_invalidated_records))
                 rxBus.send(EventTreatmentUpdateGui())
                 true
             }
@@ -254,36 +266,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
             else -> false
         }
 
-    inner class RemoveActionModeCallback : ActionMode.Callback {
-
-        override fun onCreateActionMode(mode: ActionMode, menu: Menu?): Boolean {
-            mode.menuInflater.inflate(R.menu.menu_delete_selection, menu)
-            selectedItems.clear()
-            mode.title = rh.gs(R.string.count_selected, selectedItems.size())
-            binding.recyclerview.adapter?.notifyDataSetChanged()
-            return true
-        }
-
-        override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?) = false
-
-        override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
-            return when (item.itemId) {
-                R.id.remove_selected -> {
-                    removeSelected()
-                    true
-                }
-
-                else                 -> false
-            }
-        }
-
-        override fun onDestroyActionMode(mode: ActionMode?) {
-            removeActionMode = null
-            binding.recyclerview.adapter?.notifyDataSetChanged()
-        }
-    }
-
-    private fun getConfirmationText(): String {
+    private fun getConfirmationText(selectedItems: SparseArray<TemporaryBasal>): String {
         if (selectedItems.size() == 1) {
             val tempBasal = selectedItems.valueAt(0)
             val isFakeExtended = tempBasal.type == TemporaryBasal.Type.FAKE_EXTENDED
@@ -295,46 +278,44 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
         return rh.gs(R.string.confirm_remove_multiple_items, selectedItems.size())
     }
 
-    private fun removeSelected() {
+    private fun removeSelected(selectedItems: SparseArray<TemporaryBasal>) {
         if (selectedItems.size() > 0)
             activity?.let { activity ->
-                OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord), getConfirmationText(), Runnable {
-                    selectedItems.forEach {_, tempBasal ->
-                        var extendedBolus: ExtendedBolus? = null
-                        val isFakeExtended = tempBasal.type == TemporaryBasal.Type.FAKE_EXTENDED
-                        if (isFakeExtended) {
-                            val eb = repository.getExtendedBolusActiveAt(tempBasal.timestamp).blockingGet()
-                            extendedBolus = if (eb is ValueWrapper.Existing) eb.value else null
-                        }
-                        if (isFakeExtended && extendedBolus != null) {
-                            uel.log(
-                                Action.EXTENDED_BOLUS_REMOVED, Sources.Treatments,
-                                ValueWithUnit.Timestamp(extendedBolus.timestamp),
-                                ValueWithUnit.Insulin(extendedBolus.amount),
-                                ValueWithUnit.UnitPerHour(extendedBolus.rate),
-                                ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(extendedBolus.duration).toInt())
-                            )
-                            disposable += repository.runTransactionForResult(InvalidateExtendedBolusTransaction(extendedBolus.id))
-                                .subscribe(
-                                    { aapsLogger.debug(LTag.DATABASE, "Removed extended bolus $extendedBolus") },
-                                    { aapsLogger.error(LTag.DATABASE, "Error while invalidating extended bolus", it) })
-                        } else if (!isFakeExtended) {
-                            uel.log(
-                                Action.TEMP_BASAL_REMOVED, Sources.Treatments,
-                                ValueWithUnit.Timestamp(tempBasal.timestamp),
-                                if (tempBasal.isAbsolute) ValueWithUnit.UnitPerHour(tempBasal.rate) else ValueWithUnit.Percent(tempBasal.rate.toInt()),
-                                ValueWithUnit.Minute(T.msecs(tempBasal.duration).mins().toInt())
-                            )
-                            disposable += repository.runTransactionForResult(InvalidateTemporaryBasalTransaction(tempBasal.id))
-                                .subscribe(
-                                    { aapsLogger.debug(LTag.DATABASE, "Removed temporary basal $tempBasal") },
-                                    { aapsLogger.error(LTag.DATABASE, "Error while invalidating temporary basal", it) })
-                        }
+            OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord), getConfirmationText(selectedItems), Runnable {
+                selectedItems.forEach {_, tempBasal ->
+                    var extendedBolus: ExtendedBolus? = null
+                    val isFakeExtended = tempBasal.type == TemporaryBasal.Type.FAKE_EXTENDED
+                    if (isFakeExtended) {
+                        val eb = repository.getExtendedBolusActiveAt(tempBasal.timestamp).blockingGet()
+                        extendedBolus = if (eb is ValueWrapper.Existing) eb.value else null
                     }
-                    removeActionMode?.finish()
-                })
-            }
-        else
-            removeActionMode?.finish()
+                    if (isFakeExtended && extendedBolus != null) {
+                        uel.log(
+                            Action.EXTENDED_BOLUS_REMOVED, Sources.Treatments,
+                            ValueWithUnit.Timestamp(extendedBolus.timestamp),
+                            ValueWithUnit.Insulin(extendedBolus.amount),
+                            ValueWithUnit.UnitPerHour(extendedBolus.rate),
+                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(extendedBolus.duration).toInt())
+                        )
+                        disposable += repository.runTransactionForResult(InvalidateExtendedBolusTransaction(extendedBolus.id))
+                            .subscribe(
+                                { aapsLogger.debug(LTag.DATABASE, "Removed extended bolus $extendedBolus") },
+                                { aapsLogger.error(LTag.DATABASE, "Error while invalidating extended bolus", it) })
+                    } else if (!isFakeExtended) {
+                        uel.log(
+                            Action.TEMP_BASAL_REMOVED, Sources.Treatments,
+                            ValueWithUnit.Timestamp(tempBasal.timestamp),
+                            if (tempBasal.isAbsolute) ValueWithUnit.UnitPerHour(tempBasal.rate) else ValueWithUnit.Percent(tempBasal.rate.toInt()),
+                            ValueWithUnit.Minute(T.msecs(tempBasal.duration).mins().toInt())
+                        )
+                        disposable += repository.runTransactionForResult(InvalidateTemporaryBasalTransaction(tempBasal.id))
+                            .subscribe(
+                                { aapsLogger.debug(LTag.DATABASE, "Removed temporary basal $tempBasal") },
+                                { aapsLogger.error(LTag.DATABASE, "Error while invalidating temporary basal", it) })
+                    }
+                }
+                actionHelper.finish()
+            })
+        }
     }
 }

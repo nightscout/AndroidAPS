@@ -13,20 +13,21 @@ import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.databinding.TreatmentsUserEntryFragmentBinding
 import info.nightscout.androidaps.databinding.TreatmentsUserEntryItemBinding
 import info.nightscout.androidaps.events.EventPreferenceChange
+import info.nightscout.androidaps.events.EventTreatmentUpdateGui
+import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ImportExportPrefs
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.events.EventTreatmentUpdateGui
-import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.Translator
-import info.nightscout.androidaps.utils.userEntry.UserEntryPresentationHelper
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.androidaps.utils.userEntry.UserEntryPresentationHelper
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.util.concurrent.TimeUnit
@@ -47,9 +48,9 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
     @Inject lateinit var userEntryPresentationHelper: UserEntryPresentationHelper
 
     private val disposable = CompositeDisposable()
-
     private val millsToThePastFiltered = T.days(30).msecs()
     private val millsToThePastUnFiltered = T.days(3).msecs()
+    private var menu: Menu? = null
     private var showLoop = false
     private var _binding: TreatmentsUserEntryFragmentBinding? = null
 
@@ -66,7 +67,7 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
         binding.recyclerview.layoutManager = LinearLayoutManager(view.context)
     }
 
-    fun exportUserEnteries() {
+    private fun exportUserEntries() {
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, rh.gs(R.string.ue_export_to_csv) + "?") {
                 uel.log(Action.EXPORT_CSV, Sources.Treatments)
@@ -94,7 +95,6 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
     override fun onResume() {
         super.onResume()
         swapAdapter()
-
         disposable += rxBus
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
@@ -134,11 +134,10 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
             holder.binding.time.text = dateUtil.timeStringWithSeconds(current.timestamp)
             holder.binding.action.text = userEntryPresentationHelper.actionToColoredString(current.action)
             holder.binding.notes.text = current.note
-            holder.binding.notes.visibility = if (current.note != "") View.VISIBLE else View.GONE
+            holder.binding.notes.visibility = (current.note != "").toVisibility()
             holder.binding.iconSource.setImageResource(userEntryPresentationHelper.iconId(current.source))
-            holder.binding.iconSource.visibility = View.VISIBLE
             holder.binding.values.text = userEntryPresentationHelper.listToPresentationString(current.values)
-            holder.binding.values.visibility = if (holder.binding.values.text != "") View.VISIBLE else View.GONE
+            holder.binding.values.visibility = (holder.binding.values.text != "").toVisibility()
             val nextTimestamp = if (entries.size != position + 1) entries[position + 1].timestamp else 0L
             holder.binding.delimiter.visibility = dateUtil.isSameDayGroup(current.timestamp, nextTimestamp).toVisibility()
         }
@@ -152,14 +151,18 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        this.menu = menu
         inflater.inflate(R.menu.menu_treatments_user_entry, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        menu.findItem(R.id.nav_hide_loop)?.isVisible = showLoop
-        menu.findItem(R.id.nav_show_loop)?.isVisible = !showLoop
+    private fun updateMenuVisibility() {
+        menu?.findItem(R.id.nav_hide_loop)?.isVisible = showLoop
+        menu?.findItem(R.id.nav_show_loop)?.isVisible = !showLoop
+    }
 
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        updateMenuVisibility()
         return super.onPrepareOptionsMenu(menu)
     }
 
@@ -167,21 +170,26 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
         when (item.itemId) {
             R.id.nav_show_loop -> {
                 showLoop = true
+                updateMenuVisibility()
+                ToastUtils.showToastInUiThread(context, rh.gs(R.string.show_loop_records))
                 rxBus.send(EventTreatmentUpdateGui())
                 true
             }
 
             R.id.nav_hide_loop -> {
                 showLoop = false
+                updateMenuVisibility()
+                ToastUtils.showToastInUiThread(context, rh.gs(R.string.show_hide_records))
                 rxBus.send(EventTreatmentUpdateGui())
                 true
             }
 
             R.id.nav_export    -> {
-                exportUserEnteries()
+                exportUserEntries()
                 true
             }
 
             else               -> false
         }
+
 }

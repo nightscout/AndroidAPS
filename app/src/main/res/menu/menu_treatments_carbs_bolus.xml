@@ -3,20 +3,27 @@
 
     <item
         android:id="@+id/nav_remove_items"
+        android:icon="@drawable/ic_trash"
         android:title="@string/remove_items"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
+
     <item
         android:id="@+id/nav_show_invalidated"
+        android:icon="@drawable/ic_visibility"
         android:title="@string/show_invalidated"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
+
     <item
         android:id="@+id/nav_hide_invalidated"
+        android:icon="@drawable/ic_visibility_off"
         android:title="@string/hide_invalidated"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
+
     <item
         android:id="@+id/nav_delete_future"
         android:title="@string/delete_future_treatments"
         app:showAsAction="never" />
+
     <item
         android:id="@+id/nav_refresh_ns"
         android:title="@string/refresh_from_nightscout"

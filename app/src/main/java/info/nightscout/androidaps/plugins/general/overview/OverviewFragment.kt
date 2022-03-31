@@ -173,7 +173,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         binding.notifications.setHasFixedSize(false)
         binding.notifications.layoutManager = LinearLayoutManager(view.context)
         axisWidth = if (dm.densityDpi <= 120) 3 else if (dm.densityDpi <= 160) 10 else if (dm.densityDpi <= 320) 35 else if (dm.densityDpi <= 420) 50 else if (dm.densityDpi <= 560) 70 else 80
-        binding.graphsLayout.bgGraph.gridLabelRenderer?.gridColor = rh.gc(R.color.graphgrid)
+        binding.graphsLayout.bgGraph.gridLabelRenderer?.gridColor = rh.gac(context, R.attr.graphgrid)
         binding.graphsLayout.bgGraph.gridLabelRenderer?.reloadStyles()
         binding.graphsLayout.bgGraph.gridLabelRenderer?.labelVerticalWidth = axisWidth
         binding.graphsLayout.bgGraph.layoutParams?.height = rh.dpToPx(skinProvider.activeSkin().mainGraphHeight)
@@ -416,14 +416,15 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                             loop.invoke("Accept temp button", false)
                             if (lastRun?.lastAPSRun != null && lastRun.constraintsProcessed?.isChangeRequested == true) {
                                 protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable {
-                                    OKDialog.showConfirmation(activity, rh.gs(R.string.tempbasal_label), lastRun.constraintsProcessed?.toSpanned()
-                                        ?: "".toSpanned(), {
-                                                                  uel.log(Action.ACCEPTS_TEMP_BASAL, Sources.Overview)
-                                                                  (context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?)?.cancel(Constants.notificationID)
-                                                                  rxBus.send(EventWearInitiateAction("cancelChangeRequest"))
-                                                                  Thread { loop.acceptChangeRequest() }.run()
-                                                                  binding.buttonsLayout.acceptTempButton.visibility = View.GONE
-                                                              })
+                                    if (isAdded)
+                                        OKDialog.showConfirmation(activity, rh.gs(R.string.tempbasal_label), lastRun.constraintsProcessed?.toSpanned()
+                                            ?: "".toSpanned(), {
+                                                                      uel.log(Action.ACCEPTS_TEMP_BASAL, Sources.Overview)
+                                                                      (context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?)?.cancel(Constants.notificationID)
+                                                                      rxBus.send(EventWearInitiateAction("cancelChangeRequest"))
+                                                                      Thread { loop.acceptChangeRequest() }.run()
+                                                                      binding.buttonsLayout.acceptTempButton.visibility = View.GONE
+                                                                  })
                                 })
                             }
                         }
@@ -559,10 +560,10 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         binding.buttonsLayout.calibrationButton.visibility = (xDripIsBgSource && actualBG != null && sp.getBoolean(R.string.key_show_calibration_button, true)).toVisibility()
         if (dexcomIsSource) {
             binding.buttonsLayout.cgmButton.setCompoundDrawablesWithIntrinsicBounds(null, rh.gd(R.drawable.ic_byoda), null, null)
-            binding.buttonsLayout.cgmButton.setTextColor(rh.gc(R.color.colorLightGray))
+            binding.buttonsLayout.cgmButton.setTextColor(rh.gac(context, R.attr.cgmdexColor))
         } else if (xDripIsBgSource) {
             binding.buttonsLayout.cgmButton.setCompoundDrawablesWithIntrinsicBounds(null, rh.gd(R.drawable.ic_xdrip), null, null)
-            binding.buttonsLayout.cgmButton.setTextColor(rh.gc(R.color.colorCalibrationButton))
+            binding.buttonsLayout.cgmButton.setTextColor(rh.gac(context, R.attr.cgmxdripColor))
         }
         binding.buttonsLayout.cgmButton.visibility = (sp.getBoolean(R.string.key_show_cgm_button, false) && (xDripIsBgSource || dexcomIsSource)).toVisibility()
 
@@ -574,7 +575,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 if (event.isEnabled && event.trigger.shouldRun())
                     context?.let { context ->
                         SingleClickButton(context).also {
-                            it.setTextColor(rh.gc(R.color.colorTreatmentButton))
+                            it.setTextColor(rh.gac(context, R.attr.treatmentButton))
                             it.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10f)
                             it.layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 0.5f).also { l ->
                                 l.setMargins(0, 0, rh.dpToPx(-4), 0)
@@ -583,11 +584,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                             it.text = event.title
 
                             it.setOnClickListener {
-                                OKDialog.showConfirmation(
-                                    context,
-                                    rh.gs(R.string.run_question, event.title),
-                                    { handler.post { automationPlugin.processEvent(event) } }
-                                )
+                                OKDialog.showConfirmation(context, rh.gs(R.string.run_question, event.title), { handler.post { automationPlugin.processEvent(event) } })
                             }
                             binding.buttonsLayout.userButtonsLayout.addView(it)
                         }
@@ -722,12 +719,12 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 val graph = GraphView(context)
                 graph.layoutParams =
                     LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, rh.dpToPx(skinProvider.activeSkin().secondaryGraphHeight)).also { it.setMargins(0, rh.dpToPx(15), 0, rh.dpToPx(10)) }
-                graph.gridLabelRenderer?.gridColor = rh.gc(R.color.graphgrid)
+                graph.gridLabelRenderer?.gridColor = rh.gac(context, R.attr.graphgrid)
                 graph.gridLabelRenderer?.reloadStyles()
                 graph.gridLabelRenderer?.isHorizontalLabelsVisible = false
                 graph.gridLabelRenderer?.labelVerticalWidth = axisWidth
                 graph.gridLabelRenderer?.numVerticalLabels = 3
-                graph.viewport.backgroundColor = Color.argb(20, 255, 255, 255) // 8% of gray
+                graph.viewport.backgroundColor = rh.gac(context, R.attr.viewPortbackgroundColor)
                 relativeLayout.addView(graph)
 
                 val label = TextView(context)
@@ -765,15 +762,15 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val units = profileFunction.getUnits()
         binding.infoLayout.bg.text = overviewData.lastBg?.valueToUnitsString(units)
             ?: rh.gs(R.string.notavailable)
-        binding.infoLayout.bg.setTextColor(overviewData.lastBgColor)
+        binding.infoLayout.bg.setTextColor(overviewData.lastBgColor(context))
         binding.infoLayout.arrow.setImageResource(trendCalculator.getTrendArrow(overviewData.lastBg).directionToIcon())
-        binding.infoLayout.arrow.setColorFilter(overviewData.lastBgColor)
+        binding.infoLayout.arrow.setColorFilter(overviewData.lastBgColor(context))
         binding.infoLayout.arrow.contentDescription = overviewData.lastBgDescription + " " + rh.gs(R.string.and) + " " + trendCalculator.getTrendDescription(overviewData.lastBg)
 
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData
         if (glucoseStatus != null) {
             binding.infoLayout.deltaLarge.text = Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
-            binding.infoLayout.deltaLarge.setTextColor(overviewData.lastBgColor)
+            binding.infoLayout.deltaLarge.setTextColor(overviewData.lastBgColor(context))
             binding.infoLayout.delta.text = Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
             binding.infoLayout.avgDelta.text = Profile.toSignedUnitsString(glucoseStatus.shortAvgDelta, glucoseStatus.shortAvgDelta * Constants.MGDL_TO_MMOLL, units)
             binding.infoLayout.longAvgDelta.text = Profile.toSignedUnitsString(glucoseStatus.longAvgDelta, glucoseStatus.longAvgDelta * Constants.MGDL_TO_MMOLL, units)
@@ -816,27 +813,27 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             profileFunction.getProfile()?.let {
                 if (it is ProfileSealed.EPS) {
                     if (it.value.originalPercentage != 100 || it.value.originalTimeshift != 0L || it.value.originalDuration != 0L)
-                        rh.gc(R.color.ribbonWarning)
-                    else rh.gc(R.color.ribbonDefault)
+                        rh.gac(context, R.attr.ribbonWarningColor)
+                    else rh.gac(context, R.attr.ribbonDefaultColor)
                 } else if (it is ProfileSealed.PS) {
-                    rh.gc(R.color.ribbonDefault)
+                    rh.gac(context, R.attr.ribbonDefaultColor)
                 } else {
-                    rh.gc(R.color.ribbonDefault)
+                    rh.gac(context, R.attr.ribbonDefaultColor)
                 }
-            } ?: rh.gc(R.color.ribbonCritical)
+            } ?: rh.gac(context, R.attr.ribbonCriticalColor)
 
         val profileTextColor =
             profileFunction.getProfile()?.let {
                 if (it is ProfileSealed.EPS) {
                     if (it.value.originalPercentage != 100 || it.value.originalTimeshift != 0L || it.value.originalDuration != 0L)
-                        rh.gc(R.color.ribbonTextWarning)
-                    else rh.gc(R.color.ribbonTextDefault)
+                        rh.gac(context, R.attr.ribbonTextWarningColor)
+                    else rh.gac(context, R.attr.ribbonTextDefaultColor)
                 } else if (it is ProfileSealed.PS) {
-                    rh.gc(R.color.ribbonTextDefault)
+                    rh.gac(context, R.attr.ribbonTextDefaultColor)
                 } else {
-                    rh.gc(R.color.ribbonTextDefault)
+                    rh.gac(context, R.attr.ribbonTextDefaultColor)
                 }
-            } ?: rh.gc(R.color.ribbonTextDefault)
+            } ?: rh.gac(context, R.attr.ribbonTextDefaultColor)
 
         binding.activeProfile.text = profileFunction.getProfileNameWithRemainingTime()
         binding.activeProfile.setBackgroundColor(profileBackgroundColor)
@@ -929,8 +926,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         if (overviewData.temporaryTarget?.isInProgress(dateUtil) == false) overviewData.temporaryTarget = null
         val tempTarget = overviewData.temporaryTarget
         if (tempTarget != null) {
-            binding.tempTarget.setTextColor(rh.gc(R.color.ribbonTextWarning))
-            binding.tempTarget.setBackgroundColor(rh.gc(R.color.ribbonWarning))
+            binding.tempTarget.setTextColor(rh.gac(context, R.attr.ribbonTextWarningColor))
+            binding.tempTarget.setBackgroundColor(rh.gac(context, R.attr.ribbonWarningColor))
             binding.tempTarget.text = Profile.toTargetRangeString(tempTarget.lowTarget, tempTarget.highTarget, GlucoseUnit.MGDL, units) + " " + dateUtil.untilString(tempTarget.end, rh)
         } else {
             // If the target is not the same as set in the profile then oref has overridden it
@@ -940,11 +937,11 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 if (targetUsed != 0.0 && abs(profile.getTargetMgdl() - targetUsed) > 0.01) {
                     aapsLogger.debug("Adjusted target. Profile: ${profile.getTargetMgdl()} APS: $targetUsed")
                     binding.tempTarget.text = Profile.toTargetRangeString(targetUsed, targetUsed, GlucoseUnit.MGDL, units)
-                    binding.tempTarget.setTextColor(rh.gc(R.color.ribbonTextWarning))
-                    binding.tempTarget.setBackgroundColor(rh.gc(R.color.tempTargetBackground))
+                    binding.tempTarget.setTextColor(rh.gac(context, R.attr.ribbonTextWarningColor))
+                    binding.tempTarget.setBackgroundColor(rh.gac(context, R.attr.tempTargetBackgroundColor))
                 } else {
-                    binding.tempTarget.setTextColor(rh.gc(R.color.ribbonTextDefault))
-                    binding.tempTarget.setBackgroundColor(rh.gc(R.color.ribbonDefault))
+                    binding.tempTarget.setTextColor(rh.gac(context, R.attr.ribbonTextDefaultColor))
+                    binding.tempTarget.setBackgroundColor(rh.gac(context, R.attr.ribbonDefaultColor))
                     binding.tempTarget.text = Profile.toTargetRangeString(profile.getTargetLowMgdl(), profile.getTargetHighMgdl(), GlucoseUnit.MGDL, units)
                 }
             }

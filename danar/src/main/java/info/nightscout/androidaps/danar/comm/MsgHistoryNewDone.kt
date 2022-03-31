@@ -8,7 +8,7 @@ class MsgHistoryNewDone(
 ) : MessageBase(injector) {
 
     init {
-        SetCommand(0x42F1)
+        setCommand(0x42F1)
         danaPump.historyDoneReceived = false
         aapsLogger.debug(LTag.PUMPCOMM, "New message")
     }

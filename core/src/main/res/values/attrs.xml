@@ -1,8 +1,6 @@
 <resources>
     <!---bolus color -->
     <attr name="bolusColor" format="reference|color" />
-    <!---Treatment button color -->
-    <attr name="treatmentButton" format="reference|color" />
     <!---Number Picker text color -->
     <attr name="numPickerText" format="reference|color" />
     <!---NS Client action text color -->
@@ -31,8 +29,10 @@
     <attr name="carbsButtonColor" format="reference|color" />
     <!-- Temp Button Button -->
     <attr name="acceptTempButtonColor" format="reference|color" />
-    <!-- Treatment Button -->
-    <attr name="treatmentButtonColor" format="reference|color" />
+    <!---Treatment -->
+    <attr name="treatmentButton" format="reference|color" />
+    <attr name="activeColor" format="reference|color" />
+    <attr name="scheduledColor" format="reference|color" />
     <!-- Insulin Button -->
     <attr name="insulinButtonColor" format="reference|color" />
     <!-- Calculator Button -->
@@ -60,6 +60,10 @@
     <attr name="activity_title_backgroundColor" format="reference|color" />
     <!---Automation  -->
     <attr name="ribbonDefaultColor" format="reference|color" />
+    <attr name="ribbonWarningColor" format="reference|color" />
+    <attr name="ribbonCriticalColor" format="reference|color" />
+    <attr name="ribbonTextDefaultColor" format="reference|color" />
+    <attr name="ribbonTextWarningColor" format="reference|color" />
     <!---Main Activity Tab  -->
     <attr name="tabSelectedTextColor" format="reference|color" />
     <attr name="tabTextColor" format="reference|color" />
@@ -86,5 +90,64 @@
     <attr name="splashBackgroundColor" format="reference|color" />
     <!---Disabled Text Color  -->
     <attr name="disabledTextColor" format="reference|color" />
-
+    <!---Overview and Historybrowser  -->
+    <attr name="graphgrid" format="reference|color" />
+    <attr name="viewPortbackgroundColor" format="reference|color" />
+    <attr name="tempTargetBackgroundColor" format="reference|color" />
+    <!---CGM source-->
+    <attr name="cgmdexColor" format="reference|color" />
+    <attr name="cgmxdripColor" format="reference|color" />
+    <!---BG color-->
+    <attr name="bgLow" format="reference|color" />
+    <attr name="highColor" format="reference|color" />
+    <attr name="bgInRange" format="reference|color" />
+    <!---Profile Helper -->
+    <attr name="helperProfileColor" format="reference|color" />
+    <attr name="examinedProfileColor" format="reference|color" />
+    <!---Local profile -->
+    <attr name="okBackgroundColor" format="reference|color" />
+    <attr name="errorBackgroundColor" format="reference|color" />
+    <!---Warning  -->
+    <attr name="warningColor" format="reference|color" />
+    <!---Warning Colors : WarnColors.kt-->
+    <attr name="normalColor" format="reference|color" />
+    <attr name="warnColor" format="reference|color" />
+    <attr name="urgentColor" format="reference|color" />
+    <!---TextColor -->
+    <attr name="defaultTextColor" format="reference|color" />
+    <!---Profile viewer TempBasal -->
+    <attr name="tempBasalColor" format="reference|color" />
+    <attr name="infoColor" format="reference|color" />
+    <!---Bolus wizard -->
+    <attr name="cobAlertColor" format="reference|color" />
+    <!---Fill dialog -->
+    <attr name="actionsConfirmColor" format="reference|color" />
+    <!-- dash and eros colors -->
+    <attr name="omniMagentaColor" format="reference|color" />
+    <attr name="omniYellowColor" format="reference|color" />
+    <attr name="omniCyanColor" format="reference|color" />
+    <attr name="omniGreenColor" format="reference|color" />
+    <attr name="omniGrayColor" format="reference|color" />
+    <attr name="omniWizardFinishButtonColor" format="reference|color" />
+    <!---Automation -->
+    <attr name="userAction" format="reference|color" />
+    <attr name="validActions" format="reference|color" />
+    <attr name="actionsError" format="reference|color" />
+    <attr name="automationBackgroundColor" format="reference|color" />
+    <attr name="automationOverlayColor" format="reference|color" />
+    <!---BG source -->
+    <attr name="bgsourceError" format="reference|color" />
+    <!---TDD-statistics -->
+    <attr name="tddHeaderBackground" format="reference|color" />
+    <attr name="mainTableBackground" format="reference|color" />
+    <attr name="dummyBackground" format="reference|color" />
+    <!-- Icon Colors -->
+    <attr name="icCheckboxTrendColor" format="reference|color" />
+    <!-- Overview Buttons -->
+    <attr name="icBolusColor" format="reference|color" />
+    <attr name="icBolusCarbsColor" format="reference|color" />
+    <attr name="icCalculatorColor" format="reference|color" />
+    <attr name="icQuickWizardColor" format="reference|color" />
+    <attr name="icCalibrationColor" format="reference|color" />
+    <attr name="icTreatmentColor" format="reference|color" />
 </resources>

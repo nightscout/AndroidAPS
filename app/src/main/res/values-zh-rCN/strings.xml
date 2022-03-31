@@ -997,6 +997,7 @@
     <string name="show_loop">显示闭环</string>
     <string name="count_selected">已选中 %1$d</string>
     <string name="sort_label">排序</string>
+    <string name="dialog_canceled">对话框已取消</string>
     <string name="below" comment="below &quot;in range&quot;">底部</string>
     <string name="in_range">在范围内</string>
     <string name="above" comment="above &quot;in range&quot;">上方</string>

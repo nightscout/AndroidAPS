@@ -34,7 +34,7 @@ class ErosHistoryTest {
 
     @Test
     fun testInsertionAndRetrieval() {
-        var history = erosHistory.getAllErosHistoryRecordsFromTimestamp(0L);
+        var history = erosHistory.getAllErosHistoryRecordsFromTimestamp(0L)
         assert(history.isEmpty())
 
         val type = PodHistoryEntryType.SET_BOLUS.code.toLong()
@@ -42,7 +42,7 @@ class ErosHistoryTest {
         erosHistory.create(entity)
         erosHistory.create(ErosHistoryRecordEntity(3000L, PodHistoryEntryType.CANCEL_BOLUS.code.toLong()))
 
-        history = erosHistory.getAllErosHistoryRecordsFromTimestamp(0L);
+        history = erosHistory.getAllErosHistoryRecordsFromTimestamp(0L)
         assert(history.size == 2)
         assert(type.equals(history.first().podEntryTypeCode))
 

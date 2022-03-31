@@ -985,6 +985,8 @@
     <string name="wear_unknown_action_string">Ukjent kommando:</string>
     <string name="overview_editquickwizard_percentage">Prosent</string>
     <string name="app_default">Standardverdi</string>
+    <string name="show_invalidated_records">Vis ugyldige / slettede registreringer</string>
+    <string name="hide_invalidated_records">Skjul ugyldige / slettede registreringer</string>
     <string name="select_profile">Velg profil du vil redigere</string>
     <string name="refresh_from_nightscout">Oppdater fra Nightscout</string>
     <string name="remove_selected_items">Fjern valgte elementer</string>
@@ -1001,4 +1003,6 @@
     <string name="below" comment="below &quot;in range&quot;">Under</string>
     <string name="in_range">I målområdet</string>
     <string name="above" comment="above &quot;in range&quot;">Over</string>
+    <string name="show_loop_records">Vis loop registreringer</string>
+    <string name="show_hide_records">Skjul loop registreringer</string>
 </resources>

@@ -67,10 +67,7 @@ data class PumpDbEntryBolus(override var temporaryId: Long,
                 detailedBolusInfo: DetailedBolusInfo) : this(temporaryId, date, pumpType, serialNumber, null,
                                                              detailedBolusInfo.insulin,
                                                              detailedBolusInfo.carbs,
-                                                             detailedBolusInfo.bolusType) {
-
-        }
-
+                                                             detailedBolusInfo.bolusType)
 
 }
 

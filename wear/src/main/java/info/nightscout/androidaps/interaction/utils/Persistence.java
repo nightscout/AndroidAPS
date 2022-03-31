@@ -26,10 +26,10 @@ import info.nightscout.shared.logging.LTag;
 @Singleton
 public class Persistence {
 
-    private Context context;
-    private AAPSLogger aapsLogger;
-    private WearUtil wearUtil;
-    private SharedPreferences preferences;
+    private final Context context;
+    private final AAPSLogger aapsLogger;
+    private final WearUtil wearUtil;
+    private final SharedPreferences preferences;
     private final String COMPLICATION_PROVIDER_PREFERENCES_FILE_KEY =
             "info.nightscout.androidaps.complications.COMPLICATION_PROVIDER_PREFERENCES_FILE_KEY";
 

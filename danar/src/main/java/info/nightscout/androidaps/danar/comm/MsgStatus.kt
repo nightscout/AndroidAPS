@@ -8,7 +8,7 @@ class MsgStatus(
 ) : MessageBase(injector) {
 
     init {
-        SetCommand(0x020B)
+        setCommand(0x020B)
         aapsLogger.debug(LTag.PUMPCOMM, "New message")
     }
 

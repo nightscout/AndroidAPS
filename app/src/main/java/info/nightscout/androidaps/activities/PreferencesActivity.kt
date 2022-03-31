@@ -65,7 +65,7 @@ class PreferencesActivity : NoSplashAppCompatActivity(), PreferenceFragmentCompa
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.getItemId()) {
+        when (item.itemId) {
             android.R.id.home -> {
                 onBackPressed()
                 return true

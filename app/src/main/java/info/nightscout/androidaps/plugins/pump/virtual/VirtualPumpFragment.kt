@@ -52,10 +52,6 @@ class VirtualPumpFragment : DaggerFragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-    }
-
     @Synchronized
     override fun onResume() {
         super.onResume()

@@ -8,7 +8,7 @@ class MsgHistorySuspend(
 ) : MsgHistoryAll(injector) {
 
     init {
-        SetCommand(0x3109)
+        setCommand(0x3109)
         aapsLogger.debug(LTag.PUMPCOMM, "New message")
     }
     // Handle message taken from MsgHistoryAll
