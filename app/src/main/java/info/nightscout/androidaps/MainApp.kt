@@ -7,6 +7,10 @@ import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import android.os.Build
 import androidx.lifecycle.ProcessLifecycleOwner
+import androidx.work.Data
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequest
+import androidx.work.WorkManager
 import com.uber.rxdogtag.RxDogTag
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
@@ -27,14 +31,11 @@ import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionChec
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationStore
 import info.nightscout.androidaps.plugins.general.themes.ThemeSwitcherPlugin
-import info.nightscout.androidaps.receivers.BTReceiver
-import info.nightscout.androidaps.receivers.ChargingStateReceiver
-import info.nightscout.androidaps.receivers.KeepAliveReceiver.KeepAliveManager
-import info.nightscout.androidaps.receivers.NetworkChangeReceiver
-import info.nightscout.androidaps.receivers.TimeDateOrTZChangeReceiver
+import info.nightscout.androidaps.receivers.*
 import info.nightscout.androidaps.services.AlarmSoundServiceHelper
 import info.nightscout.androidaps.utils.ActivityMonitor
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.LocalAlertUtils
 import info.nightscout.androidaps.utils.ProcessLifecycleListener
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.locale.LocaleHelper
@@ -48,6 +49,7 @@ import io.reactivex.rxjava3.plugins.RxJavaPlugins
 import net.danlew.android.joda.JodaTimeAndroid
 import java.io.IOException
 import java.net.SocketException
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class MainApp : DaggerApplication() {
@@ -62,7 +64,6 @@ class MainApp : DaggerApplication() {
     @Inject lateinit var config: Config
     @Inject lateinit var buildHelper: BuildHelper
     @Inject lateinit var configBuilder: ConfigBuilder
-    @Inject lateinit var keepAliveManager: KeepAliveManager
     @Inject lateinit var plugins: List<@JvmSuppressWildcards PluginBase>
     @Inject lateinit var compatDBHelper: CompatDBHelper
     @Inject lateinit var repository: AppRepository
@@ -73,6 +74,7 @@ class MainApp : DaggerApplication() {
     @Inject lateinit var notificationStore: NotificationStore
     @Inject lateinit var processLifecycleListener: ProcessLifecycleListener
     @Inject lateinit var profileSwitchPlugin: ThemeSwitcherPlugin
+    @Inject lateinit var localAlertUtils: LocalAlertUtils
 
     override fun onCreate() {
         super.onCreate()
@@ -118,7 +120,17 @@ class MainApp : DaggerApplication() {
         // Register all tabs in app here
         pluginStore.plugins = plugins
         configBuilder.initialize()
-        keepAliveManager.setAlarm(this)
+
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+            "KeepAlive",
+            ExistingPeriodicWorkPolicy.REPLACE,
+            PeriodicWorkRequest.Builder(KeepAliveWorker::class.java, 15, TimeUnit.MINUTES)
+                .setInputData(Data.Builder().putString("schedule", "KeepAlive").build())
+                .setInitialDelay(5, TimeUnit.SECONDS)
+                .build()
+        )
+        localAlertUtils.shortenSnoozeInterval()
+        localAlertUtils.preSnoozeAlarms()
         doMigrations()
         uel.log(UserEntry.Action.START_AAPS, UserEntry.Sources.Aaps)
     }
@@ -190,7 +202,6 @@ class MainApp : DaggerApplication() {
     override fun onTerminate() {
         aapsLogger.debug(LTag.CORE, "onTerminate")
         unregisterActivityLifecycleCallbacks(activityMonitor)
-        keepAliveManager.cancelAlarm(this)
         alarmSoundServiceHelper.stopService(this)
         super.onTerminate()
     }

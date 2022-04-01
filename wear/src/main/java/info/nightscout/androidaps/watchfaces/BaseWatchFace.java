@@ -18,7 +18,6 @@ import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.wearable.view.WatchViewStub;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowInsets;
@@ -49,6 +48,8 @@ import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.data.RawDisplayData;
 import info.nightscout.androidaps.interaction.utils.Persistence;
 import info.nightscout.androidaps.interaction.utils.WearUtil;
+import info.nightscout.shared.logging.AAPSLogger;
+import info.nightscout.shared.logging.LTag;
 import lecho.lib.hellocharts.view.LineChartView;
 
 /**
@@ -61,6 +62,7 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
 
     @Inject WearUtil wearUtil;
     @Inject Persistence persistence;
+    @Inject AAPSLogger aapsLogger;
 
     public final static IntentFilter INTENT_FILTER;
 
@@ -382,7 +384,7 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
     private void checkVibrateHourly(WatchFaceTime oldTime, WatchFaceTime newTime) {
         boolean hourlyVibratePref = sharedPrefs.getBoolean("vibrate_Hourly", false);
         if (hourlyVibratePref && layoutSet && newTime.hasHourChanged(oldTime)) {
-            Log.i("hourlyVibratePref", "true --> " + newTime.toString());
+            aapsLogger.info(LTag.WEAR, "hourlyVibratePref", "true --> " + newTime);
             Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
             long[] vibrationPattern = {0, 150, 125, 100};
             vibrator.vibrate(vibrationPattern, -1);

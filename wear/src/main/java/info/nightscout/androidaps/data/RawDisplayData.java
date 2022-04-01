@@ -22,7 +22,7 @@ import info.nightscout.androidaps.interaction.utils.WearUtil;
  */
 public class RawDisplayData {
 
-    private WearUtil wearUtil;
+    private final WearUtil wearUtil;
 
     public RawDisplayData(WearUtil wearUtil) {
         this.wearUtil = wearUtil;

@@ -99,7 +99,7 @@
     <attr name="cgmxdripColor" format="reference|color" />
     <!---BG color-->
     <attr name="bgLow" format="reference|color" />
-    <attr name="bgHigh" format="reference|color" />
+    <attr name="highColor" format="reference|color" />
     <attr name="bgInRange" format="reference|color" />
     <!---Profile Helper -->
     <attr name="helperProfileColor" format="reference|color" />
@@ -109,6 +109,10 @@
     <attr name="errorBackgroundColor" format="reference|color" />
     <!---Warning  -->
     <attr name="warningColor" format="reference|color" />
+    <!---Warning Colors : WarnColors.kt-->
+    <attr name="normalColor" format="reference|color" />
+    <attr name="warnColor" format="reference|color" />
+    <attr name="urgentColor" format="reference|color" />
     <!---TextColor -->
     <attr name="defaultTextColor" format="reference|color" />
     <!---Profile viewer TempBasal -->
@@ -116,4 +120,63 @@
     <attr name="infoColor" format="reference|color" />
     <!---Bolus wizard -->
     <attr name="cobAlertColor" format="reference|color" />
+    <!---Fill dialog -->
+    <attr name="actionsConfirmColor" format="reference|color" />
+    <!-- dash and eros colors -->
+    <attr name="omniMagentaColor" format="reference|color" />
+    <attr name="omniYellowColor" format="reference|color" />
+    <attr name="omniCyanColor" format="reference|color" />
+    <attr name="omniGreenColor" format="reference|color" />
+    <attr name="omniGrayColor" format="reference|color" />
+    <attr name="omniWizardFinishButtonColor" format="reference|color" />
+    <!---Automation -->
+    <attr name="userAction" format="reference|color" />
+    <attr name="validActions" format="reference|color" />
+    <attr name="actionsError" format="reference|color" />
+    <attr name="automationBackgroundColor" format="reference|color" />
+    <attr name="automationOverlayColor" format="reference|color" />
+    <!---BG source -->
+    <attr name="bgsourceError" format="reference|color" />
+    <!---TDD-statistics -->
+    <attr name="tddHeaderBackground" format="reference|color" />
+    <attr name="mainTableBackground" format="reference|color" />
+    <attr name="dummyBackground" format="reference|color" />
+    <!-- Icon Colors -->
+    <attr name="icCheckboxTrendColor" format="reference|color" />
+    <!-- Overview Buttons -->
+    <attr name="icBolusColor" format="reference|color" />
+    <attr name="icBolusCarbsColor" format="reference|color" />
+    <attr name="icCalculatorColor" format="reference|color" />
+    <attr name="icQuickWizardColor" format="reference|color" />
+    <attr name="icCalibrationColor" format="reference|color" />
+    <attr name="icTreatmentColor" format="reference|color" />
+    <!-- IOB -->
+    <attr name="iobColor" format="reference|color" />
+    <!-- Basal -->
+    <attr name="basal" format="reference|color" />
+    <!---Loop Icon-->
+    <!---Loop Paused Icon Color-->
+    <attr name="loopPaused" format="reference|color" />
+    <!---Loop Closed Icon Color-->
+    <attr name="loopClosed" format="reference|color" />
+    <!---Loop Disabled Icon Color-->
+    <attr name="loopDisabled" format="reference|color" />
+    <!---Loop Disconnected Icon Color-->
+    <attr name="loopDisconnected" format="reference|color" />
+    <!---Loop Opened Icon Color-->
+    <attr name="loopOpened" format="reference|color" />
+    <!---Loop Super Bolus Icon Color-->
+    <attr name="loopSuperBolus" format="reference|color" />
+    <!---Extended Bolus Icon Color-->
+    <attr name="extBolusColor" format="reference|color" />
+    <attr name="extBolusStopColor" format="reference|color" />
+    <attr name="basalstartColor" format="reference|color" />
+    <attr name="basalCancelColor" format="reference|color" />
+    <attr name="pumpCanulaColor" format="reference|color" />
+    <attr name="cgmInsertColor" format="reference|color" />
+    <attr name="pumpBatteryColor" format="reference|color" />
+    <attr name="noteColor" format="reference|color" />
+    <attr name="announcementColor" format="reference|color" />
+    <attr name="questionColor" format="reference|color" />
+    <attr name="pumpHistoryColor" format="reference|color" />
 </resources>

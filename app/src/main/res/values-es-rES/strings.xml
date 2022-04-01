@@ -435,7 +435,7 @@
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">ISF Dinámico</string>
     <string name="DynISFAdjust_title">Factor de ajuste de ISF Dinámico %</string>
-    <string name="DynISFAdjust_summary">Porcentaje del factor de ajuste para ISF Dinámico. Establece valores por encima del 100%, para correcciones más agresivas y por debajo para correcciones menos agresivas</string>
+    <string name="DynISFAdjust_summary">Porcentaje del factor de ajuste de ISF Dinámico\n Valor predeterminado: 100\nEstablecer valores por encima del 100% para que el algoritmo aplique correcciones más agresivas y valores por debajo del 100% para correcciones menos agresivas.</string>
     <string name="enableuam">Activar UAM</string>
     <string name="enablesmb">Activar SMB</string>
     <string name="enablesmb_summary">Usar microbolos en lugar de basales temporales, para corregir más rápidamente</string>
@@ -985,6 +985,8 @@
     <string name="wear_unknown_action_string">Comando de acción desconocido:</string>
     <string name="overview_editquickwizard_percentage">Porcentaje</string>
     <string name="app_default">Aplicación por defecto</string>
+    <string name="show_invalidated_records">Mostrar registros eliminados o invalidados</string>
+    <string name="hide_invalidated_records">Ocultar registros eliminados o invalidados</string>
     <string name="select_profile">Seleccione el perfil a editar</string>
     <string name="refresh_from_nightscout">Actualizar de Nightscout</string>
     <string name="remove_selected_items">Eliminar los elementos seleccionados</string>
@@ -1001,4 +1003,6 @@
     <string name="below" comment="below &quot;in range&quot;">Bajo</string>
     <string name="in_range">En rango</string>
     <string name="above" comment="above &quot;in range&quot;">Alto</string>
+    <string name="show_loop_records">Mostrar registros del lazo</string>
+    <string name="show_hide_records">Ocultar registros del lazo</string>
 </resources>

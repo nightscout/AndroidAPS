@@ -142,7 +142,7 @@ class OverviewData @Inject constructor(
     fun lastBgColor(context: Context?): Int {
         return when {
             isLow  -> rh.gac(context, R.attr.bgLow)
-            isHigh -> rh.gac(context, R.attr.bgHigh)
+            isHigh -> rh.gac(context, R.attr.highColor)
             else   -> rh.gac(context, R.attr.bgInRange)
         }
     }
