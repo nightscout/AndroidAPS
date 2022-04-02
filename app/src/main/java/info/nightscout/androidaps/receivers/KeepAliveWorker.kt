@@ -15,6 +15,7 @@ import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.RunningConfiguration
 import info.nightscout.androidaps.plugins.general.maintenance.MaintenancePlugin
 import info.nightscout.androidaps.queue.commands.Command
+import info.nightscout.androidaps.updateWidget
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.LocalAlertUtils
@@ -86,6 +87,7 @@ class KeepAliveWorker(
             )
         }
 
+        updateWidget(context)
         localAlertUtils.shortenSnoozeInterval()
         localAlertUtils.checkStaleBGAlert()
         checkPump()

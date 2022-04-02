@@ -37,14 +37,25 @@
     <application
         android:name=".MainApp"
         android:allowBackup="true"
+        android:backupAgent=".utils.SPBackupAgent"
+        android:fullBackupOnly="false"
         android:icon="${appIcon}"
         android:label="@string/app_name"
+        android:restoreAnyVersion="true"
         android:roundIcon="${appIconRound}"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme.Launcher"
-        android:fullBackupOnly="false"
-        android:backupAgent=".utils.SPBackupAgent"
-        android:restoreAnyVersion="true">
+        android:theme="@style/AppTheme.Launcher" >
+        <receiver
+            android:name=".Widget"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info" />
+        </receiver>
 
         <meta-data
             android:name="com.google.android.backup.api_key"
