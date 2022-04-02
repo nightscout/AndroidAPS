@@ -529,7 +529,8 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             if (!predArray.isEmpty()) {
                 for (GlucoseValueDataPoint bg : predArray) {
                     if (bg.getData().getValue() < 40) continue;
-                    predictions.add(predictionMap(bg.getData().getTimestamp(), bg.getData().getValue(), bg.getPredictionColor()));
+                    predictions.add(predictionMap(bg.getData().getTimestamp(),
+                            bg.getData().getValue(), bg.color(null)));
                 }
             }
         }

@@ -226,6 +226,11 @@
         <item name="therapyEvent_Default">@color/mdtp_line_dark</item>
         <!-- Graph specific colors  -->
         <item name="inrangeBackground">@color/black_alpha_20</item>
+        <item name="devslopeposColor">@color/devslopepos</item>
+        <item name="predictionColor">@color/prediction</item>
+        <item name="bgiColor">@color/bgi</item>
+        <item name="ratioColor">@color/ratio</item>
+        <item name="activityColor">@color/activity</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>
@@ -287,16 +292,33 @@
         <item name="android:textAllCaps">true</item>
     </style>
 
-
     <style name="MaterialPickerTheme" parent="Theme.MaterialComponents.Light.Dialog.Alert">
+        <item name="android:datePickerStyle">@style/MaterialDatePickerStyle</item>
+        <item name="android:timePickerStyle">@style/MaterialTimePickerStyle</item>
         <item name="android:buttonBarPositiveButtonStyle">@style/PickerTextButton</item>
         <item name="android:buttonBarNegativeButtonStyle">@style/PickerTextButton</item>
-        <item name="android:textColorPrimary">@color/black</item>
-        <item name="android:colorPrimary">@color/colorPrimary</item>
-        <item name="android:calendarTextColor">@color/black</item>
-        <item name="android:colorAccent">@color/dialog_title_background</item>
-        <item name="colorSecondary">@color/dialog_title_background</item>
+        <item name="colorAccent">@color/dialog_title_background</item>
+        <item name="android:textColorSecondary">@color/defaulttextcolor</item>
+        <item name="android:textColorPrimary">@color/defaulttextcolor</item>
+        <item name="android:textColor">@color/defaulttextcolor</item>
         <item name="android:dialogCornerRadius">12dp</item>
+    </style>
+
+    <style name="MaterialDatePickerStyle" parent="Widget.MaterialComponents.MaterialCalendar">
+        <item name="android:calendarTextColor">@color/defaulttextcolor</item>
+        <item name="android:datePickerMode">calendar</item>
+        <item name="android:background">@color/dateTimePickerBackground</item>
+        <item name="android:headerBackground">@color/dialog_title_background</item>
+    </style>
+
+    <style name="MaterialTimePickerStyle" parent="Widget.MaterialComponents.TimePicker">
+        <item name="android:numbersTextColor">@color/defaulttextcolor</item>
+        <item name="android:numbersSelectorColor">@color/white_alpha_40</item>
+        <item name="android:numbersBackgroundColor">@color/dialog_title_background</item>
+        <item name="android:background">@color/dateTimePickerBackground</item>
+        <item name="android:headerBackground">@color/dialog_title_background</item>
+        <item name="android:headerTimeTextAppearance">@color/defaulttextcolor</item>
+        <item name="android:timePickerMode">clock</item>
     </style>
 
     <style name="PickerTextButton" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
