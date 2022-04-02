@@ -162,7 +162,6 @@
         <item name="mainTableBackground">@android:color/transparent</item>
         <item name="dummyBackground">@color/dummy_background</item>
         <!-- Icon Colors -->
-        <item name="icCheckboxTrendColor">@color/white</item>
         <!-- Overview Buttons -->
         <item name="icBolusColor">@color/colorInsulinButton</item>
         <item name="icBolusCarbsColor">@color/colorCarbsButton</item>
@@ -203,6 +202,22 @@
         <item name="announcementColor">@color/announcement</item>
         <item name="questionColor">@color/question</item>
         <item name="pumpHistoryColor">@color/pumpHistory</item>
+        <item name="userOptionColor">@color/userOption</item>
+        <!---Graph data glucose value point colors-->
+        <item name="cobColor">@color/cob</item>
+        <item name="uamColor">@color/uam</item>
+        <item name="ztColor">@color/zt</item>
+        <item name="smbColor">@color/tempbasal</item>
+        <item name="bolusDataPointColor">@color/pumpHistory</item>
+        <item name="profileSwitchColor">@color/profileSwitch</item>
+        <item name="inMemoryColor">@color/white</item>
+        <item name="therapyEvent_NS_MBG">@color/red</item>
+        <item name="therapyEvent_FINGER_STICK_BG_VALUE">@color/red</item>
+        <item name="therapyEvent_EXERCISE">@color/blue</item>
+        <item name="therapyEvent_APS_OFFLINE">@color/mdtp_line_dark</item>
+        <item name="therapyEvent_Default">@color/mdtp_line_dark</item>
+        <!-- Graph specific colors  -->
+        <item name="inrangeBackground">@color/inrangebackground</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>
@@ -251,6 +266,7 @@
         <item name="android:textAllCaps">true</item>
     </style>
 
+
     <style name="MaterialPickerTheme" parent="android:Theme.Material.Dialog.Alert">
         <item name="android:buttonBarPositiveButtonStyle">@style/PickerTextButton</item>
         <item name="android:buttonBarNegativeButtonStyle">@style/PickerTextButton</item>
@@ -258,6 +274,7 @@
         <item name="android:colorPrimary">@color/okButtonText</item>
         <item name="android:calendarTextColor">@color/okButtonText</item>
         <item name="android:colorAccent">@color/okButtonText</item>
+        <item name="android:dialogCornerRadius">12dp</item>
     </style>
     <style name="PickerTextButton" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
         <item name="android:textColor">@color/okButtonText</item>

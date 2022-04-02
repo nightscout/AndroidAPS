@@ -179,4 +179,23 @@
     <attr name="announcementColor" format="reference|color" />
     <attr name="questionColor" format="reference|color" />
     <attr name="pumpHistoryColor" format="reference|color" />
+    <attr name="userOptionColor" format="reference|color" />
+    <!---Glucose Value Color-->
+    <attr name="cobColor" format="reference|color" />
+    <attr name="uamColor" format="reference|color" />
+    <attr name="ztColor" format="reference|color" />
+    <attr name="smbColor" format="reference|color" />
+    <attr name="bolusDataPointColor" format="reference|color" />
+    <attr name="profileSwitchColor" format="reference|color" />
+    <attr name="inMemoryColor" format="reference|color" />
+    <attr name="therapyEvent_NS_MBG" format="reference|color" />
+    <attr name="therapyEvent_FINGER_STICK_BG_VALUE" format="reference|color" />
+    <attr name="therapyEvent_EXERCISE" format="reference|color" />
+    <attr name="therapyEvent_APS_OFFLINE" format="reference|color" />
+    <attr name="therapyEvent_Default" format="reference|color" />
+    <!-- Graph specific colors  -->
+    <attr name="graphHorizontalLabelText" format="reference|color" />
+    <attr name="graphVerticalLabelText" format="reference|color" />
+    <attr name="inrangeBackground" format="reference|color" />
+    <attr name="graphGrid" format="reference|color" />
 </resources>
