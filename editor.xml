@@ -2,4 +2,7 @@
   <component name="EditorSettings">
     <option name="ENABLE_RENDERED_DOC" value="true" />
   </component>
+  <component name="InlayHintsSettings">
+    <option name="lastViewedProviderKeyId" value="groovy.implicit.null.argument.hint" />
+  </component>
 </application>

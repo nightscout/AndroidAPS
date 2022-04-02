@@ -1,0 +1,7 @@
+<application>
+  <component name="ParameterNameHintsSettings">
+    <blacklists>
+      <blacklist language="C/C++" />
+    </blacklists>
+  </component>
+</application>
