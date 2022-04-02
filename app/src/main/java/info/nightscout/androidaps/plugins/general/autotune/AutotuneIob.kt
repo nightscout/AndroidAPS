@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.autotune
 
+import android.content.Context
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
@@ -21,6 +22,7 @@ import info.nightscout.androidaps.plugins.general.autotune.data.ATProfile
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
+import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
@@ -54,6 +56,8 @@ class AutotuneIob(
     @Inject lateinit var sp: SP
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var context: Context
+    @Inject lateinit var dataWorker: DataWorker
     @Inject lateinit var activePlugin: ActivePlugin
 
     lateinit var iobCobCalculator: IobCobCalculatorPlugin
@@ -83,7 +87,9 @@ class AutotuneIob(
                 sensitivityWeightedAveragePlugin,
                 fabricPrivacy,
                 dateUtil,
-                repository
+                repository,
+                context,
+                dataWorker
             )
         dia = tunedProfile.dia
         startBG = from
