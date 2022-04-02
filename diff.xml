@@ -1,0 +1,9 @@
+<application>
+  <component name="TextDiffSettings">
+    <option name="SHARED_SETTINGS">
+      <SharedSettings>
+        <option name="MERGE_AUTO_APPLY_NON_CONFLICTED_CHANGES" value="true" />
+      </SharedSettings>
+    </option>
+  </component>
+</application>
