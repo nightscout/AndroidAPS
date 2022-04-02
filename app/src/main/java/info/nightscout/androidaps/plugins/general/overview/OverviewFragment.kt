@@ -5,8 +5,9 @@ import android.app.NotificationManager
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.AnimationDrawable
 import android.os.Build
 import android.os.Bundle
@@ -560,9 +561,17 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         binding.buttonsLayout.calibrationButton.visibility = (xDripIsBgSource && actualBG != null && sp.getBoolean(R.string.key_show_calibration_button, true)).toVisibility()
         if (dexcomIsSource) {
             binding.buttonsLayout.cgmButton.setCompoundDrawablesWithIntrinsicBounds(null, rh.gd(R.drawable.ic_byoda), null, null)
+            for (drawable in binding.buttonsLayout.cgmButton.compoundDrawables) {
+                drawable?.mutate()
+                drawable?.colorFilter = PorterDuffColorFilter(rh.gac( context,R.attr.cgmdexColor ), PorterDuff.Mode.SRC_IN)
+            }
             binding.buttonsLayout.cgmButton.setTextColor(rh.gac(context, R.attr.cgmdexColor))
         } else if (xDripIsBgSource) {
             binding.buttonsLayout.cgmButton.setCompoundDrawablesWithIntrinsicBounds(null, rh.gd(R.drawable.ic_xdrip), null, null)
+            for (drawable in binding.buttonsLayout.cgmButton.compoundDrawables) {
+                drawable?.mutate()
+                drawable?.colorFilter = PorterDuffColorFilter(rh.gac( context,R.attr.cgmxdripColor ), PorterDuff.Mode.SRC_IN)
+            }
             binding.buttonsLayout.cgmButton.setTextColor(rh.gac(context, R.attr.cgmxdripColor))
         }
         binding.buttonsLayout.cgmButton.visibility = (sp.getBoolean(R.string.key_show_cgm_button, false) && (xDripIsBgSource || dexcomIsSource)).toVisibility()
@@ -1029,7 +1038,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
     @Suppress("UNUSED_PARAMETER")
     fun updateCalcProgress(from: String) {
-        binding.graphsLayout.iobCalculationProgress.text = overviewData.calcProgress
+        binding.progressBar.progress = overviewData.calcProgressPct
+        binding.progressBar.visibility = (overviewData.calcProgressPct != 100).toVisibility()
     }
 
     @Suppress("UNUSED_PARAMETER")

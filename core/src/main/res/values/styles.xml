@@ -3,8 +3,8 @@
 
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <!---Example light theme colors -->
-        <item name="colorPrimary">@color/lightSandGray</item>
-        <item name="colorOnPrimary">@color/aaps_theme_light_onPrimary</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorOnPrimary">@color/black</item>
         <item name="colorSecondary">@color/aaps_theme_light_secondary</item>
         <item name="colorOnSecondary">@color/aaps_theme_light_onSecondary</item>
         <item name="colorError">@color/aaps_theme_light_error</item>
@@ -13,18 +13,22 @@
         <item name="colorOnBackground">@color/aaps_theme_light_onBackground</item>
         <item name="colorSurface">@color/aaps_theme_light_surface</item>
         <item name="colorOnSurface">@color/aaps_theme_light_onSurface</item>
-
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/aaps_theme_light_secondary</item>
         <item name="dialogTitleBackground">@color/dialog_title_background</item>
         <item name="dialogTitleColor">@color/dialog_title_color</item>
         <item name="dialogTitleIconTint">@color/dialog_title_icon_tint</item>
+        <!-- Actionbar -->
+        <item name="actionBarTheme">@style/ThemeOverlay.MaterialComponents.ActionBar</item>
         <!-- New MaterialComponents attributes. -->
         <item name="colorPrimaryVariant">@color/primaryLightColorDefault</item>
         <item name="colorSecondaryVariant">@color/secondaryLightColorDefault</item>
         <item name="scrimBackground">@color/white</item>
         <item name="popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
         <item name="actionOverflowMenuStyle">@style/Widget.MaterialComponents.PopupMenu.Overflow</item>
+        <!---Text Colors -->
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="android:textColor">@color/black</item>
         <!---Notification -->
         <item name="notificationUrgent">@color/notificationUrgent</item>
         <item name="notificationNormal">@color/notificationNormal</item>
@@ -50,14 +54,10 @@
         <item name="setTempButton">@color/colorSetTempButton</item>
         <!-- Card Item-->
         <item name="cardItemBackgroundColor">@color/cardColorBackground</item>
-        <!-- Carbs -->
-        <item name="carbsColor">@color/carbs</item>
         <!-- Exercise -->
         <item name="exerciseColor">@color/exercise</item>
         <!-- BG low -->
         <item name="lowColor">@color/low</item>
-        <!-- Temp Target -->
-        <item name="tempTargetConfirmation">@color/tempTargetConfirmation</item>
         <!-- Treatments -->
         <item name="setExtendedButtonColor">@color/colorSetExtendedButton</item>
         <item name="activeColor">@color/colorActive</item>
@@ -89,7 +89,7 @@
         <!---Delete selection -->
         <item name="trashBinTintColor">@color/black</item>
         <!---Dialog  -->
-        <item name="activity_title_backgroundColor">@color/activity_title_background</item>
+        <item name="activity_title_backgroundColor">@color/dialog_title_background</item>
         <!---Automation  -->
         <item name="ribbonDefaultColor">@color/ribbonDefault</item>
         <item name="ribbonWarningColor">@color/ribbonWarning</item>
@@ -129,7 +129,7 @@
         <!---BG color-->
         <item name="bgLow">@color/low</item>
         <item name="highColor">@color/high</item>
-        <item name="bgInRange">@color/inrange</item>
+        <item name="bgInRange">@color/tempTargetConfirmation</item>
         <!---Profile Helper -->
         <item name="helperProfileColor">@color/helperProfile</item>
         <item name="examinedProfileColor">@color/examinedProfile</item>
@@ -170,8 +170,6 @@
         <item name="mainTableBackground">@android:color/transparent</item>
         <item name="dummyBackground">@color/dummy_background</item>
         <!-- Icon Colors -->
-        <!-- Trend Arrow -->
-        <item name="icCheckboxTrendColor">@color/plastic_grey</item>
         <!-- Overview Buttons -->
         <item name="icBolusColor">@color/bolus</item>
         <item name="icBolusCarbsColor">@color/colorCarbsButton</item>
@@ -179,7 +177,55 @@
         <item name="icQuickWizardColor">@color/colorQuickWizardButton</item>
         <item name="icCalibrationColor">@color/colorCalibrationButton</item>
         <item name="icTreatmentColor">@color/bolus</item>
-
+        <!-- IOB -->
+        <item name="iobColor">@color/iob</item>
+        <!-- Basal -->
+        <item name="basal">@color/basal</item>
+        <!-- Carbs -->
+        <item name="carbsColor">@color/carbs</item>
+        <!-- Temp Target -->
+        <item name="tempTargetConfirmation">@color/tempTargetConfirmation</item>
+        <!---Loop Icon-->
+        <!---Loop Paused Icon Color-->
+        <item name="loopPaused">@color/loopSuspended</item>
+        <!---Loop Closed Icon Color-->
+        <item name="loopClosed">@color/loopClosed</item>
+        <!---Loop Disabled Icon Color-->
+        <item name="loopDisabled">@color/loopDisabled</item>
+        <!---Loop Disconnected Icon Color-->
+        <item name="loopDisconnected">@color/loopDisconnected</item>
+        <!---Loop Opened Icon Color-->
+        <item name="loopOpened">@color/loopOpened</item>
+        <!---Loop Super Bolus Icon Color-->
+        <item name="loopSuperBolus">@color/carbs</item>
+        <!---Action Icons Color-->
+        <item name="extBolusColor">@color/extendedBolus</item>
+        <item name="extBolusStopColor">@color/extBolusStop</item>
+        <item name="basalstartColor">@color/actionBasal</item>
+        <item name="basalCancelColor">@color/actionBasal</item>
+        <item name="pumpCanulaColor">@color/pumpCanula</item>
+        <item name="cgmInsertColor">@color/cgmInsert</item>
+        <item name="pumpBatteryColor">@color/pumpBattery</item>
+        <item name="noteColor">@color/note</item>
+        <item name="announcementColor">@color/announcement</item>
+        <item name="questionColor">@color/question</item>
+        <item name="pumpHistoryColor">@color/pumpHistory</item>
+        <item name="userOptionColor">@color/userOption</item>
+        <!---Graph data glucose value point colors-->
+        <item name="cobColor">@color/cob</item>
+        <item name="uamColor">@color/uam</item>
+        <item name="ztColor">@color/zt</item>
+        <item name="smbColor">@color/tempbasal</item>
+        <item name="bolusDataPointColor">@color/pumpHistory</item>
+        <item name="profileSwitchColor">@color/profileSwitch</item>
+        <item name="inMemoryColor">@color/white</item>
+        <item name="therapyEvent_NS_MBG">@color/red</item>
+        <item name="therapyEvent_FINGER_STICK_BG_VALUE">@color/red</item>
+        <item name="therapyEvent_EXERCISE">@color/blue</item>
+        <item name="therapyEvent_APS_OFFLINE">@color/mdtp_line_dark</item>
+        <item name="therapyEvent_Default">@color/mdtp_line_dark</item>
+        <!-- Graph specific colors  -->
+        <item name="inrangeBackground">@color/black_alpha_20</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>
@@ -241,14 +287,18 @@
         <item name="android:textAllCaps">true</item>
     </style>
 
-    <style name="MaterialPickerTheme" parent="android:Theme.Material.Dialog.Alert">
+
+    <style name="MaterialPickerTheme" parent="Theme.MaterialComponents.Light.Dialog.Alert">
         <item name="android:buttonBarPositiveButtonStyle">@style/PickerTextButton</item>
         <item name="android:buttonBarNegativeButtonStyle">@style/PickerTextButton</item>
-        <item name="android:textColorPrimary">@color/okButtonText</item>
-        <item name="android:colorPrimary">@color/okButtonText</item>
-        <item name="android:calendarTextColor">@color/okButtonText</item>
-        <item name="android:colorAccent">@color/okButtonText</item>
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="android:colorPrimary">@color/colorPrimary</item>
+        <item name="android:calendarTextColor">@color/black</item>
+        <item name="android:colorAccent">@color/dialog_title_background</item>
+        <item name="colorSecondary">@color/dialog_title_background</item>
+        <item name="android:dialogCornerRadius">12dp</item>
     </style>
+
     <style name="PickerTextButton" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
         <item name="android:textColor">@color/okButtonText</item>
     </style>
@@ -263,6 +313,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:gravity">center</item>
+        <item name="android:elevation">8dp</item>
         <item name="android:layout_marginStart">@dimen/gray_material_button_margin_horizontal</item>
         <item name="android:layout_marginEnd">@dimen/gray_material_button_margin_horizontal</item>
         <item name="android:textAllCaps">true</item>

@@ -2,13 +2,13 @@
 <resources>
     <!-- Default theme color -->
     <!-- This section describes the main theme colors -->
-    <color name="colorPrimary">#787878</color>
+    <color name="colorPrimary">#FBF9FF</color>
     <color name="colorPrimaryDark">#676767</color>
     <color name="colorAccent">#40bbaa</color>
     <color name="mdtp_white">#ffffff</color>
     <color name="mdtp_line_dark">#808080</color>
     <color name="colorLightGray">#d8d8d8</color>
-    <color name="cardColorBackground">@color/lightgray</color>
+    <color name="cardColorBackground">#CBCBCB</color>
     <color name="gray">#BBBBBB</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
@@ -32,12 +32,12 @@
     <color name="background_light">#FFFFFF</color>
 
     <!--    Tabs-->
-    <color name="tabText">#d0d0d0</color>
-    <color name="tabSelectedText">@color/white</color>
+    <color name="tabText">@color/black_alpha_90</color>
+    <color name="tabSelectedText">@color/black_alpha_90</color>
 
     <!--    Buttons-->
-    <color name="buttonBackground">#555555</color>
-    <color name="buttonText">#ffffff</color>
+    <color name="buttonBackground">@color/midlightgray</color>
+    <color name="buttonText">#000000</color>
     <color name="okButtonText">@color/colorAccent</color>
     <color name="okButtonSelected">#33969696</color>
 
@@ -64,6 +64,9 @@
     <color name="examinedProfile">#FFFF5555</color>
     <color name="defaulttext">#BBBBBB</color>
 
+    <!--    Datepicker-->
+    <color name="dateTimePickerBackground">@color/white</color>
+
     <!--    Treatment-->
     <color name="tempbasal">#C803A9F4</color>
     <color name="list_delimiter">#505050</color>
@@ -82,13 +85,17 @@
     <color name="low">#FF0000</color>
     <color name="high">#FFFB8C00</color>
     <color name="iob">#1e88e5</color>
-    <color name="extendedBolus">#67DFE8</color>
+    <color name="extendedBolus">#1e88e5</color>
     <color name="iobPredAS">#1ea3e5</color>
     <color name="cob">#FFFB8C00</color>
     <color name="carbs">#FFFB8C00</color>
     <color name="uam">#c9bd60</color>
     <color name="zt">#00d2d2</color>
     <color name="calibration">#E83258</color>
+    <color name="bolusDataPointColor">#00FFFF</color>
+    <color name="profileSwitch">#00FFFF</color>
+    <color name="red">#FF0000</color>
+    <color name="blue">#0000FF</color>
 
     <color name="ribbonDefault">#5a595b</color>
     <color name="daySelected">#D000FF00</color>
@@ -144,14 +151,14 @@
     <color name="metadataTextError">#FF5555</color>
 
     <!-- Import/Export -->
-    <color name="importListAdditionalInfo">#BBBBBB</color>
-    <color name="importListFileName">#FFFFFF</color>
+    <color name="importListAdditionalInfo">#757575</color>
+    <color name="importListFileName">#000000</color>
 
     <color name="ribbonWarning">#f4d700</color>
     <color name="ribbonCritical">#ff0400</color>
     <color name="ribbonTextDefault">#FFFFFF</color>
     <color name="ribbonTextWarning">#303030</color>
-    <color name="tempTargetConfirmation">#77dd77</color>
+    <color name="tempTargetConfirmation">#6BD16B</color>
 
     <color name="prediction">#ff00ff</color>
     <color name="iobPred">#00d2d2</color>
@@ -175,15 +182,15 @@
     <color name="dummy_background">#7DFF0000</color>
 
     <color name="tempTargetBackground">#77dd77</color>
-    <color name="exercise">#67DFE8</color>
+    <color name="exercise">#42A5F5</color>
 
     <color name="action">#ffffbb33</color>
     <color name="alarm">#ffff4444</color>
 
     <color name="cardObjectiveText">#779ECB</color>
 
-    <color name="colorAcceptTempButton">#ffffbb33</color>
-    <color name="colorTreatmentButton">#67dfe8</color>
+    <color name="colorAcceptTempButton">#E19701</color>
+    <color name="colorTreatmentButton">#42A5F5</color>
     <color name="colorInsulinButton">#67dfe8</color>
     <color name="colorCarbsButton">#E19701</color>
     <color name="colorCalibrationButton">#e93057</color>
@@ -205,6 +212,17 @@
 
     <color name="splashBackground">#FFFFFF</color>
 
+    <color name="extBolusStop">#FEAF05</color>
+    <color name="actionBasal">#CF8BFE</color>
+    <color name="pumpCanula">#42A5F5</color>
+    <color name="cgmInsert">#42A5F5</color>
+    <color name="pumpBattery">#66BB6A</color>
+    <color name="note">#FEAF05</color>
+    <color name="announcement">#CF8BFE</color>
+    <color name="question">#FEAF05</color>
+    <color name="pumpHistory">#42A5F5</color>
+    <color name="userOption">#66BB6A</color>
+
     <!-- Gray colors -->
     <color name="darkgray">#323232</color>
     <color name="darkgrayVariant">#424242</color>
@@ -215,6 +233,7 @@
     <color name="lightSandGray">#72000000</color>
     <color name="sandGray">#c8666666</color>
     <color name="midgray">#B2B2B2</color>
+    <color name="midlightgray">#D6D7D7</color>
     <color name="lightgray">#4dB1B1B1</color>
     <color name="mdtp_button_selected">#33969696</color>
     <color name="plastic">#EBEBEA</color>

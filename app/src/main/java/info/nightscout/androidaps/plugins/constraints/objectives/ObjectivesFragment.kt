@@ -233,7 +233,7 @@ class ObjectivesFragment : DaggerFragment() {
                 }
             }
             holder.binding.accomplished.text = rh.gs(R.string.accomplished, dateUtil.dateAndTimeString(objective.accomplishedOn))
-            holder.binding.accomplished.setTextColor(-0x3e3e3f)
+            holder.binding.accomplished.setTextColor(rh.gac(context,R.attr.defaultTextColor))
             holder.binding.verify.setOnClickListener {
                 receiverStatusStore.updateNetworkStatus()
                 if (binding.fake.isChecked) {

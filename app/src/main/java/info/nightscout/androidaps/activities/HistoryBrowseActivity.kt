@@ -2,6 +2,7 @@ package info.nightscout.androidaps.activities
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.util.DisplayMetrics
@@ -33,6 +34,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCa
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
+import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -68,6 +70,8 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var loop: Loop
     @Inject lateinit var nsDeviceStatus: NSDeviceStatus
     @Inject lateinit var translator: Translator
+    @Inject lateinit var context: Context
+    @Inject lateinit var dataWorker: DataWorker
 
     private val disposable = CompositeDisposable()
 
@@ -105,7 +109,9 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
                 sensitivityWeightedAveragePlugin,
                 fabricPrivacy,
                 dateUtil,
-                repository
+                repository,
+                context,
+                dataWorker
             )
         overviewData =
             OverviewData(
@@ -235,7 +241,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
             .observeOn(aapsSchedulers.main)
             .subscribe({
                            if (it.cause is EventCustomCalculationFinished)
-                               binding.overviewIobcalculationprogess.text = it.progress
+                               binding.overviewIobcalculationprogess.text = it.progressPct.toString() + "%"
                        }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventRefreshOverview::class.java)
@@ -335,11 +341,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
     }
 
     private fun runCalculation(from: String) {
-        Thread {
-            iobCobCalculator.stopCalculation(from)
-            iobCobCalculator.stopCalculationTrigger = false
-            iobCobCalculator.runCalculation(from, overviewData.toTime, bgDataReload = true, limitDataToOldestAvailable = false, cause = EventCustomCalculationFinished())
-        }.start()
+        iobCobCalculator.runCalculation(from, overviewData.toTime, bgDataReload = true, limitDataToOldestAvailable = false, cause = EventCustomCalculationFinished())
     }
 
     @Volatile
