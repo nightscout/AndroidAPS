@@ -66,7 +66,7 @@ class GraphData(
         addSeries(AreaGraphSeries(inRangeAreaDataPoints).also {
             it.color = 0
             it.isDrawBackground = true
-            it.backgroundColor = rh.gc(R.color.inrangebackground)
+            it.backgroundColor = rh.gac(graph.context,R.attr.inrangeBackground)
         })
     }
 

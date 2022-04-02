@@ -548,7 +548,7 @@ class OverviewData @Inject constructor(
 
         // ProfileSwitch
         repository.getEffectiveProfileSwitchDataFromTimeToTime(fromTime, endTime, true).blockingGet()
-            .map { EffectiveProfileSwitchDataPoint(it) }
+            .map { EffectiveProfileSwitchDataPoint(it,rh) }
             .forEach(filteredTreatments::add)
 
         // OfflineEvent
@@ -566,7 +566,7 @@ class OverviewData @Inject constructor(
         // Extended bolus
         if (!activePlugin.activePump.isFakingTempsByExtendedBoluses) {
             repository.getExtendedBolusDataFromTimeToTime(fromTime, endTime, true).blockingGet()
-                .map { ExtendedBolusDataPoint(it) }
+                .map { ExtendedBolusDataPoint(it, rh) }
                 .filter { it.duration != 0L }
                 .forEach {
                     it.y = getNearestBg(it.x.toLong())

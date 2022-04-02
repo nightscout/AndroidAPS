@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.iob.iobCobCalculator.data
 
+import android.content.Context
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.core.R
@@ -162,7 +163,9 @@ class AutosensData(injector: HasAndroidInjector) : DataPointWithLabelInterface {
     override val duration = 0L
     override val shape = PointsWithLabelGraphSeries.Shape.COBFAILOVER
     override val size = 0.5f
-    override val color get() = rh.gc(R.color.cob)
+    override fun color(context: Context?): Int {
+        return rh.gac(context,R.attr.cobColor)
+    }
 
     init {
         injector.androidInjector().inject(this)
