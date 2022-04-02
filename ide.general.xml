@@ -1,0 +1,15 @@
+<application>
+  <component name="Registry">
+    <entry key="external.system.auto.import.disabled" value="true" />
+    <entry key="ide.instant.shutdown" value="false" />
+  </component>
+  <component name="StatusBar">
+    <option name="widgets">
+      <map>
+        <entry key="Memory" value="true" />
+        <entry key="UserSentimentPanelNegative" value="false" />
+        <entry key="UserSentimentPanelPositive" value="false" />
+      </map>
+    </option>
+  </component>
+</application>
