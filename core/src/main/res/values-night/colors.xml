@@ -91,6 +91,8 @@
     <color name="uam">#c9bd60</color>
     <color name="zt">#00d2d2</color>
     <color name="calibration">#E83258</color>
+    <color name="bolusDataPointColor">#00FFFF</color>
+    <color name="profileSwitch">#00FFFF</color>
 
     <color name="ribbonDefault">#5a595b</color>
     <color name="daySelected">#D000FF00</color>
@@ -216,6 +218,7 @@
     <color name="announcement">#CF8BFE</color>
     <color name="question">#FEAF05</color>
     <color name="pumpHistory">#67DFE8</color>
+    <color name="userOption">#6AE86D</color>
 
     <!-- Gray colors -->
     <color name="darkgray">#323232</color>
