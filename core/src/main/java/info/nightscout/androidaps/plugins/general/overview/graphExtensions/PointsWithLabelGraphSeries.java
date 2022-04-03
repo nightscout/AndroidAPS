@@ -152,7 +152,7 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
         while (values.hasNext()) {
             E value = values.next();
 
-            mPaint.setColor(value.getColor());
+            mPaint.setColor(value.color(graphView.getContext()));
 
             double valY = value.getY() - minY;
             double ratY = valY / diffY;
@@ -200,12 +200,12 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
                     mPaint.setStrokeWidth(0);
                     canvas.drawCircle(endX, endY, value.getSize() * scaledPxSize, mPaint);
                 } else if (value.getShape() == Shape.BG || value.getShape() == Shape.IOBPREDICTION || value.getShape() == Shape.BUCKETED_BG) {
-                    mPaint.setColor(value.getColor());
+                    mPaint.setColor(value.color(graphView.getContext()));
                     mPaint.setStyle(Paint.Style.FILL);
                     mPaint.setStrokeWidth(0);
                     canvas.drawCircle(endX, endY, value.getSize() * scaledPxSize, mPaint);
                 } else if (value.getShape() == Shape.PREDICTION) {
-                    mPaint.setColor(value.getColor());
+                    mPaint.setColor(value.color(graphView.getContext()));
                     mPaint.setStyle(Paint.Style.FILL);
                     mPaint.setStrokeWidth(0);
                     canvas.drawCircle(endX, endY, scaledPxSize, mPaint);

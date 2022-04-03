@@ -6,6 +6,8 @@ import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import android.os.Build
+import android.os.Handler
+import android.os.HandlerThread
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.work.Data
 import androidx.work.ExistingPeriodicWorkPolicy
@@ -76,6 +78,9 @@ class MainApp : DaggerApplication() {
     @Inject lateinit var profileSwitchPlugin: ThemeSwitcherPlugin
     @Inject lateinit var localAlertUtils: LocalAlertUtils
 
+    private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
+    private lateinit var refreshWidget: Runnable
+
     override fun onCreate() {
         super.onCreate()
         aapsLogger.debug("onCreate")
@@ -133,6 +138,13 @@ class MainApp : DaggerApplication() {
         localAlertUtils.preSnoozeAlarms()
         doMigrations()
         uel.log(UserEntry.Action.START_AAPS, UserEntry.Sources.Aaps)
+
+        //  schedule widget update
+        refreshWidget = Runnable {
+            handler.postDelayed(refreshWidget, 60000)
+            updateWidget(this)
+        }
+        handler.postDelayed(refreshWidget, 60000)
     }
 
     private fun setRxErrorHandler() {

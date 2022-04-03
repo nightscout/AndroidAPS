@@ -198,4 +198,9 @@
     <attr name="graphVerticalLabelText" format="reference|color" />
     <attr name="inrangeBackground" format="reference|color" />
     <attr name="graphGrid" format="reference|color" />
+    <attr name="devslopeposColor" format="reference|color" />
+    <attr name="predictionColor" format="reference|color" />
+    <attr name="bgiColor" format="reference|color" />
+    <attr name="ratioColor" format="reference|color" />
+    <attr name="activityColor" format="reference|color" />
 </resources>
