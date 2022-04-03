@@ -1005,4 +1005,5 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="above" comment="above &quot;in range&quot;">Au-dessus</string>
     <string name="show_loop_records">Afficher les entrées de la boucle</string>
     <string name="show_hide_records">Masquer les entrées de la boucle</string>
+    <string name="widget_description">Widget AndroidAPS</string>
 </resources>
