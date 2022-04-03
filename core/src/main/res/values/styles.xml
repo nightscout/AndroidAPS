@@ -225,7 +225,7 @@
         <item name="therapyEvent_APS_OFFLINE">@color/mdtp_line_dark</item>
         <item name="therapyEvent_Default">@color/mdtp_line_dark</item>
         <!-- Graph specific colors  -->
-        <item name="inrangeBackground">@color/black_alpha_20</item>
+        <item name="inrangeBackground">@color/inrangebackground</item>
         <item name="devslopeposColor">@color/devslopepos</item>
         <item name="predictionColor">@color/prediction</item>
         <item name="bgiColor">@color/bgi</item>
