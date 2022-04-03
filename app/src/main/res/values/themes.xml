@@ -17,6 +17,7 @@
 
         <item name="icBolusColor">@color/colorInsulinButton</item>
         <item name="icBolusCarbsColor">@color/colorCarbsButton</item>
+        <item name="defaultTextColor">@color/white</item>
 
     </style>
 </resources>
