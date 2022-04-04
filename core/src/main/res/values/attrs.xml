@@ -205,4 +205,5 @@
     <attr name="activityColor" format="reference|color" />
     <!-- CardView specific colors  -->
     <attr name="strokeColor" format="reference|color" />
+    <attr name="textAppearancemediumColor" format="reference|color" />
 </resources>

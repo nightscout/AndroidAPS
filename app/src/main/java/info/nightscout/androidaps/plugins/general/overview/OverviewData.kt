@@ -196,9 +196,13 @@ class OverviewData @Inject constructor(
                 }
             } ?: R.drawable.ic_cp_basal_no_tbr
 
+    // will be removed if a solution of getting the right color for widget is solved
     val temporaryBasalColor: Int
         get() = iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil.now())?.let { rh.gc(R.color.basal) }
-            ?: rh.gc(R.color.defaulttextcolor)
+            ?: rh.gc(R.color.textAppearancemediumDark)
+
+    fun temporaryBasalColor(context: Context?): Int = iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil.now())?.let { rh.gac(context , R.attr.basal) }
+            ?: rh.gac(context, R.attr.textAppearancemediumColor)
 
     /*
      * EXTENDED BOLUS
