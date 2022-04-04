@@ -434,8 +434,6 @@
     <string name="ns_localbroadcasts_title">Aktiver lokale sendinger.</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dynamisk ISF</string>
-    <string name="DynISFAdjust_title">DynamiskISF justeringsfaktor %%</string>
-    <string name="DynISFAdjust_summary">Justeringsfaktor for dynamisk ISF. Verdier over 100%% vil gi mer aggressive korreksjonsdoser, mens verdier under 100%% vil gi mildere korreksjonsdoser.</string>
     <string name="enableuam">Aktiver UAM</string>
     <string name="enablesmb">Aktiver SMB</string>
     <string name="enablesmb_summary">Bruk Super Mikro Solen i stedet for temp basal for raskere resultat</string>
@@ -1005,4 +1003,5 @@
     <string name="above" comment="above &quot;in range&quot;">Over</string>
     <string name="show_loop_records">Vis loop registreringer</string>
     <string name="show_hide_records">Skjul loop registreringer</string>
+    <string name="widget_description">AndroidAPS widget</string>
 </resources>
