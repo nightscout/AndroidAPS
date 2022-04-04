@@ -13,21 +13,21 @@ class MsgSettingUserOptions(
         aapsLogger.debug(LTag.PUMPCOMM, "New message")
     }
 
-    override fun handleMessage(packet: ByteArray) {
-        val bytes = getDataBytes(packet, packet.size - 10)
-        danaPump.userOptionsFromPump = bytes.copyOf(bytes.size) // saving pumpDataBytes to use it in MsgSetUserOptions
-        for (pos in bytes.indices) {
-            aapsLogger.debug(LTag.PUMPCOMM, "[" + pos + "]" + bytes[pos])
+    override fun handleMessage(bytes: ByteArray) {
+        val data = getDataBytes(bytes, bytes.size - 10)
+        danaPump.userOptionsFromPump = data.copyOf(data.size) // saving pumpDataBytes to use it in MsgSetUserOptions
+        for (pos in data.indices) {
+            aapsLogger.debug(LTag.PUMPCOMM, "[" + pos + "]" + data[pos])
         }
-        danaPump.timeDisplayType24 = bytes[0].toInt() == 0 // 0 -> 24h 1 -> 12h
-        danaPump.buttonScrollOnOff = bytes[1] == 1.toByte() // 1 -> ON, 0-> OFF
-        danaPump.beepAndAlarm = bytes[2].toInt() // 1 -> Sound on alarm 2-> Vibrate on alarm 3-> Both on alarm 5-> Sound + beep 6-> vibrate + beep 7-> both + beep Beep adds 4
-        danaPump.lcdOnTimeSec = bytes[3].toInt()
-        danaPump.backlightOnTimeSec = bytes[4].toInt()
-        danaPump.selectedLanguage = bytes[5].toInt() // on DanaRv2 is that needed ?
-        danaPump.units = bytes[8].toInt()
-        danaPump.shutdownHour = bytes[9].toInt()
-        danaPump.lowReservoirRate = bytes[32].toInt()
+        danaPump.timeDisplayType24 = data[0].toInt() == 0 // 0 -> 24h 1 -> 12h
+        danaPump.buttonScrollOnOff = data[1] == 1.toByte() // 1 -> ON, 0-> OFF
+        danaPump.beepAndAlarm = data[2].toInt() // 1 -> Sound on alarm 2-> Vibrate on alarm 3-> Both on alarm 5-> Sound + beep 6-> vibrate + beep 7-> both + beep Beep adds 4
+        danaPump.lcdOnTimeSec = data[3].toInt()
+        danaPump.backlightOnTimeSec = data[4].toInt()
+        danaPump.selectedLanguage = data[5].toInt() // on DanaRv2 is that needed ?
+        danaPump.units = data[8].toInt()
+        danaPump.shutdownHour = data[9].toInt()
+        danaPump.lowReservoirRate = data[32].toInt()
         /* int selectableLanguage1 = bytes[10];
         int selectableLanguage2 = bytes[11];
         int selectableLanguage3 = bytes[12];

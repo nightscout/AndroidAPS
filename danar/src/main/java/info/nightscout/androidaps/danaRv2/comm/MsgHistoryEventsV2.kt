@@ -42,8 +42,8 @@ class MsgHistoryEventsV2 constructor(
         messageBuffer = arrayListOf()
     }
 
-    override fun handleMessage(data: ByteArray) {
-        val recordCode = intFromBuff(data, 0, 1).toByte()
+    override fun handleMessage(bytes: ByteArray) {
+        val recordCode = intFromBuff(bytes, 0, 1).toByte()
         // Last record
         if (recordCode == 0xFF.toByte()) {
             aapsLogger.debug(LTag.PUMPCOMM, "Last record received")
@@ -52,7 +52,7 @@ class MsgHistoryEventsV2 constructor(
             val sorted = array.sortedArrayWith { s1: ByteArray, s2: ByteArray -> (dateTime(s1) - dateTime(s2)).toInt() }
             for (message in sorted) processMessage(message)
             danaPump.historyDoneReceived = true
-        } else messageBuffer.add(data)
+        } else messageBuffer.add(bytes)
     }
 
     fun dateTime(data: ByteArray): Long =
