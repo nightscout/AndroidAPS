@@ -435,8 +435,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="ns_localbroadcasts_title">Activer les transmissions locales</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">SI dynamique</string>
-    <string name="DynISFAdjust_title">Facteur d\'ajustement SI dynamique %%</string>
-    <string name="DynISFAdjust_summary">Facteur d\'ajustement pour SI dynamique. Définissez plus de 100 %% pour des corrections plus agressives et moins de 100 % pour des corrections moins agressives.</string>
     <string name="enableuam">Activer RNS</string>
     <string name="enablesmb">Activer SMB</string>
     <string name="enablesmb_summary">Utiliser les Super Micro Bolus au lieu des débits de base temporaires pour une action rapide</string>
