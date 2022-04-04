@@ -1,4 +1,5 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -25,21 +26,22 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|center_vertical"
                     android:layout_weight="2"
                     android:gravity="end"
                     android:paddingRight="5dp"
-                    android:text="@string/autotune_last_run"
+                    android:text="@string/profile"
                     android:textSize="14sp" />
-
                 <TextView
                     android:layout_width="5dp"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|center_vertical"
                     android:layout_weight="0"
                     android:gravity="center_horizontal"
                     android:paddingEnd="2dp"
@@ -47,66 +49,27 @@
                     android:text=":"
                     android:textSize="14sp" />
 
-                <TextView
-                    android:id="@+id/tune_lastrun"
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="start"
+                    android:hint="@string/autotune_select_profile"
                     android:paddingLeft="5dp"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    app:boxStrokeColor="@color/list_delimiter">
+
+                    <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                        android:id="@+id/profileList"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:enabled="false"
+                        tools:ignore="KeyboardInaccessibleWidget" />
+
+                </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dip"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="5dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:gravity="end"
-                    android:paddingRight="5dp"
-                    android:text="@string/autotune_warning"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:layout_width="5dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:gravity="center_horizontal"
-                    android:paddingEnd="2dp"
-                    android:paddingStart="2dp"
-                    android:text=":"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/tune_warning"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="start"
-                    android:paddingLeft="5dp"
-                    android:textSize="14sp" />
-
-            </LinearLayout>
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dip"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="5dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -156,7 +119,87 @@
                 android:layout_marginBottom="5dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginTop="5dp" />
+                android:layout_marginTop="5dp"
+                android:background="@color/list_delimiter" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:gravity="end"
+                    android:paddingRight="5dp"
+                    android:text="@string/autotune_warning"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="5dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:gravity="center_horizontal"
+                    android:paddingEnd="2dp"
+                    android:paddingStart="2dp"
+                    android:text=":"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tune_warning"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="start"
+                    android:paddingLeft="5dp"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:gravity="end"
+                    android:paddingRight="5dp"
+                    android:text="@string/autotune_last_run"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="5dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:gravity="center_horizontal"
+                    android:paddingEnd="2dp"
+                    android:paddingStart="2dp"
+                    android:text=":"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tune_lastrun"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="start"
+                    android:paddingLeft="5dp"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dip"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/list_delimiter" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -193,14 +236,14 @@
 
             </LinearLayout>
 
-
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="2dip"
                 android:layout_marginBottom="5dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginTop="5dp" />
+                android:layout_marginTop="5dp"
+                android:background="@color/list_delimiter" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -212,7 +255,7 @@
                     android:id="@+id/autotune_run"
                     style="?android:attr/buttonStyle"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
@@ -226,7 +269,7 @@
                     android:id="@+id/autotune_compare"
                     style="?android:attr/buttonStyle"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
@@ -248,7 +291,7 @@
                     android:id="@+id/autotune_copylocal"
                     style="?android:attr/buttonStyle"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"

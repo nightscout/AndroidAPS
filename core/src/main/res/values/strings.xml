@@ -588,6 +588,7 @@
     <string name="autotune_tunedprofile_name">Tuned</string>
     <string name="autotune_last_run">Last run</string>
     <string name="autotune_warning">Warning</string>
+    <string name="autotune_select_profile">Select profile to tune</string>
     <string name="autotune_result">Result</string>
     <string name="autotune_tune_days">Tune days</string>
     <string name="autotune_run">Run Autotune</string>

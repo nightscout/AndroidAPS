@@ -204,21 +204,21 @@ class ATProfile(profile: Profile?, var localInsulin: LocalInsulin, val injector:
     fun getBasal(timestamp: Long): Double = basal[(Profile.secondsFromMidnight(timestamp) / T.hours(1).secs()).toInt()]
 
     fun profileStore(circadian: Boolean = false): ProfileStore?
-        {
-            var profileStore: ProfileStore? = null
-            val json = JSONObject()
-            val store = JSONObject()
-            val tunedProfile = if (circadian) circadianProfile else profile
-            try {
-                store.put(rh.gs(R.string.autotune_tunedprofile_name), tunedProfile.toPureNsJson(dateUtil))
-                json.put("defaultProfile", rh.gs(R.string.autotune_tunedprofile_name))
-                json.put("store", store)
-                json.put("startDate", dateUtil.toISOAsUTC(dateUtil.now()))
-                profileStore = ProfileStore(injector, json, dateUtil)
-            } catch (e: JSONException) {
-            }
-            return profileStore
+    {
+        var profileStore: ProfileStore? = null
+        val json = JSONObject()
+        val store = JSONObject()
+        val tunedProfile = if (circadian) circadianProfile else profile
+        try {
+            store.put(rh.gs(R.string.autotune_tunedprofile_name), tunedProfile.toPureNsJson(dateUtil))
+            json.put("defaultProfile", rh.gs(R.string.autotune_tunedprofile_name))
+            json.put("store", store)
+            json.put("startDate", dateUtil.toISOAsUTC(dateUtil.now()))
+            profileStore = ProfileStore(injector, json, dateUtil)
+        } catch (e: JSONException) {
         }
+        return profileStore
+    }
 
     companion object {
 

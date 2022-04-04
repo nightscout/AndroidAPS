@@ -6,6 +6,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.LocalInsulin
+import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.interfaces.*
@@ -71,6 +72,7 @@ class AutotunePlugin @Inject constructor(
     @Volatile override var result: String = ""
     @Volatile override var calculationRunning: Boolean = false
     @Volatile override var lastRun: Long = 0
+    @Volatile override var selectedProfile = ""
     override var lastNbDays: String = ""
     @Volatile override var copyButtonVisibility: Int = 0
     @Volatile override var profileSwitchButtonVisibility: Int = 0
@@ -82,7 +84,7 @@ class AutotunePlugin @Inject constructor(
     private lateinit var autotuneIob: AutotuneIob
     private lateinit var autotuneFS: AutotuneFS
 
-    override var currentprofile: ATProfile? = null
+    override var pumpProfile: ATProfile? = null
     override var tunedProfile: ATProfile? = null
 
     //    @Override
@@ -98,7 +100,7 @@ class AutotunePlugin @Inject constructor(
         }).start()
     }
 
-    override fun aapsAutotune(daysBack: Int, autoSwitch: Boolean): String {
+    override fun aapsAutotune(daysBack: Int, autoSwitch: Boolean, profileToTune: String): String {
         autotuneFS = AutotuneFS(injector)
         autotunePrep = AutotunePrep(injector)
         autotuneCore = AutotuneCore(injector)
@@ -108,11 +110,13 @@ class AutotunePlugin @Inject constructor(
         copyButtonVisibility = View.GONE
         lastRunSuccess = false
         calculationRunning = true
-        currentprofile = null
+        pumpProfile = null
         result = ""
         lastNbDays = "" + daysBack
         val now = System.currentTimeMillis()
-        profile = profileFunction.getProfile(now)
+        val profileStore = activePlugin.activeProfileSource.profile ?: return rh.gs(R.string.profileswitch_ismissing)
+        selectedProfile = if (profileToTune.isNullOrEmpty()) profileFunction.getProfileName() else profileToTune
+        profile = profileStore.getSpecificProfile(selectedProfile)?.let { ProfileSealed.Pure(it) } ?: profileFunction.getProfile()
         if (profile == null ) {
             result = "Cannot tune a null profile"
             atLog(result)
@@ -121,8 +125,7 @@ class AutotunePlugin @Inject constructor(
             tunedProfile=null
             return result
         }
-        var localInsulin = LocalInsulin("PumpInsulin", activePlugin.activeInsulin.peak, profile!!.dia) // var because localInsulin could be updated later with Tune
-        // Insulin peak/dia
+        var localInsulin = LocalInsulin("PumpInsulin", activePlugin.activeInsulin.peak, profile!!.dia) // var because localInsulin could be updated later with Tune Insulin peak/dia
         lastRun = System.currentTimeMillis()
 
         atLog("Start Autotune with $daysBack days back")
@@ -137,11 +140,13 @@ class AutotunePlugin @Inject constructor(
         if (endTime > now) endTime -= 24 * 60 * 60 * 1000L
         val starttime = endTime - daysBack * 24 * 60 * 60 * 1000L
         autotuneFS.exportSettings(settings(lastRun, daysBack, starttime, endTime))
-        tunedProfile = ATProfile(profile, localInsulin, injector)
-        tunedProfile?.profilename = rh.gs(R.string.autotune_tunedprofile_name)
-        val pumpprofile = ATProfile(profile, localInsulin, injector)
-        pumpprofile.profilename = profileFunction.getProfileName()
-        autotuneFS.exportPumpProfile(pumpprofile)
+        tunedProfile = ATProfile(profile, localInsulin, injector).also {
+            it.profilename = rh.gs(R.string.autotune_tunedprofile_name)
+        }
+        pumpProfile = ATProfile(profile, localInsulin, injector).also {
+            it.profilename = selectedProfile
+        }
+        pumpProfile?.let { autotuneFS.exportPumpProfile(it) }
         if (daysBack < 1) {
             //Not necessary today (test is done in fragment, but left if other way later to launch autotune (i.e. with automation)
             result = rh.gs(R.string.autotune_min_days)
@@ -176,13 +181,13 @@ class AutotunePlugin @Inject constructor(
                     return result
                 }
                 autotuneFS.exportPreppedGlucose(preppedGlucose!!)
-                tunedProfile = autotuneCore.tuneAllTheThings(preppedGlucose!!, tunedProfile!!, pumpprofile)
+                tunedProfile = autotuneCore.tuneAllTheThings(preppedGlucose!!, tunedProfile!!, pumpProfile!!)
                 // localInsulin = LocalInsulin("TunedInsulin", tunedProfile!!.peak, tunedProfile!!.dia)
                 //<=> newprofile.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
                 autotuneFS.exportTunedProfile(tunedProfile!!)
                 if (i < daysBack - 1) {
                     atLog("Partial result for day ${i + 1}".trimIndent())
-                    result = rh.gs(R.string.format_autotune_partialresult, i + 1, daysBack, showResults(tunedProfile!!, pumpprofile))
+                    result = rh.gs(R.string.format_autotune_partialresult, i + 1, daysBack, showResults(tunedProfile!!, pumpProfile!!))
                     rxBus.send(EventAutotuneUpdateResult(result))
                 }
                 if (detailedLog) {
@@ -190,7 +195,7 @@ class AutotunePlugin @Inject constructor(
                     logString = ""
                 }
             }
-            result = showResults(tunedProfile!!, pumpprofile)
+            result = showResults(tunedProfile!!, pumpProfile!!)
             if (!detailedLog)
                 autotuneFS.exportLog(lastRun, logString)
             autotuneFS.exportResult(result)
@@ -225,7 +230,6 @@ class AutotunePlugin @Inject constructor(
         lastRunSuccess = true
         rxBus.send(EventAutotuneUpdateResult(result))
         calculationRunning = false
-        currentprofile = pumpprofile
         tunedProfile?.let {
             return result
         }
@@ -318,7 +322,6 @@ class AutotunePlugin @Inject constructor(
 
     companion object {
         private val log = LoggerFactory.getLogger(AutotunePlugin::class.java)
-        //@JvmField var currentprofile: ATProfile? = null
         private var profile: Profile? = null
     }
 
