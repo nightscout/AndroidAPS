@@ -434,7 +434,6 @@
     <string name="ns_localbroadcasts_title">אפשר שידורים מקומיים.</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">רגישות דינאמית</string>
-    <string name="DynISFAdjust_summary">כיוונון פקטור הרגישות הדינאמית. הגדירו יותר מ-100%% לקבלת תיקונים אגרסיביים יותר ופחות מ-100%% לקבלת תיקונים עדינים יותר.</string>
     <string name="enableuam">הפעלת UAM</string>
     <string name="enablesmb">אפשר SMB</string>
     <string name="enablesmb_summary">השתמש בסופר מיקרו בולוסים במקום בבזאלי זמני לפעילות מהירה יותר</string>
