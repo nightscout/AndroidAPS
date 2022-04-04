@@ -434,8 +434,8 @@
     <string name="ns_localbroadcasts_title">Povoliť lokálne vysielanie.</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dynamická ISF</string>
-    <string name="DynISFAdjust_title">Korekčný faktor pre Dynamickú ISF v %</string>
-    <string name="DynISFAdjust_summary">Korekčný faktor pre dynamickú ISF. Pre agresivnejšie korekčné dávky nastavte hodnoty väčšie ako 100%, a pre menej agresivne korekcie menšie než 100%.</string>
+    <string name="DynISFAdjust_title">Korekčný faktor pre Dynamickú ISF v %%</string>
+    <string name="DynISFAdjust_summary">Korekčný faktor pre dynamickú ISF. Pre agresivnejšie korekčné dávky nastavte hodnoty väčšie ako 100%%, a pre menej agresivne korekcie menšie než 100%%.</string>
     <string name="enableuam">Povoliť UAM</string>
     <string name="enablesmb">Povoliť SMB</string>
     <string name="enablesmb_summary">Použiť Super Mikro Bolusy namiesto dočasných bazálov, pre zrýchleniu účinku</string>
