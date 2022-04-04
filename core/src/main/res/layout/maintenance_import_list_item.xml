@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/careportal_cardview"
+    style="@style/Widget.MaterialComponents.CardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    card_view:cardElevation="0dp"
-    card_view:cardBackgroundColor="?attr/cardItemBackgroundColor">
+    android:layout_marginStart="4dp"
+    android:layout_marginEnd="4dp"
+    android:layout_marginTop="4dp"
+    app:strokeColor="?attr/strokeColor"
+    app:strokeWidth="2dp"
+    app:cardCornerRadius="3dp"
+    app:contentPadding="2dp"
+    app:cardElevation="2dp"
+    app:cardUseCompatPadding="false"
+    android:layout_gravity="center">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -30,7 +37,7 @@
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="6dp"
                 android:layout_marginBottom="1dp"
-                card_view:srcCompat="@drawable/ic_meta_format"
+                app:srcCompat="@drawable/ic_meta_format"
                 app:tint="?attr/importListFileNameColor" />
 
             <TextView
@@ -91,7 +98,7 @@
                 android:layout_marginTop="1dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="1dp"
-                card_view:srcCompat="@drawable/ic_meta_name"
+                app:srcCompat="@drawable/ic_meta_name"
                 app:tint="?attr/importListAdditionalInfoColor" />
 
             <TextView
@@ -123,7 +130,7 @@
                 android:layout_marginTop="1dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="1dp"
-                card_view:srcCompat="@drawable/ic_meta_date"
+                app:srcCompat="@drawable/ic_meta_date"
                 app:tint="?attr/importListAdditionalInfoColor" />
 
             <TextView
@@ -156,16 +163,6 @@
 
         </LinearLayout>
 
-
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="2dip"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="7dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginBottom="3dp"
-            android:background="?android:attr/dividerHorizontal" />
-
     </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

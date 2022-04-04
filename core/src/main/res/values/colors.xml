@@ -36,7 +36,7 @@
     <color name="tabSelectedText">@color/black_alpha_90</color>
 
     <!--    Buttons-->
-    <color name="buttonBackground">@color/midlightgray</color>
+    <color name="buttonBackground">#B2B2B2</color>
     <color name="buttonText">#000000</color>
     <color name="okButtonText">@color/colorAccent</color>
     <color name="okButtonSelected">#33969696</color>
@@ -146,12 +146,12 @@
     <color name="transparent">#00000000</color>
 
     <!-- Maintenance -->
-    <color name="metadataOk">#77dd77</color>
+    <color name="metadataOk">#66BB6A</color>
     <color name="metadataTextWarning">#FF8C00</color>
     <color name="metadataTextError">#FF5555</color>
 
     <!-- Import/Export -->
-    <color name="importListAdditionalInfo">#757575</color>
+    <color name="importListAdditionalInfo">#666666</color>
     <color name="importListFileName">#000000</color>
 
     <color name="ribbonWarning">#f4d700</color>
@@ -190,7 +190,7 @@
     <color name="cardObjectiveText">#779ECB</color>
 
     <color name="colorAcceptTempButton">#E19701</color>
-    <color name="colorTreatmentButton">#42A5F5</color>
+    <color name="colorTreatmentButton">#429BF5</color>
     <color name="colorInsulinButton">#67dfe8</color>
     <color name="colorCarbsButton">#E19701</color>
     <color name="colorCalibrationButton">#e93057</color>
