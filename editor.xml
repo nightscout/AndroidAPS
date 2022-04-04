@@ -1,4 +1,7 @@
 <application>
+  <component name="EditorSettings">
+    <option name="USE_SOFT_WRAPS" value="CONSOLE" />
+  </component>
   <component name="TodoConfiguration">
     <pattern pattern="\btodo\b.*" />
     <pattern pattern="\bfixme\b.*" />
