@@ -460,6 +460,11 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basaal</string>
     <string name="basalpct">Basaal %</string>
+    <string name="count_selected">%1$d geselecteerd</string>
+    <string name="sort_label">Sorteren</string>
+    <string name="remove_items">Items verwijderen</string>
+    <string name="sort_items">Sorteer items</string>
+    <string name="remove_selected_items">Verwijder geselecteerde items</string>
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagen</item>
