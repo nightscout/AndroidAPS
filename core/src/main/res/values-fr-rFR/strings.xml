@@ -404,7 +404,7 @@
     <string name="ue_action">Action</string>
     <string name="ue_timestamp">Horodatage</string>
     <string name="ue_none">Aucune unité</string>
-    <string name="ue_export_to_csv">Exporter les entrées utilisateur vers Excel (csv)</string>
+    <string name="ue_export_to_csv">Exporter vers Excel (csv)</string>
     <string name="uel_loop_change">BOUCLE CHANGÉE</string>
     <string name="uel_loop_removed">BOUCLE SUPPRIMÉE</string>
     <string name="uel_other">AUTRE</string>
@@ -457,6 +457,14 @@
     <string name="insight_refresh_button" comment="26 characters max for translation">Actualisation état Insight</string>
     <string name="a11y_min_button_description">réduire %1$s par %2$s</string>
     <string name="a11y_plus_button_description">incrémenter %1$s par %2$s</string>
+    <string name="formatPercent">%1$.0f%%</string>
+    <string name="basal">Basal</string>
+    <string name="basalpct">Basal %</string>
+    <string name="count_selected">%1$d séléctionné(s)</string>
+    <string name="sort_label">Trier</string>
+    <string name="remove_items">Supprimer les éléments</string>
+    <string name="sort_items">Trier les éléments</string>
+    <string name="remove_selected_items">Supprimer les éléments sélectionnés</string>
     <plurals name="days">
         <item quantity="one">%1$d jour</item>
         <item quantity="other">%1$d jours</item>

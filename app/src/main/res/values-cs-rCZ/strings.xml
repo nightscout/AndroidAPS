@@ -1005,4 +1005,5 @@
     <string name="above" comment="above &quot;in range&quot;">Nad</string>
     <string name="show_loop_records">Zobrazit záznamy smyčky</string>
     <string name="show_hide_records">Skrýt záznamy smyčky</string>
+    <string name="widget_description">AndroidAPS widget</string>
 </resources>

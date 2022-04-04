@@ -460,6 +460,11 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Bazál</string>
     <string name="basalpct">Bazál %</string>
+    <string name="count_selected">%1$d vybraných</string>
+    <string name="sort_label">Zoradiť</string>
+    <string name="remove_items">Odstrániť položky</string>
+    <string name="sort_items">Zoradiť položky</string>
+    <string name="remove_selected_items">Odstrániť vybrané položky</string>
     <plurals name="days">
         <item quantity="one">%1$d deň</item>
         <item quantity="few">%1$d dní</item>

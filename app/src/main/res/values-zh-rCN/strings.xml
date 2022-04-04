@@ -985,6 +985,8 @@
     <string name="wear_unknown_action_string">未知操作命令：</string>
     <string name="overview_editquickwizard_percentage">百分比</string>
     <string name="app_default">应用程序预设</string>
+    <string name="show_invalidated_records">显示无效/已删除的记录</string>
+    <string name="hide_invalidated_records">隐藏无效/已删除的记录</string>
     <string name="select_profile">选择要编辑的配置文件</string>
     <string name="refresh_from_nightscout">从 Nightscout 刷新</string>
     <string name="remove_selected_items">删除选中项？</string>
@@ -1001,4 +1003,7 @@
     <string name="below" comment="below &quot;in range&quot;">底部</string>
     <string name="in_range">在范围内</string>
     <string name="above" comment="above &quot;in range&quot;">上方</string>
+    <string name="show_loop_records">显示闭环记录</string>
+    <string name="show_hide_records">隐藏闭环记录</string>
+    <string name="widget_description">AndroidAPS小部件</string>
 </resources>
