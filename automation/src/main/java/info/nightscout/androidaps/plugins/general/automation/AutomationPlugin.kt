@@ -150,7 +150,7 @@ class AutomationPlugin @Inject constructor(
 
     private fun storeToSP() {
         val array = JSONArray()
-        val iterator = automationEvents.iterator()
+        val iterator = ArrayList<AutomationEvent>(automationEvents).iterator()
         try {
             while (iterator.hasNext()) {
                 val event = iterator.next()

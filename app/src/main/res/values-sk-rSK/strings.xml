@@ -434,8 +434,8 @@
     <string name="ns_localbroadcasts_title">Povoliť lokálne vysielanie.</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dynamická ISF</string>
-    <string name="DynISFAdjust_title">Korekčný faktor pre Dynamickú ISF v %</string>
-    <string name="DynISFAdjust_summary">Korekčný faktor pre dynamickú ISF. Pre agresivnejšie korekčné dávky nastavte hodnoty väčšie ako 100%, a pre menej agresivne korekcie menšie než 100%.</string>
+    <string name="DynISFAdjust_title">Korekčný faktor pre Dynamickú ISF v %%</string>
+    <string name="DynISFAdjust_summary">Korekčný faktor pre dynamickú ISF. Pre agresivnejšie korekčné dávky nastavte hodnoty väčšie ako 100%%, a pre menej agresivne korekcie menšie než 100%%.</string>
     <string name="enableuam">Povoliť UAM</string>
     <string name="enablesmb">Povoliť SMB</string>
     <string name="enablesmb_summary">Použiť Super Mikro Bolusy namiesto dočasných bazálov, pre zrýchleniu účinku</string>
@@ -985,6 +985,8 @@
     <string name="wear_unknown_action_string">Neznámy príkaz k akcii:</string>
     <string name="overview_editquickwizard_percentage">Percentuálny podiel</string>
     <string name="app_default">Predvolené aplikáciou</string>
+    <string name="show_invalidated_records">Zobraziť zneplatnené / odstránené záznamy</string>
+    <string name="hide_invalidated_records">Skryť zneplatnené / odstránené záznamy</string>
     <string name="select_profile">Vyberte profil pre úpravu</string>
     <string name="refresh_from_nightscout">Obnoviť z Nightscoutu</string>
     <string name="remove_selected_items">Odstrániť vybrané položky</string>
@@ -1001,4 +1003,6 @@
     <string name="below" comment="below &quot;in range&quot;">Nižšie</string>
     <string name="in_range">V rozsahu</string>
     <string name="above" comment="above &quot;in range&quot;">Vyššie</string>
+    <string name="show_loop_records">Zobraziť záznamy uzavretého okruhu</string>
+    <string name="show_hide_records">Skryť záznamy uzavretého okruhu</string>
 </resources>

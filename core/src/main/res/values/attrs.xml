@@ -203,4 +203,6 @@
     <attr name="bgiColor" format="reference|color" />
     <attr name="ratioColor" format="reference|color" />
     <attr name="activityColor" format="reference|color" />
+    <!-- CardView specific colors  -->
+    <attr name="strokeColor" format="reference|color" />
 </resources>

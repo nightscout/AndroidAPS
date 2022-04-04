@@ -162,6 +162,7 @@
     <string name="end_user_license_agreement_text">NE DOIT PAS ÊTRE UTILISÉ POUR PRENDRE DES DÉCISIONS MÉDICALES. IL N\'Y A AUCUNE GARANTIE POUR LE PROGRAMME, DANS LA LIMITE PERMISE PAR LA LOI APPLICABLE. SAUF S\'IL EST INDIQUÉ LE CONTRAIRE PAR ÉCRIT. LES TITULAIRES DU DROIT D\'AUTEUR ET / OU D\'AUTRES PARTIES FOURNISSENT LE PROGRAMME «EN L\'ÉTAT» SANS GARANTIE D\'AUCUNE SORTE, EXPLICITE OU IMPLICITE, Y COMPRIS MAIS NON SEULEMENT AUX GARANTIES IMPLICITES DE QUALITÉ MARCHANDE ET D\'ADÉQUATION À UN USAGE PARTICULIER
 L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME SONT DE VOTRE RESPONSABILITÉ. SI LE PROGRAMME EST DÉFECTUEUX, VOUS ASSUMEZ LE COÛT DE TOUS LES SERVICES, RÉPARATIONS OU CORRECTIONS NÉCESSAIRES.</string>
     <string name="end_user_license_agreement_i_understand">JE COMPRENDS ET J\'ACCEPTE LES CONDITIONS DU CONTRAT</string>
+    <string name="save">Enregistrer</string>
     <string name="reloadprofile">Actualiser le profil</string>
     <string name="smscommunicator">Communicateur SMS</string>
     <string name="smscommunicator_allowednumbers">Numéros de tél autorisés</string>
@@ -434,6 +435,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="ns_localbroadcasts_title">Activer les transmissions locales</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">SI dynamique</string>
+    <string name="DynISFAdjust_title">Facteur d\'ajustement SI dynamique %%</string>
+    <string name="DynISFAdjust_summary">Facteur d\'ajustement pour SI dynamique. Définissez plus de 100 %% pour des corrections plus agressives et moins de 100 % pour des corrections moins agressives.</string>
     <string name="enableuam">Activer RNS</string>
     <string name="enablesmb">Activer SMB</string>
     <string name="enablesmb_summary">Utiliser les Super Micro Bolus au lieu des débits de base temporaires pour une action rapide</string>
@@ -982,6 +985,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="wear_unknown_action_string">Commande inconnue :</string>
     <string name="overview_editquickwizard_percentage">Pourcentage</string>
     <string name="app_default">Application par défaut</string>
+    <string name="show_invalidated_records">Afficher les enregistrements invalidés / supprimés</string>
+    <string name="hide_invalidated_records">Masquer les enregistrements invalidés / supprimés</string>
     <string name="select_profile">Sélectionnez le profil à modifier</string>
     <string name="refresh_from_nightscout">Rafraîchir à partir de Nightscout</string>
     <string name="remove_selected_items">Supprimer les entrées sélectionnées</string>
@@ -994,4 +999,11 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="show_loop">Afficher les entrées boucle</string>
     <string name="count_selected">%1$d sélectionnée(s)</string>
     <string name="sort_label">Trier</string>
+    <string name="dialog_canceled">Boîte de dialogue annulée</string>
+    <string name="below" comment="below &quot;in range&quot;">En-dessous</string>
+    <string name="in_range">Dans la cible</string>
+    <string name="above" comment="above &quot;in range&quot;">Au-dessus</string>
+    <string name="show_loop_records">Afficher les entrées de la boucle</string>
+    <string name="show_hide_records">Masquer les entrées de la boucle</string>
+    <string name="widget_description">Widget AndroidAPS</string>
 </resources>

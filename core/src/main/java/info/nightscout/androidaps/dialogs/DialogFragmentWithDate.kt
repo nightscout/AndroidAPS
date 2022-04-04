@@ -19,6 +19,7 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.shared.sharedPreferences.SP
 import java.util.*
+import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
 abstract class DialogFragmentWithDate : DaggerDialogFragment() {
@@ -36,12 +37,12 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
     val eventTimeChanged: Boolean
         get() = eventTime != eventTimeOriginal
 
-    var eventDateView: TextView? = null
-    var eventTimeView: TextView? = null
+    private var eventDateView: TextView? = null
+    private var eventTimeView: TextView? = null
     private var mOnValueChangedListener: OnValueChangedListener? = null
 
     //one shot guards
-    private var okClicked: Boolean = false
+    private var okClicked: AtomicBoolean = AtomicBoolean(false)
 
     companion object {
 
@@ -147,16 +148,16 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
 
         (view.findViewById(R.id.ok) as Button?)?.setOnClickListener {
             synchronized(okClicked) {
-                if (okClicked) {
+                if (okClicked.get()) {
                     aapsLogger.warn(LTag.UI, "guarding: ok already clicked for dialog: ${this.javaClass.name}")
                 } else {
-                    okClicked = true
+                    okClicked.set(true)
                     if (submit()) {
                         aapsLogger.debug(LTag.APS, "Submit pressed for Dialog: ${this.javaClass.name}")
                         dismiss()
                     } else {
                         aapsLogger.debug(LTag.APS, "Submit returned false for Dialog: ${this.javaClass.name}")
-                        okClicked = false
+                        okClicked.set(false)
                     }
                 }
             }
