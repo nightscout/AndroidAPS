@@ -36,8 +36,8 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
     val eventTimeChanged: Boolean
         get() = eventTime != eventTimeOriginal
 
-    var eventDateView: TextView? = null
-    var eventTimeView: TextView? = null
+    private var eventDateView: TextView? = null
+    private var eventTimeView: TextView? = null
     private var mOnValueChangedListener: OnValueChangedListener? = null
 
     //one shot guards
