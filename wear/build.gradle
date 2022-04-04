@@ -88,9 +88,6 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        flatDir {
-            dirs 'libs'
-        }
     }
 }
 
@@ -110,8 +107,8 @@ dependencies {
     compileOnly "com.google.android.wearable:wearable:${wearableVersion}"
     implementation "com.google.android.support:wearable:${wearableVersion}"
     implementation "com.google.android.gms:play-services-wearable:${playServicesWearable}"
-    implementation(name: 'ustwo-clockwise-debug', ext: 'aar')
-    implementation(name: 'wearpreferenceactivity-0.5.0', ext: 'aar')
+    implementation(files('libs/ustwo-clockwise-debug.aar'))
+    implementation(files('libs/wearpreferenceactivity-0.5.0.aar'))
     implementation('com.github.lecho:hellocharts-library:1.5.8@aar')
 
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0'
