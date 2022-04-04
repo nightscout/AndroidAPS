@@ -169,6 +169,9 @@ class PluginStore @Inject constructor(
     override val activeSafety: Safety
         get() = getSpecificPluginsListByInterface(Safety::class.java).first() as Safety
 
+    override val activeIobCobCalculator: IobCobCalculator
+        get() = getSpecificPluginsListByInterface(IobCobCalculator::class.java).first() as IobCobCalculator
+
     override fun getPluginsList(): ArrayList<PluginBase> = ArrayList(plugins)
 
 }

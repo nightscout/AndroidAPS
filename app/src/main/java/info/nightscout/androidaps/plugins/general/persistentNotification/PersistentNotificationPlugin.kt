@@ -9,17 +9,20 @@ import androidx.core.app.RemoteInput
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.events.*
+import info.nightscout.androidaps.events.EventAutosensCalculationFinished
+import info.nightscout.androidaps.events.EventInitializationChanged
+import info.nightscout.androidaps.events.EventPreferenceChange
+import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.extensions.toStringShort
 import info.nightscout.androidaps.extensions.valueToUnitsString
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.shared.logging.AAPSLogger
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -73,23 +76,7 @@ class PersistentNotificationPlugin @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException)
         disposable += rxBus
-            .toObservable(EventExtendedBolusChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventTempBasalChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventTreatmentChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException)
-        disposable += rxBus
             .toObservable(EventInitializationChanged::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventEffectiveProfileSwitchChanged::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException)
         disposable += rxBus

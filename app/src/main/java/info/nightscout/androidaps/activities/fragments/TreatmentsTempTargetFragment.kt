@@ -23,7 +23,6 @@ import info.nightscout.androidaps.databinding.TreatmentsTemptargetItemBinding
 import info.nightscout.androidaps.events.EventEffectiveProfileSwitchChanged
 import info.nightscout.androidaps.events.EventProfileSwitchChanged
 import info.nightscout.androidaps.events.EventTempTargetChange
-import info.nightscout.androidaps.events.EventTreatmentUpdateGui
 import info.nightscout.androidaps.extensions.friendlyDescription
 import info.nightscout.androidaps.extensions.highValueToUnitsToString
 import info.nightscout.androidaps.extensions.lowValueToUnitsToString
@@ -134,11 +133,6 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
             .observeOn(aapsSchedulers.io)
             .debounce(1L, TimeUnit.SECONDS)
             .subscribe({ swapAdapter() }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventTreatmentUpdateGui::class.java) // TODO join with above
-            .observeOn(aapsSchedulers.io)
-            .debounce(1L, TimeUnit.SECONDS)
-            .subscribe({ swapAdapter() }, fabricPrivacy::logException)
     }
 
     @Synchronized
@@ -235,7 +229,7 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
                 showInvalidated = true
                 updateMenuVisibility()
                 ToastUtils.showToastInUiThread(context, rh.gs(R.string.show_invalidated_records))
-                rxBus.send(EventTreatmentUpdateGui())
+                swapAdapter()
                 true
             }
 
@@ -243,7 +237,7 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
                 showInvalidated = false
                 updateMenuVisibility()
                 ToastUtils.showToastInUiThread(context, rh.gs(R.string.show_invalidated_records))
-                rxBus.send(EventTreatmentUpdateGui())
+                swapAdapter()
                 true
             }
 

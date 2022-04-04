@@ -63,6 +63,17 @@
 
         </LinearLayout>
 
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:indeterminate="false"
+            android:max="100"
+            android:progress="100" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -87,13 +98,6 @@
                     android:contentDescription="@string/chart_menu"
                     android:paddingTop="5dp"
                     app:srcCompat="@drawable/ic_arrow_drop_down_white_24dp" />
-
-                <TextView
-                    android:id="@+id/overview_iobcalculationprogess"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:textSize="15sp" />
 
             </RelativeLayout>
 

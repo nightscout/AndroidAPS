@@ -170,8 +170,7 @@ class NSClientPlugin @Inject constructor(
 
         override fun onServiceConnected(name: ComponentName, service: IBinder) {
             aapsLogger.debug(LTag.NSCLIENT, "Service is connected")
-            val mLocalBinder = service as NSClientService.LocalBinder
-            @Suppress("UNNECESSARY_SAFE_CALL")
+            val mLocalBinder = service as NSClientService.LocalBinder?
             nsClientService = mLocalBinder?.serviceInstance // is null when running in roboelectric
         }
     }
