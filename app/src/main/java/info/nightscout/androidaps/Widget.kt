@@ -6,6 +6,7 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.Paint
 import android.view.View
 import android.widget.RemoteViews
@@ -105,7 +106,11 @@ class Widget : AppWidgetProvider() {
             }
         )
         views.setImageViewResource(R.id.arrow, trendCalculator.getTrendArrow(overviewData.lastBg).directionToIcon())
-        //binding.infoLayout.arrow.setColorFilter(overviewData.lastBgColor(context))
+        views.setInt(R.id.arrow, "setColorFilter", when {
+            overviewData.isLow  -> rh.gc(R.color.low)
+            overviewData.isHigh -> rh.gc(R.color.high)
+            else                -> rh.gc(R.color.inrange)
+        })
 
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData
         if (glucoseStatus != null) {

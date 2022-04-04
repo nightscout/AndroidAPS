@@ -852,7 +852,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @Suppress("UNUSED_PARAMETER")
     fun updateTemporaryBasal(from: String) {
         binding.infoLayout.baseBasal.text = overviewData.temporaryBasalText
-        binding.infoLayout.baseBasal.setTextColor(overviewData.temporaryBasalColor)
+        binding.infoLayout.baseBasal.setTextColor(overviewData.temporaryBasalColor(context))
         binding.infoLayout.baseBasalIcon.setImageResource(overviewData.temporaryBasalIcon)
         binding.infoLayout.basalLayout.setOnClickListener {
             activity?.let { OKDialog.show(it, rh.gs(R.string.basal), overviewData.temporaryBasalDialogText) }

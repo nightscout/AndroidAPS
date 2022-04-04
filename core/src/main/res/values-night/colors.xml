@@ -234,6 +234,9 @@
     <color name="mdtp_button_selected">#33969696</color>
     <color name="plastic">#EBEBEA</color>
 
+    <color name="textAppearancemediumLight">#000000</color>
+    <color name="textAppearancemediumDark">#B3FFFFFF</color>
+
     <!-- dash and eros colors -->
     <color name="omni_yellow">#FFFF00</color>
     <color name="omni_cyan">#00FFFF</color>
