@@ -307,7 +307,7 @@
     <color name="aaps_theme_light_onError">#FFFFFF</color>
     <color name="aaps_theme_light_background">#FFFBFE</color>
     <color name="aaps_theme_light_onBackground">#1C1B1F</color>
-    <color name="aaps_theme_light_surface">#FFFBFE</color>
+    <color name="aaps_theme_light_surface">#FAF9F8</color>
     <color name="aaps_theme_light_onSurface">#1C1B1F</color>
     <color name="aaps_theme_light_surfaceVariant">#E7E0EC</color>
 
