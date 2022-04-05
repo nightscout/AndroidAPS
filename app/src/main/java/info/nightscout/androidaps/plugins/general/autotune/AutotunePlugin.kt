@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.general.autotune
 
-import android.content.Context
 import android.view.View
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
@@ -45,7 +44,6 @@ import javax.inject.Singleton
 class AutotunePlugin @Inject constructor(
     injector: HasAndroidInjector,
     resourceHelper: ResourceHelper,
-    private val context: Context,
     private val sp: SP,
     private val rxBus: RxBus,
     private val profileFunction: ProfileFunction,
@@ -235,6 +233,10 @@ class AutotunePlugin @Inject constructor(
         var strResult = line
         strResult += rh.gs(R.string.format_autotune_title)
         strResult += line
+        // show ISF and CR
+        strResult += rh.gs(R.string.format_autotune_isf, rh.gs(R.string.isf_short), pumpProfile.isf / toMgDl, tunedProfile.isf / toMgDl)
+        strResult += rh.gs(R.string.format_autotune_ic, rh.gs(R.string.ic_short), pumpProfile.ic, tunedProfile.ic)
+        strResult += line
         var totalBasal = 0.0
         var totalTuned = 0.0
         for (i in 0..23) {
@@ -246,11 +248,7 @@ class AutotunePlugin @Inject constructor(
         strResult += line
         strResult += rh.gs(R.string.format_autotune_sum_basal, totalBasal, totalTuned)
         strResult += line
-        // show ISF and CR
-        strResult += rh.gs(R.string.format_autotune_isf, rh.gs(R.string.isf_short), pumpProfile.isf / toMgDl, tunedProfile.isf / toMgDl)
-        strResult += line
-        strResult += rh.gs(R.string.format_autotune_ic, rh.gs(R.string.ic_short), pumpProfile.ic, tunedProfile.ic)
-        strResult += line
+
         atLog(strResult)
         return strResult
     }
