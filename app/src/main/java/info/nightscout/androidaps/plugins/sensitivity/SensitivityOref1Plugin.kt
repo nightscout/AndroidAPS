@@ -204,6 +204,8 @@ class SensitivityOref1Plugin @Inject constructor(
         return output
     }
 
+    override fun maxAbsorptionHours(): Double = sp.getDouble(R.string.key_absorption_cutoff, Constants.DEFAULT_MAX_ABSORPTION_TIME)
+
     override fun configuration(): JSONObject {
         val c = JSONObject()
         try {

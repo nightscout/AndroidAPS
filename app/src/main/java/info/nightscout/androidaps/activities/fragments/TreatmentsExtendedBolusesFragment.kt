@@ -20,7 +20,6 @@ import info.nightscout.androidaps.database.transactions.InvalidateExtendedBolusT
 import info.nightscout.androidaps.databinding.TreatmentsExtendedbolusFragmentBinding
 import info.nightscout.androidaps.databinding.TreatmentsExtendedbolusItemBinding
 import info.nightscout.androidaps.events.EventExtendedBolusChange
-import info.nightscout.androidaps.events.EventTreatmentUpdateGui
 import info.nightscout.androidaps.extensions.iobCalc
 import info.nightscout.androidaps.extensions.isInProgress
 import info.nightscout.androidaps.extensions.toVisibility
@@ -102,11 +101,6 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
         swapAdapter()
         disposable += rxBus
             .toObservable(EventExtendedBolusChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .debounce(1L, TimeUnit.SECONDS)
-            .subscribe({ swapAdapter() }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventTreatmentUpdateGui::class.java) // TODO join with above
             .observeOn(aapsSchedulers.io)
             .debounce(1L, TimeUnit.SECONDS)
             .subscribe({ swapAdapter() }, fabricPrivacy::logException)
@@ -203,7 +197,7 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
                 showInvalidated = true
                 updateMenuVisibility()
                 ToastUtils.showToastInUiThread(context, rh.gs(R.string.show_invalidated_records))
-                rxBus.send(EventTreatmentUpdateGui())
+                swapAdapter()
                 true
             }
 
@@ -211,7 +205,7 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
                 showInvalidated = false
                 updateMenuVisibility()
                 ToastUtils.showToastInUiThread(context, rh.gs(R.string.hide_invalidated_records))
-                rxBus.send(EventTreatmentUpdateGui())
+                swapAdapter()
                 true
             }
 

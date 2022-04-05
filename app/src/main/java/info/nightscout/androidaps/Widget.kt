@@ -13,7 +13,6 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.extensions.directionToIcon
-import info.nightscout.androidaps.extensions.isInProgress
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.extensions.valueToUnitsString
 import info.nightscout.androidaps.interfaces.*
@@ -78,7 +77,7 @@ class Widget : AppWidgetProvider() {
 
         // Create an Intent to launch MainActivity when clicked
         val intent = Intent(context, MainActivity::class.java).also { it.action = intentAction }
-        val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+        val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         // Widgets allow click handlers to only launch pending intents
         views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent)
 
@@ -105,7 +104,11 @@ class Widget : AppWidgetProvider() {
             }
         )
         views.setImageViewResource(R.id.arrow, trendCalculator.getTrendArrow(overviewData.lastBg).directionToIcon())
-        //binding.infoLayout.arrow.setColorFilter(overviewData.lastBgColor(context))
+        views.setInt(R.id.arrow, "setColorFilter", when {
+            overviewData.isLow  -> rh.gc(R.color.low)
+            overviewData.isHigh -> rh.gc(R.color.high)
+            else                -> rh.gc(R.color.inrange)
+        })
 
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData
         if (glucoseStatus != null) {
@@ -127,21 +130,21 @@ class Widget : AppWidgetProvider() {
     }
 
     private fun updateTemporaryBasal(views: RemoteViews) {
-        views.setTextViewText(R.id.base_basal, overviewData.temporaryBasalText)
-        views.setTextColor(R.id.base_basal, overviewData.temporaryBasalColor)
-        views.setImageViewResource(R.id.base_basal_icon, overviewData.temporaryBasalIcon)
+        views.setTextViewText(R.id.base_basal, overviewData.temporaryBasalText(iobCobCalculator))
+        views.setTextColor(R.id.base_basal, overviewData.temporaryBasalColor(iobCobCalculator))
+        views.setImageViewResource(R.id.base_basal_icon, overviewData.temporaryBasalIcon(iobCobCalculator))
     }
 
     private fun updateExtendedBolus(views: RemoteViews) {
         val pump = activePlugin.activePump
-        views.setTextViewText(R.id.extended_bolus, overviewData.extendedBolusText)
+        views.setTextViewText(R.id.extended_bolus, overviewData.extendedBolusText(iobCobCalculator))
         views.setViewVisibility(R.id.extended_layout, (iobCobCalculator.getExtendedBolus(dateUtil.now()) != null && !pump.isFakingTempsByExtendedBoluses).toVisibility())
     }
 
     private fun updateIobCob(views: RemoteViews) {
-        views.setTextViewText(R.id.iob, overviewData.iobText)
+        views.setTextViewText(R.id.iob, overviewData.iobText(iobCobCalculator))
         // cob
-        var cobText = overviewData.cobInfo?.displayText(rh, dateUtil, isDev = false) ?: rh.gs(R.string.value_unavailable_short)
+        var cobText = overviewData.cobInfo(iobCobCalculator).displayText(rh, dateUtil, isDev = false) ?: rh.gs(R.string.value_unavailable_short)
 
         val constraintsProcessed = loop.lastRun?.constraintsProcessed
         val lastRun = loop.lastRun
@@ -158,7 +161,6 @@ class Widget : AppWidgetProvider() {
 
     private fun updateTemporaryTarget(views: RemoteViews) {
         val units = profileFunction.getUnits()
-        if (overviewData.temporaryTarget?.isInProgress(dateUtil) == false) overviewData.temporaryTarget = null
         val tempTarget = overviewData.temporaryTarget
         if (tempTarget != null) {
             // this is crashing, use background as text for now
@@ -210,12 +212,12 @@ class Widget : AppWidgetProvider() {
         views.setTextColor(R.id.active_profile, profileTextColor)
     }
 
-    fun updateSensitivity(views: RemoteViews) {
+    private fun updateSensitivity(views: RemoteViews) {
         if (sp.getBoolean(R.string.key_openapsama_useautosens, false) && constraintChecker.isAutosensModeEnabled().value())
             views.setImageViewResource(R.id.sensitivity_icon, R.drawable.ic_swap_vert_black_48dp_green)
         else
             views.setImageViewResource(R.id.sensitivity_icon, R.drawable.ic_x_swap_vert)
-        views.setTextViewText(R.id.sensitivity, overviewData.lastAutosensData?.let { autosensData ->
+        views.setTextViewText(R.id.sensitivity, overviewData.lastAutosensData(iobCobCalculator)?.let { autosensData ->
             String.format(Locale.ENGLISH, "%.0f%%", autosensData.autosensResult.ratio * 100)
         } ?: "")
 

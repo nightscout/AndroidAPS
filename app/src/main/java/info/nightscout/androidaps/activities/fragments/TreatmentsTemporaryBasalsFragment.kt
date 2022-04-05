@@ -23,9 +23,7 @@ import info.nightscout.androidaps.database.transactions.InvalidateExtendedBolusT
 import info.nightscout.androidaps.database.transactions.InvalidateTemporaryBasalTransaction
 import info.nightscout.androidaps.databinding.TreatmentsTempbasalsFragmentBinding
 import info.nightscout.androidaps.databinding.TreatmentsTempbasalsItemBinding
-import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.events.EventTempBasalChange
-import info.nightscout.androidaps.events.EventTreatmentUpdateGui
 import info.nightscout.androidaps.extensions.iobCalc
 import info.nightscout.androidaps.extensions.toStringFull
 import info.nightscout.androidaps.extensions.toTemporaryBasal
@@ -141,15 +139,6 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
             .toObservable(EventTempBasalChange::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ swapAdapter() }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventAutosensCalculationFinished::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({ swapAdapter() }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventTreatmentUpdateGui::class.java) // TODO join with above
-            .observeOn(aapsSchedulers.io)
-            .debounce(1L, TimeUnit.SECONDS)
-            .subscribe({ swapAdapter() }, fabricPrivacy::logException)
     }
 
     @Synchronized
@@ -183,7 +172,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
             holder.binding.date.text = if (newDay) dateUtil.dateStringRelative(tempBasal.timestamp, rh) else ""
             if (tempBasal.isInProgress) {
                 holder.binding.time.text = dateUtil.timeString(tempBasal.timestamp)
-                holder.binding.time.setTextColor(rh.gac(context , R.attr.activeColor))
+                holder.binding.time.setTextColor(rh.gac(context, R.attr.activeColor))
             } else {
                 holder.binding.time.text = dateUtil.timeRangeString(tempBasal.timestamp, tempBasal.end)
                 holder.binding.time.setTextColor(holder.binding.duration.currentTextColor)
@@ -200,7 +189,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
             holder.binding.suspendFlag.visibility = (tempBasal.type == TemporaryBasal.Type.PUMP_SUSPEND).toVisibility()
             holder.binding.emulatedSuspendFlag.visibility = (tempBasal.type == TemporaryBasal.Type.EMULATED_PUMP_SUSPEND).toVisibility()
             holder.binding.superBolusFlag.visibility = (tempBasal.type == TemporaryBasal.Type.SUPERBOLUS).toVisibility()
-            if (abs(iob.basaliob) > 0.01) holder.binding.iob.setTextColor(rh.gac(context , R.attr.activeColor)) else holder.binding.iob.setTextColor(holder.binding.duration.currentTextColor)
+            if (abs(iob.basaliob) > 0.01) holder.binding.iob.setTextColor(rh.gac(context, R.attr.activeColor)) else holder.binding.iob.setTextColor(holder.binding.duration.currentTextColor)
             holder.binding.cbRemove.visibility = (tempBasal.isValid && actionHelper.isRemoving).toVisibility()
             if (actionHelper.isRemoving) {
                 holder.binding.cbRemove.setOnCheckedChangeListener { _, value ->
@@ -251,7 +240,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
                 showInvalidated = true
                 updateMenuVisibility()
                 ToastUtils.showToastInUiThread(context, rh.gs(R.string.show_invalidated_records))
-                rxBus.send(EventTreatmentUpdateGui())
+                swapAdapter()
                 true
             }
 
@@ -259,7 +248,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
                 showInvalidated = false
                 updateMenuVisibility()
                 ToastUtils.showToastInUiThread(context, rh.gs(R.string.hide_invalidated_records))
-                rxBus.send(EventTreatmentUpdateGui())
+                swapAdapter()
                 true
             }
 
@@ -281,41 +270,41 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
     private fun removeSelected(selectedItems: SparseArray<TemporaryBasal>) {
         if (selectedItems.size() > 0)
             activity?.let { activity ->
-            OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord), getConfirmationText(selectedItems), Runnable {
-                selectedItems.forEach {_, tempBasal ->
-                    var extendedBolus: ExtendedBolus? = null
-                    val isFakeExtended = tempBasal.type == TemporaryBasal.Type.FAKE_EXTENDED
-                    if (isFakeExtended) {
-                        val eb = repository.getExtendedBolusActiveAt(tempBasal.timestamp).blockingGet()
-                        extendedBolus = if (eb is ValueWrapper.Existing) eb.value else null
+                OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord), getConfirmationText(selectedItems), Runnable {
+                    selectedItems.forEach { _, tempBasal ->
+                        var extendedBolus: ExtendedBolus? = null
+                        val isFakeExtended = tempBasal.type == TemporaryBasal.Type.FAKE_EXTENDED
+                        if (isFakeExtended) {
+                            val eb = repository.getExtendedBolusActiveAt(tempBasal.timestamp).blockingGet()
+                            extendedBolus = if (eb is ValueWrapper.Existing) eb.value else null
+                        }
+                        if (isFakeExtended && extendedBolus != null) {
+                            uel.log(
+                                Action.EXTENDED_BOLUS_REMOVED, Sources.Treatments,
+                                ValueWithUnit.Timestamp(extendedBolus.timestamp),
+                                ValueWithUnit.Insulin(extendedBolus.amount),
+                                ValueWithUnit.UnitPerHour(extendedBolus.rate),
+                                ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(extendedBolus.duration).toInt())
+                            )
+                            disposable += repository.runTransactionForResult(InvalidateExtendedBolusTransaction(extendedBolus.id))
+                                .subscribe(
+                                    { aapsLogger.debug(LTag.DATABASE, "Removed extended bolus $extendedBolus") },
+                                    { aapsLogger.error(LTag.DATABASE, "Error while invalidating extended bolus", it) })
+                        } else if (!isFakeExtended) {
+                            uel.log(
+                                Action.TEMP_BASAL_REMOVED, Sources.Treatments,
+                                ValueWithUnit.Timestamp(tempBasal.timestamp),
+                                if (tempBasal.isAbsolute) ValueWithUnit.UnitPerHour(tempBasal.rate) else ValueWithUnit.Percent(tempBasal.rate.toInt()),
+                                ValueWithUnit.Minute(T.msecs(tempBasal.duration).mins().toInt())
+                            )
+                            disposable += repository.runTransactionForResult(InvalidateTemporaryBasalTransaction(tempBasal.id))
+                                .subscribe(
+                                    { aapsLogger.debug(LTag.DATABASE, "Removed temporary basal $tempBasal") },
+                                    { aapsLogger.error(LTag.DATABASE, "Error while invalidating temporary basal", it) })
+                        }
                     }
-                    if (isFakeExtended && extendedBolus != null) {
-                        uel.log(
-                            Action.EXTENDED_BOLUS_REMOVED, Sources.Treatments,
-                            ValueWithUnit.Timestamp(extendedBolus.timestamp),
-                            ValueWithUnit.Insulin(extendedBolus.amount),
-                            ValueWithUnit.UnitPerHour(extendedBolus.rate),
-                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(extendedBolus.duration).toInt())
-                        )
-                        disposable += repository.runTransactionForResult(InvalidateExtendedBolusTransaction(extendedBolus.id))
-                            .subscribe(
-                                { aapsLogger.debug(LTag.DATABASE, "Removed extended bolus $extendedBolus") },
-                                { aapsLogger.error(LTag.DATABASE, "Error while invalidating extended bolus", it) })
-                    } else if (!isFakeExtended) {
-                        uel.log(
-                            Action.TEMP_BASAL_REMOVED, Sources.Treatments,
-                            ValueWithUnit.Timestamp(tempBasal.timestamp),
-                            if (tempBasal.isAbsolute) ValueWithUnit.UnitPerHour(tempBasal.rate) else ValueWithUnit.Percent(tempBasal.rate.toInt()),
-                            ValueWithUnit.Minute(T.msecs(tempBasal.duration).mins().toInt())
-                        )
-                        disposable += repository.runTransactionForResult(InvalidateTemporaryBasalTransaction(tempBasal.id))
-                            .subscribe(
-                                { aapsLogger.debug(LTag.DATABASE, "Removed temporary basal $tempBasal") },
-                                { aapsLogger.error(LTag.DATABASE, "Error while invalidating temporary basal", it) })
-                    }
-                }
-                actionHelper.finish()
-            })
-        }
+                    actionHelper.finish()
+                })
+            }
     }
 }
