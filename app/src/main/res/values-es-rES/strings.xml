@@ -848,7 +848,7 @@
     <string name="advisoralarm">Ejecutar alarma cuando es hora de comer</string>
     <string name="alarminxmin">Ejecutar alarma en %1$d min</string>
     <string name="bolusadvisor">Asistente de bolo</string>
-    <string name="bolusadvisormessage">Usted tiene alta glicemia. En lugar de comer ahora se recomienda esperar a una mejor glicemia. ¿Quieres hacer un bolo de corrección ahora y recibir una nota cuándo es el momento de comer? En este caso no se grabarán carbohidratos y se debe volver a utilizar el asistente cuando lo recordamos.</string>
+    <string name="bolusadvisormessage">Tienes la glucosa alta. En lugar de comer ahora, se recomienda esperar a tener un mejor valor de glucosa. ¿Quieres poner un bolo de corrección ahora y recibir un aviso cuando sea un buen momento para comer? En este caso no se registrarán los carbohidratos y deberás utilizar el asistente de bolos después de recibir la notificación</string>
     <string name="enablebolusadvisor">Habilitar asistente de bolo</string>
     <string name="enablebolusadvisor_summary">Utiliza un recordatorio para empezar a comer más tarde, en lugar del resultado del asistente durante una glucemia alta (\"pre-bolo\")</string>
     <string name="time_to_eat">¡Hora de comer!\nEjecutar el asistente de bolo y calcular de nuevo.</string>
