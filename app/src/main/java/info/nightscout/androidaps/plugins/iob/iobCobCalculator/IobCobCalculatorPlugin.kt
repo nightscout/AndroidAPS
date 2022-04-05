@@ -1,12 +1,6 @@
 package info.nightscout.androidaps.plugins.iob.iobCobCalculator
 
-import android.content.Context
-import android.os.SystemClock
 import androidx.collection.LongSparseArray
-import androidx.work.ExistingWorkPolicy
-import androidx.work.OneTimeWorkRequest
-import androidx.work.WorkInfo
-import androidx.work.WorkManager
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
@@ -24,21 +18,19 @@ import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.iobCalc
 import info.nightscout.androidaps.extensions.toTemporaryBasal
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.general.overview.OverviewData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData
-import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin
-import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
-import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
-import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.androidaps.workflow.CalculationWorkflow
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -63,14 +55,11 @@ class IobCobCalculatorPlugin @Inject constructor(
     rh: ResourceHelper,
     private val profileFunction: ProfileFunction,
     private val activePlugin: ActivePlugin,
-    private val sensitivityOref1Plugin: SensitivityOref1Plugin,
-    private val sensitivityAAPSPlugin: SensitivityAAPSPlugin,
-    private val sensitivityWeightedAveragePlugin: SensitivityWeightedAveragePlugin,
     private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil,
     private val repository: AppRepository,
-    private val context: Context,
-    private val dataWorker: DataWorker
+    val overviewData: OverviewData,
+    private val calculationWorkflow: CalculationWorkflow
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
@@ -90,8 +79,6 @@ class IobCobCalculatorPlugin @Inject constructor(
 
     private val dataLock = Any()
     private var thread: Thread? = null
-
-    private val jobGroupName = "calculation"
 
     override fun onStart() {
         super.onStart()
@@ -126,14 +113,6 @@ class IobCobCalculatorPlugin @Inject constructor(
                                resetDataAndRunCalculation("onEventPreferenceChange", event)
                            }
                        }, fabricPrivacy::logException)
-        // EventAppInitialized
-        disposable += rxBus
-            .toObservable(EventAppInitialized::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe(
-                { event -> runCalculation("onEventAppInitialized", System.currentTimeMillis(), bgDataReload = true, limitDataToOldestAvailable = true, cause = event) },
-                fabricPrivacy::logException
-            )
         // EventNewHistoryData
         disposable += rxBus
             .toObservable(EventNewHistoryData::class.java)
@@ -147,10 +126,10 @@ class IobCobCalculatorPlugin @Inject constructor(
     }
 
     private fun resetDataAndRunCalculation(reason: String, event: Event?) {
-        stopCalculation(reason)
+        calculationWorkflow.stopCalculation(CalculationWorkflow.MAIN_CALCULATION,reason)
         clearCache()
         ads.reset()
-        runCalculation(reason, System.currentTimeMillis(), bgDataReload = false, limitDataToOldestAvailable = true, cause = event)
+        calculationWorkflow.runCalculation(CalculationWorkflow.MAIN_CALCULATION,this, overviewData, reason, System.currentTimeMillis(), bgDataReload = false, limitDataToOldestAvailable = true, cause = event, runLoop = true)
     }
 
     override fun clearCache() {
@@ -310,11 +289,7 @@ class IobCobCalculatorPlugin @Inject constructor(
     override fun getMealDataWithWaitingForCalculationFinish(): MealData {
         val result = MealData()
         val now = System.currentTimeMillis()
-        val maxAbsorptionHours: Double = if (sensitivityAAPSPlugin.isEnabled() || sensitivityWeightedAveragePlugin.isEnabled()) {
-            sp.getDouble(R.string.key_absorption_maxtime, Constants.DEFAULT_MAX_ABSORPTION_TIME)
-        } else {
-            sp.getDouble(R.string.key_absorption_cutoff, Constants.DEFAULT_MAX_ABSORPTION_TIME)
-        }
+        val maxAbsorptionHours: Double = activePlugin.activeSensitivity.maxAbsorptionHours()
         val absorptionTimeAgo = now - (maxAbsorptionHours * T.hours(1).msecs()).toLong()
         repository.getCarbsDataFromTimeToTimeExpanded(absorptionTimeAgo + 1, now, true)
             .blockingGet()
@@ -374,34 +349,6 @@ class IobCobCalculatorPlugin @Inject constructor(
         return sb.toString()
     }
 
-    fun stopCalculation(from: String) {
-        aapsLogger.debug(LTag.AUTOSENS, "Stopping calculation thread: $from")
-        WorkManager.getInstance(context).cancelUniqueWork(jobGroupName)
-        val workStatus = WorkManager.getInstance(context).getWorkInfosForUniqueWork(jobGroupName).get()
-        while (workStatus.size >= 1 && workStatus[0].state == WorkInfo.State.RUNNING)
-            SystemClock.sleep(100)
-        aapsLogger.debug(LTag.AUTOSENS, "Calculation thread stopped: $from")
-    }
-
-    fun runCalculation(from: String, end: Long, bgDataReload: Boolean, limitDataToOldestAvailable: Boolean, cause: Event?) {
-        aapsLogger.debug(LTag.AUTOSENS, "Starting calculation worker: $from to ${dateUtil.dateAndTimeAndSecondsString(end)}")
-
-        val iobCalculation =
-            if (sensitivityOref1Plugin.isEnabled())
-                OneTimeWorkRequest.Builder(IobCobOref1Worker::class.java)
-                    .setInputData(
-                        dataWorker.storeInputData(IobCobOref1Worker.IobCobOref1WorkerData(injector, this, from, end, bgDataReload, limitDataToOldestAvailable, cause))
-                    ).build()
-            else
-                OneTimeWorkRequest.Builder(IobCobOref1Worker::class.java)
-                    .setInputData(
-                        dataWorker.storeInputData(IobCobOrefWorker.IobCobOrefWorkerData(injector, this, from, end, bgDataReload, limitDataToOldestAvailable, cause))
-                    ).build()
-
-        WorkManager.getInstance(context)
-            .enqueueUniqueWork(jobGroupName, ExistingWorkPolicy.REPLACE, iobCalculation)
-    }
-
     // Limit rate of EventNewHistoryData
     private val historyWorker = Executors.newSingleThreadScheduledExecutor()
     private var scheduledHistoryPost: ScheduledFuture<*>? = null
@@ -443,7 +390,7 @@ class IobCobCalculatorPlugin @Inject constructor(
     // When historical data is changed (coming from NS etc) finished calculations after this date must be invalidated
     private fun newHistoryData(oldDataTimestamp: Long, bgDataReload: Boolean, event: Event) {
         //log.debug("Locking onNewHistoryData");
-        stopCalculation("onEventNewHistoryData")
+        calculationWorkflow.stopCalculation(CalculationWorkflow.MAIN_CALCULATION,"onEventNewHistoryData")
         synchronized(dataLock) {
 
             // clear up 5 min back for proper COB calculation
@@ -467,7 +414,7 @@ class IobCobCalculatorPlugin @Inject constructor(
             }
             ads.newHistoryData(time, aapsLogger, dateUtil)
         }
-        runCalculation(event.javaClass.simpleName, System.currentTimeMillis(), bgDataReload, true, event)
+        calculationWorkflow.runCalculation(CalculationWorkflow.MAIN_CALCULATION,this, overviewData, event.javaClass.simpleName, System.currentTimeMillis(), bgDataReload, true, event, runLoop = true)
         //log.debug("Releasing onNewHistoryData");
     }
 

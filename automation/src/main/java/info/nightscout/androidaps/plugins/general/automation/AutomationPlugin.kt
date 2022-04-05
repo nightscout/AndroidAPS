@@ -7,7 +7,11 @@ import android.os.SystemClock
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.automation.R
-import info.nightscout.androidaps.events.*
+import info.nightscout.androidaps.events.EventBTChange
+import info.nightscout.androidaps.events.EventChargingState
+import info.nightscout.androidaps.events.EventLocationChange
+import info.nightscout.androidaps.events.EventNetworkChange
+import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
@@ -33,7 +37,6 @@ import org.json.JSONObject
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.collections.ArrayList
 
 @OpenForTesting
 @Singleton
@@ -128,10 +131,6 @@ class AutomationPlugin @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe({ processActions() }, fabricPrivacy::logException)
         disposable += rxBus
-            .toObservable(EventAutosensCalculationFinished::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ processActions() }, fabricPrivacy::logException)
-        disposable += rxBus
             .toObservable(EventBTChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({
@@ -150,7 +149,7 @@ class AutomationPlugin @Inject constructor(
 
     private fun storeToSP() {
         val array = JSONArray()
-        val iterator = ArrayList<AutomationEvent>(automationEvents).iterator()
+        val iterator = ArrayList(automationEvents).iterator()
         try {
             while (iterator.hasNext()) {
                 val event = iterator.next()

@@ -30,6 +30,7 @@ import info.nightscout.androidaps.utils.Profiler
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.workflow.CalculationWorkflow
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
@@ -69,7 +70,6 @@ class IobCobOrefWorker @Inject internal constructor(
         val iobCobCalculatorPlugin: IobCobCalculator, // cannot be injected : HistoryBrowser uses different instance
         val from: String,
         val end: Long,
-        val bgDataReload: Boolean,
         val limitDataToOldestAvailable: Boolean,
         val cause: Event?
     )
@@ -87,10 +87,6 @@ class IobCobOrefWorker @Inject internal constructor(
             }
             //log.debug("Locking calculateSensitivityData");
             val oldestTimeWithData = data.iobCobCalculatorPlugin.calculateDetectionStart(data.end, data.limitDataToOldestAvailable)
-            if (data.bgDataReload) {
-                data.iobCobCalculatorPlugin.ads.loadBgData(data.end, repository, aapsLogger, dateUtil, rxBus)
-                data.iobCobCalculatorPlugin.clearCache()
-            }
             // work on local copy and set back when finished
             val ads = data.iobCobCalculatorPlugin.ads.clone()
             val bucketedData = ads.bucketedData
@@ -104,8 +100,7 @@ class IobCobOrefWorker @Inject internal constructor(
             var previous = autosensDataTable[prevDataTime]
             // start from oldest to be able sub cob
             for (i in bucketedData.size - 4 downTo 0) {
-                val progress = i.toString() + if (buildHelper.isDev()) " (${data.from})" else ""
-                rxBus.send(EventIobCalculationProgress(100 - (100.0 * i / bucketedData.size).toInt(), data.cause))
+                rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.IOB_COB_OREF, 100 - (100.0 * i / bucketedData.size).toInt(), data.cause))
                 if (isStopped) {
                     aapsLogger.debug(LTag.AUTOSENS, "Aborting calculation thread (trigger): ${data.from}")
                     return Result.failure(workDataOf("Error" to "Aborting calculation thread (trigger): ${data.from}"))
@@ -282,7 +277,7 @@ class IobCobOrefWorker @Inject internal constructor(
                 rxBus.send(EventAutosensCalculationFinished(data.cause))
             }.start()
         } finally {
-            rxBus.send(EventIobCalculationProgress(100, data.cause))
+            rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.IOB_COB_OREF, 100, data.cause))
             aapsLogger.debug(LTag.AUTOSENS, "AUTOSENSDATA thread ended: ${data.from}")
             profiler.log(LTag.AUTOSENS, "IobCobThread", start)
         }

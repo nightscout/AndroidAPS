@@ -137,6 +137,8 @@ class SensitivityAAPSPlugin @Inject constructor(
         return output
     }
 
+    override fun maxAbsorptionHours(): Double = sp.getDouble(R.string.key_absorption_maxtime, Constants.DEFAULT_MAX_ABSORPTION_TIME)
+
     override val id: SensitivityType
         get() = SensitivityType.SENSITIVITY_AAPS
 

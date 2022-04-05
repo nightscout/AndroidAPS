@@ -32,6 +32,7 @@ import info.nightscout.androidaps.utils.Profiler
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.workflow.CalculationWorkflow
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
@@ -62,6 +63,7 @@ class IobCobOref1Worker(
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var dataWorker: DataWorker
+    @Inject lateinit var calculationWorkflow: CalculationWorkflow
 
     init {
         (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
@@ -69,10 +71,9 @@ class IobCobOref1Worker(
 
     class IobCobOref1WorkerData(
         val injector: HasAndroidInjector,
-        val iobCobCalculatorPlugin: IobCobCalculator, // cannot be injected : HistoryBrowser uses different instance
+        val iobCobCalculator: IobCobCalculator, // cannot be injected : HistoryBrowser uses different instance
         val from: String,
         val end: Long,
-        val bgDataReload: Boolean,
         val limitDataToOldestAvailable: Boolean,
         val cause: Event?
     )
@@ -90,13 +91,9 @@ class IobCobOref1Worker(
                 return Result.failure(workDataOf("Error" to "app still initializing"))
             }
             //log.debug("Locking calculateSensitivityData");
-            val oldestTimeWithData = data.iobCobCalculatorPlugin.calculateDetectionStart(data.end, data.limitDataToOldestAvailable)
-            if (data.bgDataReload) {
-                data.iobCobCalculatorPlugin.ads.loadBgData(data.end, repository, aapsLogger, dateUtil, rxBus)
-                data.iobCobCalculatorPlugin.clearCache()
-            }
+            val oldestTimeWithData = data.iobCobCalculator.calculateDetectionStart(data.end, data.limitDataToOldestAvailable)
             // work on local copy and set back when finished
-            val ads = data.iobCobCalculatorPlugin.ads.clone()
+            val ads = data.iobCobCalculator.ads.clone()
             val bucketedData = ads.bucketedData
             val autosensDataTable = ads.autosensDataTable
             if (bucketedData == null || bucketedData.size < 3) {
@@ -108,8 +105,7 @@ class IobCobOref1Worker(
             var previous = autosensDataTable[prevDataTime]
             // start from oldest to be able sub cob
             for (i in bucketedData.size - 4 downTo 0) {
-                val progress = i.toString() + if (buildHelper.isDev()) " (${data.from})" else ""
-                rxBus.send(EventIobCalculationProgress(100 - (100.0 * i / bucketedData.size).toInt(), data.cause))
+                rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.IOB_COB_OREF, 100 - (100.0 * i / bucketedData.size).toInt(), data.cause))
                 if (isStopped) {
                     aapsLogger.debug(LTag.AUTOSENS, "Aborting calculation thread (trigger): ${data.from}")
                     return Result.failure(workDataOf("Error" to "Aborting calculation thread (trigger): ${data.from}"))
@@ -145,7 +141,7 @@ class IobCobOref1Worker(
                 autosensData.bg = bg
                 delta = bg - bucketedData[i + 1].value
                 avgDelta = (bg - bucketedData[i + 3].value) / 3
-                val iob = data.iobCobCalculatorPlugin.calculateFromTreatmentsAndTemps(bgTime, profile)
+                val iob = data.iobCobCalculator.calculateFromTreatmentsAndTemps(bgTime, profile)
                 val bgi = -iob.activity * sens * 5
                 val deviation = delta - bgi
                 val avgDeviation = ((avgDelta - bgi) * 1000).roundToLong() / 1000.0
@@ -332,13 +328,13 @@ class IobCobOref1Worker(
                 autosensData.autosensResult = sensitivity
                 aapsLogger.debug(LTag.AUTOSENS, autosensData.toString())
             }
-            data.iobCobCalculatorPlugin.ads = ads
+            data.iobCobCalculator.ads = ads
             Thread {
                 SystemClock.sleep(1000)
                 rxBus.send(EventAutosensCalculationFinished(data.cause))
             }.start()
         } finally {
-            rxBus.send(EventIobCalculationProgress(100, data.cause))
+            rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.IOB_COB_OREF, 100, data.cause))
             aapsLogger.debug(LTag.AUTOSENS, "AUTOSENSDATA thread ended: ${data.from}")
             profiler.log(LTag.AUTOSENS, "IobCobOref1Thread", start)
         }

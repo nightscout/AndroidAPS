@@ -30,6 +30,8 @@ class AbstractSensitivityPluginTest : TestBase() {
         override val id: Sensitivity.SensitivityType
             get() = Sensitivity.SensitivityType.UNKNOWN
 
+        override fun maxAbsorptionHours(): Double = 8.0
+
         override fun configuration(): JSONObject = JSONObject()
 
         override fun applyConfiguration(configuration: JSONObject) {}

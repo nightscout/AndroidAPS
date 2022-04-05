@@ -225,6 +225,7 @@
         <item name="activityColor">@color/activity</item>
         <!-- CardView specific colors  -->
         <item name="strokeColor">@color/plastic_grey</item>
+        <item name="textAppearancemediumColor">@color/textAppearancemediumDark</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>

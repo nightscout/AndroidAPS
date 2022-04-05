@@ -53,7 +53,7 @@
         <!-- BG source temp button -->
         <item name="setTempButton">@color/colorSetTempButton</item>
         <!-- Card Item-->
-        <item name="cardItemBackgroundColor">@color/cardColorBackground</item>
+        <item name="cardItemBackgroundColor">?attr/colorSurface</item>
         <!-- Exercise -->
         <item name="exerciseColor">@color/exercise</item>
         <!-- BG low -->
@@ -233,6 +233,7 @@
         <item name="activityColor">@color/activity</item>
         <!-- CardView specific colors  -->
         <item name="strokeColor">@color/plastic_grey</item>
+        <item name="textAppearancemediumColor">@color/textAppearancemediumLight</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>
