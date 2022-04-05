@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.general.autotune
 
-import android.content.Context
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
@@ -9,7 +8,6 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.database.entities.*
 import info.nightscout.androidaps.extensions.convertToBoluses
 import info.nightscout.androidaps.extensions.durationInMinutes
@@ -19,11 +17,8 @@ import info.nightscout.androidaps.extensions.toTemporaryBasal
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.autotune.data.ATProfile
-import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin
-import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
-import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
-import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -46,21 +41,15 @@ class AutotuneIob(
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var sensitivityOref1Plugin: SensitivityOref1Plugin
-    @Inject lateinit var sensitivityAAPSPlugin: SensitivityAAPSPlugin
-    @Inject lateinit var sensitivityWeightedAveragePlugin: SensitivityWeightedAveragePlugin
+    @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var autotunePlugin: AutotunePlugin
     @Inject lateinit var sp: SP
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var context: Context
-    @Inject lateinit var dataWorker: DataWorker
     @Inject lateinit var activePlugin: ActivePlugin
 
-    lateinit var iobCobCalculator: IobCobCalculatorPlugin
     private val nsTreatments = ArrayList<NsTreatment>()
     private var dia: Double = Constants.defaultDIA
     var boluses: MutableList<Bolus> = ArrayList()
@@ -72,25 +61,6 @@ class AutotuneIob(
     private fun range(): Long = (60 * 60 * 1000L * dia + T.hours(2).msecs()).toLong()
 
     fun initializeData(from: Long, to: Long, tunedProfile: ATProfile) {
-        iobCobCalculator =
-            IobCobCalculatorPlugin(
-                injector,
-                aapsLogger,
-                aapsSchedulers,
-                rxBus,
-                sp,
-                rh,
-                profileFunction,
-                activePlugin,
-                sensitivityOref1Plugin,
-                sensitivityAAPSPlugin,
-                sensitivityWeightedAveragePlugin,
-                fabricPrivacy,
-                dateUtil,
-                repository,
-                context,
-                dataWorker
-            )
         dia = tunedProfile.dia
         startBG = from
         endBG = to
