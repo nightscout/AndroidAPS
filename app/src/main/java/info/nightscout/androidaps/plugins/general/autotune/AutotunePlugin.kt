@@ -206,21 +206,19 @@ class AutotunePlugin @Inject constructor(
         if (autoSwitch) {
             val circadian = sp.getBoolean(R.string.key_autotune_circadian_ic_isf, false)
             profileSwitchButtonVisibility = View.GONE //hide profilSwitch button in fragment
-            val now = dateUtil.now()
-            val profileStore = tunedProfile?.profileStore(circadian)
-            profileStore?.let {
+            tunedProfile?.profileStore(circadian)?.let {
                 if (profileFunction.createProfileSwitch(
                         it,
                         profileName = tunedProfile!!.profilename,
                         durationInMinutes = 0,
                         percentage = 100,
                         timeShiftInHours = 0,
-                        timestamp = now
+                        timestamp = dateUtil.now()
                     )
                 ) {
                     uel.log(
                         UserEntry.Action.PROFILE_SWITCH,
-                        UserEntry.Sources.ProfileSwitchDialog,
+                        UserEntry.Sources.Autotune,
                         "Autotune AutoSwitch",
                         ValueWithUnit.SimpleString(tunedProfile!!.profilename))
                 }
