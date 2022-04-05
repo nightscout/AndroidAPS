@@ -61,7 +61,6 @@ class AutotuneFragment : DaggerFragment() {
     private var disposable: CompositeDisposable = CompositeDisposable()
     private var lastRun: Long = 0
     private var lastRunTxt: String? = null
-    private var tempResult = ""
     private val log = LoggerFactory.getLogger(AutotunePlugin::class.java)
     private var _binding: AutotuneFragmentBinding? = null
 
@@ -80,11 +79,10 @@ class AutotuneFragment : DaggerFragment() {
         binding.tuneDays.setParams(
             savedInstanceState?.getDouble("tunedays")
                 ?: defaultValue, 1.0, 30.0, 1.0, DecimalFormat("0"), false, null, textWatcher)
-        binding.autotuneRun.setOnClickListener { view ->
+        binding.autotuneRun.setOnClickListener {
             val daysBack = SafeParse.stringToInt(binding.tuneDays.text)
             var profileName = if (binding.profileList.text.toString() == rh.gs(R.string.active)) profileFunction.getProfileName() else binding.profileList.text.toString()
             autotunePlugin.selectedProfile = profileName
-            tempResult = ""
             autotunePlugin.calculationRunning = true
             autotunePlugin.copyButtonVisibility = View.GONE
             autotunePlugin.profileSwitchButtonVisibility = View.GONE
@@ -148,7 +146,7 @@ class AutotuneFragment : DaggerFragment() {
                         ) {
                             uel.log(
                                 UserEntry.Action.PROFILE_SWITCH,
-                                UserEntry.Sources.ProfileSwitchDialog,
+                                UserEntry.Sources.Autotune,
                                 "Autotune AutoSwitch",
                                 ValueWithUnit.SimpleString(autotunePlugin.tunedProfile!!.profilename))
                         }
@@ -188,7 +186,6 @@ class AutotuneFragment : DaggerFragment() {
             .toObservable(EventAutotuneUpdateResult::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                tempResult = it.result
                 updateGui()
             }, { fabricPrivacy.logException(it) })
 
@@ -221,14 +218,14 @@ class AutotuneFragment : DaggerFragment() {
             binding.autotuneRun.visibility = View.GONE
             binding.autotuneCompare.visibility = View.GONE
             binding.tuneWarning.text = resourceHelper.gs(R.string.autotune_warning_during_run)
-            binding.tuneResult.text = tempResult
+            binding.tuneResult.text = autotunePlugin.result
         } else if (autotunePlugin.lastRunSuccess) {
             binding.autotuneRun.visibility = View.VISIBLE
             binding.tuneWarning.text = resourceHelper.gs(R.string.autotune_warning_after_run)
             binding.tuneResult.text = autotunePlugin.result
             binding.autotuneCompare.visibility = View.VISIBLE
         } else {
-            binding.tuneResult.text = tempResult
+            binding.tuneResult.text = autotunePlugin.result
             binding.autotuneRun.visibility = View.VISIBLE
         }
         if (autotunePlugin.tunedProfile == null || autotunePlugin.pumpProfile == null)
