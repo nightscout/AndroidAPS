@@ -1,25 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/notes_layout"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+android:id="@+id/notes_layout"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:orientation="horizontal">
+
+<com.google.android.material.textfield.TextInputLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+    android:hint="@string/notes_label"
+    app:boxStrokeColor="@color/mtrl_textinput_default_box_stroke_color"
+    android:textColorHint="?attr/colorOnPrimary"
+    app:hintTextColor="?attr/colorOnPrimary"
+    app:endIconMode="clear_text">
 
-    <TextView
-        android:labelFor="@+id/notes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:width="120dp"
-        android:padding="10dp"
-        android:text="@string/notes_label"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        android:textStyle="bold" />
-
-    <EditText
+    <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/notes"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:autofillHints="@string/notes_label"
+        android:gravity="start"
+        android:textStyle="bold"
         android:width="180dp"
-        android:inputType="text" />
+        android:inputType="text|textCapSentences" />
+
+</com.google.android.material.textfield.TextInputLayout>
+
 </LinearLayout>
