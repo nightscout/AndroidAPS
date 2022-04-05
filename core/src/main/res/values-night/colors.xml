@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Default theme color -->
     <!-- This section describes the main theme colors -->
     <color name="colorPrimary">#212121</color>
@@ -244,6 +244,8 @@
 
     <!-- Button icons - general -->
     <color name="pod_icon_outline">#9E9E9E</color>
+
+    <color name="mtrl_textinput_default_box_stroke_color" tools:override="true" >#9E9E9E</color>
 
     <!-- Omnipod Wizard -->
     <color name="omnipod_wizard_progress_bar">#0099CC</color>
