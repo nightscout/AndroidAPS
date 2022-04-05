@@ -23,7 +23,7 @@
         <!-- New MaterialComponents attributes. -->
         <item name="colorPrimaryVariant">@color/primaryLightColorDefault</item>
         <item name="colorSecondaryVariant">@color/secondaryLightColorDefault</item>
-        <item name="scrimBackground">@color/white</item>
+        <item name="scrimBackground">@color/aaps_theme_light_background</item>
         <item name="popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
         <item name="actionOverflowMenuStyle">@style/Widget.MaterialComponents.PopupMenu.Overflow</item>
         <!---Text Colors -->
