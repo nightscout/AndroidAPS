@@ -211,34 +211,9 @@
 
         </LinearLayout>
 
-        <LinearLayout
+        <include
             android:id="@+id/notes_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:labelFor="@+id/notes"
-                android:padding="10dp"
-                android:text="@string/notes_label"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/notes"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:autofillHints="@string/notes_label"
-                android:gravity="start"
-                android:inputType="text|textCapSentences"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-
-        </LinearLayout>
+            layout="@layout/notes" />
 
         <LinearLayout
             android:id="@+id/checkbox_row"
