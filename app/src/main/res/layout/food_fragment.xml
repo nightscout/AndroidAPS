@@ -49,16 +49,13 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
-        android:hint="@string/category"
-        app:boxStrokeColor="@color/list_delimiter">
+        android:hint="@string/category">
 
-        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
             android:id="@+id/categoryList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clickable="true"
-            android:enabled="false"
-            tools:ignore="KeyboardInaccessibleWidget" />
+            android:inputType="none" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -68,16 +65,13 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
-        android:hint="@string/subcategory"
-        app:boxStrokeColor="@color/list_delimiter">
+        android:hint="@string/subcategory">
 
-        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
             android:id="@+id/subcategoryList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clickable="true"
-            android:enabled="false"
-            tools:ignore="KeyboardInaccessibleWidget" />
+            android:inputType="none" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
