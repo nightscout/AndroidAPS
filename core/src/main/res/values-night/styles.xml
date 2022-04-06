@@ -71,6 +71,7 @@
         <!-- Pump -->
         <item name="pumpStatusBackground">@color/pumpStatusBackground</item>
         <!-- Objectives -->
+        <item name="objectivescardItemBackgroundColor">?attr/cardItemBackgroundColor</item>
         <item name="objectivesBackgroundColor">@color/objectivesBackground</item>
         <item name="objectivesDisabledTextColor">@color/colorObjectivesDisabledText</item>
         <!---Import List -->

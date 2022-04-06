@@ -226,7 +226,7 @@
     <!-- Gray colors -->
     <color name="darkgray">#323232</color>
     <color name="darkgrayVariant">#424242</color>
-    <color name="objectivesBackground">#3C3C3C</color>
+    <color name="objectivesBackground">#8C8C8C</color>
     <color name="plastic_grey">#666666</color>
     <color name="byodagray">#777777</color>
     <color name="sphere_plastic_grey">#8c8c8c</color>
@@ -309,6 +309,7 @@
     <color name="aaps_theme_light_onBackground">#1C1B1F</color>
     <color name="aaps_theme_light_surface">#FAF9F8</color>
     <color name="aaps_theme_light_onSurface">#1C1B1F</color>
-    <color name="aaps_theme_light_surfaceVariant">#E7E0EC</color>
+    <color name="aaps_theme_light_surfaceVariant">#E2E0DF</color>
+
 
 </resources>

@@ -11,7 +11,7 @@
         <item name="colorOnError">@color/aaps_theme_light_onError</item>
         <item name="android:colorBackground">@color/aaps_theme_light_background</item>
         <item name="colorOnBackground">@color/aaps_theme_light_onBackground</item>
-        <item name="colorSurface">@color/aaps_theme_light_surface</item>
+        <item name="colorSurface">@color/aaps_theme_light_surfaceVariant</item>
         <item name="colorOnSurface">@color/aaps_theme_light_onSurface</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/aaps_theme_light_secondary</item>
@@ -79,6 +79,7 @@
         <!-- Pump -->
         <item name="pumpStatusBackground">@color/pumpStatusBackground</item>
         <!-- Objectives -->
+        <item name="objectivescardItemBackgroundColor">@color/midgray</item>
         <item name="objectivesBackgroundColor">@color/objectivesBackground</item>
         <item name="objectivesDisabledTextColor">@color/colorObjectivesDisabledText</item>
         <!---Import List -->
