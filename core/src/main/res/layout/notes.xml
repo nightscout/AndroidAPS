@@ -10,6 +10,8 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:hint="@string/notes_label"
         app:endIconMode="clear_text">
 
@@ -17,13 +19,7 @@
             android:id="@+id/notes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_weight="1"
-            android:width="180dp"
             android:autofillHints="@string/notes_label"
-            android:gravity="start"
             android:inputType="text|textCapSentences"
             android:textStyle="bold" />
 
