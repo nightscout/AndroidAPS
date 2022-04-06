@@ -434,7 +434,7 @@
     <string name="ns_localbroadcasts_title">启用本地广播。</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">动态ISF(胰岛素敏感系数)</string>
-    <string name="DynISFAdjust_title">动态ISF 调整因数 %%</string>
+    <string name="DynISFAdjust_title">动态ISF胰岛素敏系数调整比例 %%</string>
     <string name="DynISFAdjust_summary">动态ISF的调整因子。设置100%%以上用于更积极的校正，100%%以下则不那么积极校正。</string>
     <string name="enableuam">启用 UAM</string>
     <string name="enablesmb">启用微型大剂量</string>

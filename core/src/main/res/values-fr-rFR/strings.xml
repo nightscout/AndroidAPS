@@ -138,8 +138,8 @@
     <string name="hoursago">il y a %1$.1f h</string>
     <string name="days_ago">Il y a %1$.1f jours</string>
     <string name="days_ago_round">Il y a %1$.0f jours</string>
-    <string name="in_days">dans %1$.0f jours</string>
-    <string name="in_days_round">dans %1$.0f jours</string>
+    <string name="in_days">en %1$.0f jours</string>
+    <string name="in_days_round">en %1$.0f jours</string>
     <string name="shorthour">h</string>
     <string name="days">jours</string>
     <string name="hours">heures</string>

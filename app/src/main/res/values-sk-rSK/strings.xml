@@ -435,7 +435,7 @@
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dynamická ISF</string>
     <string name="DynISFAdjust_title">Korekčný faktor pre Dynamickú ISF v %%</string>
-    <string name="DynISFAdjust_summary">Korekčný faktor pre dynamickú ISF. Pre agresivnejšie korekčné dávky nastavte hodnoty väčšie ako 100%%, a pre menej agresivne korekcie menšie než 100%%.</string>
+    <string name="DynISFAdjust_summary">Korekčný faktor pre dynamickú ISF. Pre agresivnejšie korekčné dávky nastavte hodnoty väčšie ako 100%% a pre menej agresivne korekcie menšie než 100%%.</string>
     <string name="enableuam">Povoliť UAM</string>
     <string name="enablesmb">Povoliť SMB</string>
     <string name="enablesmb_summary">Použiť Super Mikro Bolusy namiesto dočasných bazálov, pre zrýchleniu účinku</string>
@@ -1005,4 +1005,6 @@
     <string name="above" comment="above &quot;in range&quot;">Vyššie</string>
     <string name="show_loop_records">Zobraziť záznamy uzavretého okruhu</string>
     <string name="show_hide_records">Skryť záznamy uzavretého okruhu</string>
+    <string name="widget_description">AndroidAPS widget</string>
+    <string name="configure">Konfigurovať priehľadnosť</string>
 </resources>

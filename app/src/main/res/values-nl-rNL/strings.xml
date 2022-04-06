@@ -435,7 +435,7 @@
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dynamische ISF</string>
     <string name="DynISFAdjust_title">Dynamische ISF aanpassingsfactor %%</string>
-    <string name="DynISFAdjust_summary">Aanpassingsfactor voor DynamicISF. Stel meer dan 100%% in voor agressievere correctie doses en minder dan 100%% voor minder agressieve correcties.</string>
+    <string name="DynISFAdjust_summary">Aanpassingsfactor voor Dynamische ISF. Stel meer dan 100% in voor een agressievere correctie dosis en minder dan 100% voor minder agressieve correcties.</string>
     <string name="enableuam">Activeer UAM</string>
     <string name="enablesmb">Activeer SMB</string>
     <string name="enablesmb_summary">SMB in plaats van tijdelijke basalen voor snellere reactie</string>
@@ -985,6 +985,8 @@
     <string name="wear_unknown_action_string">Onbekend actie commando:</string>
     <string name="overview_editquickwizard_percentage">Percentage</string>
     <string name="app_default">Applicatie standaardwaarden</string>
+    <string name="show_invalidated_records">Toon ongeldig gemarkeerde / verwijderde records</string>
+    <string name="hide_invalidated_records">Verberg ongeldig gemarkeerde / verwijderde records</string>
     <string name="select_profile">Kies profiel om te bewerken</string>
     <string name="refresh_from_nightscout">Vernieuw vanaf Nightscout</string>
     <string name="remove_selected_items">Geselecteerde items verwijderen</string>
@@ -997,7 +999,11 @@
     <string name="show_loop">Toon loop</string>
     <string name="count_selected">%1$d geselecteerd</string>
     <string name="sort_label">Sorteren</string>
+    <string name="dialog_canceled">Dialoog geannuleerd</string>
     <string name="below" comment="below &quot;in range&quot;">Onder</string>
     <string name="in_range">Binnen bereik</string>
     <string name="above" comment="above &quot;in range&quot;">Boven</string>
+    <string name="show_loop_records">Toon loop records</string>
+    <string name="show_hide_records">Verberg loop records</string>
+    <string name="widget_description">AndroidAPS widget</string>
 </resources>

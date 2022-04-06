@@ -433,8 +433,6 @@
     <string name="ns_localbroadcasts_title">Активировать локальную передачу</string>
     <string name="openapssmb">Супер микро болюс OpenAPS</string>
     <string name="openaps_smb_dynamic_isf">Динамический ISF</string>
-    <string name="DynISFAdjust_title">Коэффициент регулировки динамического диапазона чувствительности ISF %%</string>
-    <string name="DynISFAdjust_summary">Коэффициент корректировки динамического диапазона чувствительности ISF. Установите более 100%% для более агрессивных доз коррекции и менее 100%% для менее агрессивной коррекции.</string>
     <string name="enableuam">Включить непредвиденный прием пищи UAM</string>
     <string name="enablesmb">Включить супер микро болюс SMB</string>
     <string name="enablesmb_summary">Для ускорения действия используйте супер микро болюсы SMB вместо временного базала</string>
