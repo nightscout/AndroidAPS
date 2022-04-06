@@ -1006,4 +1006,5 @@
     <string name="show_loop_records">Mostrar registros del lazo</string>
     <string name="show_hide_records">Ocultar registros del lazo</string>
     <string name="widget_description">Widget de AndroidAPS</string>
+    <string name="configure">Configurar opacidad</string>
 </resources>
