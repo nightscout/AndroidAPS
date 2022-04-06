@@ -6,6 +6,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
@@ -22,10 +23,12 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorP
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
 import info.nightscout.androidaps.data.LocalInsulin
+import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.interfaces.Autotune
 import info.nightscout.androidaps.interfaces.Profile
+import info.nightscout.androidaps.interfaces.ProfileStore
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -38,6 +41,7 @@ import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import org.json.JSONObject
 import org.slf4j.LoggerFactory
 import java.text.DecimalFormat
 import java.util.*
@@ -63,7 +67,9 @@ class AutotuneFragment : DaggerFragment() {
     private var lastRunTxt: String? = null
     private val log = LoggerFactory.getLogger(AutotunePlugin::class.java)
     private var _binding: AutotuneFragmentBinding? = null
-
+    private lateinit var profileStore: ProfileStore
+    private var profileName = ""
+    private lateinit var profile: ATProfile
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -76,14 +82,17 @@ class AutotuneFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val defaultValue = sp.getInt(R.string.key_autotune_default_tune_days, 5).toDouble()
+        profileStore = activePlugin.activeProfileSource.profile ?: ProfileStore(injector, JSONObject(), dateUtil)
+        profileName = if (binding.profileList.text.toString() == rh.gs(R.string.active)) "" else binding.profileList.text.toString()
+        profile = ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(it) } ?:profileFunction.getProfile(), LocalInsulin(""), injector)
+
         binding.tuneDays.setParams(
             savedInstanceState?.getDouble("tunedays")
                 ?: defaultValue, 1.0, 30.0, 1.0, DecimalFormat("0"), false, null, textWatcher)
         binding.autotuneRun.setOnClickListener {
             val daysBack = SafeParse.stringToInt(binding.tuneDays.text)
-            var profileName = if (binding.profileList.text.toString() == rh.gs(R.string.active)) profileFunction.getProfileName() else binding.profileList.text.toString()
-            autotunePlugin.selectedProfile = profileName
             autotunePlugin.calculationRunning = true
+            autotunePlugin.lastNbDays = daysBack.toString()
             autotunePlugin.copyButtonVisibility = View.GONE
             autotunePlugin.profileSwitchButtonVisibility = View.GONE
             Thread(Runnable {
@@ -91,6 +100,12 @@ class AutotuneFragment : DaggerFragment() {
             }).start()
             lastRunTxt = dateUtil.dateAndTimeString(autotunePlugin.lastRun)
             lastRun = autotunePlugin.lastRun
+            updateGui()
+        }
+        binding.profileList.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+            profileName = if (binding.profileList.text.toString() == rh.gs(R.string.active)) "" else binding.profileList.text.toString()
+            profile = ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(it) } ?:profileFunction.getProfile(), LocalInsulin(""), injector)
+            resetParam()
             updateGui()
         }
 
@@ -130,9 +145,8 @@ class AutotuneFragment : DaggerFragment() {
             val tunedProfile = autotunePlugin.tunedProfile
             val circadian = sp.getBoolean(R.string.key_autotune_circadian_ic_isf, false)
             tunedProfile?.let { tunedP ->
-                val profileStore = tunedP.profileStore(circadian)
                 log("ProfileSwitch pressed")
-                profileStore?.let {
+                tunedP.profileStore(circadian)?.let {
                     showConfirmation(requireContext(), resourceHelper.gs(R.string.activate_profile) + ": " + tunedP.profilename + " ?", Runnable {
                         val now = dateUtil.now()
                         if (profileFunction.createProfileSwitch(
@@ -151,12 +165,10 @@ class AutotuneFragment : DaggerFragment() {
                                 ValueWithUnit.SimpleString(autotunePlugin.tunedProfile!!.profilename))
                         }
                         rxBus.send(EventLocalProfileChanged())
-                        //autotunePlugin.profileSwitchButtonVisibility = View.GONE
                         updateGui()
                     })
                 }
                     ?: log("ProfileStore is null!")
-
             }
 
         }
@@ -175,6 +187,15 @@ class AutotuneFragment : DaggerFragment() {
     @Synchronized
     override fun onResume() {
         super.onResume()
+        profileStore = activePlugin.activeProfileSource.profile ?: ProfileStore(injector, JSONObject(), dateUtil)
+        profileName = if (binding.profileList.text.toString() == rh.gs(R.string.active)) "" else binding.profileList.text.toString()
+        profile = ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(it) } ?:profileFunction.getProfile(), LocalInsulin(""), injector)
+        val profileList: ArrayList<CharSequence> = profileStore.getProfileList()
+        profileList.add(0, rh.gs(R.string.active))
+        context?.let { context ->
+            binding.profileList.setAdapter(ArrayAdapter(context, R.layout.spinner_centered, profileList))
+            binding.profileList.setText(if (!autotunePlugin.selectedProfile.isEmpty()) profileList[0] else autotunePlugin.selectedProfile, false)
+        }
         disposable += rxBus
             .toObservable(EventAutotuneUpdateGui::class.java)
             .observeOn(AndroidSchedulers.mainThread())
@@ -200,20 +221,6 @@ class AutotuneFragment : DaggerFragment() {
 
     @Synchronized
     private fun updateGui() {
-        val profile = profileFunction.getProfile()
-        val profileStore = activePlugin.activeProfileSource.profile
-
-        if (profile == null || profileStore == null) {
-            ToastUtils.showToastInUiThread(context, rh.gs(R.string.noprofile))
-            return
-        }
-        val profileList: ArrayList<CharSequence> = profileStore.getProfileList()
-        profileList.add(0, rh.gs(R.string.active))
-        context?.let { context ->
-            binding.profileList.setAdapter(ArrayAdapter(context, R.layout.spinner_centered, profileList))
-            binding.profileList.setText(if (autotunePlugin.selectedProfile.isNullOrEmpty()) profileList[0] else autotunePlugin.selectedProfile, false)
-        }
-
         if (autotunePlugin.calculationRunning) {
             binding.autotuneRun.visibility = View.GONE
             binding.autotuneCompare.visibility = View.GONE
@@ -237,9 +244,8 @@ class AutotuneFragment : DaggerFragment() {
     }
 
     private fun addWarnings(): String {
-        var warning = resourceHelper.gs(R.string.autotune_warning_before_run)
-        var nl = "\n"
-        val profile = ATProfile(profileFunction.getProfile(System.currentTimeMillis()), LocalInsulin(""), injector)
+        var warning = ""
+        var nl = ""
         if (!profile.isValid) return resourceHelper.gs(R.string.autotune_profile_invalid)
         if (profile.icSize > 1) {
             warning += nl + resourceHelper.gs(R.string.format_autotune_ic_warning, profile.icSize, profile.ic)
@@ -257,6 +263,8 @@ class AutotuneFragment : DaggerFragment() {
             binding.tuneDays.value = sp.getInt(R.string.key_autotune_default_tune_days, 5).toDouble()
         autotunePlugin.result = ""
         autotunePlugin.tunedProfile = null
+        autotunePlugin.lastRun = 0
+        autotunePlugin.lastRunSuccess = false
         autotunePlugin.profileSwitchButtonVisibility = View.GONE
         autotunePlugin.copyButtonVisibility = View.GONE
         binding.autotuneCompare.visibility = View.GONE
@@ -266,7 +274,7 @@ class AutotuneFragment : DaggerFragment() {
         override fun afterTextChanged(s: Editable) { updateGui() }
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            if (!binding.tuneDays.text.isNullOrEmpty()) {
+            if (!binding.tuneDays.text.isEmpty()) {
                 try {
                     if (autotunePlugin.calculationRunning)
                         binding.tuneDays.value = autotunePlugin.lastNbDays.toDouble()

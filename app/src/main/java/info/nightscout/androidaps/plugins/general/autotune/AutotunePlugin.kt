@@ -34,10 +34,11 @@ import javax.inject.Singleton
  *
  * TODO: build data sets for autotune validation
  * => I hope we will be able to validate autotunePlugin with several data set (simulation of several situations and get oref0 autotune results as reference)
- * TODO: Reset results field and Switch/Copy button visibility when selected profile is changed
+ * TODO: Update profile in Local Profile Plugin if activated (tuned profile or selected profile)
  * TODO: use materials for results presentation
- * TODO: futur version (once first version validated): add DIA and Peak tune for insulin
  * TODO: replace Thread by Worker
+ * TODO: future version (once first version validated): add DIA and Peak tune for insulin
+ * TODO: future version: Allow day of the week selection to tune specifics days (training days, working days, WE days)
  */
 
 @Singleton
@@ -65,10 +66,10 @@ class AutotunePlugin @Inject constructor(
     @Volatile override var calculationRunning: Boolean = false
     @Volatile override var lastRun: Long = 0
     @Volatile override var selectedProfile = ""
-    override var lastNbDays: String = ""
+    @Volatile override var lastNbDays: String = ""
     @Volatile override var copyButtonVisibility: Int = 0
     @Volatile override var profileSwitchButtonVisibility: Int = 0
-    override var lastRunSuccess: Boolean = false
+    @Volatile override var lastRunSuccess: Boolean = false
     private var logString = ""
     private var preppedGlucose: PreppedGlucose? = null
     private lateinit var autotunePrep: AutotunePrep
@@ -107,8 +108,8 @@ class AutotunePlugin @Inject constructor(
         lastNbDays = "" + daysBack
         val now = System.currentTimeMillis()
         val profileStore = activePlugin.activeProfileSource.profile ?: return rh.gs(R.string.profileswitch_ismissing)
-        selectedProfile = if (profileToTune.isNullOrEmpty()) profileFunction.getProfileName() else profileToTune
-        profile = profileStore.getSpecificProfile(selectedProfile)?.let { ProfileSealed.Pure(it) } ?: profileFunction.getProfile()
+        selectedProfile = if (profileToTune.isEmpty()) profileFunction.getProfileName() else profileToTune
+        profile = profileStore.getSpecificProfile(profileToTune)?.let { ProfileSealed.Pure(it) } ?: profileFunction.getProfile()
         if (profile == null ) {
             result = "Cannot tune a null profile"
             atLog(result)

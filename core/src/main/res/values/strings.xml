@@ -601,7 +601,7 @@
     <string name="autotune_min_days">Set at least 1 day!!!</string>
     <string name="autotune_copy_local_profile_message">Create a new local profile from this Autotune Profile?</string>
     <string name="autotune_profile_invalid">Profile invalid</string>
-    <string name="format_autotune_title" comment="Lengths of titles should be as short as possible">|Param|Profile|Tuned|\t%/\tMiss.\n</string>
+    <string name="format_autotune_title" comment="Lengths of titles should be as short as possible">|Param|Profile|Tuned|%/Miss.\n</string>
     <string name="format_autotune_separator" translatable="false">+------------------------------------------\n</string>
     <string name="format_autotune_isf" translatable="false">| %1$4.4s |\t%2$3.3f |\t%3$3.3f |\n</string>
     <string name="format_autotune_ic" translatable="false">| %1$4.4s |\t%2$3.3f |\t%3$3.3f |\n</string>

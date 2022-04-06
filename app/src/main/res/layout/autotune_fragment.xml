@@ -57,6 +57,7 @@
                     android:layout_weight="1"
                     android:hint="@string/autotune_select_profile"
                     android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
                     android:textSize="14sp"
                     app:boxStrokeColor="@color/list_delimiter">
 
