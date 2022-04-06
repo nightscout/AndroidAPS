@@ -1,4 +1,4 @@
-package info.nightscout.androidaps
+package info.nightscout.androidaps.widget
 
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
@@ -6,10 +6,14 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.Paint
 import android.view.View
 import android.widget.RemoteViews
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.Constants
+import info.nightscout.androidaps.MainActivity
+import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.extensions.directionToIcon
@@ -73,13 +77,16 @@ class Widget : AppWidgetProvider() {
 
     private fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
         aapsLogger.debug(LTag.WIDGET, "updateAppWidget called")
+
         val views = RemoteViews(context.packageName, R.layout.widget_layout)
+        val alpha = sp.getInt(WidgetConfigureActivity.PREF_PREFIX_KEY + appWidgetId, WidgetConfigureActivity.DEFAULT_OPACITY)
 
         // Create an Intent to launch MainActivity when clicked
         val intent = Intent(context, MainActivity::class.java).also { it.action = intentAction }
         val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         // Widgets allow click handlers to only launch pending intents
         views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent)
+        views.setInt(R.id.widget_layout, "setBackgroundColor", Color.argb(alpha, 0, 0, 0))
 
         updateBg(views)
         updateTemporaryBasal(views)
@@ -104,11 +111,13 @@ class Widget : AppWidgetProvider() {
             }
         )
         views.setImageViewResource(R.id.arrow, trendCalculator.getTrendArrow(overviewData.lastBg).directionToIcon())
-        views.setInt(R.id.arrow, "setColorFilter", when {
-            overviewData.isLow  -> rh.gc(R.color.low)
-            overviewData.isHigh -> rh.gc(R.color.high)
-            else                -> rh.gc(R.color.inrange)
-        })
+        views.setInt(
+            R.id.arrow, "setColorFilter", when {
+                overviewData.isLow  -> rh.gc(R.color.low)
+                overviewData.isHigh -> rh.gc(R.color.high)
+                else                -> rh.gc(R.color.inrange)
+            }
+        )
 
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData
         if (glucoseStatus != null) {
@@ -131,7 +140,8 @@ class Widget : AppWidgetProvider() {
 
     private fun updateTemporaryBasal(views: RemoteViews) {
         views.setTextViewText(R.id.base_basal, overviewData.temporaryBasalText(iobCobCalculator))
-        views.setTextColor(R.id.base_basal, overviewData.temporaryBasalColor(iobCobCalculator))
+        views.setTextColor(R.id.base_basal, iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil.now())?.let { rh.gc(R.color.basal) }
+            ?: rh.gc(R.color.white))
         views.setImageViewResource(R.id.base_basal_icon, overviewData.temporaryBasalIcon(iobCobCalculator))
     }
 

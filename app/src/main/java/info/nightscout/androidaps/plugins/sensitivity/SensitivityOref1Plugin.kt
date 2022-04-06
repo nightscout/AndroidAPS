@@ -53,8 +53,6 @@ class SensitivityOref1Plugin @Inject constructor(
 ) {
 
     override fun detectSensitivity(ads: AutosensDataStore, fromTime: Long, toTime: Long): AutosensResult {
-        // todo this method is called from the IobCobCalculatorPlugin, which leads to a circular
-        // dependency, this should be avoided
         val profile = profileFunction.getProfile()
         if (profile == null) {
             aapsLogger.error("No profile")

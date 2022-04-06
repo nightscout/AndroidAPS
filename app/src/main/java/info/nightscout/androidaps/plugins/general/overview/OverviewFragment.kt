@@ -308,6 +308,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
     fun refreshAll() {
         runOnUiThread {
+            _binding ?: return@runOnUiThread
             updateBg()
             updateTime()
             updateProfile()

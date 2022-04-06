@@ -7,23 +7,20 @@
     android:clipChildren="false"
     android:clipToPadding="false">
 
-    <androidx.appcompat.widget.Toolbar
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
         app:contentInsetEndWithActions="48dp"
         app:contentInsetStartWithNavigation="48dp"
-        android:elevation="4dp">
+        android:elevation="2dp">
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs_normal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@android:color/transparent"
-            app:tabIndicatorColor="?attr/tabSelectedTextColor"
-            app:tabTextColor="?attr/tabTextColor"
-            app:tabSelectedTextColor="?attr/tabSelectedTextColor"
+
             app:tabMode="scrollable" />
 
         <com.google.android.material.tabs.TabLayout
@@ -33,12 +30,10 @@
             android:background="@android:color/transparent"
             app:tabMinWidth="0dp"
             app:tabPadding="0dp"
-            app:tabIndicatorColor="?attr/tabSelectedTextColor"
-            app:tabTextColor="?attr/tabTextColor"
-            app:tabSelectedTextColor="?attr/tabSelectedTextColor"
+
             app:tabMode="scrollable" />
 
-    </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.MaterialToolbar>
 
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/main_drawer_layout"

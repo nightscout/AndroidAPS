@@ -49,9 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:hint="@string/profiletype"
-            android:textColorHint="?attr/tabBgColorSelected"
-            app:boxStrokeColor="?attr/tabBgColorSelected">
+            android:hint="@string/profiletype">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/profile_type"
@@ -213,8 +211,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/selected_profile"
-                app:boxStrokeColor="?attr/boxStrokeColor">
+                android:hint="@string/selected_profile">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/available_profile_list"
@@ -241,8 +238,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/careportal_profileswitch"
-                app:boxStrokeColor="?attr/boxStrokeColor">
+                android:hint="@string/careportal_profileswitch">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/profileswitch_list"

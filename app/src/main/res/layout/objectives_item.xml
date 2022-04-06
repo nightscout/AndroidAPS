@@ -8,8 +8,9 @@
     android:layout_marginLeft="16dp"
     android:layout_marginTop="16dp"
     android:layout_marginRight="16dp"
-    app:cardBackgroundColor="?attr/cardItemBackgroundColor"
+    app:cardBackgroundColor="?attr/objectivescardItemBackgroundColor"
     app:cardCornerRadius="2dp"
+    app:cardElevation="8dp"
     app:cardUseCompatPadding="true"
     app:contentPadding="16dp">
 

@@ -434,8 +434,8 @@
     <string name="ns_localbroadcasts_title">Habilitar la emisión de mensajes localmente.</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">ISF Dinámico</string>
-    <string name="DynISFAdjust_title">Factor de ajuste de ISF Dinámico %%</string>
-    <string name="DynISFAdjust_summary">Porcentaje del factor de ajuste de ISF Dinámico\nValor predeterminado: 100\nEstablecer valores por encima del 100%% para que el algoritmo aplique correcciones más agresivas y valores por debajo del 100%% para correcciones menos agresivas.</string>
+    <string name="DynISFAdjust_title">Factor de ajuste de ISF Dinámico %</string>
+    <string name="DynISFAdjust_summary">Porcentaje del factor de ajuste de ISF Dinámico\nValor predeterminado: 100\nEstablecer valores por encima del 100% para que el algoritmo aplique correcciones más agresivas y valores por debajo del 100% para correcciones menos agresivas.</string>
     <string name="enableuam">Activar UAM</string>
     <string name="enablesmb">Activar SMB</string>
     <string name="enablesmb_summary">Usar microbolos en lugar de basales temporales, para corregir más rápidamente</string>
@@ -848,7 +848,7 @@
     <string name="advisoralarm">Ejecutar alarma cuando es hora de comer</string>
     <string name="alarminxmin">Ejecutar alarma en %1$d min</string>
     <string name="bolusadvisor">Asistente de bolo</string>
-    <string name="bolusadvisormessage">Usted tiene alta glicemia. En lugar de comer ahora se recomienda esperar a una mejor glicemia. ¿Quieres hacer un bolo de corrección ahora y recibir una nota cuándo es el momento de comer? En este caso no se grabarán carbohidratos y se debe volver a utilizar el asistente cuando lo recordamos.</string>
+    <string name="bolusadvisormessage">Tienes la glucosa alta. En lugar de comer ahora, se recomienda esperar a tener un mejor valor de glucosa. ¿Quieres poner un bolo de corrección ahora y recibir un aviso cuando sea un buen momento para comer? En este caso no se registrarán los carbohidratos y deberás utilizar el asistente de bolos después de recibir la notificación</string>
     <string name="enablebolusadvisor">Habilitar asistente de bolo</string>
     <string name="enablebolusadvisor_summary">Utiliza un recordatorio para empezar a comer más tarde, en lugar del resultado del asistente durante una glucemia alta (\"pre-bolo\")</string>
     <string name="time_to_eat">¡Hora de comer!\nEjecutar el asistente de bolo y calcular de nuevo.</string>
@@ -1006,4 +1006,5 @@
     <string name="show_loop_records">Mostrar registros del lazo</string>
     <string name="show_hide_records">Ocultar registros del lazo</string>
     <string name="widget_description">Widget de AndroidAPS</string>
+    <string name="configure">Configurar opacidad</string>
 </resources>

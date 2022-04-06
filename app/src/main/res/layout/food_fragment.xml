@@ -16,38 +16,29 @@
         android:text="@string/refresheventsfromnightscout"
         tools:visibility="visible" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="wrap_content"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/filterinputLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/filter"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            app:srcCompat="@android:drawable/ic_menu_search" />
+            android:hint="@string/filter"
+            app:startIconDrawable="@android:drawable/ic_menu_search"
+            app:endIconMode="clear_text">
 
-        <EditText
-            android:id="@+id/filter"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:autofillHints="@string/filter"
-            android:ems="10"
-            android:inputType="text"
-            android:text="" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/filter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:autofillHints="@string/notes_label"
+                android:gravity="start"
+                android:textStyle="bold"
+                android:inputType="text|textCapSentences" />
 
-        <ImageView
-            android:id="@+id/clearfilter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/clear_filter"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
-    </LinearLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
@@ -55,16 +46,13 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
-        android:hint="@string/category"
-        app:boxStrokeColor="@color/list_delimiter">
+        android:hint="@string/category">
 
-        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
             android:id="@+id/categoryList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clickable="true"
-            android:enabled="false"
-            tools:ignore="KeyboardInaccessibleWidget" />
+            android:inputType="none" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -74,16 +62,13 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
-        android:hint="@string/subcategory"
-        app:boxStrokeColor="@color/list_delimiter">
+        android:hint="@string/subcategory">
 
-        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
             android:id="@+id/subcategoryList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clickable="true"
-            android:enabled="false"
-            tools:ignore="KeyboardInaccessibleWidget" />
+            android:inputType="none" />
 
     </com.google.android.material.textfield.TextInputLayout>
 

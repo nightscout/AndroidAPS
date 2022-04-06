@@ -1005,4 +1005,6 @@
     <string name="above" comment="above &quot;in range&quot;">Over</string>
     <string name="show_loop_records">Vis loop registreringer</string>
     <string name="show_hide_records">Skjul loop registreringer</string>
+    <string name="widget_description">AndroidAPS widget</string>
+    <string name="configure">Konfigurer gjennomsiktighet</string>
 </resources>

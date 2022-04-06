@@ -169,9 +169,9 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     @Override
     public boolean isThisProfileSet(@NonNull Profile profile) {
         if (!isInitialized())
-            return true; // TODO: not sure what's better. so far TRUE to prevent too many SMS
+            return true;
         if (danaPump.getPumpProfiles() == null)
-            return true; // TODO: not sure what's better. so far TRUE to prevent too many SMS
+            return true;
         int basalValues = danaPump.getBasal48Enable() ? 48 : 24;
         int basalIncrement = danaPump.getBasal48Enable() ? 30 * 60 : 60 * 60;
         for (int h = 0; h < basalValues; h++) {

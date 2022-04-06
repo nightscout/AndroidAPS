@@ -211,34 +211,9 @@
 
         </LinearLayout>
 
-        <LinearLayout
+        <include
             android:id="@+id/notes_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:labelFor="@+id/notes"
-                android:padding="10dp"
-                android:text="@string/notes_label"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/notes"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:autofillHints="@string/notes_label"
-                android:gravity="start"
-                android:inputType="text|textCapSentences"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-
-        </LinearLayout>
+            layout="@layout/notes" />
 
         <LinearLayout
             android:id="@+id/checkbox_row"
@@ -407,18 +382,15 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:layout_marginEnd="5dp"
-                    android:hint="@string/profile"
-                    android:paddingStart="7dp"
                     android:layout_weight="0.5"
-                    app:boxStrokeColor="@color/list_delimiter">
+                    android:hint="@string/profile"
+                    android:paddingStart="7dp">
 
-                    <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
                         android:id="@+id/profileList"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:enabled="false"
-                        tools:ignore="KeyboardInaccessibleWidget" />
+                        android:inputType="none" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 

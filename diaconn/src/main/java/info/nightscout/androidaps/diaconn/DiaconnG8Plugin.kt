@@ -224,8 +224,8 @@ class DiaconnG8Plugin @Inject constructor(
     }
 
     override fun isThisProfileSet(profile: Profile): Boolean {
-        if (!isInitialized()) return true // TODO: not sure what's better. so far TRUE to prevent too many SMS
-        if (diaconnG8Pump.pumpProfiles == null) return true // TODO: not sure what's better. so far TRUE to prevent too many SMS
+        if (!isInitialized()) return true
+        if (diaconnG8Pump.pumpProfiles == null) return true
         val basalValues = 24
         val basalIncrement =  60 * 60
         for (h in 0 until basalValues) {
