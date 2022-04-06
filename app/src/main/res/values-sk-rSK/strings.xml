@@ -1006,4 +1006,5 @@
     <string name="show_loop_records">Zobraziť záznamy uzavretého okruhu</string>
     <string name="show_hide_records">Skryť záznamy uzavretého okruhu</string>
     <string name="widget_description">AndroidAPS widget</string>
+    <string name="configure">Konfigurovať priehľadnosť</string>
 </resources>
