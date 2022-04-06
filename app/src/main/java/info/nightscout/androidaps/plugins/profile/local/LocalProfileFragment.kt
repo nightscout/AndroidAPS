@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import com.google.android.material.tabs.TabLayout
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
@@ -105,30 +106,16 @@ class LocalProfileFragment : DaggerFragment() {
         val parentClass = this.activity?.let { it::class.java }
         inMenu = parentClass == SingleFragmentActivity::class.java
         updateProtectedUi()
-        // activate DIA tab
-        processVisibilityOnClick(binding.diaTab)
-        binding.diaPlaceholder.visibility = View.VISIBLE
-        // setup listeners
-        binding.diaTab.setOnClickListener {
-            processVisibilityOnClick(it)
-            binding.diaPlaceholder.visibility = View.VISIBLE
-        }
-        binding.icTab.setOnClickListener {
-            processVisibilityOnClick(it)
-            binding.ic.visibility = View.VISIBLE
-        }
-        binding.isfTab.setOnClickListener {
-            processVisibilityOnClick(it)
-            binding.isf.visibility = View.VISIBLE
-        }
-        binding.basalTab.setOnClickListener {
-            processVisibilityOnClick(it)
-            binding.basal.visibility = View.VISIBLE
-        }
-        binding.targetTab.setOnClickListener {
-            processVisibilityOnClick(it)
-            binding.target.visibility = View.VISIBLE
-        }
+        processVisibility(0)
+        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                processVisibility(tab.position)
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
+            override fun onTabReselected(tab: TabLayout.Tab) {}
+        })
+
         binding.dia.editText?.id?.let { binding.diaLabel.labelFor = it }
 
         binding.unlock.setOnClickListener { queryProtection() }
@@ -400,18 +387,12 @@ class LocalProfileFragment : DaggerFragment() {
         }
     }
 
-    private fun processVisibilityOnClick(selected: View) {
-        binding.diaTab.setBackgroundColor(rh.gac(context, R.attr.defaultbackground))
-        binding.icTab.setBackgroundColor(rh.gac(context, R.attr.defaultbackground))
-        binding.isfTab.setBackgroundColor(rh.gac(context, R.attr.defaultbackground))
-        binding.basalTab.setBackgroundColor(rh.gac(context, R.attr.defaultbackground))
-        binding.targetTab.setBackgroundColor(rh.gac(context, R.attr.defaultbackground))
-        selected.setBackgroundColor(rh.gac(context, R.attr.tabBgColorSelected))
-        binding.diaPlaceholder.visibility = View.GONE
-        binding.ic.visibility = View.GONE
-        binding.isf.visibility = View.GONE
-        binding.basal.visibility = View.GONE
-        binding.target.visibility = View.GONE
+    private fun processVisibility(position: Int) {
+        binding.diaPlaceholder.visibility = (position == 0).toVisibility()
+        binding.ic.visibility  = (position == 1).toVisibility()
+        binding.isf.visibility  = (position == 2).toVisibility()
+        binding.basal.visibility  = (position == 3).toVisibility()
+        binding.target.visibility  = (position == 4).toVisibility()
     }
 
     private fun updateProtectedUi() {
