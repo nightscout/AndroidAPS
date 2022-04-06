@@ -130,7 +130,7 @@ class WizardDialog : DaggerDialogFragment() {
         val useSuperBolus = sp.getBoolean(R.string.key_usesuperbolus, false)
         binding.sbCheckbox.visibility = useSuperBolus.toVisibility()
         binding.superBolusRow.visibility = useSuperBolus.toVisibility()
-        binding.notesLayout.visibility = sp.getBoolean(R.string.key_show_notes_entry_dialogs, false).toVisibility()
+        binding.notesLayout.root.visibility = sp.getBoolean(R.string.key_show_notes_entry_dialogs, false).toVisibility()
 
         val maxCarbs = constraintChecker.getMaxCarbsAllowed().value()
         val maxCorrection = constraintChecker.getMaxBolusAllowed().value()
@@ -327,7 +327,7 @@ class WizardDialog : DaggerDialogFragment() {
             binding.carbsInput.value = carbsPassedIntoWizard
         }
         if (notesPassedIntoWizard.isNotBlank()) {
-            binding.notes.setText(notesPassedIntoWizard)
+            binding.notesLayout.notes.setText(notesPassedIntoWizard)
         }
         val profile = profileFunction.getProfile()
         val profileStore = activePlugin.activeProfileSource.profile
@@ -427,7 +427,7 @@ class WizardDialog : DaggerDialogFragment() {
             binding.ttCheckbox.isChecked,
             binding.bgTrendCheckbox.isChecked,
             binding.alarm.isChecked,
-            binding.notes.text.toString(),
+            binding.notesLayout.notes.text.toString(),
             carbTime,
             usePercentage = usePercentage,
             totalPercentage = percentageCorrection

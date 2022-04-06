@@ -21,10 +21,7 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:boxStrokeColor="@color/mtrl_textinput_default_box_stroke_color"
             android:hint="@string/filter"
-            android:textColorHint="?attr/colorOnPrimary"
-            app:hintTextColor="?attr/colorOnPrimary"
             app:startIconDrawable="@android:drawable/ic_menu_search"
             app:endIconMode="clear_text">
 
