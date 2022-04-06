@@ -1006,4 +1006,5 @@
     <string name="show_loop_records">显示闭环记录</string>
     <string name="show_hide_records">隐藏闭环记录</string>
     <string name="widget_description">AndroidAPS小部件</string>
+    <string name="configure">配置透明度</string>
 </resources>
