@@ -319,7 +319,7 @@ public class AreaGraphSeries<E extends DoubleDataPoint> extends BaseSeries<E> {
                 //fix: last value not drawn as datapoint. Draw first point here, and then on every step the end values (above)
                 //float first_X = (float) x + (graphLeft + 1);
                 //float first_Y = (float) (graphTop - y) + graphHeight;
-                //TODO canvas.drawCircle(first_X, first_Y, dataPointsRadius, mPaint);
+                // canvas.drawCircle(first_X, first_Y, dataPointsRadius, mPaint);
             }
             lastEndY1 = orgY1;
             lastEndY2 = orgY2;
