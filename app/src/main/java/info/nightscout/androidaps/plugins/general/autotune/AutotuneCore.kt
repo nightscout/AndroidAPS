@@ -241,23 +241,21 @@ class AutotuneCore(private val injector: HasAndroidInjector) {
             }
         }
         //autotune-core (lib/autotune/index.js) #267-#294
-        if (pumpBasalProfile != null) {
-            for (hour in 0..23) {
-                //log.debug(newHourlyBasalProfile[hour],hourlyPumpProfile[hour].rate*1.2);
-                // cap adjustments at autosens_max and autosens_min
-                val maxRate = pumpBasalProfile[hour] * autotuneMax
-                val minRate = pumpBasalProfile[hour] * autotuneMin
-                if (newHourlyBasalProfile[hour] > maxRate) {
-                    log("Limiting hour " + hour + " basal to " + Round.roundTo(maxRate, 0.01) + " (which is " + Round.roundTo(autotuneMax, 0.01) + " * pump basal of " + pumpBasalProfile[hour] + ")")
-                    //log.debug("Limiting hour",hour,"basal to",maxRate.toFixed(2),"(which is 20% above pump basal of",hourlyPumpProfile[hour].rate,")");
-                    newHourlyBasalProfile[hour] = maxRate
-                } else if (newHourlyBasalProfile[hour] < minRate) {
-                    log("Limiting hour " + hour + " basal to " + Round.roundTo(minRate, 0.01) + " (which is " + autotuneMin + " * pump basal of " + newHourlyBasalProfile[hour] + ")")
-                    //log.debug("Limiting hour",hour,"basal to",minRate.toFixed(2),"(which is 20% below pump basal of",hourlyPumpProfile[hour].rate,")");
-                    newHourlyBasalProfile[hour] = minRate
-                }
-                newHourlyBasalProfile[hour] = Round.roundTo(newHourlyBasalProfile[hour], 0.001)
+        for (hour in 0..23) {
+            //log.debug(newHourlyBasalProfile[hour],hourlyPumpProfile[hour].rate*1.2);
+            // cap adjustments at autosens_max and autosens_min
+            val maxRate = pumpBasalProfile[hour] * autotuneMax
+            val minRate = pumpBasalProfile[hour] * autotuneMin
+            if (newHourlyBasalProfile[hour] > maxRate) {
+                log("Limiting hour " + hour + " basal to " + Round.roundTo(maxRate, 0.01) + " (which is " + Round.roundTo(autotuneMax, 0.01) + " * pump basal of " + pumpBasalProfile[hour] + ")")
+                //log.debug("Limiting hour",hour,"basal to",maxRate.toFixed(2),"(which is 20% above pump basal of",hourlyPumpProfile[hour].rate,")");
+                newHourlyBasalProfile[hour] = maxRate
+            } else if (newHourlyBasalProfile[hour] < minRate) {
+                log("Limiting hour " + hour + " basal to " + Round.roundTo(minRate, 0.01) + " (which is " + autotuneMin + " * pump basal of " + newHourlyBasalProfile[hour] + ")")
+                //log.debug("Limiting hour",hour,"basal to",minRate.toFixed(2),"(which is 20% below pump basal of",hourlyPumpProfile[hour].rate,")");
+                newHourlyBasalProfile[hour] = minRate
             }
+            newHourlyBasalProfile[hour] = Round.roundTo(newHourlyBasalProfile[hour], 0.001)
         }
 
         // some hours of the day rarely have data to tune basals due to meals.

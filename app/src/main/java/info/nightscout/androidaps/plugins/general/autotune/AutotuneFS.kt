@@ -63,11 +63,15 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
      * between each run of autotune, clean autotune folder content
      *****************************************************************************/
     fun deleteAutotuneFiles() {
-        for (file in autotunePath.listFiles()) {
-            if (file.isFile) file.delete()
+        autotunePath.listFiles()?.let { listFiles ->
+            for (file in listFiles) {
+                if (file.isFile) file.delete()
+            }
         }
-        for (file in autotuneSettings.listFiles()) {
-            if (file.isFile) file.delete()
+        autotuneSettings.listFiles()?.let { listFiles ->
+            for (file in listFiles) {
+                if (file.isFile) file.delete()
+            }
         }
         log("Delete previous Autotune files")
     }
@@ -168,23 +172,25 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
     companion object {
         const val BUFFER_SIZE = 2048
         private fun zipDirectory(folder: File, parentFolder: String, out: ZipOutputStream) {
-            for (file in folder.listFiles()) {
-                if (file.isDirectory) {
-                    zipDirectory(file, parentFolder + "/" + file.name, out)
-                    continue
-                }
-                try {
-                    out.putNextEntry(ZipEntry(parentFolder + "/" + file.name))
-                    val bis = BufferedInputStream(FileInputStream(file))
-                    //long bytesRead = 0;
-                    val bytesIn = ByteArray(BUFFER_SIZE)
-                    var read: Int
-                    while (bis.read(bytesIn).also { read = it } != -1) {
-                        out.write(bytesIn, 0, read)
+            folder.listFiles()?.let { listFiles ->
+                for (file in listFiles) {
+                    if (file.isDirectory) {
+                        zipDirectory(file, parentFolder + "/" + file.name, out)
+                        continue
                     }
-                    out.closeEntry()
-                } catch (e: IOException) {
-                    //log.error("Unhandled exception", e);
+                    try {
+                        out.putNextEntry(ZipEntry(parentFolder + "/" + file.name))
+                        val bis = BufferedInputStream(FileInputStream(file))
+                        //long bytesRead = 0;
+                        val bytesIn = ByteArray(BUFFER_SIZE)
+                        var read: Int
+                        while (bis.read(bytesIn).also { read = it } != -1) {
+                            out.write(bytesIn, 0, read)
+                        }
+                        out.closeEntry()
+                    } catch (e: IOException) {
+                        //log.error("Unhandled exception", e);
+                    }
                 }
             }
         }

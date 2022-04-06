@@ -318,8 +318,8 @@ class AutotuneIob(
                 TherapyEvent.Type.TEMPORARY_BASAL  ->
                     temporaryBasal?.let { tbr ->
                         val profile = profileFunction.getProfile(tbr.timestamp)
-                        profile?.let { profile ->
-                            tbr.toJson(true, profile, dateUtil)
+                        profile?.let {
+                            tbr.toJson(true, it, dateUtil)
                         }
                     }
                 TherapyEvent.Type.COMBO_BOLUS      ->

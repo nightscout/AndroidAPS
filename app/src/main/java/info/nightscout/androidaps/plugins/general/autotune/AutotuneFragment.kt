@@ -102,7 +102,7 @@ class AutotuneFragment : DaggerFragment() {
             lastRun = autotunePlugin.lastRun
             updateGui()
         }
-        binding.profileList.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+        binding.profileList.onItemClickListener = AdapterView.OnItemClickListener { _, _, _, _ ->
             profileName = if (binding.profileList.text.toString() == rh.gs(R.string.active)) "" else binding.profileList.text.toString()
             profile = ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(it) } ?:profileFunction.getProfile(), LocalInsulin(""), injector)
             resetParam()
