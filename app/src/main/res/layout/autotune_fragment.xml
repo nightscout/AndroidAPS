@@ -61,13 +61,11 @@
                     android:textSize="14sp"
                     app:boxStrokeColor="@color/list_delimiter">
 
-                    <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
                         android:id="@+id/profileList"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:enabled="false"
-                        tools:ignore="KeyboardInaccessibleWidget" />
+                        android:inputType="none" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -76,6 +74,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:paddingTop="5dp"
                 android:orientation="horizontal">
 
                 <TextView
