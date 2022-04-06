@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:ns2="http://schemas.android.com/tools">
 
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!---Example light theme colors -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorOnPrimary">@color/black</item>
@@ -234,6 +234,18 @@
         <!-- CardView specific colors  -->
         <item name="strokeColor">@color/plastic_grey</item>
         <item name="textAppearancemediumColor">@color/textAppearancemediumLight</item>
+        <!-- Actionbar  -->
+        <item name="actionBarStyle">@style/Aaps_ActionBarStyle</item>
+    </style>
+
+    <style name="Aaps_ActionBarStyle" parent="@style/Widget.AppCompat.ActionBar">
+        <item name="android:titleTextStyle">@style/Theme.Aaps.ActionBar.TitleTextStyle</item>
+        <item name="backgroundColor">?attr/backgroundColor</item>
+    </style>
+
+    <style name="Theme.Aaps.ActionBar.TitleTextStyle"
+        parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">?attr/defaultTextColor</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>

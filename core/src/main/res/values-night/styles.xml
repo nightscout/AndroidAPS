@@ -226,6 +226,18 @@
         <!-- CardView specific colors  -->
         <item name="strokeColor">@color/plastic_grey</item>
         <item name="textAppearancemediumColor">@color/textAppearancemediumDark</item>
+        <!-- Actionbar  -->
+        <item name="actionBarStyle">@style/Aaps_ActionBarStyle</item>
+    </style>
+
+    <style name="Aaps_ActionBarStyle" parent="@style/Widget.AppCompat.ActionBar">
+        <item name="android:titleTextStyle">@style/Theme.Aaps.ActionBar.TitleTextStyle</item>
+        <item name="backgroundColor">?attr/backgroundColor</item>
+    </style>
+
+    <style name="Theme.Aaps.ActionBar.TitleTextStyle"
+        parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">?attr/defaultTextColor</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>
