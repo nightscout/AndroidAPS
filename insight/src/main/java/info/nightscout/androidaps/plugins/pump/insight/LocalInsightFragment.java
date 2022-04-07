@@ -37,7 +37,7 @@ import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.rx.AapsSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 public class LocalInsightFragment extends DaggerFragment implements View.OnClickListener {
     @Inject LocalInsightPlugin localInsightPlugin;
@@ -289,7 +289,7 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
         if (cartridgeStatus == null) return;
         String status;
         if (cartridgeStatus.isInserted())
-            status = DecimalFormatter.INSTANCE.to2Decimal(localInsightPlugin.getCartridgeStatus().getRemainingAmount()) + "U";
+            status = DecimalFormatter.INSTANCE.to2Decimal(cartridgeStatus.getRemainingAmount()) + "U";
         else status = rh.gs(R.string.not_inserted);
         statusItems.add(getStatusItem(rh.gs(R.string.reservoir_label), status));
     }

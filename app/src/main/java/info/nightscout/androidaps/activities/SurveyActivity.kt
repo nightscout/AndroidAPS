@@ -43,9 +43,9 @@ class SurveyActivity : NoSplashAppCompatActivity() {
         val profileList = profileStore?.getProfileList() ?: return
         binding.spinner.adapter = ArrayAdapter(this, R.layout.spinner_centered, profileList)
 
-        binding.tdds.text = tddCalculator.stats()
-        binding.tir.text = tirCalculator.stats()
-        binding.activity.text = activityMonitor.stats()
+        //binding.tdds.text = tddCalculator.stats()
+        //binding.tir.text = tirCalculator.stats()
+        //binding.activity.text = activityMonitor.stats()
 
         binding.profile.setOnClickListener {
             val age = SafeParse.stringToDouble(binding.age.text.toString())
@@ -104,7 +104,7 @@ class SurveyActivity : NoSplashAppCompatActivity() {
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         aapsLogger.debug(LTag.CORE, "signInAnonymously:success")
-                        //val user = auth.currentUser // TODO: do we need this, seems unused?
+                        //val user = auth.currentUser // do we need this, seems unused?
 
                         val database = FirebaseDatabase.getInstance().reference
                         database.child("survey").child(r.id).setValue(r)

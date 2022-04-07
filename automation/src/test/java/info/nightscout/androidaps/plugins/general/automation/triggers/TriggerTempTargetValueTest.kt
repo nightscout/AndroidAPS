@@ -6,7 +6,7 @@ import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Single
 import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Before

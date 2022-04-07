@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:layout_margin="1dp"
-    card_view:cardBackgroundColor="@color/cardColorBackground"
+    card_view:cardBackgroundColor="?attr/notificationUrgent"
     card_view:cardCornerRadius="6dp">
 
     <LinearLayout
@@ -22,14 +22,18 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:layout_weight="1"
+            android:textColor="?attr/colorOnError"
             android:maxLines="4"
+            android:textStyle="bold"
             android:text="Notification text. Notification text. Notification text. Notification text. Notification text. Notification text. "
             tools:ignore="HardcodedText" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
+            style="@style/GrayButton"
             android:id="@+id/dismiss"
             android:layout_width="wrap_content"
-            android:layout_height="35dp"
+            android:layout_height="wrap_content"
+            android:minHeight="0dp"
             android:text="@string/dismiss" />
 
     </LinearLayout>

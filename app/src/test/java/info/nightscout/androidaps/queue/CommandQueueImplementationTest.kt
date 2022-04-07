@@ -30,7 +30,7 @@ import info.nightscout.androidaps.utils.buildHelper.BuildHelperImpl
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.sharedPreferences.SP
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Single
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -137,6 +137,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         val percentageConstraint = Constraint(0)
         `when`(constraintChecker.applyBasalPercentConstraints(anyObject(), anyObject())).thenReturn(percentageConstraint)
         `when`(rh.gs(R.string.connectiontimedout)).thenReturn("Connection timed out")
+        `when`(rh.gs(R.string.formatinsulinunits)).thenReturn("%1\$.2f U")
     }
 
     @Test

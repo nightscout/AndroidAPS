@@ -77,10 +77,16 @@ class FabricPrivacy @Inject constructor(
         }
     }
 
+    // Crashlytics log message
+    fun logMessage(message: String) {
+        aapsLogger.info(LTag.CORE,"Crashlytics log message: $message")
+        FirebaseCrashlytics.getInstance().log(message)
+    }
+
     // Crashlytics logException
     fun logException(throwable: Throwable) {
+        aapsLogger.error("Crashlytics log exception: ", throwable)
         FirebaseCrashlytics.getInstance().recordException(throwable)
-        aapsLogger.error("Exception: ", throwable)
     }
 
     fun fabricEnabled(): Boolean {

@@ -2,14 +2,20 @@ package info.nightscout.androidaps.utils
 
 import android.app.Activity
 import android.app.Application
+import android.content.Context
+import android.graphics.Typeface
 import android.os.Bundle
-import android.text.Spanned
+import android.view.Gravity
+import android.view.ViewGroup
+import android.widget.TableLayout
+import android.widget.TableRow
+import android.widget.TextView
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.shared.SafeParse
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.SafeParse
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -58,24 +64,47 @@ class ActivityMonitor @Inject constructor(
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
     }
 
-    private fun toText(): String {
-        val keys: Map<String, *> = sp.getAll()
-        var result = ""
-        for ((key, value) in keys)
-            if (key.startsWith("Monitor") && key.endsWith("total")) {
-                val v = if (value is Long) value else SafeParse.stringToLong(value as String)
-                val activity = key.split("_")[1].replace("Activity", "")
-                val duration = dateUtil.niceTimeScalar(v, rh)
-                val start = sp.getLong(key.replace("total", "start"), 0)
-                val days = T.msecs(dateUtil.now() - start).days()
-                result += rh.gs(R.string.activitymonitorformat, activity, duration, days)
-            }
-        return result
-    }
+    fun stats(context: Context): TableLayout =
+        TableLayout(context).also { layout ->
+            layout.layoutParams = TableLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
+            layout.addView(
+                TextView(context).apply {
+                    text = rh.gs(R.string.activitymonitor)
+                    setTypeface(typeface, Typeface.BOLD)
+                    gravity = Gravity.CENTER_HORIZONTAL
+                    setTextAppearance(android.R.style.TextAppearance_Material_Medium)
+                })
+            layout.addView(
+                TableRow(context).also { row ->
+                    val lp = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT).apply { weight = 1f }
+                    row.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT)
+                    row.gravity = Gravity.CENTER_HORIZONTAL
+                    row.addView(TextView(context).apply { layoutParams = lp.apply { column = 0 }; text = rh.gs(R.string.activity) })
+                    row.addView(TextView(context).apply { layoutParams = lp.apply { column = 1 }; text = rh.gs(R.string.duration) })
+                    row.addView(TextView(context).apply { layoutParams = lp.apply { column = 2 } })
+                }
+            )
 
-    fun stats(): Spanned {
-        return HtmlHelper.fromHtml("<br><b>" + rh.gs(R.string.activitymonitor) + ":</b><br>" + toText())
-    }
+            val keys: Map<String, *> = sp.getAll()
+            for ((key, value) in keys)
+                if (key.startsWith("Monitor") && key.endsWith("total")) {
+                    val v = if (value is Long) value else SafeParse.stringToLong(value as String)
+                    val activity = key.split("_")[1].replace("Activity", "")
+                    val duration = dateUtil.niceTimeScalar(v, rh)
+                    val start = sp.getLong(key.replace("total", "start"), 0)
+                    val days = T.msecs(dateUtil.now() - start).days()
+                    layout.addView(
+                        TableRow(context).also { row ->
+                            val lp = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT).apply { weight = 1f }
+                            row.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT)
+                            row.gravity = Gravity.CENTER_HORIZONTAL
+                            row.addView(TextView(context).apply { layoutParams = lp.apply { column = 0 }; text = activity })
+                            row.addView(TextView(context).apply { layoutParams = lp.apply { column = 1 }; text = duration })
+                            row.addView(TextView(context).apply { layoutParams = lp.apply { column = 2 }; text = rh.gs(R.string.in_days, days.toDouble()) })
+                        }
+                    )
+                }
+        }
 
     fun reset() {
         val keys: Map<String, *> = sp.getAll()

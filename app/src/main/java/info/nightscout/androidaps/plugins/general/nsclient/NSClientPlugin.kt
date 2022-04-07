@@ -38,7 +38,7 @@ import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.sharedPreferences.SP
-import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -154,11 +154,12 @@ class NSClientPlugin @Inject constructor(
 //            preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_sync_use_absolute))?.isVisible = false
         } else {
             // APS or pumpControl mode
-            preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_receive_profile_switch))?.isVisible = buildHelper.isEngineeringMode()
-            preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_receive_insulin))?.isVisible = buildHelper.isEngineeringMode()
-            preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_receive_carbs))?.isVisible = buildHelper.isEngineeringMode()
-            preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_receive_temp_target))?.isVisible = buildHelper.isEngineeringMode()
+//            preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_receive_profile_switch))?.isVisible = buildHelper.isEngineeringMode()
+//            preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_receive_insulin))?.isVisible = buildHelper.isEngineeringMode()
+//            preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_receive_carbs))?.isVisible = buildHelper.isEngineeringMode()
+//            preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_receive_temp_target))?.isVisible = buildHelper.isEngineeringMode()
         }
+        preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_receive_tbr_eb))?.isVisible = buildHelper.isEngineeringMode()
     }
 
     private val mConnection: ServiceConnection = object : ServiceConnection {
@@ -169,8 +170,7 @@ class NSClientPlugin @Inject constructor(
 
         override fun onServiceConnected(name: ComponentName, service: IBinder) {
             aapsLogger.debug(LTag.NSCLIENT, "Service is connected")
-            val mLocalBinder = service as NSClientService.LocalBinder
-            @Suppress("UNNECESSARY_SAFE_CALL")
+            val mLocalBinder = service as NSClientService.LocalBinder?
             nsClientService = mLocalBinder?.serviceInstance // is null when running in roboelectric
         }
     }

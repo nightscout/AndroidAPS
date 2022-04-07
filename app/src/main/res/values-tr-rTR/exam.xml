@@ -104,11 +104,11 @@
     <string name="troubleshooting_wheretoask">AndroidAPS ile ilgili nereden yardım alabilirsiniz?</string>
     <string name="troubleshooting_fb">AndroidAPS Kullanıcıları Facebook grubundan tavsiye isteyebilirsiniz.</string>
     <string name="troubleshooting_wiki">AndroidAPS belgelerini okumalısınız (ve yeniden okumalısınız).</string>
-    <string name="troubleshooting_gitter">AndroidAPS Gitter odasından tavsiye isteyebilir ve teknik problemleri veya sorunları not edebilirsiniz.</string>
+    <string name="troubleshooting_gitter">AndroidAPS Discord\'da tavsiye isteyebilir ve teknik sorunları veya hataları bildirebilirsiniz.</string>
     <string name="troubleshooting_yourendo">Diyabet kliniğinize/endokrinoloğunuza sormalısınız.</string>
     <string name="troubleshooting_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
-    <string name="troubleshooting_hint3">https://gitter.im/MilosKozak/AndroidAPS</string>
+    <string name="troubleshooting_hint3">https://discord.gg/4fQUWHZ4Mw</string>
     <string name="insulin_label">İnsülin Eklentileri</string>
     <string name="insulin_ultrarapid">Ultra-Hızlı Oref eklentisi ile hangi insülini kullanmalısınız?</string>
     <string name="insulin_fiasp">Fiasp®</string>
@@ -131,7 +131,7 @@
     <string name="wrongcarbs_bolus">Genel Bakış\'ta İnsülin (bolus) düğmesini kullanarak insülin gönderme.</string>
     <string name="wronginsulin_label">İnsülin gönderme/giriş hataları</string>
     <string name="wronginsulin_whattodo">Tıkanma, başarısız bir kanül veya duştan sonra pompayı tekrar takmayı unutma v.s. nedeniyle, pompa geçmişinin önerdiğinden daha az insülin aldıysanız ne yapmalısınız?</string>
-    <string name="wronginsulin_careportal">Pompa geçmişinden çıkarmak için insülin verilerini Nightscout Careportal\'dan silerim.</string>
+    <string name="wronginsulin_careportal">Pompa geçmişinden çıkarmak için insülin verilerini Nightscout Bakım Portalından silin.</string>
     <string name="wronginsulin_compare">AndroidAPS ve pompa geçmişindeki değerleri karşılaştırın (pompa bunu destekliyorsa).</string>
     <string name="wronginsulin_prime">Şırınga/kalem veya başlatma kullanarak hesaplanan \"eksik\" insülininizi bolus olarak karşılayın.</string>
     <string name="wronginsulin_donothing">Hiçbir şey yapmayın ve AndroidAPS\'in ortaya çıkabilecek yüksek kan şekeri seviyesini düzeltmesine müsade edin.</string>
@@ -171,7 +171,7 @@
     <string name="isf_hint2">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html</string>
     <string name="ic_multiple">Profilinizde I:C oranı için birden fazla değer kullanabilirsiniz.</string>
     <string name="ic_isf">Profilinizde ISF\'nizi değiştirirseniz, her zaman I:C oranınızı da değiştirmelisiniz.</string>
-    <string name="ic_label_exam">İnsülin/Karbonhidrat Oranı (I:C oranı)</string>
+    <string name="ic_label_exam">Karbonhidrat insülin Oranı (I:C oranı)</string>
     <string name="ic_increasingvalue">Daha yüksek I:C oranları, belirli bir miktarda karbonhidrat için daha az insülin verilmesine yol açar.</string>
     <string name="ic_decreasingvalue">Daha düşük I:C oranları, belirli bir miktarda karbonhidrat için daha az insülin verilmesine yol açar.</string>
     <string name="ic_noeffect">0 COB\'niz varsa, IC oranını değiştirmek, belirli bir KŞ değerini düzeltmek için farklı insülin miktarına sebep olur.</string>

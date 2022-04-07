@@ -4,6 +4,7 @@
     <!--    General-->
     <string name="refresh">Aggiorna</string>
     <string name="error">Errore</string>
+    <string name="save">Salva</string>
     <string name="not_set_short">Non impostato</string>
     <string name="failedupdatebasalprofile">Impossibile aggiornare il profilo basale</string>
     <string name="profile_set_ok">Profilo basale aggiornato nel micro</string>
@@ -48,6 +49,7 @@
     <string name="isf_label">ISF</string>
     <string name="basal_label">Basale</string>
     <string name="target_label">Target</string>
+    <string name="basal_long_label">Velocità basale</string>
     <string name="initializing">Inizializzazione...</string>
     <string name="serialnumber">Numero seriale</string>
     <string name="battery_label">Batteria</string>
@@ -168,10 +170,6 @@
     <string name="zerovalueinprofile">Profilo non valido: %1$s</string>
     <!--    Temptarget-->
     <string name="mins">%1$d min</string>
-    <!--    TDD-->
-    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f U</b> Bol: <b>%3$.2f U</b> Bas: <b>%4$.2f U(%5$.0f%%)</b>]]></string>
-    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f U</b> Bol: <b>%3$.2f U</b> Bas: <b>%4$.2f U(%5$.0f%%)</b> CHO: <b>%6$.0f g</b>]]></string>
-    <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> in <b>%3$d</b> giorni<br>]]></string>
     <!--    Translator-->
     <string name="careportal">Portale</string>
     <string name="careportal_bgcheck">Controllo BG</string>

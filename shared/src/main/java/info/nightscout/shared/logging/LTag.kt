@@ -24,5 +24,6 @@ enum class LTag(val tag: String, val defaultValue : Boolean = true, val requires
     SMS("SMS"),
     TIDEPOOL("TIDEPOOL"),
     UI("UI", defaultValue = false),
-    WEAR("WEAR")
+    WEAR("WEAR"),
+    WIDGET("WIDGET")
 }

@@ -20,7 +20,7 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.sharedPreferences.SP
-import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -95,7 +95,7 @@ class WearPlugin @Inject constructor(
             .toObservable(EventBolusRequested::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event: EventBolusRequested ->
-                val status = String.format(rh.gs(R.string.bolusrequested), event.amount)
+                val status = rh.gs(R.string.bolusrequested, event.amount)
                 val intent = Intent(ctx, WatchUpdaterService::class.java).setAction(WatchUpdaterService.ACTION_SEND_BOLUSPROGRESS)
                 intent.putExtra("progresspercent", 0)
                 intent.putExtra("progressstatus", status)

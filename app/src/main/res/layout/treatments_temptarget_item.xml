@@ -12,12 +12,25 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="?android:attr/dividerHorizontal"
+            android:gravity="center"
+            android:text="1.1.2000"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            tools:ignore="HardcodedText" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:baselineAligned="true"
             android:orientation="horizontal">
-
 
             <com.joanzapata.iconify.widget.IconTextView
                 android:layout_width="wrap_content"
@@ -30,7 +43,7 @@
                 tools:ignore="HardcodedText" />
 
             <TextView
-                android:id="@+id/date"
+                android:id="@+id/time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingStart="10dp"
@@ -86,7 +99,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
                 android:text="NS"
-                android:textColor="@color/colorSetTempButton"
+                android:textColor="?attr/setTempButton"
                 tools:ignore="HardcodedText" />
 
         </LinearLayout>
@@ -132,27 +145,27 @@
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
                 android:text="@string/invalid"
-                android:textColor="@android:color/holo_red_light" />
+                android:textColor="?attr/alarmColor" />
 
-            <TextView
-                android:id="@+id/remove"
+            <CheckBox
+                android:id="@+id/cb_remove"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:text="@string/remove_button"
-                android:textAlignment="viewEnd"
-                android:textColor="@android:color/holo_orange_light" />
+                android:layout_height="19dp"
+                android:contentDescription="@string/select_for_removal"
+                android:minWidth="0dp"
+                android:visibility="gone" />
 
         </LinearLayout>
 
         <View
+            android:id="@+id/delimiter"
             android:layout_width="fill_parent"
             android:layout_height="2dip"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/list_delimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
     </LinearLayout>
 

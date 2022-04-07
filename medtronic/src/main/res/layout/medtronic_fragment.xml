@@ -32,7 +32,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:background="@color/pumpStatusBackground"
+                    android:background="?attr/pumpStatusBackground"
                     android:gravity="center_vertical|center_horizontal"
                     android:text="@string/initializing"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -46,21 +46,23 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="5dp"
-                android:background="@color/list_delimiter" />
+                android:background="?android:attr/dividerHorizontal" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:focusable="true">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.5"
                     android:gravity="end"
-                    android:paddingRight="5dp"
+                    android:paddingEnd="5dp"
                     android:text="@string/rileylink_status"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    tools:ignore="RtlSymmetry" />
 
                 <TextView
                     android:layout_width="5dp"
@@ -70,7 +72,8 @@
                     android:paddingStart="2dp"
                     android:paddingEnd="2dp"
                     android:text=":"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    tools:ignore="HardcodedText" />
 
                 <com.joanzapata.iconify.widget.IconTextView
                     android:id="@+id/rl_status"
@@ -78,10 +81,10 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
                     android:text="{fa-bluetooth-b}"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    tools:ignore="HardcodedText,RtlSymmetry" />
 
 
             </LinearLayout>
@@ -95,13 +98,14 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="5dp"
-                android:background="@color/list_delimiter" />
+                android:background="?android:attr/dividerHorizontal" />
 
             <LinearLayout
                 android:id="@+id/rl_battery_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:focusable="true">
 
                 <TextView
                     android:id="@+id/rl_battery_label"
@@ -109,9 +113,10 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1.5"
                     android:gravity="end"
-                    android:paddingRight="5dp"
+                    android:paddingEnd="5dp"
                     android:text="@string/rl_battery_label"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    tools:ignore="RtlSymmetry" />
 
                 <TextView
                     android:id="@+id/rl_battery_semicolon"
@@ -122,7 +127,8 @@
                     android:paddingStart="2dp"
                     android:paddingEnd="2dp"
                     android:text=":"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    tools:ignore="HardcodedText" />
 
                 <com.joanzapata.iconify.widget.IconTextView
                     android:id="@+id/rl_battery_state"
@@ -130,10 +136,10 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
                     android:text=""
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    tools:ignore="RtlSymmetry" />
 
 
             </LinearLayout>
@@ -146,21 +152,23 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="5dp"
-                android:background="@color/list_delimiter" />
+                android:background="?android:attr/dividerHorizontal" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:focusable="true">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.5"
                     android:gravity="end"
-                    android:paddingRight="5dp"
+                    android:paddingEnd="5dp"
                     android:text="@string/medtronic_pump_status"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    tools:ignore="RtlSymmetry" />
 
                 <TextView
                     android:layout_width="5dp"
@@ -170,7 +178,8 @@
                     android:paddingStart="2dp"
                     android:paddingEnd="2dp"
                     android:text=":"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    tools:ignore="HardcodedText" />
 
                 <com.joanzapata.iconify.widget.IconTextView
                     android:id="@+id/pump_status_icon"
@@ -178,10 +187,10 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
                     android:text="{fa-bluetooth-b}"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    tools:ignore="HardcodedText,RtlSymmetry" />
 
 
             </LinearLayout>
@@ -191,7 +200,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="content"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                tools:ignore="HardcodedText" />
 
             <View
                 android:layout_width="fill_parent"
@@ -200,7 +210,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="5dp"
-                android:background="@color/list_delimiter" />
+                android:background="?android:attr/dividerHorizontal" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -212,9 +222,10 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1.5"
                     android:gravity="end"
-                    android:paddingRight="5dp"
+                    android:paddingEnd="5dp"
                     android:text="@string/battery_label"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    tools:ignore="RtlSymmetry" />
 
                 <TextView
                     android:layout_width="5dp"
@@ -224,7 +235,8 @@
                     android:paddingStart="2dp"
                     android:paddingEnd="2dp"
                     android:text=":"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    tools:ignore="HardcodedText" />
 
                 <com.joanzapata.iconify.widget.IconTextView
                     android:id="@+id/pump_state_battery"
@@ -232,10 +244,10 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
                     android:text=""
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    tools:ignore="RtlSymmetry" />
 
 
             </LinearLayout>
@@ -247,21 +259,23 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="5dp"
-                android:background="@color/list_delimiter" />
+                android:background="?android:attr/dividerHorizontal" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:focusable="true">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.5"
                     android:gravity="end"
-                    android:paddingRight="5dp"
+                    android:paddingEnd="5dp"
                     android:text="@string/lastconnection_label"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    tools:ignore="RtlSymmetry" />
 
                 <TextView
                     android:layout_width="5dp"
@@ -271,7 +285,8 @@
                     android:paddingStart="2dp"
                     android:paddingEnd="2dp"
                     android:text=":"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    tools:ignore="HardcodedText" />
 
                 <TextView
                     android:id="@+id/last_connection"
@@ -279,9 +294,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:paddingLeft="5dp"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp" />
+                    android:paddingStart="5dp"
+                    android:textSize="14sp"
+                    tools:ignore="RtlSymmetry" />
 
             </LinearLayout>
 
@@ -292,21 +307,23 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="5dp"
-                android:background="@color/list_delimiter" />
+                android:background="?android:attr/dividerHorizontal" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:focusable="true">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.5"
                     android:gravity="end"
-                    android:paddingRight="5dp"
+                    android:paddingEnd="5dp"
                     android:text="@string/lastbolus_label"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    tools:ignore="RtlSymmetry" />
 
                 <TextView
                     android:layout_width="5dp"
@@ -316,7 +333,8 @@
                     android:paddingStart="2dp"
                     android:paddingEnd="2dp"
                     android:text=":"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    tools:ignore="HardcodedText" />
 
                 <TextView
                     android:id="@+id/last_bolus"
@@ -324,9 +342,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:paddingLeft="5dp"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp" />
+                    android:paddingStart="5dp"
+                    android:textSize="14sp"
+                    tools:ignore="RtlSymmetry" />
 
             </LinearLayout>
 
@@ -338,21 +356,23 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="5dp"
-                android:background="@color/list_delimiter" />
+                android:background="?android:attr/dividerHorizontal" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:focusable="true">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.5"
                     android:gravity="end"
-                    android:paddingRight="5dp"
+                    android:paddingEnd="5dp"
                     android:text="@string/basebasalrate_label"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    tools:ignore="RtlSymmetry" />
 
                 <TextView
                     android:layout_width="5dp"
@@ -362,7 +382,8 @@
                     android:paddingStart="2dp"
                     android:paddingEnd="2dp"
                     android:text=":"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    tools:ignore="HardcodedText" />
 
                 <TextView
                     android:id="@+id/base_basal_rate"
@@ -370,9 +391,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:paddingLeft="5dp"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp" />
+                    android:paddingStart="5dp"
+                    android:textSize="14sp"
+                    tools:ignore="RtlSymmetry" />
 
             </LinearLayout>
 
@@ -383,21 +404,23 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="5dp"
-                android:background="@color/list_delimiter" />
+                android:background="?android:attr/dividerHorizontal" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:focusable="true">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.5"
                     android:gravity="end"
-                    android:paddingRight="5dp"
+                    android:paddingEnd="5dp"
                     android:text="@string/tempbasal_label"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    tools:ignore="RtlSymmetry" />
 
                 <TextView
                     android:layout_width="5dp"
@@ -407,7 +430,8 @@
                     android:paddingStart="2dp"
                     android:paddingEnd="2dp"
                     android:text=":"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    tools:ignore="HardcodedText" />
 
                 <TextView
                     android:id="@+id/temp_basal"
@@ -415,9 +439,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:paddingLeft="5dp"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp" />
+                    android:paddingStart="5dp"
+                    android:textSize="14sp"
+                    tools:ignore="RtlSymmetry" />
 
             </LinearLayout>
 
@@ -428,22 +452,24 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="5dp"
-                android:background="@color/list_delimiter" />
+                android:background="?android:attr/dividerHorizontal" />
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:focusable="true">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.5"
                     android:gravity="end"
-                    android:paddingRight="5dp"
+                    android:paddingEnd="5dp"
                     android:text="@string/reservoir_label"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    tools:ignore="RtlSymmetry" />
 
                 <TextView
                     android:layout_width="5dp"
@@ -453,7 +479,8 @@
                     android:paddingStart="2dp"
                     android:paddingEnd="2dp"
                     android:text=":"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    tools:ignore="HardcodedText" />
 
                 <TextView
                     android:id="@+id/reservoir"
@@ -461,9 +488,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:paddingLeft="5dp"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp" />
+                    android:paddingStart="5dp"
+                    android:textSize="14sp"
+                    tools:ignore="RtlSymmetry" />
 
             </LinearLayout>
 
@@ -475,21 +502,23 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="5dp"
-                android:background="@color/list_delimiter" />
+                android:background="?android:attr/dividerHorizontal" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:focusable="true">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.5"
                     android:gravity="end"
-                    android:paddingRight="5dp"
+                    android:paddingEnd="5dp"
                     android:text="@string/medtronic_errors"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    tools:ignore="RtlSymmetry" />
 
                 <TextView
                     android:layout_width="5dp"
@@ -499,7 +528,8 @@
                     android:paddingStart="2dp"
                     android:paddingEnd="2dp"
                     android:text=":"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    tools:ignore="HardcodedText" />
 
                 <TextView
                     android:id="@+id/errors"
@@ -507,9 +537,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:paddingLeft="5dp"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp" />
+                    android:paddingStart="5dp"
+                    android:textSize="14sp"
+                    tools:ignore="RtlSymmetry" />
 
             </LinearLayout>
 
@@ -520,7 +550,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="5dp"
-                android:background="@color/list_delimiter" />
+                android:background="?android:attr/dividerHorizontal" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -540,7 +570,7 @@
         android:layout_alignParentBottom="true"
         android:orientation="horizontal">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/refresh"
             style="@style/ButtonSmallFontStyle"
             android:layout_width="match_parent"
@@ -552,7 +582,7 @@
             android:text="@string/refresh" />
 
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/history"
             style="@style/ButtonSmallFontStyle"
             android:layout_width="match_parent"
@@ -563,7 +593,7 @@
             android:paddingRight="0dp"
             android:text="@string/pumphistory" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/stats"
             style="@style/ButtonSmallFontStyle"
             android:layout_width="match_parent"

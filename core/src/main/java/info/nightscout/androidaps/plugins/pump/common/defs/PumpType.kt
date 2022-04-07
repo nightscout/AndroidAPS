@@ -52,7 +52,8 @@ enum class PumpType {
         baseBasalStep = 0.01,
         baseBasalSpecialSteps = DoseStepSize.ComboBasal,
         pumpCapability = PumpCapability.ComboCapabilities,
-        source = Sources.Combo),
+        source = Sources.Combo,
+        supportBatteryLevel = false),
     ACCU_CHEK_SPIRIT(description = "Accu-Chek Spirit",
         manufacturer = ManufacturerType.Roche,
         model = "Spirit",
@@ -184,6 +185,9 @@ enum class PumpType {
         baseBasalSpecialSteps = null,
         pumpCapability = PumpCapability.OmnipodCapabilities,
         hasCustomUnreachableAlertCheck = true,
+        isPatchPump = true,
+        useHardwareLink = true,
+        supportBatteryLevel = false,
         source = Sources.OmnipodEros),
     OMNIPOD_DASH(description = "Omnipod Dash",
         manufacturer = ManufacturerType.Insulet,
@@ -198,8 +202,10 @@ enum class PumpType {
         baseBasalMaxValue = null,
         baseBasalStep = 0.05,
         baseBasalSpecialSteps = null,
+        isPatchPump = true,
         pumpCapability = PumpCapability.OmnipodCapabilities,
-        hasCustomUnreachableAlertCheck = false),
+        hasCustomUnreachableAlertCheck = false,
+        supportBatteryLevel = false),
     MEDTRONIC_512_712(description = "Medtronic 512/712",
         manufacturer = ManufacturerType.Medtronic,
         model = "512/712",
@@ -311,7 +317,8 @@ enum class PumpType {
         baseBasalStep = 0.01,
         baseBasalSpecialSteps = null,
         pumpCapability = PumpCapability.DanaWithHistoryCapabilities,
-        source = Sources.DiaconnG8);
+        source = Sources.DiaconnG8,
+        useHardwareLink = true);
 
     val description: String
     var manufacturer: ManufacturerType? = null
@@ -351,6 +358,12 @@ enum class PumpType {
         get() = parent?.pumpCapability ?: field
         private set
     var hasCustomUnreachableAlertCheck = false
+        private set
+    var isPatchPump = false
+        private set
+    var supportBatteryLevel = true
+        private set
+    var useHardwareLink = false
         private set
     private var parent: PumpType? = null
     val source: Sources
@@ -419,6 +432,9 @@ enum class PumpType {
                 baseBasalSpecialSteps: DoseStepSize? = null,
                 pumpCapability: PumpCapability,
                 hasCustomUnreachableAlertCheck: Boolean = false,
+                isPatchPump: Boolean = false,
+                supportBatteryLevel: Boolean = true,
+                useHardwareLink: Boolean = false,
                 source: Sources = Sources.VirtualPump) {
         this.description = description
         this.manufacturer = manufacturer
@@ -435,6 +451,9 @@ enum class PumpType {
         this.baseBasalSpecialSteps = baseBasalSpecialSteps
         this.pumpCapability = pumpCapability
         this.hasCustomUnreachableAlertCheck = hasCustomUnreachableAlertCheck
+        this.isPatchPump = isPatchPump
+        this.supportBatteryLevel = supportBatteryLevel
+        this.useHardwareLink = useHardwareLink
         this.source = source
     }
 

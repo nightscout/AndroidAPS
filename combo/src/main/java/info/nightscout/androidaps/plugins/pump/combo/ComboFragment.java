@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,7 @@ import dagger.android.support.DaggerFragment;
 import info.nightscout.androidaps.combo.R;
 import info.nightscout.androidaps.interfaces.CommandQueue;
 import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.pump.combo.data.ComboErrorUtil;
 import info.nightscout.androidaps.plugins.pump.combo.events.EventComboPumpUpdateGUI;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.PumpState;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.Bolus;
@@ -28,7 +30,7 @@ import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.rx.AapsSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 public class ComboFragment extends DaggerFragment {
     @Inject ComboPlugin comboPlugin;
@@ -38,6 +40,7 @@ public class ComboFragment extends DaggerFragment {
     @Inject DateUtil dateUtil;
     @Inject FabricPrivacy fabricPrivacy;
     @Inject AapsSchedulers aapsSchedulers;
+    @Inject ComboErrorUtil errorUtil;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
 
@@ -52,6 +55,12 @@ public class ComboFragment extends DaggerFragment {
     private Button refreshButton;
     private TextView bolusCount;
     private TextView tbrCount;
+
+    private View errorCountDelimiter;
+    private LinearLayout errorCountLayout;
+    private TextView errorCountLabel;
+    private TextView errorCountDots;
+    private TextView errorCountValue;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -68,6 +77,12 @@ public class ComboFragment extends DaggerFragment {
         tempBasalText = view.findViewById(R.id.combo_temp_basal);
         bolusCount = view.findViewById(R.id.combo_bolus_count);
         tbrCount = view.findViewById(R.id.combo_tbr_count);
+
+        errorCountDelimiter = view.findViewById(R.id.combo_connection_error_delimiter);
+        errorCountLayout = view.findViewById(R.id.combo_connection_error_layout);
+        errorCountLabel = view.findViewById(R.id.combo_connection_error_label);
+        errorCountDots = view.findViewById(R.id.combo_connection_error_dots);
+        errorCountValue = view.findViewById(R.id.combo_connection_error_value);
 
         refreshButton = view.findViewById(R.id.combo_refresh_button);
         refreshButton.setOnClickListener(v -> {
@@ -119,33 +134,33 @@ public class ComboFragment extends DaggerFragment {
         PumpState ps = comboPlugin.getPump().state;
         if (ps.insulinState == PumpState.EMPTY || ps.batteryState == PumpState.EMPTY
                 || ps.activeAlert != null && ps.activeAlert.errorCode != null) {
-            stateView.setTextColor(Color.RED);
+            stateView.setTextColor(rh.gac(getContext(), R.attr.warningColor));
             stateView.setTypeface(null, Typeface.BOLD);
         } else if (comboPlugin.getPump().state.suspended
                 || ps.activeAlert != null && ps.activeAlert.warningCode != null) {
-            stateView.setTextColor(Color.YELLOW);
+            stateView.setTextColor(rh.gac(getContext(), R.attr.omniYellowColor));
             stateView.setTypeface(null, Typeface.BOLD);
         } else {
-            stateView.setTextColor(Color.WHITE);
+            stateView.setTextColor(rh.gac(getContext(), R.attr.defaultTextColor));
             stateView.setTypeface(null, Typeface.NORMAL);
         }
 
         // activity
         String activity = comboPlugin.getPump().activity;
         if (activity != null) {
-            activityView.setTextColor(Color.WHITE);
+            activityView.setTextColor(rh.gac(getContext(), R.attr.defaultTextColor));
             activityView.setTextSize(14);
             activityView.setText(activity);
         } else if (commandQueue.size() > 0) {
-            activityView.setTextColor(Color.WHITE);
+            activityView.setTextColor(rh.gac(getContext(), R.attr.defaultTextColor));
             activityView.setTextSize(14);
             activityView.setText("");
         } else if (comboPlugin.isInitialized()) {
-            activityView.setTextColor(Color.WHITE);
+            activityView.setTextColor(rh.gac(getContext(), R.attr.defaultTextColor));
             activityView.setTextSize(20);
             activityView.setText("{fa-bed}");
         } else {
-            activityView.setTextColor(Color.RED);
+            activityView.setTextColor(rh.gac(getContext(), R.attr.warningColor));
             activityView.setTextSize(14);
             activityView.setText(rh.gs(R.string.pump_unreachable));
         }
@@ -155,10 +170,10 @@ public class ComboFragment extends DaggerFragment {
             batteryView.setTextSize(20);
             if (ps.batteryState == PumpState.EMPTY) {
                 batteryView.setText("{fa-battery-empty}");
-                batteryView.setTextColor(Color.RED);
+                batteryView.setTextColor(rh.gac(getContext(), R.attr.warningColor));
             } else if (ps.batteryState == PumpState.LOW) {
                 batteryView.setText("{fa-battery-quarter}");
-                batteryView.setTextColor(Color.YELLOW);
+                batteryView.setTextColor(rh.gac(getContext(), R.attr.omniYellowColor));
             } else {
                 batteryView.setText("{fa-battery-full}");
                 batteryView.setTextColor(Color.WHITE);
@@ -177,16 +192,16 @@ public class ComboFragment extends DaggerFragment {
             }
 
             if (ps.insulinState == PumpState.UNKNOWN) {
-                reservoirView.setTextColor(Color.WHITE);
+                reservoirView.setTextColor(rh.gac(getContext(), R.attr.defaultTextColor));
                 reservoirView.setTypeface(null, Typeface.NORMAL);
             } else if (ps.insulinState == PumpState.LOW) {
-                reservoirView.setTextColor(Color.YELLOW);
+                reservoirView.setTextColor(rh.gac(getContext(), R.attr.omniYellowColor));
                 reservoirView.setTypeface(null, Typeface.BOLD);
             } else if (ps.insulinState == PumpState.EMPTY) {
-                reservoirView.setTextColor(Color.RED);
+                reservoirView.setTextColor(rh.gac(getContext(), R.attr.warningColor));
                 reservoirView.setTypeface(null, Typeface.BOLD);
             } else {
-                reservoirView.setTextColor(Color.WHITE);
+                reservoirView.setTextColor(rh.gac(getContext(), R.attr.defaultTextColor));
                 reservoirView.setTypeface(null, Typeface.NORMAL);
             }
 
@@ -195,13 +210,13 @@ public class ComboFragment extends DaggerFragment {
             long min = (System.currentTimeMillis() - comboPlugin.getPump().lastSuccessfulCmdTime) / 1000 / 60;
             if (comboPlugin.getPump().lastSuccessfulCmdTime + 60 * 1000 > System.currentTimeMillis()) {
                 lastConnectionView.setText(R.string.combo_pump_connected_now);
-                lastConnectionView.setTextColor(Color.WHITE);
+                lastConnectionView.setTextColor(rh.gac(getContext(), R.attr.defaultTextColor));
             } else if (comboPlugin.getPump().lastSuccessfulCmdTime + 30 * 60 * 1000 < System.currentTimeMillis()) {
                 lastConnectionView.setText(rh.gs(R.string.combo_no_pump_connection, min));
-                lastConnectionView.setTextColor(Color.RED);
+                lastConnectionView.setTextColor(rh.gac(getContext(), R.attr.warningColor));
             } else {
                 lastConnectionView.setText(minAgo);
-                lastConnectionView.setTextColor(Color.WHITE);
+                lastConnectionView.setTextColor(rh.gac(getContext(), R.attr.defaultTextColor));
             }
 
             // last bolus
@@ -240,6 +255,45 @@ public class ComboFragment extends DaggerFragment {
             // stats
             bolusCount.setText(String.valueOf(comboPlugin.getBolusesDelivered()));
             tbrCount.setText(String.valueOf(comboPlugin.getTbrsSet()));
+
+            updateErrorDisplay(false);
+        } else {
+            updateErrorDisplay(true);
+        }
+    }
+
+    private void updateErrorDisplay(boolean forceHide) {
+        int errorCount = -1;
+
+        if (!forceHide) {
+            ComboErrorUtil.DisplayType displayType = errorUtil.getDisplayType();
+
+            if (displayType== ComboErrorUtil.DisplayType.ON_ERROR || displayType== ComboErrorUtil.DisplayType.ALWAYS) {
+                int errorCountInternal = errorUtil.getErrorCount();
+
+                if (errorCountInternal>0) {
+                    errorCount = errorCountInternal;
+                } else if (displayType== ComboErrorUtil.DisplayType.ALWAYS) {
+                    errorCount = 0;
+                }
+            }
+        }
+
+        if (errorCount >=0) {
+            errorCountDelimiter.setVisibility(View.VISIBLE);
+            errorCountLayout.setVisibility(View.VISIBLE);
+            errorCountLabel.setVisibility(View.VISIBLE);
+            errorCountDots.setVisibility(View.VISIBLE);
+            errorCountValue.setVisibility(View.VISIBLE);
+            errorCountValue.setText(errorCount==0 ?
+                    "-" :
+                    ""+errorCount);
+        } else {
+            errorCountDelimiter.setVisibility(View.GONE);
+            errorCountLayout.setVisibility(View.GONE);
+            errorCountLabel.setVisibility(View.GONE);
+            errorCountDots.setVisibility(View.GONE);
+            errorCountValue.setVisibility(View.GONE);
         }
     }
 }

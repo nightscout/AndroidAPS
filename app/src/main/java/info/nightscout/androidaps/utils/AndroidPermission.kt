@@ -97,7 +97,7 @@ class AndroidPermission @Inject constructor(
 
     @Synchronized
     fun notifyForBtConnectPermission(activity: FragmentActivity) {
-        if (Build.VERSION.SDK_INT >= /*Build.VERSION_CODES.S*/31) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             //  Manifest.permission.BLUETOOTH_CONNECT
             if (permissionNotGranted(activity, "android.permission.BLUETOOTH_CONNECT") || permissionNotGranted(activity, "android.permission.BLUETOOTH_SCAN")) {
                 val notification = NotificationWithAction(injector, Notification.PERMISSION_BT, rh.gs(R.string.needconnectpermission), Notification.URGENT)
@@ -113,7 +113,7 @@ class AndroidPermission @Inject constructor(
     @Synchronized
     fun notifyForBatteryOptimizationPermission(activity: FragmentActivity) {
         if (permissionNotGranted(activity, Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)) {
-            val notification = NotificationWithAction(injector, Notification.PERMISSION_BATTERY, String.format(rh.gs(R.string.needwhitelisting), rh.gs(R.string.app_name)), Notification.URGENT)
+            val notification = NotificationWithAction(injector, Notification.PERMISSION_BATTERY, rh.gs(R.string.needwhitelisting, rh.gs(R.string.app_name)), Notification.URGENT)
             notification.action(R.string.request) { askForPermission(activity, arrayOf(Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)) }
             rxBus.send(EventNewNotification(notification))
         } else rxBus.send(EventDismissNotification(Notification.PERMISSION_BATTERY))

@@ -19,7 +19,7 @@ object TwoMessagesAlertDialog {
         val secondMessageLayout = LayoutInflater.from(context).inflate(R.layout.dialog_alert_two_messages, null)
         (secondMessageLayout.findViewById<View>(R.id.password_prompt_title) as TextView).text = secondMessage
 
-        val dialog = AlertDialogHelper.Builder(context)
+        AlertDialogHelper.Builder(context, R.style.DialogTheme)
             .setMessage(message)
             .setCustomTitle(
                 AlertDialogHelper.buildCustomTitle(
@@ -40,7 +40,7 @@ object TwoMessagesAlertDialog {
                 if (cancel != null) runOnUiThread { cancel() }
             }
             .show()
-        dialog.setCanceledOnTouchOutside(false)
+            .setCanceledOnTouchOutside(false)
     }
 
 }

@@ -6,6 +6,13 @@ import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import android.os.Build
+import android.os.Handler
+import android.os.HandlerThread
+import androidx.lifecycle.ProcessLifecycleOwner
+import androidx.work.Data
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequest
+import androidx.work.WorkManager
 import com.uber.rxdogtag.RxDogTag
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
@@ -20,32 +27,32 @@ import info.nightscout.androidaps.di.StaticInjector
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.ConfigBuilder
 import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationStore
-import info.nightscout.androidaps.receivers.BTReceiver
-import info.nightscout.androidaps.receivers.ChargingStateReceiver
-import info.nightscout.androidaps.receivers.KeepAliveReceiver.KeepAliveManager
-import info.nightscout.androidaps.receivers.NetworkChangeReceiver
-import info.nightscout.androidaps.receivers.TimeDateOrTZChangeReceiver
+import info.nightscout.androidaps.plugins.general.themes.ThemeSwitcherPlugin
+import info.nightscout.androidaps.receivers.*
 import info.nightscout.androidaps.services.AlarmSoundServiceHelper
 import info.nightscout.androidaps.utils.ActivityMonitor
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.LocalAlertUtils
+import info.nightscout.androidaps.utils.ProcessLifecycleListener
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.locale.LocaleHelper
-import info.nightscout.androidaps.utils.protection.PasswordCheck
+import info.nightscout.androidaps.widget.updateWidget
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.exceptions.UndeliverableException
-import io.reactivex.plugins.RxJavaPlugins
-import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.exceptions.UndeliverableException
+import io.reactivex.rxjava3.kotlin.plusAssign
+import io.reactivex.rxjava3.plugins.RxJavaPlugins
 import net.danlew.android.joda.JodaTimeAndroid
 import java.io.IOException
 import java.net.SocketException
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class MainApp : DaggerApplication() {
@@ -60,16 +67,20 @@ class MainApp : DaggerApplication() {
     @Inject lateinit var config: Config
     @Inject lateinit var buildHelper: BuildHelper
     @Inject lateinit var configBuilder: ConfigBuilder
-    @Inject lateinit var keepAliveManager: KeepAliveManager
     @Inject lateinit var plugins: List<@JvmSuppressWildcards PluginBase>
     @Inject lateinit var compatDBHelper: CompatDBHelper
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var staticInjector: StaticInjector// TODO avoid , here fake only to initialize
     @Inject lateinit var uel: UserEntryLogger
-    @Inject lateinit var passwordCheck: PasswordCheck
     @Inject lateinit var alarmSoundServiceHelper: AlarmSoundServiceHelper
     @Inject lateinit var notificationStore: NotificationStore
+    @Inject lateinit var processLifecycleListener: ProcessLifecycleListener
+    @Inject lateinit var profileSwitchPlugin: ThemeSwitcherPlugin
+    @Inject lateinit var localAlertUtils: LocalAlertUtils
+
+    private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
+    private lateinit var refreshWidget: Runnable
 
     override fun onCreate() {
         super.onCreate()
@@ -77,6 +88,7 @@ class MainApp : DaggerApplication() {
         RxDogTag.install()
         setRxErrorHandler()
         LocaleHelper.update(this)
+        ProcessLifecycleOwner.get().lifecycle.addObserver(processLifecycleListener)
 
         var gitRemote: String? = BuildConfig.REMOTE
         var commitHash: String? = BuildConfig.HEAD
@@ -84,21 +96,10 @@ class MainApp : DaggerApplication() {
             gitRemote = null
             commitHash = null
         }
-        disposable += repository.runTransaction(VersionChangeTransaction(BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE, gitRemote, commitHash)).subscribe()
-        if (sp.getBoolean(R.string.key_ns_logappstartedevent, config.APS))
-            disposable += repository
-                .runTransaction(
-                    InsertIfNewByTimestampTherapyEventTransaction(
-                        timestamp = dateUtil.now(),
-                        type = TherapyEvent.Type.NOTE,
-                        note = getString(info.nightscout.androidaps.core.R.string.androidaps_start) + " - " + Build.MANUFACTURER + " " + Build.MODEL,
-                        glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
-                    )
-                )
-                .subscribe()
         disposable += compatDBHelper.dbChangeDisposable()
         registerActivityLifecycleCallbacks(activityMonitor)
         JodaTimeAndroid.init(this)
+        profileSwitchPlugin.setThemeMode()
         aapsLogger.debug("Version: " + BuildConfig.VERSION_NAME)
         aapsLogger.debug("BuildVersion: " + BuildConfig.BUILDVERSION)
         aapsLogger.debug("Remote: " + BuildConfig.REMOTE)
@@ -113,10 +114,38 @@ class MainApp : DaggerApplication() {
         // Register all tabs in app here
         pluginStore.plugins = plugins
         configBuilder.initialize()
-        keepAliveManager.setAlarm(this)
+
+        disposable += repository.runTransaction(VersionChangeTransaction(BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE, gitRemote, commitHash)).subscribe()
+        if (sp.getBoolean(R.string.key_ns_logappstartedevent, config.APS))
+            disposable += repository
+                .runTransaction(
+                    InsertIfNewByTimestampTherapyEventTransaction(
+                        timestamp = dateUtil.now(),
+                        type = TherapyEvent.Type.NOTE,
+                        note = getString(info.nightscout.androidaps.core.R.string.androidaps_start) + " - " + Build.MANUFACTURER + " " + Build.MODEL,
+                        glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
+                    )
+                )
+                .subscribe()
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+            "KeepAlive",
+            ExistingPeriodicWorkPolicy.REPLACE,
+            PeriodicWorkRequest.Builder(KeepAliveWorker::class.java, 15, TimeUnit.MINUTES)
+                .setInputData(Data.Builder().putString("schedule", "KeepAlive").build())
+                .setInitialDelay(5, TimeUnit.SECONDS)
+                .build()
+        )
+        localAlertUtils.shortenSnoozeInterval()
+        localAlertUtils.preSnoozeAlarms()
         doMigrations()
         uel.log(UserEntry.Action.START_AAPS, UserEntry.Sources.Aaps)
-        passwordCheck.passwordResetCheck(this)
+
+        //  schedule widget update
+        refreshWidget = Runnable {
+            handler.postDelayed(refreshWidget, 60000)
+            updateWidget(this)
+        }
+        handler.postDelayed(refreshWidget, 60000)
     }
 
     private fun setRxErrorHandler() {
@@ -186,7 +215,6 @@ class MainApp : DaggerApplication() {
     override fun onTerminate() {
         aapsLogger.debug(LTag.CORE, "onTerminate")
         unregisterActivityLifecycleCallbacks(activityMonitor)
-        keepAliveManager.cancelAlarm(this)
         alarmSoundServiceHelper.stopService(this)
         super.onTerminate()
     }

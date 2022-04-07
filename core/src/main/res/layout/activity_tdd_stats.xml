@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="info.nightscout.androidaps.activities.TDDStatsActivity">
@@ -23,8 +24,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/pillborder"
                 android:gravity="center_horizontal"
-                android:text="@string/tdd"
-                android:textColor="@color/mdtp_white" />
+                android:text="@string/tdd" />
 
             <TableLayout
                 android:id="@+id/main_table"
@@ -53,8 +53,7 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/pillborder"
                         android:gravity="center_horizontal"
-                        android:text="@string/cumulative_tdd"
-                        android:textColor="@color/mdtp_white" />
+                        android:text="@string/cumulative_tdd" />
 
                     <TableLayout
                         android:id="@+id/cumulative_table"
@@ -82,8 +81,7 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/pillborder"
                         android:gravity="center_horizontal"
-                        android:text="@string/expweight"
-                        android:textColor="@color/mdtp_white" />
+                        android:text="@string/expweight" />
 
                     <TableLayout
                         android:id="@+id/expweight_table"
@@ -118,8 +116,7 @@
                             android:background="@drawable/pillborder"
                             android:gravity="center_vertical|center_horizontal"
                             android:inputType="numberDecimal"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:textColor="@color/mdtp_white" />
+                            android:textAppearance="?android:attr/textAppearanceMedium" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -141,8 +138,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="10dp"
                             android:gravity="center_vertical|center_horizontal"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:textColor="@color/mdtp_white" />
+                            android:textAppearance="?android:attr/textAppearanceMedium" />
 
                     </LinearLayout>
                 </LinearLayout>
@@ -174,7 +170,7 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:text="@string/warning_Message"
-            android:textColor="#ff0000"
+            android:textColor="?attr/alarmColor"
             android:textSize="15sp"
             android:textStyle="bold" />
 
@@ -182,14 +178,14 @@
             android:layout_width="match_parent"
             android:layout_height="5dp" />
 
-        <info.nightscout.androidaps.utils.ui.SingleClickButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/reload"
-            style="@style/ButtonSmallFontStyle"
+            style="@style/GrayButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:drawableStart="@drawable/ic_actions_refill"
-            android:text="@string/reload" />
+            android:text="@string/reload"
+            app:icon="@drawable/ic_actions_refill"
+            app:iconTint="@color/ic_actions_refill" />
 
     </LinearLayout>
 

@@ -18,7 +18,6 @@ import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.wearable.view.WatchViewStub;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowInsets;
@@ -49,6 +48,8 @@ import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.data.RawDisplayData;
 import info.nightscout.androidaps.interaction.utils.Persistence;
 import info.nightscout.androidaps.interaction.utils.WearUtil;
+import info.nightscout.shared.logging.AAPSLogger;
+import info.nightscout.shared.logging.LTag;
 import lecho.lib.hellocharts.view.LineChartView;
 
 /**
@@ -61,6 +62,7 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
 
     @Inject WearUtil wearUtil;
     @Inject Persistence persistence;
+    @Inject AAPSLogger aapsLogger;
 
     public final static IntentFilter INTENT_FILTER;
 
@@ -70,6 +72,8 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
         INTENT_FILTER.addAction(Intent.ACTION_TIMEZONE_CHANGED);
         INTENT_FILTER.addAction(Intent.ACTION_TIME_CHANGED);
     }
+
+    static IntentFilter iFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
 
     public final Point displaySize = new Point();
     public TextView mTime, mHour, mMinute, mTimePeriod, mSgv, mDirection, mTimestamp, mUploaderBattery, mRigBattery, mDelta, mAvgDelta, mStatus, mBasalRate, mIOB1, mIOB2, mCOB1, mCOB2, mBgi, mLoop, mDay, mDayName, mMonth, isAAPSv2, mHighLight, mLowLight;
@@ -111,7 +115,6 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
     private Date mDateTime;
     private String mLastSvg = "", mLastDirection = "";
     private float mYOffset = 0;
-    private Intent mBatteryStatus;
 
     @Override
     public void onCreate() {
@@ -145,10 +148,8 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
     }
 
     private void setupBatteryReceiver() {
-        IntentFilter iFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-        mBatteryStatus = this.registerReceiver(null, iFilter);
         String setting = sharedPrefs.getString("simplify_ui", "off");
-        if (setting.equals("charging") || setting.equals("ambient_charging") && batteryReceiver == null) {
+        if ((setting.equals("charging") || setting.equals("ambient_charging")) && batteryReceiver == null) {
             IntentFilter intentBatteryFilter = new IntentFilter();
             intentBatteryFilter.addAction(BatteryManager.ACTION_CHARGING);
             intentBatteryFilter.addAction(BatteryManager.ACTION_DISCHARGING);
@@ -374,6 +375,7 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
     }
 
     private boolean isCharging() {
+        Intent mBatteryStatus = this.registerReceiver(null, iFilter);
         int status = mBatteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
         return status == BatteryManager.BATTERY_STATUS_CHARGING ||
                 status == BatteryManager.BATTERY_STATUS_FULL;
@@ -382,7 +384,7 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
     private void checkVibrateHourly(WatchFaceTime oldTime, WatchFaceTime newTime) {
         boolean hourlyVibratePref = sharedPrefs.getBoolean("vibrate_Hourly", false);
         if (hourlyVibratePref && layoutSet && newTime.hasHourChanged(oldTime)) {
-            Log.i("hourlyVibratePref", "true --> " + newTime.toString());
+            aapsLogger.info(LTag.WEAR, "hourlyVibratePref", "true --> " + newTime);
             Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
             long[] vibrationPattern = {0, 150, 125, 100};
             vibrator.vibrate(vibrationPattern, -1);
@@ -658,7 +660,7 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
     }
 
     private boolean isLowRes(WatchMode watchMode) {
-        return (watchMode == WatchMode.LOW_BIT) || (watchMode == WatchMode.LOW_BIT_BURN_IN); // || (watchMode == WatchMode.LOW_BIT_BURN_IN);
+        return watchMode == WatchMode.LOW_BIT || watchMode == WatchMode.LOW_BIT_BURN_IN;
     }
 
     private boolean isSimpleUi() {

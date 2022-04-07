@@ -97,7 +97,7 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
     }
 
     val carbsRequiredText: String
-        get() = String.format(rh.gs(R.string.carbsreq), carbsReq, carbsReqWithin)
+        get() = rh.gs(R.string.carbsreq, carbsReq, carbsReqWithin)
 
     override fun toString(): String {
         val pump = activePlugin.activePump

@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="60dp"
     android:layout_height="100dp"
-    android:background="@drawable/background_darkgray"
+    android:background="@drawable/background_total"
     android:orientation="vertical">
 
-    <Button
+    <ImageButton
         android:id="@+id/increment"
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:background="@null"
-        android:padding="0dp"
-        android:text="+"
-        android:textColor="@color/mdtp_white"
-        android:textSize="25sp" />
+        android:background="@color/transparent"
+        android:src="@drawable/ic_plus" />
 
     <EditText
         android:id="@+id/display"
@@ -23,17 +21,14 @@
         android:gravity="center"
         android:imeOptions="actionDone"
         android:inputType="number"
-        android:text="1"
-        android:textColor="@android:color/black" />
+        android:textColor="?attr/numPickerText"
+        tools:text="1" />
 
-    <Button
+    <ImageButton
         android:id="@+id/decrement"
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:background="@null"
-        android:padding="0dp"
-        android:text="—"
-        android:textColor="@color/mdtp_white"
-        android:textStyle="bold" />
+        android:background="@color/transparent"
+        android:src="@drawable/ic_minus" />
 
 </LinearLayout>

@@ -27,8 +27,8 @@ import info.nightscout.androidaps.plugin.general.openhumans.ui.OHLoginActivity
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.withContext
@@ -233,10 +233,11 @@ class OpenHumansUploader @Inject internal constructor(
         tags.add("DeviceInfo")
 
         val displayMetrics = DisplayMetrics()
+        @Suppress("DEPRECATION")
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R)
             context.display?.getRealMetrics(displayMetrics)
         else
-            @Suppress("DEPRECATION") (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.getMetrics(displayMetrics)
+            (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.getMetrics(displayMetrics)
 
         val displayInfo = JSONObject()
         displayInfo.put("height", displayMetrics.heightPixels)

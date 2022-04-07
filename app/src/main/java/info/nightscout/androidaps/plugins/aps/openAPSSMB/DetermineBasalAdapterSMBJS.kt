@@ -7,14 +7,11 @@ import info.nightscout.androidaps.data.MealData
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.getPassedDurationToTimeInMinutes
 import info.nightscout.androidaps.extensions.plannedRemainingMinutes
-import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.GlucoseUnit
-import info.nightscout.androidaps.interfaces.IobCobCalculator
-import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.*
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.aps.logger.LoggerCallback
+import info.nightscout.androidaps.plugins.aps.loop.APSResult
 import info.nightscout.androidaps.plugins.aps.loop.ScriptReader
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
@@ -31,7 +28,7 @@ import java.lang.reflect.InvocationTargetException
 import java.nio.charset.StandardCharsets
 import javax.inject.Inject
 
-class DetermineBasalAdapterSMBJS internal constructor(private val scriptReader: ScriptReader, private val injector: HasAndroidInjector) {
+class DetermineBasalAdapterSMBJS internal constructor(private val scriptReader: ScriptReader, private val injector: HasAndroidInjector) : DetermineBasalAdapterInterface {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var constraintChecker: ConstraintChecker
@@ -51,21 +48,16 @@ class DetermineBasalAdapterSMBJS internal constructor(private val scriptReader: 
     private var smbAlwaysAllowed = false
     private var currentTime: Long = 0
     private var saveCgmSource = false
-    var currentTempParam: String? = null
-        private set
-    var iobDataParam: String? = null
-        private set
-    var glucoseStatusParam: String? = null
-        private set
-    var profileParam: String? = null
-        private set
-    var mealDataParam: String? = null
-        private set
-    var scriptDebug = ""
-        private set
+
+    override var currentTempParam: String? = null
+    override var iobDataParam: String? = null
+    override var glucoseStatusParam: String? = null
+    override var profileParam: String? = null
+    override var mealDataParam: String? = null
+    override var scriptDebug = ""
 
     @Suppress("SpellCheckingInspection")
-    operator fun invoke(): DetermineBasalResultSMB? {
+    override operator fun invoke(): APSResult? {
         aapsLogger.debug(LTag.APS, ">>> Invoking determine_basal <<<")
         aapsLogger.debug(LTag.APS, "Glucose status: " + mGlucoseStatus.toString().also { glucoseStatusParam = it })
         aapsLogger.debug(LTag.APS, "IOB data:       " + iobData.toString().also { iobDataParam = it })
@@ -155,22 +147,24 @@ class DetermineBasalAdapterSMBJS internal constructor(private val scriptReader: 
         return determineBasalResultSMB
     }
 
-    @Suppress("SpellCheckingInspection") fun setData(profile: Profile,
-                                                     maxIob: Double,
-                                                     maxBasal: Double,
-                                                     minBg: Double,
-                                                     maxBg: Double,
-                                                     targetBg: Double,
-                                                     basalRate: Double,
-                                                     iobArray: Array<IobTotal>,
-                                                     glucoseStatus: GlucoseStatus,
-                                                     mealData: MealData,
-                                                     autosensDataRatio: Double,
-                                                     tempTargetSet: Boolean,
-                                                     microBolusAllowed: Boolean,
-                                                     uamAllowed: Boolean,
-                                                     advancedFiltering: Boolean,
-                                                     isSaveCgmSource: Boolean
+    @Suppress("SpellCheckingInspection")
+    override fun setData(
+        profile: Profile,
+        maxIob: Double,
+        maxBasal: Double,
+        minBg: Double,
+        maxBg: Double,
+        targetBg: Double,
+        basalRate: Double,
+        iobArray: Array<IobTotal>,
+        glucoseStatus: GlucoseStatus,
+        mealData: MealData,
+        autosensDataRatio: Double,
+        tempTargetSet: Boolean,
+        microBolusAllowed: Boolean,
+        uamAllowed: Boolean,
+        advancedFiltering: Boolean,
+        isSaveCgmSource: Boolean
     ) {
         val pump = activePlugin.activePump
         val pumpBolusStep = pump.pumpDescription.bolusStep

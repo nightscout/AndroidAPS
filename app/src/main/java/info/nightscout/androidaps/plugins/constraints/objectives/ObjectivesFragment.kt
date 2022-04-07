@@ -37,11 +37,11 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.SntpClient
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxjava3.kotlin.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.sharedPreferences.SP
-import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 
 class ObjectivesFragment : DaggerFragment() {
@@ -233,7 +233,7 @@ class ObjectivesFragment : DaggerFragment() {
                 }
             }
             holder.binding.accomplished.text = rh.gs(R.string.accomplished, dateUtil.dateAndTimeString(objective.accomplishedOn))
-            holder.binding.accomplished.setTextColor(-0x3e3e3f)
+            holder.binding.accomplished.setTextColor(rh.gac(context,R.attr.defaultTextColor))
             holder.binding.verify.setOnClickListener {
                 receiverStatusStore.updateNetworkStatus()
                 if (binding.fake.isChecked) {

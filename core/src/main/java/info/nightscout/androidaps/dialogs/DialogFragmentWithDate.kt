@@ -19,6 +19,7 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.shared.sharedPreferences.SP
 import java.util.*
+import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
 abstract class DialogFragmentWithDate : DaggerDialogFragment() {
@@ -27,11 +28,21 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
     @Inject lateinit var sp: SP
     @Inject lateinit var dateUtil: DateUtil
 
+    fun interface OnValueChangedListener {
+        fun onValueChanged(value: Long)
+    }
+
     var eventTime: Long = 0
-    var eventTimeChanged = false
+    var eventTimeOriginal: Long = 0
+    val eventTimeChanged: Boolean
+        get() = eventTime != eventTimeOriginal
+
+    private var eventDateView: TextView? = null
+    private var eventTimeView: TextView? = null
+    private var mOnValueChangedListener: OnValueChangedListener? = null
 
     //one shot guards
-    private var okClicked: Boolean = false
+    private var okClicked: AtomicBoolean = AtomicBoolean(false)
 
     companion object {
 
@@ -50,7 +61,7 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
         super.onSaveInstanceState(savedInstanceState)
         savedInstanceState.putLong("eventTime", eventTime)
-        savedInstanceState.putBoolean("eventTimeChanged", eventTimeChanged)
+        savedInstanceState.putLong("eventTimeOriginal", eventTimeOriginal)
     }
 
     fun onCreateViewGeneral() {
@@ -60,12 +71,18 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
         dialog?.setCanceledOnTouchOutside(false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val eventDateView = view.findViewById(R.id.eventdate) as TextView?
-        val eventTimeView = view.findViewById(R.id.eventtime) as TextView?
+    fun updateDateTime(timeMs: Long) {
+        eventTime = timeMs
+        eventDateView?.text = dateUtil.dateString(eventTime)
+        eventTimeView?.text = dateUtil.timeString(eventTime)
+    }
 
-        eventTime = savedInstanceState?.getLong("eventTime") ?: dateUtil.nowWithoutMilliseconds()
-        eventTimeChanged = savedInstanceState?.getBoolean("eventTimeChanged") ?: false
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        eventDateView = view.findViewById(R.id.eventdate) as TextView?
+        eventTimeView = view.findViewById(R.id.eventtime) as TextView?
+
+        eventTimeOriginal = savedInstanceState?.getLong("eventTimeOriginal") ?: dateUtil.nowWithoutMilliseconds()
+        eventTime = savedInstanceState?.getLong("eventTime") ?: eventTimeOriginal
 
         eventDateView?.text = dateUtil.dateString(eventTime)
         eventTimeView?.text = dateUtil.timeString(eventTime)
@@ -79,8 +96,8 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
                 cal.set(Calendar.MONTH, monthOfYear)
                 cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
                 eventTime = cal.timeInMillis
-                eventTimeChanged = true
                 eventDateView?.text = dateUtil.dateString(eventTime)
+                callValueChangedListener()
             }
 
         eventDateView?.setOnClickListener {
@@ -88,7 +105,8 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
                 val cal = Calendar.getInstance()
                 cal.timeInMillis = eventTime
                 DatePickerDialog(
-                    it, dateSetListener,
+                    it, R.style.MaterialPickerTheme,
+                    dateSetListener,
                     cal.get(Calendar.YEAR),
                     cal.get(Calendar.MONTH),
                     cal.get(Calendar.DAY_OF_MONTH)
@@ -107,8 +125,8 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
                 seconds++
             ) // randomize seconds to prevent creating record of the same time, if user choose time manually
             eventTime = cal.timeInMillis
-            eventTimeChanged = true
             eventTimeView?.text = dateUtil.timeString(eventTime)
+            callValueChangedListener()
         }
 
         eventTimeView?.setOnClickListener {
@@ -116,7 +134,8 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
                 val cal = Calendar.getInstance()
                 cal.timeInMillis = eventTime
                 TimePickerDialog(
-                    it, timeSetListener,
+                    it, R.style.MaterialPickerTheme,
+                    timeSetListener,
                     cal.get(Calendar.HOUR_OF_DAY),
                     cal.get(Calendar.MINUTE),
                     DateFormat.is24HourFormat(context)
@@ -129,16 +148,16 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
 
         (view.findViewById(R.id.ok) as Button?)?.setOnClickListener {
             synchronized(okClicked) {
-                if (okClicked) {
+                if (okClicked.get()) {
                     aapsLogger.warn(LTag.UI, "guarding: ok already clicked for dialog: ${this.javaClass.name}")
                 } else {
-                    okClicked = true
+                    okClicked.set(true)
                     if (submit()) {
                         aapsLogger.debug(LTag.APS, "Submit pressed for Dialog: ${this.javaClass.name}")
                         dismiss()
                     } else {
                         aapsLogger.debug(LTag.APS, "Submit returned false for Dialog: ${this.javaClass.name}")
-                        okClicked = false
+                        okClicked.set(false)
                     }
                 }
             }
@@ -148,6 +167,14 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
             dismiss()
         }
 
+    }
+
+    private fun callValueChangedListener() {
+        mOnValueChangedListener?.onValueChanged(eventTime)
+    }
+
+    fun setOnValueChangedListener(onValueChangedListener: OnValueChangedListener?) {
+        mOnValueChangedListener = onValueChangedListener
     }
 
     override fun show(manager: FragmentManager, tag: String?) {

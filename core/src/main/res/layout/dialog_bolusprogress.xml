@@ -1,23 +1,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/StyleDialog"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context="info.nightscout.androidaps.dialogs.BolusProgressDialog">
 
     <RelativeLayout
+        style="@style/StyleDialogHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="@color/dialog_title_background"
-        android:orientation="horizontal"
-        android:padding="5dp">
+        android:layout_gravity="center">
 
         <ImageView
             android:id="@+id/header_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:importantForAccessibility="no"
             app:srcCompat="@drawable/ic_trending_flat_white_48dp" />
 
         <TextView
@@ -63,7 +62,7 @@
 
     <ProgressBar
         android:id="@+id/progressbar"
-        style="@android:style/Widget.ProgressBar.Horizontal"
+        style="@android:style/Widget.Material.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:layout_marginLeft="5dp"
@@ -72,7 +71,8 @@
         android:maxHeight="5dp"
         android:minHeight="3dp" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
+        style="@style/GrayButton"
         android:id="@+id/stop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

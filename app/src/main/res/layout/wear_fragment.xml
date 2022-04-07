@@ -10,9 +10,9 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
+            style="@style/GrayButton"
             android:id="@+id/resend"
-            style="?android:attr/buttonStyle"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="3dp"
@@ -21,11 +21,11 @@
             android:layout_marginTop="3dp"
             android:layout_weight="0.5"
             android:text="@string/resend_all_data"
-            android:textColor="@color/colorTreatmentButton" />
+            android:textColor="?attr/treatmentButton" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
+            style="@style/GrayButton"
             android:id="@+id/opensettings"
-            style="?android:attr/buttonStyle"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="3dp"
@@ -34,7 +34,7 @@
             android:layout_marginTop="3dp"
             android:layout_weight="0.5"
             android:text="@string/open_settings_on_wear"
-            android:textColor="@color/colorTreatmentButton" />
+            android:textColor="?attr/treatmentButton" />
 
     </LinearLayout>
 

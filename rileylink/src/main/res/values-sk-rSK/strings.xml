@@ -81,4 +81,5 @@
     </plurals>
     <string name="orange_use_scanning_level">Použi skenovanie</string>
     <string name="orange_use_scanning_level_summary">Skenuj, predtým, ako sa pripojíš k OrangeLinku. Malo by to zlepšiť stabilitu pripojenia (môže byť použité i s inými klonmi RileyLinku, ak je to potrebné).</string>
+    <string name="rileylink_configuration">Konfigurácia RileyLinku</string>
 </resources>

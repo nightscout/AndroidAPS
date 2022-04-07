@@ -16,8 +16,6 @@ import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.plannedRemainingMinutes
 import info.nightscout.androidaps.extensions.toStringFull
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.common.ManufacturerType
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
@@ -52,11 +50,13 @@ import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.TimeChangeType
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
-import io.reactivex.Completable
-import io.reactivex.Single
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
 import org.json.JSONObject
 import java.time.Duration
 import java.time.ZonedDateTime
@@ -119,11 +119,12 @@ class OmnipodDashPumpPlugin @Inject constructor(
             updatePodWarnings()
             aapsLogger.info(LTag.PUMP, "statusChecker")
 
-            val err = createFakeTBRWhenNoActivePod()
-                .subscribeOn(aapsSchedulers.io)
-                .blockingGet()
-            err?.let {
-                aapsLogger.warn(LTag.PUMP, "Error on createFakeTBRWhenNoActivePod=$it")
+            try {
+                createFakeTBRWhenNoActivePod()
+                    .subscribeOn(aapsSchedulers.io)
+                    .blockingAwait()
+            } catch (e: Exception) {
+                aapsLogger.warn(LTag.PUMP, "Error on createFakeTBRWhenNoActivePod=$e")
             }
             handler.postDelayed(statusChecker, STATUS_CHECK_INTERVAL_MS)
         }
@@ -248,12 +249,12 @@ class OmnipodDashPumpPlugin @Inject constructor(
         ) {
             try {
                 stopConnecting?.let {
-                    val error = omnipodManager.connect(it).ignoreElements().blockingGet()
-                    aapsLogger.info(LTag.PUMPCOMM, "connect error=$error")
-                    if (error == null) {
-                        podStateManager.incrementSuccessfulConnectionAttemptsAfterRetries()
-                    }
+                    omnipodManager.connect(it).ignoreElements()
+                        .doOnComplete { podStateManager.incrementSuccessfulConnectionAttemptsAfterRetries() }
+                        .blockingAwait()
                 }
+            } catch (e: Exception) {
+                aapsLogger.info(LTag.PUMPCOMM, "connect error=$e")
             } finally {
                 synchronized(this) {
                     stopConnecting = null
@@ -282,18 +283,20 @@ class OmnipodDashPumpPlugin @Inject constructor(
             return
         }
 
-        val throwable = getPodStatus().blockingGet()
-        if (throwable != null) {
-            aapsLogger.error(LTag.PUMP, "Error in getPumpStatus", throwable)
-        } else {
-            aapsLogger.info(LTag.PUMP, "getPumpStatus executed with success")
-            if (!podStateManager.isActivationCompleted) {
-                val msg = podStateManager.recoverActivationFromPodStatus()
-                msg?.let {
-                    // TODO: show dialog with "try again, the pod is busy now"
-                    aapsLogger.info(LTag.PUMP, "recoverActivationFromPodStatus msg=$msg")
-                }
-            }
+        try {
+            getPodStatus()
+                .doOnComplete {
+                    aapsLogger.info(LTag.PUMP, "getPumpStatus executed with success")
+                    if (!podStateManager.isActivationCompleted) {
+                        val msg = podStateManager.recoverActivationFromPodStatus()
+                        msg?.let {
+                            // TODO: show dialog with "try again, the pod is busy now"
+                            aapsLogger.info(LTag.PUMP, "recoverActivationFromPodStatus msg=$msg")
+                        }
+                    }
+                }.blockingAwait()
+        } catch (e: Exception) {
+            aapsLogger.error(LTag.PUMP, "Error in getPumpStatus", e)
         }
     }
 
@@ -546,12 +549,6 @@ class OmnipodDashPumpPlugin @Inject constructor(
         try {
             bolusDeliveryInProgress = true
             aapsLogger.info(LTag.PUMP, "Delivering treatment: $detailedBolusInfo $bolusCanceled")
-            val beepsConfigurationKey = if (detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB)
-                R.string.key_omnipod_common_smb_beeps_enabled
-            else
-                R.string.key_omnipod_common_bolus_beeps_enabled
-            val bolusBeeps = sp.getBoolean(beepsConfigurationKey, false)
-            R.string.key_omnipod_common_smb_beeps_enabled
             if (detailedBolusInfo.carbs > 0 ||
                 detailedBolusInfo.insulin == 0.0
             ) {
@@ -568,10 +565,25 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     .success(false)
                     .enacted(false)
                     .bolusDelivered(0.0)
-                    .comment("Not enough insulin in the reservoir")
+                    .comment(rh.gs(R.string.omnipod_dash_not_enough_insulin))
             }
+            if (podStateManager.deliveryStatus == DeliveryStatus.BOLUS_AND_BASAL_ACTIVE ||
+                podStateManager.deliveryStatus == DeliveryStatus.BOLUS_AND_TEMP_BASAL_ACTIVE
+            ) {
+                return PumpEnactResult(injector)
+                    .success(false)
+                    .enacted(false)
+                    .bolusDelivered(0.0)
+                    .comment(rh.gs(R.string.omnipod_dash_bolus_already_in_progress))
+            }
+
             var deliveredBolusAmount = 0.0
 
+            val beepsConfigurationKey = if (detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB)
+                R.string.key_omnipod_common_smb_beeps_enabled
+            else
+                R.string.key_omnipod_common_bolus_beeps_enabled
+            val bolusBeeps = sp.getBoolean(beepsConfigurationKey, false)
             aapsLogger.info(
                 LTag.PUMP,
                 "deliverTreatment: requestedBolusAmount=$requestedBolusAmount"
@@ -674,11 +686,13 @@ class OmnipodDashPumpPlugin @Inject constructor(
         if (bolusCanceled && podStateManager.activeCommand != null) {
             var errorGettingStatus: Throwable? = null
             for (tries in 1..BOLUS_RETRIES) {
-                errorGettingStatus = getPodStatus().blockingGet()
-                if (errorGettingStatus != null) {
+                try {
+                    getPodStatus().blockingAwait()
+                    break
+                } catch (err: Throwable) {
+                    errorGettingStatus = err
                     aapsLogger.debug(LTag.PUMP, "waitForBolusDeliveryToComplete errorGettingStatus=$errorGettingStatus")
                     Thread.sleep(BOLUS_RETRY_INTERVAL_MS) // retry every 2 sec
-                    continue
                 }
             }
             if (errorGettingStatus != null) {
@@ -712,10 +726,15 @@ class OmnipodDashPumpPlugin @Inject constructor(
             else
                 getPodStatus()
 
-            val errorGettingStatus = cmd.blockingGet()
-            if (errorGettingStatus != null) {
+            var errorGettingStatus: Throwable? = null
+            try {
+                cmd.blockingAwait()
+            } catch (e: Exception) {
+                errorGettingStatus = e
                 aapsLogger.debug(LTag.PUMP, "waitForBolusDeliveryToComplete errorGettingStatus=$errorGettingStatus")
                 Thread.sleep(BOLUS_RETRY_INTERVAL_MS) // retry every 3 sec
+            }
+            if (errorGettingStatus != null) {
                 continue
             }
             val bolusDeliveringActive = podStateManager.deliveryStatus?.bolusDeliveringActive() ?: false

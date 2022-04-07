@@ -1,11 +1,10 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/StyleDialog"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusableInTouchMode="true"
-    android:minWidth="300dp"
-    android:orientation="vertical"
     tools:context="info.nightscout.androidaps.dialogs.ProfileViewerDialog">
 
     <LinearLayout
@@ -14,18 +13,17 @@
         android:orientation="vertical">
 
         <RelativeLayout
+            style="@style/StyleDialogHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@color/dialog_title_background"
-            android:orientation="horizontal"
-            android:padding="5dp">
+            android:layout_gravity="center">
 
             <ImageView
                 android:id="@+id/header_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:importantForAccessibility="no"
                 app:srcCompat="@drawable/ic_home_profile" />
 
             <TextView
@@ -57,7 +55,7 @@
             android:gravity="center_horizontal"
             android:text="@string/invalidprofile"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@android:color/holo_red_light"
+            android:textColor="?attr/alarmColor"
             android:textStyle="bold"
             android:visibility="gone" />
 
@@ -68,7 +66,7 @@
             android:gravity="center_horizontal"
             android:text="@string/noprofileset"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@android:color/holo_red_light"
+            android:textColor="?attr/alarmColor"
             android:textStyle="bold"
             android:visibility="gone" />
 
@@ -105,7 +103,6 @@
                 android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:gravity="start"
-                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -117,12 +114,13 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/list_delimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:focusable="true">
 
             <TextView
                 android:layout_width="match_parent"
@@ -150,7 +148,6 @@
                 android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:gravity="start"
-                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -162,12 +159,13 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/list_delimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:focusable="true">
 
             <TextView
                 android:layout_width="match_parent"
@@ -195,7 +193,6 @@
                 android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:gravity="start"
-                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -207,12 +204,13 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/list_delimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:focusable="true">
 
             <TextView
                 android:layout_width="match_parent"
@@ -240,10 +238,15 @@
                 android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:gravity="start"
-                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
         </LinearLayout>
+
+        <info.nightscout.androidaps.utils.ui.IcProfileGraph
+            android:id="@+id/ic_graph"
+            android:layout_width="match_parent"
+            android:layout_height="100dip"
+            android:layout_margin="20dp" />
 
         <View
             android:layout_width="fill_parent"
@@ -252,7 +255,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/list_delimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -260,6 +263,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:focusable="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
@@ -285,10 +289,15 @@
                 android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:gravity="start"
-                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
         </LinearLayout>
+
+        <info.nightscout.androidaps.utils.ui.IsfProfileGraph
+            android:id="@+id/isf_graph"
+            android:layout_width="match_parent"
+            android:layout_height="100dip"
+            android:layout_margin="20dp" />
 
         <View
             android:layout_width="fill_parent"
@@ -297,12 +306,13 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/list_delimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:focusable="true">
 
             <TextView
                 android:layout_width="match_parent"
@@ -330,7 +340,6 @@
                 android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:gravity="start"
-                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -366,12 +375,11 @@
                 android:layout_marginStart="17dp"
                 android:layout_weight="1"
                 android:gravity="start"
-                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
         </LinearLayout>
 
-        <info.nightscout.androidaps.utils.ui.ProfileGraph
+        <info.nightscout.androidaps.utils.ui.BasalProfileGraph
             android:id="@+id/basal_graph"
             android:layout_width="match_parent"
             android:layout_height="100dip"
@@ -384,12 +392,13 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/list_delimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:focusable="true">
 
             <TextView
                 android:layout_width="match_parent"
@@ -417,10 +426,15 @@
                 android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:gravity="start"
-                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
         </LinearLayout>
+
+        <info.nightscout.androidaps.utils.ui.TargetBgProfileGraph
+            android:id="@+id/target_graph"
+            android:layout_width="match_parent"
+            android:layout_height="100dip"
+            android:layout_margin="20dp" />
 
         <include
             android:id="@+id/close_layout"

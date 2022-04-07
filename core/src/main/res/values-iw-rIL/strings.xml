@@ -4,6 +4,7 @@
     <!--    General-->
     <string name="refresh">רענן</string>
     <string name="error">שגיאה</string>
+    <string name="save">שמור</string>
     <string name="not_set_short">לא הוגדר</string>
     <string name="failedupdatebasalprofile">עדכון הפרופיל הבזאלי נכשל</string>
     <string name="profile_set_ok">הפרופיל הבזאלי עודכן במשאבה</string>
@@ -48,6 +49,11 @@
     <string name="isf_label">ISF</string>
     <string name="basal_label">אינסולין בזאלי</string>
     <string name="target_label">ערך מטרה</string>
+    <string name="dia_long_label">משך פעילות האינסולין</string>
+    <string name="ic_long_label">יחס אינסולין-פחמימות </string>
+    <string name="isf_long_label">יחס התיקון (ISF)</string>
+    <string name="basal_long_label">מינון בזאלי</string>
+    <string name="target_long_label">ערך מטרה</string>
     <string name="initializing">מאתחל...</string>
     <string name="serialnumber">מספר סידורי</string>
     <string name="battery_label">סוללה</string>
@@ -105,6 +111,7 @@
     <string name="notes_label">הערות</string>
     <string name="remove_button">הסרה</string>
     <string name="addnew">הוסף חדש</string>
+    <string name="addnew_above">הוסף חדש למעלה</string>
     <string name="wrong_pump_data">הנתונים מגיעים ממשאבה אחרת. בחרו מחדש את סוג המשאבה כדי לאפס את מצב המשאבה.</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">מגביל את הקצב הבזאלי המרבי ל-%1$.2f יח\' לשעה בגלל %2$s</string>
@@ -127,7 +134,12 @@
     <string name="location_not_found_message">בכדי שסריקת בלוטות\' תעבוד יש לאפשר את שירות המיקום. AAPS לא עוקב אחר המיקום שלכם וניתן להפסיק את השירות לאחר סיום הצימוד.</string>
     <!--    DateUtil-->
     <string name="minago">לפני %1$d דקות</string>
+    <string name="minago_long">לפני %1$d דקות</string>
     <string name="hoursago">לפני %1$.1f שעות</string>
+    <string name="days_ago">לפני %1$.1f ימים</string>
+    <string name="days_ago_round">לפני %1$.0f ימים</string>
+    <string name="in_days">בעוד %1$.0f ימים</string>
+    <string name="in_days_round">בעוד %1$.0f ימים</string>
     <string name="shorthour">ש\'</string>
     <string name="days">ימים</string>
     <string name="hours">שעות</string>
@@ -143,9 +155,15 @@
     <string name="unit_weeks">שבועות</string>
     <string name="shortminute">דק\'</string>
     <string name="shortday">י\' </string>
+    <string name="later_today">מאוחר יותר היום</string>
+    <string name="tomorrow">מחר</string>
+    <string name="today">היום</string>
+    <string name="yesterday">אתמול</string>
     <!--    Protection-->
     <string name="wrongpassword">סיסמה שגויה</string>
+    <string name="wrongpin">קוד PIN שגוי</string>
     <string name="passwords_dont_match">הסיסמאות אינן תואמות</string>
+    <string name="pin_dont_match">קודי PIN אינם תואמים</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">ערכי הבזאלי לא מותאמים לשעות: %1$s</string>
     <string name="minimalbasalvaluereplaced">ערכי הבזאלי הוחלפו בהערכים המינימליים שנתמכים: %1$s</string>
@@ -168,10 +186,6 @@
     <string name="zerovalueinprofile">פרופיל לא חוקי: %1$s</string>
     <!--    Temptarget-->
     <string name="mins">%1$d דק\'</string>
-    <!--    TDD-->
-    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f יחידות</b> בולוס: <b>%3$.2f יחידות</b> בזאלי: <b>%4$.2f יחידות(%5$.0f%%)</b>]]></string>
-    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f יחידות</b> בולוס: <b>%3$.2f יחידות</b> בזאלי: <b>%4$.2f יחידות(%5$.0f%%)</b> פחמ: <b>%6$.0f גרם</b>]]></string>
-    <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> ב- <b>%3$d</b> ימים<br>]]></string>
     <!--    Translator-->
     <string name="careportal">פורטל טיפולים</string>
     <string name="careportal_bgcheck">בדיקת רמת סוכר בדם</string>
@@ -369,6 +383,7 @@
     <string name="uel_stat_reset">איפוס סטטיסטיקה</string>
     <string name="uel_delete_logs">מחיקת יומן</string>
     <string name="uel_delete_future_treatments">מחיקת טיפולים עתידיים</string>
+    <string name="delete_future_treatments">מחק טיפולים עתידיים</string>
     <string name="uel_export_settings">ייצוא הגדרות</string>
     <string name="uel_import_settings">ייבוא הגדרות</string>
     <string name="uel_reset_databases">איפוס מסדי נתונים</string>

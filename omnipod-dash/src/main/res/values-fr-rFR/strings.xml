@@ -35,4 +35,7 @@
     <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
     <string name="dash_bolusdelivering">Injection de %1$.2fU en cours</string>
     <string name="omnipod_common_alert_delivery_suspended">Injection d\'insuline suspendue</string>
+    <string name="omnipod_dash_connection_lost">Connexion perdue avec le pod</string>
+    <string name="omnipod_dash_bolus_already_in_progress">Un autre bolus est en cours d\'injection</string>
+    <string name="omnipod_dash_not_enough_insulin">Pas assez d\'insuline restante dans le réservoir</string>
 </resources>

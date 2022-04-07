@@ -6,6 +6,7 @@ import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.shared.SafeParse
+import org.apache.commons.lang3.time.DateUtils.isSameDay
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.ISODateTimeFormat
@@ -23,6 +24,8 @@ import java.util.stream.Collectors
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs
+import kotlin.math.ceil
+import kotlin.math.floor
 
 /**
  * The Class DateUtil. A simple wrapper around SimpleDateFormat to ease the handling of iso date string &lt;-&gt; date obj
@@ -55,8 +58,6 @@ class DateUtil @Inject constructor(private val context: Context) {
      * Render date
      *
      * @param date   the date obj
-     * @param format - if not specified, will use FORMAT_DATE_ISO
-     * @param tz     - tz to set to, if not specified uses local timezone
      * @return the iso-formatted date string
      */
     fun toISOString(date: Long): String {
@@ -103,6 +104,26 @@ class DateUtil @Inject constructor(private val context: Context) {
         return df.format(mills)
     }
 
+    fun dateStringRelative(mills: Long, rh: ResourceHelper): String {
+        val df = DateFormat.getDateInstance(DateFormat.SHORT)
+        val day = df.format(mills)
+        val beginOfToday = beginOfDay(now())
+        return if (mills < now()) // Past
+            when {
+                mills > beginOfToday                     -> rh.gs(R.string.today)
+                mills > beginOfToday - T.days(1).msecs() -> rh.gs(R.string.yesterday)
+                mills > beginOfToday - T.days(7).msecs() -> dayAgo(mills, rh, true)
+                else                                     -> day
+            }
+        else // Future
+            when {
+                mills < beginOfToday + T.days(1).msecs() -> rh.gs(R.string.later_today)
+                mills < beginOfToday + T.days(2).msecs() -> rh.gs(R.string.tomorrow)
+                mills < beginOfToday + T.days(7).msecs() -> dayAgo(mills, rh, true)
+                else                                     -> day
+            }
+    }
+
     fun dateStringShort(mills: Long): String {
         var format = "MM/dd"
         if (android.text.format.DateFormat.is24HourFormat(context)) {
@@ -131,6 +152,10 @@ class DateUtil @Inject constructor(private val context: Context) {
         return dateAndTimeString(start) + " - " + timeString(end)
     }
 
+    fun timeRangeString(start: Long, end: Long): String {
+        return timeString(start) + " - " + timeString(end)
+    }
+
     fun dateAndTimeString(mills: Long): String {
         return if (mills == 0L) "" else dateString(mills) + " " + timeString(mills)
     }
@@ -151,9 +176,42 @@ class DateUtil @Inject constructor(private val context: Context) {
         return (if (mins > 0) "+" else "") + mins
     }
 
+    fun minAgoLong(rh: ResourceHelper, time: Long?): String {
+        if (time == null) return ""
+        val mins = ((now() - time) / 1000 / 60).toInt()
+        return rh.gs(R.string.minago_long, mins)
+    }
+
     fun hourAgo(time: Long, rh: ResourceHelper): String {
         val hours = (now() - time) / 1000.0 / 60 / 60
         return rh.gs(R.string.hoursago, hours)
+    }
+
+    fun dayAgo(time: Long, rh: ResourceHelper, round: Boolean = false): String {
+        var days = (now() - time) / 1000.0 / 60 / 60 / 24
+        if (round) {
+            if (now() > time) {
+                days = ceil(days)
+                return rh.gs(R.string.days_ago_round, days)
+            } else {
+                days = floor(days)
+                return rh.gs(R.string.in_days_round, days)
+            }
+        }
+        return if (now() > time)
+            rh.gs(R.string.days_ago, days)
+        else
+            rh.gs(R.string.in_days, days)
+    }
+
+    fun beginOfDay(mills: Long): Long {
+        val givenDate = Calendar.getInstance()
+        givenDate.timeInMillis = mills
+        givenDate[Calendar.HOUR_OF_DAY] = 0
+        givenDate[Calendar.MINUTE] = 0
+        givenDate[Calendar.SECOND] = 0
+        givenDate[Calendar.MILLISECOND] = 0
+        return givenDate.timeInMillis
     }
 
     fun timeStringFromSeconds(seconds: Int): String {
@@ -205,6 +263,15 @@ class DateUtil @Inject constructor(private val context: Context) {
 
     fun getTimeZoneOffsetMinutes(timestamp: Long): Int {
         return TimeZone.getDefault().getOffset(timestamp) / 60000
+    }
+
+    fun isSameDay(timestamp1: Long, timestamp2: Long) = isSameDay(Date(timestamp1), Date(timestamp2))
+
+    fun isSameDayGroup(timestamp1: Long, timestamp2: Long): Boolean {
+        val now = now()
+        if (timestamp1 < now && timestamp2 > now || timestamp1 > now && timestamp2 < now)
+            return false
+        return isSameDay(Date(timestamp1), Date(timestamp2))
     }
 
     //Map:{DAYS=1, HOURS=3, MINUTES=46, SECONDS=40, MILLISECONDS=0, MICROSECONDS=0, NANOSECONDS=0}

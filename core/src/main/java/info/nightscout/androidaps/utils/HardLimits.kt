@@ -9,8 +9,8 @@ import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.max
@@ -94,9 +94,9 @@ class HardLimits @Inject constructor(
         if (newValue < lowLimit || newValue > highLimit) {
             newValue = max(newValue, lowLimit)
             newValue = min(newValue, highLimit)
-            var msg = String.format(rh.gs(R.string.valueoutofrange), rh.gs(valueName))
+            var msg = rh.gs(R.string.valueoutofrange, rh.gs(valueName))
             msg += ".\n"
-            msg += String.format(rh.gs(R.string.valuelimitedto), value, newValue)
+            msg += rh.gs(R.string.valuelimitedto, value, newValue)
             aapsLogger.error(msg)
             disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(msg)).subscribe()
             ToastUtils.showToastInUiThread(context, rxBus, msg, R.raw.error)

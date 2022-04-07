@@ -40,4 +40,6 @@ data class TotalDailyDose(
     var bolusAmount: Double = 0.0,
     var totalAmount: Double = 0.0, // if zero it's calculated as basalAmount + bolusAmount
     var carbs: Double = 0.0
-) : TraceableDBEntry, DBEntryWithTime
+) : TraceableDBEntry, DBEntryWithTime {
+    companion object
+}

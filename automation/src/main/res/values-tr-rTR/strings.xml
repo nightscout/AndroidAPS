@@ -81,6 +81,7 @@
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Otoduyarlılık %1$s %2$s %%</string>
     <string name="autosenslabel">Otoduyarlılık %</string>
+    <string name="a11y_autosenslabel">Oto duyarlılık</string>
     <string name="deltacompared">%3$s %1$s %2$s</string>
     <string name="deltalabel">KŞ farkı</string>
     <string name="deltalabel_u">KŞ farkı [%1$s]</string>
@@ -112,4 +113,11 @@
     <string name="automation_event">Otomasyon durumu</string>
     <string name="reorder_label">Yeniden sırala</string>
     <string name="user_action">Kullanıcı onayı ile</string>
+    <string name="remove_automation">Otomasyonu kaldır</string>
+    <string name="sort_automation">Otomasyonu sırala</string>
+    <string name="remove_selected_items">Seçilen öğeleri kaldır</string>
+    <string name="count_selected">%1$d seçildi</string>
+    <string name="confirm_remove_multiple_items">%1$d öğeyi kaldırmak istediğinizden emin misiniz</string>
+    <string name="sort_label">Sırala</string>
+    <string name="system_automation">Sistem otomasyonu</string>
 </resources>

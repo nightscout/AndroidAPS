@@ -43,8 +43,8 @@ import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.sharedPreferences.SP
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import java.util.concurrent.TimeUnit
@@ -306,7 +306,7 @@ class DanaRSService : DaggerService() {
         val expectedEnd = bolusStart + bolusDurationInMSec + 2000
         while (System.currentTimeMillis() < expectedEnd) {
             val waitTime = expectedEnd - System.currentTimeMillis()
-            bolusingEvent.status = String.format(rh.gs(R.string.waitingforestimatedbolusend), waitTime / 1000)
+            bolusingEvent.status = rh.gs(R.string.waitingforestimatedbolusend, waitTime / 1000)
             rxBus.send(bolusingEvent)
             SystemClock.sleep(1000)
         }

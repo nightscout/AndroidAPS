@@ -9,7 +9,7 @@ class MsgSettingProfileRatios(
 ) : MessageBase(injector) {
 
     init {
-        SetCommand(0x3204)
+        setCommand(0x3204)
         aapsLogger.debug(LTag.PUMPCOMM, "New message")
     }
 

@@ -13,7 +13,7 @@ import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 
 /**
@@ -39,8 +39,6 @@ class DummyService : DaggerService() {
 
     override fun onCreate() {
         super.onCreate()
-        // TODO: I guess this was moved here in order to adhere to the 5 seconds rule to call "startForeground" after a Service was called as Foreground service?
-        // As onCreate() is not called every time a service is started, copied to onStartCommand().
         try {
             aapsLogger.debug("Starting DummyService with ID ${notificationHolder.notificationID} notification ${notificationHolder.notification}")
             startForeground(notificationHolder.notificationID, notificationHolder.notification)

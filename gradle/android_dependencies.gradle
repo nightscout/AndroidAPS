@@ -1,5 +1,5 @@
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
     defaultConfig {
         minSdkVersion 28
         targetSdkVersion 28
@@ -19,9 +19,15 @@ android {
         debug {
             testCoverageEnabled(project.hasProperty('coverage'))
         }
-        firebaseDisable {
-            System.setProperty("disableFirebase", "true")
-            ext.enableCrashlytics = false
+//        firebaseDisable {
+//            System.setProperty("disableFirebase", "true")
+//            ext.enableCrashlytics = false
+//        }
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['src/main/jniLibs']
         }
     }
 
@@ -30,7 +36,7 @@ android {
         targetCompatibility JavaVersion.VERSION_11
     }
 
-    lintOptions {
+    lint {
         checkReleaseBuilds false
         disable 'MissingTranslation'
         disable 'ExtraTranslation'

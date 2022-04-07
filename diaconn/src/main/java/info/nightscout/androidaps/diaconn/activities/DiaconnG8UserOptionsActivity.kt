@@ -19,13 +19,12 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
-import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import java.text.DecimalFormat
 import javax.inject.Inject
 
 class DiaconnG8UserOptionsActivity : NoSplashAppCompatActivity() {
 
-    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var context: Context
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump
