@@ -997,6 +997,7 @@
     <string name="smscommunicator_otp_install_info">On each follower phone install Authenticator app that support RFC 6238 TOTP tokens. Popular free apps are:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">By reseting authenticator you make all already provisioned authenticators invalid. You will need to set up them again!</string>
     <string name="overview_show_predictions">Predictions</string>
+    <string name="overview_show_treatments">Treatments</string>
     <string name="overview_show_deviationslope">Deviation slope</string>
     <string name="key_graphconfig" translatable="false">graphconfig</string>
     <string name="authorizationfailed">Authorization failed</string>
