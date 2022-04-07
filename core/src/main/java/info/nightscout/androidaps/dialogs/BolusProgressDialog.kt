@@ -85,7 +85,7 @@ class BolusProgressDialog : DaggerDialogFragment() {
         dialog?.setCanceledOnTouchOutside(false)
 
         val theme: Resources.Theme? = context?.theme
-        theme?.applyStyle(R.style.AppTheme,  true)
+        theme?.applyStyle(R.style.AppTheme_NoActionBar,  true)
 
         _binding = DialogBolusprogressBinding.inflate(inflater, container, false)
         return binding.root
