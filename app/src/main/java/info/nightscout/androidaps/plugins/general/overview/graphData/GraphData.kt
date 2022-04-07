@@ -88,6 +88,11 @@ class GraphData(
         addSeries(overviewData.treatmentsSeries)
     }
 
+    fun addTherapyEvents() {
+        maxY = maxOf(maxY, overviewData.maxTherapyEventValue)
+        addSeries(overviewData.therapyEventSeries)
+    }
+
     fun addActivity(scale: Double) {
         addSeries(overviewData.activitySeries)
         addSeries(overviewData.activityPredictionSeries)

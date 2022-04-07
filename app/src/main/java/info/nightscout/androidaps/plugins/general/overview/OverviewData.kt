@@ -263,6 +263,8 @@ class OverviewData @Inject constructor(
 
     var maxTreatmentsValue = 0.0
     var treatmentsSeries: PointsWithLabelGraphSeries<DataPointWithLabelInterface> = PointsWithLabelGraphSeries()
+    var maxTherapyEventValue = 0.0
+    var therapyEventSeries: PointsWithLabelGraphSeries<DataPointWithLabelInterface> = PointsWithLabelGraphSeries()
 
     var maxIobValueFound = Double.MIN_VALUE
     val iobScale = Scale()
