@@ -85,11 +85,11 @@ class AutotunePlugin @Inject constructor(
         get() = AutotuneFragment::class.java.name
 
     //Launch Autotune with default settings
-    override fun aapsAutotune() {
-        val daysBack = sp.getInt(R.string.key_autotune_default_tune_days, 5)
+    override fun aapsAutotune(daysBack: Int, profileToTune: String) {
+        var automationDaysBack = if (daysBack == 0) sp.getInt(R.string.key_autotune_default_tune_days, 5) else daysBack
         val autoSwitch = sp.getBoolean(R.string.key_autotune_auto, false)
         Thread(Runnable {
-            aapsAutotune(daysBack, autoSwitch)
+            aapsAutotune(automationDaysBack, autoSwitch, profileToTune)
         }).start()
     }
 
