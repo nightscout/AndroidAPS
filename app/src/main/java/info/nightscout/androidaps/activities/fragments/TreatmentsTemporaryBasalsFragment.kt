@@ -84,6 +84,8 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
         setHasOptionsMenu(true)
         binding.recyclerview.setHasFixedSize(true)
         binding.recyclerview.layoutManager = LinearLayoutManager(view.context)
+        binding.recyclerview.emptyView = binding.noRecordsText
+        binding.recyclerview.loadingView = binding.progressBar
     }
 
     private fun tempBasalsWithInvalid(now: Long) = repository
@@ -102,6 +104,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
 
     fun swapAdapter() {
         val now = System.currentTimeMillis()
+        binding.recyclerview.isLoading = true
         disposable +=
             if (activePlugin.activePump.isFakingTempsByExtendedBoluses) {
                 if (showInvalidated)

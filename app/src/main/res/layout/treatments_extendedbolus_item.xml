@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    card_view:cardBackgroundColor="?android:colorBackground">
+    app:cardBackgroundColor="?attr/colorSurface">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,9 +22,8 @@
             android:layout_marginBottom="5dp"
             android:background="?android:attr/dividerHorizontal"
             android:gravity="center"
-            android:text="1.1.2000"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            tools:ignore="HardcodedText" />
+            tools:text="1.1.2000" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -39,37 +38,35 @@
                 android:gravity="center_vertical"
                 android:paddingStart="10dp"
                 android:paddingEnd="5dp"
-                android:text="{fa-clock-o}"
-                tools:ignore="HardcodedText" />
+                tools:text="{fa-clock-o}" />
 
             <TextView
                 android:id="@+id/time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="18:00"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                tools:ignore="HardcodedText" />
+                tools:text="18:00" />
 
             <TextView
                 android:id="@+id/insulin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingStart="10dp"
-                android:text="150%"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                tools:ignore="HardcodedText,RtlSymmetry" />
+                tools:ignore="RtlSymmetry"
+                tools:text="150%" />
 
             <TextView
                 android:id="@+id/duration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingStart="10dp"
-                android:text="30 min"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                tools:ignore="HardcodedText,RtlSymmetry" />
+                tools:ignore="RtlSymmetry"
+                tools:text="30 min" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
                 android:layout_weight="1"
@@ -80,18 +77,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
-                android:text="PH"
                 android:textColor="?attr/setTempButton"
-                tools:ignore="HardcodedText" />
+                tools:text="PH" />
 
             <TextView
                 android:id="@+id/ns"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
-                android:text="NS"
                 android:textColor="?attr/setTempButton"
-                tools:ignore="HardcodedText" />
+                tools:text="NS" />
 
         </LinearLayout>
 
@@ -104,7 +99,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
-                android:paddingLeft="10dp"
+                android:paddingStart="10dp"
                 android:paddingEnd="5dp"
                 android:text="@string/tempbasals_netratio_label_string"
                 android:textAppearance="?android:attr/textAppearanceSmall"
@@ -116,17 +111,18 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:paddingEnd="10dp"
-                android:text="0.05 U/h"
                 android:textStyle="bold"
-                tools:ignore="HardcodedText,RtlSymmetry" />
+                tools:ignore="RtlSymmetry"
+                tools:text="0.05 U/h" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
-                android:paddingRight="10dp"
+                android:paddingEnd="10dp"
                 android:text="@string/tempbasals_iob_label_string"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                tools:ignore="RtlSymmetry" />
 
             <TextView
                 android:id="@+id/iob"
@@ -134,12 +130,11 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="30dp"
-                android:text="0.12 U"
                 android:textStyle="bold"
-                tools:ignore="HardcodedText" />
+                tools:text="0.12 U" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
                 android:layout_weight="1"
@@ -173,10 +168,10 @@
             android:id="@+id/delimiter"
             android:layout_width="fill_parent"
             android:layout_height="2dip"
-            android:layout_marginBottom="5dp"
             android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
             android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp"
             android:background="?android:attr/dividerHorizontal" />
 
     </LinearLayout>
