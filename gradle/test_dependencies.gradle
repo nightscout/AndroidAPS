@@ -1,6 +1,6 @@
 dependencies {
     testImplementation "junit:junit:$junit_version"
-    testImplementation 'org.json:json:20210307'
+    testImplementation "org.json:json:$json_version"
     testImplementation "org.mockito:mockito-core:$mockito_version"
     testImplementation "org.mockito:mockito-inline:$mockito_version"
     testImplementation "joda-time:joda-time:$jodatime_version"
