@@ -14,6 +14,7 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.database.entities.BolusCalculatorResult
 import info.nightscout.androidaps.database.entities.Carbs
+import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
@@ -82,8 +83,6 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
     private val disposable = CompositeDisposable()
     private lateinit var actionHelper: ActionModeHelper<MealLink>
     private val millsToThePast = T.days(30).msecs()
-
-    // private var selectedItems: SparseArray<MealLink> = SparseArray()
     private var showInvalidated = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
@@ -98,6 +97,8 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
         setHasOptionsMenu(true)
         binding.recyclerview.setHasFixedSize(true)
         binding.recyclerview.layoutManager = LinearLayoutManager(view.context)
+        binding.recyclerview.emptyView = binding.noRecordsText
+        binding.recyclerview.loadingView = binding.progressBar
     }
 
     private fun bolusMealLinksWithInvalid(now: Long) = repository
@@ -126,7 +127,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
 
     fun swapAdapter() {
         val now = System.currentTimeMillis()
-
+        binding.recyclerview.isLoading = true
         disposable +=
             if (showInvalidated)
                 carbsMealLinksWithInvalid(now)

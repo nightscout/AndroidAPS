@@ -1198,6 +1198,7 @@
     <string name="tempt_targets">Temp Targets</string>
     <string name="carbs_and_bolus">Carbs and bolus</string>
     <string name="confirm_remove_multiple_items">Are you sure you want to remove %1$d items</string>
+    <string name="no_records_available">No records available</string>
     <string name="hide_loop">Hide loop</string>
     <string name="show_loop">Show loop</string>
     <string name="count_selected">%1$d selected</string>
