@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    card_view:cardElevation="0dp"
-    card_view:cardBackgroundColor="?attr/cardItemBackgroundColor">
+    app:cardBackgroundColor="?attr/colorSurface">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,9 +22,8 @@
             android:layout_marginBottom="5dp"
             android:background="?android:attr/dividerHorizontal"
             android:gravity="center"
-            android:text="1.1.2000"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            tools:ignore="HardcodedText" />
+            tools:text="1.1.2000" />
 
         <LinearLayout
             android:id="@+id/metadata_layout"
@@ -40,16 +38,16 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="5dp"
                 android:gravity="center"
-                android:text="{fa-clock-o}"
-                tools:ignore="HardcodedText,RtlSymmetry" />
+                tools:ignore="RtlSymmetry"
+                tools:text="{fa-clock-o}" />
 
             <TextView
                 android:id="@+id/calc_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:text="11:45"
-                tools:ignore="HardcodedText,RtlSymmetry" />
+                tools:ignore="RtlSymmetry"
+                tools:text="11:45" />
 
             <TextView
                 android:layout_width="0dp"
@@ -82,16 +80,16 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="5dp"
                 android:gravity="center"
-                android:text="{fa-clock-o}"
-                tools:ignore="HardcodedText,RtlSymmetry" />
+                tools:ignore="RtlSymmetry"
+                tools:text="{fa-clock-o}" />
 
             <TextView
                 android:id="@+id/bolus_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:text="11:45"
-                tools:ignore="HardcodedText,RtlSymmetry" />
+                tools:ignore="RtlSymmetry"
+                tools:text="11:45" />
 
             <TextView
                 android:id="@+id/insulin"
@@ -99,9 +97,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="10dp"
-                android:text="1.00 U"
                 android:textStyle="bold"
-                tools:ignore="HardcodedText" />
+                tools:text="1.00 U" />
 
             <TextView
                 android:id="@+id/iob_label"
@@ -117,9 +114,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="0.45U"
                 android:textStyle="bold"
-                tools:ignore="HardcodedText" />
+                tools:text="0.45U" />
 
             <TextView
                 android:layout_width="0dp"
@@ -132,27 +128,24 @@
                 android:id="@+id/meal_or_correction"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Meal"
                 android:textAlignment="textEnd"
-                tools:ignore="HardcodedText" />
+                tools:text="Meal" />
 
             <TextView
                 android:id="@+id/bolus_ns"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:text="NS"
                 android:textColor="?attr/setTempButton"
-                tools:ignore="HardcodedText" />
+                tools:text="NS" />
 
             <TextView
                 android:id="@+id/bolus_pump"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:text="PH"
                 android:textColor="?attr/setTempButton"
-                tools:ignore="HardcodedText" />
+                tools:text="PH" />
 
             <TextView
                 android:id="@+id/bolus_invalid"
@@ -189,16 +182,16 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="5dp"
                 android:gravity="center"
-                android:text="{fa-clock-o}"
-                tools:ignore="HardcodedText,RtlSymmetry" />
+                tools:ignore="RtlSymmetry"
+                tools:text="{fa-clock-o}" />
 
             <TextView
                 android:id="@+id/carbs_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:text="11:45"
-                tools:ignore="HardcodedText,RtlSymmetry" />
+                tools:ignore="RtlSymmetry"
+                tools:text="11:45" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -234,18 +227,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:text="NS"
                 android:textColor="?attr/setTempButton"
-                tools:ignore="HardcodedText" />
+                tools:text="NS" />
 
             <TextView
                 android:id="@+id/carbs_pump"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:text="PH"
                 android:textColor="?attr/setTempButton"
-                tools:ignore="HardcodedText" />
+                tools:text="PH" />
 
             <TextView
                 android:id="@+id/carbs_invalid"
