@@ -811,6 +811,7 @@
     <string name="smscommunicator_otp_install_info">בכל אחד מהטלפונים העוקבים, התקינו יישום מאמת התומך באסימוני RFC 6238 TOTP. יישומים פופולריים בחינם הם:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">אתחול המאמת גורם למאמתים שסופקו לכם להפסיק להיות חוקיים ויהיה צורך להגדירם שוב!</string>
     <string name="overview_show_predictions">חיזוי</string>
+    <string name="overview_show_treatments">טיפולים</string>
     <string name="overview_show_deviationslope">שיפוע הסטייה</string>
     <string name="authorizationfailed">ההרשאה נכשלה</string>
     <string name="overview_show_absinsulin">אינסולין מוחלט</string>
