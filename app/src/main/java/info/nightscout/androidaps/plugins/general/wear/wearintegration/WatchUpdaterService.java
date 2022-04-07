@@ -409,13 +409,12 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
         double endBasalValue = beginBasalValue;
 
         TemporaryBasal tb1 = iobCobCalculator.getTempBasalIncludingConvertedExtended(runningTime);
-        TemporaryBasal tb2 = iobCobCalculator.getTempBasalIncludingConvertedExtended(runningTime); //TODO for Adrian ... what's the meaning?
+        TemporaryBasal tb2;
         double tb_before = beginBasalValue;
         double tb_amount = beginBasalValue;
         long tb_start = runningTime;
 
         if (tb1 != null) {
-            tb_before = beginBasalValue;
             Profile profileTB = profileFunction.getProfile(runningTime);
             if (profileTB != null) {
                 tb_amount = TemporaryBasalExtensionKt.convertedToAbsolute(tb1, runningTime, profileTB);
@@ -443,7 +442,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             tb2 = iobCobCalculator.getTempBasalIncludingConvertedExtended(runningTime);
 
             if (tb1 == null && tb2 == null) {
-                //no temp stays no temp
+                ; //no temp stays no temp
 
             } else if (tb1 != null && tb2 == null) {
                 //temp is over -> push it
