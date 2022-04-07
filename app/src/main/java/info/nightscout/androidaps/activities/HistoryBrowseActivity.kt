@@ -5,10 +5,13 @@ import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Bundle
 import android.util.DisplayMetrics
+import android.view.Menu
+import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.appcompat.widget.PopupMenu
 import com.jjoe64.graphview.GraphView
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
@@ -148,6 +151,24 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
             true
         }
 
+        binding.chartMenuButton.setOnLongClickListener { v: View ->
+            val popup = PopupMenu(v.context, v)
+            popup.menu.add(Menu.NONE, 6, Menu.NONE, rh.gq(R.plurals.hours, 6, 6))
+            popup.menu.add(Menu.NONE, 12, Menu.NONE, rh.gq(R.plurals.hours, 12, 12))
+            popup.menu.add(Menu.NONE, 18, Menu.NONE, rh.gq(R.plurals.hours, 18, 18))
+            popup.menu.add(Menu.NONE, 24, Menu.NONE, rh.gq(R.plurals.hours, 24, 24))
+            popup.setOnMenuItemClickListener {
+                // id == Range to display ...
+                rangeToDisplay = it.itemId
+                setTime(overviewData.fromTime)
+                loadAll("rangeChange")
+                return@setOnMenuItemClickListener true
+            }
+            binding.chartMenuButton.setImageResource(R.drawable.ic_arrow_drop_up_white_24dp)
+            popup.setOnDismissListener { binding.chartMenuButton.setImageResource(R.drawable.ic_arrow_drop_down_white_24dp) }
+            popup.show()
+            false
+        }
         // create an OnDateSetListener
         val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
             Calendar.getInstance().also { calendar ->
@@ -190,7 +211,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         binding.bgGraph.gridLabelRenderer?.reloadStyles()
         binding.bgGraph.gridLabelRenderer?.labelVerticalWidth = axisWidth
 
-        overviewMenus.setupChartMenu(context, binding.chartMenuButton, overviewData, ::updateGUI)
+        overviewMenus.setupChartMenu(context, binding.chartMenuButton)
         prepareGraphsIfNeeded(overviewMenus.setting.size)
         savedInstanceState?.let { bundle ->
             rangeToDisplay = bundle.getInt("rangeToDisplay", 0)
