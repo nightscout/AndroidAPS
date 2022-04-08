@@ -154,14 +154,15 @@ class AutotunePlugin @Inject constructor(
                 val from = starttime + i * 24 * 60 * 60 * 1000L
                 val to = from + 24 * 60 * 60 * 1000L
                 atLog("Tune day " + (i + 1) + " of " + daysBack)
-
-                //autotuneIob contains BG and Treatments data from history (<=> query for ns-treatments and ns-entries)
-                autotuneIob.initializeData(from, to, tunedProfile!!)
-               //<=> ns-entries.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
-                autotuneFS.exportEntries(autotuneIob)
-                //<=> ns-treatments.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine (include treatments ,tempBasal and extended
-                autotuneFS.exportTreatments(autotuneIob)
-                preppedGlucose = autotunePrep.categorizeBGDatums(autotuneIob, tunedProfile!!, localInsulin)
+                tunedProfile?.let {
+                    //autotuneIob contains BG and Treatments data from history (<=> query for ns-treatments and ns-entries)
+                    autotuneIob.initializeData(from, to, it)
+                   //<=> ns-entries.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
+                    autotuneFS.exportEntries(autotuneIob)
+                    //<=> ns-treatments.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine (include treatments ,tempBasal and extended
+                    autotuneFS.exportTreatments(autotuneIob)
+                    preppedGlucose = autotunePrep.categorizeBGDatums(autotuneIob, it, localInsulin)
+                }
                 //<=> autotune.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
                 if (preppedGlucose == null || tunedProfile == null) {
                     result = rh.gs(R.string.autotune_error)
