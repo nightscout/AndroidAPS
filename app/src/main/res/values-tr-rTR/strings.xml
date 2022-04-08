@@ -996,6 +996,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="tempt_targets">Geçici Hedefler</string>
     <string name="carbs_and_bolus">Karbonhidrat ve bolus</string>
     <string name="confirm_remove_multiple_items">%1$d öğeyi kaldırmak istediğinizden emin misiniz</string>
+    <string name="no_records_available">Kayıt mevcut değil</string>
     <string name="hide_loop">Döngüyü gizle</string>
     <string name="show_loop">Döngüyü göster</string>
     <string name="count_selected">%1$d seçildi</string>
