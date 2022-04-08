@@ -19,10 +19,12 @@ import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
-import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import info.nightscout.androidaps.core.R
+import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.shared.SafeParse
 import java.text.NumberFormat
@@ -39,9 +41,10 @@ open class NumberPicker(context: Context, attrs: AttributeSet? = null) : LinearL
         fun onValueChanged(value: Double)
     }
 
-    var editText: EditText? = null
+    var editText: TextInputEditText? = null
     private var minusButton: ImageButton? = null
     private var plusButton: ImageButton? = null
+    var textInputLayout: TextInputLayout? = null
     var currentValue = 0.0
     var minValue = 0.0
     var maxValue = 1.0
@@ -110,6 +113,7 @@ open class NumberPicker(context: Context, attrs: AttributeSet? = null) : LinearL
         minusButton?.id = generateViewId()
         plusButton = findViewById(R.id.increment)
         plusButton?.id = generateViewId()
+        textInputLayout = findViewById(R.id.textInputLayout)
         editText = findViewById(R.id.display)
         editText?.id = generateViewId()
         minusButton?.setOnTouchListener(this)
@@ -124,7 +128,9 @@ open class NumberPicker(context: Context, attrs: AttributeSet? = null) : LinearL
             override fun afterTextChanged(s: Editable) {
                 if (focused) currentValue = SafeParse.stringToDouble(editText?.text.toString())
                 callValueChangedListener()
-                okButton?.visibility = if (currentValue > maxValue || currentValue < minValue) INVISIBLE else VISIBLE
+                val inValid = currentValue > maxValue || currentValue < minValue
+                okButton?.visibility = inValid.not().toVisibility()
+                textInputLayout?.error = if (inValid) "invalid" else null
             }
         })
         editText?.setOnFocusChangeListener { _: View?, hasFocus: Boolean ->

@@ -54,6 +54,8 @@ class PrepareTreatmentsDataWorker(
         rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TREATMENTS_DATA, 0, null))
         data.overviewData.maxTreatmentsValue = 0.0
         val filteredTreatments: MutableList<DataPointWithLabelInterface> = ArrayList()
+        val filteredTherapyEvents: MutableList<DataPointWithLabelInterface> = ArrayList()
+
         repository.getBolusesDataFromTimeToTime(data.overviewData.fromTime, data.overviewData.endTime, true).blockingGet()
             .map { BolusDataPoint(it, rh, activePlugin, defaultValueHelper) }
             .filter { it.data.type == Bolus.Type.NORMAL || it.data.type == Bolus.Type.SMB }
@@ -102,7 +104,7 @@ class PrepareTreatmentsDataWorker(
             .filterTimeframe(data.overviewData.fromTime, data.overviewData.endTime)
             .forEach {
                 if (it.y == 0.0) it.y = getNearestBg(data.overviewData, it.x.toLong())
-                filteredTreatments.add(it)
+                filteredTherapyEvents.add(it)
             }
 
         // increase maxY if a treatment forces it's own height that's higher than a BG value
@@ -110,8 +112,13 @@ class PrepareTreatmentsDataWorker(
             .maxOrNull()
             ?.let(::addUpperChartMargin)
             ?.let { data.overviewData.maxTreatmentsValue = maxOf(data.overviewData.maxTreatmentsValue, it) }
+        filteredTherapyEvents.map { it.y }
+            .maxOrNull()
+            ?.let(::addUpperChartMargin)
+            ?.let { data.overviewData.maxTherapyEventValue = maxOf(data.overviewData.maxTherapyEventValue, it) }
 
         data.overviewData.treatmentsSeries = PointsWithLabelGraphSeries(filteredTreatments.toTypedArray())
+        data.overviewData.therapyEventSeries = PointsWithLabelGraphSeries(filteredTherapyEvents.toTypedArray())
 
         rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TREATMENTS_DATA, 100, null))
         return Result.success()

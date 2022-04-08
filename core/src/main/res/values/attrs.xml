@@ -1,16 +1,12 @@
 <resources>
     <!---bolus color -->
     <attr name="bolusColor" format="reference|color" />
-    <!---Number Picker text color -->
-    <attr name="numPickerText" format="reference|color" />
     <!---NS Client action text color -->
     <attr name="actionButton" format="reference|color" />
     <!---Text color for Quickwizard and more -->
     <attr name="cardObjectiveText" format="reference|color" />
     <!---Text color for misc buttons and texts -->
     <attr name="alarmColor" format="reference|color" />
-    <!-- Number picker and more -->
-    <attr name="totalBackground" format="reference|color" />
     <!-- BG source temp button -->
     <attr name="setTempButton" format="reference|color" />
     <!-- Card Item-->

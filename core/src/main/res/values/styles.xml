@@ -40,16 +40,12 @@
         <item name="actionModeCloseDrawable">@drawable/ic_close</item>
         <!---bolus color -->
         <item name="bolusColor">@color/bolus</item>
-        <!---Number Picker text color -->
-        <item name="numPickerText">@color/black</item>
         <!---NS Client action text color -->
         <item name="actionButton">@android:color/holo_orange_light</item>
         <!---Text color for Quickwizard and more -->
         <item name="cardObjectiveText">@color/cardObjectiveText</item>
         <!---Text color for misc buttons and texts -->
         <item name="alarmColor">@color/alarm</item>
-        <!-- Number picker and more -->
-        <item name="totalBackground">@color/gray</item>
         <!-- BG source temp button -->
         <item name="setTempButton">@color/colorSetTempButton</item>
         <!-- Card Item-->
