@@ -108,6 +108,7 @@
     <string name="carbs">Carbs</string>
     <string name="invalidprofile">Invalid profile !!!</string>
     <string name="noprofileset">NO PROFILE SET</string>
+    <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">Date</string>
     <string name="units_label">Units</string>
     <string name="dia_label">DIA</string>

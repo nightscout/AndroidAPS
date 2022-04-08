@@ -30,16 +30,17 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var uel: UserEntryLogger
 
     var defaultValue = 0
-    var inputProfileName: InputProfileName = InputProfileName(rh, activePlugin, "")
-    var daysBack: InputDuration = InputDuration(5, InputDuration.TimeUnit.DAYS)
+    var inputProfileName: InputProfileName = InputProfileName(rh, activePlugin, "", true)
+    var daysBack: InputDuration = InputDuration(0, InputDuration.TimeUnit.DAYS)
 
     override fun friendlyName(): Int = R.string.autotune_run
-    override fun shortDescription(): String = resourceHelper.gs(R.string.autotune_profile, profileFunction.getProfileName())
+    override fun shortDescription(): String = resourceHelper.gs(R.string.autotune_profile, inputProfileName.value)
     @DrawableRes override fun icon(): Int = R.drawable.ic_actions_profileswitch
 
     override fun doAction(callback: Callback) {
+        val profileName = if (inputProfileName.value == rh.gs(R.string.active)) "" else inputProfileName.value
         if(sp.getBoolean(R.string.key_autotune_auto, false)) {
-            autotunePlugin.aapsAutotune(daysBack.value, inputProfileName.value)
+            autotunePlugin.aapsAutotune(daysBack.value, profileName)
             var message = R.string.autotune_run_with_autoswitch
             /* Todo, get end result and send message according to succeed or not (rxbus to update)
             if (!autotunePlugin.lastRunSuccess) {
@@ -50,7 +51,7 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
             callback.result(PumpEnactResult(injector).success(autotunePlugin.lastRunSuccess).comment(message))?.run()
             return
         } else {
-            autotunePlugin.aapsAutotune(daysBack.value, inputProfileName.value)
+            autotunePlugin.aapsAutotune(daysBack.value, profileName)
             var message = R.string.autotune_run_without_autoswitch
             /*
             if (!autotunePlugin.lastRunSuccess) {
@@ -87,7 +88,7 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
 
     override fun fromJSON(data: String): Action {
         val o = JSONObject(data)
-        inputProfileName.value = JsonHelper.safeGetString(o, "profileToSwitchTo", "")
+        inputProfileName.value = JsonHelper.safeGetString(o, "profileToTune", "")
         defaultValue = JsonHelper.safeGetInt(o, "tunedays")
         if (defaultValue == 0)
             defaultValue = sp.getInt(R.string.key_autotune_default_tune_days, 5)

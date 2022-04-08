@@ -10,14 +10,15 @@ import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 
-class InputProfileName(private val rh: ResourceHelper, private val activePlugin: ActivePlugin, val name: String = "") : Element() {
+class InputProfileName(private val rh: ResourceHelper, private val activePlugin: ActivePlugin, val name: String = "", val addActive: Boolean = false) : Element() {
 
     var value: String = name
 
     override fun addToLayout(root: LinearLayout) {
         val profileStore = activePlugin.activeProfileSource.profile ?: return
         val profileList = profileStore.getProfileList()
-
+        if (addActive)
+            profileList.add(0, rh.gs(R.string.active))
         root.addView(
             Spinner(root.context).apply {
                 adapter = ArrayAdapter(root.context, R.layout.spinner_centered, profileList).apply {
