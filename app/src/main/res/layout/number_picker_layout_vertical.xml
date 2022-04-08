@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:errorEnabled="true"
+        app:errorIconDrawable="@null"
         app:hintEnabled="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -24,6 +25,8 @@
             android:gravity="center"
             android:imeOptions="actionDone"
             android:inputType="number"
+            android:paddingStart="2dp"
+            android:paddingEnd="2dp"
             tools:text="1" />
 
     </com.google.android.material.textfield.TextInputLayout>
