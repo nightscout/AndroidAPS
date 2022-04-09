@@ -5,7 +5,6 @@
     <color name="colorPrimary">#3378C5</color>
     <color name="colorPrimaryDark">#676767</color>
     <color name="colorAccent">#40bbaa</color>
-    <color name="mdtp_white">#ffffff</color>
     <color name="mdtp_line_dark">#808080</color>
     <color name="colorLightGray">#d8d8d8</color>
     <color name="cardColorBackground">#CBCBCB</color>
@@ -76,7 +75,7 @@
     <!--    Loop     -->
     <color name="loopDisconnected">#939393</color>
     <color name="loopClosed">#00C03E</color>
-    <color name="loopSuspended">#FFFF13</color>
+    <color name="loopSuspended">#F6CE22</color>
     <color name="loopOpened">#4983D7</color>
     <color name="loopDisabled">#FF1313</color>
 
@@ -97,7 +96,7 @@
     <color name="red">#FF0000</color>
     <color name="blue">#0000FF</color>
 
-    <color name="ribbonDefault">#5a595b</color>
+    <color name="ribbonDefault">#8C8C8C</color>
     <color name="daySelected">#D000FF00</color>
     <color name="weekdayOutline">#1ea3e5</color>
     <color name="weekendOutline">#1e88e5</color>
@@ -169,7 +168,6 @@
     <color name="devslopepos">#FFFFFF00</color>
     <color name="devslopeneg">#FFFF00FF</color>
     <color name="actionsConfirm">#FFFF00</color>
-    <color name="tabBgColorSelected">#FF666666</color>
     <color name="deviations">#FF0000</color>
     <color name="cobAlert">#7484E2</color>
     <color name="inrangebackground">#2800FF00</color>
@@ -190,7 +188,7 @@
     <color name="cardObjectiveText">#779ECB</color>
 
     <color name="colorAcceptTempButton">#E19701</color>
-    <color name="colorTreatmentButton">#429BF5</color>
+    <color name="colorTreatmentButton">#006493</color>
     <color name="colorInsulinButton">#67dfe8</color>
     <color name="colorCarbsButton">#E19701</color>
     <color name="colorCalibrationButton">#e93057</color>
@@ -298,18 +296,66 @@
     <color name="ic_pod_management_rl_stats">@color/rl_board_shape</color>
     <color name="ic_pod_management_rl_stats_outline">@color/rl_icon_outline</color>
 
-    <!---Example light theme colors -->
-    <color name="aaps_theme_light_primary">#1D5FA5</color>
+    <!---Example light theme colors for testing
+         build with material 3 theme builder
+         colors can be used also if we change to material 3
+         !!! In the moment only tested in light theme !!! -->
+    <color name="aaps_theme_light_primary">#006493</color>
     <color name="aaps_theme_light_onPrimary">#FFFFFF</color>
-    <color name="aaps_theme_light_secondary">#5954A8</color>
+    <color name="aaps_theme_light_primaryContainer">#C7E6FF</color>
+    <color name="aaps_theme_light_onPrimaryContainer">#001E30</color>
+    <color name="aaps_theme_light_secondary">#006A5F</color>
     <color name="aaps_theme_light_onSecondary">#FFFFFF</color>
+    <color name="aaps_theme_light_secondaryContainer">#4FFBE6</color>
+    <color name="aaps_theme_light_onSecondaryContainer">#00201C</color>
+    <color name="aaps_theme_light_tertiary">#7D5260</color>
+    <color name="aaps_theme_light_onTertiary">#FFFFFF</color>
+    <color name="aaps_theme_light_tertiaryContainer">#FFD8E4</color>
+    <color name="aaps_theme_light_onTertiaryContainer">#31111D</color>
     <color name="aaps_theme_light_error">#B3261E</color>
+    <color name="aaps_theme_light_errorContainer">#F9DEDC</color>
     <color name="aaps_theme_light_onError">#FFFFFF</color>
-    <color name="aaps_theme_light_background">#FFFBFE</color>
-    <color name="aaps_theme_light_onBackground">#1C1B1F</color>
-    <color name="aaps_theme_light_surface">#FAF9F8</color>
-    <color name="aaps_theme_light_onSurface">#1C1B1F</color>
-    <color name="aaps_theme_light_surfaceVariant">#E2E0DF</color>
+    <color name="aaps_theme_light_onErrorContainer">#410E0B</color>
+    <color name="aaps_theme_light_background">#FFFBFC</color>
+    <color name="aaps_theme_light_onBackground">#1D1B1E</color>
+    <color name="aaps_theme_light_surface">#FFFBFC</color>
+    <color name="aaps_theme_light_onSurface">#1D1B1E</color>
+    <color name="aaps_theme_light_surfaceVariant">#E7E0EC</color>
+    <color name="aaps_theme_light_onSurfaceVariant">#49454F</color>
+    <color name="aaps_theme_light_outline">#79747E</color>
+    <color name="aaps_theme_light_inverseOnSurface">#F5EFF3</color>
+    <color name="aaps_theme_light_inverseSurface">#322F33</color>
+    <color name="aaps_theme_light_inversePrimary">#88CEFF</color>
+    <color name="aaps_theme_light_shadow">#000000</color>
+    <color name="aaps_theme_light_primaryInverse">#88CEFF</color>
+    <color name="aaps_theme_dark_primary">#88CEFF</color>
+    <color name="aaps_theme_dark_onPrimary">#00344F</color>
+    <color name="aaps_theme_dark_primaryContainer">#004B6F</color>
+    <color name="aaps_theme_dark_onPrimaryContainer">#C7E6FF</color>
+    <color name="aaps_theme_dark_secondary">#17DECA</color>
+    <color name="aaps_theme_dark_onSecondary">#003730</color>
+    <color name="aaps_theme_dark_secondaryContainer">#005047</color>
+    <color name="aaps_theme_dark_onSecondaryContainer">#4FFBE6</color>
+    <color name="aaps_theme_dark_tertiary">#EFB8C8</color>
+    <color name="aaps_theme_dark_onTertiary">#492532</color>
+    <color name="aaps_theme_dark_tertiaryContainer">#633B48</color>
+    <color name="aaps_theme_dark_onTertiaryContainer">#FFD8E4</color>
+    <color name="aaps_theme_dark_error">#F2B8B5</color>
+    <color name="aaps_theme_dark_errorContainer">#8C1D18</color>
+    <color name="aaps_theme_dark_onError">#601410</color>
+    <color name="aaps_theme_dark_onErrorContainer">#F9DEDC</color>
+    <color name="aaps_theme_dark_background">#1D1B1E</color>
+    <color name="aaps_theme_dark_onBackground">#E7E1E5</color>
+    <color name="aaps_theme_dark_surface">#1D1B1E</color>
+    <color name="aaps_theme_dark_onSurface">#E7E1E5</color>
+    <color name="aaps_theme_dark_surfaceVariant">#49454F</color>
+    <color name="aaps_theme_dark_onSurfaceVariant">#CAC4D0</color>
+    <color name="aaps_theme_dark_outline">#938F99</color>
+    <color name="aaps_theme_dark_inverseOnSurface">#1D1B1E</color>
+    <color name="aaps_theme_dark_inverseSurface">#E7E1E5</color>
+    <color name="aaps_theme_dark_inversePrimary">#006493</color>
+    <color name="aaps_theme_dark_shadow">#000000</color>
+    <color name="aaps_theme_dark_primaryInverse">#006493</color>
 
 
 </resources>
