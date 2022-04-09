@@ -5,7 +5,6 @@
     <color name="colorPrimary">#96CAF2</color>
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#40bbaa</color>
-    <color name="mdtp_white">#ffffff</color>
     <color name="mdtp_line_dark">#808080</color>
     <color name="colorLightGray">#d8d8d8</color>
     <color name="cardColorBackground">#212121</color>
@@ -166,7 +165,6 @@
     <color name="devslopepos">#FFFFFF00</color>
     <color name="devslopeneg">#FFFF00FF</color>
     <color name="actionsConfirm">#FFFF00</color>
-    <color name="tabBgColorSelected">#FF666666</color>
     <color name="deviations">#FF0000</color>
     <color name="cobAlert">#7484E2</color>
     <color name="inrangebackground">#2800FF00</color>
