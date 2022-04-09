@@ -53,7 +53,6 @@ class AutotuneFragment : DaggerFragment() {
     @Inject lateinit var sp: SP
     @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var localProfilePlugin: LocalProfilePlugin
     @Inject lateinit var fabricPrivacy: FabricPrivacy
@@ -105,17 +104,18 @@ class AutotuneFragment : DaggerFragment() {
         binding.profileList.onItemClickListener = AdapterView.OnItemClickListener { _, _, _, _ ->
             profileName = if (binding.profileList.text.toString() == rh.gs(R.string.active)) "" else binding.profileList.text.toString()
             profile = ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(it) } ?:profileFunction.getProfile(), LocalInsulin(""), injector)
+            autotunePlugin.selectedProfile = profileName
             resetParam()
             updateGui()
         }
 
         binding.autotuneCopylocal.setOnClickListener {
-            val localName = resourceHelper.gs(R.string.autotune_tunedprofile_name) + " " + dateUtil.dateAndTimeString(autotunePlugin.lastRun)
+            val localName = rh.gs(R.string.autotune_tunedprofile_name) + " " + dateUtil.dateAndTimeString(autotunePlugin.lastRun)
             val circadian = sp.getBoolean(R.string.key_autotune_circadian_ic_isf, false)
             autotunePlugin.tunedProfile?.let {  tunedProfile ->
                 showConfirmation(requireContext(),
-                                 resourceHelper.gs(R.string.autotune_copy_localprofile_button),
-                                 resourceHelper.gs(R.string.autotune_copy_local_profile_message) + "\n" + localName + " " + dateUtil.dateAndTimeString(lastRun),
+                                 rh.gs(R.string.autotune_copy_localprofile_button),
+                                 rh.gs(R.string.autotune_copy_local_profile_message) + "\n" + localName + " " + dateUtil.dateAndTimeString(lastRun),
                                  Runnable {
                                      localProfilePlugin.addProfile(localProfilePlugin.copyFrom(tunedProfile.getProfile(circadian), localName))
                                      rxBus.send(EventLocalProfileChanged())
@@ -147,7 +147,7 @@ class AutotuneFragment : DaggerFragment() {
             tunedProfile?.let { tunedP ->
                 log("ProfileSwitch pressed")
                 tunedP.profileStore(circadian)?.let {
-                    showConfirmation(requireContext(), resourceHelper.gs(R.string.activate_profile) + ": " + tunedP.profilename + " ?", Runnable {
+                    showConfirmation(requireContext(), rh.gs(R.string.activate_profile) + ": " + tunedP.profilename + " ?", Runnable {
                         val now = dateUtil.now()
                         if (profileFunction.createProfileSwitch(
                                 it,
@@ -176,7 +176,7 @@ class AutotuneFragment : DaggerFragment() {
         lastRun = autotunePlugin.lastRun
         if (lastRun > MidnightTime.calc(System.currentTimeMillis() - autotunePlugin.autotuneStartHour * 3600 * 1000L) + autotunePlugin.autotuneStartHour * 3600 * 1000L && autotunePlugin.result !=="")
         {
-            binding.tuneWarning.text = resourceHelper.gs(R.string.autotune_warning_after_run)
+            binding.tuneWarning.text = rh.gs(R.string.autotune_warning_after_run)
             binding.tuneDays.value = autotunePlugin.lastNbDays.toDouble()
         } else { //if new day reinit result, default days, warning and button's visibility
             resetParam()
@@ -187,15 +187,6 @@ class AutotuneFragment : DaggerFragment() {
     @Synchronized
     override fun onResume() {
         super.onResume()
-        profileStore = activePlugin.activeProfileSource.profile ?: ProfileStore(injector, JSONObject(), dateUtil)
-        profileName = if (binding.profileList.text.toString() == rh.gs(R.string.active)) "" else binding.profileList.text.toString()
-        profile = ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(it) } ?:profileFunction.getProfile(), LocalInsulin(""), injector)
-        val profileList: ArrayList<CharSequence> = profileStore.getProfileList()
-        profileList.add(0, rh.gs(R.string.active))
-        context?.let { context ->
-            binding.profileList.setAdapter(ArrayAdapter(context, R.layout.spinner_centered, profileList))
-            binding.profileList.setText(if (!autotunePlugin.selectedProfile.isEmpty()) profileList[0] else autotunePlugin.selectedProfile, false)
-        }
         disposable += rxBus
             .toObservable(EventAutotuneUpdateGui::class.java)
             .observeOn(AndroidSchedulers.mainThread())
@@ -221,14 +212,29 @@ class AutotuneFragment : DaggerFragment() {
 
     @Synchronized
     private fun updateGui() {
+        profileStore = activePlugin.activeProfileSource.profile ?: ProfileStore(injector, JSONObject(), dateUtil)
+        profileName = if (binding.profileList.text.toString() == rh.gs(R.string.active)) "" else binding.profileList.text.toString()
+        profile = ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(it) } ?:profileFunction.getProfile(), LocalInsulin(""), injector)
+        val profileList: ArrayList<CharSequence> = profileStore.getProfileList()
+        profileList.add(0, rh.gs(R.string.active))
+        context?.let { context ->
+            binding.profileList.setAdapter(ArrayAdapter(context, R.layout.spinner_centered, profileList))
+
+        } ?: return
+        // set selected to actual profile
+        if (autotunePlugin.selectedProfile.isNotEmpty())
+            binding.profileList.setText(autotunePlugin.selectedProfile, false)
+        else {
+            binding.profileList.setText(profileList[0], false)
+        }
         if (autotunePlugin.calculationRunning) {
             binding.autotuneRun.visibility = View.GONE
             binding.autotuneCompare.visibility = View.GONE
-            binding.tuneWarning.text = resourceHelper.gs(R.string.autotune_warning_during_run)
+            binding.tuneWarning.text = rh.gs(R.string.autotune_warning_during_run)
             binding.tuneResult.text = autotunePlugin.result
         } else if (autotunePlugin.lastRunSuccess) {
             binding.autotuneRun.visibility = View.VISIBLE
-            binding.tuneWarning.text = resourceHelper.gs(R.string.autotune_warning_after_run)
+            binding.tuneWarning.text = rh.gs(R.string.autotune_warning_after_run)
             binding.tuneResult.text = autotunePlugin.result
             binding.autotuneCompare.visibility = View.VISIBLE
         } else {
@@ -246,13 +252,13 @@ class AutotuneFragment : DaggerFragment() {
     private fun addWarnings(): String {
         var warning = ""
         var nl = ""
-        if (!profile.isValid) return resourceHelper.gs(R.string.autotune_profile_invalid)
+        if (!profile.isValid) return rh.gs(R.string.autotune_profile_invalid)
         if (profile.icSize > 1) {
-            warning += nl + resourceHelper.gs(R.string.format_autotune_ic_warning, profile.icSize, profile.ic)
+            warning += nl + rh.gs(R.string.format_autotune_ic_warning, profile.icSize, profile.ic)
             nl = "\n"
         }
         if (profile.isfSize > 1) {
-            warning += nl + resourceHelper.gs(R.string.format_autotune_isf_warning, profile.isfSize, Profile.fromMgdlToUnits(profile.isf, profileFunction.getUnits()), profileFunction.getUnits().asText)
+            warning += nl + rh.gs(R.string.format_autotune_isf_warning, profile.isfSize, Profile.fromMgdlToUnits(profile.isf, profileFunction.getUnits()), profileFunction.getUnits().asText)
         }
         return warning
     }
