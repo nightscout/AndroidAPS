@@ -93,6 +93,7 @@ class AutotuneFragment : DaggerFragment() {
             autotunePlugin.calculationRunning = true
             autotunePlugin.lastNbDays = daysBack.toString()
             autotunePlugin.copyButtonVisibility = View.GONE
+            autotunePlugin.updateButtonVisibility = View.GONE
             autotunePlugin.profileSwitchButtonVisibility = View.GONE
             Thread(Runnable {
                 autotunePlugin.aapsAutotune(daysBack, false, profileName)
@@ -101,7 +102,7 @@ class AutotuneFragment : DaggerFragment() {
             lastRun = autotunePlugin.lastRun
             updateGui()
         }
-        binding.profileList.onItemClickListener = AdapterView.OnItemClickListener { _, _, _, _ ->
+        binding.profileList.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
             profileName = if (binding.profileList.text.toString() == rh.gs(R.string.active)) "" else binding.profileList.text.toString()
             profile = ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(it) } ?:profileFunction.getProfile(), LocalInsulin(""), injector)
             autotunePlugin.selectedProfile = profileName
@@ -120,9 +121,33 @@ class AutotuneFragment : DaggerFragment() {
                                      localProfilePlugin.addProfile(localProfilePlugin.copyFrom(tunedProfile.getProfile(circadian), localName))
                                      rxBus.send(EventLocalProfileChanged())
                                      autotunePlugin.copyButtonVisibility = View.GONE
+                                     uel.log(
+                                         UserEntry.Action.NEW_PROFILE,
+                                         UserEntry.Sources.Autotune,
+                                         ValueWithUnit.SimpleString(localName)
+                                     )
                                      updateGui()
                                  })
             }
+        }
+
+        binding.autotuneUpdateProfile.setOnClickListener {
+            val localName = autotunePlugin.pumpProfile?.profilename ?:rh.gs(R.string.autotune_tunedprofile_name)
+            showConfirmation(requireContext(),
+                             rh.gs(R.string.autotune_update_input_profile_button),
+                             rh.gs(R.string.autotune_update_local_profile_message) + "\n" + localName,
+                             Runnable {
+                                 autotunePlugin.tunedProfile?.profilename = localName
+                                 autotunePlugin.updateProfile(autotunePlugin.tunedProfile)
+                                 autotunePlugin.updateButtonVisibility = View.GONE
+                                 uel.log(
+                                     UserEntry.Action.STORE_PROFILE,
+                                     UserEntry.Sources.Autotune,
+                                     ValueWithUnit.SimpleString(localName)
+                                 )
+                                 updateGui()
+                             }
+            )
         }
 
         binding.autotuneCompare.setOnClickListener {
@@ -136,41 +161,50 @@ class AutotuneFragment : DaggerFragment() {
                     it.putString("customProfile", pumpProfile?.profile?.toPureNsJson(dateUtil).toString())
                     it.putString("customProfile2", tunedprofile?.toPureNsJson(dateUtil).toString())
                     it.putString("customProfileUnits", profileFunction.getUnits().asText)
-                    it.putString("customProfileName", pumpProfile?.profilename + "\n" + autotunePlugin.tunedProfile?.profilename)
+                    it.putString("customProfileName", pumpProfile?.profilename + "\n" + rh.gs(R.string.autotune_tunedprofile_name))
                 }
             }.show(childFragmentManager, "ProfileViewDialog")
         }
 
-        binding.autotuneProfileswitch.setOnClickListener{
+        binding.autotuneProfileswitch.setOnClickListener {
             val tunedProfile = autotunePlugin.tunedProfile
+            autotunePlugin.updateProfile(tunedProfile)
             val circadian = sp.getBoolean(R.string.key_autotune_circadian_ic_isf, false)
             tunedProfile?.let { tunedP ->
                 log("ProfileSwitch pressed")
                 tunedP.profileStore(circadian)?.let {
-                    showConfirmation(requireContext(), rh.gs(R.string.activate_profile) + ": " + tunedP.profilename + " ?", Runnable {
-                        val now = dateUtil.now()
-                        if (profileFunction.createProfileSwitch(
-                                it,
-                                profileName = tunedP.profilename,
-                                durationInMinutes = 0,
-                                percentage = 100,
-                                timeShiftInHours = 0,
-                                timestamp = now
-                            )
-                        ) {
-                            uel.log(
-                                UserEntry.Action.PROFILE_SWITCH,
-                                UserEntry.Sources.Autotune,
-                                "Autotune AutoSwitch",
-                                ValueWithUnit.SimpleString(autotunePlugin.tunedProfile!!.profilename))
-                        }
-                        rxBus.send(EventLocalProfileChanged())
-                        updateGui()
-                    })
+                    showConfirmation(requireContext(),
+                                     rh.gs(R.string.activate_profile) + ": " + tunedP.profilename + " ?",
+                                     Runnable {
+                                         uel.log(
+                                             UserEntry.Action.STORE_PROFILE,
+                                             UserEntry.Sources.Autotune,
+                                             ValueWithUnit.SimpleString(tunedP.profilename)
+                                         )
+                                         val now = dateUtil.now()
+                                         if (profileFunction.createProfileSwitch(
+                                                 it,
+                                                 profileName = tunedP.profilename,
+                                                 durationInMinutes = 0,
+                                                 percentage = 100,
+                                                 timeShiftInHours = 0,
+                                                 timestamp = now
+                                             )
+                                         ) {
+                                             uel.log(
+                                                 UserEntry.Action.PROFILE_SWITCH,
+                                                 UserEntry.Sources.Autotune,
+                                                 "Autotune AutoSwitch",
+                                                 ValueWithUnit.SimpleString(autotunePlugin.tunedProfile!!.profilename)
+                                             )
+                                         }
+                                         rxBus.send(EventLocalProfileChanged())
+                                         updateGui()
+                                     }
+                    )
                 }
                     ?: log("ProfileStore is null!")
             }
-
         }
 
         lastRun = autotunePlugin.lastRun
@@ -244,6 +278,7 @@ class AutotuneFragment : DaggerFragment() {
         if (autotunePlugin.tunedProfile == null || autotunePlugin.pumpProfile == null)
             binding.autotuneCompare.visibility = View.GONE
         binding.autotuneCopylocal.visibility = autotunePlugin.copyButtonVisibility
+        binding.autotuneUpdateProfile.visibility = autotunePlugin.updateButtonVisibility
         binding.autotuneProfileswitch.visibility = autotunePlugin.profileSwitchButtonVisibility
         lastRunTxt = if (autotunePlugin.lastRun != 0L) dateUtil.dateAndTimeString(autotunePlugin.lastRun) else ""
         binding.tuneLastrun.text = lastRunTxt
@@ -273,6 +308,7 @@ class AutotuneFragment : DaggerFragment() {
         autotunePlugin.lastRunSuccess = false
         autotunePlugin.profileSwitchButtonVisibility = View.GONE
         autotunePlugin.copyButtonVisibility = View.GONE
+        autotunePlugin.updateButtonVisibility = View.GONE
         binding.autotuneCompare.visibility = View.GONE
     }
 

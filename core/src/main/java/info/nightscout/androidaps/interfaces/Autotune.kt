@@ -6,6 +6,7 @@ interface Autotune {
 
     fun aapsAutotune(daysBack: Int = 0, profileToTune: String = "")
     fun aapsAutotune(daysBack: Int, autoSwitch: Boolean, profileToTune: String = ""): String
+    fun updateProfile(newProfile: ATProfile?)
     fun atLog(message: String)
 
     var pumpProfile: ATProfile?
@@ -16,6 +17,7 @@ interface Autotune {
     var lastRun: Long
     var lastNbDays: String
     var copyButtonVisibility: Int
+    var updateButtonVisibility: Int
     var profileSwitchButtonVisibility: Int
     var lastRunSuccess: Boolean
     val autotuneStartHour: Int

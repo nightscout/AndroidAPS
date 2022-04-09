@@ -304,24 +304,39 @@
                     android:layout_weight="1"
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
-                    android:drawableStart="@drawable/ic_local_save"
+                    android:drawableStart="@drawable/ic_clone_24"
                     android:text="@string/autotune_copy_localprofile_button" />
 
                 <info.nightscout.androidaps.utils.ui.SingleClickButton
-                    android:id="@+id/autotune_profileswitch"
+                    android:id="@+id/autotune_update_profile"
                     style="?android:attr/buttonStyle"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_weight="1"
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
-                    android:text="@string/activate_profile"
-                    android:drawableStart="@drawable/ic_local_activate" />
+                    android:text="@string/autotune_update_input_profile_button"
+                    android:drawableStart="@drawable/ic_local_save" />
 
             </LinearLayout>
+
+            <info.nightscout.androidaps.utils.ui.SingleClickButton
+                android:id="@+id/autotune_profileswitch"
+                style="?android:attr/buttonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="@string/activate_profile"
+                android:drawableStart="@drawable/ic_local_activate" />
+
         </LinearLayout>
 
     </ScrollView>

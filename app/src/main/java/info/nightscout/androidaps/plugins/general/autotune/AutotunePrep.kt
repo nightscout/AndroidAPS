@@ -168,7 +168,7 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
             currentPumpBasal = Round.roundTo(currentPumpBasal / 4, 0.001) //CurrentPumpBasal for iob calculation is average of 4 last pumpProfile Basal rate
             */
             // this is the current autotuned basal, used for everything else besides IOB calculations
-            val currentBasal = tunedprofile.basal(BGTime)
+            val currentBasal = tunedprofile.getBasal(BGTime)
 
             // basalBGI is BGI of basal insulin activity.
             val basalBGI = Round.roundTo(currentBasal * sens / 60 * 5, 0.01) // U/hr * mg/dL/U * 1 hr / 60 minutes * 5 = mg/dL/5m

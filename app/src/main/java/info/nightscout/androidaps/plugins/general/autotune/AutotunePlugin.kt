@@ -16,6 +16,7 @@ import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.autotune.data.ATProfile
 import info.nightscout.androidaps.plugins.general.autotune.data.PreppedGlucose
 import info.nightscout.androidaps.plugins.general.autotune.events.EventAutotuneUpdateResult
+import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.MidnightTime
@@ -34,7 +35,6 @@ import javax.inject.Singleton
  *
  * TODO: build data sets for autotune validation
  * => I hope we will be able to validate autotunePlugin with several data set (simulation of several situations and get oref0 autotune results as reference)
- * TODO: Update profile in Local Profile Plugin if activated (tuned profile or selected profile)
  * TODO: use materials for results presentation
  * TODO: replace Thread by Worker
  * TODO: future version (once first version validated): add DIA and Peak tune for insulin
@@ -50,6 +50,7 @@ class AutotunePlugin @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
     private val activePlugin: ActivePlugin,
+    private val localProfilePlugin: LocalProfilePlugin,
     private val uel: UserEntryLogger,
     aapsLogger: AAPSLogger
 ) : PluginBase(PluginDescription()
@@ -68,6 +69,7 @@ class AutotunePlugin @Inject constructor(
     @Volatile override var selectedProfile = ""
     @Volatile override var lastNbDays: String = ""
     @Volatile override var copyButtonVisibility: Int = 0
+    @Volatile override var updateButtonVisibility: Int = 0
     @Volatile override var profileSwitchButtonVisibility: Int = 0
     @Volatile override var lastRunSuccess: Boolean = false
     private var logString = ""
@@ -101,6 +103,7 @@ class AutotunePlugin @Inject constructor(
         val detailedLog = sp.getBoolean(R.string.key_autotune_additional_log, false)
         profileSwitchButtonVisibility = View.GONE
         copyButtonVisibility = View.GONE
+        updateButtonVisibility = View.GONE
         lastRunSuccess = false
         calculationRunning = true
         pumpProfile = null
@@ -196,26 +199,32 @@ class AutotunePlugin @Inject constructor(
             autotuneFS.zipAutotune(lastRun)
             profileSwitchButtonVisibility = View.VISIBLE
             copyButtonVisibility = View.VISIBLE
+            updateButtonVisibility = View.VISIBLE
         }
         if (autoSwitch) {
             val circadian = sp.getBoolean(R.string.key_autotune_circadian_ic_isf, false)
-            tunedProfile?.profileStore(circadian)?.let {
-                if (profileFunction.createProfileSwitch(
-                        it,
-                        profileName = tunedProfile!!.profilename,
-                        durationInMinutes = 0,
-                        percentage = 100,
-                        timeShiftInHours = 0,
-                        timestamp = dateUtil.now()
-                    )
-                ) {
-                    uel.log(
-                        UserEntry.Action.PROFILE_SWITCH,
-                        UserEntry.Sources.Autotune,
-                        "Autotune AutoSwitch",
-                        ValueWithUnit.SimpleString(tunedProfile!!.profilename))
+            tunedProfile?.profilename = pumpProfile?.profilename ?:rh.gs(R.string.autotune_tunedprofile_name)
+            updateProfile(tunedProfile)
+            tunedProfile?.let { tunedP ->
+                tunedP.profileStore(circadian)?.let { profilestore ->
+                    if (profileFunction.createProfileSwitch(
+                            profilestore,
+                            profileName = tunedP.profilename,
+                            durationInMinutes = 0,
+                            percentage = 100,
+                            timeShiftInHours = 0,
+                            timestamp = dateUtil.now()
+                        )
+                    ) {
+                        atLog("Profile Switch succeed ${tunedP.profilename}")
+                        uel.log(
+                            UserEntry.Action.PROFILE_SWITCH,
+                            UserEntry.Sources.Autotune,
+                            "Autotune AutoSwitch",
+                            ValueWithUnit.SimpleString(tunedP.profilename))
+                    }
+                    rxBus.send(EventLocalProfileChanged())
                 }
-                rxBus.send(EventLocalProfileChanged())
             }
         }
         lastRunSuccess = true
@@ -302,6 +311,27 @@ class AutotunePlugin @Inject constructor(
             log.error("Unhandled exception", e)
         }
         return jsonString
+    }
+
+    override fun updateProfile(newProfile: ATProfile?) {
+        if (newProfile == null) return
+        val circadian = sp.getBoolean(R.string.key_autotune_circadian_ic_isf, false)
+        val profileStore = activePlugin.activeProfileSource.profile ?: ProfileStore(injector, JSONObject(), dateUtil)
+        val profileList: ArrayList<CharSequence> = profileStore.getProfileList()
+        var indexLocalProfile = -1
+        for (p in profileList.indices)
+            if (profileList[p] == newProfile.profilename)
+                indexLocalProfile = p
+        if (indexLocalProfile == -1) {
+            localProfilePlugin.addProfile(localProfilePlugin.copyFrom(newProfile.getProfile(circadian), newProfile.profilename))
+            return
+        }
+        localProfilePlugin.currentProfileIndex = indexLocalProfile
+        localProfilePlugin.currentProfile()?.dia = newProfile.dia
+        localProfilePlugin.currentProfile()?.basal = newProfile.basal()
+        localProfilePlugin.currentProfile()?.ic = newProfile.ic(circadian)
+        localProfilePlugin.currentProfile()?.isf = newProfile.isf(circadian)
+        localProfilePlugin.storeSettings()
     }
 
     // end of autotune Plugin
