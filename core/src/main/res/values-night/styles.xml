@@ -4,25 +4,30 @@
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/secondaryColorDefault</item>
+        <item name="colorAccent">@color/aaps_theme_dark_secondary</item>
         <item name="dialogTitleBackground">@color/dialog_title_background</item>
         <item name="dialogTitleColor">@color/dialog_title_color</item>
         <item name="dialogTitleIconTint">@color/dialog_title_icon_tint</item>
         <!-- New MaterialComponents attributes. -->
-        <item name="colorSecondary">@color/secondaryColorDefault</item>
+        <item name="colorSecondary">@color/aaps_theme_dark_secondary</item>
         <item name="colorPrimaryVariant">@color/primaryLightColorDefault</item>
         <item name="colorSecondaryVariant">@color/secondaryLightColorDefault</item>
         <item name="colorOnPrimary">@color/primaryTextColorDefault</item>
-        <item name="colorSurface">@color/black</item>
+        <item name="colorSurface">@color/aaps_theme_dark_surface</item>
         <item name="colorOnSurface">@color/white</item>
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorOnBackground">@color/white</item>
         <item name="colorOnError">@color/black</item>
         <item name="scrimBackground">@color/mtrl_scrim_color</item>
-        <item name="popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
-        <item name="actionOverflowMenuStyle">@style/Widget.MaterialComponents.PopupMenu.Overflow</item>
-        <!-- Fragment background for some themes default transparent  -->
-        <item name="fragmentbackground">@color/transparent</item>
+        <!---Splash Background  -->
+        <item name="splashBackgroundColor">@color/splashBackground</item>
+        <!---Application Background Color  -->
+        <item name="android:windowBackground">@color/black</item>
+        <!---Text Colors -->
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColor">@color/white</item>
+        <!---TextColor -->
+        <item name="defaultTextColor">@color/white</item>
         <!---Notification -->
         <item name="notificationUrgent">@color/notificationUrgent</item>
         <item name="notificationNormal">@color/notificationNormal</item>
@@ -94,18 +99,12 @@
         <item name="toastBaseTextColor">@color/toastBase</item>
         <!---Input  -->
         <item name="boxStrokeColor">@color/white_alpha_20</item>
-        <!---Profile Helper  -->
-        <item name="tabBgColorSelected">@color/tabBgColorSelected</item>
         <!---Dialog Helper  -->
         <item name="materialAlertDialogTheme">@style/DialogTheme</item>
         <item name="android:alertDialogTheme">@style/DialogTheme</item>
         <item name="alertDialogTheme">@style/DialogTheme</item>
         <!---Disabled Text Color  -->
         <item name="disabledTextColor">@color/sandGray</item>
-        <!---Splash Background  -->
-        <item name="splashBackgroundColor">@color/splashBackground</item>
-        <!---Application Background Color  -->
-        <item name="android:windowBackground">@color/black</item>
         <!---Dialogfragment Background Color  -->
         <item name="android:dialogCornerRadius">12dp</item>
         <!---Overview and Historybrowser  -->
@@ -127,8 +126,6 @@
         <item name="errorBackgroundColor">@color/error_background</item>
         <!---Warning  -->
         <item name="warningColor">@color/warning</item>
-        <!---TextColor -->
-        <item name="defaultTextColor">@color/white</item>
         <!---TempBasal -->
         <item name="tempBasalColor">@color/tempbasal</item>
         <item name="infoColor">@color/info</item>
@@ -229,7 +226,6 @@
 
     <style name="Aaps_ActionBarStyle" parent="@style/Widget.AppCompat.ActionBar">
         <item name="android:titleTextStyle">@style/Theme.Aaps.ActionBar.TitleTextStyle</item>
-        <item name="backgroundColor">?attr/backgroundColor</item>
     </style>
 
     <style name="Theme.Aaps.ActionBar.TitleTextStyle"

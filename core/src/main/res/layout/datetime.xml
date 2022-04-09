@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingTop="2dp"
     android:orientation="horizontal">
 
     <TextView
@@ -21,6 +22,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/background_input_border"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
         android:padding="10dp"
         android:text="2017/05/05" />
 
@@ -29,6 +34,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:background="@drawable/background_input_border"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
         android:padding="10dp"
         android:text="08:20pm" />
 

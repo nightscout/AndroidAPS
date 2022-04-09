@@ -4,39 +4,41 @@
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!---Example light theme colors -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorOnPrimary">@color/aaps_theme_light_onPrimary</item>
         <item name="colorSecondary">@color/aaps_theme_light_secondary</item>
         <item name="colorOnSecondary">@color/aaps_theme_light_onSecondary</item>
         <item name="colorError">@color/aaps_theme_light_error</item>
         <item name="colorOnError">@color/aaps_theme_light_onError</item>
         <item name="android:colorBackground">@color/aaps_theme_light_background</item>
         <item name="colorOnBackground">@color/aaps_theme_light_onBackground</item>
-        <item name="colorSurface">@color/aaps_theme_light_surfaceVariant</item>
+        <item name="colorSurface">@color/aaps_theme_light_surface</item>
         <item name="colorOnSurface">@color/aaps_theme_light_onSurface</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/aaps_theme_light_primary</item>
         <item name="colorAccent">@color/aaps_theme_light_secondary</item>
         <item name="dialogTitleBackground">@color/dialog_title_background</item>
         <item name="dialogTitleColor">@color/dialog_title_color</item>
         <item name="dialogTitleIconTint">@color/dialog_title_icon_tint</item>
-        <!-- Actionbar -->
-        <item name="actionBarTheme">@style/ThemeOverlay.MaterialComponents.ActionBar</item>
         <!-- New MaterialComponents attributes. -->
         <item name="colorPrimaryVariant">@color/primaryLightColorDefault</item>
         <item name="colorSecondaryVariant">@color/secondaryLightColorDefault</item>
-        <item name="scrimBackground">@color/aaps_theme_light_background</item>
-        <item name="popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
-        <item name="actionOverflowMenuStyle">@style/Widget.MaterialComponents.PopupMenu.Overflow</item>
+        <item name="scrimBackground">@color/mtrl_scrim_color</item>
+        <!---Splash Background  -->
+        <item name="splashBackgroundColor">@color/aaps_theme_light_background</item>
+        <!---Application Background Color  -->
+        <item name="android:windowBackground">@color/aaps_theme_light_background</item>
         <!---Text Colors -->
         <item name="android:textColorPrimary">@color/black</item>
         <item name="android:textColor">@color/black</item>
+        <!---TextColor -->
+        <item name="defaultTextColor">@color/black</item>
+        <!---Disabled Text Color  -->
+        <item name="disabledTextColor">@color/sandGray</item>
         <!---Notification -->
         <item name="notificationUrgent">@color/notificationUrgent</item>
         <item name="notificationNormal">@color/notificationNormal</item>
         <item name="notificationLow">@color/notificationLow</item>
         <item name="notificationInfo">@color/notificationInfo</item>
         <item name="notificationAnnouncement">@color/notificationAnnouncement</item>
-        <!-- Fragment background for some themes default transparent  -->
-        <item name="fragmentbackground">@color/transparent</item>
         <item name="actionModeCloseDrawable">@drawable/ic_close</item>
         <!---bolus color -->
         <item name="bolusColor">@color/bolus</item>
@@ -102,18 +104,10 @@
         <item name="toastBaseTextColor">@color/toastBase</item>
         <!---Input  -->
         <item name="boxStrokeColor">@color/white</item>
-        <!---Profile Helper  -->
-        <item name="tabBgColorSelected">@color/tabBgColorSelected</item>
         <!---Dialog Helper  -->
         <item name="materialAlertDialogTheme">@style/DialogTheme</item>
         <item name="android:alertDialogTheme">@style/DialogTheme</item>
         <item name="alertDialogTheme">@style/DialogTheme</item>
-        <!---Disabled Text Color  -->
-        <item name="disabledTextColor">@color/sandGray</item>
-        <!---Splash Background  -->
-        <item name="splashBackgroundColor">@color/splashBackground</item>
-        <!---Application Background Color  -->
-        <item name="android:windowBackground">@color/white</item>
         <!---Dialogfragment Background Color  -->
         <item name="android:dialogCornerRadius">12dp</item>
         <!---Overview and Historybrowser  -->
@@ -135,8 +129,6 @@
         <item name="errorBackgroundColor">@color/error_background</item>
         <!---Warning  -->
         <item name="warningColor">@color/warning</item>
-        <!---TextColor -->
-        <item name="defaultTextColor">@color/black</item>
         <!---TempBasal -->
         <item name="tempBasalColor">@color/tempbasal</item>
         <item name="infoColor">@color/info</item>
@@ -226,7 +218,7 @@
         <item name="devslopeposColor">@color/devslopepos</item>
         <item name="predictionColor">@color/prediction</item>
         <item name="bgiColor">@color/bgi</item>
-        <item name="ratioColor">@color/ratio</item>
+        <item name="ratioColor">@color/lightSandGray</item>
         <item name="activityColor">@color/activity</item>
         <!-- CardView specific colors  -->
         <item name="strokeColor">@color/plastic_grey</item>
@@ -237,7 +229,6 @@
 
     <style name="Aaps_ActionBarStyle" parent="@style/Widget.AppCompat.ActionBar">
         <item name="android:titleTextStyle">@style/Theme.Aaps.ActionBar.TitleTextStyle</item>
-        <item name="backgroundColor">?attr/backgroundColor</item>
     </style>
 
     <style name="Theme.Aaps.ActionBar.TitleTextStyle"
