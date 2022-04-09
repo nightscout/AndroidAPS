@@ -815,6 +815,7 @@
     <string name="smscommunicator_otp_install_info">Na každém sledovacím telefonu nainstalujte Authentikátor, který podporuje tokeny TOTP RFC 6238. Nejoblíbenější bezplatné aplikace jsou:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">Obnovením autentikátoru uděláte všechny již poskytnuté autentikátory neplatné. Budete je muset znovu nastavit!</string>
     <string name="overview_show_predictions">Predikce</string>
+    <string name="overview_show_treatments">Ošetření</string>
     <string name="overview_show_deviationslope">Odchylka sklonu</string>
     <string name="authorizationfailed">Autorizace selhala</string>
     <string name="overview_show_absinsulin">Absolutní inzulin</string>
@@ -995,6 +996,7 @@
     <string name="tempt_targets">Dočasné cíle</string>
     <string name="carbs_and_bolus">Sacharidy a bolusy</string>
     <string name="confirm_remove_multiple_items">Opravdu chcete odstranit %1$d položku(y)</string>
+    <string name="no_records_available">Žádné záznamy nejsou k dispozici</string>
     <string name="hide_loop">Skrýt smyčku</string>
     <string name="show_loop">Zobrazit smyčku</string>
     <string name="count_selected">Vybráno: %1$d</string>

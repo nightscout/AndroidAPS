@@ -815,6 +815,7 @@
     <string name="smscommunicator_otp_install_info">En cada teléfono seguidor, instale la aplicación Authenticator que admita tokens RFC 6238 TOTP. Las aplicaciones gratuitas populares son:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">Al resetear el autenticador haces que todos los autenticadores ya provistos no sean válidos. ¡Necesitarás configurarlos de nuevo!</string>
     <string name="overview_show_predictions">Predicciones</string>
+    <string name="overview_show_treatments">Tratamientos</string>
     <string name="overview_show_deviationslope">Pendiente de desviación</string>
     <string name="authorizationfailed">Ha fallado la autorización</string>
     <string name="overview_show_absinsulin">Insulina en total</string>
@@ -995,6 +996,7 @@
     <string name="tempt_targets">Objetivos temporales</string>
     <string name="carbs_and_bolus">Carbohidratos y bolos</string>
     <string name="confirm_remove_multiple_items">¿Estás seguro de que quieres eliminar %1$d elementos?</string>
+    <string name="no_records_available">No hay registros disponibles</string>
     <string name="hide_loop">Ocultar lazo</string>
     <string name="show_loop">Mostrar lazo</string>
     <string name="count_selected">%1$d selecionado</string>
