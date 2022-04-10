@@ -1,0 +1,1 @@
+gradlew -Pcoverage -PfirebaseDisable testFullDebugUnitTest

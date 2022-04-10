@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:paddingLeft="15dp">
+
+    <TextView
+        android:id="@+id/rileylink_device_label"
+        android:layout_width="184dp"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:text="Command"
+        android:textSize="12dp" />
+
+    <Button
+        android:id="@+id/rileylink_device_action"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:text="Description"
+        android:gravity="center_vertical"
+        android:textSize="12dp" />
+
+</LinearLayout>

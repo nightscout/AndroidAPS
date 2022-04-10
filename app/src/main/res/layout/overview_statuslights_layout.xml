@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/status_lights"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="3dp"
+    android:layout_marginBottom="3dp"
+    android:background="?attr/colorControlHighlight"
+    android:orientation="horizontal"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp">
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:scaleType="centerInside"
+        android:scaleX="2"
+        android:scaleY="2"
+        app:srcCompat="@drawable/ic_cp_age_cannula"
+        android:contentDescription="@string/cannula" />
+
+    <TextView
+        android:id="@+id/cannula_age"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingStart="1dp"
+        android:paddingEnd="2dp"
+        android:textSize="14sp" />
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:scaleType="centerInside"
+        android:scaleX="1.8"
+        android:scaleY="1.8"
+        app:srcCompat="@drawable/ic_cp_age_insulin"
+        android:contentDescription="@string/insulin_label" />
+
+    <TextView
+        android:id="@+id/insulin_age"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingStart="1dp"
+        android:paddingEnd="2dp"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/reservoir_level"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:textSize="14sp" />
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:scaleType="centerInside"
+        android:scaleX="2"
+        android:scaleY="2"
+        app:srcCompat="@drawable/ic_cp_age_sensor"
+        android:contentDescription="@string/careportal_sensor_label" />
+
+    <TextView
+        android:id="@+id/sensor_age"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingStart="1dp"
+        android:paddingEnd="2dp"
+        android:textSize="14sp" />
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:scaleType="centerInside"
+        android:scaleX="2"
+        android:scaleY="2"
+        app:srcCompat="@drawable/ic_cp_age_battery"
+        android:contentDescription="@string/battery_label" />
+
+    <TextView
+        android:id="@+id/pb_age"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingStart="1dp"
+        android:paddingEnd="1dp"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/battery_level"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingStart="1dp"
+        android:paddingEnd="2dp"
+        android:textSize="14sp" />
+
+</LinearLayout>

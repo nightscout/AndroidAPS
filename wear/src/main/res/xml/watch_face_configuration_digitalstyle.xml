@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <ListPreference
+        android:defaultValue="full"
+        android:entries="@array/digitalstyle_styles_name"
+        android:entryValues="@array/digitalstyle_styles_values"
+        android:key="digitalstyle_frameStyle"
+        android:title="@string/digitalstyle_pref_your_style" />
+
+    <ListPreference
+        android:defaultValue="red"
+        android:entries="@array/digitalstyle_color_name"
+        android:entryValues="@array/digitalstyle_color_values"
+        android:key="digitalstyle_frameColor"
+        android:title="@string/digitalstyle_pref_your_color" />
+    <ListPreference
+        android:defaultValue="700"
+        android:entries="@array/digitalstyle_color_saturation"
+        android:entryValues="@array/digitalstyle_color_saturation"
+        android:key="digitalstyle_frameColorSaturation"
+        android:title="@string/digitalstyle_pref_your_color_saturation" />
+
+    <ListPreference
+        android:defaultValue="1"
+        android:entries="@array/digitalstyle_color_opacity_name"
+        android:entryValues="@array/digitalstyle_color_opacity_value"
+        android:key="digitalstyle_frameColorOpacity"
+        android:title="@string/digitalstyle_pref_your_color_opacity" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="show_date"
+        android:title="@string/pref_show_date"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="show_weeknumber"
+        android:title="@string/pref_show_weeknumber"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="vibrate_Hourly"
+        android:title="@string/pref_vibrate_hourly"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <ListPreference
+        android:defaultValue="off"
+        android:entries="@array/watchface_simplify_ui_name"
+        android:entryValues="@array/watchface_simplify_ui_values"
+        android:key="simplify_ui"
+        android:summary="@string/pref_simplify_ui_sum"
+        android:title="@string/pref_simplify_ui" />
+
+</PreferenceScreen>

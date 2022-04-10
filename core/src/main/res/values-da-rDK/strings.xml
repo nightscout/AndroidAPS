@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    Keys-->
+    <!--    General-->
+    <string name="refresh">Opdatér</string>
+    <string name="error">Fejl</string>
+    <string name="not_set_short">Ikke angivet</string>
+    <string name="failedupdatebasalprofile">Opdatering af basal profil mislykkedes</string>
+    <string name="profile_set_ok">Basal profil i pumpen er opdateret</string>
+    <string name="invalidinput">Ugyldigt input</string>
+    <string name="tempbasaldeliveryerror">Midlertidig basal leveringsfejl</string>
+    <string name="goingtodeliver">Leverer %1$.2f IE</string>
+    <string name="waitingforpump">Venter på pumpe</string>
+    <string name="connectingfor">Opretter forbindelse i %1$d s</string>
+    <string name="bolusdelivering">Leverer %1$.2f IE</string>
+    <string name="handshaking">Forbindelse verificeres</string>
+    <string name="connecting">Forbinder</string>
+    <string name="connected">Tilsuttet</string>
+    <string name="disconnected">Forbindelse afbrudt</string>
+    <string name="disconnecting">Afbryder</string>
+    <string name="waiting_for_disconnection">Venter på afbrydelse</string>
+    <string name="androidaps_start">AndroidAPS startet</string>
+    <string name="formatinsulinunits1">%1$.1f IE</string>
+    <string name="formatinsulinunits">%1$.2f IE</string>
+    <string name="formatsignedinsulinunits">%1$+.2f IE</string>
+    <string name="format_carbs">%1$d g</string>
+    <string name="reservoirvalue">%1$.0f / %2$d IE</string>
+    <string name="pump_basebasalrate">%1$.2f E/t</string>
+    <string name="format_hours">%1$.2f t</string>
+    <string name="format_mins">%1$d min</string>
+    <string name="pumpbusy">Pumpe er optaget</string>
+    <string name="connectionerror">Forbindelsesfejl til pumpe</string>
+    <string name="youareonallowedlimit">Du har nået den tilladte grænse</string>
+    <string name="objectives">Mål</string>
+    <string name="close">Luk</string>
+    <string name="please_wait">Vent venligst…</string>
+    <string name="mute">Lydløs</string>
+    <string name="reload">Genindlæs</string>
+    <string name="stoppressed">STOP TRYKKET</string>
+    <string name="stop">Stop</string>
+    <string name="carbs">Kulhydrater</string>
+    <string name="invalidprofile">Ugyldig profil !!!</string>
+    <string name="noprofileset">INGEN PROFIL SAT</string>
+    <string name="date">Dato</string>
+    <string name="units_label">Enheder</string>
+    <string name="dia_label">DIA</string>
+    <string name="ic_label">IC</string>
+    <string name="isf_label">ISF</string>
+    <string name="basal_label">Basal</string>
+    <string name="target_label">Målværdi</string>
+    <string name="initializing">Initialiserer ...</string>
+    <string name="serialnumber">Serienummer</string>
+    <string name="battery_label">Batteri</string>
+    <string name="lastconnection_label">Seneste forbindelse</string>
+    <string name="lastbolus_label">Seneste Bolus</string>
+    <string name="dailyunits">Daglige enheder</string>
+    <string name="basebasalrate_label">Standard basal rate</string>
+    <string name="tempbasal_label">Midlertidig basal</string>
+    <string name="virtualpump_extendedbolus_label">Forlænget bolus</string>
+    <string name="reservoir_label">Reservoir</string>
+    <string name="pumphistory">Pumpe historik</string>
+    <string name="viewprofile">Se profil</string>
+    <string name="eventtype">Hændelsestype</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
+    <string name="shortgram">g</string>
+    <string name="shortpercent">%</string>
+    <string name="loopdisabled">LOOP DEAKTIVERET AF BEGRÆNSNINGER</string>
+    <string name="bolusdelivered">Bolus %1$.2fE leveret uden fejl</string>
+    <string name="virtualpump_resultok">OK</string>
+    <string name="exit">Afslut</string>
+    <string name="removerecord">Fjern registrering</string>
+    <string name="loopisdisabled">Loop er deaktiveret</string>
+    <string name="alarm">Alarm</string>
+    <string name="disableloop">Deaktivér loop</string>
+    <string name="enableloop">Aktiver loop</string>
+    <string name="duration_min_label">Varighed [min]</string>
+    <string name="noprofile">Ingen profil er indlæst fra NS endnu</string>
+    <string name="glucose">Glukose</string>
+    <string name="iob">IOB</string>
+    <string name="cob">COB</string>
+    <string name="name_short">Navn:</string>
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="event_time_label">Tidspunkt for hændelsen</string>
+    <string name="notes_label">Bemærkninger</string>
+    <string name="remove_button">Fjern</string>
+    <!--    Constraints-->
+    <!--    Dialogs-->
+    <string name="ok">OK</string>
+    <string name="cancel">Annuller</string>
+    <!--    BlePreCheck-->
+    <!--    DateUtil-->
+    <string name="unit_weeks">uger</string>
+    <string name="shortminute">min</string>
+    <string name="shortday">d</string>
+    <!--    Protection-->
+    <string name="wrongpassword">Forkert kodeord</string>
+    <string name="passwords_dont_match">Kodeordene stemmer ikke overens</string>
+    <!--    Profile-->
+    <string name="basalprofilenotaligned">Basalværdier ikke angivet i hele timer: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Basal dosis erstattet af minimal understøttet dosis: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Basal dosis erstattet af maximal understøttet dosis: %1$s</string>
+    <string name="profile_per_unit">/IE</string>
+    <string name="profile_ins_units_per_hour">E/t</string>
+    <string name="profile_carbs_per_unit">g/E</string>
+    <!--    ProfileFunction-->
+    <string name="startprofile">Start profil %1$d%% i %2$d min</string>
+    <!--    PumpType-->
+    <string name="def_extended_note">* Kun konkrete værdier, ingen intervaller, er understøttet som granularitet for basal/bolus i virtuel pumpe.</string>
+    <!--    APSResult-->
+    <string name="canceltemp">Annuller midlertidig basal</string>
+    <string name="let_temp_basal_run">Lad midlertidig basal køre</string>
+    <string name="rate">Dosis</string>
+    <string name="duration">Varighed</string>
+    <string name="reason">Årsag</string>
+    <string name="nochangerequested">Ingen ændring efterspurgt</string>
+    <!--    ProfileSwitch-->
+    <string name="zerovalueinprofile">Ugyldig profil: %1$s</string>
+    <!--    Temptarget-->
+    <string name="mins">%1$d min</string>
+    <!--    TDD-->
+    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f IE</b> Bol: <b>%3$.2f IE</b> Bas: <b>%4$.2f IE(%5$.0f%%)</b>]]></string>
+    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f IE</b> Bol: <b>%3$.2f IE</b> Bas: <b>%4$.2f IE(%5$.0f%%)</b> Kulh: <b>%6$.0f g</b>]]></string>
+    <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> i <b>%3$d</b> dage<br>]]></string>
+    <!--    Translator-->
+    <string name="careportal">Behandlingsportal</string>
+    <string name="careportal_bgcheck">BS kontrol</string>
+    <string name="careportal_mbg">Manuelt BS eller kalibrering</string>
+    <string name="careportal_announcement">Meddelelse</string>
+    <string name="careportal_note">Notat</string>
+    <string name="careportal_question">Spørgsmål</string>
+    <string name="careportal_exercise">Motion</string>
+    <string name="careportal_announcement_message">Meddelelse : %1$s</string>
+    <string name="careportal_note_message">Notat : %1$s</string>
+    <string name="careportal_question_message">Spørgsmål : %1$s</string>
+    <string name="careportal_exercise_message">Motion: %1$s</string>
+    <string name="careportal_pumpsitechange">Skift af pumpeindstik</string>
+    <string name="careportal_cgmsensorinsert">Skift af CGM Sensor</string>
+    <string name="careportal_cgmsensorstart">CGM Sensor Start</string>
+    <string name="careportal_cgm_sensor_stop">CGM Sensor Stop</string>
+    <string name="careportal_insulincartridgechange">Skift af insulinampul</string>
+    <string name="careportal_profileswitch">Profilskift</string>
+    <string name="careportal_snackbolus">Snack Bolus</string>
+    <string name="careportal_mealbolus">Måltidsbolus</string>
+    <string name="careportal_correctionbolus">Korrektionsbolus</string>
+    <string name="careportal_combobolus">Kombineret bolus</string>
+    <string name="careportal_tempbasalstart">Midlertidig basal start</string>
+    <string name="careportal_tempbasalend">Midlertidig basal slut</string>
+    <string name="careportal_carbscorrection">Korrektion for kulhydrater</string>
+    <string name="careportal_openapsoffline">OpenAPS Offline</string>
+    <string name="careportal_pumpbatterychange">Skift af pumpebatteri</string>
+    <string name="careportal_temporarytarget">Midlertidigt mål</string>
+    <string name="glucosetype_sensor">Sensor</string>
+    <string name="eatingsoon">Spiser snart</string>
+    <string name="hypo">Hypo</string>
+    <string name="activity">Aktivitet</string>
+    <string name="wear">Ur</string>
+    <string name="automation">Automatisering</string>
+    <string name="pump">Pumpe</string>
+    <string name="loop">Loop</string>
+    <string name="reading_pump_history">Læser pumpehistorik</string>
+    <!--    Command-->
+    <!--    PumpEnactResult-->
+    <string name="configbuilder_insulin">Insulin</string>
+    <!--    CarbsReq-->
+    <!--    TDDStatsActivity-->
+    <string name="basalrate">Basal</string>
+    <string name="bolus">Bolus</string>
+    <string name="ratio">Ratio</string>
+    <!--    Ntp-->
+    <!-- Maintenance -->
+    <string name="metadata_label_format">Filformat</string>
+    <string name="metadata_label_created_at">Oprettet den</string>
+    <string name="metadata_label_aaps_version">AAPS Version</string>
+    <string name="metadata_label_aaps_flavour">Build Variant</string>
+    <string name="metadata_label_device_name">Eksporterer enhedens patientnavn</string>
+    <string name="metadata_label_device_model">Eksporterer enhedsmodel</string>
+    <string name="metadata_label_encryption">Filkryptering</string>
+    <string name="metadata_format_new">Nyt krypteret format</string>
+    <string name="metadata_format_debug">Nyt debug format (ukrypteret)</string>
+    <string name="metadata_format_other">Ukendt eksportformat</string>
+    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">eksporteret %1$s siden</string>
+    <string name="exported_at" comment="at placeholder we add export date">eksporteret ved %1$s</string>
+    <string name="exported_less_than_hour_ago">eksporteret for mindre end time siden</string>
+    <string name="in_directory" comment="placeholder is for exported file path">i mappe %1$s</string>
+    <string name="preferences_import_list_title">Vælg fil, der skal importeres</string>
+    <string name="metadata_warning_different_flavour">Præferencer er oprettet med forskellig variant af AAPS (%1$s) Mens du har: %2$s.\n\nNogle indstillinger mangler eller er ugyldige-efter import, tjek og opdatér dine præferencer.</string>
+    <string name="metadata_warning_different_device">Indstillinger er oprettet på en anden enhed. Det er OK, hvis du importerer fra ældre / anden telefon, men sørg for, at importerede præferencer er korrekte!</string>
+    <string name="metadata_warning_outdated_format">Du bruger det forældede ældre format fra gamle versioner af AAPS, som ikke er sikret. Brug kun den som en sidste udvej, hvis du ikke har en eksport i aktuelt, JSON-format.</string>
+    <string name="metadata_warning_old_export">Importerede præferencer er allerede %1$s dag(e) gammel! Måske har du flere opdaterede præferencer, eller vælger du den forkerte fil? Husk at eksportere præferencer regelmæssigt!</string>
+    <string name="metadata_warning_date_format">Ugyldigt datoformat!</string>
+    <string name="metadata_warning_different_version">Indstillinger fra en anden mindre version af applikationen. Det er OK, hvis du importerer efter opgradering, men tjek efter import, hvis indstillingerne stadig er korrekte!</string>
+    <string name="metadata_urgent_different_version">Indstillinger fra en anden overordnet version af applikationen. Større versioner er forskellige, og de kan have inkompatible præferencer. Sørg for, at indstillingerne stadig er korrekte, når du har importeret!</string>
+    <string name="prefdecrypt_settings_tampered">Opsætnings fil manipuleret</string>
+    <string name="prefdecrypt_settings_secure">Indstillingsfilen er sikker</string>
+    <string name="prefdecrypt_settings_unencrypted">Bruger ikke sikker, ukrypteret indstillingsformat</string>
+    <string name="prefdecrypt_wrong_json">JSON-formatfejl. Der mangler et påkrævet felt (format, indhold, metadata eller sikkerhed)</string>
+    <string name="prefdecrypt_wrong_password">Dekrypteringsfejl. Det angivne kodeord kan ikke dekryptere filen</string>
+    <string name="prefdecrypt_issue_missing_file_hash">Filkontrolsum (hash) mangler, kan ikke verificere valideringsindstillingerne!</string>
+    <string name="prefdecrypt_issue_modified">Filen er ændret efter eksport!</string>
+    <string name="prefdecrypt_issue_parsing">Dekrypteringsfejl, parsing præferencer mislykkedes!</string>
+    <string name="prefdecrypt_issue_wrong_pass">Dekrypteringsfejl, det angivne kodeord er ugyldigt, eller indstillingsfilen er ændret. Det kan forekomme, at den importerede fil er eksporteret med et andet masterkodeord.</string>
+    <string name="prefdecrypt_issue_wrong_format">Manglende krypteringskonfiguration, indstillingsformat er ugyldigt!</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">Ikke-understøttet eller ikke angivet krypteringsalgoritme!</string>
+    <!-- VersionChecker -->
+    <!-- Permissions -->
+    <string name="alert_dialog_storage_permission_text">Genstart venligst din telefon eller genstart AndroidAPS fra Systemindstillinger \nellers vil Android APS ikke have logning (vigtigt at spore og kontrollere, at algoritmerne fungerer korrekt)!</string>
+    <!-- WeekdayPicker -->
+    <!-- User Entry -->
+    <string name="ue_action">Handling</string>
+    <!-- HardLimits -->
+    <string name="valuelimitedto">%1$.2f begrænset til %2$.2f</string>
+    <!-- Command Queue + readStatus reasons -->
+    <string name="sms" comment="26 characters max for translation">SMS</string>
+</resources>

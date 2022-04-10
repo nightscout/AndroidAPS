@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="alert_r1_code">Reminder R1</string>
+    <string name="alert_r2_code">Reminder R2</string>
+    <string name="alert_r3_code">Reminder R3</string>
+    <string name="alert_r4_code">Reminder R4</string>
+    <string name="alert_r7_code">Reminder R7</string>
+
+    <string name="alert_w31_code">Warning W31</string>
+    <string name="alert_w32_code">Warning W32</string>
+    <string name="alert_w33_code">Warning W33</string>
+    <string name="alert_w34_code">Warning W34</string>
+    <string name="alert_w36_code">Warning W36</string>
+    <string name="alert_w38_code">Warning W38</string>
+    <string name="alert_w39_code">Warning W39</string>
+
+    <string name="alert_m20_code">Maintenance M20</string>
+    <string name="alert_m21_code">Maintenance M21</string>
+    <string name="alert_m22_code">Maintenance M22</string>
+    <string name="alert_m23_code">Maintenance M23</string>
+    <string name="alert_m24_code">Maintenance M24</string>
+    <string name="alert_m25_code">Maintenance M25</string>
+    <string name="alert_m26_code">Maintenance M26</string>
+    <string name="alert_m27_code">Maintenance M27</string>
+    <string name="alert_m28_code">Maintenance M28</string>
+    <string name="alert_m29_code">Maintenance M29</string>
+    <string name="alert_m30_code">Maintenance M30</string>
+
+    <string name="alert_e6_code">Error E6</string>
+    <string name="alert_e10_code">Error E10</string>
+    <string name="alert_e13_code">Error E13</string>
+</resources>

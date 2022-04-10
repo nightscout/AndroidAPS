@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:clipToPadding="false">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        app:contentInsetEndWithActions="48dp"
+        app:contentInsetStartWithNavigation="48dp"
+        android:elevation="4dp">
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabs_normal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            app:tabIndicatorColor="#FFFFFF"
+            app:tabMode="scrollable" />
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabs_compact"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            app:tabMinWidth="0dp"
+            app:tabPadding="0dp"
+            app:tabIndicatorColor="#FFFFFF"
+            app:tabMode="scrollable" />
+    </androidx.appcompat.widget.Toolbar>
+
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/main_drawer_layout"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/main_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/main_navigation_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:itemBackground="?attr/selectableItemBackground"
+            android:fitsSystemWindows="true"
+            android:layout_gravity="start"
+            app:itemIconTint="@android:color/white"
+            app:itemTextColor="@android:color/white"/>
+    </androidx.drawerlayout.widget.DrawerLayout>
+
+</LinearLayout>
