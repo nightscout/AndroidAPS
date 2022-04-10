@@ -434,6 +434,8 @@
     <string name="ns_localbroadcasts_title">אפשר שידורים מקומיים.</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">רגישות דינאמית</string>
+    <string name="DynISFAdjust_title">כיוונון פקטור הרגישות הדינאמית %%</string>
+    <string name="DynISFAdjust_summary">כיוונון פקטור הרגישות הדינאמית. קבעו יותר מ-100% לקבלת תיקונים אגרסיביים יותר ופחות מ-100% לקבלת תיקונים עדינים יותר.</string>
     <string name="enableuam">הפעלת UAM</string>
     <string name="enablesmb">אפשר SMB</string>
     <string name="enablesmb_summary">השתמש בסופר מיקרו בולוסים במקום בבזאלי זמני לפעילות מהירה יותר</string>
@@ -811,6 +813,7 @@
     <string name="smscommunicator_otp_install_info">בכל אחד מהטלפונים העוקבים, התקינו יישום מאמת התומך באסימוני RFC 6238 TOTP. יישומים פופולריים בחינם הם:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">אתחול המאמת גורם למאמתים שסופקו לכם להפסיק להיות חוקיים ויהיה צורך להגדירם שוב!</string>
     <string name="overview_show_predictions">חיזוי</string>
+    <string name="overview_show_treatments">טיפולים</string>
     <string name="overview_show_deviationslope">שיפוע הסטייה</string>
     <string name="authorizationfailed">ההרשאה נכשלה</string>
     <string name="overview_show_absinsulin">אינסולין מוחלט</string>
@@ -964,9 +967,17 @@
     <string name="tempt_targets">ערכי מטרה זמניים</string>
     <string name="carbs_and_bolus">פחמ\' ובולוס</string>
     <string name="confirm_remove_multiple_items">האם אתם בטוחים שברצונכם להסיר %1$d פריטים?</string>
+    <string name="no_records_available">אין רישומים זמינים</string>
     <string name="hide_loop">החבא לולאה</string>
     <string name="show_loop">הצג לולאה</string>
     <string name="count_selected">%1$d נבחרו</string>
     <string name="sort_label">מיין</string>
+    <string name="dialog_canceled">דו-שיח בוטל</string>
+    <string name="below" comment="below &quot;in range&quot;">מתחת</string>
+    <string name="in_range">בטווח</string>
+    <string name="above" comment="above &quot;in range&quot;">מעל</string>
+    <string name="show_loop_records">הצג רשומות לולאה</string>
+    <string name="show_hide_records">החבא רשומות לולאה</string>
     <string name="widget_description">ווידג\'ט AndroidAPS</string>
+    <string name="configure">הגדרת אטימות</string>
 </resources>

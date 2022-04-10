@@ -70,10 +70,6 @@
     <attr name="toastBaseTextColor" format="reference|color" />
     <!---Input  -->
     <attr name="boxStrokeColor" format="reference|color" />
-    <!---Profile Helper  -->
-    <attr name="tabBgColorSelected" format="reference|color" />
-    <!-- Fragment background for some themes default transparent  -->
-    <attr name="fragmentbackground" format="reference|color" />
     <declare-styleable name="NumberPicker">
         <attr name="customContentDescription" format="string" />
     </declare-styleable>
