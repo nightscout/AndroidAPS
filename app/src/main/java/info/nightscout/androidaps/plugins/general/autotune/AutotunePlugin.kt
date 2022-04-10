@@ -203,9 +203,15 @@ class AutotunePlugin @Inject constructor(
         }
         if (autoSwitch) {
             val circadian = sp.getBoolean(R.string.key_autotune_circadian_ic_isf, false)
-            tunedProfile?.profilename = pumpProfile?.profilename ?:rh.gs(R.string.autotune_tunedprofile_name)
-            updateProfile(tunedProfile)
             tunedProfile?.let { tunedP ->
+                tunedP.profilename = pumpProfile?.profilename ?:rh.gs(R.string.autotune_tunedprofile_name)
+                updateProfile(tunedP)
+                uel.log(
+                    UserEntry.Action.STORE_PROFILE,
+                    UserEntry.Sources.Autotune,
+                    ValueWithUnit.SimpleString(tunedP.profilename)
+                )
+                updateButtonVisibility = View.GONE
                 tunedP.profileStore(circadian)?.let { profilestore ->
                     if (profileFunction.createProfileSwitch(
                             profilestore,

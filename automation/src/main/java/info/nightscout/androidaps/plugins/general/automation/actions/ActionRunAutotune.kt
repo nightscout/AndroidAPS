@@ -13,7 +13,6 @@ import info.nightscout.androidaps.plugins.general.automation.elements.InputDurat
 import info.nightscout.androidaps.plugins.general.automation.elements.InputProfileName
 import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -34,7 +33,7 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
     var daysBack: InputDuration = InputDuration(0, InputDuration.TimeUnit.DAYS)
 
     override fun friendlyName(): Int = R.string.autotune_run
-    override fun shortDescription(): String = resourceHelper.gs(R.string.autotune_profile, inputProfileName.value)
+    override fun shortDescription(): String = resourceHelper.gs(R.string.autotune_profile_name, inputProfileName.value)
     @DrawableRes override fun icon(): Int = R.drawable.ic_actions_profileswitch
 
     override fun doAction(callback: Callback) {
