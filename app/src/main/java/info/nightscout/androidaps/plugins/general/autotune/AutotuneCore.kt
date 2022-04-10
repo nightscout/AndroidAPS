@@ -154,7 +154,7 @@ class AutotuneCore(private val injector: HasAndroidInjector) {
             //val cr = Round.roundTo(crDatum.crCarbs / crDatum.crInsulinTotal, 0.001)
             //log(crBGChange + " " + crInsulinReq + " " + crIOBChange + " " + crDatum.crInsulinTotal);
             //log("CRCarbs: " + crDatum.crCarbs + " CRInsulin: " + crDatum.crInsulinTotal + " CR:" + cr);
-            if (crDatum.crInsulin > 0) {
+            if (crDatum.crInsulinTotal > 0) {
                 crTotalCarbs += crDatum.crCarbs
                 crTotalInsulin += crDatum.crInsulinTotal
             }
