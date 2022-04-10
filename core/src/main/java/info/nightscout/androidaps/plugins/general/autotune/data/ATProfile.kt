@@ -68,8 +68,8 @@ class ATProfile(profile: Profile?, var localInsulin: LocalInsulin, val injector:
     }
     fun isf(circadian: Boolean = false): JSONArray {
         if(circadian)
-            return jsonArray(pumpProfile.isfBlocks, avgISF/pumpProfileAvgISF, true)
-        return jsonArray(isf)
+            return jsonArray(pumpProfile.isfBlocks, avgISF/pumpProfileAvgISF)
+        return jsonArray(Profile.fromMgdlToUnits(isf, profile.units))
     }
 
     fun getProfile(circadian: Boolean = false): PureProfile {
@@ -145,7 +145,7 @@ class ATProfile(profile: Profile?, var localInsulin: LocalInsulin, val injector:
         try {
             json.put("dia", dia)
             if (circadian) {
-                json.put("sens", jsonArray(pumpProfile.isfBlocks, avgISF/pumpProfileAvgISF, true))
+                json.put("sens", jsonArray(pumpProfile.isfBlocks, avgISF/pumpProfileAvgISF))
                 json.put("carbratio", jsonArray(pumpProfile.icBlocks, avgIC/pumpProfileAvgIC))
             } else {
                 json.put("sens", jsonArray(Profile.fromMgdlToUnits(isf, profile.units)))
@@ -199,7 +199,7 @@ class ATProfile(profile: Profile?, var localInsulin: LocalInsulin, val injector:
                 .put("value", value)
         )
 
-    fun jsonArray(values: List<Block>, multiplier: Double = 1.0, convertUnit: Boolean = false): JSONArray {
+    fun jsonArray(values: List<Block>, multiplier: Double = 1.0): JSONArray {
         val json = JSONArray()
         var elapsedHours = 0L
         values.forEach {
@@ -208,7 +208,7 @@ class ATProfile(profile: Profile?, var localInsulin: LocalInsulin, val injector:
                 JSONObject()
                     .put("time", DecimalFormat("00").format(elapsedHours) + ":00")
                     .put("timeAsSeconds", T.hours(elapsedHours).secs())
-                    .put("value", if (convertUnit) Profile.fromMgdlToUnits(value, profile.units) else value)
+                    .put("value", value)
             )
             elapsedHours += T.msecs(it.duration).hours()
         }
