@@ -1,0 +1,15 @@
+<application>
+  <component name="NotificationConfiguration">
+    <notification groupId="ADB Logs" />
+    <notification groupId="APK Analyzer (Info)" />
+    <notification groupId="Build Log" />
+    <notification groupId="File type conflict" displayType="STICKY_BALLOON" />
+    <notification groupId="Gradle Notification Group" displayType="NONE" />
+    <notification groupId="Gradle Sync" />
+    <notification groupId="JSON Schema" />
+    <notification groupId="Live Literal Problem Notification" />
+    <notification groupId="SDK Install" displayType="STICKY_BALLOON" />
+    <notification groupId="Structural Search" displayType="TOOL_WINDOW" />
+    <notification groupId="Test Runner" />
+  </component>
+</application>

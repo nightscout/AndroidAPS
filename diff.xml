@@ -1,0 +1,22 @@
+<application>
+  <component name="TextDiffSettings">
+    <option name="PLACES_MAP">
+      <entry key="Default">
+        <PlaceSettings>
+          <option name="BREADCRUMBS_PLACEMENT" value="TOP" />
+        </PlaceSettings>
+      </entry>
+      <entry key="VcsLogView">
+        <PlaceSettings>
+          <option name="EXPAND_BY_DEFAULT" value="false" />
+          <option name="USE_SOFT_WRAPS" value="true" />
+        </PlaceSettings>
+      </entry>
+    </option>
+    <option name="SHARED_SETTINGS">
+      <SharedSettings>
+        <option name="MERGE_AUTO_APPLY_NON_CONFLICTED_CHANGES" value="true" />
+      </SharedSettings>
+    </option>
+  </component>
+</application>

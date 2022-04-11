@@ -1,0 +1,8 @@
+<application>
+  <component name="GeneralSettings">
+    <option name="defaultProjectDirectory" value="C:\Users\ocean\StudioProjects" />
+  </component>
+  <component name="Registry">
+    <entry key="debugger.valueTooltipAutoShowOnSelection" value="true" />
+  </component>
+</application>
