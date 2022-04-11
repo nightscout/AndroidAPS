@@ -753,6 +753,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
     @SuppressLint("SetTextI18n")
     fun updateBg() {
+        _binding ?: return
         val units = profileFunction.getUnits()
         binding.infoLayout.bg.text = overviewData.lastBg?.valueToUnitsString(units)
             ?: rh.gs(R.string.notavailable)
@@ -802,6 +803,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     }
 
     fun updateProfile() {
+        _binding ?: return
         val profileBackgroundColor =
             profileFunction.getProfile()?.let {
                 if (it is ProfileSealed.EPS) {
@@ -834,6 +836,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     }
 
     private fun updateTemporaryBasal() {
+        _binding ?: return
         binding.infoLayout.baseBasal.text = overviewData.temporaryBasalText(iobCobCalculator)
         binding.infoLayout.baseBasal.setTextColor(overviewData.temporaryBasalColor(context, iobCobCalculator))
         binding.infoLayout.baseBasalIcon.setImageResource(overviewData.temporaryBasalIcon(iobCobCalculator))
@@ -843,6 +846,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     }
 
     private fun updateExtendedBolus() {
+        _binding ?: return
         val pump = activePlugin.activePump
         binding.infoLayout.extendedBolus.text = overviewData.extendedBolusText(iobCobCalculator)
         binding.infoLayout.extendedLayout.setOnClickListener {
@@ -852,6 +856,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     }
 
     fun updateTime() {
+        _binding ?: return
         binding.infoLayout.time.text = dateUtil.timeString(dateUtil.now())
         // Status lights
         val pump = activePlugin.activePump
@@ -883,6 +888,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     }
 
     fun updateIobCob() {
+        _binding ?: return
         binding.infoLayout.iob.text = overviewData.iobText(iobCobCalculator)
         binding.infoLayout.iobLayout.setOnClickListener {
             activity?.let { OKDialog.show(it, rh.gs(R.string.iob), overviewData.iobDialogText(iobCobCalculator)) }
@@ -910,6 +916,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
     @SuppressLint("SetTextI18n")
     fun updateTemporaryTarget() {
+        _binding ?: return
         val units = profileFunction.getUnits()
         val tempTarget = overviewData.temporaryTarget
         if (tempTarget != null) {
@@ -936,6 +943,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     }
 
     private fun updateGraph() {
+        _binding ?: return
         val pump = activePlugin.activePump
         val graphData = GraphData(injector, binding.graphsLayout.bgGraph, overviewData)
         val menuChartSettings = overviewMenus.setting
@@ -1016,11 +1024,13 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     }
 
     private fun updateCalcProgress() {
+        _binding ?: return
         binding.progressBar.progress = overviewData.calcProgressPct
         binding.progressBar.visibility = (overviewData.calcProgressPct != 100).toVisibility()
     }
 
     private fun updateSensitivity() {
+        _binding ?: return
         if (sp.getBoolean(R.string.key_openapsama_useautosens, false) && constraintChecker.isAutosensModeEnabled().value()) {
             binding.infoLayout.sensitivityIcon.setImageResource(R.drawable.ic_swap_vert_black_48dp_green)
         } else {
@@ -1034,12 +1044,14 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     }
 
     private fun updatePumpStatus() {
+        _binding ?: return
         val status = overviewData.pumpStatus
         binding.pumpStatus.text = status
         binding.pumpStatusLayout.visibility = (status != "").toVisibility()
     }
 
     private fun updateNotification() {
+        _binding ?: return
         binding.notifications.let { notificationStore.updateNotifications(it) }
     }
 }
