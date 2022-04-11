@@ -115,9 +115,7 @@ class LocalProfileFragment : DaggerFragment() {
             override fun onTabUnselected(tab: TabLayout.Tab) {}
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
-
-        binding.dia.editText?.id?.let { binding.diaLabel.labelFor = it }
-
+        binding.diaLabel.labelFor = binding.dia.editTextId
         binding.unlock.setOnClickListener { queryProtection() }
     }
 

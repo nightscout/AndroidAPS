@@ -99,7 +99,7 @@ class FillDialog : DialogFragmentWithDate() {
         } else {
             binding.fillPresetButton3.visibility = View.GONE
         }
-        binding.fillInsulinamount.editText?.id?.let { binding.fillLabel.labelFor = it }
+        binding.fillLabel.labelFor = binding.fillInsulinamount.editTextId
     }
 
     override fun onDestroyView() {
