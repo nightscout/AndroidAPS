@@ -4,6 +4,7 @@
       <entry key="Default">
         <PlaceSettings>
           <option name="BREADCRUMBS_PLACEMENT" value="TOP" />
+          <option name="USE_SOFT_WRAPS" value="true" />
         </PlaceSettings>
       </entry>
       <entry key="VcsLogView">
