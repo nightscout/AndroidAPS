@@ -357,5 +357,17 @@
     <color name="aaps_theme_dark_shadow">#000000</color>
     <color name="aaps_theme_dark_primaryInverse">#006493</color>
 
+    <!-- widget theme color -->
+    <!-- This section describes the widget theme colors
+     Because the implementation of google has no idea of a light/dark mode until now
+     we generate extra colornames only used for the widget
+     Colors for the widget are always taken from the default color.xml-->
+    <color name="widget_inrange">#00FF00</color>
+    <color name="widget_low">#FF0000</color>
+    <color name="widget_high">#FFFF00</color>
+    <color name="widget_ribbonWarning">#f4d700</color>
+    <color name="widget_ribbonTextDefault">#FFFFFF</color>
+    <color name="widget_ribbonCritical">#ff0400</color>
+    <color name="widget_basal">#00ffff</color>
 
 </resources>
