@@ -1,8 +1,6 @@
 package info.nightscout.androidaps.interaction.actions;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.wearable.view.GridPagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +10,7 @@ import android.widget.ImageView;
 import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.ListenerService;
+import info.nightscout.androidaps.data.DataLayerListenerService;
 import info.nightscout.androidaps.interaction.utils.PlusMinusEditText;
 import info.nightscout.shared.SafeParse;
 
@@ -34,7 +32,6 @@ public class TempTargetActivity extends ViewSelectorActivity {
 
         setAdapter(new MyGridViewPagerAdapter());
 
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         isMGDL = sp.getBoolean("units_mgdl", true);
         isSingleTarget = sp.getBoolean("singletarget", true);
     }
@@ -126,8 +123,8 @@ public class TempTargetActivity extends ViewSelectorActivity {
                             + " " + SafeParse.stringToDouble(lowRange.editText.getText().toString())
                             + " " + (isSingleTarget ? SafeParse.stringToDouble(lowRange.editText.getText().toString()) : SafeParse.stringToDouble(highRange.editText.getText().toString()));
 
-                    ListenerService.initiateAction(TempTargetActivity.this, actionstring);
-                    confirmAction(TempTargetActivity.this, R.string.action_tempt_confirmation);
+                    DataLayerListenerService.Companion.initiateAction(TempTargetActivity.this, actionstring);
+                    showToast(TempTargetActivity.this, R.string.action_tempt_confirmation);
                     finishAffinity();
                 });
                 container.addView(view);

@@ -1,8 +1,6 @@
 package info.nightscout.androidaps.interaction.actions;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.wearable.view.GridPagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +10,7 @@ import android.widget.ImageView;
 import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.ListenerService;
+import info.nightscout.androidaps.data.DataLayerListenerService;
 import info.nightscout.androidaps.interaction.utils.PlusMinusEditText;
 import info.nightscout.shared.SafeParse;
 
@@ -33,7 +31,6 @@ public class WizardActivity extends ViewSelectorActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setAdapter(new MyGridViewPagerAdapter());
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         hasPercentage = sp.getBoolean("wizardpercentage", false);
         percentage = sp.getInt(getString(R.string.key_boluswizard_percentage), 100);
         maxCarbs = sp.getInt(getString(R.string.key_treatmentssafety_maxcarbs), 48);
@@ -93,8 +90,8 @@ public class WizardActivity extends ViewSelectorActivity {
 
                     String actionstring = "wizard2 " + SafeParse.stringToInt(editCarbs.editText.getText().toString())
                             + " " + percentage;
-                    ListenerService.initiateAction(WizardActivity.this, actionstring);
-                    confirmAction(WizardActivity.this, R.string.action_wizard_confirmation);
+                    DataLayerListenerService.Companion.initiateAction(WizardActivity.this, actionstring);
+                    showToast(WizardActivity.this, R.string.action_wizard_confirmation);
                     finishAffinity();
                 });
                 container.addView(view);

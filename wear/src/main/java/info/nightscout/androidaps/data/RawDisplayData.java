@@ -174,7 +174,7 @@ public class RawDisplayData {
         wearUtil.releaseWakeLock(wl);
     }
 
-    public DataMap updateBasalsFromMessage(Intent intent, PowerManager.WakeLock wakeLock) {
+    public DataMap updateBasalsFromMessage(Intent intent) {
         Bundle bundle = intent.getBundleExtra("basals");
         if (bundle != null) {
             DataMap dataMap = wearUtil.bundleToDataMap(bundle);

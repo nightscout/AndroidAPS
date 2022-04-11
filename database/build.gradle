@@ -18,6 +18,9 @@ android {
 }
 
 dependencies {
+    // shared needed for OpenForTesting
+    implementation project(':shared')
+
     api "androidx.core:core-ktx:$core_version"
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 

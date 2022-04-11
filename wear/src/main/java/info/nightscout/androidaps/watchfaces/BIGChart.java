@@ -44,7 +44,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.BasalWatchData;
 import info.nightscout.androidaps.data.BgWatchData;
 import info.nightscout.androidaps.data.BolusWatchData;
-import info.nightscout.androidaps.data.ListenerService;
+import info.nightscout.androidaps.data.DataLayerListenerService;
 import info.nightscout.androidaps.data.TempWatchData;
 import info.nightscout.androidaps.interaction.menus.MainMenuActivity;
 import lecho.lib.hellocharts.view.LineChartView;
@@ -158,7 +158,7 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
                         mRelativeLayout.getMeasuredHeight());
             }
         });
-        ListenerService.requestData(this);
+        DataLayerListenerService.Companion.requestData(this);
         wakeLock.acquire(50);
     }
 
@@ -634,9 +634,9 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
     }
 
     public void missedReadingAlert() {
-        int minutes_since   = (int) Math.floor(timeSince()/(1000*60));
-        if(minutes_since >= 16 && ((minutes_since - 16) % 5) == 0) {
-            ListenerService.requestData(this); // attempt endTime recover missing data
+        int minutes_since = (int) Math.floor(timeSince() / (1000 * 60));
+        if (minutes_since >= 16 && ((minutes_since - 16) % 5) == 0) {
+            DataLayerListenerService.Companion.requestData(this); // attempt endTime recover missing data
         }
     }
 
@@ -690,7 +690,7 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
             chart.setViewportCalculationEnabled(true);
             chart.setMaximumViewport(chart.getMaximumViewport());
         } else {
-            ListenerService.requestData(this);
+            DataLayerListenerService.Companion.requestData(this);
         }
     }
 }

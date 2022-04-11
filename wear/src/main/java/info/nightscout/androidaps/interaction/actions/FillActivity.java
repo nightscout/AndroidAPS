@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.ListenerService;
+import info.nightscout.androidaps.data.DataLayerListenerService;
 import info.nightscout.androidaps.interaction.utils.PlusMinusEditText;
 import info.nightscout.shared.SafeParse;
 
@@ -64,13 +64,13 @@ public class FillActivity extends ViewSelectorActivity {
                 final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_send_item, container, false);
                 final ImageView confirmbutton = view.findViewById(R.id.confirmbutton);
                 confirmbutton.setOnClickListener((View v) -> {
-                        //check if it can happen that the fagment is never created that hold data?
-                        // (you have to swipe past them anyways - but still)
+                    //check if it can happen that the fagment is never created that hold data?
+                    // (you have to swipe past them anyways - but still)
 
-                        String actionstring = "fill " + SafeParse.stringToDouble(editInsulin.editText.getText().toString());
-                        ListenerService.initiateAction(FillActivity.this, actionstring);
-                        confirmAction(FillActivity.this, R.string.action_fill_confirmation);
-                        finishAffinity();
+                    String actionstring = "fill " + SafeParse.stringToDouble(editInsulin.editText.getText().toString());
+                    DataLayerListenerService.Companion.initiateAction(FillActivity.this, actionstring);
+                    showToast(FillActivity.this, R.string.action_fill_confirmation);
+                    finishAffinity();
                 });
                 container.addView(view);
                 return view;

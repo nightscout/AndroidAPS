@@ -44,7 +44,7 @@ import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.ListenerService;
+import info.nightscout.androidaps.data.DataLayerListenerService;
 import info.nightscout.androidaps.data.RawDisplayData;
 import info.nightscout.androidaps.interaction.utils.Persistence;
 import info.nightscout.androidaps.interaction.utils.WearUtil;
@@ -678,7 +678,7 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         setupBatteryReceiver();
         if ("delta_granularity".equals(key)) {
-            ListenerService.requestData(this);
+            DataLayerListenerService.Companion.requestData(this);
         }
         if (layoutSet) {
             setDataFields();
@@ -695,7 +695,7 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
     public void missedReadingAlert() {
         int minutes_since = (int) Math.floor(timeSince() / (1000 * 60));
         if (rawData.datetime == 0 || minutes_since >= 16 && ((minutes_since - 16) % 5) == 0) {
-            ListenerService.requestData(this); // Attempt endTime recover missing data
+            DataLayerListenerService.Companion.requestData(this); // Attempt endTime recover missing data
         }
     }
 
@@ -728,7 +728,7 @@ public abstract class BaseWatchFace extends WatchFace implements SharedPreferenc
                 setupCharts();
             }
             rawData.updateStatusFromMessage(intent, wakeLock);
-            rawData.updateBasalsFromMessage(intent, wakeLock);
+            rawData.updateBasalsFromMessage(intent);
 
             if (isSimpleUi()) {
                 if (needUpdate()) {

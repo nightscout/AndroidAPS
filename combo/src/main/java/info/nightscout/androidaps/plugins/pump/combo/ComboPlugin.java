@@ -1343,7 +1343,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
     }
 
     private String fakeSerialNumber() {
-        return InstanceId.INSTANCE.instanceId();
+        return InstanceId.INSTANCE.getInstanceId();
     }
 
     @NonNull @Override

@@ -1,8 +1,6 @@
 package info.nightscout.androidaps.interaction.actions;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.wearable.view.GridPagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,9 +10,11 @@ import android.widget.ImageView;
 import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.ListenerService;
+import info.nightscout.androidaps.data.DataLayerListenerService;
+import info.nightscout.androidaps.events.EventWearToMobileAction;
 import info.nightscout.androidaps.interaction.utils.PlusMinusEditText;
 import info.nightscout.shared.SafeParse;
+import info.nightscout.shared.weardata.ActionData;
 
 /**
  * Created by adrian on 09/02/17.
@@ -25,15 +25,14 @@ public class TreatmentActivity extends ViewSelectorActivity {
     PlusMinusEditText editCarbs;
     PlusMinusEditText editInsulin;
     int maxCarbs;
-    float maxBolus;
+    double maxBolus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setAdapter(new MyGridViewPagerAdapter());
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         maxCarbs = sp.getInt(getString(R.string.key_treatmentssafety_maxcarbs), 48);
-        maxBolus = sp.getFloat(getString(R.string.key_treatmentssafety_maxbolus), 3f);
+        maxBolus = sp.getDouble(getString(R.string.key_treatmentssafety_maxbolus), 3.0);
     }
 
     @Override
@@ -63,7 +62,7 @@ public class TreatmentActivity extends ViewSelectorActivity {
                 if (editInsulin != null) {
                     def = SafeParse.stringToDouble(editInsulin.editText.getText().toString());
                 }
-                editInsulin = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, (double) maxBolus, 0.1d, new DecimalFormat("#0.0"),false);
+                editInsulin = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, (double) maxBolus, 0.1d, new DecimalFormat("#0.0"), false);
                 setLabelToPlusMinusView(view, getString(R.string.action_insulin));
                 container.addView(view);
                 view.requestFocus();
@@ -74,7 +73,7 @@ public class TreatmentActivity extends ViewSelectorActivity {
                 if (editCarbs != null) {
                     def = SafeParse.stringToDouble(editCarbs.editText.getText().toString());
                 }
-                editCarbs = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, (double)maxCarbs, 1d, new DecimalFormat("0"),false);
+                editCarbs = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"), false);
                 setLabelToPlusMinusView(view, getString(R.string.action_carbs));
                 container.addView(view);
                 return view;
@@ -83,13 +82,12 @@ public class TreatmentActivity extends ViewSelectorActivity {
                 final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_send_item, container, false);
                 final ImageView confirmbutton = view.findViewById(R.id.confirmbutton);
                 confirmbutton.setOnClickListener((View v) -> {
-                        //check if it can happen that the fagment is never created that hold data?
-                        // (you have to swipe past them anyways - but still)
-                        String actionstring = "bolus " + SafeParse.stringToDouble(editInsulin.editText.getText().toString())
-                                + " " + SafeParse.stringToInt(editCarbs.editText.getText().toString());
-                        ListenerService.initiateAction(TreatmentActivity.this, actionstring);
-                        confirmAction(TreatmentActivity.this, R.string.action_treatment_confirmation);
-                        finishAffinity();
+                    //check if it can happen that the fragment is never created that hold data?
+                    // (you have to swipe past them anyways - but still)
+                    ActionData.Bolus bolus = new ActionData.Bolus(SafeParse.stringToDouble(editInsulin.editText.getText().toString()), SafeParse.stringToInt(editCarbs.editText.getText().toString()));
+                    rxBus.send(new EventWearToMobileAction(bolus));
+                    showToast(TreatmentActivity.this, R.string.action_treatment_confirmation);
+                    finishAffinity();
                 });
                 container.addView(view);
                 return view;

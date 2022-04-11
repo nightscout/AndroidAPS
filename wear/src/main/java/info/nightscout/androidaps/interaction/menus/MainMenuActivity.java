@@ -9,11 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.ListenerService;
+import info.nightscout.androidaps.data.DataLayerListenerService;
 import info.nightscout.androidaps.interaction.AAPSPreferences;
-import info.nightscout.androidaps.interaction.actions.TreatmentActivity;
 import info.nightscout.androidaps.interaction.actions.ECarbActivity;
 import info.nightscout.androidaps.interaction.actions.TempTargetActivity;
+import info.nightscout.androidaps.interaction.actions.TreatmentActivity;
 import info.nightscout.androidaps.interaction.actions.WizardActivity;
 import info.nightscout.androidaps.interaction.utils.MenuListActivity;
 
@@ -30,7 +30,7 @@ public class MainMenuActivity extends MenuListActivity {
         sp = PreferenceManager.getDefaultSharedPreferences(this);
         setTitle(R.string.label_actions_activity);
         super.onCreate(savedInstanceState);
-        ListenerService.requestData(this);
+        DataLayerListenerService.Companion.requestData(this);
     }
 
     @Override
@@ -68,7 +68,7 @@ public class MainMenuActivity extends MenuListActivity {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             this.startActivity(intent);
         } else if (getString(R.string.menu_resync).equals(action)) {
-            ListenerService.requestData(this);
+            DataLayerListenerService.Companion.requestData(this);
         } else if (getString(R.string.menu_tempt).equals(action)) {
             intent = new Intent(this, TempTargetActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -1,8 +1,6 @@
 package info.nightscout.androidaps.interaction.actions;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.wearable.view.GridPagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +10,7 @@ import android.widget.ImageView;
 import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.ListenerService;
+import info.nightscout.androidaps.data.DataLayerListenerService;
 import info.nightscout.androidaps.interaction.utils.PlusMinusEditText;
 import info.nightscout.shared.SafeParse;
 
@@ -31,7 +29,6 @@ public class ECarbActivity extends ViewSelectorActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setAdapter(new MyGridViewPagerAdapter());
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         maxCarbs = sp.getInt(getString(R.string.key_treatmentssafety_maxcarbs), 48);
     }
 
@@ -92,14 +89,14 @@ public class ECarbActivity extends ViewSelectorActivity {
                 final ImageView confirmbutton = view.findViewById(R.id.confirmbutton);
                 confirmbutton.setOnClickListener((View v) -> {
 
-                    //check if it can happen that the fagment is never created that hold data?
+                    //check if it can happen that the fragment is never created that hold data?
                     // (you have to swipe past them anyways - but still)
 
                     String actionstring = "ecarbs " + SafeParse.stringToInt(editCarbs.editText.getText().toString())
                             + " " + SafeParse.stringToInt(editStartTime.editText.getText().toString())
                             + " " + SafeParse.stringToInt(editDuration.editText.getText().toString());
-                    ListenerService.initiateAction(ECarbActivity.this, actionstring);
-                    confirmAction(ECarbActivity.this, R.string.action_ecarb_confirmation);
+                    DataLayerListenerService.Companion.initiateAction(ECarbActivity.this, actionstring);
+                    showToast(ECarbActivity.this, R.string.action_ecarb_confirmation);
                     finishAffinity();
 
                 });

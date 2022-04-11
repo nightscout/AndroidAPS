@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.ListenerService;
+import info.nightscout.androidaps.data.DataLayerListenerService;
 import info.nightscout.androidaps.interaction.utils.MenuListActivity;
 
 /**
@@ -35,13 +35,13 @@ public class StatusMenuActivity extends MenuListActivity {
     @Override
     protected void doAction(String action) {
         if (getString(R.string.status_pump).equals(action)) {
-            ListenerService.initiateAction(this, "status pump");
+            DataLayerListenerService.Companion.initiateAction(this, "status pump");
         } else if (getString(R.string.status_loop).equals(action)) {
-            ListenerService.initiateAction(this, "status loop");
+            DataLayerListenerService.Companion.initiateAction(this, "status loop");
         } else if (getString(R.string.status_cpp).equals(action)) {
-            ListenerService.initiateAction(this, "opencpp");
+            DataLayerListenerService.Companion.initiateAction(this, "opencpp");
         } else if (getString(R.string.status_tdd).equals(action)) {
-            ListenerService.initiateAction(this, "tddstats");
+            DataLayerListenerService.Companion.initiateAction(this, "tddstats");
         }
     }
 }

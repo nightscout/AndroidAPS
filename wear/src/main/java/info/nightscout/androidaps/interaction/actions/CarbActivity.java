@@ -1,8 +1,6 @@
 package info.nightscout.androidaps.interaction.actions;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.wearable.view.GridPagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +10,7 @@ import android.widget.ImageView;
 import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.ListenerService;
+import info.nightscout.androidaps.data.DataLayerListenerService;
 import info.nightscout.androidaps.interaction.utils.PlusMinusEditText;
 import info.nightscout.shared.SafeParse;
 
@@ -25,7 +23,6 @@ public class CarbActivity extends ViewSelectorActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setAdapter(new MyGridViewPagerAdapter());
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         maxCarbs = sp.getInt(getString(R.string.key_treatmentssafety_maxcarbs), 48);
     }
 
@@ -66,8 +63,8 @@ public class CarbActivity extends ViewSelectorActivity {
                 confirmbutton.setOnClickListener((View v) -> {
                     // With start time 0 and duration 0
                     String actionstring = "ecarbs " + SafeParse.stringToInt(editCarbs.editText.getText().toString()) + " 0 0";
-                    ListenerService.initiateAction(CarbActivity.this, actionstring);
-                    confirmAction(CarbActivity.this, R.string.action_ecarb_confirmation);
+                    DataLayerListenerService.Companion.initiateAction(CarbActivity.this, actionstring);
+                    showToast(CarbActivity.this, R.string.action_ecarb_confirmation);
                     finishAffinity();
 
                 });

@@ -20,6 +20,6 @@
         translatable="false"
         tools:ignore="UnusedResources">
         <!-- declaring the provided capabilities -->
-        <item>androidaps_wear</item>
+        <item>androidaps_mobile</item>
     </string-array>
 </resources>

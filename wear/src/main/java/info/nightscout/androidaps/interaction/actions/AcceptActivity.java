@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.interaction.actions;
 
+import static info.nightscout.shared.weardata.WearConstants.KEY_ACTION_DATA;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,7 +21,10 @@ import androidx.core.view.MotionEventCompat;
 import androidx.core.view.ViewConfigurationCompat;
 
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.ListenerService;
+import info.nightscout.androidaps.data.DataLayerListenerService;
+import info.nightscout.androidaps.events.EventWearToMobileChange;
+import info.nightscout.androidaps.events.EventWearToMobileConfirm;
+import info.nightscout.shared.weardata.ActionData;
 
 /**
  * Created by adrian on 09/02/17.
@@ -29,6 +34,7 @@ public class AcceptActivity extends ViewSelectorActivity {
 
     String message = "";
     String actionstring = "";
+    String actionKey = "";
     private DismissThread dismissThread;
 
     @Override
@@ -41,8 +47,9 @@ public class AcceptActivity extends ViewSelectorActivity {
         Bundle extras = getIntent().getExtras();
         message = extras.getString("message", "");
         actionstring = extras.getString("actionstring", "");
+        actionKey = extras.getString(KEY_ACTION_DATA, "");
 
-        if ("".equals(message) || "".equals(actionstring)) {
+        if (message.isEmpty() || (actionstring.isEmpty() && actionKey.isEmpty())) {
             finish();
             return;
         }
@@ -60,6 +67,7 @@ public class AcceptActivity extends ViewSelectorActivity {
         finish();
     }
 
+    @SuppressWarnings("deprecation")
     private class MyGridViewPagerAdapter extends GridPagerAdapter {
         @Override
         public int getColumnCount(int arg0) {
@@ -74,48 +82,53 @@ public class AcceptActivity extends ViewSelectorActivity {
         @Override
         public Object instantiateItem(ViewGroup container, int row, int col) {
 
+            final View view;
             if (col == 0) {
-                final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_confirm_text, container, false);
+                view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_confirm_text, container, false);
                 final TextView textView = view.findViewById(R.id.message);
                 final View scrollView = view.findViewById(R.id.message_scroll);
                 textView.setText(message);
                 container.addView(view);
-                scrollView.setOnGenericMotionListener(new View.OnGenericMotionListener() {
-                    @Override
-                    public boolean onGenericMotion(View v, MotionEvent ev) {
-                        if (ev.getAction() == MotionEvent.ACTION_SCROLL &&
-                                ev.isFromSource(InputDeviceCompat.SOURCE_ROTARY_ENCODER)
-                        ) {
-                            float delta = -ev.getAxisValue(MotionEventCompat.AXIS_SCROLL) *
-                                    ViewConfigurationCompat.getScaledVerticalScrollFactor(
-                                            ViewConfiguration.get(container.getContext()),
-                                            container.getContext());
-                            v.scrollBy(0, Math.round(delta));
+                scrollView.setOnGenericMotionListener((v, ev) -> {
+                    if (ev.getAction() == MotionEvent.ACTION_SCROLL &&
+                            ev.isFromSource(InputDeviceCompat.SOURCE_ROTARY_ENCODER)
+                    ) {
+                        float delta = -ev.getAxisValue(MotionEventCompat.AXIS_SCROLL) *
+                                ViewConfigurationCompat.getScaledVerticalScrollFactor(
+                                        ViewConfiguration.get(container.getContext()),
+                                        container.getContext());
+                        v.scrollBy(0, Math.round(delta));
 
-                            return true;
-                        }
-                        return false;
+                        return true;
                     }
+                    return false;
                 });
 
                 scrollView.requestFocus();
-                return view;
             } else {
-                final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_send_item, container, false);
-                final ImageView confirmbutton = view.findViewById(R.id.confirmbutton);
-                confirmbutton.setOnClickListener((View v) -> {
-                    ListenerService.confirmAction(AcceptActivity.this, actionstring);
+                view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_send_item, container, false);
+                final ImageView confirmButton = view.findViewById(R.id.confirmbutton);
+                confirmButton.setOnClickListener((View v) -> {
+                    if (!actionstring.isEmpty())
+                        DataLayerListenerService.Companion.confirmAction(AcceptActivity.this, actionstring);
+                    else {
+                        ActionData actionData = ActionData.Companion.deserialize(actionKey);
+                        if (actionData instanceof ActionData.ConfirmAction)
+                            rxBus.send(new EventWearToMobileConfirm(actionData));
+                        if (actionData instanceof ActionData.ChangeAction)
+                            rxBus.send(new EventWearToMobileChange(actionData));
+                    }
                     finishAffinity();
                 });
                 container.addView(view);
-                return view;
             }
+            return view;
         }
 
         @Override
         public void destroyItem(ViewGroup container, int row, int col, Object view) {
             // Handle this to get the data before the view is destroyed?
-            // Object should still be kept by this, just setup for reinit?
+            // Object should still be kept by this, just setup for re-init?
             container.removeView((View) view);
         }
 

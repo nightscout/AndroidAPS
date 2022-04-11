@@ -3,14 +3,15 @@ package info.nightscout.androidaps.di
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import info.nightscout.androidaps.complications.*
-import info.nightscout.androidaps.data.ListenerService
+import info.nightscout.androidaps.data.DataLayerListenerService
+import info.nightscout.androidaps.interaction.actions.BackgroundActionActivity
 import info.nightscout.androidaps.watchfaces.*
 
 @Module
 @Suppress("unused")
 abstract class WearServicesModule {
 
-    @ContributesAndroidInjector abstract fun contributesListenerService(): ListenerService
+    @ContributesAndroidInjector abstract fun contributesDataLayerListenerService(): DataLayerListenerService
 
     @ContributesAndroidInjector abstract fun contributesBaseComplicationProviderService(): BaseComplicationProviderService
     @ContributesAndroidInjector abstract fun contributesBrCobIobComplication(): BrCobIobComplication

@@ -43,7 +43,7 @@ import java.util.ArrayList;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.BasalWatchData;
 import info.nightscout.androidaps.data.BgWatchData;
-import info.nightscout.androidaps.data.ListenerService;
+import info.nightscout.androidaps.data.DataLayerListenerService;
 import info.nightscout.androidaps.data.TempWatchData;
 import info.nightscout.androidaps.interaction.menus.MainMenuActivity;
 
@@ -137,7 +137,7 @@ public class NOChart extends WatchFace implements SharedPreferences.OnSharedPref
                         mRelativeLayout.getMeasuredHeight());
             }
         });
-        ListenerService.requestData(this);
+        DataLayerListenerService.Companion.requestData(this);
         wakeLock.acquire(50);
     }
 
@@ -518,7 +518,7 @@ public class NOChart extends WatchFace implements SharedPreferences.OnSharedPref
     public void missedReadingAlert() {
         int minutes_since   = (int) Math.floor(timeSince()/(1000*60));
         if(minutes_since >= 16 && ((minutes_since - 16) % 5) == 0) {
-            ListenerService.requestData(this); // attempt endTime recover missing data
+            DataLayerListenerService.Companion.requestData(this); // attempt endTime recover missing data
         }
     }
 }

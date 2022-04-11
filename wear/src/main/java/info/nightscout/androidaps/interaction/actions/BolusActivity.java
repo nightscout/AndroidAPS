@@ -1,8 +1,6 @@
 package info.nightscout.androidaps.interaction.actions;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.wearable.view.GridPagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,21 +10,21 @@ import android.widget.ImageView;
 import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.ListenerService;
+import info.nightscout.androidaps.events.EventWearToMobileAction;
 import info.nightscout.androidaps.interaction.utils.PlusMinusEditText;
 import info.nightscout.shared.SafeParse;
+import info.nightscout.shared.weardata.ActionData;
 
 public class BolusActivity extends ViewSelectorActivity {
 
     PlusMinusEditText editInsulin;
-    float maxBolus;
+    double maxBolus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setAdapter(new MyGridViewPagerAdapter());
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        maxBolus = sp.getFloat(getString(R.string.key_treatmentssafety_maxbolus), 3f);
+        maxBolus = sp.getDouble(getString(R.string.key_treatmentssafety_maxbolus), 3.0);
     }
 
     @Override
@@ -35,6 +33,7 @@ public class BolusActivity extends ViewSelectorActivity {
         finish();
     }
 
+    @SuppressWarnings("deprecation")
     private class MyGridViewPagerAdapter extends GridPagerAdapter {
         @Override
         public int getColumnCount(int arg0) {
@@ -49,30 +48,29 @@ public class BolusActivity extends ViewSelectorActivity {
         @Override
         public Object instantiateItem(ViewGroup container, int row, int col) {
 
+            final View view;
             if (col == 0) {
-                final View view = getInflatedPlusMinusView(container);
+                view = getInflatedPlusMinusView(container);
                 double def = 0;
                 if (editInsulin != null) {
                     def = SafeParse.stringToDouble(editInsulin.editText.getText().toString());
                 }
-                editInsulin = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, (double)maxBolus, 0.1d, new DecimalFormat("#0.0"),false);
+                editInsulin = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, maxBolus, 0.1d, new DecimalFormat("#0.0"), false);
                 setLabelToPlusMinusView(view, getString(R.string.action_insulin));
                 container.addView(view);
                 view.requestFocus();
-                return view;
             } else {
-                final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_send_item, container, false);
-                final ImageView confirmbutton = view.findViewById(R.id.confirmbutton);
-                confirmbutton.setOnClickListener((View v) -> {
-                    String actionstring = "bolus " + SafeParse.stringToDouble(editInsulin.editText.getText().toString())
-                            + " 0"; // Zero carbs
-                    ListenerService.initiateAction(BolusActivity.this, actionstring);
-                    confirmAction(BolusActivity.this, R.string.action_bolus_confirmation);
+                view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_send_item, container, false);
+                final ImageView confirmButton = view.findViewById(R.id.confirmbutton);
+                confirmButton.setOnClickListener((View v) -> {
+                    ActionData.Bolus bolus = new ActionData.Bolus(SafeParse.stringToDouble(editInsulin.editText.getText().toString()), 0);
+                    rxBus.send(new EventWearToMobileAction(bolus));
+                    showToast(BolusActivity.this, R.string.action_bolus_confirmation);
                     finishAffinity();
                 });
                 container.addView(view);
-                return view;
             }
+            return view;
         }
 
         @Override

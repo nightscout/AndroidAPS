@@ -1,73 +1,7 @@
 package info.nightscout.androidaps.plugins.general.wear.wearintegration;
 
-import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
-import android.util.Log;
-
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.wearable.CapabilityApi;
-import com.google.android.gms.wearable.CapabilityInfo;
-import com.google.android.gms.wearable.DataMap;
-import com.google.android.gms.wearable.MessageEvent;
-import com.google.android.gms.wearable.Node;
-import com.google.android.gms.wearable.PutDataMapRequest;
-import com.google.android.gms.wearable.PutDataRequest;
-import com.google.android.gms.wearable.Wearable;
-import com.google.android.gms.wearable.WearableListenerService;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import javax.inject.Inject;
-
-import dagger.android.AndroidInjection;
-import info.nightscout.androidaps.Constants;
-import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.IobTotal;
-import info.nightscout.androidaps.database.AppRepository;
-import info.nightscout.androidaps.database.entities.Bolus;
-import info.nightscout.androidaps.database.entities.GlucoseValue;
-import info.nightscout.androidaps.database.entities.TemporaryBasal;
-import info.nightscout.androidaps.extensions.GlucoseValueExtensionKt;
-import info.nightscout.androidaps.extensions.TemporaryBasalExtensionKt;
-import info.nightscout.androidaps.interfaces.ActivePlugin;
-import info.nightscout.androidaps.interfaces.Config;
-import info.nightscout.androidaps.interfaces.GlucoseUnit;
-import info.nightscout.androidaps.interfaces.IobCobCalculator;
-import info.nightscout.androidaps.interfaces.Loop;
-import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.interfaces.Profile;
-import info.nightscout.androidaps.interfaces.ProfileFunction;
-import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
-import info.nightscout.androidaps.plugins.bus.RxBus;
-import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus;
-import info.nightscout.androidaps.plugins.general.overview.graphExtensions.GlucoseValueDataPoint;
-import info.nightscout.androidaps.plugins.general.wear.WearPlugin;
-import info.nightscout.androidaps.plugins.general.wear.events.EventWearConfirmAction;
-import info.nightscout.androidaps.plugins.general.wear.events.EventWearInitiateAction;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider;
-import info.nightscout.androidaps.receivers.ReceiverStatusStore;
-import info.nightscout.androidaps.utils.DecimalFormatter;
-import info.nightscout.androidaps.utils.DefaultValueHelper;
-import info.nightscout.androidaps.utils.TrendCalculator;
-import info.nightscout.androidaps.utils.resources.ResourceHelper;
-import info.nightscout.androidaps.utils.wizard.QuickWizard;
-import info.nightscout.androidaps.utils.wizard.QuickWizardEntry;
-import info.nightscout.shared.logging.AAPSLogger;
-import info.nightscout.shared.logging.LTag;
-import info.nightscout.shared.sharedPreferences.SP;
-import info.nightscout.shared.weardata.WearUris;
-
-public class WatchUpdaterService extends WearableListenerService implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+/*
+public class WatchUpdaterService1 extends WearableListenerService implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     @Inject public GlucoseStatusProvider glucoseStatusProvider;
     @Inject public AAPSLogger aapsLogger;
     @Inject public WearPlugin wearPlugin;
@@ -841,3 +775,4 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
         return (lastLoopStatus != enabled);
     }
 }
+*/

@@ -1,10 +1,7 @@
 package info.nightscout.androidaps.interaction.actions;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.wearable.view.DotsPageIndicator;
 import android.support.wearable.view.GridPagerAdapter;
 import android.support.wearable.view.GridViewPager;
@@ -16,13 +13,21 @@ import android.widget.Toast;
 
 import androidx.wear.widget.CurvedTextView;
 
+import javax.inject.Inject;
+
+import dagger.android.DaggerActivity;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.shared.sharedPreferences.SP;
 
 /**
  * Created by adrian on 13/02/17.
  */
 
-public class ViewSelectorActivity extends Activity {
+public class ViewSelectorActivity extends DaggerActivity {
+
+    @Inject SP sp;
+    @Inject RxBus rxBus;
 
     private GridViewPager pager;
 
@@ -81,9 +86,7 @@ public class ViewSelectorActivity extends Activity {
     }
 
     View getInflatedPlusMinusView(ViewGroup container) {
-        SharedPreferences sharedPrefs = PreferenceManager
-                .getDefaultSharedPreferences(this);
-        int design = Integer.parseInt(sharedPrefs.getString("input_design", "1"));
+        int design = sp.getInt("input_design", 1);
 
         if (design == 2) {
             return LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_editplusminus_item_quickrighty, container, false);
@@ -102,7 +105,7 @@ public class ViewSelectorActivity extends Activity {
         textView.setText(labelText);
     }
 
-    void confirmAction(Context context, int text)  {
+    void showToast(Context context, int text)  {
         Toast.makeText(context, getString(text), Toast.LENGTH_LONG).show();
     }
 

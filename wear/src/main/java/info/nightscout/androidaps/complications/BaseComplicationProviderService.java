@@ -22,7 +22,7 @@ import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.ListenerService;
+import info.nightscout.androidaps.data.DataLayerListenerService;
 import info.nightscout.androidaps.data.RawDisplayData;
 import info.nightscout.androidaps.interaction.utils.Constants;
 import info.nightscout.androidaps.interaction.utils.DisplayFormat;
@@ -205,7 +205,7 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
         localBroadcastManager.registerReceiver(messageReceiver, messageFilter);
 
-        ListenerService.requestData(this);
+        DataLayerListenerService.Companion.requestData(this);
         checkIfUpdateNeeded();
     }
 

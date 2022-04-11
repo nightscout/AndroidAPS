@@ -220,7 +220,7 @@ public class RawDisplayDataBasalsTest extends TestBase {
         RawDisplayData newRaw = new RawDisplayData(getWearUtil());
 
         // WHEN
-        newRaw.updateBasalsFromMessage(intent, null);
+        newRaw.updateBasalsFromMessage(intent);
 
         // THEN
         assertBasalsOk(newRaw);
@@ -233,7 +233,7 @@ public class RawDisplayDataBasalsTest extends TestBase {
         RawDisplayData newRaw = new RawDisplayData(getWearUtil());
 
         // WHEN
-        newRaw.updateBasalsFromMessage(intent, null);
+        newRaw.updateBasalsFromMessage(intent);
 
         // THEN
         assertBasalsEmpty(newRaw);

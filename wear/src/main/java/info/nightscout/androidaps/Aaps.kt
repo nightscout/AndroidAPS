@@ -8,11 +8,17 @@ import androidx.preference.PreferenceManager
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import info.nightscout.androidaps.di.DaggerWearComponent
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
+import javax.inject.Inject
 
 class Aaps : DaggerApplication(), OnSharedPreferenceChangeListener {
 
+    @Inject lateinit var aapsLogger: AAPSLogger
+
     override fun onCreate() {
         super.onCreate()
+        aapsLogger.debug(LTag.WEAR, "onCreate")
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this)
     }
 
