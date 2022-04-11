@@ -105,7 +105,7 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
                 val cal = Calendar.getInstance()
                 cal.timeInMillis = eventTime
                 DatePickerDialog(
-                    it, R.style.MaterialPickerTheme,
+                    it,
                     dateSetListener,
                     cal.get(Calendar.YEAR),
                     cal.get(Calendar.MONTH),
@@ -134,7 +134,7 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
                 val cal = Calendar.getInstance()
                 cal.timeInMillis = eventTime
                 TimePickerDialog(
-                    it, R.style.MaterialPickerTheme,
+                    it,
                     timeSetListener,
                     cal.get(Calendar.HOUR_OF_DAY),
                     cal.get(Calendar.MINUTE),
