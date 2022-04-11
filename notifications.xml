@@ -3,8 +3,9 @@
     <notification groupId="ADB Logs" />
     <notification groupId="APK Analyzer (Info)" />
     <notification groupId="Build Log" />
+    <notification groupId="Build sync orphan modules" displayType="NONE" shouldLog="false" />
     <notification groupId="File type conflict" displayType="STICKY_BALLOON" />
-    <notification groupId="Gradle Notification Group" displayType="NONE" />
+    <notification groupId="Gradle Notification Group" displayType="NONE" shouldLog="false" />
     <notification groupId="Gradle Sync" />
     <notification groupId="JSON Schema" />
     <notification groupId="Live Literal Problem Notification" />
