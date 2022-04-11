@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.workflow
 
 import android.content.Context
+import androidx.core.content.ContextCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
@@ -33,9 +34,10 @@ class PrepareTemporaryTargetDataWorker(
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var loop: Loop
     @Inject lateinit var rxBus: RxBus
-
+    var ctx: Context
     init {
         (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
+        ctx =  rh.getThemedCtx(context)
     }
 
     class PrepareTemporaryTargetData(
@@ -76,7 +78,7 @@ class PrepareTemporaryTargetDataWorker(
         // create series
         data.overviewData.temporaryTargetSeries = LineGraphSeries(Array(targetsSeriesArray.size) { i -> targetsSeriesArray[i] }).also {
             it.isDrawBackground = false
-            it.color = rh.gc(R.color.tempTargetBackground)
+            it.color = rh.gac(ctx, R.attr.tempTargetBackgroundColor )
             it.thickness = 2
         }
         rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TEMPORARY_TARGET_DATA, 100, null))

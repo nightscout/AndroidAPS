@@ -213,10 +213,20 @@
         <!-- Graph specific colors  -->
         <item name="inrangeBackground">@color/inrangebackground</item>
         <item name="devslopeposColor">@color/devslopepos</item>
+        <item name="devslopenegColor">@color/devslopeneg</item>
+        <item name="deviationgreyColor">@color/deviationgrey</item>
+        <item name="deviationblackColor">@color/deviationblack</item>
+        <item name="deviationgreenColor">@color/deviationgreen</item>
+        <item name="deviationredColor">@color/deviationred</item>
         <item name="predictionColor">@color/prediction</item>
+        <item name="iobPredASColor">@color/iobPredAS</item>
         <item name="bgiColor">@color/bgi</item>
         <item name="ratioColor">@color/ratio</item>
         <item name="activityColor">@color/activity</item>
+        <item name="basebasalColor">@color/basebasal</item>
+        <!---Popupmenu TextColor -->
+        <item name="menuTextColor">@color/black</item>
+        <item name="menuTextColorInverse">@color/black</item>
         <!-- CardView specific colors  -->
         <item name="strokeColor">@color/plastic_grey</item>
         <item name="textAppearancemediumColor">@color/textAppearancemediumDark</item>
