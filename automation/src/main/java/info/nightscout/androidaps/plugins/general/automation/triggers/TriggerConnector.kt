@@ -165,7 +165,7 @@ class TriggerConnector(injector: HasAndroidInjector) : Trigger(injector) {
             text = rh.gs(connectorType.stringRes)
             gravity = gravity or Gravity.CENTER_VERTICAL
             setTypeface(typeface, Typeface.BOLD)
-            setBackgroundColor(rh.gc(R.color.black_overlay))
+            setBackgroundColor(rh.gac(context, R.attr.automationOverlayColor))
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT).also { ll ->
                 ll.setMargins(rh.dpToPx(3), rh.dpToPx(3), rh.dpToPx(3), rh.dpToPx(3))
             }

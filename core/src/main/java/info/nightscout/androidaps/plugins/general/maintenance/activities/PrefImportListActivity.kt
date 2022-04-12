@@ -32,7 +32,6 @@ class PrefImportListActivity : DaggerAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setTheme(R.style.AppTheme)
         binding = MaintenanceImportListActivityBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
@@ -88,8 +87,8 @@ class PrefImportListActivity : DaggerAppCompatActivity() {
 
                 prefFile.metadata[PrefsMetadataKey.AAPS_FLAVOUR]?.let {
                     metaVariantFormat.text = it.value
-                    val color = if (it.status == PrefsStatus.OK) R.color.metadataOk else R.color.metadataTextWarning
-                    metaVariantFormat.setTextColor(rh.gc(color))
+                    val colorattr = if (it.status == PrefsStatus.OK) R.attr.metadataTextOkColor else R.attr.metadataTextWarningColor
+                    metaVariantFormat.setTextColor(rh.gac( metaVariantFormat.context, colorattr))
                 }
 
                 prefFile.metadata[PrefsMetadataKey.CREATED_AT]?.let {
@@ -98,8 +97,8 @@ class PrefImportListActivity : DaggerAppCompatActivity() {
 
                 prefFile.metadata[PrefsMetadataKey.AAPS_VERSION]?.let {
                     metaAppVersion.text = it.value
-                    val color = if (it.status == PrefsStatus.OK) R.color.metadataOk else R.color.metadataTextWarning
-                    metaAppVersion.setTextColor(rh.gc(color))
+                    val colorattr = if (it.status == PrefsStatus.OK) R.attr.metadataTextOkColor else R.attr.metadataTextWarningColor
+                    metaAppVersion.setTextColor(rh.gac( metaVariantFormat.context, colorattr))
                 }
 
                 prefFile.metadata[PrefsMetadataKey.DEVICE_NAME]?.let {

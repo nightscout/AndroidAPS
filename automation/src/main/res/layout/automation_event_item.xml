@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -8,7 +9,7 @@
     android:layout_marginTop="8dp"
     android:layout_marginEnd="8dp"
     android:layout_marginBottom="8dp"
-    android:background="@color/ribbonDefault"
+    android:background="?attr/activity_title_backgroundColor"
     android:clickable="true"
     android:focusable="true">
 
@@ -26,10 +27,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="5dp"
-        android:contentDescription="@string/remove_label"
+        android:contentDescription="@string/system_automation"
         android:scaleX="0.9"
         android:scaleY="0.9"
-        android:src="@drawable/ic_notif_aaps"
+        android:src="@drawable/ic_aaps"
         app:layout_constraintBottom_toTopOf="@+id/iconLayout"
         app:layout_constraintEnd_toStartOf="@+id/eventTitle"
         app:layout_constraintStart_toEndOf="@+id/enabled"
@@ -42,33 +43,32 @@
         android:textAlignment="viewStart"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/iconLayout"
-        app:layout_constraintEnd_toStartOf="@+id/iconTrash"
+        app:layout_constraintEnd_toStartOf="@+id/cb_remove"
         app:layout_constraintStart_toEndOf="@+id/aapsLogo"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Event title" />
 
-    <ImageView
-        android:id="@+id/iconTrash"
+    <CheckBox
+        android:id="@+id/cb_remove"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
         android:contentDescription="@string/remove_label"
         android:orientation="horizontal"
-        android:src="@drawable/ic_trash_outline"
         app:layout_constraintBottom_toTopOf="@+id/iconLayout"
-        app:layout_constraintEnd_toStartOf="@+id/iconSort"
+        app:layout_constraintEnd_toStartOf="@+id/sortHandle"
         app:layout_constraintStart_toEndOf="@+id/eventTitle"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/iconSort"
+        android:id="@+id/sortHandle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:contentDescription="@string/reorder_label"
         android:orientation="horizontal"
-        android:layout_marginEnd="8dp"
         app:layout_constraintBottom_toTopOf="@+id/iconLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/iconTrash"
+        app:layout_constraintStart_toEndOf="@+id/cb_remove"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_reorder_gray_24dp" />
 
@@ -78,10 +78,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:orientation="horizontal"
+        android:paddingBottom="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iconSort" />
-
+        app:layout_constraintTop_toBottomOf="@+id/enabled" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -15,7 +15,7 @@
         android:paddingStart="5dp"
         android:paddingEnd="5dp"
         android:text="@string/setbasalquestion"
-        android:textColor="@color/colorAcceptTempButton"
+        android:textColor="?attr/acceptTempButtonColor"
         android:visibility="gone" />
 
     <LinearLayout
@@ -45,7 +45,7 @@
             android:layout_weight="0.5"
             android:drawableTop="@drawable/icon_insulin_carbs"
             android:text="@string/overview_treatment_label"
-            android:textColor="@color/colorTreatmentButton"
+            android:textColor="?attr/icTreatmentColor"
             android:textSize="10sp"
             android:visibility="gone"
             tools:ignore="SmallSp" />
@@ -59,7 +59,7 @@
             android:layout_weight="0.5"
             android:drawableTop="@drawable/ic_bolus"
             android:text="@string/overview_insulin_label"
-            android:textColor="@color/colorInsulinButton"
+            android:textColor="?attr/icBolusColor"
             android:textSize="10sp"
             tools:ignore="SmallSp" />
 
@@ -72,7 +72,7 @@
             android:layout_weight="0.5"
             android:drawableTop="@drawable/ic_cp_bolus_carbs"
             android:text="@string/treatments_wizard_carbs_label"
-            android:textColor="@color/colorCarbsButton"
+            android:textColor="?attr/icBolusCarbsColor"
             android:textSize="10sp"
             tools:ignore="SmallSp" />
 
@@ -85,7 +85,7 @@
             android:layout_weight="0.5"
             android:drawableTop="@drawable/ic_calculator"
             android:text="@string/overview_calculator_label"
-            android:textColor="@color/colorCalculatorButton"
+            android:textColor="?attr/icCalculatorColor"
             android:textSize="10sp"
             tools:ignore="SmallSp" />
 
@@ -98,7 +98,7 @@
             android:layout_weight="0.5"
             android:drawableTop="@drawable/ic_calibration"
             android:text="@string/overview_calibration"
-            android:textColor="@color/colorCalibrationButton"
+            android:textColor="?attr/icCalibrationColor"
             android:textSize="10sp"
             android:visibility="gone"
             tools:ignore="SmallSp" />
@@ -112,7 +112,7 @@
             android:layout_weight="0.5"
             android:drawableTop="@drawable/ic_xdrip"
             android:text="@string/overview_cgm"
-            android:textColor="@color/colorCalibrationButton"
+            android:textColor="?attr/icCalibrationColor"
             android:textSize="10sp"
             android:visibility="gone"
             tools:ignore="SmallSp" />
@@ -127,7 +127,7 @@
             android:drawableTop="@drawable/ic_quick_wizard"
             android:text="@string/quickwizard"
             android:hint="@string/quickwizard"
-            android:textColor="@color/colorQuickWizardButton"
+            android:textColor="?attr/icQuickWizardColor"
             android:textSize="10sp"
             tools:ignore="SmallSp" />
 

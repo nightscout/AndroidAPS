@@ -72,7 +72,8 @@
     <string name="menu_treatment">Ošetrenie</string>
     <string name="menu_treatment_short">Ošetr</string>
     <string name="menu_bolus">Bolus</string>
-    <string name="menu_ecarb">Sacharidy</string>
+    <string name="menu_carb">Sacharidy</string>
+    <string name="menu_ecarb">eSacharidy</string>
     <string name="menu_settings">Nastavenia</string>
     <string name="menu_status">Stav</string>
     <string name="menu_resync">Opätovne synchronizovať</string>
@@ -94,6 +95,7 @@
     <string name="action_low" comment="In temp target menu, lower value from range">Nízka</string>
     <string name="action_high" comment="In temp target menu, higher value from range">Vysoká</string>
     <string name="action_carbs">Sacharidy</string>
+    <string name="action_ecarbs">eSacharidy</string>
     <string name="action_percentage">Percento</string>
     <string name="action_start_min">Začiatok [min]</string>
     <string name="action_duration_h">Trvanie [h]</string>

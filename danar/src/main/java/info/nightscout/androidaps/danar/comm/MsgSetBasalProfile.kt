@@ -14,10 +14,10 @@ class MsgSetBasalProfile(
 
     // index 0-3
     init {
-        SetCommand(0x3306)
-        AddParamByte(index)
+        setCommand(0x3306)
+        addParamByte(index)
         for (i in 0..23) {
-            AddParamInt((values[i] * 100).toInt())
+            addParamInt((values[i] * 100).toInt())
         }
         aapsLogger.debug(LTag.PUMPCOMM, "Set basal profile: $index")
     }

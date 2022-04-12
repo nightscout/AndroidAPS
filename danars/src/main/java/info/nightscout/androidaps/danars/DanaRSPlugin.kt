@@ -242,8 +242,8 @@ class DanaRSPlugin @Inject constructor(
     }
 
     override fun isThisProfileSet(profile: Profile): Boolean {
-        if (!isInitialized()) return true // TODO: not sure what's better. so far TRUE to prevent too many SMS
-        if (danaPump.pumpProfiles == null) return true // TODO: not sure what's better. so far TRUE to prevent too many SMS
+        if (!isInitialized()) return true
+        if (danaPump.pumpProfiles == null) return true
         val basalValues = if (danaPump.basal48Enable) 48 else 24
         val basalIncrement = if (danaPump.basal48Enable) 30 * 60 else 60 * 60
         for (h in 0 until basalValues) {
@@ -302,7 +302,7 @@ class DanaRSPlugin @Inject constructor(
                     0x40 -> error = rh.gs(R.string.speederror)
                     0x80 -> error = rh.gs(R.string.insulinlimitviolation)
                 }
-                result.comment = String.format(rh.gs(R.string.boluserrorcode), detailedBolusInfo.insulin, t.insulin, error)
+                result.comment = rh.gs(R.string.boluserrorcode, detailedBolusInfo.insulin, t.insulin, error)
             } else result.comment = rh.gs(R.string.ok)
             aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)
             result

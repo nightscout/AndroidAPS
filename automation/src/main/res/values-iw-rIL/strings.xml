@@ -113,4 +113,11 @@
     <string name="automation_event">אירוע אוטומציה</string>
     <string name="reorder_label">סדר מחדש</string>
     <string name="user_action">פעולות משתמש</string>
+    <string name="remove_automation">הסר אוטומציה</string>
+    <string name="sort_automation">מיין אוטומציות</string>
+    <string name="remove_selected_items">הסר פריטים נבחרים</string>
+    <string name="count_selected">%1$d נבחרו</string>
+    <string name="confirm_remove_multiple_items">האם אתם בטוחים שברצונכם להסיר %1$d פריטים? </string>
+    <string name="sort_label">מיין</string>
+    <string name="system_automation">אוטומציית מערכת</string>
 </resources>

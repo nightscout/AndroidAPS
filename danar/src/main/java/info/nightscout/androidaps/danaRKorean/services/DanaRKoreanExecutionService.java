@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.danaRKorean.services;
 
+import android.annotation.SuppressLint;
 import android.os.Binder;
 import android.os.SystemClock;
 
@@ -89,7 +90,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
         }
     }
 
-    public void connect() {
+    @SuppressLint("MissingPermission") public void connect() {
         if (mConnectionInProgress)
             return;
 
@@ -135,7 +136,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
 
             if (danaPump.isNewPump()) {
                 mSerialIOThread.sendMessage(checkValue);
-                if (!checkValue.received) {
+                if (!checkValue.isReceived()) {
                     return;
                 }
             }
@@ -280,7 +281,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
                 t.insulin = 0d;
                 return false;
             }
-            while (!danaPump.getBolusStopped() && !start.failed) {
+            while (!danaPump.getBolusStopped() && !start.getFailed()) {
                 SystemClock.sleep(100);
                 if ((System.currentTimeMillis() - danaPump.getBolusProgressLastTimeStamp()) > 15 * 1000L) { // if i didn't receive status for more than 15 sec expecting broken comm
                     danaPump.setBolusStopped(true);
@@ -294,7 +295,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
             commandQueue.readStatus(rh.gs(R.string.bolus_ok), null);
         }
 
-        return !start.failed;
+        return !start.getFailed();
     }
 
     public boolean carbsEntry(int amount) {

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <padding
+                android:bottom="2dp"
+                android:left="10dp"
+                android:right="10dp"
+                android:top="10dp" />
+            <solid android:color="?attr/backgroundColor" />
+            <corners android:radius="?android:dialogCornerRadius" />
+        </shape>
+    </item>
+</layer-list>

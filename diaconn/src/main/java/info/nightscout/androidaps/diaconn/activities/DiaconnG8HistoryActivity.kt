@@ -33,7 +33,6 @@ import javax.inject.Inject
 
 class DiaconnG8HistoryActivity : NoSplashAppCompatActivity() {
 
-    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var activePlugin: ActivePlugin
@@ -87,11 +86,10 @@ class DiaconnG8HistoryActivity : NoSplashAppCompatActivity() {
         typeList.add(TypeList(RecordTypes.RECORD_TYPE_DAILY, rh.gs(R.string.diaconn_g8_history_dailyinsulin)))
         typeList.add(TypeList(RecordTypes.RECORD_TYPE_REFILL, rh.gs(R.string.diaconn_g8_history_refill)))
         typeList.add(TypeList(RecordTypes.RECORD_TYPE_SUSPEND, rh.gs(R.string.diaconn_g8_history_suspend)))
-        binding.spinner.adapter = ArrayAdapter(this, R.layout.spinner_centered, typeList)
+        binding.typeList.setAdapter(ArrayAdapter(this, R.layout.spinner_centered, typeList))
 
         binding.reload.setOnClickListener {
-            val selected = binding.spinner.selectedItem as TypeList?
-                ?: return@setOnClickListener
+            val selected = typeList.firstOrNull { it.name == binding.typeList.text.toString() } ?: return@setOnClickListener
             runOnUiThread {
                 binding.reload.visibility = View.GONE
                 binding.status.visibility = View.VISIBLE
@@ -107,16 +105,10 @@ class DiaconnG8HistoryActivity : NoSplashAppCompatActivity() {
                 }
             })
         }
-        binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val selected = typeList[position]
-                swapAdapter(selected.type)
-                showingType = selected.type
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                clearCardView()
-            }
+        binding.typeList.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+            val selected = typeList[position]
+            showingType = selected.type
+            swapAdapter(selected.type)
         }
     }
 

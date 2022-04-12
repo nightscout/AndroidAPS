@@ -103,7 +103,6 @@
     <string name="overview_calculator_label">Assistant</string>
     <string name="constraintapllied">Restriction appliquée !</string>
     <string name="sms_bolus">Bolus:</string>
-    <string name="basal">Basal</string>
     <string name="sms_basal">Basal:</string>
     <string name="changeyourinput">Changez vos entrées !</string>
     <string name="configbuilder_bgsource">Source des glycémies</string>
@@ -163,6 +162,7 @@
     <string name="end_user_license_agreement_text">NE DOIT PAS ÊTRE UTILISÉ POUR PRENDRE DES DÉCISIONS MÉDICALES. IL N\'Y A AUCUNE GARANTIE POUR LE PROGRAMME, DANS LA LIMITE PERMISE PAR LA LOI APPLICABLE. SAUF S\'IL EST INDIQUÉ LE CONTRAIRE PAR ÉCRIT. LES TITULAIRES DU DROIT D\'AUTEUR ET / OU D\'AUTRES PARTIES FOURNISSENT LE PROGRAMME «EN L\'ÉTAT» SANS GARANTIE D\'AUCUNE SORTE, EXPLICITE OU IMPLICITE, Y COMPRIS MAIS NON SEULEMENT AUX GARANTIES IMPLICITES DE QUALITÉ MARCHANDE ET D\'ADÉQUATION À UN USAGE PARTICULIER
 L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME SONT DE VOTRE RESPONSABILITÉ. SI LE PROGRAMME EST DÉFECTUEUX, VOUS ASSUMEZ LE COÛT DE TOUS LES SERVICES, RÉPARATIONS OU CORRECTIONS NÉCESSAIRES.</string>
     <string name="end_user_license_agreement_i_understand">JE COMPRENDS ET J\'ACCEPTE LES CONDITIONS DU CONTRAT</string>
+    <string name="save">Enregistrer</string>
     <string name="reloadprofile">Actualiser le profil</string>
     <string name="smscommunicator">Communicateur SMS</string>
     <string name="smscommunicator_allowednumbers">Numéros de tél autorisés</string>
@@ -667,6 +667,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="show_invalidated">Montrer les entrées invalides</string>
     <string name="hide_invalidated">Masquer les entrées invalides</string>
     <string name="remove_items">Supprimer des entrées</string>
+    <string name="sort_items">Trier les objets</string>
     <string name="storedsettingsfound">Paramètres sauvegardés trouvés</string>
     <string name="allow_hardware_pump_text">ATTENTION : Si vous activez et connectez à une vraie pompe, AndroidAPS copiera les paramètres Basals du profil vers la pompe, écrasant le taux basal existant stocké sur la pompe. Assurez-vous d\'avoir correctement saisi et réglé les paramètres Basal dans AndroidAPS. Si vous ne savez pas ou si ne voulez pas écraser les paramètres Basal sur votre pompe, appuyez sur Annuler et reporter le passage à la pompe à une date ultérieure.</string>
     <string name="error_adding_treatment_title">Données de traitement incomplètes</string>
@@ -771,7 +772,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="invalidage">Âge invalide</string>
     <string name="invalidweight">Poids invalide</string>
     <string name="invalidpct">% saisi invalide</string>
-    <string name="tirformat"><![CDATA[<b>%1$s:</b> Bas: <b>%2$02d%%</b> Cible: <b>%3$02d%%</b> Haut: <b>%4$02d%%</b>]]></string>
     <string name="average">Moyenne</string>
     <string name="tir">Cible Gly</string>
     <string name="activitymonitor">Moniteur d\'activité</string>
@@ -882,6 +882,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="ns_receive_profile_switch_summary">Accepter les changements de profil entrés via NS ou NSClient</string>
     <string name="ns_receive_offline_event">Recevoir les événements APS hors ligne</string>
     <string name="ns_receive_offline_event_summary">Accepter les événements APS hors ligne entrés via NS ou NSClient</string>
+    <string name="ns_receive_tbr_eb">Recevoir des DBT et des BE</string>
+    <string name="ns_receive_tbr_eb_summary">Accepter le DBT et le BE entrés dans une autre instance</string>
     <string name="ns_receive_insulin">Recevoir l\'insuline</string>
     <string name="ns_receive_insulin_summary">Acceptez l\'insuline entrée via NS ou NSClient (elle n\'est pas injectée, uniquement pour le calcul pour IA)</string>
     <string name="ns_receive_carbs">Recevoir les glucides</string>
@@ -904,6 +906,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="errors">Erreurs</string>
     <string name="ns_sync_slow">Ralentir les téléchargements</string>
     <string name="data_status">État des données Gly</string>
+    <string name="remove_bg_readings">Supprimer des Glycémies</string>
     <string name="statuslights_cannula_age">âge canule</string>
     <string name="statuslights_patch_pump_age">âge pompe patch</string>
     <string name="patch_pump">Pompe patch</string>
@@ -940,6 +943,12 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="a11y_clone_profile">dupliquer le profil actuel</string>
     <string name="a11y_delete_current_profile">supprimer le profil actuel</string>
     <string name="a11y_add_new_to_list">ajouter un nouveau à la liste</string>
+    <!-- Theme switcher dark and light mode-->
+    <string name="theme_switcher_summary">Choisissez le thème sombre, clair ou pour suivre le thème système</string>
+    <string name="app_color_scheme">Thèmes de couleurs de l\'appli</string>
+    <string name="dark_theme">Thème sombre</string>
+    <string name="light_theme">Thème clair</string>
+    <string name="follow_system_theme">Utiliser le thème de l’appareil</string>
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">Préréglage inconnu de la cible temporaire : %1$s</string>
     <string name="wear_action_tempt_cancel_message">Annuler l\'exécution des cibles Temp?</string>
@@ -974,6 +983,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="wear_unknown_action_string">Commande inconnue :</string>
     <string name="overview_editquickwizard_percentage">Pourcentage</string>
     <string name="app_default">Application par défaut</string>
+    <string name="show_invalidated_records">Afficher les enregistrements invalidés / supprimés</string>
+    <string name="hide_invalidated_records">Masquer les enregistrements invalidés / supprimés</string>
     <string name="select_profile">Sélectionnez le profil à modifier</string>
     <string name="refresh_from_nightscout">Rafraîchir à partir de Nightscout</string>
     <string name="remove_selected_items">Supprimer les entrées sélectionnées</string>
@@ -985,4 +996,12 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="hide_loop">Masquer la boucle</string>
     <string name="show_loop">Afficher les entrées boucle</string>
     <string name="count_selected">%1$d sélectionnée(s)</string>
+    <string name="sort_label">Trier</string>
+    <string name="dialog_canceled">Boîte de dialogue annulée</string>
+    <string name="below" comment="below &quot;in range&quot;">En-dessous</string>
+    <string name="in_range">Dans la cible</string>
+    <string name="above" comment="above &quot;in range&quot;">Au-dessus</string>
+    <string name="show_loop_records">Afficher les entrées de la boucle</string>
+    <string name="show_hide_records">Masquer les entrées de la boucle</string>
+    <string name="widget_description">Widget AndroidAPS</string>
 </resources>

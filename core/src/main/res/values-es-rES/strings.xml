@@ -61,7 +61,7 @@
     <string name="lastbolus_label">Último bolo</string>
     <string name="dailyunits">Unidades diarias</string>
     <string name="basebasalrate_label">Dosis Basal</string>
-    <string name="tempbasal_label">Basal Temporal</string>
+    <string name="tempbasal_label">Basal temporal</string>
     <string name="virtualpump_extendedbolus_label">Bolo extendido</string>
     <string name="reservoir_label">Reservorio</string>
     <string name="pumphistory">Historial de la bomba</string>
@@ -136,6 +136,10 @@
     <string name="minago">hace %1$d m</string>
     <string name="minago_long">Hace %1$d minutos</string>
     <string name="hoursago">hace %1$.1f h</string>
+    <string name="days_ago">Hace %1$.1f día</string>
+    <string name="days_ago_round">Hace %1$.0f días</string>
+    <string name="in_days">en %1$.0f días</string>
+    <string name="in_days_round">en %1$.0f días</string>
     <string name="shorthour">h</string>
     <string name="days">días</string>
     <string name="hours">horas</string>
@@ -151,9 +155,15 @@
     <string name="unit_weeks">semanas</string>
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
+    <string name="later_today">Más tarde hoy</string>
+    <string name="tomorrow">Mañana</string>
+    <string name="today">Hoy</string>
+    <string name="yesterday">Ayer</string>
     <!--    Protection-->
     <string name="wrongpassword">Contraseña incorrecta</string>
+    <string name="wrongpin">Pin erróneo</string>
     <string name="passwords_dont_match">Las ontraseñas no coinciden</string>
+    <string name="pin_dont_match">Los códigos PIN no coinciden</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Valores basales no alineados a las horas: %1$s</string>
     <string name="minimalbasalvaluereplaced">Valor basal reemplazado por el valor mínimo soportado: %1$s</string>
@@ -176,10 +186,6 @@
     <string name="zerovalueinprofile">Perfil inválido: %1$s</string>
     <!--    Temptarget-->
     <string name="mins">%1$d min</string>
-    <!--    TDD-->
-    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fU</b> Bolo: <b>%3$.2fU</b> Basal: <b>%4$.2fU(%5$.0f%%)</b>]]></string>
-    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fU</b> Bolo: <b>%3$.2fU</b> Basal: <b>%4$.2fU(%5$.0f%%)</b> Carbohidratos: <b>%6$.0fg</b>]]></string>
-    <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> en <b>%3$d</b> días<br>]]></string>
     <!--    Translator-->
     <string name="careportal">Portal de cuidados</string>
     <string name="careportal_bgcheck">Medir glucosa</string>
@@ -451,6 +457,14 @@
     <string name="insight_refresh_button" comment="26 characters max for translation">Botón de refresco de Insight</string>
     <string name="a11y_min_button_description">decrecimiento %1$s por %2$s</string>
     <string name="a11y_plus_button_description">incremento %1$s por %2$s</string>
+    <string name="formatPercent">%1$.0f%%</string>
+    <string name="basal">Basal</string>
+    <string name="basalpct">Basal %</string>
+    <string name="count_selected">%1$d seleccionados</string>
+    <string name="sort_label">Ordenar</string>
+    <string name="remove_items">Eliminar elementos</string>
+    <string name="sort_items">Ordenar elementos</string>
+    <string name="remove_selected_items">Eliminar los elementos seleccionados</string>
     <plurals name="days">
         <item quantity="one">%1$d día</item>
         <item quantity="other">%1$d días</item>

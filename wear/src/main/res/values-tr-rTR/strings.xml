@@ -72,7 +72,8 @@
     <string name="menu_treatment">Tedavi</string>
     <string name="menu_treatment_short">Tedavi</string>
     <string name="menu_bolus">Bolus</string>
-    <string name="menu_ecarb">Karbonhidrat</string>
+    <string name="menu_carb">Karbonhidrat</string>
+    <string name="menu_ecarb">yKarb</string>
     <string name="menu_settings">Ayarlar</string>
     <string name="menu_status">Durum</string>
     <string name="menu_resync">Yen-Senkr</string>
@@ -94,6 +95,7 @@
     <string name="action_low" comment="In temp target menu, lower value from range">Düşük</string>
     <string name="action_high" comment="In temp target menu, higher value from range">Yüksek</string>
     <string name="action_carbs">Karbonhidrat</string>
+    <string name="action_ecarbs">yKarb</string>
     <string name="action_percentage">Yüzde</string>
     <string name="action_start_min">Başlat [min]</string>
     <string name="action_duration_h">Süre [h]</string>

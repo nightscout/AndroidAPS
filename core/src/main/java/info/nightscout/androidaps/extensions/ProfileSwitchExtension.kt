@@ -29,15 +29,19 @@ fun List<ProfileSwitch>.isPSEvent5minBack(time: Long): Boolean {
 
 fun ProfileSwitch.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
     JSONObject()
+        .put("timeshift", timeshift)
+        .put("percentage", percentage)
+        .also { // remove customization to store original profileJson in toPureNsJson call
+            timeshift = 0
+            percentage = 100
+        }
         .put("created_at", dateUtil.toISOString(timestamp))
         .put("enteredBy", "openaps://" + "AndroidAPS")
         .put("isValid", isValid)
         .put("eventType", TherapyEvent.Type.PROFILE_SWITCH.text)
         .put("duration", T.msecs(duration).mins())
-        .put("profile", getCustomizedName())
+        .put("profile", profileName)
         .put("profileJson", ProfileSealed.PS(this).toPureNsJson(dateUtil).toString())
-        .put("timeshift", 0)
-        .put("percentage", 100) // customization already applied to json
         .also {
             if (interfaceIDs.pumpId != null) it.put("pumpId", interfaceIDs.pumpId)
             if (interfaceIDs.pumpType != null) it.put("pumpType", interfaceIDs.pumpType!!.name)

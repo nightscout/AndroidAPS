@@ -7,7 +7,11 @@ import android.os.SystemClock
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.automation.R
-import info.nightscout.androidaps.events.*
+import info.nightscout.androidaps.events.EventBTChange
+import info.nightscout.androidaps.events.EventChargingState
+import info.nightscout.androidaps.events.EventLocationChange
+import info.nightscout.androidaps.events.EventNetworkChange
+import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
@@ -33,7 +37,6 @@ import org.json.JSONObject
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.collections.ArrayList
 
 @OpenForTesting
 @Singleton
@@ -128,10 +131,6 @@ class AutomationPlugin @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe({ processActions() }, fabricPrivacy::logException)
         disposable += rxBus
-            .toObservable(EventAutosensCalculationFinished::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ processActions() }, fabricPrivacy::logException)
-        disposable += rxBus
             .toObservable(EventBTChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({
@@ -150,8 +149,10 @@ class AutomationPlugin @Inject constructor(
 
     private fun storeToSP() {
         val array = JSONArray()
+        val iterator = ArrayList(automationEvents).iterator()
         try {
-            for (event in automationEvents) {
+            while (iterator.hasNext()) {
+                val event = iterator.next()
                 array.put(JSONObject(event.toJSON()))
             }
         } catch (e: JSONException) {
@@ -169,14 +170,14 @@ class AutomationPlugin @Inject constructor(
                 val array = JSONArray(data)
                 for (i in 0 until array.length()) {
                     val o = array.getJSONObject(i)
-                    val event = AutomationEvent(injector).fromJSON(o.toString())
+                    val event = AutomationEvent(injector).fromJSON(o.toString(), i)
                     automationEvents.add(event)
                 }
             } catch (e: JSONException) {
                 e.printStackTrace()
             }
         else
-            automationEvents.add(AutomationEvent(injector).fromJSON(event))
+            automationEvents.add(AutomationEvent(injector).fromJSON(event, 0))
     }
 
     @Synchronized
@@ -292,8 +293,10 @@ class AutomationPlugin @Inject constructor(
 
     @Synchronized
     fun removeAt(index: Int) {
-        automationEvents.removeAt(index)
-        rxBus.send(EventAutomationDataChanged())
+        if (index >= 0 && index < automationEvents.size) {
+            automationEvents.removeAt(index)
+            rxBus.send(EventAutomationDataChanged())
+        }
     }
 
     @Synchronized
@@ -305,7 +308,6 @@ class AutomationPlugin @Inject constructor(
     @Synchronized
     fun swap(fromPosition: Int, toPosition: Int) {
         Collections.swap(automationEvents, fromPosition, toPosition)
-        rxBus.send(EventAutomationDataChanged())
     }
 
     @Synchronized

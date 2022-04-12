@@ -12,14 +12,14 @@ class MsgSetExtendedBolusStart(
 ) : MessageBase(injector) {
 
     init {
-        SetCommand(0x0407)
+        setCommand(0x0407)
         aapsLogger.debug(LTag.PUMPBTCOMM, "New message")
         // HARDCODED LIMITS
         if (halfhours < 1) halfhours = 1
         if (halfhours > 16) halfhours = 16
         amount = constraintChecker.applyBolusConstraints(Constraint(amount)).value()
-        AddParamInt((amount * 100).toInt())
-        AddParamByte(halfhours)
+        addParamInt((amount * 100).toInt())
+        addParamByte(halfhours)
         aapsLogger.debug(LTag.PUMPBTCOMM, "Set extended bolus start: " + (amount * 100).toInt() / 100.0 + "U halfhours: " + halfhours.toInt())
     }
 

@@ -16,7 +16,7 @@ class MsgCheckValue_v2(
 
 
     init {
-        SetCommand(0xF0F1)
+        setCommand(0xF0F1)
         aapsLogger.debug(LTag.PUMPCOMM, "New message")
     }
 

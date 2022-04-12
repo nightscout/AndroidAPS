@@ -50,6 +50,7 @@ import info.nightscout.androidaps.tile.ActionsTileService;
 import info.nightscout.androidaps.tile.QuickWizardTileService;
 import info.nightscout.androidaps.tile.TempTargetTileService;
 import info.nightscout.shared.SafeParse;
+import info.nightscout.shared.weardata.WearUris;
 
 /**
  * Created by emmablack on 12/26/14.
@@ -59,21 +60,6 @@ public class ListenerService extends WearableListenerService implements GoogleAp
 
     @Inject WearUtil wearUtil;
     @Inject Persistence persistence;
-
-    private static final String WEARABLE_RESEND_PATH = "/nightscout_watch_data_resend";
-    private static final String WEARABLE_CANCELBOLUS_PATH = "/nightscout_watch_cancel_bolus";
-    public static final String WEARABLE_CONFIRM_ACTIONSTRING_PATH = "/nightscout_watch_confirmactionstring";
-    public static final String WEARABLE_INITIATE_ACTIONSTRING_PATH = "/nightscout_watch_initiateactionstring";
-
-    private static final String OPEN_SETTINGS = "/openwearsettings";
-    private static final String NEW_STATUS_PATH = "/sendstatustowear";
-    private static final String NEW_PREFERENCES_PATH = "/sendpreferencestowear";
-    private static final String QUICK_WIZARD_PATH = "/send_quick_wizard";
-    public static final String BASAL_DATA_PATH = "/nightscout_watch_basal";
-    public static final String BOLUS_PROGRESS_PATH = "/nightscout_watch_bolusprogress";
-    public static final String ACTION_CONFIRMATION_REQUEST_PATH = "/nightscout_watch_actionconfirmationrequest";
-    public static final String NEW_CHANGECONFIRMATIONREQUEST_PATH = "/nightscout_watch_changeconfirmationrequest";
-    public static final String ACTION_CANCELNOTIFICATION_REQUEST_PATH = "/nightscout_watch_cancelnotificationrequest";
 
     public static final int BOLUS_PROGRESS_NOTIF_ID = 1;
     public static final int CONFIRM_NOTIF_ID = 2;
@@ -121,7 +107,8 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                 NodeApi.GetConnectedNodesResult nodes =
                         Wearable.NodeApi.getConnectedNodes(googleApiClient).await();
                 for (Node node : nodes.getNodes()) {
-                    Wearable.MessageApi.sendMessage(googleApiClient, node.getId(), WEARABLE_CANCELBOLUS_PATH, null);
+                    Wearable.MessageApi.sendMessage(googleApiClient, node.getId(),
+                            WearUris.WEARABLE_CANCELBOLUS_PATH, null);
                 }
 
             }
@@ -179,7 +166,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                 Log.i(TAG, "ResendDataTask.doInBackground: connected");
                 NodeApi.GetConnectedNodesResult nodes = Wearable.NodeApi.getConnectedNodes(googleApiClient).await();
                 for (Node node : nodes.getNodes()) {
-                    Wearable.MessageApi.sendMessage(googleApiClient, node.getId(), WEARABLE_RESEND_PATH, null);
+                    Wearable.MessageApi.sendMessage(googleApiClient, node.getId(), WearUris.WEARABLE_RESEND_PATH, null);
                 }
             } else {
                 Log.i(TAG, "ResendDataTask.doInBackground: could not connect");
@@ -198,11 +185,11 @@ public class ListenerService extends WearableListenerService implements GoogleAp
     }
 
     private void sendConfirmActionstring(String actionstring) {
-        new MessageActionTask(this, WEARABLE_CONFIRM_ACTIONSTRING_PATH, actionstring).execute();
+        new MessageActionTask(this, WearUris.WEARABLE_CONFIRM_ACTIONSTRING_PATH, actionstring).execute();
     }
 
     private void sendInitiateActionstring(String actionstring) {
-        new MessageActionTask(this, WEARABLE_INITIATE_ACTIONSTRING_PATH, actionstring).execute();
+        new MessageActionTask(this, WearUris.WEARABLE_INITIATE_ACTIONSTRING_PATH, actionstring).execute();
     }
 
     private void googleApiConnect() {
@@ -295,15 +282,15 @@ public class ListenerService extends WearableListenerService implements GoogleAp
 
                 //Log.d(TAG, "WR: onDataChanged: Path: " + path + ", EventDataItem=" + event.getDataItem());
 
-                if (path.equals(OPEN_SETTINGS)) {
+                if (path.equals(WearUris.OPEN_SETTINGS_PATH)) {
                     Intent intent = new Intent(this, AAPSPreferences.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
-                } else if (path.equals(BOLUS_PROGRESS_PATH)) {
+                } else if (path.equals(WearUris.BOLUS_PROGRESS_PATH)) {
                     int progress = DataMapItem.fromDataItem(event.getDataItem()).getDataMap().getInt("progresspercent", 0);
                     String status = DataMapItem.fromDataItem(event.getDataItem()).getDataMap().getString("progressstatus", "");
                     showBolusProgress(progress, status);
-                } else if (path.equals(ACTION_CONFIRMATION_REQUEST_PATH)) {
+                } else if (path.equals(WearUris.ACTION_CONFIRMATION_REQUEST_PATH)) {
                     String title = DataMapItem.fromDataItem(event.getDataItem()).getDataMap().getString("title");
                     String message = DataMapItem.fromDataItem(event.getDataItem()).getDataMap().getString("message");
                     String actionstring = DataMapItem.fromDataItem(event.getDataItem()).getDataMap().getString("actionstring");
@@ -322,21 +309,21 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                         showConfirmationDialog(title, message, actionstring);
                     }
 
-                } else if (path.equals(NEW_STATUS_PATH)) {
+                } else if (path.equals(WearUris.NEW_STATUS_PATH)) {
                     dataMap = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
                     Intent messageIntent = new Intent();
                     messageIntent.setAction(Intent.ACTION_SEND);
                     messageIntent.putExtra("status", dataMap.toBundle());
                     persistence.storeDataMap(RawDisplayData.STATUS_PERSISTENCE_KEY, dataMap);
                     LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);
-                } else if (path.equals(BASAL_DATA_PATH)) {
+                } else if (path.equals(WearUris.BASAL_DATA_PATH)) {
                     dataMap = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
                     Intent messageIntent = new Intent();
                     messageIntent.setAction(Intent.ACTION_SEND);
                     messageIntent.putExtra("basals", dataMap.toBundle());
                     persistence.storeDataMap(RawDisplayData.BASALS_PERSISTENCE_KEY, dataMap);
                     LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);
-                } else if (path.equals(NEW_PREFERENCES_PATH)) {
+                } else if (path.equals(WearUris.NEW_PREFERENCES_PATH)) {
                     dataMap = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
                     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -370,12 +357,12 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                     }
                     String keyMaxBolus = getString(R.string.key_treatmentssafety_maxbolus);
                     if (dataMap.containsKey(keyMaxBolus)) {
-                        float maxBolus = (float)dataMap.getDouble(keyMaxBolus, 3.0f);
+                        float maxBolus = (float) dataMap.getDouble(keyMaxBolus, 3.0f);
                         editor.putFloat(keyMaxBolus, maxBolus);
                         editor.apply();
                     }
 
-                } else if (path.equals(QUICK_WIZARD_PATH)) {
+                } else if (path.equals(WearUris.QUICK_WIZARD_PATH)) {
                     dataMap = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
                     Log.i(TAG, "onDataChanged: QUICK_WIZARD_PATH" + dataMap);
                     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -395,12 +382,12 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                     } else {
                         Log.i(TAG, "onDataChanged: ignore update");
                     }
-                } else if (path.equals(NEW_CHANGECONFIRMATIONREQUEST_PATH)) {
+                } else if (path.equals(WearUris.ACTION_CHANGECONFIRMATION_REQUEST_PATH)) {
                     String title = DataMapItem.fromDataItem(event.getDataItem()).getDataMap().getString("title");
                     String message = DataMapItem.fromDataItem(event.getDataItem()).getDataMap().getString("message");
                     String actionstring = DataMapItem.fromDataItem(event.getDataItem()).getDataMap().getString("actionstring");
                     notifyChangeRequest(title, message, actionstring);
-                } else if (path.equals(ACTION_CANCELNOTIFICATION_REQUEST_PATH)) {
+                } else if (path.equals(WearUris.ACTION_CANCELNOTIFICATION_REQUEST_PATH)) {
                     String actionstring = DataMapItem.fromDataItem(event.getDataItem()).getDataMap().getString("actionstring");
                     cancelNotificationRequest(actionstring);
                 } else {

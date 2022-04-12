@@ -42,7 +42,6 @@
     <string name="loop_aps_label">APS</string>
     <string name="overview_calculator_label">Áireamhán</string>
     <string name="sms_bolus">Bólas:</string>
-    <string name="basal">Bunaidh</string>
     <string name="sms_basal">Bunaidh:</string>
     <string name="configbuilder_bgsource">Foinse BG</string>
     <string name="xdrip">xDrip+</string>
@@ -184,5 +183,6 @@
     <string name="isf_short">ISF</string>
     <string name="randombg_short">BG</string>
     <!-- SMS Communicator & OTP Authenticator -->
+    <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
 </resources>

@@ -165,8 +165,8 @@ class CareDialog : DialogFragmentWithDate() {
             ?: 0.0, 0.0, Constants.MAX_PROFILE_SWITCH_DURATION, 10.0, DecimalFormat("0"), false, binding.okcancel.ok)
         if (options == EventType.NOTE || options == EventType.QUESTION || options == EventType.ANNOUNCEMENT || options == EventType.EXERCISE)
             binding.notesLayout.root.visibility = View.VISIBLE // independent to preferences
-        binding.bg.editText?.id?.let { binding.bgLabel.labelFor = it }
-        binding.duration.editText?.id?.let { binding.durationLabel.labelFor = it }
+        binding.bgLabel.labelFor = binding.bg.editTextId
+        binding.durationLabel.labelFor = binding.duration.editTextId
     }
 
     override fun onDestroyView() {

@@ -136,6 +136,10 @@
     <string name="minago">%1$d dak önce</string>
     <string name="minago_long">%1$d dakika önce</string>
     <string name="hoursago">%1$.1f s önce</string>
+    <string name="days_ago">%1$.1f gün önce</string>
+    <string name="days_ago_round">%1$.0f gün önce</string>
+    <string name="in_days">%1$.0f gün içinde</string>
+    <string name="in_days_round">%1$.0f gün içinde</string>
     <string name="shorthour">s</string>
     <string name="days">gün</string>
     <string name="hours">saat</string>
@@ -151,9 +155,15 @@
     <string name="unit_weeks">hafta</string>
     <string name="shortminute">dk</string>
     <string name="shortday">g</string>
+    <string name="later_today">Bugünden sonra</string>
+    <string name="tomorrow">Yarın</string>
+    <string name="today">Bugün</string>
+    <string name="yesterday">Dün</string>
     <!--    Protection-->
     <string name="wrongpassword">Hatalı parola</string>
+    <string name="wrongpin">Yanlış PIN</string>
     <string name="passwords_dont_match">Şifreler eşleşmiyor</string>
+    <string name="pin_dont_match">PIN\'ler eşleşmiyor</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Bazal değerler saatlerle uyumlu değil: %1$s</string>
     <string name="minimalbasalvaluereplaced">Bazal değeri minimum desteklenen değerle değiştirilir: %1$s</string>
@@ -176,10 +186,6 @@
     <string name="zerovalueinprofile">Geçersiz profil: %1$s</string>
     <!--    Temptarget-->
     <string name="mins">%1$d dak</string>
-    <!--    TDD-->
-    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f Ü</b> Bol: <b>%3$.2f Ü</b> Baz: <b>%4$.2f Ü(%5$.0f%%)</b>]]></string>
-    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f Ü</b> Bol: <b>%3$.2f Ü</b> Baz: <b>%4$.2f Ü(%5$.0f%%)</b> Karbhr: <b>%6$.0f g</b>]]></string>
-    <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> içinde <b>%3$d</b> gün<br>]]></string>
     <!--    Translator-->
     <string name="careportal">Bakım Portalı</string>
     <string name="careportal_bgcheck">KŞ Kontrol</string>
@@ -451,6 +457,14 @@
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight Yenileme Düğmesi</string>
     <string name="a11y_min_button_description">%2$s\'dan %1$s\'a azalma</string>
     <string name="a11y_plus_button_description">%2$s\'dan %1$s\'a artış</string>
+    <string name="formatPercent">%1$.0f%%</string>
+    <string name="basal">Bazal</string>
+    <string name="basalpct">Bazal %</string>
+    <string name="count_selected">%1$d seçildi</string>
+    <string name="sort_label">Sırala</string>
+    <string name="remove_items">Öğeleri kaldır</string>
+    <string name="sort_items">Öğeleri Sırala</string>
+    <string name="remove_selected_items">Seçilen öğeleri kaldır</string>
     <plurals name="days">
         <item quantity="one">%1$d gün</item>
         <item quantity="other">%1$d gün</item>

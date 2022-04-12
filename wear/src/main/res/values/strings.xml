@@ -79,7 +79,8 @@
     <string name="menu_treatment">Treatment</string>
     <string name="menu_treatment_short">Treat</string>
     <string name="menu_bolus">Bolus</string>
-    <string name="menu_ecarb">Carbs</string>
+    <string name="menu_carb">Carbs</string>
+    <string name="menu_ecarb">eCarbs</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_status">Status</string>
     <string name="menu_resync">Re-Sync</string>
@@ -102,6 +103,7 @@
     <string name="action_low" comment="In temp target menu, lower value from range">Low</string>
     <string name="action_high" comment="In temp target menu, higher value from range">High</string>
     <string name="action_carbs">Carbs</string>
+    <string name="action_ecarbs">eCarbs</string>
     <string name="action_percentage">Percentage</string>
     <string name="action_start_min">Start [min]</string>
     <string name="action_duration_h">Duration [h]</string>

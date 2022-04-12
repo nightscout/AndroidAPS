@@ -2,11 +2,10 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/StyleDialog"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusableInTouchMode="true"
-    android:minWidth="300dp"
-    android:orientation="vertical"
     tools:context=".dialogs.CarbsDialog">
 
     <LinearLayout
@@ -15,12 +14,10 @@
         android:orientation="vertical">
 
         <RelativeLayout
+            style="@style/StyleDialogHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@color/dialog_title_background"
-            android:orientation="horizontal"
-            android:padding="5dp">
+            android:layout_gravity="center">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -109,7 +106,7 @@
                     <CheckBox
                         android:id="@+id/alarmCheckBox"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="40dp"
                         android:layout_gravity="center_vertical"
                         android:checked="false"
                         android:padding="2dp"
@@ -119,21 +116,22 @@
 
                 </LinearLayout>
 
-                    <info.nightscout.androidaps.utils.ui.MinutesNumberPicker
-                        android:id="@+id/time"
-                        android:layout_width="130dp"
-                        android:layout_height="40dp"
-                        app:customContentDescription="@string/time_offset" />
+                <info.nightscout.androidaps.utils.ui.MinutesNumberPicker
+                    android:id="@+id/time"
+                    android:layout_width="130dp"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="2dp"
+                    app:customContentDescription="@string/time_offset" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:gravity="start"
-                        android:paddingStart="5dp"
-                        android:paddingEnd="5dp"
-                        android:text="@string/unit_minute_short"
-                        android:textAppearance="?android:attr/textAppearanceSmall" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="start"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:text="@string/unit_minute_short"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
             </TableRow>
 
@@ -158,6 +156,7 @@
                     android:layout_width="130dp"
                     android:layout_height="40dp"
                     android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="2dp"
                     app:customContentDescription="@string/careportal_newnstreatment_duration_label" />
 
                 <TextView

@@ -190,7 +190,7 @@ class NSClientService : DaggerService() {
         lastAckTime = dateUtil.now()
         dataWorker.enqueue(
             OneTimeWorkRequest.Builder(NSClientAddAckWorker::class.java)
-                .setInputData(dataWorker.storeInputData(ack, null))
+                .setInputData(dataWorker.storeInputData(ack))
                 .build()
         )
     }
@@ -199,7 +199,7 @@ class NSClientService : DaggerService() {
         lastAckTime = dateUtil.now()
         dataWorker.enqueue(
             OneTimeWorkRequest.Builder(NSClientUpdateRemoveAckWorker::class.java)
-                .setInputData(dataWorker.storeInputData(ack, null))
+                .setInputData(dataWorker.storeInputData(ack))
                 .build()
         )
     }
@@ -483,7 +483,7 @@ class NSClientService : DaggerService() {
                             rxBus.send(EventNSClientNewLog("PROFILE", "profile received"))
                             dataWorker.enqueue(
                                 OneTimeWorkRequest.Builder(LocalProfilePlugin.NSProfileWorker::class.java)
-                                    .setInputData(dataWorker.storeInputData(profileStoreJson, null))
+                                    .setInputData(dataWorker.storeInputData(profileStoreJson))
                                     .build()
                             )
                             xDripBroadcast.sendProfile(profileStoreJson)
@@ -502,7 +502,7 @@ class NSClientService : DaggerService() {
                         if (addedOrUpdatedTreatments.length() > 0) {
                             dataWorker.enqueue(
                                 OneTimeWorkRequest.Builder(NSClientAddUpdateWorker::class.java)
-                                    .setInputData(dataWorker.storeInputData(addedOrUpdatedTreatments, null))
+                                    .setInputData(dataWorker.storeInputData(addedOrUpdatedTreatments))
                                     .build()
                             )
                             xDripBroadcast.sendTreatments(addedOrUpdatedTreatments)
@@ -520,7 +520,7 @@ class NSClientService : DaggerService() {
                         if (foods.length() > 0) rxBus.send(EventNSClientNewLog("DATA", "received " + foods.length() + " foods"))
                         dataWorker.enqueue(
                             OneTimeWorkRequest.Builder(FoodWorker::class.java)
-                                .setInputData(dataWorker.storeInputData(foods, null))
+                                .setInputData(dataWorker.storeInputData(foods))
                                 .build()
                         )
                     }
@@ -529,7 +529,7 @@ class NSClientService : DaggerService() {
                         if (mbgArray.length() > 0) rxBus.send(EventNSClientNewLog("DATA", "received " + mbgArray.length() + " mbgs"))
                         dataWorker.enqueue(
                             OneTimeWorkRequest.Builder(NSClientMbgWorker::class.java)
-                                .setInputData(dataWorker.storeInputData(mbgArray, null))
+                                .setInputData(dataWorker.storeInputData(mbgArray))
                                 .build()
                         )
                     }
@@ -546,7 +546,7 @@ class NSClientService : DaggerService() {
                             sp.putBoolean(R.string.key_ObjectivesbgIsAvailableInNS, true)
                             dataWorker.enqueue(
                                 OneTimeWorkRequest.Builder(NSClientSourceWorker::class.java)
-                                    .setInputData(dataWorker.storeInputData(sgvs, null))
+                                    .setInputData(dataWorker.storeInputData(sgvs))
                                     .build()
                             )
                             xDripBroadcast.sendSgvs(sgvs)

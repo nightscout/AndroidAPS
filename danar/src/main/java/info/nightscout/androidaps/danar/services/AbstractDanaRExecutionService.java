@@ -191,22 +191,23 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
 
     protected void getBTSocketForSelectedPump() {
         mDevName = sp.getString(R.string.key_danar_bt_name, "");
-        BluetoothAdapter bluetoothAdapter = ((BluetoothManager)context.getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
+        BluetoothAdapter bluetoothAdapter = ((BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
 
         if (bluetoothAdapter != null) {
             Set<BluetoothDevice> bondedDevices = bluetoothAdapter.getBondedDevices();
 
-            for (BluetoothDevice device : bondedDevices) {
-                if (mDevName.equals(device.getName())) {
-                    mBTDevice = device;
-                    try {
-                        mRfcommSocket = mBTDevice.createRfcommSocketToServiceRecord(SPP_UUID);
-                    } catch (IOException e) {
-                        aapsLogger.error("Error creating socket: ", e);
+            if (bondedDevices != null)
+                for (BluetoothDevice device : bondedDevices) {
+                    if (mDevName.equals(device.getName())) {
+                        mBTDevice = device;
+                        try {
+                            mRfcommSocket = mBTDevice.createRfcommSocketToServiceRecord(SPP_UUID);
+                        } catch (IOException e) {
+                            aapsLogger.error("Error creating socket: ", e);
+                        }
+                        break;
                     }
-                    break;
                 }
-            }
         } else {
             ToastUtils.INSTANCE.showToastInUiThread(context.getApplicationContext(),
                     rh.gs(R.string.nobtadapter));

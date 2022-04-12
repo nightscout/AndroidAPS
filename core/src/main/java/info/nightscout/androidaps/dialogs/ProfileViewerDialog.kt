@@ -206,20 +206,20 @@ class ProfileViewerDialog : DaggerDialogFragment() {
     }
 
     private fun formatColors(label: String, text1: String, text2: String, units: String): String {
-        var s = "<font color='${rh.gc(R.color.white)}'>$label</font>"
+        var s = "<font color='${rh.gac(context, R.attr.defaultTextColor)}'>$label</font>"
         s += "    "
-        s += "<font color='${rh.gc(R.color.tempbasal)}'>$text1</font>"
+        s += "<font color='${rh.gac(context, R.attr.tempBasalColor)}'>$text1</font>"
         s += "    "
-        s += "<font color='${rh.gc(R.color.examinedProfile)}'>$text2</font>"
+        s += "<font color='${rh.gac(context, R.attr.examinedProfileColor)}'>$text2</font>"
         s += "    "
-        s += "<font color='${rh.gc(R.color.white)}'>$units</font>"
+        s += "<font color='${rh.gac(context, R.attr.defaultTextColor)}'>$units</font>"
         return s
     }
 
     private fun formatColors(text1: String, text2: String): String {
-        var s = "<font color='${rh.gc(R.color.tempbasal)}'>$text1</font>"
+        var s = "<font color='${rh.gac(context, R.attr.tempBasalColor)}'>$text1</font>"
         s += "<BR/>"
-        s += "<font color='${rh.gc(R.color.examinedProfile)}'>$text2</font>"
+        s += "<font color='${rh.gac(context, R.attr.examinedProfileColor)}'>$text2</font>"
         return s
     }
 

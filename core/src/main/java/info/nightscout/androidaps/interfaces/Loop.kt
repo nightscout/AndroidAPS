@@ -28,6 +28,8 @@ interface Loop {
     val isDisconnected: Boolean
     var enabled: Boolean
 
+    var lastBgTriggeredRun: Long
+
     fun invoke(initiator: String, allowNotification: Boolean, tempBasalFallback: Boolean = false)
 
     fun acceptChangeRequest()

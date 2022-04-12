@@ -103,7 +103,6 @@
     <string name="overview_calculator_label">Calcolatore</string>
     <string name="constraintapllied">Vincolo applicato!</string>
     <string name="sms_bolus">Bolo:</string>
-    <string name="basal">Basale</string>
     <string name="sms_basal">Basale:</string>
     <string name="changeyourinput">Cambia il tuo input!</string>
     <string name="configbuilder_bgsource">Origine BG</string>
@@ -767,7 +766,6 @@
     <string name="invalidage">Inserimento età non valido</string>
     <string name="invalidweight">Inserimento peso non valido</string>
     <string name="invalidpct">Inserimento % non valido</string>
-    <string name="tirformat"><![CDATA[<b>%1$s:</b> Basso: <b>%2$02d%%</b> In: <b>%3$02d%%</b> Alto: <b>%4$02d%%</b>]]></string>
     <string name="average">Media</string>
     <string name="tir">TIR</string>
     <string name="activitymonitor">Monitor attività</string>
@@ -918,6 +916,7 @@
     <string name="a11y_bg_quality_recalculated">ricalcolato</string>
     <string name="a11y_insulin_label">insulina</string>
     <string name="a11y_blood_glucose">glicemia</string>
+    <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
     <string name="wizard_explain_carbs">CHO: %1$.2fU</string>
     <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fU</string>

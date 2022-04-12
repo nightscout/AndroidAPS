@@ -46,6 +46,7 @@ import javax.inject.Singleton
         OmnipodDashModule::class,
         OmnipodErosModule::class,
         APSModule::class,
+        WorkflowModule::class,
         PreferencesModule::class,
         OverviewModule::class,
         DataClassesModule::class,

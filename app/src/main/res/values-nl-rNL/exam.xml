@@ -104,11 +104,11 @@
     <string name="troubleshooting_wheretoask">Waar kan je hulp zoeken voor AndroidAPS?</string>
     <string name="troubleshooting_fb">Je kunt om advies vragen in de AndroidAPS Users Facebookgroep.</string>
     <string name="troubleshooting_wiki">Je moet de AndroidAPS documentatie lezen (en opnieuw lezen).</string>
-    <string name="troubleshooting_gitter">Je kunt om advies vragen en technische problemen bespreken in de AndroidAPS Gitter-room.</string>
+    <string name="troubleshooting_gitter">Je kunt om advies vragen en technische problemen bespreken in het AndroidAPS kanaal op Discord.</string>
     <string name="troubleshooting_yourendo">Je moet hulp vragen aan je behandelteam.</string>
     <string name="troubleshooting_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/nl/Installing-AndroidAPS/Update-to-new-version.html#problemen-oplossen</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
-    <string name="troubleshooting_hint3">https://gitter.im/MilosKozak/AndroidAPS</string>
+    <string name="troubleshooting_hint3">https://discord.gg/4fQUWHZ4Mw</string>
     <string name="insulin_label">Insuline-plugins</string>
     <string name="insulin_ultrarapid">Welke insuline gebruik je met de Ultra-Rapid Oref plugin?</string>
     <string name="insulin_fiasp">Fiasp®</string>

@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.danaRv2.services;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Binder;
 import android.os.SystemClock;
@@ -106,7 +107,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
         mBinder = new LocalBinder();
     }
 
-    public void connect() {
+    @SuppressLint("MissingPermission") public void connect() {
         if (mConnectionInProgress)
             return;
 
@@ -152,7 +153,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
 
             if (danaPump.isNewPump()) {
                 mSerialIOThread.sendMessage(checkValue);
-                if (!checkValue.received) {
+                if (!checkValue.isReceived()) {
                     return;
                 }
             }
@@ -348,7 +349,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
                     DanaPump.HistoryEntry.CARBS.getValue(), carbtime, carbs, 0);
             mSerialIOThread.sendMessage(msgSetHistoryEntry_v2);
             danaPump.lastHistoryFetched = Math.min(danaPump.lastHistoryFetched, carbtime - T.Companion.mins(1).msecs());
-            if (!msgSetHistoryEntry_v2.isReceived() || msgSetHistoryEntry_v2.failed)
+            if (!msgSetHistoryEntry_v2.isReceived() || msgSetHistoryEntry_v2.getFailed())
                 ErrorHelperActivity.Companion.runAlarm(context, rh.gs(R.string.carbs_store_error)
                         , rh.gs(R.string.error), R.raw.boluserror);
         }
@@ -364,7 +365,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
                 t.insulin = 0d;
                 return false;
             }
-            while (!danaPump.getBolusStopped() && !start.failed) {
+            while (!danaPump.getBolusStopped() && !start.getFailed()) {
                 SystemClock.sleep(100);
                 if ((System.currentTimeMillis() - danaPump.getBolusProgressLastTimeStamp()) > 15 * 1000L) { // if i didn't receive status for more than 15 sec expecting broken comm
                     danaPump.setBolusStopped(true);
@@ -410,7 +411,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
                 rxBus.send(new EventPumpStatusChanged(rh.gs(R.string.disconnecting)));
             }
         });
-        return !start.failed;
+        return !start.getFailed();
     }
 
     public boolean carbsEntry(int amount, long time) {
@@ -472,7 +473,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
         MsgSetUserOptions msg = new MsgSetUserOptions(injector);
         mSerialIOThread.sendMessage(msg);
         SystemClock.sleep(200);
-        return new PumpEnactResult(injector).success(!msg.failed);
+        return new PumpEnactResult(injector).success(!msg.getFailed());
     }
 
 }

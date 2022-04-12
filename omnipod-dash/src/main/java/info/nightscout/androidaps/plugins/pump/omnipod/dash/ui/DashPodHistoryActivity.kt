@@ -209,11 +209,11 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
         private fun setTextViewColor(check_result: Boolean, textview: TextView, record: HistoryRecord) {
             if (check_result && !record.isSuccess()) {
                 // Record says not success
-                textview.setTextColor(android.graphics.Color.YELLOW)
+                textview.setTextColor(rh.gac( textview.context, R.attr.omniYellowColor))
                 return
             }
             // On success set color
-            val textColor = when (record.commandType) {
+            val textColorAttr = when (record.commandType) {
                 // Operational
                 OmnipodCommandType.INITIALIZE_POD,
                 OmnipodCommandType.CONFIGURE_ALERTS,
@@ -223,25 +223,25 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
                 OmnipodCommandType.SUSPEND_DELIVERY,
                 OmnipodCommandType.RESUME_DELIVERY,
                 OmnipodCommandType.SET_BASAL_PROFILE   -> {
-                    android.graphics.Color.CYAN
+                    R.attr.omniCyanColor
                 }
                 // User action
                 OmnipodCommandType.PLAY_TEST_BEEP,
                 OmnipodCommandType.ACKNOWLEDGE_ALERTS,
                 OmnipodCommandType.CANCEL_BOLUS        -> {
-                    android.graphics.Color.GREEN
+                    R.attr.omniCyanColor
                 }
                 // Insulin treatment
                 OmnipodCommandType.SET_BOLUS,
                 OmnipodCommandType.SET_TEMPORARY_BASAL -> {
-                    android.graphics.Color.WHITE
+                    R.attr.defaultTextColor
                 }
 
                 else                                   ->
                     // Other
-                    android.graphics.Color.LTGRAY
+                   R.attr.omniGrayColor
             }
-            textview.setTextColor(textColor)
+            textview.setTextColor(rh.gac( textview.context, textColorAttr))
         }
 
         private fun setType(record: HistoryRecord, typeView: TextView) {

@@ -4,6 +4,7 @@ import android.graphics.Typeface
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 
@@ -28,7 +29,7 @@ class StaticLabel(private val rh: ResourceHelper) : Element() {
             LinearLayout(root.context).apply {
                 orientation = LinearLayout.HORIZONTAL
                 layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-                setBackgroundColor(rh.gc(android.R.color.black))
+                setBackgroundColor(rh.gac(context, R.attr.automationBackgroundColor))
                 addView(
                     TextView(root.context).apply {
                         text = label

@@ -1,11 +1,10 @@
 package info.nightscout.androidaps.activities.fragments
 
+import android.annotation.SuppressLint
 import android.graphics.Paint
 import android.os.Bundle
 import android.util.SparseArray
 import android.view.*
-import android.view.ActionMode
-import androidx.appcompat.widget.Toolbar
 import androidx.core.util.forEach
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,7 +22,6 @@ import info.nightscout.androidaps.databinding.TreatmentsProfileswitchItemBinding
 import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.events.EventEffectiveProfileSwitchChanged
 import info.nightscout.androidaps.events.EventProfileSwitchChanged
-import info.nightscout.androidaps.events.EventTreatmentUpdateGui
 import info.nightscout.androidaps.extensions.getCustomizedName
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -32,9 +30,11 @@ import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientR
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
+import info.nightscout.androidaps.utils.ActionModeHelper
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -63,26 +63,29 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
     @Inject lateinit var uel: UserEntryLogger
 
     private var _binding: TreatmentsProfileswitchFragmentBinding? = null
+
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
-
+    private var menu: Menu? = null
+    private lateinit var actionHelper: ActionModeHelper<ProfileSealed>
     private val disposable = CompositeDisposable()
     private val millsToThePast = T.days(30).msecs()
-    private var selectedItems: SparseArray<ProfileSealed> = SparseArray()
     private var showInvalidated = false
-    private var removeActionMode: ActionMode? = null
-    private var toolbar: Toolbar? = null
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         TreatmentsProfileswitchFragmentBinding.inflate(inflater, container, false).also { _binding = it }.root
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        actionHelper = ActionModeHelper(rh, activity)
+        actionHelper.setUpdateListHandler { binding.recyclerview.adapter?.notifyDataSetChanged() }
+        actionHelper.setOnRemoveHandler { removeSelected(it) }
         setHasOptionsMenu(true)
-        toolbar = activity?.findViewById(R.id.toolbar)
         binding.recyclerview.setHasFixedSize(true)
         binding.recyclerview.layoutManager = LinearLayoutManager(view.context)
+        binding.recyclerview.emptyView = binding.noRecordsText
+        binding.recyclerview.loadingView = binding.progressBar
     }
 
     private fun refreshFromNightscout() {
@@ -127,7 +130,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
 
     fun swapAdapter() {
         val now = System.currentTimeMillis()
-
+        binding.recyclerview.isLoading = true
         disposable +=
             if (showInvalidated)
                 profileSwitchWithInvalid(now)
@@ -164,13 +167,13 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
     @Synchronized
     override fun onPause() {
         super.onPause()
+        actionHelper.finish()
         disposable.clear()
     }
 
     @Synchronized
     override fun onDestroyView() {
         super.onDestroyView()
-        removeActionMode?.finish()
         binding.recyclerview.adapter = null // avoid leaks
         _binding = null
     }
@@ -184,36 +187,35 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
             val profileSwitch = profileSwitchList[position]
             holder.binding.ph.visibility = (profileSwitch is ProfileSealed.EPS).toVisibility()
             holder.binding.ns.visibility = (profileSwitch.interfaceIDs_backing?.nightscoutId != null).toVisibility()
-            val sameDayPrevious = position > 0 && dateUtil.isSameDay(profileSwitch.timestamp, profileSwitchList[position - 1].timestamp)
-            holder.binding.date.visibility = sameDayPrevious.not().toVisibility()
-            holder.binding.date.text = dateUtil.dateString(profileSwitch.timestamp)
+            val newDay = position == 0 || !dateUtil.isSameDayGroup(profileSwitch.timestamp, profileSwitchList[position - 1].timestamp)
+            holder.binding.date.visibility = newDay.toVisibility()
+            holder.binding.date.text = if (newDay) dateUtil.dateStringRelative(profileSwitch.timestamp, rh) else ""
             holder.binding.time.text = dateUtil.timeString(profileSwitch.timestamp)
             holder.binding.duration.text = rh.gs(R.string.format_mins, T.msecs(profileSwitch.duration ?: 0L).mins())
             holder.binding.name.text =
                 if (profileSwitch is ProfileSealed.PS) profileSwitch.value.getCustomizedName() else if (profileSwitch is ProfileSealed.EPS) profileSwitch.value.originalCustomizedName else ""
-            if (profileSwitch.isInProgress(dateUtil)) holder.binding.date.setTextColor(rh.gc(R.color.colorActive))
+            if (profileSwitch.isInProgress(dateUtil)) holder.binding.date.setTextColor(rh.gac(context , R.attr.activeColor))
             else holder.binding.date.setTextColor(holder.binding.duration.currentTextColor)
             holder.binding.clone.tag = profileSwitch
             holder.binding.name.tag = profileSwitch
             holder.binding.date.tag = profileSwitch
             holder.binding.invalid.visibility = profileSwitch.isValid.not().toVisibility()
             holder.binding.duration.visibility = (profileSwitch.duration != 0L && profileSwitch.duration != null).toVisibility()
-            holder.binding.cbRemove.visibility = (removeActionMode != null && profileSwitch is ProfileSealed.PS).toVisibility()
-            if (removeActionMode != null) {
+            holder.binding.cbRemove.visibility = (actionHelper.isRemoving && profileSwitch is ProfileSealed.PS).toVisibility()
+            if (actionHelper.isRemoving) {
                 holder.binding.cbRemove.setOnCheckedChangeListener { _, value ->
-                    if (value) {
-                        selectedItems.put(position, profileSwitch)
-                    } else {
-                        selectedItems.remove(position)
-                    }
-                    removeActionMode?.title = rh.gs(R.string.count_selected, selectedItems.size())
+                    actionHelper.updateSelection(position, profileSwitch, value)
                 }
-                holder.binding.cbRemove.isChecked = selectedItems.get(position) != null
+                holder.binding.root.setOnClickListener {
+                    holder.binding.cbRemove.toggle()
+                    actionHelper.updateSelection(position, profileSwitch, holder.binding.cbRemove.isChecked)
+                }
+                holder.binding.cbRemove.isChecked = actionHelper.isSelected(position)
             }
             holder.binding.clone.visibility = (profileSwitch is ProfileSealed.PS).toVisibility()
             holder.binding.spacer.visibility = (profileSwitch is ProfileSealed.PS).toVisibility()
             val nextTimestamp = if (profileSwitchList.size != position + 1) profileSwitchList[position + 1].timestamp else 0L
-            holder.binding.delimiter.visibility = dateUtil.isSameDay(profileSwitch.timestamp, nextTimestamp).toVisibility()
+            holder.binding.delimiter.visibility = dateUtil.isSameDayGroup(profileSwitch.timestamp, nextTimestamp).toVisibility()
         }
 
         override fun getItemCount() = profileSwitchList.size
@@ -273,13 +275,18 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        this.menu = menu
         inflater.inflate(R.menu.menu_treatments_profile_switch, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
+    private fun updateMenuVisibility() {
+        menu?.findItem(R.id.nav_hide_invalidated)?.isVisible = showInvalidated
+        menu?.findItem(R.id.nav_show_invalidated)?.isVisible = !showInvalidated
+    }
+
     override fun onPrepareOptionsMenu(menu: Menu) {
-        menu.findItem(R.id.nav_hide_invalidated)?.isVisible = showInvalidated
-        menu.findItem(R.id.nav_show_invalidated)?.isVisible = !showInvalidated
+        updateMenuVisibility()
         val nsUploadOnly = !sp.getBoolean(R.string.key_ns_receive_profile_switch, false) || !buildHelper.isEngineeringMode()
         menu.findItem(R.id.nav_refresh_ns)?.isVisible = !nsUploadOnly
 
@@ -288,20 +295,21 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
         when (item.itemId) {
-            R.id.nav_remove_items -> {
-                removeActionMode = toolbar?.startActionMode(RemoveActionModeCallback())
-                true
-            }
+            R.id.nav_remove_items -> actionHelper.startRemove()
 
             R.id.nav_show_invalidated -> {
                 showInvalidated = true
-                rxBus.send(EventTreatmentUpdateGui())
+                updateMenuVisibility()
+                ToastUtils.showToastInUiThread(context, rh.gs(R.string.show_invalidated_records))
+                swapAdapter()
                 true
             }
 
             R.id.nav_hide_invalidated -> {
                 showInvalidated = false
-                rxBus.send(EventTreatmentUpdateGui())
+                updateMenuVisibility()
+                ToastUtils.showToastInUiThread(context, rh.gs(R.string.hide_invalidated_records))
+                swapAdapter()
                 true
             }
 
@@ -313,36 +321,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
             else -> false
         }
 
-    inner class RemoveActionModeCallback : ActionMode.Callback {
-
-        override fun onCreateActionMode(mode: ActionMode, menu: Menu?): Boolean {
-            mode.menuInflater.inflate(R.menu.menu_delete_selection, menu)
-            selectedItems.clear()
-            mode.title = rh.gs(R.string.count_selected, selectedItems.size())
-            binding.recyclerview.adapter?.notifyDataSetChanged()
-            return true
-        }
-
-        override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?) = false
-
-        override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
-            return when (item.itemId) {
-                R.id.remove_selected -> {
-                    removeSelected()
-                    true
-                }
-
-                else                 -> false
-            }
-        }
-
-        override fun onDestroyActionMode(mode: ActionMode?) {
-            removeActionMode = null
-            binding.recyclerview.adapter?.notifyDataSetChanged()
-        }
-    }
-
-    private fun getConfirmationText(): String {
+    private fun getConfirmationText(selectedItems: SparseArray<ProfileSealed>): String {
         if (selectedItems.size() == 1) {
             val profileSwitch = selectedItems.valueAt(0)
             return rh.gs(R.string.careportal_profileswitch) + ": " + profileSwitch.profileName + "\n" + rh.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(profileSwitch.timestamp)
@@ -350,25 +329,22 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
         return rh.gs(R.string.confirm_remove_multiple_items, selectedItems.size())
     }
 
-    private fun removeSelected() {
-        if (selectedItems.size() > 0)
-            activity?.let { activity ->
-                OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord), getConfirmationText(), Runnable {
-                    selectedItems.forEach { _, profileSwitch ->
-                        uel.log(
-                            Action.PROFILE_SWITCH_REMOVED, Sources.Treatments, profileSwitch.profileName,
-                            ValueWithUnit.Timestamp(profileSwitch.timestamp)
+    private fun removeSelected(selectedItems: SparseArray<ProfileSealed>) {
+        activity?.let { activity ->
+            OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord), getConfirmationText(selectedItems), Runnable {
+                selectedItems.forEach { _, profileSwitch ->
+                    uel.log(
+                        Action.PROFILE_SWITCH_REMOVED, Sources.Treatments, profileSwitch.profileName,
+                        ValueWithUnit.Timestamp(profileSwitch.timestamp)
+                    )
+                    disposable += repository.runTransactionForResult(InvalidateProfileSwitchTransaction(profileSwitch.id))
+                        .subscribe(
+                            { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated ProfileSwitch $it") } },
+                            { aapsLogger.error(LTag.DATABASE, "Error while invalidating ProfileSwitch", it) }
                         )
-                        disposable += repository.runTransactionForResult(InvalidateProfileSwitchTransaction(profileSwitch.id))
-                            .subscribe(
-                                { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated ProfileSwitch $it") } },
-                                { aapsLogger.error(LTag.DATABASE, "Error while invalidating ProfileSwitch", it) }
-                            )
-                    }
-                    removeActionMode?.finish()
-                })
-            }
-        else
-            removeActionMode?.finish()
+                }
+                actionHelper.finish()
+            })
+        }
     }
 }

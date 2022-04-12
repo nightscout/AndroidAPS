@@ -103,7 +103,6 @@
     <string name="overview_calculator_label">калькулятор</string>
     <string name="constraintapllied">применено ограничение!</string>
     <string name="sms_bolus">болюс:</string>
-    <string name="basal">базал</string>
     <string name="sms_basal">базал: </string>
     <string name="changeyourinput">измените введенные данные</string>
     <string name="configbuilder_bgsource">источник СК</string>
@@ -162,6 +161,7 @@
     <string name="end_user_license_agreement">лицензионное соглашение с пользователем</string>
     <string name="end_user_license_agreement_text">НЕ ДОЛЖНО ИСПОЛЬЗОВАТЬСЯ ДЛЯ ПРИНЯТИЯ МЕДИЦИНСКИХ РЕШЕНИЙ. ПРОГРАММА НЕ ДАЕТ ГАРАНТИЙ В РАМКАХ СУЩЕСТВУЮЩЕГО ЗАКОНОДАТЕЛЬСТВА. ПРЕДОСТАВЛЯЕТСЯ \"КАК ЕСТЬ\" БЕЗ ЯВНЫХ ИЛИ СКРЫТЫХ ГАРАНТИЙ ВКЛЮЧАЯ НО НЕ ОГРАНИЧИВАЯСЬ ВОЗМОЖНОСТЬЮ КОММЕРЧЕСКОГО ИСПОЛЬЗОВАНИ ИЛИ СООТВЕТСТВИЯ КАКИМ-ЛИБО ЦЕЛЯМ. ВСЕ РИСКИ ЛОЖАТСЯ НА ВАС. В СЛУЧАЕ НЕРАБОТОСПОСОБНОСТИ ПРОГРАММЫ ВЫ НЕСЕТЕ ВСЕ РАСХОДЫ СВЯЗАННЫЕ С ОБСЛУЖИВАНИЕМ РЕМОНТОМ ИЛИ КОРРЕКТИРОВКОЙ.  </string>
     <string name="end_user_license_agreement_i_understand">я понимаю и принимаю</string>
+    <string name="save">Сохранить</string>
     <string name="reloadprofile">обновить профиль</string>
     <string name="smscommunicator">SMS коммуникатор</string>
     <string name="smscommunicator_allowednumbers">разрешенные телефонные номера</string>
@@ -665,6 +665,7 @@
     <string name="show_invalidated">Показать недействительные</string>
     <string name="hide_invalidated">Скрыть недействительные</string>
     <string name="remove_items">Удалить элементы</string>
+    <string name="sort_items">Сортировать элементы</string>
     <string name="storedsettingsfound">Найдены сохраненные параметры</string>
     <string name="allow_hardware_pump_text">Внимание: Если вы активируете подключение к невиртуальной помпе, AndroidAPS скопирует настройки базала в профиль помпы, перезаписывая существующие настройки, хранящиеся в ней. Убедитесь, что настройки базала в AndroidAPS корректны. Если вы не уверены или не хотите перезаписать настройки базала на помпу, нажмите отменить и повторите подключение в другое время.</string>
     <string name="error_adding_treatment_title">Данные терапии неполные</string>
@@ -769,7 +770,6 @@
     <string name="invalidage">Некорректное значение возраст</string>
     <string name="invalidweight">Некорректное значение вес</string>
     <string name="invalidpct">Некорректный ввод %</string>
-    <string name="tirformat"><![CDATA[<b>%1$s:</b> Низкий: <b>%2$02d%%</b> В целевом диапазоне: <b>%3$02d%%</b> Высокий: <b>%4$02d%%</b>]]></string>
     <string name="average">Средний</string>
     <string name="tir">Время в целевом диапазоне TIR</string>
     <string name="activitymonitor">Монитор активности</string>
@@ -880,6 +880,7 @@
     <string name="ns_receive_profile_switch_summary">Принимать переключения профиля, введенные через NS или NSClient</string>
     <string name="ns_receive_offline_event">Принимать события APS автономно</string>
     <string name="ns_receive_offline_event_summary">Принимать события APS введенные через NS или клиент NS автономно</string>
+    <string name="ns_receive_tbr_eb">Получать временную базальную скорость TBR и пролонгированный болюс EB</string>
     <string name="ns_receive_insulin">Принимать инсулин</string>
     <string name="ns_receive_insulin_summary">Принимать инсулин, введенный через NS или NSClient (не подается, только рассчитывается как активный IOB)</string>
     <string name="ns_receive_carbs">Принимать углеводы</string>
@@ -933,6 +934,7 @@
     <string name="a11y_insulin_label">инсулин</string>
     <string name="a11y_blood_glucose">уровень глюкозы в крови (ГК)</string>
     <string name="a11y_bg_outdated">устаревшие данные</string>
+    <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">Неизвестная конфигурация врем цели: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Отменить врем цели?</string>
@@ -953,4 +955,7 @@
     <string name="hide_loop">Скрыть цикл</string>
     <string name="show_loop">Показать цикл</string>
     <string name="count_selected">%1$d выбрано</string>
+    <string name="below" comment="below &quot;in range&quot;">Ниже целевых</string>
+    <string name="in_range">В целевом диапазоне</string>
+    <string name="above" comment="above &quot;in range&quot;">Выше целевых</string>
 </resources>

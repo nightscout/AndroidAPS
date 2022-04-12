@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.overview.graphExtensions
 
+import android.content.Context
 import com.jjoe64.graphview.series.DataPointInterface
 
 interface DataPointWithLabelInterface : DataPointInterface {
@@ -12,5 +13,5 @@ interface DataPointWithLabelInterface : DataPointInterface {
     val duration: Long
     val shape: PointsWithLabelGraphSeries.Shape?
     val size: Float
-    val color: Int
+    fun color(context: Context?): Int
 }

@@ -72,7 +72,8 @@
     <string name="menu_treatment">Behandeling</string>
     <string name="menu_treatment_short">Behandel</string>
     <string name="menu_bolus">Bolus</string>
-    <string name="menu_ecarb">Koolhydraten</string>
+    <string name="menu_carb">Koolhydraten</string>
+    <string name="menu_ecarb">eCarbs</string>
     <string name="menu_settings">Instellingen</string>
     <string name="menu_status">Status</string>
     <string name="menu_resync">Opnieuw synchroniseren</string>
@@ -94,6 +95,7 @@
     <string name="action_low" comment="In temp target menu, lower value from range">Laag</string>
     <string name="action_high" comment="In temp target menu, higher value from range">Hoog</string>
     <string name="action_carbs">Koolhydraten</string>
+    <string name="action_ecarbs">eCarbs</string>
     <string name="action_percentage">Percentage</string>
     <string name="action_start_min">Start [min]</string>
     <string name="action_duration_h">Duur [h]</string>

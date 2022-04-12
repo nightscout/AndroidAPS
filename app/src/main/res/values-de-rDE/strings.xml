@@ -102,7 +102,6 @@
     <string name="overview_calculator_label">Rechner</string>
     <string name="constraintapllied">Beschränkung angewendet!</string>
     <string name="sms_bolus">Bolus:</string>
-    <string name="basal">Basal</string>
     <string name="sms_basal">Basal:</string>
     <string name="changeyourinput">Ändere deine Eingabe!</string>
     <string name="configbuilder_bgsource">BZ-Quelle</string>
@@ -766,7 +765,6 @@ Unerwartetes Verhalten.</string>
     <string name="invalidage">Ungültige Altersangabe</string>
     <string name="invalidweight">Ungültige Gewichtsangabe</string>
     <string name="invalidpct">Ungültige % Eingabe</string>
-    <string name="tirformat"><![CDATA[<b>%1$s:</b> Low: <b>%2$02d%%</b> In: <b>%3$02d%%</b> High: <b>%4$02d%%</b>]]></string>
     <string name="average">Durchschnitt</string>
     <string name="tir">TIR</string>
     <string name="activitymonitor">Aktivitätsmonitor</string>
@@ -935,6 +933,7 @@ Unerwartetes Verhalten.</string>
     <string name="a11y_clone_profile">aktuelles Profil klonen (kopieren)</string>
     <string name="a11y_delete_current_profile">aktuelles Profil löschen</string>
     <string name="a11y_add_new_to_list">neu zur Liste hinzufügen</string>
+    <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
     <string name="select_profile">Profil zum Bearbeiten auswählen</string>
     <string name="refresh_from_nightscout">Aktualisiere von Nightscout</string>
@@ -943,6 +942,6 @@ Unerwartetes Verhalten.</string>
     <string name="profile_changes">Profilwechsel</string>
     <string name="tempt_targets">Temporäre Ziele</string>
     <string name="carbs_and_bolus">Kohlenhydrate &amp; Bolus</string>
-    <string name="confirm_remove_multiple_items">Sind Sie sicher, dass Sie diese(s) %1 Element(e) löschen möchten?</string>
+    <string name="confirm_remove_multiple_items">Sind Sie sicher, dass Sie diese(s) %1$d Element(e) löschen möchten?</string>
     <string name="count_selected">%1$d ausgewählt</string>
 </resources>

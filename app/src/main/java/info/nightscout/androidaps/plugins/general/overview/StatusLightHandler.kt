@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.general.overview
 
 import android.graphics.Color
-import android.view.View
 import android.widget.TextView
 import androidx.annotation.StringRes
 import info.nightscout.androidaps.R
@@ -42,7 +41,7 @@ class StatusLightHandler @Inject constructor(
         handleAge(careportal_cannula_age, TherapyEvent.Type.CANNULA_CHANGE, R.string.key_statuslights_cage_warning, 48.0, R.string.key_statuslights_cage_critical, 72.0)
         handleAge(careportal_insulin_age, TherapyEvent.Type.INSULIN_CHANGE, R.string.key_statuslights_iage_warning, 72.0, R.string.key_statuslights_iage_critical, 144.0)
         handleAge(careportal_sensor_age, TherapyEvent.Type.SENSOR_CHANGE, R.string.key_statuslights_sage_warning, 216.0, R.string.key_statuslights_sage_critical, 240.0)
-        if (pump.pumpDescription.isBatteryReplaceable || (pump is OmnipodErosPumpPlugin && pump.isUseRileyLinkBatteryLevel && pump.isBatteryChangeLoggingEnabled)) {
+        if (pump.pumpDescription.isBatteryReplaceable || pump.isBatteryChangeLoggingEnabled()) {
             handleAge(careportal_pb_age, TherapyEvent.Type.PUMP_BATTERY_CHANGE, R.string.key_statuslights_bage_warning, 216.0, R.string.key_statuslights_bage_critical, 240.0)
         }
         if (!config.NSCLIENT) {
@@ -58,16 +57,16 @@ class StatusLightHandler @Inject constructor(
         }
 
         if (!config.NSCLIENT) {
-            if (pump.model() == PumpType.OMNIPOD_DASH) {
-                // Omnipod Dash does not report its battery level
-                careportal_battery_level?.text = rh.gs(R.string.notavailable)
-                careportal_battery_level?.setTextColor(Color.WHITE)
-            } else if (pump.model() == PumpType.OMNIPOD_EROS && pump is OmnipodErosPumpPlugin) { // instance of check is needed because at startup, pump can still be VirtualPumpPlugin and that will cause a crash because of the class cast below
-                // The Omnipod Eros does not report its battery level. However, some RileyLink alternatives do.
-                // Depending on the user's configuration, we will either show the battery level reported by the RileyLink or "n/a"
-                handleOmnipodErosBatteryLevel(careportal_battery_level, R.string.key_statuslights_bat_critical, 26.0, R.string.key_statuslights_bat_warning, 51.0, pump.batteryLevel.toDouble(), "%", pump.isUseRileyLinkBatteryLevel)
-            } else if (pump.model() != PumpType.ACCU_CHEK_COMBO) {
+            // The Omnipod Eros does not report its battery level. However, some RileyLink alternatives do.
+            // Depending on the user's configuration, we will either show the battery level reported by the RileyLink or "n/a"
+            // Pump instance check is needed because at startup, the pump can still be VirtualPumpPlugin and that will cause a crash
+            val erosBatteryLinkAvailable = pump.model() == PumpType.OMNIPOD_EROS && pump is OmnipodErosPumpPlugin && pump.isUseRileyLinkBatteryLevel
+
+            if (pump.model().supportBatteryLevel || erosBatteryLinkAvailable) {
                 handleLevel(careportal_battery_level, R.string.key_statuslights_bat_critical, 26.0, R.string.key_statuslights_bat_warning, 51.0, pump.batteryLevel.toDouble(), "%")
+            } else {
+                careportal_battery_level?.text = rh.gs(R.string.notavailable)
+                careportal_battery_level?.setTextColor(rh.gac(careportal_battery_level.context, R.attr.defaultTextColor))
             }
         }
     }
@@ -104,13 +103,4 @@ class StatusLightHandler @Inject constructor(
         }
     }
 
-    @Suppress("SameParameterValue")
-    private fun handleOmnipodErosBatteryLevel(view: TextView?, criticalSetting: Int, criticalDefaultValue: Double, warnSetting: Int, warnDefaultValue: Double, level: Double, units: String, useRileyLinkBatteryLevel: Boolean) {
-        if (useRileyLinkBatteryLevel) {
-            handleLevel(view, criticalSetting, criticalDefaultValue, warnSetting, warnDefaultValue, level, units)
-        } else {
-            view?.text = rh.gs(R.string.notavailable)
-            view?.setTextColor(Color.WHITE)
-        }
-    }
 }

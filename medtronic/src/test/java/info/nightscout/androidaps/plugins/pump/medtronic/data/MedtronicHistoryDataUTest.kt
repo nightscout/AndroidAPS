@@ -57,7 +57,7 @@ class MedtronicHistoryDataUTest : TestBase() {
 
         val fileText = ClassLoader.getSystemResource("tbr_data.json").readText()
 
-        val listType: Type = object : TypeToken<MutableList<PumpHistoryEntry?>?>() {}.getType()
+        val listType: Type = object : TypeToken<MutableList<PumpHistoryEntry?>?>() {}.type
         val yourClassList: MutableList<PumpHistoryEntry> = gson.fromJson(fileText, listType)
 
         for (pumpHistoryEntry in yourClassList) {
@@ -100,7 +100,7 @@ class MedtronicHistoryDataUTest : TestBase() {
 
         val fileText = ClassLoader.getSystemResource("tbr_data_special.json").readText()
 
-        val listType: Type = object : TypeToken<MutableList<PumpHistoryEntry?>?>() {}.getType()
+        val listType: Type = object : TypeToken<MutableList<PumpHistoryEntry?>?>() {}.type
         val yourClassList: MutableList<PumpHistoryEntry> = gson.fromJson(fileText, listType)
 
         for (pumpHistoryEntry in yourClassList) {
