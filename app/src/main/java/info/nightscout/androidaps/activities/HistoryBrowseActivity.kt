@@ -169,7 +169,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
             val cal = Calendar.getInstance()
             cal.timeInMillis = overviewData.fromTime
             DatePickerDialog(
-                this, R.style.MaterialPickerTheme,
+                this,
                 dateSetListener,
                 cal.get(Calendar.YEAR),
                 cal.get(Calendar.MONTH),
