@@ -112,7 +112,7 @@
         <item name="android:dialogCornerRadius">12dp</item>
         <!---Overview and Historybrowser  -->
         <item name="graphgrid">@color/graphgrid</item>
-        <item name="viewPortbackgroundColor">@color/white_alpha_20</item>
+        <item name="viewPortbackgroundColor">@color/black_alpha_20</item>
         <item name="tempTargetBackgroundColor">@color/tempTargetBackground</item>
         <!---CGM source-->
         <item name="cgmdexColor">@color/byodagray</item>
@@ -216,10 +216,20 @@
         <!-- Graph specific colors  -->
         <item name="inrangeBackground">@color/inrangebackground</item>
         <item name="devslopeposColor">@color/devslopepos</item>
+        <item name="devslopenegColor">@color/devslopeneg</item>
+        <item name="deviationgreyColor">@color/deviationgrey</item>
+        <item name="deviationblackColor">@color/deviationblack</item>
+        <item name="deviationgreenColor">@color/deviationgreen</item>
+        <item name="deviationredColor">@color/deviationred</item>
         <item name="predictionColor">@color/prediction</item>
+        <item name="iobPredASColor">@color/iobPredAS</item>
         <item name="bgiColor">@color/bgi</item>
-        <item name="ratioColor">@color/lightSandGray</item>
+        <item name="ratioColor">@color/ratio</item>
         <item name="activityColor">@color/activity</item>
+        <item name="basebasalColor">@color/basebasal</item>
+        <!---Popupmenu TextColor -->
+        <item name="menuTextColor">@color/black</item>
+        <item name="menuTextColorInverse">@color/white</item>
         <!-- CardView specific colors  -->
         <item name="strokeColor">@color/plastic_grey</item>
         <item name="textAppearancemediumColor">@color/textAppearancemediumLight</item>

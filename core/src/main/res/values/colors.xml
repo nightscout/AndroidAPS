@@ -162,7 +162,7 @@
     <color name="prediction">#ff00ff</color>
     <color name="iobPred">#00d2d2</color>
     <color name="bolus">#1ea3e5</color>
-    <color name="ratio">#FFFFFF</color>
+    <color name="ratio">#000000</color>
     <color name="activity">#d3f166</color>
     <color name="bgi">#00EEEE</color>
     <color name="devslopepos">#FFFFFF00</color>
