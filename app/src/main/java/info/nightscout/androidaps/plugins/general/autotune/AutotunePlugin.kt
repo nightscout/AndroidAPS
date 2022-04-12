@@ -71,6 +71,7 @@ class AutotunePlugin @Inject constructor(
     @Volatile override var copyButtonVisibility: Int = 0
     @Volatile override var updateButtonVisibility: Int = 0
     @Volatile override var profileSwitchButtonVisibility: Int = 0
+    @Volatile override var compareButtonVisibility: Int = 0
     @Volatile override var lastRunSuccess: Boolean = false
     private var logString = ""
     private var preppedGlucose: PreppedGlucose? = null
@@ -80,7 +81,7 @@ class AutotunePlugin @Inject constructor(
     private lateinit var autotuneFS: AutotuneFS
     private lateinit var profile: Profile
 
-    override var pumpProfile: ATProfile? = null
+    override lateinit var pumpProfile: ATProfile
     override var tunedProfile: ATProfile? = null
 
     //    @Override
@@ -101,14 +102,18 @@ class AutotunePlugin @Inject constructor(
         autotunePrep = AutotunePrep(injector)
         autotuneCore = AutotuneCore(injector)
         autotuneIob = AutotuneIob(injector)
-        val detailedLog = sp.getBoolean(R.string.key_autotune_additional_log, false)
+        tunedProfile = null
         profileSwitchButtonVisibility = View.GONE
         copyButtonVisibility = View.GONE
         updateButtonVisibility = View.GONE
+        compareButtonVisibility = View.GONE
         lastRunSuccess = false
-        calculationRunning = true
-        pumpProfile = null
         result = ""
+        if (profileFunction.getProfile() == null) {
+            return rh.gs(R.string.profileswitch_ismissing)
+        }
+        val detailedLog = sp.getBoolean(R.string.key_autotune_additional_log, false)
+        calculationRunning = true
         lastNbDays = "" + daysBack
         val now = System.currentTimeMillis()
         val profileStore = activePlugin.activeProfileSource.profile ?: return rh.gs(R.string.profileswitch_ismissing)
@@ -137,7 +142,7 @@ class AutotunePlugin @Inject constructor(
         pumpProfile = ATProfile(profile, localInsulin, injector).also {
             it.profilename = selectedProfile
         }
-        pumpProfile?.let { autotuneFS.exportPumpProfile(it) }
+        autotuneFS.exportPumpProfile(pumpProfile)
         if (daysBack < 1) {
             //Not necessary today (test is done in fragment, but left if other way later to launch autotune (i.e. with automation)
             result = rh.gs(R.string.autotune_min_days)
@@ -152,42 +157,42 @@ class AutotunePlugin @Inject constructor(
                 val from = starttime + i * 24 * 60 * 60 * 1000L
                 val to = from + 24 * 60 * 60 * 1000L
                 atLog("Tune day " + (i + 1) + " of " + daysBack)
-                tunedProfile?.let {
-                    //autotuneIob contains BG and Treatments data from history (<=> query for ns-treatments and ns-entries)
-                    autotuneIob.initializeData(from, to, it)
-                   //<=> ns-entries.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
-                    autotuneFS.exportEntries(autotuneIob)
-                    //<=> ns-treatments.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine (include treatments ,tempBasal and extended
-                    autotuneFS.exportTreatments(autotuneIob)
-                    preppedGlucose = autotunePrep.categorizeBGDatums(autotuneIob, it, localInsulin)
-                }
+
+                //autotuneIob contains BG and Treatments data from history (<=> query for ns-treatments and ns-entries)
+                autotuneIob.initializeData(from, to, tunedProfile!!)
+               //<=> ns-entries.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
+                autotuneFS.exportEntries(autotuneIob)
+                //<=> ns-treatments.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine (include treatments ,tempBasal and extended
+                autotuneFS.exportTreatments(autotuneIob)
+                preppedGlucose = tunedProfile?.let { autotunePrep.categorizeBGDatums(autotuneIob, it, localInsulin) }
                 //<=> autotune.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
                 if (preppedGlucose == null || tunedProfile == null) {
                     result = rh.gs(R.string.autotune_error)
                     atLog(result)
                     calculationRunning = false
                     rxBus.send(EventAutotuneUpdateResult(result))
-                    tunedProfile=null
+                    tunedProfile = null
                     autotuneFS.exportResult(result)
                     autotuneFS.exportLogAndZip(lastRun, logString)
                     return result
                 }
                 autotuneFS.exportPreppedGlucose(preppedGlucose!!)
-                tunedProfile = autotuneCore.tuneAllTheThings(preppedGlucose!!, tunedProfile!!, pumpProfile!!)
+                tunedProfile = autotuneCore.tuneAllTheThings(preppedGlucose!!, tunedProfile!!, pumpProfile)
                 // localInsulin = LocalInsulin("TunedInsulin", tunedProfile!!.peak, tunedProfile!!.dia)
                 //<=> newprofile.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
                 autotuneFS.exportTunedProfile(tunedProfile!!)
                 if (i < daysBack - 1) {
                     atLog("Partial result for day ${i + 1}".trimIndent())
-                    result = rh.gs(R.string.format_autotune_partialresult, i + 1, daysBack, showResults(tunedProfile!!, pumpProfile!!))
+                    result = rh.gs(R.string.format_autotune_partialresult, i + 1, daysBack, showResults(tunedProfile, pumpProfile))
                     rxBus.send(EventAutotuneUpdateResult(result))
                 }
                 if (detailedLog) {
+                    result = showResults(tunedProfile, pumpProfile)
                     autotuneFS.exportLog(lastRun, logString, i + 1)
                     logString = ""
                 }
             }
-            result = showResults(tunedProfile!!, pumpProfile!!)
+            result = showResults(tunedProfile, pumpProfile)
             if (!detailedLog)
                 autotuneFS.exportLog(lastRun, logString)
             autotuneFS.exportResult(result)
@@ -195,11 +200,12 @@ class AutotunePlugin @Inject constructor(
             profileSwitchButtonVisibility = View.VISIBLE
             copyButtonVisibility = View.VISIBLE
             updateButtonVisibility = View.VISIBLE
+            compareButtonVisibility = View.VISIBLE
         }
         if (autoSwitch) {
             val circadian = sp.getBoolean(R.string.key_autotune_circadian_ic_isf, false)
             tunedProfile?.let { tunedP ->
-                tunedP.profilename = pumpProfile?.profilename ?:rh.gs(R.string.autotune_tunedprofile_name)
+                tunedP.profilename = pumpProfile.profilename
                 updateProfile(tunedP)
                 uel.log(
                     UserEntry.Action.STORE_PROFILE,
@@ -234,10 +240,12 @@ class AutotunePlugin @Inject constructor(
         tunedProfile?.let {
             return result
         }
-        return "No Result"
+        return "No Result"  // should never occurs
     }
 
-    private fun showResults(tunedProfile: ATProfile, pumpProfile: ATProfile): String {
+    private fun showResults(tunedProfile: ATProfile?, pumpProfile: ATProfile): String {
+        if (tunedProfile == null)
+            return "No Result"  // should never occurs
         var toMgDl = 1.0
         if (profileFunction.getUnits() == GlucoseUnit.MMOL) toMgDl = Constants.MMOLL_TO_MGDL
         val line = rh.gs(R.string.format_autotune_separator)
