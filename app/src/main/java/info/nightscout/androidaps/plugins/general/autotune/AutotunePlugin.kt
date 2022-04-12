@@ -78,6 +78,7 @@ class AutotunePlugin @Inject constructor(
     private lateinit var autotuneCore: AutotuneCore
     private lateinit var autotuneIob: AutotuneIob
     private lateinit var autotuneFS: AutotuneFS
+    private lateinit var profile: Profile
 
     override var pumpProfile: ATProfile? = null
     override var tunedProfile: ATProfile? = null
@@ -88,7 +89,7 @@ class AutotunePlugin @Inject constructor(
 
     //Launch Autotune with default settings
     override fun aapsAutotune(daysBack: Int, profileToTune: String) {
-        var automationDaysBack = if (daysBack == 0) sp.getInt(R.string.key_autotune_default_tune_days, 5) else daysBack
+        val automationDaysBack = if (daysBack == 0) sp.getInt(R.string.key_autotune_default_tune_days, 5) else daysBack
         val autoSwitch = sp.getBoolean(R.string.key_autotune_auto, false)
         Thread(Runnable {
             aapsAutotune(automationDaysBack, autoSwitch, profileToTune)
@@ -112,16 +113,10 @@ class AutotunePlugin @Inject constructor(
         val now = System.currentTimeMillis()
         val profileStore = activePlugin.activeProfileSource.profile ?: return rh.gs(R.string.profileswitch_ismissing)
         selectedProfile = if (profileToTune.isEmpty()) profileFunction.getProfileName() else profileToTune
-        profile = profileStore.getSpecificProfile(profileToTune)?.let { ProfileSealed.Pure(it) } ?: profileFunction.getProfile()
-        if (profile == null ) {
-            result = "Cannot tune a null profile"
-            atLog(result)
-            calculationRunning = false
-            rxBus.send(EventAutotuneUpdateResult(result))
-            tunedProfile=null
-            return result
+        profileFunction.getProfile()?.let { currentProfile ->
+            profile = profileStore.getSpecificProfile(profileToTune)?.let { ProfileSealed.Pure(it) } ?: currentProfile
         }
-        var localInsulin = LocalInsulin("PumpInsulin", activePlugin.activeInsulin.peak, profile!!.dia) // var because localInsulin could be updated later with Tune Insulin peak/dia
+        var localInsulin = LocalInsulin("PumpInsulin", activePlugin.activeInsulin.peak, profile.dia) // var because localInsulin could be updated later with Tune Insulin peak/dia
         lastRun = System.currentTimeMillis()
 
         atLog("Start Autotune with $daysBack days back")
@@ -349,7 +344,6 @@ class AutotunePlugin @Inject constructor(
 
     companion object {
         private val log = LoggerFactory.getLogger(AutotunePlugin::class.java)
-        private var profile: Profile? = null
     }
 
 }

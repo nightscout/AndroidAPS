@@ -83,7 +83,9 @@ class AutotuneFragment : DaggerFragment() {
         val defaultValue = sp.getInt(R.string.key_autotune_default_tune_days, 5).toDouble()
         profileStore = activePlugin.activeProfileSource.profile ?: ProfileStore(injector, JSONObject(), dateUtil)
         profileName = if (binding.profileList.text.toString() == rh.gs(R.string.active)) "" else binding.profileList.text.toString()
-        profile = ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(it) } ?:profileFunction.getProfile(), LocalInsulin(""), injector)
+        profileFunction.getProfile()?.let { currentProfile ->
+            profile = ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(it) } ?:currentProfile, LocalInsulin(""), injector)
+        }
 
         binding.tuneDays.setParams(
             savedInstanceState?.getDouble("tunedays")
@@ -104,7 +106,9 @@ class AutotuneFragment : DaggerFragment() {
         }
         binding.profileList.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
             profileName = if (binding.profileList.text.toString() == rh.gs(R.string.active)) "" else binding.profileList.text.toString()
-            profile = ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(it) } ?:profileFunction.getProfile(), LocalInsulin(""), injector)
+            profileFunction.getProfile()?.let { currentProfile ->
+                profile = ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(it) } ?:currentProfile, LocalInsulin(""), injector)
+            }
             autotunePlugin.selectedProfile = profileName
             resetParam()
             updateGui()
@@ -248,7 +252,9 @@ class AutotuneFragment : DaggerFragment() {
     private fun updateGui() {
         profileStore = activePlugin.activeProfileSource.profile ?: ProfileStore(injector, JSONObject(), dateUtil)
         profileName = if (binding.profileList.text.toString() == rh.gs(R.string.active)) "" else binding.profileList.text.toString()
-        profile = ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(it) } ?:profileFunction.getProfile(), LocalInsulin(""), injector)
+        profileFunction.getProfile()?.let { currentProfile ->
+            profile = ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(it) } ?:currentProfile, LocalInsulin(""), injector)
+        }
         val profileList: ArrayList<CharSequence> = profileStore.getProfileList()
         profileList.add(0, rh.gs(R.string.active))
         context?.let { context ->
@@ -287,13 +293,15 @@ class AutotuneFragment : DaggerFragment() {
     private fun addWarnings(): String {
         var warning = ""
         var nl = ""
-        if (!profile.isValid) return rh.gs(R.string.autotune_profile_invalid)
-        if (profile.icSize > 1) {
-            warning += nl + rh.gs(R.string.format_autotune_ic_warning, profile.icSize, profile.ic)
-            nl = "\n"
-        }
-        if (profile.isfSize > 1) {
-            warning += nl + rh.gs(R.string.format_autotune_isf_warning, profile.isfSize, Profile.fromMgdlToUnits(profile.isf, profileFunction.getUnits()), profileFunction.getUnits().asText)
+        profileFunction.getProfile()?.let {
+            if (!profile.isValid) return rh.gs(R.string.autotune_profile_invalid)
+            if (profile.icSize > 1) {
+                warning += nl + rh.gs(R.string.format_autotune_ic_warning, profile.icSize, profile.ic)
+                nl = "\n"
+            }
+            if (profile.isfSize > 1) {
+                warning += nl + rh.gs(R.string.format_autotune_isf_warning, profile.isfSize, Profile.fromMgdlToUnits(profile.isf, profileFunction.getUnits()), profileFunction.getUnits().asText)
+            }
         }
         return warning
     }

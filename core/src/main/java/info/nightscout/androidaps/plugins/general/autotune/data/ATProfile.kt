@@ -23,7 +23,7 @@ import java.text.DecimalFormat
 import java.util.*
 import javax.inject.Inject
 
-class ATProfile(profile: Profile?, var localInsulin: LocalInsulin, val injector: HasAndroidInjector) {
+class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: HasAndroidInjector) {
 
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var sp: SP
@@ -36,7 +36,7 @@ class ATProfile(profile: Profile?, var localInsulin: LocalInsulin, val injector:
     var profile: ProfileSealed
     var circadianProfile: ProfileSealed
     lateinit var pumpProfile: ProfileSealed
-    var profilename: String = profile?.profileName ?:""
+    var profilename: String = profile.profileName ?:""
     var basal = DoubleArray(24)
     var basalUntuned = IntArray(24)
     var ic = 0.0
