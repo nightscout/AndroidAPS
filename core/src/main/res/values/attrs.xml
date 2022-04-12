@@ -192,10 +192,20 @@
     <attr name="inrangeBackground" format="reference|color" />
     <attr name="graphGrid" format="reference|color" />
     <attr name="devslopeposColor" format="reference|color" />
+    <attr name="devslopenegColor" format="reference|color" />
+    <attr name="deviationgreyColor" format="reference|color" />
+    <attr name="deviationblackColor" format="reference|color" />
+    <attr name="deviationgreenColor" format="reference|color" />
+    <attr name="deviationredColor" format="reference|color" />
     <attr name="predictionColor" format="reference|color" />
+    <attr name="iobPredASColor" format="reference|color" />
     <attr name="bgiColor" format="reference|color" />
     <attr name="ratioColor" format="reference|color" />
     <attr name="activityColor" format="reference|color" />
+    <attr name="basebasalColor" format="reference|color" />
+    <!---Popupmenu TextColor -->
+    <attr name="menuTextColor" format="reference|color" />
+    <attr name="menuTextColorInverse" format="reference|color" />
     <!-- CardView specific colors  -->
     <attr name="strokeColor" format="reference|color" />
     <attr name="textAppearancemediumColor" format="reference|color" />

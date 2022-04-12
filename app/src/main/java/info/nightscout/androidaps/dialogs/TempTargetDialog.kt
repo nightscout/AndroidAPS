@@ -123,8 +123,8 @@ class TempTargetDialog : DialogFragmentWithDate() {
                 longClick(it)
                 return@setOnLongClickListener true
             }
-            binding.duration.editText?.id?.let { binding.durationLabel.labelFor = it }
-            binding.temptarget.editText?.id?.let { binding.temptargetLabel.labelFor = it }
+            binding.durationLabel.labelFor = binding.duration.editTextId
+            binding.temptargetLabel.labelFor = binding.temptarget.editTextId
         }
     }
 

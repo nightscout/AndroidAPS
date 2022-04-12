@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="60dp"
-    android:layout_height="100dp">
+    android:layout_height="100dp"
+    tools:context="info.nightscout.androidaps.utils.ui.NumberPickerVertical">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout"

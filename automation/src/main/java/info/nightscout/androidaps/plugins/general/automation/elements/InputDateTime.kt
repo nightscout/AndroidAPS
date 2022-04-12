@@ -36,7 +36,7 @@ class InputDateTime(private val rh: ResourceHelper, private val dateUtil: DateUt
                                 val cal = Calendar.getInstance()
                                 cal.timeInMillis = value
                                 DatePickerDialog(
-                                    it, R.style.MaterialPickerTheme,
+                                    it,
                                     { _, year, monthOfYear, dayOfMonth ->
                                         value = Calendar.getInstance().apply {
                                             timeInMillis = value
@@ -62,7 +62,7 @@ class InputDateTime(private val rh: ResourceHelper, private val dateUtil: DateUt
                                 val cal = Calendar.getInstance()
                                 cal.timeInMillis = value
                                 TimePickerDialog(
-                                    it, R.style.MaterialPickerTheme,
+                                    it,
                                     { _, hour, minute ->
                                         value = Calendar.getInstance().apply {
                                             timeInMillis = value
