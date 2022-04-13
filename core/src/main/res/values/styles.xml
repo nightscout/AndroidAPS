@@ -54,6 +54,8 @@
         <item name="cardItemBackgroundColor">?attr/colorSurface</item>
         <!-- Exercise -->
         <item name="exerciseColor">@color/exercise</item>
+        <!-- Stats  -->
+        <item name="statsColor">@color/stats</item>
         <!-- BG low -->
         <item name="lowColor">@color/low</item>
         <!-- Treatments -->
@@ -174,6 +176,7 @@
         <item name="carbsColor">@color/carbs</item>
         <!-- Temp Target -->
         <item name="tempTargetConfirmation">@color/tempTargetConfirmation</item>
+        <item name="tempTargetbgInRange">@color/tempTargetConfirmation</item>
         <!---Loop Icon-->
         <!---Loop Paused Icon Color-->
         <item name="loopPaused">@color/loopSuspended</item>
@@ -192,6 +195,9 @@
         <item name="extBolusStopColor">@color/extBolusStop</item>
         <item name="basalstartColor">@color/actionBasal</item>
         <item name="basalCancelColor">@color/actionBasal</item>
+        <item name="basalNoTbrColor">@color/actionBasal</item>
+        <item name="basalHighColor">@color/actionBasal</item>
+        <item name="basalLowColor">@color/actionBasal</item>
         <item name="pumpCanulaColor">@color/pumpCanula</item>
         <item name="cgmInsertColor">@color/cgmInsert</item>
         <item name="pumpBatteryColor">@color/pumpBattery</item>
@@ -200,6 +206,7 @@
         <item name="questionColor">@color/question</item>
         <item name="pumpHistoryColor">@color/pumpHistory</item>
         <item name="userOptionColor">@color/userOption</item>
+        <item name="sensColor">@color/sens</item>
         <!---Graph data glucose value point colors-->
         <item name="cobColor">@color/cob</item>
         <item name="uamColor">@color/uam</item>
