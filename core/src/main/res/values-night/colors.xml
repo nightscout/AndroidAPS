@@ -92,6 +92,7 @@
     <color name="calibration">#E83258</color>
     <color name="bolusDataPointColor">#00FFFF</color>
     <color name="profileSwitch">#00FFFF</color>
+    <color name="sens">#008585</color>
 
     <color name="ribbonDefault">#5a595b</color>
     <color name="daySelected">#D000FF00</color>
@@ -217,6 +218,7 @@
     <color name="question">#FEAF05</color>
     <color name="pumpHistory">#67DFE8</color>
     <color name="userOption">#6AE86D</color>
+    <color name="stats">#FEAF05</color>
 
     <!-- Gray colors -->
     <color name="darkgray">#323232</color>

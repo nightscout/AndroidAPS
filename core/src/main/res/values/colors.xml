@@ -95,6 +95,7 @@
     <color name="profileSwitch">#00FFFF</color>
     <color name="red">#FF0000</color>
     <color name="blue">#0000FF</color>
+    <color name="sens">#008585</color>
 
     <color name="ribbonDefault">#8C8C8C</color>
     <color name="daySelected">#D000FF00</color>
@@ -220,6 +221,7 @@
     <color name="question">#FEAF05</color>
     <color name="pumpHistory">#42A5F5</color>
     <color name="userOption">#66BB6A</color>
+    <color name="stats">#FEAF05</color>
 
     <!-- Gray colors -->
     <color name="darkgray">#323232</color>
