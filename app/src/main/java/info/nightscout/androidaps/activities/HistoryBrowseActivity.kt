@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.activities
 
 import android.annotation.SuppressLint
-import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Bundle
 import android.util.DisplayMetrics
@@ -9,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.jjoe64.graphview.GraphView
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
@@ -148,33 +148,18 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
             true
         }
 
-        // create an OnDateSetListener
-        val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
-            Calendar.getInstance().also { calendar ->
-                calendar.timeInMillis = overviewData.fromTime
-                calendar[Calendar.YEAR] = year
-                calendar[Calendar.MONTH] = monthOfYear
-                calendar[Calendar.DAY_OF_MONTH] = dayOfMonth
-                calendar[Calendar.MILLISECOND] = 0
-                calendar[Calendar.SECOND] = 0
-                calendar[Calendar.MINUTE] = 0
-                calendar[Calendar.HOUR_OF_DAY] = 0
-                setTime(calendar.timeInMillis)
-                binding.date.text = dateUtil.dateAndTimeString(overviewData.fromTime)
-            }
-            loadAll("onClickDate")
-        }
-
         binding.date.setOnClickListener {
-            val cal = Calendar.getInstance()
-            cal.timeInMillis = overviewData.fromTime
-            DatePickerDialog(
-                this,
-                dateSetListener,
-                cal.get(Calendar.YEAR),
-                cal.get(Calendar.MONTH),
-                cal.get(Calendar.DAY_OF_MONTH)
-            ).show()
+            MaterialDatePicker.Builder.datePicker()
+                .setSelection(dateUtil.timeStampToUtcDateMilis(overviewData.fromTime))
+                .build()
+                .apply {
+                    addOnPositiveButtonClickListener { selection ->
+                        setTime(dateUtil.mergeUtcDateToTimestamp(overviewData.fromTime, selection))
+                        binding.date.text = dateUtil.dateAndTimeString(overviewData.fromTime)
+                        loadAll("onClickDate")
+                    }
+                }
+                .show(supportFragmentManager, "history_date_picker")
         }
 
         val dm = DisplayMetrics()

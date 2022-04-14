@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.general.overview.dialogs
 
-import android.app.TimePickerDialog
 import android.os.Bundle
 import android.text.format.DateFormat
 import android.view.LayoutInflater
@@ -8,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.OverviewEditquickwizardDialogBinding
@@ -24,6 +25,7 @@ import info.nightscout.androidaps.utils.wizard.QuickWizard
 import info.nightscout.androidaps.utils.wizard.QuickWizardEntry
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONException
+import java.util.*
 import javax.inject.Inject
 
 class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
@@ -40,8 +42,7 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
 
     private var _binding: OverviewEditquickwizardDialogBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
+    // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -96,41 +97,35 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
         }
         binding.okcancel.cancel.setOnClickListener { dismiss() }
 
-        // create an OnTimeSetListener
-        val fromTimeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
-            fromSeconds = (T.hours(hour.toLong()).secs() + T.mins(minute.toLong()).secs()).toInt()
-            binding.from.text = dateUtil.timeString(dateUtil.secondsOfTheDayToMilliseconds(fromSeconds))
+        binding.from.setOnClickListener {
+            val clockFormat = if (DateFormat.is24HourFormat(context)) TimeFormat.CLOCK_24H else TimeFormat.CLOCK_12H
+            val timePicker = MaterialTimePicker.Builder()
+                .setTimeFormat(clockFormat)
+                .setHour(T.secs(fromSeconds.toLong()).hours().toInt())
+                .setMinute(T.secs((fromSeconds % 3600).toLong()).mins().toInt())
+                .build()
+            timePicker.addOnPositiveButtonClickListener {
+                fromSeconds = (T.hours(timePicker.hour.toLong()).secs() + T.mins(timePicker.minute.toLong()).secs()).toInt()
+                binding.from.text = dateUtil.timeString(dateUtil.secondsOfTheDayToMilliseconds(fromSeconds))
+            }
+            timePicker.show(parentFragmentManager, "event_time_time_picker")
         }
 
-        binding.from.setOnClickListener {
-            context?.let {
-                TimePickerDialog(
-                    it,
-                    fromTimeSetListener,
-                    T.secs(fromSeconds.toLong()).hours().toInt(),
-                    T.secs((fromSeconds % 3600).toLong()).mins().toInt(),
-                    DateFormat.is24HourFormat(context)
-                ).show()
-            }
-        }
         fromSeconds = entry.validFrom()
         binding.from.text = dateUtil.timeString(dateUtil.secondsOfTheDayToMilliseconds(fromSeconds))
 
-        val toTimeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
-            toSeconds = (T.hours(hour.toLong()).secs() + T.mins(minute.toLong()).secs()).toInt()
-            binding.to.text = dateUtil.timeString(dateUtil.secondsOfTheDayToMilliseconds(toSeconds))
-        }
-
         binding.to.setOnClickListener {
-            context?.let {
-                TimePickerDialog(
-                    it,
-                    toTimeSetListener,
-                    T.secs(toSeconds.toLong()).hours().toInt(),
-                    T.secs((toSeconds % 3600).toLong()).mins().toInt(),
-                    DateFormat.is24HourFormat(context)
-                ).show()
+            val clockFormat = if (DateFormat.is24HourFormat(context)) TimeFormat.CLOCK_24H else TimeFormat.CLOCK_12H
+            val timePicker = MaterialTimePicker.Builder()
+                .setTimeFormat(clockFormat)
+                .setHour(T.secs(toSeconds.toLong()).hours().toInt())
+                .setMinute(T.secs((toSeconds % 3600).toLong()).mins().toInt())
+                .build()
+            timePicker.addOnPositiveButtonClickListener {
+                toSeconds = (T.hours(timePicker.hour.toLong()).secs() + T.mins(timePicker.minute.toLong()).secs()).toInt()
+                binding.to.text = dateUtil.timeString(dateUtil.secondsOfTheDayToMilliseconds(toSeconds))
             }
+            timePicker.show(parentFragmentManager, "event_time_time_picker")
         }
 
         fun usePercentage(custom: Boolean) {
