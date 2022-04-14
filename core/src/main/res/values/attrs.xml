@@ -216,4 +216,9 @@
     <!-- CardView specific colors  -->
     <attr name="strokeColor" format="reference|color" />
     <attr name="textAppearancemediumColor" format="reference|color" />
+    <!-- Objectives specific colors  -->
+    <attr name="isAccomplishedColor" format="reference|color" />
+    <attr name="seperatorColor" format="reference|color" />
+    <attr name="isCompletedColor" format="reference|color" />
+    <attr name="isNotCompletedColor" format="reference|color" />
 </resources>

@@ -239,6 +239,11 @@
         <item name="textAppearancemediumColor">@color/textAppearancemediumDark</item>
         <!-- Actionbar  -->
         <item name="actionBarStyle">@style/Aaps_ActionBarStyle</item>
+        <!-- Objectives specific colors  -->
+        <item name="isAccomplishedColor">@color/isAccomplished</item>
+        <item name="seperatorColor">@color/sphere_plastic_grey</item>
+        <item name="isCompletedColor">@color/isCompleted</item>
+        <item name="isNotCompletedColor">@color/isNotCompleted</item>
     </style>
 
     <style name="Aaps_ActionBarStyle" parent="@style/Widget.AppCompat.ActionBar">
