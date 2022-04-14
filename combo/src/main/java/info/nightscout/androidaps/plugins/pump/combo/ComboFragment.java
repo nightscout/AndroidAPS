@@ -61,6 +61,7 @@ public class ComboFragment extends DaggerFragment {
     private TextView errorCountLabel;
     private TextView errorCountDots;
     private TextView errorCountValue;
+    private TextView serialNumber;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -77,6 +78,7 @@ public class ComboFragment extends DaggerFragment {
         tempBasalText = view.findViewById(R.id.combo_temp_basal);
         bolusCount = view.findViewById(R.id.combo_bolus_count);
         tbrCount = view.findViewById(R.id.combo_tbr_count);
+        serialNumber = view.findViewById(R.id.serial_number);
 
         errorCountDelimiter = view.findViewById(R.id.combo_connection_error_delimiter);
         errorCountLayout = view.findViewById(R.id.combo_connection_error_layout);
@@ -255,6 +257,7 @@ public class ComboFragment extends DaggerFragment {
             // stats
             bolusCount.setText(String.valueOf(comboPlugin.getBolusesDelivered()));
             tbrCount.setText(String.valueOf(comboPlugin.getTbrsSet()));
+            serialNumber.setText(comboPlugin.serialNumber());
 
             updateErrorDisplay(false);
         } else {
