@@ -207,6 +207,10 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         binding.infoLayout.apsMode.setOnClickListener(this)
         binding.infoLayout.apsMode.setOnLongClickListener(this)
         binding.activeProfile.setOnLongClickListener(this)
+        binding.statusLightsLayout.cannulaOrPatchLayout.setOnClickListener(this)
+        binding.statusLightsLayout.insulinLayout.setOnClickListener(this)
+        binding.statusLightsLayout.sensorLayout.setOnClickListener(this)
+        binding.statusLightsLayout.batteryLayout.setOnClickListener(this)
     }
 
     @Synchronized
@@ -333,6 +337,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         // https://stackoverflow.com/questions/14860239/checking-if-state-is-saved-before-committing-a-fragmenttransaction
         if (childFragmentManager.isStateSaved) return
         activity?.let { activity ->
+            val pump = activePlugin.activePump
             when (v.id) {
                 R.id.treatment_button    -> protectionCheck.queryProtection(
                     activity,
@@ -424,6 +429,28 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                             dialog.arguments = Bundle().also { it.putInt("showOkCancel", 1) }
                         }.show(childFragmentManager, "Overview")
                     })
+                }
+
+                R.id.cannula_or_patch_layout -> {
+                    if (pump.pumpDescription.isRefillingCapable && pump.isInitialized() && !pump.isSuspended()){
+                        activity.let { protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { FillDialog().show(childFragmentManager, "FillDialog") }) }
+                    }
+                }
+
+                R.id.insulin_layout -> {
+                    if (pump.pumpDescription.isRefillingCapable && pump.isInitialized() && !pump.isSuspended()){
+                        activity.let { protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { FillDialog().show(childFragmentManager, "FillDialog") }) }
+                    }
+                }
+
+                R.id.sensor_layout -> {
+                    CareDialog().setOptions(CareDialog.EventType.SENSOR_INSERT, R.string.careportal_cgmsensorinsert).show(childFragmentManager, "Actions")
+                }
+
+                R.id.battery_layout -> {
+                    if (pump.pumpDescription.isBatteryReplaceable || pump.isBatteryChangeLoggingEnabled()){
+                        CareDialog().setOptions(CareDialog.EventType.BATTERY_CHANGE, R.string.careportal_pumpbatterychange).show(childFragmentManager, "Actions")
+                    }
                 }
             }
         }

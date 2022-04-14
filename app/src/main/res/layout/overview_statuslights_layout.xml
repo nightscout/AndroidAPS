@@ -13,10 +13,12 @@
     android:paddingBottom="4dp">
 
     <LinearLayout
+        android:id="@+id/cannula_or_patch_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:focusable="true"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
         android:gravity="center_horizontal">
 
         <ImageView
@@ -38,10 +40,12 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/insulin_layout"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:layout_weight="1"
         android:focusable="true"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
         android:gravity="center_horizontal">
 
         <ImageView
@@ -70,10 +74,12 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/sensor_layout"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:layout_weight="1"
         android:focusable="true"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
         android:gravity="center_horizontal">
 
         <ImageView
@@ -99,6 +105,7 @@
         android:layout_height="fill_parent"
         android:layout_weight="1"
         android:focusable="true"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
         android:gravity="center_horizontal">
 
         <ImageView
