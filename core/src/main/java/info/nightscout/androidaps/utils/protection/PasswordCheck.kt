@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.StringRes
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
@@ -44,7 +45,7 @@ class PasswordCheck @Inject constructor(
             return
         }
         val promptsView = LayoutInflater.from(context).inflate(R.layout.passwordprompt, null)
-        val alertDialogBuilder = AlertDialogHelper.Builder(context, R.style.DialogTheme)
+        val alertDialogBuilder = MaterialAlertDialogBuilder(context, R.style.DialogTheme)
         alertDialogBuilder.setView(promptsView)
 
         val userInput = promptsView.findViewById<View>(R.id.password_prompt_pass) as EditText
@@ -101,7 +102,7 @@ class PasswordCheck @Inject constructor(
     @SuppressLint("InflateParams")
     fun setPassword(context: Context, @StringRes labelId: Int, @StringRes preference: Int, ok: ((String) -> Unit)? = null, cancel: (() -> Unit)? = null, clear: (() -> Unit)? = null, pinInput: Boolean = false) {
         val promptsView = LayoutInflater.from(context).inflate(R.layout.passwordprompt, null)
-        val alertDialogBuilder = AlertDialogHelper.Builder(context, R.style.DialogTheme)
+        val alertDialogBuilder = MaterialAlertDialogBuilder(context, R.style.DialogTheme)
         alertDialogBuilder.setView(promptsView)
 
         val userInput = promptsView.findViewById<View>(R.id.password_prompt_pass) as EditText
@@ -165,7 +166,7 @@ class PasswordCheck @Inject constructor(
                          @StringRes passwordWarning: Int?, ok: ((String) -> Unit)?, cancel: (() -> Unit)? = null) {
 
         val promptsView = LayoutInflater.from(context).inflate(R.layout.passwordprompt, null)
-        val alertDialogBuilder = AlertDialogHelper.Builder(context, R.style.DialogTheme)
+        val alertDialogBuilder = MaterialAlertDialogBuilder(context, R.style.DialogTheme)
         alertDialogBuilder.setView(promptsView)
         passwordExplanation?.let { alertDialogBuilder.setMessage(it) }
 

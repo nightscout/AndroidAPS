@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.DrawableRes
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.extensions.runOnUiThread
 
@@ -19,7 +20,7 @@ object TwoMessagesAlertDialog {
         val secondMessageLayout = LayoutInflater.from(context).inflate(R.layout.dialog_alert_two_messages, null)
         (secondMessageLayout.findViewById<View>(R.id.password_prompt_title) as TextView).text = secondMessage
 
-        AlertDialogHelper.Builder(context, R.style.DialogTheme)
+        MaterialAlertDialogBuilder(context, R.style.DialogTheme)
             .setMessage(message)
             .setCustomTitle(
                 AlertDialogHelper.buildCustomTitle(
@@ -32,7 +33,6 @@ object TwoMessagesAlertDialog {
                 dialog.dismiss()
                 SystemClock.sleep(100)
                 if (ok != null) runOnUiThread { ok() }
-
             }
             .setNegativeButton(android.R.string.cancel) { dialog: DialogInterface, _: Int ->
                 dialog.dismiss()
