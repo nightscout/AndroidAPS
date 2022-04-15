@@ -9,8 +9,6 @@
     <attr name="alarmColor" format="reference|color" />
     <!-- BG source temp button -->
     <attr name="setTempButton" format="reference|color" />
-    <!-- Card Item-->
-    <attr name="cardItemBackgroundColor" format="reference|color" />
     <!-- Carbs -->
     <attr name="carbsColor" format="reference|color" />
     <!-- Exercise -->
@@ -43,7 +41,6 @@
     <!-- Pump -->
     <attr name="pumpStatusBackground" format="reference|color" />
     <!-- Objectives -->
-    <attr name="objectivescardItemBackgroundColor" format="reference|color" />
     <attr name="objectivesBackgroundColor" format="reference|color" />
     <attr name="objectivesDisabledTextColor" format="reference|color" />
     <!---Import List -->
