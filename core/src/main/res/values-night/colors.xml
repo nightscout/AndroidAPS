@@ -183,8 +183,6 @@
     <color name="action">#ffffbb33</color>
     <color name="alarm">#ffff4444</color>
 
-    <color name="cardObjectiveText">#779ECB</color>
-
     <color name="colorAcceptTempButton">#f4d700</color>
     <color name="colorTreatmentButton">#67dfe8</color>
     <color name="colorInsulinButton">#67dfe8</color>
@@ -196,7 +194,11 @@
     <color name="colorSetExtendedButton">#FFDD7792</color>
     <color name="colorProfileSwitchButton">#ca77dd</color>
 
+    <color name="cardObjectiveText">#779ECB</color>
     <color name="colorObjectivesDisabledText">#FF5722</color>
+    <color name="isAccomplished">#67e86a</color>
+    <color name="isCompleted">#4CAF50</color>
+    <color name="isNotCompleted">#FF9800</color>
 
     <color name="colorScheduled">#de7550</color>
     <color name="colorActive">#25912e</color>
