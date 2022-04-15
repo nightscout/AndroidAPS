@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/tools"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/cardview"
+    style="@style/Widget.MaterialComponents.CardView"
+    android:id="@+id/card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    card_view:cardBackgroundColor="?attr/cardItemBackgroundColor"
-    card_view:cardCornerRadius="6dp"
-    card_view:cardUseCompatPadding="true"
-    card_view:contentPadding="6dp">
+    android:layout_marginStart="4dp"
+    app:cardCornerRadius="4dp"
+    app:contentPadding="2dp"
+    app:cardElevation="4dp"
+    app:cardUseCompatPadding="true"
+    android:layout_gravity="center">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,7 +31,7 @@
                 android:adjustViewBounds="false"
                 android:cropToPadding="false"
                 android:scaleType="fitStart"
-                card_view:srcCompat="@drawable/ic_quick_wizard" />
+                app:srcCompat="@drawable/ic_quick_wizard" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -77,7 +81,7 @@
                         android:adjustViewBounds="false"
                         android:cropToPadding="false"
                         android:scaleType="fitStart"
-                        card_view:srcCompat="@drawable/ic_smartphone"
+                        app:srcCompat="@drawable/ic_smartphone"
                         tools:ignore="RtlSymmetry" />
 
                     <ImageView
@@ -87,7 +91,7 @@
                         android:adjustViewBounds="false"
                         android:cropToPadding="false"
                         android:scaleType="fitStart"
-                        card_view:srcCompat="@drawable/ic_reorder_gray_24dp" />
+                        app:srcCompat="@drawable/ic_reorder_gray_24dp" />
 
                     <CheckBox
                         android:id="@+id/cb_remove"
@@ -149,4 +153,4 @@
 
     </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

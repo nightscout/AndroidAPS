@@ -47,8 +47,6 @@
         <item name="alarmColor">@color/alarm</item>
         <!-- BG source temp button -->
         <item name="setTempButton">@color/colorSetTempButton</item>
-        <!-- Card Item-->
-        <item name="cardItemBackgroundColor">@color/cardColorBackground</item>
         <!-- Exercise -->
         <item name="exerciseColor">@color/exercise</item>
         <!-- Stats  -->
@@ -76,7 +74,6 @@
         <!-- Pump -->
         <item name="pumpStatusBackground">@color/pumpStatusBackground</item>
         <!-- Objectives -->
-        <item name="objectivescardItemBackgroundColor">?attr/cardItemBackgroundColor</item>
         <item name="objectivesBackgroundColor">@color/objectivesBackground</item>
         <item name="objectivesDisabledTextColor">@color/colorObjectivesDisabledText</item>
         <!---Import List -->
