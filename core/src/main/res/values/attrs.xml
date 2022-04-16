@@ -207,6 +207,7 @@
     <attr name="ratioColor" format="reference|color" />
     <attr name="activityColor" format="reference|color" />
     <attr name="basebasalColor" format="reference|color" />
+    <attr name="dotLineColor" format="reference|color" />
     <!---Popupmenu TextColor -->
     <attr name="menuTextColor" format="reference|color" />
     <attr name="menuTextColorInverse" format="reference|color" />

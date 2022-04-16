@@ -230,6 +230,7 @@
         <item name="ratioColor">@color/ratio</item>
         <item name="activityColor">@color/activity</item>
         <item name="basebasalColor">@color/basebasal</item>
+        <item name="dotLineColor">@color/white</item>
         <!---Popupmenu TextColor -->
         <item name="menuTextColor">@color/black</item>
         <item name="menuTextColorInverse">@color/black</item>

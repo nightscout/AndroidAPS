@@ -201,7 +201,7 @@ class GraphData(
                 paint.style = Paint.Style.STROKE
                 paint.strokeWidth = 2f
                 paint.pathEffect = DashPathEffect(floatArrayOf(10f, 20f), 0f)
-                paint.color = Color.WHITE
+                paint.color = rh.gac(graph.context, R.attr.dotLineColor)
             })
         })
     }
