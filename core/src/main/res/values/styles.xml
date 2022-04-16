@@ -113,7 +113,7 @@
         <item name="android:dialogCornerRadius">12dp</item>
         <!---Overview and Historybrowser  -->
         <item name="graphgrid">@color/graphgrid</item>
-        <item name="viewPortbackgroundColor">@color/black_alpha_20</item>
+        <item name="viewPortbackgroundColor">@color/transparent</item>
         <item name="tempTargetBackgroundColor">@color/tempTargetBackground</item>
         <!---CGM source-->
         <item name="cgmdexColor">@color/byodagray</item>
