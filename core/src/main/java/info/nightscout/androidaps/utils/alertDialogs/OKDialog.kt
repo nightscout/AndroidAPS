@@ -6,6 +6,7 @@ import android.content.DialogInterface
 import android.os.SystemClock
 import android.text.Spanned
 import androidx.fragment.app.FragmentActivity
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.extensions.runOnUiThread
 
@@ -17,7 +18,7 @@ object OKDialog {
         var notEmptyTitle = title
         if (notEmptyTitle.isEmpty()) notEmptyTitle = context.getString(R.string.message)
 
-        AlertDialogHelper.Builder(context, R.style.DialogTheme)
+        MaterialAlertDialogBuilder(context, R.style.DialogTheme)
             .setCustomTitle(AlertDialogHelper.buildCustomTitle(context, notEmptyTitle))
             .setMessage(message)
             .setPositiveButton(context.getString(R.string.ok)) { dialog: DialogInterface, _: Int ->
@@ -39,7 +40,7 @@ object OKDialog {
         var notEmptyTitle = title
         if (notEmptyTitle.isEmpty()) notEmptyTitle = activity.getString(R.string.message)
 
-        AlertDialogHelper.Builder(activity, R.style.DialogTheme)
+        MaterialAlertDialogBuilder(activity, R.style.DialogTheme)
             .setCustomTitle(AlertDialogHelper.buildCustomTitle(activity, notEmptyTitle))
             .setMessage(message)
             .setPositiveButton(activity.getString(R.string.ok)) { dialog: DialogInterface, _: Int ->
@@ -66,7 +67,7 @@ object OKDialog {
     @SuppressLint("InflateParams")
     fun showConfirmation(activity: FragmentActivity, title: String, message: Spanned, ok: Runnable?, cancel: Runnable? = null) {
         var okClicked = false
-        AlertDialogHelper.Builder(activity, R.style.DialogTheme)
+        MaterialAlertDialogBuilder(activity, R.style.DialogTheme)
             .setMessage(message)
             .setCustomTitle(AlertDialogHelper.buildCustomTitle(activity, title))
             .setPositiveButton(android.R.string.ok) { dialog: DialogInterface, _: Int ->
@@ -94,7 +95,7 @@ object OKDialog {
     @SuppressLint("InflateParams")
     fun showConfirmation(activity: FragmentActivity, title: String, message: String, ok: Runnable?, cancel: Runnable? = null) {
         var okClicked = false
-        AlertDialogHelper.Builder(activity, R.style.DialogTheme)
+        MaterialAlertDialogBuilder(activity, R.style.DialogTheme)
             .setMessage(message)
             .setCustomTitle(AlertDialogHelper.buildCustomTitle(activity, title))
             .setPositiveButton(android.R.string.ok) { dialog: DialogInterface, _: Int ->
@@ -126,7 +127,7 @@ object OKDialog {
     @SuppressLint("InflateParams")
     fun showConfirmation(context: Context, title: String, message: Spanned, ok: Runnable?, cancel: Runnable? = null) {
         var okClicked = false
-        AlertDialogHelper.Builder(context, R.style.DialogTheme)
+        MaterialAlertDialogBuilder(context, R.style.DialogTheme)
             .setMessage(message)
             .setCustomTitle(AlertDialogHelper.buildCustomTitle(context, title))
             .setPositiveButton(android.R.string.ok) { dialog: DialogInterface, _: Int ->
@@ -158,7 +159,7 @@ object OKDialog {
     @SuppressLint("InflateParams")
     fun showConfirmation(context: Context, title: String, message: String, ok: Runnable?, cancel: Runnable? = null) {
         var okClicked = false
-        AlertDialogHelper.Builder(context, R.style.DialogTheme)
+        MaterialAlertDialogBuilder(context, R.style.DialogTheme)
             .setMessage(message)
             .setCustomTitle(AlertDialogHelper.buildCustomTitle(context, title))
             .setPositiveButton(android.R.string.ok) { dialog: DialogInterface, _: Int ->
@@ -186,7 +187,7 @@ object OKDialog {
     @SuppressLint("InflateParams")
     fun showConfirmation(context: Context, title: String, message: String, ok: DialogInterface.OnClickListener?, cancel: DialogInterface.OnClickListener? = null) {
         var okClicked = false
-        AlertDialogHelper.Builder(context, R.style.DialogTheme)
+        MaterialAlertDialogBuilder(context, R.style.DialogTheme)
             .setMessage(message)
             .setCustomTitle(AlertDialogHelper.buildCustomTitle(context, title))
             .setPositiveButton(android.R.string.ok) { dialog: DialogInterface, which: Int ->
@@ -214,7 +215,7 @@ object OKDialog {
     @SuppressLint("InflateParams")
     fun showYesNoCancel(context: Context, title: String, message: String, yes: Runnable?, no: Runnable? = null) {
         var okClicked = false
-        AlertDialogHelper.Builder(context, R.style.DialogTheme)
+        MaterialAlertDialogBuilder(context, R.style.DialogTheme)
             .setMessage(message)
             .setCustomTitle(AlertDialogHelper.buildCustomTitle(context, title))
             .setPositiveButton(R.string.yes) { dialog: DialogInterface, _: Int ->

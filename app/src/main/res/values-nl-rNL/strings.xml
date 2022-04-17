@@ -815,6 +815,7 @@
     <string name="smscommunicator_otp_install_info">Installeer de Authenticator-app op elke volger telefoon die RFC 6238 TOTP tokens ondersteunt. Populaire gratis apps zijn:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">Door de Authentificator te resetten, maak je alle Authentificatie-instellingen van reeds verbonden telefoons ongeldig! Je zult ze opnieuw moeten instellen!</string>
     <string name="overview_show_predictions">Voorspellingen</string>
+    <string name="overview_show_treatments">Behandelingen</string>
     <string name="overview_show_deviationslope">Richtingscoëfficiënt afwijking</string>
     <string name="authorizationfailed">Autorisatie mislukt</string>
     <string name="overview_show_absinsulin">Absolute insuline</string>
@@ -995,6 +996,7 @@
     <string name="tempt_targets">Tijdelijke streefdoelen</string>
     <string name="carbs_and_bolus">Koolhydraten en bolus</string>
     <string name="confirm_remove_multiple_items">Weet je zeker dat je %1$d items wilt verwijderen</string>
+    <string name="no_records_available">Geen records beschikbaar</string>
     <string name="hide_loop">Verberg loop</string>
     <string name="show_loop">Toon loop</string>
     <string name="count_selected">%1$d geselecteerd</string>
@@ -1006,4 +1008,5 @@
     <string name="show_loop_records">Toon loop records</string>
     <string name="show_hide_records">Verberg loop records</string>
     <string name="widget_description">AndroidAPS widget</string>
+    <string name="configure">Configureer transparantie</string>
 </resources>

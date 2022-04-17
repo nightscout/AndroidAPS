@@ -150,8 +150,8 @@ class InsulinDialog : DialogFragmentWithDate() {
         binding.recordOnly.setOnCheckedChangeListener { _, isChecked: Boolean ->
             binding.timeLayout.visibility = isChecked.toVisibility()
         }
-        binding.amount.editText?.id?.let { binding.insulinLabel.labelFor = it }
-        binding.time.editText?.id?.let { binding.timeLabel.labelFor = it }
+        binding.insulinLabel.labelFor = binding.amount.editTextId
+        binding.timeLabel.labelFor = binding.time.editTextId
     }
 
     override fun onDestroyView() {

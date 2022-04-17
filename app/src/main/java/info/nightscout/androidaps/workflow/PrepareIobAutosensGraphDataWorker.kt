@@ -30,6 +30,7 @@ import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.resources.getThemeColor
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import java.util.ArrayList
@@ -51,9 +52,10 @@ class PrepareIobAutosensGraphDataWorker(
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var rxBus: RxBus
-
+    var ctx: Context
     init {
         (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
+        ctx =  rh.getThemedCtx(context)
     }
 
     class PrepareIobAutosensData(
@@ -64,7 +66,6 @@ class PrepareIobAutosensGraphDataWorker(
     override fun doWork(): Result {
         val data = dataWorker.pickupObject(inputData.getLong(DataWorker.STORE_KEY, -1)) as PrepareIobAutosensData?
             ?: return Result.failure(workDataOf("Error" to "missing input data"))
-
         rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_IOB_AUTOSENS_DATA, 0, null))
         val iobArray: MutableList<ScaledDataPoint> = ArrayList()
         val absIobArray: MutableList<ScaledDataPoint> = ArrayList()
@@ -158,15 +159,15 @@ class PrepareIobAutosensGraphDataWorker(
 
             // DEVIATIONS
             if (autosensData != null) {
-                var color = rh.gc(R.color.deviationblack) // "="
+                var color =  rh.gac( ctx, R.attr.deviationblackColor)  // "="
                 if (autosensData.type == "" || autosensData.type == "non-meal") {
-                    if (autosensData.pastSensitivity == "C") color = rh.gc(R.color.deviationgrey)
-                    if (autosensData.pastSensitivity == "+") color = rh.gc(R.color.deviationgreen)
-                    if (autosensData.pastSensitivity == "-") color = rh.gc(R.color.deviationred)
+                    if (autosensData.pastSensitivity == "C") color =  rh.gac( ctx, R.attr.deviationgreyColor)
+                    if (autosensData.pastSensitivity == "+") color =  rh.gac( ctx, R.attr.deviationgreenColor)
+                    if (autosensData.pastSensitivity == "-") color =  rh.gac( ctx, R.attr.deviationredColor)
                 } else if (autosensData.type == "uam") {
-                    color = rh.gc(R.color.uam)
+                    color =  rh.gac( ctx, R.attr.uamColor)
                 } else if (autosensData.type == "csf") {
-                    color = rh.gc(R.color.deviationgrey)
+                    color =  rh.gac( ctx, R.attr.deviationgreyColor)
                 }
                 devArray.add(OverviewPlugin.DeviationDataPoint(time.toDouble(), autosensData.deviation, color, data.overviewData.devScale))
                 data.overviewData.maxDevValueFound = maxOf(data.overviewData.maxDevValueFound, abs(autosensData.deviation), abs(bgi))
@@ -192,14 +193,14 @@ class PrepareIobAutosensGraphDataWorker(
         // IOB
         data.overviewData.iobSeries = FixedLineGraphSeries(Array(iobArray.size) { i -> iobArray[i] }).also {
             it.isDrawBackground = true
-            it.backgroundColor = -0x7f000001 and rh.gc(R.color.iob) //50%
-            it.color = rh.gc(R.color.iob)
+            it.backgroundColor = -0x7f000001 and  rh.gac( ctx, R.attr.iobColor)  //50%
+            it.color = rh.gac( ctx, R.attr.iobColor)
             it.thickness = 3
         }
         data.overviewData.absIobSeries = FixedLineGraphSeries(Array(absIobArray.size) { i -> absIobArray[i] }).also {
             it.isDrawBackground = true
-            it.backgroundColor = -0x7f000001 and rh.gc(R.color.iob) //50%
-            it.color = rh.gc(R.color.iob)
+            it.backgroundColor = -0x7f000001 and rh.gac( ctx, R.attr.iobColor) //50%
+            it.color = rh.gac( ctx, R.attr.iobColor)
             it.thickness = 3
         }
 
@@ -210,7 +211,7 @@ class PrepareIobAutosensGraphDataWorker(
             val iobPrediction: MutableList<DataPointWithLabelInterface> = ArrayList()
             val iobPredictionArray = data.iobCobCalculator.calculateIobArrayForSMB(lastAutosensResult, SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget)
             for (i in iobPredictionArray) {
-                iobPrediction.add(i.setColor(rh.gc(R.color.iobPredAS)))
+                iobPrediction.add(i.setColor(rh.gac( ctx, R.attr.iobPredASColor)))
                 data.overviewData.maxIobValueFound = max(data.overviewData.maxIobValueFound, abs(i.iob))
             }
             data.overviewData.iobPredictions1Series = PointsWithLabelGraphSeries(Array(iobPrediction.size) { i -> iobPrediction[i] })
@@ -222,8 +223,8 @@ class PrepareIobAutosensGraphDataWorker(
         // COB
         data.overviewData.cobSeries = FixedLineGraphSeries(Array(cobArray.size) { i -> cobArray[i] }).also {
             it.isDrawBackground = true
-            it.backgroundColor = -0x7f000001 and rh.gc(R.color.cob) //50%
-            it.color = rh.gc(R.color.cob)
+            it.backgroundColor = -0x7f000001 and  rh.gac( ctx, R.attr.cobColor) //50%
+            it.color = rh.gac( ctx, R.attr.cobColor)
             it.thickness = 3
         }
         data.overviewData.cobMinFailOverSeries = PointsWithLabelGraphSeries(Array(minFailOverActiveList.size) { i -> minFailOverActiveList[i] })
@@ -231,7 +232,7 @@ class PrepareIobAutosensGraphDataWorker(
         // ACTIVITY
         data.overviewData.activitySeries = FixedLineGraphSeries(Array(actArrayHist.size) { i -> actArrayHist[i] }).also {
             it.isDrawBackground = false
-            it.color = rh.gc(R.color.activity)
+            it.color = rh.gac( ctx, R.attr.activityColor)
             it.thickness = 3
         }
         data.overviewData.activityPredictionSeries = FixedLineGraphSeries(Array(actArrayPrediction.size) { i -> actArrayPrediction[i] }).also {
@@ -239,14 +240,14 @@ class PrepareIobAutosensGraphDataWorker(
                 paint.style = Paint.Style.STROKE
                 paint.strokeWidth = 3f
                 paint.pathEffect = DashPathEffect(floatArrayOf(4f, 4f), 0f)
-                paint.color = rh.gc(R.color.activity)
+                paint.color = rh.gac( ctx, R.attr.activityColor)
             })
         }
 
         // BGI
         data.overviewData.minusBgiSeries = FixedLineGraphSeries(Array(bgiArrayHist.size) { i -> bgiArrayHist[i] }).also {
             it.isDrawBackground = false
-            it.color = rh.gc(R.color.bgi)
+            it.color = rh.gac( ctx, R.attr.bgiColor)
             it.thickness = 3
         }
         data.overviewData.minusBgiHistSeries = FixedLineGraphSeries(Array(bgiArrayPrediction.size) { i -> bgiArrayPrediction[i] }).also {
@@ -254,7 +255,7 @@ class PrepareIobAutosensGraphDataWorker(
                 paint.style = Paint.Style.STROKE
                 paint.strokeWidth = 3f
                 paint.pathEffect = DashPathEffect(floatArrayOf(4f, 4f), 0f)
-                paint.color = rh.gc(R.color.bgi)
+                paint.color = rh.gac( ctx, R.attr.bgiColor)
             })
         }
 
@@ -265,17 +266,17 @@ class PrepareIobAutosensGraphDataWorker(
 
         // RATIO
         data.overviewData.ratioSeries = LineGraphSeries(Array(ratioArray.size) { i -> ratioArray[i] }).also {
-            it.color = rh.gc(R.color.ratio)
+            it.color = rh.gac( ctx, R.attr.ratioColor)
             it.thickness = 3
         }
 
         // DEV SLOPE
         data.overviewData.dsMaxSeries = LineGraphSeries(Array(dsMaxArray.size) { i -> dsMaxArray[i] }).also {
-            it.color = rh.gc(R.color.devslopepos)
+            it.color = rh.gac( ctx, R.attr.devslopeposColor)
             it.thickness = 3
         }
         data.overviewData.dsMinSeries = LineGraphSeries(Array(dsMinArray.size) { i -> dsMinArray[i] }).also {
-            it.color = rh.gc(R.color.devslopeneg)
+            it.color = rh.gac( ctx, R.attr.devslopenegColor)
             it.thickness = 3
         }
         rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_IOB_AUTOSENS_DATA, 100, null))

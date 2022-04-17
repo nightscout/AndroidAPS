@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/careportal_cardview"
@@ -9,11 +10,9 @@
     android:layout_marginStart="4dp"
     android:layout_marginEnd="4dp"
     android:layout_marginTop="4dp"
-    app:strokeColor="?attr/strokeColor"
-    app:strokeWidth="2dp"
-    app:cardCornerRadius="3dp"
+    app:cardCornerRadius="4dp"
     app:contentPadding="2dp"
-    app:cardElevation="2dp"
+    app:cardElevation="4dp"
     app:cardUseCompatPadding="false"
     android:layout_gravity="center">
 

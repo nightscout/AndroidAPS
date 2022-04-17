@@ -199,9 +199,9 @@ class CarbsDialog : DialogFragmentWithDate() {
             binding.hypoTt.isChecked = false
             binding.activityTt.isChecked = false
         }
-        binding.duration.editText?.id?.let { binding.durationLabel.labelFor = it }
-        binding.time.editText?.id?.let { binding.timeLabel.labelFor = it }
-        binding.carbs.editText?.id?.let { binding.carbsLabel.labelFor = it }
+        binding.durationLabel.labelFor = binding.duration.editTextId
+        binding.timeLabel.labelFor = binding.time.editTextId
+        binding.carbsLabel.labelFor = binding.carbs.editTextId
     }
 
     override fun onDestroyView() {

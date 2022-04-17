@@ -13,7 +13,7 @@ class SyncPumpCancelExtendedBolusIfAnyTransaction(
         val existing = database.extendedBolusDao.findByPumpEndIds(endPumpId, pumpType, pumpSerial)
         if (existing != null) // assume EB has been cut already
             return result
-        val running = database.extendedBolusDao.getExtendedBolusActiveAt(timestamp, pumpType, pumpSerial).blockingGet()
+        val running = database.extendedBolusDao.getExtendedBolusActiveAt(timestamp).blockingGet()
         if (running != null && running.interfaceIDs.endId == null) { // do not allow overwrite if cut by end event
             val pctRun = (timestamp - running.timestamp) / running.duration.toDouble()
             running.amount *= pctRun

@@ -101,14 +101,13 @@
             android:key="@string/key_skin"
             android:title="@string/skin" />
 
-        <!-- Temp hide options till light mode is completed
         <ListPreference
             android:defaultValue="dark"
             android:entries="@array/darkMode"
             android:entryValues="@array/darkModeValues"
             android:key="@string/key_use_dark_mode"
             android:summary="@string/theme_switcher_summary"
-            android:title="@string/app_color_scheme" /> -->
+            android:title="@string/app_color_scheme" />
 
     </PreferenceCategory>
 
