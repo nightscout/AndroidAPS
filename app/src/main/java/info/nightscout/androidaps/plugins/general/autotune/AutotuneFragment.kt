@@ -375,6 +375,7 @@ class AutotuneFragment : DaggerFragment() {
                         }
                     )
                 }
+                binding.autotuneResultsCard.visibility = if (autotunePlugin.calculationRunning && autotunePlugin.result.isEmpty()) View.GONE else View.VISIBLE
             }
         }.start()
     }
