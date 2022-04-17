@@ -13,13 +13,13 @@ class SyncPumpCancelTemporaryBasalIfAnyTransaction(
         val existing = database.temporaryBasalDao.findByPumpEndIds(endPumpId, pumpType, pumpSerial)
         if (existing != null) // assume TBR has been cut already
             return result
-        val current = database.temporaryBasalDao.getTemporaryBasalActiveAt(timestamp, pumpType, pumpSerial).blockingGet()
-        if (current != null && current.interfaceIDs.endId == null) { // do not allow overwrite if cut by end event
-            if (current.timestamp != timestamp) current.end = timestamp // prevent zero duration
-            else current.duration = 1
-            current.interfaceIDs.endId = endPumpId
-            database.temporaryBasalDao.updateExistingEntry(current)
-            result.updated.add(current)
+        val running = database.temporaryBasalDao.getTemporaryBasalActiveAt(timestamp).blockingGet()
+        if (running != null && running.interfaceIDs.endId == null) { // do not allow overwrite if cut by end event
+            if (running.timestamp != timestamp) running.end = timestamp // prevent zero duration
+            else running.duration = 1
+            running.interfaceIDs.endId = endPumpId
+            database.temporaryBasalDao.updateExistingEntry(running)
+            result.updated.add(running)
         }
         return result
     }

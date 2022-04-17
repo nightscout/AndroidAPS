@@ -435,6 +435,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="ns_localbroadcasts_title">Activer les transmissions locales</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">SI dynamique</string>
+    <string name="DynISFAdjust_title">Facteur d\'ajustement SI dynamique %%</string>
+    <string name="DynISFAdjust_summary">Facteur d\'ajustement pour SI dynamique. Définissez plus de 100 %% pour des corrections plus agressives et moins de 100 %% pour des corrections moins agressives.</string>
     <string name="enableuam">Activer RNS</string>
     <string name="enablesmb">Activer SMB</string>
     <string name="enablesmb_summary">Utiliser les Super Micro Bolus au lieu des débits de base temporaires pour une action rapide</string>
@@ -814,6 +816,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="smscommunicator_otp_install_info">Sur chaque téléphone suiveur, installez une appli. Authentificateur qui prend en charge les jetons RFC 6238 TOTP. Les applications libres populaires sont:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">En réinitialisant l\'Authentificateur, vous invalidez tous les authentificateurs déjà initialisés. Vous devrez les reconfigurer !</string>
     <string name="overview_show_predictions">Prédictions</string>
+    <string name="overview_show_treatments">Traitements</string>
     <string name="overview_show_deviationslope">Pente de déviations</string>
     <string name="authorizationfailed">Echec de l\'authentification</string>
     <string name="overview_show_absinsulin">Insuline absolue</string>
@@ -993,6 +996,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="tempt_targets">Cibles Temp</string>
     <string name="carbs_and_bolus">Glucides et bolus</string>
     <string name="confirm_remove_multiple_items">Êtes-vous sûr de vouloir supprimer %1$d entrée(s)</string>
+    <string name="no_records_available">Aucun enregistrement disponible</string>
     <string name="hide_loop">Masquer la boucle</string>
     <string name="show_loop">Afficher les entrées boucle</string>
     <string name="count_selected">%1$d sélectionnée(s)</string>
@@ -1004,4 +1008,5 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="show_loop_records">Afficher les entrées de la boucle</string>
     <string name="show_hide_records">Masquer les entrées de la boucle</string>
     <string name="widget_description">Widget AndroidAPS</string>
+    <string name="configure">Configurer l’opacité</string>
 </resources>

@@ -450,7 +450,7 @@
     <string name="activate_profile">ACTIVAR PERFIL</string>
     <string name="invalid">INVÁLIDO</string>
     <string name="careportal_newnstreatment_percentage_label">Porcentaje</string>
-    <string name="careportal_newnstreatment_timeshift_label">Cambio de tiempo</string>
+    <string name="careportal_newnstreatment_timeshift_label">Tiempo del cambio</string>
     <string name="default_temptargets">Objetivo temporal por defecto</string>
     <string name="eatingsoon_duration">Duración OT Comiendo Pronto</string>
     <string name="eatingsoon_target">Objetivo Comiendo Pronto</string>

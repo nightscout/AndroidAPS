@@ -176,7 +176,7 @@ abstract class Objective(injector: HasAndroidInjector, spName: String, @StringRe
             textView.setText(hint)
             textView.autoLinkMask = Linkify.WEB_URLS
             textView.linksClickable = true
-            textView.setLinkTextColor(Color.YELLOW)
+            textView.setLinkTextColor(rh.gac(context, R.attr.colorSecondary))
             Linkify.addLinks(textView, Linkify.WEB_URLS)
             return textView
         }

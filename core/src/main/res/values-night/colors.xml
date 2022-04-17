@@ -92,6 +92,7 @@
     <color name="calibration">#E83258</color>
     <color name="bolusDataPointColor">#00FFFF</color>
     <color name="profileSwitch">#00FFFF</color>
+    <color name="sens">#008585</color>
 
     <color name="ribbonDefault">#5a595b</color>
     <color name="daySelected">#D000FF00</color>
@@ -182,8 +183,6 @@
     <color name="action">#ffffbb33</color>
     <color name="alarm">#ffff4444</color>
 
-    <color name="cardObjectiveText">#779ECB</color>
-
     <color name="colorAcceptTempButton">#f4d700</color>
     <color name="colorTreatmentButton">#67dfe8</color>
     <color name="colorInsulinButton">#67dfe8</color>
@@ -195,7 +194,11 @@
     <color name="colorSetExtendedButton">#FFDD7792</color>
     <color name="colorProfileSwitchButton">#ca77dd</color>
 
+    <color name="cardObjectiveText">#779ECB</color>
     <color name="colorObjectivesDisabledText">#FF5722</color>
+    <color name="isAccomplished">#67e86a</color>
+    <color name="isCompleted">#4CAF50</color>
+    <color name="isNotCompleted">#FF9800</color>
 
     <color name="colorScheduled">#de7550</color>
     <color name="colorActive">#25912e</color>
@@ -217,6 +220,7 @@
     <color name="question">#FEAF05</color>
     <color name="pumpHistory">#67DFE8</color>
     <color name="userOption">#6AE86D</color>
+    <color name="stats">#FEAF05</color>
 
     <!-- Gray colors -->
     <color name="darkgray">#323232</color>

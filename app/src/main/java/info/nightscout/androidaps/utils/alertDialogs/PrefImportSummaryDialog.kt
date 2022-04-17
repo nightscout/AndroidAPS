@@ -16,6 +16,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.annotation.StyleRes
 import androidx.appcompat.view.ContextThemeWrapper
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.extensions.runOnUiThread
 import info.nightscout.androidaps.plugins.general.maintenance.formats.Prefs
@@ -48,7 +49,6 @@ object PrefImportSummaryDialog {
 
         var idx = 0
         val details = LinkedList<String>()
-
 
         for ((metaKey, metaEntry) in prefs.metadata) {
             val rowLayout = LayoutInflater.from(themedCtx).inflate(R.layout.import_summary_item, null)
@@ -92,7 +92,7 @@ object PrefImportSummaryDialog {
                 webView.setBackgroundColor(Color.TRANSPARENT)
                 webView.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null)
 
-                AlertDialogHelper.Builder(context, R.style.DialogTheme)
+                MaterialAlertDialogBuilder(context, R.style.DialogTheme)
                     .setCustomTitle(
                         AlertDialogHelper.buildCustomTitle(
                             context,
@@ -109,11 +109,10 @@ object PrefImportSummaryDialog {
             }
         }
 
-        val builder = AlertDialogHelper.Builder(context, theme)
+        val builder = MaterialAlertDialogBuilder(context, theme)
             .setMessage(context.getString(messageRes))
             .setCustomTitle(AlertDialogHelper.buildCustomTitle(context, context.getString(R.string.nav_import), headerIcon, theme))
             .setView(innerLayout)
-
             .setNegativeButton(android.R.string.cancel) { dialog: DialogInterface, _: Int ->
                 dialog.dismiss()
                 SystemClock.sleep(100)

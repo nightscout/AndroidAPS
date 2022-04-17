@@ -396,10 +396,38 @@ class DateUtil @Inject constructor(private val context: Context) {
                 .firstOrNull() ?: ZoneId.of("UTC")
         )
 
+    fun timeStampToUtcDateMilis(timestamp: Long): Long {
+        val current = Calendar.getInstance().apply { timeInMillis = timestamp }
+        return Calendar.getInstance().apply {
+            set(Calendar.YEAR, current.get(Calendar.YEAR))
+            set(Calendar.MONTH, current.get(Calendar.MONTH))
+            set(Calendar.DAY_OF_MONTH, current.get(Calendar.DAY_OF_MONTH))
+        }.timeInMillis
+    }
+
+    fun mergeUtcDateToTimestamp(timestamp: Long, dateUtcMilis: Long): Long {
+        val selected = Calendar.getInstance().apply { timeInMillis = dateUtcMilis }
+        return Calendar.getInstance().apply {
+            timeInMillis = timestamp
+            set(Calendar.YEAR, selected.get(Calendar.YEAR))
+            set(Calendar.MONTH, selected.get(Calendar.MONTH))
+            set(Calendar.DAY_OF_MONTH, selected.get(Calendar.DAY_OF_MONTH))
+        }.timeInMillis
+    }
+
+    fun mergeHourMinuteToTimestamp(timestamp: Long, hour: Int, minute: Int, randomSecond: Boolean = false): Long {
+        return Calendar.getInstance().apply {
+            timeInMillis = timestamp
+            set(Calendar.HOUR_OF_DAY, hour)
+            set(Calendar.MINUTE, minute)
+            if (randomSecond) set(Calendar.SECOND, seconds++)
+        }.timeInMillis
+    }
+
     companion object {
 
         private val timeStrings = LongSparseArray<String>()
-
+        private var seconds: Int = (Math.random() * 59.0).toInt()
         // singletons to avoid repeated allocation
         private var dfs: DecimalFormatSymbols? = null
         private var df: DecimalFormat? = null

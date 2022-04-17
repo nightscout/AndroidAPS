@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.dialogs
 
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
 import android.os.Bundle
 import android.text.format.DateFormat
 import android.view.View
@@ -11,12 +9,15 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.FragmentManager
+import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.core.R
+import info.nightscout.androidaps.extensions.toVisibility
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.shared.sharedPreferences.SP
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
@@ -29,6 +30,7 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
     @Inject lateinit var dateUtil: DateUtil
 
     fun interface OnValueChangedListener {
+
         fun onValueChanged(value: Long)
     }
 
@@ -43,11 +45,6 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
 
     //one shot guards
     private var okClicked: AtomicBoolean = AtomicBoolean(false)
-
-    companion object {
-
-        private var seconds: Int = (Math.random() * 59.0).toInt()
-    }
 
     override fun onStart() {
         super.onStart()
@@ -78,69 +75,44 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        eventDateView = view.findViewById(R.id.eventdate) as TextView?
-        eventTimeView = view.findViewById(R.id.eventtime) as TextView?
-
         eventTimeOriginal = savedInstanceState?.getLong("eventTimeOriginal") ?: dateUtil.nowWithoutMilliseconds()
         eventTime = savedInstanceState?.getLong("eventTime") ?: eventTimeOriginal
 
+        eventDateView = view.findViewById(R.id.eventdate) as TextView?
         eventDateView?.text = dateUtil.dateString(eventTime)
-        eventTimeView?.text = dateUtil.timeString(eventTime)
+        eventDateView?.setOnClickListener {
+            val selection = dateUtil.timeStampToUtcDateMilis(eventTime)
+            MaterialDatePicker.Builder.datePicker()
+                .setSelection(selection)
+                .build()
+                .apply {
+                    addOnPositiveButtonClickListener { selection ->
+                        eventTime = dateUtil.mergeUtcDateToTimestamp(eventTime, selection)
+                        eventDateView?.text = dateUtil.dateString(eventTime)
+                        callValueChangedListener()
 
-        // create an OnDateSetListener
-        val dateSetListener =
-            DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
-                val cal = Calendar.getInstance()
-                cal.timeInMillis = eventTime
-                cal.set(Calendar.YEAR, year)
-                cal.set(Calendar.MONTH, monthOfYear)
-                cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                eventTime = cal.timeInMillis
-                eventDateView?.text = dateUtil.dateString(eventTime)
+                    }
+                }
+                .show(parentFragmentManager, "event_time_date_picker")
+        }
+
+        eventTimeView = view.findViewById(R.id.eventtime) as TextView?
+        eventTimeView?.text = dateUtil.timeString(eventTime)
+        eventTimeView?.setOnClickListener {
+            val clockFormat = if (DateFormat.is24HourFormat(context)) TimeFormat.CLOCK_24H else TimeFormat.CLOCK_12H
+            val cal = Calendar.getInstance().apply { timeInMillis = eventTime }
+            val timePicker = MaterialTimePicker.Builder()
+                .setTimeFormat(clockFormat)
+                .setHour(cal.get(Calendar.HOUR_OF_DAY))
+                .setMinute(cal.get(Calendar.MINUTE))
+                .build()
+            timePicker.addOnPositiveButtonClickListener {
+                // Randomize seconds to prevent creating record of the same time, if user choose time manually
+                eventTime = dateUtil.mergeHourMinuteToTimestamp(eventTime, timePicker.hour, timePicker.minute, true)
+                eventTimeView?.text = dateUtil.timeString(eventTime)
                 callValueChangedListener()
             }
-
-        eventDateView?.setOnClickListener {
-            context?.let {
-                val cal = Calendar.getInstance()
-                cal.timeInMillis = eventTime
-                DatePickerDialog(
-                    it,
-                    dateSetListener,
-                    cal.get(Calendar.YEAR),
-                    cal.get(Calendar.MONTH),
-                    cal.get(Calendar.DAY_OF_MONTH)
-                ).show()
-            }
-        }
-
-        // create an OnTimeSetListener
-        val timeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
-            val cal = Calendar.getInstance()
-            cal.timeInMillis = eventTime
-            cal.set(Calendar.HOUR_OF_DAY, hour)
-            cal.set(Calendar.MINUTE, minute)
-            cal.set(
-                Calendar.SECOND,
-                seconds++
-            ) // randomize seconds to prevent creating record of the same time, if user choose time manually
-            eventTime = cal.timeInMillis
-            eventTimeView?.text = dateUtil.timeString(eventTime)
-            callValueChangedListener()
-        }
-
-        eventTimeView?.setOnClickListener {
-            context?.let {
-                val cal = Calendar.getInstance()
-                cal.timeInMillis = eventTime
-                TimePickerDialog(
-                    it,
-                    timeSetListener,
-                    cal.get(Calendar.HOUR_OF_DAY),
-                    cal.get(Calendar.MINUTE),
-                    DateFormat.is24HourFormat(context)
-                ).show()
-            }
+            timePicker.show(parentFragmentManager, "event_time_time_picker")
         }
 
         (view.findViewById(R.id.notes_layout) as View?)?.visibility =

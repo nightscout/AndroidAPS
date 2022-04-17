@@ -9,6 +9,8 @@
         <item name="dialogTitleColor">@color/dialog_title_color</item>
         <item name="dialogTitleIconTint">@color/dialog_title_icon_tint</item>
         <!-- New MaterialComponents attributes. -->
+        <item name="materialTimePickerTheme">@style/ThemeOverlay.MaterialComponents.TimePicker</item>
+        <item name="materialCalendarTheme">@style/ThemeOverlay.MaterialComponents.MaterialCalendar</item>
         <item name="colorSecondary">@color/aaps_theme_dark_secondary</item>
         <item name="colorPrimaryVariant">@color/primaryLightColorDefault</item>
         <item name="colorSecondaryVariant">@color/secondaryLightColorDefault</item>
@@ -45,10 +47,10 @@
         <item name="alarmColor">@color/alarm</item>
         <!-- BG source temp button -->
         <item name="setTempButton">@color/colorSetTempButton</item>
-        <!-- Card Item-->
-        <item name="cardItemBackgroundColor">@color/cardColorBackground</item>
         <!-- Exercise -->
         <item name="exerciseColor">@color/exercise</item>
+        <!-- Stats  -->
+        <item name="statsColor">@color/stats</item>
         <!-- BG low -->
         <item name="lowColor">@color/low</item>
         <!-- Treatments -->
@@ -72,7 +74,6 @@
         <!-- Pump -->
         <item name="pumpStatusBackground">@color/pumpStatusBackground</item>
         <!-- Objectives -->
-        <item name="objectivescardItemBackgroundColor">?attr/cardItemBackgroundColor</item>
         <item name="objectivesBackgroundColor">@color/objectivesBackground</item>
         <item name="objectivesDisabledTextColor">@color/colorObjectivesDisabledText</item>
         <!---Import List -->
@@ -109,7 +110,7 @@
         <item name="android:dialogCornerRadius">12dp</item>
         <!---Overview and Historybrowser  -->
         <item name="graphgrid">@color/graphgrid</item>
-        <item name="viewPortbackgroundColor">@color/white_alpha_20</item>
+        <item name="viewPortbackgroundColor">@color/transparent</item>
         <item name="tempTargetBackgroundColor">@color/tempTargetBackground</item>
         <!---CGM source-->
         <item name="cgmdexColor">@color/byodagray</item>
@@ -171,6 +172,7 @@
         <item name="carbsColor">@color/carbs</item>
         <!-- Temp Target -->
         <item name="tempTargetConfirmation">@color/tempTargetConfirmation</item>
+        <item name="tempTargetbgInRange">@color/tempTargetConfirmation</item>
         <!---Loop Icon-->
         <!---Loop Paused Icon Color-->
         <item name="loopPaused">@color/loopSuspended</item>
@@ -189,6 +191,9 @@
         <item name="extBolusStopColor">@color/extBolusStop</item>
         <item name="basalstartColor">@color/actionBasal</item>
         <item name="basalCancelColor">@color/actionBasal</item>
+        <item name="basalNoTbrColor">@color/actionBasal</item>
+        <item name="basalHighColor">@color/actionBasal</item>
+        <item name="basalLowColor">@color/actionBasal</item>
         <item name="pumpCanulaColor">@color/pumpCanula</item>
         <item name="cgmInsertColor">@color/cgmInsert</item>
         <item name="pumpBatteryColor">@color/pumpBattery</item>
@@ -197,6 +202,7 @@
         <item name="questionColor">@color/question</item>
         <item name="pumpHistoryColor">@color/pumpHistory</item>
         <item name="userOptionColor">@color/userOption</item>
+        <item name="sensColor">@color/sens</item>
         <!---Graph data glucose value point colors-->
         <item name="cobColor">@color/cob</item>
         <item name="uamColor">@color/uam</item>
@@ -224,6 +230,7 @@
         <item name="ratioColor">@color/ratio</item>
         <item name="activityColor">@color/activity</item>
         <item name="basebasalColor">@color/basebasal</item>
+        <item name="dotLineColor">@color/white</item>
         <!---Popupmenu TextColor -->
         <item name="menuTextColor">@color/black</item>
         <item name="menuTextColorInverse">@color/black</item>
@@ -232,6 +239,11 @@
         <item name="textAppearancemediumColor">@color/textAppearancemediumDark</item>
         <!-- Actionbar  -->
         <item name="actionBarStyle">@style/Aaps_ActionBarStyle</item>
+        <!-- Objectives specific colors  -->
+        <item name="isAccomplishedColor">@color/isAccomplished</item>
+        <item name="seperatorColor">@color/sphere_plastic_grey</item>
+        <item name="isCompletedColor">@color/isCompleted</item>
+        <item name="isNotCompletedColor">@color/isNotCompleted</item>
     </style>
 
     <style name="Aaps_ActionBarStyle" parent="@style/Widget.AppCompat.ActionBar">

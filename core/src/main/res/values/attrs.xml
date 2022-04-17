@@ -9,8 +9,6 @@
     <attr name="alarmColor" format="reference|color" />
     <!-- BG source temp button -->
     <attr name="setTempButton" format="reference|color" />
-    <!-- Card Item-->
-    <attr name="cardItemBackgroundColor" format="reference|color" />
     <!-- Carbs -->
     <attr name="carbsColor" format="reference|color" />
     <!-- Exercise -->
@@ -19,6 +17,7 @@
     <attr name="lowColor" format="reference|color" />
     <!-- Temp Target -->
     <attr name="tempTargetConfirmation" format="reference|color" />
+    <attr name="tempTargetbgInRange" format="reference|color" />
     <!-- Treatments -->
     <attr name="setExtendedButtonColor" format="reference|color" />
     <!-- Carbs Button -->
@@ -37,10 +36,11 @@
     <attr name="calibrationButtonColor" format="reference|color" />
     <!-- QuickWizard Button -->
     <attr name="quickWizardButtonColor" format="reference|color" />
+    <!-- Stats  -->
+    <attr name="statsColor" format="reference|color" />
     <!-- Pump -->
     <attr name="pumpStatusBackground" format="reference|color" />
     <!-- Objectives -->
-    <attr name="objectivescardItemBackgroundColor" format="reference|color" />
     <attr name="objectivesBackgroundColor" format="reference|color" />
     <attr name="objectivesDisabledTextColor" format="reference|color" />
     <!---Import List -->
@@ -165,6 +165,9 @@
     <attr name="extBolusStopColor" format="reference|color" />
     <attr name="basalstartColor" format="reference|color" />
     <attr name="basalCancelColor" format="reference|color" />
+    <attr name="basalNoTbrColor" format="reference|color" />
+    <attr name="basalHighColor" format="reference|color" />
+    <attr name="basalLowColor" format="reference|color" />
     <attr name="pumpCanulaColor" format="reference|color" />
     <attr name="cgmInsertColor" format="reference|color" />
     <attr name="pumpBatteryColor" format="reference|color" />
@@ -173,6 +176,7 @@
     <attr name="questionColor" format="reference|color" />
     <attr name="pumpHistoryColor" format="reference|color" />
     <attr name="userOptionColor" format="reference|color" />
+    <attr name="sensColor" format="reference|color" />
     <!---Glucose Value Color-->
     <attr name="cobColor" format="reference|color" />
     <attr name="uamColor" format="reference|color" />
@@ -203,10 +207,16 @@
     <attr name="ratioColor" format="reference|color" />
     <attr name="activityColor" format="reference|color" />
     <attr name="basebasalColor" format="reference|color" />
+    <attr name="dotLineColor" format="reference|color" />
     <!---Popupmenu TextColor -->
     <attr name="menuTextColor" format="reference|color" />
     <attr name="menuTextColorInverse" format="reference|color" />
     <!-- CardView specific colors  -->
     <attr name="strokeColor" format="reference|color" />
     <attr name="textAppearancemediumColor" format="reference|color" />
+    <!-- Objectives specific colors  -->
+    <attr name="isAccomplishedColor" format="reference|color" />
+    <attr name="seperatorColor" format="reference|color" />
+    <attr name="isCompletedColor" format="reference|color" />
+    <attr name="isNotCompletedColor" format="reference|color" />
 </resources>

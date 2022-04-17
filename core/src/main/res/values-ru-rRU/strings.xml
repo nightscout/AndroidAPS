@@ -4,6 +4,7 @@
     <!--    General-->
     <string name="refresh">Обновить</string>
     <string name="error">Ошибка</string>
+    <string name="save">Сохранить</string>
     <string name="not_set_short">Не выбрано</string>
     <string name="failedupdatebasalprofile">не удалось обновить базальный профиль</string>
     <string name="profile_set_ok">базальный профиль помпы обновлен</string>
@@ -135,6 +136,10 @@
     <string name="minago">%1$d мин. назад</string>
     <string name="minago_long">%1$d минут назад</string>
     <string name="hoursago">%1$.1fч. назад</string>
+    <string name="days_ago">%1$s дн назад</string>
+    <string name="days_ago_round">%1$s дн назад</string>
+    <string name="in_days">через %1$.0f дн</string>
+    <string name="in_days_round">через %1$.0f дн</string>
     <string name="shorthour">ч</string>
     <string name="days">дн</string>
     <string name="hours">час</string>
@@ -150,9 +155,15 @@
     <string name="unit_weeks">нед</string>
     <string name="shortminute">мин</string>
     <string name="shortday">дн</string>
+    <string name="later_today">Позднее сегодня</string>
+    <string name="tomorrow">Завтра</string>
+    <string name="today">Cегодня</string>
+    <string name="yesterday">Вчера</string>
     <!--    Protection-->
     <string name="wrongpassword">Неверный пароль</string>
+    <string name="wrongpin">Неверный PIN-код</string>
     <string name="passwords_dont_match">Пароли не совпадают</string>
+    <string name="pin_dont_match">PIN-коды не совпадают</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Базальные значения не выровнены по часам: %1$s</string>
     <string name="minimalbasalvaluereplaced">Значение базала заменено минимальной поддерживаемой величиной: %1$s</string>
@@ -449,6 +460,11 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Базал</string>
     <string name="basalpct">Базал %</string>
+    <string name="count_selected">%1$d выбрано</string>
+    <string name="sort_label">Сортировать</string>
+    <string name="remove_items">Удалить элементы</string>
+    <string name="sort_items">Сортировать элементы</string>
+    <string name="remove_selected_items">Удалить выбранные элементы</string>
     <plurals name="days">
         <item quantity="one">%1$d день</item>
         <item quantity="few">%1$d дня</item>
