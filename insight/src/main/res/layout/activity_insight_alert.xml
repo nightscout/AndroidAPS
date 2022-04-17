@@ -7,8 +7,8 @@
     android:animateLayoutChanges="true"
     android:orientation="vertical"
     android:paddingBottom="8dp"
-    android:paddingLeft="24dp"
-    android:paddingRight="24dp"
+    android:paddingStart="24dp"
+    android:paddingEnd="24dp"
     android:paddingTop="20dp">
 
     <ImageView

@@ -28,8 +28,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:text="@string/quickwizardsettings"
                 android:textAlignment="center"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -368,7 +368,7 @@
             android:ems="10"
             android:inputType="number"
             android:maxLength="3"
-            android:paddingLeft="10dp" />
+            android:paddingStart="10dp" />
 
         <include
             android:id="@+id/okcancel"
