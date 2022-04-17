@@ -10,18 +10,18 @@ import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.autotune.data.ATProfile
 import info.nightscout.androidaps.plugins.general.autotune.data.PreppedGlucose
-import info.nightscout.androidaps.plugins.general.autotune.events.EventAutotuneUpdateResult
+import info.nightscout.androidaps.plugins.general.autotune.events.EventAutotuneUpdateGui
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.MidnightTime
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONException
 import org.json.JSONObject
@@ -33,9 +33,6 @@ import javax.inject.Singleton
 /**
  * adaptation from oref0 autotune started by philoul on 2020 (complete refactoring of AutotunePlugin initialised by Rumen Georgiev on 1/29/2018.)
  *
- * TODO: build data sets for autotune validation
- * => I hope we will be able to validate autotunePlugin with several data set (simulation of several situations and get oref0 autotune results as reference)
- * TODO: use materials for results presentation
  * TODO: replace Thread by Worker
  * TODO: future version (once first version validated): add DIA and Peak tune for insulin
  * TODO: future version: Allow day of the week selection to tune specifics days (training days, working days, WE days)
@@ -81,14 +78,14 @@ class AutotunePlugin @Inject constructor(
     private lateinit var autotuneFS: AutotuneFS
     private lateinit var profile: Profile
 
-    override lateinit var pumpProfile: ATProfile
-    override var tunedProfile: ATProfile? = null
+    @Volatile override lateinit var pumpProfile: ATProfile
+    @Volatile override var tunedProfile: ATProfile? = null
 
     //    @Override
     val fragmentClass: String
         get() = AutotuneFragment::class.java.name
 
-    //Launch Autotune with default settings
+    //Launch Autotune from automation
     override fun aapsAutotune(daysBack: Int, profileToTune: String) {
         val automationDaysBack = if (daysBack == 0) sp.getInt(R.string.key_autotune_default_tune_days, 5) else daysBack
         val autoSwitch = sp.getBoolean(R.string.key_autotune_auto, false)
@@ -108,21 +105,22 @@ class AutotunePlugin @Inject constructor(
         updateButtonVisibility = View.GONE
         compareButtonVisibility = View.GONE
         lastRunSuccess = false
+        var logResult = ""
         result = ""
         if (profileFunction.getProfile() == null) {
-            return rh.gs(R.string.profileswitch_ismissing)
+            result = rh.gs(R.string.profileswitch_ismissing)
+            return result
         }
         val detailedLog = sp.getBoolean(R.string.key_autotune_additional_log, false)
         calculationRunning = true
         lastNbDays = "" + daysBack
-        val now = System.currentTimeMillis()
+        lastRun = System.currentTimeMillis()
         val profileStore = activePlugin.activeProfileSource.profile ?: return rh.gs(R.string.profileswitch_ismissing)
         selectedProfile = if (profileToTune.isEmpty()) profileFunction.getProfileName() else profileToTune
         profileFunction.getProfile()?.let { currentProfile ->
             profile = profileStore.getSpecificProfile(profileToTune)?.let { ProfileSealed.Pure(it) } ?: currentProfile
         }
         var localInsulin = LocalInsulin("PumpInsulin", activePlugin.activeInsulin.peak, profile.dia) // var because localInsulin could be updated later with Tune Insulin peak/dia
-        lastRun = System.currentTimeMillis()
 
         atLog("Start Autotune with $daysBack days back")
         //create autotune subfolder for autotune files if not exists
@@ -131,9 +129,9 @@ class AutotunePlugin @Inject constructor(
         //clean autotune folder before run
         autotuneFS.deleteAutotuneFiles()
         // Today at 4 AM
-        var endTime = MidnightTime.calc(now) + autotuneStartHour * 60 * 60 * 1000L
+        var endTime = MidnightTime.calc(lastRun) + autotuneStartHour * 60 * 60 * 1000L
         // Check if 4 AM is before now
-        if (endTime > now) endTime -= 24 * 60 * 60 * 1000L
+        if (endTime > lastRun) endTime -= 24 * 60 * 60 * 1000L
         val starttime = endTime - daysBack * 24 * 60 * 60 * 1000L
         autotuneFS.exportSettings(settings(lastRun, daysBack, starttime, endTime))
         tunedProfile = ATProfile(profile, localInsulin, injector).also {
@@ -148,7 +146,7 @@ class AutotunePlugin @Inject constructor(
             result = rh.gs(R.string.autotune_min_days)
             atLog(result)
             calculationRunning = false
-            rxBus.send(EventAutotuneUpdateResult(result))
+            rxBus.send(EventAutotuneUpdateGui())
             tunedProfile=null
             return result
         } else {
@@ -170,7 +168,7 @@ class AutotunePlugin @Inject constructor(
                     result = rh.gs(R.string.autotune_error)
                     atLog(result)
                     calculationRunning = false
-                    rxBus.send(EventAutotuneUpdateResult(result))
+                    rxBus.send(EventAutotuneUpdateGui())
                     tunedProfile = null
                     autotuneFS.exportResult(result)
                     autotuneFS.exportLogAndZip(lastRun, logString)
@@ -183,19 +181,19 @@ class AutotunePlugin @Inject constructor(
                 autotuneFS.exportTunedProfile(tunedProfile!!)
                 if (i < daysBack - 1) {
                     atLog("Partial result for day ${i + 1}".trimIndent())
-                    result = rh.gs(R.string.format_autotune_partialresult, i + 1, daysBack, showResults(tunedProfile, pumpProfile))
-                    rxBus.send(EventAutotuneUpdateResult(result))
+                    result = rh.gs(R.string.format_autotune_partialresult, i + 1, daysBack)
+                    rxBus.send(EventAutotuneUpdateGui())
                 }
+                logResult = showResults(tunedProfile, pumpProfile)
                 if (detailedLog) {
-                    result = showResults(tunedProfile, pumpProfile)
                     autotuneFS.exportLog(lastRun, logString, i + 1)
                     logString = ""
                 }
             }
-            result = showResults(tunedProfile, pumpProfile)
+            result = rh.gs(R.string.autotune_results) + dateUtil.dateAndTimeString(lastRun)
             if (!detailedLog)
                 autotuneFS.exportLog(lastRun, logString)
-            autotuneFS.exportResult(result)
+            autotuneFS.exportResult(logResult)
             autotuneFS.zipAutotune(lastRun)
             profileSwitchButtonVisibility = View.VISIBLE
             copyButtonVisibility = View.VISIBLE
@@ -235,7 +233,8 @@ class AutotunePlugin @Inject constructor(
             }
         }
         lastRunSuccess = true
-        rxBus.send(EventAutotuneUpdateResult(result))
+        sp.putLong(R.string.key_autotune_last_run, lastRun)
+        rxBus.send(EventAutotuneUpdateGui())
         calculationRunning = false
         tunedProfile?.let {
             return result

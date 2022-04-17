@@ -101,32 +101,6 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:gravity="end"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:text="@string/autotune_warning"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/tune_warning"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="start"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:textSize="14sp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="match_parent"
@@ -150,15 +124,6 @@
 
         </LinearLayout>
 
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="2dip"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="5dp"
-            android:background="@color/list_delimiter" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -171,11 +136,11 @@
                 android:gravity="end"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
-                android:text="@string/autotune_result"
+                android:text="@string/autotune_warning"
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/tune_result"
+                android:id="@+id/tune_warning"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -195,6 +160,15 @@
             android:layout_marginBottom="5dp"
             android:background="@color/list_delimiter" />
 
+        <LinearLayout
+            android:id="@+id/autotune_results"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+        </LinearLayout>
+
         <androidx.gridlayout.widget.GridLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -202,15 +176,15 @@
             app:columnCount="2">
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
-                android:id="@+id/autotune_run"
+                android:id="@+id/autotune_profileswitch"
                 style="?android:attr/buttonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:drawableStart="@drawable/ic_local_reset"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:text="@string/autotune_run"
+                android:drawableStart="@drawable/ic_local_activate"
+                android:paddingLeft="0dp"
+                android:paddingRight="0dp"
+                android:text="@string/activate_profile"
                 app:layout_column="0"
                 app:layout_columnWeight="1"
                 app:layout_gravity="fill"
@@ -263,17 +237,17 @@
 
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
-                android:id="@+id/autotune_profileswitch"
+                android:id="@+id/autotune_run"
                 style="?android:attr/buttonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:drawableStart="@drawable/ic_local_activate"
-                android:paddingLeft="0dp"
-                android:paddingRight="0dp"
-                android:text="@string/activate_profile"
+                android:drawableStart="@drawable/ic_local_reset"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="@string/autotune_run"
                 app:layout_column="0"
-                app:layout_columnWeight="0"
+                app:layout_columnWeight="1"
                 app:layout_gravity="fill"
                 app:layout_row="2" />
 

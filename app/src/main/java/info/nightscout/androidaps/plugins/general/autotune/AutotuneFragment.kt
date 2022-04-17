@@ -1,24 +1,27 @@
 package info.nightscout.androidaps.plugins.general.autotune
 
+import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.TableLayout
+import android.widget.TableRow
+import android.widget.TextView
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
+import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.AutotuneFragmentBinding
 import info.nightscout.androidaps.dialogs.ProfileViewerDialog
-import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.autotune.data.ATProfile
 import info.nightscout.androidaps.plugins.general.autotune.events.EventAutotuneUpdateGui
-import info.nightscout.androidaps.plugins.general.autotune.events.EventAutotuneUpdateResult
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
@@ -26,14 +29,13 @@ import info.nightscout.androidaps.data.LocalInsulin
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.ValueWithUnit
-import info.nightscout.androidaps.interfaces.Autotune
-import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.interfaces.ProfileStore
+import info.nightscout.androidaps.extensions.runOnUiThread
+import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.MidnightTime
-import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog.showConfirmation
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.shared.SafeParse
@@ -63,7 +65,6 @@ class AutotuneFragment : DaggerFragment() {
 
     private var disposable: CompositeDisposable = CompositeDisposable()
     private var lastRun: Long = 0
-    private var lastRunTxt: String? = null
     private val log = LoggerFactory.getLogger(AutotunePlugin::class.java)
     private var _binding: AutotuneFragmentBinding? = null
     private lateinit var profileStore: ProfileStore
@@ -80,6 +81,7 @@ class AutotuneFragment : DaggerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        autotunePlugin.lastRun = sp.getLong(R.string.key_autotune_last_run, 0)
         val defaultValue = sp.getInt(R.string.key_autotune_default_tune_days, 5).toDouble()
         profileStore = activePlugin.activeProfileSource.profile ?: ProfileStore(injector, JSONObject(), dateUtil)
         profileName = if (binding.profileList.text.toString() == rh.gs(R.string.active)) "" else binding.profileList.text.toString()
@@ -101,17 +103,19 @@ class AutotuneFragment : DaggerFragment() {
             Thread(Runnable {
                 autotunePlugin.aapsAutotune(daysBack, false, profileName)
             }).start()
-            lastRunTxt = dateUtil.dateAndTimeString(autotunePlugin.lastRun)
             lastRun = autotunePlugin.lastRun
             updateGui()
         }
         binding.profileList.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-            profileName = if (binding.profileList.text.toString() == rh.gs(R.string.active)) "" else binding.profileList.text.toString()
-            profileFunction.getProfile()?.let { currentProfile ->
-                profile = ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(it) } ?:currentProfile, LocalInsulin(""), injector)
+            if (!autotunePlugin.calculationRunning)
+            {
+                profileName = if (binding.profileList.text.toString() == rh.gs(R.string.active)) "" else binding.profileList.text.toString()
+                profileFunction.getProfile()?.let { currentProfile ->
+                    profile = ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(it) } ?:currentProfile, LocalInsulin(""), injector)
+                }
+                autotunePlugin.selectedProfile = profileName
+                resetParam()
             }
-            autotunePlugin.selectedProfile = profileName
-            resetParam()
             updateGui()
         }
 
@@ -137,7 +141,7 @@ class AutotuneFragment : DaggerFragment() {
         }
 
         binding.autotuneUpdateProfile.setOnClickListener {
-            val localName = autotunePlugin.pumpProfile?.profilename ?:rh.gs(R.string.autotune_tunedprofile_name)
+            val localName = autotunePlugin.pumpProfile.profilename ?:rh.gs(R.string.autotune_tunedprofile_name)
             showConfirmation(requireContext(),
                              rh.gs(R.string.autotune_update_input_profile_button),
                              rh.gs(R.string.autotune_update_local_profile_message) + "\n" + localName,
@@ -163,10 +167,10 @@ class AutotuneFragment : DaggerFragment() {
                 pvd.arguments = Bundle().also {
                     it.putLong("time", dateUtil.now())
                     it.putInt("mode", ProfileViewerDialog.Mode.PROFILE_COMPARE.ordinal)
-                    it.putString("customProfile", pumpProfile?.profile?.toPureNsJson(dateUtil).toString())
+                    it.putString("customProfile", pumpProfile.profile.toPureNsJson(dateUtil).toString())
                     it.putString("customProfile2", tunedprofile?.toPureNsJson(dateUtil).toString())
                     it.putString("customProfileUnits", profileFunction.getUnits().asText)
-                    it.putString("customProfileName", pumpProfile?.profilename + "\n" + rh.gs(R.string.autotune_tunedprofile_name))
+                    it.putString("customProfileName", pumpProfile.profilename + "\n" + rh.gs(R.string.autotune_tunedprofile_name))
                 }
             }.show(childFragmentManager, "ProfileViewDialog")
         }
@@ -233,13 +237,6 @@ class AutotuneFragment : DaggerFragment() {
                 updateGui()
             }, { fabricPrivacy.logException(it) })
 
-        disposable += rxBus
-            .toObservable(EventAutotuneUpdateResult::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                updateGui()
-            }, { fabricPrivacy.logException(it) })
-
         updateGui()
     }
 
@@ -261,7 +258,6 @@ class AutotuneFragment : DaggerFragment() {
         profileList.add(0, rh.gs(R.string.active))
         context?.let { context ->
             binding.profileList.setAdapter(ArrayAdapter(context, R.layout.spinner_centered, profileList))
-
         } ?: return
         // set selected to actual profile
         if (autotunePlugin.selectedProfile.isNotEmpty())
@@ -270,23 +266,20 @@ class AutotuneFragment : DaggerFragment() {
             binding.profileList.setText(profileList[0], false)
         }
         if (autotunePlugin.calculationRunning) {
-            binding.autotuneRun.visibility = View.GONE
             binding.tuneWarning.text = rh.gs(R.string.autotune_warning_during_run)
-            binding.tuneResult.text = autotunePlugin.result
+            binding.autotuneRun.visibility = View.GONE
         } else if (autotunePlugin.lastRunSuccess) {
-            binding.autotuneRun.visibility = View.VISIBLE
+            binding.autotuneRun.visibility = View.GONE
             binding.tuneWarning.text = rh.gs(R.string.autotune_warning_after_run)
-            binding.tuneResult.text = autotunePlugin.result
         } else {
-            binding.tuneResult.text = autotunePlugin.result
             binding.autotuneRun.visibility = View.VISIBLE
         }
         binding.autotuneCopylocal.visibility = autotunePlugin.copyButtonVisibility
         binding.autotuneUpdateProfile.visibility = autotunePlugin.updateButtonVisibility
         binding.autotuneProfileswitch.visibility = autotunePlugin.profileSwitchButtonVisibility
         binding.autotuneCompare.visibility = autotunePlugin.compareButtonVisibility
-        lastRunTxt = if (autotunePlugin.lastRun != 0L) dateUtil.dateAndTimeString(autotunePlugin.lastRun) else ""
-        binding.tuneLastrun.text = lastRunTxt
+        binding.tuneLastrun.text = dateUtil.dateAndTimeString(autotunePlugin.lastRun)
+        showResults()
     }
 
     private fun addWarnings(): String {
@@ -314,8 +307,8 @@ class AutotuneFragment : DaggerFragment() {
         if (resetDay)
             binding.tuneDays.value = sp.getInt(R.string.key_autotune_default_tune_days, 5).toDouble()
         autotunePlugin.result = ""
+        binding.autotuneResults.removeAllViews()
         autotunePlugin.tunedProfile = null
-        autotunePlugin.lastRun = 0
         autotunePlugin.lastRunSuccess = false
         autotunePlugin.profileSwitchButtonVisibility = View.GONE
         autotunePlugin.copyButtonVisibility = View.GONE
@@ -338,6 +331,78 @@ class AutotuneFragment : DaggerFragment() {
             }
         }
     }
+
+    private fun showResults() {
+        Thread {
+            runOnUiThread {
+                binding.autotuneResults.removeAllViews()
+                if (autotunePlugin.result.isNotBlank()) {
+                    var toMgDl = 1.0
+                    if (profileFunction.getUnits() == GlucoseUnit.MMOL) toMgDl = Constants.MMOLL_TO_MGDL
+                    binding.autotuneResults.addView(
+                        TableLayout(context).also { layout ->
+                            layout.addView(
+                                TextView(context).apply {
+                                    text = autotunePlugin.result
+                                    setTypeface(typeface, Typeface.BOLD)
+                                    gravity = Gravity.CENTER_HORIZONTAL
+                                    setTextAppearance(android.R.style.TextAppearance_Material_Medium)
+                                })
+                            autotunePlugin.tunedProfile?.let { tuned ->
+                                layout.addView(toTableRowHeader())
+                                layout.addView(toTableRowValue(rh.gs(R.string.isf_short), Round.roundTo(autotunePlugin.pumpProfile.isf / toMgDl, 0.001), Round.roundTo(tuned.isf / toMgDl, 0.001)))
+                                layout.addView(toTableRowValue(rh.gs(R.string.ic_short), Round.roundTo(autotunePlugin.pumpProfile.ic, 0.001), Round.roundTo(tuned.ic, 0.001)))
+                                layout.addView(
+                                    TextView(context).apply {
+                                        text = rh.gs(R.string.basal)
+                                        setTypeface(typeface, Typeface.BOLD)
+                                        gravity = Gravity.CENTER_HORIZONTAL
+                                        setTextAppearance(android.R.style.TextAppearance_Material_Medium)
+                                    }
+                                )
+                                layout.addView(toTableRowHeader(true))
+                                var totalPump = 0.0
+                                var totalTuned = 0.0
+                                for (h in 0 until tuned.basal.size) {
+                                    val df = DecimalFormat("00")
+                                    var time = df.format(h.toLong()) + ":00"
+                                    totalPump += autotunePlugin.pumpProfile.basal[h]
+                                    totalTuned += tuned.basal[h]
+                                    layout.addView(toTableRowValue(time, autotunePlugin.pumpProfile.basal[h], tuned.basal[h], tuned.basalUntuned[h].toString()))
+                                }
+                                layout.addView(toTableRowValue("∑", totalPump, totalTuned, " "))
+                            }
+                        }
+                    )
+                }
+            }
+        }.start()
+    }
+
+    fun toTableRowHeader(basal:Boolean = false): TableRow =
+        TableRow(context).also { header ->
+            val lp = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT)
+            header.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT)
+            header.gravity = Gravity.CENTER_HORIZONTAL
+            header.addView(TextView(context).apply { layoutParams = lp.apply { column = 0; weight = 1f }; text = if (basal) rh.gs(R.string.time) else "Param" })
+            header.addView(TextView(context).apply { layoutParams = lp.apply { column = 0; weight = 1f }; text = rh.gs(R.string.profile) })
+            header.addView(TextView(context).apply { layoutParams = lp.apply { column = 1; weight = 1f }; text = rh.gs(R.string.autotune_tunedprofile_name) })
+            header.addView(TextView(context).apply { layoutParams = lp.apply { column = 2; weight = 1f }; text = rh.gs(R.string.format_autotune_percent) })
+            header.addView(TextView(context).apply { layoutParams = lp.apply { column = 3; weight = 1f }; text = if (basal) rh.gs(R.string.format_autotune_missing) else " " })
+        }
+
+    fun toTableRowValue(hour: String, inputValue: Double, tunedValue: Double, missing: String = ""): TableRow =
+        TableRow(context).also { header ->
+            val percentValue = Round.roundTo(tunedValue / inputValue * 100 - 100, 1.0).toInt().toString() + "%"
+            val lp = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT)
+            header.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT)
+            header.gravity = Gravity.CENTER_HORIZONTAL
+            header.addView(TextView(context).apply { layoutParams = lp.apply { column = 0; weight = 1f }; text = hour })
+            header.addView(TextView(context).apply { layoutParams = lp.apply { column = 0; weight = 1f }; text = String.format("%.3f", inputValue) })
+            header.addView(TextView(context).apply { layoutParams = lp.apply { column = 1; weight = 1f }; text = String.format("%.3f", tunedValue) })
+            header.addView(TextView(context).apply { layoutParams = lp.apply { column = 2; weight = 1f }; text = percentValue })
+            header.addView(TextView(context).apply { layoutParams = lp.apply { column = 3; weight = 1f }; text = missing })
+        }
 
     private fun log(message: String) {
         autotunePlugin.atLog("[Fragment] $message")
