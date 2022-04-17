@@ -25,14 +25,14 @@
             android:id="@+id/diaconn_g8_history_time"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
+            android:paddingStart="5dp"
             android:text="27.06.2016 18:00" />
 
         <TextView
             android:id="@+id/diaconn_g8_history_value"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
+            android:paddingStart="5dp"
             android:text="0.25"
             android:gravity="right" />
 
@@ -40,7 +40,7 @@
             android:id="@+id/diaconn_g8_history_bolustype"
             android:layout_width="20dp"
             android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
+            android:paddingStart="5dp"
             android:text="E"
 />
 
@@ -48,7 +48,7 @@
             android:id="@+id/diaconn_g8_history_stringvalue"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
+            android:paddingStart="5dp"
             android:text="XXXXXXX"
 />
 
@@ -56,7 +56,7 @@
             android:id="@+id/diaconn_g8_history_duration"
             android:layout_width="30dp"
             android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
+            android:paddingStart="5dp"
             android:text="30"
             android:gravity="right" />
 
@@ -64,21 +64,21 @@
             android:id="@+id/diaconn_g8_history_dailybasal"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
+            android:paddingStart="5dp"
             android:gravity="right" />
 
         <TextView
             android:id="@+id/diaconn_g8_history_dailybolus"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
+            android:paddingStart="5dp"
             android:gravity="right" />
 
         <TextView
             android:id="@+id/diaconn_g8_history_dailytotal"
             android:layout_width="56dp"
             android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
+            android:paddingStart="10dp"
             android:gravity="right"
             android:visibility="gone"/>
 
@@ -86,7 +86,7 @@
             android:id="@+id/diaconn_g8_history_alarm"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:paddingLeft="5dp" />
+            android:paddingStart="5dp" />
 
     </LinearLayout>
 

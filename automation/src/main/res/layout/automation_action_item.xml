@@ -7,8 +7,8 @@
     android:background="?attr/ribbonDefaultColor"
     android:paddingTop="8dp"
     android:paddingBottom="8dp"
-    android:paddingLeft="4dp"
-    android:paddingRight="4dp"
+    android:paddingStart="4dp"
+    android:paddingEnd="4dp"
     android:layout_marginTop="8dp">
 
     <ImageView

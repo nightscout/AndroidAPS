@@ -35,7 +35,7 @@
                 android:gravity="bottom|right"
                 android:layout_marginBottom="-2dp"
                 android:paddingTop="-2dp"
-                android:layout_marginRight="5dp" />
+                android:layout_marginEnd="5dp" />
 
             <LinearLayout
                 android:orientation="vertical"
@@ -108,7 +108,7 @@
                     android:layout_width="wrap_content"
                     android:textAlignment="center"
                     android:textColor="#000000"
-                    android:paddingLeft="10sp"
+                    android:paddingStart="10sp"
                     android:layout_height="wrap_content" />
                 <TextView
                     android:id="@+id/raw"
@@ -117,7 +117,7 @@
                     android:layout_width="wrap_content"
                     android:textAlignment="center"
                     android:textColor="#000000"
-                    android:paddingLeft="10sp"
+                    android:paddingStart="10sp"
                     android:layout_height="wrap_content" />
                 <TextView
                     android:id="@+id/externaltstatus"
@@ -126,7 +126,7 @@
                     android:layout_width="wrap_content"
                     android:textAlignment="center"
                     android:textColor="#000000"
-                    android:paddingLeft="10sp"
+                    android:paddingStart="10sp"
                     android:layout_height="wrap_content" />
 
             </LinearLayout>

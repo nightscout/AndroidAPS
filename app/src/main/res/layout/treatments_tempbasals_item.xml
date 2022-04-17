@@ -21,9 +21,9 @@
             android:id="@+id/date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
-            android:layout_marginRight="5dp"
+            android:layout_marginEnd="5dp"
             android:layout_marginBottom="5dp"
             android:background="?android:attr/dividerHorizontal"
             android:gravity="center"
@@ -144,8 +144,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
                 android:text="@string/tempbasals_iob_label_string"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -191,9 +191,9 @@
             android:id="@+id/delimiter"
             android:layout_width="fill_parent"
             android:layout_height="2dip"
-            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
-            android:layout_marginRight="5dp"
+            android:layout_marginEnd="5dp"
             android:layout_marginBottom="5dp"
             android:background="?android:attr/dividerHorizontal" />
 

@@ -25,8 +25,8 @@
                 android:layout_height="30dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
                 android:text="1"
                 tools:ignore="HardcodedText" />
 
@@ -36,8 +36,8 @@
                 android:layout_height="30dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
                 android:text="2"
                 tools:ignore="HardcodedText" />
 

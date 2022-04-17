@@ -28,8 +28,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingLeft="3dp"
-            android:paddingRight="3dp">
+            android:paddingStart="3dp"
+            android:paddingEnd="3dp">
 
             <LinearLayout
                 android:id="@+id/name_and_info_container"
@@ -65,7 +65,7 @@
                     android:layout_weight="1"
                     android:gravity="start"
                     android:orientation="horizontal"
-                    android:layout_marginLeft="5dp">
+                    android:layout_marginStart="5dp">
 
                     <TextView
                         android:id="@+id/carbs"
