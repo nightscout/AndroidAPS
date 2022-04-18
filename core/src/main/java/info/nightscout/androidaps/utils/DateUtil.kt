@@ -54,16 +54,6 @@ class DateUtil @Inject constructor(private val context: Context) {
         return dateTime.toDate().time
     }
 
-    fun toISOString(date: Long, format: String?, tz: TimeZone?): String? {
-        var format = format
-        var tz = tz
-        if (format == null) format = FORMAT_DATE_ISO_OUT
-        if (tz == null) tz = TimeZone.getDefault()
-        val f: DateFormat = SimpleDateFormat(format, Locale.getDefault())
-        f.timeZone = tz
-        return f.format(date)
-    }
-
     /**
      * Render date
      *

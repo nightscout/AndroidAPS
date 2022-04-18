@@ -21,7 +21,6 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var  sp: SP
     @Inject lateinit var  autotunePlugin: AutotunePlugin
-    @Inject lateinit var  dateUtil: DateUtil
     @Inject lateinit var  resourceHelper: ResourceHelper
     @Inject lateinit var loggerUtils: LoggerUtils
 
@@ -40,6 +39,7 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
     val ZIPPREF = "autotune_"
     lateinit var autotunePath: File
     lateinit var autotuneSettings: File
+    val BUFFER_SIZE = 2048
 
 
     /*****************************************************************************
@@ -152,7 +152,7 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
      **********************************************************************************/
     fun zipAutotune(lastRun: Long) {
         try {
-            val zipFileName = ZIPPREF + dateUtil.toISOString(lastRun, "yyyy-MM-dd_HH-mm-ss", null) + ".zip"
+            val zipFileName = ZIPPREF + formatDate(lastRun, true) + ".zip"
             val zipFile = File(loggerUtils.logDirectory, zipFileName)
             val out = ZipOutputStream(BufferedOutputStream(FileOutputStream(zipFile)))
             zipDirectory(autotunePath, autotunePath.name, out)
@@ -169,36 +169,33 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
         autotunePlugin.atLog("[FS] $message")
     }
 
-    companion object {
-        const val BUFFER_SIZE = 2048
-        private fun zipDirectory(folder: File, parentFolder: String, out: ZipOutputStream) {
-            folder.listFiles()?.let { listFiles ->
-                for (file in listFiles) {
-                    if (file.isDirectory) {
-                        zipDirectory(file, parentFolder + "/" + file.name, out)
-                        continue
+    private fun zipDirectory(folder: File, parentFolder: String, out: ZipOutputStream) {
+        folder.listFiles()?.let { listFiles ->
+            for (file in listFiles) {
+                if (file.isDirectory) {
+                    zipDirectory(file, parentFolder + "/" + file.name, out)
+                    continue
+                }
+                try {
+                    out.putNextEntry(ZipEntry(parentFolder + "/" + file.name))
+                    val bis = BufferedInputStream(FileInputStream(file))
+                    //long bytesRead = 0;
+                    val bytesIn = ByteArray(BUFFER_SIZE)
+                    var read: Int
+                    while (bis.read(bytesIn).also { read = it } != -1) {
+                        out.write(bytesIn, 0, read)
                     }
-                    try {
-                        out.putNextEntry(ZipEntry(parentFolder + "/" + file.name))
-                        val bis = BufferedInputStream(FileInputStream(file))
-                        //long bytesRead = 0;
-                        val bytesIn = ByteArray(BUFFER_SIZE)
-                        var read: Int
-                        while (bis.read(bytesIn).also { read = it } != -1) {
-                            out.write(bytesIn, 0, read)
-                        }
-                        out.closeEntry()
-                    } catch (e: IOException) {
-                        //log.error("Unhandled exception", e);
-                    }
+                    out.closeEntry()
+                } catch (e: IOException) {
+                    //log.error("Unhandled exception", e);
                 }
             }
         }
+    }
 
-        fun formatDate(date: Long): String {
-            val dateFormat = SimpleDateFormat("yyyy-MM-dd")
-            return dateFormat.format(date)
-        }
+    private fun formatDate(date: Long, dateHour: Boolean = false): String {
+        val dateFormat = if (dateHour) SimpleDateFormat("yyyy-MM-dd_HH-mm-ss") else SimpleDateFormat("yyyy-MM-dd")
+        return dateFormat.format(date)
     }
 
     init {
