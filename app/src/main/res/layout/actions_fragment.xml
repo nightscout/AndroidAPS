@@ -43,7 +43,7 @@
 
                 <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/profile_switch"
-                    style="?android:attr/buttonStyle"
+                    style="@style/GrayButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:drawableTop="@drawable/ic_actions_profileswitch"
@@ -58,7 +58,7 @@
 
                 <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/temp_target"
-                    style="?android:attr/buttonStyle"
+                    style="@style/GrayButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:drawableTop="@drawable/ic_temptarget_high"
@@ -73,7 +73,7 @@
 
                 <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/set_temp_basal"
-                    style="?android:attr/buttonStyle"
+                    style="@style/GrayButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:drawableTop="@drawable/ic_actions_starttempbasal"
@@ -88,7 +88,7 @@
 
                 <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/cancel_temp_basal"
-                    style="?android:attr/buttonStyle"
+                    style="@style/GrayButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:drawableTop="@drawable/ic_cancelbasal"
@@ -104,7 +104,7 @@
 
                 <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/extended_bolus"
-                    style="?android:attr/buttonStyle"
+                    style="@style/GrayButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:drawableTop="@drawable/ic_actions_startextbolus"
@@ -119,7 +119,7 @@
 
                 <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/extended_bolus_cancel"
-                    style="?android:attr/buttonStyle"
+                    style="@style/GrayButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:drawableTop="@drawable/ic_actions_cancelextbolus"
@@ -190,7 +190,7 @@
 
                 <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/bg_check"
-                    style="?android:attr/buttonStyle"
+                    style="@style/GrayButton"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:drawableTop="@drawable/ic_cp_bgcheck"
@@ -205,7 +205,7 @@
 
                 <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/fill"
-                    style="?android:attr/buttonStyle"
+                    style="@style/GrayButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:drawableTop="@drawable/ic_cp_pump_canula"
@@ -220,7 +220,7 @@
 
                 <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/cgm_sensor_insert"
-                    style="?android:attr/buttonStyle"
+                    style="@style/GrayButton"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:drawableTop="@drawable/ic_cp_cgm_insert"
@@ -235,7 +235,7 @@
 
                 <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/pump_battery_change"
-                    style="?android:attr/buttonStyle"
+                    style="@style/GrayButton"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:drawableTop="@drawable/ic_cp_pump_battery"
@@ -250,7 +250,7 @@
 
                 <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/note"
-                    style="?android:attr/buttonStyle"
+                    style="@style/GrayButton"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:drawableTop="@drawable/ic_cp_note"
@@ -265,7 +265,7 @@
 
                 <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/exercise"
-                    style="?android:attr/buttonStyle"
+                    style="@style/GrayButton"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:drawableTop="@drawable/ic_cp_exercise"
@@ -280,7 +280,7 @@
 
                 <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/announcement"
-                    style="?android:attr/buttonStyle"
+                    style="@style/GrayButton"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:drawableTop="@drawable/ic_cp_announcement"
@@ -295,7 +295,7 @@
 
                 <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/question"
-                    style="?android:attr/buttonStyle"
+                    style="@style/GrayButton"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:drawableTop="@drawable/ic_cp_question"
@@ -343,7 +343,7 @@
 
                 <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/history_browser"
-                    style="?android:attr/buttonStyle"
+                    style="@style/GrayButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:drawableTop="@drawable/ic_pump_history"
@@ -358,7 +358,7 @@
 
                 <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/tdd_stats"
-                    style="?android:attr/buttonStyle"
+                    style="@style/GrayButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:drawableTop="@drawable/ic_cp_stats"
