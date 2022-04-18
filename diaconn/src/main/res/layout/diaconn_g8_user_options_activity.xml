@@ -102,8 +102,8 @@
                 android:layout_weight="1" />
 
             <com.google.android.material.button.MaterialButton
-                style="@style/OkCancelButton.Text"
                 android:id="@+id/save_alarm"
+                style="@style/OkCancelButton.Text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/save" />
@@ -183,8 +183,8 @@
                 android:layout_weight="1" />
 
             <com.google.android.material.button.MaterialButton
-                style="@style/OkCancelButton.Text"
                 android:id="@+id/save_lcd_on_time"
+                style="@style/OkCancelButton.Text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/save" />
@@ -265,8 +265,8 @@
                 android:layout_weight="1" />
 
             <com.google.android.material.button.MaterialButton
-                style="@style/OkCancelButton.Text"
                 android:id="@+id/save_lang"
+                style="@style/OkCancelButton.Text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/save" />
@@ -328,8 +328,8 @@
                 android:layout_weight="1" />
 
             <com.google.android.material.button.MaterialButton
-                style="@style/OkCancelButton.Text"
                 android:id="@+id/save_bolus_speed"
+                style="@style/OkCancelButton.Text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/save" />

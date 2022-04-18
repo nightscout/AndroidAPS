@@ -73,18 +73,18 @@
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/reusebutton"
                 style="?android:attr/buttonStyle"
-                android:drawablePadding="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_clone" />
+                android:drawableStart="@drawable/ic_clone"
+                android:drawablePadding="10dp" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="5dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingTop="5dp">
 
             <TextView
                 android:id="@+id/duration_label"
@@ -176,7 +176,7 @@
                 android:id="@+id/timeshift"
                 android:layout_width="130dp"
                 android:layout_height="40dp"
-                app:customContentDescription="@string/careportal_newnstreatment_timeshift_label"/>
+                app:customContentDescription="@string/careportal_newnstreatment_timeshift_label" />
 
             <TextView
                 android:layout_width="wrap_content"

@@ -119,8 +119,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:focusable="true">
+            android:focusable="true"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="match_parent"
@@ -164,8 +164,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:focusable="true">
+            android:focusable="true"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="match_parent"
@@ -209,8 +209,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:focusable="true">
+            android:focusable="true"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="match_parent"
@@ -263,11 +263,11 @@
             android:orientation="horizontal">
 
             <TextView
-                android:focusable="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:layout_weight="2"
+                android:focusable="true"
                 android:gravity="end"
                 android:text="@string/isf_label"
                 android:textSize="14sp" />
@@ -311,8 +311,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:focusable="true">
+            android:focusable="true"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="match_parent"
@@ -397,8 +397,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:focusable="true">
+            android:focusable="true"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="match_parent"

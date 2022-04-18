@@ -29,8 +29,8 @@
             android:layout_gravity="bottom"
             android:layout_marginStart="10dp"
             android:layout_weight="1"
-            android:text="@string/exit"
             android:onClick="exitPressed"
+            android:text="@string/exit"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textStyle="bold" />
     </LinearLayout>
@@ -49,7 +49,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
-        <LinearLayout
+
+    <LinearLayout
             android:id="@+id/sw_content_fields"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

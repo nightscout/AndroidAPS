@@ -65,7 +65,6 @@ import java.util.*
 import javax.inject.Inject
 import kotlin.system.exitProcess
 
-
 class MainActivity : NoSplashAppCompatActivity() {
 
     private val disposable = CompositeDisposable()

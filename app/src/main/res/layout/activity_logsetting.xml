@@ -12,39 +12,39 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="?attr/activity_title_backgroundColor"
-        android:orientation="horizontal"
-        android:padding="5dp">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:importantForAccessibility="no"
-            app:srcCompat="@mipmap/ic_launcher" />
-
-        <TextView
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:layout_gravity="center"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:text="@string/nav_logsettings"
-            android:textAlignment="center"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:background="?attr/activity_title_backgroundColor"
+            android:orientation="horizontal"
+            android:padding="5dp">
 
-    </RelativeLayout>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:importantForAccessibility="no"
+                app:srcCompat="@mipmap/ic_launcher" />
 
-    <LinearLayout
-        android:id="@+id/spacer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="5dp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/nav_logsettings"
+                android:textAlignment="center"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/spacer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp" />
 
         <LinearLayout
             android:id="@+id/placeholder"
@@ -56,26 +56,26 @@
             android:id="@+id/done_background"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:orientation="horizontal"
+            android:layout_gravity="center_vertical"
             android:background="@android:color/transparent"
             android:gravity="end"
-            android:layout_gravity="center_vertical"
+            android:orientation="horizontal"
             android:paddingBottom="8dp">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/reset"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:layout_marginEnd="8dp"
                 style="@style/OkCancelButton.Text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
                 android:text="@string/resettodefaults" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/ok"
+                style="@style/OkCancelButton.Text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
-                style="@style/OkCancelButton.Text"
                 android:text="@string/ok" />
 
         </LinearLayout>

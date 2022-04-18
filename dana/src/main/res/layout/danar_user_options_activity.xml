@@ -317,8 +317,8 @@
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
-            style="@style/ButtonSmallFontStyle"
             android:id="@+id/save_user_options"
+            style="@style/ButtonSmallFontStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableStart="@drawable/ic_local_save"

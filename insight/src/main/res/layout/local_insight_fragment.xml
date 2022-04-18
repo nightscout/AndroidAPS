@@ -23,8 +23,8 @@
             android:paddingTop="10dp" />
 
         <com.google.android.material.button.MaterialButton
-            style="@style/GrayButton"
             android:id="@+id/refresh"
+            style="@style/GrayButton"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_marginTop="16dp"
@@ -32,16 +32,16 @@
             android:visibility="gone" />
 
         <com.google.android.material.button.MaterialButton
-            style="@style/GrayButton"
             android:id="@+id/operating_mode"
+            style="@style/GrayButton"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_marginTop="16dp"
             android:visibility="gone" />
 
         <com.google.android.material.button.MaterialButton
-            style="@style/GrayButton"
             android:id="@+id/tbr_over_notification"
+            style="@style/GrayButton"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_marginTop="16dp"

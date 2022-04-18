@@ -85,8 +85,8 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
                     android:layout_weight="1"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <TextView
@@ -94,12 +94,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:layout_weight="1"
                         android:width="120dp"
+                        android:gravity="center_vertical"
                         android:paddingStart="10dp"
                         android:paddingEnd="10dp"
                         android:text="@string/time_offset"
-                        android:gravity="center_vertical"
-                        android:layout_weight="1"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small"
                         android:textStyle="bold" />
 
@@ -109,10 +109,10 @@
                         android:layout_height="40dp"
                         android:layout_gravity="center_vertical"
                         android:checked="false"
-                        android:padding="2dp"
-                        android:layoutDirection="rtl"
                         android:contentDescription="@string/a11y_carb_reminder"
-                        android:drawableEnd="@drawable/ic_access_alarm_24dp" />
+                        android:drawableEnd="@drawable/ic_access_alarm_24dp"
+                        android:layoutDirection="rtl"
+                        android:padding="2dp" />
 
                 </LinearLayout>
 
@@ -145,8 +145,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:padding="10dp"
                     android:width="120dp"
+                    android:padding="10dp"
                     android:text="@string/careportal_newnstreatment_duration_label"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textStyle="bold" />
@@ -176,34 +176,34 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical">
 
-                    <TextView
-                        android:id="@+id/carbs_label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:padding="10dp"
-                        android:width="120dp"
-                        android:paddingStart="10dp"
-                        android:paddingEnd="10dp"
-                        android:text="@string/treatments_wizard_carbs_label"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                        android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/carbs_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:width="120dp"
+                    android:padding="10dp"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:text="@string/treatments_wizard_carbs_label"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textStyle="bold" />
 
-                    <info.nightscout.androidaps.utils.ui.NumberPicker
-                        android:id="@+id/carbs"
-                        android:layout_width="130dp"
-                        android:layout_height="40dp"
-                        app:customContentDescription="@string/treatments_wizard_carbs_label" />
+                <info.nightscout.androidaps.utils.ui.NumberPicker
+                    android:id="@+id/carbs"
+                    android:layout_width="130dp"
+                    android:layout_height="40dp"
+                    app:customContentDescription="@string/treatments_wizard_carbs_label" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="start"
-                        android:minWidth="45dp"
-                        android:paddingStart="5dp"
-                        android:paddingEnd="5dp"
-                        android:text="@string/shortgramm"
-                        android:textAppearance="?android:attr/textAppearanceSmall" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:minWidth="45dp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:text="@string/shortgramm"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
             </TableRow>
         </TableLayout>
@@ -215,8 +215,8 @@
             android:padding="5dp">
 
             <com.google.android.material.button.MaterialButton
-                style="@style/GrayButton"
                 android:id="@+id/plus1"
+                style="@style/GrayButton"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -224,8 +224,8 @@
                 tools:ignore="HardcodedText" />
 
             <com.google.android.material.button.MaterialButton
-                style="@style/GrayButton"
                 android:id="@+id/plus2"
+                style="@style/GrayButton"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -233,8 +233,8 @@
                 tools:ignore="HardcodedText" />
 
             <com.google.android.material.button.MaterialButton
-                style="@style/GrayButton"
                 android:id="@+id/plus3"
+                style="@style/GrayButton"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -249,17 +249,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:visibility="gone"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:gravity="center_vertical"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
                 android:text="@string/bolus_reminder"
-                android:gravity="center_vertical"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textStyle="bold" />
 

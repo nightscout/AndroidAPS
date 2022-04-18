@@ -16,8 +16,8 @@
             android:orientation="horizontal">
 
             <com.google.android.material.button.MaterialButton
-                style="@style/GrayButton"
                 android:id="@+id/run"
+                style="@style/GrayButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/openapsma_run" />
@@ -27,8 +27,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:focusable="true">
+            android:focusable="true"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="match_parent"
@@ -97,8 +97,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:focusable="true">
+            android:focusable="true"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="match_parent"
@@ -142,8 +142,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:focusable="true">
+            android:focusable="true"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="match_parent"
@@ -187,8 +187,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:focusable="true">
+            android:focusable="true"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="match_parent"
@@ -232,8 +232,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:focusable="true">
+            android:focusable="true"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="match_parent"
@@ -277,8 +277,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:focusable="true">
+            android:focusable="true"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="match_parent"
@@ -322,8 +322,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:focusable="true">
+            android:focusable="true"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="match_parent"
@@ -367,8 +367,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:focusable="true">
+            android:focusable="true"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="match_parent"
@@ -446,8 +446,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:focusable="true">
+            android:focusable="true"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="match_parent"
@@ -491,8 +491,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:focusable="true">
+            android:focusable="true"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="match_parent"
@@ -536,8 +536,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:focusable="true">
+            android:focusable="true"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="match_parent"
