@@ -40,8 +40,8 @@
                             android:layout_gravity="center_horizontal|center_vertical"
                             android:layout_weight="2"
                             android:gravity="end"
-                            android:paddingRight="5dp"
-                            android:paddingLeft="5dp"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
                             android:text="@string/autotune_profile"
                             android:textSize="14sp" />
 
@@ -51,8 +51,8 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:hint="@string/autotune_select_profile"
-                            android:paddingLeft="5dp"
-                            android:paddingRight="5dp"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
                             android:textSize="14sp"
                             app:boxStrokeColor="@color/list_delimiter">
 
@@ -78,8 +78,8 @@
                             android:layout_gravity="center_horizontal|center_vertical"
                             android:layout_weight="2"
                             android:gravity="end"
-                            android:paddingLeft="5dp"
-                            android:paddingRight="5dp"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
                             android:text="@string/autotune_tune_days"
                             android:textSize="14sp" />
 
@@ -89,8 +89,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
-                            android:paddingLeft="5dp"
-                            android:paddingRight="5dp"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
                             android:layout_weight="1"
                             android:layout_marginBottom="2dp"
                             app:customContentDescription="@string/careportal_newnstreatment_duration_label" />
@@ -130,8 +130,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:gravity="end"
-                        android:paddingLeft="5dp"
-                        android:paddingRight="5dp"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/autotune_last_run"
                         android:textSize="14sp" />
 
@@ -141,8 +141,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
-                        android:paddingRight="5dp"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
                         android:textSize="14sp" />
 
                 </LinearLayout>
@@ -157,8 +157,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:gravity="end"
-                        android:paddingLeft="5dp"
-                        android:paddingRight="5dp"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/autotune_warning"
                         android:textSize="14sp" />
 
@@ -168,8 +168,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
-                        android:paddingRight="5dp"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
                         android:textSize="14sp" />
 
                 </LinearLayout>
@@ -220,8 +220,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:drawableStart="@drawable/ic_local_activate"
-                        android:paddingLeft="0dp"
-                        android:paddingRight="0dp"
+                        android:paddingStart="0dp"
+                        android:paddingEnd="0dp"
                         android:text="@string/activate_profile"
                         app:layout_column="0"
                         app:layout_columnWeight="1"
@@ -235,8 +235,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:drawableStart="@drawable/ic_compare_profiles"
-                        android:paddingLeft="0dp"
-                        android:paddingRight="0dp"
+                        android:paddingStart="0dp"
+                        android:paddingEnd="0dp"
                         android:text="@string/compareprofileshort"
                         app:layout_column="1"
                         app:layout_columnWeight="1"
@@ -250,8 +250,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:drawableStart="@drawable/ic_clone_48"
-                        android:paddingLeft="0dp"
-                        android:paddingRight="0dp"
+                        android:paddingStart="0dp"
+                        android:paddingEnd="0dp"
                         android:text="@string/autotune_copy_localprofile_button"
                         app:layout_column="0"
                         app:layout_columnWeight="1"
@@ -265,8 +265,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:drawableStart="@drawable/ic_local_save"
-                        android:paddingLeft="0dp"
-                        android:paddingRight="0dp"
+                        android:paddingStart="0dp"
+                        android:paddingEnd="0dp"
                         android:text="@string/autotune_update_input_profile_button"
                         app:layout_column="1"
                         app:layout_columnWeight="1"
@@ -281,8 +281,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:drawableStart="@drawable/ic_local_reset"
-                        android:paddingLeft="5dp"
-                        android:paddingRight="5dp"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/autotune_run"
                         app:layout_column="0"
                         app:layout_columnWeight="1"
