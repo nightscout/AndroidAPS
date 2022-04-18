@@ -146,7 +146,7 @@
 
     </LinearLayout>
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/log_scrollview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -158,6 +158,6 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="" />
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 </LinearLayout>

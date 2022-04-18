@@ -56,7 +56,7 @@
         app:layout_constraintStart_toEndOf="@+id/removeall"
         app:layout_constraintTop_toBottomOf="@+id/status" />
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/logscrollview"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -73,6 +73,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="-- logs --" />
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

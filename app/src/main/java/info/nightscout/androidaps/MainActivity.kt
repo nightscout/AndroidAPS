@@ -17,12 +17,12 @@ import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -39,7 +39,6 @@ import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.events.EventRebuildTabs
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
@@ -48,6 +47,7 @@ import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicato
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity
 import info.nightscout.androidaps.utils.AndroidPermission
 import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.ScrollingOffsetListener
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.extensions.isRunningRealPumpTest
@@ -64,6 +64,7 @@ import io.reactivex.rxjava3.kotlin.plusAssign
 import java.util.*
 import javax.inject.Inject
 import kotlin.system.exitProcess
+
 
 class MainActivity : NoSplashAppCompatActivity() {
 
@@ -229,7 +230,7 @@ class MainActivity : NoSplashAppCompatActivity() {
         if (sp.getBoolean(R.string.key_short_tabtitles, false)) {
             binding.tabsNormal.visibility = View.GONE
             binding.tabsCompact.visibility = View.VISIBLE
-            binding.toolbar.layoutParams = LinearLayout.LayoutParams(Toolbar.LayoutParams.MATCH_PARENT, resources.getDimension(R.dimen.compact_height).toInt())
+            binding.toolbar.layoutParams = AppBarLayout.LayoutParams(Toolbar.LayoutParams.MATCH_PARENT, resources.getDimension(R.dimen.compact_height).toInt())
             TabLayoutMediator(binding.tabsCompact, binding.mainPager) { tab, position ->
                 tab.text = (binding.mainPager.adapter as TabPageAdapter).getPluginAt(position).nameShort
             }.attach()
@@ -238,7 +239,7 @@ class MainActivity : NoSplashAppCompatActivity() {
             binding.tabsCompact.visibility = View.GONE
             val typedValue = TypedValue()
             if (theme.resolveAttribute(R.attr.actionBarSize, typedValue, true)) {
-                binding.toolbar.layoutParams = LinearLayout.LayoutParams(
+                binding.toolbar.layoutParams = AppBarLayout.LayoutParams(
                     Toolbar.LayoutParams.MATCH_PARENT,
                     TypedValue.complexToDimensionPixelSize(typedValue.data, resources.displayMetrics)
                 )
@@ -247,6 +248,10 @@ class MainActivity : NoSplashAppCompatActivity() {
                 tab.text = (binding.mainPager.adapter as TabPageAdapter).getPluginAt(position).name
             }.attach()
         }
+
+        //appbar
+        //fix the height if appbar is scrolled
+        binding.appbar.addOnOffsetChangedListener(ScrollingOffsetListener(binding.mainPager))
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {

@@ -6,7 +6,7 @@
     tools:context="info.nightscout.androidaps.diaconn.DiaconnG8Fragment">
 
 
-        <ScrollView
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/buttons"
@@ -658,7 +658,7 @@
 
             </LinearLayout>
 
-        </ScrollView>
+        </androidx.core.widget.NestedScrollView>
 
         <LinearLayout
             android:id="@+id/buttons"

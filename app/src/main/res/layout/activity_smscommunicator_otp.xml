@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     tools:context=".plugins.general.smsCommunicator.activities.SmsCommunicatorOtpActivity">
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
 
@@ -108,6 +108,6 @@
                 android:textColor="?attr/treatmentButton" />
 
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 </FrameLayout>
