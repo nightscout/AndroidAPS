@@ -102,7 +102,6 @@
     <string name="overview_calculator_label">Beregner</string>
     <string name="constraintapllied">Begrænsning anvendt!</string>
     <string name="sms_bolus">Bolus:</string>
-    <string name="basal">Basal</string>
     <string name="sms_basal">Basal:</string>
     <string name="changeyourinput">Skift dit input!</string>
     <string name="configbuilder_bgsource">BG kilde</string>
@@ -760,7 +759,6 @@
     <string name="invalidage">Ugyldig angivelse af alder</string>
     <string name="invalidweight">Ugyldig angivelse af vægt</string>
     <string name="invalidpct">Ugyldig angivelse af %</string>
-    <string name="tirformat"><![CDATA[<b>%1$s:</b> Lav: <b>%2$02d%%</b> Mål: <b>%3$02d%%</b> Høj: <b>%4$02d%%</b>]]></string>
     <string name="average">Gennemsnit</string>
     <string name="tir">Tid i målområde</string>
     <string name="activitymonitor">Aktivitetsovervågning</string>
@@ -902,5 +900,6 @@
     <string name="identification">Identifikation (e-mail, FB eller Discord alias osv.)</string>
     <string name="identification_not_set">Identifikation ikke indstillet i udvikler-tilstand</string>
     <string name="not_available_full">Ikke tilgængelig</string>
+    <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
 </resources>

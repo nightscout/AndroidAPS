@@ -72,7 +72,8 @@
     <string name="menu_treatment">Traitement</string>
     <string name="menu_treatment_short">Trait.</string>
     <string name="menu_bolus">Bolus</string>
-    <string name="menu_ecarb">Glucides</string>
+    <string name="menu_carb">Glucides</string>
+    <string name="menu_ecarb">eGlucides</string>
     <string name="menu_settings">Paramètres</string>
     <string name="menu_status">États</string>
     <string name="menu_resync">Re-sync</string>
@@ -94,6 +95,7 @@
     <string name="action_low" comment="In temp target menu, lower value from range">Bas</string>
     <string name="action_high" comment="In temp target menu, higher value from range">Élevé</string>
     <string name="action_carbs">Glucides</string>
+    <string name="action_ecarbs">eGlucides</string>
     <string name="action_percentage">Pourcentage</string>
     <string name="action_start_min">Début [min]</string>
     <string name="action_duration_h">Durée [h]</string>

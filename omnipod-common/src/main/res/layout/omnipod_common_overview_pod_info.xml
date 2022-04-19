@@ -41,7 +41,6 @@
             android:gravity="start"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
-            android:textColor="@android:color/white"
             android:textSize="14sp" />
     </LinearLayout>
 
@@ -82,7 +81,6 @@
             android:gravity="start"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
-            android:textColor="@android:color/white"
             android:textSize="14sp" />
     </LinearLayout>
 
@@ -122,7 +120,6 @@
             android:gravity="start"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
-            android:textColor="@android:color/white"
             android:textSize="14sp" />
     </LinearLayout>
 
@@ -162,7 +159,6 @@
             android:gravity="start"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
-            android:textColor="@android:color/white"
             android:textSize="14sp" />
     </LinearLayout>
 
@@ -202,7 +198,6 @@
             android:gravity="start"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
-            android:textColor="@android:color/white"
             android:textSize="14sp" />
 
     </LinearLayout>
@@ -243,7 +238,6 @@
             android:gravity="start"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
-            android:textColor="@android:color/white"
             android:textSize="14sp" />
 
     </LinearLayout>
@@ -285,7 +279,6 @@
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
             android:text=""
-            android:textColor="@android:color/white"
             android:textSize="14sp" />
 
     </LinearLayout>
@@ -304,7 +297,7 @@
         android:layout_marginTop="5dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="5dp"
-        android:background="@color/list_delimiter" />
+        android:background="?android:attr/dividerHorizontal" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -341,7 +334,6 @@
             android:gravity="start"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
-            android:textColor="@android:color/white"
             android:textSize="14sp" />
 
     </LinearLayout>
@@ -353,7 +345,7 @@
         android:layout_marginTop="5dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="5dp"
-        android:background="@color/list_delimiter" />
+        android:background="?android:attr/dividerHorizontal" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -390,7 +382,6 @@
             android:gravity="start"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
-            android:textColor="@android:color/white"
             android:textSize="14sp" />
 
     </LinearLayout>
@@ -402,7 +393,7 @@
         android:layout_marginTop="5dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="5dp"
-        android:background="@color/list_delimiter" />
+        android:background="?android:attr/dividerHorizontal" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -439,7 +430,6 @@
             android:gravity="start"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
-            android:textColor="@android:color/white"
             android:textSize="14sp" />
 
     </LinearLayout>
@@ -451,7 +441,7 @@
         android:layout_marginTop="5dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="5dp"
-        android:background="@color/list_delimiter" />
+        android:background="?android:attr/dividerHorizontal" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -488,7 +478,6 @@
             android:gravity="start"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
-            android:textColor="@android:color/white"
             android:textSize="14sp" />
 
     </LinearLayout>
@@ -500,7 +489,7 @@
         android:layout_marginTop="5dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="5dp"
-        android:background="@color/list_delimiter" />
+        android:background="?android:attr/dividerHorizontal" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -537,7 +526,6 @@
             android:gravity="start"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
-            android:textColor="@android:color/white"
             android:textSize="14sp" />
 
     </LinearLayout>
@@ -549,7 +537,7 @@
         android:layout_marginTop="5dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="5dp"
-        android:background="@color/list_delimiter" />
+        android:background="?android:attr/dividerHorizontal" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -586,7 +574,6 @@
             android:gravity="start"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
-            android:textColor="@android:color/white"
             android:textSize="14sp" />
 
     </LinearLayout>
@@ -598,7 +585,7 @@
         android:layout_marginTop="5dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="5dp"
-        android:background="@color/list_delimiter" />
+        android:background="?android:attr/dividerHorizontal" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -635,7 +622,6 @@
             android:gravity="start"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
-            android:textColor="@android:color/white"
             android:textSize="14sp" />
 
     </LinearLayout>
@@ -647,7 +633,7 @@
         android:layout_marginTop="5dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="5dp"
-        android:background="@color/list_delimiter" />
+        android:background="?android:attr/dividerHorizontal" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -684,7 +670,6 @@
             android:gravity="start"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
-            android:textColor="@android:color/white"
             android:textSize="14sp" />
 
     </LinearLayout>
@@ -696,7 +681,7 @@
         android:layout_marginTop="5dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="5dp"
-        android:background="@color/list_delimiter" />
+        android:background="?android:attr/dividerHorizontal" />
 
     <TextView
         android:layout_width="wrap_content"

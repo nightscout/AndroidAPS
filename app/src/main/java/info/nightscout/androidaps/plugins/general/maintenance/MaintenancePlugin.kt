@@ -64,8 +64,6 @@ class MaintenancePlugin @Inject constructor(
         context.startActivity(emailIntent)
     }
 
-    //todo replace this with a call on startup of the application, specifically to remove
-    // unnecessary garbage from the log exports
     fun deleteLogs(keep: Int) {
         val logDir = File(loggerUtils.logDirectory)
         val files = logDir.listFiles { _: File?, name: String ->

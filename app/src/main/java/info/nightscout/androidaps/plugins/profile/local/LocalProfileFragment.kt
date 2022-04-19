@@ -9,15 +9,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import com.google.android.material.tabs.TabLayout
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.activities.SingleFragmentActivity
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.databinding.LocalprofileFragmentBinding
 import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
+import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Profile
@@ -29,6 +32,7 @@ import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.ui.TimeListEdit
@@ -49,14 +53,15 @@ class LocalProfileFragment : DaggerFragment() {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var localProfilePlugin: LocalProfilePlugin
     @Inject lateinit var hardLimits: HardLimits
+    @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var uel: UserEntryLogger
 
     private var disposable: CompositeDisposable = CompositeDisposable()
-
+    private var inMenu = false
+    private var queryingProtection = false
     private var basalView: TimeListEdit? = null
-//    private var spinner: SpinnerHelper? = null
 
     private val save = Runnable {
         doEdit()
@@ -88,8 +93,7 @@ class LocalProfileFragment : DaggerFragment() {
 
     private var _binding: LocalprofileFragmentBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
+    // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -99,31 +103,20 @@ class LocalProfileFragment : DaggerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // activate DIA tab
-        processVisibilityOnClick(binding.diaTab)
-        binding.diaPlaceholder.visibility = View.VISIBLE
-        // setup listeners
-        binding.diaTab.setOnClickListener {
-            processVisibilityOnClick(it)
-            binding.diaPlaceholder.visibility = View.VISIBLE
-        }
-        binding.icTab.setOnClickListener {
-            processVisibilityOnClick(it)
-            binding.ic.visibility = View.VISIBLE
-        }
-        binding.isfTab.setOnClickListener {
-            processVisibilityOnClick(it)
-            binding.isf.visibility = View.VISIBLE
-        }
-        binding.basalTab.setOnClickListener {
-            processVisibilityOnClick(it)
-            binding.basal.visibility = View.VISIBLE
-        }
-        binding.targetTab.setOnClickListener {
-            processVisibilityOnClick(it)
-            binding.target.visibility = View.VISIBLE
-        }
-        binding.dia.editText?.id?.let { binding.diaLabel.labelFor = it }
+        val parentClass = this.activity?.let { it::class.java }
+        inMenu = parentClass == SingleFragmentActivity::class.java
+        updateProtectedUi()
+        processVisibility(0)
+        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                processVisibility(tab.position)
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
+            override fun onTabReselected(tab: TabLayout.Tab) {}
+        })
+        binding.diaLabel.labelFor = binding.dia.editTextId
+        binding.unlock.setOnClickListener { queryProtection() }
     }
 
     fun build() {
@@ -222,7 +215,6 @@ class LocalProfileFragment : DaggerFragment() {
             )
         }
 
-        // Spinner
         context?.let { context ->
             val profileList: ArrayList<CharSequence> = localProfilePlugin.profile?.getProfileList() ?: ArrayList()
             binding.profileList.setAdapter(ArrayAdapter(context, R.layout.spinner_centered, profileList))
@@ -301,7 +293,7 @@ class LocalProfileFragment : DaggerFragment() {
 
         binding.profileswitch.setOnClickListener {
             ProfileSwitchDialog()
-                .also { it.arguments = Bundle().also { bundle -> bundle.putInt("profileIndex", localProfilePlugin.currentProfileIndex) } }
+                .also { it.arguments = Bundle().also { bundle -> bundle.putString("profileName", localProfilePlugin.currentProfile()?.name) } }
                 .show(childFragmentManager, "ProfileSwitchDialog")
         }
 
@@ -329,6 +321,7 @@ class LocalProfileFragment : DaggerFragment() {
     @Synchronized
     override fun onResume() {
         super.onResume()
+        if (inMenu) queryProtection() else updateProtectedUi()
         disposable += rxBus
             .toObservable(EventLocalProfileChanged::class.java)
             .observeOn(aapsSchedulers.main)
@@ -366,7 +359,7 @@ class LocalProfileFragment : DaggerFragment() {
         val isValid = localProfilePlugin.isValidEditState(activity)
         val isEdited = localProfilePlugin.isEdited
         if (isValid) {
-            this.view?.setBackgroundColor(rh.gc(R.color.ok_background))
+            this.view?.setBackgroundColor(rh.gac(context, R.attr.okBackgroundColor))
             binding.profileList.isEnabled = true
 
             if (isEdited) {
@@ -378,7 +371,7 @@ class LocalProfileFragment : DaggerFragment() {
                 binding.save.visibility = View.GONE
             }
         } else {
-            this.view?.setBackgroundColor(rh.gc(R.color.error_background))
+            this.view?.setBackgroundColor(rh.gac(context, R.attr.errorBackgroundColor))
             binding.profileList.isEnabled = false
             binding.profileswitch.visibility = View.GONE
             binding.save.visibility = View.GONE //don't save an invalid profile
@@ -392,17 +385,28 @@ class LocalProfileFragment : DaggerFragment() {
         }
     }
 
-    private fun processVisibilityOnClick(selected: View) {
-        binding.diaTab.setBackgroundColor(rh.gc(R.color.defaultbackground))
-        binding.icTab.setBackgroundColor(rh.gc(R.color.defaultbackground))
-        binding.isfTab.setBackgroundColor(rh.gc(R.color.defaultbackground))
-        binding.basalTab.setBackgroundColor(rh.gc(R.color.defaultbackground))
-        binding.targetTab.setBackgroundColor(rh.gc(R.color.defaultbackground))
-        selected.setBackgroundColor(rh.gc(R.color.tabBgColorSelected))
-        binding.diaPlaceholder.visibility = View.GONE
-        binding.ic.visibility = View.GONE
-        binding.isf.visibility = View.GONE
-        binding.basal.visibility = View.GONE
-        binding.target.visibility = View.GONE
+    private fun processVisibility(position: Int) {
+        binding.diaPlaceholder.visibility = (position == 0).toVisibility()
+        binding.ic.visibility  = (position == 1).toVisibility()
+        binding.isf.visibility  = (position == 2).toVisibility()
+        binding.basal.visibility  = (position == 3).toVisibility()
+        binding.target.visibility  = (position == 4).toVisibility()
+    }
+
+    private fun updateProtectedUi() {
+        val isLocked = protectionCheck.isLocked(ProtectionCheck.Protection.PREFERENCES)
+        binding.mainLayout.visibility = isLocked.not().toVisibility()
+        binding.unlock.visibility = isLocked.toVisibility()
+    }
+
+    private fun queryProtection() {
+        val isLocked = protectionCheck.isLocked(ProtectionCheck.Protection.PREFERENCES)
+        if (isLocked && !queryingProtection) {
+            activity?.let { activity ->
+                queryingProtection = true
+                val doUpdate = { activity.runOnUiThread { queryingProtection = false; updateProtectedUi() } }
+                protectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, doUpdate, doUpdate, doUpdate)
+            }
+        }
     }
 }

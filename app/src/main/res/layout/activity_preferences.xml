@@ -22,7 +22,8 @@
             android:autofillHints="@string/filter"
             android:gravity="start"
             android:textStyle="bold"
-            android:inputType="text" />
+            android:inputType="text"
+            android:background="@color/transparent"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 

@@ -51,7 +51,6 @@
                     android:layout_weight="1"
                     android:gravity="start"
                     android:paddingLeft="5dp"
-                    android:textColor="@android:color/white"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -63,7 +62,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="5dp"
-                android:background="@color/list_delimiter" />
+                android:background="?android:attr/dividerHorizontal" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -97,7 +96,6 @@
                     android:layout_weight="1"
                     android:gravity="start"
                     android:paddingLeft="5dp"
-                    android:textColor="@android:color/white"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -109,7 +107,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="5dp"
-                android:background="@color/list_delimiter" />
+                android:background="?android:attr/dividerHorizontal" />
 
 
             <LinearLayout
@@ -144,7 +142,6 @@
                     android:layout_weight="1"
                     android:gravity="start"
                     android:paddingLeft="5dp"
-                    android:textColor="@android:color/white"
                     android:text=""
                     android:textSize="14sp" />
 
@@ -157,7 +154,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="5dp"
-                android:background="@color/list_delimiter" />
+                android:background="?android:attr/dividerHorizontal" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -191,7 +188,6 @@
                     android:layout_weight="1"
                     android:gravity="start"
                     android:paddingLeft="5dp"
-                    android:textColor="@android:color/white"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -203,7 +199,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="5dp"
-                android:background="@color/list_delimiter" />
+                android:background="?android:attr/dividerHorizontal" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -237,7 +233,6 @@
                     android:layout_weight="1"
                     android:gravity="start"
                     android:paddingLeft="5dp"
-                    android:textColor="@android:color/white"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -249,7 +244,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="5dp"
-                android:background="@color/list_delimiter" />
+                android:background="?android:attr/dividerHorizontal" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -283,7 +278,6 @@
                     android:layout_weight="1"
                     android:gravity="start"
                     android:paddingLeft="5dp"
-                    android:textColor="@android:color/white"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -295,7 +289,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="5dp"
-                android:background="@color/list_delimiter" />
+                android:background="?android:attr/dividerHorizontal" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -329,7 +323,6 @@
                     android:layout_weight="1"
                     android:gravity="start"
                     android:paddingLeft="5dp"
-                    android:textColor="@android:color/white"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -341,7 +334,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="5dp"
-                android:background="@color/list_delimiter" />
+                android:background="?android:attr/dividerHorizontal" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -375,7 +368,6 @@
                     android:layout_weight="1"
                     android:gravity="start"
                     android:paddingLeft="5dp"
-                    android:textColor="@android:color/white"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -387,7 +379,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="5dp"
-                android:background="@color/list_delimiter" />
+                android:background="?android:attr/dividerHorizontal" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -421,7 +413,6 @@
                     android:layout_weight="1"
                     android:gravity="start"
                     android:paddingLeft="5dp"
-                    android:textColor="@android:color/white"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -433,7 +424,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="5dp"
-                android:background="@color/list_delimiter" />
+                android:background="?android:attr/dividerHorizontal" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -467,7 +458,6 @@
                     android:layout_weight="1"
                     android:gravity="start"
                     android:paddingLeft="5dp"
-                    android:textColor="@android:color/white"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -480,7 +470,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="5dp"
-                android:background="@color/list_delimiter" />
+                android:background="?android:attr/dividerHorizontal" />
 
             <LinearLayout
                 android:id="@+id/combo_connection_error_layout"
@@ -516,7 +506,6 @@
                     android:layout_weight="1"
                     android:gravity="start"
                     android:paddingLeft="5dp"
-                    android:textColor="@android:color/white"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -528,7 +517,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="5dp"
-                android:background="@color/list_delimiter" />
+                android:background="?android:attr/dividerHorizontal" />
 
             <TextView
                 android:layout_width="wrap_content"

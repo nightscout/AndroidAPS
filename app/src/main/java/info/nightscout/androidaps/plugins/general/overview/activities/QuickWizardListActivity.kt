@@ -2,32 +2,28 @@ package info.nightscout.androidaps.plugins.general.overview.activities
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.MotionEvent
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
+import android.util.SparseArray
+import android.view.*
+import androidx.core.util.forEach
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_DRAG
-import androidx.recyclerview.widget.ItemTouchHelper.DOWN
-import androidx.recyclerview.widget.ItemTouchHelper.END
-import androidx.recyclerview.widget.ItemTouchHelper.START
-import androidx.recyclerview.widget.ItemTouchHelper.UP
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.DaggerAppCompatActivityWithResult
 import info.nightscout.androidaps.databinding.OverviewQuickwizardlistActivityBinding
+import info.nightscout.androidaps.databinding.OverviewQuickwizardlistItemBinding
+import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.utils.dragHelpers.ItemTouchHelperAdapter
+import info.nightscout.androidaps.utils.dragHelpers.OnStartDragListener
+import info.nightscout.androidaps.utils.dragHelpers.SimpleItemTouchHelperCallback
 import info.nightscout.androidaps.plugins.general.overview.dialogs.EditQuickWizardDialog
 import info.nightscout.androidaps.plugins.general.overview.events.EventQuickWizardChange
+import info.nightscout.androidaps.utils.ActionModeHelper
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.wizard.QuickWizard
 import info.nightscout.androidaps.utils.wizard.QuickWizardEntry
@@ -36,7 +32,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
 
-class QuickWizardListActivity : DaggerAppCompatActivityWithResult() {
+class QuickWizardListActivity : DaggerAppCompatActivityWithResult(), OnStartDragListener {
 
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var rxBus: RxBus
@@ -46,140 +42,89 @@ class QuickWizardListActivity : DaggerAppCompatActivityWithResult() {
     @Inject lateinit var sp: SP
 
     private var disposable: CompositeDisposable = CompositeDisposable()
-
+    private lateinit var actionHelper: ActionModeHelper<QuickWizardEntry>
+    private val itemTouchHelper = ItemTouchHelper(SimpleItemTouchHelperCallback())
     private lateinit var binding: OverviewQuickwizardlistActivityBinding
 
-    private val itemTouchHelper by lazy {
-        val simpleItemTouchCallback = object : ItemTouchHelper.SimpleCallback(UP or DOWN or START or END, 0) {
-
-            override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
-            ): Boolean {
-                val adapter = recyclerView.adapter as RecyclerViewAdapter
-                val from = viewHolder.layoutPosition
-                val to = target.layoutPosition
-                adapter.moveItem(from, to)
-                adapter.notifyItemMoved(from, to)
-
-                return true
-            }
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            }
-
-            override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
-                super.onSelectedChanged(viewHolder, actionState)
-
-                if (actionState == ACTION_STATE_DRAG) {
-                    viewHolder?.itemView?.alpha = 0.5f
-                }
-            }
-
-            override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
-                super.clearView(recyclerView, viewHolder)
-
-                viewHolder.itemView.alpha = 1.0f
-
-                val adapter = recyclerView.adapter as RecyclerViewAdapter
-                adapter.onDrop()
-            }
-        }
-
-        ItemTouchHelper(simpleItemTouchCallback)
-    }
-
-    fun startDragging(viewHolder: RecyclerView.ViewHolder) {
+    override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {
         itemTouchHelper.startDrag(viewHolder)
     }
 
-    private inner class RecyclerViewAdapter(var fragmentManager: FragmentManager) : RecyclerView.Adapter<RecyclerViewAdapter.QuickWizardEntryViewHolder>() {
+    private inner class RecyclerViewAdapter(var fragmentManager: FragmentManager) : RecyclerView.Adapter<RecyclerViewAdapter.QuickWizardEntryViewHolder>(), ItemTouchHelperAdapter {
 
-        @SuppressLint("ClickableViewAccessibility")
+        private inner class QuickWizardEntryViewHolder(val binding: OverviewQuickwizardlistItemBinding, val fragmentManager: FragmentManager) : RecyclerView.ViewHolder(binding.root)
+
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuickWizardEntryViewHolder {
-            val itemView = LayoutInflater.from(parent.context).inflate(R.layout.overview_quickwizardlist_item, parent, false)
-            val viewHolder = QuickWizardEntryViewHolder(itemView, fragmentManager)
-
-            viewHolder.handleView.setOnTouchListener { _, event ->
-                if (event.actionMasked == MotionEvent.ACTION_DOWN) {
-                    startDragging(viewHolder)
-                }
-                return@setOnTouchListener true
-            }
-
-            return viewHolder
+            val binding = OverviewQuickwizardlistItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            return QuickWizardEntryViewHolder(binding, fragmentManager)
         }
 
+        @SuppressLint("ClickableViewAccessibility")
         override fun onBindViewHolder(holder: QuickWizardEntryViewHolder, position: Int) {
-            holder.from.text = dateUtil.timeString(quickWizard[position].validFromDate())
-            holder.to.text = dateUtil.timeString(quickWizard[position].validToDate())
-            val wearControl = sp.getBoolean(R.string.key_wear_control, false)
-
-            if (wearControl) {
-                holder.handleView.visibility = View.VISIBLE
+            val entry = quickWizard[position]
+            holder.binding.from.text = dateUtil.timeString(entry.validFromDate())
+            holder.binding.to.text = dateUtil.timeString(entry.validToDate())
+            holder.binding.buttonText.text = entry.buttonText()
+            holder.binding.carbs.text = rh.gs(R.string.format_carbs, entry.carbs())
+            if (entry.device() == QuickWizardEntry.DEVICE_ALL) {
+                holder.binding.device.visibility = View.GONE
             } else {
-                holder.handleView.visibility = View.GONE
-            }
-            if (quickWizard[position].device() == QuickWizardEntry.DEVICE_ALL) {
-                holder.device.visibility = View.GONE
-            } else {
-                holder.device.visibility = View.VISIBLE
-                holder.device.setImageResource(
+                holder.binding.device.visibility = View.VISIBLE
+                holder.binding.device.setImageResource(
                     when (quickWizard[position].device()) {
                         QuickWizardEntry.DEVICE_WATCH -> R.drawable.ic_watch
                         else                          -> R.drawable.ic_smartphone
                     }
                 )
             }
-            holder.buttonText.text = quickWizard[position].buttonText()
-            holder.carbs.text = rh.gs(R.string.format_carbs, quickWizard[position].carbs())
-        }
-
-        override fun getItemCount(): Int = quickWizard.size()
-
-        private inner class QuickWizardEntryViewHolder(itemView: View, var fragmentManager: FragmentManager) : RecyclerView.ViewHolder(itemView) {
-
-            val buttonText: TextView = itemView.findViewById(R.id.overview_quickwizard_item_buttonText)
-            val carbs: TextView = itemView.findViewById(R.id.overview_quickwizard_item_carbs)
-            val from: TextView = itemView.findViewById(R.id.overview_quickwizard_item_from)
-            val handleView: ImageView = itemView.findViewById(R.id.handleView)
-            val device: ImageView = itemView.findViewById(R.id.overview_quickwizard_item_device)
-            val to: TextView = itemView.findViewById(R.id.overview_quickwizard_item_to)
-            private val editButton: Button = itemView.findViewById(R.id.overview_quickwizard_item_edit_button)
-            private val removeButton: Button = itemView.findViewById(R.id.overview_quickwizard_item_remove_button)
-
-            init {
-                editButton.setOnClickListener {
+            holder.binding.root.setOnClickListener {
+                if (actionHelper.isNoAction) {
                     val manager = fragmentManager
                     val editQuickWizardDialog = EditQuickWizardDialog()
                     val bundle = Bundle()
-                    bundle.putInt("position", bindingAdapterPosition)
+                    bundle.putInt("position", position)
                     editQuickWizardDialog.arguments = bundle
                     editQuickWizardDialog.show(manager, "EditQuickWizardDialog")
-                }
-                removeButton.setOnClickListener {
-                    quickWizard.remove(bindingAdapterPosition)
-                    rxBus.send(EventQuickWizardChange())
+                } else if (actionHelper.isRemoving) {
+                    holder.binding.cbRemove.toggle()
+                    actionHelper.updateSelection(position, entry, holder.binding.cbRemove.isChecked)
                 }
             }
+            holder.binding.sortHandle.setOnTouchListener { _, event ->
+                if (event.actionMasked == MotionEvent.ACTION_DOWN) {
+                    onStartDrag(holder)
+                    return@setOnTouchListener true
+                }
+                return@setOnTouchListener false
+            }
+            holder.binding.cbRemove.isChecked = actionHelper.isSelected(position)
+            holder.binding.cbRemove.setOnCheckedChangeListener { _, value ->
+                actionHelper.updateSelection(position, entry, value)
+            }
+            holder.binding.sortHandle.visibility = actionHelper.isSorting.toVisibility()
+            holder.binding.cbRemove.visibility = actionHelper.isRemoving.toVisibility()
         }
 
-        fun moveItem(from: Int, to: Int) {
-            Log.i("QuickWizard", "moveItem")
-            quickWizard.move(from, to)
+        override fun getItemCount() = quickWizard.size()
+
+        override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
+            binding.recyclerview.adapter?.notifyItemMoved(fromPosition, toPosition)
+            quickWizard.move(fromPosition, toPosition)
+            return true
         }
 
-        fun onDrop() {
-            Log.i("QuickWizard", "onDrop")
-            rxBus.send(EventQuickWizardChange())
-        }
+        override fun onDrop() = rxBus.send(EventQuickWizardChange())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = OverviewQuickwizardlistActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        actionHelper = ActionModeHelper(rh, this)
+        actionHelper.setUpdateListHandler { binding.recyclerview.adapter?.notifyDataSetChanged() }
+        actionHelper.setOnRemoveHandler { removeSelected(it) }
+        actionHelper.enableSort = true
 
         title = rh.gs(R.string.quickwizard)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -191,6 +136,7 @@ class QuickWizardListActivity : DaggerAppCompatActivityWithResult() {
         itemTouchHelper.attachToRecyclerView(binding.recyclerview)
 
         binding.addButton.setOnClickListener {
+            actionHelper.finish()
             val manager = supportFragmentManager
             val editQuickWizardDialog = EditQuickWizardDialog()
             editQuickWizardDialog.show(manager, "EditQuickWizardDialog")
@@ -210,7 +156,23 @@ class QuickWizardListActivity : DaggerAppCompatActivityWithResult() {
 
     override fun onPause() {
         disposable.clear()
+        actionHelper.finish()
         super.onPause()
+    }
+
+    private fun removeSelected(selectedItems: SparseArray<QuickWizardEntry>) {
+        OKDialog.showConfirmation(this, rh.gs(R.string.removerecord), getConfirmationText(selectedItems), Runnable {
+            selectedItems.forEach { _, item ->
+                quickWizard.remove(item.position)
+                rxBus.send(EventQuickWizardChange())
+            }
+            actionHelper.finish()
+        })
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_actions, menu)
+        return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
@@ -220,6 +182,17 @@ class QuickWizardListActivity : DaggerAppCompatActivityWithResult() {
                 true
             }
 
-            else              -> false
+            else              -> actionHelper.onOptionsItemSelected(item)
+
         }
+
+    private fun getConfirmationText(selectedItems: SparseArray<QuickWizardEntry>): String {
+        if (selectedItems.size() == 1) {
+            val entry = selectedItems.valueAt(0)
+            return "${rh.gs(R.string.remove_button)} ${entry.buttonText()} ${rh.gs(R.string.format_carbs, entry.carbs())}\n" +
+                "${dateUtil.timeString(entry.validFromDate())} - ${dateUtil.timeString(entry.validToDate())}"
+        }
+        return rh.gs(R.string.confirm_remove_multiple_items, selectedItems.size())
+    }
+
 }

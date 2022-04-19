@@ -109,7 +109,7 @@ android {
     defaultConfig {
         multiDexEnabled true
         versionCode 1500
-        version "3.0.0.1-dev-aidex"
+        version "3.0.0.1-dev-i"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "REMOTE", '"' + generateGitRemote() + '"'
@@ -167,9 +167,6 @@ android {
 
 allprojects {
     repositories {
-        flatDir {
-            dirs 'libs'
-        }
     }
 }
 

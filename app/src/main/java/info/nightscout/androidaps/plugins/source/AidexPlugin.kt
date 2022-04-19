@@ -96,7 +96,7 @@ class AidexPlugin @Inject constructor(
             )
             repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
                 .doOnError {
-                    aapsLogger.error(LTag.DATABASE, "Error while saving values from Xdrip", it)
+                    aapsLogger.error(LTag.DATABASE, "Error while saving values from Aidex", it)
                     ret = Result.failure(workDataOf("Error" to it.toString()))
                 }
                 .blockingGet()

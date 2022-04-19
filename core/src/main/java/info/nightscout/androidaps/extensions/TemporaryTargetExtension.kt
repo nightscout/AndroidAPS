@@ -99,6 +99,7 @@ fun TemporaryTarget.toJson(isAdd: Boolean, units: GlucoseUnit, dateUtil: DateUti
         .put("durationInMilliseconds", duration)
         .put("isValid", isValid)
         .put("created_at", dateUtil.toISOString(timestamp))
+        .put("timestamp", timestamp)
         .put("enteredBy", "AndroidAPS").also {
             if (lowTarget > 0) it
                 .put("reason", reason.text)

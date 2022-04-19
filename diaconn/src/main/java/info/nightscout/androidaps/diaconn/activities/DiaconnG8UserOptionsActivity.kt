@@ -25,7 +25,6 @@ import javax.inject.Inject
 
 class DiaconnG8UserOptionsActivity : NoSplashAppCompatActivity() {
 
-    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var context: Context
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump

@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    card_view:cardBackgroundColor="@color/cardColorBackground"
+    card_view:cardElevation="0dp"
+    card_view:cardBackgroundColor="?attr/cardItemBackgroundColor"
     card_view:cardUseCompatPadding="true">
 
     <LinearLayout
@@ -17,7 +18,7 @@
             android:id="@+id/date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/list_delimiter"
+            android:background="?android:attr/dividerHorizontal"
             android:gravity="center"
             android:text="1.1.2000"
             android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -58,7 +59,7 @@
                 android:paddingStart="10dp"
                 android:text="NS"
                 android:textAlignment="viewEnd"
-                android:textColor="@color/colorSetTempButton" />
+                android:textColor="?attr/setTempButton" />
 
             <TextView
                 android:id="@+id/invalid"
@@ -66,19 +67,19 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="10dp"
                 android:text="@string/invalid"
-                android:textColor="@android:color/holo_red_light" />
-
-            <TextView
-                android:id="@+id/remove"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="10dp"
-                android:paddingEnd="5dp"
-                android:text="@string/remove_button"
-                android:textAlignment="viewEnd"
-                android:textColor="@android:color/holo_orange_light" />
+                android:textColor="?attr/alarmColor" />
 
         </LinearLayout>
+
+        <CheckBox
+            android:id="@+id/cb_remove"
+            android:layout_width="wrap_content"
+            android:layout_gravity="end"
+            android:layout_height="19dp"
+            android:contentDescription="@string/select_for_removal"
+            android:minWidth="0dp"
+            android:layout_marginTop="-25dp"
+            android:visibility="gone"/>
 
     </LinearLayout>
 

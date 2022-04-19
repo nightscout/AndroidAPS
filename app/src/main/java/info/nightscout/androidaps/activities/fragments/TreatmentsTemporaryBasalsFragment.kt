@@ -1,15 +1,15 @@
 package info.nightscout.androidaps.activities.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.util.SparseArray
 import android.view.*
-import androidx.appcompat.widget.Toolbar
 import androidx.core.util.forEach
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.activities.fragments.TreatmentsTemporaryBasalsFragment.RecyclerViewAdapter.TempBasalsViewHolder
 import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
@@ -23,7 +23,6 @@ import info.nightscout.androidaps.database.transactions.InvalidateExtendedBolusT
 import info.nightscout.androidaps.database.transactions.InvalidateTemporaryBasalTransaction
 import info.nightscout.androidaps.databinding.TreatmentsTempbasalsFragmentBinding
 import info.nightscout.androidaps.databinding.TreatmentsTempbasalsItemBinding
-import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.events.EventTempBasalChange
 import info.nightscout.androidaps.extensions.iobCalc
 import info.nightscout.androidaps.extensions.toStringFull
@@ -31,18 +30,18 @@ import info.nightscout.androidaps.extensions.toTemporaryBasal
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.activities.fragments.TreatmentsTemporaryBasalsFragment.RecyclerViewAdapter.TempBasalsViewHolder
-import info.nightscout.androidaps.events.EventTreatmentUpdateGui
+import info.nightscout.androidaps.utils.ActionModeHelper
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.util.concurrent.TimeUnit
@@ -65,24 +64,28 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
     @Inject lateinit var repository: AppRepository
 
     private var _binding: TreatmentsTempbasalsFragmentBinding? = null
+
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
-
+    private var menu: Menu? = null
+    private lateinit var actionHelper: ActionModeHelper<TemporaryBasal>
     private val millsToThePast = T.days(30).msecs()
-    private var selectedItems: SparseArray<TemporaryBasal> = SparseArray()
     private var showInvalidated = false
-    private var toolbar: Toolbar? = null
-    private var removeActionMode: ActionMode? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         TreatmentsTempbasalsFragmentBinding.inflate(inflater, container, false).also { _binding = it }.root
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        toolbar = activity?.findViewById(R.id.toolbar)
+        actionHelper = ActionModeHelper(rh, activity)
+        actionHelper.setUpdateListHandler { binding.recyclerview.adapter?.notifyDataSetChanged() }
+        actionHelper.setOnRemoveHandler { removeSelected(it) }
         setHasOptionsMenu(true)
         binding.recyclerview.setHasFixedSize(true)
         binding.recyclerview.layoutManager = LinearLayoutManager(view.context)
+        binding.recyclerview.emptyView = binding.noRecordsText
+        binding.recyclerview.loadingView = binding.progressBar
     }
 
     private fun tempBasalsWithInvalid(now: Long) = repository
@@ -101,6 +104,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
 
     fun swapAdapter() {
         val now = System.currentTimeMillis()
+        binding.recyclerview.isLoading = true
         disposable +=
             if (activePlugin.activePump.isFakingTempsByExtendedBoluses) {
                 if (showInvalidated)
@@ -134,14 +138,8 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
     override fun onResume() {
         super.onResume()
         swapAdapter()
-
         disposable += rxBus
             .toObservable(EventTempBasalChange::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({ swapAdapter() }, fabricPrivacy::logException)
-
-        disposable += rxBus
-            .toObservable(EventAutosensCalculationFinished::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ swapAdapter() }, fabricPrivacy::logException)
     }
@@ -149,13 +147,13 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
     @Synchronized
     override fun onPause() {
         super.onPause()
+        actionHelper.finish()
         disposable.clear()
     }
 
     @Synchronized
     override fun onDestroyView() {
         super.onDestroyView()
-        removeActionMode?.let { it.finish() }
         binding.recyclerview.adapter = null // avoid leaks
         _binding = null
     }
@@ -172,10 +170,12 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
             holder.binding.ph.visibility = (tempBasal.interfaceIDs.pumpId != null).toVisibility()
             val sameDayPrevious = position > 0 && dateUtil.isSameDay(tempBasal.timestamp, tempBasalList[position - 1].timestamp)
             holder.binding.date.visibility = sameDayPrevious.not().toVisibility()
-            holder.binding.date.text = dateUtil.dateString(tempBasal.timestamp)
+            val newDay = position == 0 || !dateUtil.isSameDayGroup(tempBasal.timestamp, tempBasalList[position - 1].timestamp)
+            holder.binding.date.visibility = newDay.toVisibility()
+            holder.binding.date.text = if (newDay) dateUtil.dateStringRelative(tempBasal.timestamp, rh) else ""
             if (tempBasal.isInProgress) {
                 holder.binding.time.text = dateUtil.timeString(tempBasal.timestamp)
-                holder.binding.time.setTextColor(rh.gc(R.color.colorActive))
+                holder.binding.time.setTextColor(rh.gac(context, R.attr.activeColor))
             } else {
                 holder.binding.time.text = dateUtil.timeRangeString(tempBasal.timestamp, tempBasal.end)
                 holder.binding.time.setTextColor(holder.binding.duration.currentTextColor)
@@ -192,21 +192,20 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
             holder.binding.suspendFlag.visibility = (tempBasal.type == TemporaryBasal.Type.PUMP_SUSPEND).toVisibility()
             holder.binding.emulatedSuspendFlag.visibility = (tempBasal.type == TemporaryBasal.Type.EMULATED_PUMP_SUSPEND).toVisibility()
             holder.binding.superBolusFlag.visibility = (tempBasal.type == TemporaryBasal.Type.SUPERBOLUS).toVisibility()
-            if (abs(iob.basaliob) > 0.01) holder.binding.iob.setTextColor(rh.gc(R.color.colorActive)) else holder.binding.iob.setTextColor(holder.binding.duration.currentTextColor)
-            holder.binding.cbRemove.visibility = (tempBasal.isValid && removeActionMode != null).toVisibility()
-            if (removeActionMode != null) {
+            if (abs(iob.basaliob) > 0.01) holder.binding.iob.setTextColor(rh.gac(context, R.attr.activeColor)) else holder.binding.iob.setTextColor(holder.binding.duration.currentTextColor)
+            holder.binding.cbRemove.visibility = (tempBasal.isValid && actionHelper.isRemoving).toVisibility()
+            if (actionHelper.isRemoving) {
                 holder.binding.cbRemove.setOnCheckedChangeListener { _, value ->
-                    if (value) {
-                        selectedItems.put(position, tempBasal)
-                    } else {
-                        selectedItems.remove(position)
-                    }
-                    removeActionMode?.title = rh.gs(R.string.count_selected, selectedItems.size())
+                    actionHelper.updateSelection(position, tempBasal, value)
                 }
-                holder.binding.cbRemove.isChecked = selectedItems.get(position) != null
+                holder.binding.root.setOnClickListener {
+                    holder.binding.cbRemove.toggle()
+                    actionHelper.updateSelection(position, tempBasal, holder.binding.cbRemove.isChecked)
+                }
+                holder.binding.cbRemove.isChecked = actionHelper.isSelected(position)
             }
             val nextTimestamp = if (tempBasalList.size != position + 1) tempBasalList[position + 1].timestamp else 0L
-            holder.binding.delimiter.visibility = dateUtil.isSameDay(tempBasal.timestamp, nextTimestamp).toVisibility()
+            holder.binding.delimiter.visibility = dateUtil.isSameDayGroup(tempBasal.timestamp, nextTimestamp).toVisibility()
         }
 
         override fun getItemCount() = tempBasalList.size
@@ -220,69 +219,46 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        this.menu = menu
         inflater.inflate(R.menu.menu_treatments_temp_basal, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
+    private fun updateMenuVisibility() {
+        menu?.findItem(R.id.nav_hide_invalidated)?.isVisible = showInvalidated
+        menu?.findItem(R.id.nav_show_invalidated)?.isVisible = !showInvalidated
+    }
+
     override fun onPrepareOptionsMenu(menu: Menu) {
-        menu.findItem(R.id.nav_hide_invalidated)?.isVisible = showInvalidated
-        menu.findItem(R.id.nav_show_invalidated)?.isVisible = !showInvalidated
+        updateMenuVisibility()
 
         return super.onPrepareOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
         when (item.itemId) {
-            R.id.nav_remove_items -> {
-                removeActionMode = toolbar?.startActionMode(RemoveActionModeCallback())
-                true
-            }
+            R.id.nav_remove_items -> actionHelper.startRemove()
 
             R.id.nav_show_invalidated -> {
                 showInvalidated = true
-                rxBus.send(EventTreatmentUpdateGui())
+                updateMenuVisibility()
+                ToastUtils.showToastInUiThread(context, rh.gs(R.string.show_invalidated_records))
+                swapAdapter()
                 true
             }
 
             R.id.nav_hide_invalidated -> {
                 showInvalidated = false
-                rxBus.send(EventTreatmentUpdateGui())
+                updateMenuVisibility()
+                ToastUtils.showToastInUiThread(context, rh.gs(R.string.hide_invalidated_records))
+                swapAdapter()
                 true
             }
 
             else -> false
         }
 
-    inner class RemoveActionModeCallback : ActionMode.Callback {
-
-        override fun onCreateActionMode(mode: ActionMode, menu: Menu?): Boolean {
-            mode.menuInflater.inflate(R.menu.menu_delete_selection, menu)
-            selectedItems.clear()
-            mode.title = rh.gs(R.string.count_selected, selectedItems.size())
-            binding.recyclerview.adapter?.notifyDataSetChanged()
-            return true
-        }
-
-        override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?) = false
-
-        override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
-            return when (item.itemId) {
-                R.id.remove_selected -> {
-                    removeSelected()
-                    true
-                }
-
-                else                 -> false
-            }
-        }
-
-        override fun onDestroyActionMode(mode: ActionMode?) {
-            removeActionMode = null
-            binding.recyclerview.adapter?.notifyDataSetChanged()
-        }
-    }
-
-    private fun getConfirmationText(): String {
+    private fun getConfirmationText(selectedItems: SparseArray<TemporaryBasal>): String {
         if (selectedItems.size() == 1) {
             val tempBasal = selectedItems.valueAt(0)
             val isFakeExtended = tempBasal.type == TemporaryBasal.Type.FAKE_EXTENDED
@@ -294,11 +270,11 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
         return rh.gs(R.string.confirm_remove_multiple_items, selectedItems.size())
     }
 
-    private fun removeSelected() {
+    private fun removeSelected(selectedItems: SparseArray<TemporaryBasal>) {
         if (selectedItems.size() > 0)
             activity?.let { activity ->
-                OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord), getConfirmationText(), Runnable {
-                    selectedItems.forEach {_, tempBasal ->
+                OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord), getConfirmationText(selectedItems), Runnable {
+                    selectedItems.forEach { _, tempBasal ->
                         var extendedBolus: ExtendedBolus? = null
                         val isFakeExtended = tempBasal.type == TemporaryBasal.Type.FAKE_EXTENDED
                         if (isFakeExtended) {
@@ -330,10 +306,8 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
                                     { aapsLogger.error(LTag.DATABASE, "Error while invalidating temporary basal", it) })
                         }
                     }
-                    removeActionMode?.finish()
+                    actionHelper.finish()
                 })
             }
-        else
-            removeActionMode?.finish()
     }
 }

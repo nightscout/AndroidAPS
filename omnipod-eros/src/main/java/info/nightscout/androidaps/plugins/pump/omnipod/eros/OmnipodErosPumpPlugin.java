@@ -599,6 +599,8 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
     @NonNull
     @Override
     public PumpEnactResult setNewBasalProfile(@NonNull Profile profile) {
+        if (!podStateManager.hasPodState())
+            return new PumpEnactResult(getInjector()).enacted(false).success(false).comment("Null pod state");
         PumpEnactResult result = executeCommand(OmnipodCommandType.SET_BASAL_PROFILE, () -> aapsOmnipodErosManager.setBasalProfile(profile, true));
 
         aapsLogger.info(LTag.PUMP, "Basal Profile was set: " + result.getSuccess());
@@ -850,6 +852,8 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
 
     @Override
     public PumpEnactResult executeCustomCommand(@NonNull CustomCommand command) {
+        if (!podStateManager.hasPodState())
+            return new PumpEnactResult(getInjector()).enacted(false).success(false).comment("Null pod state");
         if (command instanceof CommandSilenceAlerts) {
             return executeCommand(OmnipodCommandType.ACKNOWLEDGE_ALERTS, aapsOmnipodErosManager::acknowledgeAlerts);
         }
@@ -980,7 +984,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         aapsLogger.info(LTag.PUMP, "Time, Date and/or TimeZone changed. [changeType=" + timeChangeType.name() + ", eventHandlingEnabled=" + aapsOmnipodErosManager.isTimeChangeEventEnabled() + "]");
 
         Instant now = Instant.now();
-        if (timeChangeType == TimeChangeType.TimeChanged && now.isBefore(lastTimeDateOrTimeZoneUpdate.plus(Duration.standardDays(1L)))){
+        if (timeChangeType == TimeChangeType.TimeChanged && now.isBefore(lastTimeDateOrTimeZoneUpdate.plus(Duration.standardDays(1L)))) {
             aapsLogger.info(LTag.PUMP, "Ignoring time change because not a TZ or DST time change and the last one happened less than 24 hours ago.");
             return;
         }
@@ -1083,7 +1087,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         return aapsOmnipodErosManager.isShowRileyLinkBatteryLevel();
     }
 
-    public boolean isBatteryChangeLoggingEnabled() {
+    @Override public boolean isBatteryChangeLoggingEnabled() {
         return aapsOmnipodErosManager.isBatteryChangeLoggingEnabled();
     }
 

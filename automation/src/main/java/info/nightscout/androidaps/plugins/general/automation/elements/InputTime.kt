@@ -38,7 +38,7 @@ class InputTime(private val rh: ResourceHelper, private val dateUtil: DateUtil) 
                                 val cal = Calendar.getInstance()
                                 cal.timeInMillis = toMills(value)
                                 TimePickerDialog(
-                                    it, R.style.MaterialPickerTheme,
+                                    it,
                                     { _, hour, minute ->
                                         value = 60 * hour + minute
                                         text = dateUtil.timeString(toMills(value))

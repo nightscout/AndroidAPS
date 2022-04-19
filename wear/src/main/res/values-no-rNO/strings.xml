@@ -72,7 +72,8 @@
     <string name="menu_treatment">Behandling</string>
     <string name="menu_treatment_short">Behandle</string>
     <string name="menu_bolus">Bolus</string>
-    <string name="menu_ecarb">Karbo</string>
+    <string name="menu_carb">Karbo</string>
+    <string name="menu_ecarb">eKarbo</string>
     <string name="menu_settings">Innstillinger</string>
     <string name="menu_status">Status</string>
     <string name="menu_resync">Re-synk</string>
@@ -94,6 +95,7 @@
     <string name="action_low" comment="In temp target menu, lower value from range">Lav</string>
     <string name="action_high" comment="In temp target menu, higher value from range">Høy</string>
     <string name="action_carbs">Karbo</string>
+    <string name="action_ecarbs">eKarbo</string>
     <string name="action_percentage">Prosent</string>
     <string name="action_start_min">Start [min]</string>
     <string name="action_duration_h">Varighet [h]</string>

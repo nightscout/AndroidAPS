@@ -38,6 +38,7 @@ ActionsTestBase : TestBaseWithProfile() {
         override var enabled: Boolean
             get() = true
             set(_) {}
+        override var lastBgTriggeredRun: Long = 0
 
         override fun invoke(initiator: String, allowNotification: Boolean, tempBasalFallback: Boolean) {}
         override fun acceptChangeRequest() {}

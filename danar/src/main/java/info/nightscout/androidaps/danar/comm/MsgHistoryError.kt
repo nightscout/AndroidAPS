@@ -8,7 +8,7 @@ class MsgHistoryError(
 ) : MsgHistoryAll(injector) {
 
     init {
-        SetCommand(0x3106)
+        setCommand(0x3106)
         aapsLogger.debug(LTag.PUMPCOMM, "New message")
     }
     // Handle message taken from MsgHistoryAll

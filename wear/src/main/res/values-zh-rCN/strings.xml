@@ -72,7 +72,8 @@
     <string name="menu_treatment">治疗</string>
     <string name="menu_treatment_short">治疗</string>
     <string name="menu_bolus">大剂量</string>
-    <string name="menu_ecarb">碳水</string>
+    <string name="menu_carb">碳水化合物</string>
+    <string name="menu_ecarb">碳水化合物</string>
     <string name="menu_settings">设置</string>
     <string name="menu_status">状态</string>
     <string name="menu_resync">再次同步</string>
@@ -94,6 +95,7 @@
     <string name="action_low" comment="In temp target menu, lower value from range">低</string>
     <string name="action_high" comment="In temp target menu, higher value from range">高</string>
     <string name="action_carbs">碳水</string>
+    <string name="action_ecarbs">碳水化合物</string>
     <string name="action_percentage">百分比</string>
     <string name="action_start_min">启动 [min]</string>
     <string name="action_duration_h">持续时长 [h]</string>

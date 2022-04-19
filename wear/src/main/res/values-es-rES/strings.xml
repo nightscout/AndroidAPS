@@ -34,7 +34,7 @@
     <string name="pref_show_bg">Mostrar glucosa</string>
     <string name="pref_show_direction_arrow">Mostrar flecha de dirección</string>
     <string name="pref_show_ago">Mostrar histórico</string>
-    <string name="pref_dark" comment="Enables dark visual theme">Oscuro</string>
+    <string name="pref_dark" comment="Enables dark visual theme">Tema oscuro</string>
     <string name="pref_highlight_basals">Resaltar las basales</string>
     <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Divisor de coincidencia</string>
     <string name="pref_chart_timeframe">Gráfico por franja de tiempo</string>
@@ -60,19 +60,20 @@
     <string name="pref_wizard_in_menu">Calculadora en el menú</string>
     <string name="pref_prime_in_menu">Cebar en menú</string>
     <string name="pref_single_target">Objetivo único</string>
-    <string name="pref_wizard_percentage">Porcentaje en Calculadora</string>
+    <string name="pref_wizard_percentage">Porcentaje en calculadora</string>
     <string name="pref_complication_tap_action">Acción de Toque Complicación</string>
     <string name="pref_unicode_in_complications">Unicode en complicaciones</string>
     <string name="pref_version">Versión:</string>
     <string name="pref_moreWatchfaceSettings">Más ajustes de la esfera del reloj</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Mira en la configuración de la esfera del reloj, por favor</string>
-    <string name="menu_tempt">Objetivo Temporal</string>
+    <string name="menu_tempt">ObjetivoT</string>
     <string name="menu_wizard">Calculadora</string>
     <string name="menu_wizard_short">Calc</string>
     <string name="menu_treatment">Tratamiento</string>
     <string name="menu_treatment_short">Trata</string>
     <string name="menu_bolus">Bolo</string>
-    <string name="menu_ecarb">Carbos</string>
+    <string name="menu_carb">Carbohidratos</string>
+    <string name="menu_ecarb">eCarbs</string>
     <string name="menu_settings">Configuración</string>
     <string name="menu_status">Estado</string>
     <string name="menu_resync">Re-sincronizar</string>
@@ -94,6 +95,7 @@
     <string name="action_low" comment="In temp target menu, lower value from range">Bajo</string>
     <string name="action_high" comment="In temp target menu, higher value from range">Alto</string>
     <string name="action_carbs">Carbohidratos</string>
+    <string name="action_ecarbs">eCarbs</string>
     <string name="action_percentage">Porcentaje</string>
     <string name="action_start_min">Iniciar [min]</string>
     <string name="action_duration_h">Duración [h]</string>

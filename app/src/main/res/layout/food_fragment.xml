@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="info.nightscout.androidaps.plugins.general.food.TreatmentsFoodFragment">
+    tools:context="info.nightscout.androidaps.plugins.general.food.FoodFragment">
 
     <info.nightscout.androidaps.utils.ui.SingleClickButton
         android:id="@+id/refresh_from_nightscout"
@@ -16,77 +16,62 @@
         android:text="@string/refresheventsfromnightscout"
         tools:visibility="visible" />
 
-    <LinearLayout
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/filterinputLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/filter"
+            app:startIconDrawable="@android:drawable/ic_menu_search"
+            app:endIconMode="clear_text">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/filter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:autofillHints="@string/notes_label"
+                android:gravity="start"
+                android:textStyle="bold"
+                android:inputType="text|textCapSentences" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:hint="@string/category">
 
-        <ImageView
-            android:layout_width="wrap_content"
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+            android:id="@+id/categoryList"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/filter"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            app:srcCompat="@android:drawable/ic_menu_search" />
+            android:inputType="none" />
 
-        <EditText
-            android:id="@+id/filter"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:autofillHints="@string/filter"
-            android:ems="10"
-            android:inputType="text"
-            android:text="" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-        <ImageView
-            android:id="@+id/clearfilter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/clear_filter"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
-    </LinearLayout>
-
-    <LinearLayout
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:orientation="horizontal">
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:hint="@string/subcategory">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+            android:id="@+id/subcategoryList"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:text="@string/category" />
+            android:inputType="none" />
 
-        <Spinner
-            android:id="@+id/category"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="end"
-            android:minWidth="100dp" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:text="@string/subcategory" />
-
-        <Spinner
-            android:id="@+id/subcategory"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="end"
-            android:minWidth="100dp" />
-
-    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview"

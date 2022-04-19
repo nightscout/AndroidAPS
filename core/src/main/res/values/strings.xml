@@ -64,6 +64,7 @@
     <string name="key_resistantadult" translatable="false">resistantadult</string>
     <string name="key_pregnant" translatable="false">pregnant</string>
     <string name="key_app_expiration" translatable="false">app_expiration</string>
+    <string name="key_use_dark_mode" translatable="false">use_dark_mode</string>
 
     <!--    General-->
     <string name="refresh">Refresh</string>
@@ -204,6 +205,10 @@
     <string name="minago">%1$d m ago</string>
     <string name="minago_long">%1$d minutes ago</string>
     <string name="hoursago">%1$.1f h ago</string>
+    <string name="days_ago">%1$.1f days ago</string>
+    <string name="days_ago_round">%1$.0f days ago</string>
+    <string name="in_days">in %1$.0f days</string>
+    <string name="in_days_round">in %1$.0f days</string>
     <string name="shorthour">h</string>
     <string name="days">days</string>
     <string name="hours">hours</string>
@@ -219,10 +224,16 @@
     <string name="unit_weeks">weeks</string>
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
+    <string name="later_today">Later today</string>
+    <string name="tomorrow">Tomorrow</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
 
     <!--    Protection-->
     <string name="wrongpassword">Wrong password</string>
+    <string name="wrongpin">Wrong PIN</string>
     <string name="passwords_dont_match">Passwords don\'t match</string>
+    <string name="pin_dont_match">PINs don\'t match</string>
 
     <!--    Profile-->
     <string name="basalprofilenotaligned">Basal values not aligned to hours: %1$s</string>
@@ -251,11 +262,6 @@
 
     <!--    Temptarget-->
     <string name="mins">%1$d min</string>
-
-    <!--    TDD-->
-    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f U</b> Bol: <b>%3$.2f U</b> Bas: <b>%4$.2f U(%5$.0f%%)</b>]]></string>
-    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f U</b> Bol: <b>%3$.2f U</b> Bas: <b>%4$.2f U(%5$.0f%%)</b> Carbs: <b>%6$.0f g</b>]]></string>
-    <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> in <b>%3$d</b> days<br>]]></string>
 
     <!--    Translator-->
     <string name="careportal">Careportal</string>
@@ -547,6 +553,14 @@
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight Refresh Button</string>
     <string name="a11y_min_button_description">decrement %1$s by %2$s</string>
     <string name="a11y_plus_button_description">increment %1$s by %2$s</string>
+    <string name="formatPercent">%1$.0f%%</string>
+    <string name="basal">Basal</string>
+    <string name="basalpct">Basal %</string>
+    <string name="count_selected">%1$d selected</string>
+    <string name="sort_label">Sort</string>
+    <string name="remove_items">Remove Items</string>
+    <string name="sort_items">Sort Items</string>
+    <string name="remove_selected_items">Remove Selected Items</string>
 
     <plurals name="days">
         <item quantity="one">%1$d day</item>

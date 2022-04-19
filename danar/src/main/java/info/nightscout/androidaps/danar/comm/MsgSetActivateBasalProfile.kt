@@ -10,8 +10,8 @@ class MsgSetActivateBasalProfile(
 
     // index 0-3
     init {
-        SetCommand(0x330C)
-        AddParamByte(index)
+        setCommand(0x330C)
+        addParamByte(index)
         aapsLogger.debug(LTag.PUMPCOMM, "Activate basal profile: $index")
     }
 

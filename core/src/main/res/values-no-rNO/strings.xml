@@ -136,6 +136,10 @@
     <string name="minago">%1$d min siden</string>
     <string name="minago_long">%1$d minutter siden</string>
     <string name="hoursago">%1$.1f timer siden</string>
+    <string name="days_ago">%1$.1f dager siden</string>
+    <string name="days_ago_round">%1$.0f dager siden</string>
+    <string name="in_days">om %1$.0f dager</string>
+    <string name="in_days_round">om %1$.0f dager</string>
     <string name="shorthour">t</string>
     <string name="days">dager</string>
     <string name="hours">timer</string>
@@ -151,9 +155,15 @@
     <string name="unit_weeks">uker</string>
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
+    <string name="later_today">Senere i dag</string>
+    <string name="tomorrow">I morgen</string>
+    <string name="today">Idag</string>
+    <string name="yesterday">I går</string>
     <!--    Protection-->
     <string name="wrongpassword">Feil passord</string>
+    <string name="wrongpin">Feil PIN-kode</string>
     <string name="passwords_dont_match">Passord stemmer ikke overens</string>
+    <string name="pin_dont_match">PIN-kodene samsvarer ikke</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Basal verdier er ikke angitt på hele timer: %1$s</string>
     <string name="minimalbasalvaluereplaced">Basal verdi erstattet med laveste tillate verdi: %1$s</string>
@@ -176,10 +186,6 @@
     <string name="zerovalueinprofile">Ugyldig profil: %1$s</string>
     <!--    Temptarget-->
     <string name="mins">%1$d min</string>
-    <!--    TDD-->
-    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f E</b> Bol: <b>%3$.2f E</b> Bas: <b>%4$.2f E(%5$.0f%%)</b>]]></string>
-    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f E</b> Bol: <b>%3$.2f E</b> Bas: <b>%4$.2f E(%5$.0f%%)</b> Karbo: <b>%6$.0f g</b>]]></string>
-    <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> i <b>%3$d</b> dager<br>]]></string>
     <!--    Translator-->
     <string name="careportal">Careportal</string>
     <string name="careportal_bgcheck">BS kontroll</string>
@@ -451,6 +457,14 @@
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight oppdateringsknapp</string>
     <string name="a11y_min_button_description">reduser %1$s med %2$s</string>
     <string name="a11y_plus_button_description">øk %1$s med %2$s</string>
+    <string name="formatPercent">%1$.0f%%</string>
+    <string name="basal">Basal</string>
+    <string name="basalpct">Basal %</string>
+    <string name="count_selected">%1$d valgt</string>
+    <string name="sort_label">Sorter</string>
+    <string name="remove_items">Slett elementer</string>
+    <string name="sort_items">Sorter elementer</string>
+    <string name="remove_selected_items">Slett valgte elementer</string>
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dager</item>

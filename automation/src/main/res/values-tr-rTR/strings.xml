@@ -113,4 +113,11 @@
     <string name="automation_event">Otomasyon durumu</string>
     <string name="reorder_label">Yeniden sırala</string>
     <string name="user_action">Kullanıcı onayı ile</string>
+    <string name="remove_automation">Otomasyonu kaldır</string>
+    <string name="sort_automation">Otomasyonu sırala</string>
+    <string name="remove_selected_items">Seçilen öğeleri kaldır</string>
+    <string name="count_selected">%1$d seçildi</string>
+    <string name="confirm_remove_multiple_items">%1$d öğeyi kaldırmak istediğinizden emin misiniz</string>
+    <string name="sort_label">Sırala</string>
+    <string name="system_automation">Sistem otomasyonu</string>
 </resources>

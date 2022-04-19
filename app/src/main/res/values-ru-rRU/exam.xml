@@ -104,13 +104,11 @@
     <string name="troubleshooting_wheretoask">Где искать помощь с AndroidAPS?</string>
     <string name="troubleshooting_fb">Вы можете попросить совета в группе AndroidAPS Users Facebook.</string>
     <string name="troubleshooting_wiki">Вам следует прочитать (и перечитать) документацию AndroidAPS.</string>
-    <string name="troubleshooting_gitter">Можно консультироваться и пересылать логи технических проблем и неполадок в чате Gitter по AndroidAPS.</string>
+    <string name="troubleshooting_gitter">Можно консультироваться, a также пересылать логи технических проблем и неполадок в чате Discord по AndroidAPS.</string>
     <string name="troubleshooting_yourendo">Вы должны спросить в диабетической клинике / у вашего врача-эндокринолога.</string>
     <string name="troubleshooting_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
-    <string name="troubleshooting_hint3">https://gitter.im/MilosKozak/AndroidAPS
- 
-Context | Edit Context</string>
+    <string name="troubleshooting_hint3">https://discord.gg/4fQUWHZ4Mw</string>
     <string name="insulin_label">Модули для инсулинов</string>
     <string name="insulin_ultrarapid">Какой инсулин следует использовать с модулем Сверхбыстрый Oref?</string>
     <string name="insulin_fiasp">Fiasp®</string>
