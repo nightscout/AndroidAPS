@@ -95,7 +95,7 @@
             android:id="@+id/requestcode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Request code: XXXXX" />
+            tools:text="Request code: XXXXX" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -108,8 +108,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
-                android:hint="XXXXXXXXXX"
-                android:inputType="text" />
+                android:inputType="text"
+                tools:hint="XXXXXXXXXX"
+                android:importantForAutofill="no" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/enterbutton"

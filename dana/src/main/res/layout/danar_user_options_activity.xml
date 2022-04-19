@@ -8,7 +8,6 @@
     android:focusableInTouchMode="true"
     tools:context="info.nightscout.androidaps.dana.activities.DanaUserOptionsActivity">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -49,16 +48,16 @@
             android:orientation="horizontal"
             android:padding="5dp" />
 
-        <Switch
+        <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/timeformat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            android:showText="true"
             android:text="@string/danar_timedisplay"
             android:textOff="@string/timeformat12h"
-            android:textOn="@string/timeformat24h" />
+            android:textOn="@string/timeformat24h"
+            app:showText="true" />
 
         <View
             android:layout_width="fill_parent"
@@ -69,7 +68,7 @@
             android:layout_marginBottom="5dp"
             android:background="?android:attr/dividerHorizontal" />
 
-        <Switch
+        <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/buttonscroll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -77,7 +76,8 @@
             android:layout_marginEnd="20dp"
             android:text="@string/danar_buttonscroll"
             android:textOff="@string/option_off"
-            android:textOn="@string/option_on" />
+            android:textOn="@string/option_on"
+            app:showText="true" />
 
         <View
             android:layout_width="fill_parent"
@@ -88,7 +88,7 @@
             android:layout_marginBottom="5dp"
             android:background="?android:attr/dividerHorizontal" />
 
-        <Switch
+        <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/beep"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -96,7 +96,8 @@
             android:layout_marginEnd="20dp"
             android:text="@string/danar_beep"
             android:textOff="@string/option_off"
-            android:textOn="@string/option_on" />
+            android:textOn="@string/option_on"
+            app:showText="true" />
 
         <View
             android:layout_width="fill_parent"
@@ -232,17 +233,17 @@
             android:layout_marginBottom="5dp"
             android:background="?android:attr/dividerHorizontal" />
 
-        <Switch
+        <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/units"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            android:showText="true"
             android:splitTrack="false"
             android:text="@string/danar_glucoseunits"
             android:textOff="@string/mgdl"
-            android:textOn="@string/mmol" />
+            android:textOn="@string/mmol"
+            app:showText="true" />
 
         <View
             android:layout_width="fill_parent"

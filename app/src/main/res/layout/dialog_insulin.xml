@@ -145,29 +145,28 @@
             android:padding="5dp">
 
             <com.google.android.material.button.MaterialButton
-                style="@style/GrayButton"
                 android:id="@+id/plus05"
+                style="@style/GrayButton"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:contentDescription="Increment insulin with 0.5"
-                android:text="+0.5" />
+                tools:text="+0.5" />
 
             <com.google.android.material.button.MaterialButton
-                style="@style/GrayButton"
                 android:id="@+id/plus10"
+                style="@style/GrayButton"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="+1.0" />
+                tools:text="+1.0" />
 
             <com.google.android.material.button.MaterialButton
-                style="@style/GrayButton"
                 android:id="@+id/plus20"
+                style="@style/GrayButton"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="+2.0" />
+                tools:text="+2.0" />
 
         </LinearLayout>
 

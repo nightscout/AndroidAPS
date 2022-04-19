@@ -20,6 +20,7 @@
             android:layout_marginTop="16dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
+            android:importantForAccessibility="no"
             android:onClick="exitPressed"
             app:srcCompat="@drawable/ic_exit_to_app" />
 

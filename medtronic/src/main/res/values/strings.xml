@@ -123,5 +123,7 @@
     <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d min remaining)</string>
     <string name="sixdigitnumber" translatable="false">^\\d{6}</string>
     <string name="invalid_history_data">Invalid pump history data detected. Open new issue and provide logs.</string>
+    <string name="riley_statistics">RL Stats</string>
+    <string name="medtronic_history_type">Type:</string>
 
 </resources>

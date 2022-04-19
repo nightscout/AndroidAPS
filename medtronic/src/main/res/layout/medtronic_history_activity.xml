@@ -7,7 +7,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="info.nightscout.androidaps.plugins.pump.medtronic.dialog.MedtronicHistoryActivity">
 
-
     <LinearLayout
         android:id="@+id/medtronic_historytop"
         android:layout_width="match_parent"
@@ -20,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:layout_marginEnd="20dp"
-            android:text="Type:"
+            android:text="@string/medtronic_history_type"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <Spinner
@@ -30,15 +29,14 @@
             android:layout_marginEnd="20dp" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
+            android:layout_gravity="end"
             android:layout_marginEnd="5dp"
             android:layout_weight="1"
             android:background="@drawable/pillborder"
             android:gravity="center_horizontal"
             android:text="@string/medtronic_pump_history" />
-
 
     </LinearLayout>
 

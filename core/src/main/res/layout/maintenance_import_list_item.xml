@@ -27,7 +27,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:baselineAligned="true"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            tools:ignore="UseCompoundDrawables">
 
             <ImageView
                 android:layout_width="18dp"
@@ -36,6 +37,7 @@
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="6dp"
                 android:layout_marginBottom="1dp"
+                android:contentDescription="@string/a11y_file"
                 app:srcCompat="@drawable/ic_meta_format"
                 app:tint="?attr/importListFileNameColor" />
 
@@ -46,13 +48,13 @@
                 android:layout_weight="1"
                 android:ellipsize="none"
                 android:maxLines="2"
+                android:paddingStart="0dp"
                 android:paddingEnd="10dp"
                 android:scrollHorizontally="false"
                 android:text="File name here"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="?attr/importListFileNameColor"
                 tools:ignore="HardcodedText" />
-
 
         </LinearLayout>
 
@@ -70,7 +72,7 @@
                 android:layout_weight="1"
                 android:ellipsize="none"
                 android:maxLines="2"
-
+                android:paddingStart="0dp"
                 android:paddingEnd="10dp"
                 android:scrollHorizontally="false"
                 android:text="File dir here"
@@ -79,7 +81,6 @@
                 android:textSize="11sp"
                 tools:ignore="HardcodedText" />
 
-
         </LinearLayout>
 
         <LinearLayout
@@ -87,16 +88,17 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="6dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            tools:ignore="UseCompoundDrawables">
 
             <ImageView
-
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="1dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="1dp"
+                android:contentDescription="@string/a11y_user"
                 app:srcCompat="@drawable/ic_meta_name"
                 app:tint="?attr/importListAdditionalInfoColor" />
 
@@ -110,16 +112,13 @@
                 android:textColor="?attr/importListAdditionalInfoColor"
                 tools:ignore="HardcodedText" />
 
-
         </LinearLayout>
-
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="3dp"
             android:orientation="horizontal">
-
 
             <ImageView
                 android:id="@+id/meta_date_time_icon"
@@ -129,6 +128,7 @@
                 android:layout_marginTop="1dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="1dp"
+                android:importantForAccessibility="no"
                 app:srcCompat="@drawable/ic_meta_date"
                 app:tint="?attr/importListAdditionalInfoColor" />
 

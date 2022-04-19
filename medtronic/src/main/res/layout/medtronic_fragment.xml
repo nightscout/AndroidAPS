@@ -4,13 +4,11 @@
     android:layout_height="match_parent"
     tools:context="info.nightscout.androidaps.plugins.pump.medtronic.MedtronicFragment">
 
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/buttons"
         android:fillViewport="true">
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -37,7 +35,6 @@
                     android:text="@string/initializing"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
             </LinearLayout>
-
 
             <View
                 android:layout_width="fill_parent"
@@ -86,9 +83,7 @@
                     android:textSize="14sp"
                     tools:ignore="HardcodedText,RtlSymmetry" />
 
-
             </LinearLayout>
-
 
             <View
                 android:id="@+id/rl_battery_view"
@@ -141,9 +136,7 @@
                     android:textSize="14sp"
                     tools:ignore="RtlSymmetry" />
 
-
             </LinearLayout>
-
 
             <View
                 android:layout_width="fill_parent"
@@ -191,7 +184,6 @@
                     android:text="{fa-bluetooth-b}"
                     android:textSize="14sp"
                     tools:ignore="HardcodedText,RtlSymmetry" />
-
 
             </LinearLayout>
 
@@ -248,7 +240,6 @@
                     android:text=""
                     android:textSize="14sp"
                     tools:ignore="RtlSymmetry" />
-
 
             </LinearLayout>
 
@@ -347,7 +338,6 @@
                     tools:ignore="RtlSymmetry" />
 
             </LinearLayout>
-
 
             <View
                 android:layout_width="fill_parent"
@@ -454,7 +444,6 @@
                 android:layout_marginBottom="5dp"
                 android:background="?android:attr/dividerHorizontal" />
 
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -493,7 +482,6 @@
                     tools:ignore="RtlSymmetry" />
 
             </LinearLayout>
-
 
             <View
                 android:layout_width="fill_parent"
@@ -581,7 +569,6 @@
             android:paddingEnd="0dp"
             android:text="@string/refresh" />
 
-
         <com.google.android.material.button.MaterialButton
             android:id="@+id/history"
             style="@style/ButtonSmallFontStyle"
@@ -602,8 +589,7 @@
             android:drawableTop="@drawable/ic_danarstats"
             android:paddingStart="0dp"
             android:paddingEnd="0dp"
-            android:text="RL Stats" />
-
+            android:text="@string/riley_statistics" />
 
     </LinearLayout>
 

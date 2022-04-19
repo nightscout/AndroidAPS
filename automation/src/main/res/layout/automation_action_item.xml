@@ -2,6 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
     android:background="?attr/ribbonDefaultColor"
@@ -30,12 +31,14 @@
         android:layout_alignParentBottom="true"
         android:layout_toStartOf="@id/automation_iconTrash"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        tools:ignore="UseCompoundDrawables">
 
         <ImageView
             android:id="@+id/automation_action_image"
             android:layout_width="24dp"
             android:layout_height="24dp"
+            android:importantForAccessibility="no"
             app:srcCompat="@drawable/ic_action_orange_48dp" />
 
         <TextView
