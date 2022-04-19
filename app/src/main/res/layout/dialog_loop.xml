@@ -182,7 +182,7 @@
                 android:id="@+id/overview_resume"
                 style="?android:attr/buttonStyle"
                 android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
+                android:layout_height="0dp"
                 android:layout_gravity="center"
                 android:layout_marginEnd="-4dp"
                 android:layout_weight="0.5"
@@ -291,7 +291,7 @@
                 android:id="@+id/overview_reconnect"
                 style="?android:attr/buttonStyle"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_gravity="center"
                 android:layout_marginEnd="-4dp"
                 android:layout_weight="0.5"
@@ -396,7 +396,7 @@
             android:id="@+id/cancel"
             style="@style/OkCancelButton.Text"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
             android:text="@string/cancel"
@@ -404,4 +404,5 @@
             android:textAlignment="textEnd" />
 
     </LinearLayout>
+
 </ScrollView>

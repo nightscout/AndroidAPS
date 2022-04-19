@@ -48,8 +48,8 @@
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingEnd="5dp"
-            tools:ignore="RtlSymmetry">
+            android:paddingStart="0dp"
+            android:paddingEnd="5dp">
 
             <TableRow
                 android:layout_width="match_parent"
@@ -149,7 +149,8 @@
                         android:padding="2dp"
                         android:text="%"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        tools:ignore="HardcodedText" />
 
                 </LinearLayout>
 
@@ -347,7 +348,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:checked="false"
-                    android:contentDescription="set carb timer alarm"
+                    android:contentDescription="@string/a11y_set_carb_timer"
                     android:drawableEnd="@drawable/ic_access_alarm_24dp"
                     android:layoutDirection="rtl"
                     android:padding="2dp" />
@@ -384,7 +385,8 @@
                     android:layout_marginEnd="5dp"
                     android:layout_weight="0.5"
                     android:hint="@string/profile"
-                    android:paddingStart="7dp">
+                    android:paddingStart="7dp"
+                    android:paddingEnd="0dp">
 
                     <com.google.android.material.textfield.MaterialAutoCompleteTextView
                         android:id="@+id/profileList"

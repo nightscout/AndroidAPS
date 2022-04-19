@@ -75,6 +75,7 @@
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingStart="0dp"
             android:paddingEnd="5dp">
 
             <TableRow
@@ -91,7 +92,7 @@
 
                     <TextView
                         android:id="@+id/time_label"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:width="120dp"
@@ -267,6 +268,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:importantForAccessibility="no"
                 android:src="@drawable/ic_access_alarm_24dp" />
 
             <CheckBox
@@ -276,6 +278,7 @@
                 android:layout_gravity="center_vertical"
                 android:checked="false"
                 android:padding="2dp" />
+
         </LinearLayout>
 
         <include

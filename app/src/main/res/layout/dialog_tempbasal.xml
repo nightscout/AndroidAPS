@@ -77,7 +77,8 @@
                 android:paddingStart="5dp"
                 android:paddingEnd="5dp"
                 android:text="%"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                tools:ignore="HardcodedText" />
 
         </LinearLayout>
 

@@ -85,15 +85,16 @@
                 android:layout_gravity="center"
                 android:gravity="center_horizontal|center_vertical"
                 android:padding="10dp"
-                android:text="08:20pm"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                tools:text="08:20pm" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:text="-"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/to"
@@ -102,8 +103,8 @@
                 android:layout_gravity="center"
                 android:gravity="center_horizontal|center_vertical"
                 android:padding="10dp"
-                android:text="08:20pm"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                tools:text="08:20pm" />
 
         </LinearLayout>
 
@@ -123,17 +124,17 @@
             <RadioButton
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="All" />
+                android:text="@string/device_all" />
 
             <RadioButton
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Phone" />
+                android:text="@string/device_phone" />
 
             <RadioButton
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Watch" />
+                android:text="@string/device_watch" />
 
         </RadioGroup>
 
@@ -366,9 +367,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:importantForAutofill="no"
             android:inputType="number"
-            android:maxLength="3"
-            android:paddingStart="10dp" />
+            android:maxLength="3"/>
 
         <include
             android:id="@+id/okcancel"

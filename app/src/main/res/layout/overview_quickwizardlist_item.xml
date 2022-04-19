@@ -2,7 +2,6 @@
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:card_view="http://schemas.android.com/tools"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/Widget.MaterialComponents.CardView"
     android:id="@+id/card"
@@ -30,6 +29,7 @@
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="false"
                 android:cropToPadding="false"
+                android:importantForAccessibility="no"
                 android:scaleType="fitStart"
                 app:srcCompat="@drawable/ic_quick_wizard" />
 
@@ -81,14 +81,15 @@
                         android:adjustViewBounds="false"
                         android:cropToPadding="false"
                         android:scaleType="fitStart"
-                        app:srcCompat="@drawable/ic_smartphone"
-                        tools:ignore="RtlSymmetry" />
+                        android:contentDescription="@string/a11y_only_on_phone"
+                        app:srcCompat="@drawable/ic_smartphone" />
 
                     <ImageView
                         android:id="@+id/sortHandle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:adjustViewBounds="false"
+                        android:contentDescription="@string/a11y_drag_and_drop_handle"
                         android:cropToPadding="false"
                         android:scaleType="fitStart"
                         app:srcCompat="@drawable/ic_reorder_gray_24dp" />

@@ -151,7 +151,8 @@
                 android:paddingStart="5dp"
                 android:paddingEnd="5dp"
                 android:text="%"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                tools:ignore="HardcodedText" />
 
         </LinearLayout>
 
@@ -210,7 +211,7 @@
 
             <CheckBox
                 android:id="@+id/tt"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
