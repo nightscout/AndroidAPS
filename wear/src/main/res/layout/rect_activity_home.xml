@@ -73,7 +73,6 @@
                     android:gravity="center_horizontal|bottom"
                     android:textStyle="bold" />
 
-
             </LinearLayout>
 
         </LinearLayout>

@@ -25,7 +25,6 @@
             validate:floatminNumber="0.1"
             validate:testType="floatNumericRange" />
 
-
         <EditTextPreference
             android:defaultValue="48"
             android:inputType="numberDecimal"

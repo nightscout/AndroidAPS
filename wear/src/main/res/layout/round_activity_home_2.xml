@@ -331,7 +331,6 @@
                     android:orientation="vertical"
                     android:textAlignment="center">
 
-
                     <TextView
                         android:id="@+id/iob_text"
                         android:layout_width="wrap_content"

@@ -45,7 +45,6 @@
     <color name="ic_local_reset">#E93057</color>
     <color name="ic_local_save">#67E86A</color>
 
-
     <!--    Fragments-->
     <color name="pumpStatusBackground">#CCCCCC</color>
 
@@ -70,7 +69,6 @@
     <color name="tempbasal">#C803A9F4</color>
     <color name="list_delimiter">#505050</color>
     <color name="basal">#00ffff</color>
-
 
     <!--    Loop     -->
     <color name="loopDisconnected">#939393</color>
