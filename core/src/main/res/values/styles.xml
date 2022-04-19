@@ -274,6 +274,17 @@
         <item name="dialogTitleBackground">@color/dialog_title_background</item>
     </style>
 
+    <!-- Style for Material Date Picker -->
+    <style name="DatePicker" parent="@style/ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="buttonBarPositiveButtonStyle">@style/PickerTextButton</item>
+        <item name="buttonBarNegativeButtonStyle">@style/PickerTextButton</item>
+    </style>
+
+    <!-- Style for Material Time Picker -->
+    <style name="TimePicker" parent="ThemeOverlay.MaterialComponents.TimePicker">
+        <item name="buttonStyle">@style/PickerTextButton</item>
+    </style>
+
     <!--    Buttons from MaterialDateTimePicker, Dialogs ...    -->
     <dimen name="material_button_height">48dp</dimen>
     <dimen name="material_button_text_size">14sp</dimen>

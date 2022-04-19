@@ -239,6 +239,8 @@
         <item name="separatorColor">@color/sphere_plastic_grey</item>
         <item name="isCompletedColor">@color/isCompleted</item>
         <item name="isNotCompletedColor">@color/isNotCompleted</item>
+        <item name="materialCalendarStyle">@style/DatePicker</item>
+        <item name="materialTimePickerStyle">@style/DatePicker</item>
         <!---Nightscout client TitelColor -->
         <item name="nsTitleColor">@color/defaulttext</item>
     </style>
@@ -269,6 +271,17 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowAnimationStyle">@android:style/Animation</item>
         <item name="dialogTitleBackground">@color/dialog_title_background</item>
+    </style>
+
+    <!-- Style for Material Date Picker -->
+    <style name="DatePicker" parent="@style/ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="buttonBarPositiveButtonStyle">@style/PickerTextButton</item>
+        <item name="buttonBarNegativeButtonStyle">@style/PickerTextButton</item>
+    </style>
+
+    <!-- Style for Material Time Picker -->
+    <style name="TimePicker" parent="ThemeOverlay.MaterialComponents.TimePicker">
+        <item name="buttonStyle">@style/PickerTextButton</item>
     </style>
 
     <!--    Buttons from MaterialDateTimePicker, Dialogs ...    -->
