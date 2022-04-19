@@ -72,7 +72,7 @@
 
                 <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/overview_closeloop"
-                    style="?android:attr/buttonStyle"
+                    style="@style/ButtonSmallFontStyle"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_gravity="center"
@@ -88,7 +88,7 @@
 
                 <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/overview_lgsloop"
-                    style="?android:attr/buttonStyle"
+                    style="@style/ButtonSmallFontStyle"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_gravity="center"
@@ -104,7 +104,7 @@
 
                 <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/overview_openloop"
-                    style="?android:attr/buttonStyle"
+                    style="@style/ButtonSmallFontStyle"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_gravity="center"
@@ -120,7 +120,7 @@
 
                 <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/overview_enable"
-                    style="?android:attr/buttonStyle"
+                    style="@style/ButtonSmallFontStyle"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_gravity="center"
@@ -136,7 +136,7 @@
 
                 <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/overview_disable"
-                    style="?android:attr/buttonStyle"
+                    style="@style/ButtonSmallFontStyle"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_gravity="center"
@@ -180,7 +180,7 @@
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/overview_resume"
-                style="?android:attr/buttonStyle"
+                style="@style/ButtonSmallFontStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:layout_gravity="center"
@@ -203,7 +203,7 @@
 
                 <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/overview_suspend_1h"
-                    style="?android:attr/buttonStyle"
+                    style="@style/ButtonSmallFontStyle"
                     android:layout_width="0px"
                     android:layout_height="fill_parent"
                     android:layout_marginEnd="-4dp"
@@ -217,7 +217,7 @@
 
                 <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/overview_suspend_2h"
-                    style="?android:attr/buttonStyle"
+                    style="@style/ButtonSmallFontStyle"
                     android:layout_width="0px"
                     android:layout_height="fill_parent"
                     android:layout_marginEnd="-4dp"
@@ -232,7 +232,7 @@
 
                 <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/overview_suspend_3h"
-                    style="?android:attr/buttonStyle"
+                    style="@style/ButtonSmallFontStyle"
                     android:layout_width="0px"
                     android:layout_height="fill_parent"
                     android:layout_marginEnd="-4dp"
@@ -247,7 +247,7 @@
 
                 <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/overview_suspend_10h"
-                    style="?android:attr/buttonStyle"
+                    style="@style/ButtonSmallFontStyle"
                     android:layout_width="0px"
                     android:layout_height="fill_parent"
                     android:layout_marginEnd="-4dp"
@@ -289,7 +289,7 @@
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/overview_reconnect"
-                style="?android:attr/buttonStyle"
+                style="@style/ButtonSmallFontStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -312,7 +312,7 @@
 
                 <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/overview_disconnect_15m"
-                    style="?android:attr/buttonStyle"
+                    style="@style/ButtonSmallFontStyle"
                     android:layout_width="0px"
                     android:layout_height="fill_parent"
                     android:layout_marginEnd="-4dp"
@@ -326,7 +326,7 @@
 
                 <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/overview_disconnect_30m"
-                    style="?android:attr/buttonStyle"
+                    style="@style/ButtonSmallFontStyle"
                     android:layout_width="0px"
                     android:layout_height="fill_parent"
                     android:layout_marginEnd="-4dp"
@@ -340,7 +340,7 @@
 
                 <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/overview_disconnect_1h"
-                    style="?android:attr/buttonStyle"
+                    style="@style/ButtonSmallFontStyle"
                     android:layout_width="0px"
                     android:layout_height="fill_parent"
                     android:layout_marginEnd="-4dp"
@@ -354,7 +354,7 @@
 
                 <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/overview_disconnect_2h"
-                    style="?android:attr/buttonStyle"
+                    style="@style/ButtonSmallFontStyle"
                     android:layout_width="0px"
                     android:layout_height="fill_parent"
                     android:layout_marginEnd="-4dp"
@@ -368,7 +368,7 @@
 
                 <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/overview_disconnect_3h"
-                    style="?android:attr/buttonStyle"
+                    style="@style/ButtonSmallFontStyle"
                     android:layout_width="0px"
                     android:layout_height="fill_parent"
                     android:layout_marginEnd="-4dp"
