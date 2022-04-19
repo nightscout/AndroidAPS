@@ -28,7 +28,6 @@
             android:textSize="14sp"
             tools:ignore="HardcodedText" />
 
-
         <TextView
             android:id="@+id/omnipod_dash_bluetooth_address"
             android:layout_width="match_parent"
@@ -160,6 +159,7 @@
             android:textSize="14sp"
             tools:ignore="HardcodedText" />
     </LinearLayout>
+
     <View
         android:layout_width="fill_parent"
         android:layout_height="2dip"
@@ -168,4 +168,5 @@
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="5dp"
         android:background="?android:attr/dividerHorizontal" />
+
 </merge>

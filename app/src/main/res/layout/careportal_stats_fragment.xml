@@ -112,7 +112,6 @@
             android:paddingEnd="2dp"
             android:textSize="14sp" />
 
-
         <TextView
             android:id="@+id/insulin_level_label"
             android:layout_width="wrap_content"

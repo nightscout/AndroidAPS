@@ -84,7 +84,6 @@
             android:text="@string/nav_import"
             android:textColor="?attr/treatmentButton" />
 
-
         <com.google.android.material.button.MaterialButton
             android:id="@+id/export_csv"
             style="@style/GrayButton"

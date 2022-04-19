@@ -5,7 +5,6 @@
     android:id="@+id/main_layout"
     android:background="@drawable/airplane_cockpit_outside_clouds">
 
-
     <LinearLayout
         android:id="@+id/inside"
         android:layout_width="fill_parent"

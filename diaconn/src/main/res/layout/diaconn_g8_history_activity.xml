@@ -6,7 +6,6 @@
     android:layout_height="fill_parent"
     tools:context="info.nightscout.androidaps.diaconn.activities.DiaconnG8HistoryActivity">
 
-
     <RelativeLayout
         android:id="@+id/header"
         android:layout_width="match_parent"

@@ -5,7 +5,6 @@
     android:paddingTop="5dp"
     tools:context="info.nightscout.androidaps.diaconn.DiaconnG8Fragment">
 
-
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -73,7 +72,6 @@
                         android:paddingStart="5dp"
                         android:textSize="14sp" />
 
-
                 </LinearLayout>
 
                 <View
@@ -121,7 +119,6 @@
                         android:text="{fa-bluetooth-b}"
                         android:textSize="20dp"
                         tools:ignore="HardcodedText" />
-
 
                 </LinearLayout>
 
@@ -176,7 +173,6 @@
                         android:gravity="start"
                         android:paddingStart="5dp"
                         android:textSize="20sp" />
-
 
                 </LinearLayout>
 

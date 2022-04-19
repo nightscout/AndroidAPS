@@ -61,7 +61,6 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-
         <LinearLayout
             android:id="@+id/reuselayout"
             android:layout_width="match_parent"
@@ -234,4 +233,3 @@
     </LinearLayout>
 
 </ScrollView>
-

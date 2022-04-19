@@ -54,7 +54,6 @@
                     android:textSize="14sp"
                     tools:ignore="RtlSymmetry" />
 
-
             </LinearLayout>
 
             <View
@@ -105,7 +104,6 @@
                     android:textSize="14sp"
                     tools:ignore="HardcodedText,RtlSymmetry" />
 
-
             </LinearLayout>
 
             <View
@@ -153,7 +151,6 @@
                     android:paddingStart="5dp"
                     android:textSize="14sp"
                     tools:ignore="RtlSymmetry" />
-
 
             </LinearLayout>
 
@@ -671,7 +668,6 @@
             android:paddingStart="0dp"
             android:paddingEnd="0dp"
             android:text="@string/viewprofile" />
-
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/history"

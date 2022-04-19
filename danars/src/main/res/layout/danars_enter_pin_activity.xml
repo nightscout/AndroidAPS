@@ -65,7 +65,6 @@
         android:text="@string/num2pin"
         android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
-
     <EditText
         android:id="@+id/rs_v3_pin2"
         android:layout_width="match_parent"

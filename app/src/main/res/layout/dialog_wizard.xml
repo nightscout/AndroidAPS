@@ -476,7 +476,6 @@
                         android:checked="false"
                         android:text="@string/bg_trend_label" />
 
-
                     <TextView
                         android:id="@+id/bg_trend"
                         android:layout_width="wrap_content"

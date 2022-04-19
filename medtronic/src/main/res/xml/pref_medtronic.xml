@@ -18,14 +18,12 @@
             validate:testErrorString="@string/error_mustbe6digitnumber"
             validate:testType="regexp" />
 
-
         <ListPreference
             android:defaultValue="1"
             android:entries="@array/medtronicPumpTypeArray"
             android:entryValues="@array/medtronicPumpTypeArray"
             android:key="@string/key_medtronic_pump_type"
             android:title="@string/medtronic_pump_type" />
-
 
         <ListPreference
             android:defaultValue="@string/key_medtronic_pump_frequency_us_ca"

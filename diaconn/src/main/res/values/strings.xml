@@ -167,5 +167,4 @@
     <string name="diaconn_g8_errorcode_35">Tempbasal start is rejected  when tempbasal is running</string>
     <string name="diaconn_g8_errorcode_36">Tempbasal stop is rejected  when tempbasal is not running</string>
 
-
 </resources>
