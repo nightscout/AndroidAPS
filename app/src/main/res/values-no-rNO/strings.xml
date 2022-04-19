@@ -1007,4 +1007,5 @@
     <string name="show_hide_records">Skjul loop registreringer</string>
     <string name="widget_description">AndroidAPS widget</string>
     <string name="configure">Konfigurer gjennomsiktighet</string>
+    <!-- Aidex Cgms -->
 </resources>
