@@ -52,9 +52,7 @@
                             android:layout_weight="1"
                             android:hint="@string/autotune_select_profile"
                             android:paddingStart="5dp"
-                            android:paddingEnd="5dp"
-                            android:textSize="14sp"
-                            app:boxStrokeColor="@color/list_delimiter">
+                            android:paddingEnd="5dp">
 
                             <com.google.android.material.textfield.MaterialAutoCompleteTextView
                                 android:id="@+id/profileList"
