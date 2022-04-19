@@ -242,6 +242,8 @@
         <item name="separatorColor">@color/sphere_plastic_grey</item>
         <item name="isCompletedColor">@color/isCompleted</item>
         <item name="isNotCompletedColor">@color/isNotCompleted</item>
+        <!---Nightscout client TitelColor -->
+        <item name="nsTitleColor">@color/defaulttext</item>
     </style>
 
     <style name="Aaps_ActionBarStyle" parent="@style/Widget.AppCompat.ActionBar">

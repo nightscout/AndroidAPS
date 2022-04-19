@@ -213,4 +213,6 @@
     <attr name="separatorColor" format="reference|color" />
     <attr name="isCompletedColor" format="reference|color" />
     <attr name="isNotCompletedColor" format="reference|color" />
+    <!---Nightscout client TitelColor -->
+    <attr name="nsTitleColor" format="reference|color" />
 </resources>
