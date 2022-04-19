@@ -2,12 +2,11 @@ package info.nightscout.androidaps.utils.ui
 
 import android.content.Context
 import android.util.AttributeSet
-import androidx.appcompat.R
-import androidx.appcompat.widget.AppCompatButton
+import info.nightscout.androidaps.core.R
 import info.nightscout.shared.logging.StacktraceLoggerWrapper
 import org.slf4j.Logger
 
-class SingleClickButton @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = R.attr.buttonStyle) : AppCompatButton(context, attrs, defStyleAttr) {
+class SingleClickButton @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = R.style.Widget_MaterialComponents_Button) : com.google.android.material.button.MaterialButton(context, attrs, defStyleAttr) {
 
     override fun performClick(): Boolean = guardClick { super.performClick() }
     override fun callOnClick(): Boolean = guardClick { super.callOnClick() }

@@ -37,7 +37,6 @@ class AppCancelSettingResponsePacket(
         aapsLogger.debug(LTag.PUMPCOMM, "Result --> ${result}")
     }
 
-
     override fun getFriendlyName(): String {
         return "PUMP_APP_CANCEL_SETTING_RESPONSE"
     }

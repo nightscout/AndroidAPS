@@ -76,6 +76,10 @@ class QuickWizardListActivity : DaggerAppCompatActivityWithResult(), OnStartDrag
                         else                          -> R.drawable.ic_smartphone
                     }
                 )
+                holder.binding.device.contentDescription = when (quickWizard[position].device()) {
+                    QuickWizardEntry.DEVICE_WATCH -> rh.gs(R.string.a11y_only_on_watch)
+                    else                          -> rh.gs(R.string.a11y_only_on_phone)
+                }
             }
             holder.binding.root.setOnClickListener {
                 if (actionHelper.isNoAction) {

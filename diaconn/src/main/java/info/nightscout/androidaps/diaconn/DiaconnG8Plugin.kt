@@ -139,7 +139,6 @@ class DiaconnG8Plugin @Inject constructor(
     override fun isConnecting(): Boolean = diaconnG8Service?.isConnecting ?: false
     override fun isHandshakeInProgress(): Boolean = false
 
-
     override fun disconnect(reason: String) {
         aapsLogger.debug(LTag.PUMP, "Diaconn G8 disconnect from: $reason")
         diaconnG8Service?.disconnect(reason)
@@ -247,7 +246,6 @@ class DiaconnG8Plugin @Inject constructor(
         get() = diaconnG8Pump.systemRemainInsulin
     override val batteryLevel: Int
         get() = diaconnG8Pump.systemRemainBattery
-
 
     @Synchronized
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {

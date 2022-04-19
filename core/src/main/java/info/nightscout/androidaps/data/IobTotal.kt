@@ -119,7 +119,6 @@ class IobTotal(val time: Long) : DataPointWithLabelInterface {
         return color
     }
 
-
     fun setColor(color: Int): IobTotal {
         this.color = color
         return this

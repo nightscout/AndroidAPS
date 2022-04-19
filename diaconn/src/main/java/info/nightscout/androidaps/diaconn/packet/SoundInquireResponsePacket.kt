@@ -35,7 +35,6 @@ class SoundInquireResponsePacket(injector: HasAndroidInjector) : DiaconnG8Packet
         diaconnG8Pump.beepAndAlarm =  getByteToInt(bufferData) -1
         diaconnG8Pump.alarmIntesity =  getByteToInt(bufferData) -1
 
-
         aapsLogger.debug(LTag.PUMPCOMM, "Result --> ${diaconnG8Pump.result}")
         aapsLogger.debug(LTag.PUMPCOMM, "beepAndAlarm --> ${diaconnG8Pump.beepAndAlarm}")
         aapsLogger.debug(LTag.PUMPCOMM, "alarmIntesity --> ${diaconnG8Pump.alarmIntesity}")

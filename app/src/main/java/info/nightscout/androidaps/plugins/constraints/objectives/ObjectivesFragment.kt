@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.constraints.objectives
 
 import android.annotation.SuppressLint
-import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
@@ -230,7 +229,7 @@ class ObjectivesFragment : DaggerFragment() {
                     }
                     // horizontal line
                     val separator = View(holder.binding.progress.context)
-                    separator.setBackgroundColor(rh.gac(context, R.attr.seperatorColor))
+                    separator.setBackgroundColor(rh.gac(context, R.attr.separatorColor))
                     holder.binding.progress.addView(separator, LinearLayout.LayoutParams.MATCH_PARENT, 2)
                 }
             }

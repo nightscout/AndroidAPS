@@ -20,6 +20,7 @@
             android:layout_marginTop="16dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
+            android:importantForAccessibility="no"
             android:onClick="exitPressed"
             app:srcCompat="@drawable/ic_exit_to_app" />
 
@@ -64,8 +65,8 @@
         android:layout_gravity="bottom|center_horizontal"
         android:background="@color/black_alpha_40"
         android:orientation="horizontal"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp">
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
 
         <Button
             android:id="@+id/previous_button"

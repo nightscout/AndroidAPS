@@ -169,9 +169,8 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         else
             windowManager.defaultDisplay.getMetrics(dm)
 
-
         axisWidth = if (dm.densityDpi <= 120) 3 else if (dm.densityDpi <= 160) 10 else if (dm.densityDpi <= 320) 35 else if (dm.densityDpi <= 420) 50 else if (dm.densityDpi <= 560) 70 else 80
-        binding.bgGraph.gridLabelRenderer?.gridColor = rh.gac(this, R.attr.graphgrid)
+        binding.bgGraph.gridLabelRenderer?.gridColor = rh.gac(this, R.attr.graphGrid)
         binding.bgGraph.gridLabelRenderer?.reloadStyles()
         binding.bgGraph.gridLabelRenderer?.labelVerticalWidth = axisWidth
 
@@ -244,12 +243,12 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
 
                 val graph = GraphView(this)
                 graph.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, rh.dpToPx(100)).also { it.setMargins(0, rh.dpToPx(15), 0, rh.dpToPx(10)) }
-                graph.gridLabelRenderer?.gridColor = rh.gac(R.attr.graphgrid)
+                graph.gridLabelRenderer?.gridColor = rh.gac(R.attr.graphGrid)
                 graph.gridLabelRenderer?.reloadStyles()
                 graph.gridLabelRenderer?.isHorizontalLabelsVisible = false
                 graph.gridLabelRenderer?.labelVerticalWidth = axisWidth
                 graph.gridLabelRenderer?.numVerticalLabels = 3
-                graph.viewport.backgroundColor = rh.gac(this, R.attr.viewPortbackgroundColor)
+                graph.viewport.backgroundColor = rh.gac(this, R.attr.viewPortBackgroundColor)
                 relativeLayout.addView(graph)
 
                 val label = TextView(this)

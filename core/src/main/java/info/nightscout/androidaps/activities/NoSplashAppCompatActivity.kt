@@ -8,7 +8,6 @@ import info.nightscout.androidaps.utils.locale.LocaleHelper
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 
-
 open class NoSplashAppCompatActivity : DaggerAppCompatActivityWithResult() {
 
     @Inject lateinit var rxBus: RxBus

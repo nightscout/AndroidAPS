@@ -38,7 +38,6 @@ class ActionCarePortalEvent(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
     @Inject lateinit var uel: UserEntryLogger
 
-
     private val disposable = CompositeDisposable()
 
     var note = InputString()

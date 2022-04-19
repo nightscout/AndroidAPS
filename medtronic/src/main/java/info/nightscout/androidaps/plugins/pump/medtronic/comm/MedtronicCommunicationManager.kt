@@ -534,7 +534,6 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
                     errorResponse = check
                 }
 
-
                 aapsLogger.debug(LTag.PUMPCOMM, "End Response: {}", ByteUtil.getHex(data))
 
                 val basalProfile: BasalProfile? = medtronicConverter.decodeBasalProfile(medtronicPumpPlugin.pumpDescription.pumpType, data)

@@ -49,7 +49,6 @@ fun offlineEventFromJson(jsonObject: JSONObject): OfflineEvent? {
     val reason = OfflineEvent.Reason.fromString(JsonHelper.safeGetString(jsonObject, "reason", OfflineEvent.Reason.OTHER.name))
 
 
-
     return OfflineEvent(
         timestamp = timestamp,
         duration = durationInMilliseconds ?: T.mins(duration).msecs(),
@@ -62,5 +61,3 @@ fun offlineEventFromJson(jsonObject: JSONObject): OfflineEvent? {
         it.interfaceIDs.pumpSerial = pumpSerial
     }
 }
-
-

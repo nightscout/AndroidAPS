@@ -130,7 +130,6 @@ class ProfileFunctionImplementation @Inject constructor(
             }
         }
 
-
         return null
     }
 
