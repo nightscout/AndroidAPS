@@ -15,7 +15,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/defaultbackground"
+            android:background="?attr/defaultBackground"
             android:orientation="horizontal"
             android:paddingBottom="10dp">
 
@@ -25,10 +25,9 @@
                 android:layout_height="30dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:text="1"
-                tools:ignore="HardcodedText" />
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:text="Profile 1" />
 
             <TextView
                 android:id="@+id/menu2"
@@ -36,10 +35,9 @@
                 android:layout_height="30dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:text="2"
-                tools:ignore="HardcodedText" />
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:text="Profile 2" />
 
         </LinearLayout>
 
@@ -178,7 +176,7 @@
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/copy_to_local_profile"
-                style="?android:attr/buttonStyle"
+                style="@style/GrayButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_clone_48"
@@ -257,7 +255,7 @@
 
         <info.nightscout.androidaps.utils.ui.SingleClickButton
             android:id="@+id/compare_profiles"
-            style="?android:attr/buttonStyle"
+            style="@style/GrayButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableStart="@drawable/ic_compare_profiles"

@@ -2,12 +2,10 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-
-
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusableInTouchMode="true"
-    tools:context=".plugins.general.automation.dialogs.EditEventDialog">
+    tools:context="info.nightscout.androidaps.plugins.general.automation.dialogs.EditEventDialog">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,8 +29,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:text="@string/please_choose_an_action_type"
                 android:textAlignment="center"
                 android:textAppearance="?android:attr/textAppearanceLarge" />

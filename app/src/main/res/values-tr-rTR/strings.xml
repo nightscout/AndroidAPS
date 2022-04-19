@@ -816,6 +816,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="smscommunicator_otp_install_info">Her takipçi telefonunda, RFC 6238 TOTP belirteçlerini destekleyen Kimlik Doğrulayıcı uygulamasını yükleyin. Popüler ücretsiz uygulamalar şunlardır:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">Doğrulayıcıyı (Authenticator) sıfırlayarak, önceden sağlanmış tüm doğrulayıcıları geçersiz kılarsınız. Onları tekrar kurmanız gerekecek!</string>
     <string name="overview_show_predictions">Tahminler</string>
+    <string name="overview_show_treatments">Tedaviler</string>
     <string name="overview_show_deviationslope">Sapma eğimi</string>
     <string name="authorizationfailed">Yetkilendirme başarısız oldu</string>
     <string name="overview_show_absinsulin">Mutlak insülin</string>

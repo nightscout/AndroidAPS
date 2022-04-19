@@ -1,12 +1,17 @@
 package info.nightscout.androidaps.plugins.general.automation.elements
 
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
+import android.content.Context
 import android.graphics.Typeface
 import android.text.format.DateFormat
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import android.view.ContextThemeWrapper
+import androidx.fragment.app.FragmentManager
+import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -32,24 +37,17 @@ class InputDateTime(private val rh: ResourceHelper, private val dateUtil: DateUt
                         text = dateUtil.dateString(value)
                         setPadding(px, px, px, px)
                         setOnClickListener {
-                            root.context?.let {
-                                val cal = Calendar.getInstance()
-                                cal.timeInMillis = value
-                                DatePickerDialog(
-                                    it,
-                                    { _, year, monthOfYear, dayOfMonth ->
-                                        value = Calendar.getInstance().apply {
-                                            timeInMillis = value
-                                            set(Calendar.YEAR, year)
-                                            set(Calendar.MONTH, monthOfYear)
-                                            set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                                        }.timeInMillis
-                                        text = dateUtil.dateString(value)
-                                    },
-                                    cal.get(Calendar.YEAR),
-                                    cal.get(Calendar.MONTH),
-                                    cal.get(Calendar.DAY_OF_MONTH)
-                                ).show()
+                            getFragmentManager(root.context)?.let { fm ->
+                                MaterialDatePicker.Builder.datePicker()
+                                    .setSelection(dateUtil.timeStampToUtcDateMilis(value))
+                                    .build()
+                                    .apply {
+                                        addOnPositiveButtonClickListener { selection ->
+                                            value = dateUtil.mergeUtcDateToTimestamp(value, selection)
+                                            text = dateUtil.dateString(value)
+                                        }
+                                    }
+                                    .show(fm, "input_date_picker")
                             }
                         }
                     })
@@ -58,28 +56,31 @@ class InputDateTime(private val rh: ResourceHelper, private val dateUtil: DateUt
                         text = dateUtil.timeString(value)
                         setPadding(px, px, px, px)
                         setOnClickListener {
-                            root.context?.let {
-                                val cal = Calendar.getInstance()
-                                cal.timeInMillis = value
-                                TimePickerDialog(
-                                    it,
-                                    { _, hour, minute ->
-                                        value = Calendar.getInstance().apply {
-                                            timeInMillis = value
-                                            set(Calendar.HOUR_OF_DAY, hour)
-                                            set(Calendar.MINUTE, minute)
-                                            set(Calendar.SECOND, 0) // randomize seconds to prevent creating record of the same time, if user choose time manually
-                                        }.timeInMillis
-                                        text = dateUtil.timeString(value)
-                                    },
-                                    cal.get(Calendar.HOUR_OF_DAY),
-                                    cal.get(Calendar.MINUTE),
-                                    DateFormat.is24HourFormat(it)
-                                ).show()
+                            getFragmentManager(root.context)?.let { fm ->
+                                val cal = Calendar.getInstance().apply { timeInMillis = value }
+                                val clockFormat = if (DateFormat.is24HourFormat(context)) TimeFormat.CLOCK_24H else TimeFormat.CLOCK_12H
+                                val timePicker = MaterialTimePicker.Builder()
+                                    .setTimeFormat(clockFormat)
+                                    .setHour(cal.get(Calendar.HOUR_OF_DAY))
+                                    .setMinute(cal.get(Calendar.MINUTE))
+                                    .build()
+                                timePicker.addOnPositiveButtonClickListener {
+                                    value = dateUtil.mergeHourMinuteToTimestamp(value, timePicker.hour, timePicker.minute)
+                                    text = dateUtil.timeString(value)
+                                }
+                                timePicker.show(fm, "input_time_picker")
                             }
                         }
                     }
                 )
             })
+    }
+
+    private fun getFragmentManager(context: Context?): FragmentManager? {
+        return when (context) {
+            is AppCompatActivity   -> context.supportFragmentManager
+            is ContextThemeWrapper -> getFragmentManager(context.baseContext)
+            else                   -> null
+        }
     }
 }

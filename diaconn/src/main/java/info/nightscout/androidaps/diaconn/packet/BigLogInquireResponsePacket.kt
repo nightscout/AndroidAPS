@@ -449,7 +449,6 @@ class BigLogInquireResponsePacket(
                         aapsLogger.debug(LTag.PUMPCOMM, (if (newRecord) "**NEW** " else "") + "EVENT TUBECHANGE(" + pumplogKind + ") " + dateUtil.dateAndTimeString(logDateTime) + " (" + logDateTime + ")" + " Amount: " + logItem.primeAmount / 100.0 + "U")
                     }
 
-
                     diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_REFILL
                     diaconnG8HistoryRecord.timestamp = logDateTime
                     diaconnG8HistoryRecord.value = logItem.remainAmount / 100.0
@@ -549,7 +548,6 @@ class BigLogInquireResponsePacket(
                     //     diaconnG8Pump.serialNo.toString()
                     // )
 
-
                     status = "DAILYBASAL " + dateUtil.timeString(logDateTime)
                 }
 
@@ -634,7 +632,6 @@ class BigLogInquireResponsePacket(
                         pumpType = PumpType.DIACONN_G8,
                         pumpSerial = diaconnG8Pump.serialNo.toString())
                     aapsLogger.debug(LTag.PUMPCOMM, (if (newRecord) "**NEW** " else "") + "EVENT TEMPSTOP (" + pumplogKind + ") " + dateUtil.dateAndTimeString(logDateTime) + " (" + logDateTime + ")")
-
 
                     diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_TB
                     diaconnG8HistoryRecord.timestamp = logDateTime

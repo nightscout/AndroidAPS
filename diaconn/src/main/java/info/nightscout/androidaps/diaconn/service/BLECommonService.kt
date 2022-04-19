@@ -48,7 +48,6 @@ class BLECommonService @Inject internal constructor(
     private var connectDeviceName: String? = null
     private var bluetoothGatt: BluetoothGatt? = null
 
-
     var isConnected = false
     var isConnecting = false
     private var uartIndicate: BluetoothGattCharacteristic? = null

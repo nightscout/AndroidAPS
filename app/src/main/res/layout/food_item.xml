@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.MaterialComponents.CardView"
+    android:id="@+id/food_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    card_view:cardBackgroundColor="?attr/cardItemBackgroundColor">
+    android:layout_marginStart="4dp"
+    android:layout_marginEnd="4dp"
+    android:layout_marginTop="4dp"
+    app:strokeWidth="1dp"
+    app:cardCornerRadius="4dp"
+    app:contentPadding="2dp"
+    app:cardElevation="4dp"
+    app:cardUseCompatPadding="true"
+    android:layout_gravity="center">
 
     <LinearLayout
         android:id="@+id/food_item"
@@ -18,8 +28,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingLeft="3dp"
-            android:paddingRight="3dp">
+            android:paddingStart="3dp"
+            android:paddingEnd="3dp">
 
             <LinearLayout
                 android:id="@+id/name_and_info_container"
@@ -55,7 +65,7 @@
                     android:layout_weight="1"
                     android:gravity="start"
                     android:orientation="horizontal"
-                    android:layout_marginLeft="5dp">
+                    android:layout_marginStart="5dp">
 
                     <TextView
                         android:id="@+id/carbs"
@@ -127,7 +137,6 @@
         </LinearLayout>
 
 
-
         <View
             android:layout_width="fill_parent"
             android:layout_height="2dip"
@@ -137,4 +146,4 @@
 
     </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

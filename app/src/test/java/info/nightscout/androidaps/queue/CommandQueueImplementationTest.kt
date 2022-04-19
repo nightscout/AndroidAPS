@@ -299,7 +299,6 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         Assert.assertFalse(commandQueue.isCustomCommandRunning(CustomCommand2::class.java))
         Assert.assertFalse(commandQueue.isCustomCommandRunning(CustomCommand3::class.java))
 
-
         Assert.assertEquals(1, commandQueue.size())
     }
 

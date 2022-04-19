@@ -1,12 +1,16 @@
 package info.nightscout.androidaps.plugins.general.automation.elements
 
-import android.app.TimePickerDialog
+import android.content.Context
 import android.graphics.Typeface
 import android.text.format.DateFormat
-import android.view.Gravity
+import android.view.ContextThemeWrapper
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentManager
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.utils.DateUtil
@@ -34,19 +38,19 @@ class InputTime(private val rh: ResourceHelper, private val dateUtil: DateUtil) 
                         val px = rh.dpToPx(10)
                         setPadding(px, px, px, px)
                         setOnClickListener {
-                            root.context?.let {
-                                val cal = Calendar.getInstance()
-                                cal.timeInMillis = toMills(value)
-                                TimePickerDialog(
-                                    it,
-                                    { _, hour, minute ->
-                                        value = 60 * hour + minute
-                                        text = dateUtil.timeString(toMills(value))
-                                    },
-                                    cal.get(Calendar.HOUR_OF_DAY),
-                                    cal.get(Calendar.MINUTE),
-                                    DateFormat.is24HourFormat(it)
-                                ).show()
+                            getFragmentManager(root.context)?.let { fm ->
+                                val cal = Calendar.getInstance().apply { timeInMillis = toMills(value) }
+                                val clockFormat = if (DateFormat.is24HourFormat(context)) TimeFormat.CLOCK_24H else TimeFormat.CLOCK_12H
+                                val timePicker = MaterialTimePicker.Builder()
+                                    .setTimeFormat(clockFormat)
+                                    .setHour(cal.get(Calendar.HOUR_OF_DAY))
+                                    .setMinute(cal.get(Calendar.MINUTE))
+                                    .build()
+                                timePicker.addOnPositiveButtonClickListener {
+                                    value = 60 * timePicker.hour + timePicker.minute
+                                    text = dateUtil.timeString(toMills(value))
+                                }
+                                timePicker.show(fm, "input_time_picker")
                             }
                         }
                     })
@@ -56,4 +60,12 @@ class InputTime(private val rh: ResourceHelper, private val dateUtil: DateUtil) 
     private fun toMills(minutesSinceMidnight: Int): Long = MidnightTime.calcPlusMinutes(minutesSinceMidnight)
 
     private fun getMinSinceMidnight(time: Long): Int = Profile.secondsFromMidnight(time) / 60
+
+    private fun getFragmentManager(context: Context?): FragmentManager? {
+        return when (context) {
+            is AppCompatActivity   -> context.supportFragmentManager
+            is ContextThemeWrapper -> getFragmentManager(context.baseContext)
+            else                   -> null
+        }
+    }
 }

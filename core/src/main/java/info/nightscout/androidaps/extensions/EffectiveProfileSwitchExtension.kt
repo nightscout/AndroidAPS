@@ -49,7 +49,6 @@ fun effectiveProfileSwitchFromJson(jsonObject: JSONObject, dateUtil: DateUtil): 
     val pureProfile = pureProfileFromJson(JSONObject(profileJson), dateUtil) ?: return null
     val profileSealed = ProfileSealed.Pure(pureProfile)
 
-
     return EffectiveProfileSwitch(
         timestamp = timestamp,
         basalBlocks = profileSealed.basalBlocks,

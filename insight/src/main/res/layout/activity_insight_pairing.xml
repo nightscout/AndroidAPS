@@ -104,5 +104,4 @@
             android:text="@string/exit" />
     </LinearLayout>
 
-
 </FrameLayout>
