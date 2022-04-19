@@ -241,6 +241,8 @@
         <item name="isNotCompletedColor">@color/isNotCompleted</item>
         <item name="materialCalendarStyle">@style/DatePicker</item>
         <item name="materialTimePickerStyle">@style/DatePicker</item>
+        <!---Nightscout client TitelColor -->
+        <item name="nsTitleColor">@color/defaulttext</item>
     </style>
 
     <style name="Aaps_ActionBarStyle" parent="@style/Widget.AppCompat.ActionBar">

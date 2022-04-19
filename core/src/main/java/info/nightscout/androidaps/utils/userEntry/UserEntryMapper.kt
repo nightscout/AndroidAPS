@@ -109,6 +109,7 @@ class UserEntryMapper {
         Actions (UserEntry.Sources.Actions),
         Automation (UserEntry.Sources.Automation),
         BG (UserEntry.Sources.BG),
+        Aidex (UserEntry.Sources.Aidex),
         Dexcom (UserEntry.Sources.Dexcom),
         Eversense (UserEntry.Sources.Eversense),
         Glimp (UserEntry.Sources.Glimp),

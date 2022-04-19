@@ -135,7 +135,6 @@
                     android:id="@+id/nsclient"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="?attr/colorControlHighlight"
                     app:alignContent="stretch"
                     app:alignItems="stretch"
                     app:flexDirection="row"
