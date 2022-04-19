@@ -1212,4 +1212,13 @@
     <string name="show_hide_records">Hide loop records</string>
     <string name="widget_description">AndroidAPS widget</string>
     <string name="configure">Configure opacity</string>
+    <string name="a11y_otp_qr_code">QR Code for setup one time password</string>
+    <string name="a11y_open_settings">open settings</string>
+    <string name="a11y_set_carb_timer">set carb timer alarm</string>
+    <string name="device_all">All</string>
+    <string name="device_phone">Phone</string>
+    <string name="device_watch">Watch</string>
+    <string name="a11y_only_on_watch">only on watch</string>
+    <string name="a11y_only_on_phone">only on phone</string>
+    <string name="a11y_drag_and_drop_handle">drag and drop handle</string>
 </resources>
