@@ -40,7 +40,6 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 //
 // }
 
-
 interface PumpDbEntry {
     var temporaryId: Long
     var date: Long
@@ -48,7 +47,6 @@ interface PumpDbEntry {
     var serialNumber: String
     var pumpId: Long?
 }
-
 
 
 data class PumpDbEntryBolus(override var temporaryId: Long,

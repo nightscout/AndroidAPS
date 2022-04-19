@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="2dp"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:paddingTop="2dp">
 
     <TextView
         android:layout_width="wrap_content"
@@ -11,8 +12,8 @@
         android:layout_gravity="center"
         android:width="120dp"
         android:labelFor="@+id/eventtime"
-        android:paddingLeft="10dp"
-        android:paddingRight="4dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="4dp"
         android:text="@string/event_time_label"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textStyle="bold" />
@@ -24,10 +25,10 @@
         android:layout_gravity="center"
         android:layout_marginEnd="20dp"
         android:background="@drawable/background_input_border"
-        android:foreground="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
         android:padding="10dp"
-        android:text="2017/05/05" />
+        tools:text="2017/05/05" />
 
     <TextView
         android:id="@+id/eventtime"
@@ -35,9 +36,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="@drawable/background_input_border"
-        android:foreground="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
         android:padding="10dp"
-        android:text="08:20pm" />
+        tools:text="08:20pm" />
 
 </LinearLayout>

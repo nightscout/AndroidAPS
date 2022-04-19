@@ -23,8 +23,8 @@
     <color name="overviewPillColorDefault">#1c171c</color>
     <color name="colorOnPrimaryDefault">#FFFFFF</color>
 
-    <color name="defaultbackground">#000000</color>
-    <color name="defaulttextcolor">#B3FFFFFF</color>
+    <color name="defaultBackground">#000000</color>
+    <color name="defaultTextColor">#B3FFFFFF</color>
 
     <!---Android Dark ans Light Theme Base colors-->
     <color name="background_dark">#262626</color>
@@ -60,16 +60,15 @@
     <color name="errorAlertHeaderText">#FF000000</color>
     <color name="helperProfile">#C803A9F4</color>
     <color name="examinedProfile">#FFFF5555</color>
-    <color name="defaulttext">#BBBBBB</color>
+    <color name="defaultText">#BBBBBB</color>
 
-    <!--    Datepicker-->
+    <!--    Date picker-->
     <color name="dateTimePickerBackground">@color/buttonBackground</color>
 
     <!--    Treatment-->
     <color name="tempbasal">#C803A9F4</color>
     <color name="list_delimiter">#505050</color>
     <color name="basal">#00ffff</color>
-
 
     <!--    Loop     -->
     <color name="loopDisconnected">#939393</color>
@@ -79,7 +78,7 @@
     <color name="loopDisabled">#FF1313</color>
 
     <!--    BgReading-->
-    <color name="inrange">#00FF00</color>
+    <color name="inRange">#00FF00</color>
     <color name="low">#FF0000</color>
     <color name="high">#FFFF00</color>
     <color name="iob">#1e88e5</color>
@@ -163,14 +162,14 @@
     <color name="ratio">#FFFFFF</color>
     <color name="activity">#d3f166</color>
     <color name="bgi">#00EEEE</color>
-    <color name="devslopepos">#FFFFFF00</color>
-    <color name="devslopeneg">#FFFF00FF</color>
+    <color name="devSlopePos">#FFFFFF00</color>
+    <color name="devSlopeNeg">#FFFF00FF</color>
     <color name="actionsConfirm">#FFFF00</color>
     <color name="deviations">#FF0000</color>
     <color name="cobAlert">#7484E2</color>
-    <color name="inrangebackground">#4000FF00</color>
-    <color name="basebasal">#C83F51B5</color>
-    <color name="graphgrid">#757575</color>
+    <color name="inRangeBackground">#4000FF00</color>
+    <color name="baseBasal">#C83F51B5</color>
+    <color name="graphGrid">#757575</color>
     <color name="warning">#ff1a1a</color>
     <color name="info">#77dd77</color>
     <color name="error_background">#66FC0000</color>
@@ -203,16 +202,16 @@
     <color name="colorScheduled">#de7550</color>
     <color name="colorActive">#25912e</color>
 
-    <color name="deviationgrey">#c8666666</color>
-    <color name="deviationgreen">#7200FF00</color>
-    <color name="deviationred">#72FF0000</color>
-    <color name="deviationblack">#72000000</color>
+    <color name="deviationGrey">#c8666666</color>
+    <color name="deviationGreen">#7200FF00</color>
+    <color name="deviationRed">#72FF0000</color>
+    <color name="deviationBlack">#72000000</color>
 
     <color name="splashBackground">#000000</color>
 
     <color name="extBolusStop">#FEAF05</color>
     <color name="actionBasal">#CF8BFE</color>
-    <color name="pumpCanula">#67dfe8</color>
+    <color name="pumpCannula">#67dfe8</color>
     <color name="cgmInsert">#67dfe8</color>
     <color name="pumpBattery">#36FF00</color>
     <color name="note">#FEAF05</color>
@@ -223,21 +222,21 @@
     <color name="stats">#FEAF05</color>
 
     <!-- Gray colors -->
-    <color name="darkgray">#323232</color>
-    <color name="darkgrayVariant">#424242</color>
+    <color name="darkGray">#323232</color>
+    <color name="darkGrayVariant">#424242</color>
     <color name="objectivesBackground">#3C3C3C</color>
     <color name="plastic_grey">#666666</color>
-    <color name="byodagray">#999999</color>
+    <color name="byodaGray">#999999</color>
     <color name="sphere_plastic_grey">#8c8c8c</color>
     <color name="lightSandGray">#72000000</color>
     <color name="sandGray">#c8666666</color>
-    <color name="midgray">#B2B2B2</color>
-    <color name="lightgray">#4dB1B1B1</color>
+    <color name="midGray">#B2B2B2</color>
+    <color name="lightGray">#4dB1B1B1</color>
     <color name="mdtp_button_selected">#33969696</color>
     <color name="plastic">#EBEBEA</color>
 
-    <color name="textAppearancemediumLight">#000000</color>
-    <color name="textAppearancemediumDark">#B3FFFFFF</color>
+    <color name="textAppearanceMediumLight">#000000</color>
+    <color name="textAppearanceMediumDark">#B3FFFFFF</color>
 
     <!-- dash and eros colors -->
     <color name="omni_yellow">#FFFF00</color>

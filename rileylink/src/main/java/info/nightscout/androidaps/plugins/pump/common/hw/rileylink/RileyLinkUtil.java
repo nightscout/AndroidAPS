@@ -23,6 +23,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistor
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.data.ServiceResult;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.data.ServiceTransport;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTask;
+import info.nightscout.shared.logging.AAPSLogger;
 
 /**
  * Created by andy on 17/05/2018.
@@ -37,6 +38,8 @@ public class RileyLinkUtil {
     private RileyLinkEncodingType encoding;
     private Encoding4b6b encoding4b6b;
 
+    @Inject AAPSLogger aapsLogger;
+
     @Inject
     public RileyLinkUtil() {
     }
@@ -50,7 +53,7 @@ public class RileyLinkUtil {
         this.encoding = encoding;
 
         if (encoding == RileyLinkEncodingType.FourByteSixByteLocal) {
-            this.encoding4b6b = new Encoding4b6bGeoff();
+            this.encoding4b6b = new Encoding4b6bGeoff(aapsLogger);
         }
     }
 

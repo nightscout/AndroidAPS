@@ -84,7 +84,6 @@ fun profileSwitchFromJson(jsonObject: JSONObject, dateUtil: DateUtil, activePlug
         } else pureProfileFromJson(JSONObject(profileJson), dateUtil) ?: return null
     val profileSealed = ProfileSealed.Pure(pureProfile)
 
-
     return ProfileSwitch(
         timestamp = timestamp,
         basalBlocks = profileSealed.basalBlocks,
@@ -155,5 +154,3 @@ fun ProfileSwitch.getCustomizedName(): String {
 fun ProfileSwitch.GlucoseUnit.Companion.fromConstant(units: GlucoseUnit): ProfileSwitch.GlucoseUnit =
     if (units == GlucoseUnit.MGDL) ProfileSwitch.GlucoseUnit.MGDL
     else ProfileSwitch.GlucoseUnit.MMOL
-
-

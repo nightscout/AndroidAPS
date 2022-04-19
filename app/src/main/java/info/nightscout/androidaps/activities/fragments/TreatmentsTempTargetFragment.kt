@@ -192,8 +192,6 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
                     else                                       -> holder.binding.reasonColon.currentTextColor
                 }
             )
-            val nextTimestamp = if (tempTargetList.size != position + 1) tempTargetList[position + 1].timestamp else 0L
-            holder.binding.delimiter.visibility = dateUtil.isSameDayGroup(tempTarget.timestamp, nextTimestamp).toVisibility()
         }
 
         override fun getItemCount() = tempTargetList.size

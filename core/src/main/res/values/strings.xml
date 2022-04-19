@@ -561,6 +561,8 @@
     <string name="remove_items">Remove Items</string>
     <string name="sort_items">Sort Items</string>
     <string name="remove_selected_items">Remove Selected Items</string>
+    <string name="a11y_file">file</string>
+    <string name="a11y_user">user</string>
 
     <plurals name="days">
         <item quantity="one">%1$d day</item>
