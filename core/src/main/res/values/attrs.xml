@@ -61,9 +61,6 @@
     <attr name="ribbonCriticalColor" format="reference|color" />
     <attr name="ribbonTextDefaultColor" format="reference|color" />
     <attr name="ribbonTextWarningColor" format="reference|color" />
-    <!---Main Activity Tab  -->
-    <attr name="tabSelectedTextColor" format="reference|color" />
-    <attr name="tabTextColor" format="reference|color" />
     <!---Background  -->
     <attr name="defaultbackground" format="reference|color" />
     <!---Toast  -->

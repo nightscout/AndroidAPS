@@ -91,9 +91,6 @@
         <item name="ribbonCriticalColor">@color/ribbonCritical</item>
         <item name="ribbonTextDefaultColor">@color/ribbonTextDefault</item>
         <item name="ribbonTextWarningColor">@color/ribbonTextWarning</item>
-        <!---Main Activity Tab  -->
-        <item name="tabSelectedTextColor">@color/tabSelectedText</item>
-        <item name="tabTextColor">@color/tabText</item>
         <!---Background  -->
         <item name="defaultbackground">@color/defaultbackground</item>
         <!---Toast  -->
