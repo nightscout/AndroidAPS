@@ -139,6 +139,7 @@ data class UserEntry(
         Actions,            //From Actions plugin
         Automation,         //From Automation plugin
         BG,                 //From BG plugin => Add One Source per BG Source for Calibration or Sensor Change
+        Aidex,
         Dexcom,
         Eversense,
         Glimp,
