@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.general.overview.graphData
 
-import android.graphics.Color
 import android.graphics.DashPathEffect
 import android.graphics.Paint
 import com.jjoe64.graphview.GraphView
@@ -66,7 +65,7 @@ class GraphData(
         addSeries(AreaGraphSeries(inRangeAreaDataPoints).also {
             it.color = 0
             it.isDrawBackground = true
-            it.backgroundColor = rh.gac(graph.context,R.attr.inrangeBackground)
+            it.backgroundColor = rh.gac(graph.context,R.attr.inRangeBackground)
         })
     }
 
