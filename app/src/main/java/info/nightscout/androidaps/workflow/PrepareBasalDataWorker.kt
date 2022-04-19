@@ -3,7 +3,6 @@ package info.nightscout.androidaps.workflow
 import android.content.Context
 import android.graphics.DashPathEffect
 import android.graphics.Paint
-import androidx.core.content.ContextCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
@@ -118,7 +117,7 @@ class PrepareBasalDataWorker(
         // create series
         data.overviewData.baseBasalGraphSeries = LineGraphSeries(Array(baseBasalArray.size) { i -> baseBasalArray[i] }).also {
             it.isDrawBackground = true
-            it.backgroundColor = rh.gac(ctx, R.attr.basebasalColor )
+            it.backgroundColor = rh.gac(ctx, R.attr.baseBasalColor )
             it.thickness = 0
         }
         data.overviewData.tempBasalGraphSeries = LineGraphSeries(Array(tempBasalArray.size) { i -> tempBasalArray[i] }).also {

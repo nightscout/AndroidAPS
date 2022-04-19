@@ -17,7 +17,7 @@
     <attr name="lowColor" format="reference|color" />
     <!-- Temp Target -->
     <attr name="tempTargetConfirmation" format="reference|color" />
-    <attr name="tempTargetbgInRange" format="reference|color" />
+    <attr name="tempTargetBgInRange" format="reference|color" />
     <!-- Treatments -->
     <attr name="setExtendedButtonColor" format="reference|color" />
     <!-- Carbs Button -->
@@ -65,7 +65,7 @@
     <attr name="tabSelectedTextColor" format="reference|color" />
     <attr name="tabTextColor" format="reference|color" />
     <!---Background  -->
-    <attr name="defaultbackground" format="reference|color" />
+    <attr name="defaultBackground" format="reference|color" />
     <!---Toast  -->
     <attr name="toastBaseTextColor" format="reference|color" />
     <!---Input  -->
@@ -83,13 +83,13 @@
     <attr name="splashBackgroundColor" format="reference|color" />
     <!---Disabled Text Color  -->
     <attr name="disabledTextColor" format="reference|color" />
-    <!---Overview and Historybrowser  -->
-    <attr name="graphgrid" format="reference|color" />
-    <attr name="viewPortbackgroundColor" format="reference|color" />
+    <!---Overview and History browser  -->
+    <attr name="graphGrid" format="reference|color" />
+    <attr name="viewPortBackgroundColor" format="reference|color" />
     <attr name="tempTargetBackgroundColor" format="reference|color" />
     <!---CGM source-->
-    <attr name="cgmdexColor" format="reference|color" />
-    <attr name="cgmxdripColor" format="reference|color" />
+    <attr name="cgmDexColor" format="reference|color" />
+    <attr name="cgmXdripColor" format="reference|color" />
     <!---BG color-->
     <attr name="bgLow" format="reference|color" />
     <attr name="highColor" format="reference|color" />
@@ -163,12 +163,12 @@
     <!---Extended Bolus Icon Color-->
     <attr name="extBolusColor" format="reference|color" />
     <attr name="extBolusStopColor" format="reference|color" />
-    <attr name="basalstartColor" format="reference|color" />
+    <attr name="basalStartColor" format="reference|color" />
     <attr name="basalCancelColor" format="reference|color" />
     <attr name="basalNoTbrColor" format="reference|color" />
     <attr name="basalHighColor" format="reference|color" />
     <attr name="basalLowColor" format="reference|color" />
-    <attr name="pumpCanulaColor" format="reference|color" />
+    <attr name="pumpCannulaColor" format="reference|color" />
     <attr name="cgmInsertColor" format="reference|color" />
     <attr name="pumpBatteryColor" format="reference|color" />
     <attr name="noteColor" format="reference|color" />
@@ -193,30 +193,29 @@
     <!-- Graph specific colors  -->
     <attr name="graphHorizontalLabelText" format="reference|color" />
     <attr name="graphVerticalLabelText" format="reference|color" />
-    <attr name="inrangeBackground" format="reference|color" />
-    <attr name="graphGrid" format="reference|color" />
-    <attr name="devslopeposColor" format="reference|color" />
-    <attr name="devslopenegColor" format="reference|color" />
-    <attr name="deviationgreyColor" format="reference|color" />
-    <attr name="deviationblackColor" format="reference|color" />
-    <attr name="deviationgreenColor" format="reference|color" />
-    <attr name="deviationredColor" format="reference|color" />
+    <attr name="inRangeBackground" format="reference|color" />
+    <attr name="devSlopePosColor" format="reference|color" />
+    <attr name="devSlopeNegColor" format="reference|color" />
+    <attr name="deviationGreyColor" format="reference|color" />
+    <attr name="deviationBlackColor" format="reference|color" />
+    <attr name="deviationGreenColor" format="reference|color" />
+    <attr name="deviationRedColor" format="reference|color" />
     <attr name="predictionColor" format="reference|color" />
     <attr name="iobPredASColor" format="reference|color" />
     <attr name="bgiColor" format="reference|color" />
     <attr name="ratioColor" format="reference|color" />
     <attr name="activityColor" format="reference|color" />
-    <attr name="basebasalColor" format="reference|color" />
+    <attr name="baseBasalColor" format="reference|color" />
     <attr name="dotLineColor" format="reference|color" />
     <!---Popupmenu TextColor -->
     <attr name="menuTextColor" format="reference|color" />
     <attr name="menuTextColorInverse" format="reference|color" />
     <!-- CardView specific colors  -->
     <attr name="strokeColor" format="reference|color" />
-    <attr name="textAppearancemediumColor" format="reference|color" />
+    <attr name="textAppearanceMediumColor" format="reference|color" />
     <!-- Objectives specific colors  -->
     <attr name="isAccomplishedColor" format="reference|color" />
-    <attr name="seperatorColor" format="reference|color" />
+    <attr name="separatorColor" format="reference|color" />
     <attr name="isCompletedColor" format="reference|color" />
     <attr name="isNotCompletedColor" format="reference|color" />
 </resources>

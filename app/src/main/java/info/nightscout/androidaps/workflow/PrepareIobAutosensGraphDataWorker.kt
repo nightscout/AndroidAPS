@@ -30,7 +30,6 @@ import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.resources.getThemeColor
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import java.util.ArrayList
@@ -159,15 +158,15 @@ class PrepareIobAutosensGraphDataWorker(
 
             // DEVIATIONS
             if (autosensData != null) {
-                var color =  rh.gac( ctx, R.attr.deviationblackColor)  // "="
+                var color =  rh.gac( ctx, R.attr.deviationBlackColor)  // "="
                 if (autosensData.type == "" || autosensData.type == "non-meal") {
-                    if (autosensData.pastSensitivity == "C") color =  rh.gac( ctx, R.attr.deviationgreyColor)
-                    if (autosensData.pastSensitivity == "+") color =  rh.gac( ctx, R.attr.deviationgreenColor)
-                    if (autosensData.pastSensitivity == "-") color =  rh.gac( ctx, R.attr.deviationredColor)
+                    if (autosensData.pastSensitivity == "C") color =  rh.gac( ctx, R.attr.deviationGreyColor)
+                    if (autosensData.pastSensitivity == "+") color =  rh.gac( ctx, R.attr.deviationGreenColor)
+                    if (autosensData.pastSensitivity == "-") color =  rh.gac( ctx, R.attr.deviationRedColor)
                 } else if (autosensData.type == "uam") {
                     color =  rh.gac( ctx, R.attr.uamColor)
                 } else if (autosensData.type == "csf") {
-                    color =  rh.gac( ctx, R.attr.deviationgreyColor)
+                    color =  rh.gac( ctx, R.attr.deviationGreyColor)
                 }
                 devArray.add(OverviewPlugin.DeviationDataPoint(time.toDouble(), autosensData.deviation, color, data.overviewData.devScale))
                 data.overviewData.maxDevValueFound = maxOf(data.overviewData.maxDevValueFound, abs(autosensData.deviation), abs(bgi))
@@ -272,11 +271,11 @@ class PrepareIobAutosensGraphDataWorker(
 
         // DEV SLOPE
         data.overviewData.dsMaxSeries = LineGraphSeries(Array(dsMaxArray.size) { i -> dsMaxArray[i] }).also {
-            it.color = rh.gac( ctx, R.attr.devslopeposColor)
+            it.color = rh.gac( ctx, R.attr.devSlopePosColor)
             it.thickness = 3
         }
         data.overviewData.dsMinSeries = LineGraphSeries(Array(dsMinArray.size) { i -> dsMinArray[i] }).also {
-            it.color = rh.gac( ctx, R.attr.devslopenegColor)
+            it.color = rh.gac( ctx, R.attr.devSlopeNegColor)
             it.thickness = 3
         }
         rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_IOB_AUTOSENS_DATA, 100, null))

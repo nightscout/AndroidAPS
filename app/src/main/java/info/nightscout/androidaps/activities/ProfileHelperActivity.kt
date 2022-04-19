@@ -316,7 +316,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
     }
 
     private fun setBackgroundColorOnSelected(tab: Int) {
-        binding.menu1.setBackgroundColor(rh.gac(this, if (tab == 1) R.attr.defaultbackground else R.attr.helperProfileColor))
-        binding.menu2.setBackgroundColor(rh.gac(this, if (tab == 0) R.attr.defaultbackground else R.attr.examinedProfileColor))
+        binding.menu1.setBackgroundColor(rh.gac(this, if (tab == 1) R.attr.defaultBackground else R.attr.helperProfileColor))
+        binding.menu2.setBackgroundColor(rh.gac(this, if (tab == 0) R.attr.defaultBackground else R.attr.examinedProfileColor))
     }
 }
