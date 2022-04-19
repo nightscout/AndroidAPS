@@ -970,4 +970,5 @@ Eversense-appen.</string>
     <string name="wear_unknown_action_string">Okänt kommando:</string>
     <string name="overview_editquickwizard_percentage">Procent</string>
     <string name="app_default">Appens standardinställning</string>
+    <!-- Aidex Cgms -->
 </resources>
