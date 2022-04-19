@@ -944,4 +944,5 @@ Unerwartetes Verhalten.</string>
     <string name="carbs_and_bolus">Kohlenhydrate &amp; Bolus</string>
     <string name="confirm_remove_multiple_items">Sind Sie sicher, dass Sie diese(s) %1$d Element(e) löschen möchten?</string>
     <string name="count_selected">%1$d ausgewählt</string>
+    <!-- Aidex Cgms -->
 </resources>
