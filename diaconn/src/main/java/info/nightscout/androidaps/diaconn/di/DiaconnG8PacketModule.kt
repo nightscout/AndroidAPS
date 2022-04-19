@@ -79,5 +79,4 @@ abstract class DiaconnG8PacketModule {
     @ContributesAndroidInjector abstract fun contributesBigAPSMainInfoInquireResponsePacket(): BigAPSMainInfoInquireResponsePacket
 
 
-
 }

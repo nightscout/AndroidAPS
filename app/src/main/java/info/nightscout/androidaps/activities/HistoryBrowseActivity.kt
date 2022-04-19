@@ -169,7 +169,6 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         else
             windowManager.defaultDisplay.getMetrics(dm)
 
-
         axisWidth = if (dm.densityDpi <= 120) 3 else if (dm.densityDpi <= 160) 10 else if (dm.densityDpi <= 320) 35 else if (dm.densityDpi <= 420) 50 else if (dm.densityDpi <= 560) 70 else 80
         binding.bgGraph.gridLabelRenderer?.gridColor = rh.gac(this, R.attr.graphgrid)
         binding.bgGraph.gridLabelRenderer?.reloadStyles()

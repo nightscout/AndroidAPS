@@ -64,5 +64,4 @@ class BasalProfileEntry {
         startTime = LocalTime(startTimeByte / 2, startTimeByte % 2 * 30)
     }
 
-
 }

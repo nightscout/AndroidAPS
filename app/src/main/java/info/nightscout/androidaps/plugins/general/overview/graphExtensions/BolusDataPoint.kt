@@ -34,7 +34,6 @@ class BolusDataPoint @Inject constructor(
         else if (data.isValid) rh.gac(context,  R.attr.bolusDataPointColor)
         else rh.gac(context,  R.attr.alarmColor)
 
-
     override fun setY(y: Double) {
         yValue = y
     }

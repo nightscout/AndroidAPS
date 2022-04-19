@@ -80,7 +80,6 @@ class VersionCheckerPlugin @Inject constructor(
             return
         }
 
-
         if (isOldVersion(gracePeriod.warning.daysToMillis()) && shouldWarnAgain()) {
             // store last notification time
             sp.putLong(R.string.key_last_versionchecker_plugin_warning, now)

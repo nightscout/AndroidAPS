@@ -144,7 +144,6 @@ class RileyLinkBLEConfigActivity : DaggerAppCompatActivity() {
         }
     }
 
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
         when (item.itemId) {
             android.R.id.home -> {
@@ -304,4 +303,5 @@ class RileyLinkBLEConfigActivity : DaggerAppCompatActivity() {
 
         private const val SCAN_PERIOD_MILLIS: Long = 15000
     }
+
 }
