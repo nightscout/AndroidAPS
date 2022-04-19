@@ -213,77 +213,82 @@
                     android:padding="5dip"
                     app:columnCount="2">
 
-                    <info.nightscout.androidaps.utils.ui.SingleClickButton
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/autotune_profileswitch"
-                        style="?android:attr/buttonStyle"
+                        style="@style/GrayButton"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:drawableStart="@drawable/ic_local_activate"
                         android:paddingStart="0dp"
                         android:paddingEnd="0dp"
                         android:text="@string/activate_profile"
+                        app:icon="@drawable/ic_local_activate"
+                        app:iconTint="@color/ic_local_activate"
                         app:layout_column="0"
                         app:layout_columnWeight="1"
                         app:layout_gravity="fill"
                         app:layout_row="0" />
 
-                    <info.nightscout.androidaps.utils.ui.SingleClickButton
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/autotune_compare"
-                        style="?android:attr/buttonStyle"
+                        style="@style/GrayButton"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:drawableStart="@drawable/ic_compare_profiles"
                         android:paddingStart="0dp"
                         android:paddingEnd="0dp"
                         android:text="@string/compareprofileshort"
+                        app:icon="@drawable/ic_compare_profiles"
+                        app:iconTintMode="multiply"
                         app:layout_column="1"
                         app:layout_columnWeight="1"
                         app:layout_gravity="fill"
                         app:layout_row="0" />
 
-                    <info.nightscout.androidaps.utils.ui.SingleClickButton
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/autotune_copylocal"
-                        style="?android:attr/buttonStyle"
+                        style="@style/GrayButton"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:drawableStart="@drawable/ic_clone_48"
                         android:paddingStart="0dp"
                         android:paddingEnd="0dp"
                         android:text="@string/autotune_copy_localprofile_button"
+                        app:icon="@drawable/ic_clone_48"
+                        app:iconTintMode="multiply"
                         app:layout_column="0"
                         app:layout_columnWeight="1"
                         app:layout_gravity="fill"
                         app:layout_row="1" />
 
-                    <info.nightscout.androidaps.utils.ui.SingleClickButton
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/autotune_update_profile"
-                        style="?android:attr/buttonStyle"
+                        style="@style/GrayButton"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:drawableStart="@drawable/ic_local_save"
                         android:paddingStart="0dp"
                         android:paddingEnd="0dp"
                         android:text="@string/autotune_update_input_profile_button"
+                        app:icon="@drawable/ic_local_save"
+                        app:iconTint="@color/ic_local_save"
                         app:layout_column="1"
                         app:layout_columnWeight="1"
                         app:layout_gravity="fill"
                         app:layout_row="1" />
 
 
-                    <info.nightscout.androidaps.utils.ui.SingleClickButton
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/autotune_run"
-                        style="?android:attr/buttonStyle"
+                        style="@style/GrayButton"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:drawableStart="@drawable/ic_local_reset"
                         android:paddingStart="5dp"
                         android:paddingEnd="5dp"
                         android:text="@string/autotune_run"
+                        app:icon="@drawable/ic_local_reset"
+                        app:iconTint="@color/ic_local_reset"
                         app:layout_column="0"
                         app:layout_columnWeight="1"
                         app:layout_gravity="fill"
