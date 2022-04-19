@@ -197,6 +197,7 @@ class BGSourceFragment : DaggerFragment() {
                         R.string.tomato             -> Sources.Tomato
                         R.string.glunovo            -> Sources.Glunovo
                         R.string.xdrip              -> Sources.Xdrip
+                        R.string.aidex              -> Sources.Aidex
                         else                        -> Sources.Unknown
                     }
                     uel.log(
