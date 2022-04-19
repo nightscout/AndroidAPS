@@ -102,7 +102,6 @@
     <string name="overview_calculator_label">Calculadora</string>
     <string name="constraintapllied">Restrição aplicada!</string>
     <string name="sms_bolus">Bólus:</string>
-    <string name="basal">Basal</string>
     <string name="sms_basal">Basal:</string>
     <string name="changeyourinput">Altere o seu input!</string>
     <string name="configbuilder_bgsource">Fonte da Glicose</string>
@@ -760,7 +759,6 @@
     <string name="invalidage">Entrada de idade inválida</string>
     <string name="invalidweight">Entrada de peso inválida</string>
     <string name="invalidpct">Entrada % inválida</string>
-    <string name="tirformat"><![CDATA[<b>%1$s:</b> Hipo: <b>%2$02d%%</b> Dentro: <b>%3$02d%%</b> Hiper: <b>%4$02d%%</b>]]></string>
     <string name="average">Média</string>
     <string name="tir">TIR</string>
     <string name="activitymonitor">Monitor de actividade</string>
@@ -899,5 +897,6 @@
     <string name="identification">Identificação (e-mail, nick FB ou Discord, etc)</string>
     <string name="identification_not_set">Identificação não definida no modo desenvolvimento</string>
     <string name="not_available_full">Indisponível</string>
+    <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
 </resources>

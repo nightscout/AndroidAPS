@@ -1,8 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="52dp"
-    android:layout_marginLeft="15.67dp"
-    android:layout_marginRight="15.67dp">
+    android:layout_marginStart="15.67dp"
+    android:layout_marginEnd="15.67dp">
 
     <TextView
         android:id="@+id/ble_name"

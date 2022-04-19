@@ -406,7 +406,8 @@ class MedtronicHistoryData @Inject constructor(
         if (lastPrimeRecord != null) {
             uploadCareportalEventIfFoundInHistory(lastPrimeRecord,
                 MedtronicConst.Statistics.LastPrime,
-                DetailedBolusInfo.EventType.CANNULA_CHANGE)
+                DetailedBolusInfo.EventType.CANNULA_CHANGE
+            )
         }
     }
 
@@ -640,7 +641,6 @@ class MedtronicHistoryData @Inject constructor(
                             "pumpId=${tempBasalProcessDTO.pumpId}, pumpType=${medtronicPumpStatus.pumpType}, " +
                             "pumpSerial=${medtronicPumpStatus.serialNumber}]")
 
-
                         if (tempBasalProcessDTO.durationAsSeconds <= 0) {
                             rxBus.send(EventNewNotification(Notification(Notification.MDT_INVALID_HISTORY_DATA, rh.gs(R.string.invalid_history_data), Notification.URGENT)))
                             aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithPumpId - Skipped")
@@ -798,7 +798,6 @@ class MedtronicHistoryData @Inject constructor(
         return processList
     }
 
-
     fun isTBRActive(dbEntry: PumpDbEntryTBR): Boolean {
         return isTBRActive(
             startTimestamp = dbEntry.date,
@@ -889,17 +888,23 @@ class MedtronicHistoryData @Inject constructor(
                 "pumpId=${tempBasalProcess.itemOne.pumpId}, " +
                 "pumpSerial=${medtronicPumpStatus.serialNumber}]")
 
-            val result = pumpSync.syncTemporaryBasalWithPumpId(
-                tryToGetByLocalTime(tempBasalProcess.itemOne.atechDateTime),
-                0.0,
-                tempBasalProcess.durationAsSeconds * 1000L,
-                true,
-                PumpSync.TemporaryBasalType.PUMP_SUSPEND,
-                tempBasalProcess.itemOne.pumpId,
-                medtronicPumpStatus.pumpType,
-                medtronicPumpStatus.serialNumber)
+            if (tempBasalProcess.durationAsSeconds <= 0) {
+                rxBus.send(EventNewNotification(Notification(Notification.MDT_INVALID_HISTORY_DATA, rh.gs(R.string.invalid_history_data), Notification.URGENT)))
+                aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithPumpId - Skipped")
+            } else {
+                val result = pumpSync.syncTemporaryBasalWithPumpId(
+                    tryToGetByLocalTime(tempBasalProcess.itemOne.atechDateTime),
+                    0.0,
+                    tempBasalProcess.durationAsSeconds * 1000L,
+                    true,
+                    PumpSync.TemporaryBasalType.PUMP_SUSPEND,
+                    tempBasalProcess.itemOne.pumpId,
+                    medtronicPumpStatus.pumpType,
+                    medtronicPumpStatus.serialNumber
+                )
 
-            aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithPumpId: Result: $result")
+                aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithPumpId: Result: $result")
+            }
         }
     }
 

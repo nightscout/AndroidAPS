@@ -11,7 +11,7 @@ class MsgBolusProgress(
 ) : MessageBase(injector) {
 
     init {
-        SetCommand(0x0202)
+        setCommand(0x0202)
         aapsLogger.debug(LTag.PUMPCOMM, "New message")
     }
 

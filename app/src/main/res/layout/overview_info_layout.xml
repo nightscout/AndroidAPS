@@ -42,7 +42,6 @@
         app:layout_constraintTop_toTopOf="@+id/bg"
         tools:ignore="HardcodedText" />
 
-
     <LinearLayout
         android:id="@+id/arrows_layout"
         android:layout_width="wrap_content"

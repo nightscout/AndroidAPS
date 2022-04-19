@@ -103,7 +103,6 @@
     <string name="overview_calculator_label">Calculadora</string>
     <string name="constraintapllied">Restricción aplicada!</string>
     <string name="sms_bolus">Bolo:</string>
-    <string name="basal">Dosis basal</string>
     <string name="sms_basal">Dosis Basal:</string>
     <string name="changeyourinput">¡Cambiar datos!</string>
     <string name="configbuilder_bgsource">Origen de Glucosa</string>
@@ -162,6 +161,7 @@
     <string name="end_user_license_agreement">Acuerdo de licencia de usuario final</string>
     <string name="end_user_license_agreement_text">NO DEBE UTILIZARSE PARA TOMAR DECISIONES MÉDICAS. NO HAY NINGUNA GARANTÍA EN EL PROGRAMA, EN LA MEDIDA PERMITIDA POR LA LEY APLICABLE. EXCEPTO CUANDO SE INDIQUE LO CONTRARIO POR ESCRITO, LOS TITULARES DE LOS DERECHOS DE AUTOR Y/O OTRAS PARTES, PROPORCIONAN EL PROGRAMA \"TAL CUAL\", SIN GARANTÍA DE NINGÚN TIPO, YA SEA EXPRESA O IMPLÍCITA, INCLUIDAS, ENTRE OTRAS, LAS GARANTÍAS IMPLÍCITAS DE COMERCIABILIDAD Y ADECUACIÓN PARA UN PROPÓSITO EN PARTICULAR. TODO EL RIESGO EN CUANTO A LA CALIDAD Y EL RENDIMIENTO DEL PROGRAMA ES SUYA. SI EL PROGRAMA TUVIERA UN ERROR, USTED ASUME EL COSTE DE TODOS LOS SERVICIOS, REPARACIONES O CORRECCIONES NECESARIAS.</string>
     <string name="end_user_license_agreement_i_understand">LO ENTIENDO Y ACEPTO</string>
+    <string name="save">Guardar</string>
     <string name="reloadprofile">Recargar Perfil</string>
     <string name="smscommunicator">Comunicador SMS</string>
     <string name="smscommunicator_allowednumbers">Números de teléfono permitidos</string>
@@ -434,6 +434,8 @@
     <string name="ns_localbroadcasts_title">Habilitar la emisión de mensajes localmente.</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">ISF Dinámico</string>
+    <string name="DynISFAdjust_title">Factor de ajuste de ISF Dinámico %</string>
+    <string name="DynISFAdjust_summary">Porcentaje del factor de ajuste de ISF Dinámico\nValor predeterminado: 100\nEstablecer valores por encima del 100% para que el algoritmo aplique correcciones más agresivas y valores por debajo del 100% para correcciones menos agresivas.</string>
     <string name="enableuam">Activar UAM</string>
     <string name="enablesmb">Activar SMB</string>
     <string name="enablesmb_summary">Usar microbolos en lugar de basales temporales, para corregir más rápidamente</string>
@@ -448,7 +450,7 @@
     <string name="activate_profile">ACTIVAR PERFIL</string>
     <string name="invalid">INVÁLIDO</string>
     <string name="careportal_newnstreatment_percentage_label">Porcentaje</string>
-    <string name="careportal_newnstreatment_timeshift_label">Cambio de tiempo</string>
+    <string name="careportal_newnstreatment_timeshift_label">Tiempo del cambio</string>
     <string name="default_temptargets">Objetivo temporal por defecto</string>
     <string name="eatingsoon_duration">Duración OT Comiendo Pronto</string>
     <string name="eatingsoon_target">Objetivo Comiendo Pronto</string>
@@ -771,7 +773,6 @@
     <string name="invalidage">Entrada de edad no válida</string>
     <string name="invalidweight">Peso no válido</string>
     <string name="invalidpct">Entrada % inválida</string>
-    <string name="tirformat"><![CDATA[<b>%1$s:</b> Low: <b>%2$02d%%</b> In: <b>%3$02d%%</b> High: <b>%4$02d%%</b>]]></string>
     <string name="average">Promedio</string>
     <string name="tir">Tiempo en rango</string>
     <string name="activitymonitor">Monitor de actividad</string>
@@ -814,6 +815,7 @@
     <string name="smscommunicator_otp_install_info">En cada teléfono seguidor, instale la aplicación Authenticator que admita tokens RFC 6238 TOTP. Las aplicaciones gratuitas populares son:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">Al resetear el autenticador haces que todos los autenticadores ya provistos no sean válidos. ¡Necesitarás configurarlos de nuevo!</string>
     <string name="overview_show_predictions">Predicciones</string>
+    <string name="overview_show_treatments">Tratamientos</string>
     <string name="overview_show_deviationslope">Pendiente de desviación</string>
     <string name="authorizationfailed">Ha fallado la autorización</string>
     <string name="overview_show_absinsulin">Insulina en total</string>
@@ -847,7 +849,7 @@
     <string name="advisoralarm">Ejecutar alarma cuando es hora de comer</string>
     <string name="alarminxmin">Ejecutar alarma en %1$d min</string>
     <string name="bolusadvisor">Asistente de bolo</string>
-    <string name="bolusadvisormessage">Usted tiene alta glicemia. En lugar de comer ahora se recomienda esperar a una mejor glicemia. ¿Quieres hacer un bolo de corrección ahora y recibir una nota cuándo es el momento de comer? En este caso no se grabarán carbohidratos y se debe volver a utilizar el asistente cuando lo recordamos.</string>
+    <string name="bolusadvisormessage">Tienes la glucosa alta. En lugar de comer ahora, se recomienda esperar a tener un mejor valor de glucosa. ¿Quieres poner un bolo de corrección ahora y recibir un aviso cuando sea un buen momento para comer? En este caso no se registrarán los carbohidratos y deberás utilizar el asistente de bolos después de recibir la notificación</string>
     <string name="enablebolusadvisor">Habilitar asistente de bolo</string>
     <string name="enablebolusadvisor_summary">Utiliza un recordatorio para empezar a comer más tarde, en lugar del resultado del asistente durante una glucemia alta (\"pre-bolo\")</string>
     <string name="time_to_eat">¡Hora de comer!\nEjecutar el asistente de bolo y calcular de nuevo.</string>
@@ -944,6 +946,12 @@
     <string name="a11y_clone_profile">clonar el perfil actual</string>
     <string name="a11y_delete_current_profile">borrar el perfil actual</string>
     <string name="a11y_add_new_to_list">añadir nuevo a la lista</string>
+    <!-- Theme switcher dark and light mode-->
+    <string name="theme_switcher_summary">Elegir tema oscuro, claro o seguir con el predeterminado del sistema</string>
+    <string name="app_color_scheme">Esquema de color de aplicación</string>
+    <string name="dark_theme">Tema oscuro</string>
+    <string name="light_theme">Tema claro</string>
+    <string name="follow_system_theme">Usar tema del dispositivo</string>
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">Objetivo Temporal preestablecido desconocido: %1$s</string>
     <string name="wear_action_tempt_cancel_message">¿Cancelar la ejecución del objetivo temporal?</string>
@@ -978,6 +986,8 @@
     <string name="wear_unknown_action_string">Comando de acción desconocido:</string>
     <string name="overview_editquickwizard_percentage">Porcentaje</string>
     <string name="app_default">Aplicación por defecto</string>
+    <string name="show_invalidated_records">Mostrar registros eliminados o invalidados</string>
+    <string name="hide_invalidated_records">Ocultar registros eliminados o invalidados</string>
     <string name="select_profile">Seleccione el perfil a editar</string>
     <string name="refresh_from_nightscout">Actualizar de Nightscout</string>
     <string name="remove_selected_items">Eliminar los elementos seleccionados</string>
@@ -986,9 +996,17 @@
     <string name="tempt_targets">Objetivos temporales</string>
     <string name="carbs_and_bolus">Carbohidratos y bolos</string>
     <string name="confirm_remove_multiple_items">¿Estás seguro de que quieres eliminar %1$d elementos?</string>
+    <string name="no_records_available">No hay registros disponibles</string>
     <string name="hide_loop">Ocultar lazo</string>
     <string name="show_loop">Mostrar lazo</string>
     <string name="count_selected">%1$d selecionado</string>
     <string name="sort_label">Ordenar</string>
-    <string name="dialog_cancled">Diálogo cancelado</string>
+    <string name="dialog_canceled">Diálogo cancelado</string>
+    <string name="below" comment="below &quot;in range&quot;">Bajo</string>
+    <string name="in_range">En rango</string>
+    <string name="above" comment="above &quot;in range&quot;">Alto</string>
+    <string name="show_loop_records">Mostrar registros del lazo</string>
+    <string name="show_hide_records">Ocultar registros del lazo</string>
+    <string name="widget_description">Widget de AndroidAPS</string>
+    <string name="configure">Configurar opacidad</string>
 </resources>

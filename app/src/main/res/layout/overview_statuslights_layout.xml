@@ -7,17 +7,18 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="3dp"
     android:layout_marginBottom="3dp"
-    android:background="?attr/colorControlHighlight"
     android:orientation="horizontal"
     android:paddingTop="4dp"
-    android:paddingBottom="4dp">
+    android:paddingBottom="4dp"
+    android:baselineAligned="false">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:focusable="true"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        tools:ignore="UseCompoundDrawables">
 
         <ImageView
             android:id="@+id/cannula_or_patch"
@@ -65,6 +66,7 @@
             android:layout_height="wrap_content"
             android:lines="1"
             android:paddingStart="2dp"
+            android:paddingEnd="0dp"
             tools:text="50+U" />
 
     </LinearLayout>
@@ -74,7 +76,8 @@
         android:layout_height="fill_parent"
         android:layout_weight="1"
         android:focusable="true"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        tools:ignore="UseCompoundDrawables">
 
         <ImageView
             android:layout_width="28dp"
@@ -122,6 +125,7 @@
             android:layout_height="fill_parent"
             android:lines="1"
             android:paddingStart="2dp"
+            android:paddingEnd="0dp"
             tools:text="100%" />
 
     </LinearLayout>

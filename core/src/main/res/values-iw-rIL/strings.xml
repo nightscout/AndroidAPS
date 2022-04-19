@@ -186,10 +186,6 @@
     <string name="zerovalueinprofile">פרופיל לא חוקי: %1$s</string>
     <!--    Temptarget-->
     <string name="mins">%1$d דק\'</string>
-    <!--    TDD-->
-    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f יחידות</b> בולוס: <b>%3$.2f יחידות</b> בזאלי: <b>%4$.2f יחידות(%5$.0f%%)</b>]]></string>
-    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f יחידות</b> בולוס: <b>%3$.2f יחידות</b> בזאלי: <b>%4$.2f יחידות(%5$.0f%%)</b> פחמ: <b>%6$.0f גרם</b>]]></string>
-    <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> ב- <b>%3$d</b> ימים<br>]]></string>
     <!--    Translator-->
     <string name="careportal">פורטל טיפולים</string>
     <string name="careportal_bgcheck">בדיקת רמת סוכר בדם</string>
@@ -459,6 +455,14 @@
     <string name="bolus_ok" comment="26 characters max for translation">בולוס OK</string>
     <string name="pump_paired" comment="26 characters max for translation">המשאבה צומדה</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">לחצן ריענון Insight</string>
+    <string name="formatPercent">%1$.0f%%</string>
+    <string name="basal">בזאלי</string>
+    <string name="basalpct">בזאלי %</string>
+    <string name="count_selected">%1$d נבחרו</string>
+    <string name="sort_label">מיין</string>
+    <string name="remove_items">פריטים שהוסרו</string>
+    <string name="sort_items">מיין פריטים</string>
+    <string name="remove_selected_items">הסר פריטים נבחרים</string>
     <plurals name="days">
         <item quantity="one">%1$d יום</item>
         <item quantity="two">%1$d ימים</item>

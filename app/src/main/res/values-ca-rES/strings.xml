@@ -100,7 +100,6 @@
     <string name="overview_calculator_label">Calculadora</string>
     <string name="constraintapllied">Restricció aplicada!</string>
     <string name="sms_bolus">Bolus:</string>
-    <string name="basal">Basal</string>
     <string name="sms_basal">Basal:</string>
     <string name="changeyourinput">Modifiqueu les dades!</string>
     <string name="configbuilder_bgsource">Origen glucèmia</string>
@@ -315,5 +314,6 @@
     <string name="doprofileswitch">Canviar de perfil</string>
     <string name="careportal_sensor_label">Sensor</string>
     <!-- SMS Communicator & OTP Authenticator -->
+    <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
 </resources>

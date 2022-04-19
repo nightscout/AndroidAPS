@@ -173,10 +173,6 @@
     <string name="zerovalueinprofile">Ugyldig profil: %1$s</string>
     <!--    Temptarget-->
     <string name="mins">%1$d min</string>
-    <!--    TDD-->
-    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f IE</b> Bol: <b>%3$.2f IE</b> Bas: <b>%4$.2f IE(%5$.0f%%)</b>]]></string>
-    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f IE</b> Bol: <b>%3$.2f IE</b> Bas: <b>%4$.2f IE(%5$.0f%%)</b> Kulh: <b>%6$.0f g</b>]]></string>
-    <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> i <b>%3$d</b> dage<br>]]></string>
     <!--    Translator-->
     <string name="careportal">Behandlingsportal</string>
     <string name="careportal_bgcheck">BS kontrol</string>

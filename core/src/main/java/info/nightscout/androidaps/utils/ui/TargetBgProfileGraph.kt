@@ -7,12 +7,12 @@ import com.jjoe64.graphview.GraphView
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.AreaGraphSeries
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DoubleDataPoint
+import info.nightscout.androidaps.utils.Round
 import java.text.NumberFormat
-import java.util.ArrayList
 import kotlin.math.max
+import kotlin.math.min
 
 class TargetBgProfileGraph : GraphView {
 
@@ -48,18 +48,20 @@ class TargetBgProfileGraph : GraphView {
 
         val nf: NumberFormat = NumberFormat.getInstance()
         nf.maximumFractionDigits = if (units == GlucoseUnit.MMOL) 1 else 0
-        gridLabelRenderer.setLabelFormatter(DefaultLabelFormatter(nf, nf))
+        gridLabelRenderer.labelFormatter = DefaultLabelFormatter(nf, nf)
     }
 
     fun show(profile1: Profile, profile2: Profile) {
 
         removeAllSeries()
         val targetArray1: MutableList<DoubleDataPoint> = ArrayList()
+        var minValue = 1000.0
         var maxValue = 0.0
         val units = profile1.units
         for (hour in 0..23) {
             val valueLow = Profile.fromMgdlToUnits(profile1.getTargetLowMgdlTimeFromMidnight(hour * 60 * 60), units)
             val valueHigh = Profile.fromMgdlToUnits(profile1.getTargetHighMgdlTimeFromMidnight(hour * 60 * 60), units)
+            minValue = min(minValue, valueLow)
             maxValue = max(maxValue, valueHigh)
             targetArray1.add(DoubleDataPoint(hour.toDouble(), valueLow, valueHigh))
             targetArray1.add(DoubleDataPoint((hour + 1).toDouble(), valueLow, valueHigh))
@@ -73,6 +75,7 @@ class TargetBgProfileGraph : GraphView {
         for (hour in 0..23) {
             val valueLow = Profile.fromMgdlToUnits(profile2.getTargetLowMgdlTimeFromMidnight(hour * 60 * 60), units)
             val valueHigh = Profile.fromMgdlToUnits(profile2.getTargetHighMgdlTimeFromMidnight(hour * 60 * 60), units)
+            minValue = min(minValue, valueLow)
             maxValue = max(maxValue, valueHigh)
             targetArray2.add(DoubleDataPoint(hour.toDouble(), valueLow, valueHigh))
             targetArray2.add(DoubleDataPoint((hour + 1).toDouble(), valueLow, valueHigh))
@@ -87,13 +90,13 @@ class TargetBgProfileGraph : GraphView {
         viewport.setMinX(0.0)
         viewport.setMaxX(24.0)
         viewport.isYAxisBoundsManual = true
-        viewport.setMinY(0.0)
+        viewport.setMinY(Round.floorTo(minValue / 1.1, 0.5))
         viewport.setMaxY(Round.ceilTo(maxValue * 1.1, 0.5))
         gridLabelRenderer.numHorizontalLabels = 13
         gridLabelRenderer.verticalLabelsColor = targetSeries1.color
 
         val nf: NumberFormat = NumberFormat.getInstance()
         nf.maximumFractionDigits = if (units == GlucoseUnit.MMOL) 1 else 0
-        gridLabelRenderer.setLabelFormatter(DefaultLabelFormatter(nf, nf))
+        gridLabelRenderer.labelFormatter = DefaultLabelFormatter(nf, nf)
     }
 }

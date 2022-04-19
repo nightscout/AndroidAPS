@@ -8,7 +8,7 @@ class MsgSettingShippingInfo(
 ) : MessageBase(injector) {
 
     init {
-        SetCommand(0x3207)
+        setCommand(0x3207)
         aapsLogger.debug(LTag.PUMPCOMM, "New message")
     }
 

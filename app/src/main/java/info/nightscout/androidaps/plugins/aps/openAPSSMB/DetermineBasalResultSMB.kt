@@ -51,7 +51,7 @@ class DetermineBasalResultSMB private constructor(injector: HasAndroidInjector) 
                     aapsLogger.error(LTag.APS, "Error parsing 'deliverAt' date: $date", e)
                 }
             }
-            if (result.has("variable_sens")) variableSens = result.getDouble("variable_sens");
+            if (result.has("variable_sens")) variableSens = result.getDouble("variable_sens")
         } catch (e: JSONException) {
             aapsLogger.error(LTag.APS, "Error parsing determine-basal result JSON", e)
         }

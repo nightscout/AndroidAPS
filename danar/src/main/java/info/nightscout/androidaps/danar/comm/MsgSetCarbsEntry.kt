@@ -11,19 +11,19 @@ class MsgSetCarbsEntry(
 ) : MessageBase(injector) {
 
     init {
-        SetCommand(0x0402)
+        setCommand(0x0402)
         aapsLogger.debug(LTag.PUMPBTCOMM, "New message")
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = time
-        AddParamByte(info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_CARBO)
-        AddParamByte((calendar[Calendar.YEAR] % 100).toByte())
-        AddParamByte((calendar[Calendar.MONTH] + 1).toByte())
-        AddParamByte(calendar[Calendar.DAY_OF_MONTH].toByte())
-        AddParamByte(calendar[Calendar.HOUR_OF_DAY].toByte())
-        AddParamByte(calendar[Calendar.MINUTE].toByte())
-        AddParamByte(calendar[Calendar.SECOND].toByte())
-        AddParamByte(0x43.toByte()) //??
-        AddParamInt(amount)
+        addParamByte(info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_CARBO)
+        addParamByte((calendar[Calendar.YEAR] % 100).toByte())
+        addParamByte((calendar[Calendar.MONTH] + 1).toByte())
+        addParamByte(calendar[Calendar.DAY_OF_MONTH].toByte())
+        addParamByte(calendar[Calendar.HOUR_OF_DAY].toByte())
+        addParamByte(calendar[Calendar.MINUTE].toByte())
+        addParamByte(calendar[Calendar.SECOND].toByte())
+        addParamByte(0x43.toByte()) //??
+        addParamInt(amount)
         aapsLogger.debug(LTag.PUMPBTCOMM, "Set carb entry: " + amount + " date " + calendar.time.toString())
     }
 

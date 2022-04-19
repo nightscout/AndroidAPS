@@ -109,25 +109,25 @@ public class ReadHistoryCommand extends BaseCommand {
         if (!history.bolusHistory.isEmpty()) {
             aapsLogger.debug(LTag.PUMP, "Read bolus history (" + history.bolusHistory.size() + "):");
             for (Bolus bolus : history.bolusHistory) {
-                aapsLogger.debug(LTag.PUMP, new Date(bolus.timestamp) + ": " + bolus.toString());
+                aapsLogger.debug(LTag.PUMP, new Date(bolus.timestamp) + ": " + bolus);
             }
         }
         if (!history.pumpAlertHistory.isEmpty()) {
             aapsLogger.debug(LTag.PUMP, "Read error history (" + history.pumpAlertHistory.size() + "):");
             for (PumpAlert pumpAlert : history.pumpAlertHistory) {
-                aapsLogger.debug(LTag.PUMP, new Date(pumpAlert.timestamp) + ": " + pumpAlert.toString());
+                aapsLogger.debug(LTag.PUMP, new Date(pumpAlert.timestamp) + ": " + pumpAlert);
             }
         }
         if (!history.tddHistory.isEmpty()) {
             aapsLogger.debug(LTag.PUMP, "Read TDD history (" + history.tddHistory.size() + "):");
             for (Tdd tdd : history.tddHistory) {
-                aapsLogger.debug(LTag.PUMP, new Date(tdd.timestamp) + ": " + tdd.toString());
+                aapsLogger.debug(LTag.PUMP, new Date(tdd.timestamp) + ": " + tdd);
             }
         }
         if (!history.tbrHistory.isEmpty()) {
             aapsLogger.debug(LTag.PUMP, "Read TBR history (" + history.tbrHistory.size() + "):");
             for (Tbr tbr : history.tbrHistory) {
-                aapsLogger.debug(LTag.PUMP, new Date(tbr.timestamp) + ": " + tbr.toString());
+                aapsLogger.debug(LTag.PUMP, new Date(tbr.timestamp) + ": " + tbr);
             }
         }
 

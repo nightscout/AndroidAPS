@@ -34,7 +34,6 @@ class SetupWizardActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var localProfilePlugin: LocalProfilePlugin
     @Inject lateinit var swDefinition: SWDefinition
-    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var sp: SP
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var aapsSchedulers: AapsSchedulers
@@ -50,8 +49,6 @@ class SetupWizardActivity : NoSplashAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // temp while switch is not public
-        setTheme(R.style.AppTheme)
         update(applicationContext)
         binding = ActivitySetupwizardBinding.inflate(layoutInflater)
         setContentView(binding.root)

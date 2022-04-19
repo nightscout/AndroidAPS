@@ -5,7 +5,6 @@
     <!-- Omnipod Eros - Keys -->
     <!-- Omnipod Eros - Overview -->
     <!-- Omnipod Eros - Preferences -->
-    <string name="omnipod_eros_preferences_riley_link_configuration">RileyLink-Konfiguration</string>
     <string name="omnipod_eros_preferences_category_notifications">Benachrichtigungen</string>
     <string name="omnipod_eros_preferences_pulse_log_button_enabled">Button \'Pulse Log\' im Menü Pod Mgmt. anzeigen</string>
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Button \'RileyLink Status\' im Menü Pod Mgmt. anzeigen</string>

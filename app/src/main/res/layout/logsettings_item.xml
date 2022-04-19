@@ -13,7 +13,6 @@
         android:textSize="12sp"
         tools:text="TYPE" />
 
-
     <CheckBox
         android:id="@+id/logsettings_visibility"
         android:layout_width="wrap_content"

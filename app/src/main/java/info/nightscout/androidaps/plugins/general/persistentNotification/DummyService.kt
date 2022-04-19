@@ -39,8 +39,6 @@ class DummyService : DaggerService() {
 
     override fun onCreate() {
         super.onCreate()
-        // TODO: I guess this was moved here in order to adhere to the 5 seconds rule to call "startForeground" after a Service was called as Foreground service?
-        // As onCreate() is not called every time a service is started, copied to onStartCommand().
         try {
             aapsLogger.debug("Starting DummyService with ID ${notificationHolder.notificationID} notification ${notificationHolder.notification}")
             startForeground(notificationHolder.notificationID, notificationHolder.notification)

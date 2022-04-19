@@ -2,7 +2,11 @@
     package="info.nightscout.androidaps.dana">
 
     <application>
-        <activity android:name="info.nightscout.androidaps.dana.activities.DanaHistoryActivity" />
-        <activity android:name="info.nightscout.androidaps.dana.activities.DanaUserOptionsActivity" />
+        <activity
+            android:name="info.nightscout.androidaps.dana.activities.DanaHistoryActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name="info.nightscout.androidaps.dana.activities.DanaUserOptionsActivity"
+            android:theme="@style/AppTheme" />
     </application>
 </manifest>

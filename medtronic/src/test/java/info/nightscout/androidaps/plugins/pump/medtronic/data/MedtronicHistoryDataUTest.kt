@@ -34,13 +34,11 @@ class MedtronicHistoryDataUTest : TestBase() {
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var rxBus: RxBus
 
-
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
 
         }
     }
-
 
 
     @Test
@@ -52,12 +50,11 @@ class MedtronicHistoryDataUTest : TestBase() {
         pumpSync,
         pumpSyncStorage)
 
-
         val gson = Gson()
 
         val fileText = ClassLoader.getSystemResource("tbr_data.json").readText()
 
-        val listType: Type = object : TypeToken<MutableList<PumpHistoryEntry?>?>() {}.getType()
+        val listType: Type = object : TypeToken<MutableList<PumpHistoryEntry?>?>() {}.type
         val yourClassList: MutableList<PumpHistoryEntry> = gson.fromJson(fileText, listType)
 
         for (pumpHistoryEntry in yourClassList) {
@@ -85,7 +82,6 @@ class MedtronicHistoryDataUTest : TestBase() {
 
     }
 
-
     @Test
     fun createTBRProcessList_SpecialCase() {
 
@@ -95,12 +91,11 @@ class MedtronicHistoryDataUTest : TestBase() {
                                               pumpSync,
                                               pumpSyncStorage)
 
-
         val gson = Gson()
 
         val fileText = ClassLoader.getSystemResource("tbr_data_special.json").readText()
 
-        val listType: Type = object : TypeToken<MutableList<PumpHistoryEntry?>?>() {}.getType()
+        val listType: Type = object : TypeToken<MutableList<PumpHistoryEntry?>?>() {}.type
         val yourClassList: MutableList<PumpHistoryEntry> = gson.fromJson(fileText, listType)
 
         for (pumpHistoryEntry in yourClassList) {
@@ -127,6 +122,5 @@ class MedtronicHistoryDataUTest : TestBase() {
         }
 
     }
-
 
 }

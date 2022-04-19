@@ -31,7 +31,6 @@ import javax.inject.Inject
 class SmsCommunicatorOtpActivity : NoSplashAppCompatActivity() {
 
     @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
     @Inject lateinit var otp: OneTimePassword
     @Inject lateinit var uel: UserEntryLogger

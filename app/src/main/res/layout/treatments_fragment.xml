@@ -1,113 +1,64 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="info.nightscout.androidaps.activities.TreatmentsActivity">
 
-    <androidx.appcompat.widget.Toolbar
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize" />
 
-    <com.google.android.flexbox.FlexboxLayout
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/treatments_tabs"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/defaultbackground"
-        app:alignContent="stretch"
-        app:alignItems="stretch"
-        app:flexDirection="row"
-        app:flexWrap="wrap"
-        app:justifyContent="center">
+        android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/treatments"
+        <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="1dp"
-            android:paddingEnd="1dp"
-            android:layout_weight="1"
             android:contentDescription="@string/bolus"
-            android:scaleX="0.8"
-            android:scaleY="0.8"
-            app:srcCompat="@drawable/ic_cp_bolus_carbs" />
+            android:icon="@drawable/ic_cp_bolus_carbs" />
 
-        <ImageView
-            android:id="@+id/extended_boluses"
+        <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:contentDescription="@string/extended_bolus"
-            android:paddingStart="1dp"
-            android:paddingEnd="1dp"
-            android:scaleX="0.7"
-            android:scaleY="0.7"
-            app:srcCompat="@drawable/ic_actions_startextbolus" />
+            android:icon="@drawable/ic_actions_startextbolus" />
 
-        <ImageView
-            android:id="@+id/temp_basals"
+        <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="1dp"
-            android:paddingEnd="1dp"
-            android:layout_weight="1"
             android:contentDescription="@string/tempbasal_label"
-            android:scaleX="0.7"
-            android:scaleY="0.7"
-            app:srcCompat="@drawable/ic_actions_starttempbasal" />
+            android:icon="@drawable/ic_actions_starttempbasal" />
 
-        <ImageView
-            android:id="@+id/temp_targets"
+        <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="1dp"
-            android:paddingEnd="1dp"
-            android:layout_weight="1"
             android:contentDescription="@string/careportal_temporarytarget"
-            android:scaleX="0.7"
-            android:scaleY="0.7"
-            app:srcCompat="@drawable/ic_temptarget_high" />
+            android:icon="@drawable/ic_temptarget_high" />
 
-        <ImageView
-            android:id="@+id/profile_switches"
+        <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="1dp"
-            android:paddingEnd="1dp"
-            android:layout_weight="1"
             android:contentDescription="@string/careportal_profileswitch"
-            android:scaleX="0.7"
-            android:scaleY="0.7"
-            app:srcCompat="@drawable/ic_actions_profileswitch" />
+            android:icon="@drawable/ic_actions_profileswitch" />
 
-        <ImageView
-            android:id="@+id/careportal"
+        <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="1dp"
-            android:paddingEnd="1dp"
-            android:layout_weight="1"
             android:contentDescription="@string/careportal"
-            android:scaleX="0.7"
-            android:scaleY="0.7"
-            app:srcCompat="@drawable/ic_cp_note" />
+            android:icon="@drawable/ic_cp_note" />
 
-        <ImageView
-            android:id="@+id/userentry"
+        <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:contentDescription="@string/userentry"
-            android:paddingStart="1dp"
-            android:paddingEnd="1dp"
-            android:scaleX="0.7"
-            android:scaleY="0.7"
-            app:srcCompat="@drawable/ic_danar_useropt" />
+            android:icon="@drawable/ic_danar_useropt" />
 
-    </com.google.android.flexbox.FlexboxLayout>
+    </com.google.android.material.tabs.TabLayout>
 
     <FrameLayout
         android:id="@+id/fragment_container"

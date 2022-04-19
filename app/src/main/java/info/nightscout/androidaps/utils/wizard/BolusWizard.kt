@@ -300,12 +300,12 @@ class BolusWizard @Inject constructor(
         )
     }
 
-    private fun confirmMessageAfterConstraints(advisor: Boolean): Spanned {
+    private fun confirmMessageAfterConstraints(context: Context, advisor: Boolean): Spanned {
 
         val actions: LinkedList<String> = LinkedList()
         if (insulinAfterConstraints > 0) {
             val pct = if (percentageCorrection != 100) " ($percentageCorrection%)" else ""
-            actions.add(rh.gs(R.string.bolus) + ": " + rh.gs(R.string.formatinsulinunits, insulinAfterConstraints).formatColor(rh, R.color.bolus) + pct)
+            actions.add(rh.gs(R.string.bolus) + ": " + rh.gs(R.string.formatinsulinunits, insulinAfterConstraints).formatColor(context, rh, R.attr.bolusColor) + pct)
         }
         if (carbs > 0 && !advisor) {
             var timeShift = ""
@@ -314,24 +314,25 @@ class BolusWizard @Inject constructor(
             } else if (carbTime < 0) {
                 timeShift += " (" + rh.gs(R.string.mins, carbTime) + ")"
             }
-            actions.add(rh.gs(R.string.carbs) + ": " + rh.gs(R.string.format_carbs, carbs).formatColor(rh, R.color.carbs) + timeShift)
+            actions.add(rh.gs(R.string.carbs) + ": " + rh.gs(R.string.format_carbs, carbs).formatColor(context, rh, R.attr.carbsColor) + timeShift)
         }
         if (insulinFromCOB > 0) {
             actions.add(
-                rh.gs(R.string.cobvsiob) + ": " + rh.gs(R.string.formatsignedinsulinunits, insulinFromBolusIOB + insulinFromBasalIOB + insulinFromCOB + insulinFromBG).formatColor(rh, R.color.cobAlert)
+                rh.gs(R.string.cobvsiob) + ": " + rh.gs(R.string.formatsignedinsulinunits, insulinFromBolusIOB + insulinFromBasalIOB + insulinFromCOB + insulinFromBG).formatColor(context, rh, R.attr
+                    .cobAlertColor)
             )
             val absorptionRate = iobCobCalculator.ads.slowAbsorptionPercentage(60)
             if (absorptionRate > .25)
-                actions.add(rh.gs(R.string.slowabsorptiondetected, rh.gc(R.color.cobAlert), (absorptionRate * 100).toInt()))
+                actions.add(rh.gs(R.string.slowabsorptiondetected, rh.gac(context, R.attr.cobAlertColor), (absorptionRate * 100).toInt()))
         }
         if (abs(insulinAfterConstraints - calculatedTotalInsulin) > activePlugin.activePump.pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))
-            actions.add(rh.gs(R.string.bolusconstraintappliedwarn, calculatedTotalInsulin, insulinAfterConstraints).formatColor(rh, R.color.warning))
+            actions.add(rh.gs(R.string.bolusconstraintappliedwarn, calculatedTotalInsulin, insulinAfterConstraints).formatColor(context, rh, R.attr.warningColor))
         if (config.NSCLIENT && insulinAfterConstraints > 0)
-            actions.add(rh.gs(R.string.bolusrecordedonly).formatColor(rh, R.color.warning))
+            actions.add(rh.gs(R.string.bolusrecordedonly).formatColor(context, rh, R.attr.warningColor))
         if (useAlarm && !advisor && carbs > 0 && carbTime > 0)
-            actions.add(rh.gs(R.string.alarminxmin, carbTime).formatColor(rh, R.color.info))
+            actions.add(rh.gs(R.string.alarminxmin, carbTime).formatColor(context, rh, R.attr.infoColor))
         if (advisor)
-            actions.add(rh.gs(R.string.advisoralarm).formatColor(rh, R.color.info))
+            actions.add(rh.gs(R.string.advisoralarm).formatColor(context, rh, R.attr.infoColor))
 
         return HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions))
     }
@@ -360,7 +361,7 @@ class BolusWizard @Inject constructor(
     }
 
     private fun bolusAdvisorProcessing(ctx: Context) {
-        val confirmMessage = confirmMessageAfterConstraints(advisor = true)
+        val confirmMessage = confirmMessageAfterConstraints(ctx, advisor = true)
         OKDialog.showConfirmation(ctx, rh.gs(R.string.boluswizard), confirmMessage, {
             DetailedBolusInfo().apply {
                 eventType = DetailedBolusInfo.EventType.CORRECTION_BOLUS
@@ -417,7 +418,7 @@ class BolusWizard @Inject constructor(
         val profile = profileFunction.getProfile() ?: return
         val pump = activePlugin.activePump
 
-        val confirmMessage = confirmMessageAfterConstraints(advisor = false)
+        val confirmMessage = confirmMessageAfterConstraints(ctx, advisor = false)
         OKDialog.showConfirmation(ctx, rh.gs(R.string.boluswizard), confirmMessage, {
             if (insulinAfterConstraints > 0 || carbs > 0) {
                 if (useSuperBolus) {

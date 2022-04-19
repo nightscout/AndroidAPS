@@ -88,6 +88,7 @@ class ActionsFragment : DaggerFragment() {
         //check screen width
         dm = DisplayMetrics()
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            @Suppress("DEPRECATION")
             activity?.display?.getRealMetrics(dm)
         } else {
             @Suppress("DEPRECATION") activity?.windowManager?.defaultDisplay?.getMetrics(dm)

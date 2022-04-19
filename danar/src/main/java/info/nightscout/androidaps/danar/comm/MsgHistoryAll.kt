@@ -12,7 +12,7 @@ open class MsgHistoryAll(
 ) : MessageBase(injector) {
 
     init {
-        SetCommand(0x41F2)
+        setCommand(0x41F2)
         aapsLogger.debug(LTag.PUMPCOMM, "New message")
     }
 

@@ -38,7 +38,8 @@
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginEnd="8dp" />
+                android:layout_marginEnd="8dp"
+                android:importantForAccessibility="no" />
 
             <ImageView
                 android:id="@+id/plugin_icon2"
@@ -46,6 +47,7 @@
                 android:layout_height="36dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="8dp"
+                android:importantForAccessibility="no"
                 tools:visibility="gone" />
 
         </LinearLayout>
@@ -70,6 +72,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
                 tools:text="A super exquisite plugin description" />
+
         </LinearLayout>
 
     </LinearLayout>
@@ -80,6 +83,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:contentDescription="@string/a11y_open_settings"
         android:background="?attr/selectableItemBackgroundBorderless"
         app:srcCompat="@drawable/ic_settings" />
 
@@ -88,4 +92,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:saveEnabled="false" />
+
 </LinearLayout>

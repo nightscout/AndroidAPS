@@ -10,23 +10,26 @@ import android.widget.*
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.PreferencesActivity
+import info.nightscout.androidaps.activities.SingleFragmentActivity
 import info.nightscout.androidaps.databinding.ConfigbuilderFragmentBinding
 import info.nightscout.androidaps.events.EventRebuildTabs
-import info.nightscout.androidaps.interfaces.*
+import info.nightscout.androidaps.extensions.toVisibility
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.androidaps.interfaces.PluginBase
+import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.events.EventConfigBuilderUpdateGui
 import info.nightscout.androidaps.utils.FabricPrivacy
-import io.reactivex.rxjava3.kotlin.plusAssign
-import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
+import info.nightscout.androidaps.utils.protection.ProtectionCheck.Protection.PREFERENCES
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import java.util.*
+import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
 
 class ConfigBuilderFragment : DaggerFragment() {
@@ -44,48 +47,36 @@ class ConfigBuilderFragment : DaggerFragment() {
 
     private var disposable: CompositeDisposable = CompositeDisposable()
     private val pluginViewHolders = ArrayList<PluginViewHolder>()
-
+    private var inMenu = false
+    private var queryingProtection = false
     private var _binding: ConfigbuilderFragmentBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
+    // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = ConfigbuilderFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        if (protectionCheck.isLocked(ProtectionCheck.Protection.PREFERENCES))
-            binding.mainLayout.visibility = View.GONE
-        else
-            binding.unlock.visibility = View.GONE
-
-        binding.unlock.setOnClickListener {
-            activity?.let { activity ->
-                protectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, {
-                    activity.runOnUiThread {
-                        binding.mainLayout.visibility = View.VISIBLE
-                        binding.unlock.visibility = View.GONE
-                    }
-                })
-            }
-        }
+        val parentClass = this.activity?.let { it::class.java }
+        inMenu = parentClass == SingleFragmentActivity::class.java
+        updateProtectedUi()
+        binding.unlock.setOnClickListener { queryProtection() }
     }
 
     @Synchronized
     override fun onResume() {
         super.onResume()
+        if (inMenu) queryProtection() else updateProtectedUi()
         disposable += rxBus
             .toObservable(EventConfigBuilderUpdateGui::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({
-                for (pluginViewHolder in pluginViewHolders) pluginViewHolder.update()
-            }, fabricPrivacy::logException)
+                           for (pluginViewHolder in pluginViewHolders) pluginViewHolder.update()
+                       }, fabricPrivacy::logException)
         updateGUI()
     }
 
@@ -213,6 +204,23 @@ class ConfigBuilderFragment : DaggerFragment() {
 
         private fun areMultipleSelectionsAllowed(type: PluginType): Boolean {
             return type == PluginType.GENERAL || type == PluginType.CONSTRAINTS || type == PluginType.LOOP
+        }
+    }
+
+    private fun updateProtectedUi() {
+        val isLocked = protectionCheck.isLocked(PREFERENCES)
+        binding.mainLayout.visibility = isLocked.not().toVisibility()
+        binding.unlock.visibility = isLocked.toVisibility()
+    }
+
+    private fun queryProtection() {
+        val isLocked = protectionCheck.isLocked(PREFERENCES)
+        if (isLocked && !queryingProtection) {
+            activity?.let { activity ->
+                queryingProtection = true
+                val doUpdate = { activity.runOnUiThread { queryingProtection = false; updateProtectedUi() } }
+                protectionCheck.queryProtection(activity, PREFERENCES, doUpdate, doUpdate, doUpdate)
+            }
         }
     }
 }

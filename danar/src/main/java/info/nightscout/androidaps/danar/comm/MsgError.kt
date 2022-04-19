@@ -10,7 +10,7 @@ class MsgError(
 ) : MessageBase(injector) {
 
     init {
-        SetCommand(0x0601)
+        setCommand(0x0601)
         aapsLogger.debug(LTag.PUMPCOMM, "New message")
     }
 

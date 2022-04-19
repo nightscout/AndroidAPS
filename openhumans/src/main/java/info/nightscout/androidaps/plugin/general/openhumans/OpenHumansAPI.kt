@@ -116,6 +116,7 @@ internal class OpenHumansAPI @Inject constructor(
         if (!response.isSuccessful) throw OHHttpException(response.code, response.message, null)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     private suspend fun Request.await(): Response {
         val call = client.newCall(this)
         return suspendCancellableCoroutine {

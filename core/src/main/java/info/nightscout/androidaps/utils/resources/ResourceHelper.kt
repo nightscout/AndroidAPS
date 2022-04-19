@@ -32,5 +32,9 @@ interface ResourceHelper {
     /**
      * Get Attribute Color based on theme style for specified context
      */
-    @ColorInt fun gac(context: Context, @AttrRes attributeId: Int): Int
+    @ColorInt fun gac(context: Context?, @AttrRes attributeId: Int): Int
+    /**
+     * Get themed context -->> context dependend on light or darkmode
+     */
+    fun getThemedCtx(context: Context): Context
 }

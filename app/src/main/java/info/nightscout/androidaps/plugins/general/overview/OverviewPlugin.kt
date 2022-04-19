@@ -4,25 +4,26 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.ValueWrapper
-import info.nightscout.androidaps.events.*
+import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.extensions.*
-import info.nightscout.androidaps.interfaces.*
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
-import info.nightscout.androidaps.plugins.aps.events.EventLoopInvoked
+import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.androidaps.interfaces.Overview
+import info.nightscout.androidaps.interfaces.PluginBase
+import info.nightscout.androidaps.interfaces.PluginDescription
+import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.general.overview.events.*
+import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
+import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
+import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewCalcProgress
+import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewNotification
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.Scale
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.ScaledDataPoint
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationStore
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventBucketedDataCreated
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
-import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -41,9 +42,6 @@ class OverviewPlugin @Inject constructor(
     private val aapsSchedulers: AapsSchedulers,
     rh: ResourceHelper,
     private val config: Config,
-    private val dateUtil: DateUtil,
-    private val iobCobCalculator: IobCobCalculator,
-    private val repository: AppRepository,
     private val overviewData: OverviewData,
     private val overviewMenus: OverviewMenus
 ) : PluginBase(
@@ -89,62 +87,9 @@ class OverviewPlugin @Inject constructor(
         disposable += rxBus
             .toObservable(EventIobCalculationProgress::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ overviewData.calcProgress = it.progress; overviewBus.send(EventUpdateOverviewCalcProgress("EventIobCalculationProgress")) }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventTempBasalChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ overviewBus.send(EventUpdateOverviewTemporaryBasal("EventTempBasalChange")) }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventExtendedBolusChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ overviewBus.send(EventUpdateOverviewExtendedBolus("EventExtendedBolusChange")) }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventNewBG::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ loadBg("EventNewBG") }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventTempTargetChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ loadTemporaryTarget("EventTempTargetChange") }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventTreatmentChange::class.java)
-            .observeOn(aapsSchedulers.io)
             .subscribe({
-                           loadIobCobResults("EventTreatmentChange")
-                           overviewData.prepareTreatmentsData("EventTreatmentChange")
-                           overviewBus.send(EventUpdateOverviewGraph("EventTreatmentChange"))
-                       }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventTherapyEventChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({
-                           overviewData.prepareTreatmentsData("EventTherapyEventChange")
-                           overviewBus.send(EventUpdateOverviewGraph("EventTherapyEventChange"))
-                       }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventBucketedDataCreated::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({
-                           overviewData.prepareBucketedData("EventBucketedDataCreated")
-                           overviewData.prepareBgData("EventBucketedDataCreated")
-                           overviewBus.send(EventUpdateOverviewGraph("EventBucketedDataCreated"))
-                       }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventLoopInvoked::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ overviewData.preparePredictions("EventLoopInvoked") }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventEffectiveProfileSwitchChanged::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({
-                           loadProfile("EventEffectiveProfileSwitchChanged")
-                           overviewData.prepareBasalData("EventEffectiveProfileSwitchChanged")
-                       }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventAutosensCalculationFinished::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({
-                           if (it.cause !is EventCustomCalculationFinished) refreshLoop("EventAutosensCalculationFinished")
+                           overviewData.calcProgressPct = it.pass.finalPercent(it.progressPct)
+                           overviewBus.send(EventUpdateOverviewCalcProgress("EventIobCalculationProgress"))
                        }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventPumpStatusChanged::class.java)
@@ -152,20 +97,7 @@ class OverviewPlugin @Inject constructor(
             .subscribe({
                            overviewData.pumpStatus = it.getStatus(rh)
                        }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventPreferenceChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ event ->
-                           if (event.isChanged(rh, R.string.key_units)) {
-                               overviewData.reset()
-                               overviewData.prepareBucketedData("EventBucketedDataCreated")
-                               overviewData.prepareBgData("EventBucketedDataCreated")
-                               overviewBus.send(EventUpdateOverviewGraph("EventBucketedDataCreated"))
-                               loadAll("EventPreferenceChange")
-                           }
-                       }, fabricPrivacy::logException)
 
-        Thread { loadAll("onResume") }.start()
     }
 
     override fun onStop() {
@@ -243,7 +175,7 @@ class OverviewPlugin @Inject constructor(
             .storeDouble(R.string.key_statuslights_bat_critical, sp, rh)
             .storeInt(R.string.key_boluswizard_percentage, sp, rh)
     }
-
+/*
     @Volatile
     var runningRefresh = false
     override fun refreshLoop(from: String) {
@@ -284,38 +216,5 @@ class OverviewPlugin @Inject constructor(
         overviewBus.send(EventUpdateOverviewGraph(from))
         aapsLogger.debug(LTag.UI, "loadAll finished")
     }
-
-    private fun loadProfile(from: String) {
-        overviewBus.send(EventUpdateOverviewProfile(from))
-    }
-
-    private fun loadTemporaryTarget(from: String) {
-        val tempTarget = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
-        if (tempTarget is ValueWrapper.Existing) overviewData.temporaryTarget = tempTarget.value
-        else overviewData.temporaryTarget = null
-        overviewBus.send(EventUpdateOverviewTemporaryTarget(from))
-    }
-
-    private fun loadAsData(from: String) {
-        overviewData.lastAutosensData = iobCobCalculator.ads.getLastAutosensData("Overview", aapsLogger, dateUtil)
-        overviewBus.send(EventUpdateOverviewSensitivity(from))
-    }
-
-    private fun loadBg(from: String) {
-        val gvWrapped = repository.getLastGlucoseValueWrapped().blockingGet()
-        if (gvWrapped is ValueWrapper.Existing) overviewData.lastBg = gvWrapped.value
-        else overviewData.lastBg = null
-        overviewBus.send(EventUpdateOverviewBg(from))
-    }
-
-    private fun loadIobCobResults(from: String) {
-        overviewData.bolusIob = iobCobCalculator.calculateIobFromBolus().round()
-        overviewData.basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
-        overviewData.cobInfo = iobCobCalculator.getCobInfo(true, "Overview COB")
-        val lastCarbs = repository.getLastCarbsRecordWrapped().blockingGet()
-        overviewData.lastCarbsTime = if (lastCarbs is ValueWrapper.Existing) lastCarbs.value.timestamp else 0L
-
-        overviewBus.send(EventUpdateOverviewIobCob(from))
-    }
-
+*/
 }

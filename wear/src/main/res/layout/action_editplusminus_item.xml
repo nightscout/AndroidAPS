@@ -3,7 +3,6 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -61,5 +60,7 @@
             android:backgroundTint="#ffffff"
             android:src="@drawable/ic_action_add"
             android:tint="#ffffff" />
-</LinearLayout>
+
+    </LinearLayout>
+
 </RelativeLayout>

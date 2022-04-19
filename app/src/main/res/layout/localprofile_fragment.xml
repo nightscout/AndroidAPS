@@ -30,16 +30,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"
-                android:hint="@string/select_profile"
-                app:boxStrokeColor="@color/list_delimiter">
+                android:hint="@string/select_profile">
 
-                <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
                     android:id="@+id/profileList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:enabled="false"
-                    tools:ignore="KeyboardInaccessibleWidget" />
+                    android:inputType="none" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -123,63 +120,37 @@
 
             </LinearLayout>
 
-            <LinearLayout
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tab_layout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:paddingBottom="10dp"
-                android:weightSum="5">
+                android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/dia_tab"
-                    android:layout_width="0dp"
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/dia_short"
-                    android:textAlignment="center"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold" />
+                    android:text="@string/dia_short" />
 
-                <TextView
-                    android:id="@+id/ic_tab"
-                    android:layout_width="0dp"
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/ic_short"
-                    android:textAlignment="center"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold" />
+                    android:text="@string/ic_short" />
 
-                <TextView
-                    android:id="@+id/isf_tab"
-                    android:layout_width="0dp"
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/isf_short"
-                    android:textAlignment="center"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold" />
+                    android:text="@string/isf_short" />
 
-                <TextView
-                    android:id="@+id/basal_tab"
-                    android:layout_width="0dp"
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/basal_short"
-                    android:textAlignment="center"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold" />
+                    android:text="@string/basal_short" />
 
-                <TextView
-                    android:id="@+id/target_tab"
-                    android:layout_width="0dp"
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/target_short"
-                    android:textAlignment="center"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold" />
-            </LinearLayout>
+                    android:text="@string/target_short" />
+
+            </com.google.android.material.tabs.TabLayout>
 
             <LinearLayout
                 android:id="@+id/dia_placeholder"
@@ -325,11 +296,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_weight="1"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
                 android:text="@string/activate_profile"
                 app:icon="@drawable/ic_local_activate"
                 app:iconTint="@color/ic_local_activate" />
@@ -346,11 +317,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
                     android:layout_weight="1"
-                    android:paddingLeft="1dp"
-                    android:paddingRight="1dp"
+                    android:paddingStart="1dp"
+                    android:paddingEnd="1dp"
                     android:text="@string/reset"
                     app:icon="@drawable/ic_local_reset"
                     app:iconTint="@color/ic_local_reset" />
@@ -361,11 +332,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
                     android:layout_weight="1"
-                    android:paddingLeft="1dp"
-                    android:paddingRight="1dp"
+                    android:paddingStart="1dp"
+                    android:paddingEnd="1dp"
                     android:text="@string/save"
                     app:icon="@drawable/ic_local_save"
                     app:iconTint="@color/ic_local_save" />
@@ -376,5 +347,3 @@
     </LinearLayout>
 
 </ScrollView>
-
-

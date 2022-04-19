@@ -93,7 +93,7 @@ class FoodFragment : DaggerFragment() {
             }
         }
 
-        binding.clearfilter.setOnClickListener {
+        binding.filterinputLayout.setEndIconOnClickListener {
             binding.filter.setText("")
             binding.categoryList.setText(rh.gs(R.string.none), false)
             binding.subcategoryList.setText(rh.gs(R.string.none), false)

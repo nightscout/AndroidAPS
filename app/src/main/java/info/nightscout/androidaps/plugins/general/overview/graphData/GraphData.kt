@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.general.overview.graphData
 
-import android.graphics.Color
 import android.graphics.DashPathEffect
 import android.graphics.Paint
 import com.jjoe64.graphview.GraphView
@@ -66,7 +65,7 @@ class GraphData(
         addSeries(AreaGraphSeries(inRangeAreaDataPoints).also {
             it.color = 0
             it.isDrawBackground = true
-            it.backgroundColor = rh.gc(R.color.inrangebackground)
+            it.backgroundColor = rh.gac(graph.context,R.attr.inRangeBackground)
         })
     }
 
@@ -86,6 +85,11 @@ class GraphData(
     fun addTreatments() {
         maxY = maxOf(maxY, overviewData.maxTreatmentsValue)
         addSeries(overviewData.treatmentsSeries)
+    }
+
+    fun addTherapyEvents() {
+        maxY = maxOf(maxY, overviewData.maxTherapyEventValue)
+        addSeries(overviewData.therapyEventSeries)
     }
 
     fun addActivity(scale: Double) {
@@ -196,7 +200,7 @@ class GraphData(
                 paint.style = Paint.Style.STROKE
                 paint.strokeWidth = 2f
                 paint.pathEffect = DashPathEffect(floatArrayOf(10f, 20f), 0f)
-                paint.color = Color.WHITE
+                paint.color = rh.gac(graph.context, R.attr.dotLineColor)
             })
         })
     }

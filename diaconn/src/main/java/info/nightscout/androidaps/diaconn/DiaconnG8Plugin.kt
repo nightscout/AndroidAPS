@@ -139,7 +139,6 @@ class DiaconnG8Plugin @Inject constructor(
     override fun isConnecting(): Boolean = diaconnG8Service?.isConnecting ?: false
     override fun isHandshakeInProgress(): Boolean = false
 
-
     override fun disconnect(reason: String) {
         aapsLogger.debug(LTag.PUMP, "Diaconn G8 disconnect from: $reason")
         diaconnG8Service?.disconnect(reason)
@@ -224,8 +223,8 @@ class DiaconnG8Plugin @Inject constructor(
     }
 
     override fun isThisProfileSet(profile: Profile): Boolean {
-        if (!isInitialized()) return true // TODO: not sure what's better. so far TRUE to prevent too many SMS
-        if (diaconnG8Pump.pumpProfiles == null) return true // TODO: not sure what's better. so far TRUE to prevent too many SMS
+        if (!isInitialized()) return true
+        if (diaconnG8Pump.pumpProfiles == null) return true
         val basalValues = 24
         val basalIncrement =  60 * 60
         for (h in 0 until basalValues) {
@@ -247,7 +246,6 @@ class DiaconnG8Plugin @Inject constructor(
         get() = diaconnG8Pump.systemRemainInsulin
     override val batteryLevel: Int
         get() = diaconnG8Pump.systemRemainBattery
-
 
     @Synchronized
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {

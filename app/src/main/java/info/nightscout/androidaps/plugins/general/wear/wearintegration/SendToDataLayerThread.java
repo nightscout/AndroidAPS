@@ -120,7 +120,7 @@ class SendToDataLayerThread extends AsyncTask<DataMap,Void,Void> {
             }
             state = 0;
         } catch (Exception e) {
-            Log.e(TAG, logPrefix + "Got exception in sendToWear: " + e.toString());
+            Log.e(TAG, logPrefix + "Got exception in sendToWear: " + e);
         } finally {
             lastlock = 0;
             lock.unlock();

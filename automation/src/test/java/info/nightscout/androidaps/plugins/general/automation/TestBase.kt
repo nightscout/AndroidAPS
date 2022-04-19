@@ -41,7 +41,6 @@ open class TestBase {
         return uninitialized()
     }
 
-
     fun <T> eqObject(expected: T): T {
         Mockito.eq<T>(expected)
         return uninitialized()

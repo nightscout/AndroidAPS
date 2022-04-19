@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.PersistableBundle
 import android.text.SpannableString
 import android.text.method.LinkMovementMethod
+import android.text.style.ForegroundColorSpan
 import android.text.util.Linkify
 import android.util.TypedValue
 import android.view.Menu
@@ -19,11 +20,10 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.joanzapata.iconify.Iconify
@@ -34,6 +34,7 @@ import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.databinding.ActivityMainBinding
 import info.nightscout.androidaps.events.EventAppExit
+import info.nightscout.androidaps.events.EventInitializationChanged
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.events.EventRebuildTabs
 import info.nightscout.androidaps.interfaces.*
@@ -51,6 +52,7 @@ import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.extensions.isRunningRealPumpTest
 import info.nightscout.androidaps.utils.locale.LocaleHelper
+import info.nightscout.androidaps.utils.protection.PasswordCheck
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.tabs.TabPageAdapter
@@ -68,7 +70,6 @@ class MainActivity : NoSplashAppCompatActivity() {
     private val disposable = CompositeDisposable()
 
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var androidPermission: AndroidPermission
     @Inject lateinit var sp: SP
     @Inject lateinit var versionCheckerUtils: VersionCheckerUtils
@@ -85,6 +86,7 @@ class MainActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var config: Config
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var passwordCheck: PasswordCheck
 
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private var pluginPreferencesMenuItem: MenuItem? = null
@@ -116,6 +118,7 @@ class MainActivity : NoSplashAppCompatActivity() {
             override fun onPageSelected(position: Int) {
                 setPluginPreferenceMenuName()
                 checkPluginPreferences(binding.mainPager)
+                setDisabledMenuItemColorPluginPreferences()
             }
         })
 
@@ -135,6 +138,12 @@ class MainActivity : NoSplashAppCompatActivity() {
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ processPreferenceChange(it) }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventInitializationChanged::class.java)
+            .observeOn(aapsSchedulers.main)
+            .subscribe({
+                           passwordCheck.passwordResetCheck(this)
+                       }, fabricPrivacy::logException)
         if (startWizard() && !isRunningRealPumpTest()) {
             protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, {
                 startActivity(Intent(this, SetupWizardActivity::class.java))
@@ -256,6 +265,14 @@ class MainActivity : NoSplashAppCompatActivity() {
         return super.dispatchTouchEvent(event)
     }
 
+    private fun setDisabledMenuItemColorPluginPreferences() {
+        if (pluginPreferencesMenuItem?.isEnabled == false) {
+            val spanString = SpannableString(this.menu?.findItem(R.id.nav_plugin_preferences)?.title.toString())
+            spanString.setSpan(ForegroundColorSpan(rh.gac(R.attr.disabledTextColor)), 0, spanString.length, 0)
+            this.menu?.findItem(R.id.nav_plugin_preferences)?.title = spanString
+        }
+    }
+
     private fun setPluginPreferenceMenuName() {
         if (binding.mainPager.currentItem >= 0) {
             val plugin = (binding.mainPager.adapter as TabPageAdapter).getPluginAt(binding.mainPager.currentItem)
@@ -274,7 +291,7 @@ class MainActivity : NoSplashAppCompatActivity() {
     }
 
     override fun onPanelClosed(featureId: Int, menu: Menu) {
-        menuOpen = false;
+        menuOpen = false
         super.onPanelClosed(featureId, menu)
     }
 
@@ -284,6 +301,7 @@ class MainActivity : NoSplashAppCompatActivity() {
         pluginPreferencesMenuItem = menu.findItem(R.id.nav_plugin_preferences)
         setPluginPreferenceMenuName()
         checkPluginPreferences(binding.mainPager)
+        setDisabledMenuItemColorPluginPreferences()
         return true
     }
 
@@ -324,7 +342,7 @@ class MainActivity : NoSplashAppCompatActivity() {
                 message += rh.gs(R.string.about_link_urls)
                 val messageSpanned = SpannableString(message)
                 Linkify.addLinks(messageSpanned, Linkify.WEB_URLS)
-                AlertDialog.Builder(this, R.style.DialogTheme)
+                MaterialAlertDialogBuilder(this, R.style.DialogTheme)
                     .setTitle(rh.gs(R.string.app_name) + " " + BuildConfig.VERSION)
                     .setIcon(iconsProvider.getIcon())
                     .setMessage(messageSpanned)
