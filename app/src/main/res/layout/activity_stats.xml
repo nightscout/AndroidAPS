@@ -47,56 +47,100 @@
             android:orientation="horizontal"
             android:padding="5dp" />
 
-        <LinearLayout
-            android:id="@+id/tdds"
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardview_tdds"
+            style="@style/Widget.MaterialComponents.CardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:orientation="vertical" />
+            android:layout_gravity="center"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="4dp"
+            app:cardUseCompatPadding="false"
+            app:contentPadding="2dp">
 
-        <LinearLayout
-            android:id="@+id/tir"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
-            android:orientation="vertical" />
-
-        <LinearLayout
-            android:id="@+id/activity"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
-            android:orientation="vertical" />
-
-        <LinearLayout
-            android:id="@+id/done_background"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_gravity="center_vertical"
-            android:background="@android:color/transparent"
-            android:gravity="end"
-            android:orientation="horizontal"
-            android:paddingBottom="8dp">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/reset"
-                style="@style/OkCancelButton.Text"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/tdds"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:text="@string/reset" />
+                android:layout_marginStart="10dp"
+                android:orientation="vertical" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/ok"
-                style="@style/OkCancelButton.Text"
-                android:layout_width="wrap_content"
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardview_tir"
+            style="@style/Widget.MaterialComponents.CardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="4dp"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="4dp"
+            app:cardUseCompatPadding="false"
+            app:contentPadding="2dp">
+
+            <LinearLayout
+                android:id="@+id/tir"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:text="@string/ok" />
+                android:layout_marginStart="10dp"
+                android:orientation="vertical" />
 
-        </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardview_activity"
+            style="@style/Widget.MaterialComponents.CardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="4dp"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="4dp"
+            app:cardUseCompatPadding="false"
+            app:contentPadding="2dp">
+
+            <LinearLayout
+                android:id="@+id/activity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:orientation="vertical" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+            <LinearLayout
+                android:id="@+id/done_background"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_gravity="center_vertical"
+                android:background="@android:color/transparent"
+                android:gravity="end"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/reset"
+                    style="@style/OkCancelButton.Text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:text="@string/reset" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/ok"
+                    style="@style/OkCancelButton.Text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:text="@string/ok" />
+
+            </LinearLayout>
 
     </LinearLayout>
 
