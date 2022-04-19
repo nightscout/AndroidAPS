@@ -1018,4 +1018,5 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="a11y_only_on_watch">seulement sur la montre</string>
     <string name="a11y_only_on_phone">uniquement sur le téléphone</string>
     <string name="a11y_drag_and_drop_handle">glissez déposez ici</string>
+    <!-- Aidex Cgms -->
 </resources>
