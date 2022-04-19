@@ -26,8 +26,9 @@
         android:layout_marginTop="4dp"
         android:layout_marginEnd="18dp"
         android:layout_marginBottom="4dp"
-        android:text="Toast goes here..."
         android:textColor="?attr/toastBaseTextColor"
         android:textSize="18sp"
-        tools:ignore="HardcodedText,RtlHardcoded" />
+        tools:ignore="RtlHardcoded"
+        tools:text="Toast goes here..." />
+
 </LinearLayout>

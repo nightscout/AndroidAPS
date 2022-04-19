@@ -1,25 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="40dp"
-    android:paddingStart="15dp">
+    android:orientation="horizontal"
+    android:paddingStart="15dp"
+    android:paddingEnd="0dp">
 
     <TextView
         android:id="@+id/rileylink_device_label"
         android:layout_width="184dp"
         android:layout_height="match_parent"
         android:gravity="center_vertical"
-        android:text="Command"
-        android:textSize="12dp" />
+        android:textSize="12sp"
+        tools:text="Command" />
 
     <com.google.android.material.button.MaterialButton
-        style="@style/GrayButton"
         android:id="@+id/rileylink_device_action"
+        style="@style/GrayButton"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
-        android:text="Description"
         android:gravity="center_vertical"
-        android:textSize="12dp" />
+        android:textSize="12sp"
+        tools:text="Description" />
 
 </LinearLayout>
