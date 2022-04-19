@@ -269,8 +269,6 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
             }
 
             holder.binding.calculation.tag = ml
-            val nextTimestamp = if (mealLinks.size != position + 1) timestamp(mealLinks[position + 1]) else 0L
-            holder.binding.delimiter.visibility = dateUtil.isSameDayGroup(timestamp(ml), nextTimestamp).toVisibility()
         }
 
         override fun getItemCount() = mealLinks.size
