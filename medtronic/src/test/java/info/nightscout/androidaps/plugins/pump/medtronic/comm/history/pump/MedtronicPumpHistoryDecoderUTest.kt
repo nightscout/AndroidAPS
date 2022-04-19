@@ -62,7 +62,6 @@ class MedtronicPumpHistoryDecoderUTest : TestBase() {
 
     }
 
-
     // @Test
     public void decodeLowAmount() {
         byte[] data = new byte[] { 52, -12, 22, -81, 46, 3, 19 };
@@ -80,7 +79,6 @@ class MedtronicPumpHistoryDecoderUTest : TestBase() {
         System.out.println("Record: " + phe.getDisplayableValue());
 
     }
-
 
     // @Test
     public void decodeDailyTotals522() {
@@ -105,7 +103,6 @@ class MedtronicPumpHistoryDecoderUTest : TestBase() {
 
     }
 
-
     // @Test
     public void decodeDailyTotals515() {
 
@@ -125,7 +122,6 @@ class MedtronicPumpHistoryDecoderUTest : TestBase() {
         testRecord(data);
 
     }
-
 
     // @Test
     public void decodeDailyTotals523() {
@@ -148,7 +144,6 @@ class MedtronicPumpHistoryDecoderUTest : TestBase() {
         testRecord(data);
 
     }
-
 
     private void testRecord(byte[] data) {
         // byte[] data = new byte[] { 0x07, 0x00, 0x00, 0x05, (byte)0xFA, (byte)0xBF, 0x12 };

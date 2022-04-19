@@ -123,5 +123,3 @@ fun List<TherapyEvent>.isTherapyEventEvent5minBack(time: Long): Boolean {
     }
     return false
 }
-
-

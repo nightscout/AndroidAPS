@@ -34,7 +34,6 @@ class DisplayTimeInquireResponsePacket(injector: HasAndroidInjector) : DiaconnG8
 
         diaconnG8Pump.lcdOnTimeSec =  getByteToInt(bufferData)
 
-
         aapsLogger.debug(LTag.PUMPCOMM, "Result --> ${diaconnG8Pump.result}")
         aapsLogger.debug(LTag.PUMPCOMM, "lcdOnTimeSec --> ${diaconnG8Pump.lcdOnTimeSec}")
     }

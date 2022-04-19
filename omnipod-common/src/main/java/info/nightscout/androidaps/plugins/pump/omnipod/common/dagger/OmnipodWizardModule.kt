@@ -74,5 +74,3 @@ abstract class OmnipodWizardModule {
     internal abstract fun contributesPodDiscardedFragment(): PodDiscardedFragment
 
 }
-
-
