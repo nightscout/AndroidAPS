@@ -91,15 +91,10 @@
         <item name="ribbonCriticalColor">@color/ribbonCritical</item>
         <item name="ribbonTextDefaultColor">@color/ribbonTextDefault</item>
         <item name="ribbonTextWarningColor">@color/ribbonTextWarning</item>
-        <!---Main Activity Tab  -->
-        <item name="tabSelectedTextColor">@color/tabSelectedText</item>
-        <item name="tabTextColor">@color/tabText</item>
         <!---Background  -->
         <item name="defaultbackground">@color/defaultbackground</item>
         <!---Toast  -->
         <item name="toastBaseTextColor">@color/toastBase</item>
-        <!---Input  -->
-        <item name="boxStrokeColor">@color/white_alpha_20</item>
         <!---Dialog Helper  -->
         <item name="materialAlertDialogTheme">@style/DialogTheme</item>
         <item name="android:alertDialogTheme">@style/DialogTheme</item>
@@ -371,8 +366,6 @@
     <!-- The launcher theme. It sets the main window background to the launch_screen drawable -->
     <style name="AppTheme.Launcher"  parent="AppTheme.NoActionBar">
         <item name="android:windowBackground">@drawable/launch_screen</item>
-        <!-- Optional, on Android 5+ you can modify the colorPrimaryDark color to match the windowBackground color for further branding-->
-        <!-- <item name="colorPrimaryDark">@android:color/white</item> -->
     </style>
 
     <style name="section_header_label">
