@@ -36,7 +36,7 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
     var profile: ProfileSealed
     var circadianProfile: ProfileSealed
     lateinit var pumpProfile: ProfileSealed
-    var profilename: String = profile.profileName
+    var profilename: String = ""
     var basal = DoubleArray(24)
     var basalUntuned = IntArray(24)
     var ic = 0.0
@@ -180,7 +180,7 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
         for (h in 0..23) {
             val secondfrommidnight = h * 60 * 60
             val df = DecimalFormat("00")
-            var time = df.format(h.toLong()) + ":00"
+            val time = df.format(h.toLong()) + ":00"
             json.put(
                 JSONObject()
                     .put("time", time)
