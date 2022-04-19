@@ -65,8 +65,6 @@
     <attr name="defaultbackground" format="reference|color" />
     <!---Toast  -->
     <attr name="toastBaseTextColor" format="reference|color" />
-    <!---Input  -->
-    <attr name="boxStrokeColor" format="reference|color" />
     <declare-styleable name="NumberPicker">
         <attr name="customContentDescription" format="string" />
     </declare-styleable>
