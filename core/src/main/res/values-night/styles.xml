@@ -330,7 +330,11 @@
     </style>
 
     <style name="ButtonSmallFontStyle" parent="GrayButton">
-        <item name="android:textSize">10sp</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingStart">0dp</item>
+        <item name="android:paddingEnd">0dp</item>
+        <item name="android:textSize">11dp</item>
     </style>
 
     <style name="ButtonMediumFontStyle" parent="GrayButton">
