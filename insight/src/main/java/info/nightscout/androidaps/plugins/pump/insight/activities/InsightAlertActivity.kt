@@ -1,12 +1,12 @@
 package info.nightscout.androidaps.plugins.pump.insight.activities
 
+import android.app.KeyguardManager
 import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import android.view.View
-import android.view.WindowManager
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import dagger.android.support.DaggerAppCompatActivity
@@ -43,10 +43,10 @@ class InsightAlertActivity : DaggerAppCompatActivity() {
         bindService(Intent(this, InsightAlertService::class.java), serviceConnection, BIND_AUTO_CREATE)
 
         setFinishOnTouchOutside(false)
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-            or WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
-            or WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-            or WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON)
+        setShowWhenLocked(true)
+        setTurnScreenOn(true)
+        val keyguardManager = getSystemService(KEYGUARD_SERVICE) as KeyguardManager
+        keyguardManager.requestDismissKeyguard(this, null)
     }
 
     override fun onDestroy() {
