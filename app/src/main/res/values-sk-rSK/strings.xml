@@ -1019,4 +1019,7 @@
     <string name="a11y_only_on_phone">iba na telefóne</string>
     <string name="a11y_drag_and_drop_handle">úchop potiahni a pusť</string>
     <!-- Aidex Cgms -->
+    <string name="aidex">GlucoRx Aidex</string>
+    <string name="aidex_short">Aidex</string>
+    <string name="description_source_aidex">Prijímať hodnoty glykémie zo senzora GlucoRx Aidex.</string>
 </resources>
