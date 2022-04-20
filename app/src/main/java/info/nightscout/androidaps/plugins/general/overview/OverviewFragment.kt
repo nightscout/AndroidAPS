@@ -165,7 +165,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val landscape = screenHeight < screenWidth
 
         skinProvider.activeSkin().preProcessLandscapeOverviewLayout(dm, binding, landscape, rh.gb(R.bool.isTablet), smallHeight)
-        binding.nsclientLayout.visibility = config.NSCLIENT.toVisibility()
+        binding.nsclientCard.visibility = config.NSCLIENT.toVisibility()
 
         binding.notifications.setHasFixedSize(false)
         binding.notifications.layoutManager = LinearLayoutManager(view.context)

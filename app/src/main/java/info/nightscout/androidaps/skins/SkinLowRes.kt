@@ -2,6 +2,8 @@ package info.nightscout.androidaps.skins
 
 import android.util.DisplayMetrics
 import android.view.View.GONE
+import android.view.ViewGroup
+import androidx.core.view.marginStart
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.ActionsFragmentBinding
@@ -38,6 +40,45 @@ class SkinLowRes @Inject constructor(private val config: Config) : SkinInterface
 
     override fun preProcessLandscapeOverviewLayout(dm: DisplayMetrics, binding: OverviewFragmentBinding, isLandscape: Boolean, isTablet: Boolean, isSmallHeight: Boolean) {
         if (!config.NSCLIENT && isLandscape) moveButtonsLayout(binding.root)
+
+        binding.apply {
+            loopCard.elevation = 0F
+            loopCard.radius = 0F
+            val param = (loopCard.layoutParams as ViewGroup.MarginLayoutParams).apply {
+                setMargins(0,0,0,0)
+            }
+            loopCard.layoutParams = param
+
+            infoCard.elevation = 0F
+            infoCard.radius = 0F
+            val paramInfo = (infoCard.layoutParams as ViewGroup.MarginLayoutParams).apply {
+                setMargins(0,0,0,0)
+            }
+            infoCard.layoutParams = paramInfo
+
+            statusCard.elevation = 0F
+            statusCard.radius = 0F
+            statusCard.strokeWidth = 1
+            val paramStatus = (statusCard.layoutParams as ViewGroup.MarginLayoutParams).apply {
+                setMargins(0,0,0,0)
+            }
+            statusCard.layoutParams = paramStatus
+
+            nsclientCard.elevation = 0F
+            nsclientCard.radius = 0F
+            val paramNsClient = (nsclientCard.layoutParams as ViewGroup.MarginLayoutParams).apply {
+                setMargins(0,0,0,0)
+            }
+            nsclientCard.layoutParams = paramNsClient
+
+            graphCard.elevation = 0F
+            graphCard.radius = 0F
+            val paramGraph = (graphCard.layoutParams as ViewGroup.MarginLayoutParams).apply {
+                setMargins(0,0,0,0)
+            }
+            graphCard.layoutParams = paramGraph
+        }
+
     }
 
 }
