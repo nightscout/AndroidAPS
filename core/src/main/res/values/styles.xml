@@ -243,7 +243,7 @@
         <item name="isCompletedColor">@color/isCompleted</item>
         <item name="isNotCompletedColor">@color/isNotCompleted</item>
         <!---Nightscout client TitelColor -->
-        <item name="nsTitleColor">@color/defaulttext</item>
+        <item name="nsTitleColor">@color/defaultText</item>
     </style>
 
     <style name="Aaps_ActionBarStyle" parent="@style/Widget.AppCompat.ActionBar">
