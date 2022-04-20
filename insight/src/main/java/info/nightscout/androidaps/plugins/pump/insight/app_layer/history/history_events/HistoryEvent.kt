@@ -3,9 +3,13 @@ package info.nightscout.androidaps.plugins.pump.insight.app_layer.history.histor
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.HistoryEvents.Companion.fromId
 import info.nightscout.androidaps.plugins.pump.insight.utils.BOCUtil
 import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf
+import info.nightscout.shared.logging.StacktraceLoggerWrapper.Companion.getLogger
+import org.slf4j.Logger
 
 open class HistoryEvent : Comparable<HistoryEvent> {
 
+    @SuppressWarnings("deprecation")
+    private val log: Logger = getLogger(HistoryEvent::class.java)
     var eventYear = 0
         private set
     var eventMonth = 0
