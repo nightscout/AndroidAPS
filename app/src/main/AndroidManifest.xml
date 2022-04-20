@@ -34,6 +34,10 @@
     <!-- To receive data from xdrip. -->
     <uses-permission android:name="com.eveningoutpost.dexdrip.permissions.RECEIVE_BG_ESTIMATE" />
 
+    <!-- To receive data from Aidex -->
+    <uses-permission android:name="com.microtechmd.cgms.aidex.permissions.RECEIVE_BG_ESTIMATE" />
+
+
     <application
         android:name=".MainApp"
         android:allowBackup="true"
@@ -133,6 +137,8 @@
                 <action android:name="com.china.poctech.data"/>
                 <!-- Receiver from Tomato -->
                 <action android:name="com.fanqies.tomatofn.BgEstimate"/>
+                <!-- Receiver from GlucoRx Aidex -->
+                <action android:name="com.microtechmd.cgms.aidex.action.BgEstimate"/>
             </intent-filter>
         </receiver>
 

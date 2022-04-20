@@ -3,11 +3,15 @@ package info.nightscout.androidaps.plugins.pump.insight;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
+import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.os.VibratorManager;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -93,9 +97,14 @@ public class InsightAlertService extends DaggerService implements InsightConnect
     }
 
     @Override
+    @SuppressWarnings({"deprecation", "RedundantSuppression"})
     public void onCreate() {
         super.onCreate();
-        vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            vibrator = ((VibratorManager)(getSystemService(Context.VIBRATOR_MANAGER_SERVICE))).getDefaultVibrator();
+        } else {
+            vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+        }
         bindService(new Intent(this, InsightConnectionService.class), serviceConnection, BIND_AUTO_CREATE);
         alertLiveData.setValue(null);
     }
@@ -108,6 +117,7 @@ public class InsightAlertService extends DaggerService implements InsightConnect
 
     @Override
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
+        //noinspection StatementWithEmptyBody
         if (intent == null) {
             // service is being restarted
         } else if ("mute".equals(intent.getStringExtra("command"))) {
@@ -220,7 +230,7 @@ public class InsightAlertService extends DaggerService implements InsightConnect
 
     private void alert() {
         if (!vibrating) {
-            vibrator.vibrate(new long[]{0, 1000, 1000}, 0);
+            vibrator.vibrate(VibrationEffect.createWaveform(new long[]{0, 1000, 1000}, 0));
             vibrating = true;
         }
     }

@@ -41,12 +41,11 @@
             style="@style/ButtonSmallFontStyle"
             android:layout_width="0px"
             android:layout_height="fill_parent"
-            android:layout_marginEnd="-4dp"
+            android:layout_marginEnd="-2dp"
             android:layout_weight="0.5"
             android:drawableTop="@drawable/icon_insulin_carbs"
             android:text="@string/overview_treatment_label"
             android:textColor="?attr/icTreatmentColor"
-            android:textSize="10sp"
             android:visibility="gone"
             tools:ignore="SmallSp" />
 
@@ -55,12 +54,11 @@
             style="@style/ButtonSmallFontStyle"
             android:layout_width="0px"
             android:layout_height="fill_parent"
-            android:layout_marginEnd="-4dp"
+            android:layout_marginEnd="-2dp"
             android:layout_weight="0.5"
             android:drawableTop="@drawable/ic_bolus"
             android:text="@string/overview_insulin_label"
             android:textColor="?attr/icBolusColor"
-            android:textSize="10sp"
             tools:ignore="SmallSp" />
 
         <info.nightscout.androidaps.utils.ui.SingleClickButton
@@ -68,12 +66,11 @@
             style="@style/ButtonSmallFontStyle"
             android:layout_width="0px"
             android:layout_height="fill_parent"
-            android:layout_marginEnd="-4dp"
+            android:layout_marginEnd="-2dp"
             android:layout_weight="0.5"
             android:drawableTop="@drawable/ic_cp_bolus_carbs"
             android:text="@string/treatments_wizard_carbs_label"
             android:textColor="?attr/icBolusCarbsColor"
-            android:textSize="10sp"
             tools:ignore="SmallSp" />
 
         <info.nightscout.androidaps.utils.ui.SingleClickButton
@@ -81,12 +78,11 @@
             style="@style/ButtonSmallFontStyle"
             android:layout_width="0px"
             android:layout_height="fill_parent"
-            android:layout_marginEnd="-4dp"
+            android:layout_marginEnd="-2dp"
             android:layout_weight="0.5"
             android:drawableTop="@drawable/ic_calculator"
             android:text="@string/overview_calculator_label"
             android:textColor="?attr/icCalculatorColor"
-            android:textSize="10sp"
             tools:ignore="SmallSp" />
 
         <info.nightscout.androidaps.utils.ui.SingleClickButton
@@ -94,12 +90,11 @@
             style="@style/ButtonSmallFontStyle"
             android:layout_width="0px"
             android:layout_height="fill_parent"
-            android:layout_marginEnd="-4dp"
+            android:layout_marginEnd="-2dp"
             android:layout_weight="0.5"
             android:drawableTop="@drawable/ic_calibration"
             android:text="@string/overview_calibration"
             android:textColor="?attr/icCalibrationColor"
-            android:textSize="10sp"
             android:visibility="gone"
             tools:ignore="SmallSp" />
 
@@ -108,12 +103,11 @@
             style="@style/ButtonSmallFontStyle"
             android:layout_width="0px"
             android:layout_height="fill_parent"
-            android:layout_marginEnd="-4dp"
+            android:layout_marginEnd="-2dp"
             android:layout_weight="0.5"
             android:drawableTop="@drawable/ic_xdrip"
             android:text="@string/overview_cgm"
             android:textColor="?attr/icCalibrationColor"
-            android:textSize="10sp"
             android:visibility="gone"
             tools:ignore="SmallSp" />
 
@@ -122,13 +116,12 @@
             style="@style/ButtonSmallFontStyle"
             android:layout_width="0px"
             android:layout_height="fill_parent"
-            android:layout_marginEnd="-4dp"
+            android:layout_marginEnd="-2dp"
             android:layout_weight="0.5"
             android:drawableTop="@drawable/ic_quick_wizard"
             android:text="@string/quickwizard"
             android:hint="@string/quickwizard"
             android:textColor="?attr/icQuickWizardColor"
-            android:textSize="10sp"
             tools:ignore="SmallSp" />
 
     </LinearLayout>

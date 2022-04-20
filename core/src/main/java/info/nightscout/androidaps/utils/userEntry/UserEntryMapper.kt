@@ -110,6 +110,7 @@ class UserEntryMapper {
         Automation (UserEntry.Sources.Automation),
         Autotune (UserEntry.Sources.Autotune),
         BG (UserEntry.Sources.BG),
+        Aidex (UserEntry.Sources.Aidex),
         Dexcom (UserEntry.Sources.Dexcom),
         Eversense (UserEntry.Sources.Eversense),
         Glimp (UserEntry.Sources.Glimp),

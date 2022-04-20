@@ -89,6 +89,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var poctechPlugin: PoctechPlugin
     @Inject lateinit var tomatoPlugin: TomatoPlugin
     @Inject lateinit var glunovoPlugin: GlunovoPlugin
+    @Inject lateinit var aidexPlugin: AidexPlugin
     @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
     @Inject lateinit var statusLinePlugin: StatusLinePlugin
     @Inject lateinit var tidepoolPlugin: TidepoolPlugin
@@ -165,6 +166,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             addPreferencesFromResourceIfEnabled(tomatoPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(glunovoPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(poctechPlugin, rootKey)
+            addPreferencesFromResourceIfEnabled(aidexPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(glimpPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(loopPlugin, rootKey, config.APS)
             addPreferencesFromResourceIfEnabled(openAPSAMAPlugin, rootKey, config.APS)

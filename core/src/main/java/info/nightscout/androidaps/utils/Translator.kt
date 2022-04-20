@@ -255,6 +255,7 @@ class Translator @Inject internal constructor(
         Sources.MM640g                             -> TODO()
         Sources.NSClientSource                     -> TODO()
         Sources.PocTech                            -> TODO()
+        Sources.Aidex                              -> TODO()
         Sources.Tomato                             -> TODO()
         Sources.Xdrip                              -> TODO()
         Sources.LocalProfile                       -> TODO()

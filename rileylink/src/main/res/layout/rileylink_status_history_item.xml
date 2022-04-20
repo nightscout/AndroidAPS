@@ -1,34 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/extended_bolus_card"
+    style="@style/Widget.MaterialComponents.CardView"
     android:layout_width="match_parent"
-    android:layout_height="40dp"
-    android:orientation="horizontal"
-    android:paddingStart="20dp"
-    android:paddingEnd="0dp">
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginStart="4dp"
+    android:layout_marginBottom="4dp"
+    app:cardCornerRadius="4dp"
+    app:contentPadding="2dp">
 
-    <TextView
-        android:id="@+id/rileylink_history_time"
-        android:layout_width="100dp"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:textSize="12sp"
-        tools:text="Date" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="10dp"
+        android:paddingTop="5dp"
+        android:paddingEnd="0dp"
+        android:paddingBottom="5dp">
 
-    <TextView
-        android:id="@+id/rileylink_history_source"
-        android:layout_width="80dp"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:textSize="12sp"
-        tools:text="Source" />
+        <TextView
+            android:id="@+id/history_time"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textSize="12sp"
+            tools:text="Date" />
 
-    <TextView
-        android:id="@+id/rileylink_history_description"
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:textSize="12sp"
-        tools:text="Description" />
+        <TextView
+            android:id="@+id/history_source"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textSize="12sp"
+            tools:text="Source" />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/history_description"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textSize="12sp"
+            tools:text="Description" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>
