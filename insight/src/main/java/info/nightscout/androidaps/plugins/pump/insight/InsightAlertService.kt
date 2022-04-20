@@ -262,10 +262,11 @@ class InsightAlertService : DaggerService(), InsightConnectionService.StateCallb
                     notificationBuilder.addAction(0, resourceHelper.gs(R.string.confirm), confirmPendingIntent)
                 }
             AlertStatus.SNOOZED -> {
-                    val confirmIntent = Intent(this, InsightAlertService::class.java).putExtra("command", "confirm")
-                    val confirmPendingIntent = PendingIntent.getService(this, 2, confirmIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-                    notificationBuilder.addAction(0, resourceHelper.gs(R.string.confirm), confirmPendingIntent)
-                }
+                val confirmIntent = Intent(this, InsightAlertService::class.java).putExtra("command", "confirm")
+                val confirmPendingIntent = PendingIntent.getService(this, 2, confirmIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+                notificationBuilder.addAction(0, resourceHelper.gs(R.string.confirm), confirmPendingIntent)
+            }
+            else                -> Unit
         }
         val notification = notificationBuilder.build()
         NotificationManagerCompat.from(this).notify(NOTIFICATION_ID, notification)
