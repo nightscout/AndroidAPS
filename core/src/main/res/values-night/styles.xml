@@ -241,8 +241,30 @@
         <item name="isNotCompletedColor">@color/isNotCompleted</item>
         <item name="materialCalendarStyle">@style/DatePicker</item>
         <item name="materialTimePickerStyle">@style/DatePicker</item>
-        <!---Nightscout client TitelColor -->
+        <!---Nightscout client Title Color -->
         <item name="nsTitleColor">@color/defaulttext</item>
+        <item name="materialCardViewStyle">@style/Widget.Aaps.CardView</item>
+    </style>
+
+    <style name="Widget.Aaps.CardView" parent="Widget.MaterialComponents.CardView">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Aaps.Card</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="strokeColor">#202020</item>
+    </style>
+
+    <style name="ThemeOverlay.Aaps.Card" parent="">
+        <item name="colorSurface">@color/black</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.Aaps.MediumComponent</item>
+    </style>
+
+    <style name="Widget.Aaps.CardView.Status" parent="Widget.Aaps.CardView">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Aaps.Card.Status</item>
+    </style>
+
+    <style name="ThemeOverlay.Aaps.Card.Status" parent="">
+        <item name="colorSurface">#252525</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.Aaps.MediumComponent</item>
     </style>
 
     <style name="Aaps_ActionBarStyle" parent="@style/Widget.AppCompat.ActionBar">

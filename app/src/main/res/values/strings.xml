@@ -1228,4 +1228,6 @@
     <string name="aidex_short">Aidex</string>
     <string name="description_source_aidex">Receive BG values from GlucoRx Aidex CGMS.</string>
   
+    <string name="a11y_active_profile">active profile</string>
+    <string name="a11y_temp_target">temp target</string>
 </resources>

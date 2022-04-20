@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".plugins.general.overview.OverviewFragment">
 
@@ -26,23 +26,17 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/loopCard"
-                style="@style/Widget.MaterialComponents.CardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginTop="4dp"
-                app:cardCornerRadius="4dp"
-                app:contentPadding="2dp"
-                app:cardElevation="4dp"
-                app:cardUseCompatPadding="false"
-                android:layout_gravity="center">
+                android:layout_marginHorizontal="@dimen/card_margin_horizontal"
+                android:layout_marginTop="@dimen/card_margin_vertical"
+                app:contentPadding="@dimen/card_padding">
 
                 <LinearLayout
                     android:id="@+id/loop_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal" >
+                    android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/active_profile"
@@ -52,12 +46,11 @@
                         android:layout_marginEnd="5dp"
                         android:layout_weight="1"
                         android:gravity="center_vertical|center_horizontal"
+                        android:hint="@string/a11y_active_profile"
                         android:paddingTop="6dp"
                         android:paddingBottom="6dp"
-                        android:hint="active profile"
-                        android:text="Profile"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        tools:ignore="HardcodedText" />
+                        tools:text="Profile" />
 
                     <TextView
                         android:id="@+id/temp_target"
@@ -66,12 +59,11 @@
                         android:layout_gravity="end"
                         android:layout_weight="1"
                         android:gravity="center_vertical|center_horizontal"
+                        android:hint="@string/a11y_temp_target"
                         android:paddingTop="6dp"
                         android:paddingBottom="6dp"
-                        android:hint="temp target"
                         android:text="@string/notavailable"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        tools:ignore="HardcodedText" />
+                        android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 </LinearLayout>
 
@@ -79,17 +71,10 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/infoCard"
-                style="@style/Widget.MaterialComponents.CardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginTop="4dp"
-                app:cardCornerRadius="4dp"
-                app:contentPadding="2dp"
-                app:cardElevation="4dp"
-                app:cardUseCompatPadding="false"
-                android:layout_gravity="center">
+                android:layout_marginHorizontal="@dimen/card_margin_horizontal"
+                android:layout_marginTop="@dimen/card_margin_vertical">
 
                 <include
                     android:id="@+id/info_layout"
@@ -99,17 +84,11 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/statusCard"
-                style="@style/Widget.MaterialComponents.CardView"
+                style="@style/Widget.Aaps.CardView.Status"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginTop="4dp"
-                app:cardCornerRadius="4dp"
-                app:contentPadding="2dp"
-                app:cardElevation="4dp"
-                app:cardUseCompatPadding="false"
-                android:layout_gravity="center">
+                android:layout_marginHorizontal="@dimen/card_margin_horizontal"
+                android:layout_marginTop="@dimen/card_margin_vertical">
 
                 <include
                     android:id="@+id/status_lights_layout"
@@ -119,17 +98,11 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/nsclientCard"
-                style="@style/Widget.MaterialComponents.CardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginTop="4dp"
-                app:cardCornerRadius="4dp"
-                app:contentPadding="2dp"
-                app:cardElevation="4dp"
-                app:cardUseCompatPadding="false"
-                android:layout_gravity="center">
+                android:layout_marginHorizontal="@dimen/card_margin_horizontal"
+                android:layout_marginTop="@dimen/card_margin_vertical"
+                app:contentPadding="@dimen/card_padding">
 
                 <com.google.android.flexbox.FlexboxLayout
                     android:id="@+id/nsclient"
@@ -147,9 +120,8 @@
                         android:layout_height="wrap_content"
                         android:paddingStart="4sp"
                         android:paddingEnd="4sp"
-                        android:text="Pump: running"
                         android:textSize="16sp"
-                        tools:ignore="HardcodedText" />
+                        tools:text="Pump: running" />
 
                     <TextView
                         android:id="@+id/openaps"
@@ -158,9 +130,8 @@
                         android:layout_weight="1"
                         android:paddingStart="4sp"
                         android:paddingEnd="4sp"
-                        android:text="OpenAPS: 3 min ago"
                         android:textSize="16sp"
-                        tools:ignore="HardcodedText" />
+                        tools:text="OpenAPS: 3 min ago" />
 
                     <TextView
                         android:id="@+id/uploader"
@@ -169,9 +140,8 @@
                         android:layout_weight="1"
                         android:paddingStart="4sp"
                         android:paddingEnd="4sp"
-                        android:text="Uploader: 84%"
                         android:textSize="16sp"
-                        tools:ignore="HardcodedText" />
+                        tools:text="Uploader: 84%" />
 
                 </com.google.android.flexbox.FlexboxLayout>
 
@@ -179,18 +149,11 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/graphCard"
-                style="@style/Widget.MaterialComponents.CardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="4dp"
-                app:cardCornerRadius="4dp"
-                app:contentPadding="2dp"
-                app:cardElevation="4dp"
-                app:cardUseCompatPadding="false"
-                android:layout_gravity="center">
+                android:layout_marginHorizontal="@dimen/card_margin_horizontal"
+                android:layout_marginVertical="@dimen/card_margin_vertical"
+                app:contentPadding="@dimen/card_padding">
 
                 <include
                     android:id="@+id/graphs_layout"
@@ -233,7 +196,7 @@
         android:layout_marginEnd="10dp"
         android:indeterminate="false"
         android:max="100"
-        android:progress="100" />
+        tools:progress="50" />
 
     <include
         android:id="@+id/buttons_layout"

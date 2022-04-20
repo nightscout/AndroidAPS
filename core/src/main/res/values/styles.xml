@@ -244,6 +244,24 @@
         <item name="isNotCompletedColor">@color/isNotCompleted</item>
         <!---Nightscout client TitelColor -->
         <item name="nsTitleColor">@color/defaulttext</item>
+        <item name="materialCardViewStyle">@style/Widget.Aaps.CardView</item>
+    </style>
+
+    <style name="Widget.Aaps.CardView" parent="Widget.MaterialComponents.CardView">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Aaps.Card</item>
+        <item name="cardElevation">4dp</item>
+        <item name="android:paddingHorizontal">4dp</item>
+    </style>
+
+    <style name="ThemeOverlay.Aaps.Card" parent="">
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.Aaps.MediumComponent</item>
+    </style>
+
+    <style name="ShapeAppearance.Aaps.MediumComponent" parent="ShapeAppearance.MaterialComponents.MediumComponent">
+        <item name="cornerSize">@dimen/card_radius</item>
+    </style>
+
+    <style name="Widget.Aaps.CardView.Status" parent="Widget.Aaps.CardView">
     </style>
 
     <style name="Aaps_ActionBarStyle" parent="@style/Widget.AppCompat.ActionBar">
@@ -254,7 +272,7 @@
         parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textColor">?attr/defaultTextColor</item>
     </style>
-
+    
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>
 
     <style name="AppTheme.NoActionBar" parent="AppTheme">

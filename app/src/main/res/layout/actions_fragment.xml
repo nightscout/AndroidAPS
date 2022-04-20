@@ -14,15 +14,11 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/actions"
-            style="@style/Widget.MaterialComponents.CardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:layout_marginEnd="4dp"
             android:layout_marginTop="4dp"
-            app:cardCornerRadius="4dp"
-            app:contentPadding="2dp"
-            app:cardElevation="4dp"
             app:cardUseCompatPadding="false"
             android:layout_gravity="center">
 
@@ -139,15 +135,11 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/careportal_statuslight"
-            style="@style/Widget.MaterialComponents.CardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:layout_marginEnd="4dp"
             android:layout_marginTop="4dp"
-            app:cardCornerRadius="4dp"
-            app:contentPadding="2dp"
-            app:cardElevation="4dp"
             app:cardUseCompatPadding="false"
             android:layout_gravity="center">
 
@@ -156,21 +148,16 @@
                 layout="@layout/careportal_stats_fragment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp" />
+                android:layout_marginBottom="5dp" />
 
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/careportal_statuslightbutton"
-            style="@style/Widget.MaterialComponents.CardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp"
+            android:layout_marginHorizontal="@dimen/card_margin_horizontal"
             android:layout_marginTop="4dp"
-            app:cardCornerRadius="4dp"
-            app:contentPadding="2dp"
-            app:cardElevation="4dp"
             app:cardUseCompatPadding="false"
             android:layout_gravity="center">
 
@@ -314,16 +301,11 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/careportal_tools"
-            style="@style/Widget.MaterialComponents.CardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp"
+            android:layout_marginHorizontal="@dimen/card_margin_horizontal"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
-            app:cardCornerRadius="4dp"
-            app:contentPadding="2dp"
-            app:cardElevation="4dp"
             app:cardUseCompatPadding="false"
             android:layout_gravity="center">
 
