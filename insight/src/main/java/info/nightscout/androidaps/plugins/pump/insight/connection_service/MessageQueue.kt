@@ -2,8 +2,8 @@ package info.nightscout.androidaps.plugins.pump.insight.connection_service
 
 import info.nightscout.androidaps.extensions.notifyAll
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage
-import java.util.*
 
+@SuppressWarnings("unchecked")
 class MessageQueue {
 
     var activeRequest: MessageRequest<out AppLayerMessage>? = null

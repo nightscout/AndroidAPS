@@ -6,6 +6,7 @@ import info.nightscout.androidaps.plugins.pump.insight.app_layer.configuration.W
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.ParameterBlock
 import info.nightscout.androidaps.plugins.pump.insight.connection_service.InsightConnectionService
 
+@SuppressWarnings("unchecked")
 object ParameterBlockUtil {
 
     @Suppress("Unchecked_Cast")
