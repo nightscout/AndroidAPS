@@ -4,17 +4,12 @@ import android.app.PendingIntent
 import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
-import android.os.Binder
-import android.os.IBinder
-import android.os.VibrationEffect
-import android.os.Vibrator
+import android.os.*
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.MutableLiveData
 import dagger.android.DaggerService
 import info.nightscout.androidaps.insight.R
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.pump.insight.activities.InsightAlertActivity
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.remote_control.ConfirmAlertMessage
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.remote_control.SnoozeAlertMessage
@@ -30,6 +25,8 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.AlertUtils
 import info.nightscout.androidaps.plugins.pump.insight.utils.ExceptionTranslator
 import info.nightscout.androidaps.utils.HtmlHelper.fromHtml
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import javax.inject.Inject
 
 class InsightAlertService : DaggerService(), InsightConnectionService.StateCallback {
@@ -79,9 +76,14 @@ class InsightAlertService : DaggerService(), InsightConnectionService.StateCallb
         return localBinder
     }
 
+    @SuppressWarnings("deprecation", "RedundantSuppression")
     override fun onCreate() {
         super.onCreate()
-        vibrator = getSystemService(VIBRATOR_SERVICE) as Vibrator
+        vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            (getSystemService(VIBRATOR_MANAGER_SERVICE) as VibratorManager).defaultVibrator
+        } else {
+            getSystemService(VIBRATOR_SERVICE) as Vibrator
+        }
         bindService(Intent(this, InsightConnectionService::class.java), serviceConnection, BIND_AUTO_CREATE)
         alertLiveData.value = null
     }
@@ -92,6 +94,7 @@ class InsightAlertService : DaggerService(), InsightConnectionService.StateCallb
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        //noinspection StatementWithEmptyBody
         if (intent == null) {
             // service is being restarted
         } else if ("mute" == intent.getStringExtra("command")) {
