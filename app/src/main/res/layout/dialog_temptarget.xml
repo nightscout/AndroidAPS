@@ -149,9 +149,7 @@
                 android:paddingStart="5dp"
                 android:paddingEnd="5dp"
                 android:text="@string/cancel"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="?attr/tempTargetConfirmation"
-                android:textSize="11sp" />
+                android:textColor="?attr/tempTargetConfirmation" />
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/eating_soon"
@@ -164,9 +162,7 @@
                 android:paddingStart="5dp"
                 android:paddingEnd="5dp"
                 android:text="@string/eatingsoon"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="?attr/carbsColor"
-                android:textSize="11sp" />
+                android:textColor="?attr/carbsColor" />
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/activity"
@@ -179,9 +175,7 @@
                 android:paddingStart="5dp"
                 android:paddingEnd="5dp"
                 android:text="@string/activity"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="?attr/exerciseColor"
-                android:textSize="11sp" />
+                android:textColor="?attr/exerciseColor" />
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/hypo"
@@ -193,9 +187,7 @@
                 android:paddingStart="5dp"
                 android:paddingEnd="5dp"
                 android:text="@string/hypo"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="?attr/lowColor"
-                android:textSize="11sp" />
+                android:textColor="?attr/lowColor" />
 
         </LinearLayout>
         
