@@ -242,7 +242,7 @@
         <item name="materialCalendarStyle">@style/DatePicker</item>
         <item name="materialTimePickerStyle">@style/DatePicker</item>
         <!---Nightscout client TitelColor -->
-        <item name="nsTitleColor">@color/defaulttext</item>
+        <item name="nsTitleColor">@color/defaultText</item>
     </style>
 
     <style name="Aaps_ActionBarStyle" parent="@style/Widget.AppCompat.ActionBar">
