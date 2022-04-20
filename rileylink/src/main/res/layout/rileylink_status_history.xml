@@ -9,17 +9,20 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/rileylink_historystatus"
-            android:layout_width="match_parent"
-            android:layout_height="10dp"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center_horizontal" />
-
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rileylink_history_list"
+            android:id="@+id/history_list"
             android:layout_width="match_parent"
-            android:layout_height="fill_parent"/>
+            android:layout_height="wrap_content" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/refresh"
+            style="@style/ButtonSmallFontStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/ic_refresh"
+            android:paddingStart="0dp"
+            android:paddingEnd="0dp"
+            android:text="@string/refresh" />
 
     </LinearLayout>
 

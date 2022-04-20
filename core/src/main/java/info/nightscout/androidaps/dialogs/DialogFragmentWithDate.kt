@@ -83,6 +83,7 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
         eventDateView?.setOnClickListener {
             val selection = dateUtil.timeStampToUtcDateMilis(eventTime)
             MaterialDatePicker.Builder.datePicker()
+                .setTheme(R.style.DatePicker)
                 .setSelection(selection)
                 .build()
                 .apply {
@@ -105,6 +106,7 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
                 .setTimeFormat(clockFormat)
                 .setHour(cal.get(Calendar.HOUR_OF_DAY))
                 .setMinute(cal.get(Calendar.MINUTE))
+                .setTheme(R.style.TimePicker)
                 .build()
             timePicker.addOnPositiveButtonClickListener {
                 // Randomize seconds to prevent creating record of the same time, if user choose time manually

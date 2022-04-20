@@ -239,6 +239,10 @@
         <item name="separatorColor">@color/sphere_plastic_grey</item>
         <item name="isCompletedColor">@color/isCompleted</item>
         <item name="isNotCompletedColor">@color/isNotCompleted</item>
+        <item name="materialCalendarStyle">@style/DatePicker</item>
+        <item name="materialTimePickerStyle">@style/DatePicker</item>
+        <!---Nightscout client TitelColor -->
+        <item name="nsTitleColor">@color/defaultText</item>
     </style>
 
     <style name="Aaps_ActionBarStyle" parent="@style/Widget.AppCompat.ActionBar">
@@ -267,6 +271,17 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowAnimationStyle">@android:style/Animation</item>
         <item name="dialogTitleBackground">@color/dialog_title_background</item>
+    </style>
+
+    <!-- Style for Material Date Picker -->
+    <style name="DatePicker" parent="@style/ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="buttonBarPositiveButtonStyle">@style/PickerTextButton</item>
+        <item name="buttonBarNegativeButtonStyle">@style/PickerTextButton</item>
+    </style>
+
+    <!-- Style for Material Time Picker -->
+    <style name="TimePicker" parent="ThemeOverlay.MaterialComponents.TimePicker">
+        <item name="buttonStyle">@style/PickerTextButton</item>
     </style>
 
     <!--    Buttons from MaterialDateTimePicker, Dialogs ...    -->
@@ -315,7 +330,11 @@
     </style>
 
     <style name="ButtonSmallFontStyle" parent="GrayButton">
-        <item name="android:textSize">10sp</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingStart">0dp</item>
+        <item name="android:paddingEnd">0dp</item>
+        <item name="android:textSize">11dp</item>
     </style>
 
     <style name="ButtonMediumFontStyle" parent="GrayButton">

@@ -3,11 +3,11 @@ package info.nightscout.androidaps.plugins.general.automation.elements
 import android.content.Context
 import android.graphics.Typeface
 import android.text.format.DateFormat
+import android.view.ContextThemeWrapper
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import android.view.ContextThemeWrapper
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
@@ -39,6 +39,7 @@ class InputDateTime(private val rh: ResourceHelper, private val dateUtil: DateUt
                         setOnClickListener {
                             getFragmentManager(root.context)?.let { fm ->
                                 MaterialDatePicker.Builder.datePicker()
+                                    .setTheme(R.style.DatePicker)
                                     .setSelection(dateUtil.timeStampToUtcDateMilis(value))
                                     .build()
                                     .apply {
@@ -60,6 +61,7 @@ class InputDateTime(private val rh: ResourceHelper, private val dateUtil: DateUt
                                 val cal = Calendar.getInstance().apply { timeInMillis = value }
                                 val clockFormat = if (DateFormat.is24HourFormat(context)) TimeFormat.CLOCK_24H else TimeFormat.CLOCK_12H
                                 val timePicker = MaterialTimePicker.Builder()
+                                    .setTheme(R.style.TimePicker)
                                     .setTimeFormat(clockFormat)
                                     .setHour(cal.get(Calendar.HOUR_OF_DAY))
                                     .setMinute(cal.get(Calendar.MINUTE))
@@ -78,9 +80,9 @@ class InputDateTime(private val rh: ResourceHelper, private val dateUtil: DateUt
 
     private fun getFragmentManager(context: Context?): FragmentManager? {
         return when (context) {
-            is AppCompatActivity   -> context.supportFragmentManager
+            is AppCompatActivity -> context.supportFragmentManager
             is ContextThemeWrapper -> getFragmentManager(context.baseContext)
-            else                   -> null
+            else -> null
         }
     }
 }
