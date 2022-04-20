@@ -60,7 +60,7 @@
     <color name="errorAlertHeaderText">#FF000000</color>
     <color name="helperProfile">#C803A9F4</color>
     <color name="examinedProfile">#FFFF5555</color>
-    <color name="defaulttext">#666666</color>
+    <color name="defaultText">#666666</color>
 
     <!--    Datepicker-->
     <color name="dateTimePickerBackground">@color/white</color>
