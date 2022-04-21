@@ -865,7 +865,7 @@
     <string name="clear_filter">Borrar filtro</string>
     <string name="trend_arrow">Flecha de tendencia</string>
     <string name="cannula">Cánula</string>
-    <string name="userentry">Entrada usuario</string>
+    <string name="userentry">Entrada de usuario</string>
     <string name="common_values">Usa los valores de la comida más grande que sueles comer\n</string>
     <string name="summary_email_for_crash_report">Esta identificación se adjuntará a los informes de errores, para que podamos contactarte en casos urgentes. Es opcional.</string>
     <string name="email_address">Dirección de Correo Electrónico</string>
