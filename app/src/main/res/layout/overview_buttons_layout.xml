@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/overview_buttons"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -45,9 +45,11 @@
             android:layout_weight="0.5"
             android:drawableTop="@drawable/icon_insulin_carbs"
             android:text="@string/overview_treatment_label"
+            android:singleLine="true"
+            android:ellipsize="end"
+            app:iconPadding="-4dp"
             android:textColor="?attr/icTreatmentColor"
-            android:visibility="gone"
-            tools:ignore="SmallSp" />
+            android:visibility="gone" />
 
         <info.nightscout.androidaps.utils.ui.SingleClickButton
             android:id="@+id/insulin_button"
@@ -58,8 +60,10 @@
             android:layout_weight="0.5"
             android:drawableTop="@drawable/ic_bolus"
             android:text="@string/overview_insulin_label"
-            android:textColor="?attr/icBolusColor"
-            tools:ignore="SmallSp" />
+            android:singleLine="true"
+            android:ellipsize="end"
+            app:iconPadding="-4dp"
+            android:textColor="?attr/icBolusColor" />
 
         <info.nightscout.androidaps.utils.ui.SingleClickButton
             android:id="@+id/carbs_button"
@@ -70,8 +74,10 @@
             android:layout_weight="0.5"
             android:drawableTop="@drawable/ic_cp_bolus_carbs"
             android:text="@string/treatments_wizard_carbs_label"
-            android:textColor="?attr/icBolusCarbsColor"
-            tools:ignore="SmallSp" />
+            android:singleLine="true"
+            android:ellipsize="end"
+            app:iconPadding="-4dp"
+            android:textColor="?attr/icBolusCarbsColor" />
 
         <info.nightscout.androidaps.utils.ui.SingleClickButton
             android:id="@+id/wizard_button"
@@ -82,8 +88,10 @@
             android:layout_weight="0.5"
             android:drawableTop="@drawable/ic_calculator"
             android:text="@string/overview_calculator_label"
-            android:textColor="?attr/icCalculatorColor"
-            tools:ignore="SmallSp" />
+            android:singleLine="true"
+            android:ellipsize="end"
+            app:iconPadding="-4dp"
+            android:textColor="?attr/icCalculatorColor"/>
 
         <info.nightscout.androidaps.utils.ui.SingleClickButton
             android:id="@+id/calibration_button"
@@ -94,9 +102,11 @@
             android:layout_weight="0.5"
             android:drawableTop="@drawable/ic_calibration"
             android:text="@string/overview_calibration"
+            android:singleLine="true"
+            android:ellipsize="end"
+            app:iconPadding="-4dp"
             android:textColor="?attr/icCalibrationColor"
-            android:visibility="gone"
-            tools:ignore="SmallSp" />
+            android:visibility="gone" />
 
         <info.nightscout.androidaps.utils.ui.SingleClickButton
             android:id="@+id/cgm_button"
@@ -107,9 +117,11 @@
             android:layout_weight="0.5"
             android:drawableTop="@drawable/ic_xdrip"
             android:text="@string/overview_cgm"
+            android:singleLine="true"
+            android:ellipsize="end"
+            app:iconPadding="-4dp"
             android:textColor="?attr/icCalibrationColor"
-            android:visibility="gone"
-            tools:ignore="SmallSp" />
+            android:visibility="gone" />
 
         <info.nightscout.androidaps.utils.ui.SingleClickButton
             android:id="@+id/quick_wizard_button"
@@ -121,8 +133,8 @@
             android:drawableTop="@drawable/ic_quick_wizard"
             android:text="@string/quickwizard"
             android:hint="@string/quickwizard"
-            android:textColor="?attr/icQuickWizardColor"
-            tools:ignore="SmallSp" />
+            app:iconPadding="-4dp"
+            android:textColor="?attr/icQuickWizardColor" />
 
     </LinearLayout>
 
