@@ -2,12 +2,7 @@ package info.nightscout.androidaps.interaction.utils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static info.nightscout.androidaps.testing.mockers.WearUtilMocker.REF_NOW;
-
-import com.google.android.gms.wearable.DataMap;
 
 import org.junit.Test;
 
@@ -40,62 +35,6 @@ public class PersistenceTest extends TestBase {
         // THEN
         assertFalse(emptyGot);
         assertTrue(updatedGot);
-    }
-
-    @Test
-    public void whenDataUpdatedTest() {
-        // GIVEN
-        DataMap map = new DataMap();
-
-        // WHEN
-        final long whenNotUpdated = persistence.whenDataUpdated();
-
-        persistence.storeDataMap("data-map", map);
-        final long whenUpdatedFirst = persistence.whenDataUpdated();
-
-        getWearUtilMocker().progressClock(60000);
-        persistence.storeDataMap("data-map", map);
-        final long whenUpdatedNext = persistence.whenDataUpdated();
-
-        // THEN
-        assertEquals(whenNotUpdated, 0L);
-        assertEquals(whenUpdatedFirst, REF_NOW);
-        assertEquals(whenUpdatedNext, REF_NOW + 60000);
-    }
-
-    @Test
-    public void getDataMapTest() {
-        // GIVEN
-        DataMap map = new DataMap();
-        map.putByteArray("test-key", new byte[]{9, 42, 127, -5});
-
-        // WHEN
-        DataMap notExisting = persistence.getDataMap("not-there");
-        persistence.storeDataMap("data-map", map);
-        DataMap restoredMap = persistence.getDataMap("data-map");
-        assert restoredMap != null;
-        byte[] restoredMapContents = restoredMap.getByteArray("test-key");
-
-        // THEN
-        assertNull(notExisting);
-        assertNotNull(restoredMap);
-        assertTrue(restoredMap.containsKey("test-key"));
-
-        assertEquals(restoredMapContents.length, 4);
-        assertEquals(restoredMapContents[0], (byte) 9);
-        assertEquals(restoredMapContents[1], (byte) 42);
-        assertEquals(restoredMapContents[2], (byte) 127);
-        assertEquals(restoredMapContents[3], (byte) -5);
-    }
-
-    @Test
-    public void brokenDataMapTest() {
-        // WHEN
-        persistence.putString("data-map", "ZmFrZSBkYXRh");
-        DataMap restoredMap = persistence.getDataMap("data-map");
-
-        // THEN
-        assertNull(restoredMap);
     }
 
     @Test

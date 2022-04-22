@@ -2,16 +2,18 @@ package info.nightscout.androidaps.di
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
+import info.nightscout.androidaps.comm.DataLayerListenerServiceWear
 import info.nightscout.androidaps.complications.*
-import info.nightscout.androidaps.data.DataLayerListenerService
-import info.nightscout.androidaps.interaction.actions.BackgroundActionActivity
+import info.nightscout.androidaps.tile.QuickWizardTileService
+import info.nightscout.androidaps.tile.TempTargetTileService
+import info.nightscout.androidaps.tile.TileBase
 import info.nightscout.androidaps.watchfaces.*
 
 @Module
 @Suppress("unused")
 abstract class WearServicesModule {
 
-    @ContributesAndroidInjector abstract fun contributesDataLayerListenerService(): DataLayerListenerService
+    @ContributesAndroidInjector abstract fun contributesDataLayerListenerService(): DataLayerListenerServiceWear
 
     @ContributesAndroidInjector abstract fun contributesBaseComplicationProviderService(): BaseComplicationProviderService
     @ContributesAndroidInjector abstract fun contributesBrCobIobComplication(): BrCobIobComplication
@@ -24,7 +26,7 @@ abstract class WearServicesModule {
     @ContributesAndroidInjector abstract fun contributesLongStatusComplication(): LongStatusComplication
     @ContributesAndroidInjector abstract fun contributesLongStatusFlippedComplication(): LongStatusFlippedComplication
     @ContributesAndroidInjector abstract fun contributesSgvComplication(): SgvComplication
-    @ContributesAndroidInjector abstract fun contributesUploaderBattery(): UploaderBattery
+    @ContributesAndroidInjector abstract fun contributesUploaderBatteryComplication(): UploaderBatteryComplication
     @ContributesAndroidInjector abstract fun contributesWallpaperComplication(): WallpaperComplication
 
     @ContributesAndroidInjector abstract fun contributesBaseWatchFace(): BaseWatchFace
@@ -34,4 +36,12 @@ abstract class WearServicesModule {
     @ContributesAndroidInjector abstract fun contributesSteampunk(): Steampunk
     @ContributesAndroidInjector abstract fun contributesDigitalStyle(): DigitalStyle
     @ContributesAndroidInjector abstract fun contributesCockpit(): Cockpit
+
+    @ContributesAndroidInjector abstract fun contributesBIGChart(): BIGChart
+    @ContributesAndroidInjector abstract fun contributesNOChart(): NOChart
+    @ContributesAndroidInjector abstract fun contributesCircleWatchface(): CircleWatchface
+
+    @ContributesAndroidInjector abstract fun contributesTileBase(): TileBase
+    @ContributesAndroidInjector abstract fun contributesQuickWizardTileService(): QuickWizardTileService
+    @ContributesAndroidInjector abstract fun contributesTempTargetTileService(): TempTargetTileService
 }

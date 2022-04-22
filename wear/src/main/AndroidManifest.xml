@@ -241,7 +241,7 @@
             </intent-filter>
         </service>
 
-        <service android:name=".data.DataLayerListenerService"
+        <service android:name=".comm.DataLayerListenerServiceWear"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.CAPABILITY_CHANGED" />
@@ -252,42 +252,6 @@
 
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="@string/path_watch_data"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="@string/path_status"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="@string/path_preferences"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="@string/path_quick_wizard"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="@string/path_basal"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="@string/path_bolus_progress"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="@string/path_action_confirmation"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="@string/path_change_confirmation_request"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="@string/path_cancel_notification_request"
-                    android:scheme="wear" />
             </intent-filter>
 
             <intent-filter>
@@ -299,15 +263,7 @@
 
                 <data
                     android:host="*"
-                    android:pathPrefix="@string/path_ping"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="@string/path_open_wear_setting"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="@string/path_action_confirmation"
+                    android:pathPrefix="@string/path_rx_bridge"
                     android:scheme="wear" />
             </intent-filter>
         </service>
@@ -466,7 +422,7 @@
         </service>
 
         <service
-            android:name=".complications.UploaderBattery"
+            android:name=".complications.UploaderBatteryComplication"
             android:icon="@drawable/ic_battery_charging_wireless_50"
             android:label="Uploader/Phone Battery"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">

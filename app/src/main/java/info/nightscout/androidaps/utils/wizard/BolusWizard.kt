@@ -65,9 +65,13 @@ class BolusWizard @Inject constructor(
 
     private val disposable = CompositeDisposable()
 
+    var timeStamp : Long
+
     init {
         injector.androidInjector().inject(this)
+        timeStamp = dateUtil.now()
     }
+
 
     // Intermediate
     var sens = 0.0
@@ -236,7 +240,7 @@ class BolusWizard @Inject constructor(
         // Total
         calculatedTotalInsulin = insulinFromBG + insulinFromTrend + insulinFromCarbs + insulinFromBolusIOB + insulinFromBasalIOB + insulinFromCorrection + insulinFromSuperBolus + insulinFromCOB
 
-        var percentage = if (usePercentage) totalPercentage else percentageCorrection.toDouble()
+        val percentage = if (usePercentage) totalPercentage else percentageCorrection.toDouble()
 
         // Percentage adjustment
         totalBeforePercentageAdjustment = calculatedTotalInsulin

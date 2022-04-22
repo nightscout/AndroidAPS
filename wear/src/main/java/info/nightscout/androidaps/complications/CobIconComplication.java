@@ -20,7 +20,7 @@ public class CobIconComplication extends BaseComplicationProviderService {
 
         if (dataType == ComplicationData.TYPE_SHORT_TEXT) {
             final ComplicationData.Builder builder = new ComplicationData.Builder(ComplicationData.TYPE_SHORT_TEXT)
-                    .setShortText(ComplicationText.plainText(raw.sCOB2))
+                    .setShortText(ComplicationText.plainText(raw.getStatus().getCob()))
                     .setIcon(
                             Icon.createWithResource(
                                     this, R.drawable.ic_carbs))

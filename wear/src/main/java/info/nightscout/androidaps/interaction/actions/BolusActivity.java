@@ -10,10 +10,10 @@ import android.widget.ImageView;
 import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.events.EventWearToMobileAction;
+import info.nightscout.androidaps.events.EventWearToMobile;
 import info.nightscout.androidaps.interaction.utils.PlusMinusEditText;
 import info.nightscout.shared.SafeParse;
-import info.nightscout.shared.weardata.ActionData;
+import info.nightscout.shared.weardata.EventData;
 
 public class BolusActivity extends ViewSelectorActivity {
 
@@ -63,8 +63,7 @@ public class BolusActivity extends ViewSelectorActivity {
                 view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_send_item, container, false);
                 final ImageView confirmButton = view.findViewById(R.id.confirmbutton);
                 confirmButton.setOnClickListener((View v) -> {
-                    ActionData.Bolus bolus = new ActionData.Bolus(SafeParse.stringToDouble(editInsulin.editText.getText().toString()), 0);
-                    rxBus.send(new EventWearToMobileAction(bolus));
+                    rxBus.send(new EventWearToMobile(new EventData.ActionBolusPreCheck(SafeParse.stringToDouble(editInsulin.editText.getText().toString()), 0)));
                     showToast(BolusActivity.this, R.string.action_bolus_confirmation);
                     finishAffinity();
                 });

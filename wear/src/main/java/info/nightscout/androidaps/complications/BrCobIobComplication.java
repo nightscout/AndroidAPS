@@ -3,7 +3,6 @@ package info.nightscout.androidaps.complications;
 import android.app.PendingIntent;
 import android.support.wearable.complications.ComplicationData;
 import android.support.wearable.complications.ComplicationText;
-import android.util.Log;
 
 import javax.inject.Inject;
 
@@ -32,11 +31,11 @@ public class BrCobIobComplication extends BaseComplicationProviderService {
         ComplicationData complicationData = null;
 
         if (dataType == ComplicationData.TYPE_SHORT_TEXT) {
-            final String cob = new SmallestDoubleString(raw.sCOB2, SmallestDoubleString.Units.USE).minimise(displayFormat.MIN_FIELD_LEN_COB);
-            final String iob = new SmallestDoubleString(raw.sIOB1, SmallestDoubleString.Units.USE).minimise(Math.max(displayFormat.MIN_FIELD_LEN_IOB, (displayFormat.MAX_FIELD_LEN_SHORT - 1) - cob.length()));
+            final String cob = new SmallestDoubleString(raw.getStatus().getCob(), SmallestDoubleString.Units.USE).minimise(displayFormat.MIN_FIELD_LEN_COB);
+            final String iob = new SmallestDoubleString(raw.getStatus().getIobSum(), SmallestDoubleString.Units.USE).minimise(Math.max(displayFormat.MIN_FIELD_LEN_IOB, (displayFormat.MAX_FIELD_LEN_SHORT - 1) - cob.length()));
 
             final ComplicationData.Builder builder = new ComplicationData.Builder(ComplicationData.TYPE_SHORT_TEXT)
-                    .setShortText(ComplicationText.plainText(displayFormat.basalRateSymbol() + raw.sBasalRate))
+                    .setShortText(ComplicationText.plainText(displayFormat.basalRateSymbol() + raw.getStatus().getCurrentBasal()))
                     .setShortTitle(ComplicationText.plainText(cob + " " + iob))
                     .setTapAction(complicationPendingIntent);
 

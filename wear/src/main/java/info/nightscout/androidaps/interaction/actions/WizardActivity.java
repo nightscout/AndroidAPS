@@ -10,9 +10,10 @@ import android.widget.ImageView;
 import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.DataLayerListenerService;
+import info.nightscout.androidaps.events.EventWearToMobile;
 import info.nightscout.androidaps.interaction.utils.PlusMinusEditText;
 import info.nightscout.shared.SafeParse;
+import info.nightscout.shared.weardata.EventData;
 
 /**
  * Created by adrian on 09/02/17.
@@ -42,6 +43,7 @@ public class WizardActivity extends ViewSelectorActivity {
         finish();
     }
 
+    @SuppressWarnings("deprecation")
     private class MyGridViewPagerAdapter extends GridPagerAdapter {
         @Override
         public int getColumnCount(int arg0) {
@@ -82,15 +84,17 @@ public class WizardActivity extends ViewSelectorActivity {
             } else {
 
                 final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_send_item, container, false);
-                final ImageView confirmbutton = view.findViewById(R.id.confirmbutton);
-                confirmbutton.setOnClickListener((View v) -> {
+                final ImageView confirmButton = view.findViewById(R.id.confirmbutton);
+                confirmButton.setOnClickListener((View v) -> {
                     if (editPercentage != null) {
                         percentage = SafeParse.stringToInt(editPercentage.editText.getText().toString());
                     }
 
-                    String actionstring = "wizard2 " + SafeParse.stringToInt(editCarbs.editText.getText().toString())
-                            + " " + percentage;
-                    DataLayerListenerService.Companion.initiateAction(WizardActivity.this, actionstring);
+                    EventData.ActionWizardPreCheck action = new EventData.ActionWizardPreCheck(
+                            SafeParse.stringToInt(editCarbs.editText.getText().toString()),
+                            percentage
+                    );
+                    rxBus.send(new EventWearToMobile(action));
                     showToast(WizardActivity.this, R.string.action_wizard_confirmation);
                     finishAffinity();
                 });
@@ -102,7 +106,7 @@ public class WizardActivity extends ViewSelectorActivity {
         @Override
         public void destroyItem(ViewGroup container, int row, int col, Object view) {
             // Handle this to get the data before the view is destroyed?
-            // Object should still be kept by this, just setup for reinit?
+            // Object should still be kept by this, just setup for re-init?
             container.removeView((View) view);
         }
 

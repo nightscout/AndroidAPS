@@ -3,11 +3,8 @@ package info.nightscout.androidaps.interaction.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Base64;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
-
-import com.google.android.gms.wearable.DataMap;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,10 +12,11 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import info.nightscout.androidaps.Aaps;
 import info.nightscout.androidaps.complications.BaseComplicationProviderService;
+import info.nightscout.androidaps.data.RawDisplayData;
 import info.nightscout.shared.logging.AAPSLogger;
 import info.nightscout.shared.logging.LTag;
+import info.nightscout.shared.weardata.EventData;
 
 /**
  * Created by dlvoy on 2019-11-12
@@ -26,7 +24,6 @@ import info.nightscout.shared.logging.LTag;
 @Singleton
 public class Persistence {
 
-    private final Context context;
     private final AAPSLogger aapsLogger;
     private final WearUtil wearUtil;
     private final SharedPreferences preferences;
@@ -35,7 +32,6 @@ public class Persistence {
 
     @Inject
     public Persistence(Context context, AAPSLogger aapsLogger, WearUtil wearUtil) {
-        this.context = context;
         this.aapsLogger = aapsLogger;
         this.wearUtil = wearUtil;
         preferences = context.getSharedPreferences(COMPLICATION_PROVIDER_PREFERENCES_FILE_KEY, 0);
@@ -49,24 +45,6 @@ public class Persistence {
     // For mocking only
     public String base64encodeToString(byte[] input, int flags) {
         return Base64.encodeToString(input, flags);
-    }
-
-    @Nullable
-    public DataMap getDataMap(String key) {
-        if (preferences.contains(key)) {
-            final String rawB64Data = preferences.getString(key, null);
-            byte[] rawData = base64decode(rawB64Data, Base64.DEFAULT);
-            try {
-                return DataMap.fromByteArray(rawData);
-            } catch (IllegalArgumentException ex) {
-                // Should never happen, and if it happen - we ignore and fallback to null
-            }
-        }
-        return null;
-    }
-
-    public void putDataMap(String key, DataMap dataMap) {
-        preferences.edit().putString(key, base64encodeToString(dataMap.toByteArray(), Base64.DEFAULT)).apply();
     }
 
     public String getString(String key, String defaultValue) {
@@ -109,9 +87,65 @@ public class Persistence {
         putString(key, joinSet(set, "|"));
     }
 
-    public void storeDataMap(String key, DataMap dataMap) {
-        putDataMap(key, dataMap);
+    public void store(EventData.SingleBg singleBg) {
+        putString(RawDisplayData.BG_DATA_PERSISTENCE_KEY, singleBg.serialize());
         markDataUpdated();
+    }
+
+    @Nullable
+    public EventData.SingleBg readSingleBg() {
+        try {
+            String s = getString(RawDisplayData.BG_DATA_PERSISTENCE_KEY, null);
+            if (s != null) {
+                return (EventData.SingleBg) EventData.Companion.deserialize(s);
+            }
+        } catch (Exception ignored) {}
+        return null;
+    }
+
+    @Nullable
+    public EventData.Status readStatus() {
+        try {
+            String s = getString(RawDisplayData.STATUS_PERSISTENCE_KEY, null);
+            if (s != null) {
+                return (EventData.Status) EventData.Companion.deserialize(s);
+            }
+        } catch (Exception ignored) {}
+        return null;
+    }
+
+    @Nullable
+    public EventData.TreatmentData readTreatments() {
+        try {
+            String s = getString(RawDisplayData.BASALS_PERSISTENCE_KEY, null);
+            if (s != null) {
+                return (EventData.TreatmentData) EventData.Companion.deserialize(s);
+            }
+        } catch (Exception ignored) {}
+        return null;
+    }
+
+    @Nullable
+    public EventData.GraphData readGraphData() {
+        try {
+            String s = getString(RawDisplayData.BG_DATA_PERSISTENCE_KEY, null);
+            if (s != null) {
+                return (EventData.GraphData) EventData.Companion.deserialize(s);
+            }
+        } catch (Exception ignored) {}
+        return null;
+    }
+
+    public void store(EventData.GraphData graphData) {
+        putString(RawDisplayData.GRAPH_DATA_PERSISTENCE_KEY, graphData.serialize());
+    }
+
+    public void store(EventData.TreatmentData treatmentData) {
+        putString(RawDisplayData.BASALS_PERSISTENCE_KEY, treatmentData.serialize());
+    }
+
+    public void store(EventData.Status status) {
+        putString(RawDisplayData.STATUS_PERSISTENCE_KEY, status.serialize());
     }
 
     public String joinSet(Set<String> set, String separator) {

@@ -4,15 +4,14 @@ import com.google.android.gms.wearable.DataMap
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.testing.mockers.WearUtilMocker
 import info.nightscout.androidaps.testing.mocks.BundleMock
-import org.hamcrest.CoreMatchers
 import org.junit.Assert
 import org.junit.Test
-import java.util.*
 
 /**
  * Created by dlvoy on 22.11.2019.
  */
-@Suppress("SpellCheckingInspection") class WearUtilTest : TestBase() {
+@Suppress("SpellCheckingInspection")
+class WearUtilTest : TestBase() {
 
     @Test fun timestampAndTimeDiffsTest() {
 

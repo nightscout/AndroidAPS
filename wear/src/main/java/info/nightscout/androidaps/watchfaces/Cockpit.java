@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.watchfaces;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.support.wearable.watchface.WatchFaceStyle;
 import android.view.LayoutInflater;
@@ -16,7 +17,7 @@ public class Cockpit extends BaseWatchFace {
 
     private long sgvTapTime = 0;
 
-    @Override
+    @SuppressLint("InflateParams") @Override
     public void onCreate() {
         super.onCreate();
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -48,13 +49,13 @@ public class Cockpit extends BaseWatchFace {
         setTextSizes();
 
         if (mHighLight != null && mLowLight != null) {
-            if (rawData.sgvLevel == 1) {
+            if (singleBg.getSgvLevel() == 1) {
                 mHighLight.setBackgroundResource(R.drawable.airplane_led_yellow_lit);
                 mLowLight.setBackgroundResource(R.drawable.airplane_led_grey_unlit);
-            } else if (rawData.sgvLevel == 0) {
+            } else if (singleBg.getSgvLevel() == 0) {
                 mHighLight.setBackgroundResource(R.drawable.airplane_led_grey_unlit);
                 mLowLight.setBackgroundResource(R.drawable.airplane_led_grey_unlit);
-            } else if (rawData.sgvLevel == -1) {
+            } else if (singleBg.getSgvLevel() == -1) {
                 mHighLight.setBackgroundResource(R.drawable.airplane_led_grey_unlit);
                 mLowLight.setBackgroundResource(R.drawable.airplane_led_red_lit);
             }
@@ -84,7 +85,7 @@ public class Cockpit extends BaseWatchFace {
     protected void setTextSizes() {
 
         if (mIOB2 != null) {
-            if (rawData.detailedIOB) {
+            if (status.getDetailedIob()) {
                 if (bIsRound) {
                     mIOB2.setTextSize(10);
                 } else {

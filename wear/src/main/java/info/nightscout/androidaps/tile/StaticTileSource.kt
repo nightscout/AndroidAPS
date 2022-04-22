@@ -5,6 +5,9 @@ import android.content.SharedPreferences
 import android.content.res.Resources
 import androidx.annotation.DrawableRes
 import androidx.preference.PreferenceManager
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.weardata.EventData
 
 class StaticAction(
     val settingName: String,
@@ -12,9 +15,9 @@ class StaticAction(
     buttonTextSub: String? = null,
     activityClass: String,
     @DrawableRes iconRes: Int,
-    actionString: String? = null,
+    action: EventData? = null,
     message: String? = null,
-) : Action(buttonText, buttonTextSub, activityClass, iconRes, actionString, message)
+) : Action(buttonText, buttonTextSub, activityClass, iconRes, action, message)
 
 abstract class StaticTileSource : TileSource {
 
@@ -23,7 +26,7 @@ abstract class StaticTileSource : TileSource {
     abstract val preferencePrefix: String
     abstract fun getDefaultConfig(): Map<String, String>
 
-    override fun getSelectedActions(context: Context): List<Action> {
+    override fun getSelectedActions(context: Context, sp: SP, aapsLogger: AAPSLogger): List<Action> {
         val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
         setDefaultSettings(sharedPrefs)
 
@@ -40,7 +43,7 @@ abstract class StaticTileSource : TileSource {
         return actionList
     }
 
-    override fun getValidFor(context: Context): Long? = null
+    override fun getValidFor(sp: SP): Long? = null
 
     private fun getActionFromPreference(resources: Resources, sharedPrefs: SharedPreferences, index: Int): Action? {
         val actionPref = sharedPrefs.getString(preferencePrefix + index, "none")

@@ -106,10 +106,10 @@ public class DisplayFormatTest extends TestBase {
 
     @Test
     public void shortTrendTest() {
-        RawDisplayData raw = new RawDisplayData(wearUtil);
+        RawDisplayData raw = new RawDisplayData();
         assertEquals(displayFormat.shortTrend(raw), "-- Δ--");
 
-        raw.datetime = wearUtilMocker.backInTime(0, 0, 2, 0);
+        raw.getSingleBg().setTimeStamp(wearUtilMocker.backInTime(0, 0, 2, 0));
         assertEquals(displayFormat.shortTrend(raw), "2' Δ--");
 
         when(sp.getBoolean("complication_unicode", true)).thenReturn(true);

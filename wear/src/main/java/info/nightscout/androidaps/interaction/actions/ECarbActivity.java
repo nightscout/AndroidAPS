@@ -10,9 +10,10 @@ import android.widget.ImageView;
 import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.DataLayerListenerService;
+import info.nightscout.androidaps.events.EventWearToMobile;
 import info.nightscout.androidaps.interaction.utils.PlusMinusEditText;
 import info.nightscout.shared.SafeParse;
+import info.nightscout.shared.weardata.EventData;
 
 /**
  * Created by adrian on 04/08/18.
@@ -38,6 +39,7 @@ public class ECarbActivity extends ViewSelectorActivity {
         finish();
     }
 
+    @SuppressWarnings("deprecation")
     private class MyGridViewPagerAdapter extends GridPagerAdapter {
         @Override
         public int getColumnCount(int arg0) {
@@ -86,16 +88,19 @@ public class ECarbActivity extends ViewSelectorActivity {
             } else {
 
                 final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_send_item, container, false);
-                final ImageView confirmbutton = view.findViewById(R.id.confirmbutton);
-                confirmbutton.setOnClickListener((View v) -> {
+                final ImageView confirmButton = view.findViewById(R.id.confirmbutton);
+                confirmButton.setOnClickListener((View v) -> {
 
                     //check if it can happen that the fragment is never created that hold data?
                     // (you have to swipe past them anyways - but still)
 
-                    String actionstring = "ecarbs " + SafeParse.stringToInt(editCarbs.editText.getText().toString())
-                            + " " + SafeParse.stringToInt(editStartTime.editText.getText().toString())
-                            + " " + SafeParse.stringToInt(editDuration.editText.getText().toString());
-                    DataLayerListenerService.Companion.initiateAction(ECarbActivity.this, actionstring);
+                    EventData.ActionECarbsPreCheck bolus =
+                            new EventData.ActionECarbsPreCheck(
+                                    SafeParse.stringToInt(editCarbs.editText.getText().toString()),
+                                    SafeParse.stringToInt(editStartTime.editText.getText().toString()),
+                                    SafeParse.stringToInt(editDuration.editText.getText().toString())
+                            );
+                    rxBus.send(new EventWearToMobile(bolus));
                     showToast(ECarbActivity.this, R.string.action_ecarb_confirmation);
                     finishAffinity();
 
@@ -108,7 +113,7 @@ public class ECarbActivity extends ViewSelectorActivity {
         @Override
         public void destroyItem(ViewGroup container, int row, int col, Object view) {
             // Handle this to get the data before the view is destroyed?
-            // Object should still be kept by this, just setup for reinit?
+            // Object should still be kept by this, just setup for re-init?
             container.removeView((View) view);
         }
 

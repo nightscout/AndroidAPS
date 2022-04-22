@@ -14,7 +14,7 @@ import info.nightscout.shared.logging.LTag;
 /*
  * Created by dlvoy on 2019-11-12
  */
-public class UploaderBattery extends BaseComplicationProviderService {
+public class UploaderBatteryComplication extends BaseComplicationProviderService {
 
     public ComplicationData buildComplicationData(int dataType, RawDisplayData raw, PendingIntent complicationPendingIntent) {
 
@@ -25,9 +25,9 @@ public class UploaderBattery extends BaseComplicationProviderService {
         int level = 0;
         String levelStr = "???";
 
-        if (raw.sUploaderBattery.matches("^[0-9]+$")) {
+        if (raw.getStatus().getBattery().matches("^[0-9]+$")) {
             try {
-                level = Integer.parseInt(raw.sUploaderBattery);
+                level = Integer.parseInt(raw.getStatus().getBattery());
                 level = Math.max(Math.min(level, 100), 0);
                 levelStr = level + "%";
                 int iconNo = (int) Math.floor(level / 10.0);
@@ -112,7 +112,7 @@ public class UploaderBattery extends BaseComplicationProviderService {
 
 
             } catch (NumberFormatException ex) {
-                aapsLogger.error(LTag.WEAR, "Cannot parse battery level of: " + raw.sUploaderBattery);
+                aapsLogger.error(LTag.WEAR, "Cannot parse battery level of: " + raw.getStatus().getBattery());
             }
         }
 
@@ -147,7 +147,7 @@ public class UploaderBattery extends BaseComplicationProviderService {
 
     @Override
     public String getProviderCanonicalName() {
-        return UploaderBattery.class.getCanonicalName();
+        return UploaderBatteryComplication.class.getCanonicalName();
     }
 
     @Override

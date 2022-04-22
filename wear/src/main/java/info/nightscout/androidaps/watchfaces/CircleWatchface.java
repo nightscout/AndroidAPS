@@ -1,25 +1,15 @@
 package info.nightscout.androidaps.watchfaces;
 
-import android.content.BroadcastReceiver;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.LinearGradient;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.RectF;
-import android.graphics.Shader;
-import android.os.Bundle;
 import android.os.PowerManager;
-import android.os.SystemClock;
-import android.preference.PreferenceManager;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import android.support.wearable.watchface.WatchFaceStyle;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -27,21 +17,40 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.google.android.gms.wearable.DataMap;
 import com.ustwo.clockwise.common.WatchFaceTime;
 import com.ustwo.clockwise.wearable.WatchFace;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashSet;
-import java.util.TreeSet;
 
+import javax.inject.Inject;
+
+import dagger.android.AndroidInjection;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.BgWatchData;
+import info.nightscout.androidaps.events.EventWearToMobile;
 import info.nightscout.androidaps.interaction.menus.MainMenuActivity;
+import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.utils.rx.AapsSchedulers;
+import info.nightscout.shared.logging.AAPSLogger;
+import info.nightscout.shared.logging.LTag;
+import info.nightscout.shared.sharedPreferences.SP;
+import info.nightscout.shared.weardata.EventData;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 
-public class CircleWatchface extends WatchFace implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class CircleWatchface extends WatchFace {
+
+    @Inject RxBus rxBus;
+    @Inject AapsSchedulers aapsSchedulers;
+    @Inject AAPSLogger aapsLogger;
+    @Inject SP sp;
+
+    CompositeDisposable disposable = new CompositeDisposable();
+
+    private EventData.SingleBg singleBg = new EventData.SingleBg(0, "---", "-", "--", "--", "--", 0, 0.0, 0.0, 0.0, 0);
+    private EventData.GraphData graphData;
+    private EventData.Status status = new EventData.Status("no status", "IOB", "-.--", false, "--g", "-.--U/h", "--", "--", -1, "--", false, 1);
+
     public final float PADDING = 20f;
     public final float CIRCLE_WIDTH = 10f;
     public final int BIG_HAND_WIDTH = 16;
@@ -52,43 +61,27 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
     //variables for time
     private float angleBig = 0f;
     private float angleSMALL = 0f;
-    private int hour, minute;
     private int color;
     private final Paint circlePaint = new Paint();
     private final Paint removePaint = new Paint();
     private RectF rect, rectDelete;
     private boolean overlapping;
 
-    private int animationAngle = 0;
-    private boolean isAnimated = false;
-
-
     public Point displaySize = new Point();
-    private final MessageReceiver messageReceiver = new MessageReceiver();
 
-    private int sgvLevel = 0;
-    private String sgvString = "999";
-    private String statusString = "no status";
-
-
-    private int batteryLevel = 0;
-    private long datetime = 0;
-    private String direction = "";
-    private String delta = "";
-    private String avgDelta = "";
-    public TreeSet<BgWatchData> bgDataList = new TreeSet<>();
+    public ArrayList<EventData.SingleBg> bgDataList = new ArrayList<>();
 
     private int specW;
     private int specH;
     private View myLayout;
 
-    protected SharedPreferences sharedPrefs;
     private TextView mSgv;
     private long sgvTapTime = 0;
 
 
-    @Override
+    @SuppressLint("InflateParams") @Override
     public void onCreate() {
+        AndroidInjection.inject(this);
         super.onCreate();
 
         PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
@@ -104,19 +97,46 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
         specH = View.MeasureSpec.makeMeasureSpec(displaySize.y,
                 View.MeasureSpec.EXACTLY);
 
-        sharedPrefs = PreferenceManager
-                .getDefaultSharedPreferences(this);
-        sharedPrefs.registerOnSharedPreferenceChangeListener(this);
-
         //register Message Receiver
-        LocalBroadcastManager.getInstance(this).registerReceiver(messageReceiver, new IntentFilter(Intent.ACTION_SEND));
 
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         myLayout = inflater.inflate(R.layout.modern_layout, null);
         prepareLayout();
         prepareDrawTime();
 
-        //ListenerService.requestData(this); //usually connection is not set up yet
+        disposable.add(rxBus
+                .toObservable(EventData.SingleBg.class)
+                .observeOn(aapsSchedulers.getMain())
+                .subscribe(event -> singleBg = event)
+        );
+        disposable.add(rxBus
+                .toObservable(EventData.GraphData.class)
+                .observeOn(aapsSchedulers.getMain())
+                .subscribe(event -> graphData = event)
+        );
+        disposable.add(rxBus
+                .toObservable(EventData.Status.class)
+                .observeOn(aapsSchedulers.getMain())
+                .subscribe(event -> {
+                    // this event is received as last batch of data
+                    aapsLogger.debug(LTag.WEAR, "Status received");
+                    status = event;
+                    addToWatchSet();
+                    prepareLayout();
+                    prepareDrawTime();
+                    invalidate();
+                })
+        );
+        disposable.add(rxBus
+                .toObservable(EventData.Preferences.class)
+                .observeOn(aapsSchedulers.getMain())
+                .subscribe(event -> {
+                    prepareDrawTime();
+                    prepareLayout();
+                    invalidate();
+                })
+        );
+        rxBus.send(new EventWearToMobile(new EventData.ActionResendData("CircleWatchFace::onCreate")));
 
         wakeLock.release();
     }
@@ -124,18 +144,13 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
 
     @Override
     public void onDestroy() {
-        if (messageReceiver != null) {
-            LocalBroadcastManager.getInstance(this).unregisterReceiver(messageReceiver);
-        }
-        if (sharedPrefs != null) {
-            sharedPrefs.unregisterOnSharedPreferenceChangeListener(this);
-        }
+        disposable.clear();
         super.onDestroy();
     }
 
     @Override
     protected synchronized void onDraw(Canvas canvas) {
-        Log.d("CircleWatchface", "start onDraw");
+        aapsLogger.debug(LTag.WEAR, "start onDraw");
         canvas.drawColor(getBackgroundColor());
         drawTime(canvas);
         drawOtherStuff(canvas);
@@ -145,27 +160,25 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
 
     private synchronized void prepareLayout() {
 
-        Log.d("CircleWatchface", "start startPrepareLayout");
+        aapsLogger.debug(LTag.WEAR, "start startPrepareLayout");
 
         // prepare fields
 
-        TextView textView;
         mSgv = myLayout.findViewById(R.id.sgvString);
-        textView = myLayout.findViewById(R.id.sgvString);
-        if (sharedPrefs.getBoolean("showBG", true)) {
-            textView.setVisibility(View.VISIBLE);
-            textView.setText(getSgvString());
-            textView.setTextColor(getTextColor());
+        if (sp.getBoolean("showBG", true)) {
+            mSgv.setVisibility(View.VISIBLE);
+            mSgv.setText(singleBg.getSgvString());
+            mSgv.setTextColor(getTextColor());
 
         } else {
             //Also possible: View.INVISIBLE instead of View.GONE (no layout change)
-            textView.setVisibility(View.INVISIBLE);
+            mSgv.setVisibility(View.INVISIBLE);
         }
 
-        textView = myLayout.findViewById(R.id.statusString);
-        if (sharedPrefs.getBoolean("showExternalStatus", true)) {
+        TextView textView = myLayout.findViewById(R.id.statusString);
+        if (sp.getBoolean("showExternalStatus", true)) {
             textView.setVisibility(View.VISIBLE);
-            textView.setText(getStatusString());
+            textView.setText(status.getExternalStatus());
             textView.setTextColor(getTextColor());
 
         } else {
@@ -174,10 +187,10 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
         }
 
         textView = myLayout.findViewById(R.id.agoString);
-        if (sharedPrefs.getBoolean("showAgo", true)) {
+        if (sp.getBoolean("showAgo", true)) {
             textView.setVisibility(View.VISIBLE);
 
-            if (sharedPrefs.getBoolean("showBigNumbers", false)) {
+            if (sp.getBoolean("showBigNumbers", false)) {
                 textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 26);
             } else {
                 ((TextView) myLayout.findViewById(R.id.agoString)).setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
@@ -190,17 +203,17 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
         }
 
         textView = myLayout.findViewById(R.id.deltaString);
-        if (sharedPrefs.getBoolean("showDelta", true)) {
+        if (sp.getBoolean("showDelta", true)) {
             textView.setVisibility(View.VISIBLE);
-            textView.setText(getDelta());
+            textView.setText(singleBg.getDelta());
             textView.setTextColor(getTextColor());
-            if (sharedPrefs.getBoolean("showBigNumbers", false)) {
+            if (sp.getBoolean("showBigNumbers", false)) {
                 textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
             } else {
                 textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
             }
-            if (sharedPrefs.getBoolean("showAvgDelta", true)) {
-                textView.append("  " + getAvgDelta());
+            if (sp.getBoolean("showAvgDelta", true)) {
+                textView.append("  " + singleBg.getAvgDelta());
             }
 
         } else {
@@ -215,8 +228,8 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
 
     public String getMinutes() {
         String minutes = "--'";
-        if (getDatetime() != 0) {
-            minutes = ((int) Math.floor((System.currentTimeMillis() - getDatetime()) / 60000.0)) + "'";
+        if (singleBg.getTimeStamp() != 0) {
+            minutes = ((int) Math.floor((System.currentTimeMillis() - singleBg.getTimeStamp()) / 60000.0)) + "'";
         }
         return minutes;
     }
@@ -249,16 +262,16 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
     }
 
     private synchronized void prepareDrawTime() {
-        Log.d("CircleWatchface", "start prepareDrawTime");
+        aapsLogger.debug(LTag.WEAR, "start prepareDrawTime");
 
-        hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY) % 12;
-        minute = Calendar.getInstance().get(Calendar.MINUTE);
+        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY) % 12;
+        int minute = Calendar.getInstance().get(Calendar.MINUTE);
         angleBig = (((hour + minute / 60f) / 12f * 360) - 90 - BIG_HAND_WIDTH / 2f + 360) % 360;
         angleSMALL = ((minute / 60f * 360) - 90 - SMALL_HAND_WIDTH / 2f + 360) % 360;
 
 
         color = 0;
-        switch (getSgvLevel()) {
+        switch ((int) singleBg.getSgvLevel()) {
             case -1:
                 color = getLowColor();
                 break;
@@ -271,20 +284,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
         }
 
 
-        if (isAnimated()) {
-            //Animation matrix:
-            int[] rainbow = {Color.RED, Color.YELLOW, Color.GREEN, Color.BLUE
-                    , Color.CYAN};
-            Shader shader = new LinearGradient(0, 0, 0, 20, rainbow,
-                    null, Shader.TileMode.MIRROR);
-            Matrix matrix = new Matrix();
-            matrix.setRotate(animationAngle);
-            shader.setLocalMatrix(matrix);
-            circlePaint.setShader(shader);
-        } else {
-            circlePaint.setShader(null);
-        }
-
+        circlePaint.setShader(null);
 
         circlePaint.setStyle(Paint.Style.STROKE);
         circlePaint.setStrokeWidth(CIRCLE_WIDTH);
@@ -299,16 +299,9 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
         rect = new RectF(PADDING, PADDING, displaySize.x - PADDING, displaySize.y - PADDING);
         rectDelete = new RectF(PADDING - CIRCLE_WIDTH / 2, PADDING - CIRCLE_WIDTH / 2, displaySize.x - PADDING + CIRCLE_WIDTH / 2, displaySize.y - PADDING + CIRCLE_WIDTH / 2);
         overlapping = ALWAYS_HIGHLIGT_SMALL || areOverlapping(angleSMALL, angleSMALL + SMALL_HAND_WIDTH + NEAR, angleBig, angleBig + BIG_HAND_WIDTH + NEAR);
-        Log.d("CircleWatchface", "end prepareDrawTime");
+        aapsLogger.debug(LTag.WEAR, "end prepareDrawTime");
 
     }
-
-    synchronized void animationStep() {
-        animationAngle = (animationAngle + 1) % 360;
-        prepareDrawTime();
-        invalidate();
-    }
-
 
     private boolean areOverlapping(float aBegin, float aEnd, float bBegin, float bEnd) {
         return
@@ -338,7 +331,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
 
     // defining color for dark and bright
     public int getLowColor() {
-        if (sharedPrefs.getBoolean("dark", true)) {
+        if (sp.getBoolean("dark", true)) {
             return Color.argb(255, 255, 120, 120);
         } else {
             return Color.argb(255, 255, 80, 80);
@@ -346,7 +339,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
     }
 
     public int getInRangeColor() {
-        if (sharedPrefs.getBoolean("dark", true)) {
+        if (sp.getBoolean("dark", true)) {
             return Color.argb(255, 120, 255, 120);
         } else {
             return Color.argb(255, 0, 240, 0);
@@ -355,7 +348,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
     }
 
     public int getHighColor() {
-        if (sharedPrefs.getBoolean("dark", true)) {
+        if (sp.getBoolean("dark", true)) {
             return Color.argb(255, 255, 255, 120);
         } else {
             return Color.argb(255, 255, 200, 0);
@@ -364,7 +357,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
     }
 
     public int getBackgroundColor() {
-        if (sharedPrefs.getBoolean("dark", true)) {
+        if (sp.getBoolean("dark", true)) {
             return Color.BLACK;
         } else {
             return Color.WHITE;
@@ -373,7 +366,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
     }
 
     public int getTextColor() {
-        if (sharedPrefs.getBoolean("dark", true)) {
+        if (sp.getBoolean("dark", true)) {
             return Color.WHITE;
         } else {
             return Color.BLACK;
@@ -382,23 +375,22 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
     }
 
     public void drawOtherStuff(Canvas canvas) {
-        Log.d("CircleWatchface", "start onDrawOtherStuff. bgDataList.size(): " + bgDataList.size());
+        aapsLogger.debug(LTag.WEAR, "start onDrawOtherStuff. bgDataList.size(): " + bgDataList.size());
 
-        if (isAnimated()) return; // too many repaints when animated
-        if (sharedPrefs.getBoolean("showRingHistory", false)) {
+        if (sp.getBoolean("showRingHistory", false)) {
             //Perfect low and High indicators
             if (bgDataList.size() > 0) {
                 addIndicator(canvas, 100, Color.LTGRAY);
-                addIndicator(canvas, (float) bgDataList.iterator().next().low, getLowColor());
-                addIndicator(canvas, (float) bgDataList.iterator().next().high, getHighColor());
+                addIndicator(canvas, (float) bgDataList.iterator().next().getLow(), getLowColor());
+                addIndicator(canvas, (float) bgDataList.iterator().next().getHigh(), getHighColor());
 
 
-                if (sharedPrefs.getBoolean("softRingHistory", true)) {
-                    for (BgWatchData data : bgDataList) {
+                if (sp.getBoolean("softRingHistory", true)) {
+                    for (EventData.SingleBg data : bgDataList) {
                         addReadingSoft(canvas, data);
                     }
                 } else {
-                    for (BgWatchData data : bgDataList) {
+                    for (EventData.SingleBg data : bgDataList) {
                         addReading(canvas, data);
                     }
                 }
@@ -406,202 +398,15 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
         }
     }
 
-    public int holdInMemory() {
-        return 6;
-    }
+    public synchronized void addToWatchSet() {
 
-    //getters & setters
+        bgDataList.clear();
+        if (!sp.getBoolean("showRingHistory", false)) return;
 
-    private synchronized int getSgvLevel() {
-        return sgvLevel;
-    }
-
-    private synchronized void setSgvLevel(int sgvLevel) {
-        this.sgvLevel = sgvLevel;
-    }
-
-    private synchronized int getBatteryLevel() {
-        return batteryLevel;
-    }
-
-    private synchronized void setBatteryLevel(int batteryLevel) {
-        this.batteryLevel = batteryLevel;
-    }
-
-
-    private synchronized long getDatetime() {
-        return datetime;
-    }
-
-    private synchronized void setDatetime(long datetime) {
-        this.datetime = datetime;
-    }
-
-    private synchronized String getDirection() {
-        return direction;
-    }
-
-    private void setDirection(String direction) {
-        this.direction = direction;
-    }
-
-    String getSgvString() {
-        return sgvString;
-    }
-
-    void setSgvString(String sgvString) {
-        this.sgvString = sgvString;
-    }
-
-    String getStatusString() {
-        return statusString;
-    }
-
-    void setStatusString(String statusString) {
-        this.statusString = statusString;
-    }
-
-    public String getDelta() {
-        return delta;
-    }
-
-    private void setDelta(String delta) {
-        this.delta = delta;
-    }
-
-    private String getAvgDelta() {
-        return avgDelta;
-    }
-
-    private void setAvgDelta(String avgDelta) {
-        this.avgDelta = avgDelta;
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        prepareDrawTime();
-        prepareLayout();
-        invalidate();
-    }
-
-    private synchronized boolean isAnimated() {
-        return isAnimated;
-    }
-
-    private synchronized void setIsAnimated(boolean isAnimated) {
-        this.isAnimated = isAnimated;
-    }
-
-    void startAnimation() {
-        Log.d("CircleWatchface", "start startAnimation");
-
-        Thread animator = new Thread() {
-
-
-            public void run() {
-                setIsAnimated(true);
-                for (int i = 0; i <= 8 * 1000 / 40; i++) {
-                    animationStep();
-                    SystemClock.sleep(40);
-                }
-                setIsAnimated(false);
-                prepareDrawTime();
-                invalidate();
-                System.gc();
-            }
-        };
-
-        animator.start();
-    }
-
-
-    public class MessageReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
-            PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS:MessageReceiver");
-            wakeLock.acquire(30000);
-            Bundle bundle = intent.getBundleExtra("data");
-            if (bundle != null) {
-                DataMap dataMap = DataMap.fromBundle(bundle);
-                setSgvLevel((int) dataMap.getLong("sgvLevel"));
-                Log.d("CircleWatchface", "sgv level : " + getSgvLevel());
-                setSgvString(dataMap.getString("sgvString"));
-                Log.d("CircleWatchface", "sgv string : " + getSgvString());
-                setDelta(dataMap.getString("delta"));
-                setAvgDelta(dataMap.getString("avgDelta"));
-                setDatetime(dataMap.getLong("timestamp"));
-                addToWatchSet(dataMap);
-
-
-                //start animation?
-                // dataMap.getDataMapArrayList("entries") == null -> not on "resend data".
-                if (sharedPrefs.getBoolean("animation", false) && dataMap.getDataMapArrayList("entries") == null && (getSgvString().equals("100") || getSgvString().equals("5.5") || getSgvString().equals("5,5"))) {
-                    startAnimation();
-                }
-
-                prepareLayout();
-                prepareDrawTime();
-                invalidate();
-            }
-            //status
-            bundle = intent.getBundleExtra("status");
-            if (bundle != null) {
-                DataMap dataMap = DataMap.fromBundle(bundle);
-                wakeLock.acquire(50);
-                setStatusString(dataMap.getString("externalStatusString"));
-
-                prepareLayout();
-                prepareDrawTime();
-                invalidate();
-            }
-            wakeLock.release();
-        }
-    }
-
-    public synchronized void addToWatchSet(DataMap dataMap) {
-
-        if (!sharedPrefs.getBoolean("showRingHistory", false)) {
-            bgDataList.clear();
-            return;
-        }
-
-        Log.d("CircleWatchface", "start addToWatchSet");
-        ArrayList<DataMap> entries = dataMap.getDataMapArrayList("entries");
-        if (entries == null) {
-            double sgv = dataMap.getDouble("sgvDouble");
-            double high = dataMap.getDouble("high");
-            double low = dataMap.getDouble("low");
-            long timestamp = dataMap.getLong("timestamp");
-            int color = dataMap.getInt("color", 0);
-            bgDataList.add(new BgWatchData(sgv, high, low, timestamp, color));
-        } else if (!sharedPrefs.getBoolean("animation", false)) {
-            // don't load history at once if animations are set (less resource consumption)
-            Log.d("addToWatchSet", "entries.size(): " + entries.size());
-
-            for (DataMap entry : entries) {
-                double sgv = entry.getDouble("sgvDouble");
-                double high = entry.getDouble("high");
-                double low = entry.getDouble("low");
-                long timestamp = entry.getLong("timestamp");
-                int color = entry.getInt("color", 0);
-                bgDataList.add(new BgWatchData(sgv, high, low, timestamp, color));
-            }
-        } else
-
-            Log.d("addToWatchSet", "start removing bgDataList.size(): " + bgDataList.size());
-        HashSet<BgWatchData> removeSet = new HashSet<>();
-        double threshold = (System.currentTimeMillis() - (1000 * 60 * 5 * holdInMemory()));
-        for (BgWatchData data : bgDataList) {
-            if (data.timestamp < threshold) {
-                removeSet.add(data);
-
-            }
-        }
-        bgDataList.removeAll(removeSet);
-        Log.d("addToWatchSet", "after bgDataList.size(): " + bgDataList.size());
-        removeSet = null;
-        System.gc();
+        double threshold = (System.currentTimeMillis() - (1000L * 60 * 30)); // 30 min
+        for (EventData.SingleBg entry : graphData.getEntries())
+            if (entry.getTimeStamp() >= threshold) bgDataList.add(entry);
+        aapsLogger.debug(LTag.WEAR, "addToWatchSet size=" + bgDataList.size());
     }
 
     public int darken(int color, double fraction) {
@@ -618,10 +423,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
 
     private int darkenColor(int color, double fraction) {
 
-        //if (sharedPrefs.getBoolean("dark", false)) {
         return (int) Math.max(color - (color * fraction), 0);
-        //}
-        // return (int)Math.min(color + (color * fraction), 255);
     }
 
 
@@ -659,44 +461,46 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
     }
 
 
-    public void addReadingSoft(Canvas canvas, BgWatchData entry) {
+    public void addReadingSoft(Canvas canvas, EventData.SingleBg entry) {
 
-        Log.d("CircleWatchface", "addReadingSoft");
+        aapsLogger.debug(LTag.WEAR, "addReadingSoft");
         double size;
         int color = Color.LTGRAY;
-        if (sharedPrefs.getBoolean("dark", true)) {
+        if (sp.getBoolean("dark", true)) {
             color = Color.DKGRAY;
         }
 
         float offsetMultiplier = (((displaySize.x / 2f) - PADDING) / 12f);
-        float offset = (float) Math.max(1, Math.ceil((System.currentTimeMillis() - entry.timestamp) / (1000 * 60 * 5.0)));
-        size = bgToAngle((float) entry.sgv);
+        float offset = (float) Math.max(1,
+                Math.ceil((System.currentTimeMillis() - entry.getTimeStamp()) / (1000 * 60 * 5.0)));
+        size = bgToAngle((float) entry.getSgv());
         addArch(canvas, offset * offsetMultiplier + 10, color, (float) size);
         addArch(canvas, (float) size, offset * offsetMultiplier + 10, getBackgroundColor(), (float) (360 - size));
         addArch(canvas, (offset + .8f) * offsetMultiplier + 10, getBackgroundColor(), 360);
     }
 
-    public void addReading(Canvas canvas, BgWatchData entry) {
-        Log.d("CircleWatchface", "addReading");
+    public void addReading(Canvas canvas, EventData.SingleBg entry) {
+        aapsLogger.debug(LTag.WEAR, "addReading");
 
         double size;
         int color = Color.LTGRAY;
         int indicatorColor = Color.DKGRAY;
-        if (sharedPrefs.getBoolean("dark", true)) {
+        if (sp.getBoolean("dark", true)) {
             color = Color.DKGRAY;
             indicatorColor = Color.LTGRAY;
         }
         int barColor = Color.GRAY;
-        if (entry.sgv >= entry.high) {
+        if (entry.getSgv() >= entry.getHigh()) {
             indicatorColor = getHighColor();
             barColor = darken(getHighColor(), .5);
-        } else if (entry.sgv <= entry.low) {
+        } else if (entry.getSgv() <= entry.getLow()) {
             indicatorColor = getLowColor();
             barColor = darken(getLowColor(), .5);
         }
         float offsetMultiplier = (((displaySize.x / 2f) - PADDING) / 12f);
-        float offset = (float) Math.max(1, Math.ceil((System.currentTimeMillis() - entry.timestamp) / (1000 * 60 * 5.0)));
-        size = bgToAngle((float) entry.sgv);
+        float offset = (float) Math.max(1,
+                Math.ceil((System.currentTimeMillis() - entry.getTimeStamp()) / (1000 * 60 * 5.0)));
+        size = bgToAngle((float) entry.getSgv());
         addArch(canvas, offset * offsetMultiplier + 11, barColor, (float) size - 2); // Dark Color Bar
         addArch(canvas, (float) size - 2, offset * offsetMultiplier + 11, indicatorColor, 2f); // Indicator at end of bar
         addArch(canvas, (float) size, offset * offsetMultiplier + 11, color, (float) (360f - size)); // Dark fill
@@ -705,8 +509,8 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
 
     @Override
     protected void onTapCommand(int tapType, int x, int y, long eventTime) {
-
-        int extra = mSgv != null ? (mSgv.getRight() - mSgv.getLeft()) / 2 : 0;
+        if (mSgv == null) return;
+        int extra = (mSgv.getRight() - mSgv.getLeft()) / 2;
 
         if (tapType == TAP_TYPE_TAP &&
                 x + extra >= mSgv.getLeft() &&
@@ -726,6 +530,4 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
     protected WatchFaceStyle getWatchFaceStyle() {
         return new WatchFaceStyle.Builder(this).setAcceptsTapEvents(true).build();
     }
-
-
 }

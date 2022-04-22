@@ -14,17 +14,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
-import info.nightscout.androidaps.data.BasalWatchData;
-import info.nightscout.androidaps.data.BgWatchData;
-import info.nightscout.androidaps.data.BolusWatchData;
-import info.nightscout.androidaps.data.RawDisplayData;
-import info.nightscout.androidaps.data.TempWatchData;
+import info.nightscout.shared.weardata.EventData;
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;
 import lecho.lib.hellocharts.model.Line;
 import lecho.lib.hellocharts.model.LineChartData;
 import lecho.lib.hellocharts.model.PointValue;
-import lecho.lib.hellocharts.model.Viewport;
 
 /**
  * Created by emmablack on 11/15/14.
@@ -33,10 +28,10 @@ public class BgGraphBuilder {
     public static final double MAX_PREDICTION__TIME_RATIO = (3d / 5);
     public static final double UPPER_CUTOFF_SGV = 400;
     private final long predictionEndTime;
-    private final List<BgWatchData> predictionsList;
-    private final ArrayList<BolusWatchData> bolusWatchDataList;
-    private final ArrayList<BasalWatchData> basalWatchDataList;
-    public List<TempWatchData> tempWatchDataList;
+    private final List<EventData.SingleBg> predictionsList;
+    private final ArrayList<EventData.TreatmentData.Treatment> bolusWatchDataList;
+    private final ArrayList<EventData.TreatmentData.Basal> basalWatchDataList;
+    public List<EventData.TreatmentData.TempBasal> tempWatchDataList;
     private final int timespan;
     public long end_time;
     public long start_time;
@@ -44,7 +39,7 @@ public class BgGraphBuilder {
     public Context context;
     public double highMark;
     public double lowMark;
-    public List<BgWatchData> bgDataList = new ArrayList<BgWatchData>();
+    public List<EventData.SingleBg> bgDataList;
 
     public int pointSize;
     public int highColor;
@@ -58,20 +53,24 @@ public class BgGraphBuilder {
 
     public boolean singleLine = false;
 
-    private final List<PointValue> inRangeValues = new ArrayList<PointValue>();
-    private final List<PointValue> highValues = new ArrayList<PointValue>();
-    private final List<PointValue> lowValues = new ArrayList<PointValue>();
-    public Viewport viewport;
-
+    private final List<PointValue> inRangeValues = new ArrayList<>();
+    private final List<PointValue> highValues = new ArrayList<>();
+    private final List<PointValue> lowValues = new ArrayList<>();
 
     //used for low resolution screen.
-    public BgGraphBuilder(Context context, List<BgWatchData> aBgList, List<BgWatchData> predictionsList, List<TempWatchData> tempWatchDataList, ArrayList<BasalWatchData> basalWatchDataList, ArrayList<BolusWatchData> bolusWatchDataList, int aPointSize, int aMidColor, int gridColour, int basalBackgroundColor, int basalCenterColor, int bolusInvalidColor, int carbsColor, int timespan) {
-        this.start_time = System.currentTimeMillis()  - (1000 * 60 * 60 * timespan); //timespan hours ago
+    public BgGraphBuilder(Context context, List<EventData.SingleBg> aBgList,
+                          List<EventData.SingleBg> predictionsList,
+                          List<EventData.TreatmentData.TempBasal> tempWatchDataList,
+                          ArrayList<EventData.TreatmentData.Basal> basalWatchDataList,
+                          ArrayList<EventData.TreatmentData.Treatment> bolusWatchDataList,
+                          int aPointSize, int aMidColor, int gridColour, int basalBackgroundColor, int basalCenterColor, int bolusInvalidColor, int carbsColor, int timespan) {
+        this.start_time = System.currentTimeMillis() - (1000L * 60 * 60 * timespan); //timespan
+        // hours ago
         this.bgDataList = aBgList;
         this.predictionsList = predictionsList;
         this.context = context;
-        this.highMark = aBgList.get(aBgList.size() - 1).high;
-        this.lowMark = aBgList.get(aBgList.size() - 1).low;
+        this.highMark = aBgList.get(aBgList.size() - 1).getHigh();
+        this.lowMark = aBgList.get(aBgList.size() - 1).getLow();
         this.pointSize = aPointSize;
         this.singleLine = false;
         this.midColor = aMidColor;
@@ -80,24 +79,31 @@ public class BgGraphBuilder {
         this.timespan = timespan;
         this.tempWatchDataList = tempWatchDataList;
         this.basalWatchDataList = basalWatchDataList;
-        this.bolusWatchDataList = (bolusWatchDataList!=null)?bolusWatchDataList:new ArrayList<BolusWatchData>();
+        this.bolusWatchDataList = (bolusWatchDataList != null) ? bolusWatchDataList : new ArrayList<>();
         this.gridColour = gridColour;
         this.basalCenterColor = basalCenterColor;
         this.basalBackgroundColor = basalBackgroundColor;
         this.bolusInvalidColor = bolusInvalidColor;
         this.carbsColor = carbsColor;
-        this.end_time = System.currentTimeMillis() + (1000 * 60 * 6 * timespan); //Now plus 30 minutes padding (for 5 hours. Less if less.)
+        this.end_time = System.currentTimeMillis() + (1000L * 60 * 6 * timespan); //Now plus 30
+        // minutes padding (for 5 hours. Less if less.)
         this.predictionEndTime = getPredictionEndTime();
-        this.end_time = (predictionEndTime>end_time)?predictionEndTime:end_time;
+        this.end_time = Math.max(predictionEndTime, end_time);
     }
 
-    public BgGraphBuilder(Context context, List<BgWatchData> aBgList, List<BgWatchData> predictionsList, List<TempWatchData> tempWatchDataList, ArrayList<BasalWatchData> basalWatchDataList, ArrayList<BolusWatchData> bolusWatchDataList, int aPointSize, int aHighColor, int aLowColor, int aMidColor, int gridColour, int basalBackgroundColor, int basalCenterColor, int bolusInvalidColor, int carbsColor, int timespan) {
-        this.start_time = System.currentTimeMillis()  - (1000 * 60 * 60 * timespan); //timespan hours ago
+    public BgGraphBuilder(Context context, List<EventData.SingleBg> aBgList,
+                          List<EventData.SingleBg> predictionsList,
+                          List<EventData.TreatmentData.TempBasal> tempWatchDataList,
+                          ArrayList<EventData.TreatmentData.Basal> basalWatchDataList,
+                          ArrayList<EventData.TreatmentData.Treatment> bolusWatchDataList,
+                          int aPointSize, int aHighColor, int aLowColor, int aMidColor, int gridColour, int basalBackgroundColor, int basalCenterColor, int bolusInvalidColor, int carbsColor, int timespan) {
+        this.start_time = System.currentTimeMillis() - (1000L * 60 * 60 * timespan); //timespan
+        // hours ago
         this.bgDataList = aBgList;
         this.predictionsList = predictionsList;
         this.context = context;
-        this.highMark = aBgList.get(aBgList.size() - 1).high;
-        this.lowMark = aBgList.get(aBgList.size() - 1).low;
+        this.highMark = aBgList.get(aBgList.size() - 1).getHigh();
+        this.lowMark = aBgList.get(aBgList.size() - 1).getLow();
         this.pointSize = aPointSize;
         this.highColor = aHighColor;
         this.lowColor = aLowColor;
@@ -105,51 +111,16 @@ public class BgGraphBuilder {
         this.timespan = timespan;
         this.tempWatchDataList = tempWatchDataList;
         this.basalWatchDataList = basalWatchDataList;
-        this.bolusWatchDataList = (bolusWatchDataList!=null)?bolusWatchDataList:new ArrayList<BolusWatchData>();
+        this.bolusWatchDataList = (bolusWatchDataList != null) ? bolusWatchDataList : new ArrayList<>();
         this.gridColour = gridColour;
         this.basalCenterColor = basalCenterColor;
         this.basalBackgroundColor = basalBackgroundColor;
         this.bolusInvalidColor = bolusInvalidColor;
         this.carbsColor = carbsColor;
-        this.end_time = System.currentTimeMillis() + (1000 * 60 * 6 * timespan); //Now plus 30 minutes padding (for 5 hours. Less if less.)
+        this.end_time = System.currentTimeMillis() + (1000L * 60 * 6 * timespan); //Now plus 30
+        // minutes padding (for 5 hours. Less if less.)
         this.predictionEndTime = getPredictionEndTime();
-        this.end_time = (predictionEndTime>end_time)?predictionEndTime:end_time;
-    }
-
-    public BgGraphBuilder(Context context, RawDisplayData raw, int aPointSize, int aHighColor, int aLowColor, int aMidColor, int gridColour, int basalBackgroundColor, int basalCenterColor, int bolusInvalidColor, int carbsColor, int timespan) {
-        this(context,
-                raw.bgDataList,
-                raw.predictionList,
-                raw.tempWatchDataList,
-                raw.basalWatchDataList,
-                raw.bolusWatchDataList,
-                aPointSize,
-                aHighColor,
-                aLowColor,
-                aMidColor,
-                gridColour,
-                basalBackgroundColor,
-                basalCenterColor,
-                bolusInvalidColor,
-                carbsColor,
-                timespan);
-    }
-
-    public BgGraphBuilder(Context context, RawDisplayData raw, int aPointSize, int aMidColor, int gridColour, int basalBackgroundColor, int basalCenterColor, int bolusInvalidColor, int carbsColor, int timespan) {
-        this(context,
-                raw.bgDataList,
-                raw.predictionList,
-                raw.tempWatchDataList,
-                raw.basalWatchDataList,
-                raw.bolusWatchDataList,
-                aPointSize,
-                aMidColor,
-                gridColour,
-                basalBackgroundColor,
-                basalCenterColor,
-                bolusInvalidColor,
-                carbsColor,
-                timespan);
+        this.end_time = Math.max(predictionEndTime, end_time);
     }
 
     public LineChartData lineData() {
@@ -162,7 +133,7 @@ public class BgGraphBuilder {
     public List<Line> defaultLines() {
 
         addBgReadingValues();
-        List<Line> lines = new ArrayList<Line>();
+        List<Line> lines = new ArrayList<>();
         lines.add(highLine());
         lines.add(lowLine());
         lines.add(inRangeValuesLine());
@@ -172,41 +143,41 @@ public class BgGraphBuilder {
         double minChart = lowMark;
         double maxChart = highMark;
 
-        for ( BgWatchData bgd:bgDataList) {
-            if(bgd.sgv > maxChart){
-                maxChart = bgd.sgv;
+        for (EventData.SingleBg bgd : bgDataList) {
+            if (bgd.getSgv() > maxChart) {
+                maxChart = bgd.getSgv();
             }
-            if(bgd.sgv < minChart){
-                minChart = bgd.sgv;
+            if (bgd.getSgv() < minChart) {
+                minChart = bgd.getSgv();
             }
         }
 
         double maxBasal = 0.1;
-        for (BasalWatchData bwd: basalWatchDataList) {
-            if(bwd.amount > maxBasal){
-                maxBasal = bwd.amount;
+        for (EventData.TreatmentData.Basal bwd : basalWatchDataList) {
+            if (bwd.getAmount() > maxBasal) {
+                maxBasal = bwd.getAmount();
             }
         }
 
         double maxTemp = maxBasal;
-        for (TempWatchData twd: tempWatchDataList) {
-            if(twd.amount > maxTemp){
-                maxTemp = twd.amount;
+        for (EventData.TreatmentData.TempBasal twd : tempWatchDataList) {
+            if (twd.getAmount() > maxTemp) {
+                maxTemp = twd.getAmount();
             }
         }
 
-        double factor = (maxChart-minChart)/maxTemp;
+        double factor = (maxChart - minChart) / maxTemp;
         // in case basal is the highest, don't paint it totally at the top.
-        factor = Math.min(factor, ((maxChart-minChart)/maxBasal)*(2/3d));
+        factor = Math.min(factor, ((maxChart - minChart) / maxBasal) * (2 / 3d));
 
         boolean highlight = PreferenceManager
                 .getDefaultSharedPreferences(context)
                 .getBoolean("highlight_basals", false);
 
-        for (TempWatchData twd: tempWatchDataList) {
-            if(twd.endTime > start_time) {
-                lines.add(tempValuesLine(twd, (float) minChart, factor, false, highlight?(pointSize+1):pointSize));
-                if(highlight){
+        for (EventData.TreatmentData.TempBasal twd : tempWatchDataList) {
+            if (twd.getEndTime() > start_time) {
+                lines.add(tempValuesLine(twd, (float) minChart, factor, false, highlight ? (pointSize + 1) : pointSize));
+                if (highlight) {
                     lines.add(tempValuesLine(twd, (float) minChart, factor, true, 1));
                 }
             }
@@ -224,13 +195,14 @@ public class BgGraphBuilder {
 
     private Line basalLine(float offset, double factor, boolean highlight) {
 
-        List<PointValue> pointValues = new ArrayList<PointValue>();
+        List<PointValue> pointValues = new ArrayList<>();
 
-        for (BasalWatchData bwd: basalWatchDataList) {
-            if(bwd.endTime > start_time) {
-                long begin = Math.max(start_time, bwd.startTime);
-                pointValues.add(new PointValue(fuzz(begin), offset + (float) (factor * bwd.amount)));
-                pointValues.add(new PointValue(fuzz(bwd.endTime), offset + (float) (factor * bwd.amount)));
+        for (EventData.TreatmentData.Basal bwd : basalWatchDataList) {
+            if (bwd.getEndTime() > start_time) {
+                long begin = Math.max(start_time, bwd.getStartTime());
+                pointValues.add(new PointValue(fuzz(begin), offset + (float) (factor * bwd.getAmount())));
+                pointValues.add(new PointValue(fuzz(bwd.getEndTime()),
+                        offset + (float) (factor * bwd.getAmount())));
             }
         }
 
@@ -238,7 +210,7 @@ public class BgGraphBuilder {
         basalLine.setHasPoints(false);
         basalLine.setColor(basalCenterColor);
         basalLine.setPathEffect(new DashPathEffect(new float[]{4f, 3f}, 4f));
-        basalLine.setStrokeWidth(highlight?2:1);
+        basalLine.setStrokeWidth(highlight ? 2 : 1);
         return basalLine;
 
 
@@ -246,28 +218,28 @@ public class BgGraphBuilder {
 
     private Line bolusLine(float offset) {
 
-        List<PointValue> pointValues = new ArrayList<PointValue>();
+        List<PointValue> pointValues = new ArrayList<>();
 
-        for (BolusWatchData bwd: bolusWatchDataList) {
-            if(bwd.date > start_time && bwd.date <= end_time && !bwd.isSMB && bwd.isValid && bwd.bolus > 0) {
-                pointValues.add(new PointValue(fuzz(bwd.date), offset -2));
+        for (EventData.TreatmentData.Treatment bwd : bolusWatchDataList) {
+            if (bwd.getDate() > start_time && bwd.getDate() <= end_time && !bwd.isSMB() && bwd.isValid() && bwd.getBolus() > 0) {
+                pointValues.add(new PointValue(fuzz(bwd.getDate()), offset - 2));
             }
         }
         Line line = new Line(pointValues);
         line.setColor(basalCenterColor);
         line.setHasLines(false);
-        line.setPointRadius(pointSize*2);
+        line.setPointRadius(pointSize * 2);
         line.setHasPoints(true);
         return line;
     }
 
     private Line smbLine(float offset) {
 
-        List<PointValue> pointValues = new ArrayList<PointValue>();
+        List<PointValue> pointValues = new ArrayList<>();
 
-        for (BolusWatchData bwd: bolusWatchDataList) {
-            if(bwd.date > start_time && bwd.date <= end_time && bwd.isSMB && bwd.isValid && bwd.bolus > 0) {
-                pointValues.add(new PointValue(fuzz(bwd.date), offset -2));
+        for (EventData.TreatmentData.Treatment bwd : bolusWatchDataList) {
+            if (bwd.getDate() > start_time && bwd.getDate() <= end_time && bwd.isSMB() && bwd.isValid() && bwd.getBolus() > 0) {
+                pointValues.add(new PointValue(fuzz(bwd.getDate()), offset - 2));
             }
         }
         Line line = new Line(pointValues);
@@ -280,11 +252,11 @@ public class BgGraphBuilder {
 
     private Line bolusInvalidLine(float offset) {
 
-        List<PointValue> pointValues = new ArrayList<PointValue>();
+        List<PointValue> pointValues = new ArrayList<>();
 
-        for (BolusWatchData bwd: bolusWatchDataList) {
-            if(bwd.date > start_time && bwd.date <= end_time && !(bwd.isValid && (bwd.bolus > 0 || bwd.carbs > 0))) {
-                pointValues.add(new PointValue(fuzz(bwd.date), offset -2));
+        for (EventData.TreatmentData.Treatment bwd : bolusWatchDataList) {
+            if (bwd.getDate() > start_time && bwd.getDate() <= end_time && !(bwd.isValid() && (bwd.getBolus() > 0 || bwd.getCarbs() > 0))) {
+                pointValues.add(new PointValue(fuzz(bwd.getDate()), offset - 2));
             }
         }
         Line line = new Line(pointValues);
@@ -297,17 +269,17 @@ public class BgGraphBuilder {
 
     private Line carbsLine(float offset) {
 
-        List<PointValue> pointValues = new ArrayList<PointValue>();
+        List<PointValue> pointValues = new ArrayList<>();
 
-        for (BolusWatchData bwd: bolusWatchDataList) {
-            if(bwd.date > start_time && bwd.date <= end_time && !bwd.isSMB && bwd.isValid && bwd.carbs > 0) {
-                pointValues.add(new PointValue(fuzz(bwd.date), offset +2));
+        for (EventData.TreatmentData.Treatment bwd : bolusWatchDataList) {
+            if (bwd.getDate() > start_time && bwd.getDate() <= end_time && !bwd.isSMB() && bwd.isValid() && bwd.getCarbs() > 0) {
+                pointValues.add(new PointValue(fuzz(bwd.getDate()), offset + 2));
             }
         }
         Line line = new Line(pointValues);
         line.setColor(carbsColor);
         line.setHasLines(false);
-        line.setPointRadius(pointSize*2);
+        line.setPointRadius(pointSize * 2);
         line.setHasPoints(true);
         return line;
     }
@@ -316,13 +288,13 @@ public class BgGraphBuilder {
     private void addPredictionLines(List<Line> lines) {
         Map<Integer, List<PointValue>> values = new HashMap<>();
         long endTime = getPredictionEndTime();
-        for (BgWatchData bwd : predictionsList) {
-            if (bwd.timestamp <= endTime) {
-                double value = Math.min(bwd.sgv, UPPER_CUTOFF_SGV);
-                if (!values.containsKey(bwd.color)) {
-                    values.put(bwd.color, new ArrayList<>());
+        for (EventData.SingleBg bwd : predictionsList) {
+            if (bwd.getTimeStamp() <= endTime) {
+                double value = Math.min(bwd.getSgv(), UPPER_CUTOFF_SGV);
+                if (!values.containsKey(bwd.getColor())) {
+                    values.put(bwd.getColor(), new ArrayList<>());
                 }
-                values.get(bwd.color).add(new PointValue(fuzz(bwd.timestamp), (float) value));
+                values.get(bwd.getColor()).add(new PointValue(fuzz(bwd.getTimeStamp()), (float) value));
             }
         }
         for (Map.Entry<Integer, List<PointValue>> entry : values.entrySet()) {
@@ -358,7 +330,7 @@ public class BgGraphBuilder {
     public Line inRangeValuesLine() {
         Line inRangeValuesLine = new Line(inRangeValues);
         inRangeValuesLine.setColor(midColor);
-        if(singleLine) {
+        if (singleLine) {
             inRangeValuesLine.setHasLines(true);
             inRangeValuesLine.setHasPoints(false);
             inRangeValuesLine.setStrokeWidth(pointSize);
@@ -371,19 +343,19 @@ public class BgGraphBuilder {
     }
 
 
-    public Line tempValuesLine(TempWatchData twd, float offset, double factor, boolean isHighlightLine, int strokeWidth) {
-        List<PointValue> lineValues = new ArrayList<PointValue>();
-        long begin = Math.max(start_time, twd.startTime);
-        lineValues.add(new PointValue(fuzz(begin), offset + (float) (factor * twd.startBasal)));
-        lineValues.add(new PointValue(fuzz(begin), offset + (float) (factor * twd.amount)));
-        lineValues.add(new PointValue(fuzz(twd.endTime), offset + (float) (factor * twd.amount)));
-        lineValues.add(new PointValue(fuzz(twd.endTime), offset + (float) (factor * twd.endBasal)));
+    public Line tempValuesLine(EventData.TreatmentData.TempBasal twd, float offset, double factor, boolean isHighlightLine, int strokeWidth) {
+        List<PointValue> lineValues = new ArrayList<>();
+        long begin = Math.max(start_time, twd.getStartTime());
+        lineValues.add(new PointValue(fuzz(begin), offset + (float) (factor * twd.getStartBasal())));
+        lineValues.add(new PointValue(fuzz(begin), offset + (float) (factor * twd.getAmount())));
+        lineValues.add(new PointValue(fuzz(twd.getEndTime()), offset + (float) (factor * twd.getAmount())));
+        lineValues.add(new PointValue(fuzz(twd.getEndTime()), offset + (float) (factor * twd.getEndBasal())));
         Line valueLine = new Line(lineValues);
         valueLine.setHasPoints(false);
-        if (isHighlightLine){
+        if (isHighlightLine) {
             valueLine.setColor(basalCenterColor);
             valueLine.setStrokeWidth(1);
-        }else {
+        } else {
             valueLine.setColor(basalBackgroundColor);
             valueLine.setStrokeWidth(strokeWidth);
         }
@@ -391,38 +363,36 @@ public class BgGraphBuilder {
     }
 
 
-
-
     private void addBgReadingValues() {
-        if(singleLine) {
-            for (BgWatchData bgReading : bgDataList) {
-                if(bgReading.timestamp > start_time) {
-                    if (bgReading.sgv >= 450) {
-                        inRangeValues.add(new PointValue(fuzz(bgReading.timestamp), (float) 450));
-                    } else if (bgReading.sgv >= highMark) {
-                        inRangeValues.add(new PointValue(fuzz(bgReading.timestamp), (float) bgReading.sgv));
-                    } else if (bgReading.sgv >= lowMark) {
-                        inRangeValues.add(new PointValue(fuzz(bgReading.timestamp), (float) bgReading.sgv));
-                    } else if (bgReading.sgv >= 40) {
-                        inRangeValues.add(new PointValue(fuzz(bgReading.timestamp), (float) bgReading.sgv));
-                    } else if (bgReading.sgv >= 11) {
-                        inRangeValues.add(new PointValue(fuzz(bgReading.timestamp), (float) 40));
+        if (singleLine) {
+            for (EventData.SingleBg bgReading : bgDataList) {
+                if (bgReading.getTimeStamp() > start_time) {
+                    if (bgReading.getSgv() >= 450) {
+                        inRangeValues.add(new PointValue(fuzz(bgReading.getTimeStamp()), (float) 450));
+                    } else if (bgReading.getSgv() >= highMark) {
+                        inRangeValues.add(new PointValue(fuzz(bgReading.getTimeStamp()), (float) bgReading.getSgv()));
+                    } else if (bgReading.getSgv() >= lowMark) {
+                        inRangeValues.add(new PointValue(fuzz(bgReading.getTimeStamp()), (float) bgReading.getSgv()));
+                    } else if (bgReading.getSgv() >= 40) {
+                        inRangeValues.add(new PointValue(fuzz(bgReading.getTimeStamp()), (float) bgReading.getSgv()));
+                    } else if (bgReading.getSgv() >= 11) {
+                        inRangeValues.add(new PointValue(fuzz(bgReading.getTimeStamp()), (float) 40));
                     }
                 }
             }
         } else {
-            for (BgWatchData bgReading : bgDataList) {
-                if (bgReading.timestamp > start_time) {
-                    if (bgReading.sgv >= 450) {
-                        highValues.add(new PointValue(fuzz(bgReading.timestamp), (float) 450));
-                    } else if (bgReading.sgv >= highMark) {
-                        highValues.add(new PointValue(fuzz(bgReading.timestamp), (float) bgReading.sgv));
-                    } else if (bgReading.sgv >= lowMark) {
-                        inRangeValues.add(new PointValue(fuzz(bgReading.timestamp), (float) bgReading.sgv));
-                    } else if (bgReading.sgv >= 40) {
-                        lowValues.add(new PointValue(fuzz(bgReading.timestamp), (float) bgReading.sgv));
-                    } else if (bgReading.sgv >= 11) {
-                        lowValues.add(new PointValue(fuzz(bgReading.timestamp), (float) 40));
+            for (EventData.SingleBg bgReading : bgDataList) {
+                if (bgReading.getTimeStamp() > start_time) {
+                    if (bgReading.getSgv() >= 450) {
+                        highValues.add(new PointValue(fuzz(bgReading.getTimeStamp()), (float) 450));
+                    } else if (bgReading.getSgv() >= highMark) {
+                        highValues.add(new PointValue(fuzz(bgReading.getTimeStamp()), (float) bgReading.getSgv()));
+                    } else if (bgReading.getSgv() >= lowMark) {
+                        inRangeValues.add(new PointValue(fuzz(bgReading.getTimeStamp()), (float) bgReading.getSgv()));
+                    } else if (bgReading.getSgv() >= 40) {
+                        lowValues.add(new PointValue(fuzz(bgReading.getTimeStamp()), (float) bgReading.getSgv()));
+                    } else if (bgReading.getSgv() >= 11) {
+                        lowValues.add(new PointValue(fuzz(bgReading.getTimeStamp()), (float) 40));
                     }
                 }
             }
@@ -430,7 +400,7 @@ public class BgGraphBuilder {
     }
 
     public Line highLine() {
-        List<PointValue> highLineValues = new ArrayList<PointValue>();
+        List<PointValue> highLineValues = new ArrayList<>();
         highLineValues.add(new PointValue(fuzz(start_time), (float) highMark));
         highLineValues.add(new PointValue(fuzz(end_time), (float) highMark));
         Line highLine = new Line(highLineValues);
@@ -441,7 +411,7 @@ public class BgGraphBuilder {
     }
 
     public Line lowLine() {
-        List<PointValue> lowLineValues = new ArrayList<PointValue>();
+        List<PointValue> lowLineValues = new ArrayList<>();
         lowLineValues.add(new PointValue(fuzz(start_time), (float) lowMark));
         lowLineValues.add(new PointValue(fuzz(end_time), (float) lowMark));
         Line lowLine = new Line(lowLineValues);
@@ -457,7 +427,7 @@ public class BgGraphBuilder {
     public Axis yAxis() {
         Axis yAxis = new Axis();
         yAxis.setAutoGenerated(true);
-        List<AxisValue> axisValues = new ArrayList<AxisValue>();
+        List<AxisValue> axisValues = new ArrayList<>();
         yAxis.setValues(axisValues);
         yAxis.setHasLines(false);
         yAxis.setLineColor(gridColour);
@@ -466,13 +436,13 @@ public class BgGraphBuilder {
 
     public Axis xAxis() {
         final boolean is24 = DateFormat.is24HourFormat(context);
-        SimpleDateFormat timeFormat = new SimpleDateFormat(is24? "HH" : "h a");
+        SimpleDateFormat timeFormat = new SimpleDateFormat(is24 ? "HH" : "h a");
         timeFormat.setTimeZone(TimeZone.getDefault());
         long timeNow = System.currentTimeMillis();
 
         Axis xAxis = new Axis();
         xAxis.setAutoGenerated(false);
-        List<AxisValue> xAxisValues = new ArrayList<AxisValue>();
+        List<AxisValue> xAxisValues = new ArrayList<>();
 
         //get the time-tick at the full hour after start_time
         GregorianCalendar startGC = new GregorianCalendar();
@@ -484,14 +454,14 @@ public class BgGraphBuilder {
         long start_hour = startGC.getTimeInMillis();
 
         //Display current time on the graph
-        SimpleDateFormat longTimeFormat = new SimpleDateFormat(is24? "HH:mm" : "h:mm a");
+        SimpleDateFormat longTimeFormat = new SimpleDateFormat(is24 ? "HH:mm" : "h:mm a");
         xAxisValues.add(new AxisValue(fuzz(timeNow)).setLabel((longTimeFormat.format(timeNow))));
 
         long hourTick = start_hour;
 
         // add all full hours within the timeframe
-        while (hourTick < end_time){
-            if(Math.abs(hourTick - timeNow) > (8 * (end_time-start_time)/60)){
+        while (hourTick < end_time) {
+            if (Math.abs(hourTick - timeNow) > (8 * (end_time - start_time) / 60)) {
                 xAxisValues.add(new AxisValue(fuzz(hourTick)).setLabel(timeFormat.format(hourTick)));
             } else {
                 //don't print hour label if too close to now to avoid overlaps
@@ -499,7 +469,7 @@ public class BgGraphBuilder {
             }
 
             //increment by one hour
-            hourTick += 60*60*1000;
+            hourTick += 60 * 60 * 1000;
         }
 
         xAxis.setValues(xAxisValues);
@@ -513,16 +483,16 @@ public class BgGraphBuilder {
 
     public long getPredictionEndTime() {
         long maxPredictionDate = System.currentTimeMillis();
-        for (BgWatchData prediction :
+        for (EventData.SingleBg prediction :
                 predictionsList) {
-            if (maxPredictionDate < prediction.timestamp) {
-                maxPredictionDate = prediction.timestamp;
+            if (maxPredictionDate < prediction.getTimeStamp()) {
+                maxPredictionDate = prediction.getTimeStamp();
             }
         }
-        return (long) Math.min(maxPredictionDate, System.currentTimeMillis() + MAX_PREDICTION__TIME_RATIO *timespan*1000*60*60);
+        return (long) Math.min(maxPredictionDate, System.currentTimeMillis() + MAX_PREDICTION__TIME_RATIO * timespan * 1000 * 60 * 60);
     }
 
     public float fuzz(long value) {
-        return (float)  Math.round(value / fuzzyTimeDenom);
+        return (float) Math.round(value / fuzzyTimeDenom);
     }
 }

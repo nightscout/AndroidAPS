@@ -10,9 +10,10 @@ import android.widget.ImageView;
 import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.DataLayerListenerService;
+import info.nightscout.androidaps.events.EventWearToMobile;
 import info.nightscout.androidaps.interaction.utils.PlusMinusEditText;
 import info.nightscout.shared.SafeParse;
+import info.nightscout.shared.weardata.EventData;
 
 /**
  * Created by adrian on 09/02/17.
@@ -34,6 +35,7 @@ public class FillActivity extends ViewSelectorActivity {
         finish();
     }
 
+    @SuppressWarnings("deprecation")
     private class MyGridViewPagerAdapter extends GridPagerAdapter {
         @Override
         public int getColumnCount(int arg0) {
@@ -67,8 +69,7 @@ public class FillActivity extends ViewSelectorActivity {
                     //check if it can happen that the fagment is never created that hold data?
                     // (you have to swipe past them anyways - but still)
 
-                    String actionstring = "fill " + SafeParse.stringToDouble(editInsulin.editText.getText().toString());
-                    DataLayerListenerService.Companion.initiateAction(FillActivity.this, actionstring);
+                    rxBus.send(new EventWearToMobile(new EventData.ActionFillPreCheck(SafeParse.stringToDouble(editInsulin.editText.getText().toString()))));
                     showToast(FillActivity.this, R.string.action_fill_confirmation);
                     finishAffinity();
                 });

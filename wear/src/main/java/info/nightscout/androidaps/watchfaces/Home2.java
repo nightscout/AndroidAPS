@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.watchfaces;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 
@@ -19,7 +20,7 @@ public class Home2 extends BaseWatchFace {
     private long chartTapTime = 0;
     private long sgvTapTime = 0;
 
-    @Override
+    @SuppressLint("InflateParams") @Override
     public void onCreate() {
         super.onCreate();
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -57,9 +58,9 @@ public class Home2 extends BaseWatchFace {
     }
 
     private void changeChartTimeframe() {
-        int timeframe = Integer.parseInt(sharedPrefs.getString("chart_timeframe", "3"));
+        int timeframe = sp.getInt("chart_timeframe", 3);
         timeframe = (timeframe % 5) + 1;
-        sharedPrefs.edit().putString("chart_timeframe", "" + timeframe).apply();
+        sp.putString("chart_timeframe", "" + timeframe);
     }
 
     @Override
@@ -89,13 +90,13 @@ public class Home2 extends BaseWatchFace {
 
         setTextSizes();
 
-        if (rawData.sgvLevel == 1) {
+        if (singleBg.getSgvLevel() == 1) {
             mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor));
             mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor));
-        } else if (rawData.sgvLevel == 0) {
+        } else if (singleBg.getSgvLevel() == 0) {
             mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
             mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
-        } else if (rawData.sgvLevel == -1) {
+        } else if (singleBg.getSgvLevel() == -1) {
             mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_lowColor));
             mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_lowColor));
         }
@@ -106,7 +107,7 @@ public class Home2 extends BaseWatchFace {
             mTimestamp.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_TimestampOld));
         }
 
-        if (rawData.batteryLevel == 1) {
+        if (status.getBatteryLevel() == 1) {
             mUploaderBattery.setTextColor(dividerBatteryOkColor);
         } else {
             mUploaderBattery.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_uploaderBatteryEmpty));
@@ -200,13 +201,13 @@ public class Home2 extends BaseWatchFace {
 
             setTextSizes();
 
-            if (rawData.sgvLevel == 1) {
+            if (singleBg.getSgvLevel() == 1) {
                 mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_highColor));
                 mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_highColor));
-            } else if (rawData.sgvLevel == 0) {
+            } else if (singleBg.getSgvLevel() == 0) {
                 mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_midColor));
                 mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_midColor));
-            } else if (rawData.sgvLevel == -1) {
+            } else if (singleBg.getSgvLevel() == -1) {
                 mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_lowColor));
                 mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_lowColor));
             }
@@ -217,7 +218,7 @@ public class Home2 extends BaseWatchFace {
                 mTimestamp.setTextColor(Color.RED);
             }
 
-            if (rawData.batteryLevel == 1) {
+            if (status.getBatteryLevel() == 1) {
                 mUploaderBattery.setTextColor(dividerTxtColor);
             } else {
                 mUploaderBattery.setTextColor(Color.RED);
@@ -255,7 +256,7 @@ public class Home2 extends BaseWatchFace {
 
         if (mIOB1 != null && mIOB2 != null) {
 
-            if (rawData.detailedIOB) {
+            if (status.getDetailedIob()) {
                 mIOB1.setTextSize(14);
                 mIOB2.setTextSize(10);
             } else {

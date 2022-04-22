@@ -1,19 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="path_ping" translatable="false">/ping</string>
-    <string name="path_pong" translatable="false">/pong</string>
-    <string name="path_open_wear_setting" translatable="false">/openwearsettings</string>
-    <string name="path_resend_data_request" translatable="false">/nightscout_watch_data_resend</string>
-    <string name="path_initiate_action_on_phone" translatable="false">/nightscout_watch_initiateactionstring</string>
-    <string name="path_cancel_bolus_on_phone" translatable="false">/nightscout_watch_cancel_bolus</string>
-    <string name="path_confirm_action" translatable="false">/nightscout_watch_confirmactionstring</string>
-    <string name="path_watch_data" translatable="false">/nightscout_watch_data</string>
-    <string name="path_status" translatable="false">/sendstatustowear</string>
-    <string name="path_preferences" translatable="false">/sendpreferencestowear</string>
-    <string name="path_quick_wizard" translatable="false">/send_quick_wizard</string>
-    <string name="path_basal" translatable="false">/nightscout_watch_basal</string>
-    <string name="path_bolus_progress" translatable="false">/nightscout_watch_bolusprogress</string>
-    <string name="path_action_confirmation" translatable="false">/nightscout_watch_actionconfirmationrequest</string>
-    <string name="path_change_confirmation_request" translatable="false">/nightscout_watch_changeconfirmationrequest</string>
-    <string name="path_cancel_notification_request" translatable="false">/nightscout_watch_cancelnotificationrequest</string>
+    <string name="path_rx_bridge" translatable="false">/rx_bridge</string>
 </resources>

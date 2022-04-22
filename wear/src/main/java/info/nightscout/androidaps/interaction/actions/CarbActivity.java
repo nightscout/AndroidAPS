@@ -10,9 +10,10 @@ import android.widget.ImageView;
 import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.DataLayerListenerService;
+import info.nightscout.androidaps.events.EventWearToMobile;
 import info.nightscout.androidaps.interaction.utils.PlusMinusEditText;
 import info.nightscout.shared.SafeParse;
+import info.nightscout.shared.weardata.EventData;
 
 public class CarbActivity extends ViewSelectorActivity {
 
@@ -32,6 +33,7 @@ public class CarbActivity extends ViewSelectorActivity {
         finish();
     }
 
+    @SuppressWarnings("deprecation")
     private class MyGridViewPagerAdapter extends GridPagerAdapter {
         @Override
         public int getColumnCount(int arg0) {
@@ -46,37 +48,42 @@ public class CarbActivity extends ViewSelectorActivity {
         @Override
         public Object instantiateItem(ViewGroup container, int row, int col) {
 
+            final View view;
             if (col == 0) {
-                final View view = getInflatedPlusMinusView(container);
+                view = getInflatedPlusMinusView(container);
                 double def = 0;
                 if (editCarbs != null) {
                     def = SafeParse.stringToDouble(editCarbs.editText.getText().toString());
                 }
-                editCarbs = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, (double)maxCarbs, 1d, new DecimalFormat("0"), true);
+                editCarbs = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"), true);
                 setLabelToPlusMinusView(view, getString(R.string.action_carbs));
                 container.addView(view);
                 view.requestFocus();
-                return view;
             } else {
-                final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_send_item, container, false);
-                final ImageView confirmbutton = view.findViewById(R.id.confirmbutton);
-                confirmbutton.setOnClickListener((View v) -> {
+                view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_send_item, container, false);
+                final ImageView confirmButton = view.findViewById(R.id.confirmbutton);
+                confirmButton.setOnClickListener((View v) -> {
                     // With start time 0 and duration 0
-                    String actionstring = "ecarbs " + SafeParse.stringToInt(editCarbs.editText.getText().toString()) + " 0 0";
-                    DataLayerListenerService.Companion.initiateAction(CarbActivity.this, actionstring);
+                    EventData.ActionECarbsPreCheck bolus =
+                            new EventData.ActionECarbsPreCheck(
+                                    SafeParse.stringToInt(editCarbs.editText.getText().toString()),
+                                    0,
+                                    0
+                            );
+                    rxBus.send(new EventWearToMobile(bolus));
                     showToast(CarbActivity.this, R.string.action_ecarb_confirmation);
                     finishAffinity();
 
                 });
                 container.addView(view);
-                return view;
             }
+            return view;
         }
 
         @Override
         public void destroyItem(ViewGroup container, int row, int col, Object view) {
             // Handle this to get the data before the view is destroyed?
-            // Object should still be kept by this, just setup for reinit?
+            // Object should still be kept by this, just setup for re-init?
             container.removeView((View) view);
         }
 

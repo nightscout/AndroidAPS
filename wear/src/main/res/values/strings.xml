@@ -170,12 +170,6 @@
     <string name="bolus_progress_silent_channel_name">AAPS Bolus Progress Silent</string>
     <string name="bolus_progress_channel_description">Bolus progress and cancel</string>
     <string name="bolus_progress_silent_channel_description">Bolus progress and cancel with less vibrations</string>
-    <string name="key_quickwizard" translatable="false">QuickWizard</string>
-    <string name="key_wear_control" translatable="false">wearcontrol</string>
-    <string name="key_units_mgdl" translatable="false">units_mgdl</string>
-    <string name="key_boluswizard_percentage" translatable="false">boluswizard_percentage</string>
-    <string name="key_treatmentssafety_maxcarbs" translatable="false">treatmentssafety_maxcarbs</string>
-    <string name="key_treatmentssafety_maxbolus" translatable="false">treatmentssafety_maxbolus</string>
     <string name="simple_ui_off">Off</string>
     <string name="simple_ui_charging">During Charging</string>
     <string name="simple_ui_always_on">Always On Mode</string>
@@ -189,6 +183,15 @@
     <string name="tile_no_config">No config available</string>
     <string name="wear_control_not_enabled">Wear controls disabled</string>
     <string name="wear_control_no_data">No data available</string>
-    <string name="key_quick_wizard_data_map" translatable="false">quick_wizard_data_map</string>
+
+    <string name="key_quickwizard" translatable="false">QuickWizard</string>
+    <string name="key_wear_control" translatable="false">wearcontrol</string>
+    <string name="key_units_mgdl" translatable="false">units_mgdl</string>
+    <string name="key_boluswizard_percentage" translatable="false">boluswizard_percentage</string>
+    <string name="key_treatmentssafety_maxcarbs" translatable="false">treatmentssafety_maxcarbs</string>
+    <string name="key_treatmentssafety_maxbolus" translatable="false">treatmentssafety_maxbolus</string>
+    <string name="key_quick_wizard_data" translatable="false">quick_wizard_data</string>
+    <string name="key_prime_fill" translatable="false">primefill</string>
+    <string name="key_show_wizard" translatable="false">showWizard</string>
 
 </resources>

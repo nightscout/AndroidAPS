@@ -22,15 +22,18 @@ import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.DataLayerListenerService;
+import info.nightscout.androidaps.comm.DataLayerListenerServiceWear;
 import info.nightscout.androidaps.data.RawDisplayData;
+import info.nightscout.androidaps.events.EventWearToMobile;
 import info.nightscout.androidaps.interaction.utils.Constants;
 import info.nightscout.androidaps.interaction.utils.DisplayFormat;
 import info.nightscout.androidaps.interaction.utils.Inevitable;
 import info.nightscout.androidaps.interaction.utils.Persistence;
 import info.nightscout.androidaps.interaction.utils.WearUtil;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.shared.logging.AAPSLogger;
 import info.nightscout.shared.logging.LTag;
+import info.nightscout.shared.weardata.EventData;
 
 /**
  * Base class for all complications
@@ -44,6 +47,7 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
     @Inject DisplayFormat displayFormat;
     @Inject Persistence persistence;
     @Inject AAPSLogger aapsLogger;
+    @Inject RxBus rxBus;
 
     // Not derived from DaggerService, do injection here
     @Override
@@ -199,13 +203,13 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
         persistence.putBoolean("complication_" + complicationId + "_since", usesSinceField());
         persistence.addToSet(KEY_COMPLICATIONS, "complication_" + complicationId);
 
-        IntentFilter messageFilter = new IntentFilter(Intent.ACTION_SEND);
+        IntentFilter messageFilter = new IntentFilter(DataLayerListenerServiceWear.Companion.getINTENT_NEW_DATA());
 
         messageReceiver = new MessageReceiver();
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
         localBroadcastManager.registerReceiver(messageReceiver, messageFilter);
 
-        DataLayerListenerService.Companion.requestData(this);
+        rxBus.send(new EventWearToMobile(new EventData.ActionResendData("BaseComplicationProviderService")));
         checkIfUpdateNeeded();
     }
 
@@ -232,12 +236,13 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
                 ComplicationTapBroadcastReceiver.getTapActionIntent(
                         getApplicationContext(), thisProvider, complicationId, getComplicationAction());
 
-        final RawDisplayData raw = new RawDisplayData(wearUtil);
+        final RawDisplayData raw = new RawDisplayData();
         raw.updateForComplicationsFromPersistence(persistence);
         aapsLogger.warn(LTag.WEAR, "Complication data: " + raw.toDebugString());
 
         // store what is currently rendered in 'SGV since' field, to detect if it was changed and need update
-        persistence.putString(KEY_LAST_SHOWN_SINCE_VALUE, displayFormat.shortTimeSince(raw.datetime));
+        persistence.putString(KEY_LAST_SHOWN_SINCE_VALUE,
+                displayFormat.shortTimeSince(raw.getSingleBg().getTimeStamp()));
 
         // by each render we clear stale flag to ensure it is re-rendered at next refresh detection round
         persistence.putBoolean(KEY_STALE_REPORTED, false);
@@ -249,11 +254,11 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
             final PendingIntent infoToast = ComplicationTapBroadcastReceiver.getTapWarningSinceIntent(
                     getApplicationContext(), thisProvider, complicationId, ComplicationAction.WARNING_SYNC, persistence.whenDataUpdated());
             complicationData = buildNoSyncComplicationData(dataType, raw, complicationPendingIntent, infoToast, persistence.whenDataUpdated());
-        } else if (wearUtil.msSince(raw.datetime) > Constants.STALE_MS) {
+        } else if (wearUtil.msSince(raw.getSingleBg().getTimeStamp()) > Constants.STALE_MS) {
             // data arriving from phone AAPS, but it is outdated (uploader/NS/xDrip/Sensor error)
             final PendingIntent infoToast = ComplicationTapBroadcastReceiver.getTapWarningSinceIntent(
-                    getApplicationContext(), thisProvider, complicationId, ComplicationAction.WARNING_OLD, raw.datetime);
-            complicationData = buildOutdatedComplicationData(dataType, raw, complicationPendingIntent, infoToast, raw.datetime);
+                    getApplicationContext(), thisProvider, complicationId, ComplicationAction.WARNING_OLD, raw.getSingleBg().getTimeStamp());
+            complicationData = buildOutdatedComplicationData(dataType, raw, complicationPendingIntent, infoToast, raw.getSingleBg().getTimeStamp());
         } else {
             // data is up-to-date, we can render standard complication
             complicationData = buildComplicationData(dataType, raw, complicationPendingIntent);
@@ -310,13 +315,13 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
      * is up-to-date or need to be changed (a minute or more elapsed)
      */
     private void requestUpdateIfSinceChanged() {
-        final RawDisplayData raw = new RawDisplayData(wearUtil);
+        final RawDisplayData raw = new RawDisplayData();
         raw.updateForComplicationsFromPersistence(persistence);
 
         final String lastSince = persistence.getString(KEY_LAST_SHOWN_SINCE_VALUE, "-");
-        final String calcSince = displayFormat.shortTimeSince(raw.datetime);
+        final String calcSince = displayFormat.shortTimeSince(raw.getSingleBg().getTimeStamp());
         final boolean isStale = (wearUtil.msSince(persistence.whenDataUpdated()) > Constants.STALE_MS)
-                || (wearUtil.msSince(raw.datetime) > Constants.STALE_MS);
+                || (wearUtil.msSince(raw.getSingleBg().getTimeStamp()) > Constants.STALE_MS);
 
         final boolean staleWasRefreshed = persistence.getBoolean(KEY_STALE_REPORTED, false);
         final boolean sinceWasChanged = !lastSince.equals(calcSince);

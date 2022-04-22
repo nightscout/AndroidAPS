@@ -4,6 +4,7 @@ import android.content.res.Resources
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interaction.actions.BackgroundActionActivity
 import info.nightscout.androidaps.interaction.actions.TempTargetActivity
+import info.nightscout.shared.weardata.EventData
 
 object TempTargetSource : StaticTileSource() {
 
@@ -19,7 +20,8 @@ object TempTargetSource : StaticTileSource() {
                 activityClass = BackgroundActionActivity::class.java.name,
                 message = message,
                 // actionString = "temptarget false 90 8.0 8.0",
-                actionString = "temptarget preset activity",
+                // actionString = "temptarget preset activity",
+                action = EventData.ActionTempTargetPreCheck(EventData.ActionTempTargetPreCheck.TempTargetCommand.PRESET_ACTIVITY)
             ),
             StaticAction(
                 settingName = "eating_soon",
@@ -28,7 +30,8 @@ object TempTargetSource : StaticTileSource() {
                 activityClass = BackgroundActionActivity::class.java.name,
                 message = message,
                 // actionString = "temptarget false 45 4.5 4.5",
-                actionString = "temptarget preset eating",
+                // actionString = "temptarget preset eating",
+                action = EventData.ActionTempTargetPreCheck(EventData.ActionTempTargetPreCheck.TempTargetCommand.PRESET_EATING)
             ),
             StaticAction(
                 settingName = "hypo",
@@ -37,13 +40,15 @@ object TempTargetSource : StaticTileSource() {
                 activityClass = BackgroundActionActivity::class.java.name,
                 message = message,
                 // actionString = "temptarget false 45 7.0 7.0",
-                actionString = "temptarget preset hypo",
+                // actionString = "temptarget preset hypo",
+                action = EventData.ActionTempTargetPreCheck(EventData.ActionTempTargetPreCheck.TempTargetCommand.PRESET_HYPO)
             ),
             StaticAction(
                 settingName = "manual",
                 buttonText = resources.getString(R.string.temp_target_manual),
                 iconRes = R.drawable.ic_target_manual,
                 activityClass = TempTargetActivity::class.java.name,
+                action = null
             ),
             StaticAction(
                 settingName = "cancel",
@@ -51,7 +56,8 @@ object TempTargetSource : StaticTileSource() {
                 iconRes = R.drawable.ic_target_cancel,
                 activityClass = BackgroundActionActivity::class.java.name,
                 message = message,
-                actionString = "temptarget cancel",
+                //actionString = "temptarget cancel",
+                action = EventData.ActionTempTargetPreCheck(EventData.ActionTempTargetPreCheck.TempTargetCommand.CANCEL)
             )
         )
     }

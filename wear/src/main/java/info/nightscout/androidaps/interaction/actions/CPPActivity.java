@@ -10,11 +10,10 @@ import android.widget.ImageView;
 import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.DataLayerListenerService;
-import info.nightscout.androidaps.events.EventWearToMobileAction;
+import info.nightscout.androidaps.events.EventWearToMobile;
 import info.nightscout.androidaps.interaction.utils.PlusMinusEditText;
 import info.nightscout.shared.SafeParse;
-import info.nightscout.shared.weardata.ActionData;
+import info.nightscout.shared.weardata.EventData;
 
 /**
  * Created by adrian on 09/02/17.
@@ -52,6 +51,7 @@ public class CPPActivity extends ViewSelectorActivity {
         finish();
     }
 
+    @SuppressWarnings("deprecation")
     private class MyGridViewPagerAdapter extends GridPagerAdapter {
         @Override
         public int getColumnCount(int arg0) {
@@ -94,9 +94,9 @@ public class CPPActivity extends ViewSelectorActivity {
                 confirmButton.setOnClickListener((View v) -> {
                     //check if it can happen that the fragment is never created that hold data?
                     // (you have to swipe past them anyways - but still)
-                    ActionData.ProfileSwitch ps =
-                            new ActionData.ProfileSwitch(SafeParse.stringToInt(editTimeshift.editText.getText().toString()), SafeParse.stringToInt(editPercentage.editText.getText().toString()));
-                    rxBus.send(new EventWearToMobileAction(ps));
+                    EventData.ActionProfileSwitchPreCheck ps =
+                            new EventData.ActionProfileSwitchPreCheck(SafeParse.stringToInt(editTimeshift.editText.getText().toString()), SafeParse.stringToInt(editPercentage.editText.getText().toString()));
+                    rxBus.send(new EventWearToMobile(ps));
                     showToast(CPPActivity.this, R.string.action_cpp_confirmation);
                     finishAffinity();
                 });
@@ -108,7 +108,7 @@ public class CPPActivity extends ViewSelectorActivity {
         @Override
         public void destroyItem(ViewGroup container, int row, int col, Object view) {
             // Handle this to get the data before the view is destroyed?
-            // Object should still be kept by this, just setup for reinit?
+            // Object should still be kept by this, just setup for re-init?
             container.removeView((View) view);
         }
 

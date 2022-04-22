@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.interaction.actions;
 
-import static info.nightscout.shared.weardata.WearConstants.KEY_ACTION_DATA;
+import static info.nightscout.androidaps.comm.DataLayerListenerServiceWear.KEY_ACTION_DATA;
 
 import android.content.Context;
 import android.content.Intent;
@@ -21,10 +21,8 @@ import androidx.core.view.MotionEventCompat;
 import androidx.core.view.ViewConfigurationCompat;
 
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.DataLayerListenerService;
-import info.nightscout.androidaps.events.EventWearToMobileChange;
-import info.nightscout.androidaps.events.EventWearToMobileConfirm;
-import info.nightscout.shared.weardata.ActionData;
+import info.nightscout.androidaps.events.EventWearToMobile;
+import info.nightscout.shared.weardata.EventData;
 
 /**
  * Created by adrian on 09/02/17.
@@ -33,7 +31,6 @@ import info.nightscout.shared.weardata.ActionData;
 public class AcceptActivity extends ViewSelectorActivity {
 
     String message = "";
-    String actionstring = "";
     String actionKey = "";
     private DismissThread dismissThread;
 
@@ -46,10 +43,9 @@ public class AcceptActivity extends ViewSelectorActivity {
 
         Bundle extras = getIntent().getExtras();
         message = extras.getString("message", "");
-        actionstring = extras.getString("actionstring", "");
         actionKey = extras.getString(KEY_ACTION_DATA, "");
 
-        if (message.isEmpty() || (actionstring.isEmpty() && actionKey.isEmpty())) {
+        if (message.isEmpty() || actionKey.isEmpty()) {
             finish();
             return;
         }
@@ -109,15 +105,9 @@ public class AcceptActivity extends ViewSelectorActivity {
                 view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_send_item, container, false);
                 final ImageView confirmButton = view.findViewById(R.id.confirmbutton);
                 confirmButton.setOnClickListener((View v) -> {
-                    if (!actionstring.isEmpty())
-                        DataLayerListenerService.Companion.confirmAction(AcceptActivity.this, actionstring);
-                    else {
-                        ActionData actionData = ActionData.Companion.deserialize(actionKey);
-                        if (actionData instanceof ActionData.ConfirmAction)
-                            rxBus.send(new EventWearToMobileConfirm(actionData));
-                        if (actionData instanceof ActionData.ChangeAction)
-                            rxBus.send(new EventWearToMobileChange(actionData));
-                    }
+                    EventData returnCommand = EventData.Companion.deserialize(actionKey);
+                    rxBus.send(new EventWearToMobile(returnCommand));
+                    rxBus.send(new EventData.CancelNotification(System.currentTimeMillis()));
                     finishAffinity();
                 });
                 container.addView(view);

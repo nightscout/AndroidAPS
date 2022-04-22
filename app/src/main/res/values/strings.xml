@@ -1212,4 +1212,5 @@
     <string name="show_hide_records">Hide loop records</string>
     <string name="widget_description">AndroidAPS widget</string>
     <string name="configure">Configure opacity</string>
+    <string name="loop_status">Loop status</string>
 </resources>

@@ -48,6 +48,7 @@ class BolusWizardTest : TestBase() {
                 it.activePlugin = activePlugin
                 it.commandQueue = commandQueue
                 it.loop = loop
+                it.dateUtil = dateUtil
                 it.iobCobCalculator = iobCobCalculator
                 it.glucoseStatusProvider = GlucoseStatusProvider(aapsLogger = aapsLogger, iobCobCalculator = iobCobCalculator, dateUtil = dateUtil)
             }

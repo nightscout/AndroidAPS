@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.watchfaces;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.support.wearable.watchface.WatchFaceStyle;
@@ -19,10 +20,9 @@ import info.nightscout.androidaps.interaction.menus.MainMenuActivity;
 
 public class DigitalStyle extends BaseWatchFace {
     private static final long TIME_TAP_THRESHOLD = 800;
-    private final long chartTapTime = 0;
     private long sgvTapTime = 0;
 
-    @Override
+    @SuppressLint("InflateParams") @Override
     public void onCreate() {
         super.onCreate();
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -57,13 +57,13 @@ public class DigitalStyle extends BaseWatchFace {
     }
 
     protected void setColorDark() {
-        if (rawData.sgvLevel == 1) {
+        if (singleBg.getSgvLevel() == 1) {
             mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor));
             mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor));
-        } else if (rawData.sgvLevel == 0) {
+        } else if (singleBg.getSgvLevel() == 0) {
             mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
             mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
-        } else if (rawData.sgvLevel == -1) {
+        } else if (singleBg.getSgvLevel() == -1) {
             mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_lowColor));
             mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_lowColor));
         }
@@ -74,7 +74,7 @@ public class DigitalStyle extends BaseWatchFace {
             mTimestamp.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_TimestampOld));
         }
 
-        if (rawData.batteryLevel == 1) {
+        if (status.getBatteryLevel() == 1) {
             mUploaderBattery.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
         } else {
             mUploaderBattery.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_uploaderBatteryEmpty));
@@ -99,10 +99,11 @@ public class DigitalStyle extends BaseWatchFace {
         LinearLayout mShapesElements = layoutView.findViewById(R.id.shapes_elements);
         if (mShapesElements != null) {
             String displayFormatType = (mShapesElements.getContentDescription().toString().startsWith("round") ? "round" : "rect");
-            String displayStyle=sharedPrefs.getString("digitalstyle_frameStyle", "full");
-            String displayFrameColor=sharedPrefs.getString("digitalstyle_frameColor", "red");
-            String displayFrameColorSaturation=sharedPrefs.getString("digitalstyle_frameColorSaturation", "500");
-            String displayFrameColorOpacity=sharedPrefs.getString("digitalstyle_frameColorOpacity", "1");
+            String displayStyle=sp.getString("digitalstyle_frameStyle", "full");
+            String displayFrameColor=sp.getString("digitalstyle_frameColor", "red");
+            String displayFrameColorSaturation=sp.getString("digitalstyle_frameColorSaturation",
+                    "500");
+            String displayFrameColorOpacity=sp.getString("digitalstyle_frameColorOpacity", "1");
 
             // Load image with shapes
             String styleDrawableName = "digitalstyle_bg_" + displayStyle + "_" + displayFormatType;
@@ -133,7 +134,7 @@ public class DigitalStyle extends BaseWatchFace {
         }
 
         /* optimize font-size  --> when date is off then increase font-size of time */
-        Boolean isShowDate = sharedPrefs.getBoolean("show_date", false);
+        Boolean isShowDate = sp.getBoolean("show_date", false);
         if (!isShowDate) {
             layoutView.findViewById(R.id.date_time).setVisibility(View.GONE);
             mHour.setTextSize(62);
@@ -148,7 +149,7 @@ public class DigitalStyle extends BaseWatchFace {
             mMinute.setLetterSpacing((float) 0);
 
             /* display week number */
-            Boolean isShowWeekNumber = sharedPrefs.getBoolean("show_weeknumber", false);
+            Boolean isShowWeekNumber = sp.getBoolean("show_weeknumber", false);
             Log.i("---------------------------------","weeknumber refresh ");
             TextView mWeekNumber= layoutView.findViewById(R.id.weeknumber);
             if (isShowWeekNumber) {

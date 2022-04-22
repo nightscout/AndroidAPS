@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.watchfaces;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import androidx.core.content.ContextCompat;
@@ -15,7 +16,7 @@ public class LargeHome extends BaseWatchFace {
 
     private long sgvTapTime = 0;
 
-    @Override
+    @SuppressLint("InflateParams") @Override
     public void onCreate() {
         super.onCreate();
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -25,8 +26,8 @@ public class LargeHome extends BaseWatchFace {
 
     @Override
     protected void onTapCommand(int tapType, int x, int y, long eventTime) {
-
-        int extra = mSgv!=null?(mSgv.getRight() - mSgv.getLeft())/2:0;
+        if (mSgv == null) return;
+        int extra = (mSgv.getRight() - mSgv.getLeft())/2;
 
         if (tapType == TAP_TYPE_TAP&&
                 x + extra >=mSgv.getLeft() &&
@@ -53,15 +54,15 @@ public class LargeHome extends BaseWatchFace {
                 R.color.dark_background : R.color.dark_mLinearLayout));
         mTime.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mTime));
         mRelativeLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_background));
-        if (rawData.sgvLevel == 1) {
+        if (singleBg.getSgvLevel() == 1) {
             mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor));
             mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor));
             mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor));
-        } else if (rawData.sgvLevel == 0) {
+        } else if (singleBg.getSgvLevel() == 0) {
             mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
             mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
             mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
-        } else if (rawData.sgvLevel == -1) {
+        } else if (singleBg.getSgvLevel() == -1) {
             mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_lowColor));
             mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_lowColor));
             mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_lowColor));
@@ -74,7 +75,7 @@ public class LargeHome extends BaseWatchFace {
             mTimestamp.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_TimestampOld));
         }
 
-        if (rawData.batteryLevel == 1) {
+        if (status.getBatteryLevel() == 1) {
             mUploaderBattery.setTextColor(ContextCompat.getColor(getApplicationContext(), dividerMatchesBg ?
                     R.color.dark_midColor : R.color.dark_uploaderBattery));
         } else {
@@ -90,15 +91,15 @@ public class LargeHome extends BaseWatchFace {
             mLinearLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), dividerMatchesBg ?
                     R.color.light_background : R.color.light_stripe_background));
             mRelativeLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.light_background));
-            if (rawData.sgvLevel == 1) {
+            if (singleBg.getSgvLevel() == 1) {
                 mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_highColor));
                 mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_highColor));
                 mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_highColor));
-            } else if (rawData.sgvLevel == 0) {
+            } else if (singleBg.getSgvLevel() == 0) {
                 mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_midColor));
                 mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_midColor));
                 mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_midColor));
-            } else if (rawData.sgvLevel == -1) {
+            } else if (singleBg.getSgvLevel() == -1) {
                 mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_lowColor));
                 mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_lowColor));
                 mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_lowColor));
@@ -110,7 +111,7 @@ public class LargeHome extends BaseWatchFace {
                 mTimestamp.setTextColor(Color.RED);
             }
 
-            if (rawData.batteryLevel == 1) {
+            if (status.getBatteryLevel() == 1) {
                 mUploaderBattery.setTextColor(dividerMatchesBg ? Color.BLACK : Color.WHITE);
             } else {
                 mUploaderBattery.setTextColor(Color.RED);
@@ -120,15 +121,15 @@ public class LargeHome extends BaseWatchFace {
         } else {
             mRelativeLayout.setBackgroundColor(Color.BLACK);
             mLinearLayout.setBackgroundColor(dividerMatchesBg ? Color.BLACK : Color.LTGRAY);
-            if (rawData.sgvLevel == 1) {
+            if (singleBg.getSgvLevel() == 1) {
                 mSgv.setTextColor(Color.YELLOW);
                 mDirection.setTextColor(Color.YELLOW);
                 mDelta.setTextColor(Color.YELLOW);
-            } else if (rawData.sgvLevel == 0) {
+            } else if (singleBg.getSgvLevel() == 0) {
                 mSgv.setTextColor(Color.WHITE);
                 mDirection.setTextColor(Color.WHITE);
                 mDelta.setTextColor(Color.WHITE);
-            } else if (rawData.sgvLevel == -1) {
+            } else if (singleBg.getSgvLevel() == -1) {
                 mSgv.setTextColor(Color.RED);
                 mDirection.setTextColor(Color.RED);
                 mDelta.setTextColor(Color.RED);
