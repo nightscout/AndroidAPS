@@ -1019,4 +1019,7 @@
     <string name="a11y_only_on_phone">仅在手机上</string>
     <string name="a11y_drag_and_drop_handle">拖放操作</string>
     <!-- Aidex Cgms -->
+    <string name="aidex">GlucoRx Aidex动泰</string>
+    <string name="aidex_short">Aidex动泰</string>
+    <string name="description_source_aidex">从GlucoRx Aidex动泰持续葡萄糖监测系统接收血糖值。</string>
 </resources>
