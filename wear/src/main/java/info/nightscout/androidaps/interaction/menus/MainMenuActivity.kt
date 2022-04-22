@@ -5,6 +5,7 @@ import android.os.Bundle
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventWearToMobile
 import info.nightscout.androidaps.interaction.AAPSPreferences
+import info.nightscout.androidaps.interaction.actions.BolusActivity
 import info.nightscout.androidaps.interaction.actions.ECarbActivity
 import info.nightscout.androidaps.interaction.actions.TempTargetActivity
 import info.nightscout.androidaps.interaction.actions.TreatmentActivity
@@ -31,6 +32,7 @@ class MainMenuActivity : MenuListActivity() {
                     add(MenuItem(R.drawable.ic_calculator, getString(R.string.menu_wizard)))
                 add(MenuItem(R.drawable.ic_e_carbs, getString(R.string.menu_ecarb)))
                 add(MenuItem(R.drawable.ic_treatment, getString(R.string.menu_treatment)))
+                add(MenuItem(R.drawable.ic_bolus, getString(R.string.menu_bolus)))
                 add(MenuItem(R.drawable.ic_temptarget, getString(R.string.menu_tempt)))
                 add(MenuItem(R.drawable.ic_status, getString(R.string.status_cpp)))
                 add(MenuItem(R.drawable.ic_settings, getString(R.string.menu_settings)))
@@ -47,6 +49,7 @@ class MainMenuActivity : MenuListActivity() {
             getString(R.string.status_cpp)      -> rxBus.send(EventWearToMobile(EventData.ActionProfileSwitchSendInitialData(System.currentTimeMillis())))
             getString(R.string.menu_tempt)      -> startActivity(Intent(this, TempTargetActivity::class.java).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })
             getString(R.string.menu_treatment)  -> startActivity(Intent(this, TreatmentActivity::class.java).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })
+            getString(R.string.menu_bolus)      -> startActivity(Intent(this, BolusActivity::class.java).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })
             getString(R.string.menu_wizard)     -> startActivity(Intent(this, WizardActivity::class.java).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })
             getString(R.string.menu_status)     -> startActivity(Intent(this, StatusMenuActivity::class.java).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })
             getString(R.string.menu_prime_fill) -> startActivity(Intent(this, FillMenuActivity::class.java).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })
