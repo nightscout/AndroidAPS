@@ -28,7 +28,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="10dp"
-            android:background="?attr/objectivesBackgroundColor"
             android:orientation="vertical"
             app:layout_constraintTop_toBottomOf="@+id/exam_options"
             tools:layout_editor_absoluteX="3dp" />
@@ -51,7 +50,7 @@
                 android:text="@string/reset" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="" />
@@ -77,10 +76,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Question"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/exam_name" />
+            app:layout_constraintTop_toBottomOf="@id/exam_name"
+            tools:text="Question" />
 
         <TextView
             android:id="@+id/exam_hint"
@@ -95,22 +94,22 @@
             android:id="@+id/exam_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Name"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Name" />
 
         <TextView
             android:id="@+id/exam_disabledto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Disabled until:"
             android:textColor="?attr/objectivesDisabledTextColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/exam_hints" />
+            app:layout_constraintTop_toBottomOf="@+id/exam_hints"
+            tools:text="Disabled until:" />
 
         <LinearLayout
             android:id="@+id/navigation"
@@ -131,7 +130,7 @@
                 android:text="@string/previous_button" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="" />

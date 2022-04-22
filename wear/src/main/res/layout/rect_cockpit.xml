@@ -5,7 +5,6 @@
     android:id="@+id/main_layout"
     android:background="@drawable/airplane_cockpit_outside_clouds">
 
-
     <LinearLayout
         android:id="@+id/inside"
         android:layout_width="fill_parent"
@@ -321,7 +320,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_gravity="bottom|center_horizontal"
                                 android:gravity="bottom|center_horizontal"
-                                android:paddingLeft="4dp"
+                                android:paddingStart="4dp"
                                 android:text="--%"
                                 android:textAlignment="center"
                                 android:textColor="@color/primary_text_dark"

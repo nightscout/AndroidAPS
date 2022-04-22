@@ -1,20 +1,14 @@
 <resources>
     <!---bolus color -->
     <attr name="bolusColor" format="reference|color" />
-    <!---Number Picker text color -->
-    <attr name="numPickerText" format="reference|color" />
     <!---NS Client action text color -->
     <attr name="actionButton" format="reference|color" />
     <!---Text color for Quickwizard and more -->
     <attr name="cardObjectiveText" format="reference|color" />
     <!---Text color for misc buttons and texts -->
     <attr name="alarmColor" format="reference|color" />
-    <!-- Number picker and more -->
-    <attr name="totalBackground" format="reference|color" />
     <!-- BG source temp button -->
     <attr name="setTempButton" format="reference|color" />
-    <!-- Card Item-->
-    <attr name="cardItemBackgroundColor" format="reference|color" />
     <!-- Carbs -->
     <attr name="carbsColor" format="reference|color" />
     <!-- Exercise -->
@@ -23,6 +17,7 @@
     <attr name="lowColor" format="reference|color" />
     <!-- Temp Target -->
     <attr name="tempTargetConfirmation" format="reference|color" />
+    <attr name="tempTargetBgInRange" format="reference|color" />
     <!-- Treatments -->
     <attr name="setExtendedButtonColor" format="reference|color" />
     <!-- Carbs Button -->
@@ -41,10 +36,11 @@
     <attr name="calibrationButtonColor" format="reference|color" />
     <!-- QuickWizard Button -->
     <attr name="quickWizardButtonColor" format="reference|color" />
+    <!-- Stats  -->
+    <attr name="statsColor" format="reference|color" />
     <!-- Pump -->
     <attr name="pumpStatusBackground" format="reference|color" />
     <!-- Objectives -->
-    <attr name="objectivescardItemBackgroundColor" format="reference|color" />
     <attr name="objectivesBackgroundColor" format="reference|color" />
     <attr name="objectivesDisabledTextColor" format="reference|color" />
     <!---Import List -->
@@ -65,19 +61,10 @@
     <attr name="ribbonCriticalColor" format="reference|color" />
     <attr name="ribbonTextDefaultColor" format="reference|color" />
     <attr name="ribbonTextWarningColor" format="reference|color" />
-    <!---Main Activity Tab  -->
-    <attr name="tabSelectedTextColor" format="reference|color" />
-    <attr name="tabTextColor" format="reference|color" />
     <!---Background  -->
-    <attr name="defaultbackground" format="reference|color" />
+    <attr name="defaultBackground" format="reference|color" />
     <!---Toast  -->
     <attr name="toastBaseTextColor" format="reference|color" />
-    <!---Input  -->
-    <attr name="boxStrokeColor" format="reference|color" />
-    <!---Profile Helper  -->
-    <attr name="tabBgColorSelected" format="reference|color" />
-    <!-- Fragment background for some themes default transparent  -->
-    <attr name="fragmentbackground" format="reference|color" />
     <declare-styleable name="NumberPicker">
         <attr name="customContentDescription" format="string" />
     </declare-styleable>
@@ -91,13 +78,13 @@
     <attr name="splashBackgroundColor" format="reference|color" />
     <!---Disabled Text Color  -->
     <attr name="disabledTextColor" format="reference|color" />
-    <!---Overview and Historybrowser  -->
-    <attr name="graphgrid" format="reference|color" />
-    <attr name="viewPortbackgroundColor" format="reference|color" />
+    <!---Overview and History browser  -->
+    <attr name="graphGrid" format="reference|color" />
+    <attr name="viewPortBackgroundColor" format="reference|color" />
     <attr name="tempTargetBackgroundColor" format="reference|color" />
     <!---CGM source-->
-    <attr name="cgmdexColor" format="reference|color" />
-    <attr name="cgmxdripColor" format="reference|color" />
+    <attr name="cgmDexColor" format="reference|color" />
+    <attr name="cgmXdripColor" format="reference|color" />
     <!---BG color-->
     <attr name="bgLow" format="reference|color" />
     <attr name="highColor" format="reference|color" />
@@ -171,9 +158,12 @@
     <!---Extended Bolus Icon Color-->
     <attr name="extBolusColor" format="reference|color" />
     <attr name="extBolusStopColor" format="reference|color" />
-    <attr name="basalstartColor" format="reference|color" />
+    <attr name="basalStartColor" format="reference|color" />
     <attr name="basalCancelColor" format="reference|color" />
-    <attr name="pumpCanulaColor" format="reference|color" />
+    <attr name="basalNoTbrColor" format="reference|color" />
+    <attr name="basalHighColor" format="reference|color" />
+    <attr name="basalLowColor" format="reference|color" />
+    <attr name="pumpCannulaColor" format="reference|color" />
     <attr name="cgmInsertColor" format="reference|color" />
     <attr name="pumpBatteryColor" format="reference|color" />
     <attr name="noteColor" format="reference|color" />
@@ -181,6 +171,7 @@
     <attr name="questionColor" format="reference|color" />
     <attr name="pumpHistoryColor" format="reference|color" />
     <attr name="userOptionColor" format="reference|color" />
+    <attr name="sensColor" format="reference|color" />
     <!---Glucose Value Color-->
     <attr name="cobColor" format="reference|color" />
     <attr name="uamColor" format="reference|color" />
@@ -197,14 +188,31 @@
     <!-- Graph specific colors  -->
     <attr name="graphHorizontalLabelText" format="reference|color" />
     <attr name="graphVerticalLabelText" format="reference|color" />
-    <attr name="inrangeBackground" format="reference|color" />
-    <attr name="graphGrid" format="reference|color" />
-    <attr name="devslopeposColor" format="reference|color" />
+    <attr name="inRangeBackground" format="reference|color" />
+    <attr name="devSlopePosColor" format="reference|color" />
+    <attr name="devSlopeNegColor" format="reference|color" />
+    <attr name="deviationGreyColor" format="reference|color" />
+    <attr name="deviationBlackColor" format="reference|color" />
+    <attr name="deviationGreenColor" format="reference|color" />
+    <attr name="deviationRedColor" format="reference|color" />
     <attr name="predictionColor" format="reference|color" />
+    <attr name="iobPredASColor" format="reference|color" />
     <attr name="bgiColor" format="reference|color" />
     <attr name="ratioColor" format="reference|color" />
     <attr name="activityColor" format="reference|color" />
+    <attr name="baseBasalColor" format="reference|color" />
+    <attr name="dotLineColor" format="reference|color" />
+    <!---Popupmenu TextColor -->
+    <attr name="menuTextColor" format="reference|color" />
+    <attr name="menuTextColorInverse" format="reference|color" />
     <!-- CardView specific colors  -->
     <attr name="strokeColor" format="reference|color" />
-    <attr name="textAppearancemediumColor" format="reference|color" />
+    <attr name="textAppearanceMediumColor" format="reference|color" />
+    <!-- Objectives specific colors  -->
+    <attr name="isAccomplishedColor" format="reference|color" />
+    <attr name="separatorColor" format="reference|color" />
+    <attr name="isCompletedColor" format="reference|color" />
+    <attr name="isNotCompletedColor" format="reference|color" />
+    <!---Nightscout client TitelColor -->
+    <attr name="nsTitleColor" format="reference|color" />
 </resources>

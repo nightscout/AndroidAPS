@@ -35,7 +35,6 @@ class DiaconnG8ResponseMessageHashTable @Inject constructor(val injector: HasAnd
         put(DisplayTimeInquireResponsePacket(injector))
         put(LanguageInquireResponsePacket(injector))
 
-
         // Report Packet
         put(BasalPauseReportPacket(injector))
         put(BasalSettingReportPacket(injector))

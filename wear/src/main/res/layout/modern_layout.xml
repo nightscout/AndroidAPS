@@ -9,7 +9,6 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true">
 
-
         <TextView android:id="@+id/agoString"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -49,5 +48,6 @@
             android:layout_gravity="center"
             android:layout_marginTop="-5dp" />
 
-</LinearLayout>
+    </LinearLayout>
+
 </RelativeLayout>

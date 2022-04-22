@@ -455,6 +455,14 @@
     <string name="bolus_ok" comment="26 characters max for translation">בולוס OK</string>
     <string name="pump_paired" comment="26 characters max for translation">המשאבה צומדה</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">לחצן ריענון Insight</string>
+    <string name="formatPercent">%1$.0f%%</string>
+    <string name="basal">בזאלי</string>
+    <string name="basalpct">בזאלי %</string>
+    <string name="count_selected">%1$d נבחרו</string>
+    <string name="sort_label">מיין</string>
+    <string name="remove_items">פריטים שהוסרו</string>
+    <string name="sort_items">מיין פריטים</string>
+    <string name="remove_selected_items">הסר פריטים נבחרים</string>
     <plurals name="days">
         <item quantity="one">%1$d יום</item>
         <item quantity="two">%1$d ימים</item>

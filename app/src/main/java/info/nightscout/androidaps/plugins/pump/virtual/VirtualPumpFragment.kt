@@ -47,10 +47,8 @@ class VirtualPumpFragment : DaggerFragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _binding = VirtualpumpFragmentBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
+        VirtualpumpFragmentBinding.inflate(inflater, container, false).also { _binding = it }.root
 
     @Synchronized
     override fun onResume() {

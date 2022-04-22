@@ -11,7 +11,6 @@ import javax.inject.Singleton
 @Singleton
 class WarnColors @Inject constructor(val rh: ResourceHelper) {
 
-
     fun setColor(view: TextView?, value: Double, warnLevel: Double, urgentLevel: Double) =
         view?.setTextColor( rh.gac( view.context ,when {
             value >= urgentLevel -> R.attr.urgentColor

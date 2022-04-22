@@ -241,10 +241,10 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
             }
             ToastUtils.showToastInUiThread(this, R.string.invalidinput)
         }
-        binding.age.editText?.id?.let { binding.ageLabel.labelFor = it }
-        binding.tdd.editText?.id?.let { binding.tddLabel.labelFor = it }
-        binding.weight.editText?.id?.let { binding.weightLabel.labelFor = it }
-        binding.basalPctFromTdd.editText?.id?.let { binding.basalPctFromTddLabel.labelFor = it }
+        binding.ageLabel.labelFor = binding.age.editTextId
+        binding.tddLabel.labelFor = binding.tdd.editTextId
+        binding.weightLabel.labelFor = binding.weight.editTextId
+        binding.basalPctFromTddLabel.labelFor = binding.basalPctFromTdd.editTextId
 
         switchTab(0, typeSelected[0], false)
     }
@@ -316,7 +316,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
     }
 
     private fun setBackgroundColorOnSelected(tab: Int) {
-        binding.menu1.setBackgroundColor(rh.gac(this, if (tab == 1) R.attr.defaultbackground else R.attr.helperProfileColor))
-        binding.menu2.setBackgroundColor(rh.gac(this, if (tab == 0) R.attr.defaultbackground else R.attr.examinedProfileColor))
+        binding.menu1.setBackgroundColor(rh.gac(this, if (tab == 1) R.attr.defaultBackground else R.attr.helperProfileColor))
+        binding.menu2.setBackgroundColor(rh.gac(this, if (tab == 0) R.attr.defaultBackground else R.attr.examinedProfileColor))
     }
 }

@@ -26,8 +26,8 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_gravity="center"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:text="@string/pairing"
             android:textAlignment="center"
             android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -64,7 +64,6 @@
         android:labelFor="@+id/rs_v3_pin2"
         android:text="@string/num2pin"
         android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
 
     <EditText
         android:id="@+id/rs_v3_pin2"

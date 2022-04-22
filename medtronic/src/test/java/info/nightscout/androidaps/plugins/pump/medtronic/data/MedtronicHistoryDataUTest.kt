@@ -34,13 +34,11 @@ class MedtronicHistoryDataUTest : TestBase() {
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var rxBus: RxBus
 
-
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
 
         }
     }
-
 
 
     @Test
@@ -51,7 +49,6 @@ class MedtronicHistoryDataUTest : TestBase() {
         medtronicPumpStatus,
         pumpSync,
         pumpSyncStorage)
-
 
         val gson = Gson()
 
@@ -85,7 +82,6 @@ class MedtronicHistoryDataUTest : TestBase() {
 
     }
 
-
     @Test
     fun createTBRProcessList_SpecialCase() {
 
@@ -94,7 +90,6 @@ class MedtronicHistoryDataUTest : TestBase() {
                                               medtronicPumpStatus,
                                               pumpSync,
                                               pumpSyncStorage)
-
 
         val gson = Gson()
 
@@ -127,6 +122,5 @@ class MedtronicHistoryDataUTest : TestBase() {
         }
 
     }
-
 
 }

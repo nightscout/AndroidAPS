@@ -4,8 +4,6 @@ import android.text.Spanned
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.Config
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.aps.loop.APSResult
 import info.nightscout.androidaps.plugins.configBuilder.RunningConfiguration
 import info.nightscout.androidaps.utils.DateUtil
@@ -14,6 +12,8 @@ import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONArray
 import org.json.JSONException
@@ -88,7 +88,7 @@ class NSDeviceStatus @Inject constructor(
     fun handleNewData(deviceStatuses: JSONArray) {
         aapsLogger.debug(LTag.NSCLIENT, "Got NS deviceStatus: \$deviceStatuses")
         try {
-            for (i in deviceStatuses.length() -1 downTo 0) {
+            for (i in deviceStatuses.length() - 1 downTo 0) {
                 val devicestatusJson = deviceStatuses.getJSONObject(i)
                 if (devicestatusJson != null) {
                     setData(devicestatusJson)
@@ -157,7 +157,7 @@ class NSDeviceStatus @Inject constructor(
 
             //String[] ALL_STATUS_FIELDS = {"reservoir", "battery", "clock", "status", "device"};
             val string = StringBuilder()
-                .append("<span style=\"color:${rh.gcs(R.color.defaulttext)}\">")
+                .append("<span style=\"color:${rh.gac(R.attr.nsTitleColor)}\">")
                 .append(rh.gs(R.string.pump))
                 .append(": </span>")
 
@@ -165,13 +165,13 @@ class NSDeviceStatus @Inject constructor(
             val level = when {
                 pumpData.clock + nsSettingsStatus.extendedPumpSettings("urgentClock") * 60 * 1000L < dateUtil.now() -> Levels.URGENT
                 pumpData.reservoir < nsSettingsStatus.extendedPumpSettings("urgentRes")                             -> Levels.URGENT
-                pumpData.isPercent && pumpData.percent < nsSettingsStatus.extendedPumpSettings("urgentBattP")        -> Levels.URGENT
+                pumpData.isPercent && pumpData.percent < nsSettingsStatus.extendedPumpSettings("urgentBattP")       -> Levels.URGENT
                 !pumpData.isPercent && pumpData.voltage < nsSettingsStatus.extendedPumpSettings("urgentBattV")      -> Levels.URGENT
                 pumpData.clock + nsSettingsStatus.extendedPumpSettings("warnClock") * 60 * 1000L < dateUtil.now()   -> Levels.WARN
                 pumpData.reservoir < nsSettingsStatus.extendedPumpSettings("warnRes")                               -> Levels.WARN
-                pumpData.isPercent && pumpData.percent < nsSettingsStatus.extendedPumpSettings("warnBattP")          -> Levels.WARN
-                !pumpData.isPercent && pumpData.voltage < nsSettingsStatus.extendedPumpSettings("warnBattV")         -> Levels.WARN
-                else                                                                                                 -> Levels.INFO
+                pumpData.isPercent && pumpData.percent < nsSettingsStatus.extendedPumpSettings("warnBattP")         -> Levels.WARN
+                !pumpData.isPercent && pumpData.voltage < nsSettingsStatus.extendedPumpSettings("warnBattV")        -> Levels.WARN
+                else                                                                                                -> Levels.INFO
             }
             string.append("<span style=\"color:${level.toColor()}\">")
             val fields = nsSettingsStatus.pumpExtendedSettingsFields()
@@ -248,7 +248,7 @@ class NSDeviceStatus @Inject constructor(
     val openApsStatus: Spanned
         get() {
             val string = StringBuilder()
-                .append("<span style=\"color:${rh.gcs(R.color.defaulttext)}\">")
+                .append("<span style=\"color:${rh.gac(R.attr.nsTitleColor)}\">")
                 .append(rh.gs(R.string.openaps_short))
                 .append(": </span>")
 
@@ -256,7 +256,7 @@ class NSDeviceStatus @Inject constructor(
             val level = when {
                 deviceStatusData.openAPSData.clockSuggested + T.mins(sp.getLong(R.string.key_nsalarm_urgent_staledatavalue, 31)).msecs() < dateUtil.now() -> Levels.URGENT
                 deviceStatusData.openAPSData.clockSuggested + T.mins(sp.getLong(R.string.key_nsalarm_staledatavalue, 16)).msecs() < dateUtil.now()        -> Levels.WARN
-                else                                                                                                                                 -> Levels.INFO
+                else                                                                                                                                      -> Levels.INFO
             }
             string.append("<span style=\"color:${level.toColor()}\">")
             if (deviceStatusData.openAPSData.clockSuggested != 0L) string.append(dateUtil.minAgo(rh, deviceStatusData.openAPSData.clockSuggested)).append(" ")
@@ -268,8 +268,10 @@ class NSDeviceStatus @Inject constructor(
         get() {
             val string = StringBuilder()
             try {
-                if (deviceStatusData.openAPSData.enacted != null && deviceStatusData.openAPSData.clockEnacted != deviceStatusData.openAPSData.clockSuggested) string.append("<b>").append(dateUtil.minAgo(rh, deviceStatusData.openAPSData.clockEnacted)).append("</b> ").append(deviceStatusData.openAPSData.enacted!!.getString("reason")).append("<br>")
-                if (deviceStatusData.openAPSData.suggested != null) string.append("<b>").append(dateUtil.minAgo(rh, deviceStatusData.openAPSData.clockSuggested)).append("</b> ").append(deviceStatusData.openAPSData.suggested!!.getString("reason")).append("<br>")
+                if (deviceStatusData.openAPSData.enacted != null && deviceStatusData.openAPSData.clockEnacted != deviceStatusData.openAPSData.clockSuggested) string.append("<b>")
+                    .append(dateUtil.minAgo(rh, deviceStatusData.openAPSData.clockEnacted)).append("</b> ").append(deviceStatusData.openAPSData.enacted!!.getString("reason")).append("<br>")
+                if (deviceStatusData.openAPSData.suggested != null) string.append("<b>").append(dateUtil.minAgo(rh, deviceStatusData.openAPSData.clockSuggested)).append("</b> ")
+                    .append(deviceStatusData.openAPSData.suggested!!.getString("reason")).append("<br>")
                 return fromHtml(string.toString())
             } catch (e: JSONException) {
                 aapsLogger.error("Unhandled exception", e)
@@ -321,7 +323,7 @@ class NSDeviceStatus @Inject constructor(
     val uploaderStatusSpanned: Spanned
         get() {
             val string = StringBuilder()
-            string.append("<span style=\"color:${rh.gcs(R.color.defaulttext)}\">")
+            string.append("<span style=\"color:${rh.gac(R.attr.nsTitleColor)}\">")
             string.append(rh.gs(R.string.uploader_short))
             string.append(": </span>")
             val iterator: Iterator<*> = deviceStatusData.uploaderMap.entries.iterator()

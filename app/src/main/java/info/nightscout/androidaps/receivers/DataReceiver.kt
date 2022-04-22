@@ -28,7 +28,6 @@ open class DataReceiver : DaggerBroadcastReceiver() {
         val bundle = intent.extras ?: return
         aapsLogger.debug(LTag.DATABASE, "onReceive ${intent.action} ${BundleLogger.log(bundle)}")
 
-
         when (intent.action) {
             Intents.ACTION_NEW_BG_ESTIMATE            ->
                 OneTimeWorkRequest.Builder(XdripPlugin.XdripWorker::class.java)
@@ -66,6 +65,9 @@ open class DataReceiver : DaggerBroadcastReceiver() {
                     .setInputData(dataWorker.storeInputData(bundle, intent)).build()
             Intents.DEXCOM_BG                         ->
                 OneTimeWorkRequest.Builder(DexcomPlugin.DexcomWorker::class.java)
+                    .setInputData(dataWorker.storeInputData(bundle, intent)).build()
+            Intents.AIDEX_NEW_BG_ESTIMATE            ->
+                OneTimeWorkRequest.Builder(AidexPlugin.AidexWorker::class.java)
                     .setInputData(dataWorker.storeInputData(bundle, intent)).build()
             else                                      -> null
         }?.let { request -> dataWorker.enqueue(request) }

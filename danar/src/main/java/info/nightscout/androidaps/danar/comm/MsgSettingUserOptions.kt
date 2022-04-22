@@ -7,7 +7,6 @@ class MsgSettingUserOptions(
     injector: HasAndroidInjector
 ) : MessageBase(injector) {
 
-
     init {
         setCommand(0x320B)
         aapsLogger.debug(LTag.PUMPCOMM, "New message")

@@ -277,7 +277,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginLeft="9dp"
+                android:layout_marginStart="9dp"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
@@ -367,7 +367,7 @@
                                 android:id="@+id/month"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="5dp"
+                                android:layout_marginStart="5dp"
                                 android:fontFamily="@font/roboto_condensed_regular"
                                 android:text="MMM"
                                 android:textAllCaps="true"
@@ -416,7 +416,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="left"
-                            android:layout_marginLeft="6sp"
+                            android:layout_marginStart="6sp"
                             android:layout_marginTop="-2sp"
                             android:layout_marginBottom="-8sp"
                             android:fontFamily="@font/roboto_condensed_bold"
@@ -431,7 +431,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
-                            android:layout_marginLeft="8sp"
+                            android:layout_marginStart="8sp"
                             android:layout_marginTop="-1.5sp"
                             android:fontFamily="@font/roboto_condensed_bold"
                             android:text="AM"
@@ -446,8 +446,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginLeft="7dp"
-                android:layout_marginRight="7dp"
+                android:layout_marginStart="7dp"
+                android:layout_marginEnd="7dp"
                 android:layout_weight="1"
                 android:baselineAligned="false"
                 android:gravity="left|top"

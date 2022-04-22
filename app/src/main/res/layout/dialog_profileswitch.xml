@@ -30,8 +30,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:text="@string/careportal_profileswitch"
                 android:textAlignment="center"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -61,7 +61,6 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-
         <LinearLayout
             android:id="@+id/reuselayout"
             android:layout_width="match_parent"
@@ -72,7 +71,7 @@
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/reusebutton"
-                style="?android:attr/buttonStyle"
+                style="@style/ButtonSmallFontStyle"
                 android:drawablePadding="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -92,8 +91,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:width="120dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
                 android:text="@string/careportal_newnstreatment_duration_label"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textStyle="bold" />
@@ -129,8 +128,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:width="120dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
                 android:text="@string/careportal_newnstreatment_percentage_label"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textStyle="bold" />
@@ -151,7 +150,8 @@
                 android:paddingStart="5dp"
                 android:paddingEnd="5dp"
                 android:text="%"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                tools:ignore="HardcodedText" />
 
         </LinearLayout>
 
@@ -166,8 +166,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:width="120dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
                 android:text="@string/careportal_newnstreatment_timeshift_label"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textStyle="bold" />
@@ -202,15 +202,15 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:width="120dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
                 android:text="@string/careportal_temporarytarget"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textStyle="bold" />
 
             <CheckBox
                 android:id="@+id/tt"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
@@ -233,4 +233,3 @@
     </LinearLayout>
 
 </ScrollView>
-

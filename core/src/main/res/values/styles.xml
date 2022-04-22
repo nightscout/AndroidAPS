@@ -4,58 +4,58 @@
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!---Example light theme colors -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorOnPrimary">@color/aaps_theme_light_onPrimary</item>
         <item name="colorSecondary">@color/aaps_theme_light_secondary</item>
         <item name="colorOnSecondary">@color/aaps_theme_light_onSecondary</item>
         <item name="colorError">@color/aaps_theme_light_error</item>
         <item name="colorOnError">@color/aaps_theme_light_onError</item>
         <item name="android:colorBackground">@color/aaps_theme_light_background</item>
         <item name="colorOnBackground">@color/aaps_theme_light_onBackground</item>
-        <item name="colorSurface">@color/aaps_theme_light_surfaceVariant</item>
+        <item name="colorSurface">@color/aaps_theme_light_surface</item>
         <item name="colorOnSurface">@color/aaps_theme_light_onSurface</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/aaps_theme_light_primary</item>
         <item name="colorAccent">@color/aaps_theme_light_secondary</item>
         <item name="dialogTitleBackground">@color/dialog_title_background</item>
         <item name="dialogTitleColor">@color/dialog_title_color</item>
         <item name="dialogTitleIconTint">@color/dialog_title_icon_tint</item>
-        <!-- Actionbar -->
-        <item name="actionBarTheme">@style/ThemeOverlay.MaterialComponents.ActionBar</item>
         <!-- New MaterialComponents attributes. -->
+        <item name="materialTimePickerTheme">@style/ThemeOverlay.MaterialComponents.TimePicker</item>
+        <item name="materialCalendarTheme">@style/ThemeOverlay.MaterialComponents.MaterialCalendar</item>
         <item name="colorPrimaryVariant">@color/primaryLightColorDefault</item>
         <item name="colorSecondaryVariant">@color/secondaryLightColorDefault</item>
-        <item name="scrimBackground">@color/aaps_theme_light_background</item>
-        <item name="popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
-        <item name="actionOverflowMenuStyle">@style/Widget.MaterialComponents.PopupMenu.Overflow</item>
+        <item name="scrimBackground">@color/mtrl_scrim_color</item>
+        <!---Splash Background  -->
+        <item name="splashBackgroundColor">@color/aaps_theme_light_background</item>
+        <!---Application Background Color  -->
+        <item name="android:windowBackground">@color/aaps_theme_light_background</item>
         <!---Text Colors -->
         <item name="android:textColorPrimary">@color/black</item>
         <item name="android:textColor">@color/black</item>
+        <!---TextColor -->
+        <item name="defaultTextColor">@color/black</item>
+        <!---Disabled Text Color  -->
+        <item name="disabledTextColor">@color/sandGray</item>
         <!---Notification -->
         <item name="notificationUrgent">@color/notificationUrgent</item>
         <item name="notificationNormal">@color/notificationNormal</item>
         <item name="notificationLow">@color/notificationLow</item>
         <item name="notificationInfo">@color/notificationInfo</item>
         <item name="notificationAnnouncement">@color/notificationAnnouncement</item>
-        <!-- Fragment background for some themes default transparent  -->
-        <item name="fragmentbackground">@color/transparent</item>
         <item name="actionModeCloseDrawable">@drawable/ic_close</item>
         <!---bolus color -->
         <item name="bolusColor">@color/bolus</item>
-        <!---Number Picker text color -->
-        <item name="numPickerText">@color/black</item>
         <!---NS Client action text color -->
         <item name="actionButton">@android:color/holo_orange_light</item>
         <!---Text color for Quickwizard and more -->
         <item name="cardObjectiveText">@color/cardObjectiveText</item>
         <!---Text color for misc buttons and texts -->
         <item name="alarmColor">@color/alarm</item>
-        <!-- Number picker and more -->
-        <item name="totalBackground">@color/gray</item>
         <!-- BG source temp button -->
         <item name="setTempButton">@color/colorSetTempButton</item>
-        <!-- Card Item-->
-        <item name="cardItemBackgroundColor">?attr/colorSurface</item>
         <!-- Exercise -->
         <item name="exerciseColor">@color/exercise</item>
+        <!-- Stats  -->
+        <item name="statsColor">@color/stats</item>
         <!-- BG low -->
         <item name="lowColor">@color/low</item>
         <!-- Treatments -->
@@ -79,7 +79,6 @@
         <!-- Pump -->
         <item name="pumpStatusBackground">@color/pumpStatusBackground</item>
         <!-- Objectives -->
-        <item name="objectivescardItemBackgroundColor">@color/midgray</item>
         <item name="objectivesBackgroundColor">@color/objectivesBackground</item>
         <item name="objectivesDisabledTextColor">@color/colorObjectivesDisabledText</item>
         <!---Import List -->
@@ -97,36 +96,23 @@
         <item name="ribbonCriticalColor">@color/ribbonCritical</item>
         <item name="ribbonTextDefaultColor">@color/ribbonTextDefault</item>
         <item name="ribbonTextWarningColor">@color/ribbonTextWarning</item>
-        <!---Main Activity Tab  -->
-        <item name="tabSelectedTextColor">@color/tabSelectedText</item>
-        <item name="tabTextColor">@color/tabText</item>
         <!---Background  -->
-        <item name="defaultbackground">@color/white</item>
+        <item name="defaultBackground">@color/white</item>
         <!---Toast  -->
         <item name="toastBaseTextColor">@color/toastBase</item>
-        <!---Input  -->
-        <item name="boxStrokeColor">@color/white</item>
-        <!---Profile Helper  -->
-        <item name="tabBgColorSelected">@color/tabBgColorSelected</item>
         <!---Dialog Helper  -->
         <item name="materialAlertDialogTheme">@style/DialogTheme</item>
         <item name="android:alertDialogTheme">@style/DialogTheme</item>
         <item name="alertDialogTheme">@style/DialogTheme</item>
-        <!---Disabled Text Color  -->
-        <item name="disabledTextColor">@color/sandGray</item>
-        <!---Splash Background  -->
-        <item name="splashBackgroundColor">@color/splashBackground</item>
-        <!---Application Background Color  -->
-        <item name="android:windowBackground">@color/white</item>
-        <!---Dialogfragment Background Color  -->
+        <!---Dialog fragment Background Color  -->
         <item name="android:dialogCornerRadius">12dp</item>
-        <!---Overview and Historybrowser  -->
-        <item name="graphgrid">@color/graphgrid</item>
-        <item name="viewPortbackgroundColor">@color/white_alpha_20</item>
+        <!---Overview and History browser  -->
+        <item name="graphGrid">@color/graphGrid</item>
+        <item name="viewPortBackgroundColor">@color/transparent</item>
         <item name="tempTargetBackgroundColor">@color/tempTargetBackground</item>
         <!---CGM source-->
-        <item name="cgmdexColor">@color/byodagray</item>
-        <item name="cgmxdripColor">@color/colorCalibrationButton</item>
+        <item name="cgmDexColor">@color/byodaGray</item>
+        <item name="cgmXdripColor">@color/colorCalibrationButton</item>
         <!---BG color-->
         <item name="bgLow">@color/low</item>
         <item name="highColor">@color/high</item>
@@ -139,8 +125,6 @@
         <item name="errorBackgroundColor">@color/error_background</item>
         <!---Warning  -->
         <item name="warningColor">@color/warning</item>
-        <!---TextColor -->
-        <item name="defaultTextColor">@color/black</item>
         <!---TempBasal -->
         <item name="tempBasalColor">@color/tempbasal</item>
         <item name="infoColor">@color/info</item>
@@ -153,7 +137,7 @@
         <item name="omniYellowColor">@color/omni_yellow</item>
         <item name="omniCyanColor">@color/omni_cyan</item>
         <item name="omniGreenColor">@color/omni_green</item>
-        <item name="omniGrayColor">@color/midgray</item>
+        <item name="omniGrayColor">@color/midGray</item>
         <item name="omniWizardFinishButtonColor">@color/omnipod_wizard_finish_button</item>
         <!---Warning Colors : WarnColors.kt-->
         <item name="warnColor">@color/high</item>
@@ -186,6 +170,7 @@
         <item name="carbsColor">@color/carbs</item>
         <!-- Temp Target -->
         <item name="tempTargetConfirmation">@color/tempTargetConfirmation</item>
+        <item name="tempTargetBgInRange">@color/tempTargetConfirmation</item>
         <!---Loop Icon-->
         <!---Loop Paused Icon Color-->
         <item name="loopPaused">@color/loopSuspended</item>
@@ -202,9 +187,12 @@
         <!---Action Icons Color-->
         <item name="extBolusColor">@color/extendedBolus</item>
         <item name="extBolusStopColor">@color/extBolusStop</item>
-        <item name="basalstartColor">@color/actionBasal</item>
+        <item name="basalStartColor">@color/actionBasal</item>
         <item name="basalCancelColor">@color/actionBasal</item>
-        <item name="pumpCanulaColor">@color/pumpCanula</item>
+        <item name="basalNoTbrColor">@color/actionBasal</item>
+        <item name="basalHighColor">@color/actionBasal</item>
+        <item name="basalLowColor">@color/actionBasal</item>
+        <item name="pumpCannulaColor">@color/pumpCannula</item>
         <item name="cgmInsertColor">@color/cgmInsert</item>
         <item name="pumpBatteryColor">@color/pumpBattery</item>
         <item name="noteColor">@color/note</item>
@@ -212,6 +200,7 @@
         <item name="questionColor">@color/question</item>
         <item name="pumpHistoryColor">@color/pumpHistory</item>
         <item name="userOptionColor">@color/userOption</item>
+        <item name="sensColor">@color/sens</item>
         <!---Graph data glucose value point colors-->
         <item name="cobColor">@color/cob</item>
         <item name="uamColor">@color/uam</item>
@@ -226,22 +215,39 @@
         <item name="therapyEvent_APS_OFFLINE">@color/mdtp_line_dark</item>
         <item name="therapyEvent_Default">@color/mdtp_line_dark</item>
         <!-- Graph specific colors  -->
-        <item name="inrangeBackground">@color/inrangebackground</item>
-        <item name="devslopeposColor">@color/devslopepos</item>
+        <item name="inRangeBackground">@color/inRangeBackground</item>
+        <item name="devSlopePosColor">@color/devSlopePos</item>
+        <item name="devSlopeNegColor">@color/devSlopeNeg</item>
+        <item name="deviationGreyColor">@color/deviationGrey</item>
+        <item name="deviationBlackColor">@color/deviationBlack</item>
+        <item name="deviationGreenColor">@color/deviationGreen</item>
+        <item name="deviationRedColor">@color/deviationRed</item>
         <item name="predictionColor">@color/prediction</item>
+        <item name="iobPredASColor">@color/iobPredAS</item>
         <item name="bgiColor">@color/bgi</item>
         <item name="ratioColor">@color/ratio</item>
         <item name="activityColor">@color/activity</item>
+        <item name="baseBasalColor">@color/baseBasal</item>
+        <item name="dotLineColor">@color/black</item>
+        <!---Popupmenu TextColor -->
+        <item name="menuTextColor">@color/black</item>
+        <item name="menuTextColorInverse">@color/white</item>
         <!-- CardView specific colors  -->
         <item name="strokeColor">@color/plastic_grey</item>
-        <item name="textAppearancemediumColor">@color/textAppearancemediumLight</item>
+        <item name="textAppearanceMediumColor">@color/textAppearanceMediumLight</item>
         <!-- Actionbar  -->
         <item name="actionBarStyle">@style/Aaps_ActionBarStyle</item>
+        <!-- Objectives specific colors  -->
+        <item name="isAccomplishedColor">@color/isAccomplished</item>
+        <item name="separatorColor">@color/sphere_plastic_grey</item>
+        <item name="isCompletedColor">@color/isCompleted</item>
+        <item name="isNotCompletedColor">@color/isNotCompleted</item>
+        <!---Nightscout client TitelColor -->
+        <item name="nsTitleColor">@color/defaultText</item>
     </style>
 
     <style name="Aaps_ActionBarStyle" parent="@style/Widget.AppCompat.ActionBar">
         <item name="android:titleTextStyle">@style/Theme.Aaps.ActionBar.TitleTextStyle</item>
-        <item name="backgroundColor">?attr/backgroundColor</item>
     </style>
 
     <style name="Theme.Aaps.ActionBar.TitleTextStyle"
@@ -266,6 +272,17 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowAnimationStyle">@android:style/Animation</item>
         <item name="dialogTitleBackground">@color/dialog_title_background</item>
+    </style>
+
+    <!-- Style for Material Date Picker -->
+    <style name="DatePicker" parent="@style/ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="buttonBarPositiveButtonStyle">@style/PickerTextButton</item>
+        <item name="buttonBarNegativeButtonStyle">@style/PickerTextButton</item>
+    </style>
+
+    <!-- Style for Material Time Picker -->
+    <style name="TimePicker" parent="ThemeOverlay.MaterialComponents.TimePicker">
+        <item name="buttonStyle">@style/PickerTextButton</item>
     </style>
 
     <!--    Buttons from MaterialDateTimePicker, Dialogs ...    -->
@@ -302,39 +319,10 @@
         <item name="android:stateListAnimator">@null</item>
         <item name="android:background">@drawable/material_button_background</item>
         <item name="android:minWidth">@dimen/material_button_min_width</item>
-        <item name="android:paddingLeft">@dimen/material_button_text_padding_horizontal</item>
-        <item name="android:paddingRight">@dimen/material_button_text_padding_horizontal</item>
+        <item name="android:paddingStart">@dimen/material_button_text_padding_horizontal</item>
+        <item name="android:paddingEnd">@dimen/material_button_text_padding_horizontal</item>
         <item name="android:textColor">@color/okButtonText</item>
         <item name="android:textAllCaps">true</item>
-    </style>
-
-    <style name="MaterialPickerTheme" parent="Theme.MaterialComponents.Light.Dialog.Alert">
-        <item name="android:datePickerStyle">@style/MaterialDatePickerStyle</item>
-        <item name="android:timePickerStyle">@style/MaterialTimePickerStyle</item>
-        <item name="android:buttonBarPositiveButtonStyle">@style/PickerTextButton</item>
-        <item name="android:buttonBarNegativeButtonStyle">@style/PickerTextButton</item>
-        <item name="colorAccent">@color/dialog_title_background</item>
-        <item name="android:textColorSecondary">@color/defaulttextcolor</item>
-        <item name="android:textColorPrimary">@color/defaulttextcolor</item>
-        <item name="android:textColor">@color/defaulttextcolor</item>
-        <item name="android:dialogCornerRadius">12dp</item>
-    </style>
-
-    <style name="MaterialDatePickerStyle" parent="Widget.MaterialComponents.MaterialCalendar">
-        <item name="android:calendarTextColor">@color/defaulttextcolor</item>
-        <item name="android:datePickerMode">calendar</item>
-        <item name="android:background">@color/dateTimePickerBackground</item>
-        <item name="android:headerBackground">@color/dialog_title_background</item>
-    </style>
-
-    <style name="MaterialTimePickerStyle" parent="Widget.MaterialComponents.TimePicker">
-        <item name="android:numbersTextColor">@color/defaulttextcolor</item>
-        <item name="android:numbersSelectorColor">@color/white_alpha_40</item>
-        <item name="android:numbersBackgroundColor">@color/dialog_title_background</item>
-        <item name="android:background">@color/dateTimePickerBackground</item>
-        <item name="android:headerBackground">@color/dialog_title_background</item>
-        <item name="android:headerTimeTextAppearance">@color/defaulttextcolor</item>
-        <item name="android:timePickerMode">clock</item>
     </style>
 
     <style name="PickerTextButton" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
@@ -345,8 +333,7 @@
     <dimen name="gray_material_button_margin_horizontal">5dp</dimen>
 
     <style name="GrayButton" parent="Widget.MaterialComponents.Button">
-        <item name="android:backgroundTint">@color/buttonBackground</item>
-        <item name="android:textColor">@color/buttonText</item>
+        <item name="android:backgroundTint">@color/mtrl_btn_bg_color_selector_grey</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center_vertical</item>
@@ -358,7 +345,11 @@
     </style>
 
     <style name="ButtonSmallFontStyle" parent="GrayButton">
-        <item name="android:textSize">10sp</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingStart">0dp</item>
+        <item name="android:paddingEnd">0dp</item>
+        <item name="android:textSize">11dp</item>
     </style>
 
     <style name="ButtonMediumFontStyle" parent="GrayButton">
@@ -404,8 +395,6 @@
     <!-- The launcher theme. It sets the main window background to the launch_screen drawable -->
     <style name="AppTheme.Launcher"  parent="AppTheme.NoActionBar">
         <item name="android:windowBackground">@drawable/launch_screen</item>
-        <!-- Optional, on Android 5+ you can modify the colorPrimaryDark color to match the windowBackground color for further branding-->
-        <!-- <item name="colorPrimaryDark">@android:color/white</item> -->
     </style>
 
     <style name="section_header_label">

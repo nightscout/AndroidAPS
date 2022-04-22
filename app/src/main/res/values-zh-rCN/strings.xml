@@ -815,6 +815,7 @@
     <string name="smscommunicator_otp_install_info">在其他遥控手机上安装支持RFC 6238 TOTP令牌协议的应用程序。常用的免费应用有:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">通过重置验证码核心密钥，可以使所有已设置的OTP随机验证码生成配置无效，您需要在遥控手机上重新设置!</string>
     <string name="overview_show_predictions">预测</string>
+    <string name="overview_show_treatments">治疗</string>
     <string name="overview_show_deviationslope">斜度偏差</string>
     <string name="authorizationfailed">授权失败</string>
     <string name="overview_show_absinsulin">胰岛素绝对值</string>
@@ -995,6 +996,7 @@
     <string name="tempt_targets">临时目标</string>
     <string name="carbs_and_bolus">碳水与大剂量</string>
     <string name="confirm_remove_multiple_items">你确定要删除 %1$d 吗？</string>
+    <string name="no_records_available">当前暂无记录</string>
     <string name="hide_loop">隐藏闭环</string>
     <string name="show_loop">显示闭环</string>
     <string name="count_selected">已选中 %1$d</string>
@@ -1006,4 +1008,5 @@
     <string name="show_loop_records">显示闭环记录</string>
     <string name="show_hide_records">隐藏闭环记录</string>
     <string name="widget_description">AndroidAPS小部件</string>
+    <string name="configure">配置透明度</string>
 </resources>
