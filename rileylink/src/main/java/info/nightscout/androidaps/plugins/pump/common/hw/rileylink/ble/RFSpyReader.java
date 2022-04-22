@@ -1,20 +1,21 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble;
 
-import android.os.AsyncTask;
 import android.os.SystemClock;
 
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
-import info.nightscout.shared.logging.AAPSLogger;
-import info.nightscout.shared.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.GattAttributes;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkEncodingType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.operations.BLECommOperationResult;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.ThreadUtil;
+import info.nightscout.shared.logging.AAPSLogger;
+import info.nightscout.shared.logging.LTag;
 
 /**
  * Created by geoff on 5/26/16.
@@ -22,29 +23,20 @@ import info.nightscout.androidaps.plugins.pump.common.utils.ThreadUtil;
 public class RFSpyReader {
 
     private final AAPSLogger aapsLogger;
-    private static AsyncTask<Void, Void, Void> readerTask;
-    private RileyLinkBLE rileyLinkBle;
+    ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final RileyLinkBLE rileyLinkBle;
     private final Semaphore waitForRadioData = new Semaphore(0, true);
     private final LinkedBlockingQueue<byte[]> mDataQueue = new LinkedBlockingQueue<>();
     private int acquireCount = 0;
     private int releaseCount = 0;
     private boolean stopAtNull = true;
-    private static boolean isRunning = false;
 
 
     RFSpyReader(AAPSLogger aapsLogger, RileyLinkBLE rileyLinkBle) {
         this.aapsLogger = aapsLogger;
-        // xyz setRileyLinkBle(rileyLinkBle);
         this.rileyLinkBle = rileyLinkBle;
     }
 
-
-    public void setRileyLinkBle(RileyLinkBLE rileyLinkBle) {
-        if (readerTask != null) {
-            readerTask.cancel(true);
-        }
-        this.rileyLinkBle = rileyLinkBle;
-    }
 
     void setRileyLinkEncodingType(RileyLinkEncodingType encodingType) {
         aapsLogger.debug("setRileyLinkEncodingType: " + encodingType);
@@ -90,57 +82,46 @@ public class RFSpyReader {
 
 
     public void start() {
-        isRunning = true;
+        executor.execute(() -> {
+            UUID serviceUUID = UUID.fromString(GattAttributes.SERVICE_RADIO);
+            UUID radioDataUUID = UUID.fromString(GattAttributes.CHARA_RADIO_DATA);
+            BLECommOperationResult result;
+            //noinspection InfiniteLoopStatement
+            while (true) {
+                try {
+                    acquireCount++;
+                    waitForRadioData.acquire();
+                    aapsLogger.debug(LTag.PUMPBTCOMM, ThreadUtil.sig() + "waitForRadioData acquired (count=" + acquireCount + ") at t="
+                            + SystemClock.uptimeMillis());
+                    SystemClock.sleep(100);
+                    SystemClock.sleep(1);
+                    result = rileyLinkBle.readCharacteristicBlocking(serviceUUID, radioDataUUID);
+                    SystemClock.sleep(100);
 
-        readerTask = new AsyncTask<Void, Void, Void>() {
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-                UUID serviceUUID = UUID.fromString(GattAttributes.SERVICE_RADIO);
-                UUID radioDataUUID = UUID.fromString(GattAttributes.CHARA_RADIO_DATA);
-                BLECommOperationResult result;
-                while (isRunning) {
-                    try {
-                        acquireCount++;
-                        waitForRadioData.acquire();
-                        aapsLogger.debug(LTag.PUMPBTCOMM, ThreadUtil.sig() + "waitForRadioData acquired (count=" + acquireCount + ") at t="
-                                + SystemClock.uptimeMillis());
-                        SystemClock.sleep(100);
-                        SystemClock.sleep(1);
-                        result = rileyLinkBle.readCharacteristicBlocking(serviceUUID, radioDataUUID);
-                        SystemClock.sleep(100);
-
-                        if (result.resultCode == BLECommOperationResult.RESULT_SUCCESS) {
-                            if (stopAtNull) {
-                                // only data up to the first null is valid
-                                for (int i = 0; i < result.value.length; i++) {
-                                    if (result.value[i] == 0) {
-                                        result.value = ByteUtil.substring(result.value, 0, i);
-                                        break;
-                                    }
+                    if (result.resultCode == BLECommOperationResult.RESULT_SUCCESS) {
+                        if (stopAtNull) {
+                            // only data up to the first null is valid
+                            for (int i = 0; i < result.value.length; i++) {
+                                if (result.value[i] == 0) {
+                                    result.value = ByteUtil.substring(result.value, 0, i);
+                                    break;
                                 }
                             }
-                            mDataQueue.add(result.value);
-                        } else if (result.resultCode == BLECommOperationResult.RESULT_INTERRUPTED) {
-                            aapsLogger.error(LTag.PUMPBTCOMM, "Read operation was interrupted");
-                        } else if (result.resultCode == BLECommOperationResult.RESULT_TIMEOUT) {
-                            aapsLogger.error(LTag.PUMPBTCOMM, "Read operation on Radio Data timed out");
-                        } else if (result.resultCode == BLECommOperationResult.RESULT_BUSY) {
-                            aapsLogger.error(LTag.PUMPBTCOMM, "FAIL: RileyLinkBLE reports operation already in progress");
-                        } else if (result.resultCode == BLECommOperationResult.RESULT_NONE) {
-                            aapsLogger.error(LTag.PUMPBTCOMM, "FAIL: got invalid result code: " + result.resultCode);
                         }
-                    } catch (InterruptedException e) {
-                        aapsLogger.error(LTag.PUMPBTCOMM, "Interrupted while waiting for data");
+                        mDataQueue.add(result.value);
+                    } else if (result.resultCode == BLECommOperationResult.RESULT_INTERRUPTED) {
+                        aapsLogger.error(LTag.PUMPBTCOMM, "Read operation was interrupted");
+                    } else if (result.resultCode == BLECommOperationResult.RESULT_TIMEOUT) {
+                        aapsLogger.error(LTag.PUMPBTCOMM, "Read operation on Radio Data timed out");
+                    } else if (result.resultCode == BLECommOperationResult.RESULT_BUSY) {
+                        aapsLogger.error(LTag.PUMPBTCOMM, "FAIL: RileyLinkBLE reports operation already in progress");
+                    } else if (result.resultCode == BLECommOperationResult.RESULT_NONE) {
+                        aapsLogger.error(LTag.PUMPBTCOMM, "FAIL: got invalid result code: " + result.resultCode);
                     }
+                } catch (InterruptedException e) {
+                    aapsLogger.error(LTag.PUMPBTCOMM, "Interrupted while waiting for data");
                 }
-                return null;
             }
-        }.execute();
+        });
     }
-
-    public void stop() {
-        isRunning = false;
-    }
-
 }
