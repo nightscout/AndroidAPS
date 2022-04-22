@@ -365,7 +365,7 @@ class AutotuneFragment : DaggerFragment() {
                                 var totalTuned = 0.0
                                 for (h in 0 until tuned.basal.size) {
                                     val df = DecimalFormat("00")
-                                    var time = df.format(h.toLong()) + ":00"
+                                    val time = df.format(h.toLong()) + ":00"
                                     totalPump += autotunePlugin.pumpProfile.basal[h]
                                     totalTuned += tuned.basal[h]
                                     layout.addView(toTableRowValue(time, autotunePlugin.pumpProfile.basal[h], tuned.basal[h], tuned.basalUntuned[h].toString()))
@@ -383,26 +383,64 @@ class AutotuneFragment : DaggerFragment() {
     fun toTableRowHeader(basal:Boolean = false): TableRow =
         TableRow(context).also { header ->
             val lp = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT).apply { weight = 1f }
-            header.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT)
-            header.gravity = Gravity.CENTER_HORIZONTAL
-            header.addView(TextView(context).apply { layoutParams = lp.apply { column = 0 }; textAlignment = TextView.TEXT_ALIGNMENT_CENTER; text = if (basal) rh.gs(R.string.time) else rh.gs(R.string.format_autotune_param) })
-            header.addView(TextView(context).apply { layoutParams = lp.apply { column = 1 }; textAlignment = TextView.TEXT_ALIGNMENT_CENTER; text = rh.gs(R.string.profile) })
-            header.addView(TextView(context).apply { layoutParams = lp.apply { column = 2 }; textAlignment = TextView.TEXT_ALIGNMENT_CENTER; text = rh.gs(R.string.autotune_tunedprofile_name) })
-            header.addView(TextView(context).apply { layoutParams = lp.apply { column = 3 }; textAlignment = TextView.TEXT_ALIGNMENT_CENTER; text = rh.gs(R.string.format_autotune_percent) })
-            header.addView(TextView(context).apply { layoutParams = lp.apply { column = 4 }; textAlignment = TextView.TEXT_ALIGNMENT_CENTER; text = if (basal) rh.gs(R.string.format_autotune_missing) else " " })
+            header.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT).apply { gravity = Gravity.CENTER_HORIZONTAL }
+            header.addView(TextView(context).apply {
+                layoutParams = lp.apply { column = 0 }
+                textAlignment = TextView.TEXT_ALIGNMENT_CENTER
+                text = if (basal) rh.gs(R.string.time) else rh.gs(R.string.format_autotune_param)
+            })
+            header.addView(TextView(context).apply {
+                layoutParams = lp.apply { column = 1 }
+                textAlignment = TextView.TEXT_ALIGNMENT_CENTER
+                text = rh.gs(R.string.profile)
+            })
+            header.addView(TextView(context).apply {
+                layoutParams = lp.apply { column = 2 }
+                textAlignment = TextView.TEXT_ALIGNMENT_CENTER
+                text = rh.gs(R.string.autotune_tunedprofile_name)
+            })
+            header.addView(TextView(context).apply {
+                layoutParams = lp.apply { column = 3 }
+                textAlignment = TextView.TEXT_ALIGNMENT_CENTER
+                text = rh.gs(R.string.format_autotune_percent)
+            })
+            header.addView(TextView(context).apply {
+                layoutParams = lp.apply { column = 4 }
+                textAlignment = TextView.TEXT_ALIGNMENT_CENTER
+                text = if (basal) rh.gs(R.string.format_autotune_missing) else " "
+            })
         }
 
     fun toTableRowValue(hour: String, inputValue: Double, tunedValue: Double, missing: String = ""): TableRow =
         TableRow(context).also { row ->
             val percentValue = Round.roundTo(tunedValue / inputValue * 100 - 100, 1.0).toInt().toString() + "%"
             val lp = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT).apply { weight = 1f }
-            row.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT)
-            row.gravity = Gravity.CENTER_HORIZONTAL
-            row.addView(TextView(context).apply { layoutParams = lp.apply { column = 0 }; textAlignment = TextView.TEXT_ALIGNMENT_CENTER; text = hour })
-            row.addView(TextView(context).apply { layoutParams = lp.apply { column = 1 }; textAlignment = TextView.TEXT_ALIGNMENT_CENTER; text = String.format("%.3f", inputValue) })
-            row.addView(TextView(context).apply { layoutParams = lp.apply { column = 2 }; textAlignment = TextView.TEXT_ALIGNMENT_CENTER; text = String.format("%.3f", tunedValue) })
-            row.addView(TextView(context).apply { layoutParams = lp.apply { column = 3 }; textAlignment = TextView.TEXT_ALIGNMENT_CENTER; text = percentValue })
-            row.addView(TextView(context).apply { layoutParams = lp.apply { column = 4 }; textAlignment = TextView.TEXT_ALIGNMENT_CENTER; text = missing })
+            row.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT).apply { gravity = Gravity.CENTER_HORIZONTAL }
+            row.addView(TextView(context).apply {
+                layoutParams = lp.apply { column = 0 }
+                textAlignment = TextView.TEXT_ALIGNMENT_CENTER
+                text = hour
+            })
+            row.addView(TextView(context).apply {
+                layoutParams = lp.apply { column = 1 }
+                textAlignment = TextView.TEXT_ALIGNMENT_CENTER
+                text = String.format("%.3f", inputValue)
+            })
+            row.addView(TextView(context).apply {
+                layoutParams = lp.apply { column = 2 }
+                textAlignment = TextView.TEXT_ALIGNMENT_CENTER
+                text = String.format("%.3f", tunedValue)
+            })
+            row.addView(TextView(context).apply {
+                layoutParams = lp.apply { column = 3 }
+                textAlignment = TextView.TEXT_ALIGNMENT_CENTER
+                text = percentValue
+            })
+            row.addView(TextView(context).apply {
+                layoutParams = lp.apply { column = 4 }
+                textAlignment = TextView.TEXT_ALIGNMENT_CENTER
+                text = missing
+            })
         }
 
     private fun log(message: String) {
