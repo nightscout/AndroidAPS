@@ -618,6 +618,7 @@
     <string name="format_autotune_isf_warning">Autotune works with only one ISF value, your profile has %1$d values. Average value is %2$.1f%3$s/U</string>
     <string name="format_autotune_percent">%</string>
     <string name="format_autotune_missing">Missing</string>
+    <string name="format_autotune_param">Param</string>
     <string name="autotune_profile_name">Autotune profile %1$s</string>
     <string name="autotune_run_without_autoswitch">Autotune runned without profile switch</string>
     <string name="autotune_run_with_autoswitch">Autotune runned and profile automatically switched</string>
