@@ -20,7 +20,7 @@
             android:layout_marginTop="4dp"
             app:cardCornerRadius="4dp"
             app:contentPadding="2dp"
-            app:cardElevation="4dp"
+            app:cardElevation="2dp"
             app:cardUseCompatPadding="false"
             android:layout_gravity="center">
 
@@ -108,7 +108,7 @@
             android:layout_marginTop="4dp"
             app:cardCornerRadius="4dp"
             app:contentPadding="2dp"
-            app:cardElevation="4dp"
+            app:cardElevation="2dp"
             app:cardUseCompatPadding="false"
             android:layout_gravity="center">
 
@@ -186,7 +186,7 @@
             android:layout_marginTop="4dp"
             app:cardCornerRadius="4dp"
             app:contentPadding="2dp"
-            app:cardElevation="4dp"
+            app:cardElevation="2dp"
             app:cardUseCompatPadding="false"
             android:layout_gravity="center">
 
