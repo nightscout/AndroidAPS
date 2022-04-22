@@ -1009,4 +1009,17 @@
     <string name="show_hide_records">隐藏闭环记录</string>
     <string name="widget_description">AndroidAPS小部件</string>
     <string name="configure">配置透明度</string>
+    <string name="a11y_otp_qr_code">用于安装一次性随机验证码的二维码</string>
+    <string name="a11y_open_settings">打开设置</string>
+    <string name="a11y_set_carb_timer">设置碳水计时器提醒</string>
+    <string name="device_all">全部</string>
+    <string name="device_phone">手机</string>
+    <string name="device_watch">手表</string>
+    <string name="a11y_only_on_watch">仅在手表时</string>
+    <string name="a11y_only_on_phone">仅在手机上</string>
+    <string name="a11y_drag_and_drop_handle">拖放操作</string>
+    <!-- Aidex Cgms -->
+    <string name="aidex">GlucoRx Aidex动泰</string>
+    <string name="aidex_short">Aidex动泰</string>
+    <string name="description_source_aidex">从GlucoRx Aidex动泰持续葡萄糖监测系统接收血糖值。</string>
 </resources>

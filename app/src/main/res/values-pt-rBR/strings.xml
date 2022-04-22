@@ -855,4 +855,5 @@
     <string name="wizard_result">Calculadora:\nInsulin: %1$.2fU\nCarbs: %2$dg</string>
     <string name="overview_editquickwizard_show_on_device">Mostrar entrada no dispositivo:</string>
     <string name="quick_wizard_not_available">O assistente rápido selecionado não está mais disponível, atualize seu atalho</string>
+    <!-- Aidex Cgms -->
 </resources>
