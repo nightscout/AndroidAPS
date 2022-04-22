@@ -435,7 +435,7 @@
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dynamische ISF</string>
     <string name="DynISFAdjust_title">Dynamische ISF aanpassingsfactor %%</string>
-    <string name="DynISFAdjust_summary">Aanpassingsfactor voor Dynamische ISF. Stel meer dan 100% in voor een agressievere correctie dosis en minder dan 100% voor minder agressieve correcties.</string>
+    <string name="DynISFAdjust_summary">Aanpassingsfactor voor Dynamische ISF. Stel meer dan 100%% in voor een agressievere correctie dosis en minder dan 100%% voor minder agressieve correcties.</string>
     <string name="enableuam">Activeer UAM</string>
     <string name="enablesmb">Activeer SMB</string>
     <string name="enablesmb_summary">SMB in plaats van tijdelijke basalen voor snellere reactie</string>
@@ -1009,4 +1009,5 @@
     <string name="show_hide_records">Verberg loop records</string>
     <string name="widget_description">AndroidAPS widget</string>
     <string name="configure">Configureer transparantie</string>
+    <!-- Aidex Cgms -->
 </resources>

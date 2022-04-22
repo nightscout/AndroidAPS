@@ -934,4 +934,5 @@
     <string name="profile_changes">Modifiche al profilo</string>
     <string name="hide_loop">Nascondi loop</string>
     <string name="show_loop">Mostra loop</string>
+    <!-- Aidex Cgms -->
 </resources>

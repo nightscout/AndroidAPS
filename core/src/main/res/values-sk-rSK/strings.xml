@@ -465,6 +465,8 @@
     <string name="remove_items">Odstrániť položky</string>
     <string name="sort_items">Zoradiť položky</string>
     <string name="remove_selected_items">Odstrániť vybrané položky</string>
+    <string name="a11y_file">súbor</string>
+    <string name="a11y_user">používateľ</string>
     <plurals name="days">
         <item quantity="one">%1$d deň</item>
         <item quantity="few">%1$d dní</item>

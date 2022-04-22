@@ -465,6 +465,8 @@
     <string name="remove_items">Eliminar elementos</string>
     <string name="sort_items">Ordenar elementos</string>
     <string name="remove_selected_items">Eliminar los elementos seleccionados</string>
+    <string name="a11y_file">Archivo</string>
+    <string name="a11y_user">Usuario</string>
     <plurals name="days">
         <item quantity="one">%1$d día</item>
         <item quantity="other">%1$d días</item>

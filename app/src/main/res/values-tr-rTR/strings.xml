@@ -436,7 +436,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dinamik İDF</string>
     <string name="DynISFAdjust_title">DinamikİDF ayarlama faktörü %%</string>
-    <string name="DynISFAdjust_summary">DinamikİDF için ayarlama faktörü. Daha agresif düzeltme dozları için %100\'den fazla ve de az agresif düzeltmeler için %100\'den az ayarlayın.</string>
+    <string name="DynISFAdjust_summary">DinamikİDF için ayarlama faktörü. Daha agresif düzeltme dozları için %%100\'den fazla ve de az agresif düzeltmeler için %%100\'den az ayarlayın.</string>
     <string name="enableuam">UAM etkinleştir</string>
     <string name="enablesmb">SMB (Super Micro Bolus) etkinleştir</string>
     <string name="enablesmb_summary">Daha hızlı bir etki için geçici bazal yerine Super Micro Bolus kullanın</string>
@@ -1010,4 +1010,5 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="show_hide_records">Döngü kayıtlarını gizle</string>
     <string name="widget_description">AndroidAPS widget</string>
     <string name="configure">Şeffaflığı yapılandır</string>
+    <!-- Aidex Cgms -->
 </resources>

@@ -1009,4 +1009,5 @@
     <string name="show_hide_records">Skrýt záznamy smyčky</string>
     <string name="widget_description">AndroidAPS widget</string>
     <string name="configure">Konfigurovat průhlednost</string>
+    <!-- Aidex Cgms -->
 </resources>

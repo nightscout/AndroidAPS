@@ -1008,4 +1008,5 @@
     <string name="show_hide_records">Скрыть записи цикла</string>
     <string name="widget_description">Виджет androidAPS</string>
     <string name="configure">Настроить прозрачность</string>
+    <!-- Aidex Cgms -->
 </resources>
