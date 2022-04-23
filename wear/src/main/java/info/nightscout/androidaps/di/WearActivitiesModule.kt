@@ -23,7 +23,7 @@ abstract class WearActivitiesModule {
     @ContributesAndroidInjector abstract fun contributesAcceptActivity(): AcceptActivity
     @ContributesAndroidInjector abstract fun contributesBolusActivity(): BolusActivity
     @ContributesAndroidInjector abstract fun contributesCarbActivity(): CarbActivity
-    @ContributesAndroidInjector abstract fun contributesCPPActivity(): CPPActivity
+    @ContributesAndroidInjector abstract fun contributesProfileSwitchActivity(): ProfileSwitchActivity
     @ContributesAndroidInjector abstract fun contributesECarbActivity(): ECarbActivity
     @ContributesAndroidInjector abstract fun contributesFillActivity(): FillActivity
     @ContributesAndroidInjector abstract fun contributesTempTargetActivity(): TempTargetActivity

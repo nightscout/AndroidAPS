@@ -33,10 +33,10 @@ class AcceptActivity : ViewSelectorActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         dismissThread = DismissThread()
-        dismissThread!!.start()
+        dismissThread?.start()
         val extras = intent.extras
-        message = extras!!.getString("message", "")
-        actionKey = extras.getString(DataLayerListenerServiceWear.KEY_ACTION_DATA, "")
+        message = extras?.getString("message", "") ?: ""
+        actionKey = extras?.getString(DataLayerListenerServiceWear.KEY_ACTION_DATA, "") ?: ""
         if (message.isEmpty() || actionKey.isEmpty()) {
             finish()
             return
@@ -117,19 +117,16 @@ class AcceptActivity : ViewSelectorActivity() {
 
         override fun run() {
             SystemClock.sleep((60 * 1000L))
-            synchronized(this) {
-                if (valid) finish()
-            }
+            synchronized(this) { if (valid) finish() }
         }
     }
 
     @Synchronized override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        if (dismissThread != null) dismissThread!!.invalidate()
-        val extras = intent.extras
-        val msgIntent = Intent(this, AcceptActivity::class.java)
-        msgIntent.putExtras(extras!!)
-        startActivity(msgIntent)
-        finish()
+        dismissThread?.invalidate()
+        intent.extras?.let {
+            startActivity(Intent(this, AcceptActivity::class.java).apply { putExtras(it) })
+            finish()
+        }
     }
 }

@@ -569,8 +569,8 @@
             android:exported="true"
             android:label="@string/action_insulin" />
         <activity
-            android:name=".interaction.actions.CPPActivity"
-            android:label="@string/status_cpp" />
+            android:name=".interaction.actions.ProfileSwitchActivity"
+            android:label="@string/status_profile_switch" />
         <activity
             android:name=".interaction.actions.AcceptActivity"
             android:label="@string/action_confirm"

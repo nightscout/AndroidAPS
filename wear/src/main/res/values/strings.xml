@@ -98,7 +98,7 @@
     <string name="action_wizard_confirmation">Calculation Requested</string>
     <string name="action_fill_confirmation">Fill Requested</string>
     <string name="action_ecarb_confirmation">Carbs Requested</string>
-    <string name="action_cpp_confirmation">CPP Requested</string>
+    <string name="action_profile_switch_confirmation">Profile Switch Requested</string>
     <string name="action_target" comment="In temp target menu, single target value">Target</string>
     <string name="action_low" comment="In temp target menu, lower value from range">Low</string>
     <string name="action_high" comment="In temp target menu, higher value from range">High</string>
@@ -122,7 +122,7 @@
 
     <string name="status_pump">Pump</string>
     <string name="status_loop">Loop</string>
-    <string name="status_cpp">CPP</string>
+    <string name="status_profile_switch">Profile switch</string>
     <string name="status_tdd">TDD</string>
 
     <string name="activity_carb">Carb</string>

@@ -19,7 +19,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventWearToMobile
 import info.nightscout.androidaps.interaction.WatchfaceConfigurationActivity
 import info.nightscout.androidaps.interaction.actions.AcceptActivity
-import info.nightscout.androidaps.interaction.actions.CPPActivity
+import info.nightscout.androidaps.interaction.actions.ProfileSwitchActivity
 import info.nightscout.androidaps.interaction.utils.Persistence
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.tile.ActionsTileService
@@ -101,7 +101,7 @@ class DataHandlerWear @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe { event ->
                 aapsLogger.debug(LTag.WEAR, "ActionProfileSwitchOpenActivity received from ${event.sourceNodeId}")
-                context.startActivity(Intent(context, CPPActivity::class.java).apply {
+                context.startActivity(Intent(context, ProfileSwitchActivity::class.java).apply {
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     putExtras(Bundle().also { bundle ->
                         bundle.putInt("percentage", event.percentage)

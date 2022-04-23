@@ -35,12 +35,12 @@ class TileConfigurationActivity : WearPreferenceActivity() {
         // Note that TileService updates are hard limited to once every 20 seconds.
         when {
             configFileName === "tile_configuration_activity" -> {
-                aapsLogger.info(LTag.WEAR, "onDestroy a: requestUpdate!!")
+                aapsLogger.info(LTag.WEAR, "onDestroy a: requestUpdate")
                 TileService.getUpdater(this).requestUpdate(ActionsTileService::class.java)
             }
 
             configFileName === "tile_configuration_tempt"    -> {
-                aapsLogger.info(LTag.WEAR, "onDestroy tt: requestUpdate!!")
+                aapsLogger.info(LTag.WEAR, "onDestroy tt: requestUpdate")
                 TileService.getUpdater(this).requestUpdate(TempTargetTileService::class.java)
             }
 
