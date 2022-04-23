@@ -1,12 +1,18 @@
 package info.nightscout.androidaps.tile
 
+import android.content.Context
 import android.content.res.Resources
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interaction.actions.BackgroundActionActivity
 import info.nightscout.androidaps.interaction.actions.TempTargetActivity
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.weardata.EventData
+import javax.inject.Inject
+import javax.inject.Singleton
 
-object TempTargetSource : StaticTileSource() {
+@Singleton
+class TempTargetSource @Inject constructor(context: Context, sp: SP, aapsLogger: AAPSLogger) : StaticTileSource(context, sp, aapsLogger) {
 
     override val preferencePrefix = "tile_tempt_"
 

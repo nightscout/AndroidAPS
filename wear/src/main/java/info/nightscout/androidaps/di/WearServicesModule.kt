@@ -4,10 +4,7 @@ import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import info.nightscout.androidaps.comm.DataLayerListenerServiceWear
 import info.nightscout.androidaps.complications.*
-import info.nightscout.androidaps.tile.ActionsTileService
-import info.nightscout.androidaps.tile.QuickWizardTileService
-import info.nightscout.androidaps.tile.TempTargetTileService
-import info.nightscout.androidaps.tile.TileBase
+import info.nightscout.androidaps.tile.*
 import info.nightscout.androidaps.watchfaces.*
 
 @Module
@@ -46,4 +43,5 @@ abstract class WearServicesModule {
     @ContributesAndroidInjector abstract fun contributesQuickWizardTileService(): QuickWizardTileService
     @ContributesAndroidInjector abstract fun contributesTempTargetTileService(): TempTargetTileService
     @ContributesAndroidInjector abstract fun contributesActionsTileService(): ActionsTileService
+
 }

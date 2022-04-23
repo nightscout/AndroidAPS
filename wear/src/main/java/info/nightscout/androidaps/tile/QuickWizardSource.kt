@@ -9,10 +9,13 @@ import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.weardata.EventData
 import java.util.*
+import javax.inject.Inject
+import javax.inject.Singleton
 
-object QuickWizardSource : TileSource {
+@Singleton
+class QuickWizardSource @Inject constructor(private val context: Context, private val sp: SP, private val aapsLogger: AAPSLogger): TileSource {
 
-    override fun getSelectedActions(context: Context, sp: SP, aapsLogger: AAPSLogger): List<Action> {
+    override fun getSelectedActions(): List<Action> {
         val quickList = mutableListOf<Action>()
         val quickMap = getQuickWizardData(sp)
         val sfm = secondsFromMidnight()
@@ -38,7 +41,7 @@ object QuickWizardSource : TileSource {
         return quickList
     }
 
-    override fun getValidFor(sp: SP): Long? {
+    override fun getValidFor(): Long? {
         val quickMap = getQuickWizardData(sp)
         if (quickMap.entries.size == 0) return null
 

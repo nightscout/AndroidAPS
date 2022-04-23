@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.tile
 
-import android.content.Context
 import android.os.Build
 import androidx.annotation.DrawableRes
 import androidx.annotation.RequiresApi
@@ -49,8 +48,8 @@ private const val LARGE_SCREEN_WIDTH_DP = 210
 interface TileSource {
 
     fun getResourceReferences(resources: android.content.res.Resources): List<Int>
-    fun getSelectedActions(context: Context, sp: SP, aapsLogger: AAPSLogger): List<Action>
-    fun getValidFor(sp: SP): Long?
+    fun getSelectedActions(): List<Action>
+    fun getValidFor(): Long?
 }
 
 open class Action(
@@ -107,11 +106,11 @@ abstract class TileBase : TileService() {
 
     private fun getSelectedActions(): List<Action> {
         // TODO check why thi scan not be don in scope of the coroutine
-        return source.getSelectedActions(this, sp, aapsLogger)
+        return source.getSelectedActions()
     }
 
     private fun validFor(): Long? {
-        return source.getValidFor(sp)
+        return source.getValidFor()
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
