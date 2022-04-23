@@ -215,4 +215,7 @@
     <attr name="isNotCompletedColor" format="reference|color" />
     <!---Nightscout client TitelColor -->
     <attr name="nsTitleColor" format="reference|color" />
+    <!---Icons in Loop area -->
+    <attr name="profileColor" format="reference|color" />
+    <attr name="crossTargetColor" format="reference|color" />
 </resources>
