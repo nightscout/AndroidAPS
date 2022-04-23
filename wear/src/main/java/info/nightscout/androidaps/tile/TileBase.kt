@@ -289,10 +289,10 @@ abstract class TileBase : TileService() {
     }
 
     private fun getWearControl(): WearControl {
-        if (!sp.contains("wearcontrol")) {
+        if (!sp.contains(R.string.key_wear_control)) {
             return WearControl.NO_DATA
         }
-        val wearControlPref = sp.getBoolean("wearcontrol", false)
+        val wearControlPref = sp.getBoolean(R.string.key_wear_control, false)
         if (wearControlPref) {
             return WearControl.ENABLED
         }
