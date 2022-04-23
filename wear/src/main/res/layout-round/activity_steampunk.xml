@@ -4,7 +4,7 @@
     android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".watchfaces.Steampunk"
+    tools:context=".watchfaces.SteampunkWatchface"
     tools:deviceIds="wear_round">
 
     <LinearLayout

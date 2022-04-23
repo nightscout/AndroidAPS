@@ -180,23 +180,18 @@ public class BIGChart extends WatchFace {
     }
 
     public void performViewSetup() {
-        final WatchViewStub stub = layoutView.findViewById(R.id.watch_view_stub);
-
-        stub.setOnLayoutInflatedListener(stub1 -> {
-            mTime = stub1.findViewById(R.id.watch_time);
-            mSgv = stub1.findViewById(R.id.sgv);
-            mTimestamp = stub1.findViewById(R.id.timestamp);
-            mDelta = stub1.findViewById(R.id.delta);
-            mAvgDelta = stub1.findViewById(R.id.avgdelta);
-            mRelativeLayout = stub1.findViewById(R.id.main_layout);
-            chart = stub1.findViewById(R.id.chart);
-            statusView = stub1.findViewById(R.id.aps_status);
-            layoutSet = true;
-            showAgeAndStatus();
-            mRelativeLayout.measure(specW, specH);
-            mRelativeLayout.layout(0, 0, mRelativeLayout.getMeasuredWidth(),
-                    mRelativeLayout.getMeasuredHeight());
-        });
+        mTime = layoutView.findViewById(R.id.watch_time);
+        mSgv = layoutView.findViewById(R.id.sgv);
+        mTimestamp = layoutView.findViewById(R.id.timestamp);
+        mDelta = layoutView.findViewById(R.id.delta);
+        mAvgDelta = layoutView.findViewById(R.id.avgdelta);
+        mRelativeLayout = layoutView.findViewById(R.id.main_layout);
+        chart = layoutView.findViewById(R.id.chart);
+        statusView = layoutView.findViewById(R.id.aps_status);
+        layoutSet = true;
+        showAgeAndStatus();
+        mRelativeLayout.measure(specW, specH);
+        mRelativeLayout.layout(0, 0, mRelativeLayout.getMeasuredWidth(), mRelativeLayout.getMeasuredHeight());
         rxBus.send(new EventWearToMobile(new EventData.ActionResendData("BIGChart:performViewSetup")));
         wakeLock.acquire(50);
     }
@@ -251,6 +246,7 @@ public class BIGChart extends WatchFace {
     }
 
 
+    @SuppressWarnings("deprecation")
     @Override
     protected WatchFaceStyle getWatchFaceStyle() {
         return new WatchFaceStyle.Builder(this).setAcceptsTapEvents(true).build();

@@ -88,7 +88,7 @@ class TempTargetActivity : ViewSelectorActivity() {
                 container.addView(view)
                 view
             } else {
-                val view = LayoutInflater.from(applicationContext).inflate(R.layout.action_send_item, container, false)
+                val view = LayoutInflater.from(applicationContext).inflate(R.layout.action_confirm_ok, container, false)
                 val confirmButton = view.findViewById<ImageView>(R.id.confirmbutton)
                 confirmButton.setOnClickListener {
                     //check if it can happen that the fragment is never created that hold data?

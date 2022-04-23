@@ -63,6 +63,7 @@ public class Home2 extends BaseWatchFace {
         sp.putString("chart_timeframe", "" + timeframe);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     protected WatchFaceStyle getWatchFaceStyle() {
         return new WatchFaceStyle.Builder(this).setAcceptsTapEvents(true).build();

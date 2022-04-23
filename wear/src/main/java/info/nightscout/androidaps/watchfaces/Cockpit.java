@@ -38,6 +38,7 @@ public class Cockpit extends BaseWatchFace {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     protected WatchFaceStyle getWatchFaceStyle() {
         return new WatchFaceStyle.Builder(this).setAcceptsTapEvents(true).build();

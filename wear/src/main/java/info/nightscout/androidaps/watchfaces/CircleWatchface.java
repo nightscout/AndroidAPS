@@ -100,7 +100,7 @@ public class CircleWatchface extends WatchFace {
         //register Message Receiver
 
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        myLayout = inflater.inflate(R.layout.modern_layout, null);
+        myLayout = inflater.inflate(R.layout.activity_circle, null);
         prepareLayout();
         prepareDrawTime();
 
@@ -507,6 +507,7 @@ public class CircleWatchface extends WatchFace {
         addArch(canvas, (offset + .8f) * offsetMultiplier + 11, getBackgroundColor(), 360);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void onTapCommand(int tapType, int x, int y, long eventTime) {
         if (mSgv == null) return;

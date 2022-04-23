@@ -31,7 +31,7 @@ abstract class WearServicesModule {
     @ContributesAndroidInjector abstract fun contributesHome(): Home
     @ContributesAndroidInjector abstract fun contributesHome2(): Home2
     @ContributesAndroidInjector abstract fun contributesLargeHome(): LargeHome
-    @ContributesAndroidInjector abstract fun contributesSteampunk(): Steampunk
+    @ContributesAndroidInjector abstract fun contributesSteampunk(): SteampunkWatchface
     @ContributesAndroidInjector abstract fun contributesDigitalStyle(): DigitalStyle
     @ContributesAndroidInjector abstract fun contributesCockpit(): Cockpit
 

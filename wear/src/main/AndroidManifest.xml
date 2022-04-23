@@ -146,7 +146,7 @@
         </service>
 
         <service
-            android:name=".watchfaces.Steampunk"
+            android:name=".watchfaces.SteampunkWatchface"
             android:allowEmbedded="true"
             android:label="@string/label_xdrip_steampunk"
             android:permission="android.permission.BIND_WALLPAPER"

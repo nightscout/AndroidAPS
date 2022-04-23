@@ -44,7 +44,7 @@ class BolusActivity : ViewSelectorActivity() {
                 container.addView(view)
                 view.requestFocus()
             } else {
-                view = LayoutInflater.from(applicationContext).inflate(R.layout.action_send_item, container, false)
+                view = LayoutInflater.from(applicationContext).inflate(R.layout.action_confirm_ok, container, false)
                 val confirmButton = view.findViewById<ImageView>(R.id.confirmbutton)
                 confirmButton.setOnClickListener {
                     rxBus.send(EventWearToMobile(ActionBolusPreCheck(SafeParse.stringToDouble(editInsulin?.editText?.text.toString()), 0)))

@@ -43,6 +43,7 @@ public class LargeHome extends BaseWatchFace {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     protected WatchFaceStyle getWatchFaceStyle(){
         return new WatchFaceStyle.Builder(this).setAcceptsTapEvents(true).build();

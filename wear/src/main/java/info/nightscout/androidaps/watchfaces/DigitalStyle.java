@@ -47,6 +47,7 @@ public class DigitalStyle extends BaseWatchFace {
     }
 
 
+    @SuppressWarnings("deprecation")
     @Override
     protected WatchFaceStyle getWatchFaceStyle() {
         return new WatchFaceStyle.Builder(this)

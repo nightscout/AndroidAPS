@@ -71,15 +71,9 @@ public abstract class BaseWatchFace extends WatchFace {
 
     CompositeDisposable disposable = new CompositeDisposable();
 
-    protected EventData.SingleBg singleBg = new EventData.SingleBg(0, "---", "-", "--", "--", "--"
-            , 0, 0.0, 0.0, 0.0, 0);
+    protected EventData.SingleBg singleBg = new EventData.SingleBg(0, "---", "-", "--", "--", "--", 0, 0.0, 0.0, 0.0, 0);
     protected EventData.Status status = new EventData.Status("no status", "IOB", "-.--", false, "--g", "-.--U/h", "--", "--", -1, "--", false, 1);
-    protected EventData.TreatmentData treatmentData = new EventData.TreatmentData(
-            new ArrayList<>(),
-            new ArrayList<>(),
-            new ArrayList<>(),
-            new ArrayList<>()
-    );
+    protected EventData.TreatmentData treatmentData = new EventData.TreatmentData(new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
     protected EventData.GraphData graphData = new EventData.GraphData(new ArrayList<>());
 
     static IntentFilter iFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
@@ -174,15 +168,11 @@ public abstract class BaseWatchFace extends WatchFace {
                 .subscribe(event -> {
                     status = event;
                     // this event is received as last batch of data
-                    if (isSimpleUi()) {
-                        if (needUpdate()) {
-                            invalidate();
-                        }
-                    } else {
+                    if (!isSimpleUi() || !needUpdate()) {
                         setupCharts();
                         setDataFields();
-                        invalidate();
                     }
+                    invalidate();
                 })
         );
 
@@ -260,50 +250,47 @@ public abstract class BaseWatchFace extends WatchFace {
     }
 
     public void performViewSetup() {
-        final WatchViewStub layoutStub = layoutView.findViewById(R.id.watch_view_stub);
-
-        layoutStub.setOnLayoutInflatedListener((WatchViewStub stub) -> {
-            mTime = stub.findViewById(R.id.watch_time);
-            mHour = stub.findViewById(R.id.hour);
-            mMinute = stub.findViewById(R.id.minute);
-            mTimePeriod = stub.findViewById(R.id.timePeriod);
-            mDay = stub.findViewById(R.id.day);
-            mDayName = stub.findViewById(R.id.dayname);
-            mMonth = stub.findViewById(R.id.month);
-            mDate = stub.findViewById(R.id.date_time);
-            mLoop = stub.findViewById(R.id.loop);
-            mSgv = stub.findViewById(R.id.sgv);
-            mDirection = stub.findViewById(R.id.direction);
-            mTimestamp = stub.findViewById(R.id.timestamp);
-            mIOB1 = stub.findViewById(R.id.iob_text);
-            mIOB2 = stub.findViewById(R.id.iobView);
-            mCOB1 = stub.findViewById(R.id.cob_text);
-            mCOB2 = stub.findViewById(R.id.cobView);
-            mBgi = stub.findViewById(R.id.bgiView);
-            mStatus = stub.findViewById(R.id.externaltstatus);
-            mBasalRate = stub.findViewById(R.id.tmpBasal);
-            mUploaderBattery = stub.findViewById(R.id.uploader_battery);
-            mRigBattery = stub.findViewById(R.id.rig_battery);
-            mDelta = stub.findViewById(R.id.delta);
-            mAvgDelta = stub.findViewById(R.id.avgdelta);
-            isAAPSv2 = stub.findViewById(R.id.AAPSv2);
-            mHighLight = stub.findViewById(R.id.highLight);
-            mLowLight = stub.findViewById(R.id.lowLight);
-            mRelativeLayout = stub.findViewById(R.id.main_layout);
-            mLinearLayout = stub.findViewById(R.id.secondary_layout);
-            mLinearLayout2 = stub.findViewById(R.id.tertiary_layout);
-            mGlucoseDial = stub.findViewById(R.id.glucose_dial);
-            mDeltaGauge = stub.findViewById(R.id.delta_pointer);
-            mHourHand = stub.findViewById(R.id.hour_hand);
-            mMinuteHand = stub.findViewById(R.id.minute_hand);
-            mChartTap = stub.findViewById(R.id.chart_zoom_tap);
-            mMainMenuTap = stub.findViewById(R.id.main_menu_tap);
-            chart = stub.findViewById(R.id.chart);
+            mTime = layoutView.findViewById(R.id.watch_time);
+            mHour = layoutView.findViewById(R.id.hour);
+            mMinute = layoutView.findViewById(R.id.minute);
+            mTimePeriod = layoutView.findViewById(R.id.timePeriod);
+            mDay = layoutView.findViewById(R.id.day);
+            mDayName = layoutView.findViewById(R.id.dayname);
+            mMonth = layoutView.findViewById(R.id.month);
+            mDate = layoutView.findViewById(R.id.date_time);
+            mLoop = layoutView.findViewById(R.id.loop);
+            mSgv = layoutView.findViewById(R.id.sgv);
+            mDirection = layoutView.findViewById(R.id.direction);
+            mTimestamp = layoutView.findViewById(R.id.timestamp);
+            mIOB1 = layoutView.findViewById(R.id.iob_text);
+            mIOB2 = layoutView.findViewById(R.id.iobView);
+            mCOB1 = layoutView.findViewById(R.id.cob_text);
+            mCOB2 = layoutView.findViewById(R.id.cobView);
+            mBgi = layoutView.findViewById(R.id.bgiView);
+            mStatus = layoutView.findViewById(R.id.externaltstatus);
+            mBasalRate = layoutView.findViewById(R.id.tmpBasal);
+            mUploaderBattery = layoutView.findViewById(R.id.uploader_battery);
+            mRigBattery = layoutView.findViewById(R.id.rig_battery);
+            mDelta = layoutView.findViewById(R.id.delta);
+            mAvgDelta = layoutView.findViewById(R.id.avgdelta);
+            isAAPSv2 = layoutView.findViewById(R.id.AAPSv2);
+            mHighLight = layoutView.findViewById(R.id.highLight);
+            mLowLight = layoutView.findViewById(R.id.lowLight);
+            mRelativeLayout = layoutView.findViewById(R.id.main_layout);
+            mLinearLayout = layoutView.findViewById(R.id.secondary_layout);
+            mLinearLayout2 = layoutView.findViewById(R.id.tertiary_layout);
+            mGlucoseDial = layoutView.findViewById(R.id.glucose_dial);
+            mDeltaGauge = layoutView.findViewById(R.id.delta_pointer);
+            mHourHand = layoutView.findViewById(R.id.hour_hand);
+            mMinuteHand = layoutView.findViewById(R.id.minute_hand);
+            mChartTap = layoutView.findViewById(R.id.chart_zoom_tap);
+            mMainMenuTap = layoutView.findViewById(R.id.main_menu_tap);
+            chart = layoutView.findViewById(R.id.chart);
             layoutSet = true;
             setupCharts();
             setDataFields();
             missedReadingAlert();
-        });
+
         wakeLock.acquire(50);
     }
 
