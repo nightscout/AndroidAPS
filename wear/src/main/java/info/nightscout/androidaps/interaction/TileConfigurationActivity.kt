@@ -3,6 +3,7 @@ package info.nightscout.androidaps.interaction
 import android.os.Bundle
 import android.view.ViewGroup
 import androidx.wear.tiles.TileService
+import dagger.android.AndroidInjection
 import info.nightscout.androidaps.tile.ActionsTileService
 import info.nightscout.androidaps.tile.TempTargetTileService
 import info.nightscout.shared.logging.AAPSLogger
@@ -17,6 +18,7 @@ class TileConfigurationActivity : WearPreferenceActivity() {
     private var configFileName: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         title = "Tile"
         configFileName = intent.action

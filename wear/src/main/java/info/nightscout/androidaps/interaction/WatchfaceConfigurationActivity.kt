@@ -7,7 +7,7 @@ import androidx.core.content.ContextCompat
 import info.nightscout.androidaps.R
 import preference.WearPreferenceActivity
 
-class AAPSPreferences : WearPreferenceActivity() {
+class WatchfaceConfigurationActivity : WearPreferenceActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,11 +19,9 @@ class AAPSPreferences : WearPreferenceActivity() {
     }
 
     private fun removeBackgroundRecursively(parent: View) {
-        if (parent is ViewGroup) {
-            for (i in 0 until parent.childCount) {
+        if (parent is ViewGroup)
+            for (i in 0 until parent.childCount)
                 removeBackgroundRecursively(parent.getChildAt(i))
-            }
-        }
         parent.background = null
     }
 }

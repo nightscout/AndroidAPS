@@ -548,7 +548,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".interaction.AAPSPreferences"
+            android:name=".interaction.WatchfaceConfigurationActivity"
             android:label="@string/menu_settings" />
         <activity
             android:name=".interaction.actions.WizardActivity"

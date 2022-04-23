@@ -17,7 +17,7 @@ import androidx.wear.tiles.TileService
 import com.google.android.gms.wearable.WearableListenerService
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventWearToMobile
-import info.nightscout.androidaps.interaction.AAPSPreferences
+import info.nightscout.androidaps.interaction.WatchfaceConfigurationActivity
 import info.nightscout.androidaps.interaction.actions.AcceptActivity
 import info.nightscout.androidaps.interaction.actions.CPPActivity
 import info.nightscout.androidaps.interaction.utils.Persistence
@@ -94,7 +94,7 @@ class DataHandlerWear @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe {
                 aapsLogger.debug(LTag.WEAR, "ActionOpenSettings received from ${it.sourceNodeId}")
-                context.startActivity(Intent(context, AAPSPreferences::class.java).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })
+                context.startActivity(Intent(context, WatchfaceConfigurationActivity::class.java).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })
             }
         disposable += rxBus
             .toObservable(EventData.ActionProfileSwitchOpenActivity::class.java)

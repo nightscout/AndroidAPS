@@ -4,8 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventWearToMobile
-import info.nightscout.androidaps.interaction.AAPSPreferences
-import info.nightscout.androidaps.interaction.actions.BolusActivity
+import info.nightscout.androidaps.interaction.WatchfaceConfigurationActivity
 import info.nightscout.androidaps.interaction.actions.ECarbActivity
 import info.nightscout.androidaps.interaction.actions.TempTargetActivity
 import info.nightscout.androidaps.interaction.actions.TreatmentActivity
@@ -43,7 +42,7 @@ class MainMenuActivity : MenuListActivity() {
 
     override fun doAction(action: String) {
         when (action) {
-            getString(R.string.menu_settings)   -> startActivity(Intent(this, AAPSPreferences::class.java).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })
+            getString(R.string.menu_settings)   -> startActivity(Intent(this, WatchfaceConfigurationActivity::class.java).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })
             getString(R.string.menu_resync)     -> rxBus.send(EventWearToMobile(ActionResendData("Re-Sync")))
             getString(R.string.status_cpp)      -> rxBus.send(EventWearToMobile(EventData.ActionProfileSwitchSendInitialData(System.currentTimeMillis())))
             getString(R.string.menu_tempt)      -> startActivity(Intent(this, TempTargetActivity::class.java).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })
