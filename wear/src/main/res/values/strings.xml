@@ -195,5 +195,6 @@
     <string name="key_show_wizard" translatable="false">showWizard</string>
     <string name="key_single_target" translatable="false">singletarget</string>
     <string name="key_wizard_percentage" translatable="false">wizardpercentage</string>
+    <string name="key_highlight_basals" translatable="false">highlight_basals</string>
 
 </resources>

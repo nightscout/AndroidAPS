@@ -17,7 +17,7 @@ import info.nightscout.androidaps.plugins.general.overview.graphExtensions.Doubl
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.TimeAsXAxisLabelFormatter
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.Round
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import java.util.*
 import javax.inject.Inject
 import kotlin.math.abs

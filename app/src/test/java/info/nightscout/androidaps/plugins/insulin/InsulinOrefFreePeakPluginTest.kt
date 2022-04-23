@@ -8,7 +8,7 @@ import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.Insulin
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert.assertEquals
 import org.junit.Before

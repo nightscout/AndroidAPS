@@ -13,7 +13,7 @@ import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.insulin.InsulinOrefBasePlugin.Companion.MIN_DIA
 import info.nightscout.androidaps.utils.DefaultValueHelper
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Before

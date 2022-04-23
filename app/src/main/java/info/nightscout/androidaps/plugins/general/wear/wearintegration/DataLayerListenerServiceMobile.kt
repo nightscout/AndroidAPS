@@ -19,7 +19,7 @@ import info.nightscout.androidaps.plugins.general.wear.WearPlugin
 import info.nightscout.androidaps.plugins.general.wear.events.EventWearUpdateGui
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.utils.DefaultValueHelper
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.wizard.QuickWizard
 import info.nightscout.shared.logging.AAPSLogger

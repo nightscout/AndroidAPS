@@ -18,7 +18,7 @@ import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInf
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.TemporaryBasalStorage
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import org.apache.commons.lang3.time.DateUtils
 import org.joda.time.DateTime

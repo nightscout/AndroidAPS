@@ -292,37 +292,37 @@ public class NOChart extends WatchFace {
     }
 
     protected void setColorLowRes() {
-        mTime.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mTime));
-        statusView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_statusView));
-        mRelativeLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_background));
-        mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
-        mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
-        mAvgDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
-        mTimestamp.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_Timestamp));
+        mTime.setTextColor(ContextCompat.getColor(this, R.color.dark_mTime));
+        statusView.setTextColor(ContextCompat.getColor(this, R.color.dark_statusView));
+        mRelativeLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.dark_background));
+        mSgv.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor));
+        mDelta.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor));
+        mAvgDelta.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor));
+        mTimestamp.setTextColor(ContextCompat.getColor(this, R.color.dark_Timestamp));
     }
 
     protected void setColorDark() {
-        mTime.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mTime));
-        statusView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_statusView));
-        mRelativeLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_background));
+        mTime.setTextColor(ContextCompat.getColor(this, R.color.dark_mTime));
+        statusView.setTextColor(ContextCompat.getColor(this, R.color.dark_statusView));
+        mRelativeLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.dark_background));
         if (sgvLevel == 1) {
-            mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor));
-            mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor));
-            mAvgDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor));
+            mSgv.setTextColor(ContextCompat.getColor(this, R.color.dark_highColor));
+            mDelta.setTextColor(ContextCompat.getColor(this, R.color.dark_highColor));
+            mAvgDelta.setTextColor(ContextCompat.getColor(this, R.color.dark_highColor));
         } else if (sgvLevel == 0) {
-            mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
-            mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
-            mAvgDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
+            mSgv.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor));
+            mDelta.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor));
+            mAvgDelta.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor));
         } else if (sgvLevel == -1) {
-            mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_lowColor));
-            mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_lowColor));
-            mAvgDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_lowColor));
+            mSgv.setTextColor(ContextCompat.getColor(this, R.color.dark_lowColor));
+            mDelta.setTextColor(ContextCompat.getColor(this, R.color.dark_lowColor));
+            mAvgDelta.setTextColor(ContextCompat.getColor(this, R.color.dark_lowColor));
         }
 
         if (ageLevel == 1) {
-            mTimestamp.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_Timestamp));
+            mTimestamp.setTextColor(ContextCompat.getColor(this, R.color.dark_Timestamp));
         } else {
-            mTimestamp.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_TimestampOld));
+            mTimestamp.setTextColor(ContextCompat.getColor(this, R.color.dark_TimestampOld));
         }
     }
 
@@ -330,27 +330,27 @@ public class NOChart extends WatchFace {
     protected void setColorBright() {
 
         if (getCurrentWatchMode() == WatchMode.INTERACTIVE) {
-            mTime.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_bigchart_time));
-            statusView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_bigchart_status));
-            mRelativeLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.light_background));
+            mTime.setTextColor(ContextCompat.getColor(this, R.color.light_bigchart_time));
+            statusView.setTextColor(ContextCompat.getColor(this, R.color.light_bigchart_status));
+            mRelativeLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.light_background));
             if (sgvLevel == 1) {
-                mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_highColor));
-                mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_highColor));
-                mAvgDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_highColor));
+                mSgv.setTextColor(ContextCompat.getColor(this, R.color.light_highColor));
+                mDelta.setTextColor(ContextCompat.getColor(this, R.color.light_highColor));
+                mAvgDelta.setTextColor(ContextCompat.getColor(this, R.color.light_highColor));
             } else if (sgvLevel == 0) {
-                mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_midColor));
-                mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_midColor));
-                mAvgDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_midColor));
+                mSgv.setTextColor(ContextCompat.getColor(this, R.color.light_midColor));
+                mDelta.setTextColor(ContextCompat.getColor(this, R.color.light_midColor));
+                mAvgDelta.setTextColor(ContextCompat.getColor(this, R.color.light_midColor));
             } else if (sgvLevel == -1) {
-                mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_lowColor));
-                mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_lowColor));
-                mAvgDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_lowColor));
+                mSgv.setTextColor(ContextCompat.getColor(this, R.color.light_lowColor));
+                mDelta.setTextColor(ContextCompat.getColor(this, R.color.light_lowColor));
+                mAvgDelta.setTextColor(ContextCompat.getColor(this, R.color.light_lowColor));
             }
 
             if (ageLevel == 1) {
-                mTimestamp.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_mTimestamp1));
+                mTimestamp.setTextColor(ContextCompat.getColor(this, R.color.light_mTimestamp1));
             } else {
-                mTimestamp.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_mTimestamp));
+                mTimestamp.setTextColor(ContextCompat.getColor(this, R.color.light_mTimestamp));
             }
         } else {
             setColorDark();

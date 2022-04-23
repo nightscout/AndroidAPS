@@ -87,7 +87,7 @@
 
     <CheckBoxPreference
         android:defaultValue="false"
-        android:key="highlight_basals"
+        android:key="@string/key_highlight_basals"
         android:summary="Better visible basal rate and temp basals"
         android:title="@string/pref_highlight_basals"
         app:wear_iconOff="@drawable/settings_off"

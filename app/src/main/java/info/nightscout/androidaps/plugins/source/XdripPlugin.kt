@@ -17,7 +17,7 @@ import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.services.Intents
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import javax.inject.Inject
 import javax.inject.Singleton
 

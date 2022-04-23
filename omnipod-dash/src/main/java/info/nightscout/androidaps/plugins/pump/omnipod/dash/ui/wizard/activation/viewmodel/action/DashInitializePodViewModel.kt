@@ -15,7 +15,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.DashHistory
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.InitialResult
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.ResolvedResult
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.I8n
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.core.Single

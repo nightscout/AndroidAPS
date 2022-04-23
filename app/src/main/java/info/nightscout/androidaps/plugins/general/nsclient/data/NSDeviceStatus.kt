@@ -11,7 +11,7 @@ import info.nightscout.androidaps.utils.HtmlHelper.fromHtml
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP

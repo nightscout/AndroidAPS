@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.iob.iobCobCalculator
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 
 /** All COB up to now, including carbs not yet processed by IobCob calculation.  */
 class CobInfo(val timestamp: Long, val displayCob: Double?, val futureCarbs: Double) {

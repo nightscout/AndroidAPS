@@ -7,7 +7,7 @@ import android.widget.TableRow
 import android.widget.TextView
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 
 class TIR(val date: Long, val lowThreshold: Double, val highThreshold: Double) {
 

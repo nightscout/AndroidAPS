@@ -14,7 +14,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistor
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.databinding.RileylinkStatusHistoryBinding
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.databinding.RileylinkStatusHistoryItemBinding
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import javax.inject.Inject
 
 class RileyLinkStatusHistoryFragment : DaggerFragment() {

@@ -22,7 +22,7 @@ import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewNotification
 import info.nightscout.androidaps.services.AlarmSoundServiceHelper
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import java.util.*
 import javax.inject.Inject

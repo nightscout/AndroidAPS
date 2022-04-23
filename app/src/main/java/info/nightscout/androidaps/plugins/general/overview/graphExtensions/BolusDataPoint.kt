@@ -7,7 +7,7 @@ import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.DefaultValueHelper
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import javax.inject.Inject
 
 class BolusDataPoint @Inject constructor(

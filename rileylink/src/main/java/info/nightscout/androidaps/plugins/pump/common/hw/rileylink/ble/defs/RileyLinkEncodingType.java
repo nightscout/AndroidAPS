@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.R;
-import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.interfaces.ResourceHelper;
 
 public enum RileyLinkEncodingType {
 

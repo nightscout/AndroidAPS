@@ -72,7 +72,7 @@ import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.commands.Command;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.T;
-import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.interfaces.ResourceHelper;
 import info.nightscout.shared.sharedPreferences.SP;
 
 public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {

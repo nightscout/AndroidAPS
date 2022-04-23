@@ -21,7 +21,7 @@ import info.nightscout.androidaps.danars.databinding.DanarsPairingProgressDialog
 import info.nightscout.androidaps.danars.events.EventDanaRSPairingSuccess;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.utils.FabricPrivacy;
-import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.interfaces.ResourceHelper;
 import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 

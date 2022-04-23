@@ -46,6 +46,7 @@ import info.nightscout.androidaps.events.EventWearToMobile;
 import info.nightscout.androidaps.interaction.utils.Persistence;
 import info.nightscout.androidaps.interaction.utils.WearUtil;
 import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import info.nightscout.shared.logging.AAPSLogger;
 import info.nightscout.shared.logging.LTag;
@@ -68,6 +69,7 @@ public abstract class BaseWatchFace extends WatchFace {
     @Inject RxBus rxBus;
     @Inject AapsSchedulers aapsSchedulers;
     @Inject SP sp;
+    @Inject DateUtil dateUtil;
 
     CompositeDisposable disposable = new CompositeDisposable();
 
@@ -121,9 +123,9 @@ public abstract class BaseWatchFace extends WatchFace {
         AndroidInjection.inject(this);
         super.onCreate();
 
-        colorDarkHigh = ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor);
-        colorDarkMid = ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor);
-        colorDarkLow = ContextCompat.getColor(getApplicationContext(), R.color.dark_lowColor);
+        colorDarkHigh = ContextCompat.getColor(this, R.color.dark_highColor);
+        colorDarkMid = ContextCompat.getColor(this, R.color.dark_midColor);
+        colorDarkLow = ContextCompat.getColor(this, R.color.dark_lowColor);
 
         Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         display.getSize(displaySize);
@@ -214,13 +216,13 @@ public abstract class BaseWatchFace extends WatchFace {
     private void setupSimpleUi() {
         mDateTime = new Date();
 
-        int black = ContextCompat.getColor(getApplicationContext(), R.color.black);
+        int black = ContextCompat.getColor(this, R.color.black);
         mBackgroundPaint = new Paint();
         mBackgroundPaint.setColor(black);
 
         final Typeface NORMAL_TYPEFACE = Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL);
         final Typeface BOLD_TYPEFACE = Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD);
-        int white = ContextCompat.getColor(getApplicationContext(), R.color.white);
+        int white = ContextCompat.getColor(this, R.color.white);
 
         Resources resources = this.getResources();
         float textSizeSvg = resources.getDimension(R.dimen.simple_ui_svg_text_size);
@@ -718,9 +720,11 @@ public abstract class BaseWatchFace extends WatchFace {
         if (chart != null && graphData.getEntries().size() > 0) {
             int timeframe = sp.getInt("chart_timeframe", 3);
             if (lowResMode) {
-                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), graphData.getEntries(), treatmentData.getPredictions(), treatmentData.getTemps(), treatmentData.getBasals(), treatmentData.getBoluses(), pointSize, midColor, gridColor, basalBackgroundColor, basalCenterColor, bolusColor, Color.GREEN, timeframe);
+                bgGraphBuilder = new BgGraphBuilder(sp, dateUtil,
+                        graphData.getEntries(), treatmentData.getPredictions(), treatmentData.getTemps(), treatmentData.getBasals(), treatmentData.getBoluses(), pointSize, midColor, gridColor, basalBackgroundColor, basalCenterColor, bolusColor, Color.GREEN, timeframe);
             } else {
-                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), graphData.getEntries(), treatmentData.getPredictions(), treatmentData.getTemps(), treatmentData.getBasals(), treatmentData.getBoluses(), pointSize, highColor, lowColor, midColor, gridColor, basalBackgroundColor, basalCenterColor, bolusColor, Color.GREEN, timeframe);
+                bgGraphBuilder = new BgGraphBuilder(sp, dateUtil, graphData.getEntries(),
+                        treatmentData.getPredictions(), treatmentData.getTemps(), treatmentData.getBasals(), treatmentData.getBoluses(), pointSize, highColor, lowColor, midColor, gridColor, basalBackgroundColor, basalCenterColor, bolusColor, Color.GREEN, timeframe);
             }
 
             chart.setLineChartData(bgGraphBuilder.lineData());

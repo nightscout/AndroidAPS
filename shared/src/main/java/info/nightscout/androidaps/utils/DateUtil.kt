@@ -3,8 +3,8 @@ package info.nightscout.androidaps.utils
 import android.content.Context
 import androidx.collection.LongSparseArray
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.R
 import info.nightscout.shared.SafeParse
 import org.apache.commons.lang3.time.DateUtils.isSameDay
 import org.joda.time.DateTime
@@ -136,6 +136,14 @@ class DateUtil @Inject constructor(private val context: Context) {
         var format = "hh:mma"
         if (android.text.format.DateFormat.is24HourFormat(context)) {
             format = "HH:mm"
+        }
+        return DateTime(mills).toString(DateTimeFormat.forPattern(format))
+    }
+
+    fun hourString(mills: Long): String {
+        var format = "hha"
+        if (android.text.format.DateFormat.is24HourFormat(context)) {
+            format = "HH"
         }
         return DateTime(mills).toString(DateTimeFormat.forPattern(format))
     }

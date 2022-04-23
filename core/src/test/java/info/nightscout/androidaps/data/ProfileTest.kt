@@ -14,7 +14,7 @@ import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HardLimits
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.TestAapsSchedulers
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONObject

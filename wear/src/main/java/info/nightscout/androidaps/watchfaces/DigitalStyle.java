@@ -59,36 +59,36 @@ public class DigitalStyle extends BaseWatchFace {
 
     protected void setColorDark() {
         if (singleBg.getSgvLevel() == 1) {
-            mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor));
-            mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor));
+            mSgv.setTextColor(ContextCompat.getColor(this, R.color.dark_highColor));
+            mDirection.setTextColor(ContextCompat.getColor(this, R.color.dark_highColor));
         } else if (singleBg.getSgvLevel() == 0) {
-            mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
-            mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
+            mSgv.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor));
+            mDirection.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor));
         } else if (singleBg.getSgvLevel() == -1) {
-            mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_lowColor));
-            mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_lowColor));
+            mSgv.setTextColor(ContextCompat.getColor(this, R.color.dark_lowColor));
+            mDirection.setTextColor(ContextCompat.getColor(this, R.color.dark_lowColor));
         }
 
         if (ageLevel == 1) {
-            mTimestamp.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
+            mTimestamp.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor));
         } else {
-            mTimestamp.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_TimestampOld));
+            mTimestamp.setTextColor(ContextCompat.getColor(this, R.color.dark_TimestampOld));
         }
 
         if (status.getBatteryLevel() == 1) {
-            mUploaderBattery.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
+            mUploaderBattery.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor));
         } else {
-            mUploaderBattery.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_uploaderBatteryEmpty));
+            mUploaderBattery.setTextColor(ContextCompat.getColor(this, R.color.dark_uploaderBatteryEmpty));
         }
 
 
         if (chart != null) {
-            highColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor);
-            lowColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_lowColor);
-            midColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor);
-            gridColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_gridColor);
-            basalBackgroundColor = ContextCompat.getColor(getApplicationContext(), R.color.basal_dark);
-            basalCenterColor = ContextCompat.getColor(getApplicationContext(), R.color.basal_light);
+            highColor = ContextCompat.getColor(this, R.color.dark_highColor);
+            lowColor = ContextCompat.getColor(this, R.color.dark_lowColor);
+            midColor = ContextCompat.getColor(this, R.color.dark_midColor);
+            gridColor = ContextCompat.getColor(this, R.color.dark_gridColor);
+            basalBackgroundColor = ContextCompat.getColor(this, R.color.basal_dark);
+            basalCenterColor = ContextCompat.getColor(this, R.color.basal_light);
             pointSize = 1;
             setupCharts();
             setWatchfaceStyle();
@@ -109,7 +109,7 @@ public class DigitalStyle extends BaseWatchFace {
             // Load image with shapes
             String styleDrawableName = "digitalstyle_bg_" + displayStyle + "_" + displayFormatType;
             try {
-                mShapesElements.setBackground(getResources().getDrawable(getResources().getIdentifier(styleDrawableName, "drawable", getApplicationContext().getPackageName())));
+                mShapesElements.setBackground(getResources().getDrawable(getResources().getIdentifier(styleDrawableName, "drawable", this.getPackageName())));
             } catch (Exception e) {
                 aapsLogger.error("digitalstyle_frameStyle", "RESOURCE NOT FOUND >> " + styleDrawableName);
             }
@@ -121,7 +121,7 @@ public class DigitalStyle extends BaseWatchFace {
                 String strColorName =((   displayFrameColor.equals("white") || displayFrameColor.equals("black")  )?displayFrameColor:displayFrameColor+"_"+displayFrameColorSaturation);
                 aapsLogger.debug(LTag.WEAR,"digitalstyle_strColorName",strColorName);
                 try {
-                    ColorStateList colorStateList = ContextCompat.getColorStateList(getApplicationContext(), getResources().getIdentifier(strColorName, "color", getApplicationContext().getPackageName()));
+                    ColorStateList colorStateList = ContextCompat.getColorStateList(this, getResources().getIdentifier(strColorName, "color", this.getPackageName()));
                     mShapesElements.setBackgroundTintList(colorStateList);
                 } catch (Exception e) {
                     mShapesElements.setBackgroundTintList(null);

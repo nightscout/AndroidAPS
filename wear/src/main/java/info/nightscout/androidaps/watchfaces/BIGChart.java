@@ -9,7 +9,6 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.PowerManager;
-import android.support.wearable.view.WatchViewStub;
 import android.support.wearable.watchface.WatchFaceStyle;
 import android.text.format.DateFormat;
 import android.util.DisplayMetrics;
@@ -37,6 +36,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventWearToMobile;
 import info.nightscout.androidaps.interaction.menus.MainMenuActivity;
 import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import info.nightscout.shared.logging.AAPSLogger;
 import info.nightscout.shared.logging.LTag;
@@ -55,6 +55,7 @@ public class BIGChart extends WatchFace {
     @Inject AapsSchedulers aapsSchedulers;
     @Inject AAPSLogger aapsLogger;
     @Inject SP sp;
+    @Inject DateUtil dateUtil;
 
     CompositeDisposable disposable = new CompositeDisposable();
 
@@ -350,20 +351,20 @@ public class BIGChart extends WatchFace {
     }
 
     protected void setColorLowRes() {
-        mTime.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mTime));
-        statusView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_statusView));
-        mRelativeLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_background));
-        mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
-        mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
-        mAvgDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
-        mTimestamp.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_Timestamp));
+        mTime.setTextColor(ContextCompat.getColor(this, R.color.dark_mTime));
+        statusView.setTextColor(ContextCompat.getColor(this, R.color.dark_statusView));
+        mRelativeLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.dark_background));
+        mSgv.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor));
+        mDelta.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor));
+        mAvgDelta.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor));
+        mTimestamp.setTextColor(ContextCompat.getColor(this, R.color.dark_Timestamp));
         if (chart != null) {
-            highColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor);
-            lowColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor);
-            midColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor);
-            gridColour = ContextCompat.getColor(getApplicationContext(), R.color.dark_gridColor);
-            basalBackgroundColor = ContextCompat.getColor(getApplicationContext(), R.color.basal_dark_lowres);
-            basalCenterColor = ContextCompat.getColor(getApplicationContext(), R.color.basal_light_lowres);
+            highColor = ContextCompat.getColor(this, R.color.dark_midColor);
+            lowColor = ContextCompat.getColor(this, R.color.dark_midColor);
+            midColor = ContextCompat.getColor(this, R.color.dark_midColor);
+            gridColour = ContextCompat.getColor(this, R.color.dark_gridColor);
+            basalBackgroundColor = ContextCompat.getColor(this, R.color.basal_dark_lowres);
+            basalCenterColor = ContextCompat.getColor(this, R.color.basal_light_lowres);
             pointSize = 2;
             setupCharts();
         }
@@ -372,36 +373,36 @@ public class BIGChart extends WatchFace {
 
     protected void setColorDark() {
         if (singleBg != null) {
-            mTime.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mTime));
-            statusView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_statusView));
-            mRelativeLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_background));
+            mTime.setTextColor(ContextCompat.getColor(this, R.color.dark_mTime));
+            statusView.setTextColor(ContextCompat.getColor(this, R.color.dark_statusView));
+            mRelativeLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.dark_background));
             if (singleBg.getSgvLevel() == 1) {
-                mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor));
-                mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor));
-                mAvgDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor));
+                mSgv.setTextColor(ContextCompat.getColor(this, R.color.dark_highColor));
+                mDelta.setTextColor(ContextCompat.getColor(this, R.color.dark_highColor));
+                mAvgDelta.setTextColor(ContextCompat.getColor(this, R.color.dark_highColor));
             } else if (singleBg.getSgvLevel() == 0) {
-                mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
-                mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
-                mAvgDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
+                mSgv.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor));
+                mDelta.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor));
+                mAvgDelta.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor));
             } else if (singleBg.getSgvLevel() == -1) {
-                mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_lowColor));
-                mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_lowColor));
-                mAvgDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_lowColor));
+                mSgv.setTextColor(ContextCompat.getColor(this, R.color.dark_lowColor));
+                mDelta.setTextColor(ContextCompat.getColor(this, R.color.dark_lowColor));
+                mAvgDelta.setTextColor(ContextCompat.getColor(this, R.color.dark_lowColor));
             }
 
             if (ageLevel == 1) {
-                mTimestamp.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_Timestamp));
+                mTimestamp.setTextColor(ContextCompat.getColor(this, R.color.dark_Timestamp));
             } else {
-                mTimestamp.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_TimestampOld));
+                mTimestamp.setTextColor(ContextCompat.getColor(this, R.color.dark_TimestampOld));
             }
 
             if (chart != null) {
-                highColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor);
-                lowColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_lowColor);
-                midColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor);
-                gridColour = ContextCompat.getColor(getApplicationContext(), R.color.dark_gridColor);
-                basalBackgroundColor = ContextCompat.getColor(getApplicationContext(), R.color.basal_dark);
-                basalCenterColor = ContextCompat.getColor(getApplicationContext(), R.color.basal_light);
+                highColor = ContextCompat.getColor(this, R.color.dark_highColor);
+                lowColor = ContextCompat.getColor(this, R.color.dark_lowColor);
+                midColor = ContextCompat.getColor(this, R.color.dark_midColor);
+                gridColour = ContextCompat.getColor(this, R.color.dark_gridColor);
+                basalBackgroundColor = ContextCompat.getColor(this, R.color.basal_dark);
+                basalCenterColor = ContextCompat.getColor(this, R.color.basal_light);
                 pointSize = 2;
                 setupCharts();
             }
@@ -412,36 +413,36 @@ public class BIGChart extends WatchFace {
     protected void setColorBright() {
 
         if (getCurrentWatchMode() == WatchMode.INTERACTIVE) {
-            mTime.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_bigchart_time));
-            statusView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_bigchart_status));
-            mRelativeLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.light_background));
+            mTime.setTextColor(ContextCompat.getColor(this, R.color.light_bigchart_time));
+            statusView.setTextColor(ContextCompat.getColor(this, R.color.light_bigchart_status));
+            mRelativeLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.light_background));
             if (singleBg.getSgvLevel() == 1) {
-                mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_highColor));
-                mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_highColor));
-                mAvgDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_highColor));
+                mSgv.setTextColor(ContextCompat.getColor(this, R.color.light_highColor));
+                mDelta.setTextColor(ContextCompat.getColor(this, R.color.light_highColor));
+                mAvgDelta.setTextColor(ContextCompat.getColor(this, R.color.light_highColor));
             } else if (singleBg.getSgvLevel() == 0) {
-                mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_midColor));
-                mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_midColor));
-                mAvgDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_midColor));
+                mSgv.setTextColor(ContextCompat.getColor(this, R.color.light_midColor));
+                mDelta.setTextColor(ContextCompat.getColor(this, R.color.light_midColor));
+                mAvgDelta.setTextColor(ContextCompat.getColor(this, R.color.light_midColor));
             } else if (singleBg.getSgvLevel() == -1) {
-                mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_lowColor));
-                mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_lowColor));
-                mAvgDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_lowColor));
+                mSgv.setTextColor(ContextCompat.getColor(this, R.color.light_lowColor));
+                mDelta.setTextColor(ContextCompat.getColor(this, R.color.light_lowColor));
+                mAvgDelta.setTextColor(ContextCompat.getColor(this, R.color.light_lowColor));
             }
 
             if (ageLevel == 1) {
-                mTimestamp.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_mTimestamp1));
+                mTimestamp.setTextColor(ContextCompat.getColor(this, R.color.light_mTimestamp1));
             } else {
-                mTimestamp.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_mTimestamp));
+                mTimestamp.setTextColor(ContextCompat.getColor(this, R.color.light_mTimestamp));
             }
 
             if (chart != null) {
-                highColor = ContextCompat.getColor(getApplicationContext(), R.color.light_highColor);
-                lowColor = ContextCompat.getColor(getApplicationContext(), R.color.light_lowColor);
-                midColor = ContextCompat.getColor(getApplicationContext(), R.color.light_midColor);
-                gridColour = ContextCompat.getColor(getApplicationContext(), R.color.light_gridColor);
-                basalBackgroundColor = ContextCompat.getColor(getApplicationContext(), R.color.basal_light);
-                basalCenterColor = ContextCompat.getColor(getApplicationContext(), R.color.basal_dark);
+                highColor = ContextCompat.getColor(this, R.color.light_highColor);
+                lowColor = ContextCompat.getColor(this, R.color.light_lowColor);
+                midColor = ContextCompat.getColor(this, R.color.light_midColor);
+                gridColour = ContextCompat.getColor(this, R.color.light_gridColor);
+                basalBackgroundColor = ContextCompat.getColor(this, R.color.basal_light);
+                basalCenterColor = ContextCompat.getColor(this, R.color.basal_dark);
                 pointSize = 2;
                 setupCharts();
             }
@@ -473,9 +474,11 @@ public class BIGChart extends WatchFace {
         if (bgDataList.size() > 0) {
             int timeframe = sp.getInt("chart_timeframe", 3);
             if (lowResMode) {
-                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, treatmentData.getPredictions(), treatmentData.getTemps(), treatmentData.getBasals(), treatmentData.getBoluses(), pointSize, midColor, gridColour, basalBackgroundColor, basalCenterColor, bolusColor, carbsColor, timeframe);
+                bgGraphBuilder = new BgGraphBuilder(sp, dateUtil, bgDataList,
+                        treatmentData.getPredictions(), treatmentData.getTemps(), treatmentData.getBasals(), treatmentData.getBoluses(), pointSize, midColor, gridColour, basalBackgroundColor, basalCenterColor, bolusColor, carbsColor, timeframe);
             } else {
-                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, treatmentData.getPredictions(), treatmentData.getTemps(), treatmentData.getBasals(), treatmentData.getBoluses(), pointSize, highColor, lowColor, midColor, gridColour, basalBackgroundColor, basalCenterColor, bolusColor, carbsColor, timeframe);
+                bgGraphBuilder = new BgGraphBuilder(sp, dateUtil, bgDataList,
+                        treatmentData.getPredictions(), treatmentData.getTemps(), treatmentData.getBasals(), treatmentData.getBoluses(), pointSize, highColor, lowColor, midColor, gridColour, basalBackgroundColor, basalCenterColor, bolusColor, carbsColor, timeframe);
             }
 
             chart.setLineChartData(bgGraphBuilder.lineData());

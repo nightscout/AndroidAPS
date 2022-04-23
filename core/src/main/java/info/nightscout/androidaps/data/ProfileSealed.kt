@@ -21,7 +21,7 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import org.json.JSONArray
 import org.json.JSONObject
 import java.text.DecimalFormat

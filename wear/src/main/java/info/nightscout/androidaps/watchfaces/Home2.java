@@ -71,47 +71,47 @@ public class Home2 extends BaseWatchFace {
 
     protected void setColorDark() {
         @ColorInt final int dividerTxtColor = dividerMatchesBg ?
-                ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor) : Color.BLACK;
-        @ColorInt final int dividerBatteryOkColor = ContextCompat.getColor(getApplicationContext(),
+                ContextCompat.getColor(this, R.color.dark_midColor) : Color.BLACK;
+        @ColorInt final int dividerBatteryOkColor = ContextCompat.getColor(this,
                 dividerMatchesBg ? R.color.dark_midColor : R.color.dark_uploaderBattery);
-        @ColorInt final int dividerBgColor = ContextCompat.getColor(getApplicationContext(),
+        @ColorInt final int dividerBgColor = ContextCompat.getColor(this,
                 dividerMatchesBg ? R.color.dark_background : R.color.dark_statusView);
 
         mLinearLayout.setBackgroundColor(dividerBgColor);
-        mLinearLayout2.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_background));
-        mRelativeLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_background));
-        mTime.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
-        mIOB1.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
-        mIOB2.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
-        mCOB1.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
-        mCOB2.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
-        mDay.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
-        mMonth.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
-        mLoop.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
+        mLinearLayout2.setBackgroundColor(ContextCompat.getColor(this, R.color.dark_background));
+        mRelativeLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.dark_background));
+        mTime.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor));
+        mIOB1.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor));
+        mIOB2.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor));
+        mCOB1.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor));
+        mCOB2.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor));
+        mDay.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor));
+        mMonth.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor));
+        mLoop.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor));
 
         setTextSizes();
 
         if (singleBg.getSgvLevel() == 1) {
-            mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor));
-            mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor));
+            mSgv.setTextColor(ContextCompat.getColor(this, R.color.dark_highColor));
+            mDirection.setTextColor(ContextCompat.getColor(this, R.color.dark_highColor));
         } else if (singleBg.getSgvLevel() == 0) {
-            mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
-            mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
+            mSgv.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor));
+            mDirection.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor));
         } else if (singleBg.getSgvLevel() == -1) {
-            mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_lowColor));
-            mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_lowColor));
+            mSgv.setTextColor(ContextCompat.getColor(this, R.color.dark_lowColor));
+            mDirection.setTextColor(ContextCompat.getColor(this, R.color.dark_lowColor));
         }
 
         if (ageLevel == 1) {
-            mTimestamp.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
+            mTimestamp.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor));
         } else {
-            mTimestamp.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_TimestampOld));
+            mTimestamp.setTextColor(ContextCompat.getColor(this, R.color.dark_TimestampOld));
         }
 
         if (status.getBatteryLevel() == 1) {
             mUploaderBattery.setTextColor(dividerBatteryOkColor);
         } else {
-            mUploaderBattery.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_uploaderBatteryEmpty));
+            mUploaderBattery.setTextColor(ContextCompat.getColor(this, R.color.dark_uploaderBatteryEmpty));
         }
         mRigBattery.setTextColor(dividerTxtColor);
         mDelta.setTextColor(dividerTxtColor);
@@ -128,12 +128,12 @@ public class Home2 extends BaseWatchFace {
         }
 
         if (chart != null) {
-            highColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor);
-            lowColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_lowColor);
-            midColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor);
-            gridColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_gridColor);
-            basalBackgroundColor = ContextCompat.getColor(getApplicationContext(), R.color.basal_dark);
-            basalCenterColor = ContextCompat.getColor(getApplicationContext(), R.color.basal_light);
+            highColor = ContextCompat.getColor(this, R.color.dark_highColor);
+            lowColor = ContextCompat.getColor(this, R.color.dark_lowColor);
+            midColor = ContextCompat.getColor(this, R.color.dark_midColor);
+            gridColor = ContextCompat.getColor(this, R.color.dark_gridColor);
+            basalBackgroundColor = ContextCompat.getColor(this, R.color.basal_dark);
+            basalCenterColor = ContextCompat.getColor(this, R.color.basal_light);
             pointSize = 2;
             setupCharts();
         }
@@ -141,38 +141,38 @@ public class Home2 extends BaseWatchFace {
 
     protected void setColorLowRes() {
         @ColorInt final int dividerTxtColor = dividerMatchesBg ?
-                ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor) : Color.BLACK;
-        @ColorInt final int dividerBgColor = ContextCompat.getColor(getApplicationContext(),
+                ContextCompat.getColor(this, R.color.dark_midColor) : Color.BLACK;
+        @ColorInt final int dividerBgColor = ContextCompat.getColor(this,
                 dividerMatchesBg ? R.color.dark_background : R.color.dark_statusView);
 
         mLinearLayout.setBackgroundColor(dividerBgColor);
-        mLinearLayout2.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_background));
-        mRelativeLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_background));
+        mLinearLayout2.setBackgroundColor(ContextCompat.getColor(this, R.color.dark_background));
+        mRelativeLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.dark_background));
         mLoop.setBackgroundResource(R.drawable.loop_grey_25);
-        mLoop.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
-        mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
-        mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
-        mTimestamp.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_Timestamp));
+        mLoop.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor));
+        mSgv.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor));
+        mDirection.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor));
+        mTimestamp.setTextColor(ContextCompat.getColor(this, R.color.dark_Timestamp));
         mDelta.setTextColor(dividerTxtColor);
         mAvgDelta.setTextColor(dividerTxtColor);
         mRigBattery.setTextColor(dividerTxtColor);
         mUploaderBattery.setTextColor(dividerTxtColor);
         mBasalRate.setTextColor(dividerTxtColor);
         mBgi.setTextColor(dividerTxtColor);
-        mIOB1.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
-        mIOB2.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
-        mCOB1.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
-        mCOB2.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
-        mDay.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
-        mMonth.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
-        mTime.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mTime));
+        mIOB1.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor));
+        mIOB2.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor));
+        mCOB1.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor));
+        mCOB2.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor));
+        mDay.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor));
+        mMonth.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor));
+        mTime.setTextColor(ContextCompat.getColor(this, R.color.dark_mTime));
         if (chart != null) {
-            highColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor);
-            lowColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor);
-            midColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor);
-            gridColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_gridColor);
-            basalBackgroundColor = ContextCompat.getColor(getApplicationContext(), R.color.basal_dark_lowres);
-            basalCenterColor = ContextCompat.getColor(getApplicationContext(), R.color.basal_light_lowres);
+            highColor = ContextCompat.getColor(this, R.color.dark_midColor);
+            lowColor = ContextCompat.getColor(this, R.color.dark_midColor);
+            midColor = ContextCompat.getColor(this, R.color.dark_midColor);
+            gridColor = ContextCompat.getColor(this, R.color.dark_gridColor);
+            basalBackgroundColor = ContextCompat.getColor(this, R.color.basal_dark_lowres);
+            basalCenterColor = ContextCompat.getColor(this, R.color.basal_light_lowres);
             pointSize = 2;
             setupCharts();
         }
@@ -184,13 +184,13 @@ public class Home2 extends BaseWatchFace {
         if (getCurrentWatchMode() == WatchMode.INTERACTIVE) {
 
             @ColorInt final int dividerTxtColor = dividerMatchesBg ? Color.BLACK :
-                    ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor);
-            @ColorInt final int dividerBgColor = ContextCompat.getColor(getApplicationContext(),
+                    ContextCompat.getColor(this, R.color.dark_midColor);
+            @ColorInt final int dividerBgColor = ContextCompat.getColor(this,
                     dividerMatchesBg ? R.color.light_background : R.color.light_stripe_background);
 
             mLinearLayout.setBackgroundColor(dividerBgColor);
-            mLinearLayout2.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.light_background));
-            mRelativeLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.light_background));
+            mLinearLayout2.setBackgroundColor(ContextCompat.getColor(this, R.color.light_background));
+            mRelativeLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.light_background));
             mTime.setTextColor(Color.BLACK);
             mIOB1.setTextColor(Color.BLACK);
             mIOB2.setTextColor(Color.BLACK);
@@ -203,14 +203,14 @@ public class Home2 extends BaseWatchFace {
             setTextSizes();
 
             if (singleBg.getSgvLevel() == 1) {
-                mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_highColor));
-                mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_highColor));
+                mSgv.setTextColor(ContextCompat.getColor(this, R.color.light_highColor));
+                mDirection.setTextColor(ContextCompat.getColor(this, R.color.light_highColor));
             } else if (singleBg.getSgvLevel() == 0) {
-                mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_midColor));
-                mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_midColor));
+                mSgv.setTextColor(ContextCompat.getColor(this, R.color.light_midColor));
+                mDirection.setTextColor(ContextCompat.getColor(this, R.color.light_midColor));
             } else if (singleBg.getSgvLevel() == -1) {
-                mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_lowColor));
-                mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_lowColor));
+                mSgv.setTextColor(ContextCompat.getColor(this, R.color.light_lowColor));
+                mDirection.setTextColor(ContextCompat.getColor(this, R.color.light_lowColor));
             }
 
             if (ageLevel == 1) {
@@ -239,12 +239,12 @@ public class Home2 extends BaseWatchFace {
             }
 
             if (chart != null) {
-                highColor = ContextCompat.getColor(getApplicationContext(), R.color.light_highColor);
-                lowColor = ContextCompat.getColor(getApplicationContext(), R.color.light_lowColor);
-                midColor = ContextCompat.getColor(getApplicationContext(), R.color.light_midColor);
-                gridColor = ContextCompat.getColor(getApplicationContext(), R.color.light_gridColor);
-                basalBackgroundColor = ContextCompat.getColor(getApplicationContext(), R.color.basal_light);
-                basalCenterColor = ContextCompat.getColor(getApplicationContext(), R.color.basal_dark);
+                highColor = ContextCompat.getColor(this, R.color.light_highColor);
+                lowColor = ContextCompat.getColor(this, R.color.light_lowColor);
+                midColor = ContextCompat.getColor(this, R.color.light_midColor);
+                gridColor = ContextCompat.getColor(this, R.color.light_gridColor);
+                basalBackgroundColor = ContextCompat.getColor(this, R.color.basal_light);
+                basalCenterColor = ContextCompat.getColor(this, R.color.basal_dark);
                 pointSize = 2;
                 setupCharts();
             }

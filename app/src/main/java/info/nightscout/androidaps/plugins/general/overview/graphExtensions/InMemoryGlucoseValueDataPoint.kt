@@ -6,7 +6,7 @@ import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.data.InMemoryGlucoseValue
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import javax.inject.Inject
 
 class InMemoryGlucoseValueDataPoint @Inject constructor(

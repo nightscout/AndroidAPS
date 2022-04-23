@@ -43,7 +43,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProv
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.*
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference

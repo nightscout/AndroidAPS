@@ -21,7 +21,7 @@ import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.Translator
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import javax.inject.Inject
 
 class PrepareTreatmentsDataWorker(
