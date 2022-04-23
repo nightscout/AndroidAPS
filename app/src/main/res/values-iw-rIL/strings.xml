@@ -435,7 +435,7 @@
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">רגישות דינאמית</string>
     <string name="DynISFAdjust_title">כיוונון פקטור הרגישות הדינאמית %%</string>
-    <string name="DynISFAdjust_summary">כיוונון פקטור הרגישות הדינאמית. קבעו יותר מ-100% לקבלת תיקונים אגרסיביים יותר ופחות מ-100% לקבלת תיקונים עדינים יותר.</string>
+    <string name="DynISFAdjust_summary">כיוונון פקטור הרגישות הדינאמית. קבעו יותר מ-100%% לקבלת תיקונים אגרסיביים יותר ופחות מ-100%% לקבלת תיקונים עדינים יותר.</string>
     <string name="enableuam">הפעלת UAM</string>
     <string name="enablesmb">אפשר SMB</string>
     <string name="enablesmb_summary">השתמש בסופר מיקרו בולוסים במקום בבזאלי זמני לפעילות מהירה יותר</string>
@@ -512,9 +512,9 @@
     <string name="maxiobset">ערך IOB מקסימלי הוגדר כראוי</string>
     <string name="hasbgdata">ערכי סוכר זמינים מהמקור הנבחר</string>
     <string name="extendedbolusdeliveryerror">שגיאה במתן הבולוס הממושך</string>
-    <string name="enablesmbalways">הפעלת SMB תמיד</string>
+    <string name="enablesmbalways">הפעל SMB תמיד</string>
     <string name="enablesmbalways_summary">אפשר SMB תמיד באופן עצמאי מבולוסים. אפשרי רק עם מקור ערכי סוכר עם דיוק של נתונים כמו G5</string>
-    <string name="enablesmbaftercarbs">הפעלת SMB אחרי פחמימות</string>
+    <string name="enablesmbaftercarbs">הפעל SMB אחרי פחמימות</string>
     <string name="enablesmbaftercarbs_summary">הפעלת SMB במשך 6 ש\' אחרי פחמימות, גם אם אין פחמ\' פעילות. אפשרי רק עם מקור ערכי סוכר עם דיוק נתונים כמו G5</string>
     <string name="enablesmbwithcob">הפעלת SMB עם פחמ\' פעילות</string>
     <string name="enablesmbwithcob_summary">הפעלת SMB כשיש פחמ\' פעילות.</string>
@@ -980,4 +980,13 @@
     <string name="show_hide_records">החבא רשומות לולאה</string>
     <string name="widget_description">ווידג\'ט AndroidAPS</string>
     <string name="configure">הגדרת אטימות</string>
+    <string name="device_phone">טלפון</string>
+    <string name="device_watch">שעון</string>
+    <string name="a11y_only_on_watch">על השעון בלבד</string>
+    <string name="a11y_only_on_phone">על הטלפון בלבד</string>
+    <string name="a11y_drag_and_drop_handle">ידית גרירה</string>
+    <!-- Aidex Cgms -->
+    <string name="aidex">GlucoRx Aidex</string>
+    <string name="aidex_short">Aidex</string>
+    <string name="description_source_aidex">קבלת נתוני סוכר מחיישני GlucoRx Aidex.</string>
 </resources>

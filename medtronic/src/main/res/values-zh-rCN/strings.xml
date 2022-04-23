@@ -91,4 +91,6 @@
     <string name="set_neutral_temps_summary">如果启用，它将在每小时结束前取消临时基础率。 此方法可帮助阻止某些泵在一小时内进行蜂鸣/振动。</string>
     <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d 分钟剩余)</string>
     <string name="invalid_history_data">检测到无效的泵历史数据。打开新问题并提供日志。</string>
+    <string name="riley_statistics">RileyLink状态</string>
+    <string name="medtronic_history_type">类型：</string>
 </resources>

@@ -70,6 +70,9 @@ class SkinLowRes @Inject constructor(private val config: Config) : SkinInterface
                 setMargins(0,0,0,0)
             }
             graphCard.layoutParams = paramGraph
+
+            activeProfile.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
+            tempTarget.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
         }
 
     }

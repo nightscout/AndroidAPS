@@ -84,7 +84,7 @@ class TriggerRecurringTime(injector: HasAndroidInjector) : Trigger(injector) {
         return if (counter == 0) rh.gs(R.string.never) else sb.toString()
     }
 
-    override fun icon(): Optional<Int?> = Optional.of(R.drawable.ic_access_alarm_24dp)
+    override fun icon(): Optional<Int> = Optional.of(R.drawable.ic_access_alarm_24dp)
 
     override fun duplicate(): Trigger = TriggerRecurringTime(injector, this)
 

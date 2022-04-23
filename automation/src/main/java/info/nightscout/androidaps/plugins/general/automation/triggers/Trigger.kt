@@ -53,7 +53,7 @@ abstract class Trigger(val injector: HasAndroidInjector) {
 
     abstract fun friendlyName(): Int
     abstract fun friendlyDescription(): String
-    abstract fun icon(): Optional<Int?>
+    abstract fun icon(): Optional<Int>
     abstract fun duplicate(): Trigger
 
     fun scanForActivity(cont: Context?): AppCompatActivity? {

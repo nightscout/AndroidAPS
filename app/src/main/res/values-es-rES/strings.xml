@@ -865,7 +865,7 @@
     <string name="clear_filter">Borrar filtro</string>
     <string name="trend_arrow">Flecha de tendencia</string>
     <string name="cannula">Cánula</string>
-    <string name="userentry">Entrada usuario</string>
+    <string name="userentry">Entrada de usuario</string>
     <string name="common_values">Usa los valores de la comida más grande que sueles comer\n</string>
     <string name="summary_email_for_crash_report">Esta identificación se adjuntará a los informes de errores, para que podamos contactarte en casos urgentes. Es opcional.</string>
     <string name="email_address">Dirección de Correo Electrónico</string>
@@ -1009,4 +1009,17 @@
     <string name="show_hide_records">Ocultar registros del lazo</string>
     <string name="widget_description">Widget de AndroidAPS</string>
     <string name="configure">Configurar opacidad</string>
+    <string name="a11y_otp_qr_code">Código QR para la configuración de la contraseña de un sólo uso</string>
+    <string name="a11y_open_settings">Abrir la configuración</string>
+    <string name="a11y_set_carb_timer">Establecer alarma de carbohidratos</string>
+    <string name="device_all">Todo</string>
+    <string name="device_phone">Teléfono</string>
+    <string name="device_watch">Reloj</string>
+    <string name="a11y_only_on_watch">Sólo en reloj</string>
+    <string name="a11y_only_on_phone">Sólo en teléfono</string>
+    <string name="a11y_drag_and_drop_handle">Arrastrar y soltar </string>
+    <!-- Aidex Cgms -->
+    <string name="aidex">GlucoRx Aidex</string>
+    <string name="aidex_short">Aidex</string>
+    <string name="description_source_aidex">Recibir los valores de glucosa de GlucoRx Aidex CGMS</string>
 </resources>
