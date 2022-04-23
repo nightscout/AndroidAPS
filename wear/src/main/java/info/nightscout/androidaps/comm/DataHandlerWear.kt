@@ -209,7 +209,10 @@ class DataHandlerWear @Inject constructor(
         cancelIntent.action = DataLayerListenerServiceWear.INTENT_CANCEL_BOLUS
         val cancelPendingIntent = PendingIntent.getService(context, 0, cancelIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         val notificationBuilder: NotificationCompat.Builder =
-            NotificationCompat.Builder(context, if (vibrate) DataLayerListenerServiceWear.AAPS_NOTIFY_CHANNEL_ID_BOLUS_PROGRESS else DataLayerListenerServiceWear.AAPS_NOTIFY_CHANNEL_ID_BOLUS_PROGRESS_SILENT)
+            NotificationCompat.Builder(
+                context,
+                if (vibrate) DataLayerListenerServiceWear.AAPS_NOTIFY_CHANNEL_ID_BOLUS_PROGRESS else DataLayerListenerServiceWear.AAPS_NOTIFY_CHANNEL_ID_BOLUS_PROGRESS_SILENT
+            )
                 .setSmallIcon(R.drawable.ic_icon)
                 .setContentTitle(context.getString(R.string.bolus_progress))
                 .setContentText("${bolusProgress.percent}% - ${bolusProgress.status}")
@@ -265,15 +268,15 @@ class DataHandlerWear @Inject constructor(
 
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
-            val notificationManager = context.getSystemService(NotificationManager::class.java)
-            notificationManager.createNotificationChannel(channel)
+            context.getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
         }
+        @Suppress("DEPRECATION")
         var builder = NotificationCompat.Builder(context, DataLayerListenerServiceWear.AAPS_NOTIFY_CHANNEL_ID_OPEN_LOOP)
-        builder = builder.setSmallIcon(R.drawable.notif_icon)
+            .setSmallIcon(R.drawable.notif_icon)
             .setContentTitle(command.title)
             .setContentText(command.message)
-            .setPriority(Notification.PRIORITY_HIGH)
             .setVibrate(longArrayOf(1000, 1000, 1000, 1000, 1000))
+            .setPriority(Notification.PRIORITY_HIGH) // suppress deprecation, ignored for API >= 26
 
         // Creates an explicit intent for an Activity in your app
         val intent = Intent(context, AcceptActivity::class.java).apply {
