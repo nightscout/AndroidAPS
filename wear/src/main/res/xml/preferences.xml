@@ -142,7 +142,7 @@
 
     <CheckBoxPreference
         android:defaultValue="false"
-        android:key="wizardpercentage"
+        android:key="@string/key_wizard_percentage"
         android:summary="Percentage correction."
         android:title="@string/pref_wizard_percentage"
         app:wear_iconOff="@drawable/settings_off"

@@ -194,5 +194,6 @@
     <string name="key_prime_fill" translatable="false">primefill</string>
     <string name="key_show_wizard" translatable="false">showWizard</string>
     <string name="key_single_target" translatable="false">singletarget</string>
+    <string name="key_wizard_percentage" translatable="false">wizardpercentage</string>
 
 </resources>
