@@ -134,7 +134,7 @@
 
     <CheckBoxPreference
         android:defaultValue="true"
-        android:key="singletarget"
+        android:key="@string/key_single_target"
         android:summary="Single temp-target instead of a range."
         android:title="@string/pref_single_target"
         app:wear_iconOff="@drawable/settings_off"

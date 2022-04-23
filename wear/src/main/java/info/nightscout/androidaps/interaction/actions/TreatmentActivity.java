@@ -30,8 +30,8 @@ public class TreatmentActivity extends ViewSelectorActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setAdapter(new MyGridViewPagerAdapter());
-        maxCarbs = sp.getInt(getString(R.string.key_treatmentssafety_maxcarbs), 48);
-        maxBolus = sp.getDouble(getString(R.string.key_treatmentssafety_maxbolus), 3.0);
+        maxCarbs = sp.getInt(getString(R.string.key_treatments_safety_max_carbs), 48);
+        maxBolus = sp.getDouble(getString(R.string.key_treatments_safety_max_bolus), 3.0);
     }
 
     @Override

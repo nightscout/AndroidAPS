@@ -38,7 +38,7 @@ class BolusActivity : ViewSelectorActivity() {
             if (col == 0) {
                 view = getInflatedPlusMinusView(container)
                 val initValue = if (editInsulin != null) SafeParse.stringToDouble(editInsulin?.editText?.text.toString()) else 0.0
-                val maxBolus = sp.getDouble(getString(R.string.key_treatmentssafety_maxbolus), 3.0)
+                val maxBolus = sp.getDouble(getString(R.string.key_treatments_safety_max_bolus), 3.0)
                 editInsulin = PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, initValue, 0.0, maxBolus, 0.1, DecimalFormat("#0.0"), false)
                 setLabelToPlusMinusView(view, getString(R.string.action_insulin))
                 container.addView(view)

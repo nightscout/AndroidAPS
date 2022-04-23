@@ -179,9 +179,9 @@ class DataHandlerWear @Inject constructor(
                     }
                 }
                 sp.putBoolean(R.string.key_units_mgdl, it.unitsMgdl)
-                sp.putInt(R.string.key_boluswizard_percentage, it.bolusPercentage)
-                sp.putInt(R.string.key_treatmentssafety_maxcarbs, it.maxCarbs)
-                sp.putDouble(R.string.key_treatmentssafety_maxbolus, it.maxBolus)
+                sp.putInt(R.string.key_bolus_wizard_percentage, it.bolusPercentage)
+                sp.putInt(R.string.key_treatments_safety_max_carbs, it.maxCarbs)
+                sp.putDouble(R.string.key_treatments_safety_max_bolus, it.maxBolus)
             }
         disposable += rxBus
             .toObservable(EventData.QuickWizard::class.java)

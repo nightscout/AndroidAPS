@@ -33,8 +33,8 @@ public class WizardActivity extends ViewSelectorActivity {
         super.onCreate(savedInstanceState);
         setAdapter(new MyGridViewPagerAdapter());
         hasPercentage = sp.getBoolean("wizardpercentage", false);
-        percentage = sp.getInt(getString(R.string.key_boluswizard_percentage), 100);
-        maxCarbs = sp.getInt(getString(R.string.key_treatmentssafety_maxcarbs), 48);
+        percentage = sp.getInt(getString(R.string.key_bolus_wizard_percentage), 100);
+        maxCarbs = sp.getInt(getString(R.string.key_treatments_safety_max_carbs), 48);
     }
 
     @Override

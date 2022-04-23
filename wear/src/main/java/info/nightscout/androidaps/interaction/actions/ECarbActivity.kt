@@ -43,7 +43,7 @@ class ECarbActivity : ViewSelectorActivity() {
                 if (editCarbs != null) {
                     def = stringToDouble(editCarbs?.editText?.text.toString())
                 }
-                val maxCarbs = sp.getInt(getString(R.string.key_treatmentssafety_maxcarbs), 48)
+                val maxCarbs = sp.getInt(getString(R.string.key_treatments_safety_max_carbs), 48)
                 editCarbs = PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0.0, maxCarbs.toDouble(), 1.0, DecimalFormat("0"), true)
                 setLabelToPlusMinusView(view, getString(R.string.action_carbs))
                 container.addView(view)
