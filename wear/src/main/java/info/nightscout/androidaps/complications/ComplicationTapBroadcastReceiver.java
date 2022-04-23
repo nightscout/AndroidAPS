@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.wearable.complications.ProviderUpdateRequester;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.StringRes;
@@ -23,6 +22,8 @@ import info.nightscout.androidaps.interaction.menus.StatusMenuActivity;
 import info.nightscout.androidaps.interaction.utils.Constants;
 import info.nightscout.androidaps.interaction.utils.DisplayFormat;
 import info.nightscout.androidaps.interaction.utils.WearUtil;
+import info.nightscout.shared.logging.AAPSLogger;
+import info.nightscout.shared.logging.LTag;
 import info.nightscout.shared.sharedPreferences.SP;
 
 /*
@@ -33,8 +34,7 @@ public class ComplicationTapBroadcastReceiver extends DaggerBroadcastReceiver {
     @Inject WearUtil wearUtil;
     @Inject DisplayFormat displayFormat;
     @Inject SP sp;
-
-    private static final String TAG = ComplicationTapBroadcastReceiver.class.getSimpleName();
+    @Inject AAPSLogger aapsLogger;
 
     private static final String EXTRA_PROVIDER_COMPONENT =
             "info.nightscout.androidaps.complications.action.PROVIDER_COMPONENT";
@@ -58,7 +58,7 @@ public class ComplicationTapBroadcastReceiver extends DaggerBroadcastReceiver {
             action = ComplicationAction.valueOf(ComplicationAction.class, complicationAction);
         } catch (IllegalArgumentException | NullPointerException ex) {
             // but how?
-            Log.e(TAG, "Cannot interpret complication action: " + complicationAction);
+            aapsLogger.error(LTag.WEAR, "Cannot interpret complication action: " + complicationAction);
         }
 
         action = remapActionWithUserPreferences(action);

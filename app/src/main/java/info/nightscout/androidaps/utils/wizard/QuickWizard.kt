@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.utils.wizard
 
-import android.util.Log
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.shared.sharedPreferences.SP
@@ -72,7 +71,7 @@ class QuickWizard @Inject constructor(
     }
 
     fun move(from: Int, to: Int) {
-        Log.i("QuickWizard", "moveItem: $from $to")
+        //Log.i("QuickWizard", "moveItem: $from $to")
         val fromEntry = storage[from] as JSONObject
         storage.remove(from)
         addToPos(to, fromEntry, storage)

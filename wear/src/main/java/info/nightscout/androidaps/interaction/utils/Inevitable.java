@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.interaction.utils;
 
 import android.os.PowerManager;
-import android.util.Log;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -9,6 +8,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import info.nightscout.androidaps.BuildConfig;
+import info.nightscout.shared.logging.AAPSLogger;
+import info.nightscout.shared.logging.LTag;
 
 /**
  * Created for xDrip by jamorham on 07/03/2018
@@ -23,10 +24,10 @@ import info.nightscout.androidaps.BuildConfig;
 public class Inevitable {
 
     @Inject WearUtil wearUtil;
+    @Inject AAPSLogger aapsLogger;
 
     @Inject Inevitable() {}
 
-    private static final String TAG = Inevitable.class.getSimpleName();
     private static final int MAX_QUEUE_TIME = (int) Constants.MINUTE_IN_MS * 6;
     private static final boolean debug = BuildConfig.DEBUG;
 
@@ -42,15 +43,14 @@ public class Inevitable {
             task.extendTime(idle_for);
 
             if (debug)
-                Log.d(TAG, "Extending time for: " + id + " to " + wearUtil.dateTimeText(task.when));
+                aapsLogger.debug(LTag.WEAR, "Extending time for: " + id + " to " + wearUtil.dateTimeText(task.when));
         } else {
             // otherwise create new task
             if (runnable == null) return; // extension only if already exists
             tasks.put(id, new Task(id, idle_for, runnable));
 
             if (debug) {
-                Log.d(TAG,
-                        "Creating task: " + id + " due: " + wearUtil.dateTimeText(tasks.get(id).when));
+                aapsLogger.debug(LTag.WEAR, "Creating task: " + id + " due: " + wearUtil.dateTimeText(tasks.get(id).when));
             }
 
             // create a thread to wait and execute in background
@@ -79,7 +79,7 @@ public class Inevitable {
             stack++;
         }
         if (stack > 0) {
-            Log.d(TAG, "Task stacked to: " + id);
+            aapsLogger.debug(LTag.WEAR, "Task stacked to: " + id);
         }
         task(id, idle_for, runnable);
     }
@@ -110,12 +110,12 @@ public class Inevitable {
         public boolean poll() {
             final long till = wearUtil.msTill(when);
             if (till < 1) {
-                if (debug) Log.d(TAG, "Executing task! " + this.id);
+                if (debug) aapsLogger.debug(LTag.WEAR, "Executing task! " + this.id);
                 tasks.remove(this.id); // early remove to allow overlapping scheduling
                 what.run();
                 return true;
             } else if (till > MAX_QUEUE_TIME) {
-                Log.wtf(TAG, "Task: " + this.id + " In queue too long: " + till);
+                aapsLogger.debug(LTag.WEAR, "Task: " + this.id + " In queue too long: " + till);
                 tasks.remove(this.id);
                 return true;
             }

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.support.wearable.watchface.WatchFaceStyle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -17,6 +16,7 @@ import java.util.Date;
 
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interaction.menus.MainMenuActivity;
+import info.nightscout.shared.logging.LTag;
 
 public class DigitalStyle extends BaseWatchFace {
     private static final long TIME_TAP_THRESHOLD = 800;
@@ -34,7 +34,7 @@ public class DigitalStyle extends BaseWatchFace {
     @Override
     protected void onTapCommand(int tapType, int x, int y, long eventTime) {
         //tapType = TAP_TYPE_TAP;
-        Log.d("onTapCommand: DeviceWidth x DeviceHeight   ///  x , y, TapType  >> ", getWidth() + " x " + getHeight() + " ///  " + x + " , " + y + " , " + tapType);
+        aapsLogger.debug(LTag.WEAR,"onTapCommand: DeviceWidth x DeviceHeight   ///  x , y, TapType  >> ", getWidth() + " x " + getHeight() + " ///  " + x + " , " + y + " , " + tapType);
 
         if (tapType == TAP_TYPE_TAP) {
             if (eventTime - sgvTapTime < TIME_TAP_THRESHOLD) {
@@ -111,7 +111,7 @@ public class DigitalStyle extends BaseWatchFace {
             try {
                 mShapesElements.setBackground(getResources().getDrawable(getResources().getIdentifier(styleDrawableName, "drawable", getApplicationContext().getPackageName())));
             } catch (Exception e) {
-                Log.e("digitalstyle_frameStyle", "RESOURCE NOT FOUND >> " + styleDrawableName);
+                aapsLogger.error("digitalstyle_frameStyle", "RESOURCE NOT FOUND >> " + styleDrawableName);
             }
 
             // set background-tint-color
@@ -119,13 +119,13 @@ public class DigitalStyle extends BaseWatchFace {
                 mShapesElements.setBackgroundTintList(null);
             } else {
                 String strColorName =((   displayFrameColor.equals("white") || displayFrameColor.equals("black")  )?displayFrameColor:displayFrameColor+"_"+displayFrameColorSaturation);
-                Log.v("digitalstyle_strColorName",strColorName);
+                aapsLogger.debug(LTag.WEAR,"digitalstyle_strColorName",strColorName);
                 try {
                     ColorStateList colorStateList = ContextCompat.getColorStateList(getApplicationContext(), getResources().getIdentifier(strColorName, "color", getApplicationContext().getPackageName()));
                     mShapesElements.setBackgroundTintList(colorStateList);
                 } catch (Exception e) {
                     mShapesElements.setBackgroundTintList(null);
-                    Log.e("digitalstyle_colorName", "COLOR NOT FOUND >> " + strColorName);
+                    aapsLogger.error("digitalstyle_colorName", "COLOR NOT FOUND >> " + strColorName);
                 }
             }
 
@@ -151,7 +151,7 @@ public class DigitalStyle extends BaseWatchFace {
 
             /* display week number */
             Boolean isShowWeekNumber = sp.getBoolean("show_weeknumber", false);
-            Log.i("---------------------------------","weeknumber refresh ");
+            aapsLogger.info(LTag.WEAR,"---------------------------------","weeknumber refresh ");
             TextView mWeekNumber= layoutView.findViewById(R.id.weeknumber);
             if (isShowWeekNumber) {
                 mWeekNumber.setVisibility(View.VISIBLE);
