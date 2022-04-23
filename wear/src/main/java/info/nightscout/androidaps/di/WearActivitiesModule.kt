@@ -2,6 +2,7 @@ package info.nightscout.androidaps.di
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
+import info.nightscout.androidaps.interaction.TileConfigurationActivity
 import info.nightscout.androidaps.interaction.actions.*
 import info.nightscout.androidaps.interaction.menus.FillMenuActivity
 import info.nightscout.androidaps.interaction.menus.MainMenuActivity
@@ -11,6 +12,8 @@ import info.nightscout.androidaps.interaction.utils.MenuListActivity
 @Module
 @Suppress("unused")
 abstract class WearActivitiesModule {
+
+    @ContributesAndroidInjector abstract fun contributesTileConfigurationActivity(): TileConfigurationActivity
 
     @ContributesAndroidInjector abstract fun contributesBackgroundActionActivity(): BackgroundActionActivity
 

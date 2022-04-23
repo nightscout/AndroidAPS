@@ -172,6 +172,7 @@ public abstract class BaseWatchFace extends WatchFace {
                 .toObservable(EventData.Status.class)
                 .observeOn(aapsSchedulers.getMain())
                 .subscribe(event -> {
+                    status = event;
                     // this event is received as last batch of data
                     if (isSimpleUi()) {
                         if (needUpdate()) {
