@@ -27,7 +27,7 @@ class TriggerDummy(injector: HasAndroidInjector, val shouldRun: Boolean = false)
         return "TriggerDummy"
     }
 
-    override fun icon(): Optional<Int?> {
+    override fun icon(): Optional<Int> {
         throw NotImplementedError("An operation is not implemented")
     }
 
