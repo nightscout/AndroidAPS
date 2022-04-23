@@ -55,7 +55,7 @@ class TriggerTime(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyDescription(): String =
         rh.gs(R.string.atspecifiedtime, dateUtil.dateAndTimeString(time.value))
 
-    override fun icon(): Optional<Int?> = Optional.of(R.drawable.ic_access_alarm_24dp)
+    override fun icon(): Optional<Int> = Optional.of(R.drawable.ic_access_alarm_24dp)
 
     override fun duplicate(): Trigger = TriggerTime(injector, time.value)
 
