@@ -292,11 +292,11 @@ class AutotuneFragment : DaggerFragment() {
         profileFunction.getProfile()?.let {
             if (!profile.isValid) return rh.gs(R.string.autotune_profile_invalid)
             if (profile.icSize > 1) {
-                warning += nl + rh.gs(R.string.format_autotune_ic_warning, profile.icSize, profile.ic)
+                warning += nl + rh.gs(R.string.autotune_ic_warning, profile.icSize, profile.ic)
                 nl = "\n"
             }
             if (profile.isfSize > 1) {
-                warning += nl + rh.gs(R.string.format_autotune_isf_warning, profile.isfSize, Profile.fromMgdlToUnits(profile.isf, profileFunction.getUnits()), profileFunction.getUnits().asText)
+                warning += nl + rh.gs(R.string.autotune_isf_warning, profile.isfSize, Profile.fromMgdlToUnits(profile.isf, profileFunction.getUnits()), profileFunction.getUnits().asText)
             }
         }
         return warning
@@ -387,7 +387,7 @@ class AutotuneFragment : DaggerFragment() {
             header.addView(TextView(context).apply {
                 layoutParams = lp.apply { column = 0 }
                 textAlignment = TextView.TEXT_ALIGNMENT_CENTER
-                text = if (basal) rh.gs(R.string.time) else rh.gs(R.string.format_autotune_param)
+                text = if (basal) rh.gs(R.string.time) else rh.gs(R.string.autotune_param)
             })
             header.addView(TextView(context).apply {
                 layoutParams = lp.apply { column = 1 }
@@ -402,12 +402,12 @@ class AutotuneFragment : DaggerFragment() {
             header.addView(TextView(context).apply {
                 layoutParams = lp.apply { column = 3 }
                 textAlignment = TextView.TEXT_ALIGNMENT_CENTER
-                text = rh.gs(R.string.format_autotune_percent)
+                text = rh.gs(R.string.autotune_percent)
             })
             header.addView(TextView(context).apply {
                 layoutParams = lp.apply { column = 4 }
                 textAlignment = TextView.TEXT_ALIGNMENT_CENTER
-                text = if (basal) rh.gs(R.string.format_autotune_missing) else " "
+                text = if (basal) rh.gs(R.string.autotune_missing) else " "
             })
         }
 

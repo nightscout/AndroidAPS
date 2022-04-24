@@ -235,7 +235,7 @@
                         android:layout_weight="1"
                         android:paddingStart="0dp"
                         android:paddingEnd="0dp"
-                        android:text="@string/compareprofileshort"
+                        android:text="@string/autotune_compare_profile"
                         app:icon="@drawable/ic_compare_profiles"
                         app:iconTintMode="multiply"
                         app:layout_column="1"
