@@ -1019,4 +1019,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="a11y_only_on_phone">uniquement sur le téléphone</string>
     <string name="a11y_drag_and_drop_handle">glissez déposez ici</string>
     <!-- Aidex Cgms -->
+    <string name="aidex">GlucoRx Aidex</string>
+    <string name="aidex_short">Aidex</string>
+    <string name="description_source_aidex">Recevoir les valeurs de glycémie du MGC GlucoRx Aidex.</string>
 </resources>
