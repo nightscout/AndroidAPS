@@ -57,7 +57,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/aps_status"
+            android:id="@+id/externaltstatus"
             android:textSize="24sp"
             android:text="E xU/h  IOB: x (x+x)"
             android:layout_width="wrap_content"
@@ -65,14 +65,6 @@
             android:textColor="#FFFFFF"
             android:layout_gravity="center_horizontal"
             android:layout_height="wrap_content"/>
-
-        <View
-            android:id="@+id/chart"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_gravity="bottom"
-            android:layout_weight="1"
-            android:gravity="center_horizontal" />
 
         <LinearLayout
             android:orientation="horizontal"

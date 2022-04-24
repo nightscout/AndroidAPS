@@ -57,7 +57,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/aps_status"
+            android:id="@+id/externaltstatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"

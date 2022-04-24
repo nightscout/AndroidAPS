@@ -337,11 +337,8 @@ abstract class BaseWatchFace : WatchFace() {
         missedReadingAlert()
     }
 
-    fun ageLevel(): Int {
-        return if (timeSince() <= 1000 * 60 * 12) {
-            1
-        } else 0
-    }
+    fun ageLevel(): Int =
+        if (timeSince() <= 1000 * 60 * 12) 1 else 0
 
     fun timeSince(): Double {
         return (System.currentTimeMillis() - singleBg.timeStamp).toDouble()
@@ -414,13 +411,9 @@ abstract class BaseWatchFace : WatchFace() {
 
     override fun onTimeChanged(oldTime: WatchFaceTime, newTime: WatchFaceTime) {
         if (layoutSet && (newTime.hasHourChanged(oldTime) || newTime.hasMinuteChanged(oldTime))) {
-            val wl = wearUtil.getWakeLock("readingPrefs", 50)
             missedReadingAlert()
             checkVibrateHourly(oldTime, newTime)
-            if (!isSimpleUi) {
-                setDataFields()
-            }
-            wearUtil.releaseWakeLock(wl)
+            if (!isSimpleUi) setDataFields()
         }
     }
 
@@ -442,7 +435,8 @@ abstract class BaseWatchFace : WatchFace() {
         }
     }
 
-    @SuppressLint("SetTextI18n") fun setDataFields() {
+    @SuppressLint("SetTextI18n")
+    fun setDataFields() {
         setDateAndTime()
         mSgv?.text = singleBg.sgvString
         mSgv?.visibility = sp.getBoolean(R.string.key_show_bg, true).toVisibilityKeepSpace()
@@ -531,11 +525,8 @@ abstract class BaseWatchFace : WatchFace() {
 
     override fun onWatchModeChanged(watchMode: WatchMode) {
         lowResMode = isLowRes(watchMode)
-        if (isSimpleUi) {
-            setSimpleUiAntiAlias()
-        } else {
-            setDataFields()
-        }
+        if (isSimpleUi) setSimpleUiAntiAlias()
+        else setDataFields()
         invalidate()
     }
 
@@ -605,5 +596,6 @@ abstract class BaseWatchFace : WatchFace() {
         var iFilter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
         val NORMAL_TYPEFACE: Typeface = Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL)
         val BOLD_TYPEFACE: Typeface = Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD)
+        const val SCREEN_SIZE_SMALL = 280
     }
 }

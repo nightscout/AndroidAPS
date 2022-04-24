@@ -1,13 +1,14 @@
 package info.nightscout.androidaps.watchfaces
 
 import android.graphics.Color
+import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat
 import com.ustwo.clockwise.common.WatchMode
 import info.nightscout.androidaps.R
 
 class AapsWatchface : BaseWatchFace() {
 
-    override fun layoutResource(): Int = R.layout.activity_home
+    @LayoutRes override fun layoutResource(): Int = R.layout.activity_home
 
     override fun setColorDark() {
         mLinearLayout?.setBackgroundColor(ContextCompat.getColor(this, if (dividerMatchesBg) R.color.dark_background else R.color.dark_statusView))

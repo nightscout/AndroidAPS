@@ -7,6 +7,7 @@ import android.support.wearable.watchface.WatchFaceStyle
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.extensions.toVisibility
@@ -14,7 +15,7 @@ import info.nightscout.shared.logging.LTag
 
 class DigitalStyleWatchface : BaseWatchFace() {
 
-    override fun layoutResource(): Int = R.layout.activity_digitalstyle
+    @LayoutRes override fun layoutResource(): Int = R.layout.activity_digitalstyle
 
     override fun getWatchFaceStyle(): WatchFaceStyle {
         return WatchFaceStyle.Builder(this)

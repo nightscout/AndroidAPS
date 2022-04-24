@@ -82,7 +82,7 @@ class BigChartWatchface : WatchFace() {
     private val displaySize = Point()
     private var specW = 0
     private var specH = 0
-    private var statusView: TextView? = null
+    private var mStatus: TextView? = null
     private var chartTapTime = 0L
     private var sgvTapTime = 0L
 
@@ -172,7 +172,7 @@ class BigChartWatchface : WatchFace() {
         mAvgDelta = layoutView?.findViewById(R.id.avgdelta)
         mRelativeLayout = layoutView?.findViewById(R.id.main_layout)
         chart = layoutView?.findViewById(R.id.chart)
-        statusView = layoutView?.findViewById(R.id.aps_status)
+        mStatus = layoutView?.findViewById(R.id.externaltstatus)
         layoutSet = true
         showAgeAndStatus()
         mRelativeLayout?.measure(specW, specH)
@@ -271,8 +271,8 @@ class BigChartWatchface : WatchFace() {
     private fun showAgeAndStatus() {
         mTimestamp?.text = readingAge()
         mAvgDelta?.visibility = sp.getBoolean(R.string.key_show_external_status, true).toVisibility()
-        statusView?.visibility = sp.getBoolean(R.string.key_show_external_status, true).toVisibility()
-        statusView?.text = status.externalStatus + if (sp.getBoolean(R.string.key_show_cob, true)) (" " + this.status.cob) else ""
+        mStatus?.visibility = sp.getBoolean(R.string.key_show_external_status, true).toVisibility()
+        mStatus?.text = status.externalStatus + if (sp.getBoolean(R.string.key_show_cob, true)) (" " + this.status.cob) else ""
     }
 
     private fun setColor() {
@@ -285,7 +285,7 @@ class BigChartWatchface : WatchFace() {
 
     private fun setColorLowRes() {
         mTime?.setTextColor(ContextCompat.getColor(this, R.color.dark_mTime))
-        statusView?.setTextColor(ContextCompat.getColor(this, R.color.dark_statusView))
+        mStatus?.setTextColor(ContextCompat.getColor(this, R.color.dark_statusView))
         mRelativeLayout?.setBackgroundColor(ContextCompat.getColor(this, R.color.dark_background))
         mSgv?.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor))
         mDelta?.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor))
@@ -305,7 +305,7 @@ class BigChartWatchface : WatchFace() {
 
     private fun setColorDark() {
         mTime?.setTextColor(ContextCompat.getColor(this, R.color.dark_mTime))
-        statusView?.setTextColor(ContextCompat.getColor(this, R.color.dark_statusView))
+        mStatus?.setTextColor(ContextCompat.getColor(this, R.color.dark_statusView))
         mRelativeLayout?.setBackgroundColor(ContextCompat.getColor(this, R.color.dark_background))
         when (singleBg.sgvLevel) {
             1L  -> {
@@ -346,7 +346,7 @@ class BigChartWatchface : WatchFace() {
     private fun setColorBright() {
         if (currentWatchMode == WatchMode.INTERACTIVE) {
             mTime?.setTextColor(ContextCompat.getColor(this, R.color.light_bigchart_time))
-            statusView?.setTextColor(ContextCompat.getColor(this, R.color.light_bigchart_status))
+            mStatus?.setTextColor(ContextCompat.getColor(this, R.color.light_bigchart_status))
             mRelativeLayout?.setBackgroundColor(ContextCompat.getColor(this, R.color.light_background))
             when (singleBg.sgvLevel) {
                 1L  -> {

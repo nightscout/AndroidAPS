@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.watchfaces
 
 import android.view.View
+import androidx.annotation.LayoutRes
 import info.nightscout.androidaps.R
 
 /**
@@ -9,7 +10,7 @@ import info.nightscout.androidaps.R
  */
 class CockpitWatchface : BaseWatchFace() {
 
-    override fun layoutResource(): Int = R.layout.activity_cockpit
+    @LayoutRes override fun layoutResource(): Int = R.layout.activity_cockpit
 
     override fun setColorDark() {
         mRelativeLayout?.setBackgroundResource(R.drawable.airplane_cockpit_outside_clouds)

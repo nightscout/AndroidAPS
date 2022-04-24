@@ -3,6 +3,7 @@ package info.nightscout.androidaps.watchfaces
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
+import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat
 import info.nightscout.androidaps.R
 import info.nightscout.shared.SafeParse.stringToFloat
@@ -17,7 +18,7 @@ class SteampunkWatchface : BaseWatchFace() {
     private var lastEndDegrees = 0f
     private var deltaRotationAngle = 0f
 
-    override fun layoutResource(): Int = R.layout.activity_steampunk
+    @LayoutRes override fun layoutResource(): Int = R.layout.activity_steampunk
 
     override fun onCreate() {
         forceSquareCanvas = true

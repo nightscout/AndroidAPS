@@ -2,13 +2,14 @@ package info.nightscout.androidaps.watchfaces
 
 import android.graphics.Color
 import androidx.annotation.ColorInt
+import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat
 import com.ustwo.clockwise.common.WatchMode
 import info.nightscout.androidaps.R
 
 class AapsV2Watchface : BaseWatchFace() {
 
-    override fun layoutResource(): Int = R.layout.activity_home_2
+    @LayoutRes override fun layoutResource(): Int = R.layout.activity_home_2
 
     override fun setColorDark() {
         @ColorInt val dividerTxtColor = if (dividerMatchesBg) ContextCompat.getColor(this, R.color.dark_midColor) else Color.BLACK
