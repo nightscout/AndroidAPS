@@ -40,7 +40,7 @@ class InputDateTime(private val rh: ResourceHelper, private val dateUtil: DateUt
                             getFragmentManager(root.context)?.let { fm ->
                                 MaterialDatePicker.Builder.datePicker()
                                     .setTheme(R.style.DatePicker)
-                                    .setSelection(dateUtil.timeStampToUtcDateMilis(value))
+                                    .setSelection(dateUtil.timeStampToUtcDateMillis(value))
                                     .build()
                                     .apply {
                                         addOnPositiveButtonClickListener { selection ->

@@ -376,7 +376,7 @@ sealed class ProfileSealed(
             var elapsedSec = 0
             array.shiftBlock(multiplier, timeshift).forEach {
                 if (elapsedSec != 0) sb.append("\n")
-                sb.append(dateUtil.format_HH_MM(elapsedSec))
+                sb.append(dateUtil.formatHHMM(elapsedSec))
                     .append("    ")
                     .append(format.format(it.amount * multiplier))
                     .append(" $units")
@@ -389,7 +389,7 @@ sealed class ProfileSealed(
             var elapsedSec = 0
             array.shiftTargetBlock(timeshift).forEach {
                 if (elapsedSec != 0) sb.append("\n")
-                sb.append(dateUtil.format_HH_MM(elapsedSec))
+                sb.append(dateUtil.formatHHMM(elapsedSec))
                     .append("    ")
                     .append(format.format(it.lowTarget))
                     .append(" - ")

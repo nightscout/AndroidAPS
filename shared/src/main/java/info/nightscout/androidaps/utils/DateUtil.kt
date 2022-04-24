@@ -1,6 +1,8 @@
 package info.nightscout.androidaps.utils
 
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.collection.LongSparseArray
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.interfaces.ResourceHelper
@@ -10,6 +12,7 @@ import org.apache.commons.lang3.time.DateUtils.isSameDay
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.ISODateTimeFormat
+import java.security.SecureRandom
 import java.text.DateFormat
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
@@ -23,7 +26,6 @@ import java.util.regex.Pattern
 import java.util.stream.Collectors
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.floor
 
@@ -38,7 +40,7 @@ class DateUtil @Inject constructor(private val context: Context) {
     /**
      * The date format in iso.
      */
-    @Suppress("PrivatePropertyName")
+    @Suppress("PrivatePropertyName", "SpellCheckingInspection")
     private val FORMAT_DATE_ISO_OUT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
 
     /**
@@ -66,12 +68,14 @@ class DateUtil @Inject constructor(private val context: Context) {
         return f.format(date)
     }
 
+    @Suppress("SpellCheckingInspection")
     fun toISOAsUTC(timestamp: Long): String {
         val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'0000Z'", Locale.US)
         format.timeZone = TimeZone.getTimeZone("UTC")
         return format.format(timestamp)
     }
 
+    @Suppress("SpellCheckingInspection")
     fun toISONoZone(timestamp: Long): String {
         val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
         format.timeZone = TimeZone.getDefault()
@@ -90,13 +94,13 @@ class DateUtil @Inject constructor(private val context: Context) {
     fun toSeconds(hh_colon_mm: String): Int {
         val p = Pattern.compile("(\\d+):(\\d+)( a.m.| p.m.| AM| PM|AM|PM|)")
         val m = p.matcher(hh_colon_mm)
-        var retval = 0
+        var retVal = 0
         if (m.find()) {
-            retval = SafeParse.stringToInt(m.group(1)) * 60 * 60 + SafeParse.stringToInt(m.group(2)) * 60
-            if ((m.group(3) == " a.m." || m.group(3) == " AM" || m.group(3) == "AM") && m.group(1) == "12") retval -= 12 * 60 * 60
-            if ((m.group(3) == " p.m." || m.group(3) == " PM" || m.group(3) == "PM") && m.group(1) != "12") retval += 12 * 60 * 60
+            retVal = SafeParse.stringToInt(m.group(1)) * 60 * 60 + SafeParse.stringToInt(m.group(2)) * 60
+            if ((m.group(3) == " a.m." || m.group(3) == " AM" || m.group(3) == "AM") && m.group(1) == "12") retVal -= 12 * 60 * 60
+            if ((m.group(3) == " p.m." || m.group(3) == " PM" || m.group(3) == "PM") && m.group(1) != "12") retVal += 12 * 60 * 60
         }
-        return retval
+        return retVal
     }
 
     fun dateString(mills: Long): String {
@@ -110,10 +114,10 @@ class DateUtil @Inject constructor(private val context: Context) {
         val beginOfToday = beginOfDay(now())
         return if (mills < now()) // Past
             when {
-                mills > beginOfToday                     -> rh.gs(R.string.today)
+                mills > beginOfToday -> rh.gs(R.string.today)
                 mills > beginOfToday - T.days(1).msecs() -> rh.gs(R.string.yesterday)
                 mills > beginOfToday - T.days(7).msecs() -> dayAgo(mills, rh, true)
-                else                                     -> day
+                else -> day
             }
         else // Future
             when {
@@ -174,20 +178,20 @@ class DateUtil @Inject constructor(private val context: Context) {
 
     fun minAgo(rh: ResourceHelper, time: Long?): String {
         if (time == null) return ""
-        val mins = ((now() - time) / 1000 / 60).toInt()
-        return rh.gs(R.string.minago, mins)
+        val minutes = ((now() - time) / 1000 / 60).toInt()
+        return rh.gs(R.string.minago, minutes)
     }
 
     fun minAgoShort(time: Long?): String {
         if (time == null) return ""
-        val mins = ((time - now()) / 1000 / 60).toInt()
-        return (if (mins > 0) "+" else "") + mins
+        val minutes = ((time - now()) / 1000 / 60).toInt()
+        return (if (minutes > 0) "+" else "") + minutes
     }
 
     fun minAgoLong(rh: ResourceHelper, time: Long?): String {
         if (time == null) return ""
-        val mins = ((now() - time) / 1000 / 60).toInt()
-        return rh.gs(R.string.minago_long, mins)
+        val minutes = ((now() - time) / 1000 / 60).toInt()
+        return rh.gs(R.string.minago_long, minutes)
     }
 
     fun hourAgo(time: Long, rh: ResourceHelper): String {
@@ -198,12 +202,12 @@ class DateUtil @Inject constructor(private val context: Context) {
     fun dayAgo(time: Long, rh: ResourceHelper, round: Boolean = false): String {
         var days = (now() - time) / 1000.0 / 60 / 60 / 24
         if (round) {
-            if (now() > time) {
+            return if (now() > time) {
                 days = ceil(days)
-                return rh.gs(R.string.days_ago_round, days)
+                rh.gs(R.string.days_ago_round, days)
             } else {
                 days = floor(days)
-                return rh.gs(R.string.in_days_round, days)
+                rh.gs(R.string.in_days_round, days)
             }
         }
         return if (now() > time)
@@ -255,11 +259,6 @@ class DateUtil @Inject constructor(private val context: Context) {
         return n
     }
 
-    fun isCloseToNow(date: Long): Boolean {
-        val diff = abs(date - now())
-        return diff < T.mins(2L).msecs()
-    }
-
     fun isOlderThan(date: Long, minutes: Long): Boolean {
         val diff = now() - date
         return diff > T.mins(minutes).msecs()
@@ -277,7 +276,7 @@ class DateUtil @Inject constructor(private val context: Context) {
 
     fun isSameDayGroup(timestamp1: Long, timestamp2: Long): Boolean {
         val now = now()
-        if (timestamp1 < now && timestamp2 > now || timestamp1 > now && timestamp2 < now)
+        if (now in (timestamp1 + 1) until timestamp2 || now in (timestamp2 + 1) until timestamp1)
             return false
         return isSameDay(Date(timestamp1), Date(timestamp2))
     }
@@ -376,13 +375,14 @@ class DateUtil @Inject constructor(private val context: Context) {
         return thisDf.format(x)
     }
 
-    fun format_HH_MM(timeAsSeconds: Int): String {
+    fun formatHHMM(timeAsSeconds: Int): String {
         val hour = timeAsSeconds / 60 / 60
         val minutes = (timeAsSeconds - hour * 60 * 60) / 60
         val df = DecimalFormat("00")
         return df.format(hour.toLong()) + ":" + df.format(minutes.toLong())
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun timeZoneByOffset(offsetInMilliseconds: Long): TimeZone =
         TimeZone.getTimeZone(
             if (offsetInMilliseconds == 0L) ZoneId.of("UTC")
@@ -394,7 +394,7 @@ class DateUtil @Inject constructor(private val context: Context) {
                 .firstOrNull() ?: ZoneId.of("UTC")
         )
 
-    fun timeStampToUtcDateMilis(timestamp: Long): Long {
+    fun timeStampToUtcDateMillis(timestamp: Long): Long {
         val current = Calendar.getInstance().apply { timeInMillis = timestamp }
         return Calendar.getInstance().apply {
             set(Calendar.YEAR, current.get(Calendar.YEAR))
@@ -403,8 +403,8 @@ class DateUtil @Inject constructor(private val context: Context) {
         }.timeInMillis
     }
 
-    fun mergeUtcDateToTimestamp(timestamp: Long, dateUtcMilis: Long): Long {
-        val selected = Calendar.getInstance().apply { timeInMillis = dateUtcMilis }
+    fun mergeUtcDateToTimestamp(timestamp: Long, dateUtcMillis: Long): Long {
+        val selected = Calendar.getInstance().apply { timeInMillis = dateUtcMillis }
         return Calendar.getInstance().apply {
             timeInMillis = timestamp
             set(Calendar.YEAR, selected.get(Calendar.YEAR))
@@ -425,7 +425,8 @@ class DateUtil @Inject constructor(private val context: Context) {
     companion object {
 
         private val timeStrings = LongSparseArray<String>()
-        private var seconds: Int = (Math.random() * 59.0).toInt()
+        private var seconds: Int = (SecureRandom().nextDouble() * 59.0).toInt()
+
         // singletons to avoid repeated allocation
         private var dfs: DecimalFormatSymbols? = null
         private var df: DecimalFormat? = null
