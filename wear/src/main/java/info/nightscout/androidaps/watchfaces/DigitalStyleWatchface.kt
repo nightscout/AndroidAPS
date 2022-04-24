@@ -130,9 +130,4 @@ class DigitalStyleWatchface : BaseWatchFace() {
     override fun setColorBright() {
         setColorDark() /* getCurrentWatchMode() == WatchMode.AMBIENT or WatchMode.INTERACTIVE */
     }
-
-    companion object {
-
-        private const val TIME_TAP_THRESHOLD: Long = 800
-    }
 }

@@ -32,43 +32,29 @@ class SteampunkWatchface : BaseWatchFace() {
             mLinearLayout2?.setBackgroundResource(0)
             mTimestamp?.setTextColor(ContextCompat.getColor(this, R.color.black_86p))
         }
-        if (loopLevel == 0) {
-            mLoop?.setTextColor(ContextCompat.getColor(this, R.color.red_600))
-        } else {
-            mLoop?.setTextColor(ContextCompat.getColor(this, R.color.black_86p))
-        }
+        mLoop?.setTextColor(ContextCompat.getColor(this, if (loopLevel == 0) R.color.red_600 else R.color.black_86p))
         if (singleBg.sgvString != "---") {
             var rotationAngle = 0f //by default, show ? on the dial (? is at 0 degrees on the dial)
             if (singleBg.glucoseUnits != "-") {
 
                 //ensure the glucose dial is the correct units
-                if (singleBg.glucoseUnits == "mmol") {
-                    mGlucoseDial?.setImageResource(R.drawable.steampunk_dial_mmol)
-                } else {
-                    mGlucoseDial?.setImageResource(R.drawable.steampunk_dial_mgdl)
-                }
+                mGlucoseDial?.setImageResource(if (singleBg.glucoseUnits == "mmol") R.drawable.steampunk_dial_mmol else R.drawable.steampunk_dial_mgdl)
 
                 //convert the Sgv to degrees of rotation
-                rotationAngle = if (singleBg.glucoseUnits == "mmol") {
-                    stringToFloat(singleBg.sgvString) * 18f //convert to
-                    // mg/dL, which is equivalent to degrees
-                } else {
-                    stringToFloat(singleBg.sgvString) //if glucose a value is received, use it to determine the amount of rotation of the dial.
-                }
+                rotationAngle =
+                    if (singleBg.glucoseUnits == "mmol") stringToFloat(singleBg.sgvString) * 18f //convert to mg/dL, which is equivalent to degrees
+                    else stringToFloat(singleBg.sgvString) //if glucose a value is received, use it to determine the amount of rotation of the dial.
             }
             if (rotationAngle > 330) rotationAngle = 330f //if the glucose value is higher than 330 then show "HIGH" on the dial. ("HIGH" is at 330 degrees on the dial)
             if (rotationAngle != 0f && rotationAngle < 30) rotationAngle = 30f //if the glucose value is lower than 30 show "LOW" on the dial. ("LOW" is at 30 degrees on the dial)
             if (lastEndDegrees == 0f) lastEndDegrees = rotationAngle
 
             //rotate glucose dial
-            val rotate = RotateAnimation(
-                lastEndDegrees, rotationAngle - lastEndDegrees,
-                Animation.RELATIVE_TO_SELF, 0.5f,
-                Animation.RELATIVE_TO_SELF, 0.5f
-            )
-            rotate.fillAfter = true
-            rotate.interpolator = LinearInterpolator()
-            rotate.duration = 1
+            val rotate = RotateAnimation(lastEndDegrees, rotationAngle - lastEndDegrees, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f).apply {
+                fillAfter = true
+                interpolator = LinearInterpolator()
+                duration = 1
+            }
             mGlucoseDial?.startAnimation(rotate)
             lastEndDegrees = rotationAngle //store the final angle as a starting point for the next rotation.
         }
@@ -85,12 +71,12 @@ class SteampunkWatchface : BaseWatchFace() {
             if (singleBg.glucoseUnits != "-") {
                 if (singleBg.glucoseUnits == "mmol") {
                     if (sp.getString("delta_granularity", "2") == "4") {  //Auto granularity
-                        autoGranularity = "1" // low (init)
-                        if (absAvgDelta < 0.3) {
-                            autoGranularity = "3" // high if below 0.3 mmol/l
-                        } else if (absAvgDelta < 0.5) {
-                            autoGranularity = "2" // medium if below 0.5 mmol/l
-                        }
+                        autoGranularity =
+                            when {
+                                absAvgDelta < 0.3 -> "3" // high if below 0.3 mmol/l
+                                absAvgDelta < 0.5 -> "2" // medium if below 0.5 mmol/l
+                                else              -> "1" // low (init)
+                            }
                     }
                     if (sp.getString("delta_granularity", "2") == "1" || autoGranularity == "1") {  //low
                         mLinearLayout?.setBackgroundResource(R.drawable.steampunk_gauge_mmol_10)
@@ -106,12 +92,12 @@ class SteampunkWatchface : BaseWatchFace() {
                     }
                 } else {
                     if (sp.getString("delta_granularity", "2") == "4") {  //Auto granularity
-                        autoGranularity = "1" // low (init)
-                        if (absAvgDelta < 5) {
-                            autoGranularity = "3" // high if below 5 mg/dl
-                        } else if (absAvgDelta < 10) {
-                            autoGranularity = "2" // medium if below 10 mg/dl
-                        }
+                        autoGranularity =
+                            when {
+                                absAvgDelta < 5  -> "3" // high if below 5 mg/dl
+                                absAvgDelta < 10 -> "2" // medium if below 10 mg/dl
+                                else             -> "1" // low (init)
+                            }
                     }
                     if (sp.getString("delta_granularity", "2") == "1" || autoGranularity == "1") {  //low
                         mLinearLayout?.setBackgroundResource(R.drawable.steampunk_gauge_mgdl_20)

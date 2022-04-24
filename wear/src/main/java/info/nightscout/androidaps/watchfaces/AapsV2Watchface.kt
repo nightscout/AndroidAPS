@@ -139,16 +139,10 @@ class AapsV2Watchface : BaseWatchFace() {
                     mDirection?.setTextColor(ContextCompat.getColor(this, R.color.light_lowColor))
                 }
             }
-            if (ageLevel == 1) {
-                mTimestamp?.setTextColor(Color.BLACK)
-            } else {
-                mTimestamp?.setTextColor(Color.RED)
-            }
-            if (status.batteryLevel == 1) {
-                mUploaderBattery?.setTextColor(dividerTxtColor)
-            } else {
-                mUploaderBattery?.setTextColor(Color.RED)
-            }
+            if (ageLevel == 1) mTimestamp?.setTextColor(Color.BLACK)
+            else mTimestamp?.setTextColor(Color.RED)
+            if (status.batteryLevel == 1) mUploaderBattery?.setTextColor(dividerTxtColor)
+            else mUploaderBattery?.setTextColor(Color.RED)
             mRigBattery?.setTextColor(dividerTxtColor)
             mDelta?.setTextColor(dividerTxtColor)
             mAvgDelta?.setTextColor(dividerTxtColor)

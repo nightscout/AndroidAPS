@@ -32,16 +32,10 @@ class AapsWatchface : BaseWatchFace() {
                 mDirection?.setTextColor(ContextCompat.getColor(this, R.color.dark_lowColor))
             }
         }
-        if (ageLevel == 1) {
-            mTimestamp?.setTextColor(ContextCompat.getColor(this, if (dividerMatchesBg) R.color.dark_midColor else R.color.dark_mTimestamp1_home))
-        } else {
-            mTimestamp?.setTextColor(ContextCompat.getColor(this, R.color.dark_TimestampOld))
-        }
-        if (status.batteryLevel == 1) {
-            mUploaderBattery?.setTextColor(ContextCompat.getColor(this, if (dividerMatchesBg) R.color.dark_midColor else R.color.dark_uploaderBattery))
-        } else {
-            mUploaderBattery?.setTextColor(ContextCompat.getColor(this, R.color.dark_uploaderBatteryEmpty))
-        }
+        if (ageLevel == 1) mTimestamp?.setTextColor(ContextCompat.getColor(this, if (dividerMatchesBg) R.color.dark_midColor else R.color.dark_mTimestamp1_home))
+        else mTimestamp?.setTextColor(ContextCompat.getColor(this, R.color.dark_TimestampOld))
+        if (status.batteryLevel == 1) mUploaderBattery?.setTextColor(ContextCompat.getColor(this, if (dividerMatchesBg) R.color.dark_midColor else R.color.dark_uploaderBattery))
+        else mUploaderBattery?.setTextColor(ContextCompat.getColor(this, R.color.dark_uploaderBatteryEmpty))
         mStatus?.setTextColor(ContextCompat.getColor(this, if (dividerMatchesBg) R.color.dark_midColor else R.color.dark_mStatus_home))
         if (chart != null) {
             highColor = ContextCompat.getColor(this, R.color.dark_highColor)
@@ -96,16 +90,10 @@ class AapsWatchface : BaseWatchFace() {
                     mDirection?.setTextColor(ContextCompat.getColor(this, R.color.light_lowColor))
                 }
             }
-            if (ageLevel == 1) {
-                mTimestamp?.setTextColor(if (dividerMatchesBg) Color.BLACK else Color.WHITE)
-            } else {
-                mTimestamp?.setTextColor(Color.RED)
-            }
-            if (status.batteryLevel == 1) {
-                mUploaderBattery?.setTextColor(if (dividerMatchesBg) Color.BLACK else Color.WHITE)
-            } else {
-                mUploaderBattery?.setTextColor(Color.RED)
-            }
+            if (ageLevel == 1) mTimestamp?.setTextColor(if (dividerMatchesBg) Color.BLACK else Color.WHITE)
+            else mTimestamp?.setTextColor(Color.RED)
+            if (status.batteryLevel == 1) mUploaderBattery?.setTextColor(if (dividerMatchesBg) Color.BLACK else Color.WHITE)
+            else mUploaderBattery?.setTextColor(Color.RED)
             mStatus?.setTextColor(if (dividerMatchesBg) Color.BLACK else Color.WHITE)
             mTime?.setTextColor(Color.BLACK)
             if (chart != null) {
