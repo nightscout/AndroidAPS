@@ -11,7 +11,6 @@ import android.graphics.Point
 import android.graphics.Rect
 import android.os.PowerManager
 import android.support.wearable.watchface.WatchFaceStyle
-import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowInsets
@@ -239,12 +238,9 @@ class BigChartWatchface : WatchFace() {
         return (System.currentTimeMillis() - singleBg.timeStamp).toDouble()
     }
 
-    private fun readingAge(): String {
-        if (singleBg.timeStamp == 0L) return "--'"
-        val minutesAgo = floor(timeSince() / (1000 * 60)).toInt()
-        return if (minutesAgo == 1) "$minutesAgo'"
-        else "$minutesAgo'"
-    }
+    private fun readingAge(): String =
+        if (singleBg.timeStamp == 0L) "--'"
+        else "${floor(timeSince() / (1000 * 60)).toInt()}'"
 
     override fun onDestroy() {
         disposable.clear()
@@ -276,7 +272,7 @@ class BigChartWatchface : WatchFace() {
         mTimestamp?.text = readingAge()
         mAvgDelta?.visibility = sp.getBoolean(R.string.key_show_external_status, true).toVisibility()
         statusView?.visibility = sp.getBoolean(R.string.key_show_external_status, true).toVisibility()
-        statusView?.text = status.externalStatus + if (sp.getBoolean(R.string.key_show_cob, true))  (" " + this.status.cob) else ""
+        statusView?.text = status.externalStatus + if (sp.getBoolean(R.string.key_show_cob, true)) (" " + this.status.cob) else ""
     }
 
     private fun setColor() {

@@ -185,12 +185,10 @@ class NoChartWatchface : WatchFace() {
 
     fun timeSince(): Double = (System.currentTimeMillis() - singleBg.timeStamp).toDouble()
 
-    private fun readingAge(): String {
-        if (singleBg.timeStamp == 0L) return "--'"
-        val minutesAgo = floor(timeSince() / (1000 * 60)).toInt()
-        return if (minutesAgo == 1) "$minutesAgo'"
-        else "$minutesAgo'"
-    }
+    private fun readingAge(): String =
+        if (singleBg.timeStamp == 0L) "--'"
+        else "${floor(timeSince() / (1000 * 60)).toInt()}'"
+
 
     override fun onDestroy() {
         disposable.clear()
