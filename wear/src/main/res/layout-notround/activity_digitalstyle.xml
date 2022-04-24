@@ -28,6 +28,7 @@
 
         <!-- left side 3/8 width  -->
         <LinearLayout
+            android:id="@+id/main_menu_tap"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
@@ -266,6 +267,7 @@
 
         <!-- right side 5/8 width  -->
         <LinearLayout
+            android:id="@+id/chart_zoom_tap"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="5"

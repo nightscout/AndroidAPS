@@ -1,62 +1,13 @@
-@file:Suppress("DEPRECATION")
-
 package info.nightscout.androidaps.watchfaces
 
-import android.annotation.SuppressLint
-import android.content.Intent
 import android.graphics.Color
-import android.support.wearable.watchface.WatchFaceStyle
-import android.view.LayoutInflater
 import androidx.core.content.ContextCompat
 import com.ustwo.clockwise.common.WatchMode
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interaction.menus.MainMenuActivity
 
 class AapsWatchface : BaseWatchFace() {
 
-    private var chartTapTime: Long = 0
-    private var sgvTapTime: Long = 0
-
-    @SuppressLint("InflateParams")
-    override fun onCreate() {
-        super.onCreate()
-        val inflater = getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        layoutView = inflater.inflate(R.layout.activity_home, null)
-        performViewSetup()
-    }
-
-    override fun onTapCommand(tapType: Int, x: Int, y: Int, eventTime: Long) {
-        chart?.let { chart ->
-            if (tapType == TAP_TYPE_TAP && x >= chart.left && x <= chart.right && y >= chart.top && y <= chart.bottom) {
-                if (eventTime - chartTapTime < 800) {
-                    changeChartTimeframe()
-                }
-                chartTapTime = eventTime
-                return
-            }
-        }
-        mSgv?.let { mSgv ->
-            val extra = (mSgv.right - mSgv.left) / 2
-            if (tapType == TAP_TYPE_TAP && x + extra >= mSgv.left && x - extra <= mSgv.right && y >= mSgv.top && y <= mSgv.bottom) {
-                if (eventTime - sgvTapTime < 800) {
-                    val intent = Intent(this, MainMenuActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
-                }
-                sgvTapTime = eventTime
-            }
-        }
-    }
-
-    private fun changeChartTimeframe() {
-        var timeframe = sp.getInt(R.string.key_chart_time_frame, 3)
-        timeframe = timeframe % 5 + 1
-        sp.putInt(R.string.key_chart_time_frame, timeframe)
-    }
-
-    override fun getWatchFaceStyle(): WatchFaceStyle {
-        return WatchFaceStyle.Builder(this).setAcceptsTapEvents(true).build()
-    }
+    override fun layoutResource(): Int = R.layout.activity_home
 
     override fun setColorDark() {
         mLinearLayout?.setBackgroundColor(ContextCompat.getColor(this, if (dividerMatchesBg) R.color.dark_background else R.color.dark_statusView))

@@ -1,14 +1,7 @@
-@file:Suppress("DEPRECATION")
-
 package info.nightscout.androidaps.watchfaces
 
-import android.annotation.SuppressLint
-import android.content.Intent
-import android.support.wearable.watchface.WatchFaceStyle
-import android.view.LayoutInflater
 import android.view.View
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interaction.menus.MainMenuActivity
 
 /**
  * Created by andrew-warrington on 18/11/2017.
@@ -16,30 +9,7 @@ import info.nightscout.androidaps.interaction.menus.MainMenuActivity
  */
 class CockpitWatchface : BaseWatchFace() {
 
-    private var sgvTapTime: Long = 0
-
-    @SuppressLint("InflateParams")
-    override fun onCreate() {
-        super.onCreate()
-        val inflater = getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        layoutView = inflater.inflate(R.layout.activity_cockpit, null)
-        performViewSetup()
-    }
-
-    override fun onTapCommand(tapType: Int, x: Int, y: Int, eventTime: Long) {
-        if (tapType == TAP_TYPE_TAP) {
-            if (eventTime - sgvTapTime < 800) {
-                val intent = Intent(this, MainMenuActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(intent)
-            }
-            sgvTapTime = eventTime
-        }
-    }
-
-    override fun getWatchFaceStyle(): WatchFaceStyle {
-        return WatchFaceStyle.Builder(this).setAcceptsTapEvents(true).build()
-    }
+    override fun layoutResource(): Int = R.layout.activity_cockpit
 
     override fun setColorDark() {
         mRelativeLayout?.setBackgroundResource(R.drawable.airplane_cockpit_outside_clouds)
@@ -77,13 +47,13 @@ class CockpitWatchface : BaseWatchFace() {
     }
 
     private fun setTextSizes() {
-            if (status.detailedIob) {
-                if (bIsRound) mIOB2?.textSize = 10f
-                else mIOB2?.textSize = 9f
-            } else {
-                if (bIsRound) mIOB2?.textSize = 13f
-                else mIOB2?.textSize = 12f
-            }
+        if (status.detailedIob) {
+            if (bIsRound) mIOB2?.textSize = 10f
+            else mIOB2?.textSize = 9f
+        } else {
+            if (bIsRound) mIOB2?.textSize = 13f
+            else mIOB2?.textSize = 12f
+        }
         if (mUploaderBattery?.visibility != View.GONE && mRigBattery?.visibility != View.GONE) {
             if (bIsRound) {
                 mUploaderBattery?.textSize = 12f

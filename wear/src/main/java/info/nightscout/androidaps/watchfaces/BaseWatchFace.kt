@@ -7,8 +7,9 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.*
 import android.os.BatteryManager
-import android.os.PowerManager
 import android.os.Vibrator
+import android.support.wearable.watchface.WatchFaceStyle
+import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
@@ -16,6 +17,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat
 import com.ustwo.clockwise.common.WatchFaceTime
 import com.ustwo.clockwise.common.WatchMode
@@ -27,6 +29,7 @@ import info.nightscout.androidaps.events.EventWearPreferenceChange
 import info.nightscout.androidaps.events.EventWearToMobile
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.extensions.toVisibilityKeepSpace
+import info.nightscout.androidaps.interaction.menus.MainMenuActivity
 import info.nightscout.androidaps.interaction.utils.Persistence
 import info.nightscout.androidaps.interaction.utils.WearUtil
 import info.nightscout.androidaps.plugins.bus.RxBus
@@ -49,6 +52,7 @@ import kotlin.math.floor
  * Created by emmablack on 12/29/14.
  * Updated by andrew-warrington on 02-Jan-2018.
  * Refactored by dlvoy on 2019-11-2019
+ * Refactored by MilosKozak 24/04/2022
  */
 abstract class BaseWatchFace : WatchFace() {
 
@@ -66,6 +70,9 @@ abstract class BaseWatchFace : WatchFace() {
     protected var status = EventData.Status("no status", "IOB", "-.--", false, "--g", "-.--U/h", "--", "--", -1, "--", false, 1)
     protected var treatmentData = TreatmentData(ArrayList(), ArrayList(), ArrayList(), ArrayList())
     protected var graphData = EventData.GraphData(ArrayList())
+
+    // Layout
+    @LayoutRes abstract fun layoutResource(): Int
 
     private val displaySize = Point()
     var mTime: TextView? = null
@@ -100,8 +107,10 @@ abstract class BaseWatchFace : WatchFace() {
     var mLinearLayout: LinearLayout? = null
     var mLinearLayout2: LinearLayout? = null
     var mDate: LinearLayout? = null
-    var mChartTap: LinearLayout? = null
-    var mMainMenuTap: LinearLayout? = null
+    var mChartTap: LinearLayout? = null // Steampunk only
+    var mMainMenuTap: LinearLayout? = null // Steampunk,Digital  only
+    var chart: LineChartView? = null
+
     var ageLevel = 1
     var loopLevel = -1
     var highColor = Color.YELLOW
@@ -111,13 +120,16 @@ abstract class BaseWatchFace : WatchFace() {
     var basalBackgroundColor = Color.BLUE
     var basalCenterColor = Color.BLUE
     var bolusColor = Color.MAGENTA
-    var lowResMode = false
-    var layoutSet = false
+    private var lowResMode = false
+    private var layoutSet = false
     var bIsRound = false
     var dividerMatchesBg = false
     var pointSize = 2
-    var chart: LineChartView? = null
-    var wakeLock: PowerManager.WakeLock? = null
+
+    // Tapping times
+    private var sgvTapTime: Long = 0
+    private var chartTapTime: Long = 0
+    private var mainMenuTapTime: Long = 0
 
     // related endTime manual layout
     var layoutView: View? = null
@@ -146,7 +158,6 @@ abstract class BaseWatchFace : WatchFace() {
         colorDarkLow = ContextCompat.getColor(this, R.color.dark_lowColor)
         @Suppress("DEPRECATION")
         (getSystemService(WINDOW_SERVICE) as WindowManager).defaultDisplay.getSize(displaySize)
-        wakeLock = (getSystemService(POWER_SERVICE) as PowerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS:BaseWatchFace")
         specW = View.MeasureSpec.makeMeasureSpec(displaySize.x, View.MeasureSpec.EXACTLY)
         specH = if (forceSquareCanvas) specW else View.MeasureSpec.makeMeasureSpec(displaySize.y, View.MeasureSpec.EXACTLY)
         disposable += rxBus
@@ -185,6 +196,58 @@ abstract class BaseWatchFace : WatchFace() {
         persistence.turnOff()
         setupBatteryReceiver()
         setupSimpleUi()
+        layoutView = (getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(layoutResource(), null)
+        performViewSetup()
+        rxBus.send(EventWearToMobile(ActionResendData("BaseWatchFace::onCreate")))
+    }
+
+    override fun onTapCommand(tapType: Int, x: Int, y: Int, eventTime: Long) {
+        chart?.let { chart ->
+            if (tapType == TAP_TYPE_TAP && x >= chart.left && x <= chart.right && y >= chart.top && y <= chart.bottom) {
+                if (eventTime - chartTapTime < 800) {
+                    changeChartTimeframe()
+                }
+                chartTapTime = eventTime
+                return
+            }
+        }
+        mSgv?.let { mSgv ->
+            val extra = (mSgv.right - mSgv.left) / 2
+            if (tapType == TAP_TYPE_TAP && x + extra >= mSgv.left && x - extra <= mSgv.right && y >= mSgv.top && y <= mSgv.bottom) {
+                if (eventTime - sgvTapTime < 800) {
+                    startActivity(Intent(this, MainMenuActivity::class.java).also { it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })
+                }
+                sgvTapTime = eventTime
+            }
+        }
+        mChartTap?.let { mChartTap ->
+            if (tapType == TAP_TYPE_TAP && x >= mChartTap.left && x <= mChartTap.right && y >= mChartTap.top && y <= mChartTap.bottom) {
+                if (eventTime - chartTapTime < 800) {
+                    changeChartTimeframe()
+                }
+                chartTapTime = eventTime
+                return
+            }
+        }
+        mMainMenuTap?.let { mMainMenuTap ->
+            if (tapType == TAP_TYPE_TAP && x >= mMainMenuTap.left && x <= mMainMenuTap.right && y >= mMainMenuTap.top && y <= mMainMenuTap.bottom) {
+                if (eventTime - mainMenuTapTime < 800) {
+                    startActivity(Intent(this, MainMenuActivity::class.java).also { it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })
+                }
+                mainMenuTapTime = eventTime
+                return
+            }
+        }
+    }
+
+    open fun changeChartTimeframe() {
+        var timeframe = sp.getInt(R.string.key_chart_time_frame, 3)
+        timeframe = timeframe % 5 + 1
+        sp.putInt(R.string.key_chart_time_frame, timeframe)
+    }
+
+    override fun getWatchFaceStyle(): WatchFaceStyle {
+        return WatchFaceStyle.Builder(this).setAcceptsTapEvents(true).build()
     }
 
     private fun setupBatteryReceiver() {
@@ -272,7 +335,6 @@ abstract class BaseWatchFace : WatchFace() {
         setupCharts()
         setDataFields()
         missedReadingAlert()
-        wakeLock?.acquire(50)
     }
 
     fun ageLevel(): Int {

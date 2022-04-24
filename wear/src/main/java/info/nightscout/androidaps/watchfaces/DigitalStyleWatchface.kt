@@ -3,42 +3,18 @@
 package info.nightscout.androidaps.watchfaces
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.support.wearable.watchface.WatchFaceStyle
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.extensions.toVisibility
-import info.nightscout.androidaps.interaction.menus.MainMenuActivity
 import info.nightscout.shared.logging.LTag
 
 class DigitalStyleWatchface : BaseWatchFace() {
 
-    private var sgvTapTime: Long = 0
-
-    @SuppressLint("InflateParams")
-    override fun onCreate() {
-        super.onCreate()
-        val inflater = getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        layoutView = inflater.inflate(R.layout.activity_digitalstyle, null)
-        performViewSetup()
-    }
-
-    override fun onTapCommand(tapType: Int, x: Int, y: Int, eventTime: Long) {
-        //tapType = TAP_TYPE_TAP;
-        aapsLogger.debug(LTag.WEAR, "onTapCommand: DeviceWidth x DeviceHeight   ///  x , y, TapType  >> ", "$width x $height ///  $x , $y , $tapType")
-        if (tapType == TAP_TYPE_TAP) {
-            if (eventTime - sgvTapTime < TIME_TAP_THRESHOLD) {
-                val intent = Intent(this, MainMenuActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(intent)
-            }
-            sgvTapTime = eventTime
-        }
-    }
+    override fun layoutResource(): Int = R.layout.activity_digitalstyle
 
     override fun getWatchFaceStyle(): WatchFaceStyle {
         return WatchFaceStyle.Builder(this)

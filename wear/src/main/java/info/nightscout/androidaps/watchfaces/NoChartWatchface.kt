@@ -10,7 +10,6 @@ import android.graphics.Point
 import android.graphics.Rect
 import android.os.PowerManager
 import android.support.wearable.watchface.WatchFaceStyle
-import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowInsets

@@ -1,17 +1,10 @@
-@file:Suppress("DEPRECATION")
-
 package info.nightscout.androidaps.watchfaces
 
-import android.annotation.SuppressLint
-import android.content.Intent
-import android.support.wearable.watchface.WatchFaceStyle
-import android.view.LayoutInflater
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
 import androidx.core.content.ContextCompat
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interaction.menus.MainMenuActivity
 import info.nightscout.shared.SafeParse.stringToFloat
 import org.joda.time.TimeOfDay
 
@@ -21,43 +14,14 @@ import org.joda.time.TimeOfDay
  */
 class SteampunkWatchface : BaseWatchFace() {
 
-    private var chartTapTime: Long = 0
-    private var mainMenuTapTime: Long = 0
     private var lastEndDegrees = 0f
     private var deltaRotationAngle = 0f
 
-    @SuppressLint("InflateParams")
+    override fun layoutResource(): Int = R.layout.activity_steampunk
+
     override fun onCreate() {
         forceSquareCanvas = true
         super.onCreate()
-        val inflater = getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        layoutView = inflater.inflate(R.layout.activity_steampunk, null)
-        performViewSetup()
-    }
-
-    override fun onTapCommand(tapType: Int, x: Int, y: Int, eventTime: Long) {
-        mChartTap?.let { mChartTap ->
-            if (tapType == TAP_TYPE_TAP && x >= mChartTap.left && x <= mChartTap.right && y >= mChartTap.top && y <= mChartTap.bottom) {
-                if (eventTime - chartTapTime < 800) {
-                    changeChartTimeframe()
-                }
-                chartTapTime = eventTime
-                return
-            }
-        }
-        mMainMenuTap?.let { mMainMenuTap ->
-            if (tapType == TAP_TYPE_TAP && x >= mMainMenuTap.left && x <= mMainMenuTap.right && y >= mMainMenuTap.top && y <= mMainMenuTap.bottom) {
-                if (eventTime - mainMenuTapTime < 800) {
-                    startActivity(Intent(this, MainMenuActivity::class.java).also { it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })
-                }
-                mainMenuTapTime = eventTime
-                return
-            }
-        }
-    }
-
-    override fun getWatchFaceStyle(): WatchFaceStyle {
-        return WatchFaceStyle.Builder(this).setAcceptsTapEvents(true).build()
     }
 
     override fun setColorDark() {
@@ -241,15 +205,10 @@ class SteampunkWatchface : BaseWatchFace() {
         }
     }
 
-    private fun changeChartTimeframe() {
+    override fun changeChartTimeframe() {
         var timeframe = sp.getInt(R.string.key_chart_time_frame, 3)
         timeframe = timeframe % 5 + 1
-        pointSize = if (timeframe < 3) {
-            2
-        } else {
-            1
-        }
-        setupCharts()
+        pointSize = if (timeframe < 3) 2 else 1
         sp.putInt(R.string.key_chart_time_frame, timeframe)
     }
 }

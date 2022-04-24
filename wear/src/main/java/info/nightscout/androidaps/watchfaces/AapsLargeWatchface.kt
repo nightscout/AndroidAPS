@@ -1,46 +1,13 @@
-@file:Suppress("DEPRECATION")
-
 package info.nightscout.androidaps.watchfaces
 
-import android.annotation.SuppressLint
-import android.content.Intent
 import android.graphics.Color
-import android.support.wearable.watchface.WatchFaceStyle
-import android.view.LayoutInflater
 import androidx.core.content.ContextCompat
 import com.ustwo.clockwise.common.WatchMode
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interaction.menus.MainMenuActivity
 
 class AapsLargeWatchface : BaseWatchFace() {
 
-    private var sgvTapTime: Long = 0
-
-    @SuppressLint("InflateParams")
-    override fun onCreate() {
-        super.onCreate()
-        val inflater = getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        layoutView = inflater.inflate(R.layout.activity_home_large, null)
-        performViewSetup()
-    }
-
-    override fun onTapCommand(tapType: Int, x: Int, y: Int, eventTime: Long) {
-        mSgv?.let { mSgv ->
-            val extra = (mSgv.right - mSgv.left) / 2
-            if (tapType == TAP_TYPE_TAP && x + extra >= mSgv.left && x - extra <= mSgv.right && y >= mSgv.top && y <= mSgv.bottom) {
-                if (eventTime - sgvTapTime < 800) {
-                    val intent = Intent(this, MainMenuActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
-                }
-                sgvTapTime = eventTime
-            }
-        }
-    }
-
-    override fun getWatchFaceStyle(): WatchFaceStyle {
-        return WatchFaceStyle.Builder(this).setAcceptsTapEvents(true).build()
-    }
+    override fun layoutResource(): Int = R.layout.activity_home_large
 
     override fun setColorDark() {
         mLinearLayout?.setBackgroundColor(ContextCompat.getColor(this, if (dividerMatchesBg) R.color.dark_background else R.color.dark_mLinearLayout))
@@ -70,7 +37,7 @@ class AapsLargeWatchface : BaseWatchFace() {
 
         if (status.batteryLevel == 1) mUploaderBattery?.setTextColor(ContextCompat.getColor(this, if (dividerMatchesBg) R.color.dark_midColor else R.color.dark_uploaderBattery))
         else mUploaderBattery?.setTextColor(ContextCompat.getColor(this, R.color.dark_uploaderBatteryEmpty))
-        
+
         mStatus?.setTextColor(ContextCompat.getColor(this, if (dividerMatchesBg) R.color.dark_midColor else R.color.dark_mStatus_home))
     }
 
