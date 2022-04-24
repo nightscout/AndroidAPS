@@ -9,6 +9,7 @@ import info.nightscout.androidaps.BuildConfig
 /**
  * Created by adrian on 07/08/17.
  */
+@Suppress("unused")
 class VersionPreference(context: Context?, attrs: AttributeSet?) : WearListPreference(context, attrs) {
 
     override fun getSummary(context: Context): CharSequence {
