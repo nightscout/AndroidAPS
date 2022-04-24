@@ -53,7 +53,6 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.exceptions.UndeliverableException
 import io.reactivex.rxjava3.kotlin.plusAssign
 import io.reactivex.rxjava3.plugins.RxJavaPlugins
-import net.danlew.android.joda.JodaTimeAndroid
 import java.io.IOException
 import java.net.SocketException
 import java.util.concurrent.TimeUnit
@@ -102,7 +101,6 @@ class MainApp : DaggerApplication() {
         }
         disposable += compatDBHelper.dbChangeDisposable()
         registerActivityLifecycleCallbacks(activityMonitor)
-        JodaTimeAndroid.init(this)
         profileSwitchPlugin.setThemeMode()
         aapsLogger.debug("Version: " + BuildConfig.VERSION_NAME)
         aapsLogger.debug("BuildVersion: " + BuildConfig.BUILDVERSION)

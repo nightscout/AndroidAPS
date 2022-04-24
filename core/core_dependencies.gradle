@@ -75,7 +75,6 @@ dependencies {
     api "com.squareup.retrofit2:converter-gson:$retrofit2_version"
 
     api "com.joanzapata.iconify:android-iconify-fontawesome:2.2.2"
-    api 'net.danlew:android.joda:2.10.6'
 
     api "androidx.fragment:fragment-ktx:$fragmentktx_version"
     api "androidx.constraintlayout:constraintlayout:$constraintlayout_version"

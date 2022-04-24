@@ -27,9 +27,9 @@
             android:value="@integer/google_play_services_version" />
 
         <service
-            android:name=".watchfaces.BIGChart"
+            android:name=".watchfaces.BigChartWatchface"
             android:allowEmbedded="true"
-            android:label="@string/label_xdrip_big_chart"
+            android:label="@string/label_watchface_big_chart"
             android:permission="android.permission.BIND_WALLPAPER"
             android:exported="false">
             <meta-data
@@ -49,9 +49,9 @@
         </service>
 
         <service
-            android:name=".watchfaces.NOChart"
+            android:name=".watchfaces.NoChartWatchface"
             android:allowEmbedded="true"
-            android:label="@string/label_xdrip_no_chart"
+            android:label="@string/label_watchface_no_chart"
             android:permission="android.permission.BIND_WALLPAPER"
             android:exported="false">
             <meta-data
@@ -71,9 +71,9 @@
         </service>
 
         <service
-            android:name=".watchfaces.Home"
+            android:name=".watchfaces.AapsWatchface"
             android:allowEmbedded="true"
-            android:label="@string/label_xdrip"
+            android:label="@string/label_watchface"
             android:permission="android.permission.BIND_WALLPAPER"
             android:exported="false">
             <meta-data
@@ -96,9 +96,9 @@
         </service>
 
         <service
-            android:name=".watchfaces.Home2"
+            android:name=".watchfaces.AapsV2Watchface"
             android:allowEmbedded="true"
-            android:label="@string/label_xdrip_v2"
+            android:label="@string/label_watchface_v2"
             android:permission="android.permission.BIND_WALLPAPER"
             android:exported="false">
             <meta-data
@@ -121,9 +121,9 @@
         </service>
 
         <service
-            android:name=".watchfaces.Cockpit"
+            android:name=".watchfaces.CockpitWatchface"
             android:allowEmbedded="true"
-            android:label="@string/label_xdrip_cockpit"
+            android:label="@string/label_watchface_cockpit"
             android:permission="android.permission.BIND_WALLPAPER"
             android:exported="false">
             <meta-data
@@ -148,7 +148,7 @@
         <service
             android:name=".watchfaces.SteampunkWatchface"
             android:allowEmbedded="true"
-            android:label="@string/label_xdrip_steampunk"
+            android:label="@string/label_watchface_steampunk"
             android:permission="android.permission.BIND_WALLPAPER"
             android:exported="false">
             <meta-data
@@ -171,9 +171,9 @@
         </service>
 
         <service
-            android:name=".watchfaces.LargeHome"
+            android:name=".watchfaces.AapsLargeWatchface"
             android:allowEmbedded="true"
-            android:label="@string/label_xdrip_large"
+            android:label="@string/label_watchface_large"
             android:permission="android.permission.BIND_WALLPAPER"
             android:exported="false">
             <meta-data
@@ -197,7 +197,7 @@
         <service
             android:name=".watchfaces.CircleWatchface"
             android:allowEmbedded="true"
-            android:label="@string/label_xdrip_circle"
+            android:label="@string/label_watchface_circle"
             android:permission="android.permission.BIND_WALLPAPER"
             android:exported="false">
             <meta-data
@@ -217,9 +217,9 @@
         </service>
 
         <service
-            android:name=".watchfaces.DigitalStyle"
+            android:name=".watchfaces.DigitalStyleWatchface"
             android:allowEmbedded="true"
-            android:label="@string/label_digitalstyle"
+            android:label="@string/label_watchface_digital_style"
             android:permission="android.permission.BIND_WALLPAPER"
             android:exported="false">
             <meta-data

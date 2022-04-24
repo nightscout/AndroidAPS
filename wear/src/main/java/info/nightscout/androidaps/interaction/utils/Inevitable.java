@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import info.nightscout.androidaps.BuildConfig;
+import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.shared.logging.AAPSLogger;
 import info.nightscout.shared.logging.LTag;
 
@@ -25,6 +26,7 @@ public class Inevitable {
 
     @Inject WearUtil wearUtil;
     @Inject AAPSLogger aapsLogger;
+    @Inject DateUtil dateUtil;
 
     @Inject Inevitable() {}
 
@@ -43,14 +45,15 @@ public class Inevitable {
             task.extendTime(idle_for);
 
             if (debug)
-                aapsLogger.debug(LTag.WEAR, "Extending time for: " + id + " to " + wearUtil.dateTimeText(task.when));
+                aapsLogger.debug(LTag.WEAR, "Extending time for: " + id + " to " + dateUtil.dateAndTimeAndSecondsString(task.when));
         } else {
             // otherwise create new task
             if (runnable == null) return; // extension only if already exists
             tasks.put(id, new Task(id, idle_for, runnable));
 
             if (debug) {
-                aapsLogger.debug(LTag.WEAR, "Creating task: " + id + " due: " + wearUtil.dateTimeText(tasks.get(id).when));
+                aapsLogger.debug(LTag.WEAR,
+                        "Creating task: " + id + " due: " + dateUtil.dateAndTimeAndSecondsString(tasks.get(id).when));
             }
 
             // create a thread to wait and execute in background
@@ -73,23 +76,8 @@ public class Inevitable {
         }
     }
 
-    public void stackableTask(String id, long idle_for, Runnable runnable) {
-        int stack = 0;
-        while (tasks.get(id = id + "-" + stack) != null) {
-            stack++;
-        }
-        if (stack > 0) {
-            aapsLogger.debug(LTag.WEAR, "Task stacked to: " + id);
-        }
-        task(id, idle_for, runnable);
-    }
-
     public void kill(final String id) {
         tasks.remove(id);
-    }
-
-    public boolean waiting(final String id) {
-        return tasks.containsKey(id);
     }
 
     private class Task {

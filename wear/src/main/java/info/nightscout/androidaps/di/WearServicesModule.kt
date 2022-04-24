@@ -28,15 +28,15 @@ abstract class WearServicesModule {
     @ContributesAndroidInjector abstract fun contributesWallpaperComplication(): WallpaperComplication
 
     @ContributesAndroidInjector abstract fun contributesBaseWatchFace(): BaseWatchFace
-    @ContributesAndroidInjector abstract fun contributesHome(): Home
-    @ContributesAndroidInjector abstract fun contributesHome2(): Home2
-    @ContributesAndroidInjector abstract fun contributesLargeHome(): LargeHome
+    @ContributesAndroidInjector abstract fun contributesAapsWatchface(): AapsWatchface
+    @ContributesAndroidInjector abstract fun contributesAapsV2Watchface(): AapsV2Watchface
+    @ContributesAndroidInjector abstract fun contributesAapsLargeWatchface(): AapsLargeWatchface
     @ContributesAndroidInjector abstract fun contributesSteampunk(): SteampunkWatchface
-    @ContributesAndroidInjector abstract fun contributesDigitalStyle(): DigitalStyle
-    @ContributesAndroidInjector abstract fun contributesCockpit(): Cockpit
+    @ContributesAndroidInjector abstract fun contributesDigitalStyleWatchface(): DigitalStyleWatchface
+    @ContributesAndroidInjector abstract fun contributesCockpitWatchface(): CockpitWatchface
 
-    @ContributesAndroidInjector abstract fun contributesBIGChart(): BIGChart
-    @ContributesAndroidInjector abstract fun contributesNOChart(): NOChart
+    @ContributesAndroidInjector abstract fun contributesBIGChart(): BigChartWatchface
+    @ContributesAndroidInjector abstract fun contributesNOChart(): NoChartWatchface
     @ContributesAndroidInjector abstract fun contributesCircleWatchface(): CircleWatchface
 
     @ContributesAndroidInjector abstract fun contributesTileBase(): TileBase

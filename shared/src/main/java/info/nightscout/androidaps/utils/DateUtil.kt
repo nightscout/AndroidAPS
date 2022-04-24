@@ -136,6 +136,7 @@ class DateUtil @Inject constructor(private val context: Context) {
         return DateTime(mills).toString(DateTimeFormat.forPattern(format))
     }
 
+    fun timeString(): String = timeString(now())
     fun timeString(mills: Long): String {
         var format = "hh:mma"
         if (android.text.format.DateFormat.is24HourFormat(context)) {
@@ -144,6 +145,11 @@ class DateUtil @Inject constructor(private val context: Context) {
         return DateTime(mills).toString(DateTimeFormat.forPattern(format))
     }
 
+    fun minuteString(): String = minuteString(now())
+    fun minuteString(mills: Long): String =
+        DateTime(mills).toString(DateTimeFormat.forPattern("mm"))
+
+    fun hourString(): String = hourString(now())
     fun hourString(mills: Long): String {
         var format = "hha"
         if (android.text.format.DateFormat.is24HourFormat(context)) {
@@ -151,6 +157,22 @@ class DateUtil @Inject constructor(private val context: Context) {
         }
         return DateTime(mills).toString(DateTimeFormat.forPattern(format))
     }
+
+    fun dayNameString(): String = minuteString(now())
+    fun dayNameString(mills: Long): String =
+        DateTime(mills).toString(DateTimeFormat.forPattern("E"))
+
+    fun dayString(): String = minuteString(now())
+    fun dayString(mills: Long): String =
+        DateTime(mills).toString(DateTimeFormat.forPattern("dd"))
+
+    fun monthString(): String = monthString(now())
+    fun monthString(mills: Long): String =
+        DateTime(mills).toString(DateTimeFormat.forPattern("MMM"))
+
+    fun weekString(): String = weekString(now())
+    fun weekString(mills: Long): String =
+        DateTime(mills).toString(DateTimeFormat.forPattern("ww"))
 
     fun timeStringWithSeconds(mills: Long): String {
         var format = "hh:mm:ssa"

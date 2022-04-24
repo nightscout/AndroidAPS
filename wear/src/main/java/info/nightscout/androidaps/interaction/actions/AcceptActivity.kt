@@ -42,9 +42,9 @@ class AcceptActivity : ViewSelectorActivity() {
             return
         }
         setAdapter(MyGridViewPagerAdapter())
-        val v = getSystemService(VIBRATOR_SERVICE) as Vibrator
+        val vibrator = getSystemService(VIBRATOR_SERVICE) as Vibrator
         val vibratePattern = longArrayOf(0, 100, 50, 100, 50)
-        v.vibrate(vibratePattern, -1)
+        vibrator.vibrate(vibratePattern, -1)
     }
 
     override fun onPause() {

@@ -38,11 +38,6 @@ public class WearUtil {
     // Time related util methods
     //==============================================================================================
 
-    public String dateTimeText(long timeInMs) {
-        Date d = new Date(timeInMs);
-        return "" + d.getDay() + "." + d.getMonth() + "." + d.getYear() + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
-    }
-
     public long timestamp() {
         return System.currentTimeMillis();
     }

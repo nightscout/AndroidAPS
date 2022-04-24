@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    tools:context=".watchfaces.DigitalStyle"
+    tools:context=".watchfaces.DigitalStyleWatchface"
     tools:deviceIds="wear_round">
 
     <!-- background-image with shapes elements-->
@@ -425,21 +425,10 @@
                             android:textSize="26sp"
                             android:textStyle="bold" />
 
-                        <!-- 12h period AM / PM -->
-                        <TextView
-                            android:id="@+id/timePeriod"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8sp"
-                            android:layout_marginTop="-1.5sp"
-                            android:fontFamily="@font/roboto_condensed_bold"
-                            android:gravity="top"
-                            android:text="AM"
-                            android:textColor="@color/light_grey"
-                            android:textSize="10sp"
-                            android:textStyle="bold" />
                     </LinearLayout>
+
                 </LinearLayout>
+
             </LinearLayout>
 
             <!-- right side 1/2 height - bottom halft -->

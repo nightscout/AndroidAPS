@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interaction.menus.MainMenuActivity
 import info.nightscout.shared.SafeParse.stringToFloat
+import org.joda.time.TimeOfDay
 
 /**
  * Created by andrew-warrington on 01/12/2017.
@@ -35,16 +36,23 @@ class SteampunkWatchface : BaseWatchFace() {
     }
 
     override fun onTapCommand(tapType: Int, x: Int, y: Int, eventTime: Long) {
-        if (tapType == TAP_TYPE_TAP && x >= mChartTap.left && x <= mChartTap.right && y >= mChartTap.top && y <= mChartTap.bottom) {
-            if (eventTime - chartTapTime < 800) {
-                changeChartTimeframe()
+        mChartTap?.let { mChartTap ->
+            if (tapType == TAP_TYPE_TAP && x >= mChartTap.left && x <= mChartTap.right && y >= mChartTap.top && y <= mChartTap.bottom) {
+                if (eventTime - chartTapTime < 800) {
+                    changeChartTimeframe()
+                }
+                chartTapTime = eventTime
+                return
             }
-            chartTapTime = eventTime
-        } else if (tapType == TAP_TYPE_TAP && x >= mMainMenuTap.left && x <= mMainMenuTap.right && y >= mMainMenuTap.top && y <= mMainMenuTap.bottom) {
-            if (eventTime - mainMenuTapTime < 800) {
-                startActivity(Intent(this, MainMenuActivity::class.java).also { it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })
+        }
+        mMainMenuTap?.let { mMainMenuTap ->
+            if (tapType == TAP_TYPE_TAP && x >= mMainMenuTap.left && x <= mMainMenuTap.right && y >= mMainMenuTap.top && y <= mMainMenuTap.bottom) {
+                if (eventTime - mainMenuTapTime < 800) {
+                    startActivity(Intent(this, MainMenuActivity::class.java).also { it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })
+                }
+                mainMenuTapTime = eventTime
+                return
             }
-            mainMenuTapTime = eventTime
         }
     }
 
@@ -53,14 +61,12 @@ class SteampunkWatchface : BaseWatchFace() {
     }
 
     override fun setColorDark() {
-        if (mLinearLayout2 != null) {
-            if (ageLevel() <= 0 && singleBg.timeStamp != 0L) {
-                mLinearLayout2.setBackgroundResource(R.drawable.redline)
-                mTimestamp.setTextColor(ContextCompat.getColor(this, R.color.red_600))
-            } else {
-                mLinearLayout2.setBackgroundResource(0)
-                mTimestamp.setTextColor(ContextCompat.getColor(this, R.color.black_86p))
-            }
+        if (ageLevel() <= 0 && singleBg.timeStamp != 0L) {
+            mLinearLayout2?.setBackgroundResource(R.drawable.redline)
+            mTimestamp?.setTextColor(ContextCompat.getColor(this, R.color.red_600))
+        } else {
+            mLinearLayout2?.setBackgroundResource(0)
+            mTimestamp?.setTextColor(ContextCompat.getColor(this, R.color.black_86p))
         }
         if (loopLevel == 0) {
             mLoop?.setTextColor(ContextCompat.getColor(this, R.color.red_600))
@@ -73,9 +79,9 @@ class SteampunkWatchface : BaseWatchFace() {
 
                 //ensure the glucose dial is the correct units
                 if (singleBg.glucoseUnits == "mmol") {
-                    mGlucoseDial.setImageResource(R.drawable.steampunk_dial_mmol)
+                    mGlucoseDial?.setImageResource(R.drawable.steampunk_dial_mmol)
                 } else {
-                    mGlucoseDial.setImageResource(R.drawable.steampunk_dial_mgdl)
+                    mGlucoseDial?.setImageResource(R.drawable.steampunk_dial_mgdl)
                 }
 
                 //convert the Sgv to degrees of rotation
@@ -99,7 +105,7 @@ class SteampunkWatchface : BaseWatchFace() {
             rotate.fillAfter = true
             rotate.interpolator = LinearInterpolator()
             rotate.duration = 1
-            mGlucoseDial.startAnimation(rotate)
+            mGlucoseDial?.startAnimation(rotate)
             lastEndDegrees = rotationAngle //store the final angle as a starting point for the next rotation.
         }
 
@@ -123,15 +129,15 @@ class SteampunkWatchface : BaseWatchFace() {
                         }
                     }
                     if (sp.getString("delta_granularity", "2") == "1" || autoGranularity == "1") {  //low
-                        mLinearLayout.setBackgroundResource(R.drawable.steampunk_gauge_mmol_10)
+                        mLinearLayout?.setBackgroundResource(R.drawable.steampunk_gauge_mmol_10)
                         deltaRotationAngle = absAvgDelta * 30f
                     }
                     if (sp.getString("delta_granularity", "2") == "2" || autoGranularity == "2") {  //medium
-                        mLinearLayout.setBackgroundResource(R.drawable.steampunk_gauge_mmol_05)
+                        mLinearLayout?.setBackgroundResource(R.drawable.steampunk_gauge_mmol_05)
                         deltaRotationAngle = absAvgDelta * 60f
                     }
                     if (sp.getString("delta_granularity", "2") == "3" || autoGranularity == "3") {  //high
-                        mLinearLayout.setBackgroundResource(R.drawable.steampunk_gauge_mmol_03)
+                        mLinearLayout?.setBackgroundResource(R.drawable.steampunk_gauge_mmol_03)
                         deltaRotationAngle = absAvgDelta * 100f
                     }
                 } else {
@@ -144,28 +150,28 @@ class SteampunkWatchface : BaseWatchFace() {
                         }
                     }
                     if (sp.getString("delta_granularity", "2") == "1" || autoGranularity == "1") {  //low
-                        mLinearLayout.setBackgroundResource(R.drawable.steampunk_gauge_mgdl_20)
+                        mLinearLayout?.setBackgroundResource(R.drawable.steampunk_gauge_mgdl_20)
                         deltaRotationAngle = absAvgDelta * 1.5f
                     }
                     if (sp.getString("delta_granularity", "2") == "2" || autoGranularity == "2") {  //medium
-                        mLinearLayout.setBackgroundResource(R.drawable.steampunk_gauge_mgdl_10)
+                        mLinearLayout?.setBackgroundResource(R.drawable.steampunk_gauge_mgdl_10)
                         deltaRotationAngle = absAvgDelta * 3f
                     }
                     if (sp.getString("delta_granularity", "2") == "3" || autoGranularity == "3") {  //high
-                        mLinearLayout.setBackgroundResource(R.drawable.steampunk_gauge_mgdl_5)
+                        mLinearLayout?.setBackgroundResource(R.drawable.steampunk_gauge_mgdl_5)
                         deltaRotationAngle = absAvgDelta * 6f
                     }
                 }
             }
             if (deltaRotationAngle > 40) deltaRotationAngle = 40f
-            mDeltaGauge.rotation = deltaRotationAngle * deltaIsNegative
+            mDeltaGauge?.rotation = deltaRotationAngle * deltaIsNegative
         }
 
         //rotate the minute hand.
-        mMinuteHand.rotation = sMinute.toFloat() * 6f
+        mMinuteHand?.rotation = TimeOfDay().minuteOfHour * 6f
 
         //rotate the hour hand.
-        mHourHand.rotation = sHour.toFloat() * 30f + sMinute.toFloat() * 0.5f
+        mHourHand?.rotation = TimeOfDay().hourOfDay * 30f + TimeOfDay().minuteOfHour * 0.5f
         setTextSizes()
         mLoop?.setBackgroundResource(0)
         if (chart != null) {
@@ -175,7 +181,7 @@ class SteampunkWatchface : BaseWatchFace() {
             gridColor = ContextCompat.getColor(this, R.color.grey_steampunk)
             basalBackgroundColor = ContextCompat.getColor(this, R.color.basal_dark)
             basalCenterColor = ContextCompat.getColor(this, R.color.basal_dark)
-            pointSize = if (sp.getInt("chart_timeframe", 3) < 3) {
+            pointSize = if (sp.getInt(R.string.key_chart_time_frame, 3) < 3) {
                 2
             } else {
                 1
@@ -204,38 +210,39 @@ class SteampunkWatchface : BaseWatchFace() {
         }
 
         //top row. large font unless text too big (i.e. detailedIOB)
-        mCOB2.textSize = fontLarge
-        mBasalRate.textSize = fontLarge
+        mCOB2?.textSize = fontLarge
+        mBasalRate?.textSize = fontLarge
         if (status.iobDetail.length < 7) {
-            mIOB2.textSize = fontLarge
+            mIOB2?.textSize = fontLarge
         } else {
-            mIOB2.textSize = fontSmall
+            mIOB2?.textSize = fontSmall
         }
 
         //bottom row. font medium unless text too long (i.e. longer than 9' timestamp)
-        if (mTimestamp.text.length < 3 || mLoop.text.length < 3) {     //always resize these fields together, for symmetry.
-            mTimestamp.textSize = fontMedium
-            mLoop.textSize = fontMedium
-        } else {
-            mTimestamp.textSize = fontSmall
-            mLoop.textSize = fontSmall
+        mLoop?.let { mLoop ->
+            mTimestamp?.let { mTimestamp ->
+                if (mTimestamp.text.length < 3 || mLoop.text.length < 3) {     //always resize these fields together, for symmetry.
+                    mTimestamp.textSize = fontMedium
+                    mLoop.textSize = fontMedium
+                } else {
+                    mTimestamp.textSize = fontSmall
+                    mLoop.textSize = fontSmall
+                }
+            }
         }
 
         //if both batteries are shown, make them smaller.
-        if (sp.getBoolean("show_uploader_battery", true) && sp.getBoolean(
-                "show_rig_battery", false
-            )
-        ) {
-            mUploaderBattery.textSize = fontSmall
-            mRigBattery.textSize = fontSmall
+        if (sp.getBoolean("show_uploader_battery", true) && sp.getBoolean("show_rig_battery", false)) {
+            mUploaderBattery?.textSize = fontSmall
+            mRigBattery?.textSize = fontSmall
         } else {
-            mUploaderBattery.textSize = fontMedium
-            mRigBattery.textSize = fontMedium
+            mUploaderBattery?.textSize = fontMedium
+            mRigBattery?.textSize = fontMedium
         }
     }
 
     private fun changeChartTimeframe() {
-        var timeframe = sp.getInt("chart_timeframe", 3)
+        var timeframe = sp.getInt(R.string.key_chart_time_frame, 3)
         timeframe = timeframe % 5 + 1
         pointSize = if (timeframe < 3) {
             2
@@ -243,6 +250,6 @@ class SteampunkWatchface : BaseWatchFace() {
             1
         }
         setupCharts()
-        sp.putString("chart_timeframe", "" + timeframe)
+        sp.putInt(R.string.key_chart_time_frame, timeframe)
     }
 }
