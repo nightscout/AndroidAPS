@@ -1,15 +1,12 @@
 package info.nightscout.androidaps.plugins.aps.loop
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.LoopFragmentBinding
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.Loop
-import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopSetLastRunGui
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopUpdateGui
 import info.nightscout.androidaps.plugins.bus.RxBus
@@ -18,6 +15,7 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -34,6 +32,8 @@ class LoopFragment : DaggerFragment() {
     @Inject lateinit var loop: Loop
     @Inject lateinit var dateUtil: DateUtil
 
+    private val ID_MENU_RUN = 1
+
     private var disposable: CompositeDisposable = CompositeDisposable()
 
     private var _binding: LoopFragmentBinding? = null
@@ -42,8 +42,11 @@ class LoopFragment : DaggerFragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        setHasOptionsMenu(true)
         _binding = LoopFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -51,11 +54,32 @@ class LoopFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.run.setOnClickListener {
-            binding.lastrun.text = rh.gs(R.string.executing)
-            Thread { loop.invoke("Loop button", true) }.start()
+        with(binding.swipeRefresh) {
+            setColorSchemeColors(rh.gac(context, R.attr.colorPrimaryDark), rh.gac(context, R.attr.colorPrimary), rh.gac(context, R.attr.colorSecondary))
+            setOnRefreshListener {
+                binding.lastrun.text = rh.gs(info.nightscout.androidaps.R.string.executing)
+                Thread { loop.invoke("Loop swiperefresh", true) }.start()
+            }
         }
     }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        menu.removeItem(ID_MENU_RUN)
+        menu.add(Menu.FIRST, ID_MENU_RUN, 0, rh.gs(R.string.openapsma_run)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+        menu.setGroupDividerEnabled(true)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
+            ID_MENU_RUN -> {
+                binding.lastrun.text = rh.gs(R.string.executing)
+                Thread { loop.invoke("Loop menu", true) }.start()
+                true
+            }
+
+            else        -> false
+        }
 
     @Synchronized
     override fun onResume() {
@@ -64,16 +88,16 @@ class LoopFragment : DaggerFragment() {
             .toObservable(EventLoopUpdateGui::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({
-                updateGUI()
-            }, fabricPrivacy::logException)
+                           updateGUI()
+                       }, fabricPrivacy::logException)
 
         disposable += rxBus
             .toObservable(EventLoopSetLastRunGui::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({
-                clearGUI()
-                binding.lastrun.text = it.text
-            }, fabricPrivacy::logException)
+                           clearGUI()
+                           binding.lastrun.text = it.text
+                       }, fabricPrivacy::logException)
 
         updateGUI()
         sp.putBoolean(R.string.key_objectiveuseloop, true)
@@ -117,6 +141,7 @@ class LoopFragment : DaggerFragment() {
                     allConstraints.getMostLimitedReasons(aapsLogger)
                 } ?: ""
             binding.constraints.text = constraints
+            binding.swipeRefresh.isRefreshing = false
         }
     }
 
@@ -133,5 +158,6 @@ class LoopFragment : DaggerFragment() {
         binding.tbrexecutionTime.text = ""
         binding.tbrsetbypump.text = ""
         binding.smbsetbypump.text = ""
+        binding.swipeRefresh.isRefreshing = false
     }
 }
