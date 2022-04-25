@@ -94,8 +94,8 @@
             android:layout_gravity="center"
             android:contentDescription="@string/overview_calculator_label"
             android:orientation="horizontal"
-            android:paddingLeft="-5dp"
-            android:paddingTop="-5dp"
+            android:paddingStart="-5dp"
+            android:paddingEnd="-5dp"
             android:scaleX=".5"
             android:scaleY=".5"
             android:src="@drawable/ic_calculator" />
