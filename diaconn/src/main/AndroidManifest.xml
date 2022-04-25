@@ -16,7 +16,8 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name="info.nightscout.androidaps.diaconn.activities.DiaconnG8BLEScanActivity"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"
+            android:exported="false">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.plugins.PumpDiaconnG8.activities.DiaconnG8BLEScanActivity" />
                 <category android:name="android.intent.category.DEFAULT" />

@@ -9,7 +9,7 @@
     android:layout_gravity="center"
     android:layout_marginStart="4dp"
     app:cardCornerRadius="4dp"
-    app:cardElevation="4dp"
+    app:cardElevation="2dp"
     app:cardUseCompatPadding="true"
     app:contentPadding="2dp">
 

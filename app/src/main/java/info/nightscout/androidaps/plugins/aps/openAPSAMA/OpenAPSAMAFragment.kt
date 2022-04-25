@@ -59,7 +59,7 @@ class OpenAPSAMAFragment : DaggerFragment() {
             setColorSchemeColors(rh.gac(context, R.attr.colorPrimaryDark), rh.gac(context, R.attr.colorPrimary), rh.gac(context, R.attr.colorSecondary))
             setOnRefreshListener {
                 binding.lastrun.text = rh.gs(info.nightscout.androidaps.R.string.executing)
-                openAPSAMAPlugin.invoke("OpenAPSAMA swiperefresh", false)
+                Thread { openAPSAMAPlugin.invoke("OpenAPSAMA swiperefresh", false) }.start()
             }
         }
 
@@ -76,7 +76,7 @@ class OpenAPSAMAFragment : DaggerFragment() {
         when (item.itemId) {
             ID_MENU_RUN -> {
                 binding.lastrun.text = rh.gs(R.string.executing)
-                openAPSAMAPlugin.invoke("OpenAPSAMA menu", false)
+                Thread { openAPSAMAPlugin.invoke("OpenAPSAMA menu", false) }.start()
                 true
             }
 
