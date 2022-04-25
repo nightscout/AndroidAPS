@@ -161,6 +161,7 @@
     <string name="end_user_license_agreement">Contratto di licenza per l\'utente</string>
     <string name="end_user_license_agreement_text">NON DEVE ESSERE USATO PER PRENDERE DECISIONI MEDICHE. NON ESISTE ALCUNA GARANZIA PER IL PROGRAMMA, NELLA MISURA CONSENTITA DALLA LEGGE APPLICABILE. TRANNE QUANDO DIVERSAMENTE INDICATO PER ISCRITTO, I DETENTORI DEL COPYRIGHT E/O ALTRE PARTI FORNISCONO IL PROGRAMMA \"COSÌ COM\'È\" SENZA GARANZIA DI ALCUN TIPO, ESPLICITA O IMPLICITA, INCLUSE, MA NON LIMITATAMENTE A, GARANZIE IMPLICITE DI COMMERCIABILITÀ E IDONEITÀ PER UN SCOPO PARTICOLARE. L\'INTERO RISCHIO RIGUARDO LA QUALITÀ E LE PRESTAZIONI DEL PROGRAMMA È TUO. SE IL PROGRAMMA DOVESSE RISULTARE DIFETTOSO, TI ASSUMI IL COSTO DI TUTTE LE NECESSARIE MANUTENZIONI, RIPARAZIONI O CORREZIONI.</string>
     <string name="end_user_license_agreement_i_understand">COMPRENDO E ACCETTO</string>
+    <string name="save">Salva</string>
     <string name="reloadprofile">Ricarica profilo</string>
     <string name="smscommunicator">Comunicazioni SMS</string>
     <string name="smscommunicator_allowednumbers">Numeri di telefono consentiti</string>
@@ -432,6 +433,8 @@
     <string name="ns_localbroadcasts_title">Abilita trasmissioni locali</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">ISF Dinamico</string>
+    <string name="DynISFAdjust_title">%% fattore di regolazione ISF dinamico</string>
+    <string name="DynISFAdjust_summary">Fattore di regolazione per ISF dinamico. Imposta più del 100%% per correzioni più aggressive, meno del 100%% per correzioni meno aggressive.</string>
     <string name="enableuam">Abilita UAM</string>
     <string name="enablesmb">Abilita SMB</string>
     <string name="enablesmb_summary">Usa super-micro-boli al posto della basale temporanea per un\'azione più veloce</string>
@@ -500,6 +503,7 @@
     <string name="negativeonly">Solo negativo</string>
     <string name="overview_editquickwizard_usecob">Calcolo COB</string>
     <string name="overview_editquickwizard_usetemptarget">Calcolo target temporaneo</string>
+    <string name="overview_editquickwizard_usepercentage">Calcolo percentuale</string>
     <string name="loopenabled">Loop abilitato</string>
     <string name="apsselected">APS selezionato</string>
     <string name="nsclienthaswritepermission">NSClient ha l\'autorizzazione di scrittura</string>
@@ -662,6 +666,8 @@
     <string name="careportal_removestartedevents">Rimuovi gli eventi \"AndroidAPS avviato\"</string>
     <string name="show_invalidated">Mostra invalidato</string>
     <string name="hide_invalidated">Nascondi invalidato</string>
+    <string name="remove_items">Rimuovi elementi</string>
+    <string name="sort_items">Ordina elementi</string>
     <string name="storedsettingsfound">Trovate impostazioni memorizzate</string>
     <string name="allow_hardware_pump_text">Attenzione: se attivi e connetti un micro, AndroidAPS copierà le impostazioni della basale dal profilo al micro, sovrascrivendo la velocità basale esistente memorizzata sul micro. Assicurati di avere la giusta impostazione della basale in AndroidAPS. Se non sei sicuro o non vuoi sovrascrivere le impostazioni della basale sul micro, premi annulla e ripeti il processo in un altro momento.</string>
     <string name="error_adding_treatment_title">Dati trattamento incompleti</string>
@@ -808,6 +814,7 @@
     <string name="smscommunicator_otp_install_info">Su ogni telefono follower installa una app autenticatore che supporta i token RFC 6238 TOTP. App gratuite popolari sono:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">Resettando l\'autenticatore rendi non validi tutti gli autenticatori già forniti. Dovrai configurarli di nuovo!</string>
     <string name="overview_show_predictions">Predizioni</string>
+    <string name="overview_show_treatments">Trattamenti</string>
     <string name="overview_show_deviationslope">Pendenza deviazione</string>
     <string name="authorizationfailed">Autorizzazione fallita</string>
     <string name="overview_show_absinsulin">Insulina assoluta</string>
