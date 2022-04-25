@@ -348,7 +348,7 @@
     <color name="aaps_theme_dark_onErrorContainer">#F9DEDC</color>
     <color name="aaps_theme_dark_background">#1D1B1E</color>
     <color name="aaps_theme_dark_onBackground">#E7E1E5</color>
-    <color name="aaps_theme_dark_surface">#1D1B1E</color>
+    <color name="aaps_theme_dark_surface">#0F0F0F</color>
     <color name="aaps_theme_dark_onSurface">#E7E1E5</color>
     <color name="aaps_theme_dark_surfaceVariant">#49454F</color>
     <color name="aaps_theme_dark_onSurfaceVariant">#CAC4D0</color>

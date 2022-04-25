@@ -3,9 +3,7 @@ package info.nightscout.androidaps.plugins.aps.openAPSSMB
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.TextUtils
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.OpenapsamaFragmentBinding
@@ -39,13 +37,16 @@ class OpenAPSSMBFragment : DaggerFragment() {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var jsonFormatter: JSONFormatter
 
+    private val ID_MENU_RUN = 1
+
     private var _binding: OpenapsamaFragmentBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        setHasOptionsMenu(true)
         _binding = OpenapsamaFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -53,10 +54,33 @@ class OpenAPSSMBFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.run.setOnClickListener {
-            activePlugin.activeAPS.invoke("OpenAPSSMB button", false)
+        with(binding.swipeRefresh) {
+            setColorSchemeColors(rh.gac(context, R.attr.colorPrimaryDark), rh.gac(context, R.attr.colorPrimary), rh.gac(context, R.attr.colorSecondary))
+            setOnRefreshListener {
+                binding.lastrun.text = rh.gs(info.nightscout.androidaps.R.string.executing)
+                activePlugin.activeAPS.invoke("OpenAPSSMB swiperefresh", false)
+            }
         }
+
     }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        menu.removeItem(ID_MENU_RUN)
+        menu.add(Menu.FIRST, ID_MENU_RUN, 0, rh.gs(R.string.openapsma_run)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+        menu.setGroupDividerEnabled(true)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
+            ID_MENU_RUN -> {
+                binding.lastrun.text = rh.gs(R.string.executing)
+                activePlugin.activeAPS.invoke("OpenAPSSMB menu", false)
+                true
+            }
+
+            else        -> false
+        }
 
     @Synchronized
     override fun onResume() {
@@ -65,14 +89,14 @@ class OpenAPSSMBFragment : DaggerFragment() {
             .toObservable(EventOpenAPSUpdateGui::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({
-                updateGUI()
-            }, fabricPrivacy::logException)
+                           updateGUI()
+                       }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventOpenAPSUpdateResultGui::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({
-                updateResultGUI(it.text)
-            }, fabricPrivacy::logException)
+                           updateResultGUI(it.text)
+                       }, fabricPrivacy::logException)
 
         updateGUI()
     }
@@ -122,6 +146,7 @@ class OpenAPSSMBFragment : DaggerFragment() {
         openAPSSMBPlugin.lastAutosensResult.let {
             binding.autosensdata.text = jsonFormatter.format(it.json())
         }
+        binding.swipeRefresh.isRefreshing = false
     }
 
     @Synchronized
@@ -137,5 +162,6 @@ class OpenAPSSMBFragment : DaggerFragment() {
         binding.scriptdebugdata.text = ""
         binding.request.text = ""
         binding.lastrun.text = ""
+        binding.swipeRefresh.isRefreshing = false
     }
 }

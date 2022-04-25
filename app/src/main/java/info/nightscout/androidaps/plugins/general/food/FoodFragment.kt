@@ -17,7 +17,6 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.Food
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
-import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.InvalidateFoodTransaction
 import info.nightscout.androidaps.databinding.FoodFragmentBinding
 import info.nightscout.androidaps.databinding.FoodItemBinding
@@ -26,7 +25,6 @@ import info.nightscout.androidaps.events.EventFoodDatabaseChanged
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
@@ -35,10 +33,8 @@ import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.ui.UIRunnable
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
-import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -73,27 +69,7 @@ class FoodFragment : DaggerFragment() {
         binding.recyclerview.setHasFixedSize(true)
         binding.recyclerview.layoutManager = LinearLayoutManager(view.context)
 
-        binding.refreshFromNightscout.setOnClickListener {
-            context?.let { context ->
-                OKDialog.showConfirmation(context, rh.gs(R.string.refresheventsfromnightscout) + " ?", {
-                    uel.log(
-                        Action.FOOD, Sources.Food, rh.gs(R.string.refresheventsfromnightscout),
-                        ValueWithUnit.SimpleString(rh.gsNotLocalised(R.string.refresheventsfromnightscout))
-                    )
-                    disposable += Completable.fromAction { repository.deleteAllFoods() }
-                        .subscribeOn(aapsSchedulers.io)
-                        .observeOn(aapsSchedulers.main)
-                        .subscribeBy(
-                            onError = { aapsLogger.error("Error removing foods", it) },
-                            onComplete = { rxBus.send(EventFoodDatabaseChanged()) }
-                        )
-
-                    rxBus.send(EventNSClientRestart())
-                })
-            }
-        }
-
-        binding.filterinputLayout.setEndIconOnClickListener {
+        binding.filterInputLayout.setEndIconOnClickListener {
             binding.filter.setText("")
             binding.categoryList.setText(rh.gs(R.string.none), false)
             binding.subcategoryList.setText(rh.gs(R.string.none), false)
@@ -220,7 +196,6 @@ class FoodFragment : DaggerFragment() {
             holder.binding.energy.text = rh.gs(R.string.shortenergy) + ": " + food.energy + rh.gs(R.string.shortkilojoul)
             holder.binding.energy.visibility = food.energy.isNotZero().toVisibility()
             holder.binding.icRemove.tag = food
-            holder.binding.foodItem.tag = food
             holder.binding.icCalculator.tag = food
         }
 
