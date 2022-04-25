@@ -906,6 +906,10 @@
     <string name="errors">Errori</string>
     <string name="ns_sync_slow">Rallenta caricamenti</string>
     <string name="data_status">Stato dati BG</string>
+    <string name="remove_bg_readings">Rimuovi letture BG</string>
+    <string name="statuslights_cannula_age">Età cannula</string>
+    <string name="statuslights_patch_pump_age">età micro a patch</string>
+    <string name="patch_pump">Micro a patch</string>
     <string name="recalculated_data_used">Dati ricalcolati usati</string>
     <string name="bg_too_close">BG troppo vicino:\n%1$s\n%2$s</string>
     <string name="identification">Identificazione (email, nick Discord o FB, etc)</string>
@@ -916,30 +920,71 @@
     <string name="a11y_high">alto</string>
     <string name="a11y_inrange">in range</string>
     <string name="a11y_low">basso</string>
+    <string name="a11y_arrow_double_down">discesa rapida</string>
+    <string name="a11y_arrow_single_down">discesa</string>
+    <string name="a11y_arrow_forty_five_down">discesa lenta</string>
     <string name="a11y_arrow_flat">stabile</string>
+    <string name="a11y_arrow_forty_five_up">salita lenta</string>
+    <string name="a11y_arrow_single_up">salita</string>
+    <string name="a11y_arrow_double_up">salita rapida</string>
+    <string name="a11y_arrow_none">nessuno</string>
     <string name="a11y_arrow_unknown">sconosciuto</string>
     <string name="a11y_graph">grafico</string>
     <string name="a11y_bg_quality">qualità glicemia</string>
     <string name="a11y_bg_quality_recalculated">ricalcolato</string>
     <string name="a11y_insulin_label">insulina</string>
     <string name="a11y_blood_glucose">glicemia</string>
+    <string name="a11y_bg_outdated">obsoleto</string>
+    <string name="a11y_carb_reminder">imposta promemoria</string>
+    <string name="a11y_add_new_profile">aggiungi nuovo profilo</string>
+    <string name="a11y_clone_profile">clona profilo corrente</string>
+    <string name="a11y_delete_current_profile">elimina profilo corrente</string>
+    <string name="a11y_add_new_to_list">aggiungi nuovo alla lista</string>
     <!-- Theme switcher dark and light mode-->
+    <string name="app_color_scheme">Schema colori app</string>
+    <string name="dark_theme">Tema scuro</string>
+    <string name="light_theme">Tema chiaro</string>
+    <string name="follow_system_theme">Usa tema dispositivo</string>
     <!-- WEAR OS-->
+    <string name="wear_action_tempt_max_bg_error">Max-BG fuori range!</string>
+    <string name="wear_action_tempt_manual_range_message">Temptarget:\nMin: %1$s\nMax: %2$s\nDurata: %3$s</string>
+    <string name="wear_action_tempt_manual_message">Temptarget:\nTarget: %1$s\nDurata: %2$s</string>
+    <string name="wear_action_tempt_preset_message">Temptarget:\Motivo: %1$s\nTarget: %2$s\nDurata: %3$s</string>
+    <string name="wizard_no_active_profile">Nessun profilo attivo!</string>
     <string name="wizard_explain_carbs">CHO: %1$.2fU</string>
     <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fU</string>
     <string name="wizard_explain_bg">BG: %1$.2fU</string>
     <string name="wizard_explain_basal_iob">IOB da basale: %1$.2fU</string>
     <string name="wizard_explain_bolus_iob">IOB da bolo: %1$.2fU</string>
     <string name="wizard_explain_superbolus">Superbolo: %1$.2fU</string>
+    <string name="wizard_explain_trend">Trend di 15\': %1$.2fU</string>
     <string name="wizard_explain_percent">Percentuale: %1$.2fU x %2$d%% ≈ %3$.2fU</string>
     <string name="wizard_explain_tt">TempT: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s a %2$s</string>
     <string name="wizard_pump_not_available">Nessun micro disponibile!</string>
     <string name="overview_editquickwizard_percentage">Percentuale</string>
+    <string name="app_default">Predefinito applicazione</string>
+    <string name="select_profile">Seleziona profilo da modificare</string>
     <string name="remove_selected_items">Rimuovi elementi selezionati</string>
     <string name="select_for_removal">Seleziona per la rimozione</string>
     <string name="profile_changes">Modifiche al profilo</string>
+    <string name="tempt_targets">Target Temporanei</string>
+    <string name="carbs_and_bolus">CHO e boli</string>
+    <string name="confirm_remove_multiple_items">Sicuro di voler rimuovere %1$d elementi</string>
+    <string name="no_records_available">Nessun record disponibile</string>
     <string name="hide_loop">Nascondi loop</string>
     <string name="show_loop">Mostra loop</string>
+    <string name="count_selected">%1$d selezionati</string>
+    <string name="sort_label">Ordina</string>
+    <string name="dialog_canceled">Finestra di dialogo cancellata</string>
+    <string name="below" comment="below &quot;in range&quot;">Sotto</string>
+    <string name="in_range">In range</string>
+    <string name="above" comment="above &quot;in range&quot;">Sopra</string>
+    <string name="a11y_open_settings">apri impostazioni</string>
+    <string name="device_all">Tutto</string>
+    <string name="device_phone">Telefono</string>
+    <string name="device_watch">Smartwatch</string>
+    <string name="a11y_only_on_watch">solo su smartwatch</string>
+    <string name="a11y_only_on_phone">solo su telefono</string>
     <!-- Aidex Cgms -->
 </resources>
