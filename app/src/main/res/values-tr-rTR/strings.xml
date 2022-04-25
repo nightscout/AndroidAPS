@@ -1014,5 +1014,13 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="a11y_open_settings">ayarları aç</string>
     <string name="a11y_set_carb_timer">karbonhidrat zamanlayıcı alarmı kur</string>
     <string name="device_all">Tümü</string>
+    <string name="device_phone">Telefon</string>
+    <string name="device_watch">Saat</string>
+    <string name="a11y_only_on_watch">sadece saatte</string>
+    <string name="a11y_only_on_phone">sadece telefonda</string>
+    <string name="a11y_drag_and_drop_handle">sürükle ve bırak kolu</string>
     <!-- Aidex Cgms -->
+    <string name="aidex">GlucoRx Aidex</string>
+    <string name="aidex_short">Aidex</string>
+    <string name="description_source_aidex">GlucoRx Aidex CGMS\'den KŞ değerleri alır.</string>
 </resources>
