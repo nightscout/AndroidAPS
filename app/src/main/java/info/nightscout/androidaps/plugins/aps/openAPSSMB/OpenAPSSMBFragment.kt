@@ -36,6 +36,7 @@ class OpenAPSSMBFragment : DaggerFragment() {
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var jsonFormatter: JSONFormatter
+    private lateinit var refreshDialog: Runnable
 
     private val ID_MENU_RUN = 1
 
@@ -58,10 +59,9 @@ class OpenAPSSMBFragment : DaggerFragment() {
             setColorSchemeColors(rh.gac(context, R.attr.colorPrimaryDark), rh.gac(context, R.attr.colorPrimary), rh.gac(context, R.attr.colorSecondary))
             setOnRefreshListener {
                 binding.lastrun.text = rh.gs(info.nightscout.androidaps.R.string.executing)
-                activePlugin.activeAPS.invoke("OpenAPSSMB swiperefresh", false)
+                Thread { activePlugin.activeAPS.invoke("OpenAPSSMB swiperefresh", false) }.start()
             }
         }
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -75,7 +75,7 @@ class OpenAPSSMBFragment : DaggerFragment() {
         when (item.itemId) {
             ID_MENU_RUN -> {
                 binding.lastrun.text = rh.gs(R.string.executing)
-                activePlugin.activeAPS.invoke("OpenAPSSMB menu", false)
+                Thread { activePlugin.activeAPS.invoke("OpenAPSSMB menu", false) }.start()
                 true
             }
 
