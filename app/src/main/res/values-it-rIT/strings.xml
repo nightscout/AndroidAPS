@@ -267,6 +267,7 @@
     <string name="configbuilder_shortname">CONF</string>
     <string name="loop_shortname">LOOP</string>
     <string name="oaps_shortname">OAPS</string>
+    <string name="dynisf_shortname">ISFDIN</string>
     <string name="localprofile_shortname">PL</string>
     <string name="overview_shortname">HOME</string>
     <string name="virtualpump_shortname">MICROV</string>
@@ -884,6 +885,8 @@
     <string name="ns_receive_profile_switch_summary">Accetta cambi profilo inseriti tramite NS o NSClient</string>
     <string name="ns_receive_offline_event">Ricevi eventi APS offline</string>
     <string name="ns_receive_offline_event_summary">Accetta eventi APS offline inseriti tramite NS o NSClient</string>
+    <string name="ns_receive_tbr_eb">Ricevi TBR e EB</string>
+    <string name="ns_receive_tbr_eb_summary">Accetta TBR e EB inseriti attraverso altra istanza</string>
     <string name="ns_receive_insulin">Ricevi insulina</string>
     <string name="ns_receive_insulin_summary">Accetta insulina inserita tramite NS o NSClient (non viene erogata, solo calcolata per IOB)</string>
     <string name="ns_receive_carbs">Ricevi CHO</string>
@@ -916,6 +919,8 @@
     <string name="identification_not_set">Identificazione non impostata in modalità dev</string>
     <string name="a11y_dialog">dialogo</string>
     <string name="a11y_current_bg">glicemia corrente</string>
+    <string name="a11_correction_percentage">risultato corretto con %</string>
+    <string name="a11_correction_units">risultato corretto con unità</string>
     <string name="not_available_full">Non disponibile</string>
     <string name="a11y_high">alto</string>
     <string name="a11y_inrange">in range</string>
@@ -932,6 +937,7 @@
     <string name="a11y_graph">grafico</string>
     <string name="a11y_bg_quality">qualità glicemia</string>
     <string name="a11y_bg_quality_recalculated">ricalcolato</string>
+    <string name="a11y_bg_quality_doubles">doppi caricamenti</string>
     <string name="a11y_insulin_label">insulina</string>
     <string name="a11y_blood_glucose">glicemia</string>
     <string name="a11y_bg_outdated">obsoleto</string>
@@ -941,16 +947,30 @@
     <string name="a11y_delete_current_profile">elimina profilo corrente</string>
     <string name="a11y_add_new_to_list">aggiungi nuovo alla lista</string>
     <!-- Theme switcher dark and light mode-->
+    <string name="theme_switcher_summary">Scegli tema scuro, chiaro o segui quello del sistema</string>
     <string name="app_color_scheme">Schema colori app</string>
     <string name="dark_theme">Tema scuro</string>
     <string name="light_theme">Tema chiaro</string>
     <string name="follow_system_theme">Usa tema dispositivo</string>
     <!-- WEAR OS-->
+    <string name="wear_action_tempt_preset_error">Preset sconosciuto target temporaneo: %1$s</string>
+    <string name="wear_action_tempt_cancel_message">Cancellare i target temporanei in esecuzione?</string>
+    <string name="wear_action_tempt_unit_error">Differenti unità usate su smartwatch e telefono!</string>
+    <string name="wear_action_tempt_zero_message">Nessuno target temporaneo - cancellare i target temporanei in esecuzione?</string>
+    <string name="wear_action_tempt_min_bg_error">Min-BG fuori range!</string>
     <string name="wear_action_tempt_max_bg_error">Max-BG fuori range!</string>
     <string name="wear_action_tempt_manual_range_message">Temptarget:\nMin: %1$s\nMax: %2$s\nDurata: %3$s</string>
     <string name="wear_action_tempt_manual_message">Temptarget:\nTarget: %1$s\nDurata: %2$s</string>
     <string name="wear_action_tempt_preset_message">Temptarget:\Motivo: %1$s\nTarget: %2$s\nDurata: %3$s</string>
+    <string name="quick_wizard_message">QuickWizard: %1$s\nInsulina: %2$.2fU\nCHO: %3$dg</string>
+    <string name="wizard_result">Calc. Wizard:\nInsulina: %1$.2fU\nCHO: %2$dg</string>
+    <string name="overview_editquickwizard_show_on_device">Mostra voce sul dispositivo:</string>
+    <string name="quick_wizard_not_available">Il calcolo rapido selezionato non è più disponibile, aggiorna il riquadro</string>
+    <string name="wizard_no_actual_bg">Nessun recente valore BG su cui basare il calcolo!</string>
     <string name="wizard_no_active_profile">Nessun profilo attivo!</string>
+    <string name="wizard_no_cob">Valore COB sconosciuto! Lettura BG mancante o recente riavvio dell\'app?</string>
+    <string name="wizard_carbs_constraint">Violazione vincolo CHO!</string>
+    <string name="wizard_explain_calc">Calc (IC: %2$.1f, ISF: %2$.1f) da:\"</string>
     <string name="wizard_explain_carbs">CHO: %1$.2fU</string>
     <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fU</string>
     <string name="wizard_explain_bg">BG: %1$.2fU</string>
@@ -959,12 +979,17 @@
     <string name="wizard_explain_superbolus">Superbolo: %1$.2fU</string>
     <string name="wizard_explain_trend">Trend di 15\': %1$.2fU</string>
     <string name="wizard_explain_percent">Percentuale: %1$.2fU x %2$d%% ≈ %3$.2fU</string>
+    <string name="wizard_constraint_bolus_size">Violazione vincolo insulina!\nImpossibile erogare %1$.2fU</string>
     <string name="wizard_explain_tt">TempT: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s a %2$s</string>
     <string name="wizard_pump_not_available">Nessun micro disponibile!</string>
+    <string name="wear_unknown_action_string">Comando sconosciuto:</string>
     <string name="overview_editquickwizard_percentage">Percentuale</string>
     <string name="app_default">Predefinito applicazione</string>
+    <string name="show_invalidated_records">Mostra record non validi/rimossi</string>
+    <string name="hide_invalidated_records">Nascondi record non validi/rimossi</string>
     <string name="select_profile">Seleziona profilo da modificare</string>
+    <string name="refresh_from_nightscout">Aggiorna da Nightscout</string>
     <string name="remove_selected_items">Rimuovi elementi selezionati</string>
     <string name="select_for_removal">Seleziona per la rimozione</string>
     <string name="profile_changes">Modifiche al profilo</string>
@@ -980,11 +1005,21 @@
     <string name="below" comment="below &quot;in range&quot;">Sotto</string>
     <string name="in_range">In range</string>
     <string name="above" comment="above &quot;in range&quot;">Sopra</string>
+    <string name="show_loop_records">Mostra record di loop</string>
+    <string name="show_hide_records">Nascondi record di loop</string>
+    <string name="widget_description">Widget di AndroidAPS</string>
+    <string name="configure">Configura opacità</string>
+    <string name="a11y_otp_qr_code">Codice QR per configurare OTP</string>
     <string name="a11y_open_settings">apri impostazioni</string>
+    <string name="a11y_set_carb_timer">imposta allarme timer CHO</string>
     <string name="device_all">Tutto</string>
     <string name="device_phone">Telefono</string>
     <string name="device_watch">Smartwatch</string>
     <string name="a11y_only_on_watch">solo su smartwatch</string>
     <string name="a11y_only_on_phone">solo su telefono</string>
+    <string name="a11y_drag_and_drop_handle">trascina e rilascia</string>
     <!-- Aidex Cgms -->
+    <string name="aidex">GlucoRx Aidex</string>
+    <string name="aidex_short">GlucoRx Aidex</string>
+    <string name="description_source_aidex">Ricevi valori glicemia da CGM GlucoRx Aidex.</string>
 </resources>
