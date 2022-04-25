@@ -295,7 +295,7 @@ abstract class BaseWatchFace : WatchFace() {
         bIsRound = screenInsets.isRound
     }
 
-    fun performViewSetup() {
+    private fun performViewSetup() {
         mTime = layoutView?.findViewById(R.id.watch_time)
         mHour = layoutView?.findViewById(R.id.hour)
         mMinute = layoutView?.findViewById(R.id.minute)
@@ -344,7 +344,7 @@ abstract class BaseWatchFace : WatchFace() {
         return (System.currentTimeMillis() - singleBg.timeStamp).toDouble()
     }
 
-    private fun readingAge(shortString: Boolean): String {
+    protected fun readingAge(shortString: Boolean): String {
         if (singleBg.timeStamp == 0L) {
             return if (shortString) "--" else "-- Minute ago"
         }
@@ -436,7 +436,7 @@ abstract class BaseWatchFace : WatchFace() {
     }
 
     @SuppressLint("SetTextI18n")
-    fun setDataFields() {
+    open fun setDataFields() {
         setDateAndTime()
         mSgv?.text = singleBg.sgvString
         mSgv?.visibility = sp.getBoolean(R.string.key_show_bg, true).toVisibilityKeepSpace()
@@ -497,7 +497,7 @@ abstract class BaseWatchFace : WatchFace() {
         invalidate()
     }
 
-    private fun setDateAndTime() {
+    protected fun setDateAndTime() {
         mTime?.text = dateUtil.timeString()
         mHour?.text = dateUtil.hourString()
         mMinute?.text = dateUtil.minuteString()
@@ -516,7 +516,7 @@ abstract class BaseWatchFace : WatchFace() {
         }
     }
 
-    private fun strikeThroughSgvIfNeeded() {
+    protected fun strikeThroughSgvIfNeeded() {
         mSgv?.let { mSgv ->
             if (ageLevel() <= 0 && singleBg.timeStamp > 0) mSgv.paintFlags = mSgv.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
             else mSgv.paintFlags = mSgv.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
