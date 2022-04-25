@@ -1010,5 +1010,9 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="show_hide_records">Döngü kayıtlarını gizle</string>
     <string name="widget_description">AndroidAPS widget</string>
     <string name="configure">Şeffaflığı yapılandır</string>
+    <string name="a11y_otp_qr_code">Tek kullanımlık şifre kurulumu için QR Kodu</string>
+    <string name="a11y_open_settings">ayarları aç</string>
+    <string name="a11y_set_carb_timer">karbonhidrat zamanlayıcı alarmı kur</string>
+    <string name="device_all">Tümü</string>
     <!-- Aidex Cgms -->
 </resources>
