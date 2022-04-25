@@ -68,6 +68,7 @@
     <string name="pref_lookInYourWatchfaceConfiguration">Controlla configurazione watchface.</string>
     <string name="menu_tempt">TempT</string>
     <string name="menu_wizard">Calcolatore</string>
+    <string name="menu_wizard_short">Calc</string>
     <string name="menu_treatment">Trattamento</string>
     <string name="menu_treatment_short">Tratt</string>
     <string name="menu_bolus">Bolo</string>
@@ -83,11 +84,13 @@
     <string name="quick_wizard_short">XL</string>
     <string name="action_duration">Durata</string>
     <string name="action_tempt_confirmation">Target temporaneo richiesto</string>
+    <string name="action_quick_wizard_confirmation">Calcolatore rapido richiesto</string>
     <string name="action_treatment_confirmation">Trattamento richiesto</string>
     <string name="action_bolus_confirmation">Bolo richiesto</string>
     <string name="action_wizard_confirmation">Calcolo richiesto</string>
     <string name="action_fill_confirmation">Riempimento richiesto</string>
     <string name="action_ecarb_confirmation">CHO richiesti</string>
+    <string name="action_cpp_confirmation">CPP richiesto</string>
     <string name="action_target" comment="In temp target menu, single target value">Target</string>
     <string name="action_low" comment="In temp target menu, lower value from range">Basso</string>
     <string name="action_high" comment="In temp target menu, higher value from range">Alto</string>
