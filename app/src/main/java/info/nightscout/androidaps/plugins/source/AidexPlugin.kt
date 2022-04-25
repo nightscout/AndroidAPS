@@ -14,27 +14,27 @@ import info.nightscout.androidaps.interfaces.BgSource
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.services.Intents
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.math.log
 
 @Singleton
 class AidexPlugin @Inject constructor(
     injector: HasAndroidInjector,
     rh: ResourceHelper,
     aapsLogger: AAPSLogger
-) : PluginBase(PluginDescription()
-    .mainType(PluginType.BGSOURCE)
-    .fragmentClass(BGSourceFragment::class.java.name)
-    .pluginIcon((R.drawable.ic_blooddrop_48))
-    .pluginName(R.string.aidex)
-     .shortName(R.string.aidex_short)
-    .description(R.string.description_source_aidex),
+) : PluginBase(
+    PluginDescription()
+        .mainType(PluginType.BGSOURCE)
+        .fragmentClass(BGSourceFragment::class.java.name)
+        .pluginIcon((R.drawable.ic_blooddrop_48))
+        .pluginName(R.string.aidex)
+        .shortName(R.string.aidex_short)
+        .description(R.string.description_source_aidex),
     aapsLogger, rh, injector
 ), BgSource {
 
@@ -43,7 +43,7 @@ class AidexPlugin @Inject constructor(
     /**
      * Aidex App doesn't have upload to NS
      */
-    override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean  = true
+    override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean = true
 
     override fun advancedFilteringSupported(): Boolean {
         return advancedFiltering
