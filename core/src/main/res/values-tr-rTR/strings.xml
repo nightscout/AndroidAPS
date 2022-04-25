@@ -465,6 +465,8 @@
     <string name="remove_items">Öğeleri kaldır</string>
     <string name="sort_items">Öğeleri Sırala</string>
     <string name="remove_selected_items">Seçilen öğeleri kaldır</string>
+    <string name="a11y_file">dosya</string>
+    <string name="a11y_user">kullanıcı</string>
     <plurals name="days">
         <item quantity="one">%1$d gün</item>
         <item quantity="other">%1$d gün</item>
