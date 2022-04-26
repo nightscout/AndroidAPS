@@ -30,7 +30,7 @@ interface DetermineBasalAdapterInterface {
                 uamAllowed: Boolean = false,
                 advancedFiltering: Boolean = false,
                 isSaveCgmSource: Boolean = false
-    ) {}
+    )
 
     operator fun invoke(): APSResult?
 }
