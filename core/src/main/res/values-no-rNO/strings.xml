@@ -465,6 +465,8 @@
     <string name="remove_items">Slett elementer</string>
     <string name="sort_items">Sorter elementer</string>
     <string name="remove_selected_items">Slett valgte elementer</string>
+    <string name="a11y_file">fil</string>
+    <string name="a11y_user">bruker</string>
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dager</item>
