@@ -58,7 +58,7 @@ public class InsightPairingActivity extends NoSplashAppCompatActivity implements
     private RecyclerView deviceList;
     private final DeviceAdapter deviceAdapter = new DeviceAdapter();
 
-    private final int PERMISSION_REQUEST_BLUETOOTH = 30242;
+    private static final int PERMISSION_REQUEST_BLUETOOTH = 30242;
 
     private InsightConnectionService service;
 
