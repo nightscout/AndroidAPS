@@ -552,7 +552,6 @@
             android:label="@string/menu_settings" />
         <activity
             android:name=".interaction.actions.WizardActivity"
-            android:exported="true"
             android:label="@string/menu_wizard" />
         <activity
             android:name=".interaction.menus.FillMenuActivity"
@@ -562,11 +561,9 @@
             android:label="@string/menu_status" />
         <activity
             android:name=".interaction.actions.TreatmentActivity"
-            android:exported="true"
             android:label="@string/menu_treatment" />
         <activity
             android:name=".interaction.actions.BolusActivity"
-            android:exported="true"
             android:label="@string/action_insulin" />
         <activity
             android:name=".interaction.actions.ProfileSwitchActivity"
@@ -577,19 +574,15 @@
             android:launchMode="singleInstance" />
         <activity
             android:name=".interaction.actions.FillActivity"
-            android:exported="true"
             android:label="@string/menu_prime_fill" />
         <activity
             android:name=".interaction.actions.ECarbActivity"
-            android:exported="true"
             android:label="@string/action_ecarbs" />
         <activity
             android:name=".interaction.actions.CarbActivity"
-            android:exported="true"
             android:label="@string/action_carbs" />
         <activity
             android:name=".interaction.actions.TempTargetActivity"
-            android:exported="true"
             android:label="@string/menu_tempt" />
 
         <activity
