@@ -17,6 +17,7 @@ interface SkinInterface {
     val mainGraphHeight: Int // in dp
     val secondaryGraphHeight: Int // in dp
 
+    // no pre processing by default
     fun preProcessLandscapeActionsLayout(dm: DisplayMetrics, binding: ActionsFragmentBinding) {
     }
 
