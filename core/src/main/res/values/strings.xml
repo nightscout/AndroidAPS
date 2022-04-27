@@ -606,6 +606,7 @@
     <string name="autotune_missing">Missing</string>
     <string name="autotune_profile_name">Autotune profile %1$s</string>
     <string name="autotune_run">Run Autotune</string>
+    <string name="autotune_check_input_profile_button">Check input profile</string>
     <string name="autotune_compare_profile">Compare profiles</string>
     <string name="autotune_copy_localprofile_button">Copy to local profile</string>
     <string name="autotune_update_input_profile_button">Update input profile</string>

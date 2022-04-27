@@ -292,6 +292,22 @@
                         app:layout_gravity="fill"
                         app:layout_row="2" />
 
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/autotune_check_input_profile"
+                        style="@style/GrayButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingStart="0dp"
+                        android:paddingEnd="0dp"
+                        android:text="@string/autotune_check_input_profile_button"
+                        app:icon="@drawable/ic_home_profile"
+                        app:iconTint="?attr/profileColor"
+                        app:layout_column="1"
+                        app:layout_columnWeight="1"
+                        app:layout_gravity="fill"
+                        app:layout_row="2" />
+
                 </androidx.gridlayout.widget.GridLayout>
 
             </LinearLayout>

@@ -159,6 +159,30 @@ class AutotuneFragment : DaggerFragment() {
             )
         }
 
+        binding.autotuneCheckInputProfile.setOnClickListener {
+            val pumpProfile = profileFunction.getProfile()?.let { currentProfile ->
+                profileStore.getSpecificProfile(profileName)?.let { specificProfile ->
+                    ATProfile(ProfileSealed.Pure(specificProfile), LocalInsulin(""), injector).also {
+                        it.profilename = profileName
+                    }
+                }
+                    ?: ATProfile(currentProfile, LocalInsulin(""), injector).also {
+                        it.profilename = profileFunction.getProfileName()
+                    }
+            }
+            pumpProfile?.let {
+                ProfileViewerDialog().also { pvd ->
+                    pvd.arguments = Bundle().also {
+                        it.putLong("time", dateUtil.now())
+                        it.putInt("mode", ProfileViewerDialog.Mode.CUSTOM_PROFILE.ordinal)
+                        it.putString("customProfile", pumpProfile.profile.toPureNsJson(dateUtil).toString())
+                        it.putString("customProfileUnits", profileFunction.getUnits().asText)
+                        it.putString("customProfileName", pumpProfile.profilename)
+                    }
+                }.show(childFragmentManager, "ProfileViewDialog")
+            }
+        }
+
         binding.autotuneCompare.setOnClickListener {
             val pumpProfile = autotunePlugin.pumpProfile
             val circadian = sp.getBoolean(R.string.key_autotune_circadian_ic_isf, false)
@@ -268,11 +292,14 @@ class AutotuneFragment : DaggerFragment() {
         if (autotunePlugin.calculationRunning) {
             binding.tuneWarning.text = rh.gs(R.string.autotune_warning_during_run)
             binding.autotuneRun.visibility = View.GONE
+            binding.autotuneCheckInputProfile.visibility = View.GONE
         } else if (autotunePlugin.lastRunSuccess) {
             binding.autotuneRun.visibility = View.GONE
+            binding.autotuneCheckInputProfile.visibility = View.GONE
             binding.tuneWarning.text = rh.gs(R.string.autotune_warning_after_run)
         } else {
             binding.autotuneRun.visibility = View.VISIBLE
+            binding.autotuneCheckInputProfile.visibility = View.VISIBLE
         }
         binding.autotuneCopylocal.visibility = autotunePlugin.copyButtonVisibility
         binding.autotuneUpdateProfile.visibility = autotunePlugin.updateButtonVisibility
