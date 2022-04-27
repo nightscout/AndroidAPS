@@ -296,6 +296,7 @@ class MainActivity : NoSplashAppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menu.setGroupDividerEnabled(true)
         this.menu = menu
         menuInflater.inflate(R.menu.menu_main, menu)
         pluginPreferencesMenuItem = menu.findItem(R.id.nav_plugin_preferences)

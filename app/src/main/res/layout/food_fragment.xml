@@ -6,39 +6,29 @@
     android:orientation="vertical"
     tools:context="info.nightscout.androidaps.plugins.general.food.FoodFragment">
 
-    <info.nightscout.androidaps.utils.ui.SingleClickButton
-        android:id="@+id/refresh_from_nightscout"
-        style="@style/GrayButton"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/filter_input_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:drawableStart="@drawable/ic_refresh"
-        android:text="@string/refresheventsfromnightscout"
-        tools:visibility="visible" />
+        android:hint="@string/filter"
+        app:endIconMode="clear_text"
+        app:startIconDrawable="@android:drawable/ic_menu_search">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/filterinputLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/filter"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/filter"
-            app:startIconDrawable="@android:drawable/ic_menu_search"
-            app:endIconMode="clear_text">
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_weight="1"
+            android:autofillHints="@string/notes_label"
+            android:gravity="start"
+            android:inputType="text|textCapSentences"
+            android:textStyle="bold" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/filter"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:autofillHints="@string/notes_label"
-                android:gravity="start"
-                android:textStyle="bold"
-                android:inputType="text|textCapSentences" />
-
-        </com.google.android.material.textfield.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"

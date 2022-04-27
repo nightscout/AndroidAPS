@@ -122,7 +122,7 @@ open class MessageBase(injector: HasAndroidInjector) {
         }
     }
 
-    open fun handleMessageNotReceived() {}
+    open fun handleMessageNotReceived() {} // do nothing by default
     val command: Int
         get() = byteFromRawBuff(buffer, 5) or (byteFromRawBuff(buffer, 4) shl 8)
 

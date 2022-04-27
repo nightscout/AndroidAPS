@@ -1,21 +1,19 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android = "http://schemas.android.com/apk/res/android"
+    xmlns:tools = "http://schemas.android.com/tools"
+    android:id = "@+id/swipeRefresh"
+    android:layout_width = "match_parent"
+    android:layout_height = "match_parent"
+    tools:context=".plugins.aps.loop.LoopFragment">
+
+<androidx.core.widget.NestedScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="2dp"
-    tools:context=".plugins.aps.loop.LoopFragment">
+    android:paddingTop="2dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
-        <com.google.android.material.button.MaterialButton
-            style="@style/GrayButton"
-            android:id="@+id/run"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/openapsma_run" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -515,4 +513,7 @@
 
     </LinearLayout>
 
-</ScrollView>
+</androidx.core.widget.NestedScrollView>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+

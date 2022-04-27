@@ -136,7 +136,7 @@ open class NumberPicker(context: Context, attrs: AttributeSet? = null) : LinearL
     }
 
     fun updateA11yDescription() {
-        val description = if (mCustomContentDescription != null) mCustomContentDescription else ""
+        val description = mCustomContentDescription ?: ""
         binding.minusButton.contentDescription = context.getString(R.string.a11y_min_button_description, description, formatter?.format(this.step))
         binding.plusButton.contentDescription = context.getString(R.string.a11y_plus_button_description, description, formatter?.format(this.step))
     }
