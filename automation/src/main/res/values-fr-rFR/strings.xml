@@ -8,7 +8,7 @@
     <string name="automation_missing_action">Veuillez spécifier au moins une action.</string>
     <string name="alarm_message">Alarme: %1$s</string>
     <string name="alarm_short">Alarme:</string>
-    <string name="message_short">Mess :</string>
+    <string name="message_short">Message :</string>
     <string name="alreadyenabled">Déjà activé</string>
     <string name="alreadydisabled">Déjà désactivé</string>
     <string name="alreadysuspended">Déjà suspendu</string>

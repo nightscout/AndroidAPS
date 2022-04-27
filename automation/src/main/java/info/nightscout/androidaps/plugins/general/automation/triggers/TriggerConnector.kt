@@ -115,7 +115,7 @@ class TriggerConnector(injector: HasAndroidInjector) : Trigger(injector) {
         return result.toString()
     }
 
-    override fun icon(): Optional<Int?> = Optional.absent()
+    override fun icon(): Optional<Int> = Optional.absent()
 
     override fun duplicate(): Trigger = TriggerConnector(injector, connectorType)
 

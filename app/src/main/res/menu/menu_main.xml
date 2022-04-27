@@ -44,6 +44,7 @@
         android:orderInCategory="1"
         app:showAsAction="never"
         android:title="@string/nav_profilehelper" />
+    <group android:id="@+id/about_exit">
     <item
         android:id="@+id/nav_about"
         android:orderInCategory="1"
@@ -54,5 +55,5 @@
         android:orderInCategory="1"
         app:showAsAction="never"
         android:title="@string/nav_exit" />
-
+    </group>
 </menu>

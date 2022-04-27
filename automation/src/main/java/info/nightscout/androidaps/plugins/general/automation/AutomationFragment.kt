@@ -149,7 +149,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
             } else {
                 val icon = t.icon()
                 if (icon.isPresent) {
-                    set.add(icon.get()!!)
+                    set.add(icon.get())
                 }
             }
         }

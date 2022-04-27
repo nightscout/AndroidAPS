@@ -86,7 +86,7 @@
         <!---Dialog  -->
         <item name="activity_title_backgroundColor">@color/activity_title_background</item>
         <!---Automation  -->
-        <item name="ribbonDefaultColor">@color/ribbonDefault</item>
+        <item name="ribbonDefaultColor">@color/buttonBackground</item>
         <item name="ribbonWarningColor">@color/ribbonWarning</item>
         <item name="ribbonCriticalColor">@color/ribbonCritical</item>
         <item name="ribbonTextDefaultColor">@color/ribbonTextDefault</item>
@@ -243,6 +243,9 @@
         <item name="materialTimePickerStyle">@style/DatePicker</item>
         <!---Nightscout client TitelColor -->
         <item name="nsTitleColor">@color/defaultText</item>
+        <!---Icons in Loop area -->
+        <item name="profileColor">@color/white</item>
+        <item name="crossTargetColor">@color/white</item>
     </style>
 
     <style name="Aaps_ActionBarStyle" parent="@style/Widget.AppCompat.ActionBar">

@@ -38,11 +38,13 @@
                         android:layout_marginEnd="5dp"
                         android:layout_weight="1"
                         android:gravity="center_vertical|center_horizontal"
-                        android:paddingTop="6dp"
-                        android:paddingBottom="6dp"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
                         android:hint="active profile"
                         android:text="Profile"
                         android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:foreground="?attr/selectableItemBackgroundBorderless"
+                        app:drawableStartCompat="@drawable/ic_ribbon_profile"
                         tools:ignore="HardcodedText" />
 
                     <TextView
@@ -52,11 +54,13 @@
                         android:layout_gravity="end"
                         android:layout_weight="1"
                         android:gravity="center_vertical|center_horizontal"
-                        android:paddingTop="6dp"
-                        android:paddingBottom="6dp"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
                         android:hint="temp target"
                         android:text="@string/notavailable"
                         android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:foreground="?attr/selectableItemBackgroundBorderless"
+                        app:drawableStartCompat="@drawable/ic_crosstarget"
                         tools:ignore="HardcodedText" />
 
                 </LinearLayout>
