@@ -96,10 +96,6 @@ class AutotuneFragment : DaggerFragment() {
             val daysBack = SafeParse.stringToInt(binding.tuneDays.text)
             autotunePlugin.calculationRunning = true
             autotunePlugin.lastNbDays = daysBack.toString()
-            autotunePlugin.copyButtonVisibility = View.GONE
-            autotunePlugin.updateButtonVisibility = View.GONE
-            autotunePlugin.compareButtonVisibility = View.GONE
-            autotunePlugin.profileSwitchButtonVisibility = View.GONE
             Thread(Runnable {
                 autotunePlugin.aapsAutotune(daysBack, false, profileName)
             }).start()
@@ -129,7 +125,6 @@ class AutotuneFragment : DaggerFragment() {
                                  Runnable {
                                      localProfilePlugin.addProfile(localProfilePlugin.copyFrom(tunedProfile.getProfile(circadian), localName))
                                      rxBus.send(EventLocalProfileChanged())
-                                     autotunePlugin.copyButtonVisibility = View.GONE
                                      uel.log(
                                          UserEntry.Action.NEW_PROFILE,
                                          UserEntry.Sources.Autotune,
@@ -308,18 +303,16 @@ class AutotuneFragment : DaggerFragment() {
         else {
             binding.profileList.setText(profileList[0], false)
         }
+        binding.autotuneRun.visibility = View.GONE
+        binding.autotuneCheckInputProfile.visibility = View.GONE
+        binding.autotuneCopylocal.visibility = View.GONE
+        binding.autotuneUpdateProfile.visibility = View.GONE
+        binding.autotuneRevertProfile.visibility = View.GONE
+        binding.autotuneProfileswitch.visibility = View.GONE
+        binding.autotuneCompare.visibility = View.GONE
         if (autotunePlugin.calculationRunning) {
             binding.tuneWarning.text = rh.gs(R.string.autotune_warning_during_run)
-            binding.autotuneRun.visibility = View.GONE
-            binding.autotuneCheckInputProfile.visibility = View.GONE
-            binding.autotuneCopylocal.visibility = View.GONE
-            binding.autotuneUpdateProfile.visibility = View.GONE
-            binding.autotuneRevertProfile.visibility = View.GONE
-            binding.autotuneProfileswitch.visibility = View.GONE
-            binding.autotuneCompare.visibility = View.GONE
         } else if (autotunePlugin.lastRunSuccess) {
-            binding.autotuneRun.visibility = View.GONE
-            binding.autotuneCheckInputProfile.visibility = View.GONE
             binding.autotuneCopylocal.visibility = View.VISIBLE
             binding.autotuneUpdateProfile.visibility = autotunePlugin.updateButtonVisibility
             binding.autotuneRevertProfile.visibility = if (autotunePlugin.updateButtonVisibility == View.VISIBLE) View.GONE else View.VISIBLE
@@ -329,11 +322,6 @@ class AutotuneFragment : DaggerFragment() {
         } else {
             binding.autotuneRun.visibility = View.VISIBLE
             binding.autotuneCheckInputProfile.visibility = View.VISIBLE
-            binding.autotuneCopylocal.visibility = View.GONE
-            binding.autotuneUpdateProfile.visibility = View.GONE
-            binding.autotuneRevertProfile.visibility = View.GONE
-            binding.autotuneProfileswitch.visibility = View.GONE
-            binding.autotuneCompare.visibility = View.GONE
         }
         binding.tuneLastrun.text = dateUtil.dateAndTimeString(autotunePlugin.lastRun)
         showResults()
@@ -367,11 +355,7 @@ class AutotuneFragment : DaggerFragment() {
         binding.autotuneResults.removeAllViews()
         autotunePlugin.tunedProfile = null
         autotunePlugin.lastRunSuccess = false
-        autotunePlugin.profileSwitchButtonVisibility = View.GONE
-        autotunePlugin.copyButtonVisibility = View.GONE
         autotunePlugin.updateButtonVisibility = View.GONE
-        autotunePlugin.compareButtonVisibility = View.GONE
-        binding.autotuneCompare.visibility = View.GONE
     }
 
     private val textWatcher = object : TextWatcher {

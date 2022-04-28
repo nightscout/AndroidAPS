@@ -65,10 +65,7 @@ class AutotunePlugin @Inject constructor(
     @Volatile override var lastRun: Long = 0
     @Volatile override var selectedProfile = ""
     @Volatile override var lastNbDays: String = ""
-    @Volatile override var copyButtonVisibility: Int = 0
     @Volatile override var updateButtonVisibility: Int = 0
-    @Volatile override var profileSwitchButtonVisibility: Int = 0
-    @Volatile override var compareButtonVisibility: Int = 0
     @Volatile override var lastRunSuccess: Boolean = false
     private var logString = ""
     private var preppedGlucose: PreppedGlucose? = null
@@ -100,10 +97,7 @@ class AutotunePlugin @Inject constructor(
         autotuneCore = AutotuneCore(injector)
         autotuneIob = AutotuneIob(injector)
         tunedProfile = null
-        profileSwitchButtonVisibility = View.GONE
-        copyButtonVisibility = View.GONE
         updateButtonVisibility = View.GONE
-        compareButtonVisibility = View.GONE
         lastRunSuccess = false
         var logResult = ""
         result = ""
@@ -187,10 +181,7 @@ class AutotunePlugin @Inject constructor(
             autotuneFS.exportLog(lastRun, logString)
         autotuneFS.exportResult(logResult)
         autotuneFS.zipAutotune(lastRun)
-        profileSwitchButtonVisibility = View.VISIBLE
-        copyButtonVisibility = View.VISIBLE
         updateButtonVisibility = View.VISIBLE
-        compareButtonVisibility = View.VISIBLE
 
         if (autoSwitch) {
             val circadian = sp.getBoolean(R.string.key_autotune_circadian_ic_isf, false)

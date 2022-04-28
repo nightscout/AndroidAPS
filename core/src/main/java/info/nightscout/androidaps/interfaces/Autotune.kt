@@ -16,10 +16,7 @@ interface Autotune {
     var calculationRunning: Boolean
     var lastRun: Long
     var lastNbDays: String
-    var compareButtonVisibility: Int
-    var copyButtonVisibility: Int
     var updateButtonVisibility: Int
-    var profileSwitchButtonVisibility: Int
     var lastRunSuccess: Boolean
     val autotuneStartHour: Int
         get() = 4
