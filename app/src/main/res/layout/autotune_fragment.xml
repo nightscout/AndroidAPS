@@ -275,6 +275,23 @@
                         app:layout_gravity="fill"
                         app:layout_row="1" />
 
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/autotune_revert_profile"
+                        style="@style/GrayButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingStart="0dp"
+                        android:paddingEnd="0dp"
+                        android:text="@string/autotune_revert_input_profile_button"
+                        android:visibility="gone"
+                        app:icon="@drawable/ic_local_reset"
+                        app:iconTint="@color/ic_local_reset"
+                        app:layout_column="1"
+                        app:layout_columnWeight="1"
+                        app:layout_gravity="fill"
+                        app:layout_row="1" />
+
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/autotune_run"
@@ -285,8 +302,8 @@
                         android:paddingStart="5dp"
                         android:paddingEnd="5dp"
                         android:text="@string/autotune_run"
-                        app:icon="@drawable/ic_local_reset"
-                        app:iconTint="@color/ic_local_reset"
+                        app:icon="@drawable/ic_autotune"
+                        app:iconTint="@color/ic_local_save"
                         app:layout_column="0"
                         app:layout_columnWeight="1"
                         app:layout_gravity="fill"

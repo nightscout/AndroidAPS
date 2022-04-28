@@ -106,7 +106,7 @@ class AutotuneFragment : DaggerFragment() {
             lastRun = autotunePlugin.lastRun
             updateGui()
         }
-        binding.profileList.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+        binding.profileList.onItemClickListener = AdapterView.OnItemClickListener { _, _, _, _ ->
             if (!autotunePlugin.calculationRunning)
             {
                 profileName = if (binding.profileList.text.toString() == rh.gs(R.string.active)) "" else binding.profileList.text.toString()
@@ -141,14 +141,33 @@ class AutotuneFragment : DaggerFragment() {
         }
 
         binding.autotuneUpdateProfile.setOnClickListener {
-            val localName = autotunePlugin.pumpProfile.profilename ?:rh.gs(R.string.autotune_tunedprofile_name)
+            val localName = autotunePlugin.pumpProfile.profilename
             showConfirmation(requireContext(),
                              rh.gs(R.string.autotune_update_input_profile_button),
-                             rh.gs(R.string.autotune_update_local_profile_message) + "\n" + localName,
+                             rh.gs(R.string.autotune_update_local_profile_message, localName),
                              Runnable {
                                  autotunePlugin.tunedProfile?.profilename = localName
                                  autotunePlugin.updateProfile(autotunePlugin.tunedProfile)
                                  autotunePlugin.updateButtonVisibility = View.GONE
+                                 uel.log(
+                                     UserEntry.Action.STORE_PROFILE,
+                                     UserEntry.Sources.Autotune,
+                                     ValueWithUnit.SimpleString(localName)
+                                 )
+                                 updateGui()
+                             }
+            )
+        }
+
+        binding.autotuneRevertProfile.setOnClickListener {
+            val localName = autotunePlugin.pumpProfile.profilename
+            showConfirmation(requireContext(),
+                             rh.gs(R.string.autotune_revert_input_profile_button),
+                             rh.gs(R.string.autotune_revert_local_profile_message, localName),
+                             Runnable {
+                                 autotunePlugin.tunedProfile?.profilename = ""
+                                 autotunePlugin.updateProfile(autotunePlugin.pumpProfile)
+                                 autotunePlugin.updateButtonVisibility = View.VISIBLE
                                  uel.log(
                                      UserEntry.Action.STORE_PROFILE,
                                      UserEntry.Sources.Autotune,
@@ -293,18 +312,29 @@ class AutotuneFragment : DaggerFragment() {
             binding.tuneWarning.text = rh.gs(R.string.autotune_warning_during_run)
             binding.autotuneRun.visibility = View.GONE
             binding.autotuneCheckInputProfile.visibility = View.GONE
+            binding.autotuneCopylocal.visibility = View.GONE
+            binding.autotuneUpdateProfile.visibility = View.GONE
+            binding.autotuneRevertProfile.visibility = View.GONE
+            binding.autotuneProfileswitch.visibility = View.GONE
+            binding.autotuneCompare.visibility = View.GONE
         } else if (autotunePlugin.lastRunSuccess) {
             binding.autotuneRun.visibility = View.GONE
             binding.autotuneCheckInputProfile.visibility = View.GONE
+            binding.autotuneCopylocal.visibility = View.VISIBLE
+            binding.autotuneUpdateProfile.visibility = autotunePlugin.updateButtonVisibility
+            binding.autotuneRevertProfile.visibility = if (autotunePlugin.updateButtonVisibility == View.VISIBLE) View.GONE else View.VISIBLE
+            binding.autotuneProfileswitch.visibility = View.VISIBLE
+            binding.autotuneCompare.visibility = View.VISIBLE
             binding.tuneWarning.text = rh.gs(R.string.autotune_warning_after_run)
         } else {
             binding.autotuneRun.visibility = View.VISIBLE
             binding.autotuneCheckInputProfile.visibility = View.VISIBLE
+            binding.autotuneCopylocal.visibility = View.GONE
+            binding.autotuneUpdateProfile.visibility = View.GONE
+            binding.autotuneRevertProfile.visibility = View.GONE
+            binding.autotuneProfileswitch.visibility = View.GONE
+            binding.autotuneCompare.visibility = View.GONE
         }
-        binding.autotuneCopylocal.visibility = autotunePlugin.copyButtonVisibility
-        binding.autotuneUpdateProfile.visibility = autotunePlugin.updateButtonVisibility
-        binding.autotuneProfileswitch.visibility = autotunePlugin.profileSwitchButtonVisibility
-        binding.autotuneCompare.visibility = autotunePlugin.compareButtonVisibility
         binding.tuneLastrun.text = dateUtil.dateAndTimeString(autotunePlugin.lastRun)
         showResults()
     }

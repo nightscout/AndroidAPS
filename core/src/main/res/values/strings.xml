@@ -610,8 +610,10 @@
     <string name="autotune_compare_profile">Compare profiles</string>
     <string name="autotune_copy_localprofile_button">Copy to local profile</string>
     <string name="autotune_update_input_profile_button">Update input profile</string>
+    <string name="autotune_revert_input_profile_button">Revert input profile</string>
     <string name="autotune_copy_local_profile_message">Create a new local profile from this Autotune Profile?</string>
-    <string name="autotune_update_local_profile_message">Update input profile with Autotune Profile?</string>
+    <string name="autotune_update_local_profile_message">Update %1$s profile with Autotune Profile?</string>
+    <string name="autotune_revert_local_profile_message">Revert %1$s profile with Input Profile?</string>
     <string name="autotune_profile_invalid">Profile invalid</string>
     <string name="format_autotune_title" translatable="false">|Param|Profile|Tuned|%/Miss.\n</string>
     <string name="format_autotune_separator" translatable="false">+------------------------------------------\n</string>
