@@ -110,6 +110,7 @@ class AutotuneFragment : DaggerFragment() {
                     profile = ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(it) } ?:currentProfile, LocalInsulin(""), injector)
                 }
                 autotunePlugin.selectedProfile = profileName
+                autotunePlugin.lastRun = dateUtil.now()
                 resetParam()
             }
             updateGui()
@@ -255,12 +256,12 @@ class AutotuneFragment : DaggerFragment() {
         }
 
         lastRun = autotunePlugin.lastRun
-        if (lastRun > MidnightTime.calc(System.currentTimeMillis() - autotunePlugin.autotuneStartHour * 3600 * 1000L) + autotunePlugin.autotuneStartHour * 3600 * 1000L && autotunePlugin.result !=="")
+        val newDay = lastRun > MidnightTime.calc(System.currentTimeMillis() - autotunePlugin.autotuneStartHour * 3600 * 1000L) + autotunePlugin.autotuneStartHour * 3600 * 1000L
+        if (newDay && autotunePlugin.result !=="")
         {
             binding.tuneWarning.text = rh.gs(R.string.autotune_warning_after_run)
-            binding.tuneDays.value = autotunePlugin.lastNbDays.toDouble()
         } else { //if new day reinit result, default days, warning and button's visibility
-            resetParam()
+            resetParam(newDay)
         }
         updateGui()
     }
@@ -303,6 +304,7 @@ class AutotuneFragment : DaggerFragment() {
         else {
             binding.profileList.setText(profileList[0], false)
         }
+        binding.tuneDays.value = autotunePlugin.lastNbDays.toDouble()
         binding.autotuneRun.visibility = View.GONE
         binding.autotuneCheckInputProfile.visibility = View.GONE
         binding.autotuneCopylocal.visibility = View.GONE
@@ -349,8 +351,8 @@ class AutotuneFragment : DaggerFragment() {
 
     private fun resetParam(resetDay: Boolean = true) {
         binding.tuneWarning.text = addWarnings()
-        if (resetDay)
-            binding.tuneDays.value = sp.getInt(R.string.key_autotune_default_tune_days, 5).toDouble()
+        if (resetDay || autotunePlugin.lastNbDays.isNullOrEmpty())
+            autotunePlugin.lastNbDays = sp.getInt(R.string.key_autotune_default_tune_days, 5).toString()
         autotunePlugin.result = ""
         binding.autotuneResults.removeAllViews()
         autotunePlugin.tunedProfile = null
@@ -366,8 +368,11 @@ class AutotuneFragment : DaggerFragment() {
                 try {
                     if (autotunePlugin.calculationRunning)
                         binding.tuneDays.value = autotunePlugin.lastNbDays.toDouble()
-                    if (binding.tuneDays.value != autotunePlugin.lastNbDays.toDouble())
+                    if (binding.tuneDays.value != autotunePlugin.lastNbDays.toDouble()) {
+                        autotunePlugin.lastNbDays = binding.tuneDays.text
+                        autotunePlugin.lastRun = dateUtil.now()
                         resetParam(false)
+                    }
                 } catch (e:Exception) { }
             }
         }
