@@ -15,6 +15,7 @@ import info.nightscout.androidaps.diaconn.DiaconnG8Plugin
 import info.nightscout.androidaps.diaconn.DiaconnG8Pump
 import info.nightscout.androidaps.diaconn.R
 import info.nightscout.androidaps.diaconn.events.EventDiaconnG8NewStatus
+import info.nightscout.androidaps.diaconn.events.EventDiaconnG8PumpLogReset
 import info.nightscout.androidaps.diaconn.packet.*
 import info.nightscout.androidaps.diaconn.pumplog.PumplogUtil
 import info.nightscout.androidaps.dialogs.BolusProgressDialog
@@ -84,6 +85,13 @@ class DiaconnG8Service : DaggerService() {
                            .toObservable(EventAppExit::class.java)
                            .observeOn(aapsSchedulers.io)
                            .subscribe({ stopSelf() }) { fabricPrivacy.logException(it) }
+        )
+        disposable.add(rxBus
+                           .toObservable(EventDiaconnG8PumpLogReset::class.java)
+                           .observeOn(aapsSchedulers.io)
+                           .subscribe {
+                               pumpLogResetAfterPrefImport()
+                           }
         )
     }
 
@@ -639,6 +647,11 @@ class DiaconnG8Service : DaggerService() {
         val apsLastLogNum = if (diaconnG8Pump.pumpLastLogNum - 1 < 0) 0 else diaconnG8Pump.pumpLastLogNum - 1
         sp.putInt(rh.gs(R.string.apslastLogNum), apsLastLogNum)
         sp.putInt(rh.gs(R.string.apsWrappingCount), apsWrappingCount)
+    }
+
+    private fun pumpLogResetAfterPrefImport() {
+        sp.putInt(rh.gs(R.string.apslastLogNum), 0)
+        sp.putInt(rh.gs(R.string.apsWrappingCount), 0)
     }
 
     private fun processConfirm(msgType: Byte): Boolean {
