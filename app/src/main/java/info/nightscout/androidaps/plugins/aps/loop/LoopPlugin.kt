@@ -588,6 +588,7 @@ class LoopPlugin @Inject constructor(
 
     private fun applySMBRequest(request: APSResult, callback: Callback?) {
         if (!request.bolusRequested()) {
+            aapsLogger.debug(LTag.APS, "No SMB requested")
             return
         }
         val pump = activePlugin.activePump
