@@ -228,14 +228,12 @@ class AutotunePlugin @Inject constructor(
     private fun showResults(tunedProfile: ATProfile?, pumpProfile: ATProfile): String {
         if (tunedProfile == null)
             return "No Result"  // should never occurs
-        var toMgDl = 1.0
-        if (profileFunction.getUnits() == GlucoseUnit.MMOL) toMgDl = Constants.MMOLL_TO_MGDL
         val line = rh.gs(R.string.autotune_log_separator)
         var strResult = line
         strResult += rh.gs(R.string.autotune_log_title)
         strResult += line
         // show ISF and CR
-        strResult += rh.gs(R.string.autotune_log_isf, rh.gs(R.string.isf_short), pumpProfile.isf / toMgDl, tunedProfile.isf / toMgDl)
+        strResult += rh.gs(R.string.autotune_log_isf, rh.gs(R.string.isf_short), pumpProfile.isf, tunedProfile.isf)
         strResult += rh.gs(R.string.autotune_log_ic, rh.gs(R.string.ic_short), pumpProfile.ic, tunedProfile.ic)
         strResult += line
         var totalBasal = 0.0
