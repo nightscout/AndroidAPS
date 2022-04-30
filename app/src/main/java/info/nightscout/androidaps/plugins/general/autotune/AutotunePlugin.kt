@@ -230,13 +230,13 @@ class AutotunePlugin @Inject constructor(
             return "No Result"  // should never occurs
         var toMgDl = 1.0
         if (profileFunction.getUnits() == GlucoseUnit.MMOL) toMgDl = Constants.MMOLL_TO_MGDL
-        val line = rh.gs(R.string.format_autotune_separator)
+        val line = rh.gs(R.string.autotune_log_separator)
         var strResult = line
-        strResult += rh.gs(R.string.format_autotune_title)
+        strResult += rh.gs(R.string.autotune_log_title)
         strResult += line
         // show ISF and CR
-        strResult += rh.gs(R.string.format_autotune_isf, rh.gs(R.string.isf_short), pumpProfile.isf / toMgDl, tunedProfile.isf / toMgDl)
-        strResult += rh.gs(R.string.format_autotune_ic, rh.gs(R.string.ic_short), pumpProfile.ic, tunedProfile.ic)
+        strResult += rh.gs(R.string.autotune_log_isf, rh.gs(R.string.isf_short), pumpProfile.isf / toMgDl, tunedProfile.isf / toMgDl)
+        strResult += rh.gs(R.string.autotune_log_ic, rh.gs(R.string.ic_short), pumpProfile.ic, tunedProfile.ic)
         strResult += line
         var totalBasal = 0.0
         var totalTuned = 0.0
@@ -244,10 +244,10 @@ class AutotunePlugin @Inject constructor(
             totalBasal += pumpProfile.basal[i]
             totalTuned += tunedProfile.basal[i]
             val percentageChangeValue = tunedProfile.basal[i] / pumpProfile.basal[i] * 100 - 100
-            strResult += rh.gs(R.string.format_autotune_basal, i.toDouble(), pumpProfile.basal[i], tunedProfile.basal[i], tunedProfile.basalUntuned[i], percentageChangeValue)
+            strResult += rh.gs(R.string.autotune_log_basal, i.toDouble(), pumpProfile.basal[i], tunedProfile.basal[i], tunedProfile.basalUntuned[i], percentageChangeValue)
         }
         strResult += line
-        strResult += rh.gs(R.string.format_autotune_sum_basal, totalBasal, totalTuned)
+        strResult += rh.gs(R.string.autotune_log_sum_basal, totalBasal, totalTuned)
         strResult += line
 
         atLog(strResult)
