@@ -2,13 +2,10 @@ package info.nightscout.androidaps.plugins.general.autotune
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.plugins.general.autotune.data.ATProfile
 import info.nightscout.androidaps.plugins.general.autotune.data.PreppedGlucose
 import info.nightscout.androidaps.plugins.general.maintenance.LoggerUtils
-import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONException
 import java.io.*
 import java.text.SimpleDateFormat
@@ -18,10 +15,8 @@ import javax.inject.Inject
 
 //@Singleton
 class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
-    @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var  sp: SP
     @Inject lateinit var  autotunePlugin: AutotunePlugin
-    @Inject lateinit var  resourceHelper: ResourceHelper
+    @Inject lateinit var  rh: ResourceHelper
     @Inject lateinit var loggerUtils: LoggerUtils
 
     val AUTOTUNEFOLDER = "autotune"
@@ -91,7 +86,7 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
     fun exportTunedProfile(tunedProfile: ATProfile) {
         createAutotunefile(TUNEDPROFILE + formatDate(tunedProfile.from) + ".json", tunedProfile.profiletoOrefJSON())
         try {
-            createAutotunefile(resourceHelper.gs(R.string.autotune_tunedprofile_name) + ".json", tunedProfile.profiletoOrefJSON(), true)
+            createAutotunefile(rh.gs(R.string.autotune_tunedprofile_name) + ".json", tunedProfile.profiletoOrefJSON(), true)
         } catch (e: JSONException) {
         }
     }
