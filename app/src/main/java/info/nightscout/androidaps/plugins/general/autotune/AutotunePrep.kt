@@ -3,9 +3,7 @@ package info.nightscout.androidaps.plugins.general.autotune
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.LocalInsulin
-import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.general.autotune.data.ATProfile
 import info.nightscout.androidaps.plugins.general.autotune.data.BGDatum
 import info.nightscout.androidaps.plugins.general.autotune.data.CRDatum
@@ -24,13 +22,10 @@ import javax.inject.Singleton
 class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector) {
 
     //    private static Logger log = LoggerFactory.getLogger(AutotunePlugin.class);
-    @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var autotunePlugin: AutotunePlugin
     @Inject lateinit var sp: SP
     @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
-    //@Inject lateinit var treatmentsActivity: TreatmentsActivity
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var repository: AppRepository
 
     fun categorizeBGDatums(autotuneIob: AutotuneIob, tunedprofile: ATProfile, localInsulin: LocalInsulin): PreppedGlucose? {
         //lib/meals is called before to get only meals data (in AAPS it's done in AutotuneIob)
