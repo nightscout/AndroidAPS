@@ -108,7 +108,7 @@ class AutotunePlugin @Inject constructor(
         val detailedLog = sp.getBoolean(R.string.key_autotune_additional_log, false)
         calculationRunning = true
         lastNbDays = "" + daysBack
-        lastRun = System.currentTimeMillis()
+        lastRun = dateUtil.now()
         val profileStore = activePlugin.activeProfileSource.profile ?: return rh.gs(R.string.profileswitch_ismissing)
         selectedProfile = if (profileToTune.isEmpty()) profileFunction.getProfileName() else profileToTune
         profileFunction.getProfile()?.let { currentProfile ->
