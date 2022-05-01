@@ -92,7 +92,7 @@
     <string name="configbuilder_loop_description">Utiliza esta opción para activar la integración del lazo en AndroidAPS</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">Tras procesar las restricciones</string>
-    <string name="loop_tbrsetbypump_label">Basal temporal en la bomba</string>
+    <string name="loop_tbrsetbypump_label">Basal temporal establecida por la bomba</string>
     <string name="noapsselected">NO APS Seleccionado o resultado entregado</string>
     <string name="safety">Seguridad</string>
     <string name="openapsma_disabled">El complemento está deshabilitado</string>
