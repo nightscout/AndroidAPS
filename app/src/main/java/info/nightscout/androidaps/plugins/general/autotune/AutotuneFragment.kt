@@ -22,7 +22,6 @@ import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.autotune.data.ATProfile
 import info.nightscout.androidaps.plugins.general.autotune.events.EventAutotuneUpdateGui
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
 import info.nightscout.androidaps.data.LocalInsulin
@@ -51,9 +50,9 @@ import javax.inject.Inject
 
 class AutotuneFragment : DaggerFragment() {
     @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var autotunePlugin: Autotune
+    @Inject lateinit var autotunePlugin: AutotunePlugin
+    @Inject lateinit var autotuneFS: AutotuneFS
     @Inject lateinit var sp: SP
-    @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var localProfilePlugin: LocalProfilePlugin
@@ -488,6 +487,6 @@ class AutotuneFragment : DaggerFragment() {
         }
 
     private fun log(message: String) {
-        autotunePlugin.atLog("[Fragment] $message")
+        autotuneFS.atLog("[Fragment] $message")
     }
 }

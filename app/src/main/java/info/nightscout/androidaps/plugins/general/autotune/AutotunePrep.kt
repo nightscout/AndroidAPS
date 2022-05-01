@@ -19,15 +19,15 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector) {
-
+class AutotunePrep @Inject constructor(
+    private val sp: SP,
+    private val dateUtil: DateUtil,
+    private val autotuneFS: AutotuneFS,
+    private val autotuneIob: AutotuneIob,
+    injector: HasAndroidInjector
+) {
     //    private static Logger log = LoggerFactory.getLogger(AutotunePlugin.class);
-    @Inject lateinit var autotunePlugin: AutotunePlugin
-    @Inject lateinit var sp: SP
-    @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
-    @Inject lateinit var dateUtil: DateUtil
-
-    fun categorizeBGDatums(autotuneIob: AutotuneIob, tunedprofile: ATProfile, localInsulin: LocalInsulin): PreppedGlucose? {
+    fun categorizeBGDatums(tunedprofile: ATProfile, localInsulin: LocalInsulin): PreppedGlucose? {
         //lib/meals is called before to get only meals data (in AAPS it's done in AutotuneIob)
         var treatments: MutableList<Carbs> = autotuneIob.meals
         var boluses: MutableList<Bolus> = autotuneIob.boluses
@@ -556,10 +556,6 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
     }
 
     private fun log(message: String) {
-        autotunePlugin.atLog("[Prep] $message")
-    }
-
-    init {
-        injector.androidInjector().inject(this)
+        autotuneFS.atLog("[Prep] $message")
     }
 }

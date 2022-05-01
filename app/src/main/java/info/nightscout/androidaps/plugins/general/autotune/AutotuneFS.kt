@@ -7,17 +7,19 @@ import info.nightscout.androidaps.plugins.general.autotune.data.PreppedGlucose
 import info.nightscout.androidaps.plugins.general.maintenance.LoggerUtils
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.json.JSONException
+import org.slf4j.LoggerFactory
 import java.io.*
 import java.text.SimpleDateFormat
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 import javax.inject.Inject
+import javax.inject.Singleton
 
-//@Singleton
-class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
-    @Inject lateinit var  autotunePlugin: AutotunePlugin
-    @Inject lateinit var  rh: ResourceHelper
-    @Inject lateinit var loggerUtils: LoggerUtils
+@Singleton
+class AutotuneFS @Inject constructor(
+    private val  rh: ResourceHelper,
+    private val loggerUtils: LoggerUtils
+    ) {
 
     val AUTOTUNEFOLDER = "autotune"
     val SETTINGSFOLDER = "settings"
@@ -34,8 +36,9 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
     val ZIPPREF = "autotune_"
     lateinit var autotunePath: File
     lateinit var autotuneSettings: File
+    private var logString = ""
     val BUFFER_SIZE = 2048
-
+    private val log = LoggerFactory.getLogger(AutotunePlugin::class.java)
 
     /*****************************************************************************
      * Create autotune folder for all files created during an autotune session
@@ -114,16 +117,18 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
         createAutotunefile(RECOMMENDATIONS, result)
     }
 
-    fun exportLog(lastRun: Long, logString: String, index: Int = 0) {
+    fun exportLog(lastRun: Long, index: Int = 0) {
         val suffix = if (index == 0) "" else "_" + index
         log("Create " + LOGPREF + formatDate(lastRun) + suffix + ".log" + " file in " + AUTOTUNEFOLDER + " folder")
         createAutotunefile(LOGPREF + formatDate(lastRun) + suffix + ".log", logString)
+        logString = ""
     }
 
-    fun exportLogAndZip(lastRun: Long, logString: String) {
+    fun exportLogAndZip(lastRun: Long) {
         log("Create " + LOGPREF + formatDate(lastRun) + ".log" + " file in " + AUTOTUNEFOLDER + " folder")
         createAutotunefile(LOGPREF + formatDate(lastRun) + ".log", logString)
         zipAutotune(lastRun)
+        logString = ""
     }
 
     private fun createAutotunefile(fileName: String, stringFile: String, isSettingFile: Boolean = false) {
@@ -161,7 +166,12 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
     }
 
     private fun log(message: String) {
-        autotunePlugin.atLog("[FS] $message")
+        atLog("[FS] $message")
+    }
+
+    fun atLog(message: String) {
+        logString += "$message\n"
+        log.debug(message)
     }
 
     private fun zipDirectory(folder: File, parentFolder: String, out: ZipOutputStream) {
@@ -191,9 +201,5 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
     private fun formatDate(date: Long, dateHour: Boolean = false): String {
         val dateFormat = if (dateHour) SimpleDateFormat("yyyy-MM-dd_HH-mm-ss") else SimpleDateFormat("yyyy-MM-dd")
         return dateFormat.format(date)
-    }
-
-    init {
-        injector.androidInjector().inject(this)
     }
 }

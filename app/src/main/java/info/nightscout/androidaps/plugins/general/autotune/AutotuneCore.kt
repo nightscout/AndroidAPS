@@ -13,10 +13,12 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AutotuneCore(private val injector: HasAndroidInjector) {
+class AutotuneCore @Inject constructor(
+    private val sp: SP,
+    private val autotuneFS: AutotuneFS,
+    injector: HasAndroidInjector
+) {
     //@Inject lateinit var activePlugin: ActivePluginProvider
-    @Inject lateinit var  sp: SP
-    @Inject lateinit var  autotunePlugin: AutotunePlugin
 
     fun tuneAllTheThings(preppedGlucose: PreppedGlucose, previousAutotune: ATProfile, pumpProfile: ATProfile): ATProfile {
         //var pumpBasalProfile = pumpProfile.basalprofile;
@@ -511,10 +513,6 @@ class AutotuneCore(private val injector: HasAndroidInjector) {
     }
 
     private fun log(message: String) {
-        autotunePlugin.atLog("[Core] $message")
-    }
-
-    init {
-        injector.androidInjector().inject(this)
+        autotuneFS.atLog("[Core] $message")
     }
 }

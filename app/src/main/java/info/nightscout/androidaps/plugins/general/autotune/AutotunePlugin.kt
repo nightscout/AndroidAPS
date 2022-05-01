@@ -48,6 +48,10 @@ class AutotunePlugin @Inject constructor(
     private val dateUtil: DateUtil,
     private val activePlugin: ActivePlugin,
     private val localProfilePlugin: LocalProfilePlugin,
+    private val autotuneFS: AutotuneFS,
+    private val autotuneIob: AutotuneIob,
+    private val autotunePrep: AutotunePrep,
+    private val autotuneCore: AutotuneCore,
     private val uel: UserEntryLogger,
     aapsLogger: AAPSLogger
 ) : PluginBase(PluginDescription()
@@ -69,19 +73,10 @@ class AutotunePlugin @Inject constructor(
     @Volatile override var lastRunSuccess: Boolean = false
     @Volatile override lateinit var pumpProfile: ATProfile
     @Volatile override var tunedProfile: ATProfile? = null
-    private var logString = ""
     private var preppedGlucose: PreppedGlucose? = null
-    private lateinit var autotunePrep: AutotunePrep
-    private lateinit var autotuneCore: AutotuneCore
-    private lateinit var autotuneIob: AutotuneIob
-    private lateinit var autotuneFS: AutotuneFS
     private lateinit var profile: Profile
 
     override fun aapsAutotune(daysBack: Int, autoSwitch: Boolean, profileToTune: String): String {
-        autotuneFS = AutotuneFS(injector)
-        autotunePrep = AutotunePrep(injector)
-        autotuneCore = AutotuneCore(injector)
-        autotuneIob = AutotuneIob(injector)
         tunedProfile = null
         updateButtonVisibility = View.GONE
         lastRunSuccess = false
@@ -105,7 +100,6 @@ class AutotunePlugin @Inject constructor(
         atLog("Start Autotune with $daysBack days back")
         //create autotune subfolder for autotune files if not exists
         autotuneFS.createAutotuneFolder()
-        logString = ""
         //clean autotune folder before run
         autotuneFS.deleteAutotuneFiles()
         // Today at 4 AM
@@ -134,7 +128,7 @@ class AutotunePlugin @Inject constructor(
             autotuneFS.exportEntries(autotuneIob)
             //<=> ns-treatments.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine (include treatments ,tempBasal and extended
             autotuneFS.exportTreatments(autotuneIob)
-            preppedGlucose = tunedProfile?.let { autotunePrep.categorizeBGDatums(autotuneIob, it, localInsulin) }
+            preppedGlucose = tunedProfile?.let { autotunePrep.categorizeBGDatums(it, localInsulin) }
             //<=> autotune.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
             if (preppedGlucose == null || tunedProfile == null) {
                 result = rh.gs(R.string.autotune_error)
@@ -143,7 +137,7 @@ class AutotunePlugin @Inject constructor(
                 rxBus.send(EventAutotuneUpdateGui())
                 tunedProfile = null
                 autotuneFS.exportResult(result)
-                autotuneFS.exportLogAndZip(lastRun, logString)
+                autotuneFS.exportLogAndZip(lastRun)
                 return result
             }
             autotuneFS.exportPreppedGlucose(preppedGlucose!!)
@@ -157,14 +151,12 @@ class AutotunePlugin @Inject constructor(
                 rxBus.send(EventAutotuneUpdateGui())
             }
             logResult = showResults(tunedProfile, pumpProfile)
-            if (detailedLog) {
-                autotuneFS.exportLog(lastRun, logString, i + 1)
-                logString = ""
-            }
+            if (detailedLog)
+                autotuneFS.exportLog(lastRun, i + 1)
         }
         result = rh.gs(R.string.autotune_result, dateUtil.dateAndTimeString(lastRun))
         if (!detailedLog)
-            autotuneFS.exportLog(lastRun, logString)
+            autotuneFS.exportLog(lastRun)
         autotuneFS.exportResult(logResult)
         autotuneFS.zipAutotune(lastRun)
         updateButtonVisibility = View.VISIBLE
@@ -233,7 +225,6 @@ class AutotunePlugin @Inject constructor(
         strResult += line
         strResult += rh.gs(R.string.autotune_log_sum_basal, totalBasal, totalTuned)
         strResult += line
-
         atLog(strResult)
         return strResult
     }
@@ -282,9 +273,7 @@ class AutotunePlugin @Inject constructor(
                 jsonSettings.put("insulinPeakTime", peaktime)
             }
             jsonString = jsonSettings.toString(4).replace("\\/", "/")
-        } catch (e: JSONException) {
-            log.error("Unhandled exception", e)
-        }
+        } catch (e: JSONException) { }
         return jsonString
     }
 
@@ -311,13 +300,6 @@ class AutotunePlugin @Inject constructor(
 
     // end of autotune Plugin
     override fun atLog(message: String) {
-        aapsLogger.debug(LTag.AUTOTUNE, message)
-        log.debug(message) // for debugging to have log even if Autotune Log disabled
-        logString += message + "\n" // for log file in autotune folder even if autotune log disable
+        autotuneFS.atLog("[Plugin] $message")
     }
-
-    companion object {
-        private val log = LoggerFactory.getLogger(AutotunePlugin::class.java)
-    }
-
 }
