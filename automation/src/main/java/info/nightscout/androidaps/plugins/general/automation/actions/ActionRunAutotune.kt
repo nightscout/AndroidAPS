@@ -41,7 +41,7 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
         val autoSwitch = sp.getBoolean(R.string.key_autotune_auto, false)
         val profileName = if (inputProfileName.value == rh.gs(R.string.active)) "" else inputProfileName.value
         var message = if (autoSwitch) R.string.autotune_run_with_autoswitch else R.string.autotune_run_without_autoswitch
-
+        autotunePlugin.atLog("[Automation] Run Autotune $profileName, ${daysBack.value} days, Autoswitch $autoSwitch")
         Thread(Runnable {
             autotunePlugin.aapsAutotune(daysBack.value, autoSwitch, profileName)
             if (!autotunePlugin.lastRunSuccess) {

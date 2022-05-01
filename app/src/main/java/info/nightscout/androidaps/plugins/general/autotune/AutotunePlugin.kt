@@ -97,7 +97,7 @@ class AutotunePlugin @Inject constructor(
         }
         var localInsulin = LocalInsulin("PumpInsulin", activePlugin.activeInsulin.peak, profile.dia) // var because localInsulin could be updated later with Tune Insulin peak/dia
 
-        atLog("Start Autotune with $daysBack days back")
+        log("Start Autotune with $daysBack days back")
         //create autotune subfolder for autotune files if not exists
         autotuneFS.createAutotuneFolder()
         //clean autotune folder before run
@@ -120,7 +120,7 @@ class AutotunePlugin @Inject constructor(
             // get 24 hours BG values from 4 AM to 4 AM next day
             val from = starttime + i * 24 * 60 * 60 * 1000L
             val to = from + 24 * 60 * 60 * 1000L
-            atLog("Tune day " + (i + 1) + " of " + daysBack)
+            log("Tune day " + (i + 1) + " of " + daysBack)
 
             //autotuneIob contains BG and Treatments data from history (<=> query for ns-treatments and ns-entries)
             autotuneIob.initializeData(from, to, tunedProfile!!)
@@ -132,7 +132,7 @@ class AutotunePlugin @Inject constructor(
             //<=> autotune.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
             if (preppedGlucose == null || tunedProfile == null) {
                 result = rh.gs(R.string.autotune_error)
-                atLog(result)
+                log(result)
                 calculationRunning = false
                 rxBus.send(EventAutotuneUpdateGui())
                 tunedProfile = null
@@ -146,7 +146,7 @@ class AutotunePlugin @Inject constructor(
             //<=> newprofile.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
             autotuneFS.exportTunedProfile(tunedProfile!!)
             if (i < daysBack - 1) {
-                atLog("Partial result for day ${i + 1}".trimIndent())
+                log("Partial result for day ${i + 1}".trimIndent())
                 result = rh.gs(R.string.autotune_partial_result, i + 1, daysBack)
                 rxBus.send(EventAutotuneUpdateGui())
             }
@@ -182,7 +182,7 @@ class AutotunePlugin @Inject constructor(
                             timestamp = dateUtil.now()
                         )
                     ) {
-                        atLog("Profile Switch succeed ${tunedP.profilename}")
+                        log("Profile Switch succeed ${tunedP.profilename}")
                         uel.log(
                             UserEntry.Action.PROFILE_SWITCH,
                             UserEntry.Sources.Autotune,
@@ -225,7 +225,7 @@ class AutotunePlugin @Inject constructor(
         strResult += line
         strResult += rh.gs(R.string.autotune_log_sum_basal, totalBasal, totalTuned)
         strResult += line
-        atLog(strResult)
+        log(strResult)
         return strResult
     }
 
@@ -298,8 +298,12 @@ class AutotunePlugin @Inject constructor(
         localProfilePlugin.storeSettings()
     }
 
-    // end of autotune Plugin
+
+    private fun log(message: String) {
+        atLog("[Plugin] $message")
+    }
+
     override fun atLog(message: String) {
-        autotuneFS.atLog("[Plugin] $message")
+        autotuneFS.atLog(message)
     }
 }

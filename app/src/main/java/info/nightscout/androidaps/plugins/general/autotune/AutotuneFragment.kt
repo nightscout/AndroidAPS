@@ -96,6 +96,7 @@ class AutotuneFragment : DaggerFragment() {
             val daysBack = SafeParse.stringToInt(binding.tuneDays.text)
             autotunePlugin.calculationRunning = true
             autotunePlugin.lastNbDays = daysBack.toString()
+            log("Run Autotune $profileName, $daysBack days")
             Thread(Runnable {
                 autotunePlugin.aapsAutotune(daysBack, false, profileName)
             }).start()
@@ -217,7 +218,6 @@ class AutotuneFragment : DaggerFragment() {
             autotunePlugin.updateProfile(tunedProfile)
             val circadian = sp.getBoolean(R.string.key_autotune_circadian_ic_isf, false)
             tunedProfile?.let { tunedP ->
-                log("ProfileSwitch pressed")
                 tunedP.profileStore(circadian)?.let {
                     showConfirmation(requireContext(),
                                      rh.gs(R.string.activate_profile) + ": " + tunedP.profilename + " ?",
@@ -249,7 +249,6 @@ class AutotuneFragment : DaggerFragment() {
                                      }
                     )
                 }
-                    ?: log("ProfileStore is null!")
             }
         }
     }
