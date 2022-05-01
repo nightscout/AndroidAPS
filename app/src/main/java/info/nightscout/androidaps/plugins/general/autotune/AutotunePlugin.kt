@@ -67,6 +67,8 @@ class AutotunePlugin @Inject constructor(
     @Volatile override var lastNbDays: String = ""
     @Volatile override var updateButtonVisibility: Int = 0
     @Volatile override var lastRunSuccess: Boolean = false
+    @Volatile override lateinit var pumpProfile: ATProfile
+    @Volatile override var tunedProfile: ATProfile? = null
     private var logString = ""
     private var preppedGlucose: PreppedGlucose? = null
     private lateinit var autotunePrep: AutotunePrep
@@ -74,22 +76,6 @@ class AutotunePlugin @Inject constructor(
     private lateinit var autotuneIob: AutotuneIob
     private lateinit var autotuneFS: AutotuneFS
     private lateinit var profile: Profile
-
-    @Volatile override lateinit var pumpProfile: ATProfile
-    @Volatile override var tunedProfile: ATProfile? = null
-
-    //    @Override
-    val fragmentClass: String
-        get() = AutotuneFragment::class.java.name
-
-    //Launch Autotune from automation
-    override fun aapsAutotune(daysBack: Int, profileToTune: String) {
-        val automationDaysBack = if (daysBack == 0) sp.getInt(R.string.key_autotune_default_tune_days, 5) else daysBack
-        val autoSwitch = sp.getBoolean(R.string.key_autotune_auto, false)
-        Thread(Runnable {
-            aapsAutotune(automationDaysBack, autoSwitch, profileToTune)
-        }).start()
-    }
 
     override fun aapsAutotune(daysBack: Int, autoSwitch: Boolean, profileToTune: String): String {
         autotuneFS = AutotuneFS(injector)

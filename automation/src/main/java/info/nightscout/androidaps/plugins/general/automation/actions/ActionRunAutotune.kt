@@ -16,6 +16,7 @@ import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuil
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONObject
 import javax.inject.Inject
@@ -37,30 +38,19 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
     @DrawableRes override fun icon(): Int = R.drawable.ic_actions_profileswitch
 
     override fun doAction(callback: Callback) {
+        val autoSwitch = sp.getBoolean(R.string.key_autotune_auto, false)
         val profileName = if (inputProfileName.value == rh.gs(R.string.active)) "" else inputProfileName.value
-        if(sp.getBoolean(R.string.key_autotune_auto, false)) {
-            autotunePlugin.aapsAutotune(daysBack.value, profileName)
-            var message = R.string.autotune_run_with_autoswitch
-            /* Todo, get end result and send message according to succeed or not (rxbus to update)
+        var message = if (autoSwitch) R.string.autotune_run_with_autoswitch else R.string.autotune_run_without_autoswitch
+
+        Thread(Runnable {
+            autotunePlugin.aapsAutotune(daysBack.value, autoSwitch, profileName)
             if (!autotunePlugin.lastRunSuccess) {
                 message = R.string.autotune_run_with_error
                 aapsLogger.error(LTag.AUTOMATION, "Error during Autotune Run")
             }
-             */
             callback.result(PumpEnactResult(injector).success(autotunePlugin.lastRunSuccess).comment(message))?.run()
-            return
-        } else {
-            autotunePlugin.aapsAutotune(daysBack.value, profileName)
-            var message = R.string.autotune_run_without_autoswitch
-            /*
-            if (!autotunePlugin.lastRunSuccess) {
-                message = R.string.autotune_run_with_error
-                aapsLogger.error(LTag.AUTOMATION, "Error during Autotune Run")
-            }
-             */
-            callback.result(PumpEnactResult(injector).success(autotunePlugin.lastRunSuccess).comment(message))?.run()
-            return
-        }
+        }).start()
+        return
     }
 
     override fun generateDialog(root: LinearLayout) {
