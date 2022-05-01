@@ -64,17 +64,18 @@ class AutotunePlugin @Inject constructor(
     .description(R.string.autotune_description),
     aapsLogger, resourceHelper, injector
 ), Autotune {
-    @Volatile override var result: String = ""
-    @Volatile override var calculationRunning: Boolean = false
-    @Volatile override var lastRun: Long = 0
-    @Volatile override var selectedProfile = ""
-    @Volatile override var lastNbDays: String = ""
-    @Volatile override var updateButtonVisibility: Int = 0
     @Volatile override var lastRunSuccess: Boolean = false
-    @Volatile override lateinit var pumpProfile: ATProfile
-    @Volatile override var tunedProfile: ATProfile? = null
+    @Volatile var result: String = ""
+    @Volatile var calculationRunning: Boolean = false
+    @Volatile var lastRun: Long = 0
+    @Volatile var selectedProfile = ""
+    @Volatile var lastNbDays: String = ""
+    @Volatile var updateButtonVisibility: Int = 0
+    @Volatile lateinit var pumpProfile: ATProfile
+    @Volatile var tunedProfile: ATProfile? = null
     private var preppedGlucose: PreppedGlucose? = null
     private lateinit var profile: Profile
+    val autotuneStartHour: Int = 4
 
     override fun aapsAutotune(daysBack: Int, autoSwitch: Boolean, profileToTune: String): String {
         tunedProfile = null
@@ -277,7 +278,7 @@ class AutotunePlugin @Inject constructor(
         return jsonString
     }
 
-    override fun updateProfile(newProfile: ATProfile?) {
+    fun updateProfile(newProfile: ATProfile?) {
         if (newProfile == null) return
         val circadian = sp.getBoolean(R.string.key_autotune_circadian_ic_isf, false)
         val profileStore = activePlugin.activeProfileSource.profile ?: ProfileStore(injector, JSONObject(), dateUtil)
