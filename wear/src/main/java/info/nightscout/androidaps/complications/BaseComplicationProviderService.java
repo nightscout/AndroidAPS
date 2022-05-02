@@ -233,7 +233,7 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
 
         // We pass the complication id, so we can only update the specific complication tapped.
         final PendingIntent complicationPendingIntent =
-                ComplicationTapBroadcastReceiver.getTapActionIntent(
+                ComplicationTapBroadcastReceiver.Companion.getTapActionIntent(
                         getApplicationContext(), thisProvider, complicationId, getComplicationAction());
 
         final RawDisplayData raw = new RawDisplayData();
@@ -251,12 +251,14 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
 
         if (wearUtil.msSince(persistence.whenDataUpdated()) > Constants.STALE_MS) {
             // no new data arrived - probably configuration or connection error
-            final PendingIntent infoToast = ComplicationTapBroadcastReceiver.getTapWarningSinceIntent(
+            final PendingIntent infoToast =
+                    ComplicationTapBroadcastReceiver.Companion.getTapWarningSinceIntent(
                     getApplicationContext(), thisProvider, complicationId, ComplicationAction.WARNING_SYNC, persistence.whenDataUpdated());
             complicationData = buildNoSyncComplicationData(dataType, raw, complicationPendingIntent, infoToast, persistence.whenDataUpdated());
         } else if (wearUtil.msSince(raw.getSingleBg().getTimeStamp()) > Constants.STALE_MS) {
             // data arriving from phone AAPS, but it is outdated (uploader/NS/xDrip/Sensor error)
-            final PendingIntent infoToast = ComplicationTapBroadcastReceiver.getTapWarningSinceIntent(
+            final PendingIntent infoToast =
+                    ComplicationTapBroadcastReceiver.Companion.getTapWarningSinceIntent(
                     getApplicationContext(), thisProvider, complicationId, ComplicationAction.WARNING_OLD, raw.getSingleBg().getTimeStamp());
             complicationData = buildOutdatedComplicationData(dataType, raw, complicationPendingIntent, infoToast, raw.getSingleBg().getTimeStamp());
         } else {
