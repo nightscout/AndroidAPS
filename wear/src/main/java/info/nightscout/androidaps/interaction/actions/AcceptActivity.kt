@@ -19,9 +19,8 @@ import androidx.core.view.MotionEventCompat
 import androidx.core.view.ViewConfigurationCompat
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.comm.DataLayerListenerServiceWear
-import info.nightscout.androidaps.events.EventWearToMobile
-import info.nightscout.shared.weardata.EventData.CancelNotification
-import info.nightscout.shared.weardata.EventData.Companion.deserialize
+import info.nightscout.androidaps.comm.IntentCancelNotification
+import info.nightscout.androidaps.comm.IntentWearToMobile
 import kotlin.math.roundToInt
 
 class AcceptActivity : ViewSelectorActivity() {
@@ -35,9 +34,9 @@ class AcceptActivity : ViewSelectorActivity() {
         dismissThread = DismissThread()
         dismissThread?.start()
         val extras = intent.extras
-        message = extras?.getString("message", "") ?: ""
+        message = extras?.getString(DataLayerListenerServiceWear.KEY_MESSAGE, "") ?: ""
         actionKey = extras?.getString(DataLayerListenerServiceWear.KEY_ACTION_DATA, "") ?: ""
-        if (message.isEmpty() || actionKey.isEmpty()) {
+        if (message.isEmpty()) {
             finish()
             return
         }
@@ -84,9 +83,8 @@ class AcceptActivity : ViewSelectorActivity() {
                 view = LayoutInflater.from(applicationContext).inflate(R.layout.action_confirm_ok, container, false)
                 val confirmButton = view.findViewById<ImageView>(R.id.confirmbutton)
                 confirmButton.setOnClickListener {
-                    val returnCommand = deserialize(actionKey)
-                    rxBus.send(EventWearToMobile(returnCommand))
-                    rxBus.send(CancelNotification(System.currentTimeMillis()))
+                    if (actionKey.isNotEmpty()) startService(IntentWearToMobile(this@AcceptActivity, actionKey))
+                    startService(IntentCancelNotification(this@AcceptActivity))
                     finishAffinity()
                 }
                 container.addView(view)

@@ -19,6 +19,7 @@ import info.nightscout.shared.logging.LTag;
 /*
  * Created by dlvoy on 2019-11-12
  */
+@SuppressWarnings("deprecation")
 public abstract class WallpaperComplication extends BaseComplicationProviderService {
 
     public abstract String getWallpaperAssetsFileName();

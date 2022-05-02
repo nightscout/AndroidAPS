@@ -29,6 +29,7 @@ import info.nightscout.shared.sharedPreferences.SP;
 /*
  * Created by dlvoy on 2019-11-12
  */
+@SuppressWarnings("deprecation")
 public class ComplicationTapBroadcastReceiver extends DaggerBroadcastReceiver {
 
     @Inject WearUtil wearUtil;
@@ -64,7 +65,7 @@ public class ComplicationTapBroadcastReceiver extends DaggerBroadcastReceiver {
         action = remapActionWithUserPreferences(action);
 
         // Request an update for the complication that has just been tapped.
-        ProviderUpdateRequester requester = new ProviderUpdateRequester(context, provider);
+         ProviderUpdateRequester requester = new ProviderUpdateRequester(context, provider);
         requester.requestUpdate(complicationId);
 
         Intent intentOpen = null;

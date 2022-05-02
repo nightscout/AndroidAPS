@@ -14,6 +14,7 @@ import info.nightscout.shared.logging.LTag;
 /*
  * Created by dlvoy on 2019-11-12
  */
+@SuppressWarnings("deprecation")
 public class LongStatusFlippedComplication extends BaseComplicationProviderService {
 
     @Inject DisplayFormat displayFormat;

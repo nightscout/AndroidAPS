@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package info.nightscout.androidaps.watchfaces
 
 import android.annotation.SuppressLint
@@ -25,6 +27,7 @@ import com.ustwo.clockwise.common.WatchShape
 import com.ustwo.clockwise.wearable.WatchFace
 import dagger.android.AndroidInjection
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.data.RawDisplayData
 import info.nightscout.androidaps.events.EventWearPreferenceChange
 import info.nightscout.androidaps.events.EventWearToMobile
 import info.nightscout.androidaps.extensions.toVisibility
@@ -66,10 +69,12 @@ abstract class BaseWatchFace : WatchFace() {
 
     private var disposable = CompositeDisposable()
 
-    protected var singleBg = SingleBg(0, "---", "-", "--", "--", "--", 0, 0.0, 0.0, 0.0, 0)
-    protected var status = EventData.Status("no status", "IOB", "-.--", false, "--g", "-.--U/h", "--", "--", -1, "--", false, 1)
-    protected var treatmentData = TreatmentData(ArrayList(), ArrayList(), ArrayList(), ArrayList())
-    protected var graphData = EventData.GraphData(ArrayList())
+    private val rawData = RawDisplayData()
+
+    protected val singleBg get() = rawData.singleBg
+    protected val status get() = rawData.status
+    protected val treatmentData get() = rawData.treatmentData
+    protected val graphData get() = rawData.graphData
 
     // Layout
     @LayoutRes abstract fun layoutResource(): Int
@@ -170,29 +175,18 @@ abstract class BaseWatchFace : WatchFace() {
                 invalidate()
             }
         disposable += rxBus
-            .toObservable(SingleBg::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe { event: SingleBg -> singleBg = event }
-        disposable += rxBus
-            .toObservable(TreatmentData::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe { event: TreatmentData -> treatmentData = event }
-        disposable += rxBus
-            .toObservable(EventData.GraphData::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe { event: EventData.GraphData -> graphData = event }
-        disposable += rxBus
             .toObservable(EventData.Status::class.java)
             .observeOn(aapsSchedulers.main)
-            .subscribe { event: EventData.Status ->
-                status = event
+            .subscribe {
                 // this event is received as last batch of data
+                rawData.updateFromPersistence(persistence)
                 if (!isSimpleUi || !needUpdate()) {
                     setupCharts()
                     setDataFields()
                 }
                 invalidate()
             }
+        rawData.updateFromPersistence(persistence)
         persistence.turnOff()
         setupBatteryReceiver()
         setupSimpleUi()

@@ -40,6 +40,7 @@ import info.nightscout.shared.weardata.EventData;
  * <p>
  * Created by dlvoy on 2019-11-12
  */
+@SuppressWarnings("deprecation")
 public abstract class BaseComplicationProviderService extends ComplicationProviderService {
 
     @Inject Inevitable inevitable;
@@ -56,9 +57,6 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
         super.onCreate();
     }
 
-    public static final String KEY_COMPLICATIONS = "complications";
-    private static final String KEY_LAST_SHOWN_SINCE_VALUE = "lastSince";
-    private static final String KEY_STALE_REPORTED = "staleReported";
     private static final String TASK_ID_REFRESH_COMPLICATION = "refresh-complication";
 
 
@@ -201,7 +199,7 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
 
         persistence.putString("complication_" + complicationId, getProviderCanonicalName());
         persistence.putBoolean("complication_" + complicationId + "_since", usesSinceField());
-        persistence.addToSet(KEY_COMPLICATIONS, "complication_" + complicationId);
+        persistence.addToSet(Persistence.KEY_COMPLICATIONS, "complication_" + complicationId);
 
         IntentFilter messageFilter = new IntentFilter(DataLayerListenerServiceWear.Companion.getINTENT_NEW_DATA());
 
@@ -237,15 +235,15 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
                         getApplicationContext(), thisProvider, complicationId, getComplicationAction());
 
         final RawDisplayData raw = new RawDisplayData();
-        raw.updateForComplicationsFromPersistence(persistence);
+        raw.updateFromPersistence(persistence);
         aapsLogger.warn(LTag.WEAR, "Complication data: " + raw.toDebugString());
 
         // store what is currently rendered in 'SGV since' field, to detect if it was changed and need update
-        persistence.putString(KEY_LAST_SHOWN_SINCE_VALUE,
+        persistence.putString(Persistence.KEY_LAST_SHOWN_SINCE_VALUE,
                 displayFormat.shortTimeSince(raw.getSingleBg().getTimeStamp()));
 
         // by each render we clear stale flag to ensure it is re-rendered at next refresh detection round
-        persistence.putBoolean(KEY_STALE_REPORTED, false);
+        persistence.putBoolean(Persistence.KEY_STALE_REPORTED, false);
 
         ComplicationData complicationData;
 
@@ -280,7 +278,7 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
     public void onComplicationDeactivated(int complicationId) {
         aapsLogger.warn(LTag.WEAR, "onComplicationDeactivated(): " + complicationId);
 
-        persistence.removeFromSet(KEY_COMPLICATIONS, "complication_" + complicationId);
+        persistence.removeFromSet(Persistence.KEY_COMPLICATIONS, "complication_" + complicationId);
 
         if (localBroadcastManager != null && messageReceiver != null) {
             localBroadcastManager.unregisterReceiver(messageReceiver);
@@ -297,7 +295,7 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
      */
     public void checkIfUpdateNeeded() {
 
-        aapsLogger.warn(LTag.WEAR, "Pending check if update needed - " + persistence.getString(KEY_COMPLICATIONS, ""));
+        aapsLogger.warn(LTag.WEAR, "Pending check if update needed - " + persistence.getString(Persistence.KEY_COMPLICATIONS, ""));
 
         inevitable.task(TASK_ID_REFRESH_COMPLICATION, 15 * Constants.SECOND_IN_MS, () -> {
             if (wearUtil.isBelowRateLimit("complication-checkIfUpdateNeeded", 5)) {
@@ -316,19 +314,19 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
      */
     private void requestUpdateIfSinceChanged() {
         final RawDisplayData raw = new RawDisplayData();
-        raw.updateForComplicationsFromPersistence(persistence);
+        raw.updateFromPersistence(persistence);
 
-        final String lastSince = persistence.getString(KEY_LAST_SHOWN_SINCE_VALUE, "-");
+        final String lastSince = persistence.getString(Persistence.KEY_LAST_SHOWN_SINCE_VALUE, "-");
         final String calcSince = displayFormat.shortTimeSince(raw.getSingleBg().getTimeStamp());
         final boolean isStale = (wearUtil.msSince(persistence.whenDataUpdated()) > Constants.STALE_MS)
                 || (wearUtil.msSince(raw.getSingleBg().getTimeStamp()) > Constants.STALE_MS);
 
-        final boolean staleWasRefreshed = persistence.getBoolean(KEY_STALE_REPORTED, false);
+        final boolean staleWasRefreshed = persistence.getBoolean(Persistence.KEY_STALE_REPORTED, false);
         final boolean sinceWasChanged = !lastSince.equals(calcSince);
 
         if (sinceWasChanged || (isStale && !staleWasRefreshed)) {
-            persistence.putString(KEY_LAST_SHOWN_SINCE_VALUE, calcSince);
-            persistence.putBoolean(KEY_STALE_REPORTED, isStale);
+            persistence.putString(Persistence.KEY_LAST_SHOWN_SINCE_VALUE, calcSince);
+            persistence.putBoolean(Persistence.KEY_STALE_REPORTED, isStale);
 
             aapsLogger.warn(LTag.WEAR, "Detected refresh of time needed! Reason: "
                     + (isStale ? "- stale detected" : "")
@@ -367,7 +365,7 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
      */
     private Set<String> getActiveProviderClasses() {
         Set<String> providers = new HashSet<>();
-        Set<String> complications = persistence.getSetOf(KEY_COMPLICATIONS);
+        Set<String> complications = persistence.getSetOf(Persistence.KEY_COMPLICATIONS);
         for (String complication : complications) {
             final String providerClass = persistence.getString(complication, "");
             if (providerClass.length() > 0) {
@@ -384,7 +382,7 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
      */
     private Set<String> getSinceDependingProviderClasses() {
         Set<String> providers = new HashSet<>();
-        Set<String> complications = persistence.getSetOf(KEY_COMPLICATIONS);
+        Set<String> complications = persistence.getSetOf(Persistence.KEY_COMPLICATIONS);
         for (String complication : complications) {
             final String providerClass = persistence.getString(complication, "");
             final boolean dependOnSince = persistence.getBoolean(complication + "_since", false);
@@ -401,14 +399,16 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
     public class MessageReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Set<String> complications = persistence.getSetOf(KEY_COMPLICATIONS);
-            if (complications.size() > 0) {
-                checkIfUpdateNeeded();
-                // We request all active providers
-                requestUpdate(getActiveProviderClasses());
-            }
+            updateAll();
         }
     }
 
-
+    private void updateAll() {
+        Set<String> complications = persistence.getSetOf(Persistence.KEY_COMPLICATIONS);
+        if (complications.size() > 0) {
+            checkIfUpdateNeeded();
+            // We request all active providers
+            requestUpdate(getActiveProviderClasses());
+        }
+    }
 }

@@ -20,8 +20,10 @@ import com.ustwo.clockwise.common.WatchFaceTime
 import com.ustwo.clockwise.wearable.WatchFace
 import dagger.android.AndroidInjection
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.data.RawDisplayData
 import info.nightscout.androidaps.events.EventWearToMobile
 import info.nightscout.androidaps.interaction.menus.MainMenuActivity
+import info.nightscout.androidaps.interaction.utils.Persistence
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
@@ -45,11 +47,15 @@ class CircleWatchface : WatchFace() {
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var sp: SP
+    @Inject lateinit var persistence: Persistence
 
     private var disposable = CompositeDisposable()
-    private var singleBg = SingleBg(0, "---", "-", "--", "--", "--", 0, 0.0, 0.0, 0.0, 0)
-    private var graphData = EventData.GraphData(ArrayList())
-    private var status = EventData.Status("no status", "IOB", "-.--", false, "--g", "-.--U/h", "--", "--", -1, "--", false, 1)
+
+    private val rawData = RawDisplayData()
+
+    private val singleBg get() = rawData.singleBg
+    private val status get() = rawData.status
+    private val graphData get() = rawData.graphData
 
     companion object {
 
@@ -97,20 +103,12 @@ class CircleWatchface : WatchFace() {
         prepareLayout()
         prepareDrawTime()
         disposable += rxBus
-            .toObservable(SingleBg::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe { event -> singleBg = event }
-        disposable += rxBus
-            .toObservable(EventData.GraphData::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe { event -> graphData = event }
-        disposable += rxBus
             .toObservable(EventData.Status::class.java)
             .observeOn(aapsSchedulers.main)
-            .subscribe { event ->
+            .subscribe {
                 // this event is received as last batch of data
                 aapsLogger.debug(LTag.WEAR, "Status received")
-                status = event
+                rawData.updateFromPersistence(persistence)
                 addToWatchSet()
                 prepareLayout()
                 prepareDrawTime()
@@ -124,6 +122,7 @@ class CircleWatchface : WatchFace() {
                 prepareLayout()
                 invalidate()
             }
+        rawData.updateFromPersistence(persistence)
         rxBus.send(EventWearToMobile(ActionResendData("CircleWatchFace::onCreate")))
         wakeLock.release()
     }

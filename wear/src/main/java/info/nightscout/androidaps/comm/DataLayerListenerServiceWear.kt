@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.comm
 
+import android.app.NotificationManager
 import android.content.Intent
 import android.os.Handler
 import android.os.HandlerThread
@@ -100,6 +101,9 @@ class DataLayerListenerServiceWear : WearableListenerService() {
                 aapsLogger.debug(LTag.WEAR, "onMessageReceived: ${String(messageEvent.data)}")
                 val command = EventData.deserialize(String(messageEvent.data))
                 rxBus.send(command.also { it.sourceNodeId = messageEvent.sourceNodeId })
+                // Use this sender
+                transcriptionNodeId = messageEvent.sourceNodeId
+                aapsLogger.debug(LTag.WEAR, "Updated node: $transcriptionNodeId")
             }
         }
     }
@@ -107,13 +111,15 @@ class DataLayerListenerServiceWear : WearableListenerService() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         when (intent?.action) {
 
-            INTENT_CANCEL_BOLUS -> {
+            INTENT_CANCEL_BOLUS        -> {
                 //dismiss notification
                 NotificationManagerCompat.from(this).cancel(BOLUS_PROGRESS_NOTIF_ID)
                 //send cancel-request to phone.
                 rxBus.send(EventWearToMobile(EventData.CancelBolus(System.currentTimeMillis())))
             }
 
+            INTENT_WEAR_TO_MOBILE      -> sendMessage(rxPath, intent.extras?.getString(KEY_ACTION_DATA))
+            INTENT_CANCEL_NOTIFICATION -> (getSystemService(NOTIFICATION_SERVICE) as NotificationManager).cancel(CHANGE_NOTIF_ID)
         }
         return START_STICKY
     }
@@ -125,7 +131,7 @@ class DataLayerListenerServiceWear : WearableListenerService() {
             capabilityClient.getCapability(PHONE_CAPABILITY, CapabilityClient.FILTER_REACHABLE)
         )
         aapsLogger.debug(LTag.WEAR, "Nodes: ${capabilityInfo.nodes.joinToString(", ") { it.displayName + "(" + it.id + ")" }}")
-        transcriptionNodeId = pickBestNodeId(capabilityInfo.nodes)
+        pickBestNodeId(capabilityInfo.nodes)?.let { transcriptionNodeId = it }
         aapsLogger.debug(LTag.WEAR, "Selected node: $transcriptionNodeId")
     }
 
@@ -156,16 +162,16 @@ class DataLayerListenerServiceWear : WearableListenerService() {
     }
 
     private fun sendMessage(path: String, data: String?) {
-        aapsLogger.debug(LTag.WEAR, "sendMessage: $path $data")
         transcriptionNodeId?.also { nodeId ->
+            aapsLogger.debug(LTag.WEAR, "sendMessage: $path $data")
             messageClient
                 .sendMessage(nodeId, path, data?.toByteArray() ?: byteArrayOf()).apply {
                     addOnSuccessListener { }
                     addOnFailureListener {
-                        aapsLogger.debug(LTag.WEAR, "sendMessage:  $path failure")
+                        aapsLogger.debug(LTag.WEAR, "sendMessage:  $path failure $it")
                     }
                 }
-        }
+        } ?: aapsLogger.debug(LTag.WEAR, "sendMessage: Ignoring message. No node selected.")
     }
 
     @Suppress("unused")
@@ -187,17 +193,16 @@ class DataLayerListenerServiceWear : WearableListenerService() {
         const val PHONE_CAPABILITY = "androidaps_mobile"
 
         // Accepted intents
-        val INTENT_CANCEL_BOLUS = DataLayerListenerServiceWear::class.java.name + ".CancelBolus"
         val INTENT_NEW_DATA = DataLayerListenerServiceWear::class.java.name + ".NewData"
+        val INTENT_CANCEL_BOLUS = DataLayerListenerServiceWear::class.java.name + ".CancelBolus"
+        val INTENT_WEAR_TO_MOBILE = DataLayerListenerServiceWear::class.java.name + ".WearToMobile"
+        val INTENT_CANCEL_NOTIFICATION = DataLayerListenerServiceWear::class.java.name + ".CancelNotification"
 
         //data keys
         const val KEY_ACTION_DATA = "actionData"
         const val KEY_ACTION = "action"
         const val KEY_MESSAGE = "message"
-        const val KEY_SINGLE_BG_DATA = "single_bg_data"
-        const val KEY_TREATMENTS_DATA = "treatments_data"
-        const val KEY_GRAPH_DATA = "graph_data"
-        const val KEY_STATUS_DATA = "status_data"
+        const val KEY_TITLE = "title"
 
         const val BOLUS_PROGRESS_NOTIF_ID = 1
         const val CONFIRM_NOTIF_ID = 2

@@ -12,6 +12,7 @@ import info.nightscout.shared.logging.LTag;
 /*
  * Created by dlvoy on 2019-11-12
  */
+@SuppressWarnings("deprecation")
 public class CobIconComplication extends BaseComplicationProviderService {
 
     public ComplicationData buildComplicationData(int dataType, RawDisplayData raw, PendingIntent complicationPendingIntent) {

@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package info.nightscout.androidaps.watchfaces
 
 import android.view.animation.Animation

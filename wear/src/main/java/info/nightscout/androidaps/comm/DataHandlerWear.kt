@@ -68,8 +68,8 @@ class DataHandlerWear @Inject constructor(
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     putExtras(
                         Bundle().also { bundle ->
-                            bundle.putString("title", it.title)
-                            bundle.putString("message", it.message)
+                            bundle.putString(DataLayerListenerServiceWear.KEY_TITLE, it.title)
+                            bundle.putString(DataLayerListenerServiceWear.KEY_MESSAGE, it.message)
                             bundle.putString(DataLayerListenerServiceWear.KEY_ACTION_DATA, it.returnCommand?.serialize())
                         }
                     )
@@ -123,11 +123,7 @@ class DataHandlerWear @Inject constructor(
             .subscribe {
                 aapsLogger.debug(LTag.WEAR, "Status received from ${it.sourceNodeId}")
                 persistence.store(it)
-                LocalBroadcastManager.getInstance(context).sendBroadcast(
-                    Intent(DataLayerListenerServiceWear.INTENT_NEW_DATA).apply {
-                        putExtra(DataLayerListenerServiceWear.KEY_STATUS_DATA, it.serialize())
-                    }
-                )
+                LocalBroadcastManager.getInstance(context).sendBroadcast(Intent(DataLayerListenerServiceWear.INTENT_NEW_DATA))
             }
         disposable += rxBus
             .toObservable(EventData.SingleBg::class.java)
@@ -135,11 +131,6 @@ class DataHandlerWear @Inject constructor(
             .subscribe {
                 aapsLogger.debug(LTag.WEAR, "SingleBg received from ${it.sourceNodeId}")
                 persistence.store(it)
-                LocalBroadcastManager.getInstance(context).sendBroadcast(
-                    Intent(DataLayerListenerServiceWear.INTENT_NEW_DATA).apply {
-                        putExtra(DataLayerListenerServiceWear.KEY_SINGLE_BG_DATA, it.serialize())
-                    }
-                )
             }
         disposable += rxBus
             .toObservable(EventData.GraphData::class.java)
@@ -147,11 +138,6 @@ class DataHandlerWear @Inject constructor(
             .subscribe {
                 aapsLogger.debug(LTag.WEAR, "GraphData received from ${it.sourceNodeId}")
                 persistence.store(it)
-                LocalBroadcastManager.getInstance(context).sendBroadcast(
-                    Intent(DataLayerListenerServiceWear.INTENT_NEW_DATA).apply {
-                        putExtra(DataLayerListenerServiceWear.KEY_GRAPH_DATA, it.serialize())
-                    }
-                )
             }
         disposable += rxBus
             .toObservable(EventData.TreatmentData::class.java)
@@ -159,11 +145,6 @@ class DataHandlerWear @Inject constructor(
             .subscribe {
                 aapsLogger.debug(LTag.WEAR, "TreatmentData received from ${it.sourceNodeId}")
                 persistence.store(it)
-                LocalBroadcastManager.getInstance(context).sendBroadcast(
-                    Intent(DataLayerListenerServiceWear.INTENT_NEW_DATA).apply {
-                        putExtra(DataLayerListenerServiceWear.KEY_TREATMENTS_DATA, it.serialize())
-                    }
-                )
             }
         disposable += rxBus
             .toObservable(EventData.Preferences::class.java)
@@ -282,8 +263,8 @@ class DataHandlerWear @Inject constructor(
         val intent = Intent(context, AcceptActivity::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             putExtras(Bundle().also { bundle ->
-                bundle.putString("title", command.title)
-                bundle.putString("message", command.message)
+                bundle.putString(DataLayerListenerServiceWear.KEY_TITLE, command.title)
+                bundle.putString(DataLayerListenerServiceWear.KEY_MESSAGE, command.message)
                 bundle.putString(DataLayerListenerServiceWear.KEY_ACTION_DATA, command.returnCommand?.serialize())
             })
         }
