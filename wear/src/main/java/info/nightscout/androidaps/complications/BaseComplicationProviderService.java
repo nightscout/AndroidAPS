@@ -13,6 +13,8 @@ import android.support.wearable.complications.ComplicationProviderService;
 import android.support.wearable.complications.ComplicationText;
 import android.support.wearable.complications.ProviderUpdateRequester;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import java.util.HashSet;
@@ -67,9 +69,9 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
     // ABSTRACT COMPLICATION INTERFACE
     //==============================================================================================
 
-    public abstract ComplicationData buildComplicationData(int dataType, RawDisplayData raw, PendingIntent complicationPendingIntent);
+    public abstract @Nullable ComplicationData buildComplicationData(int dataType, RawDisplayData raw, PendingIntent complicationPendingIntent);
 
-    public abstract String getProviderCanonicalName();
+    public abstract @NonNull String getProviderCanonicalName();
 
     public ComplicationAction getComplicationAction() {
         return ComplicationAction.MENU;
