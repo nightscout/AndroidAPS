@@ -60,7 +60,7 @@ class ComplicationTapBroadcastReceiver : DaggerBroadcastReceiver() {
                 return
             ComplicationAction.WIZARD                                       -> intentOpen = Intent(context, WizardActivity::class.java)
             ComplicationAction.BOLUS                                        -> intentOpen = Intent(context, TreatmentActivity::class.java)
-            ComplicationAction.ECARB                                        -> intentOpen = Intent(context, ECarbActivity::class.java)
+            ComplicationAction.E_CARB                                       -> intentOpen = Intent(context, ECarbActivity::class.java)
             ComplicationAction.STATUS                                       -> intentOpen = Intent(context, StatusMenuActivity::class.java)
 
             ComplicationAction.WARNING_OLD, ComplicationAction.WARNING_SYNC -> {
@@ -92,7 +92,7 @@ class ComplicationTapBroadcastReceiver : DaggerBroadcastReceiver() {
                 "menu"    -> ComplicationAction.MENU
                 "wizard"  -> ComplicationAction.WIZARD
                 "bolus"   -> ComplicationAction.BOLUS
-                "ecarb"   -> ComplicationAction.ECARB
+                "ecarb"   -> ComplicationAction.E_CARB
                 "status"  -> ComplicationAction.STATUS
                 "none"    -> ComplicationAction.NONE
                 "default" -> originalAction
