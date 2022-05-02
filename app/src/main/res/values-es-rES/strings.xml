@@ -734,7 +734,7 @@
     <string name="description_source_dexcom">Recibir los valores de glucosa de la aplicación Dexcom \'Build Your Own Device\'</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="bolusconstraintappliedwarn">Restricción de bolo aplicada: %1$.2f U a %2$.2f U</string>
-    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>! Se ha detectado una absorción lenta de carbohidratos: %2$d%% de tiempo. Compruebe de nuevo su cálculo. Los COB se pueden sobrestimar, por lo que se podría administrar más insulina de la cuenta</font>]]></string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>¡Se ha detectado una absorción lenta de carbohidratos: %2$d%% de tiempo. Comprueba de nuevo el cálculo. Los COB se pueden sobrestimar, por lo que se podría administrar más insulina de la cuenta!</font>]]></string>
     <string name="partialboluswizard">Administrar esta parte del resultado del asistente de bolos [%]</string>
     <string name="deliverpartofboluswizard">El asistente de bolos realiza el cálculo, pero solo se entrega esta parte de la insulina calculada. Útil con el algoritmo SMB.</string>
     <string name="snooze">Silenciar</string>
