@@ -8,7 +8,6 @@ import info.nightscout.androidaps.plugins.general.autotune.data.ATProfile
 import info.nightscout.androidaps.plugins.general.autotune.data.BGDatum
 import info.nightscout.androidaps.plugins.general.autotune.data.CRDatum
 import info.nightscout.androidaps.plugins.general.autotune.data.PreppedGlucose
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.database.entities.Carbs
 import info.nightscout.androidaps.utils.DateUtil
@@ -23,8 +22,7 @@ class AutotunePrep @Inject constructor(
     private val sp: SP,
     private val dateUtil: DateUtil,
     private val autotuneFS: AutotuneFS,
-    private val autotuneIob: AutotuneIob,
-    injector: HasAndroidInjector
+    private val autotuneIob: AutotuneIob
 ) {
     //    private static Logger log = LoggerFactory.getLogger(AutotunePlugin.class);
     fun categorizeBGDatums(tunedprofile: ATProfile, localInsulin: LocalInsulin): PreppedGlucose? {

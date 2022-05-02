@@ -35,8 +35,7 @@ class AutotuneIob @Inject constructor(
     private val sp: SP,
     private val dateUtil: DateUtil,
     private val activePlugin: ActivePlugin,
-    private val autotuneFS: AutotuneFS,
-    injector: HasAndroidInjector
+    private val autotuneFS: AutotuneFS
 ) {
 
     private val nsTreatments = ArrayList<NsTreatment>()
@@ -201,7 +200,8 @@ class AutotuneIob @Inject constructor(
                     nsTreatments.add(NsTreatment(newtb))
                     splittedDuration = 0
                     val profile = profileFunction.getProfile(newtb.timestamp) ?:continue
-                    boluses.addAll(newtb.convertToBoluses(profile, tunedProfile))           // required for correct iob calculation with oref0 algo
+                    boluses.addAll(newtb.convertToBoluses(profile, tunedProfile.profile))           //
+                // required for correct iob calculation with oref0 algo
                 } else {
                     val durationFilled = (cutInMilliSec - Profile.milliSecFromMidnight(splittedTimestamp) % cutInMilliSec)
                     val newtb = TemporaryBasal(
@@ -218,7 +218,7 @@ class AutotuneIob @Inject constructor(
                     splittedTimestamp += durationFilled
                     splittedDuration = splittedDuration - durationFilled
                     val profile = profileFunction.getProfile(newtb.timestamp) ?:continue
-                    boluses.addAll(newtb.convertToBoluses(profile, tunedProfile))           // required for correct iob calculation with oref0 algo
+                    boluses.addAll(newtb.convertToBoluses(profile, tunedProfile.profile))           // required for correct iob calculation with oref0 algo
                 }
             }
         }

@@ -16,6 +16,7 @@ abstract class AutotuneModule {
     @ContributesAndroidInjector abstract fun autoTuneCoreInjector(): AutotuneCore
     @ContributesAndroidInjector abstract fun autoTuneFSInjector(): AutotuneFS
 
+    @ContributesAndroidInjector abstract fun autoTuneATProfileInjector(): ATProfile
     @ContributesAndroidInjector abstract fun autoTuneBGDatumInjector(): BGDatum
     @ContributesAndroidInjector abstract fun autoTuneCRDatumInjector(): CRDatum
     @ContributesAndroidInjector abstract fun autoTunePreppedGlucoseInjector(): PreppedGlucose

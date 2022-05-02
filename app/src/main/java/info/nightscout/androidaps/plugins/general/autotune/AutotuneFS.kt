@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.general.autotune
 
-import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.plugins.general.autotune.data.ATProfile
 import info.nightscout.androidaps.plugins.general.autotune.data.PreppedGlucose
