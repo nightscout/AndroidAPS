@@ -142,7 +142,7 @@ public class DisplayFormat {
             }
             iob2 = iobBolus + " " + iobBasal;
         }
-        return new Pair(iob1, iob2);
+        return Pair.Companion.create(iob1, iob2);
     }
 
     public Pair<String, String> detailedCob(final RawDisplayData raw) {
@@ -153,6 +153,6 @@ public class DisplayFormat {
             cob2 = cobMini.getExtra() + cobMini.getUnits();
         }
         final String cob1 = cobMini.minimise(MAX_FIELD_LEN_SHORT);
-        return new Pair(cob1, cob2);
+        return Pair.Companion.create(cob1, cob2);
     }
 }
