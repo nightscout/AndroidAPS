@@ -37,16 +37,6 @@ class Persistence @Inject constructor(
 
     }
 
-    // For mocking only
-    fun base64decode(str: String, flags: Int): ByteArray {
-        return Base64.decode(str, flags)
-    }
-
-    // For mocking only
-    fun base64encodeToString(input: ByteArray, flags: Int): String {
-        return Base64.encodeToString(input, flags)
-    }
-
     fun getString(key: String, defaultValue: String): String {
         return sp.getString(key, defaultValue)
     }
@@ -177,7 +167,7 @@ class Persistence @Inject constructor(
     fun explodeSet(joined: String, separator: String): MutableSet<String> {
         // special RegEx literal \\Q starts sequence we escape, \\E ends is
         // we use it to escape separator for use in RegEx
-        val items = joined.split("\\Q$separator\\E").toTypedArray()
+        val items = joined.split(Regex("\\Q$separator\\E")).toTypedArray()
         val set: MutableSet<String> = HashSet()
         for (item in items) {
             val itemToAdd = item.trim { it <= ' ' }

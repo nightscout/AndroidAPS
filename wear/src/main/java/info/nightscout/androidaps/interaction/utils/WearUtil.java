@@ -6,7 +6,6 @@ import android.os.PowerManager;
 
 import com.google.android.gms.wearable.DataMap;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,7 +31,6 @@ public class WearUtil {
 
     private final boolean debug_wakelocks = false;
     private final Map<String, Long> rateLimits = new HashMap<>();
-    private final String TAG = WearUtil.class.getName();
 
     //==============================================================================================
     // Time related util methods
