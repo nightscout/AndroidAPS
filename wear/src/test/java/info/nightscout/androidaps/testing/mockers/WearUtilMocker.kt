@@ -64,7 +64,7 @@ class WearUtilMocker(private val wearUtil: WearUtil) {
             if (v is String) map.putString(key, v)
             if (v is Array<*>) map.putStringArray(key, v as Array<String>)
             if (v is ArrayList<*>) {
-                if (!v.isEmpty()) {
+                if (v.isNotEmpty()) {
                     if (v[0] is Int) {
                         map.putIntegerArrayList(key, v as ArrayList<Int>)
                     }

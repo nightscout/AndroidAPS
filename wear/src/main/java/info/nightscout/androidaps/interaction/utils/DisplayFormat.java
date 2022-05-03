@@ -12,7 +12,8 @@ public class DisplayFormat {
     @Inject SP sp;
     @Inject WearUtil wearUtil;
 
-    @Inject DisplayFormat() {}
+    @Inject DisplayFormat() {
+    }
 
     /**
      * Maximal and minimal lengths of fields/labels shown in complications, in characters
@@ -74,12 +75,12 @@ public class DisplayFormat {
         }
 
         // that only optimizes obvious things like 0 before . or at end, + at beginning
-        String delta = (new SmallestDoubleString(raw.getSingleBg().getDelta())).minimise(MAX_FIELD_LEN_SHORT -1);
+        String delta = (new SmallestDoubleString(raw.getSingleBg().getDelta())).minimise(MAX_FIELD_LEN_SHORT - 1);
         if (minutes.length() + delta.length() + deltaSymbol().length() + 1 <= MAX_FIELD_LEN_SHORT) {
             return minutes + " " + deltaSymbol() + delta;
         }
 
-        String shortDelta = (new SmallestDoubleString(raw.getSingleBg().getDelta())).minimise(MAX_FIELD_LEN_SHORT -(1+minutes.length()));
+        String shortDelta = (new SmallestDoubleString(raw.getSingleBg().getDelta())).minimise(MAX_FIELD_LEN_SHORT - (1 + minutes.length()));
 
         return minutes + " " + shortDelta;
     }
@@ -96,7 +97,7 @@ public class DisplayFormat {
         final String SEP_MIN = " ";
 
         String line =
-                raw.getStatus().getCob() + SEP_LONG + raw.getStatus().getIobSum() + SEP_LONG + basalRateSymbol()+raw.getStatus().getCurrentBasal();
+                raw.getStatus().getCob() + SEP_LONG + raw.getStatus().getIobSum() + SEP_LONG + basalRateSymbol() + raw.getStatus().getCurrentBasal();
         if (line.length() <= MAX_FIELD_LEN_LONG) {
             return line;
         }
@@ -105,14 +106,14 @@ public class DisplayFormat {
             return line;
         }
 
-        int remainingMax = MAX_FIELD_LEN_LONG - (raw.getStatus().getCob().length() + raw.getStatus().getCurrentBasal().length() + SEP_SHORT_LEN*2);
+        int remainingMax = MAX_FIELD_LEN_LONG - (raw.getStatus().getCob().length() + raw.getStatus().getCurrentBasal().length() + SEP_SHORT_LEN * 2);
         final String smallestIoB = new SmallestDoubleString(raw.getStatus().getIobSum(), SmallestDoubleString.Units.USE).minimise(Math.max(MIN_FIELD_LEN_IOB, remainingMax));
         line = raw.getStatus().getCob() + SEP_SHORT + smallestIoB + SEP_SHORT + raw.getStatus().getCurrentBasal();
         if (line.length() <= MAX_FIELD_LEN_LONG) {
             return line;
         }
 
-        remainingMax = MAX_FIELD_LEN_LONG - (smallestIoB.length() + raw.getStatus().getCurrentBasal().length() + SEP_SHORT_LEN*2);
+        remainingMax = MAX_FIELD_LEN_LONG - (smallestIoB.length() + raw.getStatus().getCurrentBasal().length() + SEP_SHORT_LEN * 2);
         final String simplifiedCob = new SmallestDoubleString(raw.getStatus().getCob(), SmallestDoubleString.Units.USE).minimise(Math.max(MIN_FIELD_LEN_COB, remainingMax));
 
         line = simplifiedCob + SEP_SHORT + smallestIoB + SEP_SHORT + raw.getStatus().getCurrentBasal();
@@ -135,13 +136,13 @@ public class DisplayFormat {
             if (iobBolus.trim().length() == 0) {
                 iobBolus = "--";
             }
-            String iobBasal = new SmallestDoubleString(iobs[1]).minimise((MAX_FIELD_LEN_SHORT -1) - Math.max(MIN_FIELD_LEN_IOB, iobBolus.length()));
+            String iobBasal = new SmallestDoubleString(iobs[1]).minimise((MAX_FIELD_LEN_SHORT - 1) - Math.max(MIN_FIELD_LEN_IOB, iobBolus.length()));
             if (iobBasal.trim().length() == 0) {
                 iobBasal = "--";
             }
-            iob2 = iobBolus+" "+iobBasal;
+            iob2 = iobBolus + " " + iobBasal;
         }
-        return Pair.create(iob1, iob2);
+        return new Pair(iob1, iob2);
     }
 
     public Pair<String, String> detailedCob(final RawDisplayData raw) {
@@ -152,6 +153,6 @@ public class DisplayFormat {
             cob2 = cobMini.getExtra() + cobMini.getUnits();
         }
         final String cob1 = cobMini.minimise(MAX_FIELD_LEN_SHORT);
-        return Pair.create(cob1, cob2);
+        return new Pair(cob1, cob2);
     }
 }
