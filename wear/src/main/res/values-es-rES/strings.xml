@@ -2,15 +2,6 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_xdrip">AAPS</string>
-    <string name="label_xdrip_large">AAPS (Grande)</string>
-    <string name="label_xdrip_big_chart">AAPS (Aumentado)</string>
-    <string name="label_xdrip_no_chart">AAPS (SinGráfico)</string>
-    <string name="label_xdrip_circle">AAPS (Círculo)</string>
-    <string name="label_xdrip_v2">AAPSv2</string>
-    <string name="label_xdrip_cockpit">AAPS (Cockpit)</string>
-    <string name="label_xdrip_steampunk">AAPS (Steampunk)</string>
-    <string name="label_digitalstyle">AAPS (Digital)</string>
     <string name="label_actions_tile">AAPS(Acciones)</string>
     <string name="label_temp_target_tile">AAPS(Objetivo Temporal)</string>
     <string name="label_quick_wizard_tile">AAPS(Asistente Rápido)</string>
@@ -64,7 +55,6 @@
     <string name="pref_complication_tap_action">Acción de Toque Complicación</string>
     <string name="pref_unicode_in_complications">Unicode en complicaciones</string>
     <string name="pref_version">Versión:</string>
-    <string name="pref_moreWatchfaceSettings">Más ajustes de la esfera del reloj</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Mira en la configuración de la esfera del reloj, por favor</string>
     <string name="menu_tempt">ObjetivoT</string>
     <string name="menu_wizard">Calculadora</string>
@@ -90,7 +80,6 @@
     <string name="action_wizard_confirmation">Calculadora Solicitada</string>
     <string name="action_fill_confirmation">Llenado Solicitado</string>
     <string name="action_ecarb_confirmation">Carbohidratos Solicitados</string>
-    <string name="action_cpp_confirmation">CPP Solicitado</string>
     <string name="action_target" comment="In temp target menu, single target value">Objetivo</string>
     <string name="action_low" comment="In temp target menu, lower value from range">Bajo</string>
     <string name="action_high" comment="In temp target menu, higher value from range">Alto</string>
@@ -112,7 +101,6 @@
     <string name="cancel_bolus">CANCELAR BOLO</string>
     <string name="status_pump">Bomba</string>
     <string name="status_loop">Lazo</string>
-    <string name="status_cpp">CPP</string>
     <string name="status_tdd">TDD</string>
     <string name="activity_carb">Carbohidratos</string>
     <string name="activity_IOB">IOB</string>
