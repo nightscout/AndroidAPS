@@ -469,7 +469,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="shortenergy">En</string>
     <string name="shortprotein">Pr</string>
     <string name="shortfat">Yağ</string>
-    <string name="active"><![CDATA[<Aktif>]]></string>
     <string name="executingrightnow">Komut şu anda çalıştırıldı</string>
     <string name="missed_bg_readings">Kaçırılan KŞ Okumaları</string>
     <string name="raise_notifications_as_android_notifications">Uyarılar ve bildirimler için sistem bildirimlerini kullan</string>
