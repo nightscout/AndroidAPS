@@ -469,7 +469,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="shortenergy">En</string>
     <string name="shortprotein">Protéines</string>
     <string name="shortfat">Gras (Lipides)</string>
-    <string name="active"><![CDATA[<Actif>]]></string>
     <string name="executingrightnow">Commande exécutée à l\'instant</string>
     <string name="missed_bg_readings">Valeurs de glycémie manquantes</string>
     <string name="raise_notifications_as_android_notifications">Utiliser les notifications système pour les alertes et notifications</string>
