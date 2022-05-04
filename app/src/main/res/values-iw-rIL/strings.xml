@@ -468,7 +468,6 @@
     <string name="shortenergy">אנרגיה</string>
     <string name="shortprotein">חלבון</string>
     <string name="shortfat">שומן</string>
-    <string name="active"><![CDATA[<Active>]]></string>
     <string name="executingrightnow">הפקודה מבוצעת כעת</string>
     <string name="missed_bg_readings">לא התקבלו קריאות סוכר</string>
     <string name="raise_notifications_as_android_notifications">שימוש בהודעות מערכת עבור התראות ודיווחים</string>
