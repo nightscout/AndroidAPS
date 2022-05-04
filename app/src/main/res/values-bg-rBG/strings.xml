@@ -459,7 +459,6 @@
     <string name="shortenergy">Ен</string>
     <string name="shortprotein">Бел.</string>
     <string name="shortfat">Маз.</string>
-    <string name="active"><![CDATA[<Активно>]]></string>
     <string name="executingrightnow">Командата се изпълнява в момента</string>
     <string name="missed_bg_readings">Липсват данни за КЗ</string>
     <string name="raise_notifications_as_android_notifications">Използвай системни известия за аларми и съобщения</string>
