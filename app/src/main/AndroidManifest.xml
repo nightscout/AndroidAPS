@@ -50,6 +50,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.Launcher" >
 
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
         <activity
             android:name=".widget.WidgetConfigureActivity"
             android:theme="@android:style/Theme.Material.Dialog.NoActionBar"
@@ -110,14 +114,6 @@
             android:theme="@style/AppTheme" />
         <activity android:name=".activities.StatsActivity"
             android:theme="@style/AppTheme" />
-        <activity
-            android:name="com.google.firebase.auth.internal.FederatedSignInActivity"
-            android:excludeFromRecents="true"
-            android:exported="true"
-            android:launchMode="singleInstance"
-            android:permission="com.google.firebase.auth.api.gms.permission.LAUNCH_FEDERATED_SIGN_IN"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            tools:replace="android:launchMode" />
 
         <!-- Receive new BG readings from other local apps -->
         <receiver
@@ -177,65 +173,25 @@
         </provider>
 
         <service
-            android:name=".plugins.general.wear.wearintegration.WatchUpdaterService"
+            android:name=".plugins.general.wear.wearintegration.DataLayerListenerServiceMobile"
             android:exported="true">
             <intent-filter>
-                <!-- <action android:name="com.google.android.gms.wearable.BIND_LISTENER" /> -->
-                <!-- listeners receive events that match the action and data filters -->
-                <action android:name="com.google.android.gms.wearable.CAPABILITY_CHANGED" />
+                <action android:name="com.google.android.gms.wearable.CHANNEL_EVENT" />
                 <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.CAPABILITY_CHANGED" />
+                <data
+                    android:host="*"
+                    android:scheme="wear" />
+            </intent-filter>
+            <intent-filter>
+                <!-- listeners receive events that match the action and data filters -->
+                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
 
                 <data
                     android:host="*"
-                    android:pathPrefix="/nightscout_watch_data"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="/nightscout_watch_data_resend"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="/nightscout_watch_cancel_bolus"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="/nightscout_watch_confirmactionstring"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="/nightscout_watch_initiateactionstring"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="/openwearsettings"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="/sendstatustowear"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="/sendpreferencestowear"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="/nightscout_watch_basal"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="/nightscout_watch_bolusprogress"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="/nightscout_watch_actionconfirmationrequest"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="/nightscout_watch_changeconfirmationrequest"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="/nightscout_watch_cancelnotificationrequest"
+                    android:pathPrefix="@string/path_rx_bridge"
                     android:scheme="wear" />
             </intent-filter>
         </service>
@@ -252,10 +208,6 @@
             android:exported="false" />
 
         <service android:name=".plugins.general.persistentNotification.DummyService" />
-
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="59d462666c664c57b29e1d79ea123e01f8057cfa" />
 
         <activity
             android:name=".setupwizard.SetupWizardActivity"

@@ -11,7 +11,7 @@ import info.nightscout.androidaps.plugins.general.automation.actions.ActionLoopE
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnectorTest
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerDummy
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Test

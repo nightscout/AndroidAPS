@@ -8,7 +8,7 @@ import android.widget.LinearLayout
 import android.widget.Spinner
 import androidx.annotation.StringRes
 import info.nightscout.androidaps.automation.R
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 
 class InputLocationMode(private val rh: ResourceHelper) : Element() {
 

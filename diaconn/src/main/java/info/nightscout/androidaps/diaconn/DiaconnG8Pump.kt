@@ -187,6 +187,13 @@ class DiaconnG8Pump @Inject constructor(
     var lgsTime:Int = 0        // LGS Setting time (0~255 min)
     var lgsElapsedTime:Int = 0 // LGS Passed Time (0~255 min)
 
+    val pumpUid: String
+        get() = "$country-$productType-$makeYear-${makeMonth.toString().padStart(2,'0')}-${makeDay.toString().padStart(2, '0')}-${lotNo.toString().padStart(3,'0')}-${serialNo.toString().padStart(5,'0')}"
+
+    val pumpVersion: String
+        get() = "$majorVersion.$minorVersion"
+
+
     fun buildDiaconnG8ProfileRecord(nsProfile: Profile): Array<Double> {
         val record = Array(24) { 0.0 }
         for (hour in 0..23) {
@@ -247,6 +254,7 @@ class DiaconnG8Pump @Inject constructor(
     var apslastLogNum = 0 // 앱에서 처리한 마지막 로그 번호.
     var apsWrappingCount = 0 // 앱에서 처리한 마지막 로그 번호.
     var isProgressPumpLogSync = false // 로그 동기화 진행 여부
+    var isPlatformUploadStarted = false // 플랫폼 로그 동기화 진행 여부
 
     // 6. bolus speed status.
     var speed = 0 // 주입 속도(1 ~ 8)

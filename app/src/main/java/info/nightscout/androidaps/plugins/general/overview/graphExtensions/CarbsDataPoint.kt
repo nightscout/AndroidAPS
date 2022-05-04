@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.general.overview.graphExtensions
 import android.content.Context
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.entities.Carbs
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import javax.inject.Inject
 
 class CarbsDataPoint @Inject constructor(

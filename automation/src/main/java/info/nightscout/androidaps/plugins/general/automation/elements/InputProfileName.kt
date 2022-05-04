@@ -8,7 +8,7 @@ import android.widget.LinearLayout
 import android.widget.Spinner
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 
 class InputProfileName(private val rh: ResourceHelper, private val activePlugin: ActivePlugin, val name: String = "", val addActive: Boolean = false) : Element() {
 

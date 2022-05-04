@@ -89,6 +89,8 @@
     <string name="diaconn_g8_logcanulachange_title">바늘 교체</string>
     <string name="diaconn_g8_logcanulachange_summary">로그 동기화 시 케어포털 \"위치 교체\" 정보 자동 업로드</string>
     <string name="diaconn_g8_logbatterychange_summary">로그 동기화 시 케어포털 \"베터리 교체\" 정보 자동 업로드</string>
+    <string name="diaconn_g8_cloudsend_summary">펌프 로그정보를 \"디아콘 클라우드\"로 자동 업로드</string>
+    <string name="diaconn_g8_cloudsend_title">디아콘 클라우드 전송</string>
     <string name="diaconn_g8_logbatterychange_title">베터리 교체</string>
     <string name="diaconn_g8_logsyncinprogress">로그 동기화 진행 중</string>
     <string name="diaconn_g8_loginsulinshorage">인슐린 부족 경고</string>

@@ -12,7 +12,7 @@
 
     <CheckBoxPreference
         android:defaultValue="false"
-        android:key="showBigNumbers"
+        android:key="@string/key_show_big_numbers"
         android:summary="Big numbers. (Circle WF)"
         android:title="@string/pref_big_numbers"
         app:wear_iconOff="@drawable/settings_off"
@@ -20,7 +20,7 @@
 
     <CheckBoxPreference
         android:defaultValue="false"
-        android:key="showRingHistory"
+        android:key="@string/key_show_ring_history"
         android:summary="Graphical history. (Circle WF)"
         android:title="@string/pref_ring_history"
         app:wear_iconOff="@drawable/settings_off"

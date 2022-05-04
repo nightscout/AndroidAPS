@@ -14,7 +14,7 @@ import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import java.io.*
 import java.util.*

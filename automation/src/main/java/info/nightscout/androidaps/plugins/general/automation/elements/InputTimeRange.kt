@@ -16,7 +16,7 @@ import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.MidnightTime
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import java.util.*
 
 class InputTimeRange(private val rh: ResourceHelper, private val dateUtil: DateUtil) : Element() {

@@ -4,7 +4,7 @@ import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.utils.CryptoUtil
 import info.nightscout.androidaps.extensions.hexStringToByteArray
 import info.nightscout.androidaps.extensions.toHex
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.storage.Storage
 import org.json.JSONException
 import org.json.JSONObject

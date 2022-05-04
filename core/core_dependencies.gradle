@@ -5,6 +5,8 @@ dependencies {
     api "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
     api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-guava:$coroutines_version"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$coroutines_version"
     api "androidx.core:core-ktx:$core_version"
     api 'androidx.legacy:legacy-support-v13:1.0.0'
     api 'androidx.legacy:legacy-support-v4:1.0.0'
@@ -25,7 +27,7 @@ dependencies {
     api "com.google.dagger:dagger-android-support:$dagger_version"
 
     //Firebase
-    api platform('com.google.firebase:firebase-bom:25.12.0')
+    api platform('com.google.firebase:firebase-bom:29.3.0')
     api "com.google.firebase:firebase-analytics-ktx"
     api "com.google.firebase:firebase-crashlytics-ktx"
     api "com.google.firebase:firebase-messaging-ktx"
@@ -73,7 +75,6 @@ dependencies {
     api "com.squareup.retrofit2:converter-gson:$retrofit2_version"
 
     api "com.joanzapata.iconify:android-iconify-fontawesome:2.2.2"
-    api 'net.danlew:android.joda:2.10.6'
 
     api "androidx.fragment:fragment-ktx:$fragmentktx_version"
     api "androidx.constraintlayout:constraintlayout:$constraintlayout_version"

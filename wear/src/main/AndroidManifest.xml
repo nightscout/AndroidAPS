@@ -17,15 +17,21 @@
         android:icon="@drawable/ic_icon"
         android:label="@string/app_name"
         android:theme="@android:style/Theme.DeviceDefault">
+
+        <meta-data
+            android:name="com.google.android.wearable.standalone"
+            android:value="false" />
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
         <service
-            android:name=".watchfaces.BIGChart"
+            android:name=".watchfaces.BigChartWatchface"
             android:allowEmbedded="true"
-            android:label="@string/label_xdrip_big_chart"
-            android:permission="android.permission.BIND_WALLPAPER">
+            android:label="@string/label_watchface_big_chart"
+            android:permission="android.permission.BIND_WALLPAPER"
+            android:exported="false">
             <meta-data
                 android:name="android.service.wallpaper"
                 android:resource="@xml/watch_face" />
@@ -43,10 +49,11 @@
         </service>
 
         <service
-            android:name=".watchfaces.NOChart"
+            android:name=".watchfaces.NoChartWatchface"
             android:allowEmbedded="true"
-            android:label="@string/label_xdrip_no_chart"
-            android:permission="android.permission.BIND_WALLPAPER">
+            android:label="@string/label_watchface_no_chart"
+            android:permission="android.permission.BIND_WALLPAPER"
+            android:exported="false">
             <meta-data
                 android:name="android.service.wallpaper"
                 android:resource="@xml/watch_face" />
@@ -64,10 +71,11 @@
         </service>
 
         <service
-            android:name=".watchfaces.Home"
+            android:name=".watchfaces.AapsWatchface"
             android:allowEmbedded="true"
-            android:label="@string/label_xdrip"
-            android:permission="android.permission.BIND_WALLPAPER">
+            android:label="@string/label_watchface"
+            android:permission="android.permission.BIND_WALLPAPER"
+            android:exported="false">
             <meta-data
                 android:name="android.service.wallpaper"
                 android:resource="@xml/watch_face" />
@@ -88,10 +96,11 @@
         </service>
 
         <service
-            android:name=".watchfaces.Home2"
+            android:name=".watchfaces.AapsV2Watchface"
             android:allowEmbedded="true"
-            android:label="@string/label_xdrip_v2"
-            android:permission="android.permission.BIND_WALLPAPER">
+            android:label="@string/label_watchface_v2"
+            android:permission="android.permission.BIND_WALLPAPER"
+            android:exported="false">
             <meta-data
                 android:name="android.service.wallpaper"
                 android:resource="@xml/watch_face" />
@@ -112,10 +121,11 @@
         </service>
 
         <service
-            android:name=".watchfaces.Cockpit"
+            android:name=".watchfaces.CockpitWatchface"
             android:allowEmbedded="true"
-            android:label="@string/label_xdrip_cockpit"
-            android:permission="android.permission.BIND_WALLPAPER">
+            android:label="@string/label_watchface_cockpit"
+            android:permission="android.permission.BIND_WALLPAPER"
+            android:exported="false">
             <meta-data
                 android:name="android.service.wallpaper"
                 android:resource="@xml/watch_face" />
@@ -136,10 +146,11 @@
         </service>
 
         <service
-            android:name=".watchfaces.Steampunk"
+            android:name=".watchfaces.SteampunkWatchface"
             android:allowEmbedded="true"
-            android:label="@string/label_xdrip_steampunk"
-            android:permission="android.permission.BIND_WALLPAPER">
+            android:label="@string/label_watchface_steampunk"
+            android:permission="android.permission.BIND_WALLPAPER"
+            android:exported="false">
             <meta-data
                 android:name="android.service.wallpaper"
                 android:resource="@xml/watch_face" />
@@ -160,10 +171,11 @@
         </service>
 
         <service
-            android:name=".watchfaces.LargeHome"
+            android:name=".watchfaces.AapsLargeWatchface"
             android:allowEmbedded="true"
-            android:label="@string/label_xdrip_large"
-            android:permission="android.permission.BIND_WALLPAPER">
+            android:label="@string/label_watchface_large"
+            android:permission="android.permission.BIND_WALLPAPER"
+            android:exported="false">
             <meta-data
                 android:name="android.service.wallpaper"
                 android:resource="@xml/watch_face" />
@@ -185,8 +197,9 @@
         <service
             android:name=".watchfaces.CircleWatchface"
             android:allowEmbedded="true"
-            android:label="@string/label_xdrip_circle"
-            android:permission="android.permission.BIND_WALLPAPER">
+            android:label="@string/label_watchface_circle"
+            android:permission="android.permission.BIND_WALLPAPER"
+            android:exported="false">
             <meta-data
                 android:name="android.service.wallpaper"
                 android:resource="@xml/watch_face" />
@@ -204,10 +217,11 @@
         </service>
 
         <service
-            android:name=".watchfaces.DigitalStyle"
+            android:name=".watchfaces.DigitalStyleWatchface"
             android:allowEmbedded="true"
-            android:label="@string/label_digitalstyle"
-            android:permission="android.permission.BIND_WALLPAPER">
+            android:label="@string/label_watchface_digital_style"
+            android:permission="android.permission.BIND_WALLPAPER"
+            android:exported="false">
             <meta-data
                 android:name="android.service.wallpaper"
                 android:resource="@xml/watch_face" />
@@ -227,68 +241,29 @@
             </intent-filter>
         </service>
 
-        <service android:name=".data.ListenerService">
+        <service android:name=".comm.DataLayerListenerServiceWear"
+            android:exported="true">
             <intent-filter>
-                <!-- <action android:name="com.google.android.gms.wearable.BIND_LISTENER" /> -->
-                <!-- listeners receive events that match the action and data filters -->
                 <action android:name="com.google.android.gms.wearable.CAPABILITY_CHANGED" />
+                <data
+                    android:host="*"
+                    android:scheme="wear" />
+            </intent-filter>
+
+            <intent-filter>
                 <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.CHANNEL_EVENT" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
 
                 <data
                     android:host="*"
-                    android:pathPrefix="/nightscout_watch_data"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="/nightscout_watch_data_resend"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="/nightscout_watch_cancel_bolus"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="/nightscout_watch_confirmactionstring"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="/nightscout_watch_initiateactionstring"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="/openwearsettings"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="/send_quick_wizard"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="/sendstatustowear"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="/sendpreferencestowear"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="/nightscout_watch_basal"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="/nightscout_watch_bolusprogress"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="/nightscout_watch_actionconfirmationrequest"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="/nightscout_watch_changeconfirmationrequest"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="/nightscout_watch_cancelnotificationrequest"
+                    android:pathPrefix="@string/path_rx_bridge"
                     android:scheme="wear" />
             </intent-filter>
         </service>
@@ -447,7 +422,7 @@
         </service>
 
         <service
-            android:name=".complications.UploaderBattery"
+            android:name=".complications.UploaderBatteryComplication"
             android:icon="@drawable/ic_battery_charging_wireless_50"
             android:label="Uploader/Phone Battery"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
@@ -466,7 +441,7 @@
         <service
             android:name=".complications.WallpaperLightComplication"
             android:icon="@drawable/ic_aaps_light"
-            android:label="Light Walpaper"
+            android:label="Light Wallpaper"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
                 <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
@@ -483,7 +458,7 @@
         <service
             android:name=".complications.WallpaperDarkComplication"
             android:icon="@drawable/ic_aaps_dark"
-            android:label="Dark Walpaper"
+            android:label="Dark Wallpaper"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
                 <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
@@ -500,7 +475,7 @@
         <service
             android:name=".complications.WallpaperGrayComplication"
             android:icon="@drawable/ic_aaps_gray"
-            android:label="Gray Walpaper"
+            android:label="Gray Wallpaper"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
                 <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
@@ -573,11 +548,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".interaction.AAPSPreferences"
+            android:name=".interaction.WatchfaceConfigurationActivity"
             android:label="@string/menu_settings" />
         <activity
             android:name=".interaction.actions.WizardActivity"
-            android:exported="true"
             android:label="@string/menu_wizard" />
         <activity
             android:name=".interaction.menus.FillMenuActivity"
@@ -587,34 +561,28 @@
             android:label="@string/menu_status" />
         <activity
             android:name=".interaction.actions.TreatmentActivity"
-            android:exported="true"
             android:label="@string/menu_treatment" />
         <activity
             android:name=".interaction.actions.BolusActivity"
-            android:exported="true"
             android:label="@string/action_insulin" />
         <activity
-            android:name=".interaction.actions.CPPActivity"
-            android:label="@string/status_cpp" />
+            android:name=".interaction.actions.ProfileSwitchActivity"
+            android:label="@string/status_profile_switch" />
         <activity
             android:name=".interaction.actions.AcceptActivity"
             android:label="@string/action_confirm"
             android:launchMode="singleInstance" />
         <activity
             android:name=".interaction.actions.FillActivity"
-            android:exported="true"
             android:label="@string/menu_prime_fill" />
         <activity
             android:name=".interaction.actions.ECarbActivity"
-            android:exported="true"
             android:label="@string/action_ecarbs" />
         <activity
             android:name=".interaction.actions.CarbActivity"
-            android:exported="true"
             android:label="@string/action_carbs" />
         <activity
             android:name=".interaction.actions.TempTargetActivity"
-            android:exported="true"
             android:label="@string/menu_tempt" />
 
         <activity
@@ -623,7 +591,7 @@
 
         <activity android:name=".interaction.ConfigurationActivity">
             <intent-filter>
-                <!-- action-name must be equal with name of xml-ressource where the configuration is describe -->
+                <!-- action-name must be equal with name of xml-resource where the configuration is describe -->
                 <action android:name="watch_face_configuration_bigchart" />
                 <action android:name="watch_face_configuration_circle" />
                 <action android:name="watch_face_configuration_cockpit" />

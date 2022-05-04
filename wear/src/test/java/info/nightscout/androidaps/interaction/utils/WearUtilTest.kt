@@ -4,15 +4,14 @@ import com.google.android.gms.wearable.DataMap
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.testing.mockers.WearUtilMocker
 import info.nightscout.androidaps.testing.mocks.BundleMock
-import org.hamcrest.CoreMatchers
 import org.junit.Assert
 import org.junit.Test
-import java.util.*
 
 /**
  * Created by dlvoy on 22.11.2019.
  */
-@Suppress("SpellCheckingInspection") class WearUtilTest : TestBase() {
+@Suppress("SpellCheckingInspection")
+class WearUtilTest : TestBase() {
 
     @Test fun timestampAndTimeDiffsTest() {
 
@@ -122,27 +121,5 @@ import java.util.*
         Assert.assertFalse(callAfterward)
         Assert.assertFalse(callTooSoon)
         Assert.assertTrue(callAfterRateLimit)
-    }
-
-    /**
-     * It tests if mock for bundleToDataMap is sane,
-     * because original impl. of bundleToDataMap
-     * uses DataMap.fromBundle which need Android SDK runtime
-     */
-    @Test
-    fun bundleToDataMapTest() {
-        // GIVEN
-        val refMap = DataMap()
-        refMap.putString("ala", "ma kota")
-        refMap.putInt("why", 42)
-        refMap.putFloatArray("list", floatArrayOf(0.45f, 3.2f, 6.8f))
-
-        // WHEN
-        wearUtilMocker.prepareMockNoReal()
-        val bundle = BundleMock.mock(refMap)
-        val gotMap = wearUtil.bundleToDataMap(bundle)
-
-        // THEN
-        Assert.assertEquals(gotMap, refMap)
     }
 }

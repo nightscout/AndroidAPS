@@ -6,9 +6,9 @@ import info.nightscout.androidaps.interaction.utils.Persistence
 import info.nightscout.androidaps.interaction.utils.WearUtil
 import info.nightscout.androidaps.testing.mockers.WearUtilMocker
 import info.nightscout.androidaps.testing.mocks.SharedPreferencesMock
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.androidaps.utils.rx.TestAapsSchedulers
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.shared.logging.AAPSLoggerTest
+import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Before
 import org.junit.Rule
 import org.mockito.ArgumentMatchers
@@ -21,9 +21,10 @@ import java.util.*
 open class TestBase {
 
     @Mock lateinit var context: Context
+    @Mock lateinit var sp: SP
+    @Mock lateinit var dateUtil: DateUtil
 
     val aapsLogger = AAPSLoggerTest()
-    val aapsSchedulers: AapsSchedulers = TestAapsSchedulers()
 
     val wearUtil: WearUtil = Mockito.spy(WearUtil())
     val wearUtilMocker = WearUtilMocker(wearUtil)
@@ -47,21 +48,8 @@ open class TestBase {
         wearUtilMocker.prepareMockNoReal()
         wearUtil.aapsLogger = aapsLogger
         wearUtil.context = context
-        persistence = Mockito.spy(Persistence(context, aapsLogger, wearUtil))
+        persistence = Mockito.spy(Persistence(aapsLogger, dateUtil, sp))
 
-        Mockito.doAnswer { invocation ->
-            val payload = invocation.getArgument<String>(0)
-            try {
-                return@doAnswer Base64.getDecoder().decode(payload)
-            } catch (ex: IllegalArgumentException) {
-                return@doAnswer null
-            }
-        }.`when`(persistence).base64decode(ArgumentMatchers.anyString(), ArgumentMatchers.anyInt())
-
-        Mockito.doAnswer { invocation ->
-            val payload = invocation.getArgument<ByteArray>(0)
-            Base64.getEncoder().encodeToString(payload)
-        }.`when`(persistence).base64encodeToString(ArgumentMatchers.any(), ArgumentMatchers.anyInt())
     }
 
     // Add a JUnit rule that will setup the @Mock annotated vars and log.

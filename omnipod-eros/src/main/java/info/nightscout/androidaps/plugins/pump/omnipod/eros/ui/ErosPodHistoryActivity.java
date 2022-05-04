@@ -35,7 +35,7 @@ import info.nightscout.androidaps.plugins.pump.common.utils.ProfileUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.R;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.definition.PodHistoryEntryType;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil;
-import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.interfaces.ResourceHelper;
 
 public class ErosPodHistoryActivity extends NoSplashAppCompatActivity {
 

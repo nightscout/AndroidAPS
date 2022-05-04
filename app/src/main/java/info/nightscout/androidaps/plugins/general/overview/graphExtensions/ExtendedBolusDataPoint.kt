@@ -5,7 +5,7 @@ import android.graphics.Color
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.entities.ExtendedBolus
 import info.nightscout.androidaps.extensions.toStringTotal
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import javax.inject.Inject
 
 class ExtendedBolusDataPoint @Inject constructor(

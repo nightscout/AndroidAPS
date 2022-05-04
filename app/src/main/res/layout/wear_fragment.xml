@@ -10,29 +10,38 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <com.google.android.material.button.MaterialButton
-            style="@style/GrayButton"
-            android:id="@+id/resend"
-            android:layout_width="fill_parent"
+
+        <TextView
+            android:id="@+id/connected_device"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="3dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginTop="3dp"
-            android:layout_weight="0.5"
-            android:text="@string/resend_all_data"
+            android:gravity="center_vertical|center_horizontal"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            tools:text="---" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/resend"
+            style="@style/GrayButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/ic_refresh"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
+            android:text="@string/resend_all_data" 
             android:textColor="?attr/treatmentButton" />
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/open_settings"
             style="@style/GrayButton"
-            android:id="@+id/opensettings"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="3dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginTop="3dp"
-            android:layout_weight="0.5"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/ic_settings"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
             android:text="@string/open_settings_on_wear"
             android:textColor="?attr/treatmentButton" />
 

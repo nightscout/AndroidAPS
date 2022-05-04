@@ -1,15 +1,13 @@
 package info.nightscout.androidaps.tile
 
-import android.content.Context
 import android.os.Build
 import androidx.annotation.DrawableRes
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
-import androidx.preference.PreferenceManager
 import androidx.wear.tiles.ActionBuilders
 import androidx.wear.tiles.ColorBuilders.argb
-import androidx.wear.tiles.DeviceParametersBuilders.SCREEN_SHAPE_ROUND
 import androidx.wear.tiles.DeviceParametersBuilders.DeviceParameters
+import androidx.wear.tiles.DeviceParametersBuilders.SCREEN_SHAPE_ROUND
 import androidx.wear.tiles.DimensionBuilders.SpProp
 import androidx.wear.tiles.DimensionBuilders.dp
 import androidx.wear.tiles.DimensionBuilders.sp
@@ -29,11 +27,17 @@ import androidx.wear.tiles.TileService
 import androidx.wear.tiles.TimelineBuilders.Timeline
 import androidx.wear.tiles.TimelineBuilders.TimelineEntry
 import com.google.common.util.concurrent.ListenableFuture
+import dagger.android.AndroidInjection
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.comm.DataLayerListenerServiceWear
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.weardata.EventData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.guava.future
+import javax.inject.Inject
 import kotlin.math.sqrt
 
 private const val SPACING_ACTIONS = 3f
@@ -44,8 +48,8 @@ private const val LARGE_SCREEN_WIDTH_DP = 210
 interface TileSource {
 
     fun getResourceReferences(resources: android.content.res.Resources): List<Int>
-    fun getSelectedActions(context: Context): List<Action>
-    fun getValidFor(context: Context): Long?
+    fun getSelectedActions(): List<Action>
+    fun getValidFor(): Long?
 }
 
 open class Action(
@@ -53,7 +57,7 @@ open class Action(
     val buttonTextSub: String? = null,
     val activityClass: String,
     @DrawableRes val iconRes: Int,
-    val actionString: String? = null,
+    val action: EventData? = null,
     val message: String? = null,
 )
 
@@ -63,11 +67,20 @@ enum class WearControl {
 
 abstract class TileBase : TileService() {
 
+    @Inject lateinit var sp: SP
+    @Inject lateinit var aapsLogger: AAPSLogger
+
     abstract val resourceVersion: String
     abstract val source: TileSource
 
     private val serviceJob = Job()
     private val serviceScope = CoroutineScope(Dispatchers.IO + serviceJob)
+
+    // Not derived from DaggerService, do injection here
+    override fun onCreate() {
+        AndroidInjection.inject(this)
+        super.onCreate()
+    }
 
     override fun onTileRequest(
         requestParams: RequestBuilders.TileRequest
@@ -93,11 +106,11 @@ abstract class TileBase : TileService() {
 
     private fun getSelectedActions(): List<Action> {
         // TODO check why thi scan not be don in scope of the coroutine
-        return source.getSelectedActions(this)
+        return source.getSelectedActions()
     }
 
     private fun validFor(): Long? {
-        return source.getValidFor(this)
+        return source.getValidFor()
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -172,13 +185,13 @@ abstract class TileBase : TileService() {
         val builder = ActionBuilders.AndroidActivity.Builder()
             .setClassName(action.activityClass)
             .setPackageName(this.packageName)
-        if (action.actionString != null) {
-            val actionString = ActionBuilders.AndroidStringExtra.Builder().setValue(action.actionString).build()
-            builder.addKeyToExtraMapping("actionString", actionString)
+        if (action.action != null) {
+            val actionString = ActionBuilders.AndroidStringExtra.Builder().setValue(action.action.serialize()).build()
+            builder.addKeyToExtraMapping(DataLayerListenerServiceWear.KEY_ACTION, actionString)
         }
         if (action.message != null) {
             val message = ActionBuilders.AndroidStringExtra.Builder().setValue(action.message).build()
-            builder.addKeyToExtraMapping("message", message)
+            builder.addKeyToExtraMapping(DataLayerListenerServiceWear.KEY_MESSAGE, message)
         }
 
         return ActionBuilders.LaunchAction.Builder()
@@ -197,12 +210,8 @@ abstract class TileBase : TileService() {
                 Modifiers.Builder()
                     .setBackground(
                         Background.Builder()
-                            .setColor(
-                                argb(ContextCompat.getColor(baseContext, BUTTON_COLOR))
-                            )
-                            .setCorner(
-                                Corner.Builder().setRadius(dp(circleDiameter / 2)).build()
-                            )
+                            .setColor(argb(ContextCompat.getColor(baseContext, BUTTON_COLOR)))
+                            .setCorner(Corner.Builder().setRadius(dp(circleDiameter / 2)).build())
                             .build()
                     )
                     .setSemantics(
@@ -239,9 +248,7 @@ abstract class TileBase : TileService() {
                     .setFontStyle(
                         FontStyle.Builder()
                             .setWeight(FONT_WEIGHT_BOLD)
-                            .setColor(
-                                argb(ContextCompat.getColor(baseContext, R.color.white))
-                            )
+                            .setColor(argb(ContextCompat.getColor(baseContext, R.color.white)))
                             .setSize(buttonTextSize(deviceParameters, text))
                             .build()
                     )
@@ -253,9 +260,7 @@ abstract class TileBase : TileService() {
                     .setText(textSub)
                     .setFontStyle(
                         FontStyle.Builder()
-                            .setColor(
-                                argb(ContextCompat.getColor(baseContext, R.color.white))
-                            )
+                            .setColor(argb(ContextCompat.getColor(baseContext, R.color.white)))
                             .setSize(buttonTextSize(deviceParameters, textSub))
                             .build()
                     )
@@ -283,11 +288,10 @@ abstract class TileBase : TileService() {
     }
 
     private fun getWearControl(): WearControl {
-        val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this)
-        if (!sharedPrefs.contains("wearcontrol")) {
+        if (!sp.contains(R.string.key_wear_control)) {
             return WearControl.NO_DATA
         }
-        val wearControlPref = sharedPrefs.getBoolean("wearcontrol", false)
+        val wearControlPref = sp.getBoolean(R.string.key_wear_control, false)
         if (wearControlPref) {
             return WearControl.ENABLED
         }

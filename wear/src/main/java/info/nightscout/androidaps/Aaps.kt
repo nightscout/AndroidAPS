@@ -7,13 +7,27 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.preference.PreferenceManager
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
+import info.nightscout.androidaps.comm.DataHandlerWear
+import info.nightscout.androidaps.comm.DataLayerListenerServiceWear
 import info.nightscout.androidaps.di.DaggerWearComponent
+import info.nightscout.androidaps.events.EventWearPreferenceChange
+import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
+import javax.inject.Inject
 
 class Aaps : DaggerApplication(), OnSharedPreferenceChangeListener {
 
+    @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var dataHandlerWear: DataHandlerWear // instantiate only
+
     override fun onCreate() {
         super.onCreate()
+        aapsLogger.debug(LTag.WEAR, "onCreate")
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this)
+        startService(Intent(this, DataLayerListenerServiceWear::class.java))
+
     }
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> =
@@ -24,6 +38,7 @@ class Aaps : DaggerApplication(), OnSharedPreferenceChangeListener {
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
         // we trigger update on Complications
-        LocalBroadcastManager.getInstance(this).sendBroadcast(Intent(Intent.ACTION_SEND))
+        LocalBroadcastManager.getInstance(this).sendBroadcast(Intent(DataLayerListenerServiceWear.INTENT_NEW_DATA))
+        rxBus.send(EventWearPreferenceChange(key))
     }
 }

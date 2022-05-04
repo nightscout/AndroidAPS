@@ -32,7 +32,7 @@ import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.buildHelper.BuildHelperImpl
 import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.utils.resources.IconsProviderImplementation
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.rx.DefaultAapsSchedulers
 import info.nightscout.androidaps.utils.storage.FileStorage

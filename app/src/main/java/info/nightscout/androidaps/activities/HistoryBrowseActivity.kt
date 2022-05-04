@@ -150,7 +150,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
 
         binding.date.setOnClickListener {
             MaterialDatePicker.Builder.datePicker()
-                .setSelection(dateUtil.timeStampToUtcDateMilis(overviewData.fromTime))
+                .setSelection(dateUtil.timeStampToUtcDateMillis(overviewData.fromTime))
                 .setTheme(R.style.DatePicker)
                 .build()
                 .apply {

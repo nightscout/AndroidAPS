@@ -48,7 +48,7 @@ import info.nightscout.androidaps.plugins.source.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog.show
 import info.nightscout.androidaps.utils.protection.PasswordCheck
 import info.nightscout.androidaps.utils.protection.ProtectionCheck.ProtectionType.*
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
