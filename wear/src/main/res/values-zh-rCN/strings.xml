@@ -2,15 +2,6 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_xdrip">AAPS</string>
-    <string name="label_xdrip_large">AAPS(大)</string>
-    <string name="label_xdrip_big_chart">AAPS(大图)</string>
-    <string name="label_xdrip_no_chart">AAPS(无图)</string>
-    <string name="label_xdrip_circle">AAPS(圆形)</string>
-    <string name="label_xdrip_v2">AAPSv2</string>
-    <string name="label_xdrip_cockpit">AAPS(驾驶)</string>
-    <string name="label_xdrip_steampunk">AAPS(Steampunk)</string>
-    <string name="label_digitalstyle">AAPS(数字风格)</string>
     <string name="label_actions_tile">AAPS(操作)</string>
     <string name="label_temp_target_tile">AAPS(临时目标)</string>
     <string name="label_quick_wizard_tile">AAPS(快速向导)</string>
@@ -64,7 +55,6 @@
     <string name="pref_complication_tap_action">折叠Tap操作</string>
     <string name="pref_unicode_in_complications">折叠中的代码</string>
     <string name="pref_version">版本</string>
-    <string name="pref_moreWatchfaceSettings">更多手表表盘设置</string>
     <string name="pref_lookInYourWatchfaceConfiguration">请查看手表表盘配置。</string>
     <string name="menu_tempt">临时目标</string>
     <string name="menu_wizard">计算器</string>
@@ -90,7 +80,6 @@
     <string name="action_wizard_confirmation">计算请求</string>
     <string name="action_fill_confirmation">Fill 充盈请求</string>
     <string name="action_ecarb_confirmation">碳水化合物请求</string>
-    <string name="action_cpp_confirmation">CPP请求</string>
     <string name="action_target" comment="In temp target menu, single target value">目标</string>
     <string name="action_low" comment="In temp target menu, lower value from range">低</string>
     <string name="action_high" comment="In temp target menu, higher value from range">高</string>
@@ -112,7 +101,6 @@
     <string name="cancel_bolus">取消大剂量</string>
     <string name="status_pump">胰岛素泵</string>
     <string name="status_loop">闭环</string>
-    <string name="status_cpp">CPP</string>
     <string name="status_tdd">日总量</string>
     <string name="activity_carb">碳水化合物</string>
     <string name="activity_IOB">活性胰岛素</string>
