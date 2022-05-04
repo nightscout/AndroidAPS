@@ -72,11 +72,4 @@ class WearUtil @Inject constructor() {
             // we simply ignore if sleep was interrupted
         }
     }
-
-    /**
-     * Taken out to helper method to allow testing
-     */
-    fun bundleToDataMap(bundle: Bundle?): DataMap {
-        return DataMap.fromBundle(bundle)
-    }
 }

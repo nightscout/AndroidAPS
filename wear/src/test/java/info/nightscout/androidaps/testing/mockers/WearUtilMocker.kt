@@ -25,7 +25,6 @@ class WearUtilMocker(private val wearUtil: WearUtil) {
         resetClock()
         Mockito.doAnswer { invocation: InvocationOnMock? -> REF_NOW + clockMsDiff }.`when`(wearUtil).timestamp()
         Mockito.doReturn(null).`when`(wearUtil).getWakeLock(ArgumentMatchers.anyString(), ArgumentMatchers.anyInt())
-        Mockito.doAnswer(bundleToDataMapMock).`when`(wearUtil).bundleToDataMap(ArgumentMatchers.any())
     }
 
     fun resetClock() {
