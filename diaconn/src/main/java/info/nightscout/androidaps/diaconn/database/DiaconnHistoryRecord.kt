@@ -15,5 +15,8 @@ data class DiaconnHistoryRecord(
     var duration: Int = 0,
     var dailyBasal: Double = 0.0,
     var dailyBolus: Double = 0.0,
-    var alarm: String = ""
+    var alarm: String = "",
+    var lognum: Int = 0,
+    var wrappingCount: Int = 0,
+    var pumpUid: String = ""
 )
