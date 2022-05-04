@@ -263,6 +263,7 @@ class AutotuneFragment : DaggerFragment() {
                 updateGui()
             }, { fabricPrivacy.logException(it) })
         checkNewDay()
+        binding.tuneDays.value = autotunePlugin.lastNbDays.toDouble()
         updateGui()
     }
 
@@ -291,7 +292,6 @@ class AutotuneFragment : DaggerFragment() {
         else {
             binding.profileList.setText(profileList[0], false)
         }
-        binding.tuneDays.value = autotunePlugin.lastNbDays.toDouble()
         binding.autotuneRun.visibility = View.GONE
         binding.autotuneCheckInputProfile.visibility = View.GONE
         binding.autotuneCopylocal.visibility = View.GONE
