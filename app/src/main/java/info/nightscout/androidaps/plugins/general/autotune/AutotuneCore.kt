@@ -1,8 +1,6 @@
 package info.nightscout.androidaps.plugins.general.autotune
 
-import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-//import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.plugins.general.autotune.data.ATProfile
 import info.nightscout.androidaps.plugins.general.autotune.data.PreppedGlucose
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
@@ -17,7 +15,6 @@ class AutotuneCore @Inject constructor(
     private val sp: SP,
     private val autotuneFS: AutotuneFS
 ) {
-    //@Inject lateinit var activePlugin: ActivePluginProvider
 
     fun tuneAllTheThings(preppedGlucose: PreppedGlucose, previousAutotune: ATProfile, pumpProfile: ATProfile): ATProfile {
         //var pumpBasalProfile = pumpProfile.basalprofile;

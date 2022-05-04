@@ -36,7 +36,6 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.MidnightTime
 import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog.showConfirmation
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers

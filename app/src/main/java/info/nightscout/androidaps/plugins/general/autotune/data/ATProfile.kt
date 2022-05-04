@@ -13,7 +13,6 @@ import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONArray

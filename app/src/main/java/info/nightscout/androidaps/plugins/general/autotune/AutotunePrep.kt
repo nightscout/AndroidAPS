@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.general.autotune
 
-import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.LocalInsulin
 import info.nightscout.androidaps.database.entities.GlucoseValue

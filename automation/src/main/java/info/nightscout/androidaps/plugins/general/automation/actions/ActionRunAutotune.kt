@@ -8,6 +8,7 @@ import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Autotune
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.automation.elements.InputDuration
 import info.nightscout.androidaps.plugins.general.automation.elements.InputProfileName
@@ -15,7 +16,6 @@ import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithE
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.JsonHelper
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONObject
