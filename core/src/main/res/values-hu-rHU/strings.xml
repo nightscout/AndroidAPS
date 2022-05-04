@@ -6,7 +6,6 @@
     <!--    Constraints-->
     <!--    Dialogs-->
     <!--    BlePreCheck-->
-    <!--    DateUtil-->
     <!--    Protection-->
     <!--    Profile-->
     <!--    ProfileFunction-->
@@ -27,4 +26,5 @@
     <!-- User Entry -->
     <!-- HardLimits -->
     <!-- Command Queue + readStatus reasons -->
+    <!-- Autotune -->
 </resources>
