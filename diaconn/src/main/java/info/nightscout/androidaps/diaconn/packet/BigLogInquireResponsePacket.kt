@@ -1,9 +1,15 @@
 package info.nightscout.androidaps.diaconn.packet
 
+import android.content.Context
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.diaconn.DiaconnG8Pump
 import info.nightscout.androidaps.diaconn.R
+import info.nightscout.androidaps.diaconn.api.ApiResponse
+import info.nightscout.androidaps.diaconn.api.DiaconnApiService
+import info.nightscout.androidaps.diaconn.api.DiaconnLogUploader
+import info.nightscout.androidaps.diaconn.api.PumpLog
+import info.nightscout.androidaps.diaconn.api.PumpLogDto
 import info.nightscout.androidaps.diaconn.common.RecordTypes
 import info.nightscout.androidaps.diaconn.database.DiaconnHistoryRecord
 import info.nightscout.androidaps.diaconn.database.DiaconnHistoryRecordDao
@@ -12,16 +18,19 @@ import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.TemporaryBasalStorage
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import org.apache.commons.lang3.time.DateUtils
 import org.joda.time.DateTime
+import retrofit2.Call
+import retrofit2.Response
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -30,7 +39,6 @@ import javax.inject.Inject
 class BigLogInquireResponsePacket(
     injector: HasAndroidInjector
 ) : DiaconnG8Packet(injector) {
-
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var activePlugin: ActivePlugin
@@ -40,6 +48,9 @@ class BigLogInquireResponsePacket(
     @Inject lateinit var sp: SP
     @Inject lateinit var pumpSync: PumpSync
     @Inject lateinit var diaconnHistoryRecordDao: DiaconnHistoryRecordDao
+    @Inject lateinit var diaconnLogUploader: DiaconnLogUploader
+    @Inject lateinit var context: Context
+
     var result = 0// 조회결과
     private var pumpDesc = PumpDescription(PumpType.DIACONN_G8)
     init {
@@ -66,6 +77,7 @@ class BigLogInquireResponsePacket(
         // initalize
         val dailyMaxvalInfo = mutableMapOf<String, MutableMap<String, Double>>()
         dailyMaxvalInfo[""] = mutableMapOf()
+        val pumpLogs : MutableList<PumpLog> = mutableListOf()
 
         // 15 byte를 로그갯수만큼 돌기.
         for(i in 0 until logLength) {
@@ -86,637 +98,761 @@ class BigLogInquireResponsePacket(
                 PumplogUtil.getByte(bufferData),
                 PumplogUtil.getByte(bufferData)
             )
-
-            diaconnG8Pump.apsWrappingCount = wrapingCount
-            diaconnG8Pump.apslastLogNum  = logNum
-            sp.putInt(rh.gs(R.string.apslastLogNum), logNum)
-            sp.putInt(rh.gs(R.string.apsWrappingCount), wrapingCount)
-
             // process Log to DB
             val logDataToHexString = toNarrowHex(logdata)
             val pumplogKind: Byte = PumplogUtil.getKind(logDataToHexString)
             var status: String
             val diaconnG8HistoryRecord = DiaconnHistoryRecord(0)
-            when(pumplogKind) {
 
-                LOG_INJECT_MEAL_SUCCESS.LOG_KIND -> {
-                    val logItem = LOG_INJECT_MEAL_SUCCESS.parse(logDataToHexString)
-                    aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
-                    val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
-                    val logDateTime = logStartDate.time
-                    val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(logDateTime, logItem.injectAmount / 100.0)
-                    val newRecord = pumpSync.syncBolusWithPumpId(
-                        timestamp = logDateTime,
-                        amount = logItem.injectAmount / 100.0,
-                        type = detailedBolusInfo?.bolusType,
-                        pumpId = logDateTime,
-                        pumpType = PumpType.DIACONN_G8,
-                        pumpSerial = diaconnG8Pump.serialNo.toString())
-                    aapsLogger.debug(LTag.PUMPCOMM, (if (newRecord) "**NEW** " else "") + "EVENT MEALBOLUS (" + pumplogKind + ") " + dateUtil.dateAndTimeString(logDateTime) + " (" + logDateTime + ")" + " Bolus: " + logItem.injectAmount / 100.0 + "U ")
-                    diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_BOLUS
-                    diaconnG8HistoryRecord.timestamp = logDateTime
-                    diaconnG8HistoryRecord.value = logItem.injectAmount / 100.0
-                    diaconnG8HistoryRecord.duration =  logItem.getInjectTime()
-                    diaconnG8HistoryRecord.bolusType = "M" // meal bolus
-                    diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logmealsuccess)
-                    diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
-                    if (!newRecord && detailedBolusInfo != null) {
-                        // detailedInfo can be from another similar record. Reinsert
-                        detailedBolusInfoStorage.add(detailedBolusInfo)
-                    }
-                    status = "MEALBOLUSSUCCESS" + dateUtil.timeString(logDateTime)
-                }
+            if(diaconnG8Pump.isPlatformUploadStarted){
+                // Diaconn Platform upload start
+                aapsLogger.debug(LTag.PUMPCOMM, "make api upload parameter")
+                val pumpLog = PumpLog(
+                    pumplog_no = logNum.toLong(),
+                    pumplog_wrapping_count = wrapingCount,
+                    pumplog_data = logDataToHexString,
+                    act_type = "1"
+                )
+                pumpLogs.add(pumpLog)
+                continue
 
-                LOG_INJECT_MEAL_FAIL.LOG_KIND -> {
-                    val logItem = LOG_INJECT_MEAL_FAIL.parse(logDataToHexString)
-                    aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
-                    val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
-                    val logDateTime = logStartDate.time
-                    val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(logDateTime, logItem.injectAmount / 100.0)
-                    val newRecord = pumpSync.syncBolusWithPumpId(
-                        timestamp = logDateTime,
-                        amount = logItem.injectAmount / 100.0,
-                        type = detailedBolusInfo?.bolusType,
-                        pumpId = logDateTime,
-                        pumpType = PumpType.DIACONN_G8,
-                        pumpSerial = diaconnG8Pump.serialNo.toString())
-                    aapsLogger.debug(LTag.PUMPCOMM, (if (newRecord) "**NEW** " else "") + "EVENT MEALBOLUS (" + pumplogKind + ") " + dateUtil.dateAndTimeString(logDateTime) + " (" + logDateTime + ")" + " Bolus: " + logItem.injectAmount / 100.0 + "U ")
-                    diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_BOLUS
-                    diaconnG8HistoryRecord.timestamp = logDateTime
-                    diaconnG8HistoryRecord.value = if ((logItem.injectAmount / 100.0) < 0) 0.0 else (logItem.injectAmount / 100.0)
-                    diaconnG8HistoryRecord.duration = logItem.getInjectTime()
-                    diaconnG8HistoryRecord.bolusType = "M" // Meal bolus
-                    diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logmealfail)
-                    diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
-                    if (!newRecord && detailedBolusInfo != null) {
-                        // detailedInfo can be from another similar record. Reinsert
-                        detailedBolusInfoStorage.add(detailedBolusInfo)
-                    }
-                    status = "MEALBOLUSFAIL " + dateUtil.timeString(logDateTime)
-                }
+            } else {
+                // APS Local history sync start
+                diaconnG8Pump.apsWrappingCount = wrapingCount
+                diaconnG8Pump.apslastLogNum  = logNum
 
-                LOG_INJECT_NORMAL_SUCCESS.LOG_KIND -> {
-                    val logItem = LOG_INJECT_NORMAL_SUCCESS.parse(logDataToHexString)
-                    aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
+                when(pumplogKind) {
 
-                    val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
-                    val logDateTime = logStartDate.time
-                    val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(logDateTime, logItem.injectAmount / 100.0)
-                    val newRecord = pumpSync.syncBolusWithPumpId(
-                        timestamp = logDateTime,
-                        amount = logItem.injectAmount / 100.0,
-                        type = detailedBolusInfo?.bolusType,
-                        pumpId = logDateTime,
-                        pumpType = PumpType.DIACONN_G8,
-                        pumpSerial = diaconnG8Pump.serialNo.toString())
-                    aapsLogger.debug(LTag.PUMPCOMM, (if (newRecord) "**NEW** " else "") + "EVENT BOLUS (" + pumplogKind + ") " + dateUtil.dateAndTimeString(logDateTime) + " (" + logDateTime + ")" + " Bolus: " + logItem.injectAmount / 100.0 + "U ")
-                    diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_BOLUS
-                    diaconnG8HistoryRecord.timestamp = logDateTime
-                    diaconnG8HistoryRecord.value = logItem.injectAmount / 100.0
-                    diaconnG8HistoryRecord.duration = logItem.getInjectTime()
-                    diaconnG8HistoryRecord.bolusType = "B" // bolus
-                    diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logsuccess)
-                    diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
-                    if (!newRecord && detailedBolusInfo != null) {
-                        // detailedInfo can be from another similar record. Reinsert
-                        detailedBolusInfoStorage.add(detailedBolusInfo)
-                    }
-                    status = "BOLUSSUCCESS" + dateUtil.timeString(logDateTime)
-                }
-
-                LOG_INJECT_NORMAL_FAIL.LOG_KIND -> {
-                    val logItem = LOG_INJECT_NORMAL_FAIL.parse(logDataToHexString)
-                    aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
-                    val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
-                    val logDateTime = logStartDate.time
-
-                    // APS DB process
-                    val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(logDateTime, logItem.injectAmount / 100.0)
-                    val newRecord = pumpSync.syncBolusWithPumpId(
-                        timestamp = logDateTime,
-                        amount = logItem.injectAmount / 100.0,
-                        type = detailedBolusInfo?.bolusType,
-                        pumpId = logDateTime,
-                        pumpType = PumpType.DIACONN_G8,
-                        pumpSerial = diaconnG8Pump.serialNo.toString())
-                    aapsLogger.debug(LTag.PUMPCOMM, (if (newRecord) "**NEW** " else "") + "EVENT BOLUS (" + pumplogKind + ") " + dateUtil.dateAndTimeString(logDateTime) + " (" + logDateTime + ")" + " Bolus: " + logItem.injectAmount / 100.0 + "U ")
-                    // Diaconn History Process
-                    diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_BOLUS
-                    diaconnG8HistoryRecord.timestamp = logDateTime
-                    diaconnG8HistoryRecord.value = if ((logItem.injectAmount / 100.0) < 0) 0.0 else (logItem.injectAmount / 100.0)
-                    diaconnG8HistoryRecord.duration = logItem.getInjectTime()
-                    diaconnG8HistoryRecord.bolusType = "B" // bolus
-                    diaconnG8HistoryRecord.stringValue = getReasonName(pumplogKind, logItem.reason)
-                    diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
-                    if (!newRecord && detailedBolusInfo != null) {
-                        // detailedInfo can be from another similar record. Reinsert
-                        detailedBolusInfoStorage.add(detailedBolusInfo)
-                    }
-                    status = "BOLUSFAIL " + dateUtil.timeString(logDateTime)
-                }
-
-                LOG_SET_SQUARE_INJECTION.LOG_KIND -> {
-                    val logItem = LOG_SET_SQUARE_INJECTION.parse(logDataToHexString)
-                    aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
-                    val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
-                    val logDateTime = logStartDate.time
-                    val newRecord = pumpSync.syncExtendedBolusWithPumpId(
-                        timestamp = logDateTime,
-                        amount = logItem.setAmount / 100.0,
-                        duration = T.mins((logItem.getInjectTime() * 10).toLong()).msecs(),
-                        isEmulatingTB = false,
-                        pumpId = logDateTime,
-                        pumpType = PumpType.DIACONN_G8,
-                        pumpSerial = diaconnG8Pump.serialNo.toString())
-                    aapsLogger.debug(LTag.PUMPCOMM, (if (newRecord) "**NEW** " else "") + "EVENT EXTENDEDSTART (" + pumplogKind + ") " + dateUtil.dateAndTimeString(logDateTime) + " (" + logDateTime + ")" + " Amount: " + logItem.setAmount / 100.0 + "U Duration: " + logItem.getInjectTime() * 10 + "min")
-                    diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_BOLUS
-                    diaconnG8HistoryRecord.timestamp = logDateTime
-                    diaconnG8HistoryRecord.value = logItem.setAmount / 100.0
-                    diaconnG8HistoryRecord.duration = logItem.getInjectTime()
-                    diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logsquarestart)
-                    diaconnG8HistoryRecord.bolusType = "E" // Extended
-                    diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
-                    status = "EXTENDEDBOLUSSTART " + dateUtil.timeString(logDateTime)
-                }
-
-                LOG_INJECT_SQUARE_SUCCESS.LOG_KIND -> {
-                    val logItem = LOG_INJECT_SQUARE_SUCCESS.parse(logDataToHexString)
-                    aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
-                    val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
-                    val logDateTime = logStartDate.time
-                    diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_BOLUS
-                    diaconnG8HistoryRecord.timestamp = logDateTime
-                    diaconnG8HistoryRecord.duration = logItem.getInjectTime()
-                    diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logsquaresuccess)
-                    diaconnG8HistoryRecord.bolusType = "E" // Extended
-                    diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
-                    status = "EXTENDEDBOLUSEND " + dateUtil.timeString(logDateTime)
-                }
-
-                LOG_INJECT_SQUARE_FAIL.LOG_KIND -> {
-                    val logItem = LOG_INJECT_SQUARE_FAIL.parse(logDataToHexString)
-                    aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
-                    val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
-                    val logDateTime = logStartDate.time
-                    val newRecord = pumpSync.syncStopExtendedBolusWithPumpId(
-                        timestamp = logDateTime,
-                        endPumpId = logDateTime,
-                        pumpType = PumpType.DIACONN_G8,
-                        pumpSerial = diaconnG8Pump.serialNo.toString())
-                    aapsLogger.debug(LTag.PUMPCOMM, (if (newRecord) "**NEW** " else "") + "EVENT EXTENDEDSTOP (" + pumplogKind + ") " + dateUtil.dateAndTimeString(logDateTime) + " (" + logDateTime + ")" + " Delivered: " + logItem.injectAmount / 100.0 + "U RealDuration: " + logItem.getInjectTime() + "min")
-                    diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_BOLUS
-                    diaconnG8HistoryRecord.timestamp = logDateTime
-                    diaconnG8HistoryRecord.value = logItem.injectAmount / 100.0
-                    diaconnG8HistoryRecord.duration = logItem.getInjectTime()
-                    diaconnG8HistoryRecord.stringValue = getReasonName(pumplogKind, logItem.reason)
-                    diaconnG8HistoryRecord.bolusType = "E"
-                    diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
-                    status = "EXTENDEDBOLUSFAIL " + dateUtil.timeString(logDateTime)
-                }
-
-                LOG_SET_DUAL_INJECTION.LOG_KIND -> {
-                    val logItem = LOG_SET_DUAL_INJECTION.parse(logDataToHexString)
-                    aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
-                    val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
-                    val logDateTime = logStartDate.time
-
-                    // dual square 처리.
-                    val newRecord = pumpSync.syncExtendedBolusWithPumpId(
-                        timestamp = logDateTime,
-                        amount = logItem.setSquareAmount / 100.0,
-                        duration = T.mins((logItem.getInjectTime() * 10).toLong()).msecs(),
-                        isEmulatingTB = false,
-                        pumpId = logDateTime,
-                        pumpType = PumpType.DIACONN_G8,
-                        pumpSerial = diaconnG8Pump.serialNo.toString())
-                    aapsLogger.debug(LTag.PUMPCOMM, (if (newRecord) "**NEW** " else "") + "EVENT EXTENDEDSTART (" + pumplogKind + ") " + dateUtil.dateAndTimeString(logDateTime) + " (" + logDateTime + ")" + " Amount: " + logItem.setSquareAmount / 100.0 + "U Duration: " + logItem.getInjectTime() * 10 + "min")
-                    diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_BOLUS
-                    diaconnG8HistoryRecord.timestamp = logDateTime
-                    diaconnG8HistoryRecord.value = logItem.setSquareAmount / 100.0
-                    diaconnG8HistoryRecord.duration = logItem.getInjectTime() * 10 // (1~30) 1:10min 30:300min
-                    diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logdualsquarestart)
-                    diaconnG8HistoryRecord.bolusType = "D" // Extended
-                    diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
-
-                    status = "DUALEXTENTEDSTART " + dateUtil.timeString(logDateTime)
-                }
-
-                LOG_INJECTION_DUAL_NORMAL.LOG_KIND -> {
-                    val logItem = LOG_INJECTION_DUAL_NORMAL.parse(logDataToHexString)
-                    aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
-                    val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
-                    val logDateTime = logStartDate.time
-                    val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(logDateTime, logItem.injectAmount / 100.0)
-                    val newRecord = pumpSync.syncBolusWithPumpId(
-                        timestamp = logDateTime,
-                        amount = logItem.injectAmount / 100.0,
-                        type = detailedBolusInfo?.bolusType,
-                        pumpId = logDateTime,
-                        pumpType = PumpType.DIACONN_G8,
-                        pumpSerial = diaconnG8Pump.serialNo.toString())
-                    aapsLogger.debug(LTag.PUMPCOMM, (if (newRecord) "**NEW** " else "") + "EVENT DUALBOLUS (" + pumplogKind + ") " + dateUtil.dateAndTimeString(logDateTime) + " (" + logDateTime + ")" + " Bolus: " + logItem.injectAmount / 100.0 + "U Duration: " + logItem.getInjectTime() + "min")
-
-                    diaconnG8Pump.lastBolusAmount = logItem.injectAmount / 100.0
-                    diaconnG8Pump.lastBolusTime = logDateTime
-
-                    //Diaconn History
-                    diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_BOLUS
-                    diaconnG8HistoryRecord.timestamp = logDateTime
-                    diaconnG8HistoryRecord.value = logItem.injectAmount / 100.0
-                    diaconnG8HistoryRecord.duration = logItem.getInjectTime()
-                    diaconnG8HistoryRecord.bolusType = "D" // bolus
-                    diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logdualnormalsuccess)
-                    diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
-                    if (!newRecord && detailedBolusInfo != null) {
-                        // detailedInfo can be from another similar record. Reinsert
-                        detailedBolusInfoStorage.add(detailedBolusInfo)
-                    }
-                    status = "DUALBOLUS" + dateUtil.timeString(logDateTime)
-                }
-
-                LOG_INJECT_DUAL_SUCCESS.LOG_KIND -> {
-                    val logItem = LOG_INJECT_DUAL_SUCCESS.parse(logDataToHexString)
-                    aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
-                    val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
-                    val logDateTime = logStartDate.time
-
-                    diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_BOLUS
-                    diaconnG8HistoryRecord.timestamp = logDateTime
-                    diaconnG8HistoryRecord.value = logItem.injectSquareAmount / 100.0
-                    diaconnG8HistoryRecord.duration = logItem.getInjectTime()
-                    diaconnG8HistoryRecord.bolusType = "D"
-                    diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logdualsquaresuccess)
-                    diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
-                    status = "DUALBOLUS SQUARESUCCESS " + dateUtil.timeString(logDateTime)
-                }
-
-                LOG_INJECT_DUAL_FAIL.LOG_KIND -> {
-                    val logItem = LOG_INJECT_DUAL_FAIL.parse(logDataToHexString)
-                    aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
-                    val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
-                    val logDateTime = logStartDate.time
-                    val newRecord = pumpSync.syncStopExtendedBolusWithPumpId(
-                        timestamp = logDateTime,
-                        endPumpId = logDateTime,
-                        pumpType = PumpType.DIACONN_G8,
-                        pumpSerial = diaconnG8Pump.serialNo.toString())
-                    aapsLogger.debug(LTag.PUMPCOMM, (if (newRecord) "**NEW** " else "") + "EVENT EXTENDEDSTOP (" + pumplogKind + ") " + dateUtil.dateAndTimeString(logDateTime) + " (" + logDateTime + ")" + " Delivered: " + logItem.injectSquareAmount / 100.0 + "U RealDuration: " + logItem.getInjectTime() + "min")
-
-                    diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_BOLUS
-                    diaconnG8HistoryRecord.timestamp = logDateTime
-                    diaconnG8HistoryRecord.value = logItem.injectNormAmount / 100.0 + logItem.injectSquareAmount / 100.0
-                    diaconnG8HistoryRecord.duration = logItem.getInjectTime()
-                    diaconnG8HistoryRecord.bolusType = "D"
-                    diaconnG8HistoryRecord.stringValue = getReasonName(pumplogKind, logItem.reason)
-                    diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
-                    status = "DUALBOLUS FAIL " + dateUtil.timeString(logDateTime)
-                }
-
-                LOG_INJECTION_1HOUR_BASAL.LOG_KIND -> {
-                    val logItem = LOG_INJECTION_1HOUR_BASAL.parse(logDataToHexString)
-                    aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
-                    val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
-                    val logDateTime = logStartDate.time
-                    diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_BASALHOUR
-                    diaconnG8HistoryRecord.timestamp = logDateTime
-                    diaconnG8HistoryRecord.value = logItem.beforeAmount / 100.0
-                    diaconnG8HistoryRecord.stringValue = "TB before: ${logItem.beforeAmount / 100.0} / TB after: ${logItem.afterAmount / 100.0}"
-                    diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
-                    status = "1HOUR BASAL " + dateUtil.dateAndTimeString(logDateTime)
-                }
-
-                LOG_SUSPEND_V2.LOG_KIND -> {
-                    val logItem = LOG_SUSPEND_V2.parse(logDataToHexString)
-                    aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
-                    val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
-                    val logDateTime = logStartDate.time
-                    diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_SUSPEND
-                    diaconnG8HistoryRecord.timestamp = logDateTime
-                    diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_lgosuspend, logItem.getBasalPattern())
-                    diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
-                    status = "SUSPEND " + dateUtil.timeString(logDateTime)
-                }
-
-                LOG_SUSPEND_RELEASE_V2.LOG_KIND -> {
-                    val logItem = LOG_SUSPEND_RELEASE_V2.parse(logDataToHexString)
-                    aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
-                    val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
-                    val logDateTime = logStartDate.time
-                    diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_SUSPEND
-                    diaconnG8HistoryRecord.timestamp = logDateTime
-                    diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_lgorelease, logItem.getBasalPattern())
-                    diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
-                    status = "SUSPENDRELEASE " + dateUtil.timeString(logDateTime)
-                }
-
-                LOG_CHANGE_INJECTOR_SUCCESS.LOG_KIND -> {
-                    val logItem = LOG_CHANGE_INJECTOR_SUCCESS.parse(logDataToHexString)
-                    aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
-                    val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
-                    val logDateTime = logStartDate.time
-                    if (sp.getBoolean(R.string.key_diaconn_g8_loginsulinchange, true)) {
-                        val newRecord = pumpSync.insertTherapyEventIfNewWithTimestamp(
+                    LOG_INJECT_MEAL_SUCCESS.LOG_KIND -> {
+                        val logItem = LOG_INJECT_MEAL_SUCCESS.parse(logDataToHexString)
+                        aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
+                        val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
+                        val logDateTime = logStartDate.time
+                        val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(logDateTime, logItem.injectAmount / 100.0)
+                        val newRecord = pumpSync.syncBolusWithPumpId(
                             timestamp = logDateTime,
-                            type = DetailedBolusInfo.EventType.INSULIN_CHANGE,
+                            amount = logItem.injectAmount / 100.0,
+                            type = detailedBolusInfo?.bolusType,
                             pumpId = logDateTime,
                             pumpType = PumpType.DIACONN_G8,
-                            pumpSerial = diaconnG8Pump.serialNo.toString()
-                        )
-                        aapsLogger.debug(LTag.PUMPCOMM, (if (newRecord) "**NEW** " else "") + "EVENT INSULINCHANGE(" + pumplogKind + ") " + dateUtil.dateAndTimeString(logDateTime) + " (" + logDateTime + ")" + " Amount: " + logItem.remainAmount / 100.0 + "U")
+                            pumpSerial = diaconnG8Pump.serialNo.toString())
+                        aapsLogger.debug(LTag.PUMPCOMM, (if (newRecord) "**NEW** " else "") + "EVENT MEALBOLUS (" + pumplogKind + ") " + dateUtil.dateAndTimeString(logDateTime) + " (" + logDateTime + ")" + " Bolus: " + logItem.injectAmount / 100.0 + "U ")
+                        diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_BOLUS
+                        diaconnG8HistoryRecord.timestamp = logDateTime
+                        diaconnG8HistoryRecord.value = logItem.injectAmount / 100.0
+                        diaconnG8HistoryRecord.duration =  logItem.getInjectTime()
+                        diaconnG8HistoryRecord.bolusType = "M" // meal bolus
+                        diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logmealsuccess)
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
+                        diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
+                        if (!newRecord && detailedBolusInfo != null) {
+                            // detailedInfo can be from another similar record. Reinsert
+                            detailedBolusInfoStorage.add(detailedBolusInfo)
+                        }
+                        status = "MEALBOLUSSUCCESS" + dateUtil.timeString(logDateTime)
                     }
-                    diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_REFILL
-                    diaconnG8HistoryRecord.timestamp = logDateTime
-                    diaconnG8HistoryRecord.value = logItem.remainAmount / 100.0
-                    diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_loginjectorprime, logItem.primeAmount / 100.0)
-                    diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
-                    status = "INSULINCHANGE " + dateUtil.timeString(logDateTime)
-                }
 
-                LOG_CHANGE_TUBE_SUCCESS.LOG_KIND -> {
-                    val logItem = LOG_CHANGE_TUBE_SUCCESS.parse(logDataToHexString)
-                    aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
-                    val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
-                    val logDateTime = logStartDate.time
-                    if (sp.getBoolean(R.string.key_diaconn_g8_logtubechange, true)) {
-                        val newRecord = pumpSync.insertTherapyEventIfNewWithTimestamp(
+                    LOG_INJECT_MEAL_FAIL.LOG_KIND -> {
+                        val logItem = LOG_INJECT_MEAL_FAIL.parse(logDataToHexString)
+                        aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
+                        val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
+                        val logDateTime = logStartDate.time
+                        val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(logDateTime, logItem.injectAmount / 100.0)
+                        val newRecord = pumpSync.syncBolusWithPumpId(
                             timestamp = logDateTime,
-                            type = DetailedBolusInfo.EventType.NOTE,
-                            note = rh.gs(R.string.diaconn_g8_logtubeprime, logItem.primeAmount / 100.0),
+                            amount = logItem.injectAmount / 100.0,
+                            type = detailedBolusInfo?.bolusType,
                             pumpId = logDateTime,
                             pumpType = PumpType.DIACONN_G8,
-                            pumpSerial = diaconnG8Pump.serialNo.toString()
-                        )
-                        aapsLogger.debug(LTag.PUMPCOMM, (if (newRecord) "**NEW** " else "") + "EVENT TUBECHANGE(" + pumplogKind + ") " + dateUtil.dateAndTimeString(logDateTime) + " (" + logDateTime + ")" + " Amount: " + logItem.primeAmount / 100.0 + "U")
+                            pumpSerial = diaconnG8Pump.serialNo.toString())
+                        aapsLogger.debug(LTag.PUMPCOMM, (if (newRecord) "**NEW** " else "") + "EVENT MEALBOLUS (" + pumplogKind + ") " + dateUtil.dateAndTimeString(logDateTime) + " (" + logDateTime + ")" + " Bolus: " + logItem.injectAmount / 100.0 + "U ")
+                        diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_BOLUS
+                        diaconnG8HistoryRecord.timestamp = logDateTime
+                        diaconnG8HistoryRecord.value = if ((logItem.injectAmount / 100.0) < 0) 0.0 else (logItem.injectAmount / 100.0)
+                        diaconnG8HistoryRecord.duration = logItem.getInjectTime()
+                        diaconnG8HistoryRecord.bolusType = "M" // Meal bolus
+                        diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logmealfail)
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
+                        diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
+                        if (!newRecord && detailedBolusInfo != null) {
+                            // detailedInfo can be from another similar record. Reinsert
+                            detailedBolusInfoStorage.add(detailedBolusInfo)
+                        }
+                        status = "MEALBOLUSFAIL " + dateUtil.timeString(logDateTime)
                     }
 
-                    diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_REFILL
-                    diaconnG8HistoryRecord.timestamp = logDateTime
-                    diaconnG8HistoryRecord.value = logItem.remainAmount / 100.0
-                    diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logtubeprime, logItem.primeAmount / 100.0)
-                    diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
-                    status = "TUBECHANGE " + dateUtil.timeString(logDateTime)
-                }
+                    LOG_INJECT_NORMAL_SUCCESS.LOG_KIND -> {
+                        val logItem = LOG_INJECT_NORMAL_SUCCESS.parse(logDataToHexString)
+                        aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
 
-                LOG_INJECTION_1DAY.LOG_KIND -> { // Daily Bolus Log
-                    val logItem = LOG_INJECTION_1DAY.parse(logDataToHexString)
-                    aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
-                    val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
-                    val logDateTime = logStartDate.time
-
-                    diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_DAILY
-                    diaconnG8HistoryRecord.timestamp = DateTime(logDateTime).withTimeAtStartOfDay().millis
-                    diaconnG8HistoryRecord.dailyBolus = logItem.extAmount / 100.0 + logItem.mealAmount / 100.0
-
-                    val recordDateStr = "" + diaconnG8HistoryRecord.timestamp
-                    var recordMap: MutableMap<String, Double> = mutableMapOf("dummy" to 0.0)
-
-                    if (dailyMaxvalInfo.containsKey(recordDateStr)) {
-                        recordMap = dailyMaxvalInfo[recordDateStr]!!
-                    } else {
-                        recordMap["bolus"] = 0.0
-                        recordMap["basal"] = 0.0
-                        dailyMaxvalInfo[recordDateStr] = recordMap
-                    }
-
-                    if (diaconnG8HistoryRecord.dailyBolus > recordMap["bolus"]!!) {
-                        recordMap["bolus"] = diaconnG8HistoryRecord.dailyBolus
-                    } else {
-                        diaconnG8HistoryRecord.dailyBolus = recordMap["bolus"]!!
-                    }
-
-                    if (recordMap["basal"]!! > 0.0) {
-                        diaconnG8HistoryRecord.dailyBasal = recordMap["basal"]!!
-                    }
-
-                    diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
-
-                    //If it is a TDD, store it for stats also.
-                    pumpSync.createOrUpdateTotalDailyDose(
-                        timestamp = diaconnG8HistoryRecord.timestamp,
-                        bolusAmount = diaconnG8HistoryRecord.dailyBolus,
-                        basalAmount = diaconnG8HistoryRecord.dailyBasal,
-                        totalAmount = 0.0,
-                        pumpId = null,
-                        pumpType = PumpType.DIACONN_G8,
-                        diaconnG8Pump.serialNo.toString()
-                    )
-
-                    status = "DAILYBOLUS " + dateUtil.timeString(logDateTime)
-                }
-
-                LOG_INJECTION_1DAY_BASAL.LOG_KIND -> { // Daily Basal Log
-                    val logItem = LOG_INJECTION_1DAY_BASAL.parse(logDataToHexString)
-                    aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
-                    val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
-                    val logDateTime = logStartDate.time
-
-                    diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_DAILY
-                    diaconnG8HistoryRecord.timestamp = DateTime(logDateTime).withTimeAtStartOfDay().millis
-                    diaconnG8HistoryRecord.dailyBasal = logItem.amount / 100.0
-
-                    val recordDateStr = "" + diaconnG8HistoryRecord.timestamp
-                    var recordMap: MutableMap<String, Double> = mutableMapOf("dummy" to 0.0)
-
-                    if (dailyMaxvalInfo.containsKey(recordDateStr)) {
-                        recordMap = dailyMaxvalInfo[recordDateStr]!!
-                    } else {
-                        recordMap["bolus"] = 0.0
-                        recordMap["basal"] = 0.0
-                        dailyMaxvalInfo[recordDateStr] = recordMap
-                    }
-
-                    if (diaconnG8HistoryRecord.dailyBasal > recordMap["basal"]!!) {
-                        recordMap["basal"] = diaconnG8HistoryRecord.dailyBasal
-                    } else {
-                        diaconnG8HistoryRecord.dailyBasal = recordMap["basal"]!!
-                    }
-
-                    if (recordMap["bolus"]!! > 0.0) {
-                        diaconnG8HistoryRecord.dailyBolus = recordMap["bolus"]!!
-                    }
-
-                    diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
-
-                    //If it is a TDD, store it for stats also.
-                    // pumpSync.createOrUpdateTotalDailyDose(
-                    //     timestamp = diaconnG8HistoryRecord.timestamp,
-                    //     bolusAmount = diaconnG8HistoryRecord.dailyBolus,
-                    //     basalAmount = diaconnG8HistoryRecord.dailyBasal,
-                    //     totalAmount = 0.0,
-                    //     pumpId = null,
-                    //     pumpType = PumpType.DIACONN_G8,
-                    //     diaconnG8Pump.serialNo.toString()
-                    // )
-
-                    status = "DAILYBASAL " + dateUtil.timeString(logDateTime)
-                }
-
-                LOG_CHANGE_NEEDLE_SUCCESS.LOG_KIND -> {
-                    val logItem = LOG_CHANGE_NEEDLE_SUCCESS.parse(logDataToHexString)
-                    aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
-                    val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
-                    val logDateTime = logStartDate.time
-                    if (sp.getBoolean(R.string.key_diaconn_g8_logneedlechange, true)) {
-                        val newRecord = pumpSync.insertTherapyEventIfNewWithTimestamp(
+                        val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
+                        val logDateTime = logStartDate.time
+                        val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(logDateTime, logItem.injectAmount / 100.0)
+                        val newRecord = pumpSync.syncBolusWithPumpId(
                             timestamp = logDateTime,
-                            type = DetailedBolusInfo.EventType.CANNULA_CHANGE,
+                            amount = logItem.injectAmount / 100.0,
+                            type = detailedBolusInfo?.bolusType,
                             pumpId = logDateTime,
                             pumpType = PumpType.DIACONN_G8,
-                            pumpSerial = diaconnG8Pump.serialNo.toString()
-                        )
-                        aapsLogger.debug(LTag.PUMPCOMM, (if (newRecord) "**NEW** " else "") + "EVENT NEEDLECHANGE(" + pumplogKind + ") " + dateUtil.dateAndTimeString(logDateTime) + " (" + logDateTime + ")" + " Amount: " + logItem.remainAmount / 100.0 + "U")
+                            pumpSerial = diaconnG8Pump.serialNo.toString())
+                        aapsLogger.debug(LTag.PUMPCOMM, (if (newRecord) "**NEW** " else "") + "EVENT BOLUS (" + pumplogKind + ") " + dateUtil.dateAndTimeString(logDateTime) + " (" + logDateTime + ")" + " Bolus: " + logItem.injectAmount / 100.0 + "U ")
+                        diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_BOLUS
+                        diaconnG8HistoryRecord.timestamp = logDateTime
+                        diaconnG8HistoryRecord.value = logItem.injectAmount / 100.0
+                        diaconnG8HistoryRecord.duration = logItem.getInjectTime()
+                        diaconnG8HistoryRecord.bolusType = "B" // bolus
+                        diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logsuccess)
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
+                        diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
+                        if (!newRecord && detailedBolusInfo != null) {
+                            // detailedInfo can be from another similar record. Reinsert
+                            detailedBolusInfoStorage.add(detailedBolusInfo)
+                        }
+                        status = "BOLUSSUCCESS" + dateUtil.timeString(logDateTime)
                     }
 
-                    diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_REFILL
-                    diaconnG8HistoryRecord.timestamp = logDateTime
-                    diaconnG8HistoryRecord.value = logItem.remainAmount / 100.0
-                    diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logneedleprime, logItem.primeAmount / 100.0)
-                    diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
-                    status = "NEEDLECHANGE " + dateUtil.timeString(logDateTime)
-                }
+                    LOG_INJECT_NORMAL_FAIL.LOG_KIND -> {
+                        val logItem = LOG_INJECT_NORMAL_FAIL.parse(logDataToHexString)
+                        aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
+                        val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
+                        val logDateTime = logStartDate.time
 
-                LOG_TB_START_V3.LOG_KIND -> {
-                    val logItem = LOG_TB_START_V3.parse(logDataToHexString)
-                    aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
-
-                    val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
-                    val logDateTime = logStartDate.time
-                    var absoluteRate = 0.0
-                    if (logItem.getTbInjectRateRatio() >= 50000) {
-                        val tempBasalPercent = logItem.getTbInjectRateRatio() - 50000
-                        absoluteRate = pumpDesc.pumpType.determineCorrectBasalSize(diaconnG8Pump.baseAmount * (tempBasalPercent / 100.0))
+                        // APS DB process
+                        val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(logDateTime, logItem.injectAmount / 100.0)
+                        val newRecord = pumpSync.syncBolusWithPumpId(
+                            timestamp = logDateTime,
+                            amount = logItem.injectAmount / 100.0,
+                            type = detailedBolusInfo?.bolusType,
+                            pumpId = logDateTime,
+                            pumpType = PumpType.DIACONN_G8,
+                            pumpSerial = diaconnG8Pump.serialNo.toString())
+                        aapsLogger.debug(LTag.PUMPCOMM, (if (newRecord) "**NEW** " else "") + "EVENT BOLUS (" + pumplogKind + ") " + dateUtil.dateAndTimeString(logDateTime) + " (" + logDateTime + ")" + " Bolus: " + logItem.injectAmount / 100.0 + "U ")
+                        // Diaconn History Process
+                        diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_BOLUS
+                        diaconnG8HistoryRecord.timestamp = logDateTime
+                        diaconnG8HistoryRecord.value = if ((logItem.injectAmount / 100.0) < 0) 0.0 else (logItem.injectAmount / 100.0)
+                        diaconnG8HistoryRecord.duration = logItem.getInjectTime()
+                        diaconnG8HistoryRecord.bolusType = "B" // bolus
+                        diaconnG8HistoryRecord.stringValue = getReasonName(pumplogKind, logItem.reason)
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
+                        diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
+                        if (!newRecord && detailedBolusInfo != null) {
+                            // detailedInfo can be from another similar record. Reinsert
+                            detailedBolusInfoStorage.add(detailedBolusInfo)
+                        }
+                        status = "BOLUSFAIL " + dateUtil.timeString(logDateTime)
                     }
 
-                    if (logItem.getTbInjectRateRatio() in 1000..2500) {
-                        absoluteRate = (logItem.getTbInjectRateRatio() - 1000) / 100.0
+                    LOG_SET_SQUARE_INJECTION.LOG_KIND -> {
+                        val logItem = LOG_SET_SQUARE_INJECTION.parse(logDataToHexString)
+                        aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
+                        val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
+                        val logDateTime = logStartDate.time
+                        val newRecord = pumpSync.syncExtendedBolusWithPumpId(
+                            timestamp = logDateTime,
+                            amount = logItem.setAmount / 100.0,
+                            duration = T.mins((logItem.getInjectTime() * 10).toLong()).msecs(),
+                            isEmulatingTB = false,
+                            pumpId = logDateTime,
+                            pumpType = PumpType.DIACONN_G8,
+                            pumpSerial = diaconnG8Pump.serialNo.toString())
+                        aapsLogger.debug(LTag.PUMPCOMM, (if (newRecord) "**NEW** " else "") + "EVENT EXTENDEDSTART (" + pumplogKind + ") " + dateUtil.dateAndTimeString(logDateTime) + " (" + logDateTime + ")" + " Amount: " + logItem.setAmount / 100.0 + "U Duration: " + logItem.getInjectTime() * 10 + "min")
+                        diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_BOLUS
+                        diaconnG8HistoryRecord.timestamp = logDateTime
+                        diaconnG8HistoryRecord.value = logItem.setAmount / 100.0
+                        diaconnG8HistoryRecord.duration = logItem.getInjectTime()
+                        diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logsquarestart)
+                        diaconnG8HistoryRecord.bolusType = "E" // Extended
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
+                        diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
+                        status = "EXTENDEDBOLUSSTART " + dateUtil.timeString(logDateTime)
                     }
 
-                    val temporaryBasalInfo = temporaryBasalStorage.findTemporaryBasal(logDateTime, absoluteRate)
-                    val newRecord = pumpSync.syncTemporaryBasalWithPumpId(
-                        timestamp = logDateTime,
-                        rate = absoluteRate,
-                        duration = T.mins((logItem.tbTime * 15).toLong()).msecs(),
-                        isAbsolute = true,
-                        type = temporaryBasalInfo?.type,
-                        pumpId = logDateTime,
-                        pumpType = PumpType.DIACONN_G8,
-                        pumpSerial = diaconnG8Pump.serialNo.toString())
-                   aapsLogger.debug(LTag.PUMPCOMM, (if (newRecord) "**NEW** " else "") + "EVENT TEMPSTART (" + pumplogKind + ") " + dateUtil.dateAndTimeString(logDateTime) + " (" + logDateTime + ")" + " Ratio: " + absoluteRate + "U Duration: " + logItem.tbTime * 15 + "min")
-
-                    diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_TB
-                    diaconnG8HistoryRecord.timestamp = logDateTime
-                    diaconnG8HistoryRecord.duration = logItem.tbTime * 15
-                    diaconnG8HistoryRecord.value = absoluteRate
-                    diaconnG8HistoryRecord.stringValue =  rh.gs(R.string.diaconn_g8_logtempstart)
-                    diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
-                    status = "TEMPSTART " + dateUtil.timeString(logDateTime)
-                }
-
-                LOG_TB_STOP_V3.LOG_KIND -> {
-                    val logItem = LOG_TB_STOP_V3.parse(logDataToHexString)
-                    aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
-                    val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
-                    val logDateTime = logStartDate.time
-                    var absoluteRate = 0.0
-                    if (logItem.getTbInjectRateRatio() >= 50000) {
-                        val tempBasalPercent = logItem.getTbInjectRateRatio() - 50000
-                        absoluteRate = diaconnG8Pump.baseAmount * (tempBasalPercent / 100.0)
-                    }
-                    if (logItem.getTbInjectRateRatio() in 1000..2500) {
-                        absoluteRate = (logItem.getTbInjectRateRatio() - 1000) / 100.0
+                    LOG_INJECT_SQUARE_SUCCESS.LOG_KIND -> {
+                        val logItem = LOG_INJECT_SQUARE_SUCCESS.parse(logDataToHexString)
+                        aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
+                        val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
+                        val logDateTime = logStartDate.time
+                        diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_BOLUS
+                        diaconnG8HistoryRecord.timestamp = logDateTime
+                        diaconnG8HistoryRecord.duration = logItem.getInjectTime()
+                        diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logsquaresuccess)
+                        diaconnG8HistoryRecord.bolusType = "E" // Extended
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
+                        diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
+                        status = "EXTENDEDBOLUSEND " + dateUtil.timeString(logDateTime)
                     }
 
-                    val newRecord = pumpSync.syncStopTemporaryBasalWithPumpId(
-                        timestamp = logDateTime,
-                        endPumpId = dateUtil.now(),
-                        pumpType = PumpType.DIACONN_G8,
-                        pumpSerial = diaconnG8Pump.serialNo.toString())
-                    aapsLogger.debug(LTag.PUMPCOMM, (if (newRecord) "**NEW** " else "") + "EVENT TEMPSTOP (" + pumplogKind + ") " + dateUtil.dateAndTimeString(logDateTime) + " (" + logDateTime + ")")
+                    LOG_INJECT_SQUARE_FAIL.LOG_KIND -> {
+                        val logItem = LOG_INJECT_SQUARE_FAIL.parse(logDataToHexString)
+                        aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
+                        val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
+                        val logDateTime = logStartDate.time
+                        val newRecord = pumpSync.syncStopExtendedBolusWithPumpId(
+                            timestamp = logDateTime,
+                            endPumpId = logDateTime,
+                            pumpType = PumpType.DIACONN_G8,
+                            pumpSerial = diaconnG8Pump.serialNo.toString())
+                        aapsLogger.debug(LTag.PUMPCOMM, (if (newRecord) "**NEW** " else "") + "EVENT EXTENDEDSTOP (" + pumplogKind + ") " + dateUtil.dateAndTimeString(logDateTime) + " (" + logDateTime + ")" + " Delivered: " + logItem.injectAmount / 100.0 + "U RealDuration: " + logItem.getInjectTime() + "min")
+                        diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_BOLUS
+                        diaconnG8HistoryRecord.timestamp = logDateTime
+                        diaconnG8HistoryRecord.value = logItem.injectAmount / 100.0
+                        diaconnG8HistoryRecord.duration = logItem.getInjectTime()
+                        diaconnG8HistoryRecord.stringValue = getReasonName(pumplogKind, logItem.reason)
+                        diaconnG8HistoryRecord.bolusType = "E"
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
+                        diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
+                        status = "EXTENDEDBOLUSFAIL " + dateUtil.timeString(logDateTime)
+                    }
 
-                    diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_TB
-                    diaconnG8HistoryRecord.timestamp = logDateTime
-                    diaconnG8HistoryRecord.value = absoluteRate
-                    diaconnG8HistoryRecord.stringValue = getReasonName(pumplogKind, logItem.reason)
-                    diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
-                    status = "TEMPSTOP " + dateUtil.timeString(logDateTime)
-                }
+                    LOG_SET_DUAL_INJECTION.LOG_KIND -> {
+                        val logItem = LOG_SET_DUAL_INJECTION.parse(logDataToHexString)
+                        aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
+                        val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
+                        val logDateTime = logStartDate.time
 
-                LOG_ALARM_BATTERY.LOG_KIND -> { // BATTERY SHORTAGE ALARM
-                    val logItem = LOG_ALARM_BATTERY.parse(logDataToHexString)
-                    aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
-                    val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
-                    val logDateTime = logStartDate.time
+                        // dual square 처리.
+                        val newRecord = pumpSync.syncExtendedBolusWithPumpId(
+                            timestamp = logDateTime,
+                            amount = logItem.setSquareAmount / 100.0,
+                            duration = T.mins((logItem.getInjectTime() * 10).toLong()).msecs(),
+                            isEmulatingTB = false,
+                            pumpId = logDateTime,
+                            pumpType = PumpType.DIACONN_G8,
+                            pumpSerial = diaconnG8Pump.serialNo.toString())
+                        aapsLogger.debug(LTag.PUMPCOMM, (if (newRecord) "**NEW** " else "") + "EVENT EXTENDEDSTART (" + pumplogKind + ") " + dateUtil.dateAndTimeString(logDateTime) + " (" + logDateTime + ")" + " Amount: " + logItem.setSquareAmount / 100.0 + "U Duration: " + logItem.getInjectTime() * 10 + "min")
+                        diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_BOLUS
+                        diaconnG8HistoryRecord.timestamp = logDateTime
+                        diaconnG8HistoryRecord.value = logItem.setSquareAmount / 100.0
+                        diaconnG8HistoryRecord.duration = logItem.getInjectTime() * 10 // (1~30) 1:10min 30:300min
+                        diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logdualsquarestart)
+                        diaconnG8HistoryRecord.bolusType = "D" // Extended
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
+                        diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
 
-                    diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_ALARM
-                    diaconnG8HistoryRecord.timestamp = logDateTime
-                    diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logbatteryshorage)
-                    diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
-                    status = "BATTERYALARM " + dateUtil.timeString(logDateTime)
-                }
+                        status = "DUALEXTENTEDSTART " + dateUtil.timeString(logDateTime)
+                    }
 
-                LOG_ALARM_BLOCK.LOG_KIND -> { // INJECTION BLOCKED ALARM
-                    val logItem = LOG_ALARM_BLOCK.parse(logDataToHexString)
-                    aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
+                    LOG_INJECTION_DUAL_NORMAL.LOG_KIND -> {
+                        val logItem = LOG_INJECTION_DUAL_NORMAL.parse(logDataToHexString)
+                        aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
+                        val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
+                        val logDateTime = logStartDate.time
+                        val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(logDateTime, logItem.injectAmount / 100.0)
+                        val newRecord = pumpSync.syncBolusWithPumpId(
+                            timestamp = logDateTime,
+                            amount = logItem.injectAmount / 100.0,
+                            type = detailedBolusInfo?.bolusType,
+                            pumpId = logDateTime,
+                            pumpType = PumpType.DIACONN_G8,
+                            pumpSerial = diaconnG8Pump.serialNo.toString())
+                        aapsLogger.debug(LTag.PUMPCOMM, (if (newRecord) "**NEW** " else "") + "EVENT DUALBOLUS (" + pumplogKind + ") " + dateUtil.dateAndTimeString(logDateTime) + " (" + logDateTime + ")" + " Bolus: " + logItem.injectAmount / 100.0 + "U Duration: " + logItem.getInjectTime() + "min")
 
-                    val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
-                    val logDateTime = logStartDate.time
+                        diaconnG8Pump.lastBolusAmount = logItem.injectAmount / 100.0
+                        diaconnG8Pump.lastBolusTime = logDateTime
 
-                    diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_ALARM
-                    diaconnG8HistoryRecord.timestamp = logDateTime
-                    diaconnG8HistoryRecord.value = logItem.amount / 100.0
-                    diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logalarmblock, getReasonName(pumplogKind, logItem.reason))
-                    diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
-                    status = "BLOCKALARM " + dateUtil.timeString(logDateTime)
-                }
+                        //Diaconn History
+                        diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_BOLUS
+                        diaconnG8HistoryRecord.timestamp = logDateTime
+                        diaconnG8HistoryRecord.value = logItem.injectAmount / 100.0
+                        diaconnG8HistoryRecord.duration = logItem.getInjectTime()
+                        diaconnG8HistoryRecord.bolusType = "D" // bolus
+                        diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logdualnormalsuccess)
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
+                        diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
+                        if (!newRecord && detailedBolusInfo != null) {
+                            // detailedInfo can be from another similar record. Reinsert
+                            detailedBolusInfoStorage.add(detailedBolusInfo)
+                        }
+                        status = "DUALBOLUS" + dateUtil.timeString(logDateTime)
+                    }
 
-                LOG_ALARM_SHORTAGE.LOG_KIND -> { // INSULIN SHORTAGE ALARM
-                    val logItem = LOG_ALARM_SHORTAGE.parse(logDataToHexString)
-                    aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
+                    LOG_INJECT_DUAL_SUCCESS.LOG_KIND -> {
+                        val logItem = LOG_INJECT_DUAL_SUCCESS.parse(logDataToHexString)
+                        aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
+                        val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
+                        val logDateTime = logStartDate.time
 
-                    val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
-                    val logDateTime = logStartDate.time
+                        diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_BOLUS
+                        diaconnG8HistoryRecord.timestamp = logDateTime
+                        diaconnG8HistoryRecord.value = logItem.injectSquareAmount / 100.0
+                        diaconnG8HistoryRecord.duration = logItem.getInjectTime()
+                        diaconnG8HistoryRecord.bolusType = "D"
+                        diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logdualsquaresuccess)
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
+                        diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
+                        status = "DUALBOLUS SQUARESUCCESS " + dateUtil.timeString(logDateTime)
+                    }
 
-                    diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_ALARM
-                    diaconnG8HistoryRecord.timestamp = logDateTime
-                    diaconnG8HistoryRecord.value = logItem.remain.toDouble()
-                    diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_loginsulinshorage)
-                    diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
-                    status = "SHORTAGEALARM " + dateUtil.timeString(logDateTime)
-                }
+                    LOG_INJECT_DUAL_FAIL.LOG_KIND -> {
+                        val logItem = LOG_INJECT_DUAL_FAIL.parse(logDataToHexString)
+                        aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
+                        val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
+                        val logDateTime = logStartDate.time
+                        val newRecord = pumpSync.syncStopExtendedBolusWithPumpId(
+                            timestamp = logDateTime,
+                            endPumpId = logDateTime,
+                            pumpType = PumpType.DIACONN_G8,
+                            pumpSerial = diaconnG8Pump.serialNo.toString())
+                        aapsLogger.debug(LTag.PUMPCOMM, (if (newRecord) "**NEW** " else "") + "EVENT EXTENDEDSTOP (" + pumplogKind + ") " + dateUtil.dateAndTimeString(logDateTime) + " (" + logDateTime + ")" + " Delivered: " + logItem.injectSquareAmount / 100.0 + "U RealDuration: " + logItem.getInjectTime() + "min")
 
-                LOG_RESET_SYS_V3.LOG_KIND -> {
-                    val logItem = LOG_RESET_SYS_V3.parse(logDataToHexString)
-                    aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
+                        diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_BOLUS
+                        diaconnG8HistoryRecord.timestamp = logDateTime
+                        diaconnG8HistoryRecord.value = logItem.injectNormAmount / 100.0 + logItem.injectSquareAmount / 100.0
+                        diaconnG8HistoryRecord.duration = logItem.getInjectTime()
+                        diaconnG8HistoryRecord.bolusType = "D"
+                        diaconnG8HistoryRecord.stringValue = getReasonName(pumplogKind, logItem.reason)
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
+                        diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
+                        status = "DUALBOLUS FAIL " + dateUtil.timeString(logDateTime)
+                    }
 
-                    val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
-                    val logDateTime = logStartDate.time
+                    LOG_INJECTION_1HOUR_BASAL.LOG_KIND -> {
+                        val logItem = LOG_INJECTION_1HOUR_BASAL.parse(logDataToHexString)
+                        aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
+                        val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
+                        val logDateTime = logStartDate.time
+                        diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_BASALHOUR
+                        diaconnG8HistoryRecord.timestamp = logDateTime
+                        diaconnG8HistoryRecord.value = logItem.beforeAmount / 100.0
+                        diaconnG8HistoryRecord.stringValue = "TB before: ${logItem.beforeAmount / 100.0} / TB after: ${logItem.afterAmount / 100.0}"
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
+                        diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
+                        status = "1HOUR BASAL " + dateUtil.dateAndTimeString(logDateTime)
+                    }
 
-                    diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_ALARM
-                    diaconnG8HistoryRecord.timestamp = logDateTime
-                    diaconnG8HistoryRecord.stringValue = getReasonName(pumplogKind, logItem.reason)
-                    diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
-                    if (logItem.reason == 3.toByte()) {
-                        if (sp.getBoolean(R.string.key_diaconn_g8_logbatterychange, true)) {
+                    LOG_SUSPEND_V2.LOG_KIND -> {
+                        val logItem = LOG_SUSPEND_V2.parse(logDataToHexString)
+                        aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
+                        val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
+                        val logDateTime = logStartDate.time
+                        diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_SUSPEND
+                        diaconnG8HistoryRecord.timestamp = logDateTime
+                        diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_lgosuspend, logItem.getBasalPattern())
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
+                        diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
+                        status = "SUSPEND " + dateUtil.timeString(logDateTime)
+                    }
+
+                    LOG_SUSPEND_RELEASE_V2.LOG_KIND -> {
+                        val logItem = LOG_SUSPEND_RELEASE_V2.parse(logDataToHexString)
+                        aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
+                        val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
+                        val logDateTime = logStartDate.time
+                        diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_SUSPEND
+                        diaconnG8HistoryRecord.timestamp = logDateTime
+                        diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_lgorelease, logItem.getBasalPattern())
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
+                        diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
+                        status = "SUSPENDRELEASE " + dateUtil.timeString(logDateTime)
+                    }
+
+                    LOG_CHANGE_INJECTOR_SUCCESS.LOG_KIND -> {
+                        val logItem = LOG_CHANGE_INJECTOR_SUCCESS.parse(logDataToHexString)
+                        aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
+                        val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
+                        val logDateTime = logStartDate.time
+                        if (sp.getBoolean(R.string.key_diaconn_g8_loginsulinchange, true)) {
                             val newRecord = pumpSync.insertTherapyEventIfNewWithTimestamp(
                                 timestamp = logDateTime,
-                                type = DetailedBolusInfo.EventType.PUMP_BATTERY_CHANGE,
+                                type = DetailedBolusInfo.EventType.INSULIN_CHANGE,
                                 pumpId = logDateTime,
                                 pumpType = PumpType.DIACONN_G8,
                                 pumpSerial = diaconnG8Pump.serialNo.toString()
                             )
-                            aapsLogger.debug(LTag.PUMPCOMM, (if (newRecord) "**NEW** " else "") + "EVENT BATTERYCHANGE(" + pumplogKind + ") " + dateUtil.dateAndTimeString(logDateTime) + " (" + logDateTime + ")" + " remainAmount: " + logItem.batteryRemain.toInt() + "%")
+                            aapsLogger.debug(LTag.PUMPCOMM, (if (newRecord) "**NEW** " else "") + "EVENT INSULINCHANGE(" + pumplogKind + ") " + dateUtil.dateAndTimeString(logDateTime) + " (" + logDateTime + ")" + " Amount: " + logItem.remainAmount / 100.0 + "U")
+                        }
+                        diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_REFILL
+                        diaconnG8HistoryRecord.timestamp = logDateTime
+                        diaconnG8HistoryRecord.value = logItem.remainAmount / 100.0
+                        diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_loginjectorprime, logItem.primeAmount / 100.0)
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
+                        diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
+                        status = "INSULINCHANGE " + dateUtil.timeString(logDateTime)
+                    }
+
+                    LOG_CHANGE_TUBE_SUCCESS.LOG_KIND -> {
+                        val logItem = LOG_CHANGE_TUBE_SUCCESS.parse(logDataToHexString)
+                        aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
+                        val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
+                        val logDateTime = logStartDate.time
+                        if (sp.getBoolean(R.string.key_diaconn_g8_logtubechange, true)) {
+                            val newRecord = pumpSync.insertTherapyEventIfNewWithTimestamp(
+                                timestamp = logDateTime,
+                                type = DetailedBolusInfo.EventType.NOTE,
+                                note = rh.gs(R.string.diaconn_g8_logtubeprime, logItem.primeAmount / 100.0),
+                                pumpId = logDateTime,
+                                pumpType = PumpType.DIACONN_G8,
+                                pumpSerial = diaconnG8Pump.serialNo.toString()
+                            )
+                            aapsLogger.debug(LTag.PUMPCOMM, (if (newRecord) "**NEW** " else "") + "EVENT TUBECHANGE(" + pumplogKind + ") " + dateUtil.dateAndTimeString(logDateTime) + " (" + logDateTime + ")" + " Amount: " + logItem.primeAmount / 100.0 + "U")
+                        }
+
+
+                        diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_REFILL
+                        diaconnG8HistoryRecord.timestamp = logDateTime
+                        diaconnG8HistoryRecord.value = logItem.remainAmount / 100.0
+                        diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logtubeprime, logItem.primeAmount / 100.0)
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
+                        diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
+                        status = "TUBECHANGE " + dateUtil.timeString(logDateTime)
+                    }
+
+                    LOG_INJECTION_1DAY.LOG_KIND -> { // Daily Bolus Log
+                        val logItem = LOG_INJECTION_1DAY.parse(logDataToHexString)
+                        aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
+                        val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
+                        val logDateTime = logStartDate.time
+
+                        diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_DAILY
+                        diaconnG8HistoryRecord.timestamp = DateTime(logDateTime).withTimeAtStartOfDay().millis
+                        diaconnG8HistoryRecord.dailyBolus = logItem.extAmount / 100.0 + logItem.mealAmount / 100.0
+
+                        val recordDateStr = "" + diaconnG8HistoryRecord.timestamp
+                        var recordMap: MutableMap<String, Double> = mutableMapOf("dummy" to 0.0)
+
+                        if (dailyMaxvalInfo.containsKey(recordDateStr)) {
+                            recordMap = dailyMaxvalInfo[recordDateStr]!!
+                        } else {
+                            recordMap["bolus"] = 0.0
+                            recordMap["basal"] = 0.0
+                            dailyMaxvalInfo[recordDateStr] = recordMap
+                        }
+
+                        if (diaconnG8HistoryRecord.dailyBolus > recordMap["bolus"]!!) {
+                            recordMap["bolus"] = diaconnG8HistoryRecord.dailyBolus
+                        } else {
+                            diaconnG8HistoryRecord.dailyBolus = recordMap["bolus"]!!
+                        }
+
+                        if (recordMap["basal"]!! > 0.0) {
+                            diaconnG8HistoryRecord.dailyBasal = recordMap["basal"]!!
+                        }
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
+                        diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
+
+                        //If it is a TDD, store it for stats also.
+                        pumpSync.createOrUpdateTotalDailyDose(
+                            timestamp = diaconnG8HistoryRecord.timestamp,
+                            bolusAmount = diaconnG8HistoryRecord.dailyBolus,
+                            basalAmount = diaconnG8HistoryRecord.dailyBasal,
+                            totalAmount = 0.0,
+                            pumpId = null,
+                            pumpType = PumpType.DIACONN_G8,
+                            diaconnG8Pump.serialNo.toString()
+                        )
+
+                        status = "DAILYBOLUS " + dateUtil.timeString(logDateTime)
+                    }
+
+                    LOG_INJECTION_1DAY_BASAL.LOG_KIND -> { // Daily Basal Log
+                        val logItem = LOG_INJECTION_1DAY_BASAL.parse(logDataToHexString)
+                        aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
+                        val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
+                        val logDateTime = logStartDate.time
+
+                        diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_DAILY
+                        diaconnG8HistoryRecord.timestamp = DateTime(logDateTime).withTimeAtStartOfDay().millis
+                        diaconnG8HistoryRecord.dailyBasal = logItem.amount / 100.0
+
+                        val recordDateStr = "" + diaconnG8HistoryRecord.timestamp
+                        var recordMap: MutableMap<String, Double> = mutableMapOf("dummy" to 0.0)
+
+                        if (dailyMaxvalInfo.containsKey(recordDateStr)) {
+                            recordMap = dailyMaxvalInfo[recordDateStr]!!
+                        } else {
+                            recordMap["bolus"] = 0.0
+                            recordMap["basal"] = 0.0
+                            dailyMaxvalInfo[recordDateStr] = recordMap
+                        }
+
+                        if (diaconnG8HistoryRecord.dailyBasal > recordMap["basal"]!!) {
+                            recordMap["basal"] = diaconnG8HistoryRecord.dailyBasal
+                        } else {
+                            diaconnG8HistoryRecord.dailyBasal = recordMap["basal"]!!
+                        }
+
+                        if (recordMap["bolus"]!! > 0.0) {
+                            diaconnG8HistoryRecord.dailyBolus = recordMap["bolus"]!!
+                        }
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
+                        diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
+
+                        //If it is a TDD, store it for stats also.
+                        // pumpSync.createOrUpdateTotalDailyDose(
+                        //     timestamp = diaconnG8HistoryRecord.timestamp,
+                        //     bolusAmount = diaconnG8HistoryRecord.dailyBolus,
+                        //     basalAmount = diaconnG8HistoryRecord.dailyBasal,
+                        //     totalAmount = 0.0,
+                        //     pumpId = null,
+                        //     pumpType = PumpType.DIACONN_G8,
+                        //     diaconnG8Pump.serialNo.toString()
+                        // )
+
+
+                        status = "DAILYBASAL " + dateUtil.timeString(logDateTime)
+                    }
+
+                    LOG_CHANGE_NEEDLE_SUCCESS.LOG_KIND -> {
+                        val logItem = LOG_CHANGE_NEEDLE_SUCCESS.parse(logDataToHexString)
+                        aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
+                        val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
+                        val logDateTime = logStartDate.time
+                        if (sp.getBoolean(R.string.key_diaconn_g8_logneedlechange, true)) {
+                            val newRecord = pumpSync.insertTherapyEventIfNewWithTimestamp(
+                                timestamp = logDateTime,
+                                type = DetailedBolusInfo.EventType.CANNULA_CHANGE,
+                                pumpId = logDateTime,
+                                pumpType = PumpType.DIACONN_G8,
+                                pumpSerial = diaconnG8Pump.serialNo.toString()
+                            )
+                            aapsLogger.debug(LTag.PUMPCOMM, (if (newRecord) "**NEW** " else "") + "EVENT NEEDLECHANGE(" + pumplogKind + ") " + dateUtil.dateAndTimeString(logDateTime) + " (" + logDateTime + ")" + " Amount: " + logItem.remainAmount / 100.0 + "U")
+                        }
+
+                        diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_REFILL
+                        diaconnG8HistoryRecord.timestamp = logDateTime
+                        diaconnG8HistoryRecord.value = logItem.remainAmount / 100.0
+                        diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logneedleprime, logItem.primeAmount / 100.0)
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
+                        diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
+                        status = "NEEDLECHANGE " + dateUtil.timeString(logDateTime)
+                    }
+
+                    LOG_TB_START_V3.LOG_KIND -> {
+                        val logItem = LOG_TB_START_V3.parse(logDataToHexString)
+                        aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
+
+                        val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
+                        val logDateTime = logStartDate.time
+                        var absoluteRate = 0.0
+                        if (logItem.getTbInjectRateRatio() >= 50000) {
+                            val tempBasalPercent = logItem.getTbInjectRateRatio() - 50000
+                            absoluteRate = pumpDesc.pumpType.determineCorrectBasalSize(diaconnG8Pump.baseAmount * (tempBasalPercent / 100.0))
+                        }
+
+                        if (logItem.getTbInjectRateRatio() in 1000..2500) {
+                            absoluteRate = (logItem.getTbInjectRateRatio() - 1000) / 100.0
+                        }
+
+                        val temporaryBasalInfo = temporaryBasalStorage.findTemporaryBasal(logDateTime, absoluteRate)
+                        val newRecord = pumpSync.syncTemporaryBasalWithPumpId(
+                            timestamp = logDateTime,
+                            rate = absoluteRate,
+                            duration = T.mins((logItem.tbTime * 15).toLong()).msecs(),
+                            isAbsolute = true,
+                            type = temporaryBasalInfo?.type,
+                            pumpId = logDateTime,
+                            pumpType = PumpType.DIACONN_G8,
+                            pumpSerial = diaconnG8Pump.serialNo.toString())
+                        aapsLogger.debug(LTag.PUMPCOMM, (if (newRecord) "**NEW** " else "") + "EVENT TEMPSTART (" + pumplogKind + ") " + dateUtil.dateAndTimeString(logDateTime) + " (" + logDateTime + ")" + " Ratio: " + absoluteRate + "U Duration: " + logItem.tbTime * 15 + "min")
+
+                        diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_TB
+                        diaconnG8HistoryRecord.timestamp = logDateTime
+                        diaconnG8HistoryRecord.duration = logItem.tbTime * 15
+                        diaconnG8HistoryRecord.value = absoluteRate
+                        diaconnG8HistoryRecord.stringValue =  rh.gs(R.string.diaconn_g8_logtempstart)
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
+                        diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
+                        status = "TEMPSTART " + dateUtil.timeString(logDateTime)
+                    }
+
+                    LOG_TB_STOP_V3.LOG_KIND -> {
+                        val logItem = LOG_TB_STOP_V3.parse(logDataToHexString)
+                        aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
+                        val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
+                        val logDateTime = logStartDate.time
+                        var absoluteRate = 0.0
+                        if (logItem.getTbInjectRateRatio() >= 50000) {
+                            val tempBasalPercent = logItem.getTbInjectRateRatio() - 50000
+                            absoluteRate = diaconnG8Pump.baseAmount * (tempBasalPercent / 100.0)
+                        }
+                        if (logItem.getTbInjectRateRatio() in 1000..2500) {
+                            absoluteRate = (logItem.getTbInjectRateRatio() - 1000) / 100.0
+                        }
+
+                        val newRecord = pumpSync.syncStopTemporaryBasalWithPumpId(
+                            timestamp = logDateTime,
+                            endPumpId = dateUtil.now(),
+                            pumpType = PumpType.DIACONN_G8,
+                            pumpSerial = diaconnG8Pump.serialNo.toString())
+                        aapsLogger.debug(LTag.PUMPCOMM, (if (newRecord) "**NEW** " else "") + "EVENT TEMPSTOP (" + pumplogKind + ") " + dateUtil.dateAndTimeString(logDateTime) + " (" + logDateTime + ")")
+
+
+                        diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_TB
+                        diaconnG8HistoryRecord.timestamp = logDateTime
+                        diaconnG8HistoryRecord.value = absoluteRate
+                        diaconnG8HistoryRecord.stringValue = getReasonName(pumplogKind, logItem.reason)
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
+                        diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
+                        status = "TEMPSTOP " + dateUtil.timeString(logDateTime)
+                    }
+
+                    LOG_ALARM_BATTERY.LOG_KIND -> { // BATTERY SHORTAGE ALARM
+                        val logItem = LOG_ALARM_BATTERY.parse(logDataToHexString)
+                        aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
+                        val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
+                        val logDateTime = logStartDate.time
+
+                        diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_ALARM
+                        diaconnG8HistoryRecord.timestamp = logDateTime
+                        diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logbatteryshorage)
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
+                        diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
+                        status = "BATTERYALARM " + dateUtil.timeString(logDateTime)
+                    }
+
+                    LOG_ALARM_BLOCK.LOG_KIND -> { // INJECTION BLOCKED ALARM
+                        val logItem = LOG_ALARM_BLOCK.parse(logDataToHexString)
+                        aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
+
+                        val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
+                        val logDateTime = logStartDate.time
+
+                        diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_ALARM
+                        diaconnG8HistoryRecord.timestamp = logDateTime
+                        diaconnG8HistoryRecord.value = logItem.amount / 100.0
+                        diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logalarmblock, getReasonName(pumplogKind, logItem.reason))
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
+                        diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
+                        status = "BLOCKALARM " + dateUtil.timeString(logDateTime)
+                    }
+
+                    LOG_ALARM_SHORTAGE.LOG_KIND -> { // INSULIN SHORTAGE ALARM
+                        val logItem = LOG_ALARM_SHORTAGE.parse(logDataToHexString)
+                        aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
+
+                        val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
+                        val logDateTime = logStartDate.time
+
+                        diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_ALARM
+                        diaconnG8HistoryRecord.timestamp = logDateTime
+                        diaconnG8HistoryRecord.value = logItem.remain.toDouble()
+                        diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_loginsulinshorage)
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
+                        diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
+                        status = "SHORTAGEALARM " + dateUtil.timeString(logDateTime)
+                    }
+
+                    LOG_RESET_SYS_V3.LOG_KIND -> {
+                        val logItem = LOG_RESET_SYS_V3.parse(logDataToHexString)
+                        aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
+
+                        val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
+                        val logDateTime = logStartDate.time
+
+                        diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_ALARM
+                        diaconnG8HistoryRecord.timestamp = logDateTime
+                        diaconnG8HistoryRecord.stringValue = getReasonName(pumplogKind, logItem.reason)
+                        diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
+                        if (logItem.reason == 3.toByte()) {
+                            if (sp.getBoolean(R.string.key_diaconn_g8_logbatterychange, true)) {
+                                val newRecord = pumpSync.insertTherapyEventIfNewWithTimestamp(
+                                    timestamp = logDateTime,
+                                    type = DetailedBolusInfo.EventType.PUMP_BATTERY_CHANGE,
+                                    pumpId = logDateTime,
+                                    pumpType = PumpType.DIACONN_G8,
+                                    pumpSerial = diaconnG8Pump.serialNo.toString()
+                                )
+                                aapsLogger.debug(LTag.PUMPCOMM, (if (newRecord) "**NEW** " else "") + "EVENT BATTERYCHANGE(" + pumplogKind + ") " + dateUtil.dateAndTimeString(logDateTime) + " (" + logDateTime + ")" + " remainAmount: " + logItem.batteryRemain.toInt() + "%")
+                            }
+                        }
+                        status = "RESET " + dateUtil.timeString(logDateTime)
+                    }
+
+                    else       -> {
+                        status = rh.gs(R.string.diaconn_g8_logsyncinprogress)
+                        rxBus.send(EventPumpStatusChanged(status))
+                        continue
+                    }
+                }
+                rxBus.send(EventPumpStatusChanged(rh.gs(R.string.processinghistory) + ": " + status))
+            }
+
+        }
+
+        // 플랫폼 동기화이면,
+        if(diaconnG8Pump.isPlatformUploadStarted){
+            aapsLogger.debug(LTag.PUMPCOMM, "Diaconn api upload start!!")
+            var appUid:String = sp.getString(R.string.key_diaconn_g8_appuid, "")
+            if (appUid.isEmpty()) {
+                appUid = UUID.randomUUID().toString()
+                sp.putString(R.string.key_diaconn_g8_appuid, appUid)
+            }
+            //api send
+            val retrofit = diaconnLogUploader.getRetrofitInstance()
+            val api = retrofit?.create(DiaconnApiService::class.java)
+            val pumpLogDto = PumpLogDto(
+                app_uid = appUid,
+                app_version = context.packageManager.getPackageInfo(context.packageName, 0).versionName,
+                pump_uid = diaconnG8Pump.pumpUid,
+                pump_version = diaconnG8Pump.pumpVersion,
+                incarnation_num = diaconnG8Pump.pumpIncarnationNum,
+                pumplog_info = pumpLogs,
+            )
+            try {
+                api?.uploadPumpLogs(pumpLogDto)?.enqueue(
+                    object : retrofit2.Callback<ApiResponse> {
+                        override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
+                            if(response.body()?.ok == true) {
+                                aapsLogger.debug(LTag.PUMPCOMM, "logs upload Success")
+                            }
+                        }
+                        override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
+                            t.printStackTrace()
                         }
                     }
-                    status = "RESET " + dateUtil.timeString(logDateTime)
-                }
-
-                else       -> {
-                    status = rh.gs(R.string.diaconn_g8_logsyncinprogress)
-                    rxBus.send(EventPumpStatusChanged(status))
-                    continue
-                }
+                )
+            } catch(e: Exception) {
+                aapsLogger.error("Unhandled exception", e)
             }
-            rxBus.send(EventPumpStatusChanged(rh.gs(R.string.processinghistory) + ": " + status))
         }
     }
 
@@ -780,5 +916,4 @@ class BigLogInquireResponsePacket(
             else -> ""
         }
     }
-
 }
