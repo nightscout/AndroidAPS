@@ -5,13 +5,13 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.common.ManufacturerType
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.InstanceId.instanceId
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.InstanceId
+import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject
@@ -152,7 +152,7 @@ class MDIPlugin @Inject constructor(
 
     override fun manufacturer(): ManufacturerType = ManufacturerType.AndroidAPS
     override fun model(): PumpType = PumpType.MDI
-    override fun serialNumber(): String = instanceId()
+    override fun serialNumber(): String = InstanceId.instanceId
     override fun shortStatus(veryShort: Boolean): String = model().model
     override fun canHandleDST(): Boolean = true
 }

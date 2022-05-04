@@ -31,7 +31,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProv
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -65,9 +65,13 @@ class BolusWizard @Inject constructor(
 
     private val disposable = CompositeDisposable()
 
+    var timeStamp : Long
+
     init {
         injector.androidInjector().inject(this)
+        timeStamp = dateUtil.now()
     }
+
 
     // Intermediate
     var sens = 0.0
@@ -236,7 +240,7 @@ class BolusWizard @Inject constructor(
         // Total
         calculatedTotalInsulin = insulinFromBG + insulinFromTrend + insulinFromCarbs + insulinFromBolusIOB + insulinFromBasalIOB + insulinFromCorrection + insulinFromSuperBolus + insulinFromCOB
 
-        var percentage = if (usePercentage) totalPercentage else percentageCorrection.toDouble()
+        val percentage = if (usePercentage) totalPercentage else percentageCorrection.toDouble()
 
         // Percentage adjustment
         totalBeforePercentageAdjustment = calculatedTotalInsulin

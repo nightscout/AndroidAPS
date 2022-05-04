@@ -1,10 +1,13 @@
 package info.nightscout.androidaps.utils
 
-import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.installations.FirebaseInstallations
 
 object InstanceId {
-    fun instanceId(): String {
-        var id = FirebaseInstanceId.getInstance().id
-        return id
+    var instanceId : String = ""
+
+    init {
+        FirebaseInstallations.getInstance().id.addOnCompleteListener {
+            instanceId = it.result
+        }
     }
 }

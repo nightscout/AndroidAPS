@@ -5,7 +5,7 @@ import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.plugins.common.ManufacturerType
 import info.nightscout.androidaps.utils.Round
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import kotlin.math.min
 
 @Suppress("unused")

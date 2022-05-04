@@ -26,7 +26,7 @@ import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.HtmlHelper
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import org.json.JSONObject
 import java.text.DecimalFormat
 import javax.inject.Inject
@@ -231,7 +231,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             val val1 = profile1.getBasalTimeFromMidnight(hour * 60 * 60)
             val val2 = profile2.getBasalTimeFromMidnight(hour * 60 * 60)
             if (val1 != prev1 || val2 != prev2) {
-                s.append(formatColors(dateUtil.format_HH_MM(hour * 60 * 60), val1, val2, DecimalFormat("0.00"), " " + rh.gs(R.string.profile_ins_units_per_hour)))
+                s.append(formatColors(dateUtil.formatHHMM(hour * 60 * 60), val1, val2, DecimalFormat("0.00"), " " + rh.gs(R.string.profile_ins_units_per_hour)))
                 s.append("<br>")
             }
             prev1 = val1
@@ -254,7 +254,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             val val1 = profile1.getIcTimeFromMidnight(hour * 60 * 60)
             val val2 = profile2.getIcTimeFromMidnight(hour * 60 * 60)
             if (val1 != prev1 || val2 != prev2) {
-                s.append(formatColors(dateUtil.format_HH_MM(hour * 60 * 60), val1, val2, DecimalFormat("0.0"), " " + rh.gs(R.string.profile_carbs_per_unit)))
+                s.append(formatColors(dateUtil.formatHHMM(hour * 60 * 60), val1, val2, DecimalFormat("0.0"), " " + rh.gs(R.string.profile_carbs_per_unit)))
                 s.append("<br>")
             }
             prev1 = val1
@@ -272,7 +272,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             val val1 = Profile.fromMgdlToUnits(profile1.getIsfMgdlTimeFromMidnight(hour * 60 * 60), units)
             val val2 = Profile.fromMgdlToUnits(profile2.getIsfMgdlTimeFromMidnight(hour * 60 * 60), units)
             if (val1 != prev1 || val2 != prev2) {
-                s.append(formatColors(dateUtil.format_HH_MM(hour * 60 * 60), val1, val2, DecimalFormat("0.0"), units.asText + " " + rh.gs(R.string.profile_per_unit)))
+                s.append(formatColors(dateUtil.formatHHMM(hour * 60 * 60), val1, val2, DecimalFormat("0.0"), units.asText + " " + rh.gs(R.string.profile_per_unit)))
                 s.append("<br>")
             }
             prev1 = val1
@@ -293,8 +293,8 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             val val1h = profile1.getTargetHighMgdlTimeFromMidnight(hour * 60 * 60)
             val val2l = profile2.getTargetLowMgdlTimeFromMidnight(hour * 60 * 60)
             val val2h = profile2.getTargetHighMgdlTimeFromMidnight(hour * 60 * 60)
-            val txt1 = dateUtil.format_HH_MM(hour * 60 * 60) + " " + Profile.toUnitsString(val1l, val1l * Constants.MGDL_TO_MMOLL, units) + " - " + Profile.toUnitsString(val1h, val1h * Constants.MGDL_TO_MMOLL, units) + " " + units.asText
-            val txt2 = dateUtil.format_HH_MM(hour * 60 * 60) + " " + Profile.toUnitsString(val2l, val2l * Constants.MGDL_TO_MMOLL, units) + " - " + Profile.toUnitsString(val2h, val2h * Constants.MGDL_TO_MMOLL, units) + " " + units.asText
+            val txt1 = dateUtil.formatHHMM(hour * 60 * 60) + " " + Profile.toUnitsString(val1l, val1l * Constants.MGDL_TO_MMOLL, units) + " - " + Profile.toUnitsString(val1h, val1h * Constants.MGDL_TO_MMOLL, units) + " " + units.asText
+            val txt2 = dateUtil.formatHHMM(hour * 60 * 60) + " " + Profile.toUnitsString(val2l, val2l * Constants.MGDL_TO_MMOLL, units) + " - " + Profile.toUnitsString(val2h, val2h * Constants.MGDL_TO_MMOLL, units) + " " + units.asText
             if (val1l != prev1l || val1h != prev1h || val2l != prev2l || val2h != prev2h) {
                 s.append(formatColors(txt1, txt2))
                 s.append("<br>")

@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.events
 
-import info.nightscout.androidaps.utils.StringUtils
-
 class EventNetworkChange : Event() {
 
     var mobileConnected = false

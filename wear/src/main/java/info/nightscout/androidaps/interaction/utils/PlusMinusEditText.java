@@ -23,17 +23,16 @@ import java.util.concurrent.TimeUnit;
 public class PlusMinusEditText implements View.OnKeyListener,
         View.OnTouchListener, View.OnClickListener, View.OnGenericMotionListener {
 
-    Integer editTextID;
     public TextView editText;
     ImageView minusImage;
     ImageView plusImage;
 
     Double value;
-    Double minValue = 0d;
-    Double maxValue = 1d;
-    Double step = 1d;
+    Double minValue;
+    Double maxValue;
+    Double step;
     NumberFormat formatter;
-    boolean allowZero = false;
+    boolean allowZero;
     boolean roundRobin;
 
     private int mChangeCounter = 0;
@@ -50,14 +49,13 @@ public class PlusMinusEditText implements View.OnKeyListener,
         private int repeated = 0;
         private int multiplier = 1;
 
-        private final int doubleLimit = 5;
-
         public UpdateCounterTask(boolean inc) {
             mInc = inc;
         }
 
         public void run() {
             Message msg = new Message();
+            int doubleLimit = 5;
             if (repeated % doubleLimit == 0) multiplier *= 2;
             repeated++;
             msg.arg1 = multiplier;
@@ -123,10 +121,6 @@ public class PlusMinusEditText implements View.OnKeyListener,
 
     public Double getValue() {
         return value;
-    }
-
-    public void setStep(Double step) {
-        this.step = step;
     }
 
     private void inc(int multiplier) {

@@ -1211,6 +1211,7 @@
     <string name="show_hide_records">Hide loop records</string>
     <string name="widget_description">AndroidAPS widget</string>
     <string name="configure">Configure opacity</string>
+    <string name="loop_status">Loop status</string>
 
     <string name="a11y_otp_qr_code">QR Code for setup one time password</string>
     <string name="a11y_open_settings">open settings</string>

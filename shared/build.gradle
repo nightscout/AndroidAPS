@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-allopen'
 apply plugin: 'com.hiya.jacoco-android'
+apply plugin: 'kotlinx-serialization'
 
 apply from: "${project.rootDir}/gradle/android_dependencies.gradle"
 apply from: "${project.rootDir}/gradle/android_module_dependencies.gradle"
@@ -17,6 +18,7 @@ android {
 
 dependencies {
     api "androidx.preference:preference-ktx:$preferencektx_version"
+    api "net.danlew:android.joda:$joga_version"
 
     // for old fashioned support-app version (wear)
     api "com.google.dagger:dagger:$dagger_version"
@@ -28,6 +30,9 @@ dependencies {
     api("com.github.tony19:logback-android-classic:1.1.1-6") {
         exclude group: "com.google.android", module: "android"
     }
+
+    api "org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2"
+    api "org.apache.commons:commons-lang3:$commonslang3_version"
 
     //RxBus
     api "io.reactivex.rxjava3:rxjava:$rxjava_version"

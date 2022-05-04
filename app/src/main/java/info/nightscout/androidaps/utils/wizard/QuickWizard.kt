@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.utils.wizard
 
-import android.util.Log
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.shared.sharedPreferences.SP
@@ -9,6 +8,7 @@ import org.json.JSONObject
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.collections.ArrayList
 
 @Singleton
 class QuickWizard @Inject constructor(
@@ -55,6 +55,11 @@ class QuickWizard @Inject constructor(
     operator fun get(position: Int): QuickWizardEntry =
         QuickWizardEntry(injector).from(storage.get(position) as JSONObject, position)
 
+    fun list(): ArrayList<QuickWizardEntry> =
+        ArrayList<QuickWizardEntry>().also {
+            for (i in 0 until size()) it.add(get(i))
+        }
+
     fun get(guid: String): QuickWizardEntry? {
         for (i in 0 until storage.length()) {
             val entry = QuickWizardEntry(injector).from(storage.get(i) as JSONObject, i)
@@ -66,7 +71,7 @@ class QuickWizard @Inject constructor(
     }
 
     fun move(from: Int, to: Int) {
-        Log.i("QuickWizard", "moveItem: $from $to")
+        //Log.i("QuickWizard", "moveItem: $from $to")
         val fromEntry = storage[from] as JSONObject
         storage.remove(from)
         addToPos(to, fromEntry, storage)

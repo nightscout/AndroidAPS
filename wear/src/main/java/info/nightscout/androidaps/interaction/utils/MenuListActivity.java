@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.interaction.utils;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.wear.widget.CurvedTextView;
 import androidx.wear.widget.WearableLinearLayoutManager;
@@ -16,13 +16,22 @@ import androidx.wear.widget.WearableRecyclerView;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.android.DaggerActivity;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.shared.sharedPreferences.SP;
 
 /**
  * Created by adrian on 08/02/17.
  */
 
-public abstract class MenuListActivity extends Activity {
+public abstract class MenuListActivity extends DaggerActivity {
+
+    @Inject public RxBus rxBus;
+    @Inject public SP sp;
+
     List<MenuItem> elements;
 
     protected abstract List<MenuItem> getElements();
@@ -96,7 +105,7 @@ public abstract class MenuListActivity extends Activity {
             }
         }
 
-        @Override
+        @NonNull @Override
         public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
 

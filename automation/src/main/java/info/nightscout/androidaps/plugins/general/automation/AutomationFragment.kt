@@ -34,7 +34,7 @@ import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.dragHelpers.ItemTouchHelperAdapter
 import info.nightscout.androidaps.utils.dragHelpers.OnStartDragListener
 import info.nightscout.androidaps.utils.dragHelpers.SimpleItemTouchHelperCallback
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign

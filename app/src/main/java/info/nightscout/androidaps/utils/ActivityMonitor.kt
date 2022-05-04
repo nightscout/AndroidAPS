@@ -11,7 +11,7 @@ import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag

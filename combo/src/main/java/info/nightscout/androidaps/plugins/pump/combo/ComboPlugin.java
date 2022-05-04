@@ -61,7 +61,7 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.InstanceId;
 import info.nightscout.androidaps.utils.T;
-import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.interfaces.ResourceHelper;
 import info.nightscout.shared.logging.AAPSLogger;
 import info.nightscout.shared.logging.LTag;
 import info.nightscout.shared.sharedPreferences.SP;
@@ -1343,7 +1343,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
     }
 
     private String fakeSerialNumber() {
-        return InstanceId.INSTANCE.instanceId();
+        return InstanceId.INSTANCE.getInstanceId();
     }
 
     @NonNull @Override

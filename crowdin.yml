@@ -13,6 +13,8 @@ files:
     translation: /core/src/main/res/values-%android_code%/validator.xml
   - source: /core/src/main/res/values/strings.xml
     translation: /core/src/main/res/values-%android_code%/strings.xml
+  - source: /shared/src/main/res/values/strings.xml
+    translation: /shared/src/main/res/values-%android_code%/strings.xml
   - source: /combo/src/main/res/values/strings.xml
     translation: /combo/src/main/res/values-%android_code%/strings.xml
   - source: /dana/src/main/res/values/strings.xml

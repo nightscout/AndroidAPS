@@ -23,8 +23,7 @@ apply from: "${project.rootDir}/gradle/jacoco_global.gradle"
 
 ext {
     wearableVersion = "2.9.0"
-    // playServicesWearable 17.1.0 breaks test
-    playServicesWearable = "17.0.0"
+    playServicesWearable = "17.1.0"
 }
 
 def generateGitBuild = { ->
@@ -52,7 +51,6 @@ android {
     compileSdkVersion 31
 
     defaultConfig {
-        applicationId "info.nightscout.androidaps"
         minSdkVersion 23
         targetSdkVersion 29
         versionCode 2
@@ -98,12 +96,12 @@ dependencies {
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-    implementation "androidx.core:core-ktx:$core_version"
     implementation "androidx.appcompat:appcompat:$appcompat_version"
-    implementation "androidx.preference:preference-ktx:$preferencektx_version"
+    implementation "androidx.core:core-ktx:$core_version"
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation "androidx.preference:preference-ktx:$preferencektx_version"
     implementation 'androidx.wear:wear:1.2.0'
+    implementation "androidx.wear.tiles:tiles:1.0.1"
 
     compileOnly "com.google.android.wearable:wearable:${wearableVersion}"
     implementation "com.google.android.support:wearable:${wearableVersion}"
@@ -112,10 +110,10 @@ dependencies {
     implementation(files('libs/wearpreferenceactivity-0.5.0.aar'))
     implementation('com.github.lecho:hellocharts-library:1.5.8@aar')
 
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.6.1'
-    implementation "androidx.core:core-ktx:$core_version"
-    implementation "androidx.wear.tiles:tiles:1.0.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-guava:$coroutines_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$coroutines_version"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
     // for old fashioned support-app version
