@@ -302,6 +302,7 @@
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
                 android:text="@string/activate_profile"
+                android:visibility="gone"
                 app:icon="@drawable/ic_local_activate"
                 app:iconTint="@color/ic_local_activate" />
 
@@ -323,6 +324,7 @@
                     android:paddingStart="1dp"
                     android:paddingEnd="1dp"
                     android:text="@string/reset"
+                    android:visibility="gone"
                     app:icon="@drawable/ic_local_reset"
                     app:iconTint="@color/ic_local_reset" />
 
@@ -338,6 +340,7 @@
                     android:paddingStart="1dp"
                     android:paddingEnd="1dp"
                     android:text="@string/save"
+                    android:visibility="gone"
                     app:icon="@drawable/ic_local_save"
                     app:iconTint="@color/ic_local_save" />
             </LinearLayout>

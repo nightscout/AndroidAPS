@@ -10,6 +10,7 @@
     <string name="key_diaconn_g8_logbatterychange" translatable="false">diaconn_g8_logbatterychanges</string>
     <string name="key_diaconn_g8_loginsulinchange" translatable="false">diaconn_g8_loginsulinchange</string>
     <string name="key_diaconn_g8_logneedlechange" translatable="false">diaconn_g8_logneedlechange</string>
+    <string name="key_diaconn_g8_cloudsend" translatable="false">diaconn_g8_cloudsend</string>
 
     <string name="resetpairing" >Reset Pairing</string>
     <string name="diaconn_nodeviceavailable" >No Device available</string>
@@ -166,5 +167,7 @@
     <string name="diaconn_g8_errorcode_34">LGS status is OFF, OFF Command is declined.</string>
     <string name="diaconn_g8_errorcode_35">Tempbasal start is rejected  when tempbasal is running</string>
     <string name="diaconn_g8_errorcode_36">Tempbasal stop is rejected  when tempbasal is not running</string>
-
+    <string name="diaconn_g8_cloudsend_summary">Send pump logs to the Diaconn Cloud.</string>
+    <string name="diaconn_g8_cloudsend_title">Diaconn Cloud Sync</string>
+    <string name="key_diaconn_g8_appuid" translatable="false">diaconn_g8_appuid</string>
 </resources>

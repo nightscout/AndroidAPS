@@ -561,7 +561,6 @@
     <string name="shortenergy">En</string>
     <string name="shortprotein">Pr</string>
     <string name="shortfat">Fat</string>
-    <string name="active"><![CDATA[<Active>]]></string>
     <string name="executingrightnow">Command is executed right now</string>
     <string name="missed_bg_readings">Missed BG readings</string>
     <string name="key_raise_notifications_as_android_notifications" translatable="false">raise_urgent_alarms_as_android_notification</string>
