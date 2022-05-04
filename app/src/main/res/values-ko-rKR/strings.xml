@@ -455,7 +455,6 @@
     <string name="shortenergy">En</string>
     <string name="shortprotein">단백질</string>
     <string name="shortfat">지방</string>
-    <string name="active"><![CDATA[<Active>]]></string>
     <string name="executingrightnow">명령을 지금 실행합니다.</string>
     <string name="missed_bg_readings">혈당 읽기가 누락되었습니다.</string>
     <string name="raise_notifications_as_android_notifications">경고와 알림시 시스템 알림 사용하기</string>
