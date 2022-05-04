@@ -468,7 +468,6 @@
     <string name="shortenergy">Enr</string>
     <string name="shortprotein">Prt</string>
     <string name="shortfat">Grs</string>
-    <string name="active"><![CDATA[<Active>]]></string>
     <string name="executingrightnow">Il comando sarà eseguito ora</string>
     <string name="missed_bg_readings">Letture BG mancanti</string>
     <string name="raise_notifications_as_android_notifications">Usa le notifiche di sistema per gli avvisi</string>
