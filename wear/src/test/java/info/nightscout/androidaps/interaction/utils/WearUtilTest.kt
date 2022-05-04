@@ -122,26 +122,4 @@ class WearUtilTest : TestBase() {
         Assert.assertFalse(callTooSoon)
         Assert.assertTrue(callAfterRateLimit)
     }
-
-    /**
-     * It tests if mock for bundleToDataMap is sane,
-     * because original impl. of bundleToDataMap
-     * uses DataMap.fromBundle which need Android SDK runtime
-     */
-    @Test
-    fun bundleToDataMapTest() {
-        // GIVEN
-        val refMap = DataMap()
-        refMap.putString("ala", "ma kota")
-        refMap.putInt("why", 42)
-        refMap.putFloatArray("list", floatArrayOf(0.45f, 3.2f, 6.8f))
-
-        // WHEN
-        wearUtilMocker.prepareMockNoReal()
-        val bundle = BundleMock.mock(refMap)
-        val gotMap = wearUtil.bundleToDataMap(bundle)
-
-        // THEN
-        Assert.assertEquals(gotMap, refMap)
-    }
 }
