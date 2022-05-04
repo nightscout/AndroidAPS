@@ -1,12 +1,15 @@
 package info.nightscout.androidaps.diaconn.packet
 
-import android.app.Application
 import android.content.Context
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.diaconn.DiaconnG8Pump
 import info.nightscout.androidaps.diaconn.R
-import info.nightscout.androidaps.diaconn.api.*
+import info.nightscout.androidaps.diaconn.api.ApiResponse
+import info.nightscout.androidaps.diaconn.api.DiaconnApiService
+import info.nightscout.androidaps.diaconn.api.DiaconnLogUploader
+import info.nightscout.androidaps.diaconn.api.PumpLog
+import info.nightscout.androidaps.diaconn.api.PumpLogDto
 import info.nightscout.androidaps.diaconn.common.RecordTypes
 import info.nightscout.androidaps.diaconn.database.DiaconnHistoryRecord
 import info.nightscout.androidaps.diaconn.database.DiaconnHistoryRecordDao
@@ -15,19 +18,18 @@ import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.TemporaryBasalStorage
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import org.apache.commons.lang3.time.DateUtils
 import org.joda.time.DateTime
 import retrofit2.Call
 import retrofit2.Response
-import java.lang.Exception
 import java.util.*
 import javax.inject.Inject
 
@@ -118,8 +120,6 @@ class BigLogInquireResponsePacket(
                 // APS Local history sync start
                 diaconnG8Pump.apsWrappingCount = wrapingCount
                 diaconnG8Pump.apslastLogNum  = logNum
-                sp.putInt(rh.gs(R.string.apslastLogNum), logNum)
-                sp.putInt(rh.gs(R.string.apsWrappingCount), wrapingCount)
 
                 when(pumplogKind) {
 
@@ -143,6 +143,9 @@ class BigLogInquireResponsePacket(
                         diaconnG8HistoryRecord.duration =  logItem.getInjectTime()
                         diaconnG8HistoryRecord.bolusType = "M" // meal bolus
                         diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logmealsuccess)
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
                         diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
                         if (!newRecord && detailedBolusInfo != null) {
                             // detailedInfo can be from another similar record. Reinsert
@@ -171,6 +174,9 @@ class BigLogInquireResponsePacket(
                         diaconnG8HistoryRecord.duration = logItem.getInjectTime()
                         diaconnG8HistoryRecord.bolusType = "M" // Meal bolus
                         diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logmealfail)
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
                         diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
                         if (!newRecord && detailedBolusInfo != null) {
                             // detailedInfo can be from another similar record. Reinsert
@@ -200,6 +206,9 @@ class BigLogInquireResponsePacket(
                         diaconnG8HistoryRecord.duration = logItem.getInjectTime()
                         diaconnG8HistoryRecord.bolusType = "B" // bolus
                         diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logsuccess)
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
                         diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
                         if (!newRecord && detailedBolusInfo != null) {
                             // detailedInfo can be from another similar record. Reinsert
@@ -231,6 +240,9 @@ class BigLogInquireResponsePacket(
                         diaconnG8HistoryRecord.duration = logItem.getInjectTime()
                         diaconnG8HistoryRecord.bolusType = "B" // bolus
                         diaconnG8HistoryRecord.stringValue = getReasonName(pumplogKind, logItem.reason)
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
                         diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
                         if (!newRecord && detailedBolusInfo != null) {
                             // detailedInfo can be from another similar record. Reinsert
@@ -259,6 +271,9 @@ class BigLogInquireResponsePacket(
                         diaconnG8HistoryRecord.duration = logItem.getInjectTime()
                         diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logsquarestart)
                         diaconnG8HistoryRecord.bolusType = "E" // Extended
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
                         diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
                         status = "EXTENDEDBOLUSSTART " + dateUtil.timeString(logDateTime)
                     }
@@ -273,6 +288,9 @@ class BigLogInquireResponsePacket(
                         diaconnG8HistoryRecord.duration = logItem.getInjectTime()
                         diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logsquaresuccess)
                         diaconnG8HistoryRecord.bolusType = "E" // Extended
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
                         diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
                         status = "EXTENDEDBOLUSEND " + dateUtil.timeString(logDateTime)
                     }
@@ -294,6 +312,9 @@ class BigLogInquireResponsePacket(
                         diaconnG8HistoryRecord.duration = logItem.getInjectTime()
                         diaconnG8HistoryRecord.stringValue = getReasonName(pumplogKind, logItem.reason)
                         diaconnG8HistoryRecord.bolusType = "E"
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
                         diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
                         status = "EXTENDEDBOLUSFAIL " + dateUtil.timeString(logDateTime)
                     }
@@ -320,6 +341,9 @@ class BigLogInquireResponsePacket(
                         diaconnG8HistoryRecord.duration = logItem.getInjectTime() * 10 // (1~30) 1:10min 30:300min
                         diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logdualsquarestart)
                         diaconnG8HistoryRecord.bolusType = "D" // Extended
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
                         diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
 
                         status = "DUALEXTENTEDSTART " + dateUtil.timeString(logDateTime)
@@ -350,6 +374,9 @@ class BigLogInquireResponsePacket(
                         diaconnG8HistoryRecord.duration = logItem.getInjectTime()
                         diaconnG8HistoryRecord.bolusType = "D" // bolus
                         diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logdualnormalsuccess)
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
                         diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
                         if (!newRecord && detailedBolusInfo != null) {
                             // detailedInfo can be from another similar record. Reinsert
@@ -370,6 +397,9 @@ class BigLogInquireResponsePacket(
                         diaconnG8HistoryRecord.duration = logItem.getInjectTime()
                         diaconnG8HistoryRecord.bolusType = "D"
                         diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logdualsquaresuccess)
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
                         diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
                         status = "DUALBOLUS SQUARESUCCESS " + dateUtil.timeString(logDateTime)
                     }
@@ -392,6 +422,9 @@ class BigLogInquireResponsePacket(
                         diaconnG8HistoryRecord.duration = logItem.getInjectTime()
                         diaconnG8HistoryRecord.bolusType = "D"
                         diaconnG8HistoryRecord.stringValue = getReasonName(pumplogKind, logItem.reason)
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
                         diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
                         status = "DUALBOLUS FAIL " + dateUtil.timeString(logDateTime)
                     }
@@ -405,6 +438,9 @@ class BigLogInquireResponsePacket(
                         diaconnG8HistoryRecord.timestamp = logDateTime
                         diaconnG8HistoryRecord.value = logItem.beforeAmount / 100.0
                         diaconnG8HistoryRecord.stringValue = "TB before: ${logItem.beforeAmount / 100.0} / TB after: ${logItem.afterAmount / 100.0}"
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
                         diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
                         status = "1HOUR BASAL " + dateUtil.dateAndTimeString(logDateTime)
                     }
@@ -417,6 +453,9 @@ class BigLogInquireResponsePacket(
                         diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_SUSPEND
                         diaconnG8HistoryRecord.timestamp = logDateTime
                         diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_lgosuspend, logItem.getBasalPattern())
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
                         diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
                         status = "SUSPEND " + dateUtil.timeString(logDateTime)
                     }
@@ -429,6 +468,9 @@ class BigLogInquireResponsePacket(
                         diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_SUSPEND
                         diaconnG8HistoryRecord.timestamp = logDateTime
                         diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_lgorelease, logItem.getBasalPattern())
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
                         diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
                         status = "SUSPENDRELEASE " + dateUtil.timeString(logDateTime)
                     }
@@ -452,6 +494,9 @@ class BigLogInquireResponsePacket(
                         diaconnG8HistoryRecord.timestamp = logDateTime
                         diaconnG8HistoryRecord.value = logItem.remainAmount / 100.0
                         diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_loginjectorprime, logItem.primeAmount / 100.0)
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
                         diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
                         status = "INSULINCHANGE " + dateUtil.timeString(logDateTime)
                     }
@@ -478,6 +523,9 @@ class BigLogInquireResponsePacket(
                         diaconnG8HistoryRecord.timestamp = logDateTime
                         diaconnG8HistoryRecord.value = logItem.remainAmount / 100.0
                         diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logtubeprime, logItem.primeAmount / 100.0)
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
                         diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
                         status = "TUBECHANGE " + dateUtil.timeString(logDateTime)
                     }
@@ -512,7 +560,9 @@ class BigLogInquireResponsePacket(
                         if (recordMap["basal"]!! > 0.0) {
                             diaconnG8HistoryRecord.dailyBasal = recordMap["basal"]!!
                         }
-
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
                         diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
 
                         //If it is a TDD, store it for stats also.
@@ -559,7 +609,9 @@ class BigLogInquireResponsePacket(
                         if (recordMap["bolus"]!! > 0.0) {
                             diaconnG8HistoryRecord.dailyBolus = recordMap["bolus"]!!
                         }
-
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
                         diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
 
                         //If it is a TDD, store it for stats also.
@@ -597,6 +649,9 @@ class BigLogInquireResponsePacket(
                         diaconnG8HistoryRecord.timestamp = logDateTime
                         diaconnG8HistoryRecord.value = logItem.remainAmount / 100.0
                         diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logneedleprime, logItem.primeAmount / 100.0)
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
                         diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
                         status = "NEEDLECHANGE " + dateUtil.timeString(logDateTime)
                     }
@@ -634,6 +689,9 @@ class BigLogInquireResponsePacket(
                         diaconnG8HistoryRecord.duration = logItem.tbTime * 15
                         diaconnG8HistoryRecord.value = absoluteRate
                         diaconnG8HistoryRecord.stringValue =  rh.gs(R.string.diaconn_g8_logtempstart)
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
                         diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
                         status = "TEMPSTART " + dateUtil.timeString(logDateTime)
                     }
@@ -664,6 +722,9 @@ class BigLogInquireResponsePacket(
                         diaconnG8HistoryRecord.timestamp = logDateTime
                         diaconnG8HistoryRecord.value = absoluteRate
                         diaconnG8HistoryRecord.stringValue = getReasonName(pumplogKind, logItem.reason)
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
                         diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
                         status = "TEMPSTOP " + dateUtil.timeString(logDateTime)
                     }
@@ -677,6 +738,9 @@ class BigLogInquireResponsePacket(
                         diaconnG8HistoryRecord.code = RecordTypes.RECORD_TYPE_ALARM
                         diaconnG8HistoryRecord.timestamp = logDateTime
                         diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logbatteryshorage)
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
                         diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
                         status = "BATTERYALARM " + dateUtil.timeString(logDateTime)
                     }
@@ -692,6 +756,9 @@ class BigLogInquireResponsePacket(
                         diaconnG8HistoryRecord.timestamp = logDateTime
                         diaconnG8HistoryRecord.value = logItem.amount / 100.0
                         diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_logalarmblock, getReasonName(pumplogKind, logItem.reason))
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
                         diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
                         status = "BLOCKALARM " + dateUtil.timeString(logDateTime)
                     }
@@ -707,6 +774,9 @@ class BigLogInquireResponsePacket(
                         diaconnG8HistoryRecord.timestamp = logDateTime
                         diaconnG8HistoryRecord.value = logItem.remain.toDouble()
                         diaconnG8HistoryRecord.stringValue = rh.gs(R.string.diaconn_g8_loginsulinshorage)
+                        diaconnG8HistoryRecord.lognum = logNum
+                        diaconnG8HistoryRecord.wrappingCount = wrapingCount
+                        diaconnG8HistoryRecord.pumpUid = diaconnG8Pump.pumpUid
                         diaconnHistoryRecordDao.createOrUpdate(diaconnG8HistoryRecord)
                         status = "SHORTAGEALARM " + dateUtil.timeString(logDateTime)
                     }

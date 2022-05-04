@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "698b023da2f9efdc0351236c43eb20b6",
+    "identityHash": "d604d25c3edbdf18cc5a39121cf5a779",
     "entities": [
       {
         "tableName": "diaconnHistory",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`timestamp` INTEGER NOT NULL, `code` INTEGER NOT NULL, `value` REAL NOT NULL, `bolusType` TEXT NOT NULL, `stringValue` TEXT NOT NULL, `duration` INTEGER NOT NULL, `dailyBasal` REAL NOT NULL, `dailyBolus` REAL NOT NULL, `alarm` TEXT NOT NULL, PRIMARY KEY(`timestamp`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`timestamp` INTEGER NOT NULL, `code` INTEGER NOT NULL, `value` REAL NOT NULL, `bolusType` TEXT NOT NULL, `stringValue` TEXT NOT NULL, `duration` INTEGER NOT NULL, `dailyBasal` REAL NOT NULL, `dailyBolus` REAL NOT NULL, `alarm` TEXT NOT NULL, `lognum` INTEGER NOT NULL, `wrappingCount` INTEGER NOT NULL, `pumpUid` TEXT NOT NULL, PRIMARY KEY(`timestamp`))",
         "fields": [
           {
             "fieldPath": "timestamp",
@@ -61,6 +61,24 @@
             "columnName": "alarm",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "lognum",
+            "columnName": "lognum",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "wrappingCount",
+            "columnName": "wrappingCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pumpUid",
+            "columnName": "pumpUid",
+            "affinity": "TEXT",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -77,6 +95,7 @@
               "code",
               "timestamp"
             ],
+            "orders": [],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_diaconnHistory_code_timestamp` ON `${TABLE_NAME}` (`code`, `timestamp`)"
           }
         ],
@@ -86,7 +105,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '698b023da2f9efdc0351236c43eb20b6')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd604d25c3edbdf18cc5a39121cf5a779')"
     ]
   }
 }

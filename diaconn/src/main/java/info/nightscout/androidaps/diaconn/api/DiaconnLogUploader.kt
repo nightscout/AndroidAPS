@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.diaconn.api
 
-import android.content.Context
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import retrofit2.Retrofit
@@ -21,7 +19,7 @@ class DiaconnLogUploader @Inject constructor (
     private var retrofit: Retrofit? = null
 
     fun getRetrofitInstance(): Retrofit? {
-        //aapsLogger.debug(LTag.PUMPCOMM, "Diaconn pump logs upload BASE_URL : $BASE_URL")
+        aapsLogger.debug(LTag.PUMPCOMM, "diaconn pump logs upload instance")
         if (retrofit == null) {
             retrofit = Retrofit.Builder()
                 .baseUrl(BASE_URL)
