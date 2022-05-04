@@ -132,33 +132,6 @@
     <string name="ble_not_enabled">Bluetooth etkin değil.</string>
     <string name="location_not_found_title">Konum Etkin Değil</string>
     <string name="location_not_found_message">Bluetooth cihaz bulmanın daha yeni cihazlarda çalışması için konum etkinleştirilmelidir. AAPS konumunuzu izlemez ve eşleştirme başarılı olduktan sonra devre dışı bırakılabilir.</string>
-    <!--    DateUtil-->
-    <string name="minago">%1$d dak önce</string>
-    <string name="minago_long">%1$d dakika önce</string>
-    <string name="hoursago">%1$.1f s önce</string>
-    <string name="days_ago">%1$.1f gün önce</string>
-    <string name="days_ago_round">%1$.0f gün önce</string>
-    <string name="in_days">%1$.0f gün içinde</string>
-    <string name="in_days_round">%1$.0f gün içinde</string>
-    <string name="shorthour">s</string>
-    <string name="days">gün</string>
-    <string name="hours">saat</string>
-    <string name="unit_second">saniye</string>
-    <string name="unit_minute">dakika</string>
-    <string name="unit_hour">saat</string>
-    <string name="unit_day">gün</string>
-    <string name="unit_week">hafta</string>
-    <string name="unit_seconds">saniye</string>
-    <string name="unit_minutes">dakika</string>
-    <string name="unit_hours">saat</string>
-    <string name="unit_days">gün</string>
-    <string name="unit_weeks">hafta</string>
-    <string name="shortminute">dk</string>
-    <string name="shortday">g</string>
-    <string name="later_today">Bugünden sonra</string>
-    <string name="tomorrow">Yarın</string>
-    <string name="today">Bugün</string>
-    <string name="yesterday">Dün</string>
     <!--    Protection-->
     <string name="wrongpassword">Hatalı parola</string>
     <string name="wrongpin">Yanlış PIN</string>
@@ -467,6 +440,7 @@
     <string name="remove_selected_items">Seçilen öğeleri kaldır</string>
     <string name="a11y_file">dosya</string>
     <string name="a11y_user">kullanıcı</string>
+    <!-- Autotune -->
     <plurals name="days">
         <item quantity="one">%1$d gün</item>
         <item quantity="other">%1$d gün</item>
