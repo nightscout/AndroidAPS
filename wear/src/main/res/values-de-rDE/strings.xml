@@ -2,15 +2,6 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_xdrip">AAPS</string>
-    <string name="label_xdrip_large">AAPS(groß)</string>
-    <string name="label_xdrip_big_chart">AAPS(GroßerGraph)</string>
-    <string name="label_xdrip_no_chart">AAPS(KeinGraph)</string>
-    <string name="label_xdrip_circle">AAPS(Kreis)</string>
-    <string name="label_xdrip_v2">AAPSv2</string>
-    <string name="label_xdrip_cockpit">AAPS(Cockpit)</string>
-    <string name="label_xdrip_steampunk">AAPS(Steampunk)</string>
-    <string name="label_digitalstyle">AAPS(DigitalStyle)</string>
     <string name="label_warning_sync">Keine Daten!</string>
     <string name="label_warning_old">Veraltete Daten!</string>
     <string name="label_warning_since">Seit %1$s</string>
@@ -59,7 +50,6 @@
     <string name="pref_complication_tap_action">Tipp Komplikation</string>
     <string name="pref_unicode_in_complications">Unicode in Komplikationen</string>
     <string name="pref_version">Version:</string>
-    <string name="pref_moreWatchfaceSettings">weitere Watchface Einstellungen</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Schaue Dir bitte die Watchface-Konfiguration an.</string>
     <string name="menu_tempt">Temp. Ziel</string>
     <string name="menu_bolus">Bolus</string>
@@ -81,7 +71,6 @@
     <string name="cancel_bolus">Bolus löschen </string>
     <string name="status_pump">Pumpe</string>
     <string name="status_loop">Loop</string>
-    <string name="status_cpp">CPP</string>
     <string name="status_tdd">TDD</string>
     <string name="activity_carb">KH</string>
     <string name="activity_IOB">IOB</string>
