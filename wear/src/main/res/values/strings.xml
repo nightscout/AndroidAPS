@@ -4,15 +4,15 @@
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
 
-    <string name="label_xdrip">AAPS</string>
-    <string name="label_xdrip_large">AAPS(Large)</string>
-    <string name="label_xdrip_big_chart">AAPS(BigChart)</string>
-    <string name="label_xdrip_no_chart">AAPS(NoChart)</string>
-    <string name="label_xdrip_circle">AAPS(Circle)</string>
-    <string name="label_xdrip_v2">AAPSv2</string>
-    <string name="label_xdrip_cockpit">AAPS(Cockpit)</string>
-    <string name="label_xdrip_steampunk">AAPS(Steampunk)</string>
-    <string name="label_digitalstyle">AAPS(DigitalStyle)</string>
+    <string name="label_watchface">AAPS</string>
+    <string name="label_watchface_large">AAPS(Large)</string>
+    <string name="label_watchface_big_chart">AAPS(BigChart)</string>
+    <string name="label_watchface_no_chart">AAPS(NoChart)</string>
+    <string name="label_watchface_circle">AAPS(Circle)</string>
+    <string name="label_watchface_v2">AAPS(v2)</string>
+    <string name="label_watchface_cockpit">AAPS(Cockpit)</string>
+    <string name="label_watchface_steampunk">AAPS(Steampunk)</string>
+    <string name="label_watchface_digital_style">AAPS(DigitalStyle)</string>
 
     <string name="label_actions_tile">AAPS(Actions)</string>
     <string name="label_temp_target_tile">AAPS(Temp Target)</string>
@@ -70,7 +70,7 @@
     <string name="pref_complication_tap_action">Complication Tap Action</string>
     <string name="pref_unicode_in_complications">Unicode in Complications</string>
     <string name="pref_version">Version:</string>
-    <string name="pref_moreWatchfaceSettings">more Watchface settings</string>
+    <string name="pref_moreWatchfaceSettings">More Watchface settings</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Look into Watchface configuration, please.</string>
 
     <string name="menu_tempt">TempT</string>
@@ -98,7 +98,7 @@
     <string name="action_wizard_confirmation">Calculation Requested</string>
     <string name="action_fill_confirmation">Fill Requested</string>
     <string name="action_ecarb_confirmation">Carbs Requested</string>
-    <string name="action_cpp_confirmation">CPP Requested</string>
+    <string name="action_profile_switch_confirmation">Profile Switch Requested</string>
     <string name="action_target" comment="In temp target menu, single target value">Target</string>
     <string name="action_low" comment="In temp target menu, lower value from range">Low</string>
     <string name="action_high" comment="In temp target menu, higher value from range">High</string>
@@ -122,7 +122,7 @@
 
     <string name="status_pump">Pump</string>
     <string name="status_loop">Loop</string>
-    <string name="status_cpp">CPP</string>
+    <string name="status_profile_switch">Profile switch</string>
     <string name="status_tdd">TDD</string>
 
     <string name="activity_carb">Carb</string>
@@ -170,12 +170,6 @@
     <string name="bolus_progress_silent_channel_name">AAPS Bolus Progress Silent</string>
     <string name="bolus_progress_channel_description">Bolus progress and cancel</string>
     <string name="bolus_progress_silent_channel_description">Bolus progress and cancel with less vibrations</string>
-    <string name="key_quickwizard" translatable="false">QuickWizard</string>
-    <string name="key_wear_control" translatable="false">wearcontrol</string>
-    <string name="key_units_mgdl" translatable="false">units_mgdl</string>
-    <string name="key_boluswizard_percentage" translatable="false">boluswizard_percentage</string>
-    <string name="key_treatmentssafety_maxcarbs" translatable="false">treatmentssafety_maxcarbs</string>
-    <string name="key_treatmentssafety_maxbolus" translatable="false">treatmentssafety_maxbolus</string>
     <string name="simple_ui_off">Off</string>
     <string name="simple_ui_charging">During Charging</string>
     <string name="simple_ui_always_on">Always On Mode</string>
@@ -189,6 +183,29 @@
     <string name="tile_no_config">No config available</string>
     <string name="wear_control_not_enabled">Wear controls disabled</string>
     <string name="wear_control_no_data">No data available</string>
-    <string name="key_quick_wizard_data_map" translatable="false">quick_wizard_data_map</string>
+
+    <string name="key_quickwizard" translatable="false">QuickWizard</string>
+    <string name="key_wear_control" translatable="false">wearcontrol</string>
+    <string name="key_units_mgdl" translatable="false">units_mgdl</string>
+    <string name="key_bolus_wizard_percentage" translatable="false">boluswizard_percentage</string>
+    <string name="key_treatments_safety_max_carbs" translatable="false">treatmentssafety_maxcarbs</string>
+    <string name="key_treatments_safety_max_bolus" translatable="false">treatmentssafety_maxbolus</string>
+    <string name="key_quick_wizard_data" translatable="false">quick_wizard_data</string>
+    <string name="key_prime_fill" translatable="false">primefill</string>
+    <string name="key_show_wizard" translatable="false">showWizard</string>
+    <string name="key_single_target" translatable="false">singletarget</string>
+    <string name="key_wizard_percentage" translatable="false">wizardpercentage</string>
+    <string name="key_highlight_basals" translatable="false">highlight_basals</string>
+    <string name="key_chart_time_frame" translatable="false">chart_time_frame</string>
+    <string name="key_show_week_number" translatable="false">show_week_number</string>
+    <string name="key_show_date" translatable="false">show_date</string>
+    <string name="key_show_cob" translatable="false">show_cob</string>
+    <string name="key_show_bg" translatable="false">showBG</string>
+    <string name="key_show_external_status" translatable="false">showExternalStatus</string>
+    <string name="key_show_ago" translatable="false">showAgo</string>
+    <string name="key_show_big_numbers" translatable="false">showBigNumbers</string>
+    <string name="key_show_delta" translatable="false">showDelta</string>
+    <string name="key_show_avg_delta" translatable="false">showAvgDelta</string>
+    <string name="key_show_ring_history" translatable="false">showRingHistory</string>
 
 </resources>
