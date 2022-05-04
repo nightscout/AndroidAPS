@@ -468,7 +468,6 @@
     <string name="shortenergy">En</string>
     <string name="shortprotein">Pr</string>
     <string name="shortfat">Grasa</string>
-    <string name="active"><![CDATA[<Activo>]]></string>
     <string name="executingrightnow">Orden se esta efectuando en este momento</string>
     <string name="missed_bg_readings">Faltan lecturas de glucosa</string>
     <string name="raise_notifications_as_android_notifications">Usa las notificaciones del sistema para las alarmas y las notificaciones</string>
