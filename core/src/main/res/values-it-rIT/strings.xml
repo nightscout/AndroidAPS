@@ -132,33 +132,6 @@
     <string name="ble_not_enabled">Bluetooth non abilitato.</string>
     <string name="location_not_found_title">La localizzazione non è abilitata</string>
     <string name="location_not_found_message">Affinché la ricerca bluetooth funzioni sui dispositivi più recenti, la localizzazione deve essere abilitata, ma può essere disabilitata dopo l\'associazione. AAPS non tiene traccia della tua posizione.</string>
-    <!--    DateUtil-->
-    <string name="minago">%1$d m fa</string>
-    <string name="minago_long">%1$d minuti fa</string>
-    <string name="hoursago">%1$.1f h fa</string>
-    <string name="days_ago">%1$.1f giorni fa</string>
-    <string name="days_ago_round">%1$.0f giorni fa</string>
-    <string name="in_days">in %1$.0f giorni</string>
-    <string name="in_days_round">in %1$.0f giorni</string>
-    <string name="shorthour">h</string>
-    <string name="days">giorni</string>
-    <string name="hours">ore</string>
-    <string name="unit_second">secondo</string>
-    <string name="unit_minute">minuto</string>
-    <string name="unit_hour">ora</string>
-    <string name="unit_day">giorno</string>
-    <string name="unit_week">settimana</string>
-    <string name="unit_seconds">secondi</string>
-    <string name="unit_minutes">minuti</string>
-    <string name="unit_hours">ore</string>
-    <string name="unit_days">giorni</string>
-    <string name="unit_weeks">settimane</string>
-    <string name="shortminute">m</string>
-    <string name="shortday">d</string>
-    <string name="later_today">Più tardì oggi</string>
-    <string name="tomorrow">Domani</string>
-    <string name="today">Oggi</string>
-    <string name="yesterday">Ieri</string>
     <!--    Protection-->
     <string name="wrongpassword">Password errata</string>
     <string name="wrongpin">PIN errato</string>
@@ -467,6 +440,7 @@
     <string name="remove_selected_items">Rimuovi elementi selezionati</string>
     <string name="a11y_file">file</string>
     <string name="a11y_user">utente</string>
+    <!-- Autotune -->
     <plurals name="days">
         <item quantity="one">%1$d giorno</item>
         <item quantity="other">%1$d giorni</item>
