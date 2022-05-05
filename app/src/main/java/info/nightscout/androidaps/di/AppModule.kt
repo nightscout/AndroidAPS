@@ -15,6 +15,7 @@ import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctionImplementation
+import info.nightscout.androidaps.plugins.general.autotune.AutotunePlugin
 import info.nightscout.androidaps.plugins.general.maintenance.ImportExportPrefsImpl
 import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
 import info.nightscout.androidaps.plugins.general.nsclient.DataSyncSelectorImplementation
@@ -98,6 +99,7 @@ open class AppModule {
         @Binds fun bindImportExportPrefsInterface(importExportPrefs: ImportExportPrefsImpl): ImportExportPrefs
         @Binds fun bindIconsProviderInterface(iconsProvider: IconsProviderImplementation): IconsProvider
         @Binds fun bindLoopInterface(loopPlugin: LoopPlugin): Loop
+        @Binds fun bindAutotuneInterface(autotunePlugin: AutotunePlugin): Autotune
         @Binds fun bindIobCobCalculatorInterface(iobCobCalculatorPlugin: IobCobCalculatorPlugin): IobCobCalculator
         @Binds fun bindSmsCommunicatorInterface(smsCommunicatorPlugin: SmsCommunicatorPlugin): SmsCommunicator
         @Binds fun bindDataSyncSelector(dataSyncSelectorImplementation: DataSyncSelectorImplementation): DataSyncSelector
