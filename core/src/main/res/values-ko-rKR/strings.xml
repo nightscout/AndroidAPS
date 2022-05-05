@@ -124,24 +124,6 @@
     <string name="ble_not_enabled">블루투스가 활성화되지 않았습니다.</string>
     <string name="location_not_found_title">위치가 활성화되지 않았습니다.</string>
     <string name="location_not_found_message">최신 스마트폰에서 블루투스 검색이 작동하려면 위치가 활성화되어 있어야합니다. AAPS는 당신의 위치를 추적하지 않으며 페어링에 성공한 후 비활성화 할 수 있습니다.</string>
-    <!--    DateUtil-->
-    <string name="minago">%1$d 분 전</string>
-    <string name="hoursago">%1$.1f 시간 전</string>
-    <string name="shorthour">시간</string>
-    <string name="days">일</string>
-    <string name="hours">시간</string>
-    <string name="unit_second">초</string>
-    <string name="unit_minute">분</string>
-    <string name="unit_hour">시</string>
-    <string name="unit_day">일</string>
-    <string name="unit_week">주</string>
-    <string name="unit_seconds">초</string>
-    <string name="unit_minutes">분</string>
-    <string name="unit_hours">시</string>
-    <string name="unit_days">일</string>
-    <string name="unit_weeks">주</string>
-    <string name="shortminute">분</string>
-    <string name="shortday">일</string>
     <!--    Protection-->
     <string name="wrongpassword">잘못된 비밀번호</string>
     <string name="passwords_dont_match">비밀번호가 일치하지 않습니다.</string>
@@ -394,6 +376,7 @@
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f이 \'고정된 한계값\'을 벗어났습니다.</string>
     <string name="basal_value">Basal 값</string>
     <!-- Command Queue + readStatus reasons -->
+    <!-- Autotune -->
     <plurals name="days">
         <item quantity="other">%1$d 일</item>
     </plurals>
