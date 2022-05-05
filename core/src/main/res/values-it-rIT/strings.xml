@@ -49,7 +49,11 @@
     <string name="isf_label">ISF</string>
     <string name="basal_label">Basale</string>
     <string name="target_label">Target</string>
+    <string name="dia_long_label">Durata dell’azione dell’insulina</string>
+    <string name="ic_long_label">Rapporto Insulina-Carboidrati (I:C)</string>
+    <string name="isf_long_label">Fattore di sensibilità insulinica (ISF)</string>
     <string name="basal_long_label">Velocità basale</string>
+    <string name="target_long_label">Target glicemia</string>
     <string name="initializing">Inizializzazione...</string>
     <string name="serialnumber">Numero seriale</string>
     <string name="battery_label">Batteria</string>
@@ -107,6 +111,7 @@
     <string name="notes_label">Note</string>
     <string name="remove_button">Rimuovi</string>
     <string name="addnew">Aggiungi nuovo</string>
+    <string name="addnew_above">Aggiungi nuovo sopra</string>
     <string name="wrong_pump_data">I dati arrivano da un micro differente. Cambia il driver del micro per resettarne lo stato.</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limitazione max velocità basale a %1$.2f U/h a causa di: %2$s</string>
@@ -127,27 +132,11 @@
     <string name="ble_not_enabled">Bluetooth non abilitato.</string>
     <string name="location_not_found_title">La localizzazione non è abilitata</string>
     <string name="location_not_found_message">Affinché la ricerca bluetooth funzioni sui dispositivi più recenti, la localizzazione deve essere abilitata, ma può essere disabilitata dopo l\'associazione. AAPS non tiene traccia della tua posizione.</string>
-    <!--    DateUtil-->
-    <string name="minago">%1$d m fa</string>
-    <string name="hoursago">%1$.1f h fa</string>
-    <string name="shorthour">h</string>
-    <string name="days">giorni</string>
-    <string name="hours">ore</string>
-    <string name="unit_second">secondo</string>
-    <string name="unit_minute">minuto</string>
-    <string name="unit_hour">ora</string>
-    <string name="unit_day">giorno</string>
-    <string name="unit_week">settimana</string>
-    <string name="unit_seconds">secondi</string>
-    <string name="unit_minutes">minuti</string>
-    <string name="unit_hours">ore</string>
-    <string name="unit_days">giorni</string>
-    <string name="unit_weeks">settimane</string>
-    <string name="shortminute">m</string>
-    <string name="shortday">d</string>
     <!--    Protection-->
     <string name="wrongpassword">Password errata</string>
+    <string name="wrongpin">PIN errato</string>
     <string name="passwords_dont_match">Le password non coincidono</string>
+    <string name="pin_dont_match">I PIN non coincidono</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Valori basali non allineati alle ore: %1$s</string>
     <string name="minimalbasalvaluereplaced">Valore basale sostituito dal minimo valore supportato: %1$s</string>
@@ -367,6 +356,7 @@
     <string name="uel_stat_reset">RESET STAT</string>
     <string name="uel_delete_logs">ELIMINA LOG</string>
     <string name="uel_delete_future_treatments">ELIMINA TRATTAMENTI FUTURI</string>
+    <string name="delete_future_treatments">Elimina trattamenti futuri</string>
     <string name="uel_export_settings">ESPORTA IMPOSTAZIONI</string>
     <string name="uel_import_settings">IMPORTA IMPOSTAZIONI</string>
     <string name="uel_reset_databases">RESETTA DATABASE</string>
@@ -438,6 +428,19 @@
     <string name="bolus_ok" comment="26 characters max for translation">Bolo OK</string>
     <string name="pump_paired" comment="26 characters max for translation">Micro associato</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Tasto aggiornamento Insight</string>
+    <string name="a11y_min_button_description">decremento %1$s di %2$s</string>
+    <string name="a11y_plus_button_description">incremento %1$s di %2$s</string>
+    <string name="formatPercent">%1$.0f%%</string>
+    <string name="basal">Basale</string>
+    <string name="basalpct">% basale</string>
+    <string name="count_selected">%1$d selezionato</string>
+    <string name="sort_label">Ordina</string>
+    <string name="remove_items">Rimuovi elementi</string>
+    <string name="sort_items">Ordina elementi</string>
+    <string name="remove_selected_items">Rimuovi elementi selezionati</string>
+    <string name="a11y_file">file</string>
+    <string name="a11y_user">utente</string>
+    <!-- Autotune -->
     <plurals name="days">
         <item quantity="one">%1$d giorno</item>
         <item quantity="other">%1$d giorni</item>
