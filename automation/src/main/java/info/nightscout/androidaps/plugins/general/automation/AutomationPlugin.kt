@@ -24,7 +24,6 @@ import info.nightscout.androidaps.services.LocationServiceHelper
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
@@ -180,8 +179,7 @@ class AutomationPlugin @Inject constructor(
             automationEvents.add(AutomationEvent(injector).fromJSON(event, 0))
     }
 
-    @Synchronized
-    private fun processActions() {
+    @Synchronized internal fun processActions() {
         var commonEventsEnabled = true
         if (loop.isSuspended || !(loop as PluginBase).isEnabled()) {
             aapsLogger.debug(LTag.AUTOMATION, "Loop deactivated")

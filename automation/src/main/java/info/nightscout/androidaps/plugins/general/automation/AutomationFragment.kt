@@ -21,6 +21,7 @@ import info.nightscout.androidaps.automation.databinding.AutomationFragmentBindi
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.extensions.toVisibility
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.automation.dialogs.EditEventDialog
@@ -34,7 +35,6 @@ import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.dragHelpers.ItemTouchHelperAdapter
 import info.nightscout.androidaps.utils.dragHelpers.OnStartDragListener
 import info.nightscout.androidaps.utils.dragHelpers.SimpleItemTouchHelperCallback
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -50,6 +50,13 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var uel: UserEntryLogger
 
+    companion object {
+
+        const val ID_MENU_ADD = 3
+        const val ID_MENU_RUN = 4
+        const val ID_MENU_EDIT_MOVE = 5
+    }
+
     private var disposable: CompositeDisposable = CompositeDisposable()
     private lateinit var eventListAdapter: EventListAdapter
     private lateinit var actionHelper: ActionModeHelper<AutomationEvent>
@@ -59,13 +66,14 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = AutomationFragmentBinding.inflate(inflater, container, false)
         actionHelper = ActionModeHelper(rh, activity)
         actionHelper.setUpdateListHandler { binding.eventListView.adapter?.notifyDataSetChanged() }
         actionHelper.setOnRemoveHandler { removeSelected(it) }
         actionHelper.enableSort = true
-        setHasOptionsMenu(actionHelper.inMenu)
+        setHasOptionsMenu(true)
         return binding.root
     }
 
@@ -75,18 +83,44 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
         binding.eventListView.layoutManager = LinearLayoutManager(context)
         binding.eventListView.adapter = eventListAdapter
         binding.logView.movementMethod = ScrollingMovementMethod()
-        binding.fabAddEvent.setOnClickListener {
-            actionHelper.finish()
-            val dialog = EditEventDialog()
-            val args = Bundle()
-            args.putString("event", AutomationEvent(injector).toJSON())
-            args.putInt("position", -1) // New event
-            dialog.arguments = args
-            dialog.show(childFragmentManager, "EditEventDialog")
-        }
 
         itemTouchHelper.attachToRecyclerView(binding.eventListView)
     }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        if (isResumed) {
+            actionHelper.onCreateOptionsMenu(menu, inflater)
+            menu.removeItem(ID_MENU_ADD)
+            menu.removeItem(ID_MENU_RUN)
+            menu.add(Menu.FIRST, ID_MENU_ADD, 0, rh.gs(R.string.add_automation)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+            menu.add(Menu.FIRST, ID_MENU_RUN, 0, rh.gs(R.string.run_automations)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+            menu.add(Menu.FIRST, ID_MENU_EDIT_MOVE, 0, rh.gs(R.string.remove_sort)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+            menu.setGroupDividerEnabled(true)
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        if (actionHelper.onOptionsItemSelected(item)) true
+        else
+            when (item.itemId) {
+                ID_MENU_RUN -> {
+                    Thread { automationPlugin.processActions() }.start()
+                    true
+                }
+
+                ID_MENU_ADD -> {
+                    add()
+                    true
+                }
+
+               ID_MENU_EDIT_MOVE -> {
+                    actionHelper.startAction()
+                    true
+                }
+
+                else        -> false
+            }
 
     @SuppressLint("NotifyDataSetChanged")
     @Synchronized
@@ -120,14 +154,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
         _binding = null
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        actionHelper.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean =
-        actionHelper.onOptionsItemSelected(item)
-
+    @SuppressLint("NotifyDataSetChanged")
     @Synchronized
     private fun updateGui() {
         if (_binding == null) return
@@ -173,10 +200,13 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val automation = automationPlugin.at(position)
             holder.binding.rootLayout.setBackgroundColor(
-                rh.gac( context,
-                    if (automation.userAction) R.attr.userAction
-                    else if (automation.areActionsValid()) R.attr.validActions
-                    else R.attr.actionsError
+                rh.gac(
+                    context,
+                    when {
+                        automation.userAction        -> R.attr.userAction
+                        automation.areActionsValid() -> R.attr.validActions
+                        else                         -> R.attr.actionsError
+                    }
                 )
             )
             holder.binding.eventTitle.text = automation.title
@@ -280,4 +310,13 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
         }
     }
 
+    private fun add() {
+        actionHelper.finish()
+        EditEventDialog().also {
+            it.arguments = Bundle().apply {
+                putString("event", AutomationEvent(injector).toJSON())
+                putInt("position", -1) // New event
+            }
+        }.show(childFragmentManager, "EditEventDialog")
+    }
 }
