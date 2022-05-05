@@ -19,7 +19,7 @@ sealed class EventData : Event() {
 
     // Mobile <- Wear
     @Serializable
-    data class ActionPong(val timeStamp: Long) : EventData()
+    data class ActionPong(val timeStamp: Long, val apiLevel: Int) : EventData()
 
     @Serializable
     data class Error(val timeStamp: Long) : EventData() // ignored

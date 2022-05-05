@@ -20,6 +20,7 @@ import info.nightscout.androidaps.plugins.general.wear.events.EventWearUpdateGui
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.wizard.QuickWizard
 import info.nightscout.shared.logging.AAPSLogger
@@ -35,6 +36,7 @@ import javax.inject.Inject
 class DataLayerListenerServiceMobile : WearableListenerService() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var rh: ResourceHelper
@@ -125,17 +127,21 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
     private var transcriptionNodeId: String? = null
 
     private fun updateTranscriptionCapability() {
-        val capabilityInfo: CapabilityInfo = Tasks.await(
-            capabilityClient.getCapability(WEAR_CAPABILITY, CapabilityClient.FILTER_REACHABLE)
-        )
-        aapsLogger.debug(LTag.WEAR, "Nodes: ${capabilityInfo.nodes.joinToString(", ") { it.displayName + "(" + it.id + ")" }}")
-        val bestNode = pickBestNodeId(capabilityInfo.nodes)
-        transcriptionNodeId = bestNode?.id
-        wearPlugin.connectedDevice = bestNode?.displayName ?: "---"
-        rxBus.send(EventWearUpdateGui())
-        aapsLogger.debug(LTag.WEAR, "Selected node: ${bestNode?.displayName} $transcriptionNodeId")
-        rxBus.send(EventMobileToWear(EventData.ActionPing(System.currentTimeMillis())))
-        rxBus.send(EventData.ActionResendData("WatchUpdaterService"))
+        try {
+            val capabilityInfo: CapabilityInfo = Tasks.await(
+                capabilityClient.getCapability(WEAR_CAPABILITY, CapabilityClient.FILTER_REACHABLE)
+            )
+            aapsLogger.debug(LTag.WEAR, "Nodes: ${capabilityInfo.nodes.joinToString(", ") { it.displayName + "(" + it.id + ")" }}")
+            val bestNode = pickBestNodeId(capabilityInfo.nodes)
+            transcriptionNodeId = bestNode?.id
+            wearPlugin.connectedDevice = bestNode?.displayName ?: "---"
+            rxBus.send(EventWearUpdateGui())
+            aapsLogger.debug(LTag.WEAR, "Selected node: ${bestNode?.displayName} $transcriptionNodeId")
+            rxBus.send(EventMobileToWear(EventData.ActionPing(System.currentTimeMillis())))
+            rxBus.send(EventData.ActionResendData("WatchUpdaterService"))
+        } catch (e: Exception) {
+            fabricPrivacy.logCustom("WearOS_unsupported")
+        }
     }
 
     // Find a nearby node or pick one arbitrarily

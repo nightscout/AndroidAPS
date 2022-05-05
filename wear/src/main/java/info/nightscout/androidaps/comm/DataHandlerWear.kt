@@ -57,7 +57,7 @@ class DataHandlerWear @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe {
                 aapsLogger.debug(LTag.WEAR, "Ping received from ${it.sourceNodeId}")
-                rxBus.send(EventWearToMobile(EventData.ActionPong(System.currentTimeMillis())))
+                rxBus.send(EventWearToMobile(EventData.ActionPong(System.currentTimeMillis(), Build.VERSION.SDK_INT)))
             }
         disposable += rxBus
             .toObservable(EventData.ConfirmAction::class.java)
@@ -115,7 +115,6 @@ class DataHandlerWear @Inject constructor(
             .subscribe {
                 aapsLogger.debug(LTag.WEAR, "Bolus progress received from ${it.sourceNodeId}")
                 handleBolusProgress(it)
-                rxBus.send(EventWearToMobile(EventData.ActionPong(System.currentTimeMillis())))
             }
         disposable += rxBus
             .toObservable(EventData.Status::class.java)
