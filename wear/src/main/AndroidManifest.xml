@@ -586,8 +586,7 @@
             android:label="@string/menu_tempt" />
 
         <activity
-            android:name=".interaction.actions.BackgroundActionActivity"
-            android:exported="true" />
+            android:name=".interaction.actions.BackgroundActionActivity" />
 
         <activity android:name=".interaction.ConfigurationActivity">
             <intent-filter>
