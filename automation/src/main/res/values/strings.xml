@@ -123,5 +123,8 @@
     <string name="confirm_remove_multiple_items">Are you sure you want to remove %1$d items</string>
     <string name="sort_label">Sort</string>
     <string name="system_automation">System automation</string>
+    <string name="run_automations">Run automations</string>
+    <string name="add_automation">Add rule</string>
+    <string name="remove_sort">Remove/sort</string>
 
 </resources>
