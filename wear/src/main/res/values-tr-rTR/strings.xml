@@ -64,6 +64,7 @@
     <string name="pref_complication_tap_action">Komplikasyon Dokunma Eylemi</string>
     <string name="pref_unicode_in_complications">Komplikasyonlarda Unicode</string>
     <string name="pref_version">Versiyon:</string>
+    <string name="pref_moreWatchfaceSettings">Diğer Saatarayüz ayarları</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Lütfen, Saatarayüzü yapılandırmasına bakın.</string>
     <string name="menu_tempt">GeçiciH</string>
     <string name="menu_wizard">Hesap makinesi</string>
