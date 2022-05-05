@@ -152,4 +152,6 @@
     <string name="diaconn_g8_errorcode_34">LGS durumu KAPALI, KAPAT komutu reddedildi.</string>
     <string name="diaconn_g8_errorcode_35">Geçici bazal çalışırken Geçici bazal başlatma reddedilir</string>
     <string name="diaconn_g8_errorcode_36">Geçici bazal çalışmıyorken Geçici bazal durdurma reddedilir</string>
+    <string name="diaconn_g8_cloudsend_summary">Pompa günlüklerini Diaconn Bulut Deposuna gönderin.</string>
+    <string name="diaconn_g8_cloudsend_title">Diaconn Bulut Senkronizasyonu</string>
 </resources>
