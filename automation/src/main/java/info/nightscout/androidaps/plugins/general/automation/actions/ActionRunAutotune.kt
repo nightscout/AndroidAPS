@@ -40,18 +40,21 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
     @DrawableRes override fun icon(): Int = R.drawable.ic_actions_profileswitch
 
     override fun doAction(callback: Callback) {
-        val autoSwitch = sp.getBoolean(R.string.key_autotune_auto, false)
+        val autoSwitch = sp.getBoolean(R.string.key_autotune_auto, false) && buildHelper.isEngineeringMode()
         val profileName = if (inputProfileName.value == rh.gs(R.string.active)) "" else inputProfileName.value
         var message = if (autoSwitch) R.string.autotune_run_with_autoswitch else R.string.autotune_run_without_autoswitch
         Thread {
+            if (buildHelper.isDev()) {
                 autotunePlugin.atLog("[Automation] Run Autotune $profileName, ${daysBack.value} days, Autoswitch $autoSwitch")
                 autotunePlugin.aapsAutotune(daysBack.value, autoSwitch, profileName)
                 if (!autotunePlugin.lastRunSuccess) {
                     message = R.string.autotune_run_with_error
                     aapsLogger.error(LTag.AUTOMATION, "Error during Autotune Run")
                 }
-                callback.result(PumpEnactResult(injector).success(autotunePlugin.lastRunSuccess).comment(message))?.run()
-            }.start()
+            } else
+                message = R.string.autotune_dev_warning
+            callback.result(PumpEnactResult(injector).success(autotunePlugin.lastRunSuccess).comment(message))?.run()
+        }.start()
         return
     }
 
