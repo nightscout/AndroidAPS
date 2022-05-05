@@ -342,7 +342,6 @@
     <string name="shortenergy">En</string>
     <string name="shortprotein">Pr</string>
     <string name="shortfat">Vet</string>
-    <string name="active"><![CDATA[<Active>]]></string>
     <string name="executingrightnow">Opdrag word nou uitgevoer</string>
     <string name="missed_bg_readings">Gemiste BG lesings</string>
     <string name="raise_notifications_as_android_notifications">Gebruik stelsel kennisgewings vir waarskuwings en kennisgewings</string>
