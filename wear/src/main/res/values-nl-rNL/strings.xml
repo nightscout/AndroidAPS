@@ -2,15 +2,6 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_xdrip">AAPS</string>
-    <string name="label_xdrip_large">AAPS(Groot)</string>
-    <string name="label_xdrip_big_chart">AAPS(GroteGrafiek)</string>
-    <string name="label_xdrip_no_chart">AAPS(GeenGrafiek)</string>
-    <string name="label_xdrip_circle">AAPS(Cirkel)</string>
-    <string name="label_xdrip_v2">AAPSv2</string>
-    <string name="label_xdrip_cockpit">AAPS(Cockpit)</string>
-    <string name="label_xdrip_steampunk">AAPS(Steampunk)</string>
-    <string name="label_digitalstyle">AAPS (DigitalStyle)</string>
     <string name="label_actions_tile">AAPS(Acties)</string>
     <string name="label_temp_target_tile">AAPS(Tijdelijk Streefdoel)</string>
     <string name="label_quick_wizard_tile">AAPS(Quick Wizard)</string>
@@ -64,7 +55,6 @@
     <string name="pref_complication_tap_action">Complicatie tik voor actie</string>
     <string name="pref_unicode_in_complications">Unicode in complicaties</string>
     <string name="pref_version">Versie:</string>
-    <string name="pref_moreWatchfaceSettings">meer Watchface instellingen</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Kijk naar de Watchface configuratie, alsjeblieft.</string>
     <string name="menu_tempt">TijdStreefd</string>
     <string name="menu_wizard">Calculator</string>
@@ -90,7 +80,6 @@
     <string name="action_wizard_confirmation">Berekening aangevraagd</string>
     <string name="action_fill_confirmation">Vullen aangevraagd</string>
     <string name="action_ecarb_confirmation">Koolhydraten aangevraagd</string>
-    <string name="action_cpp_confirmation">CPP aangevraagd</string>
     <string name="action_target" comment="In temp target menu, single target value">Doel</string>
     <string name="action_low" comment="In temp target menu, lower value from range">Laag</string>
     <string name="action_high" comment="In temp target menu, higher value from range">Hoog</string>
@@ -112,7 +101,6 @@
     <string name="cancel_bolus">BOLUS ANNULEREN</string>
     <string name="status_pump">Pomp</string>
     <string name="status_loop">Loop</string>
-    <string name="status_cpp">CPP</string>
     <string name="status_tdd">TDD</string>
     <string name="activity_carb">Khd</string>
     <string name="activity_IOB">IOB</string>
