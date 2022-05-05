@@ -468,7 +468,6 @@
     <string name="shortenergy">En</string>
     <string name="shortprotein">Pr</string>
     <string name="shortfat">Fett</string>
-    <string name="active"><![CDATA[<Active>]]></string>
     <string name="executingrightnow">Kommandoen utføres akkurat nå</string>
     <string name="missed_bg_readings">Mangler BS målinger</string>
     <string name="raise_notifications_as_android_notifications">Bruk systemvarslinger for alarmer og varslinger</string>
@@ -815,6 +814,7 @@
     <string name="smscommunicator_otp_install_info">I hver følger telefon installerer du en Authenticator-app som støtter RFC 6238 TOTP token. Populære gratis apper er:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">Ved å tilbakestille authenticator vil du gjøre alle lagrede autentiseringer ugyldige. Du må sette alle opp på nytt igjen!</string>
     <string name="overview_show_predictions">Prognoser</string>
+    <string name="overview_show_treatments">Behandlinger</string>
     <string name="overview_show_deviationslope">Avvikskurve</string>
     <string name="authorizationfailed">Autentisering feilet</string>
     <string name="overview_show_absinsulin">Absolutt insulinmengde</string>
@@ -995,6 +995,7 @@
     <string name="tempt_targets">Temp Target</string>
     <string name="carbs_and_bolus">Karbohydrater og bolus</string>
     <string name="confirm_remove_multiple_items">Er du sikker på at du vil fjerne %1$d elementer</string>
+    <string name="no_records_available">Ingen registreringer tilgjengelig</string>
     <string name="hide_loop">Skjul loop</string>
     <string name="show_loop">Vis loop</string>
     <string name="count_selected">%1$d valgt</string>
@@ -1007,5 +1008,17 @@
     <string name="show_hide_records">Skjul loop registreringer</string>
     <string name="widget_description">AndroidAPS widget</string>
     <string name="configure">Konfigurer gjennomsiktighet</string>
+    <string name="a11y_otp_qr_code">QR-kode for oppsett av engangspassord</string>
+    <string name="a11y_open_settings">åpne innstillinger</string>
+    <string name="a11y_set_carb_timer">angi karbo nedtellings alarm</string>
+    <string name="device_all">Alle</string>
+    <string name="device_phone">Telefon</string>
+    <string name="device_watch">Klokke</string>
+    <string name="a11y_only_on_watch">kun på klokke</string>
+    <string name="a11y_only_on_phone">kun på telefon</string>
+    <string name="a11y_drag_and_drop_handle">dra og slipp håndtering</string>
     <!-- Aidex Cgms -->
+    <string name="aidex">GlucoRx Aidex</string>
+    <string name="aidex_short">Aidex</string>
+    <string name="description_source_aidex">Motta BS verdier fra GlucoRx Aidex CGM.</string>
 </resources>

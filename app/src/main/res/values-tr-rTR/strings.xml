@@ -469,7 +469,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="shortenergy">En</string>
     <string name="shortprotein">Pr</string>
     <string name="shortfat">Yağ</string>
-    <string name="active"><![CDATA[<Aktif>]]></string>
     <string name="executingrightnow">Komut şu anda çalıştırıldı</string>
     <string name="missed_bg_readings">Kaçırılan KŞ Okumaları</string>
     <string name="raise_notifications_as_android_notifications">Uyarılar ve bildirimler için sistem bildirimlerini kullan</string>
@@ -1010,5 +1009,18 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="show_hide_records">Döngü kayıtlarını gizle</string>
     <string name="widget_description">AndroidAPS widget</string>
     <string name="configure">Şeffaflığı yapılandır</string>
+    <string name="loop_status">Döngü durumu</string>
+    <string name="a11y_otp_qr_code">Tek kullanımlık şifre kurulumu için QR Kodu</string>
+    <string name="a11y_open_settings">ayarları aç</string>
+    <string name="a11y_set_carb_timer">karbonhidrat zamanlayıcı alarmı kur</string>
+    <string name="device_all">Tümü</string>
+    <string name="device_phone">Telefon</string>
+    <string name="device_watch">Saat</string>
+    <string name="a11y_only_on_watch">sadece saatte</string>
+    <string name="a11y_only_on_phone">sadece telefonda</string>
+    <string name="a11y_drag_and_drop_handle">sürükle ve bırak kolu</string>
     <!-- Aidex Cgms -->
+    <string name="aidex">GlucoRx Aidex</string>
+    <string name="aidex_short">Aidex</string>
+    <string name="description_source_aidex">GlucoRx Aidex CGMS\'den KŞ değerleri alır.</string>
 </resources>

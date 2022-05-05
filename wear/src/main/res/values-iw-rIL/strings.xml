@@ -2,15 +2,6 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_xdrip">AAPS</string>
-    <string name="label_xdrip_large">AAPS (גדול)</string>
-    <string name="label_xdrip_big_chart">AAPS (תרשים גדול)</string>
-    <string name="label_xdrip_no_chart">AAPS (ללא תרשים)</string>
-    <string name="label_xdrip_circle">AAPS (עיגול)</string>
-    <string name="label_xdrip_v2">AAPSv2</string>
-    <string name="label_xdrip_cockpit">AAPS (קוקפיט)</string>
-    <string name="label_xdrip_steampunk">AAPS (סטימפאנק)</string>
-    <string name="label_digitalstyle">AAPS (דיגיטלי)</string>
     <string name="label_actions_tile">AAPS (פעולות)</string>
     <string name="label_temp_target_tile">AAPS (מטרה זמנית)</string>
     <string name="label_quick_wizard_tile">AAPS (אשף מהיר)</string>
@@ -64,7 +55,6 @@
     <string name="pref_complication_tap_action">פעולת הקשה על סיבוך</string>
     <string name="pref_unicode_in_complications">יוניקוד בסיבוכים</string>
     <string name="pref_version">גירסה:</string>
-    <string name="pref_moreWatchfaceSettings">עוד הגדרות פני שעון</string>
     <string name="pref_lookInYourWatchfaceConfiguration">עיינו בהגדרות פני השעון בבקשה.</string>
     <string name="menu_tempt">מטרה זמנית</string>
     <string name="menu_wizard">מחשבון</string>
@@ -111,7 +101,6 @@
     <string name="cancel_bolus">ביטול בולוס</string>
     <string name="status_pump">משאבה</string>
     <string name="status_loop">לולאה</string>
-    <string name="status_cpp">CPP</string>
     <string name="status_tdd">סה\"כ מינון אינסולין יומי TDD</string>
     <string name="activity_carb">פחמימות</string>
     <string name="activity_IOB">כמות אינסולין פעילה</string>

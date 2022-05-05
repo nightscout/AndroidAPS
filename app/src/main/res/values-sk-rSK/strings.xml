@@ -468,7 +468,6 @@
     <string name="shortenergy">En</string>
     <string name="shortprotein">Pr</string>
     <string name="shortfat">Tuk</string>
-    <string name="active"><![CDATA[<Aktívny>]]></string>
     <string name="executingrightnow">Príkaz sa práve vykonáva</string>
     <string name="missed_bg_readings">Chýbajúce hodnoty glykémie</string>
     <string name="raise_notifications_as_android_notifications">Používať systémové notifikácie pre výstrahy a oznámenia</string>

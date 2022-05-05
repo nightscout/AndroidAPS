@@ -92,7 +92,7 @@
     <string name="configbuilder_loop_description">Utiliza esta opción para activar la integración del lazo en AndroidAPS</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">Tras procesar las restricciones</string>
-    <string name="loop_tbrsetbypump_label">Basal temporal en la bomba</string>
+    <string name="loop_tbrsetbypump_label">Basal temporal establecida por la bomba</string>
     <string name="noapsselected">NO APS Seleccionado o resultado entregado</string>
     <string name="safety">Seguridad</string>
     <string name="openapsma_disabled">El complemento está deshabilitado</string>
@@ -238,7 +238,7 @@
     <string name="button3">Botón 3</string>
     <string name="units_colon">Unidades:</string>
     <string name="units">Unidades</string>
-    <string name="dia">Duración de la insulina activa</string>
+    <string name="dia">DIA</string>
     <string name="prefs_range_title">Rango de visualización</string>
     <string name="prefs_range_summary">Establece los rangos de glucosa objetivos (hiper e hipo) en la pantalla inicio de AAPS y en la esfera del reloj</string>
     <string name="low_mark">Valor de hipoglucemia</string>
@@ -468,7 +468,6 @@
     <string name="shortenergy">En</string>
     <string name="shortprotein">Pr</string>
     <string name="shortfat">Grasa</string>
-    <string name="active"><![CDATA[<Activo>]]></string>
     <string name="executingrightnow">Orden se esta efectuando en este momento</string>
     <string name="missed_bg_readings">Faltan lecturas de glucosa</string>
     <string name="raise_notifications_as_android_notifications">Usa las notificaciones del sistema para las alarmas y las notificaciones</string>
@@ -734,7 +733,7 @@
     <string name="description_source_dexcom">Recibir los valores de glucosa de la aplicación Dexcom \'Build Your Own Device\'</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="bolusconstraintappliedwarn">Restricción de bolo aplicada: %1$.2f U a %2$.2f U</string>
-    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>! Se ha detectado una absorción lenta de carbohidratos: %2$d%% de tiempo. Compruebe de nuevo su cálculo. Los COB se pueden sobrestimar, por lo que se podría administrar más insulina de la cuenta</font>]]></string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>¡Se ha detectado una absorción lenta de carbohidratos: %2$d%% de tiempo. Comprueba de nuevo el cálculo. Los COB se pueden sobrestimar, por lo que se podría administrar más insulina de la cuenta!</font>]]></string>
     <string name="partialboluswizard">Administrar esta parte del resultado del asistente de bolos [%]</string>
     <string name="deliverpartofboluswizard">El asistente de bolos realiza el cálculo, pero solo se entrega esta parte de la insulina calculada. Útil con el algoritmo SMB.</string>
     <string name="snooze">Silenciar</string>

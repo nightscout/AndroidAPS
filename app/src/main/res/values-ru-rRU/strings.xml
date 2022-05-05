@@ -468,7 +468,6 @@
     <string name="shortenergy">Энергия</string>
     <string name="shortprotein">Белки</string>
     <string name="shortfat">Жиры</string>
-    <string name="active"><![CDATA[<Active>]]></string>
     <string name="executingrightnow">Команда выполняется</string>
     <string name="missed_bg_readings">Пропущенные данные СК</string>
     <string name="raise_notifications_as_android_notifications">Использовать системные уведомления для предупреждений и уведомлений</string>

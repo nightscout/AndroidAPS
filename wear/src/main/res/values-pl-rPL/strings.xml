@@ -2,15 +2,6 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_xdrip">AAPS</string>
-    <string name="label_xdrip_large">AAPS(Duży)</string>
-    <string name="label_xdrip_big_chart">AAPS(DużyWykres)</string>
-    <string name="label_xdrip_no_chart">AAPS(BezWykresu)</string>
-    <string name="label_xdrip_circle">AAPS(Koło)</string>
-    <string name="label_xdrip_v2">AAPSv2</string>
-    <string name="label_xdrip_cockpit">AAPS(Kokpit)</string>
-    <string name="label_xdrip_steampunk">AAPS(Steampunk)</string>
-    <string name="label_digitalstyle">AAPS(StylCyfrowy)</string>
     <string name="label_warning_sync">Brak danych!</string>
     <string name="label_warning_old">Stare dane!</string>
     <string name="label_warning_since">Od %1$s</string>
@@ -59,7 +50,6 @@
     <string name="pref_complication_tap_action">Akcja po kliknięciu komplikacji</string>
     <string name="pref_unicode_in_complications">Unicode w Komplikacjach</string>
     <string name="pref_version">Wersja:</string>
-    <string name="pref_moreWatchfaceSettings">więcej ustawień zegarka</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Proszę, zajrzyj do konfiguracji zegarka.</string>
     <string name="menu_tempt">CelTymcz.</string>
     <string name="menu_wizard">Kalkulator</string>
@@ -92,7 +82,6 @@
     <string name="cancel_bolus">ANULUJ BOLUS</string>
     <string name="status_pump">Pompa</string>
     <string name="status_loop">Pętla</string>
-    <string name="status_cpp">CPP</string>
     <string name="status_tdd">TDD</string>
     <string name="activity_carb">Węgl.</string>
     <string name="activity_IOB">IOB</string>

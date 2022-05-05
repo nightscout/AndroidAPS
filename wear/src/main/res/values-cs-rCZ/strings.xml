@@ -2,15 +2,15 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_xdrip">AAPS</string>
-    <string name="label_xdrip_large">AAPS(velké)</string>
-    <string name="label_xdrip_big_chart">AAPS(VelkýGraf)</string>
-    <string name="label_xdrip_no_chart">AAPS(BezGrafu)</string>
-    <string name="label_xdrip_circle">APS(Kruh)</string>
-    <string name="label_xdrip_v2">AAPSv2</string>
-    <string name="label_xdrip_cockpit">AAPS (Cockpit)</string>
-    <string name="label_xdrip_steampunk">AAPS (Steampunk)</string>
-    <string name="label_digitalstyle">AAPS (DigitalStyle)</string>
+    <string name="label_watchface">AAPS</string>
+    <string name="label_watchface_large">AAPS(velký)</string>
+    <string name="label_watchface_big_chart">AAPS(VelkýGraf)</string>
+    <string name="label_watchface_no_chart">AAPS(BezGrafu)</string>
+    <string name="label_watchface_circle">AAPS(Kruhový)</string>
+    <string name="label_watchface_v2">AAPS(v2)</string>
+    <string name="label_watchface_cockpit">AAPS(Kokpit)</string>
+    <string name="label_watchface_steampunk">AAPS (Steampunk)</string>
+    <string name="label_watchface_digital_style">AAPS (DigitalStyle)</string>
     <string name="label_actions_tile">AAPS(Akce)</string>
     <string name="label_temp_target_tile">AAPS(Doč. cíl)</string>
     <string name="label_quick_wizard_tile">AAPS(Rychlý bolus)</string>
@@ -64,7 +64,7 @@
     <string name="pref_complication_tap_action">Akce po klepnutí na komplikaci</string>
     <string name="pref_unicode_in_complications">Znaky Unicode v komplikacích</string>
     <string name="pref_version">Verze:</string>
-    <string name="pref_moreWatchfaceSettings">další nastavení Watchface</string>
+    <string name="pref_moreWatchfaceSettings">Další nastavení ciferníku</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Podívejte se na konfiguraci hodinek prosím.</string>
     <string name="menu_tempt">Dočasný cíl</string>
     <string name="menu_wizard">Kalkulačka</string>
@@ -90,7 +90,7 @@
     <string name="action_wizard_confirmation">Požadován kalkulátor</string>
     <string name="action_fill_confirmation">Požadováno plnění</string>
     <string name="action_ecarb_confirmation">Požadovány sacharidy</string>
-    <string name="action_cpp_confirmation">Požadován profil</string>
+    <string name="action_profile_switch_confirmation">Požadováno přepnutí profilu</string>
     <string name="action_target" comment="In temp target menu, single target value">Cíl</string>
     <string name="action_low" comment="In temp target menu, lower value from range">Nízký</string>
     <string name="action_high" comment="In temp target menu, higher value from range">Vysoký</string>
@@ -112,7 +112,7 @@
     <string name="cancel_bolus">ZRUŠIT BOLUS</string>
     <string name="status_pump">Pumpa</string>
     <string name="status_loop">Smyčka</string>
-    <string name="status_cpp">CPP</string>
+    <string name="status_profile_switch">Přepnutí profilu</string>
     <string name="status_tdd">TDD</string>
     <string name="activity_carb">Sacharidy</string>
     <string name="activity_IOB">IOB</string>

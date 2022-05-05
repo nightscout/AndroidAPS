@@ -468,7 +468,6 @@
     <string name="shortenergy">En</string>
     <string name="shortprotein">Prot</string>
     <string name="shortfat">Vet</string>
-    <string name="active"><![CDATA[<Huidig>]]></string>
     <string name="executingrightnow">Opdracht is nu uitgevoerd</string>
     <string name="missed_bg_readings">Geen BG metingen</string>
     <string name="raise_notifications_as_android_notifications">Gebruik systeem notificaties voor waarschuwingen en notificaties</string>

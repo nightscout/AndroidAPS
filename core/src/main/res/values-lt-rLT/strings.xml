@@ -125,24 +125,6 @@
     <string name="ble_not_enabled">Bluetooth neįjungta.</string>
     <string name="location_not_found_title">Vietovės nustatymas neįjungtas</string>
     <string name="location_not_found_message">Vietos nustatymo paslauga turi būti įjungta, kad Bluetooth aptikimas veiktų naujesniuose įrenginiuose. AAPS neseka Jūsų lokacijos, o vietos nustatymo paslauga gali būti išjungta po sėkmingo įrenginių suporavimo.</string>
-    <!--    DateUtil-->
-    <string name="minago">prieš %1$d min</string>
-    <string name="hoursago">Prieš %1$.1f val.</string>
-    <string name="shorthour">val</string>
-    <string name="days">d.</string>
-    <string name="hours">val.</string>
-    <string name="unit_second">sek.</string>
-    <string name="unit_minute">min.</string>
-    <string name="unit_hour">val.</string>
-    <string name="unit_day">d.</string>
-    <string name="unit_week">savaitė</string>
-    <string name="unit_seconds">sekundės</string>
-    <string name="unit_minutes"> min.</string>
-    <string name="unit_hours">val.</string>
-    <string name="unit_days">d.</string>
-    <string name="unit_weeks">savaičių</string>
-    <string name="shortminute">min.</string>
-    <string name="shortday">d</string>
     <!--    Protection-->
     <string name="wrongpassword">Neteisingas slaptažodis</string>
     <string name="passwords_dont_match">Slaptažodžiai nesutampa</string>
@@ -436,6 +418,7 @@
     <string name="bolus_ok" comment="26 characters max for translation">Bolusas OK</string>
     <string name="pump_paired" comment="26 characters max for translation">Pompa suporuota</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight Mygtukas Naujinti</string>
+    <!-- Autotune -->
     <plurals name="days">
         <item quantity="one">%1$d d.</item>
         <item quantity="few">%1$d d.</item>

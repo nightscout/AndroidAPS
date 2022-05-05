@@ -461,7 +461,6 @@
     <string name="shortenergy">Energ. vertė</string>
     <string name="shortprotein">Balt.</string>
     <string name="shortfat">Rieb</string>
-    <string name="active"><![CDATA[<Active>]]></string>
     <string name="executingrightnow">Komanda vykdoma</string>
     <string name="missed_bg_readings">Negauti KG duomenys</string>
     <string name="raise_notifications_as_android_notifications">Naudoti sistemos perspėjimus aliarmams ir įspėjimams</string>

@@ -132,33 +132,6 @@
     <string name="ble_not_enabled">蓝牙未启用</string>
     <string name="location_not_found_title">未启用位置</string>
     <string name="location_not_found_message">为了蓝牙能发现新的设备，手机定位功能必须启用， AAPS 不会追踪你的位置，你可以在配对成功后禁用定位。</string>
-    <!--    DateUtil-->
-    <string name="minago">%1$d 分钟前</string>
-    <string name="minago_long">%1$d 分钟前</string>
-    <string name="hoursago">%1$.1f 小时前</string>
-    <string name="days_ago">%1$.1f 天前</string>
-    <string name="days_ago_round">%1$.0f 天前</string>
-    <string name="in_days">在 %1$.0f 天内</string>
-    <string name="in_days_round">在 %1$.0f 天内</string>
-    <string name="shorthour">h</string>
-    <string name="days">天</string>
-    <string name="hours">小时</string>
-    <string name="unit_second">秒</string>
-    <string name="unit_minute">分钟</string>
-    <string name="unit_hour">小时</string>
-    <string name="unit_day">天</string>
-    <string name="unit_week">周</string>
-    <string name="unit_seconds">秒</string>
-    <string name="unit_minutes">分钟</string>
-    <string name="unit_hours">小时</string>
-    <string name="unit_days">天</string>
-    <string name="unit_weeks">周</string>
-    <string name="shortminute">m</string>
-    <string name="shortday">d</string>
-    <string name="later_today">今天稍后</string>
-    <string name="tomorrow">明天</string>
-    <string name="today">今天</string>
-    <string name="yesterday">昨天</string>
     <!--    Protection-->
     <string name="wrongpassword">密码错误</string>
     <string name="wrongpin">PIN 码错误</string>
@@ -467,6 +440,7 @@
     <string name="remove_selected_items">删除选中项</string>
     <string name="a11y_file">文件</string>
     <string name="a11y_user">用户</string>
+    <!-- Autotune -->
     <plurals name="days">
         <item quantity="other">%1$d　天</item>
     </plurals>

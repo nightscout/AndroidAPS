@@ -132,33 +132,6 @@
     <string name="ble_not_enabled">בלוטות\' כבוי.</string>
     <string name="location_not_found_title">המיקום אינו מופעל</string>
     <string name="location_not_found_message">בכדי שסריקת בלוטות\' תעבוד יש לאפשר את שירות המיקום. AAPS לא עוקב אחר המיקום שלכם וניתן להפסיק את השירות לאחר סיום הצימוד.</string>
-    <!--    DateUtil-->
-    <string name="minago">לפני %1$d דקות</string>
-    <string name="minago_long">לפני %1$d דקות</string>
-    <string name="hoursago">לפני %1$.1f שעות</string>
-    <string name="days_ago">לפני %1$.1f ימים</string>
-    <string name="days_ago_round">לפני %1$.0f ימים</string>
-    <string name="in_days">בעוד %1$.0f ימים</string>
-    <string name="in_days_round">בעוד %1$.0f ימים</string>
-    <string name="shorthour">ש\'</string>
-    <string name="days">ימים</string>
-    <string name="hours">שעות</string>
-    <string name="unit_second">שניה</string>
-    <string name="unit_minute">דקה</string>
-    <string name="unit_hour">שעה</string>
-    <string name="unit_day">יום</string>
-    <string name="unit_week">שבוע</string>
-    <string name="unit_seconds">שניות</string>
-    <string name="unit_minutes">דקות</string>
-    <string name="unit_hours">שעות</string>
-    <string name="unit_days">ימים</string>
-    <string name="unit_weeks">שבועות</string>
-    <string name="shortminute">דק\'</string>
-    <string name="shortday">י\' </string>
-    <string name="later_today">מאוחר יותר היום</string>
-    <string name="tomorrow">מחר</string>
-    <string name="today">היום</string>
-    <string name="yesterday">אתמול</string>
     <!--    Protection-->
     <string name="wrongpassword">סיסמה שגויה</string>
     <string name="wrongpin">קוד PIN שגוי</string>
@@ -463,6 +436,7 @@
     <string name="remove_items">פריטים שהוסרו</string>
     <string name="sort_items">מיין פריטים</string>
     <string name="remove_selected_items">הסר פריטים נבחרים</string>
+    <!-- Autotune -->
     <plurals name="days">
         <item quantity="one">%1$d יום</item>
         <item quantity="two">%1$d ימים</item>

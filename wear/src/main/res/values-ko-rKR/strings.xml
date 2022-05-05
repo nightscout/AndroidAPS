@@ -2,15 +2,6 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_xdrip">AAPS</string>
-    <string name="label_xdrip_large">AAPS(대)</string>
-    <string name="label_xdrip_big_chart">AAPS(큰차트)</string>
-    <string name="label_xdrip_no_chart">AAPS(차트없음)</string>
-    <string name="label_xdrip_circle">AAPS(원형)</string>
-    <string name="label_xdrip_v2">AAPSv2</string>
-    <string name="label_xdrip_cockpit">AAPS(조종석)</string>
-    <string name="label_xdrip_steampunk">AAPS(스팀펑크)</string>
-    <string name="label_digitalstyle">AAPS(디지털방식)</string>
     <string name="label_warning_sync">데이터없음!</string>
     <string name="label_warning_old">오래된 데이터!</string>
     <string name="label_warning_since">%1$s 이후</string>
@@ -59,7 +50,6 @@
     <string name="pref_complication_tap_action">컴플리케이션 탭 동작</string>
     <string name="pref_unicode_in_complications">컴플리케이션에서 유니코드 사용</string>
     <string name="pref_version">버전:</string>
-    <string name="pref_moreWatchfaceSettings">더 다양한 워치페이스 설정</string>
     <string name="pref_lookInYourWatchfaceConfiguration">워치페이스 설정을 확인하십시오.</string>
     <string name="menu_tempt">임시목표</string>
     <string name="menu_bolus">Bolus</string>
@@ -81,7 +71,6 @@
     <string name="cancel_bolus">BOLUS 취소</string>
     <string name="status_pump">펌프</string>
     <string name="status_loop">Loop</string>
-    <string name="status_cpp">CPP</string>
     <string name="status_tdd">TDD</string>
     <string name="activity_carb">Carb</string>
     <string name="activity_IOB">IOB</string>
