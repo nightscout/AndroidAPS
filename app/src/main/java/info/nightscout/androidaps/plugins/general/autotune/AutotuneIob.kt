@@ -8,7 +8,6 @@ import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.database.entities.*
-import info.nightscout.androidaps.extensions.convertToBoluses
 import info.nightscout.androidaps.extensions.durationInMinutes
 import info.nightscout.androidaps.extensions.iobCalc
 import info.nightscout.androidaps.extensions.toJson
@@ -16,6 +15,7 @@ import info.nightscout.androidaps.extensions.toTemporaryBasal
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.plugins.general.autotune.data.ATProfile
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.T
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP
@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.roundToInt
 
 @Singleton
 class AutotuneIob @Inject constructor(
@@ -136,7 +137,7 @@ class AutotuneIob @Inject constructor(
                 val eb = extendedBoluses[i]
                 if (eb.isValid) {
                     nsTreatments.add(NsTreatment(eb))
-                    boluses.addAll(eb.convertToBoluses())
+                    boluses.addAll(convertToBoluses(eb))
                 }
             }
         }
@@ -199,7 +200,7 @@ class AutotuneIob @Inject constructor(
                     nsTreatments.add(NsTreatment(newtb))
                     splittedDuration = 0
                     val profile = profileFunction.getProfile(newtb.timestamp) ?:continue
-                    boluses.addAll(newtb.convertToBoluses(profile, tunedProfile.profile))           //
+                    boluses.addAll(convertToBoluses(newtb, profile, tunedProfile.profile))           //
                 // required for correct iob calculation with oref0 algo
                 } else {
                     val durationFilled = (cutInMilliSec - Profile.milliSecFromMidnight(splittedTimestamp) % cutInMilliSec)
@@ -217,7 +218,7 @@ class AutotuneIob @Inject constructor(
                     splittedTimestamp += durationFilled
                     splittedDuration = splittedDuration - durationFilled
                     val profile = profileFunction.getProfile(newtb.timestamp) ?:continue
-                    boluses.addAll(newtb.convertToBoluses(profile, tunedProfile.profile))           // required for correct iob calculation with oref0 algo
+                    boluses.addAll(convertToBoluses(newtb, profile, tunedProfile.profile))           // required for correct iob calculation with oref0 algo
                 }
             }
         }
@@ -243,6 +244,59 @@ class AutotuneIob @Inject constructor(
         }
         return total
     }
+
+
+    fun convertToBoluses(eb: ExtendedBolus): MutableList<Bolus> {
+        val result: MutableList<Bolus> = ArrayList()
+        val tempBolusSize = 0.05
+        val tempBolusCount : Int = (eb.amount / tempBolusSize).roundToInt()
+        if(tempBolusCount > 0) {
+            val tempBolusSpacing = eb.duration / tempBolusCount
+            for (j in 0L until tempBolusCount) {
+                val calcDate = eb.timestamp + j * tempBolusSpacing
+                val bolusInterfaceIDs = InterfaceIDs().also { it.nightscoutId = eb.interfaceIDs.nightscoutId + "_eb_$j" }
+                val tempBolusPart = Bolus(
+                    interfaceIDs_backing = bolusInterfaceIDs,
+                    timestamp = calcDate,
+                    amount = tempBolusSize,
+                    type = Bolus.Type.NORMAL
+                )
+                result.add(tempBolusPart)
+            }
+        }
+        return result
+    }
+
+    fun convertToBoluses(tbr: TemporaryBasal, profile: Profile, tunedProfile: Profile): MutableList<Bolus> {
+        val result: MutableList<Bolus> = ArrayList()
+        val realDuration = tbr.durationInMinutes
+        val basalRate = profile.getBasal(tbr.timestamp)
+        val tunedRate = tunedProfile.getBasal(tbr.timestamp)
+        val netBasalRate = Round.roundTo(if (tbr.isAbsolute) {
+            tbr.rate - tunedRate
+        } else {
+            tbr.rate / 100.0 * basalRate - tunedRate
+        }, 0.001)
+        val tempBolusSize = if (netBasalRate < 0 ) -0.05 else 0.05
+        val netBasalAmount: Double = Round.roundTo(netBasalRate * realDuration / 60.0, 0.01)
+        val tempBolusCount : Int = (netBasalAmount / tempBolusSize).roundToInt()
+        if(tempBolusCount > 0) {
+            val tempBolusSpacing = realDuration * 60 * 1000 / tempBolusCount
+            for (j in 0L until tempBolusCount) {
+                val calcDate = tbr.timestamp + j * tempBolusSpacing
+                val bolusInterfaceIDs = InterfaceIDs().also { it.nightscoutId = tbr.interfaceIDs.nightscoutId + "_tbr_$j" }
+                val tempBolusPart = Bolus(
+                    interfaceIDs_backing = bolusInterfaceIDs,
+                    timestamp = calcDate,
+                    amount = tempBolusSize,
+                    type = Bolus.Type.NORMAL
+                )
+                result.add(tempBolusPart)
+            }
+        }
+        return result
+    }
+
 
     fun glucoseToJSON(): String {
         val glucoseJson = JSONArray()

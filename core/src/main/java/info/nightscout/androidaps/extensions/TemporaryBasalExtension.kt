@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.extensions
 
 import info.nightscout.androidaps.data.IobTotal
-import info.nightscout.androidaps.data.ProfileSealed
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.database.entities.TemporaryBasal
@@ -9,13 +9,11 @@ import info.nightscout.androidaps.database.entities.TemporaryBasal.Type.Companio
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.interfaces.Insulin
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter.to0Decimal
 import info.nightscout.androidaps.utils.DecimalFormatter.to2Decimal
 import info.nightscout.androidaps.utils.JsonHelper
-import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.T
 import org.json.JSONObject
 import kotlin.math.ceil
@@ -169,36 +167,6 @@ fun TemporaryBasal.iobCalc(time: Long, profile: Profile, insulinInterface: Insul
         }
     }
     result.netInsulin = netBasalAmount
-    return result
-}
-
-fun TemporaryBasal.convertToBoluses(profile: Profile, tunedProfile: ProfileSealed): MutableList<Bolus> {
-    val result: MutableList<Bolus> = ArrayList()
-    val realDuration = durationInMinutes
-    val basalRate = profile.getBasal(timestamp)
-    val tunedRate = tunedProfile.getBasal(timestamp)
-    val netBasalRate = Round.roundTo(if (isAbsolute) {
-        rate - tunedRate
-    } else {
-        rate / 100.0 * basalRate - tunedRate
-    }, 0.001)
-    val tempBolusSize = if (netBasalRate < 0 ) -0.05 else 0.05
-    val netBasalAmount: Double = Round.roundTo(netBasalRate * realDuration / 60.0, 0.01)
-    val tempBolusCount : Int = (netBasalAmount / tempBolusSize).roundToInt()
-    if(tempBolusCount > 0) {
-        val tempBolusSpacing = realDuration * 60 * 1000 / tempBolusCount
-        for (j in 0L until tempBolusCount) {
-            val calcDate = timestamp + j * tempBolusSpacing
-            val bolusInterfaceIDs = InterfaceIDs().also { it.nightscoutId = interfaceIDs.nightscoutId + "_tbr_$j" }
-            val tempBolusPart = Bolus(
-                interfaceIDs_backing = bolusInterfaceIDs,
-                timestamp = calcDate,
-                amount = tempBolusSize,
-                type = Bolus.Type.NORMAL
-            )
-            result.add(tempBolusPart)
-        }
-    }
     return result
 }
 
