@@ -2,15 +2,6 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_xdrip">AAPS</string>
-    <string name="label_xdrip_large">AAPS(голям)</string>
-    <string name="label_xdrip_big_chart">AAPS(Графика)</string>
-    <string name="label_xdrip_no_chart">AAPS(без рафика)</string>
-    <string name="label_xdrip_circle">AAPS(Кръгъл)</string>
-    <string name="label_xdrip_v2">AAPSv2</string>
-    <string name="label_xdrip_cockpit">AAPS(Самолет)</string>
-    <string name="label_xdrip_steampunk">AAPS(Steampunk)</string>
-    <string name="label_digitalstyle">AAPS (DigitalStyle)</string>
     <string name="label_warning_sync">Няма данни!</string>
     <string name="label_warning_old">Стари данни!</string>
     <string name="label_warning_since">От %1$s</string>
@@ -59,7 +50,6 @@
     <string name="pref_complication_tap_action">Допълнителни действия при почукване</string>
     <string name="pref_unicode_in_complications">Unicode кодиране</string>
     <string name="pref_version">Версия:</string>
-    <string name="pref_moreWatchfaceSettings">Настройки на Watchface</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Погледнете в конфигурацията, моля.</string>
     <string name="menu_tempt">Врем цел</string>
     <string name="menu_bolus">Болус</string>
@@ -81,7 +71,6 @@
     <string name="cancel_bolus">СПРИ БОЛУС</string>
     <string name="status_pump">Помпа</string>
     <string name="status_loop">Режим на APS - Loop</string>
-    <string name="status_cpp">CPP</string>
     <string name="status_tdd">TDD</string>
     <string name="activity_carb">ВХ</string>
     <string name="activity_IOB">IOB</string>
