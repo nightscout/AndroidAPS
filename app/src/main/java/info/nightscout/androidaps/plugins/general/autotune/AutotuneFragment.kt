@@ -43,7 +43,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import org.json.JSONObject
-import org.slf4j.LoggerFactory
+//import org.slf4j.LoggerFactory
 import java.text.DecimalFormat
 import java.util.*
 import javax.inject.Inject
@@ -64,7 +64,7 @@ class AutotuneFragment : DaggerFragment() {
     @Inject lateinit var injector: HasAndroidInjector
 
     private var disposable: CompositeDisposable = CompositeDisposable()
-    private val log = LoggerFactory.getLogger(AutotunePlugin::class.java)
+    //private val log = LoggerFactory.getLogger(AutotunePlugin::class.java)
     private var _binding: AutotuneFragmentBinding? = null
     private lateinit var profileStore: ProfileStore
     private var profileName = ""
@@ -81,7 +81,7 @@ class AutotuneFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         autotunePlugin.lastRun = sp.getLong(R.string.key_autotune_last_run, 0)
-        if (autotunePlugin.lastNbDays.isNullOrEmpty())
+        if (autotunePlugin.lastNbDays.isEmpty())
             autotunePlugin.lastNbDays = sp.getInt(R.string.key_autotune_default_tune_days, 5).toString()
         val defaultValue = sp.getInt(R.string.key_autotune_default_tune_days, 5).toDouble()
         profileStore = activePlugin.activeProfileSource.profile ?: ProfileStore(injector, JSONObject(), dateUtil)
@@ -98,9 +98,9 @@ class AutotuneFragment : DaggerFragment() {
             autotunePlugin.calculationRunning = true
             autotunePlugin.lastNbDays = daysBack.toString()
             log("Run Autotune $profileName, $daysBack days")
-            Thread(Runnable {
+            Thread {
                 autotunePlugin.aapsAutotune(daysBack, false, profileName)
-            }).start()
+            }.start()
             updateGui()
         }
         binding.profileList.onItemClickListener = AdapterView.OnItemClickListener { _, _, _, _ ->
@@ -300,23 +300,27 @@ class AutotuneFragment : DaggerFragment() {
         binding.autotuneRevertProfile.visibility = View.GONE
         binding.autotuneProfileswitch.visibility = View.GONE
         binding.autotuneCompare.visibility = View.GONE
-        if (autotunePlugin.calculationRunning) {
-            binding.tuneWarning.text = rh.gs(R.string.autotune_warning_during_run)
-        } else if (autotunePlugin.lastRunSuccess) {
-            if (buildHelper.isEngineeringMode()) {
-                binding.autotuneCopylocal.visibility = View.VISIBLE
-                binding.autotuneUpdateProfile.visibility = autotunePlugin.updateButtonVisibility
-                binding.autotuneRevertProfile.visibility = if (autotunePlugin.updateButtonVisibility == View.VISIBLE) View.GONE else View.VISIBLE
-                binding.autotuneProfileswitch.visibility = View.VISIBLE
-                binding.tuneWarning.text = rh.gs(R.string.autotune_warning_after_run)
-            } else
-                binding.tuneWarning.text = rh.gs(R.string.autotune_engineering_mode_warning)
-            binding.autotuneCompare.visibility = View.VISIBLE
-        } else if (buildHelper.isDev()) {
-            binding.autotuneRun.visibility = View.VISIBLE
-            binding.autotuneCheckInputProfile.visibility = View.VISIBLE
-        } else
-            binding.tuneWarning.text = rh.gs(R.string.autotune_dev_warning)
+        when {
+            autotunePlugin.calculationRunning -> {
+                binding.tuneWarning.text = rh.gs(R.string.autotune_warning_during_run)
+            }
+            autotunePlugin.lastRunSuccess     -> {
+                if (buildHelper.isEngineeringMode()) {
+                    binding.autotuneCopylocal.visibility = View.VISIBLE
+                    binding.autotuneUpdateProfile.visibility = autotunePlugin.updateButtonVisibility
+                    binding.autotuneRevertProfile.visibility = if (autotunePlugin.updateButtonVisibility == View.VISIBLE) View.GONE else View.VISIBLE
+                    binding.autotuneProfileswitch.visibility = View.VISIBLE
+                    binding.tuneWarning.text = rh.gs(R.string.autotune_warning_after_run)
+                } else
+                    binding.tuneWarning.text = rh.gs(R.string.autotune_engineering_mode_warning)
+                binding.autotuneCompare.visibility = View.VISIBLE
+            }
+            buildHelper.isDev()               -> {
+                binding.autotuneRun.visibility = View.VISIBLE
+                binding.autotuneCheckInputProfile.visibility = View.VISIBLE
+            }
+            else                              -> binding.tuneWarning.text = rh.gs(R.string.autotune_dev_warning)
+        }
         binding.tuneLastrun.text = dateUtil.dateAndTimeString(autotunePlugin.lastRun)
         showResults()
     }
@@ -326,7 +330,7 @@ class AutotuneFragment : DaggerFragment() {
         if (runToday && autotunePlugin.result != "")
         {
             binding.tuneWarning.text = rh.gs(R.string.autotune_warning_after_run)
-        } else if (!runToday || autotunePlugin.result.isNullOrEmpty()) { //if new day reinit result, default days, warning and button's visibility
+        } else if (!runToday || autotunePlugin.result.isEmpty()) { //if new day reinit result, default days, warning and button's visibility
             resetParam(!runToday)
         }
     }
@@ -366,7 +370,7 @@ class AutotuneFragment : DaggerFragment() {
         override fun afterTextChanged(s: Editable) { updateGui() }
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            if (!binding.tuneDays.text.isEmpty()) {
+            if (binding.tuneDays.text.isNotEmpty()) {
                 try {
                     if (autotunePlugin.calculationRunning)
                         binding.tuneDays.value = autotunePlugin.lastNbDays.toDouble()
@@ -427,7 +431,7 @@ class AutotuneFragment : DaggerFragment() {
         }.start()
     }
 
-    fun toTableRowHeader(basal:Boolean = false): TableRow =
+    private fun toTableRowHeader(basal:Boolean = false): TableRow =
         TableRow(context).also { header ->
             val lp = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT).apply { weight = 1f }
             header.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT).apply { gravity = Gravity.CENTER_HORIZONTAL }
@@ -458,7 +462,7 @@ class AutotuneFragment : DaggerFragment() {
             })
         }
 
-    fun toTableRowValue(hour: String, inputValue: Double, tunedValue: Double, missing: String = ""): TableRow =
+    private fun toTableRowValue(hour: String, inputValue: Double, tunedValue: Double, missing: String = ""): TableRow =
         TableRow(context).also { row ->
             val percentValue = Round.roundTo(tunedValue / inputValue * 100 - 100, 1.0).toInt().toString() + "%"
             val lp = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT).apply { weight = 1f }
