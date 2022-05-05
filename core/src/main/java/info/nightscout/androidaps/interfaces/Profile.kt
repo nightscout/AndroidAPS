@@ -148,6 +148,10 @@ interface Profile {
             return (passed / 1000).toInt()
         }
 
+        fun milliSecFromMidnight(date: Long): Long {
+            val passed = DateTime(date).millisOfDay.toLong()
+            return passed
+        }
         /*
          * Units conversion
          */
