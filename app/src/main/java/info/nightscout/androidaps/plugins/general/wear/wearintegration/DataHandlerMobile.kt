@@ -28,7 +28,6 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProv
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.utils.*
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.wizard.BolusWizard
 import info.nightscout.androidaps.utils.wizard.QuickWizard
@@ -46,7 +45,6 @@ import java.util.concurrent.TimeUnit
 import java.util.stream.Collectors
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.collections.ArrayList
 import kotlin.math.abs
 import kotlin.math.min
 
@@ -89,6 +87,7 @@ class DataHandlerMobile @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe({
                            aapsLogger.debug(LTag.WEAR, "Pong received from ${it.sourceNodeId}")
+                           fabricPrivacy.logCustom("WearOS_${it.apiLevel}")
                        }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventData.CancelBolus::class.java)

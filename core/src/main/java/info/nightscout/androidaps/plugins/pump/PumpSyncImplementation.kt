@@ -271,7 +271,7 @@ class PumpSyncImplementation @Inject constructor(
             .blockingGet()
             .also { result ->
                 result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted TemporaryBasal $it") }
-                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated ${it.first} TemporaryBasal ${it.second}") }
+                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated TemporaryBasal \n${it.first}\n${it.second}") }
                 return result.inserted.size > 0
             }
     }

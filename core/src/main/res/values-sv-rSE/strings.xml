@@ -131,25 +131,6 @@
     <string name="ble_not_enabled">Bluetooth är avstängt.</string>
     <string name="location_not_found_title">Platsdata är inte aktiverat</string>
     <string name="location_not_found_message">För att Bluetooth ska fungera med nyare enheter, måste platsdata vara aktiverat. AAPS sparar inte din plats och det kan stängas av efter att enheten har parkopplats.</string>
-    <!--    DateUtil-->
-    <string name="minago">%1$dm sedan</string>
-    <string name="minago_long">%1$d minuter sedan</string>
-    <string name="hoursago">%1$.1f tim sedan</string>
-    <string name="shorthour">h</string>
-    <string name="days">dagar</string>
-    <string name="hours">timmar</string>
-    <string name="unit_second">sekund</string>
-    <string name="unit_minute">minut</string>
-    <string name="unit_hour">timme</string>
-    <string name="unit_day">dag</string>
-    <string name="unit_week">vecka</string>
-    <string name="unit_seconds">sekunder</string>
-    <string name="unit_minutes">minuter</string>
-    <string name="unit_hours">timmar</string>
-    <string name="unit_days">dagar</string>
-    <string name="unit_weeks">veckor</string>
-    <string name="shortminute">m</string>
-    <string name="shortday">d</string>
     <!--    Protection-->
     <string name="wrongpassword">Fel lösenord</string>
     <string name="passwords_dont_match">Lösenorden stämmer inte överens</string>
@@ -445,6 +426,7 @@
     <string name="insight_refresh_button" comment="26 characters max for translation">Uppdat. knapp för Insight</string>
     <string name="a11y_min_button_description">minska %1$s med %2$s</string>
     <string name="a11y_plus_button_description">öka %1$s med %2$s</string>
+    <!-- Autotune -->
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagar</item>

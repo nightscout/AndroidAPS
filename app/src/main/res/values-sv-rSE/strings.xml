@@ -465,7 +465,6 @@ Eversense-appen.</string>
     <string name="shortenergy">En</string>
     <string name="shortprotein">Pr</string>
     <string name="shortfat">Fett</string>
-    <string name="active"><![CDATA[<Aktiv>]]></string>
     <string name="executingrightnow">Kommando körs just nu</string>
     <string name="missed_bg_readings">BG-värden saknas</string>
     <string name="raise_notifications_as_android_notifications">Systemaviseringar för larm &amp; info</string>

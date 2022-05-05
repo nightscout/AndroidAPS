@@ -102,21 +102,6 @@
     <string name="ble_not_enabled">Bluetooth não está ativado.</string>
     <string name="location_not_found_title">Localização Não Está Ativada</string>
     <string name="location_not_found_message">Para que a procura de Bluetooth funcione em aparelhos mais recentes, a localização tem que ser activada. A app não rastreia a sua localização e pode ser desativada depois de um emparelhamento bem sucedido.</string>
-    <!--    DateUtil-->
-    <string name="shorthour">h</string>
-    <string name="days">dias</string>
-    <string name="hours">horas</string>
-    <string name="unit_second">segundo</string>
-    <string name="unit_minute">minuto</string>
-    <string name="unit_hour">hora</string>
-    <string name="unit_day">dia</string>
-    <string name="unit_week">semana</string>
-    <string name="unit_seconds">segundos</string>
-    <string name="unit_minutes">minutos</string>
-    <string name="unit_hours">horas</string>
-    <string name="unit_days">dias</string>
-    <string name="unit_weeks">semanas</string>
-    <string name="shortminute">m</string>
     <!--    Protection-->
     <string name="passwords_dont_match">As passwords não coincidem</string>
     <!--    Profile-->
@@ -239,6 +224,7 @@
     <!-- HardLimits -->
     <string name="valuelimitedto">%1$.2f limitado a %2$.2f</string>
     <!-- Command Queue + readStatus reasons -->
+    <!-- Autotune -->
     <plurals name="days">
         <item quantity="one">%1$d dia</item>
         <item quantity="other">%1$d dias</item>

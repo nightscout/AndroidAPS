@@ -461,7 +461,6 @@
     <string name="shortenergy">En</string>
     <string name="shortprotein">Bi</string>
     <string name="shortfat">Tł</string>
-    <string name="active"><![CDATA[<Aktywny>]]></string>
     <string name="executingrightnow">Polecenie jest teraz wykonywane</string>
     <string name="missed_bg_readings">Pominięte odczyty BG</string>
     <string name="raise_notifications_as_android_notifications">Użyj powiadomień systemowych dla alertów i powiadomień</string>

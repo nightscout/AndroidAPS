@@ -2,15 +2,6 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_xdrip">AAPS</string>
-    <string name="label_xdrip_large">AAPS (Stor)</string>
-    <string name="label_xdrip_big_chart">AAPS(StorGraf)</string>
-    <string name="label_xdrip_no_chart">AAPS(IngenGraf)</string>
-    <string name="label_xdrip_circle">AAPS(Cirkel)</string>
-    <string name="label_xdrip_v2">AAPSv2</string>
-    <string name="label_xdrip_cockpit">AAPS(Cockpit)</string>
-    <string name="label_xdrip_steampunk">AAPS(Steampunk)</string>
-    <string name="label_digitalstyle">AAPS (Digitalstil)</string>
     <string name="label_warning_sync">Ingen data!</string>
     <string name="label_warning_old">Gammel data!</string>
     <string name="label_warning_since">Siden %1$s</string>
@@ -59,7 +50,6 @@
     <string name="pref_complication_tap_action">Complication handling ved tryk</string>
     <string name="pref_unicode_in_complications">Unicode i komplikationer</string>
     <string name="pref_version">Version:</string>
-    <string name="pref_moreWatchfaceSettings">flere Watchface indstillinger</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Se venligst på Watchface-konfigurationen.</string>
     <string name="menu_tempt">MidlertidigMål</string>
     <string name="menu_bolus">Bolus</string>
@@ -81,7 +71,6 @@
     <string name="cancel_bolus">ANNULLER BOLUS</string>
     <string name="status_pump">Pumpe</string>
     <string name="status_loop">Loop</string>
-    <string name="status_cpp">CPP</string>
     <string name="status_tdd">TDD</string>
     <string name="activity_carb">Kulhydrat</string>
     <string name="activity_IOB">IOB</string>

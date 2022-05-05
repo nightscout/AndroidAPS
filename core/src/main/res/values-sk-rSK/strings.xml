@@ -132,33 +132,6 @@
     <string name="ble_not_enabled">Bluetooth nie je aktivovaný.</string>
     <string name="location_not_found_title">Poloha nie je aktivovaná</string>
     <string name="location_not_found_message">Pre vyhľadanie Bluetooth zariadení na novších telefónoch musí byť povolené zisťovanie polohy. AAPS vás nesleduje a po úspešnom spárovaní môžete túto voľbu opäť zakázať.</string>
-    <!--    DateUtil-->
-    <string name="minago">pred %1$d min</string>
-    <string name="minago_long">pred %1$d minútami</string>
-    <string name="hoursago">pred %1$.1f h</string>
-    <string name="days_ago">Pred %1$.1f dňami</string>
-    <string name="days_ago_round">Pred %1$.0f dňami</string>
-    <string name="in_days">za %1$.0f dní</string>
-    <string name="in_days_round">za %1$.0f dní</string>
-    <string name="shorthour">h</string>
-    <string name="days">dní</string>
-    <string name="hours">hodín</string>
-    <string name="unit_second">sekunda</string>
-    <string name="unit_minute">minúta</string>
-    <string name="unit_hour">hodina</string>
-    <string name="unit_day">deň</string>
-    <string name="unit_week">týždeň</string>
-    <string name="unit_seconds">sekúnd</string>
-    <string name="unit_minutes">minút</string>
-    <string name="unit_hours">hodín</string>
-    <string name="unit_days">dní</string>
-    <string name="unit_weeks">týždňov</string>
-    <string name="shortminute">m</string>
-    <string name="shortday">d</string>
-    <string name="later_today">Neskôr počas dňa</string>
-    <string name="tomorrow">Zajtra</string>
-    <string name="today">Dnes</string>
-    <string name="yesterday">včera</string>
     <!--    Protection-->
     <string name="wrongpassword">Nesprávne heslo</string>
     <string name="wrongpin">Nesprávny PIN</string>
@@ -467,6 +440,7 @@
     <string name="remove_selected_items">Odstrániť vybrané položky</string>
     <string name="a11y_file">súbor</string>
     <string name="a11y_user">používateľ</string>
+    <!-- Autotune -->
     <plurals name="days">
         <item quantity="one">%1$d deň</item>
         <item quantity="few">%1$d dní</item>
