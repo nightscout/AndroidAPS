@@ -238,7 +238,7 @@
     <string name="button3">Botón 3</string>
     <string name="units_colon">Unidades:</string>
     <string name="units">Unidades</string>
-    <string name="dia">Duración de la insulina activa</string>
+    <string name="dia">DIA</string>
     <string name="prefs_range_title">Rango de visualización</string>
     <string name="prefs_range_summary">Establece los rangos de glucosa objetivos (hiper e hipo) en la pantalla inicio de AAPS y en la esfera del reloj</string>
     <string name="low_mark">Valor de hipoglucemia</string>
