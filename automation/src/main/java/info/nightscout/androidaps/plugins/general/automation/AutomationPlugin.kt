@@ -334,6 +334,7 @@ class AutomationPlugin @Inject constructor(
             ActionCarePortalEvent(injector),
             ActionProfileSwitchPercent(injector),
             ActionProfileSwitch(injector),
+            ActionRunAutotune(injector),
             ActionSendSMS(injector)
         )
     }
