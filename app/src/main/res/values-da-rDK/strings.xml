@@ -461,7 +461,6 @@
     <string name="shortenergy">En</string>
     <string name="shortprotein">Pr</string>
     <string name="shortfat">Fedt</string>
-    <string name="active"><![CDATA[<Active>]]></string>
     <string name="executingrightnow">Kommando udføres lige nu</string>
     <string name="missed_bg_readings">Manglende BS målinger </string>
     <string name="raise_notifications_as_android_notifications">Brug systemnotifikationer til advarsler og notifikationer</string>

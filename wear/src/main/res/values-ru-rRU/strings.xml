@@ -2,15 +2,6 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_xdrip">AAPS</string>
-    <string name="label_xdrip_large">AAPS (Большой)</string>
-    <string name="label_xdrip_big_chart">AAPS (Крупный график)</string>
-    <string name="label_xdrip_no_chart">AAPS (Без графика)</string>
-    <string name="label_xdrip_circle">AAPS (круглый)</string>
-    <string name="label_xdrip_v2">AAPSv2</string>
-    <string name="label_xdrip_cockpit">AAPS (кабина пилота)</string>
-    <string name="label_xdrip_steampunk">AAPS (Стимпанк)</string>
-    <string name="label_digitalstyle">AAPS (DigitalStyle)</string>
     <string name="label_actions_tile">AAPS (Действия)</string>
     <string name="label_temp_target_tile">AAPS(ВремЦель)</string>
     <string name="label_quick_wizard_tile">AAPS(Мастер)</string>
@@ -64,7 +55,6 @@
     <string name="pref_complication_tap_action">Действия при нажатии кнопки расширений</string>
     <string name="pref_unicode_in_complications">Юникод в репликации</string>
     <string name="pref_version">Версия:</string>
-    <string name="pref_moreWatchfaceSettings">еще настройки циферблатов</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Смотрите конфигурацию циферблата.</string>
     <string name="menu_tempt">ВремЦ</string>
     <string name="menu_wizard">Калькулятор</string>
@@ -92,7 +82,6 @@
     <string name="cancel_bolus">ОТМЕНИТЬ БОЛЮС</string>
     <string name="status_pump">Помпа</string>
     <string name="status_loop">Замкнутый цикл</string>
-    <string name="status_cpp">Суточный профиль в процентах</string>
     <string name="status_tdd">TDD/общая суточная доза</string>
     <string name="activity_carb">Углеводы</string>
     <string name="activity_IOB">IOB</string>

@@ -132,25 +132,6 @@
     <string name="ble_not_enabled">Bluetooth nicht aktiviert.</string>
     <string name="location_not_found_title">Standortdienst ist nicht aktiviert</string>
     <string name="location_not_found_message">Auf neueren Geräten muss für die Bluetooth-Erkennung der Standortdienst aktiviert sein. AAPS speichert keine Standortdaten und der Dienst kann nach erfolgreichem Pairing wieder deaktiviert werden.</string>
-    <!--    DateUtil-->
-    <string name="minago">vor %1$d Min.</string>
-    <string name="minago_long">vor %1$d Minuten</string>
-    <string name="hoursago">vor %1$.1f Stunde</string>
-    <string name="shorthour">h</string>
-    <string name="days">Tage</string>
-    <string name="hours">Stunden</string>
-    <string name="unit_second">Sekunde</string>
-    <string name="unit_minute">Minute</string>
-    <string name="unit_hour">Stunde</string>
-    <string name="unit_day">Tag</string>
-    <string name="unit_week">Woche</string>
-    <string name="unit_seconds">Sekunden</string>
-    <string name="unit_minutes">Minuten</string>
-    <string name="unit_hours">Stunden</string>
-    <string name="unit_days">Tage</string>
-    <string name="unit_weeks">Wochen</string>
-    <string name="shortminute">min</string>
-    <string name="shortday">d</string>
     <!--    Protection-->
     <string name="wrongpassword">Falsches Passwort</string>
     <string name="passwords_dont_match">Die Passwörter stimmen nicht überein.</string>
@@ -447,6 +428,7 @@
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight Refresh Button</string>
     <string name="a11y_min_button_description">abnehmend %1$s mit %2$s</string>
     <string name="a11y_plus_button_description">zunehmend %1$s mit %2$s</string>
+    <!-- Autotune -->
     <plurals name="days">
         <item quantity="one">%1$d Tag</item>
         <item quantity="other">%1$d Tage</item>

@@ -132,33 +132,6 @@
     <string name="ble_not_enabled">Bluetooth niet ingeschakeld.</string>
     <string name="location_not_found_title">Locatie is niet ingeschakeld</string>
     <string name="location_not_found_message">Om Bluetooth discovery met nieuwere apparaten te laten werken moet locatie worden ingeschakeld. AAPS volgt je locatie niet en locatie kan ook weer worden uitgeschakeld nadat het koppelen is gelukt.</string>
-    <!--    DateUtil-->
-    <string name="minago">%1$d m geleden</string>
-    <string name="minago_long">%1$d minuten geleden</string>
-    <string name="hoursago">%1$.1f u geleden</string>
-    <string name="days_ago">%1$.1f dagen geleden</string>
-    <string name="days_ago_round">%1$.0f dagen geleden</string>
-    <string name="in_days">over %1$.0f dagen</string>
-    <string name="in_days_round">over %1$.0f dagen</string>
-    <string name="shorthour">u</string>
-    <string name="days">dagen</string>
-    <string name="hours">uren</string>
-    <string name="unit_second">seconde</string>
-    <string name="unit_minute">minuut</string>
-    <string name="unit_hour">uur</string>
-    <string name="unit_day">dag</string>
-    <string name="unit_week">week</string>
-    <string name="unit_seconds">seconden</string>
-    <string name="unit_minutes">minuten</string>
-    <string name="unit_hours">uren</string>
-    <string name="unit_days">dagen</string>
-    <string name="unit_weeks">weken</string>
-    <string name="shortminute">m</string>
-    <string name="shortday">d</string>
-    <string name="later_today">Later Vandaag</string>
-    <string name="tomorrow">Morgen</string>
-    <string name="today">Vandaag</string>
-    <string name="yesterday">Gisteren</string>
     <!--    Protection-->
     <string name="wrongpassword">Verkeerd wachtwoord</string>
     <string name="wrongpin">Onjuiste PIN-code</string>
@@ -465,6 +438,7 @@
     <string name="remove_items">Items verwijderen</string>
     <string name="sort_items">Sorteer items</string>
     <string name="remove_selected_items">Verwijder geselecteerde items</string>
+    <!-- Autotune -->
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagen</item>

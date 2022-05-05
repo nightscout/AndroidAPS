@@ -468,7 +468,6 @@
     <string name="shortenergy">En</string>
     <string name="shortprotein">Pr</string>
     <string name="shortfat">Tuk</string>
-    <string name="active"><![CDATA[<Aktivní>]]></string>
     <string name="executingrightnow">Příkaz je právě prováděn</string>
     <string name="missed_bg_readings">Chybějící glykémie</string>
     <string name="raise_notifications_as_android_notifications">Používat systémové notifikace pro výstrahy a oznámení</string>
@@ -1009,5 +1008,18 @@
     <string name="show_hide_records">Skrýt záznamy smyčky</string>
     <string name="widget_description">AndroidAPS widget</string>
     <string name="configure">Konfigurovat průhlednost</string>
+    <string name="loop_status">Stav smyčky</string>
+    <string name="a11y_otp_qr_code">QR kód pro nastavení jednorázového hesla</string>
+    <string name="a11y_open_settings">otevřít nastavení</string>
+    <string name="a11y_set_carb_timer">nastavit upozornění na sacharidy</string>
+    <string name="device_all">Vše</string>
+    <string name="device_phone">Telefon</string>
+    <string name="device_watch">Hodinky</string>
+    <string name="a11y_only_on_watch">pouze na hodinkách</string>
+    <string name="a11y_only_on_phone">pouze na telefonu</string>
+    <string name="a11y_drag_and_drop_handle">úchyt pro přetažení</string>
     <!-- Aidex Cgms -->
+    <string name="aidex">GlucoRx Aidex</string>
+    <string name="aidex_short">Aidex</string>
+    <string name="description_source_aidex">Přijímat hodnoty glykémie ze senzoru GlucoRx Aidex.</string>
 </resources>

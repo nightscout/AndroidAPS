@@ -344,7 +344,6 @@
     <string name="shortenergy">Ενέργεια</string>
     <string name="shortprotein">Πρωτεΐνες</string>
     <string name="shortfat">Λίπος</string>
-    <string name="active"><![CDATA[<Ενεργή>]]></string>
     <string name="executingrightnow">Η εντολή εκτελείται τώρα</string>
     <string name="missed_bg_readings">Χαμένες μετρήσεις BG</string>
     <string name="raise_notifications_as_android_notifications">Χρησιμοποιήστε ειδοποιήσεις συστήματος για ειδοποιήσεις και συναγερμούς</string>

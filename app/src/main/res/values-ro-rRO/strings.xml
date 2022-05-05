@@ -461,7 +461,6 @@
     <string name="shortenergy">En</string>
     <string name="shortprotein">Pr</string>
     <string name="shortfat">Grăsime</string>
-    <string name="active"><![CDATA[<Activ>]]></string>
     <string name="executingrightnow">Se execută comanda chiar acum</string>
     <string name="missed_bg_readings">Lipsesc date glicemie</string>
     <string name="raise_notifications_as_android_notifications">Se folosesc notificările sistemului pentru alerte și notificări</string>

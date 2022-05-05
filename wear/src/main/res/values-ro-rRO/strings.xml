@@ -2,15 +2,6 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_xdrip">AAPS</string>
-    <string name="label_xdrip_large">AAPS(Mare)</string>
-    <string name="label_xdrip_big_chart">AAPS(GraficMare)</string>
-    <string name="label_xdrip_no_chart">AAPS(FărăGrafic)</string>
-    <string name="label_xdrip_circle">AAPS(Cerc)</string>
-    <string name="label_xdrip_v2">AAPSv2</string>
-    <string name="label_xdrip_cockpit">AAPS(Panou)</string>
-    <string name="label_xdrip_steampunk">AAPS (Steampunk)</string>
-    <string name="label_digitalstyle">AAPS (DigitalStyle)</string>
     <string name="label_warning_sync">Nu există date!</string>
     <string name="label_warning_old">Date vechi!</string>
     <string name="label_warning_since">De acum %1$s</string>
@@ -59,7 +50,6 @@
     <string name="pref_complication_tap_action">Acţiuni pentru complicaţii</string>
     <string name="pref_unicode_in_complications">Unicode în complicații</string>
     <string name="pref_version">Versiune:</string>
-    <string name="pref_moreWatchfaceSettings">mai multe setări Watchface</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Uitaţi-vă în configurarea Watchface, vă rugăm.</string>
     <string name="menu_tempt">ŢintăTemporară</string>
     <string name="menu_bolus">Bolus</string>
@@ -81,7 +71,6 @@
     <string name="cancel_bolus">ANULARE BOLUS</string>
     <string name="status_pump">Pompă</string>
     <string name="status_loop">Buclă</string>
-    <string name="status_cpp">CPP</string>
     <string name="status_tdd">TDD</string>
     <string name="activity_carb">Carbohidrați</string>
     <string name="activity_IOB">IOB</string>

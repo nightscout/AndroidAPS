@@ -123,24 +123,6 @@
     <string name="ble_not_enabled">Bluetooth não está activado.</string>
     <string name="location_not_found_title">Localização Não Está Activa</string>
     <string name="location_not_found_message">Para a Pesquisa Bluetooth funcionar em dispositivos mais recentes, a localização deve ser activada. AAPS não acompanha a sua localização e pode ser desactivada após o emparelhamento bem-sucedido.</string>
-    <!--    DateUtil-->
-    <string name="minago">%1$d m atrás</string>
-    <string name="hoursago">%1$.1f h atrás</string>
-    <string name="shorthour">h</string>
-    <string name="days">dias</string>
-    <string name="hours">horas</string>
-    <string name="unit_second">segundo</string>
-    <string name="unit_minute">minuto</string>
-    <string name="unit_hour">hora</string>
-    <string name="unit_day">dia</string>
-    <string name="unit_week">semana</string>
-    <string name="unit_seconds">segundos</string>
-    <string name="unit_minutes">minutos</string>
-    <string name="unit_hours">horas</string>
-    <string name="unit_days">dias</string>
-    <string name="unit_weeks">semanas</string>
-    <string name="shortminute">m</string>
-    <string name="shortday">d</string>
     <!--    Protection-->
     <string name="wrongpassword">Palavra-passe incorreta</string>
     <string name="passwords_dont_match">Palavras-passe não correspondem</string>
@@ -355,6 +337,7 @@
     <string name="valuelimitedto">%1$.2f limitado a %2$.2f</string>
     <string name="valueoutofrange">»%1$s« está fora dos limites máximos</string>
     <!-- Command Queue + readStatus reasons -->
+    <!-- Autotune -->
     <plurals name="days">
         <item quantity="one">%1$d dia</item>
         <item quantity="other">%1$d dias</item>
