@@ -559,7 +559,7 @@
     <string name="autotune_circadian_ic_isf_summary">Autotune will not tune circadian variations, this option only apply the average tuning of IC and ISF to your circadian input profile</string>
     <string name="autotune_additional_log_title">Include more log information for debugging</string>
     <string name="autotune_additional_log_summary">Switch on only if requested by dev to send more log information to help debugging Autotune plugin</string>
-    <string name="autotune_default_tune_days_summary">Default number of days of data to be processed by Autotune (up to xx)</string>
+    <string name="autotune_default_tune_days_summary">Default number of days of data to be processed by Autotune (up to 30)</string>
     <string name="autotune_tunedprofile_name">Tuned</string>
     <string name="autotune_profile">Profile :</string>
     <string name="autotune_tune_days">Tune days :</string>
@@ -568,7 +568,7 @@
     <string name="autotune_select_profile">Select profile to tune</string>
     <string name="autotune_ic_warning">Autotune works with only one IC value, your profile has %1$d values. Average value is %2$.2fg/U</string>
     <string name="autotune_isf_warning">Autotune works with only one ISF value, your profile has %1$d values. Average value is %2$.1f%3$s/U</string>
-    <string name="autotune_error">Error in input data, try to reduce the number of days</string>
+    <string name="autotune_error">Error in input data, try to run again autotune or reduce the number of days</string>
     <string name="autotune_warning_during_run">Autotune calculation started, please be patient</string>
     <string name="autotune_warning_after_run">Check the results carefully before using it!</string>
     <string name="autotune_partial_result">Partial result day %1$d / %2$d tuned</string>
