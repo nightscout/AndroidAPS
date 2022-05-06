@@ -16,7 +16,6 @@ import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithE
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.JsonHelper
-import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONObject
@@ -29,7 +28,6 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var sp: SP
     @Inject lateinit var uel: UserEntryLogger
-    @Inject lateinit var buildHelper: BuildHelper
 
     var defaultValue = 0
     private var inputProfileName = InputProfileName(rh, activePlugin, "", true)
@@ -40,7 +38,7 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
     @DrawableRes override fun icon(): Int = R.drawable.ic_actions_profileswitch
 
     override fun doAction(callback: Callback) {
-        val autoSwitch = sp.getBoolean(R.string.key_autotune_auto, false) && buildHelper.isEngineeringMode()
+        val autoSwitch = sp.getBoolean(R.string.key_autotune_auto, false)
         val profileName = if (inputProfileName.value == rh.gs(R.string.active)) "" else inputProfileName.value
         var message = if (autoSwitch) R.string.autotune_run_with_autoswitch else R.string.autotune_run_without_autoswitch
         Thread {
