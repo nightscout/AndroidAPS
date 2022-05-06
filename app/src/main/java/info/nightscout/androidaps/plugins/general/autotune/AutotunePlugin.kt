@@ -18,6 +18,7 @@ import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfile
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.MidnightTime
 import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONException
@@ -48,6 +49,7 @@ class AutotunePlugin @Inject constructor(
     private val autotuneIob: AutotuneIob,
     private val autotunePrep: AutotunePrep,
     private val autotuneCore: AutotuneCore,
+    private val buildHelper:BuildHelper,
     private val uel: UserEntryLogger,
     aapsLogger: AAPSLogger
 ) : PluginBase(PluginDescription()
@@ -294,6 +296,8 @@ class AutotunePlugin @Inject constructor(
     private fun log(message: String) {
         atLog("[Plugin] $message")
     }
+
+    override fun specialEnableCondition(): Boolean = buildHelper.isEngineeringMode() && buildHelper.isDev()
 
     override fun atLog(message: String) {
         autotuneFS.atLog(message)

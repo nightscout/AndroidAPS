@@ -36,7 +36,6 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.MidnightTime
 import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog.showConfirmation
-import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -60,7 +59,6 @@ class AutotuneFragment : DaggerFragment() {
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var buildHelper: BuildHelper
     @Inject lateinit var injector: HasAndroidInjector
 
     private var disposable: CompositeDisposable = CompositeDisposable()
@@ -305,21 +303,17 @@ class AutotuneFragment : DaggerFragment() {
                 binding.tuneWarning.text = rh.gs(R.string.autotune_warning_during_run)
             }
             autotunePlugin.lastRunSuccess     -> {
-                if (buildHelper.isEngineeringMode()) {
                     binding.autotuneCopylocal.visibility = View.VISIBLE
                     binding.autotuneUpdateProfile.visibility = autotunePlugin.updateButtonVisibility
                     binding.autotuneRevertProfile.visibility = if (autotunePlugin.updateButtonVisibility == View.VISIBLE) View.GONE else View.VISIBLE
                     binding.autotuneProfileswitch.visibility = View.VISIBLE
                     binding.tuneWarning.text = rh.gs(R.string.autotune_warning_after_run)
-                } else
-                    binding.tuneWarning.text = rh.gs(R.string.autotune_engineering_mode_warning)
                 binding.autotuneCompare.visibility = View.VISIBLE
             }
-            buildHelper.isDev()               -> {
+            else                              -> {
                 binding.autotuneRun.visibility = View.VISIBLE
                 binding.autotuneCheckInputProfile.visibility = View.VISIBLE
             }
-            else                              -> binding.tuneWarning.text = rh.gs(R.string.autotune_dev_warning)
         }
         binding.tuneLastrun.text = dateUtil.dateAndTimeString(autotunePlugin.lastRun)
         showResults()
