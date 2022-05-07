@@ -2,6 +2,18 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
+    <string name="label_watchface">AAPS</string>
+    <string name="label_watchface_large">AAPS (Stor)</string>
+    <string name="label_watchface_big_chart">AAPS(StorGraf)</string>
+    <string name="label_watchface_no_chart">AAPS(IngenGraf)</string>
+    <string name="label_watchface_circle">AAPS(Cirkel)</string>
+    <string name="label_watchface_v2">AAPS(v2)</string>
+    <string name="label_watchface_cockpit">AAPS(Cockpit)</string>
+    <string name="label_watchface_steampunk">AAPS(Steampunk)</string>
+    <string name="label_watchface_digital_style">AAPS (DigitalStil)</string>
+    <string name="label_actions_tile">AAPS (Handlinger)</string>
+    <string name="label_temp_target_tile">AAPS(Midl. Mål)</string>
+    <string name="label_quick_wizard_tile">AAPS(Hurtig Guide)</string>
     <string name="label_warning_sync">Ingen data!</string>
     <string name="label_warning_old">Gammel data!</string>
     <string name="label_warning_since">Siden %1$s</string>
@@ -45,14 +57,23 @@
     <string name="pref_ring_history">Ring Historik</string>
     <string name="pref_light_ring_history">Lys Ring Historik</string>
     <string name="pref_animations">Animationer</string>
+    <string name="pref_wizard_in_menu">Beregner i Menu</string>
     <string name="pref_prime_in_menu">Prime i menuen</string>
     <string name="pref_single_target">Enkelt Mål</string>
+    <string name="pref_wizard_percentage">Beregner Procent</string>
     <string name="pref_complication_tap_action">Complication handling ved tryk</string>
     <string name="pref_unicode_in_complications">Unicode i komplikationer</string>
     <string name="pref_version">Version:</string>
+    <string name="pref_moreWatchfaceSettings">Flere urskive indstillinger</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Se venligst på Watchface-konfigurationen.</string>
     <string name="menu_tempt">MidlertidigMål</string>
+    <string name="menu_wizard">Beregner</string>
+    <string name="menu_wizard_short">Beregn</string>
+    <string name="menu_treatment">Behandling</string>
+    <string name="menu_treatment_short">Behandl</string>
     <string name="menu_bolus">Bolus</string>
+    <string name="menu_carb">Kulhydrater</string>
+    <string name="menu_ecarb">Forlængede kulhydrater</string>
     <string name="menu_settings">Indstillinger</string>
     <string name="menu_status">Status</string>
     <string name="menu_resync">Gensynkronisering</string>
@@ -60,17 +81,38 @@
     <string name="menu_none">Ingen</string>
     <string name="menu_default">Standard</string>
     <string name="menu_menu">Menu</string>
+    <string name="quick_wizard_short">XL</string>
+    <string name="action_duration">Varighed</string>
+    <string name="action_tempt_confirmation">Midlertidig Mål Anmodet</string>
+    <string name="action_quick_wizard_confirmation">Hurtig Guide Anmodet</string>
+    <string name="action_treatment_confirmation">Behandling Anmodet</string>
+    <string name="action_bolus_confirmation">Bolus Anmodet</string>
+    <string name="action_wizard_confirmation">Beregning Anmodet</string>
+    <string name="action_fill_confirmation">Fyldning Anmodet</string>
+    <string name="action_ecarb_confirmation">Kulhydrater Anmodet</string>
+    <string name="action_profile_switch_confirmation">Profilskift anmodet</string>
+    <string name="action_target" comment="In temp target menu, single target value">Mål</string>
+    <string name="action_low" comment="In temp target menu, lower value from range">Lav</string>
+    <string name="action_high" comment="In temp target menu, higher value from range">Høj</string>
+    <string name="action_carbs">Kulhydrater</string>
+    <string name="action_ecarbs">Forlængede kulhydrater</string>
+    <string name="action_percentage">Procentdel</string>
+    <string name="action_start_min">Start [min]</string>
+    <string name="action_duration_h">Varighed [h]</string>
+    <string name="action_insulin">Insulin</string>
     <string name="action_preset_1">Forvalg 1</string>
     <string name="action_preset_2">Forvalg 2</string>
     <string name="action_preset_3">Forvalg 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Fri mængde</string>
     <string name="action_confirm">BEKRÆFT</string>
     <string name="action_timeshift">tidsforskydning</string>
+    <string name="action_bolus">Bolus</string>
     <string name="bolus_progress">Bolus Fremskridt</string>
     <string name="press_to_cancel">tryk for at annullere</string>
     <string name="cancel_bolus">ANNULLER BOLUS</string>
     <string name="status_pump">Pumpe</string>
     <string name="status_loop">Loop</string>
+    <string name="status_profile_switch">Profilskift</string>
     <string name="status_tdd">TDD</string>
     <string name="activity_carb">Kulhydrat</string>
     <string name="activity_IOB">IOB</string>
@@ -117,4 +159,13 @@
     <string name="simple_ui_charging">Under Opladning</string>
     <string name="simple_ui_always_on">Altid Tændt Tilstand</string>
     <string name="simple_ui_always_on_charging">Altid Tændt ved opladning</string>
+    <string name="temp_target_eating_soon">Spiser</string>
+    <string name="temp_target_hypo">Hypo</string>
+    <string name="temp_target_activity">Aktivitet</string>
+    <string name="temp_target_manual">Manuel</string>
+    <string name="temp_target_cancel">Annuller</string>
+    <string name="tile_none">Ingen</string>
+    <string name="tile_no_config">Ingen konfiguration tilgængelig</string>
+    <string name="wear_control_not_enabled">Wear kontrol deaktiveret</string>
+    <string name="wear_control_no_data">Ingen data tilgængelig</string>
 </resources>
