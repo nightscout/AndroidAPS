@@ -120,4 +120,7 @@
     <string name="confirm_remove_multiple_items">¿Estás seguro de que quieres eliminar %1$d elementos?</string>
     <string name="sort_label">Ordenar</string>
     <string name="system_automation">Automatización del sistema</string>
+    <string name="run_automations">Ejecutar automatizaciones</string>
+    <string name="add_automation">Añadir regla</string>
+    <string name="remove_sort">Eliminar/ordenar</string>
 </resources>
