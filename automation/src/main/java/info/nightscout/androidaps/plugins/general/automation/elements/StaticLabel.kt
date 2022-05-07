@@ -6,7 +6,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 
 class StaticLabel(private val rh: ResourceHelper) : Element() {
 

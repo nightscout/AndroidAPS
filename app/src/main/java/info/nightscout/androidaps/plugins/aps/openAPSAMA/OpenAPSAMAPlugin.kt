@@ -23,7 +23,7 @@ import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.Profiler
 import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.extensions.target
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import org.json.JSONException
 import javax.inject.Inject
 import javax.inject.Singleton

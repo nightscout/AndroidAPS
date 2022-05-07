@@ -16,7 +16,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpH
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.TempBasalPair
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 
 import org.junit.Test

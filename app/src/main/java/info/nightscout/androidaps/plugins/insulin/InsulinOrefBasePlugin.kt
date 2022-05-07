@@ -11,7 +11,7 @@ import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import kotlin.math.exp
 import kotlin.math.pow
 
@@ -101,7 +101,7 @@ abstract class InsulinOrefBasePlugin(
             return comment
         }
 
-    abstract val peak: Int
+    override abstract val peak: Int
     abstract fun commentStandardText(): String
 
     companion object {

@@ -14,7 +14,7 @@ import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import java.util.*
 
 class InputDateTime(private val rh: ResourceHelper, private val dateUtil: DateUtil, var value: Long = dateUtil.now()) : Element() {
@@ -40,7 +40,7 @@ class InputDateTime(private val rh: ResourceHelper, private val dateUtil: DateUt
                             getFragmentManager(root.context)?.let { fm ->
                                 MaterialDatePicker.Builder.datePicker()
                                     .setTheme(R.style.DatePicker)
-                                    .setSelection(dateUtil.timeStampToUtcDateMilis(value))
+                                    .setSelection(dateUtil.timeStampToUtcDateMillis(value))
                                     .build()
                                     .apply {
                                         addOnPositiveButtonClickListener { selection ->

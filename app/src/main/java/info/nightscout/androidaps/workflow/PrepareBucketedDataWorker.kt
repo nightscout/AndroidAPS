@@ -12,7 +12,7 @@ import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataP
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.InMemoryGlucoseValueDataPoint
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries
 import info.nightscout.androidaps.receivers.DataWorker
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.logging.AAPSLogger
 import javax.inject.Inject
 

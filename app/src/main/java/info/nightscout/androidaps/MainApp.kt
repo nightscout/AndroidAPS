@@ -33,7 +33,11 @@ import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionChec
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationStore
 import info.nightscout.androidaps.plugins.general.themes.ThemeSwitcherPlugin
-import info.nightscout.androidaps.receivers.*
+import info.nightscout.androidaps.receivers.BTReceiver
+import info.nightscout.androidaps.receivers.ChargingStateReceiver
+import info.nightscout.androidaps.receivers.KeepAliveWorker
+import info.nightscout.androidaps.receivers.NetworkChangeReceiver
+import info.nightscout.androidaps.receivers.TimeDateOrTZChangeReceiver
 import info.nightscout.androidaps.services.AlarmSoundServiceHelper
 import info.nightscout.androidaps.utils.ActivityMonitor
 import info.nightscout.androidaps.utils.DateUtil
@@ -49,7 +53,6 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.exceptions.UndeliverableException
 import io.reactivex.rxjava3.kotlin.plusAssign
 import io.reactivex.rxjava3.plugins.RxJavaPlugins
-import net.danlew.android.joda.JodaTimeAndroid
 import java.io.IOException
 import java.net.SocketException
 import java.util.concurrent.TimeUnit
@@ -98,7 +101,6 @@ class MainApp : DaggerApplication() {
         }
         disposable += compatDBHelper.dbChangeDisposable()
         registerActivityLifecycleCallbacks(activityMonitor)
-        JodaTimeAndroid.init(this)
         profileSwitchPlugin.setThemeMode()
         aapsLogger.debug("Version: " + BuildConfig.VERSION_NAME)
         aapsLogger.debug("BuildVersion: " + BuildConfig.BUILDVERSION)

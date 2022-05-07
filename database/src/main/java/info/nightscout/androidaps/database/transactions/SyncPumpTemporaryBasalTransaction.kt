@@ -24,20 +24,22 @@ class SyncPumpTemporaryBasalTransaction(
                 existing.duration != temporaryBasal.duration  && existing.interfaceIDs.endId == null ||
                 existing.type != type ?: existing.type
             ) {
+                val old = existing.copy()
                 existing.timestamp = temporaryBasal.timestamp
                 existing.rate = temporaryBasal.rate
                 existing.duration = temporaryBasal.duration
                 existing.type = type ?: existing.type
                 database.temporaryBasalDao.updateExistingEntry(existing)
-                result.updated.add(existing)
+                result.updated.add(Pair(old, existing))
             }
         } else {
             val running = database.temporaryBasalDao.getTemporaryBasalActiveAt(temporaryBasal.timestamp).blockingGet()
             if (running != null) {
+                val old = running.copy()
                 running.end = temporaryBasal.timestamp
                 running.interfaceIDs.endId = temporaryBasal.interfaceIDs.pumpId
                 database.temporaryBasalDao.updateExistingEntry(running)
-                result.updated.add(running)
+                result.updated.add(Pair(old, running))
             }
             database.temporaryBasalDao.insertNewEntry(temporaryBasal)
             result.inserted.add(temporaryBasal)
@@ -48,6 +50,6 @@ class SyncPumpTemporaryBasalTransaction(
     class TransactionResult {
 
         val inserted = mutableListOf<TemporaryBasal>()
-        val updated = mutableListOf<TemporaryBasal>()
+        val updated = mutableListOf<Pair<TemporaryBasal,TemporaryBasal>>()
     }
 }

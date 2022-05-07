@@ -2,14 +2,6 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_xdrip">AAPS</string>
-    <string name="label_xdrip_large">AAPS(Grande)</string>
-    <string name="label_xdrip_big_chart">AAPS(GrafGrande)</string>
-    <string name="label_xdrip_no_chart">AAPS(SemGraf)</string>
-    <string name="label_xdrip_circle">AAPS(Círculo)</string>
-    <string name="label_xdrip_v2">AAPSv2</string>
-    <string name="label_xdrip_cockpit">AAPS(Cockpit)</string>
-    <string name="label_xdrip_steampunk">AAPS(Steampunk)</string>
     <string name="label_warning_sync">Sem dados!</string>
     <string name="label_warning_old">Dados antigos!</string>
     <string name="label_warning_since">Desde %1$s</string>
@@ -74,7 +66,6 @@
     <string name="action_timeshift">alteração turno</string>
     <string name="status_pump">Bomba</string>
     <string name="status_loop">Loop</string>
-    <string name="status_cpp">CPP</string>
     <string name="status_tdd">TDD</string>
     <string name="activity_carb">Hidratos</string>
     <string name="activity_IOB">IOB</string>

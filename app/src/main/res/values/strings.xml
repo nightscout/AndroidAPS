@@ -561,7 +561,6 @@
     <string name="shortenergy">En</string>
     <string name="shortprotein">Pr</string>
     <string name="shortfat">Fat</string>
-    <string name="active"><![CDATA[<Active>]]></string>
     <string name="executingrightnow">Command is executed right now</string>
     <string name="missed_bg_readings">Missed BG readings</string>
     <string name="key_raise_notifications_as_android_notifications" translatable="false">raise_urgent_alarms_as_android_notification</string>
@@ -1212,6 +1211,7 @@
     <string name="show_hide_records">Hide loop records</string>
     <string name="widget_description">AndroidAPS widget</string>
     <string name="configure">Configure opacity</string>
+    <string name="loop_status">Loop status</string>
 
     <string name="a11y_otp_qr_code">QR Code for setup one time password</string>
     <string name="a11y_open_settings">open settings</string>

@@ -48,7 +48,7 @@ import info.nightscout.androidaps.utils.DecimalFormatter.to2Decimal
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.TimeChangeType
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
@@ -1364,16 +1364,17 @@ class OmnipodDashPumpPlugin @Inject constructor(
     private fun handleCommandConfirmation(confirmation: CommandConfirmed) {
         val command = confirmation.command
         val historyEntry = history.getById(command.historyId)
-        aapsLogger.debug(LTag.PUMPCOMM, "handling command confirmation: $confirmation")
+        aapsLogger.debug(LTag.PUMPCOMM, "handling command confirmation: $confirmation ${historyEntry.commandType}")
         when (historyEntry.commandType) {
             OmnipodCommandType.CANCEL_TEMPORARY_BASAL -> {
                 if (confirmation.success) {
-                    pumpSync.syncStopTemporaryBasalWithPumpId(
+                    val ret = pumpSync.syncStopTemporaryBasalWithPumpId(
                         historyEntry.createdAt,
                         historyEntry.pumpId(),
                         PumpType.OMNIPOD_DASH,
                         serialNumber()
                     )
+                    aapsLogger.info(LTag.PUMP, "syncStopTemporaryBasalWithPumpId ret=$ret")
                     podStateManager.tempBasal = null
                 }
                 rxBus.send(EventDismissNotification(Notification.OMNIPOD_TBR_ALERTS))

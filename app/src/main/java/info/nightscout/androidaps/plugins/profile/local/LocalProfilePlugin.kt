@@ -25,7 +25,7 @@ import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfile
 import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONArray
 import org.json.JSONException

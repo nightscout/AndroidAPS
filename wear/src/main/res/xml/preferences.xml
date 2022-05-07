@@ -12,7 +12,7 @@
 
     <CheckBoxPreference
         android:defaultValue="true"
-        android:key="show_cob"
+        android:key="@string/key_show_cob"
         android:summary="Show carb on board."
         android:title="@string/pref_show_cob"
         app:wear_iconOff="@drawable/settings_off"
@@ -20,7 +20,7 @@
 
     <CheckBoxPreference
         android:defaultValue="true"
-        android:key="showBG"
+        android:key="@string/key_show_bg"
         android:summary="Show BG."
         android:title="@string/pref_show_bg"
         app:wear_iconOff="@drawable/settings_off"
@@ -28,7 +28,7 @@
 
     <CheckBoxPreference
         android:defaultValue="true"
-        android:key="showDelta"
+        android:key="@string/key_show_delta"
         android:summary="Show delta."
         android:title="@string/pref_show_delta"
         app:wear_iconOff="@drawable/settings_off"
@@ -36,7 +36,7 @@
 
     <CheckBoxPreference
         android:defaultValue="true"
-        android:key="showAvgDelta"
+        android:key="@string/key_show_avg_delta"
         android:summary="Show the avgDelta."
         android:title="@string/pref_show_avgdelta"
         app:wear_iconOff="@drawable/settings_off"
@@ -51,7 +51,7 @@
 
     <CheckBoxPreference
         android:defaultValue="true"
-        android:key="showAgo"
+        android:key="@string/key_show_ago"
         android:summary="Minutes since last reading."
         android:title="@string/pref_show_ago"
         app:wear_iconOff="@drawable/settings_off"
@@ -80,14 +80,14 @@
 
     <CheckBoxPreference
         android:defaultValue="true"
-        android:key="showExternalStatus"
+        android:key="@string/key_show_external_status"
         android:title="@string/pref_show_loop_status"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
 
     <CheckBoxPreference
         android:defaultValue="false"
-        android:key="highlight_basals"
+        android:key="@string/key_highlight_basals"
         android:summary="Better visible basal rate and temp basals"
         android:title="@string/pref_highlight_basals"
         app:wear_iconOff="@drawable/settings_off"
@@ -97,7 +97,7 @@
         android:defaultValue="3"
         android:entries="@array/chart_timeframe"
         android:entryValues="@array/chart_timeframe_values"
-        android:key="chart_timeframe"
+        android:key="@string/key_chart_time_frame"
         android:summary="Chart Timeframe"
         android:title="@string/pref_chart_timeframe" />
 
@@ -134,7 +134,7 @@
 
     <CheckBoxPreference
         android:defaultValue="true"
-        android:key="singletarget"
+        android:key="@string/key_single_target"
         android:summary="Single temp-target instead of a range."
         android:title="@string/pref_single_target"
         app:wear_iconOff="@drawable/settings_off"
@@ -142,7 +142,7 @@
 
     <CheckBoxPreference
         android:defaultValue="false"
-        android:key="wizardpercentage"
+        android:key="@string/key_wizard_percentage"
         android:summary="Percentage correction."
         android:title="@string/pref_wizard_percentage"
         app:wear_iconOff="@drawable/settings_off"

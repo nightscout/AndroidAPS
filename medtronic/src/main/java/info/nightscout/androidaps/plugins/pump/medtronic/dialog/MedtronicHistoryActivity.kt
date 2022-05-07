@@ -16,7 +16,7 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpHistoryEntryGroup
 import info.nightscout.androidaps.plugins.pump.medtronic.R
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry
 import info.nightscout.androidaps.plugins.pump.medtronic.data.MedtronicHistoryData
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import java.util.*
 import javax.inject.Inject
 

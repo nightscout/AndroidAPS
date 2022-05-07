@@ -8,7 +8,7 @@ import android.widget.TextView
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.entities.TotalDailyDose
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 
 val TotalDailyDose.total
     get() = if (totalAmount > 0) totalAmount else basalAmount + bolusAmount

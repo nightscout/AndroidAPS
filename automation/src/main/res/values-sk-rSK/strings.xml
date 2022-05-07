@@ -120,4 +120,7 @@
     <string name="confirm_remove_multiple_items">Naozaj chcete odstrániť %1$d položiek</string>
     <string name="sort_label">Zoradiť</string>
     <string name="system_automation">Automatizácia systému</string>
+    <string name="run_automations">Spustiť automatizácie</string>
+    <string name="add_automation">Pridať pravidlo</string>
+    <string name="remove_sort">Odstrániť/zoradiť</string>
 </resources>

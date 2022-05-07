@@ -1,28 +1,30 @@
 package info.nightscout.androidaps.interaction.actions
 
-import android.app.Activity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
-import info.nightscout.androidaps.data.ListenerService
+import dagger.android.DaggerActivity
+import info.nightscout.androidaps.comm.DataLayerListenerServiceWear
+import info.nightscout.androidaps.events.EventWearToMobile
+import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
+import info.nightscout.shared.weardata.EventData
+import javax.inject.Inject
 
-const val TAG = "QuickWizard"
+class BackgroundActionActivity : DaggerActivity() {
 
-class BackgroundActionActivity : Activity() {
+    @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var rxBus: RxBus
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val actionString = intent.extras?.getString("actionString")
-        Log.i(TAG, "QuickWizardActivity.onCreate: actionString=$actionString")
-        if (actionString != null) {
-            ListenerService.initiateAction(this, actionString)
-            val message = intent.extras?.getString("message")
-            if (message != null) {
+        intent.extras?.getString(DataLayerListenerServiceWear.KEY_ACTION)?.let { action ->
+            aapsLogger.info(LTag.WEAR, "QuickWizardActivity.onCreate: action=$action")
+            rxBus.send(EventWearToMobile(EventData.deserialize(action)))
+            intent.extras?.getString(DataLayerListenerServiceWear.KEY_MESSAGE)?.let { message ->
                 Toast.makeText(this, message, Toast.LENGTH_LONG).show()
             }
-        } else {
-            Log.e(TAG, "BackgroundActionActivity.onCreate extras 'actionString' required")
-        }
+        } ?: aapsLogger.error(LTag.WEAR, "BackgroundActionActivity.onCreate extras 'actionString' required")
         finishAffinity()
     }
 

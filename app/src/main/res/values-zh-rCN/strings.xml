@@ -468,7 +468,6 @@
     <string name="shortenergy">En</string>
     <string name="shortprotein">蛋白质</string>
     <string name="shortfat">脂肪</string>
-    <string name="active"><![CDATA[<Active>]]></string>
     <string name="executingrightnow">现在命令被执行了</string>
     <string name="missed_bg_readings">血糖读数丢失</string>
     <string name="raise_notifications_as_android_notifications">对警报和通知使用系统通知音</string>

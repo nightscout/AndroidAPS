@@ -5,7 +5,6 @@
     <!--    Constraints-->
     <!--    Dialogs-->
     <!--    BlePreCheck-->
-    <!--    DateUtil-->
     <!--    Protection-->
     <!--    Profile-->
     <!--    ProfileFunction-->
@@ -67,4 +66,5 @@
     <string name="valuelimitedto">%1$.2f limitat a %2$.2f</string>
     <string name="valueoutofrange">»%1$s« supera els límits</string>
     <!-- Command Queue + readStatus reasons -->
+    <!-- Autotune -->
 </resources>

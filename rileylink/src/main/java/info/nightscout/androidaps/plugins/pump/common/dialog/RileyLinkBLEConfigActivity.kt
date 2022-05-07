@@ -32,7 +32,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.Gatt
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.databinding.RileyLinkBleConfigActivityBinding
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpDevice
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP

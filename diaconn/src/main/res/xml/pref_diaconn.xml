@@ -45,6 +45,12 @@
             android:summary="@string/diaconn_g8_logbatterychange_summary"
             android:title="@string/diaconn_g8_logbatterychange_title" />
 
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_diaconn_g8_cloudsend"
+            android:summary="@string/diaconn_g8_cloudsend_summary"
+            android:title="@string/diaconn_g8_cloudsend_title" />
+
     </PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>

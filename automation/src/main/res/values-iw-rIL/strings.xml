@@ -120,4 +120,7 @@
     <string name="confirm_remove_multiple_items">האם אתם בטוחים שברצונכם להסיר %1$d פריטים? </string>
     <string name="sort_label">מיין</string>
     <string name="system_automation">אוטומציית מערכת</string>
+    <string name="run_automations">הפעל אוטומציות</string>
+    <string name="add_automation">הוספת כלל</string>
+    <string name="remove_sort">הסרה\\סידור</string>
 </resources>

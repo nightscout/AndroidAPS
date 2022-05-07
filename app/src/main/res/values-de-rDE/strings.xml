@@ -463,7 +463,6 @@
     <string name="shortenergy">En</string>
     <string name="shortprotein">Prot</string>
     <string name="shortfat">Ft</string>
-    <string name="active"><![CDATA[<Aktiv>]]></string>
     <string name="executingrightnow">Befehl wird zurzeit ausgeführt</string>
     <string name="missed_bg_readings">BZ-Werte fehlen</string>
     <string name="raise_notifications_as_android_notifications">Benutze Systemmeldungen für Alarme und Meldungen</string>

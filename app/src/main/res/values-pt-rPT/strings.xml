@@ -461,7 +461,6 @@
     <string name="shortenergy">En</string>
     <string name="shortprotein">Pr</string>
     <string name="shortfat">Gor</string>
-    <string name="active"><![CDATA[<Activo>]]></string>
     <string name="executingrightnow">Comando será executado agora</string>
     <string name="missed_bg_readings">Leituras Glicose perdidas</string>
     <string name="raise_notifications_as_android_notifications">Utilizar as notificações do sistema para alertas e notificações</string>

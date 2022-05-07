@@ -31,14 +31,14 @@
 
     <CheckBoxPreference
         android:defaultValue="true"
-        android:key="show_date"
+        android:key="@string/key_show_date"
         android:title="@string/pref_show_date"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
 
     <CheckBoxPreference
         android:defaultValue="false"
-        android:key="show_weeknumber"
+        android:key="@string/key_show_week_number"
         android:title="@string/pref_show_weeknumber"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />

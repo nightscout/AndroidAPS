@@ -2,15 +2,6 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_xdrip">AAPS</string>
-    <string name="label_xdrip_large">AAPS(Didelis)</string>
-    <string name="label_xdrip_big_chart">AAPS(DidelisGrafikas)</string>
-    <string name="label_xdrip_no_chart">AAPS(BeGrafiko)</string>
-    <string name="label_xdrip_circle">AAPS(Apvalus)</string>
-    <string name="label_xdrip_v2">AAPSv2</string>
-    <string name="label_xdrip_cockpit">AAPS(Cockpit)</string>
-    <string name="label_xdrip_steampunk">AAPS(Steampunk)</string>
-    <string name="label_digitalstyle">AAPS(DigitalStyle)</string>
     <string name="label_warning_sync">Nėra duomenų!</string>
     <string name="label_warning_old">Seni duomenys!</string>
     <string name="label_warning_since">Nuo %1$s</string>
@@ -59,7 +50,6 @@
     <string name="pref_complication_tap_action">Elementų skirtuko veiksmai</string>
     <string name="pref_unicode_in_complications">Unikodas elementuose</string>
     <string name="pref_version">Versija:</string>
-    <string name="pref_moreWatchfaceSettings">Daugiau laikrodžio ekrano nustatymų</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Prašom žiūrėti Watchface konfigūraciją.</string>
     <string name="menu_tempt">LaikinasTikslas</string>
     <string name="menu_bolus">Bolusas</string>
@@ -81,7 +71,6 @@
     <string name="cancel_bolus">ATŠAUKTI BOLUSĄ</string>
     <string name="status_pump">Pompa</string>
     <string name="status_loop">Ciklas</string>
-    <string name="status_cpp">CPP (Procentinis dienos profilis)</string>
     <string name="status_tdd">BPD</string>
     <string name="activity_carb">AV</string>
     <string name="activity_IOB">AIO</string>

@@ -70,7 +70,14 @@ public class RuffyScripter implements RuffyCommands {
     private final IRTHandler mHandler = new IRTHandler.Stub() {
         @Override
         public void log(String message) {
-            aapsLogger.debug(LTag.PUMP, "Ruffy says: " + message);
+            // Ruffy is very verbose at this level, but the data provided isn't too helpful for
+            // debugging. For debugging Ruffy, it makes more sense to check logcat, where other
+            // possibly relevant (BT) events are also logged.
+            // Due to the amount of calls, logging this causes timing issues as reported in
+            // https://github.com/nightscout/AndroidAPS/issues/1619#issuecomment-1115811485
+            // This was caused by changing the log level from trace to debug so these messages
+            // where logged by default.
+            //aapsLogger.debug(LTag.PUMP, "Ruffy says: " + message);
         }
 
         @Override

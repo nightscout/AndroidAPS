@@ -4,9 +4,9 @@ import android.content.Context
 import android.os.PowerManager
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
-import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.database.AppRepository
@@ -27,7 +27,7 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.buildHelper.BuildHelperImpl
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.core.Single
@@ -138,6 +138,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         `when`(constraintChecker.applyBasalPercentConstraints(anyObject(), anyObject())).thenReturn(percentageConstraint)
         `when`(rh.gs(R.string.connectiontimedout)).thenReturn("Connection timed out")
         `when`(rh.gs(R.string.formatinsulinunits)).thenReturn("%1\$.2f U")
+        `when`(rh.gs(R.string.bolusrequested)).thenReturn("Going to deliver %1\$.2f U")
     }
 
     @Test
