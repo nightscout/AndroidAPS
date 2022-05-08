@@ -185,7 +185,7 @@ class SteampunkWatchface : BaseWatchFace() {
         }
 
         //if both batteries are shown, make them smaller.
-        if (sp.getBoolean("show_uploader_battery", true) && sp.getBoolean("show_rig_battery", false)) {
+        if (sp.getBoolean(R.string.key_show_uploader_battery, true) && sp.getBoolean(R.string.key_show_rig_battery, false)) {
             mUploaderBattery?.textSize = fontSmall
             mRigBattery?.textSize = fontSmall
         } else {

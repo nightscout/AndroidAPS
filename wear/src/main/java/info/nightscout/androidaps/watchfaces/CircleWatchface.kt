@@ -276,35 +276,15 @@ class CircleWatchface : WatchFace() {
 
     // defining color for dark and bright
     private val lowColor: Int
-        get() = if (sp.getBoolean("dark", true)) {
-            Color.argb(255, 255, 120, 120)
-        } else {
-            Color.argb(255, 255, 80, 80)
-        }
+        get() = if (sp.getBoolean(R.string.key_dark, true)) Color.argb(255, 255, 120, 120) else Color.argb(255, 255, 80, 80)
     private val inRangeColor: Int
-        get() = if (sp.getBoolean("dark", true)) {
-            Color.argb(255, 120, 255, 120)
-        } else {
-            Color.argb(255, 0, 240, 0)
-        }
+        get() = if (sp.getBoolean(R.string.key_dark, true)) Color.argb(255, 120, 255, 120) else Color.argb(255, 0, 240, 0)
     private val highColor: Int
-        get() = if (sp.getBoolean("dark", true)) {
-            Color.argb(255, 255, 255, 120)
-        } else {
-            Color.argb(255, 255, 200, 0)
-        }
+        get() = if (sp.getBoolean(R.string.key_dark, true)) Color.argb(255, 255, 255, 120) else Color.argb(255, 255, 200, 0)
     private val backgroundColor: Int
-        get() = if (sp.getBoolean("dark", true)) {
-            Color.BLACK
-        } else {
-            Color.WHITE
-        }
+        get() = if (sp.getBoolean(R.string.key_dark, true)) Color.BLACK else Color.WHITE
     val textColor: Int
-        get() = if (sp.getBoolean("dark", true)) {
-            Color.WHITE
-        } else {
-            Color.BLACK
-        }
+        get() = if (sp.getBoolean(R.string.key_dark, true)) Color.WHITE else Color.BLACK
 
     private fun drawOtherStuff(canvas: Canvas) {
         aapsLogger.debug(LTag.WEAR, "start onDrawOtherStuff. bgDataList.size(): " + bgDataList.size)
@@ -388,7 +368,7 @@ class CircleWatchface : WatchFace() {
     private fun addReadingSoft(canvas: Canvas, entry: SingleBg) {
         aapsLogger.debug(LTag.WEAR, "addReadingSoft")
         var color = Color.LTGRAY
-        if (sp.getBoolean("dark", true)) {
+        if (sp.getBoolean(R.string.key_dark, true)) {
             color = Color.DKGRAY
         }
         val offsetMultiplier = (displaySize.x / 2f - PADDING) / 12f
@@ -403,7 +383,7 @@ class CircleWatchface : WatchFace() {
         aapsLogger.debug(LTag.WEAR, "addReading")
         var color = Color.LTGRAY
         var indicatorColor = Color.DKGRAY
-        if (sp.getBoolean("dark", true)) {
+        if (sp.getBoolean(R.string.key_dark, true)) {
             color = Color.DKGRAY
             indicatorColor = Color.LTGRAY
         }

@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    tools:context=".watchfaces.DigitalStyleWatchface"
     tools:deviceIds="wear_square">
 
     <!-- background-image with shapes elements-->
@@ -279,7 +278,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginStart="9dp"
+                android:layout_marginLeft="9dp"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
@@ -369,7 +368,7 @@
                                 android:id="@+id/month"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="5dp"
+                                android:layout_marginLeft="5dp"
                                 android:fontFamily="@font/roboto_condensed_regular"
                                 android:text="MMM"
                                 android:textAllCaps="true"
@@ -418,8 +417,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="left"
-                            android:layout_marginStart="6sp"
-                            android:layout_marginTop="-2sp"
+                            android:layout_marginLeft="6sp"
                             android:layout_marginBottom="-8sp"
                             android:fontFamily="@font/roboto_condensed_bold"
                             android:text="MI"
@@ -427,18 +425,28 @@
                             android:textSize="26sp"
                             android:textStyle="bold" />
 
+                        <!-- 12h period AM / PM-->
+                        <TextView
+                            android:id="@+id/timePeriod"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:layout_marginLeft="8sp"
+                            android:fontFamily="@font/roboto_condensed_bold"
+                            android:text="AM"
+                            android:textColor="@color/light_grey"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
                     </LinearLayout>
-
                 </LinearLayout>
-
             </LinearLayout>
 
             <!-- right side 1/2 height - bottom halft -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginStart="7dp"
-                android:layout_marginEnd="7dp"
+                android:layout_marginLeft="7dp"
+                android:layout_marginRight="7dp"
                 android:layout_weight="1"
                 android:baselineAligned="false"
                 android:gravity="left|top"

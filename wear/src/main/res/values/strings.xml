@@ -207,5 +207,18 @@
     <string name="key_show_delta" translatable="false">showDelta</string>
     <string name="key_show_avg_delta" translatable="false">showAvgDelta</string>
     <string name="key_show_ring_history" translatable="false">showRingHistory</string>
+    <string name="key_digital_style_frame_style" translatable="false">digital_style_frame_style</string>
+    <string name="key_digital_style_frame_color" translatable="false">digital_style_frame_color</string>
+    <string name="key_digital_style_frame_color_saturation" translatable="false">digital_style_frame_color_saturation</string>
+    <string name="key_digital_style_frame_color_opacity" translatable="false">digital_style_frame_color_opacity</string>
+    <string name="key_show_direction" translatable="false">show_direction</string>
+    <string name="key_show_iob" translatable="false">show_iob</string>
+    <string name="key_show_uploader_battery" translatable="false">show_uploader_battery</string>
+    <string name="key_show_rig_battery" translatable="false">show_rig_battery</string>
+    <string name="key_show_temp_basal" translatable="false">show_temp_basal</string>
+    <string name="key_vibrate_hourly" translatable="false">vibrate_hourly</string>
+    <string name="key_match_divider" translatable="false">match_divider</string>
+    <string name="key_simplify_ui" translatable="false">simplify_ui</string>
+    <string name="key_dark" translatable="false">dark</string>
 
 </resources>

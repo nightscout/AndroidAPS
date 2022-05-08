@@ -158,11 +158,15 @@ class DateUtil @Inject constructor(private val context: Context) {
         return DateTime(mills).toString(DateTimeFormat.forPattern(format))
     }
 
-    fun dayNameString(): String = minuteString(now())
+    fun amPm(): String = amPm(now())
+    fun amPm(mills: Long): String =
+        DateTime(mills).toString(DateTimeFormat.forPattern("a"))
+
+    fun dayNameString(): String = dayNameString(now())
     fun dayNameString(mills: Long): String =
         DateTime(mills).toString(DateTimeFormat.forPattern("E"))
 
-    fun dayString(): String = minuteString(now())
+    fun dayString(): String = dayString(now())
     fun dayString(mills: Long): String =
         DateTime(mills).toString(DateTimeFormat.forPattern("dd"))
 
