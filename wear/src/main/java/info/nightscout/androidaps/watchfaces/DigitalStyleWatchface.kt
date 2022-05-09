@@ -67,13 +67,10 @@ class DigitalStyleWatchface : BaseWatchFace() {
         val mShapesElements = layoutView?.findViewById<LinearLayout>(R.id.shapes_elements)
         if (mShapesElements != null) {
             val displayFormatType = if (mShapesElements.contentDescription.toString().startsWith("round")) "round" else "rect"
-            val displayStyle = sp.getString("digitalstyle_frameStyle", "full")
-            val displayFrameColor = sp.getString("digitalstyle_frameColor", "red")
-            val displayFrameColorSaturation = sp.getString(
-                "digitalstyle_frameColorSaturation",
-                "500"
-            )
-            val displayFrameColorOpacity = sp.getString("digitalstyle_frameColorOpacity", "1")
+            val displayStyle = sp.getString(R.string.key_digital_style_frame_style, "full")
+            val displayFrameColor = sp.getString(R.string.key_digital_style_frame_color, "red")
+            val displayFrameColorSaturation = sp.getString(R.string.key_digital_style_frame_color_saturation, "500")
+            val displayFrameColorOpacity = sp.getString(R.string.key_digital_style_frame_color_opacity, "1")
 
             // Load image with shapes
             val styleDrawableName = "digitalstyle_bg_" + displayStyle + "_" + displayFormatType
