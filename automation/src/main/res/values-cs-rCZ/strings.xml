@@ -120,4 +120,7 @@
     <string name="confirm_remove_multiple_items">Opravdu chcete odstranit %1$d položek</string>
     <string name="sort_label">Seřadit</string>
     <string name="system_automation">Automatizace systému</string>
+    <string name="run_automations">Spustit automatizace</string>
+    <string name="add_automation">Přidat pravidlo</string>
+    <string name="remove_sort">Odstranit/řadit</string>
 </resources>
