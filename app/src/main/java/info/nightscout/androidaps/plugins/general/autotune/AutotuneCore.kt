@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.general.autotune
 
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.data.LocalInsulin
 import info.nightscout.androidaps.plugins.general.autotune.data.ATProfile
 import info.nightscout.androidaps.plugins.general.autotune.data.PreppedGlucose
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
@@ -28,16 +29,14 @@ class AutotuneCore @Inject constructor(
         var carbRatio = previousAutotune.ic
         //console.error(carbRatio);
         var csf = isf / carbRatio
-        //val dia = previousAutotune.dia
-        //val insulinInterface = activePlugin.activeInsulin
-        //var peak = 75
-        //if (insulinInterface.id == InsulinInterface.InsulinType.OREF_ULTRA_RAPID_ACTING) peak = 55 else if (insulinInterface.id == InsulinInterface.InsulinType.OREF_FREE_PEAK) peak = sp.getInt(R.string.key_insulin_oref_peak, 75)
+        var dia = previousAutotune.dia
+        var peak = previousAutotune.peak
         val csfGlucose = preppedGlucose.csfGlucoseData
         val isfGlucose = preppedGlucose.isfGlucoseData
         val basalGlucose = preppedGlucose.basalGlucoseData
         val crData = preppedGlucose.crData
-        //List<DiaDatum> diaDeviations = preppedGlucose.diaDeviations;
-        //List<PeakDatum> peakDeviations = preppedGlucose.peakDeviations;
+        val diaDeviations = preppedGlucose.diaDeviations
+        val peakDeviations = preppedGlucose.peakDeviations
         val pumpISF = pumpProfile.isf
         val pumpCarbRatio = pumpProfile.ic
         val pumpCSF = pumpISF / pumpCarbRatio
@@ -46,92 +45,98 @@ class AutotuneCore @Inject constructor(
         val autotuneMin = sp.getDouble(R.string.key_openapsama_autosens_min, 0.7)
         val min5minCarbImpact = sp.getDouble(R.string.key_openapsama_min_5m_carbimpact, 3.0)
 
-        /*******Tune DIA (#57-#99) and Peak (#101-#139) disabled for the first version code below in js********************************************************************************************************
-         * // tune DIA
-         * var newDIA = DIA;
-         * if (diaDeviations) {
-         * var currentDIAMeanDev = diaDeviations[2].meanDeviation;
-         * var currentDIARMSDev = diaDeviations[2].RMSDeviation;
-         * //console.error(DIA,currentDIAMeanDev,currentDIARMSDev);
-         * var minMeanDeviations = 1000000;
-         * var minRMSDeviations = 1000000;
-         * var meanBest = 2;
-         * var RMSBest = 2;
-         * for (var i=0; i < diaDeviations.length; i++) {
-         * var meanDeviations = diaDeviations[i].meanDeviation;
-         * var RMSDeviations = diaDeviations[i].RMSDeviation;
-         * if (meanDeviations < minMeanDeviations) {
-         * minMeanDeviations = Math.round(meanDeviations*1000)/1000;
-         * meanBest = i;
-         * }
-         * if (RMSDeviations < minRMSDeviations) {
-         * minRMSDeviations = Math.round(RMSDeviations*1000)/1000;
-         * RMSBest = i;
-         * }
-         * }
-         * console.error("Best insulinEndTime for meanDeviations:",diaDeviations[meanBest].dia,"hours");
-         * console.error("Best insulinEndTime for RMSDeviations:",diaDeviations[RMSBest].dia,"hours");
-         * if ( meanBest < 2 && RMSBest < 2 ) {
-         * if ( diaDeviations[1].meanDeviation < currentDIAMeanDev * 0.99 && diaDeviations[1].RMSDeviation < currentDIARMSDev * 0.99 ) {
-         * newDIA = diaDeviations[1].dia;
-         * }
-         * } else if ( meanBest > 2 && RMSBest > 2 ) {
-         * if ( diaDeviations[3].meanDeviation < currentDIAMeanDev * 0.99 && diaDeviations[3].RMSDeviation < currentDIARMSDev * 0.99 ) {
-         * newDIA = diaDeviations[3].dia;
-         * }
-         * }
-         * if ( newDIA > 12 ) {
-         * console.error("insulinEndTime maximum is 12h: not raising further");
-         * newDIA=12;
-         * }
-         * if ( newDIA !== DIA ) {
-         * console.error("Adjusting insulinEndTime from",DIA,"to",newDIA,"hours");
-         * } else {
-         * console.error("Leaving insulinEndTime unchanged at",DIA,"hours");
-         * }
-         * }
-         *
-         * // tune insulinPeakTime
-         * var newPeak = peak;
-         * if (peakDeviations && peakDeviations[2]) {
-         * var currentPeakMeanDev = peakDeviations[2].meanDeviation;
-         * var currentPeakRMSDev = peakDeviations[2].RMSDeviation;
-         * //console.error(currentPeakMeanDev);
-         * minMeanDeviations = 1000000;
-         * minRMSDeviations = 1000000;
-         * meanBest = 2;
-         * RMSBest = 2;
-         * for (i=0; i < peakDeviations.length; i++) {
-         * meanDeviations = peakDeviations[i].meanDeviation;
-         * RMSDeviations = peakDeviations[i].RMSDeviation;
-         * if (meanDeviations < minMeanDeviations) {
-         * minMeanDeviations = Math.round(meanDeviations*1000)/1000;
-         * meanBest = i;
-         * }
-         * if (RMSDeviations < minRMSDeviations) {
-         * minRMSDeviations = Math.round(RMSDeviations*1000)/1000;
-         * RMSBest = i;
-         * }
-         * }
-         * console.error("Best insulinPeakTime for meanDeviations:",peakDeviations[meanBest].peak,"minutes");
-         * console.error("Best insulinPeakTime for RMSDeviations:",peakDeviations[RMSBest].peak,"minutes");
-         * if ( meanBest < 2 && RMSBest < 2 ) {
-         * if ( peakDeviations[1].meanDeviation < currentPeakMeanDev * 0.99 && peakDeviations[1].RMSDeviation < currentPeakRMSDev * 0.99 ) {
-         * newPeak = peakDeviations[1].peak;
-         * }
-         * } else if ( meanBest > 2 && RMSBest > 2 ) {
-         * if ( peakDeviations[3].meanDeviation < currentPeakMeanDev * 0.99 && peakDeviations[3].RMSDeviation < currentPeakRMSDev * 0.99 ) {
-         * newPeak = peakDeviations[3].peak;
-         * }
-         * }
-         * if ( newPeak !== peak ) {
-         * console.error("Adjusting insulinPeakTime from",peak,"to",newPeak,"minutes");
-         * } else {
-         * console.error("Leaving insulinPeakTime unchanged at",peak);
-         * }
-         * }
-         *
-         */
+        // tune DIA
+        var newDia = dia
+        if (diaDeviations.size > 0)
+        {
+            val currentDiaMeanDev = diaDeviations[2].meanDeviation
+            val currentDiaRMSDev = diaDeviations[2].rmsDeviation
+            //Console.WriteLine(DIA,currentDIAMeanDev,currentDIARMSDev);
+            var minMeanDeviations = 1000000.0
+            var minRmsDeviations = 1000000.0
+            var meanBest = 2
+            var rmsBest = 2
+            for (i in 0..diaDeviations.size-1)
+            {
+                val meanDeviations = diaDeviations[i].meanDeviation
+                val rmsDeviations = diaDeviations[i].rmsDeviation
+                if (meanDeviations < minMeanDeviations)
+                {
+                    minMeanDeviations = Round.roundTo(meanDeviations, 0.001)
+                    meanBest = i
+                }
+                if (rmsDeviations < minRmsDeviations)
+                {
+                    minRmsDeviations = Round.roundTo(rmsDeviations, 0.001)
+                    rmsBest = i
+                }
+            }
+            log("Best insulinEndTime for meanDeviations: ${diaDeviations[meanBest].dia} hours")
+            log("Best insulinEndTime for RMSDeviations: ${diaDeviations[rmsBest].dia} hours")
+            if (meanBest < 2 && rmsBest < 2)
+            {
+                if (diaDeviations[1].meanDeviation < currentDiaMeanDev * 0.99 && diaDeviations[1].rmsDeviation < currentDiaRMSDev * 0.99)
+                    newDia = diaDeviations[1].dia
+            }
+            else if (meanBest > 2 && rmsBest > 2)
+            {
+                if (diaDeviations[3].meanDeviation < currentDiaMeanDev * 0.99 && diaDeviations[3].rmsDeviation < currentDiaRMSDev * 0.99)
+                    newDia = diaDeviations[3].dia
+            }
+            if (newDia > 12.0)
+            {
+                log("insulinEndTime maximum is 12h: not raising further")
+                newDia = 12.0
+            }
+            if (newDia != dia)
+                log("Adjusting insulinEndTime from $dia to $newDia hours")
+            else
+                log("Leaving insulinEndTime unchanged at $dia hours")
+        }
+
+        // tune insulinPeakTime
+        var newPeak = peak
+        if (peakDeviations.size > 2)
+        {
+            val currentPeakMeanDev = peakDeviations[2].meanDeviation
+            val currentPeakRMSDev = peakDeviations[2].rmsDeviation
+            //Console.WriteLine(currentPeakMeanDev);
+            var minMeanDeviations = 1000000.0
+            var minRmsDeviations = 1000000.0
+            var meanBest = 2
+            var rmsBest = 2
+            for (i in 0..peakDeviations.size-1)
+            {
+                val meanDeviations = peakDeviations[i].meanDeviation;
+                val rmsDeviations = peakDeviations[i].rmsDeviation;
+                if (meanDeviations < minMeanDeviations)
+                {
+                    minMeanDeviations = Round.roundTo(meanDeviations, 0.001)
+                    meanBest = i
+                }
+                if (rmsDeviations < minRmsDeviations)
+                {
+                    minRmsDeviations = Round.roundTo(rmsDeviations, 0.001)
+                    rmsBest = i
+                }
+            }
+            log("Best insulinPeakTime for meanDeviations: ${peakDeviations[meanBest].peak} minutes")
+            log("Best insulinPeakTime for RMSDeviations: ${peakDeviations[rmsBest].peak} minutes")
+            if (meanBest < 2 && rmsBest < 2)
+            {
+                if (peakDeviations[1].meanDeviation < currentPeakMeanDev * 0.99 && peakDeviations[1].rmsDeviation < currentPeakRMSDev * 0.99)
+                    newPeak = peakDeviations[1].peak
+            }
+            else if (meanBest > 2 && rmsBest > 2)
+            {
+                if (peakDeviations[3].meanDeviation < currentPeakMeanDev * 0.99 && peakDeviations[3].rmsDeviation < currentPeakRMSDev * 0.99)
+                    newPeak = peakDeviations[3].peak
+            }
+            if (newPeak != peak)
+                log("Adjusting insulinPeakTime from " + peak + " to " + newPeak + " minutes")
+            else
+                log("Leaving insulinPeakTime unchanged at " + peak)
+        }
 
         // Calculate carb ratio (CR) independently of csf and isf
         // Use the time period from meal bolus/carbs until COB is zero and IOB is < currentBasal/2
@@ -142,7 +147,7 @@ class AutotuneCore @Inject constructor(
         //autotune-core (lib/autotune/index.js) #149-#165
         var crTotalCarbs = 0.0
         var crTotalInsulin = 0.0
-        for (i in crData!!.indices) {
+        for (i in crData.indices) {
             val crDatum = crData[i]
             val crBGChange = crDatum.crEndBG - crDatum.crInitialBG
             val crInsulinReq = crBGChange / isf
@@ -181,7 +186,7 @@ class AutotuneCore @Inject constructor(
         // look at net deviations for each hour
         for (hour in 0..23) {
             var deviations = 0.0
-            for (i in basalGlucose!!.indices) {
+            for (i in basalGlucose.indices) {
                 val BGTime = Calendar.getInstance()
                 //var BGTime: Date? = null
                 if (basalGlucose[i].date != 0L) {
@@ -300,7 +305,7 @@ class AutotuneCore @Inject constructor(
         //log.debug(CSFGlucose[0].mealAbsorption);
         //log.debug(CSFGlucose[0]);
         //autotune-core (lib/autotune/index.js) #346-#365
-        for (i in csfGlucose!!.indices) {
+        for (i in csfGlucose.indices) {
             //log.debug(CSFGlucose[i].mealAbsorption, i);
             if (csfGlucose[i].mealAbsorption === "start") {
                 deviations = 0.0
@@ -412,7 +417,7 @@ class AutotuneCore @Inject constructor(
         val avgDeltas: MutableList<Double> = ArrayList()
         val ratios: MutableList<Double> = ArrayList()
         var count = 0
-        for (i in isfGlucose!!.indices) {
+        for (i in isfGlucose.indices) {
             val deviation = isfGlucose[i].deviation
             isfDeviations.add(deviation)
             val BGI = isfGlucose[i].bgi
@@ -497,13 +502,10 @@ class AutotuneCore @Inject constructor(
         previousAutotune.isf = isf
         previousAutotune.ic = Round.roundTo(carbRatio, 0.001)
         previousAutotune.basalUntuned = basalUntuned
-        /* code prepared for future dia/peak integration
-        previousAutotune.dia=newDia;
-        previousAutotune.peak = newPeak ;
-        if (diaDeviations || peakDeviations) {
-            autotuneOutput.useCustomPeakTime = true;
-        }
-        */
+        previousAutotune.dia = newDia
+        previousAutotune.peak = newPeak
+        val localInsulin = LocalInsulin("Ins_$newPeak-$newDia", newPeak, newDia)
+        previousAutotune.localInsulin = localInsulin
         previousAutotune.updateProfile()
         return previousAutotune
     }

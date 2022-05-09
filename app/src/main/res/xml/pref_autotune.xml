@@ -4,7 +4,7 @@
     <PreferenceCategory
         android:key="@string/key_autotune_plugin"
         android:title="@string/autotune_settings"
-        app:initialExpandedChildrenCount="0">
+        app:initialExpandedChildrenCount="10">
 
         <SwitchPreference
             android:defaultValue="false"
@@ -17,6 +17,12 @@
             android:key="@string/key_autotune_categorize_uam_as_basal"
             android:summary="@string/autotune_categorize_uam_as_basal_summary"
             android:title="@string/autotune_categorize_uam_as_basal_title" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_autotune_tune_insulin_curve"
+            android:summary="@string/autotune_tune_insulin_curve_summary"
+            android:title="@string/autotune_tune_insulin_curve_title" />
 
         <EditTextPreference
             android:defaultValue="5"
