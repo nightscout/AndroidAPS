@@ -446,8 +446,8 @@ abstract class BaseWatchFace : WatchFace() {
         mCOB2?.visibility = sp.getBoolean(R.string.key_show_cob, true).toVisibility()
         mIOB1?.visibility = sp.getBoolean(R.string.key_show_iob, true).toVisibility()
         mIOB2?.visibility = sp.getBoolean(R.string.key_show_iob, true).toVisibility()
-        mIOB1?.text = if (sp.getBoolean(R.string.key_show_iob, true)) status.iobSum else getString(R.string.activity_IOB)
-        mIOB2?.text = if (sp.getBoolean(R.string.key_show_iob, true)) status.iobDetail else status.iobSum
+        mIOB1?.text = if (status.detailedIob) status.iobSum else getString(R.string.activity_IOB)
+        mIOB2?.text = if (status.detailedIob) status.iobDetail else status.iobSum
         mTimestamp?.visibility = sp.getBoolean(R.string.key_show_ago, true).toVisibility()
         mTimestamp?.text = readingAge(if (isAAPSv2 != null) true else sp.getBoolean(R.string.key_show_external_status, true))
         mUploaderBattery?.visibility = sp.getBoolean(R.string.key_show_uploader_battery, true).toVisibility()
