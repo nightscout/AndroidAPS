@@ -15,7 +15,7 @@ abstract class HistoryRecordDao {
 
     @Query("SELECT * from historyrecords")
     abstract fun all(): Single<List<HistoryRecordEntity>>
-    
+
     @Query("SELECT * from historyrecords ORDER BY id LIMIT 1")
     abstract fun first(): HistoryRecordEntity?
 

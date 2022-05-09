@@ -66,7 +66,6 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.concurrent.thread
 import kotlin.math.ceil
-import kotlin.random.Random
 
 @Singleton
 class OmnipodDashPumpPlugin @Inject constructor(
@@ -142,7 +141,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     duration = T.mins(PodConstants.MAX_POD_LIFETIME.toMinutes()).msecs(),
                     isAbsolute = true,
                     type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
-                    pumpId = Random.Default.nextLong(), // we don't use this, just make sure it's unique
+                    pumpId = System.currentTimeMillis(), // we don't use this, just make sure it's unique
                     pumpType = PumpType.OMNIPOD_DASH,
                     pumpSerial = Constants.PUMP_SERIAL_FOR_FAKE_TBR // switching the serialNumber here would need a
                     // call to connectNewPump. If we do that, then we will have a TBR started by the "n/a" pump and
@@ -323,7 +322,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     duration = T.mins(PodConstants.MAX_POD_LIFETIME.toMinutes()).msecs(),
                     isAbsolute = true,
                     type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
-                    pumpId = Random.Default.nextLong(), // we don't use this, just make sure it's unique
+                    pumpId = System.currentTimeMillis(), // we don't use this, just make sure it's unique
                     pumpType = PumpType.OMNIPOD_DASH,
                     pumpSerial = serialNumber()
                 )
@@ -356,7 +355,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     }
                     pumpSync.insertAnnouncement(
                         error = it.toString(),
-                        pumpId = Random.Default.nextLong(),
+                        pumpId = System.currentTimeMillis(),
                         pumpType = PumpType.OMNIPOD_DASH,
                         pumpSerial = serialNumber()
                     )
