@@ -161,6 +161,7 @@
     <string name="end_user_license_agreement">Condições de Utilização</string>
     <string name="end_user_license_agreement_text">NÃO DEVE SER USADO PARA FAZER DECISÕES MÉDICAS. NÃO HÁ NENHUMA GARANTIA PARA O PROGRAMA, NA EXTENSÃO PERMITIDA PELA LEGISLAÇÃO APLICÁVEL. EXCETO QUANDO DE OUTRA FORMA, POR ESCRITO, OS TITULARES DOS DIREITOS DE AUTOR E / OU OUTRAS PARTES FORNECEM O PROGRAMA “TAL COMO ESTÁ”, SEM GARANTIA DE QUALQUER TIPO, EXPRESSA OU IMPLÍCITA, INCLUINDO, MAS NÃO SE LIMITANDO, ÀS GARANTIAS IMPLÍCITAS DE COMERCIALIZAÇÃO E ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. TODO O RISCO QUANTO À QUALIDADE E DESEMPENHO DO PROGRAMA É COM VOCÊ. CASO O PROGRAMA SEJA DEFEITUOSO, VOCÊ ASSUME O CUSTO DE TODOS OS SERVIÇOS, REPAROS OU CORREÇÕES NECESSÁRIOS.</string>
     <string name="end_user_license_agreement_i_understand">EU ENTENDO E CONCORDO</string>
+    <string name="save">Salvar</string>
     <string name="reloadprofile">Recarregar perfil</string>
     <string name="smscommunicator">Comunicador SMS</string>
     <string name="smscommunicator_allowednumbers">Números de telefone permitidos</string>
@@ -413,6 +414,9 @@
     <string name="valuesnotstored">Valores não guardados!</string>
     <string name="ns_localbroadcasts_title">Ativar partilha local.</string>
     <string name="openapssmb">SMB OpenAPS</string>
+    <string name="openaps_smb_dynamic_isf">FSI Dinâmico</string>
+    <string name="DynISFAdjust_title">Fator de Ajuste FSI dinâmico %%</string>
+    <string name="DynISFAdjust_summary">Fator de ajuste para FSI dinâmico. Defina mais de 100%% para doses de correção mais agressivas e menos de 100%% para correções menos agressivas.</string>
     <string name="enableuam">Ativar UAM</string>
     <string name="enablesmb">Ativar SMB</string>
     <string name="enablesmb_summary">Use Super Micro Boluses em vez de basal temp para uma ação mais rápida</string>
@@ -461,6 +465,7 @@
     <string name="smbmaxminutes_summary">Limite de minutos de basal para SMB</string>
     <string name="uamsmbmaxminutes">UAM SMB máx minutos</string>
     <string name="uamsmbmaxminutes_summary">Max minutos de basal para limitar SMB para UAM</string>
+    <string name="carbsReqThreshold">Limite mínimo de carboidratos necessários para sugerir</string>
     <string name="dexcomg5_xdripupload_title">Enviar dados Glic. para xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">Seleccionar 640g/Eversense como fonte no xDrip+</string>
     <string name="nsclientbg">Glic NSCliente</string>
@@ -617,6 +622,7 @@
     <string name="sensitivity_raises_target_title">Sensibilidade aumenta o alvo</string>
     <string name="sensitivity_raises_target_summary">Quando a sensibilidade é detectada, aumenta o alvo glicose</string>
     <string name="careportal_removestartedevents">Limpar AndroidAPS iniciado</string>
+    <string name="sort_items">Ordenar itens</string>
     <string name="storedsettingsfound">Configurações encontradas</string>
     <string name="allow_hardware_pump_text">Atenção: Se conectar à sua bomba física e ativar o perfil, o AndroidAPS irá copiar as definições desse perfil para as definições da bomba, apagando o memorizado na bomba. Por favor verifique que o que preencheu no perfil do app tem os mesmos valores que estão na bomba. Em caso contrário pressione imediatamente cancelar e corrija antes de voltar a ligar à bomba.</string>
     <string name="error_adding_treatment_title">Dados tratamento incompletos</string>
@@ -760,6 +766,7 @@
     <string name="smscommunicator_otp_install_info">Instalar uma app Autenticador que suporte Tokens RFC 6238 TOTP em cada telefone seguidor. Populares aplicativos gratuitos são:\n • Authy\n • o Google Authenticator\n • LastPass Autenticador\n • FreeOTP Autenticador</string>
     <string name="smscommunicator_otp_reset_warning">Ao repor o autenticador, torna inválidos todos os autenticadores já provisionados. Precisará de os configurar novamente!</string>
     <string name="overview_show_predictions">Previsões</string>
+    <string name="overview_show_treatments">Tratamentos</string>
     <string name="overview_show_deviationslope">Desvio de inclinação</string>
     <string name="authorizationfailed">Falha na autorização</string>
     <string name="overview_show_absinsulin">Insulina absoluta</string>
@@ -802,7 +809,14 @@
     <string name="enablebolusreminder_summary">Usar lembrete para adiar o bolus com o assistente
         (\"pós-bolus\")</string>
     <string name="time_to_bolus">Hora do bolus!\nAbra o assistente de bolus e faça o cálculo novamente.</string>
+    <string name="prime">Purgar/Preencher</string>
+    <string name="ns_upload_summary">Perfis, bolus, carboidratos, basais temporários são enviados para NS</string>
+    <string name="ns_receive_tbr_eb">Receber taxa basal temporária (TBT) e bolus estendido (e-bolus ou BE)</string>
+    <string name="ns_receive_tbr_eb_summary">Aceitar taxa basal temporária (TBT) e bolus estendido (BE) informados por outra instância</string>
+    <string name="ns_receive_insulin_summary">Aceitar insulina inserida através de NS ou NSClient (não é administrada, apenas serve para o cálculo da IA)</string>
+    <string name="error_in_isf_values">Erro nos valores de FSI</string>
     <string name="data_status">Estado dos dados de glicemia</string>
+    <string name="remove_bg_readings">Remover leituras de Glicemia</string>
     <string name="statuslights_cannula_age">idade da cânula</string>
     <string name="statuslights_patch_pump_age">Idade da bomba patch</string>
     <string name="patch_pump">Bomba patch</string>
@@ -840,6 +854,11 @@
     <string name="a11y_delete_current_profile">excluir perfil atual</string>
     <string name="a11y_add_new_to_list">adicionar novo à lista</string>
     <!-- Theme switcher dark and light mode-->
+    <string name="theme_switcher_summary">Escolha o tema escuro, claro ou para seguir o tema do dispositivo</string>
+    <string name="app_color_scheme">Esquema de cores do aplicativo</string>
+    <string name="dark_theme">Tema escuro</string>
+    <string name="light_theme">Tema claro</string>
+    <string name="follow_system_theme">Usar tema do dispositivo</string>
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">Alvo temporário pré-definido desconhecido: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Cancelando Alvos temporários em execução?</string>
@@ -854,5 +873,35 @@
     <string name="wizard_result">Calculadora:\nInsulin: %1$.2fU\nCarbs: %2$dg</string>
     <string name="overview_editquickwizard_show_on_device">Mostrar entrada no dispositivo:</string>
     <string name="quick_wizard_not_available">O assistente rápido selecionado não está mais disponível, atualize seu atalho</string>
+    <string name="wizard_no_actual_bg">Nenhuma glicemia recente para base de cálculo!</string>
+    <string name="wizard_no_cob">CA desconhecido! Leitura de Glicemia faltando ou reinício recente do app?</string>
+    <string name="wizard_explain_calc">Calc (IC: %2$.1f, FSI: %2$.1f) de:\"</string>
+    <string name="wizard_explain_cob">CA: %1$.0fg %2$.2fU</string>
+    <string name="wizard_explain_trend">Tendência 15min: %1$.2fU</string>
+    <string name="show_invalidated_records">Exibir registros invalidados / removidos</string>
+    <string name="hide_invalidated_records">Ocultar registros invalidados / removidos</string>
+    <string name="refresh_from_nightscout">Atualizar do NS (Nightscout)</string>
+    <string name="no_records_available">Nenhum registro disponível</string>
+    <string name="show_loop">Exibir loop</string>
+    <string name="sort_label">Ordenar</string>
+    <string name="dialog_canceled">Janela cancelada</string>
+    <string name="below" comment="below &quot;in range&quot;">Abaixo</string>
+    <string name="in_range">Dentro da meta</string>
+    <string name="above" comment="above &quot;in range&quot;">Acima</string>
+    <string name="show_loop_records">Exibir registros do loop</string>
+    <string name="show_hide_records">Ocultar registros do loop</string>
+    <string name="widget_description">AndroidAPS widget</string>
+    <string name="configure">Configurar opacidade</string>
+    <string name="loop_status">Status do loop</string>
+    <string name="a11y_open_settings">abrir configurações</string>
+    <string name="device_all">Todos</string>
+    <string name="device_phone">Telefone</string>
+    <string name="device_watch">Smartwatch</string>
+    <string name="a11y_only_on_watch">somente no smartwatch</string>
+    <string name="a11y_only_on_phone">somente no telefone</string>
+    <string name="a11y_drag_and_drop_handle">arraste e solte aqui</string>
     <!-- Aidex Cgms -->
+    <string name="aidex">GlucoRx Aidex</string>
+    <string name="aidex_short">Aidex</string>
+    <string name="description_source_aidex">Receber valores BG do GlucoRx Aidex CGMS.</string>
 </resources>

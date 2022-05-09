@@ -1008,6 +1008,7 @@
     <string name="show_hide_records">Ocultar registros del lazo</string>
     <string name="widget_description">Widget de AndroidAPS</string>
     <string name="configure">Configurar opacidad</string>
+    <string name="loop_status">Estado del lazo</string>
     <string name="a11y_otp_qr_code">Código QR para la configuración de la contraseña de un sólo uso</string>
     <string name="a11y_open_settings">Abrir la configuración</string>
     <string name="a11y_set_carb_timer">Establecer alarma de carbohidratos</string>

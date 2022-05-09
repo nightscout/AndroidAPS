@@ -450,7 +450,7 @@
     <string name="activate_profile">הפעלת פרופיל</string>
     <string name="invalid">לא חוקי</string>
     <string name="careportal_newnstreatment_percentage_label">אחוזים</string>
-    <string name="careportal_newnstreatment_timeshift_label">קיזוז זמנים</string>
+    <string name="careportal_newnstreatment_timeshift_label">היסט זמן</string>
     <string name="default_temptargets">ברירות מחדל ערכי מטרה</string>
     <string name="eatingsoon_duration">משך אוכלים בקרוב</string>
     <string name="eatingsoon_target">ערך מטרת אוכלים בקרוב</string>
