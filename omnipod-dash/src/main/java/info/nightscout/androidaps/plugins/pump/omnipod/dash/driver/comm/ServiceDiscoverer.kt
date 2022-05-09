@@ -2,8 +2,6 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm
 
 import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCharacteristic
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.callbacks.BleCommCallbacks
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.ConnectException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.CharacteristicType
@@ -11,6 +9,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.Connection
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.Connection.Companion.STOP_CONNECTING_CHECK_INTERVAL_MS
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.ConnectionWaitCondition
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import java.math.BigInteger
 import java.util.*
 
