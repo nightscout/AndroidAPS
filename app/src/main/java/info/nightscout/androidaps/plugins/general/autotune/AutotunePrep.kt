@@ -3,14 +3,13 @@ package info.nightscout.androidaps.plugins.general.autotune
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.LocalInsulin
 import info.nightscout.androidaps.database.entities.GlucoseValue
-import info.nightscout.androidaps.plugins.general.autotune.data.ATProfile
-import info.nightscout.androidaps.plugins.general.autotune.data.BGDatum
-import info.nightscout.androidaps.plugins.general.autotune.data.CRDatum
-import info.nightscout.androidaps.plugins.general.autotune.data.PreppedGlucose
+import info.nightscout.androidaps.plugins.general.autotune.data.*
 import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.database.entities.Carbs
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.MidnightTime
 import info.nightscout.androidaps.utils.Round
+import info.nightscout.androidaps.utils.T
 import info.nightscout.shared.sharedPreferences.SP
 import java.util.*
 import javax.inject.Inject
@@ -23,11 +22,121 @@ class AutotunePrep @Inject constructor(
     private val autotuneFS: AutotuneFS,
     private val autotuneIob: AutotuneIob
 ) {
+    fun categorize(tunedprofile: ATProfile): PreppedGlucose? {
+        val preppedGlucose = categorizeBGDatums(tunedprofile, tunedprofile.localInsulin)
+        val tuneInsulin = sp.getBoolean(R.string.key_autotune_tune_insulin_curve, false)
+        if (tuneInsulin) {
+            var minDeviations = 1000000.0
+            val diaDeviations: MutableList<DiaDeviation> = ArrayList()
+            val peakDeviations: MutableList<PeakDeviation> = ArrayList()
+            val currentDIA = tunedprofile.localInsulin.dia
+            val currentPeak = tunedprofile.localInsulin.peak
+
+            var dia = currentDIA - 2
+            val endDIA = currentDIA + 2
+            while (dia <= endDIA)
+            {
+                var sqrtDeviations = 0.0
+                var deviations = 0.0
+                var deviationsSq = 0.0
+                val localInsulin = LocalInsulin("Ins_$currentPeak-$dia", currentPeak, dia)
+                val curve_output = categorizeBGDatums(tunedprofile, localInsulin, false)
+                val basalGlucose = curve_output?.basalGlucoseData
+
+                basalGlucose?.let {
+                    for (hour in 0..23) {
+                        for (i in 0..(basalGlucose.size-1)) {
+                            val myHour = ((basalGlucose[i].date - MidnightTime.calc(basalGlucose[i].date)) / T.hours(1).msecs()).toInt()
+                            if (hour == myHour) {
+                                sqrtDeviations += Math.pow(Math.abs(basalGlucose[i].deviation), 0.5)
+                                deviations += Math.abs(basalGlucose[i].deviation)
+                                deviationsSq += Math.pow(basalGlucose[i].deviation, 2.0)
+                            }
+                        }
+                    }
+
+                    val meanDeviation = Round.roundTo(Math.abs(deviations / basalGlucose.size), 0.001)
+                    val smrDeviation = Round.roundTo(Math.pow(sqrtDeviations / basalGlucose.size, 2.0), 0.001)
+                    val rmsDeviation = Round.roundTo(Math.pow(deviationsSq / basalGlucose.size, 0.5), 0.001)
+                    log("insulinEndTime $dia meanDeviation: $meanDeviation SMRDeviation: $smrDeviation RMSDeviation: $rmsDeviation (mg/dL)")
+                    diaDeviations.add(
+                        DiaDeviation(
+                            dia = dia,
+                            meanDeviation = meanDeviation,
+                            smrDeviation = smrDeviation,
+                            rmsDeviation = rmsDeviation
+                        )
+                    )
+                }
+                preppedGlucose?.diaDeviations = diaDeviations
+
+                deviations = Round.roundTo(deviations, 0.001)
+                if (deviations < minDeviations)
+                    minDeviations = Round.roundTo(deviations, 0.001)
+                dia += 1.0
+            }
+
+            // consoleError('Optimum insulinEndTime', newDIA, 'mean deviation:', JSMath.Round(minDeviations/basalGlucose.length*1000)/1000, '(mg/dL)');
+            //consoleError(diaDeviations);
+
+            minDeviations = 1000000.0
+            var peak = currentPeak - 10
+            val endPeak = currentPeak + 10
+            while (peak <= endPeak)
+            {
+                var sqrtDeviations = 0.0
+                var deviations = 0.0
+                var deviationsSq = 0.0
+                val localInsulin = LocalInsulin("Ins_$peak-$currentDIA", peak, currentDIA)
+                val curve_output = categorizeBGDatums(tunedprofile, localInsulin, false)
+                val basalGlucose = curve_output?.basalGlucoseData
+
+                basalGlucose?.let {
+                    for (hour in 0..23) {
+                        for (i in 0..(basalGlucose.size - 1)) {
+                            val myHour = ((basalGlucose[i].date - MidnightTime.calc(basalGlucose[i].date)) / T.hours(1).msecs()).toInt()
+                            if (hour == myHour) {
+                                //console.error(basalGlucose[i].deviation);
+                                sqrtDeviations += Math.pow(Math.abs(basalGlucose[i].deviation), 0.5)
+                                deviations += Math.abs(basalGlucose[i].deviation)
+                                deviationsSq += Math.pow(basalGlucose[i].deviation, 2.0)
+                            }
+                        }
+                    }
+
+                    val meanDeviation = Round.roundTo(deviations / basalGlucose.size, 0.001)
+                    val smrDeviation = Round.roundTo(Math.pow(sqrtDeviations / basalGlucose.size, 2.0), 0.001)
+                    val rmsDeviation = Round.roundTo(Math.pow(deviationsSq / basalGlucose.size, 0.5), 0.001)
+                    log("insulinPeakTime $peak meanDeviation: $meanDeviation SMRDeviation: $smrDeviation RMSDeviation: $rmsDeviation (mg/dL)")
+                    peakDeviations.add(
+                        PeakDeviation
+                            (
+                            peak = peak,
+                            meanDeviation = meanDeviation,
+                            smrDeviation = smrDeviation,
+                            rmsDeviation = rmsDeviation,
+                        )
+                    )
+                }
+
+                deviations = Round.roundTo(deviations, 0.001);
+                if (deviations < minDeviations)
+                    minDeviations = Round.roundTo(deviations, 0.001)
+                peak += 5
+            }
+            //consoleError($"Optimum insulinPeakTime {newPeak} mean deviation: {JSMath.Round(minDeviations/basalGlucose.Count, 3)} (mg/dL)");
+            //consoleError(peakDeviations);
+            preppedGlucose?.peakDeviations = peakDeviations
+        }
+
+        return preppedGlucose
+    }
+
     //    private static Logger log = LoggerFactory.getLogger(AutotunePlugin.class);
-    fun categorizeBGDatums(tunedprofile: ATProfile, localInsulin: LocalInsulin): PreppedGlucose? {
+    fun categorizeBGDatums(tunedprofile: ATProfile, localInsulin: LocalInsulin, verbose: Boolean = true): PreppedGlucose? {
         //lib/meals is called before to get only meals data (in AAPS it's done in AutotuneIob)
-        var treatments: MutableList<Carbs> = autotuneIob.meals
-        var boluses: MutableList<Bolus> = autotuneIob.boluses
+        val treatments: MutableList<Carbs> = autotuneIob.meals
+        val boluses: MutableList<Bolus> = autotuneIob.boluses
         // Bloc between #21 and # 54 replaced by bloc below (just remove BG value below 39, Collections.sort probably not necessary because BG values already sorted...)
         val glucose = autotuneIob.glucose
         val glucoseData: MutableList<GlucoseValue> = ArrayList()
@@ -37,7 +146,8 @@ class AutotunePrep @Inject constructor(
             }
         }
         if (glucose.size == 0 || glucoseData.size == 0 ) {
-            log("No BG value received")
+            if (verbose)
+                log("No BG value received")
             return null
         }
 
@@ -49,11 +159,13 @@ class AutotunePrep @Inject constructor(
         //val boluses = 0
         //val maxCarbs = 0
         if (treatments.size == 0) {
-            log("No Carbs entries")
+            if (verbose)
+                log("No Carbs entries")
             //return null
         }
         if (autotuneIob.boluses.size == 0) {
-            log("No treatment received")
+            if (verbose)
+                log("No treatment received")
             return null
         }
 
@@ -141,7 +253,8 @@ class AutotunePrep @Inject constructor(
                 }
                 avgDelta = (bg - bucketedData[i + 4].value) / 4
             } else {
-                log("Could not find glucose data")
+                if (verbose)
+                    log("Could not find glucose data")
             }
             avgDelta = Round.roundTo(avgDelta, 0.01)
             glucoseDatum.avgDelta = avgDelta
@@ -207,7 +320,8 @@ class AutotunePrep @Inject constructor(
                     crInitialIOB = iob.iob
                     crInitialBG = glucoseDatum.value
                     crInitialCarbTime = glucoseDatum.date
-                    log("CRInitialIOB: " + crInitialIOB + " CRInitialBG: " + crInitialBG + " CRInitialCarbTime: " + dateUtil.toISOString(crInitialCarbTime))
+                    if (verbose)
+                        log("CRInitialIOB: " + crInitialIOB + " CRInitialBG: " + crInitialBG + " CRInitialCarbTime: " + dateUtil.toISOString(crInitialCarbTime))
                 }
                 // keep calculatingCR as long as we have COB or enough IOB
                 if (mealCOB > 0 && i > 1) {
@@ -219,7 +333,8 @@ class AutotunePrep @Inject constructor(
                     val crEndIOB = iob.iob
                     val crEndBG = glucoseDatum.value
                     val crEndTime = glucoseDatum.date
-                    log("CREndIOB: " + crEndIOB + " CREndBG: " + crEndBG + " CREndTime: " + dateUtil.toISOString(crEndTime))
+                    if (verbose)
+                        log("CREndIOB: " + crEndIOB + " CREndBG: " + crEndBG + " CREndTime: " + dateUtil.toISOString(crEndTime))
                     val crDatum = CRDatum(dateUtil)
                     crDatum.crInitialBG = crInitialBG
                     crDatum.crInitialIOB = crInitialIOB
@@ -234,7 +349,8 @@ class AutotunePrep @Inject constructor(
 
                     //log.debug(CREndTime - CRInitialCarbTime, CRElapsedMinutes);
                     if (CRElapsedMinutes < 60 || i == 1 && mealCOB > 0) {
-                        log("Ignoring $CRElapsedMinutes m CR period.")
+                        if (verbose)
+                            log("Ignoring $CRElapsedMinutes m CR period.")
                     } else {
                         crData.add(crDatum)
                     }
@@ -262,7 +378,8 @@ class AutotunePrep @Inject constructor(
                 //log.debug(type);
                 if (type != "csf") {
                     glucoseDatum.mealAbsorption = "start"
-                    log(glucoseDatum.mealAbsorption + " carb absorption")
+                    if (verbose)
+                        log(glucoseDatum.mealAbsorption + " carb absorption")
                 }
                 type = "csf"
                 glucoseDatum.mealCarbs = mealCarbs.toInt()
@@ -272,7 +389,8 @@ class AutotunePrep @Inject constructor(
                 // check previous "type" value, and if it was csf, set a mealAbsorption end flag
                 if (type == "csf") {
                     csfGlucoseData[csfGlucoseData.size - 1].mealAbsorption = "end"
-                    log(csfGlucoseData[csfGlucoseData.size - 1].mealAbsorption + " carb absorption")
+                    if (verbose)
+                        log(csfGlucoseData[csfGlucoseData.size - 1].mealAbsorption + " carb absorption")
                 }
                 if (iob.iob > 2 * currentBasal || deviation > 6 || uam) {
                     uam = if (deviation > 0) {
@@ -282,13 +400,15 @@ class AutotunePrep @Inject constructor(
                     }
                     if (type != "uam") {
                         glucoseDatum.uamAbsorption = "start"
-                        log(glucoseDatum.uamAbsorption + " unannnounced meal absorption")
+                        if (verbose)
+                            log(glucoseDatum.uamAbsorption + " unannnounced meal absorption")
                     }
                     type = "uam"
                     uamGlucoseData.add(glucoseDatum)
                 } else {
                     if (type == "uam") {
-                        log("end unannounced meal absorption")
+                        if (verbose)
+                            log("end unannounced meal absorption")
                     }
 
                     // Go through the remaining time periods and divide them into periods where scheduled basal insulin activity dominates. This would be determined by calculating the BG impact of scheduled basal insulin
@@ -313,7 +433,8 @@ class AutotunePrep @Inject constructor(
                 }
             }
             // debug line to print out all the things
-            log((if (absorbing) 1 else 0).toString() + " mealCOB: " + Round.roundTo(mealCOB, 0.1) + " mealCarbs: " + Math.round(mealCarbs) + " basalBGI: " + Round.roundTo(basalBGI, 0.1) + " BGI: " + Round.roundTo(BGI, 0.1) + " IOB: " + iob.iob+ " Activity: " + iob.activity + " at " + dateUtil.timeStringWithSeconds(BGTime) + " dev: " + deviation + " avgDelta: " + avgDelta + " " + type)
+            if (verbose)
+                log((if (absorbing) 1 else 0).toString() + " mealCOB: " + Round.roundTo(mealCOB, 0.1) + " mealCarbs: " + Math.round(mealCarbs) + " basalBGI: " + Round.roundTo(basalBGI, 0.1) + " BGI: " + Round.roundTo(BGI, 0.1) + " IOB: " + iob.iob+ " Activity: " + iob.activity + " at " + dateUtil.timeStringWithSeconds(BGTime) + " dev: " + deviation + " avgDelta: " + avgDelta + " " + type)
         }
 
 //****************************************************************************************************************************************
@@ -328,16 +449,20 @@ class AutotunePrep @Inject constructor(
         val UAMLength = uamGlucoseData.size
         var basalLength = basalGlucoseData.size
         if (sp.getBoolean(R.string.key_autotune_categorize_uam_as_basal, false)) {
-            log("Categorizing all UAM data as basal.")
+            if (verbose)
+                log("Categorizing all UAM data as basal.")
             basalGlucoseData.addAll(uamGlucoseData)
         } else if (CSFLength > 12) {
-            log("Found at least 1h of carb: assuming meals were announced, and categorizing UAM data as basal.")
+            if (verbose)
+                log("Found at least 1h of carb: assuming meals were announced, and categorizing UAM data as basal.")
             basalGlucoseData.addAll(uamGlucoseData)
         } else {
             if (2 * basalLength < UAMLength) {
                 //log.debug(basalGlucoseData, UAMGlucoseData);
-                log("Warning: too many deviations categorized as UnAnnounced Meals")
-                log("Adding $UAMLength UAM deviations to $basalLength basal ones")
+                if (verbose) {
+                    log("Warning: too many deviations categorized as UnAnnounced Meals")
+                    log("Adding $UAMLength UAM deviations to $basalLength basal ones")
+                }
                 basalGlucoseData.addAll(uamGlucoseData)
                 //log.debug(basalGlucoseData);
                 // if too much data is excluded as UAM, add in the UAM deviations, but then discard the highest 50%
@@ -348,10 +473,12 @@ class AutotunePrep @Inject constructor(
                 }
                 //log.debug(newBasalGlucose);
                 basalGlucoseData = newBasalGlucose
-                log("and selecting the lowest 50%, leaving " + basalGlucoseData.size + " basal+UAM ones")
+                if (verbose)
+                    log("and selecting the lowest 50%, leaving " + basalGlucoseData.size + " basal+UAM ones")
             }
             if (2 * ISFLength < UAMLength) {
-                log("Adding $UAMLength UAM deviations to $ISFLength ISF ones")
+                if (verbose)
+                    log("Adding $UAMLength UAM deviations to $ISFLength ISF ones")
                 isfGlucoseData.addAll(uamGlucoseData)
                 // if too much data is excluded as UAM, add in the UAM deviations to ISF, but then discard the highest 50%
                 isfGlucoseData.sortWith(object: Comparator<BGDatum>{ override fun compare(o1: BGDatum, o2: BGDatum): Int = (100 * o1.deviation - 100 * o2.deviation).toInt() })   //deviation rouded to 0.01, so *100 to avoid crash during sort
@@ -361,178 +488,29 @@ class AutotunePrep @Inject constructor(
                 }
                 //console.error(newISFGlucose);
                 isfGlucoseData = newISFGlucose
-                log("and selecting the lowest 50%, leaving " + isfGlucoseData.size + " ISF+UAM ones")
+                if (verbose)
+                    log("and selecting the lowest 50%, leaving " + isfGlucoseData.size + " ISF+UAM ones")
                 //log.error(ISFGlucoseData.length, UAMLength);
             }
         }
         basalLength = basalGlucoseData.size
         ISFLength = isfGlucoseData.size
         if (4 * basalLength + ISFLength < CSFLength && ISFLength < 10) {
-            log("Warning: too many deviations categorized as meals")
-            //log.debug("Adding",CSFLength,"CSF deviations to",basalLength,"basal ones");
-            //var basalGlucoseData = basalGlucoseData.concat(CSFGlucoseData);
-            log("Adding $CSFLength CSF deviations to $ISFLength ISF ones")
+            if (verbose) {
+                log("Warning: too many deviations categorized as meals")
+                //log.debug("Adding",CSFLength,"CSF deviations to",basalLength,"basal ones");
+                //var basalGlucoseData = basalGlucoseData.concat(CSFGlucoseData);
+                log("Adding $CSFLength CSF deviations to $ISFLength ISF ones")
+            }
             isfGlucoseData.addAll(csfGlucoseData)
             csfGlucoseData = ArrayList()
         }
 
 // categorize.js Lines 437-444
-        log("CRData: " + crData.size + " CSFGlucoseData: " + csfGlucoseData.size + " ISFGlucoseData: " + isfGlucoseData.size + " BasalGlucoseData: " + basalGlucoseData.size)
-        // Here is the end of categorize.js file
+        if (verbose)
+            log("CRData: " + crData.size + " CSFGlucoseData: " + csfGlucoseData.size + " ISFGlucoseData: " + isfGlucoseData.size + " BasalGlucoseData: " + basalGlucoseData.size)
 
-/* bloc below is for --tune-insulin-curve not developed for the moment
-// these lines are in index.js file (autotune-prep folder)
-        if (inputs.tune_insulin_curve) {
-            if (opts.profile.curve === 'bilinear') {
-                console.error('--tune-insulin-curve is set but only valid for exponential curves');
-            } else {
-                var minDeviations = 1000000;
-                var newDIA = 0;
-                var diaDeviations = [];
-                var peakDeviations = [];
-                var currentDIA = opts.profile.dia;
-                var currentPeak = opts.profile.insulinPeakTime;
-
-                var consoleError = console.error;
-                console.error = function() {};
-
-                var startDIA=currentDIA - 2;
-                var endDIA=currentDIA + 2;
-                for (var dia=startDIA; dia <= endDIA; ++dia) {
-                    var sqrtDeviations = 0;
-                    var deviations = 0;
-                    var deviationsSq = 0;
-
-                    opts.profile.dia = dia;
-
-                    var curve_output = categorize(opts);
-                    var basalGlucose = curve_output.basalGlucoseData;
-
-                    for (var hour=0; hour < 24; ++hour) {
-                        for (var i=0; i < basalGlucose.length; ++i) {
-                            var BGTime;
-
-                            if (basalGlucose[i].date) {
-                                BGTime = new Date(basalGlucose[i].date);
-                            } else if (basalGlucose[i].displayTime) {
-                                BGTime = new Date(basalGlucose[i].displayTime.replace('T', ' '));
-                            } else if (basalGlucose[i].dateString) {
-                                BGTime = new Date(basalGlucose[i].dateString);
-                            } else {
-                                consoleError("Could not determine last BG time");
-                            }
-
-                            var myHour = BGTime.getHours();
-                            if (hour === myHour) {
-                                //console.error(basalGlucose[i].deviation);
-                                sqrtDeviations += Math.pow(parseFloat(Math.abs(basalGlucose[i].deviation)), 0.5);
-                                deviations += Math.abs(parseFloat(basalGlucose[i].deviation));
-                                deviationsSq += Math.pow(parseFloat(basalGlucose[i].deviation), 2);
-                            }
-                        }
-                    }
-
-                    var meanDeviation = Math.round(Math.abs(deviations/basalGlucose.length)*1000)/1000;
-                    var SMRDeviation = Math.round(Math.pow(sqrtDeviations/basalGlucose.length,2)*1000)/1000;
-                    var RMSDeviation = Math.round(Math.pow(deviationsSq/basalGlucose.length,0.5)*1000)/1000;
-                    consoleError('insulinEndTime', dia, 'meanDeviation:', meanDeviation, 'SMRDeviation:', SMRDeviation, 'RMSDeviation:',RMSDeviation, '(mg/dL)');
-                    diaDeviations.push({
-                            dia: dia,
-                            meanDeviation: meanDeviation,
-                            SMRDeviation: SMRDeviation,
-                            RMSDeviation: RMSDeviation,
-        });
-                    autotune_prep_output.diaDeviations = diaDeviations;
-
-                    deviations = Math.round(deviations*1000)/1000;
-                    if (deviations < minDeviations) {
-                        minDeviations = Math.round(deviations*1000)/1000;
-                        newDIA = dia;
-                    }
-                }
-
-                // consoleError('Optimum insulinEndTime', newDIA, 'mean deviation:', Math.round(minDeviations/basalGlucose.length*1000)/1000, '(mg/dL)');
-                //consoleError(diaDeviations);
-
-                minDeviations = 1000000;
-
-                var newPeak = 0;
-                opts.profile.dia = currentDIA;
-                //consoleError(opts.profile.useCustomPeakTime, opts.profile.insulinPeakTime);
-                if ( ! opts.profile.useCustomPeakTime === true && opts.profile.curve === "ultra-rapid" ) {
-                    opts.profile.insulinPeakTime = 55;
-                } else if ( ! opts.profile.useCustomPeakTime === true ) {
-                    opts.profile.insulinPeakTime = 75;
-                }
-                opts.profile.useCustomPeakTime = true;
-
-                var startPeak=opts.profile.insulinPeakTime - 10;
-                var endPeak=opts.profile.insulinPeakTime + 10;
-                for (var peak=startPeak; peak <= endPeak; peak=(peak+5)) {
-                    sqrtDeviations = 0;
-                    deviations = 0;
-                    deviationsSq = 0;
-
-                    opts.profile.insulinPeakTime = peak;
-
-
-                    curve_output = categorize(opts);
-                    basalGlucose = curve_output.basalGlucoseData;
-
-                    for (hour=0; hour < 24; ++hour) {
-                        for (i=0; i < basalGlucose.length; ++i) {
-                            if (basalGlucose[i].date) {
-                                BGTime = new Date(basalGlucose[i].date);
-                            } else if (basalGlucose[i].displayTime) {
-                                BGTime = new Date(basalGlucose[i].displayTime.replace('T', ' '));
-                            } else if (basalGlucose[i].dateString) {
-                                BGTime = new Date(basalGlucose[i].dateString);
-                            } else {
-                                consoleError("Could not determine last BG time");
-                            }
-
-                            myHour = BGTime.getHours();
-                            if (hour === myHour) {
-                                //console.error(basalGlucose[i].deviation);
-                                sqrtDeviations += Math.pow(parseFloat(Math.abs(basalGlucose[i].deviation)), 0.5);
-                                deviations += Math.abs(parseFloat(basalGlucose[i].deviation));
-                                deviationsSq += Math.pow(parseFloat(basalGlucose[i].deviation), 2);
-                            }
-                        }
-                    }
-                    console.error(deviationsSq);
-
-                    meanDeviation = Math.round(deviations/basalGlucose.length*1000)/1000;
-                    SMRDeviation = Math.round(Math.pow(sqrtDeviations/basalGlucose.length,2)*1000)/1000;
-                    RMSDeviation = Math.round(Math.pow(deviationsSq/basalGlucose.length,0.5)*1000)/1000;
-                    consoleError('insulinPeakTime', peak, 'meanDeviation:', meanDeviation, 'SMRDeviation:', SMRDeviation, 'RMSDeviation:',RMSDeviation, '(mg/dL)');
-                    peakDeviations.push({
-                            peak: peak,
-                            meanDeviation: meanDeviation,
-                            SMRDeviation: SMRDeviation,
-                            RMSDeviation: RMSDeviation,
-        });
-                    autotune_prep_output.diaDeviations = diaDeviations;
-
-                    deviations = Math.round(deviations*1000)/1000;
-                    if (deviations < minDeviations) {
-                        minDeviations = Math.round(deviations*1000)/1000;
-                        newPeak = peak;
-                    }
-                }
-
-                //consoleError('Optimum insulinPeakTime', newPeak, 'mean deviation:', Math.round(minDeviations/basalGlucose.length*1000)/1000, '(mg/dL)');
-                //consoleError(peakDeviations);
-                autotune_prep_output.peakDeviations = peakDeviations;
-
-                console.error = consoleError;
-            }
-        }
-        */
         return PreppedGlucose(autotuneIob.startBG, crData, csfGlucoseData, isfGlucoseData, basalGlucoseData, dateUtil)
-
-        // and may be later
-        // return new PreppedGlucose(crData, csfGlucoseData, isfGlucoseData, basalGlucoseData, diaDeviations, peakDeviations);
     }
 
     //dosed.js full

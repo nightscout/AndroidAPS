@@ -31,7 +31,6 @@ import javax.inject.Singleton
  * adaptation from oref0 autotune started by philoul on 2020 (complete refactoring of AutotunePlugin initialised by Rumen Georgiev on 1/29/2018.)
  *
  * TODO: replace Thread by Worker
- * TODO: future version (once first version validated): add DIA and Peak tune for insulin
  * TODO: future version: Allow day of the week selection to tune specifics days (training days, working days, WE days)
  */
 
@@ -94,7 +93,7 @@ class AutotunePlugin @Inject constructor(
         profileFunction.getProfile()?.let { currentProfile ->
             profile = profileStore.getSpecificProfile(profileToTune)?.let { ProfileSealed.Pure(it) } ?: currentProfile
         }
-        var localInsulin = LocalInsulin("PumpInsulin", activePlugin.activeInsulin.peak, profile.dia) // var because localInsulin could be updated later with Tune Insulin peak/dia
+        val localInsulin = LocalInsulin("PumpInsulin", activePlugin.activeInsulin.peak, profile.dia) // var because localInsulin could be updated later with Tune Insulin peak/dia
 
         log("Start Autotune with $daysBack days back")
         autotuneFS.createAutotuneFolder()                           //create autotune subfolder for autotune files if not exists
@@ -120,7 +119,7 @@ class AutotunePlugin @Inject constructor(
                 autotuneIob.initializeData(from, to, tunedProfile)  //autotuneIob contains BG and Treatments data from history (<=> query for ns-treatments and ns-entries)
                 autotuneFS.exportEntries(autotuneIob)               //<=> ns-entries.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
                 autotuneFS.exportTreatments(autotuneIob)            //<=> ns-treatments.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine (include treatments ,tempBasal and extended
-                preppedGlucose = autotunePrep.categorizeBGDatums(tunedProfile, localInsulin) //<=> autotune.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
+                preppedGlucose = autotunePrep.categorize(tunedProfile) //<=> autotune.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
             }
 
             if (preppedGlucose == null || tunedProfile == null) {
@@ -204,9 +203,14 @@ class AutotunePlugin @Inject constructor(
         var strResult = line
         strResult += rh.gs(R.string.autotune_log_title)
         strResult += line
+        val tuneInsulin = sp.getBoolean(R.string.key_autotune_tune_insulin_curve, false)
+        if (tuneInsulin) {
+            strResult += rh.gs(R.string.autotune_log_peak, rh.gs(R.string.insulin_peak), pumpProfile.localInsulin.peak, tunedProfile.localInsulin.peak)
+            strResult += rh.gs(R.string.autotune_log_dia, rh.gs(R.string.ic_short), pumpProfile.localInsulin.dia, tunedProfile.localInsulin.dia)
+        }
         // show ISF and CR
-        strResult += rh.gs(R.string.autotune_log_isf, rh.gs(R.string.isf_short), pumpProfile.isf, tunedProfile.isf)
-        strResult += rh.gs(R.string.autotune_log_ic, rh.gs(R.string.ic_short), pumpProfile.ic, tunedProfile.ic)
+        strResult += rh.gs(R.string.autotune_log_ic_isf, rh.gs(R.string.isf_short), pumpProfile.isf, tunedProfile.isf)
+        strResult += rh.gs(R.string.autotune_log_ic_isf, rh.gs(R.string.ic_short), pumpProfile.ic, tunedProfile.ic)
         strResult += line
         var totalBasal = 0.0
         var totalTuned = 0.0
@@ -232,7 +236,7 @@ class AutotunePlugin @Inject constructor(
         val endDateString = dateUtil.toISOString(lastloopend - 24 * 60 * 60 * 1000L).substring(0,10)
         val nsUrl = sp.getString(R.string.key_nsclientinternal_url, "")
         val optCategorizeUam = if (sp.getBoolean(R.string.key_autotune_categorize_uam_as_basal, false)) "-c=true" else ""
-        val optInsulinCurve = ""
+        val optInsulinCurve = if (sp.getBoolean(R.string.key_autotune_tune_insulin_curve, false)) "-i=true" else ""
         try {
             jsonSettings.put("datestring", dateUtil.toISOString(runDate))
             jsonSettings.put("dateutc", dateUtil.toISOAsUTC(runDate))

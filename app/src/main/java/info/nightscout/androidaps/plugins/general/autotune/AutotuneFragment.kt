@@ -384,6 +384,7 @@ class AutotuneFragment : DaggerFragment() {
                 if (autotunePlugin.result.isNotBlank()) {
                     var toMgDl = 1.0
                     if (profileFunction.getUnits() == GlucoseUnit.MMOL) toMgDl = Constants.MMOLL_TO_MGDL
+                    var isf_Format = if (profileFunction.getUnits() == GlucoseUnit.MMOL) "%.2f" else "%.1f"
                     binding.autotuneResults.addView(
                         TableLayout(context).also { layout ->
                             layout.addView(
@@ -395,8 +396,13 @@ class AutotuneFragment : DaggerFragment() {
                                 })
                             autotunePlugin.tunedProfile?.let { tuned ->
                                 layout.addView(toTableRowHeader())
-                                layout.addView(toTableRowValue(rh.gs(R.string.isf_short), Round.roundTo(autotunePlugin.pumpProfile.isf / toMgDl, 0.001), Round.roundTo(tuned.isf / toMgDl, 0.001)))
-                                layout.addView(toTableRowValue(rh.gs(R.string.ic_short), Round.roundTo(autotunePlugin.pumpProfile.ic, 0.001), Round.roundTo(tuned.ic, 0.001)))
+                                val tuneInsulin = sp.getBoolean(R.string.key_autotune_tune_insulin_curve, false)
+                                if (tuneInsulin) {
+                                    layout.addView(toTableRowValue(rh.gs(R.string.insulin_peak), autotunePlugin.pumpProfile.localInsulin.peak.toDouble(), tuned.localInsulin.peak.toDouble(), "%.0f"))
+                                    layout.addView(toTableRowValue(rh.gs(R.string.dia), Round.roundTo(autotunePlugin.pumpProfile.localInsulin.dia, 0.1), Round.roundTo(tuned.localInsulin.dia, 0.1),"%.1f"))
+                                }
+                                layout.addView(toTableRowValue(rh.gs(R.string.isf_short), Round.roundTo(autotunePlugin.pumpProfile.isf / toMgDl, 0.001), Round.roundTo(tuned.isf / toMgDl, 0.001), isf_Format))
+                                layout.addView(toTableRowValue(rh.gs(R.string.ic_short), Round.roundTo(autotunePlugin.pumpProfile.ic, 0.001), Round.roundTo(tuned.ic, 0.001), "%.2f"))
                                 layout.addView(
                                     TextView(context).apply {
                                         text = rh.gs(R.string.basal)
@@ -413,7 +419,7 @@ class AutotuneFragment : DaggerFragment() {
                                     val time = df.format(h.toLong()) + ":00"
                                     totalPump += autotunePlugin.pumpProfile.basal[h]
                                     totalTuned += tuned.basal[h]
-                                    layout.addView(toTableRowValue(time, autotunePlugin.pumpProfile.basal[h], tuned.basal[h], tuned.basalUntuned[h].toString()))
+                                    layout.addView(toTableRowValue(time, autotunePlugin.pumpProfile.basal[h], tuned.basal[h], "%.3f", tuned.basalUntuned[h].toString()))
                                 }
                                 layout.addView(toTableRowValue("∑", totalPump, totalTuned, " "))
                             }
@@ -456,7 +462,7 @@ class AutotuneFragment : DaggerFragment() {
             })
         }
 
-    private fun toTableRowValue(hour: String, inputValue: Double, tunedValue: Double, missing: String = ""): TableRow =
+    private fun toTableRowValue(hour: String, inputValue: Double, tunedValue: Double, format:String = "%.3f", missing: String = ""): TableRow =
         TableRow(context).also { row ->
             val percentValue = Round.roundTo(tunedValue / inputValue * 100 - 100, 1.0).toInt().toString() + "%"
             val lp = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT).apply { weight = 1f }
@@ -469,12 +475,12 @@ class AutotuneFragment : DaggerFragment() {
             row.addView(TextView(context).apply {
                 layoutParams = lp.apply { column = 1 }
                 textAlignment = TextView.TEXT_ALIGNMENT_CENTER
-                text = String.format("%.3f", inputValue)
+                text = String.format(format, inputValue)
             })
             row.addView(TextView(context).apply {
                 layoutParams = lp.apply { column = 2 }
                 textAlignment = TextView.TEXT_ALIGNMENT_CENTER
-                text = String.format("%.3f", tunedValue)
+                text = String.format(format, tunedValue)
             })
             row.addView(TextView(context).apply {
                 layoutParams = lp.apply { column = 3 }

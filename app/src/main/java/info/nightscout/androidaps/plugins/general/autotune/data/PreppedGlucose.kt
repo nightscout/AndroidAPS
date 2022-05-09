@@ -8,12 +8,12 @@ import java.util.*
 
 class PreppedGlucose {
 
-    var crData: List<CRDatum>? = ArrayList()
-    var csfGlucoseData: List<BGDatum>? = ArrayList()
-    var isfGlucoseData: List<BGDatum>? = ArrayList()
-    var basalGlucoseData: List<BGDatum>? = ArrayList()
-    var diaDeviations: List<DiaDatum> = ArrayList()
-    var peakDeviations: List<PeakDatum> = ArrayList()
+    var crData: List<CRDatum> = ArrayList()
+    var csfGlucoseData: List<BGDatum> = ArrayList()
+    var isfGlucoseData: List<BGDatum> = ArrayList()
+    var basalGlucoseData: List<BGDatum> = ArrayList()
+    var diaDeviations: List<DiaDeviation> = ArrayList()
+    var peakDeviations: List<PeakDeviation> = ArrayList()
     var from: Long = 0
     lateinit var dateUtil: DateUtil
 
@@ -22,7 +22,7 @@ class PreppedGlucose {
         return toString(0)
     }
 
-    constructor(from: Long, crData: List<CRDatum>?, csfGlucoseData: List<BGDatum>?, isfGlucoseData: List<BGDatum>?, basalGlucoseData: List<BGDatum>?, dateUtil: DateUtil) {
+    constructor(from: Long, crData: List<CRDatum>, csfGlucoseData: List<BGDatum>, isfGlucoseData: List<BGDatum>, basalGlucoseData: List<BGDatum>, dateUtil: DateUtil) {
         this.from = from
         this.crData = crData
         this.csfGlucoseData = csfGlucoseData
@@ -34,10 +34,10 @@ class PreppedGlucose {
     constructor(json: JSONObject?, dateUtil: DateUtil) {
         if (json == null) return
         this.dateUtil = dateUtil
-        crData = null
-        csfGlucoseData = null
-        isfGlucoseData = null
-        basalGlucoseData = null
+        crData = ArrayList()
+        csfGlucoseData = ArrayList()
+        isfGlucoseData = ArrayList()
+        basalGlucoseData = ArrayList()
         try {
             crData = JsonCRDataToList(json.getJSONArray("CRData"))
             csfGlucoseData = JsonGlucoseDataToList(json.getJSONArray("CSFGlucoseData"))
@@ -76,19 +76,19 @@ class PreppedGlucose {
         val json = JSONObject()
         try {
             val crjson = JSONArray()
-            for (crd in crData!!) {
+            for (crd in crData) {
                 crjson.put(crd.toJSON())
             }
             val csfjson = JSONArray()
-            for (bgd in csfGlucoseData!!) {
+            for (bgd in csfGlucoseData) {
                 csfjson.put(bgd.toJSON(true))
             }
             val isfjson = JSONArray()
-            for (bgd in isfGlucoseData!!) {
+            for (bgd in isfGlucoseData) {
                 isfjson.put(bgd.toJSON(false))
             }
             val basaljson = JSONArray()
-            for (bgd in basalGlucoseData!!) {
+            for (bgd in basalGlucoseData) {
                 basaljson.put(bgd.toJSON(false))
             }
             val diajson = JSONArray()

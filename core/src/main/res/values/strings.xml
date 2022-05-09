@@ -68,6 +68,7 @@
     <string name="key_insulin_oref_peak" translatable="false">insulin_oref_peak</string>
     <string name="key_autotune_auto" translatable="false">autotune_auto</string>
     <string name="key_autotune_categorize_uam_as_basal" translatable="false">categorize_uam_as_basal</string>
+    <string name="key_autotune_tune_insulin_curve" translatable="false">autotune_tune_insulin_curve</string>
     <string name="key_autotune_default_tune_days" translatable="false">autotune_default_tune_days</string>
     <string name="key_autotune_circadian_ic_isf" translatable="false">autotune_circadian_ic_isf</string>
     <string name="key_autotune_additional_log" translatable="false">autotune_additional_log</string>
@@ -554,6 +555,8 @@
     <string name="autotune_auto_summary">If enabled, Autotune will automatically update and switch to input profile after calculation from an automation rule.</string>
     <string name="autotune_categorize_uam_as_basal_title">Categorize UAM as basal</string>
     <string name="autotune_categorize_uam_as_basal_summary">Enable only if you have reliably entered all carbs eaten, with this option sudden rises seen by Autotune will be used to recommend changes to the basal rate.</string>
+    <string name="autotune_tune_insulin_curve_title">Tune insulin curve</string>
+    <string name="autotune_tune_insulin_curve_summary">Enable only if you use free peak. This option will tune peak and DIA durations</string>
     <string name="autotune_default_tune_days_title">Number of days of data</string>
     <string name="autotune_circadian_ic_isf_title">Apply average result in circadian IC/ISF</string>
     <string name="autotune_circadian_ic_isf_summary">Autotune will not tune circadian variations, this option only apply the average tuning of IC and ISF to your circadian input profile</string>
@@ -589,8 +592,9 @@
     <string name="autotune_profile_invalid">Profile invalid</string>
     <string name="autotune_log_title" translatable="false">|Param|Profile|Tuned|%/Miss.\n</string>
     <string name="autotune_log_separator" translatable="false">+------------------------------------------\n</string>
-    <string name="autotune_log_isf" translatable="false">| %1$4.4s |\t%2$3.3f |\t%3$3.3f |\n</string>
-    <string name="autotune_log_ic" translatable="false">| %1$4.4s |\t%2$3.3f |\t%3$3.3f |\n</string>
+    <string name="autotune_log_peak" translatable="false">| %1$4.4s |\t%2$d |\t%3$d |\n</string>
+    <string name="autotune_log_dia" translatable="false">| %1$4.4s |\t%2$3.1f |\t%3$3.1f |\n</string>
+    <string name="autotune_log_ic_isf" translatable="false">| %1$4.4s | %2$3.3f |\t%3$3.3f |\n</string>
     <string name="autotune_log_basal" translatable="false">|\t%1$02.0f\t| %2$3.3f |%3$3.3f\t| %5$.0f%% / %4$d\n</string>
     <string name="autotune_log_sum_basal"  translatable="false">|\t∑\t|\t%1$3.1f |\t%2$3.1f |\n</string>
     <string name="autotune_run_without_autoswitch">Autotune runned without profile switch</string>

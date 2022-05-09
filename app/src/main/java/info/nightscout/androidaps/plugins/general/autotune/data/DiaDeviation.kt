@@ -3,15 +3,9 @@ package info.nightscout.androidaps.plugins.general.autotune.data
 import org.json.JSONException
 import org.json.JSONObject
 
-class DiaDatum {
+class DiaDeviation(var dia: Double = 0.0, var meanDeviation: Double = 0.0, var smrDeviation: Double = 0.0, var rmsDeviation: Double = 0.0) {
 
-    var dia = 0.0
-    var meanDeviation = 0.0
-    var smrDeviation = 0.0
-    var rmsDeviation = 0.0
-
-    constructor() {}
-    constructor(json: JSONObject) {
+    constructor(json: JSONObject) : this() {
         try {
             if (json.has("dia")) dia = json.getDouble("dia")
             if (json.has("meanDeviation")) meanDeviation = json.getDouble("meanDeviation")
@@ -31,14 +25,5 @@ class DiaDatum {
         } catch (e: JSONException) {
         }
         return crjson
-    }
-
-    fun equals(obj: DiaDatum): Boolean {
-        var isEqual = true
-        if (dia != obj.dia) isEqual = false
-        if (meanDeviation != obj.meanDeviation) isEqual = false
-        if (smrDeviation != obj.smrDeviation) isEqual = false
-        if (rmsDeviation != obj.rmsDeviation) isEqual = false
-        return isEqual
     }
 }
