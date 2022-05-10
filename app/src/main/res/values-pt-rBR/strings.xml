@@ -423,6 +423,7 @@
     <string name="enableuam_summary">Detecção de refeições não Introduzidas</string>
     <string name="insulin_oref_peak">Tempo Pico da curva de IOB</string>
     <string name="insulin_peak_time">Tempo Pico [min]</string>
+    <string name="insulin_peak">Pico</string>
     <string name="free_peak_oref">Oref Pico-Livre</string>
     <string name="rapid_acting_oref">Oref Ação Rápida</string>
     <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
@@ -893,7 +894,9 @@
     <string name="widget_description">AndroidAPS widget</string>
     <string name="configure">Configurar opacidade</string>
     <string name="loop_status">Status do loop</string>
+    <string name="a11y_otp_qr_code">Código QR para configuração de senha de uso único</string>
     <string name="a11y_open_settings">abrir configurações</string>
+    <string name="a11y_set_carb_timer">definir alarme temporizador de carboidrato</string>
     <string name="device_all">Todos</string>
     <string name="device_phone">Telefone</string>
     <string name="device_watch">Smartwatch</string>
