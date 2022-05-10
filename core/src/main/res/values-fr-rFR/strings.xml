@@ -455,7 +455,6 @@
     <string name="autotune_circadian_ic_isf_summary">Autotune ne réglera pas les variations circadiennes, cette option ne fait que appliquer le réglage moyen du G/I et de la SI à votre profil d\'entrée circadien</string>
     <string name="autotune_additional_log_title">Inclure plus d\'informations de log pour le débogage</string>
     <string name="autotune_additional_log_summary">A n\'activer que sur demande du développeur pour envoyer plus d\'informations dans les fichiers log pour aider à déboguer le plugin Autotune</string>
-    <string name="autotune_default_tune_days_summary">Nombre de jours de données par défaut à traiter par Autotune (jusqu\'à 30)</string>
     <string name="autotune_tunedprofile_name">Tuned</string>
     <string name="autotune_profile">Profil :</string>
     <string name="autotune_tune_days">Nb jours :</string>
@@ -464,7 +463,6 @@
     <string name="autotune_select_profile">Sélectionnez le profil à optimiser</string>
     <string name="autotune_ic_warning">Autotune ne fonctionne qu\'avec une seule valeur G/I, votre profil a %1$d valeurs. La valeur moyenne est de %2$.2f g/U</string>
     <string name="autotune_isf_warning">Autotune ne calcule qu\'une seule valeur de SI, votre profil a %1$d valeurs. La valeur moyenne est de %2$.1f %3$s/U</string>
-    <string name="autotune_error">Erreur dans les données d\'entrée, essayez de relancer le calcul ou réduire le nombre de jours</string>
     <string name="autotune_warning_during_run">Le calcul Autotune a commencé, veuillez patienter</string>
     <string name="autotune_warning_after_run">Vérifiez attentivement les résultats avant de les utiliser!</string>
     <string name="autotune_partial_result">Résultat partiel jour %1$d / %2$d calculé</string>

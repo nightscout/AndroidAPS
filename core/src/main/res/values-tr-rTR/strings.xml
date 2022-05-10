@@ -455,7 +455,6 @@
     <string name="autotune_circadian_ic_isf_summary">OtoAyar sirkadiyen varyasyonları ayarlamaz, bu seçenek sirkadiyen giriş profilinize yalnızca IC ve İDF\'nün ortalama ayarını uygular</string>
     <string name="autotune_additional_log_title">Hata ayıklama için daha fazla günlük bilgisi ekleyin</string>
     <string name="autotune_additional_log_summary">OtoAyar eklentisinde hata ayıklamaya yardımcı olmak için yalnızca geliştirici tarafından daha fazla günlük bilgisi göndermesi istenirse açın</string>
-    <string name="autotune_default_tune_days_summary">OtoAyar tarafından işlenecek varsayılan veri gün sayısı (en fazla xx)</string>
     <string name="autotune_tunedprofile_name">Ayarlandı</string>
     <string name="autotune_profile">Profil :</string>
     <string name="autotune_tune_days">Ayar günleri:</string>
@@ -464,7 +463,6 @@
     <string name="autotune_select_profile">Ayarlanacak profili seçin</string>
     <string name="autotune_ic_warning">OtoAyar yalnızca bir IC değeriyle çalışır, profilinizde %1$d değer mevcut. Ortalama değer: %2$.2fg/Ü</string>
     <string name="autotune_isf_warning">OtoAyar yalnızca bir İDF değeriyle çalışır, profilinizde %1$d değer mevcut. Ortalama değer: %2$.1f%3$s/Ü</string>
-    <string name="autotune_error">Giriş verilerinde hata, gün sayısını azaltmaya çalışın</string>
     <string name="autotune_warning_during_run">OtoAyar hesaplaması başladı, lütfen sabırlı olun</string>
     <string name="autotune_warning_after_run">Kullanmadan önce sonuçları dikkatlice kontrol edin!</string>
     <string name="autotune_partial_result">Kısmi sonuç günü %1$d / %2$d ayarlandı</string>
