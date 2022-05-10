@@ -4,7 +4,6 @@ import androidx.annotation.StringRes
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
@@ -14,6 +13,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.deactiva
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.shared.logging.AAPSLogger
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 

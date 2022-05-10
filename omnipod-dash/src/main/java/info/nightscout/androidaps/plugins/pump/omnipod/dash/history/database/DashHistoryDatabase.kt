@@ -18,7 +18,7 @@ abstract class DashHistoryDatabase : RoomDatabase() {
 
     companion object {
 
-        const val VERSION = 2
+        const val VERSION = 3
 
         fun build(context: Context) =
             Room.databaseBuilder(

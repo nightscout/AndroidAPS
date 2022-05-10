@@ -1,9 +1,9 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session
 
 import info.nightscout.androidaps.extensions.toHex
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.BuildConfig
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.BuildConfig
 import org.spongycastle.util.encoders.Hex
 import java.security.SecureRandom
 import javax.crypto.Cipher
