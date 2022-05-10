@@ -99,6 +99,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         private const val BOLUS_RETRY_INTERVAL_MS = 2000.toLong()
         private const val BOLUS_RETRIES = 5 // number of retries for cancel/get bolus status
         private const val STATUS_CHECK_INTERVAL_MS = (60L * 1000)
+        private const val RESERVOIR_OVER_50_UNITS_DEFAULT = 75.0
 
         private val pluginDescription = PluginDescription()
             .mainType(PluginType.PUMP)
@@ -537,7 +538,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             // Omnipod only reports reservoir level when there's < 1023 pulses left
             return podStateManager.pulsesRemaining?.let {
                 it * PodConstants.POD_PULSE_BOLUS_UNITS
-            } ?: 50.0
+            } ?: RESERVOIR_OVER_50_UNITS_DEFAULT
         }
 
     override val batteryLevel: Int
