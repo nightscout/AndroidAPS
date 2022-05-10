@@ -11,7 +11,7 @@
     <string name="combo_pump_state_suspended_by_user">Suspensa pelo usuário</string>
     <string name="combo_pump_state_running">Funcionando</string>
     <string name="combo_pump_action_cancelling_tbr">Cancelando a TBR</string>
-    <string name="combo_pump_action_setting_tbr">Ajustando a TBR (%1$d%% / %2$d min)</string>
+    <string name="combo_pump_action_setting_tbr">Ajustando a TBT (%1$d%% / %2$d min)</string>
     <string name="combo_pump_action_bolusing">Aplicando bolus (%1$.1f U)</string>
     <string name="combo_pump_action_refreshing">Atualizando</string>
     <string name="combo_pump_unsupported_operation">Ação solicitada não compatível com a bomba</string>
