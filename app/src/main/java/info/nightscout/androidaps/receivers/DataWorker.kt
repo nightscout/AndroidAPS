@@ -56,10 +56,10 @@ class DataWorker @Inject constructor(
         return value as JSONObject?
     }
 
-    fun storeInputData(value: Any, intent: Intent? = null) =
+    fun storeInputData(value: Any, action: String? = null) =
         Data.Builder()
             .putLong(STORE_KEY, store(value))
-            .putString(ACTION_KEY, intent?.action).build()
+            .putString(ACTION_KEY, action).build()
 
     fun enqueue(request: OneTimeWorkRequest) {
         WorkManager.getInstance(context)
