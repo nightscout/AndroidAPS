@@ -51,7 +51,7 @@ class DashHistory @Inject constructor(
         resolvedAt: Long? = null
     ): Single<Long> = Single.defer {
         var id: Long = 0
-        if (dao.first() != null) {
+        if (dao.first() == null) {
             id = currentTimeMillis()
         }
         when {
