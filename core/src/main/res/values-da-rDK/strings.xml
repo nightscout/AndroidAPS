@@ -455,7 +455,6 @@
     <string name="autotune_circadian_ic_isf_summary">Autotune vil ikke justere døgnrytme variationer, denne indstilling benytter gennemsnitlige værdier til justering af IC og ISF til din døgnrytme input profil</string>
     <string name="autotune_additional_log_title">Inkludér flere logoplysninger for fejlfinding</string>
     <string name="autotune_additional_log_summary">Aktivér kun hvis udviklerne beder dig om det, for at sende flere logoplysninger til at hjælpe med at fejlfinde Autotune plugin</string>
-    <string name="autotune_default_tune_days_summary">Standard antal dage data der skal behandles af Autotune (op til xx)</string>
     <string name="autotune_tunedprofile_name">Justeret</string>
     <string name="autotune_profile">Profil :</string>
     <string name="autotune_tune_days">Justerings dage :</string>
@@ -464,7 +463,6 @@
     <string name="autotune_select_profile">Vælg profil, der skal justeres</string>
     <string name="autotune_ic_warning">Autotune fungerer med kun én IC-værdi, din profil har %1$d værdier. Gennemsnitsværdi er %2$.2fg/E</string>
     <string name="autotune_isf_warning">Autotune virker med kun én ISF-værdi, din profil har %1$d værdier. Gennemsnitlig værdi er %2$.1f%3$s/E</string>
-    <string name="autotune_error">Fejl i inputdata, prøv at reducere antallet af dage</string>
     <string name="autotune_warning_during_run">Automatisk beregning startet, vær venligst tålmodig</string>
     <string name="autotune_warning_after_run">Kontrollér resultaterne omhyggeligt, før du bruger dem!</string>
     <string name="autotune_partial_result">Delvis resultat dag %1$d / %2$d justeret</string>
