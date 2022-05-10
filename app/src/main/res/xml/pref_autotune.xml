@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory
+        android:key="@string/key_autotune_plugin"
+        android:title="@string/autotune_settings"
+        app:initialExpandedChildrenCount="10">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_autotune_auto"
+            android:summary="@string/autotune_auto_summary"
+            android:title="@string/autotune_auto_title" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_autotune_categorize_uam_as_basal"
+            android:summary="@string/autotune_categorize_uam_as_basal_summary"
+            android:title="@string/autotune_categorize_uam_as_basal_title" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_autotune_tune_insulin_curve"
+            android:summary="@string/autotune_tune_insulin_curve_summary"
+            android:title="@string/autotune_tune_insulin_curve_title" />
+
+        <EditTextPreference
+            android:defaultValue="5"
+            android:inputType="number"
+            android:key="@string/key_autotune_default_tune_days"
+            android:summary="@string/autotune_default_tune_days_summary"
+            android:title="@string/autotune_default_tune_days_title" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_autotune_circadian_ic_isf"
+            android:summary="@string/autotune_circadian_ic_isf_summary"
+            android:title="@string/autotune_circadian_ic_isf_title" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_autotune_additional_log"
+            android:summary="@string/autotune_additional_log_summary"
+            android:title="@string/autotune_additional_log_title" />
+    </PreferenceCategory>
+</androidx.preference.PreferenceScreen>

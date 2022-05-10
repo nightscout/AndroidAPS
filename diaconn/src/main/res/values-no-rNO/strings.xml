@@ -152,4 +152,6 @@
     <string name="diaconn_g8_errorcode_34">LGS status er AV. AV kommandoen er avslått.</string>
     <string name="diaconn_g8_errorcode_35">Temp basal avslått siden det allerede kjøres en temp basal</string>
     <string name="diaconn_g8_errorcode_36">Stopp av temp basal avslått siden det ikke kjøres en temp basal</string>
+    <string name="diaconn_g8_cloudsend_summary">Send pumpe logger til Diaconn Cloud.</string>
+    <string name="diaconn_g8_cloudsend_title">Diaconn Cloud Sync</string>
 </resources>

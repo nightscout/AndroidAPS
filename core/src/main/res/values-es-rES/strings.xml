@@ -455,7 +455,6 @@
     <string name="autotune_circadian_ic_isf_summary">Autotune no afinará las variaciones circadianas, esta opción solo aplica los ajustes medios de IC e ISF a tu perfil circadiano de entrada</string>
     <string name="autotune_additional_log_title">Incluir más información de registro para depuración</string>
     <string name="autotune_additional_log_summary">Activar sólo si es solicitado por los desarrolladores, para enviar más registros y así ayudar a depurar el plugin Autotune</string>
-    <string name="autotune_default_tune_days_summary">Número predeterminado de días de datos a procesar por Autotune (hasta xx)</string>
     <string name="autotune_tunedprofile_name">Ajustado</string>
     <string name="autotune_profile">Perfil :</string>
     <string name="autotune_tune_days">Días de ajuste:</string>
@@ -464,7 +463,6 @@
     <string name="autotune_select_profile">Selecciona el perfil para a ajustar</string>
     <string name="autotune_ic_warning">Autotune sólo funciona con un valor de IC. Tu perfil tiene %1$d valores. El valor promedio es %2$.2fg/U</string>
     <string name="autotune_isf_warning">Autotune sólo funciona con un valor de ISF. Tu perfil tiene %1$d valores. El valor promedio es %2$.1f%3$s/U</string>
-    <string name="autotune_error">Error en los datos de entrada, intenta reducir el número de días</string>
     <string name="autotune_warning_during_run">Cálculo de autototune iniciado, por favor ten paciencia</string>
     <string name="autotune_warning_after_run">¡Comprueba los resultados cuidadosamente antes de usarlos!</string>
     <string name="autotune_partial_result">Resultado parcial día %1$d / %2$d afinado</string>

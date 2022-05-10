@@ -442,6 +442,7 @@
     <string name="enableuam_summary">Detekce neoznámených jídel</string>
     <string name="insulin_oref_peak">Čas vrcholu IOB křivky</string>
     <string name="insulin_peak_time">Vrchol křivky [min]</string>
+    <string name="insulin_peak">Vrchol</string>
     <string name="free_peak_oref">Volitelný vrchol - Oref</string>
     <string name="rapid_acting_oref">Rychle působící - Oref</string>
     <string name="ultrarapid_oref">Ultra rychlý - Oref</string>

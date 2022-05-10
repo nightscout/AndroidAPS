@@ -450,12 +450,14 @@
     <string name="autotune_auto_summary">Pokiaľ je táto voľba povolená, Autotune po výpočte automaticky aktualizuje a prepne na vstupný profil zadaný v pravidle automatizácie.</string>
     <string name="autotune_categorize_uam_as_basal_title">Započítavať UAM ako bazál</string>
     <string name="autotune_categorize_uam_as_basal_summary">Povoľte iba v prípade, že ste dôsledne zadávali všetky prijaté sacharidy. S touto možnosťou bude náhly vzostup detekovaný funkciou Autotune, použitý pre doporučovanie zmien bazálu.</string>
+    <string name="autotune_tune_insulin_curve_title">Ladiť inzulínovú krivku</string>
+    <string name="autotune_tune_insulin_curve_summary">Aktivuj iba ak používaš voliteľný vrchol. Táto možnosť má vyladiť vrchol a trvanie DIA</string>
     <string name="autotune_default_tune_days_title">Počet dní s dátami</string>
     <string name="autotune_circadian_ic_isf_title">Použi priemerný výsledok v cirkadiánnom IC/ISF</string>
     <string name="autotune_circadian_ic_isf_summary">Autotune nebude ladiť cirkadiánne rozloženie, táto možnosť použije iba priemerné ladenie IC a ISF na váš cirkadiánný vstupní profil</string>
     <string name="autotune_additional_log_title">Zahrnúť ďalšie informácie o protokole pre ladenie</string>
     <string name="autotune_additional_log_summary">Zapnite, iba pokiaľ je to požadované vývojárom, aby bolo možné odoslať dalšie logy pre ladenie modulu Autotune</string>
-    <string name="autotune_default_tune_days_summary">Štandardný počet dní, z ktorých majú byť dáta spracované Autotune (až do xx)</string>
+    <string name="autotune_default_tune_days_summary">Štandardný počet dní, z ktorých majú byť dáta spracované Autotune (až do 30)</string>
     <string name="autotune_tunedprofile_name">Vyladené</string>
     <string name="autotune_profile">Profil :</string>
     <string name="autotune_tune_days">Ladiť dni:</string>
@@ -464,7 +466,7 @@
     <string name="autotune_select_profile">Vyberte profil pre ladenie</string>
     <string name="autotune_ic_warning">Autotune funguje iba s jedinou hodnotou IC, váš profil má %1$d hodnôt. Priemerná hodnota je %2$.2fg/JI</string>
     <string name="autotune_isf_warning">Autotune funguje iba s jedinou hodnotou IC, váš profil má %1$d hodnôt. Priemerná hodnota je %2$.1fg/JI</string>
-    <string name="autotune_error">Chyba vstupných dát, skúste znížiť počet dní</string>
+    <string name="autotune_error">Chyba vstupných dát, skúste znova spustiť Autotune, alebo znížte počet dní</string>
     <string name="autotune_warning_during_run">Autotune spustený, prosím buďte trpezliví</string>
     <string name="autotune_warning_after_run">Pred použitím výsledky starostlivo skontrolujte!</string>
     <string name="autotune_partial_result">Čiastočný výsledok - vyladený deň %1$d / %2$d</string>
