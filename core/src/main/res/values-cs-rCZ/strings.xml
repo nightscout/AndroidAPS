@@ -455,7 +455,6 @@
     <string name="autotune_circadian_ic_isf_summary">Autotune nebude ladit cirkadiánní rozložení, tato možnost použije pouze průměrné hodnoty IC a ISF na váš cirkadiánní vstupní profil</string>
     <string name="autotune_additional_log_title">Zahrnout další informace o protokolu pro ladění</string>
     <string name="autotune_additional_log_summary">Zapněte, pouze pokud je to požadováno vývojářem, aby bylo možné odeslat další logy pro ladění pluginu Autotune</string>
-    <string name="autotune_default_tune_days_summary">Výchozí počet dní, ze kterých mají být data zpracována Autotune (až xx)</string>
     <string name="autotune_tunedprofile_name">Vyladěno</string>
     <string name="autotune_profile">Profil :</string>
     <string name="autotune_tune_days">Ladit dní:</string>
@@ -464,7 +463,6 @@
     <string name="autotune_select_profile">Vyberte profil pro ladění</string>
     <string name="autotune_ic_warning">Autotune funguje pouze s jedinou hodnotou IC, váš profil má %1$d hodnot. Průměrná hodnota je %2$.2fg/U</string>
     <string name="autotune_isf_warning">Autotune funguje pouze s jedinou hodnotou ISF, váš profil má %1$d hodnot. Průměrná hodnota je %2$.1f%3$s/U</string>
-    <string name="autotune_error">Chyba vstupních dat, zkuste snížit počet dní</string>
     <string name="autotune_warning_during_run">Autotune spuštěno, prosím buďte trpěliví</string>
     <string name="autotune_warning_after_run">Před použitím výsledky pečlivě zkontrolujte!</string>
     <string name="autotune_partial_result">Částečný výsledek - vyladěn den %1$d / %2$d</string>

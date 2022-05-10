@@ -2,6 +2,15 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
+    <string name="label_watchface">AAPS</string>
+    <string name="label_watchface_large">AAPS (stor)</string>
+    <string name="label_watchface_big_chart">AAPS (stor graf)</string>
+    <string name="label_watchface_no_chart">AAPS (ingen graf)</string>
+    <string name="label_watchface_circle">AAPS (sirkel)</string>
+    <string name="label_watchface_v2">AAPS(v2)</string>
+    <string name="label_watchface_cockpit">AAPS(Cockpit)</string>
+    <string name="label_watchface_steampunk">AAPS(Steampunk)</string>
+    <string name="label_watchface_digital_style">AAPS(Digitalstil)</string>
     <string name="label_actions_tile">AAPS(Actions)</string>
     <string name="label_temp_target_tile">AAPS(Temp Target)</string>
     <string name="label_quick_wizard_tile">AAPS(Quick Wizard)</string>
@@ -55,6 +64,7 @@
     <string name="pref_complication_tap_action">Komplikasjon trykk handling</string>
     <string name="pref_unicode_in_complications">Unicode ikomplikasjoner</string>
     <string name="pref_version">Versjon:</string>
+    <string name="pref_moreWatchfaceSettings">Fler urskive innstillinger</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Vennligst sjekk urskive innstillinger.</string>
     <string name="menu_tempt">TempT</string>
     <string name="menu_wizard">Kalkulator</string>
@@ -80,6 +90,7 @@
     <string name="action_wizard_confirmation">Beregning forespurt</string>
     <string name="action_fill_confirmation">Fylling forespurt</string>
     <string name="action_ecarb_confirmation">Karbo forespurt</string>
+    <string name="action_profile_switch_confirmation">Profilbytte forespurt</string>
     <string name="action_target" comment="In temp target menu, single target value">Mål</string>
     <string name="action_low" comment="In temp target menu, lower value from range">Lav</string>
     <string name="action_high" comment="In temp target menu, higher value from range">Høy</string>
@@ -101,6 +112,7 @@
     <string name="cancel_bolus">AVBRYT BOLUS</string>
     <string name="status_pump">Pumpe</string>
     <string name="status_loop">Loop</string>
+    <string name="status_profile_switch">Profilbytte</string>
     <string name="status_tdd">TDD</string>
     <string name="activity_carb">Karbo</string>
     <string name="activity_IOB">IOB</string>
