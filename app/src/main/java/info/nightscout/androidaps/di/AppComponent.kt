@@ -12,6 +12,7 @@ import info.nightscout.androidaps.dana.di.DanaModule
 import info.nightscout.androidaps.danar.di.DanaRModule
 import info.nightscout.androidaps.danars.di.DanaRSModule
 import info.nightscout.androidaps.database.DatabaseModule
+import info.nightscout.androidaps.dependencyInjection.AutotuneModule
 import info.nightscout.androidaps.diaconn.di.DiaconnG8Module
 import info.nightscout.androidaps.insight.di.InsightDatabaseModule
 import info.nightscout.androidaps.insight.di.InsightModule
@@ -37,6 +38,7 @@ import javax.inject.Singleton
         ReceiversModule::class,
         ServicesModule::class,
         AutomationModule::class,
+        AutotuneModule::class,
         CommandQueueModule::class,
         ObjectivesModule::class,
         WizardModule::class,

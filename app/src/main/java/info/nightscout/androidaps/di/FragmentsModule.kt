@@ -12,6 +12,7 @@ import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesFragm
 import info.nightscout.androidaps.plugins.constraints.objectives.activities.ObjectivesExamDialog
 import info.nightscout.androidaps.plugins.general.actions.ActionsFragment
 import info.nightscout.androidaps.plugins.general.automation.AutomationFragment
+import info.nightscout.androidaps.plugins.general.autotune.AutotuneFragment
 import info.nightscout.androidaps.plugins.general.food.FoodFragment
 import info.nightscout.androidaps.plugins.general.maintenance.MaintenanceFragment
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientFragment
@@ -36,6 +37,7 @@ abstract class FragmentsModule {
 
     @ContributesAndroidInjector abstract fun contributesActionsFragment(): ActionsFragment
     @ContributesAndroidInjector abstract fun contributesAutomationFragment(): AutomationFragment
+    @ContributesAndroidInjector abstract fun contributesAutotuneFragment(): AutotuneFragment
     @ContributesAndroidInjector abstract fun contributesBGSourceFragment(): BGSourceFragment
 
     @ContributesAndroidInjector abstract fun contributesConfigBuilderFragment(): ConfigBuilderFragment
