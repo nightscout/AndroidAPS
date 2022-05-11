@@ -442,6 +442,7 @@
     <string name="enableuam_summary">Oppdaget uannonsert måltid (UAM)</string>
     <string name="insulin_oref_peak">IOB kurvens topp tid</string>
     <string name="insulin_peak_time">Topp tid [min]</string>
+    <string name="insulin_peak">Topp</string>
     <string name="free_peak_oref">Free-Peak Oref</string>
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
     <string name="ultrarapid_oref">Ultra-Rapid Oref</string>

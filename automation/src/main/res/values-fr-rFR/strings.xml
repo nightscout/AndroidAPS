@@ -120,6 +120,7 @@
     <string name="confirm_remove_multiple_items">Êtes-vous sûr de vouloir supprimer %1$d entrée(s)</string>
     <string name="sort_label">Trier</string>
     <string name="system_automation">Système d\'automatisation</string>
+    <string name="run_automations">Exécuter les automatisations</string>
     <string name="add_automation">Ajouter une règle</string>
     <string name="remove_sort">Supprimer/trier</string>
 </resources>

@@ -443,6 +443,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="enableuam_summary">Détection des Repas Non Signalés</string>
     <string name="insulin_oref_peak">Durée du Pic de la Courbe IA</string>
     <string name="insulin_peak_time">Temps du Pic [min]</string>
+    <string name="insulin_peak">Pic</string>
     <string name="free_peak_oref">Profil d\'insuline ajustable Oref</string>
     <string name="rapid_acting_oref">Insuline à Action Rapide Oref </string>
     <string name="ultrarapid_oref">Insuline Ultra Rapide Oref</string>
