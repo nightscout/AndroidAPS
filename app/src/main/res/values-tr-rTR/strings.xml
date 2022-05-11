@@ -443,6 +443,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="enableuam_summary">(Uam) Bildirilmemiş öğünlerin tespiti</string>
     <string name="insulin_oref_peak">IOB Eğrisi Tepe Zamanı</string>
     <string name="insulin_peak_time">Tepe zamanı [min]</string>
+    <string name="insulin_peak">Tepe</string>
     <string name="free_peak_oref">Serbest tepe Oref</string>
     <string name="rapid_acting_oref">Hızlı etkili Oref</string>
     <string name="ultrarapid_oref">Ultra Hızlı Oref</string>

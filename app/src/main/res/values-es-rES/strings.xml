@@ -442,6 +442,7 @@
     <string name="enableuam_summary">Detectar comidas no anunciadas (UAM)</string>
     <string name="insulin_oref_peak">Tiempo del pico máximo de la curva de IOB</string>
     <string name="insulin_peak_time">Tiempo del pico máximo de acción de la insulina [min]</string>
+    <string name="insulin_peak">Pico</string>
     <string name="free_peak_oref">Personalizar Pico</string>
     <string name="rapid_acting_oref">Acción Rápida</string>
     <string name="ultrarapid_oref">Acción Ultra Rápida</string>
