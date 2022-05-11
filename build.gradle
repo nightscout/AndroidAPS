@@ -87,7 +87,7 @@ allprojects {
     }
 }
 
-apply from: 'gradle/jacoco_project.gradle'
+apply from: 'jacoco_project.gradle'
 
 task clean(type: Delete) {
     delete rootProject.buildDir

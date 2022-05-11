@@ -6,10 +6,10 @@ apply plugin: 'com.hiya.jacoco-android'
 apply plugin: "io.gitlab.arturbosch.detekt" // TODO move to `subprojects` section in global build.gradle
 apply plugin: "org.jlleitschuh.gradle.ktlint" // TODO move to `subprojects` section in global build.gradle
 
-apply from: "${project.rootDir}/gradle/android_dependencies.gradle"
-apply from: "${project.rootDir}/gradle/android_module_dependencies.gradle"
-apply from: "${project.rootDir}/gradle/test_dependencies.gradle"
-apply from: "${project.rootDir}/gradle/jacoco_global.gradle"
+apply from: "${project.rootDir}/core/android_dependencies.gradle"
+apply from: "${project.rootDir}/core/android_module_dependencies.gradle"
+apply from: "${project.rootDir}/core/test_dependencies.gradle"
+apply from: "${project.rootDir}/core/jacoco_global.gradle"
 
 detekt { // TODO move to `subprojects` section in global build.gradle
     toolVersion = "1.15.0-RC2"

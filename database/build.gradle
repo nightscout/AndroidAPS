@@ -3,8 +3,8 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-allopen'
 
-apply from: "${project.rootDir}/gradle/android_dependencies.gradle"
-apply from: "${project.rootDir}/gradle/android_module_dependencies.gradle"
+apply from: "${project.rootDir}/core/android_dependencies.gradle"
+apply from: "${project.rootDir}/core/android_module_dependencies.gradle"
 
 android {
     defaultConfig {

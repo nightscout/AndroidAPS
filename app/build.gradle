@@ -6,8 +6,8 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.hiya.jacoco-android'
 apply plugin: 'com.google.firebase.crashlytics'
 
-apply from: "${project.rootDir}/gradle/android_dependencies.gradle"
-apply from: "${project.rootDir}/gradle/jacoco_global.gradle"
+apply from: "${project.rootDir}/core/android_dependencies.gradle"
+apply from: "${project.rootDir}/core/jacoco_global.gradle"
 
 repositories {
     mavenCentral()
@@ -204,7 +204,7 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
 }
 
-apply from: "${project.rootDir}/gradle/test_dependencies.gradle"
+apply from: "${project.rootDir}/core/test_dependencies.gradle"
 
 
 /*
