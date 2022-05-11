@@ -1213,6 +1213,7 @@
     <string name="widget_description">AndroidAPS widget</string>
     <string name="configure">Configure opacity</string>
     <string name="loop_status">Loop status</string>
+    <string name="graph_scale">Graph scale</string>
 
     <string name="a11y_otp_qr_code">QR Code for setup one time password</string>
     <string name="a11y_open_settings">open settings</string>
@@ -1228,5 +1229,5 @@
     <string name="aidex">GlucoRx Aidex</string>
     <string name="aidex_short">Aidex</string>
     <string name="description_source_aidex">Receive BG values from GlucoRx Aidex CGMS.</string>
-  
+
 </resources>
