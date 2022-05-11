@@ -17,6 +17,7 @@ import info.nightscout.androidaps.databinding.ActivityHistorybrowseBinding
 import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.events.EventCustomCalculationFinished
 import info.nightscout.androidaps.events.EventRefreshOverview
+import info.nightscout.androidaps.events.EventScale
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.extensions.toVisibilityKeepSpace
 import info.nightscout.androidaps.interfaces.ActivePlugin
@@ -130,10 +131,9 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
             loadAll("onClickEnd")
         }
         binding.zoom.setOnClickListener {
-            rangeToDisplay += 6
-            rangeToDisplay = if (rangeToDisplay > 24) 6 else rangeToDisplay
-            setTime(overviewData.fromTime)
-            loadAll("rangeChange")
+            var hours = rangeToDisplay + 6
+            hours = if (hours > 24) 6 else hours
+            rxBus.send(EventScale(hours))
         }
         binding.zoom.setOnLongClickListener {
             Calendar.getInstance().also { calendar ->
@@ -214,6 +214,14 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
             .toObservable(EventUpdateOverviewGraph::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ updateGUI("EventRefreshOverview") }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventScale::class.java)
+            .observeOn(aapsSchedulers.main)
+            .subscribe({
+                           rangeToDisplay = it.hours
+                           setTime(overviewData.fromTime)
+                           loadAll("rangeChange")
+                       }, fabricPrivacy::logException)
 
         if (overviewData.fromTime == 0L) {
             // set start of current day
