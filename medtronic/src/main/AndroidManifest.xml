@@ -7,7 +7,7 @@
             android:enabled="true"
             android:exported="false" />
 
-        <activity android:name=".dialog.MedtronicHistoryActivity" />
+        <activity android:name=".dialog.MedtronicHistoryActivity"  android:theme="@style/AppTheme" />
 
         <uses-library android:name="org.apache.http.legacy" android:required="false"/>
     </application>
