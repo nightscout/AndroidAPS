@@ -979,6 +979,7 @@
     <string name="show_hide_records">החבא רשומות לולאה</string>
     <string name="widget_description">ווידג\'ט AndroidAPS</string>
     <string name="configure">הגדרת אטימות</string>
+    <string name="graph_scale">קנה מידה של הגרף</string>
     <string name="device_phone">טלפון</string>
     <string name="device_watch">שעון</string>
     <string name="a11y_only_on_watch">על השעון בלבד</string>
