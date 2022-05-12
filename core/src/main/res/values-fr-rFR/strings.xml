@@ -461,7 +461,7 @@
     <string name="autotune_tunedprofile_name">Tuned</string>
     <string name="autotune_profile">Profil :</string>
     <string name="autotune_tune_days">Nb jours :</string>
-    <string name="autotune_last_run">Dernièr run :</string>
+    <string name="autotune_last_run">Dernier run :</string>
     <string name="autotune_warning">Avertissement :</string>
     <string name="autotune_select_profile">Sélectionnez le profil à optimiser</string>
     <string name="autotune_ic_warning">Autotune ne fonctionne qu\'avec une seule valeur G/I, votre profil a %1$d valeurs. La valeur moyenne est de %2$.2f g/U</string>
