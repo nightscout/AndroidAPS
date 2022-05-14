@@ -480,7 +480,7 @@
     <string name="autotune_compare_profile">Comparer les profils</string>
     <string name="autotune_copy_localprofile_button">Copier vers Profil Local</string>
     <string name="autotune_update_input_profile_button">Mettre à jour profil d\'entrée</string>
-    <string name="autotune_revert_input_profile_button">Réinitialisé profil d\'entrée</string>
+    <string name="autotune_revert_input_profile_button">Réinitialiser profil d\'entrée</string>
     <string name="autotune_copy_local_profile_message">Créer un nouveau profil local à partir de ce profil Autotune ?</string>
     <string name="autotune_update_local_profile_message">Mettre à jour le profil %1$s avec le profil Autotune ?</string>
     <string name="autotune_revert_local_profile_message">Annuler la mise à jour du profil %1$s et remettre le profil d\'entrée ?</string>
