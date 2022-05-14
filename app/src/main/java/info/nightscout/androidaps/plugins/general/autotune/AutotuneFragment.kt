@@ -422,7 +422,7 @@ class AutotuneFragment : DaggerFragment() {
                                     totalTuned += tuned.basal[h]
                                     layout.addView(toTableRowValue(time, autotunePlugin.pumpProfile.basal[h], tuned.basal[h], "%.3f", tuned.basalUntuned[h].toString()))
                                 }
-                                layout.addView(toTableRowValue("∑", totalPump, totalTuned, " "))
+                                layout.addView(toTableRowValue("∑", totalPump, totalTuned, "%.3f", " "))
                             }
                         }
                     )
