@@ -151,7 +151,7 @@ class DateUtil @Inject constructor(private val context: Context) {
 
     fun hourString(): String = hourString(now())
     fun hourString(mills: Long): String {
-        var format = "hha"
+        var format = "hh"
         if (android.text.format.DateFormat.is24HourFormat(context)) {
             format = "HH"
         }
