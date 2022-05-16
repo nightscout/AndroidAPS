@@ -240,7 +240,7 @@ class DataHandlerMobile @Inject constructor(
             .toObservable(EventData.ActionQuickWizardPreCheck::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({
-                           aapsLogger.debug(LTag.WEAR, "ActionWizardPreCheck received $it from ${it.sourceNodeId}")
+                           aapsLogger.debug(LTag.WEAR, "ActionQuickWizardPreCheck received $it from ${it.sourceNodeId}")
                            handleQuickWizardPreCheck(it)
                        }, fabricPrivacy::logException)
         disposable += rxBus

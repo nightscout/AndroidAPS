@@ -8,7 +8,6 @@ import androidx.work.OneTimeWorkRequest
 import dagger.android.DaggerBroadcastReceiver
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.androidaps.plugins.source.*
-import info.nightscout.androidaps.services.Intents
 import info.nightscout.androidaps.utils.extensions.copyDouble
 import info.nightscout.androidaps.utils.extensions.copyLong
 import info.nightscout.androidaps.utils.extensions.copyString
@@ -65,7 +64,7 @@ open class DataReceiver : DaggerBroadcastReceiver() {
             Intents.DEXCOM_BG                         ->
                 OneTimeWorkRequest.Builder(DexcomPlugin.DexcomWorker::class.java)
                     .setInputData(dataWorker.storeInputData(bundle, intent.action)).build()
-            Intents.AIDEX_NEW_BG_ESTIMATE            ->
+            Intents.AIDEX_NEW_BG_ESTIMATE             ->
                 OneTimeWorkRequest.Builder(AidexPlugin.AidexWorker::class.java)
                     .setInputData(dataWorker.storeInputData(bundle, intent.action)).build()
             else                                      -> null
