@@ -15,7 +15,7 @@ import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.receivers.DataWorker
-import info.nightscout.androidaps.services.Intents
+import info.nightscout.androidaps.receivers.Intents
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
