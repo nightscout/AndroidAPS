@@ -1010,6 +1010,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="widget_description">Widget AndroidAPS</string>
     <string name="configure">Configurer l’opacité</string>
     <string name="loop_status">État de la boucle</string>
+    <string name="graph_scale">Échelle du graph.</string>
     <string name="a11y_otp_qr_code">Code QR pour configurer un mot de passe à usage unique</string>
     <string name="a11y_open_settings">ouvrir les paramètres</string>
     <string name="a11y_set_carb_timer">définir l\'alarme du minuteur de glucides</string>

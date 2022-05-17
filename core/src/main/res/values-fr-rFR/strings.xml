@@ -461,7 +461,7 @@
     <string name="autotune_tunedprofile_name">Tuned</string>
     <string name="autotune_profile">Profil :</string>
     <string name="autotune_tune_days">Nb jours :</string>
-    <string name="autotune_last_run">Dernièr run :</string>
+    <string name="autotune_last_run">Dernier run :</string>
     <string name="autotune_warning">Avertissement :</string>
     <string name="autotune_select_profile">Sélectionnez le profil à optimiser</string>
     <string name="autotune_ic_warning">Autotune ne fonctionne qu\'avec une seule valeur G/I, votre profil a %1$d valeurs. La valeur moyenne est de %2$.2f g/U</string>
@@ -480,7 +480,7 @@
     <string name="autotune_compare_profile">Comparer les profils</string>
     <string name="autotune_copy_localprofile_button">Copier vers Profil Local</string>
     <string name="autotune_update_input_profile_button">Mettre à jour profil d\'entrée</string>
-    <string name="autotune_revert_input_profile_button">Réinitialisé profil d\'entrée</string>
+    <string name="autotune_revert_input_profile_button">Réinitialiser profil d\'entrée</string>
     <string name="autotune_copy_local_profile_message">Créer un nouveau profil local à partir de ce profil Autotune ?</string>
     <string name="autotune_update_local_profile_message">Mettre à jour le profil %1$s avec le profil Autotune ?</string>
     <string name="autotune_revert_local_profile_message">Annuler la mise à jour du profil %1$s et remettre le profil d\'entrée ?</string>
