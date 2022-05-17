@@ -450,11 +450,14 @@
     <string name="autotune_auto_summary">Hvis det er aktivert så vil Autotune automatisk oppdatere profilen og skifte til denne etter beregninger fra en automatiserings regel.</string>
     <string name="autotune_categorize_uam_as_basal_title">Kategoriser UAM (uannonsert måltid) som basal</string>
     <string name="autotune_categorize_uam_as_basal_summary">Aktiver kun hvis du korrekt har angitt alle spiste karbohydrater. Med dette alternativet vil Autotune foreslå endringer i basal doser hvis den plutselig oppdager BS stigninger.</string>
+    <string name="autotune_tune_insulin_curve_title">Tilpass insulinkurven</string>
+    <string name="autotune_tune_insulin_curve_summary">Aktiver kun hvis du bruker egendefinert topp punkt. Dette alternativet vil justere topp- og DIA-varigheten</string>
     <string name="autotune_default_tune_days_title">Antall dager med data</string>
     <string name="autotune_circadian_ic_isf_title">Bruk gjennomsnittsverdier i cirkadisk IK/ISF</string>
     <string name="autotune_circadian_ic_isf_summary">Autotune vil ikke justere cirkadiske variasjoner. Dette valget benytter gjennomsnittsverdier til å justere IK og ISF i din cirkadiske inngangsprofil</string>
     <string name="autotune_additional_log_title">Inkluder mer logginformasjon for feilsøking</string>
     <string name="autotune_additional_log_summary">Slå på kun dersom det er forespurt av utviklere for å sende mer logginformasjon for å hjelpe i feilsøking av Autotune</string>
+    <string name="autotune_default_tune_days_summary">Standard antall dager som skal analyseres av Autotune (opp til 30)</string>
     <string name="autotune_tunedprofile_name">Innstilt</string>
     <string name="autotune_profile">Profil :</string>
     <string name="autotune_tune_days">Antall dager:</string>
@@ -463,6 +466,7 @@
     <string name="autotune_select_profile">Velg profil du vil justere</string>
     <string name="autotune_ic_warning">Autotune fungerer bare med én IC-verdi, og din profil har %1$d verdier. Gjennomsnittlig verdi er %2$.2fg/E</string>
     <string name="autotune_isf_warning">Autotune fungerer med bare én ISF verdi, og din profil har %1$d verdier. Gjennomsnittsverdi er %2$.1f%3$s/E</string>
+    <string name="autotune_error">Feil i innleste datasett, prøv å kjør Autotune en gang til eller reduser antall dager</string>
     <string name="autotune_warning_during_run">Har startet Autotune beregning, vennligst vent</string>
     <string name="autotune_warning_after_run">Kontroller resultatene nøye før du bruker dem!</string>
     <string name="autotune_partial_result">Delvis resultat dag %1$d / %2$d justert</string>

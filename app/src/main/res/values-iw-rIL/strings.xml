@@ -840,7 +840,7 @@
     <string name="setupwizard_pump_riley_link_status">מצב ריילילינק:</string>
     <string name="filter">סינון</string>
     <string name="copytolocalprofile_invalid">לא ניתן ליצור פרופיל מקומי. הפרופיל אינו חוקי.</string>
-    <string name="cta_dont_kill_my_app_info">לא להשבית את האפליקציה שלי?</string>
+    <string name="cta_dont_kill_my_app_info">איך לא להשבית את האפליקציה שלי?</string>
     <string name="smscommunicator_report_pump_ureachable_summary">שולח SMS אם מופעל אירוע \"המשאבה אינה נגישה\"</string>
     <string name="smscommunicator_pump_ureachable">דווח שהמשאבה אינה נגישה</string>
     <string name="advisoralarm">הפעל התראה כשצריכים לאכול</string>
@@ -979,6 +979,7 @@
     <string name="show_hide_records">החבא רשומות לולאה</string>
     <string name="widget_description">ווידג\'ט AndroidAPS</string>
     <string name="configure">הגדרת אטימות</string>
+    <string name="graph_scale">קנה מידה של הגרף</string>
     <string name="device_phone">טלפון</string>
     <string name="device_watch">שעון</string>
     <string name="a11y_only_on_watch">על השעון בלבד</string>
