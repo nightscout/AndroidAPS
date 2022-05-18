@@ -970,7 +970,7 @@
     <string name="wizard_no_active_profile">¡No hay perfil activo!</string>
     <string name="wizard_no_cob">COB desconocido! ¿Valor de glucosa ausente o reincio reciente de la aplicación?</string>
     <string name="wizard_carbs_constraint">¡Violación de restricción de carbohidratos!</string>
-    <string name="wizard_explain_calc">Calc (CI: %2$.1f, ISF: %2$.1f) desde:\"</string>
+    <string name="wizard_explain_calc">Calc (CI: %1$.1f, ISF: %2$.1f) desde:\"</string>
     <string name="wizard_explain_carbs">Carbohidratos: %1$.2fU</string>
     <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fU</string>
     <string name="wizard_explain_bg">BG: %1$.2fU</string>

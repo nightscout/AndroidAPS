@@ -953,7 +953,7 @@ Eversense-appen.</string>
     <string name="wizard_no_active_profile">Ingen aktiv profil vald!</string>
     <string name="wizard_no_cob">Okänt COB! Saknas BG eller är appen nyss omstartad?</string>
     <string name="wizard_carbs_constraint">Max KH uppnått!</string>
-    <string name="wizard_explain_calc">Kalkyl (IC: %2$.1f, ISF: %2$.1f) från:\"</string>
+    <string name="wizard_explain_calc">Kalkyl (IC: %1$.1f, ISF: %2$.1f) från:\"</string>
     <string name="wizard_explain_carbs">Kolhydrater: %1$.2fU</string>
     <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fU</string>
     <string name="wizard_explain_bg">BG: %1$.2fU</string>

@@ -322,12 +322,6 @@ class DataHandlerMobile @Inject constructor(
             sendError(rh.gs(R.string.wizard_carbs_constraint))
             return
         }
-        val useBG = sp.getBoolean(R.string.key_wearwizard_bg, true)
-        val useTT = sp.getBoolean(R.string.key_wearwizard_tt, false)
-        val useBolusIOB = sp.getBoolean(R.string.key_wearwizard_bolusiob, true)
-        val useBasalIOB = sp.getBoolean(R.string.key_wearwizard_basaliob, true)
-        val useCOB = sp.getBoolean(R.string.key_wearwizard_cob, true)
-        val useTrend = sp.getBoolean(R.string.key_wearwizard_trend, false)
         val percentage = command.percentage
         val profile = profileFunction.getProfile()
         val profileName = profileFunction.getProfileName()
@@ -349,9 +343,22 @@ class DataHandlerMobile @Inject constructor(
         val tempTarget = if (dbRecord is ValueWrapper.Existing) dbRecord.value else null
 
         val bolusWizard = BolusWizard(injector).doCalc(
-            profile, profileName, tempTarget,
-            carbsAfterConstraints, cobInfo.displayCob!!, bgReading.valueToUnits(profileFunction.getUnits()),
-            0.0, percentage, useBG, useCOB, useBolusIOB, useBasalIOB, false, useTT, useTrend, false
+            profile = profile,
+            profileName = profileName,
+            tempTarget = tempTarget,
+            carbs = carbsAfterConstraints,
+            cob = cobInfo.displayCob!!,
+            bg = bgReading.valueToUnits(profileFunction.getUnits()),
+            correction = 0.0,
+            percentageCorrection = percentage,
+            useBg = sp.getBoolean(R.string.key_wearwizard_bg, true),
+            useCob = sp.getBoolean(R.string.key_wearwizard_cob, true),
+            includeBolusIOB = sp.getBoolean(R.string.key_wearwizard_iob, true),
+            includeBasalIOB = sp.getBoolean(R.string.key_wearwizard_iob, true),
+            useSuperBolus = false,
+            useTT = sp.getBoolean(R.string.key_wearwizard_tt, false),
+            useTrend = sp.getBoolean(R.string.key_wearwizard_trend, false),
+            useAlarm = false
         )
         val insulinAfterConstraints = bolusWizard.insulinAfterConstraints
         val minStep = pump.pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints)
@@ -833,7 +840,7 @@ class DataHandlerMobile @Inject constructor(
             iobSum = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob)
             iobDetail = "(${DecimalFormatter.to2Decimal(bolusIob.iob)}|${DecimalFormatter.to2Decimal(basalIob.basaliob)})"
             cobString = iobCobCalculator.getCobInfo(false, "WatcherUpdaterService").generateCOBString()
-            currentBasal = iobCobCalculator.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())?.toStringShort() ?: DecimalFormatter.to2Decimal(profile.getBasal()) + "U/h"
+            currentBasal = iobCobCalculator.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())?.toStringShort() ?: rh.gs(R.string.pump_basebasalrate, profile.getBasal())
 
             //bgi
             val bgi = -(bolusIob.activity + basalIob.activity) * 5 * Profile.fromMgdlToUnits(profile.getIsfMgdl(), profileFunction.getUnits())
@@ -1167,6 +1174,6 @@ class DataHandlerMobile @Inject constructor(
     }
 
     @Synchronized private fun sendError(errorMessage: String) {
-        rxBus.send(EventData.ConfirmAction(rh.gs(R.string.error), errorMessage, returnCommand = EventData.Error(dateUtil.now()))) // ignore return path
+        rxBus.send(EventMobileToWear(EventData.ConfirmAction(rh.gs(R.string.error), errorMessage, returnCommand = EventData.Error(dateUtil.now())))) // ignore return path
     }
 }
