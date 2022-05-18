@@ -220,5 +220,7 @@
     <string name="key_match_divider" translatable="false">match_divider</string>
     <string name="key_simplify_ui" translatable="false">simplify_ui</string>
     <string name="key_dark" translatable="false">dark</string>
+    <string name="key_input_design" translatable="false">input_design</string>
+    <string name="key_complication_tap_action" translatable="false">complication_tap_action</string>
 
 </resources>
