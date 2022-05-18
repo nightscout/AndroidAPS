@@ -235,11 +235,15 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
         isValid = profile.isValid
         if (isValid) {
             //initialize tuned value with current profile values
+            var minBasal = 1.0
             for (h in 0..23) {
                 basal[h] = Round.roundTo(profile.basalBlocks.blockValueBySeconds(T.hours(h.toLong()).secs().toInt(), 1.0, 0), 0.001)
+                minBasal = Math.min(minBasal, basal[h])
             }
             ic = avgIC
             isf = avgISF
+            if (ic * isf * minBasal == 0.0)     // Additional validity check to avoid error later in AutotunePrep
+                isValid = false
             pumpProfile = profile
             pumpProfileAvgIC = avgIC
             pumpProfileAvgISF = avgISF
