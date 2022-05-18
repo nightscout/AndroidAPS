@@ -312,7 +312,8 @@ class AutotuneFragment : DaggerFragment() {
                 binding.autotuneCompare.visibility = View.VISIBLE
             }
             else                              -> {
-                binding.autotuneRun.visibility = View.VISIBLE
+                if (profile.isValid)
+                    binding.autotuneRun.visibility = View.VISIBLE
                 binding.autotuneCheckInputProfile.visibility = View.VISIBLE
             }
         }
@@ -337,7 +338,8 @@ class AutotuneFragment : DaggerFragment() {
             warning = rh.gs(R.string.profileswitch_ismissing)
                 return warning
         }
-        profileFunction.getProfile()?.let {
+        profileFunction.getProfile()?.let { currentProfile ->
+            profile = ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(it) } ?:currentProfile, LocalInsulin(""), injector)
             if (!profile.isValid) return rh.gs(R.string.autotune_profile_invalid)
             if (profile.icSize > 1) {
                 warning += nl + rh.gs(R.string.autotune_ic_warning, profile.icSize, profile.ic)
