@@ -236,7 +236,7 @@ abstract class BaseWatchFace : WatchFace() {
     open fun changeChartTimeframe() {
         var timeframe = sp.getInt(R.string.key_chart_time_frame, 3)
         timeframe = timeframe % 5 + 1
-        sp.putInt(R.string.key_chart_time_frame, timeframe)
+        sp.putString(R.string.key_chart_time_frame, timeframe.toString())
     }
 
     override fun getWatchFaceStyle(): WatchFaceStyle {
