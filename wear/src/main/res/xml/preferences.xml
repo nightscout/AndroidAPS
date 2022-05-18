@@ -105,7 +105,7 @@
         android:defaultValue="1"
         android:entries="@array/input_design"
         android:entryValues="@array/input_design_values"
-        android:key="input_design"
+        android:key="@string/key_input_design"
         android:summary="Input Design"
         android:title="@string/pref_input_design" />
 
@@ -152,7 +152,7 @@
         android:defaultValue="default"
         android:entries="@array/complication_tap_action"
         android:entryValues="@array/complication_tap_action_values"
-        android:key="complication_tap_action"
+        android:key="@string/key_complication_tap_action"
         android:summary="What dialog to show after tap on complication"
         android:title="@string/pref_complication_tap_action" />
 
