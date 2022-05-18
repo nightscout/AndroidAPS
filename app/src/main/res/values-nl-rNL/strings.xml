@@ -969,12 +969,9 @@
     <string name="wizard_no_active_profile">Geen actief profiel ingesteld!</string>
     <string name="wizard_no_cob">Onbekende COB! BG uitlezing ontbreekt of de recente app herstart?</string>
     <string name="wizard_carbs_constraint">Koolhydraten beperking overschreden!</string>
-    <string name="wizard_explain_calc">Bereken (IC: %1$.1f, ISF: %2$.1f) van:\"</string>
     <string name="wizard_explain_carbs">Koolhydraten: %1$.2fE</string>
     <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fE</string>
     <string name="wizard_explain_bg">BG: %1$.2fE</string>
-    <string name="wizard_explain_basal_iob">Basaal IOB: %1$.2fE</string>
-    <string name="wizard_explain_bolus_iob">Bolus IOB: %1$.2fE</string>
     <string name="wizard_explain_superbolus">Superbolus: %1$.2fE</string>
     <string name="wizard_explain_trend">15\' trend: %1$.2fE</string>
     <string name="wizard_explain_percent">Percentage: %1$.2fE x %2$d%% ≈ %3$.2fE</string>
