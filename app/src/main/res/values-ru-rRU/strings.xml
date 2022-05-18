@@ -968,12 +968,9 @@
     <string name="wizard_no_active_profile">Активный профиль не установлен!</string>
     <string name="wizard_no_cob">Неизвестный COB! Отсутствуют данные ГК или приложения недавно перезапущено?</string>
     <string name="wizard_carbs_constraint">Нарушено ограничение по углеводам!</string>
-    <string name="wizard_explain_calc">Кальк (IC: %2$.1f, ISF: %2$.1f) из:\"</string>
     <string name="wizard_explain_carbs">Углеводов: %1$.2fгУ</string>
     <string name="wizard_explain_cob">Акт Инс COB: %1$.0fг %2$.2fед</string>
     <string name="wizard_explain_bg">ГК: %1$.2f</string>
-    <string name="wizard_explain_basal_iob">Базал IOB: %1$.2fед</string>
-    <string name="wizard_explain_bolus_iob">Болюсный IOB: %1$.2fед</string>
     <string name="wizard_explain_superbolus">Суперболюсный: %1$.2fед</string>
     <string name="wizard_explain_trend">тренд 15\': %1$.2f</string>
     <string name="wizard_explain_percent">Процент: %1$.2fU x %2$d%% = %3$.2f</string>
