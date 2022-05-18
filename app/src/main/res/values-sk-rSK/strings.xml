@@ -970,7 +970,7 @@
     <string name="wizard_no_active_profile">Nie je nastavený žiadny aktívny profil!</string>
     <string name="wizard_no_cob">Neznáme COB! Chýbajú glykémie, alebo bola práve reštartovaná aplikácia?</string>
     <string name="wizard_carbs_constraint">Sacharidy mimo povolený rozsah!</string>
-    <string name="wizard_explain_calc">Kalk (IC: %2$.1f, ISF: %2$.1f) z:\"</string>
+    <string name="wizard_explain_calc">Kalk (IC: %1$.1f, ISF: %2$.1f) z:\"</string>
     <string name="wizard_explain_carbs">Sacharidy: %1$.2fJI</string>
     <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fJI</string>
     <string name="wizard_explain_bg">Gly: %1$.2fJI</string>

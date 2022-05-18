@@ -876,7 +876,7 @@
     <string name="quick_wizard_not_available">O assistente rápido selecionado não está mais disponível, atualize seu atalho</string>
     <string name="wizard_no_actual_bg">Nenhuma glicemia recente para base de cálculo!</string>
     <string name="wizard_no_cob">CA desconhecido! Leitura de Glicemia faltando ou reinício recente do app?</string>
-    <string name="wizard_explain_calc">Calc (IC: %2$.1f, FSI: %2$.1f) de:\"</string>
+    <string name="wizard_explain_calc">Calc (IC: %1$.1f, FSI: %2$.1f) de:\"</string>
     <string name="wizard_explain_cob">CA: %1$.0fg %2$.2fU</string>
     <string name="wizard_explain_trend">Tendência 15min: %1$.2fU</string>
     <string name="show_invalidated_records">Exibir registros invalidados / removidos</string>

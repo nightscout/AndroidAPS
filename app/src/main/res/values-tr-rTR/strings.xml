@@ -971,7 +971,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="wizard_no_active_profile">Etkin profil ayarlanmadı!</string>
     <string name="wizard_no_cob">Aktif karbonhidrat bilinmiyor! KŞ okuması eksik veya son uygulama yeniden başlatılsın mı?</string>
     <string name="wizard_carbs_constraint">Karbonhidrat kısıtlaması ihlali!</string>
-    <string name="wizard_explain_calc">Tarafından hesaplanan (IC: %2$.1f, İDF: %2$.1f):\"</string>
+    <string name="wizard_explain_calc">Tarafından hesaplanan (IC: %1$.1f, İDF: %2$.1f):\"</string>
     <string name="wizard_explain_carbs">Karb: %1$.2fÜ</string>
     <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fÜ</string>
     <string name="wizard_explain_bg">KŞ: %1$.2fÜ</string>
