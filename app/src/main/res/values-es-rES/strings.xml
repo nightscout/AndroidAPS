@@ -442,6 +442,7 @@
     <string name="enableuam_summary">Detectar comidas no anunciadas (UAM)</string>
     <string name="insulin_oref_peak">Tiempo del pico máximo de la curva de IOB</string>
     <string name="insulin_peak_time">Tiempo del pico máximo de acción de la insulina [min]</string>
+    <string name="insulin_peak">Pico</string>
     <string name="free_peak_oref">Personalizar Pico</string>
     <string name="rapid_acting_oref">Acción Rápida</string>
     <string name="ultrarapid_oref">Acción Ultra Rápida</string>
@@ -969,7 +970,7 @@
     <string name="wizard_no_active_profile">¡No hay perfil activo!</string>
     <string name="wizard_no_cob">COB desconocido! ¿Valor de glucosa ausente o reincio reciente de la aplicación?</string>
     <string name="wizard_carbs_constraint">¡Violación de restricción de carbohidratos!</string>
-    <string name="wizard_explain_calc">Calc (CI: %2$.1f, ISF: %2$.1f) desde:\"</string>
+    <string name="wizard_explain_calc">Calc (CI: %1$.1f, ISF: %2$.1f) desde:\"</string>
     <string name="wizard_explain_carbs">Carbohidratos: %1$.2fU</string>
     <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fU</string>
     <string name="wizard_explain_bg">BG: %1$.2fU</string>
@@ -1008,6 +1009,8 @@
     <string name="show_hide_records">Ocultar registros del lazo</string>
     <string name="widget_description">Widget de AndroidAPS</string>
     <string name="configure">Configurar opacidad</string>
+    <string name="loop_status">Estado del lazo</string>
+    <string name="graph_scale">Escala gráfica</string>
     <string name="a11y_otp_qr_code">Código QR para la configuración de la contraseña de un sólo uso</string>
     <string name="a11y_open_settings">Abrir la configuración</string>
     <string name="a11y_set_carb_timer">Establecer alarma de carbohidratos</string>

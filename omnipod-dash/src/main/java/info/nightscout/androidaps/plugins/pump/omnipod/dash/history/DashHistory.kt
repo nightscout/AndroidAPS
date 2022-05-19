@@ -1,8 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.history
 
-import com.github.guepardoapps.kulid.ULID
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType.SET_BOLUS
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType.SET_TEMPORARY_BASAL
@@ -11,6 +8,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.database.HistoryRecordDao
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.database.HistoryRecordEntity
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.mapper.HistoryMapper
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import java.lang.System.currentTimeMillis
@@ -22,19 +21,19 @@ class DashHistory @Inject constructor(
     private val logger: AAPSLogger
 ) {
 
-    private fun markSuccess(id: String): Completable = dao.markResolved(
+    private fun markSuccess(id: Long): Completable = dao.markResolved(
         id,
         ResolvedResult.SUCCESS,
         currentTimeMillis()
     )
 
-    private fun markFailure(id: String): Completable = dao.markResolved(
+    private fun markFailure(id: Long): Completable = dao.markResolved(
         id,
         ResolvedResult.FAILURE,
         currentTimeMillis()
     )
 
-    fun getById(id: String): HistoryRecord {
+    fun getById(id: Long): HistoryRecord {
         val entry = dao.byIdBlocking(id)
             ?: throw java.lang.IllegalArgumentException("history entry [$id] not found")
         return historyMapper.entityToDomain(entry)
@@ -50,9 +49,11 @@ class DashHistory @Inject constructor(
         basalProfileRecord: BasalValuesRecord? = null,
         resolveResult: ResolvedResult? = null,
         resolvedAt: Long? = null
-    ): Single<String> = Single.defer {
-        val id = ULID.random()
-
+    ): Single<Long> = Single.defer {
+        var id: Long = 0
+        if (dao.first() == null) {
+            id = currentTimeMillis()
+        }
         when {
             commandType == SET_BOLUS && bolusRecord == null ->
                 Single.error(IllegalArgumentException("bolusRecord missing on SET_BOLUS"))
@@ -72,7 +73,7 @@ class DashHistory @Inject constructor(
                         resolvedResult = resolveResult,
                         resolvedAt = resolvedAt
                     )
-                ).toSingle { id }
+                )
         }
     }
 
@@ -82,7 +83,7 @@ class DashHistory @Inject constructor(
     fun getRecordsAfter(time: Long): Single<List<HistoryRecord>> =
         dao.allSince(time).map { list -> list.map(historyMapper::entityToDomain) }
 
-    fun updateFromState(podState: OmnipodDashPodStateManager) = Completable.defer {
+    fun updateFromState(podState: OmnipodDashPodStateManager): Completable = Completable.defer {
         val historyId = podState.activeCommand?.historyId
         if (historyId == null) {
             logger.error(LTag.PUMP, "HistoryId not found to for updating from state")

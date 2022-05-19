@@ -4,7 +4,7 @@
 
     <CheckBoxPreference
         android:defaultValue="true"
-        android:key="show_iob"
+        android:key="@string/key_show_iob"
         android:summary="Show insulin on board."
         android:title="@string/pref_show_iob"
         app:wear_iconOff="@drawable/settings_off"
@@ -43,7 +43,7 @@
         app:wear_iconOn="@drawable/settings_on" />
     <CheckBoxPreference
         android:defaultValue="true"
-        android:key="show_direction"
+        android:key="@string/key_show_direction"
         android:summary="Show direction arrow"
         android:title="@string/pref_show_direction_arrow"
         app:wear_iconOff="@drawable/settings_off"
@@ -59,21 +59,21 @@
 
     <CheckBoxPreference
         android:defaultValue="true"
-        android:key="show_uploader_battery"
+        android:key="@string/key_show_uploader_battery"
         android:title="@string/pref_show_phone_battery"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
 
     <CheckBoxPreference
         android:defaultValue="false"
-        android:key="show_rig_battery"
+        android:key="@string/key_show_rig_battery"
         android:title="@string/pref_show_rig_battery"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
 
     <CheckBoxPreference
         android:defaultValue="true"
-        android:key="show_temp_basal"
+        android:key="@string/key_show_temp_basal"
         android:title="@string/pref_show_basal_rate"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
@@ -105,7 +105,7 @@
         android:defaultValue="1"
         android:entries="@array/input_design"
         android:entryValues="@array/input_design_values"
-        android:key="input_design"
+        android:key="@string/key_input_design"
         android:summary="Input Design"
         android:title="@string/pref_input_design" />
 
@@ -152,7 +152,7 @@
         android:defaultValue="default"
         android:entries="@array/complication_tap_action"
         android:entryValues="@array/complication_tap_action_values"
-        android:key="complication_tap_action"
+        android:key="@string/key_complication_tap_action"
         android:summary="What dialog to show after tap on complication"
         android:title="@string/pref_complication_tap_action" />
 

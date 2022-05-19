@@ -4,6 +4,7 @@
     <!--    General-->
     <string name="refresh">Opdatér</string>
     <string name="error">Fejl</string>
+    <string name="save">Gem</string>
     <string name="not_set_short">Ikke angivet</string>
     <string name="failedupdatebasalprofile">Opdatering af basal profil mislykkedes</string>
     <string name="profile_set_ok">Basal profil i pumpen er opdateret</string>
@@ -41,6 +42,7 @@
     <string name="carbs">Kulhydrater</string>
     <string name="invalidprofile">Ugyldig profil !!!</string>
     <string name="noprofileset">INGEN PROFIL SAT</string>
+    <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">Dato</string>
     <string name="units_label">Enheder</string>
     <string name="dia_label">DIA</string>
@@ -110,6 +112,7 @@
     <string name="notes_label">Bemærkninger</string>
     <string name="remove_button">Fjern</string>
     <string name="addnew">Tilføj ny</string>
+    <string name="addnew_above">Tilføj ny ovenfor</string>
     <string name="wrong_pump_data">Data kommer fra en anden pumpe. Skift pumpedriver for at nulstille pumpetilstand.</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Begrænser max IOB til %1$.2f E/t på grund af %2$s</string>
@@ -132,7 +135,9 @@
     <string name="location_not_found_message">Placeringen skal være aktiveret, hvis Bluetooth-opdagelsen skal fungere på nyere enheder. AAPS sporer ikke din placering, og det kan deaktiveres efter parring er lykkedes.</string>
     <!--    Protection-->
     <string name="wrongpassword">Forkert kodeord</string>
+    <string name="wrongpin">Forkert pinkode</string>
     <string name="passwords_dont_match">Kodeordene stemmer ikke overens</string>
+    <string name="pin_dont_match">PIN-koder ikke identiske</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Basalværdier ikke angivet i hele timer: %1$s</string>
     <string name="minimalbasalvaluereplaced">Basal dosis erstattet af minimal understøttet dosis: %1$s</string>
@@ -352,6 +357,7 @@
     <string name="uel_stat_reset">STAT NULSTIL</string>
     <string name="uel_delete_logs">SLET LOGS</string>
     <string name="uel_delete_future_treatments">SLET FREMTIDIGE BEHANDLINGER</string>
+    <string name="delete_future_treatments">Slet fremtidige behandlinger</string>
     <string name="uel_export_settings">EKSPORTER INDSTILLINGER</string>
     <string name="uel_import_settings">IMPORTER INDSTILLINGER</string>
     <string name="uel_reset_databases">NULSTIL DATABASER</string>
@@ -423,7 +429,61 @@
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="pump_paired" comment="26 characters max for translation">Pumpe parret</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight Opdater-knap</string>
+    <string name="a11y_min_button_description">fald %1$s af %2$s</string>
+    <string name="a11y_plus_button_description">stigning %1$s af %2$s</string>
+    <string name="formatPercent">%1$.0f%%</string>
+    <string name="basal">Basal</string>
+    <string name="basalpct">Basal %</string>
+    <string name="count_selected">%1$d valgt</string>
+    <string name="sort_label">Sortér</string>
+    <string name="remove_items">Fjern Emner</string>
+    <string name="sort_items">Sortér Emner</string>
+    <string name="remove_selected_items">Fjern valgte emner</string>
+    <string name="a11y_file">fil</string>
+    <string name="a11y_user">bruger</string>
     <!-- Autotune -->
+    <string name="autotune">Autotune</string>
+    <string name="autotune_description">Hjælp til potentielle justeringer af profil (ISF, KH-ratio og basalrater)</string>
+    <string name="autotune_shortname">AT</string>
+    <string name="autotune_settings">Autotune indstillinger</string>
+    <string name="autotune_auto_title">Automatisk profilskift</string>
+    <string name="autotune_auto_summary">Hvis aktiveret, vil Autotune automatisk opdatere og skifte til input-profil efter beregning ud fra en automatiseringsregel.</string>
+    <string name="autotune_categorize_uam_as_basal_title">Kategoriser UAM som basal</string>
+    <string name="autotune_categorize_uam_as_basal_summary">Aktiver kun hvis du har indtastet alle kulhydrater på pålidelig vis. Med denne indstilling vil pludselige stigninger set af Autotune, blive brugt til at anbefale ændringer af basal rate.</string>
+    <string name="autotune_default_tune_days_title">Antal dage med data</string>
+    <string name="autotune_circadian_ic_isf_title">Anvend gennemsnitligt resultat i døgnbaseret IC/ISF</string>
+    <string name="autotune_circadian_ic_isf_summary">Autotune vil ikke justere døgnrytme variationer, denne indstilling benytter gennemsnitlige værdier til justering af IC og ISF til din døgnrytme input profil</string>
+    <string name="autotune_additional_log_title">Inkludér flere logoplysninger for fejlfinding</string>
+    <string name="autotune_additional_log_summary">Aktivér kun hvis udviklerne beder dig om det, for at sende flere logoplysninger til at hjælpe med at fejlfinde Autotune plugin</string>
+    <string name="autotune_tunedprofile_name">Justeret</string>
+    <string name="autotune_profile">Profil :</string>
+    <string name="autotune_tune_days">Justerings dage :</string>
+    <string name="autotune_last_run">Sidst kørt :</string>
+    <string name="autotune_warning">Advarsel :</string>
+    <string name="autotune_select_profile">Vælg profil, der skal justeres</string>
+    <string name="autotune_ic_warning">Autotune fungerer med kun én IC-værdi, din profil har %1$d værdier. Gennemsnitsværdi er %2$.2fg/E</string>
+    <string name="autotune_isf_warning">Autotune virker med kun én ISF-værdi, din profil har %1$d værdier. Gennemsnitlig værdi er %2$.1f%3$s/E</string>
+    <string name="autotune_warning_during_run">Automatisk beregning startet, vær venligst tålmodig</string>
+    <string name="autotune_warning_after_run">Kontrollér resultaterne omhyggeligt, før du bruger dem!</string>
+    <string name="autotune_partial_result">Delvis resultat dag %1$d / %2$d justeret</string>
+    <string name="autotune_result">Resultat: %1$s</string>
+    <string name="autotune_param">Parameter</string>
+    <string name="autotune_percent">%</string>
+    <string name="autotune_missing">Mangler</string>
+    <string name="autotune_profile_name">Autotune profil %1$s</string>
+    <string name="autotune_run">Kør Autotune</string>
+    <string name="autotune_check_input_profile_button">Tjek input-profil</string>
+    <string name="autotune_compare_profile">Sammenlign profiler</string>
+    <string name="autotune_copy_localprofile_button">Kopier til lokal profil</string>
+    <string name="autotune_update_input_profile_button">Opdater input profil</string>
+    <string name="autotune_revert_input_profile_button">Gendan input profil</string>
+    <string name="autotune_copy_local_profile_message">Opret en ny lokal profil ud fra denne Autotune profil?</string>
+    <string name="autotune_update_local_profile_message">Opdater %1$s profil med Autotune profil?</string>
+    <string name="autotune_revert_local_profile_message">Gendan %1$s profil med Input-profilen?</string>
+    <string name="autotune_profile_invalid">Profil ugyldig</string>
+    <string name="autotune_run_without_autoswitch">Autotune kørt uden profilskift</string>
+    <string name="autotune_run_with_autoswitch">Autotune kørt, profilen er automatisk skiftet</string>
+    <string name="autotune_run_with_error">Fejl under sidste Autotune kørsel</string>
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dage</item>

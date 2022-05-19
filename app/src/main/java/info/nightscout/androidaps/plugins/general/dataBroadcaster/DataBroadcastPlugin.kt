@@ -18,7 +18,7 @@ import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
-import info.nightscout.androidaps.services.Intents
+import info.nightscout.androidaps.receivers.Intents
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.FabricPrivacy

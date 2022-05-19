@@ -59,7 +59,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                tools:text="24" />
+                android:text="24"
+                tools:ignore="HardcodedText" />
 
         </LinearLayout>
 

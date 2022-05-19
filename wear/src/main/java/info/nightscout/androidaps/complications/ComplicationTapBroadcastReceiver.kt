@@ -81,7 +81,7 @@ class ComplicationTapBroadcastReceiver : DaggerBroadcastReceiver() {
     }
 
     private val complicationTapAction: String
-        get() = sp.getString("complication_tap_action", "default")
+        get() = sp.getString(R.string.key_complication_tap_action, "default")
 
     private fun remapActionWithUserPreferences(originalAction: ComplicationAction): ComplicationAction {
         val userPrefAction = complicationTapAction

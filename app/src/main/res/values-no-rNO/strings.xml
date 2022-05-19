@@ -442,6 +442,7 @@
     <string name="enableuam_summary">Oppdaget uannonsert måltid (UAM)</string>
     <string name="insulin_oref_peak">IOB kurvens topp tid</string>
     <string name="insulin_peak_time">Topp tid [min]</string>
+    <string name="insulin_peak">Topp</string>
     <string name="free_peak_oref">Free-Peak Oref</string>
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
     <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
@@ -969,7 +970,7 @@
     <string name="wizard_no_active_profile">Det er ikke angitt noen aktiv profil!</string>
     <string name="wizard_no_cob">Ukjent COB! BS verdier mangler eller nylig oppstart av appen?</string>
     <string name="wizard_carbs_constraint">Brudd på karbo begrensning!</string>
-    <string name="wizard_explain_calc">Kalk (IC: %2$.1f, ISF: %2$.1f) fra:\"</string>
+    <string name="wizard_explain_calc">Kalk (IC: %1$.1f, ISF: %2$.1f) fra:\"</string>
     <string name="wizard_explain_carbs">Karbo: %1$.2fE</string>
     <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fE</string>
     <string name="wizard_explain_bg">BS: %1$.2fE</string>
@@ -1008,6 +1009,8 @@
     <string name="show_hide_records">Skjul loop registreringer</string>
     <string name="widget_description">AndroidAPS widget</string>
     <string name="configure">Konfigurer gjennomsiktighet</string>
+    <string name="loop_status">Loop status</string>
+    <string name="graph_scale">Diagram skala</string>
     <string name="a11y_otp_qr_code">QR-kode for oppsett av engangspassord</string>
     <string name="a11y_open_settings">åpne innstillinger</string>
     <string name="a11y_set_carb_timer">angi karbo nedtellings alarm</string>

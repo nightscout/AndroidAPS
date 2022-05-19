@@ -44,7 +44,8 @@
                 android:gravity="center"
                 android:paddingStart="10dp"
                 android:paddingEnd="5dp"
-                tools:text="{fa-clock-o}" />
+                android:text="{fa-clock-o}"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/time"
@@ -82,8 +83,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:textColor="?attr/setExtendedButtonColor"
-                tools:ignore="RtlSymmetry"
-                tools:text="E" />
+                tools:ignore="HardcodedText,RtlSymmetry"
+                android:text="E" />
 
             <TextView
                 android:id="@+id/suspend_flag"
@@ -91,8 +92,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:textColor="?attr/setExtendedButtonColor"
-                tools:ignore="RtlSymmetry"
-                tools:text="S" />
+                tools:ignore="HardcodedText,RtlSymmetry"
+                android:text="S" />
 
             <TextView
                 android:id="@+id/emulated_suspend_flag"
@@ -100,8 +101,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:textColor="?attr/setExtendedButtonColor"
-                tools:ignore="RtlSymmetry"
-                tools:text="ES" />
+                tools:ignore="HardcodedText,RtlSymmetry"
+                android:text="ES" />
 
             <TextView
                 android:id="@+id/super_bolus_flag"
@@ -109,8 +110,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:textColor="?attr/setExtendedButtonColor"
-                tools:ignore="RtlSymmetry"
-                tools:text="SB" />
+                tools:ignore="HardcodedText,RtlSymmetry"
+                android:text="SB" />
 
             <TextView
                 android:id="@+id/ph"
@@ -118,7 +119,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:textColor="?attr/setTempButton"
-                tools:text="PH" />
+                android:text="PH"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/ns"
@@ -126,7 +128,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:textColor="?attr/setTempButton"
-                tools:text="NS" />
+                android:text="NS"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:layout_width="wrap_content"

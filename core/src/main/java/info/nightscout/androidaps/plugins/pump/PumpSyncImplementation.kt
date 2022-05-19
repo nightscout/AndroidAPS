@@ -271,7 +271,7 @@ class PumpSyncImplementation @Inject constructor(
             .blockingGet()
             .also { result ->
                 result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted TemporaryBasal $it") }
-                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated TemporaryBasal \n${it.first}\n${it.second}") }
+                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated TemporaryBasal ${it.first} New: ${it.second}") }
                 return result.inserted.size > 0
             }
     }
@@ -283,7 +283,7 @@ class PumpSyncImplementation @Inject constructor(
             .blockingGet()
             .also { result ->
                 result.updated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated TemporaryBasal $it")
+                    aapsLogger.debug(LTag.DATABASE, "Updated TemporaryBasal ${it.first} New: ${it.second}")
                 }
                 return result.updated.size > 0
             }
@@ -331,7 +331,7 @@ class PumpSyncImplementation @Inject constructor(
             .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving TemporaryBasal", it) }
             .blockingGet()
             .also { result ->
-                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated TemporaryBasal $it") }
+                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated TemporaryBasal ${it.first} New: ${it.second}") }
                 return result.updated.size > 0
             }
     }

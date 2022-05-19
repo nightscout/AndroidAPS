@@ -442,6 +442,7 @@
     <string name="enableuam_summary">Detekcia neoznámených jedál</string>
     <string name="insulin_oref_peak">Čas vrcholu IOB krivky</string>
     <string name="insulin_peak_time">Vrchol krivky [min]</string>
+    <string name="insulin_peak">Vrchol</string>
     <string name="free_peak_oref">Voliteľný vrchol - Oref</string>
     <string name="rapid_acting_oref">Rýchlo pôsobiaci - Oref</string>
     <string name="ultrarapid_oref">Ultra rýchly - Oref</string>
@@ -969,7 +970,7 @@
     <string name="wizard_no_active_profile">Nie je nastavený žiadny aktívny profil!</string>
     <string name="wizard_no_cob">Neznáme COB! Chýbajú glykémie, alebo bola práve reštartovaná aplikácia?</string>
     <string name="wizard_carbs_constraint">Sacharidy mimo povolený rozsah!</string>
-    <string name="wizard_explain_calc">Kalk (IC: %2$.1f, ISF: %2$.1f) z:\"</string>
+    <string name="wizard_explain_calc">Kalk (IC: %1$.1f, ISF: %2$.1f) z:\"</string>
     <string name="wizard_explain_carbs">Sacharidy: %1$.2fJI</string>
     <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fJI</string>
     <string name="wizard_explain_bg">Gly: %1$.2fJI</string>
@@ -1008,6 +1009,8 @@
     <string name="show_hide_records">Skryť záznamy uzavretého okruhu</string>
     <string name="widget_description">AndroidAPS widget</string>
     <string name="configure">Konfigurovať priehľadnosť</string>
+    <string name="loop_status">Stav uzavretého okruhu</string>
+    <string name="graph_scale">Mierka grafu</string>
     <string name="a11y_otp_qr_code">QR kód pre nastavenie jednorázového hesla</string>
     <string name="a11y_open_settings">otvoriť nastavenia</string>
     <string name="a11y_set_carb_timer">nastaviť upozornenie na sacharidy</string>

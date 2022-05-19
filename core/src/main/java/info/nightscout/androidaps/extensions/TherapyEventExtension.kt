@@ -4,11 +4,11 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.interfaces.GlucoseUnit
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSMbg
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import org.json.JSONObject
 import java.util.concurrent.TimeUnit
 
@@ -31,17 +31,9 @@ fun TherapyEvent.getHoursFromStart(): Double {
     return (System.currentTimeMillis() - timestamp) / (60 * 60 * 1000.0)
 }
 
-fun TherapyEvent.GlucoseUnit.toConstant(): String =
-    if (this == TherapyEvent.GlucoseUnit.MGDL) Constants.MGDL
-    else Constants.MMOL
-
 fun TherapyEvent.GlucoseUnit.toMainUnit(): GlucoseUnit =
     if (this == TherapyEvent.GlucoseUnit.MGDL) GlucoseUnit.MGDL
     else GlucoseUnit.MMOL
-
-fun TherapyEvent.GlucoseUnit.Companion.fromConstant(units: String): TherapyEvent.GlucoseUnit =
-    if (units == Constants.MGDL) TherapyEvent.GlucoseUnit.MGDL
-    else TherapyEvent.GlucoseUnit.MMOL
 
 fun TherapyEvent.GlucoseUnit.Companion.fromConstant(units: GlucoseUnit): TherapyEvent.GlucoseUnit =
     if (units == GlucoseUnit.MGDL) TherapyEvent.GlucoseUnit.MGDL
@@ -49,24 +41,18 @@ fun TherapyEvent.GlucoseUnit.Companion.fromConstant(units: GlucoseUnit): Therapy
 
 fun therapyEventFromNsMbg(mbg: NSMbg) =
     TherapyEvent(
-        type = TherapyEvent.Type.NS_MBG,
+        type = TherapyEvent.Type.FINGER_STICK_BG_VALUE, //convert Mbg to finger stick because is coming from "entries" collection
         timestamp = mbg.date,
         glucose = mbg.mbg,
         glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
-    ).also {
-        it.interfaceIDs.nightscoutId = mbg.id()
-    }
+    )
+//.also {
+// it.interfaceIDs.nightscoutId = mbg.id() // id will be different in treatments collection
+//}
 
 /*
         create fake object with nsID and isValid == false
  */
-fun therapyEventFromNsIdForInvalidating(nsId: String): TherapyEvent =
-    therapyEventFromJson(
-        JSONObject()
-            .put("mills", 1)
-            .put("_id", nsId)
-            .put("isValid", false)
-    )!!
 
 fun therapyEventFromJson(jsonObject: JSONObject): TherapyEvent? {
     val glucoseUnit = if (JsonHelper.safeGetString(jsonObject, "units", Constants.MGDL) == Constants.MGDL) TherapyEvent.GlucoseUnit.MGDL else TherapyEvent.GlucoseUnit.MMOL

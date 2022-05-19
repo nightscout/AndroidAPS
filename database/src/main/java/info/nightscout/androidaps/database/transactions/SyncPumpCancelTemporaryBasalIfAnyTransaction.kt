@@ -15,17 +15,18 @@ class SyncPumpCancelTemporaryBasalIfAnyTransaction(
             return result
         val running = database.temporaryBasalDao.getTemporaryBasalActiveAt(timestamp).blockingGet()
         if (running != null && running.interfaceIDs.endId == null) { // do not allow overwrite if cut by end event
+            val old = running.copy()
             if (running.timestamp != timestamp) running.end = timestamp // prevent zero duration
             else running.duration = 1
             running.interfaceIDs.endId = endPumpId
             database.temporaryBasalDao.updateExistingEntry(running)
-            result.updated.add(running)
+            result.updated.add(Pair(old, running))
         }
         return result
     }
 
     class TransactionResult {
 
-        val updated = mutableListOf<TemporaryBasal>()
+        val updated = mutableListOf<Pair<TemporaryBasal,TemporaryBasal>>()
     }
 }

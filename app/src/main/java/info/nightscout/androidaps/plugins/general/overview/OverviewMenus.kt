@@ -13,12 +13,13 @@ import androidx.appcompat.widget.PopupMenu
 import com.google.gson.Gson
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventRefreshOverview
+import info.nightscout.androidaps.events.EventScale
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.Loop
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
@@ -53,6 +54,7 @@ class OverviewMenus @Inject constructor(
     companion object {
 
         const val MAX_GRAPHS = 5 // including main
+        const val SCALE_ID = 1001
     }
 
     fun enabledTypes(graph: Int): String {
@@ -103,6 +105,13 @@ class OverviewMenus @Inject constructor(
             }
             val popup = PopupMenu(v.context, v)
 
+            popup.menu.addSubMenu(Menu.NONE, SCALE_ID, Menu.NONE, rh.gs(R.string.graph_scale)).also {
+                it.add(Menu.NONE, SCALE_ID + 6, Menu.NONE, "6")
+                it.add(Menu.NONE, SCALE_ID + 12, Menu.NONE, "12")
+                it.add(Menu.NONE, SCALE_ID + 18, Menu.NONE, "18")
+                it.add(Menu.NONE, SCALE_ID + 24, Menu.NONE, "24")
+            }
+
             val used = arrayListOf<Int>()
 
             for (g in 0 until numOfGraphs) {
@@ -124,7 +133,7 @@ class OverviewMenus @Inject constructor(
                     if (insert) {
                         val item = popup.menu.add(Menu.NONE, m.ordinal + 100 * (g + 1), Menu.NONE, rh.gs(m.nameId))
                         val title = item.title
-                        val s = SpannableString(" " + title + " ")
+                        val s = SpannableString(" $title ")
                         s.setSpan(ForegroundColorSpan(rh.gac(context, m.attrTextId)), 0, s.length, 0)
                         s.setSpan(BackgroundColorSpan(rh.gac(context, m.attrId)), 0, s.length, 0)
                         item.title = s
@@ -144,17 +153,26 @@ class OverviewMenus @Inject constructor(
                 try {
                     // id < 100 graph header - divider 1, 2, 3 .....
                     when {
-                        it.itemId == numOfGraphs -> {
+                        it.itemId == SCALE_ID                              -> {
+                            // do nothing, submenu
+                        }
+
+                        it.itemId > SCALE_ID && it.itemId < SCALE_ID + 100 -> {
+                            val hours = it.itemId - SCALE_ID // 6,12,....
+                            rxBus.send(EventScale(hours))
+                        }
+
+                        it.itemId == numOfGraphs                           -> {
                             // add new empty
                             _setting.add(Array(CharType.values().size) { false })
                         }
 
-                        it.itemId < 100          -> {
+                        it.itemId < 100                                    -> {
                             // remove graph
                             _setting.removeAt(it.itemId)
                         }
 
-                        else                     -> {
+                        else                                               -> {
                             val graphNumber = it.itemId / 100 - 1
                             val item = it.itemId % 100
                             _setting[graphNumber][item] = !it.isChecked

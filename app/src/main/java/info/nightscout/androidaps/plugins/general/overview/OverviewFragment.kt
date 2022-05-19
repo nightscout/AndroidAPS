@@ -246,6 +246,15 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             .observeOn(aapsSchedulers.main)
             .subscribe({ updateNotification() }, fabricPrivacy::logException)
         disposable += rxBus
+            .toObservable(EventScale::class.java)
+            .observeOn(aapsSchedulers.main)
+            .subscribe({
+                           overviewData.rangeToDisplay = it.hours
+                           sp.putInt(R.string.key_rangetodisplay, it.hours)
+                           rxBus.send(EventPreferenceChange(rh, R.string.key_rangetodisplay))
+                           sp.putBoolean(R.string.key_objectiveusescale, true)
+                       }, fabricPrivacy::logException)
+        disposable += rxBus
             .toObservable(EventNewBG::class.java)
             .debounce(1L, TimeUnit.SECONDS)
             .observeOn(aapsSchedulers.main)

@@ -437,6 +437,7 @@
     <string name="sort_items">מיין פריטים</string>
     <string name="remove_selected_items">הסר פריטים נבחרים</string>
     <!-- Autotune -->
+    <string name="autotune_profile_invalid">פרופיל לא חוקי</string>
     <plurals name="days">
         <item quantity="one">%1$d יום</item>
         <item quantity="two">%1$d ימים</item>

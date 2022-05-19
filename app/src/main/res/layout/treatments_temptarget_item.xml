@@ -44,7 +44,8 @@
                 android:gravity="center"
                 android:paddingStart="10dp"
                 android:paddingEnd="5dp"
-                tools:text="{fa-clock-o}" />
+                android:text="{fa-clock-o}"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/time"
@@ -69,8 +70,8 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="5dp"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                tools:ignore="RtlSymmetry"
-                tools:text="-" />
+                tools:ignore="HardcodedText,RtlSymmetry"
+                android:text="-" />
 
             <TextView
                 android:id="@+id/high"
@@ -103,7 +104,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
                 android:textColor="?attr/setTempButton"
-                tools:text="NS" />
+                android:text="NS"
+                tools:ignore="HardcodedText" />
 
         </LinearLayout>
 

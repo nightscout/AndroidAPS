@@ -1,11 +1,11 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.util
 
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.FailedToConnectException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.NotConnectedException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.ScanException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.ScanFailFoundTooManyException
-import info.nightscout.androidaps.interfaces.ResourceHelper
 
 class I8n {
     companion object {

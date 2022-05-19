@@ -443,6 +443,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="enableuam_summary">Détection des Repas Non Signalés</string>
     <string name="insulin_oref_peak">Durée du Pic de la Courbe IA</string>
     <string name="insulin_peak_time">Temps du Pic [min]</string>
+    <string name="insulin_peak">Pic</string>
     <string name="free_peak_oref">Profil d\'insuline ajustable Oref</string>
     <string name="rapid_acting_oref">Insuline à Action Rapide Oref </string>
     <string name="ultrarapid_oref">Insuline Ultra Rapide Oref</string>
@@ -969,7 +970,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="wizard_no_active_profile">Aucun profil activé !</string>
     <string name="wizard_no_cob">GA inconnu! glycémie manquante ou démarrage récent de l\'application ?</string>
     <string name="wizard_carbs_constraint">Violation de contrainte des glucides!</string>
-    <string name="wizard_explain_calc">Calcul (G/I: %2$.1f, SI: %2$.1f) de:\"</string>
+    <string name="wizard_explain_calc">Calcul (G/I: %1$.1f, SI: %2$.1f) de:\"</string>
     <string name="wizard_explain_carbs">Glucides : %1$.2fU</string>
     <string name="wizard_explain_cob">GA: %1$.0fg %2$.2fU</string>
     <string name="wizard_explain_bg">Gly: %1$.2fU</string>
@@ -1009,6 +1010,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="widget_description">Widget AndroidAPS</string>
     <string name="configure">Configurer l’opacité</string>
     <string name="loop_status">État de la boucle</string>
+    <string name="graph_scale">Échelle du graph.</string>
     <string name="a11y_otp_qr_code">Code QR pour configurer un mot de passe à usage unique</string>
     <string name="a11y_open_settings">ouvrir les paramètres</string>
     <string name="a11y_set_carb_timer">définir l\'alarme du minuteur de glucides</string>

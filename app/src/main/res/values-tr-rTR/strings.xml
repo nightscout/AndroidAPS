@@ -443,6 +443,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="enableuam_summary">(Uam) Bildirilmemiş öğünlerin tespiti</string>
     <string name="insulin_oref_peak">IOB Eğrisi Tepe Zamanı</string>
     <string name="insulin_peak_time">Tepe zamanı [min]</string>
+    <string name="insulin_peak">Tepe</string>
     <string name="free_peak_oref">Serbest tepe Oref</string>
     <string name="rapid_acting_oref">Hızlı etkili Oref</string>
     <string name="ultrarapid_oref">Ultra Hızlı Oref</string>
@@ -970,7 +971,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="wizard_no_active_profile">Etkin profil ayarlanmadı!</string>
     <string name="wizard_no_cob">Aktif karbonhidrat bilinmiyor! KŞ okuması eksik veya son uygulama yeniden başlatılsın mı?</string>
     <string name="wizard_carbs_constraint">Karbonhidrat kısıtlaması ihlali!</string>
-    <string name="wizard_explain_calc">Tarafından hesaplanan (IC: %2$.1f, İDF: %2$.1f):\"</string>
+    <string name="wizard_explain_calc">Tarafından hesaplanan (IC: %1$.1f, İDF: %2$.1f):\"</string>
     <string name="wizard_explain_carbs">Karb: %1$.2fÜ</string>
     <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fÜ</string>
     <string name="wizard_explain_bg">KŞ: %1$.2fÜ</string>
@@ -1010,6 +1011,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="widget_description">AndroidAPS widget</string>
     <string name="configure">Şeffaflığı yapılandır</string>
     <string name="loop_status">Döngü durumu</string>
+    <string name="graph_scale">Grafik ölçeği</string>
     <string name="a11y_otp_qr_code">Tek kullanımlık şifre kurulumu için QR Kodu</string>
     <string name="a11y_open_settings">ayarları aç</string>
     <string name="a11y_set_carb_timer">karbonhidrat zamanlayıcı alarmı kur</string>

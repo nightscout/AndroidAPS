@@ -45,14 +45,8 @@
             <CheckBoxPreference
                 android:defaultValue="true"
                 android:dependency="@string/key_wear_control"
-                android:key="@string/key_wearwizard_bolusiob"
-                android:title="@string/bolus_iob_label" />
-
-            <CheckBoxPreference
-                android:defaultValue="true"
-                android:dependency="@string/key_wear_control"
-                android:key="@string/key_wearwizard_basaliob"
-                android:title="@string/treatments_wizard_basaliob_label" />
+                android:key="@string/key_wearwizard_iob"
+                android:title="@string/iob_label" />
 
         </PreferenceCategory>
 

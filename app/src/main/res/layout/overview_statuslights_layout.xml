@@ -117,7 +117,8 @@
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:lines="1"
-            tools:text="-" />
+            android:text="-"
+            tools:ignore="HardcodedText" />
 
         <TextView
             android:id="@+id/battery_level"

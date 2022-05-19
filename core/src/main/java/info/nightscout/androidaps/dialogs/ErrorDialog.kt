@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.dialogs
 
 import android.content.Context
+import android.content.res.Resources
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
@@ -15,10 +16,10 @@ import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.core.databinding.DialogErrorBinding
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
-import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.services.AlarmSoundServiceHelper
 import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.logging.AAPSLogger
 import javax.inject.Inject
 
 class ErrorDialog : DaggerDialogFragment() {
@@ -41,8 +42,13 @@ class ErrorDialog : DaggerDialogFragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        val theme: Resources.Theme? = context?.theme
+        theme?.applyStyle(R.style.AppTheme_NoActionBar, true)
+
         dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
         isCancelable = true

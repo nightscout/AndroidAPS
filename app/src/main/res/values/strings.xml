@@ -537,6 +537,7 @@
     <string name="key_insulin_oref_peak" translatable="false">insulin_oref_peak</string>
     <string name="insulin_oref_peak">IOB Curve Peak Time</string>
     <string name="insulin_peak_time">Peak Time [min]</string>
+    <string name="insulin_peak">Peak</string>
     <string name="free_peak_oref">Free-Peak Oref</string>
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
     <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
@@ -766,8 +767,7 @@
     <string name="key_wearwizard_tt" translatable="false">wearwizard_tt</string>
     <string name="key_wearwizard_trend" translatable="false">wearwizard_trend</string>
     <string name="key_wearwizard_cob" translatable="false">wearwizard_cob</string>
-    <string name="key_wearwizard_bolusiob" translatable="false">wearwizard_bolusiob</string>
-    <string name="key_wearwizard_basaliob" translatable="false">wearwizard_basaliob</string>
+    <string name="key_wearwizard_iob" translatable="false">wearwizard_iob</string>
     <string name="wear_wizard_settings_summary">Calculations included in the Wizard result:</string>
     <string name="wear_display_settings">Display Settings</string>
     <string name="wear_general_settings">General Settings</string>
@@ -1178,12 +1178,11 @@
     <string name="wizard_no_active_profile">No active profile set!</string>
     <string name="wizard_no_cob">Unknown COB! BG reading missing or recent app restart?</string>
     <string name="wizard_carbs_constraint">Carb constraint violation!</string>
-    <string name="wizard_explain_calc">Calc (IC: %2$.1f, ISF: %2$.1f) from:"</string>
+    <string name="wizard_explain_calc">Calc (IC: %1$.1f, ISF: %2$.1f)</string>
     <string name="wizard_explain_carbs">Carbs: %1$.2fU</string>
     <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fU</string>
     <string name="wizard_explain_bg">BG: %1$.2fU</string>
-    <string name="wizard_explain_basal_iob">Basal IOB: %1$.2fU</string>
-    <string name="wizard_explain_bolus_iob">Bolus IOB: %1$.2fU</string>
+    <string name="wizard_explain_iob">IOB: %1$.2fU</string>
     <string name="wizard_explain_superbolus">Superbolus: %1$.2fU</string>
     <string name="wizard_explain_trend">15\' trend: %1$.2fU</string>
     <string name="wizard_explain_percent">Percentage: %1$.2fU x %2$d%% ≈ %3$.2fU</string>
@@ -1218,6 +1217,7 @@
     <string name="widget_description">AndroidAPS widget</string>
     <string name="configure">Configure opacity</string>
     <string name="loop_status">Loop status</string>
+    <string name="graph_scale">Graph scale</string>
 
     <string name="a11y_otp_qr_code">QR Code for setup one time password</string>
     <string name="a11y_open_settings">open settings</string>
@@ -1233,5 +1233,5 @@
     <string name="aidex">GlucoRx Aidex</string>
     <string name="aidex_short">Aidex</string>
     <string name="description_source_aidex">Receive BG values from GlucoRx Aidex CGMS.</string>
-  
+
 </resources>
