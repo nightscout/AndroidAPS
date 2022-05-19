@@ -193,7 +193,7 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scri
         this.profile.put("sens", profile.getIsfMgdl())
         this.profile.put("max_daily_safety_multiplier", sp.getInt(R.string.key_openapsama_max_daily_safety_multiplier, 3))
         this.profile.put("current_basal_safety_multiplier", sp.getDouble(R.string.key_openapsama_current_basal_safety_multiplier, 4.0))
-        this.profile.put("lgsThreshold", sp.getInt(R.string.key_treatmentssafety_lgsThreshold, 60))
+        this.profile.put("lgsThreshold", sp.getDouble(R.string.key_treatmentssafety_lgsThreshold, 60.0))
 
         val insulin = activePlugin.activeInsulin
             val insulinType = insulin.friendlyName
@@ -275,6 +275,7 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scri
         this.mealData.put("TDDAIMI7", tddCalculator.averageTDD(tddCalculator.calculate(7))?.totalAmount)
         this.mealData.put("TDDLast4", tddCalculator.calculate4Daily().totalAmount)
         this.mealData.put("TDD4to8", tddCalculator.calculate8Gap().totalAmount)
+        this.mealData.put("TDD24", tddCalculator.calculate24Daily().totalAmount)
 
 
 

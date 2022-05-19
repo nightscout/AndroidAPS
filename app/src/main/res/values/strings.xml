@@ -725,7 +725,7 @@
     <string name="openapssmb_maxiob_summary">This value is called Max IOB in OpenAPS context\nOpenAPS will not add more insulin if current IOB is greater than this value</string>
     <string name="absorption_cutoff_title">Meal max absorption time [h]</string>
     <string name="absorption_cutoff_summary">Time at which any meal is considered absorbed. Remaining carbs will be cut off.</string>
-    <string name="treatmentssafety_lgsThreshold_summary">BG value below which insulin is suspended. Default value uses standard target model. User can set value between 65 and 100</string>
+    <string name="treatmentssafety_lgsThreshold_summary">BG value below which insulin is suspended. Default value uses standard target model. User can set value between 60mg/dl (3.3mmol/l) and 100mg/dl(5.5mmol/l). Values below 65/3.6 result in use of default model</string>
     <string name="overview_show_notes_field_in_dialogs_title">Show notes field in treatment dialogs</string>
     <string name="title_activity_setup_wizard" translatable="false">SetupWizardActivity</string>
     <string name="next_button">Next</string>

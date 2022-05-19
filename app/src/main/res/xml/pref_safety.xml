@@ -34,15 +34,15 @@
             validate:floatminNumber="1"
             validate:testType="numericRange" />
 
-        <EditTextPreference
+        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
             android:defaultValue="60"
             android:inputType="numberDecimal"
             android:dialogMessage="@string/treatmentssafety_lgsThreshold_summary"
             android:key="@string/key_treatmentssafety_lgsThreshold"
             android:title="@string/treatmentssafety_lgsThreshold_title"
             validate:floatmaxNumber="100"
-            validate:floatminNumber="65"
-            validate:testType="numericRange" />
+            validate:floatminNumber="3.3"
+            validate:testType="floatNumericRange" />
 
 
 

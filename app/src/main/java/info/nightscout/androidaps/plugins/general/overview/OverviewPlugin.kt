@@ -131,6 +131,7 @@ class OverviewPlugin @Inject constructor(
             .putDouble(R.string.key_hypo_target, sp, rh)
             .putDouble(R.string.key_low_mark, sp, rh)
             .putDouble(R.string.key_high_mark, sp, rh)
+            .putDouble(R.string.key_treatmentssafety_lgsThreshold, sp, rh)
             .putDouble(R.string.key_statuslights_cage_warning, sp, rh)
             .putDouble(R.string.key_statuslights_cage_critical, sp, rh)
             .putDouble(R.string.key_statuslights_iage_warning, sp, rh)
