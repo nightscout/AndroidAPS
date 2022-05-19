@@ -34,6 +34,18 @@
             validate:floatminNumber="1"
             validate:testType="numericRange" />
 
+        <EditTextPreference
+            android:defaultValue="60"
+            android:inputType="numberDecimal"
+            android:dialogMessage="@string/treatmentssafety_lgsThreshold_summary"
+            android:key="@string/key_treatmentssafety_lgsThreshold"
+            android:title="@string/treatmentssafety_lgsThreshold_title"
+            validate:floatmaxNumber="100"
+            validate:floatminNumber="65"
+            validate:testType="numericRange" />
+
+
+
     </PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>

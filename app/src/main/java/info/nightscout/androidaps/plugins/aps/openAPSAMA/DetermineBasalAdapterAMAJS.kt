@@ -175,6 +175,7 @@ class DetermineBasalAdapterAMAJS internal constructor(scriptReader: ScriptReader
         this.profile.put("current_basal", basalRate)
         this.profile.put("temptargetSet", tempTargetSet)
         this.profile.put("autosens_adjust_targets", sp.getBoolean(R.string.key_openapsama_autosens_adjusttargets, true))
+        this.profile.put("lgsThreshold", sp.getInt(R.string.key_treatmentssafety_lgsThreshold, 60))
         //align with max-absorption model in AMA sensitivity
         if (mealData.usedMinCarbsImpact > 0) {
             this.profile.put("min_5m_carbimpact", mealData.usedMinCarbsImpact)
