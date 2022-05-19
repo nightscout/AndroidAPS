@@ -761,8 +761,7 @@
     <string name="key_wearwizard_tt" translatable="false">wearwizard_tt</string>
     <string name="key_wearwizard_trend" translatable="false">wearwizard_trend</string>
     <string name="key_wearwizard_cob" translatable="false">wearwizard_cob</string>
-    <string name="key_wearwizard_bolusiob" translatable="false">wearwizard_bolusiob</string>
-    <string name="key_wearwizard_basaliob" translatable="false">wearwizard_basaliob</string>
+    <string name="key_wearwizard_iob" translatable="false">wearwizard_iob</string>
     <string name="wear_wizard_settings_summary">Calculations included in the Wizard result:</string>
     <string name="wear_display_settings">Display Settings</string>
     <string name="wear_general_settings">General Settings</string>
@@ -1173,12 +1172,11 @@
     <string name="wizard_no_active_profile">No active profile set!</string>
     <string name="wizard_no_cob">Unknown COB! BG reading missing or recent app restart?</string>
     <string name="wizard_carbs_constraint">Carb constraint violation!</string>
-    <string name="wizard_explain_calc">Calc (IC: %2$.1f, ISF: %2$.1f) from:"</string>
+    <string name="wizard_explain_calc">Calc (IC: %1$.1f, ISF: %2$.1f)</string>
     <string name="wizard_explain_carbs">Carbs: %1$.2fU</string>
     <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fU</string>
     <string name="wizard_explain_bg">BG: %1$.2fU</string>
-    <string name="wizard_explain_basal_iob">Basal IOB: %1$.2fU</string>
-    <string name="wizard_explain_bolus_iob">Bolus IOB: %1$.2fU</string>
+    <string name="wizard_explain_iob">IOB: %1$.2fU</string>
     <string name="wizard_explain_superbolus">Superbolus: %1$.2fU</string>
     <string name="wizard_explain_trend">15\' trend: %1$.2fU</string>
     <string name="wizard_explain_percent">Percentage: %1$.2fU x %2$d%% ≈ %3$.2fU</string>

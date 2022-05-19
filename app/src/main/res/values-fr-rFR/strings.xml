@@ -970,7 +970,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="wizard_no_active_profile">Aucun profil activé !</string>
     <string name="wizard_no_cob">GA inconnu! glycémie manquante ou démarrage récent de l\'application ?</string>
     <string name="wizard_carbs_constraint">Violation de contrainte des glucides!</string>
-    <string name="wizard_explain_calc">Calcul (G/I: %2$.1f, SI: %2$.1f) de:\"</string>
+    <string name="wizard_explain_calc">Calcul (G/I: %1$.1f, SI: %2$.1f) de:\"</string>
     <string name="wizard_explain_carbs">Glucides : %1$.2fU</string>
     <string name="wizard_explain_cob">GA: %1$.0fg %2$.2fU</string>
     <string name="wizard_explain_bg">Gly: %1$.2fU</string>

@@ -64,16 +64,13 @@ class WizardActivity : ViewSelectorActivity() {
                 view
             } else {
                 val view = LayoutInflater.from(applicationContext).inflate(R.layout.action_confirm_ok, container, false)
-                val confirmButton = view.findViewById<ImageView>(R.id.confirmbutton)
-                confirmButton.setOnClickListener {
-                    val action = ActionWizardPreCheck(
-                        SafeParse.stringToInt(editCarbs?.editText?.text.toString()),
-                        SafeParse.stringToInt(editPercentage?.editText?.text.toString())
-                    )
-                    rxBus.send(EventWearToMobile(action))
-                    showToast(this@WizardActivity, R.string.action_wizard_confirmation)
-                    finishAffinity()
-                }
+                view.findViewById<ImageView>(R.id.confirmbutton)
+                    .setOnClickListener {
+                        val percentage = if (hasPercentage) SafeParse.stringToInt(editPercentage?.editText?.text.toString()) else sp.getInt(getString(R.string.key_bolus_wizard_percentage), 100)
+                        rxBus.send(EventWearToMobile(ActionWizardPreCheck(SafeParse.stringToInt(editCarbs?.editText?.text.toString()), percentage)))
+                        showToast(this@WizardActivity, R.string.action_wizard_confirmation)
+                        finishAffinity()
+                    }
                 container.addView(view)
                 view
             }

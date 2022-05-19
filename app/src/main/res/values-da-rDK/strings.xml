@@ -969,7 +969,7 @@
     <string name="wizard_no_active_profile">Ingen aktiv profil angivet!</string>
     <string name="wizard_no_cob">Ukendt COB! BG læsning mangler eller nylig app genstart?</string>
     <string name="wizard_carbs_constraint">KH begrænsninger overtrådt!</string>
-    <string name="wizard_explain_calc">Calc (IC: %2$.1f, ISF: %2$.1f) fra:\"</string>
+    <string name="wizard_explain_calc">Calc (IC: %1$.1f, ISF: %2$.1f) fra:\"</string>
     <string name="wizard_explain_carbs">Kulhydrater: %1$.2fE</string>
     <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fE</string>
     <string name="wizard_explain_bg">BS: %1$.2fE</string>

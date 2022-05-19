@@ -969,7 +969,7 @@
     <string name="wizard_no_active_profile">没有激活的个人配置文件！</string>
     <string name="wizard_no_cob">未知的活性碳水！血糖读取缺失或最近重新启动了应用程序？</string>
     <string name="wizard_carbs_constraint">碳水违反约束条件!</string>
-    <string name="wizard_explain_calc">计算(IC: %2$.1f, ISF: %2$.1f) 从:\"</string>
+    <string name="wizard_explain_calc">计算(IC: %1$.1f, ISF: %2$.1f) 从:\"</string>
     <string name="wizard_explain_carbs">碳水: %1$.2fU</string>
     <string name="wizard_explain_cob">活性碳水: %1$.0f克 %2$.2fU</string>
     <string name="wizard_explain_bg">血糖: %1$.2fU</string>
