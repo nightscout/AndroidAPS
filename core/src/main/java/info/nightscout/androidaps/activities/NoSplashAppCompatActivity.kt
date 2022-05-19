@@ -3,6 +3,7 @@ import android.content.Context
 import android.os.Bundle
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.events.EventThemeSwitch
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.locale.LocaleHelper
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -17,6 +18,7 @@ open class NoSplashAppCompatActivity : DaggerAppCompatActivityWithResult() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(R.style.AppTheme_NoActionBar)
+        rh.updateContext(this)
 
         compositeDisposable.add(rxBus.toObservable(EventThemeSwitch::class.java).subscribe {
             recreate()

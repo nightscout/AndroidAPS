@@ -8,6 +8,8 @@ import android.util.DisplayMetrics
 import androidx.annotation.*
 
 interface ResourceHelper {
+    fun updateContext(ctx: Context?)
+
     fun gs(@StringRes id: Int): String
     fun gs(@StringRes id: Int, vararg args: Any?): String
     fun gq(@PluralsRes id: Int, quantity: Int, vararg args: Any?): String
