@@ -22,18 +22,22 @@ import javax.inject.Inject
 /**
  * Created by adrian on 2019-12-23.
  */
-class ResourceHelperImplementation @Inject constructor(private val context: Context, private val fabricPrivacy: FabricPrivacy) : ResourceHelper {
+class ResourceHelperImplementation @Inject constructor(var context: Context, private val fabricPrivacy: FabricPrivacy) : ResourceHelper {
+
+    override fun updateContext(ctx: Context?) {
+        ctx?.let { context = it }
+    }
 
     override fun gs(@StringRes id: Int): String = context.getString(id)
 
-    override fun gs(@StringRes id: Int, vararg args: Any?) : String {
+    override fun gs(@StringRes id: Int, vararg args: Any?): String {
         return try {
             context.getString(id, *args)
         } catch (exception: Exception) {
             val resourceName = context.resources.getResourceEntryName(id)
             val resourceValue = context.getString(id)
             val currentLocale: Locale = context.resources.configuration.locales[0]
-            fabricPrivacy.logMessage("Failed to get string for resource $resourceName ($id) '$resourceValue' for locale $currentLocale with args ${args.map{it.toString()}}")
+            fabricPrivacy.logMessage("Failed to get string for resource $resourceName ($id) '$resourceValue' for locale $currentLocale with args ${args.map { it.toString() }}")
             fabricPrivacy.logException(exception)
             try {
                 gsNotLocalised(id, *args)
@@ -89,7 +93,7 @@ class ResourceHelperImplementation @Inject constructor(private val context: Cont
     override fun shortTextMode(): Boolean = !gb(R.bool.isTablet)
 
     override fun gac(context: Context?, attributeId: Int): Int =
-        ( ContextThemeWrapper( context ?: this.context, R.style.AppTheme)).getThemeColor(attributeId)
+        (ContextThemeWrapper(context ?: this.context, R.style.AppTheme)).getThemeColor(attributeId)
 
     override fun gac(attributeId: Int): Int =
         ContextThemeWrapper(this.context, R.style.AppTheme).getThemeColor(attributeId)
@@ -99,11 +103,11 @@ class ResourceHelperImplementation @Inject constructor(private val context: Cont
         val configuration = Configuration(res.configuration)
         val filter = res.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK.inv()
 
-       configuration.uiMode = when (AppCompatDelegate.getDefaultNightMode()) {
+        configuration.uiMode = when (AppCompatDelegate.getDefaultNightMode()) {
             AppCompatDelegate.MODE_NIGHT_NO  -> Configuration.UI_MODE_NIGHT_NO or filter
             AppCompatDelegate.MODE_NIGHT_YES -> Configuration.UI_MODE_NIGHT_YES or filter
             else                             -> res.configuration.uiMode
         }
-        return  context.createConfigurationContext(configuration)
+        return context.createConfigurationContext(configuration)
     }
 }
