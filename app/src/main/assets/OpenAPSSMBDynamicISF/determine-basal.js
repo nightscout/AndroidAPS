@@ -306,7 +306,7 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
             console.log("ISF from "+variable_sens+" to "+sens+ "due to temp target; ");
             }
             else {
-            sensitivityRatio = ( tdd_24 / tdd7 );
+            sensitivityRatio = ( profile.TDD24 / tdd7 );
             }
             if (sensitivityRatio > 1) {
                 sensitivityRatio = Math.min(sensitivityRatio, profile.autosens_max);

@@ -275,6 +275,7 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scri
         this.mealData.put("TDDAIMI7", tddCalculator.averageTDD(tddCalculator.calculate(7))?.totalAmount)
         this.mealData.put("TDDLast4", tddCalculator.calculate4Daily().totalAmount)
         this.mealData.put("TDD4to8", tddCalculator.calculate8Gap().totalAmount)
+        this.mealData.put("TDD24", tddCalculator.calculate24Daily().totalAmount)
 
 
 
