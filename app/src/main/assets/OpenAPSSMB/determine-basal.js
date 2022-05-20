@@ -398,19 +398,20 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
     }
 
     // min_bg of 90 -> threshold of 65, 100 -> 70 110 -> 75, and 130 -> 85, or if specified by user, take that value
-        var lgsThreshold = profile.lgsThreshold;
-        var threshold = min_bg - 0.5*(min_bg-40);
+         var lgsThreshold = profile.lgsThreshold;
+                var threshold = min_bg - 0.5*(min_bg-40);
+                var oldThreshold = threshold;
 
-        if(lgsThreshold < 65 || lgsThreshold > 120) {
-            threshold = threshold;
-            }
-        else if( lgsThreshold < threshold){
-            threshold = threshold;
-            }
-        else {
-            threshold = lgsThreshold;
-            }
-        console.error("Low glucose suspend threshold: "+threshold);
+                if(lgsThreshold < 65 || lgsThreshold > 120) {
+                    threshold = threshold;
+                    }
+                else if( lgsThreshold < threshold){
+                    threshold = threshold;
+                    }
+                else {
+                    threshold = lgsThreshold;
+                    }
+                console.error("Threshold set from " + convert_bg(oldThreshold, profile) + " to " + convert_bg(threshold, profile) + "; ");
 
     //console.error(reservoir_data);
 
