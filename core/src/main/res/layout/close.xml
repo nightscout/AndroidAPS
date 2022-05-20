@@ -3,17 +3,18 @@
     android:id="@+id/done_background"
     android:layout_width="match_parent"
     android:layout_height="56dp"
-    android:orientation="horizontal"
+    android:layout_gravity="center_vertical"
     android:background="@android:color/transparent"
     android:gravity="end"
-    android:layout_gravity="center_vertical"
+    android:orientation="horizontal"
     android:paddingBottom="8dp">
 
     <Button
         android:id="@+id/close"
+        style="@style/OkCancelButton.Text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        style="@style/OkCancelButton.Text"
         android:text="@string/close" />
+
 </LinearLayout>

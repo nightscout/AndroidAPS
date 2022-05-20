@@ -1,5 +1,4 @@
-<androidx.core.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -15,87 +14,87 @@
             style="@style/Widget.MaterialComponents.CardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp"
             android:layout_marginTop="4dp"
+            android:layout_marginEnd="4dp"
             app:cardCornerRadius="4dp"
-            app:contentPadding="2dp"
             app:cardElevation="2dp"
             app:cardUseCompatPadding="false"
-            android:layout_gravity="center">
+            app:contentPadding="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
 
-                    <LinearLayout
+                    <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal|center_vertical"
+                        android:layout_weight="2"
+                        android:gravity="end"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
+                        android:text="@string/autotune_profile"
+                        android:textSize="14sp" />
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal|center_vertical"
-                            android:layout_weight="2"
-                            android:gravity="end"
-                            android:paddingStart="5dp"
-                            android:paddingEnd="5dp"
-                            android:text="@string/autotune_profile"
-                            android:textSize="14sp" />
-
-                        <com.google.android.material.textfield.TextInputLayout
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:hint="@string/autotune_select_profile"
-                            android:paddingStart="5dp"
-                            android:paddingEnd="5dp">
-
-                            <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                                android:id="@+id/profileList"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:inputType="none" />
-
-                        </com.google.android.material.textfield.TextInputLayout>
-
-                    </LinearLayout>
-
-                    <LinearLayout
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        android:paddingTop="5dp">
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="@string/autotune_select_profile"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp">
 
-                        <TextView
+                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                            android:id="@+id/profileList"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal|center_vertical"
-                            android:layout_weight="2"
-                            android:gravity="end"
-                            android:paddingStart="5dp"
-                            android:paddingEnd="5dp"
-                            android:text="@string/autotune_tune_days"
-                            android:textSize="14sp" />
+                            android:inputType="none" />
 
-
-                        <info.nightscout.androidaps.utils.ui.NumberPicker
-                            android:id="@+id/tune_days"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:paddingStart="5dp"
-                            android:paddingEnd="5dp"
-                            android:layout_weight="1"
-                            android:layout_marginBottom="2dp"
-                            app:customContentDescription="@string/careportal_newnstreatment_duration_label" />
-
-                    </LinearLayout>
+                    </com.google.android.material.textfield.TextInputLayout>
 
                 </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:paddingTop="5dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal|center_vertical"
+                        android:layout_weight="2"
+                        android:gravity="end"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
+                        android:text="@string/autotune_tune_days"
+                        android:textSize="14sp" />
+
+
+                    <info.nightscout.androidaps.utils.ui.NumberPicker
+                        android:id="@+id/tune_days"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="2dp"
+                        android:layout_weight="1"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
+                        app:customContentDescription="@string/careportal_newnstreatment_duration_label" />
+
+                </LinearLayout>
+
+            </LinearLayout>
 
         </com.google.android.material.card.MaterialCardView>
 
@@ -103,14 +102,14 @@
             style="@style/Widget.MaterialComponents.CardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp"
             android:layout_marginTop="4dp"
+            android:layout_marginEnd="4dp"
             app:cardCornerRadius="4dp"
-            app:contentPadding="2dp"
             app:cardElevation="2dp"
             app:cardUseCompatPadding="false"
-            android:layout_gravity="center">
+            app:contentPadding="2dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -172,23 +171,23 @@
 
                 </LinearLayout>
 
-            </LinearLayout>>
+            </LinearLayout>
 
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
-            style="@style/Widget.MaterialComponents.CardView"
             android:id="@+id/autotune_results_card"
+            style="@style/Widget.MaterialComponents.CardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp"
             android:layout_marginTop="4dp"
+            android:layout_marginEnd="4dp"
             app:cardCornerRadius="4dp"
-            app:contentPadding="2dp"
             app:cardElevation="2dp"
             app:cardUseCompatPadding="false"
-            android:layout_gravity="center">
+            app:contentPadding="2dp">
 
 
             <LinearLayout
