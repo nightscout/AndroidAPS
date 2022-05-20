@@ -29,7 +29,6 @@
     <string name="description_overview">Zobrazení stavu a informací. Přístup k nejběžnějším ovládacím prvkům</string>
     <string name="description_persistent_notification">Zobrazení průběžného oznámení v Androidu s krátkým přehledem, co smyčka právě dělá</string>
     <string name="description_profile_local">Definujte profil, který je dostupný offline.</string>
-    <string name="description_pump_mdi">Ovladač pumpy pro uživatele inzulínových per</string>
     <string name="description_pump_virtual">Ovladač pumpy pro uživatele bez podporované pumpy (Otevřená smyčka)</string>
     <string name="description_sensitivity_aaps">Citlivost je počítána stejným způsobem jako v Oref0, ale je možné specifikovat dobu do minulosti. Minimální absorpce sacharidů je počítána dynamicky z maximální doby absorpce definované v nastavení.</string>
     <string name="description_sensitivity_oref1">Citlivost je počítána za 8h nebo 24h (použita je vyšší citlivost). Sacharidy, pokud nejsou absorbované, jsou oříznuty po čase definovaném v nastavení. Je také zároveň vyhodnocováno UAM (neoznámené jídlo).</string>
@@ -250,7 +249,6 @@
     <string name="basalvaluebelowminimum">Hodnota bazálu pod povoleným minimem. Nenastaveno!</string>
     <string name="sms_actualbg">Glykémie:</string>
     <string name="sms_lastbg">Poslední glykémie:</string>
-    <string name="mdi">Pera</string>
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Průběžné oznámení</string>
     <string name="old_data">ZASTARALÉ</string>
