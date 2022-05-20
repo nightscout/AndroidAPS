@@ -1212,7 +1212,11 @@
     <string name="configure">Configure opacity</string>
     <string name="loop_status">Loop status</string>
     <string name="graph_scale">Graph scale</string>
-
+    <string name="profile1">Profile 1</string>
+    <string name="profile2">Profile 2</string>
+    <string name="login">Login</string>
+    <string name="remove_all">Remove all</string>
+    <string name="reset_start">Reset start</string>
     <string name="a11y_otp_qr_code">QR Code for setup one time password</string>
     <string name="a11y_open_settings">open settings</string>
     <string name="a11y_set_carb_timer">set carb timer alarm</string>
@@ -1227,5 +1231,6 @@
     <string name="aidex">GlucoRx Aidex</string>
     <string name="aidex_short">Aidex</string>
     <string name="description_source_aidex">Receive BG values from GlucoRx Aidex CGMS.</string>
+
 
 </resources>

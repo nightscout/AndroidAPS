@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -12,47 +13,48 @@
         android:layout_marginTop="32dp"
         android:text="-"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="HardcodedText" />
 
     <com.google.android.material.button.MaterialButton
-        style="@style/GrayButton"
         android:id="@+id/login"
+        style="@style/GrayButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Login"
+        android:text="@string/login"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/status" />
 
     <com.google.android.material.button.MaterialButton
-        style="@style/GrayButton"
         android:id="@+id/uploadnow"
+        style="@style/GrayButton"
         android:layout_width="113dp"
         android:layout_height="50dp"
         android:layout_marginTop="8dp"
-        android:text="Upload now"
+        android:text="@string/upload_now"
         app:layout_constraintStart_toEndOf="@+id/login"
         app:layout_constraintTop_toBottomOf="@+id/status" />
 
     <com.google.android.material.button.MaterialButton
-        style="@style/GrayButton"
         android:id="@+id/removeall"
+        style="@style/GrayButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_marginTop="8dp"
-        android:text="Remove all"
+        android:text="@string/remove_all"
         app:layout_constraintStart_toEndOf="@+id/uploadnow"
         app:layout_constraintTop_toBottomOf="@+id/status" />
 
     <com.google.android.material.button.MaterialButton
-        style="@style/GrayButton"
         android:id="@+id/resertstart"
+        style="@style/GrayButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_marginTop="8dp"
-        android:text="Reset start"
+        android:text="@string/reset_start"
         app:layout_constraintStart_toEndOf="@+id/removeall"
         app:layout_constraintTop_toBottomOf="@+id/status" />
 
@@ -72,7 +74,9 @@
             android:id="@+id/log"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="-- logs --" />
+            android:text="-- logs --"
+            tools:ignore="HardcodedText" />
+
     </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -82,8 +82,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:layout_weight="2"
-                android:gravity="end"
                 android:text="@string/date"
+                android:textAlignment="viewEnd"
                 android:textSize="14sp" />
 
             <TextView
@@ -94,7 +94,8 @@
                 android:layout_weight="0"
                 android:gravity="center_horizontal"
                 android:text=":"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/date"
@@ -102,7 +103,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_weight="1"
-                android:gravity="start"
+                android:textAlignment="viewStart"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -119,16 +120,16 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:focusable="true">
+            android:focusable="true"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:layout_weight="2"
-                android:gravity="end"
                 android:text="@string/units_label"
+                android:textAlignment="viewEnd"
                 android:textSize="14sp" />
 
             <TextView
@@ -139,7 +140,8 @@
                 android:layout_weight="0"
                 android:gravity="center_horizontal"
                 android:text=":"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/units"
@@ -147,8 +149,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_weight="1"
-                android:gravity="start"
-                android:textSize="14sp" />
+                android:textAlignment="viewStart"
+                android:textSize="14sp"
+                tools:text="mmol" />
 
         </LinearLayout>
 
@@ -164,16 +167,16 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:focusable="true">
+            android:focusable="true"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:layout_weight="2"
-                android:gravity="end"
                 android:text="@string/dia_label"
+                android:textAlignment="viewEnd"
                 android:textSize="14sp" />
 
             <TextView
@@ -184,7 +187,8 @@
                 android:layout_weight="0"
                 android:gravity="center_horizontal"
                 android:text=":"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/dia"
@@ -192,8 +196,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_weight="1"
-                android:gravity="start"
-                android:textSize="14sp" />
+                android:textAlignment="viewStart"
+                android:textSize="14sp"
+                tools:text="6.50 h" />
 
         </LinearLayout>
 
@@ -209,16 +214,16 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:focusable="true">
+            android:focusable="true"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:layout_weight="2"
-                android:gravity="end"
                 android:text="@string/ic_label"
+                android:textAlignment="viewEnd"
                 android:textSize="14sp" />
 
             <TextView
@@ -229,7 +234,8 @@
                 android:layout_weight="0"
                 android:gravity="center_horizontal"
                 android:text=":"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/ic"
@@ -237,8 +243,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_weight="1"
-                android:gravity="start"
-                android:textSize="14sp" />
+                android:textAlignment="viewStart"
+                android:textSize="14sp"
+                tools:text="00:00 13.8 g/U" />
 
         </LinearLayout>
 
@@ -263,13 +270,13 @@
             android:orientation="horizontal">
 
             <TextView
-                android:focusable="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:layout_weight="2"
-                android:gravity="end"
+                android:focusable="true"
                 android:text="@string/isf_label"
+                android:textAlignment="viewEnd"
                 android:textSize="14sp" />
 
             <TextView
@@ -280,7 +287,8 @@
                 android:layout_weight="0"
                 android:gravity="center_horizontal"
                 android:text=":"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/isf"
@@ -288,7 +296,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_weight="1"
-                android:gravity="start"
+                android:textAlignment="viewStart"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -311,16 +319,16 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:focusable="true">
+            android:focusable="true"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:layout_weight="2"
-                android:gravity="end"
                 android:text="@string/basal_label"
+                android:textAlignment="viewEnd"
                 android:textSize="14sp" />
 
             <TextView
@@ -331,7 +339,8 @@
                 android:layout_weight="0"
                 android:gravity="center_horizontal"
                 android:text=":"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/basal"
@@ -339,7 +348,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_weight="1"
-                android:gravity="start"
+                android:textAlignment="viewStart"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -354,8 +363,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:layout_weight="2"
-                android:gravity="end"
                 android:text=""
+                android:textAlignment="viewEnd"
                 android:textSize="14sp" />
 
             <TextView
@@ -374,7 +383,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="17dp"
                 android:layout_weight="1"
-                android:gravity="start"
+                android:textAlignment="viewStart"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -397,16 +406,16 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:focusable="true">
+            android:focusable="true"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:layout_weight="2"
-                android:gravity="end"
                 android:text="@string/target_label"
+                android:textAlignment="viewEnd"
                 android:textSize="14sp" />
 
             <TextView
@@ -417,7 +426,8 @@
                 android:layout_weight="0"
                 android:gravity="center_horizontal"
                 android:text=":"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/target"
@@ -425,7 +435,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_weight="1"
-                android:gravity="start"
+                android:textAlignment="viewStart"
                 android:textSize="14sp" />
 
         </LinearLayout>
