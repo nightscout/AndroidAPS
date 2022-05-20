@@ -29,7 +29,6 @@
     <string name="description_overview">Zobrazenie aktuálneho stavu vašeho uzavretého okruhu a tlačidlá k najpoužívanejším ovládacím prvkom</string>
     <string name="description_persistent_notification">Zobrazuje priebežné oznámenia v Androide s krátkym prehľadom, čo práve uzavretý okruh robí</string>
     <string name="description_profile_local">Definujte profil, ktorý je dostupný offline.</string>
-    <string name="description_pump_mdi">Ovládač pumpy pre užívateľov používajúcich k liečbe diabetu inzulínové perá</string>
     <string name="description_pump_virtual">Ovládač pumpy pre užívateľov bez podporovanej pumpy (Otvorený okruh)</string>
     <string name="description_sensitivity_aaps">Citlivosť je počítaná tým istým spôsobom ako v Oref0, ale je možné špecifikovať časové okno do minulosti. Minimálne vstrebávanie sacharidov je počítané dynamicky z maximálnej doby vstrebávania, definovanej v nastaveniach.</string>
     <string name="description_sensitivity_oref1">Citlivosť je počítaná za posledných 8h, alebo 24h (použiť to, ktoré je citlivejšie) a sacharidy (pokiaľ nie sú vstrebané), sú orezané po čase definovanom v nastaveniach. Modul tiež počíta s UAM (neoznámené jedlo).</string>
@@ -250,7 +249,6 @@
     <string name="basalvaluebelowminimum">Hodnota bazálu pod povoleným minimom. Profil nenastavený!</string>
     <string name="sms_actualbg">Glykémia:</string>
     <string name="sms_lastbg">Posledná glykémia:</string>
-    <string name="mdi">Perá</string>
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Priebežné notifikácie</string>
     <string name="old_data">ZASTARALÉ DÁTA</string>
