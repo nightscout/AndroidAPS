@@ -29,7 +29,6 @@
     <string name="description_overview">Muestra el estado actual de tu lazo y los botones para las acciones más usadas</string>
     <string name="description_persistent_notification">Muestra una notificación en curso con un breve resumen de lo que está haciendo tu lazo</string>
     <string name="description_profile_local">Define un perfil que esté disponible cuando tengas una desconexión</string>
-    <string name="description_pump_mdi">Integración de bomba de insulina para personas que usan múltiples dosis de insulina diarias, en su terapia de diabetes</string>
     <string name="description_pump_virtual">Integración de bombas de insulina que aún no tienen ningún controlador disponible (lazo abierto)</string>
     <string name="description_sensitivity_aaps">La sensibilidad se calcula de la misma manera que en Oref0, pero puede especificarse el rango de tiempo. La absorción de carbohidratos mínima se calcula con el máximo tiempo de absorción de carbohidratos en preferencias</string>
     <string name="description_sensitivity_oref1">La sensibilidad se calcula con las últimas 8h y los carbohidratos (si no son absorbidos) se anulan después del tiempo indicado en preferencias. Este complemento también calcula UAM</string>
@@ -250,7 +249,6 @@
     <string name="basalvaluebelowminimum">Valor basal por debajo del mínimo. Perfil no establecido.</string>
     <string name="sms_actualbg">Glucosa:</string>
     <string name="sms_lastbg">Última Glucosa:</string>
-    <string name="mdi">Múltiples dosis de insulina (MDI)</string>
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Notificaciones en curso</string>
     <string name="old_data">DATOS CADUCADOS</string>
