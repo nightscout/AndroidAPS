@@ -45,6 +45,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingStart="10dp"
+                android:paddingEnd="0dp"
                 android:textStyle="bold"
                 tools:text="Name" />
 
@@ -60,17 +61,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingStart="10dp"
+                android:paddingEnd="0dp"
+                android:text="NS"
                 android:textAlignment="viewEnd"
                 android:textColor="?attr/setTempButton"
-                tools:text="NS" />
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/invalid"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingStart="10dp"
-                android:textColor="?attr/alarmColor"
-                tools:text="@string/invalid" />
+                android:paddingEnd="0dp"
+                android:text="@string/invalid"
+                android:textColor="?attr/alarmColor" />
 
         </LinearLayout>
 
