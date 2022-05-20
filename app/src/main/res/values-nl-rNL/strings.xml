@@ -29,7 +29,6 @@
     <string name="description_overview">Toont de huidige Loop-status en knoppen voor meest gebruikte acties</string>
     <string name="description_persistent_notification">Toont een permanente melding met een beknopt overzicht van hetgeen de Loop momenteel doet</string>
     <string name="description_profile_local">Gebruik profiel(en) die je in AAPS aanmaakt en offline kunt gebruiken.</string>
-    <string name="description_pump_mdi">Pomp integratie voor mensen met pen-therapie (meerdere dagelijkse injecties)</string>
     <string name="description_pump_virtual">Pomp integratie voor pompen, waar nog geen driver voor is (Open Loop)</string>
     <string name="description_sensitivity_aaps">Gevoeligheid wordt berekend op dezelfde manier als Oref0, maar je kunt zelf instellen hoeveel uren AAPS terugkijkt. Minimale koolhydraat absorptie is berekend op basis van max koolhydraat absorptie tijd zoals in jouw instellingen.</string>
     <string name="description_sensitivity_oref1">Gevoeligheid wordt berekend met gegevens van de afgelopen 8 of 24 uur (de meest gevoelige van die twee) en koolhydraten (indien niet geabsorbeerd) worden hiervan afgehaald, na de duur die is opgegeven in de instellingen. Berekent ook UAM.</string>
@@ -250,7 +249,6 @@
     <string name="basalvaluebelowminimum">Basaalwaarde onder minimum. Profiel niet ingesteld!</string>
     <string name="sms_actualbg">BG:</string>
     <string name="sms_lastbg">Laatste BG:</string>
-    <string name="mdi">MDI</string>
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Permanent bericht</string>
     <string name="old_data">Oude gegevens</string>
