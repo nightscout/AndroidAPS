@@ -29,7 +29,6 @@
     <string name="description_overview">Visualizza lo stato corrente del tuo loop e i tasti per le azioni più comuni</string>
     <string name="description_persistent_notification">Mostra una notifica persistente con una breve panoramica di ciò che sta facendo il tuo loop</string>
     <string name="description_profile_local">Definisci un profilo che è disponibile offline.</string>
-    <string name="description_pump_mdi">Per le persone in terapia multi-iniettiva</string>
     <string name="description_pump_virtual">Per microinfusori che non hanno ancora alcun driver (Loop aperto)</string>
     <string name="description_sensitivity_aaps">La sensibilità è calcolata allo stesso modo di Oref0, ma puoi specificare l\'intervallo di tempo al passato. L\'assorbimento minimo dei carboidrati è calcolato da \'max tempo assorbimento pasto\' nelle preferenze.</string>
     <string name="description_sensitivity_oref1">La sensibilità è calcolata dai dati delle ultime 8h o 24h (usando tra i due periodi il più sensibile) e i carboidrati (se non assorbiti) vengono tagliati fuori dopo il tempo specificato nelle preferenze. Il plugin calcola anche UAM.</string>
@@ -250,7 +249,6 @@
     <string name="basalvaluebelowminimum">Valore basale inferiore al minimo. Profilo non impostato!</string>
     <string name="sms_actualbg">BG:</string>
     <string name="sms_lastbg">Ultimo BG:</string>
-    <string name="mdi">MDI</string>
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Notifica persistente</string>
     <string name="old_data">DATI VECCHI</string>
