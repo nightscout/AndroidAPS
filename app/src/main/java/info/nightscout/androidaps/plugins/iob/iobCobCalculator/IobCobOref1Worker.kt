@@ -81,14 +81,14 @@ class IobCobOref1Worker(
     override fun doWork(): Result {
 
         val data = dataWorker.pickupObject(inputData.getLong(DataWorker.STORE_KEY, -1)) as IobCobOref1WorkerData?
-            ?: return Result.failure(workDataOf("Error" to "missing input data"))
+            ?: return Result.success(workDataOf("Error" to "missing input data"))
 
         val start = dateUtil.now()
         try {
             aapsLogger.debug(LTag.AUTOSENS, "AUTOSENSDATA thread started: ${data.from}")
             if (!profileFunction.isProfileValid("IobCobThread")) {
                 aapsLogger.debug(LTag.AUTOSENS, "Aborting calculation thread (No profile): ${data.from}")
-                return Result.failure(workDataOf("Error" to "app still initializing"))
+                return Result.success(workDataOf("Error" to "app still initializing"))
             }
             //log.debug("Locking calculateSensitivityData");
             val oldestTimeWithData = data.iobCobCalculator.calculateDetectionStart(data.end, data.limitDataToOldestAvailable)
@@ -98,7 +98,7 @@ class IobCobOref1Worker(
             val autosensDataTable = ads.autosensDataTable
             if (bucketedData == null || bucketedData.size < 3) {
                 aapsLogger.debug(LTag.AUTOSENS, "Aborting calculation thread (No bucketed data available): ${data.from}")
-                return Result.failure(workDataOf("Error" to "Aborting calculation thread (No bucketed data available): ${data.from}"))
+                return Result.success(workDataOf("Error" to "Aborting calculation thread (No bucketed data available): ${data.from}"))
             }
             val prevDataTime = ads.roundUpTime(bucketedData[bucketedData.size - 3].timestamp)
             aapsLogger.debug(LTag.AUTOSENS, "Prev data time: " + dateUtil.dateAndTimeString(prevDataTime))
