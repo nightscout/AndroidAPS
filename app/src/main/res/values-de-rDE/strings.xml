@@ -28,7 +28,6 @@
     <string name="description_overview">Zeigt den aktuellen Status deines Loops und Schaltflächen für die geläufigsten Aktionen an</string>
     <string name="description_persistent_notification">Zeigt eine fortlaufende Benachrichtigung mit einer kurzen Übersicht darüber, was dein Loop derzeit tut</string>
     <string name="description_profile_local">Definiere ein Profil, was auch offline verfügbar ist.</string>
-    <string name="description_pump_mdi">Pumpenintegration für Personen, die täglich mehrere Injektionen für ihre Diabetestherapie vornehmen</string>
     <string name="description_pump_virtual">Pumpenintegration für Pumpen, die noch nicht über einen Treiber verfügen (Open Loop)</string>
     <string name="description_sensitivity_aaps">Die Sensitivität wird genauso wie bei Oref0 berechnet, aber Du kannst dafür ein Zeitfenster bestimmen. Die minimale Kohlenhydrat-Absorptionsrate wird aus der maximalen Absorptionsdauer aus den Einstellungen abgeleitet.</string>
     <string name="description_sensitivity_oref1">Die Sensitivität wird aus den Daten der letzten 8 Stunden berechnet und Kohlenhydrate (falls nicht bereits absorbiert) werden nach der in den Einstellungen angegebenen Zeit als absorbiert betrachtet. Das Plugin bezieht Zeiträume, in denen UAM annimmt, dass Kohlenhydrate aktiv waren, nicht mit in die Berechnung ein.</string>
@@ -248,7 +247,6 @@
     <string name="basalvaluebelowminimum">Wert der Basalrate unter Minimum. Profil nicht gesetzt!</string>
     <string name="sms_actualbg">BZ:</string>
     <string name="sms_lastbg">Letzter BZ:</string>
-    <string name="mdi">ICT</string>
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Anhaltende Benachrichtigung</string>
     <string name="old_data">VERALTETE DATEN</string>
