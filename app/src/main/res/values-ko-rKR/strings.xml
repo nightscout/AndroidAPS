@@ -28,7 +28,6 @@
     <string name="description_overview">현재 Loop 상태와 기본 기능 버튼을 표시합니다.</string>
     <string name="description_persistent_notification">Loop가 어떤 작동하는지에 대한 간략한 개요를 연속 알림으로 보여줍니다.</string>
     <string name="description_profile_local">오프라인에서 사용 가능한 프로파일을 정의하십시오.</string>
-    <string name="description_pump_mdi">다회요법으로 관리하는 사용자를 위한 설정</string>
     <string name="description_pump_virtual">가상용 펌프를 위한 설정(Open Loop)</string>
     <string name="description_sensitivity_aaps">Oref0와 동일한 방법으로 민감도가 계산되지만, 과거 시간을 지정할 수 있습니다. 최소 탄수화물 흡수는 설정에서 최대 탄수화물 흡수 시간으로 부터 계산됩니다.</string>
     <string name="description_sensitivity_oref1">민감도가 과거 8시간의 데이터로 부터 계산됩니다. (흡수되지 않은 경우) 탄수화물은 설정에서 설정된 시간이 지나면 없어집니다. UAM(알리지 않은 음식)도 계산합니다.</string>
@@ -243,7 +242,6 @@
     <string name="basalvaluebelowminimum">Basal값이 최소값 이하입니다. 프로파일이 설정되지 않습니다!</string>
     <string name="sms_actualbg">BG:</string>
     <string name="sms_lastbg">Last BG:</string>
-    <string name="mdi">MDI</string>
     <string name="MM640g">미니메드640g</string>
     <string name="ongoingnotificaction">연속 알림</string>
     <string name="old_data">오래된 데이터</string>
