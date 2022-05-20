@@ -397,7 +397,7 @@ class MedtronicHistoryData @Inject constructor(
                 continue
             }
             if (primeRecord.atechDateTime > maxAllowedTimeInPast) {
-                if (lastPrimeRecordTime != 0L && lastPrimeRecordTime < primeRecord.atechDateTime) {
+                if (lastPrimeRecordTime < primeRecord.atechDateTime) {
                     lastPrimeRecordTime = primeRecord.atechDateTime
                     lastPrimeRecord = primeRecord
                 }
