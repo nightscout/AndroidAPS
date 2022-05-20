@@ -251,13 +251,14 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
 
         //var ins_val = 75;
         var insulin = profile.insulinType;
+        console.log("Insulin Peak = "+profile.insulinPeak+"; ");
         //console.log("Initial insulin value for ISF: "+ins_val+"; ");
         //console.log("Current value for insulin: "+insulin+"; ");
 
         var ins_val = 75; // Lyumjev peak: 75
             if (profile.insulinPeak > 65) { // lyumjev peak: 45
                 ins_val = 55;
-            } else if (profile.insulinPeak > 50 { // ultra rapid peak: 55
+            } else if (profile.insulinPeak > 50 ){ // ultra rapid peak: 55
                 ins_val = 65;
             }
             console.log("For "+profile.insulinType+" (insulin peak: "+profile.insulinPeak+") divisor is: "+ins_val+"; ");
@@ -490,16 +491,19 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
     }
 
     // min_bg of 90 -> threshold of 65, 100 -> 70 110 -> 75, and 130 -> 85, or if specified by user, take that value
-    var lgsThreshold = profile.lgsThreshold;
-    if(lgsThreshold < 65 || lgsThreshold > 100){
+        var lgsThreshold = profile.lgsThreshold;
         var threshold = min_bg - 0.5*(min_bg-40);
-        console.error("Default low glucose suspend threshold: "+threshold);
-        }
-    else {
-        var threshold = lgsThreshold;
-        }
-    console.error("Low glucose suspend threshold: "+threshold);
 
+        if(lgsThreshold < 65 || lgsThreshold > 120) {
+            threshold = threshold;
+            }
+        else if( lgsThreshold < threshold){
+            threshold = threshold;
+            }
+        else {
+            threshold = lgsThreshold;
+            }
+        console.error("Low glucose suspend threshold: "+threshold);
     //console.error(reservoir_data);
 
     rT = {
