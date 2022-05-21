@@ -438,7 +438,13 @@
     <string name="remove_items">Items verwijderen</string>
     <string name="sort_items">Sorteer items</string>
     <string name="remove_selected_items">Verwijder geselecteerde items</string>
+    <string name="a11y_file">bestand</string>
+    <string name="a11y_user">gebruiker</string>
     <!-- Autotune -->
+    <string name="autotune_tune_insulin_curve_title">Insuline curve afstemmen</string>
+    <string name="autotune_tune_insulin_curve_summary">Alleen inschakelen als je vrije piek gebruikt. Deze optie zal piek en DIA duur afstemmen</string>
+    <string name="autotune_default_tune_days_summary">Standaard aantal dagen aan gegevens dat Autotune moet verwerken (tot 30)</string>
+    <string name="autotune_error">Fout in invoergegevens, probeer autotune opnieuw te starten of het aantal dagen te verminderen</string>
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagen</item>
