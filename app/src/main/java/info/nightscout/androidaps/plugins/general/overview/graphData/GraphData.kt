@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.overview.graphData
 
+import android.content.Context
 import android.graphics.DashPathEffect
 import android.graphics.Paint
 import com.jjoe64.graphview.GraphView
@@ -10,14 +11,13 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.general.overview.OverviewData
-import info.nightscout.androidaps.plugins.general.overview.graphExtensions.AreaGraphSeries
-import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DoubleDataPoint
-import info.nightscout.androidaps.plugins.general.overview.graphExtensions.TimeAsXAxisLabelFormatter
+import info.nightscout.androidaps.plugins.general.overview.graphExtensions.*
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.Round
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.shared.logging.AAPSLogger
 import java.util.*
 import javax.inject.Inject
 import kotlin.math.abs
@@ -48,13 +48,16 @@ class GraphData(
         addSeries(overviewData.bucketedGraphSeries)
     }
 
-    fun addBgReadings(addPredictions: Boolean) {
+    fun addBgReadings(addPredictions: Boolean, context: Context?) {
         maxY = if (overviewData.bgReadingsArray.isEmpty()) {
             if (units == GlucoseUnit.MGDL) 180.0 else 10.0
         } else overviewData.maxBgValue
         minY = 0.0
         addSeries(overviewData.bgReadingGraphSeries)
         if (addPredictions) addSeries(overviewData.predictionsGraphSeries)
+        overviewData.bgReadingGraphSeries.setOnDataPointTapListener { _, dataPoint ->
+            if (dataPoint is GlucoseValueDataPoint) ToastUtils.showToastInUiThread(context, dataPoint.label)
+        }
     }
 
     fun addInRangeArea(fromTime: Long, toTime: Long, lowLine: Double, highLine: Double) {
@@ -65,7 +68,7 @@ class GraphData(
         addSeries(AreaGraphSeries(inRangeAreaDataPoints).also {
             it.color = 0
             it.isDrawBackground = true
-            it.backgroundColor = rh.gac(graph.context,R.attr.inRangeBackground)
+            it.backgroundColor = rh.gac(graph.context, R.attr.inRangeBackground)
         })
     }
 
@@ -82,9 +85,13 @@ class GraphData(
         addSeries(overviewData.temporaryTargetSeries)
     }
 
-    fun addTreatments() {
+    fun addTreatments(context: Context?) {
         maxY = maxOf(maxY, overviewData.maxTreatmentsValue)
         addSeries(overviewData.treatmentsSeries)
+        overviewData.treatmentsSeries.setOnDataPointTapListener { _, dataPoint ->
+            if (dataPoint is EffectiveProfileSwitchDataPoint) ToastUtils.showToastInUiThread(context, dataPoint.data.originalCustomizedName)
+            if (dataPoint is BolusDataPoint) ToastUtils.showToastInUiThread(context, dataPoint.label)
+        }
     }
 
     fun addTherapyEvents() {

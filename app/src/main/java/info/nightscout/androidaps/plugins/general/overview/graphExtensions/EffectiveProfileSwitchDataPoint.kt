@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.general.overview.graphExtensions
 
 import android.content.Context
-import android.graphics.Color
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.entities.EffectiveProfileSwitch
 import info.nightscout.androidaps.interfaces.ResourceHelper
@@ -9,10 +8,9 @@ import javax.inject.Inject
 
 class EffectiveProfileSwitchDataPoint @Inject constructor(
     val data: EffectiveProfileSwitch,
-    private val rh: ResourceHelper
+    private val rh: ResourceHelper,
+    private var yValue: Double
 ) : DataPointWithLabelInterface {
-
-    private var yValue = 0.0
 
     override fun getX(): Double = data.timestamp.toDouble()
     override fun getY(): Double = yValue
@@ -21,10 +19,10 @@ class EffectiveProfileSwitchDataPoint @Inject constructor(
         yValue = y
     }
 
-    override val label get() = data.originalCustomizedName
+    override val label get() = if (data.originalPercentage != 100) data.originalPercentage.toString() + "%" else ""
     override val duration = 0L
     override val shape = PointsWithLabelGraphSeries.Shape.PROFILE
-    override val size = 10f
+    override val size = 2f
     override fun color(context: Context?): Int {
         return rh.gac(context, R.attr.profileSwitchColor)
     }

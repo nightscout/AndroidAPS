@@ -5,9 +5,10 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.interfaces.GlucoseUnit
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.utils.DefaultValueHelper
 import javax.inject.Inject
 
 class GlucoseValueDataPoint @Inject constructor(
@@ -24,7 +25,7 @@ class GlucoseValueDataPoint @Inject constructor(
     override fun getY(): Double = valueToUnits(profileFunction.getUnits())
 
     override fun setY(y: Double) {}
-    override val label: String? = null
+    override val label: String = Profile.toCurrentUnitsString(profileFunction, data.value)
     override val duration = 0L
     override val shape get() = if (isPrediction) PointsWithLabelGraphSeries.Shape.PREDICTION else PointsWithLabelGraphSeries.Shape.BG
     override val size = 1f
@@ -40,15 +41,15 @@ class GlucoseValueDataPoint @Inject constructor(
         }
     }
 
-    private fun predictionColor (context: Context?): Int {
-            return when (data.sourceSensor) {
-                GlucoseValue.SourceSensor.IOB_PREDICTION   -> rh.gac(context, R.attr.iobColor)
-                GlucoseValue.SourceSensor.COB_PREDICTION   -> rh.gac(context, R.attr.cobColor)
-                GlucoseValue.SourceSensor.A_COB_PREDICTION -> -0x7f000001 and rh.gac(context, R.attr.cobColor)
-                GlucoseValue.SourceSensor.UAM_PREDICTION   ->  rh.gac(context, R.attr.uamColor)
-                GlucoseValue.SourceSensor.ZT_PREDICTION    -> rh.gac(context, R.attr.ztColor)
-                else                                       -> rh.gac( context,R.attr.defaultTextColor)
-            }
+    private fun predictionColor(context: Context?): Int {
+        return when (data.sourceSensor) {
+            GlucoseValue.SourceSensor.IOB_PREDICTION   -> rh.gac(context, R.attr.iobColor)
+            GlucoseValue.SourceSensor.COB_PREDICTION   -> rh.gac(context, R.attr.cobColor)
+            GlucoseValue.SourceSensor.A_COB_PREDICTION -> -0x7f000001 and rh.gac(context, R.attr.cobColor)
+            GlucoseValue.SourceSensor.UAM_PREDICTION   -> rh.gac(context, R.attr.uamColor)
+            GlucoseValue.SourceSensor.ZT_PREDICTION    -> rh.gac(context, R.attr.ztColor)
+            else                                       -> rh.gac(context, R.attr.defaultTextColor)
+        }
     }
 
     private val isPrediction: Boolean

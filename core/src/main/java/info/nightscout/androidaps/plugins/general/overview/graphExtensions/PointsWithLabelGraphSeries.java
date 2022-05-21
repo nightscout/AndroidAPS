@@ -25,16 +25,23 @@ package info.nightscout.androidaps.plugins.general.overview.graphExtensions;
  */
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
+
+import androidx.core.content.ContextCompat;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.BaseSeries;
 
 import java.util.Iterator;
+
+import info.nightscout.androidaps.core.R;
 
 /**
  * Series that plots the data as points.
@@ -108,8 +115,8 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
     /**
      * plot the data to the viewport
      *
-     * @param graphView graphview
-     * @param canvas canvas to draw on
+     * @param graphView     graphview
+     * @param canvas        canvas to draw on
      * @param isSecondScale whether it is the second scale
      */
     @Override
@@ -264,6 +271,24 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
                         canvas.drawText(value.getLabel(), endX, endY, mPaint);
                     }
                 } else if (value.getShape() == Shape.PROFILE) {
+                    Drawable drawable = ContextCompat.getDrawable(graphView.getContext(), R.drawable.ic_ribbon_profile);
+                    drawable.setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
+                    drawable.setBounds((int) endX - drawable.getIntrinsicWidth() / 2, 0,
+                            (int) (endX + drawable.getIntrinsicWidth() / 2),
+                            drawable.getIntrinsicHeight());
+                    drawable.draw(canvas);
+
+                    mPaint.setTextSize(scaledTextSize * 0.8f);
+                    mPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
+                    mPaint.setColor(value.color(graphView.getContext()));
+                    Rect bounds = new Rect();
+                    mPaint.getTextBounds(value.getLabel(), 0, value.getLabel().length(), bounds);
+                    float px = endX - bounds.width() / 2.0f;
+                    float py = (float) (drawable.getIntrinsicHeight() + 30);
+                    mPaint.setStyle(Paint.Style.FILL);
+                    canvas.drawText(value.getLabel(), px, py, mPaint);
+
+                    /*
                     mPaint.setStrokeWidth(0);
                     if (value.getLabel() != null) {
                         //mPaint.setTextSize((int) (scaledPxSize * 3));
@@ -280,7 +305,9 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
                         mPaint.setStyle(Paint.Style.STROKE);
                         canvas.drawRect(px - 3, bounds.top + py - 3, bounds.right + px + 3, bounds.bottom + py + 3, mPaint);
                         canvas.restore();
+
                     }
+                     */
                 } else if (value.getShape() == Shape.MBG) {
                     mPaint.setStyle(Paint.Style.STROKE);
                     mPaint.setStrokeWidth(5);
@@ -364,9 +391,9 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
     /**
      * helper to render triangle
      *
-     * @param point array with 3 coordinates
+     * @param point  array with 3 coordinates
      * @param canvas canvas to draw on
-     * @param paint paint object
+     * @param paint  paint object
      */
     private void drawArrows(Point[] point, Canvas canvas, Paint paint) {
         canvas.save();

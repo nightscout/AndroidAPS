@@ -12,6 +12,7 @@ import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.OverviewData
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.*
@@ -21,7 +22,6 @@ import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.Translator
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import javax.inject.Inject
 
 class PrepareTreatmentsDataWorker(
@@ -72,7 +72,7 @@ class PrepareTreatmentsDataWorker(
 
         // ProfileSwitch
         repository.getEffectiveProfileSwitchDataFromTimeToTime(data.overviewData.fromTime, data.overviewData.endTime, true).blockingGet()
-            .map { EffectiveProfileSwitchDataPoint(it, rh) }
+            .map { EffectiveProfileSwitchDataPoint(it, rh, data.overviewData.maxBgValue) }
             .forEach(filteredTreatments::add)
 
         // OfflineEvent
