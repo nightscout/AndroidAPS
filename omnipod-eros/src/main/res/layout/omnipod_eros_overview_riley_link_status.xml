@@ -11,7 +11,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1.5"
-            android:gravity="end"
+            android:textAlignment="viewEnd"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
             android:text="@string/rileylink_status"
@@ -33,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="start"
+            android:textAlignment="viewStart"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
             android:text="{fa-bluetooth-b}"
@@ -50,4 +50,5 @@
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="5dp"
         android:background="?android:attr/dividerHorizontal" />
+
 </merge>
