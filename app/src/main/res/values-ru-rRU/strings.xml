@@ -29,7 +29,6 @@
     <string name="description_overview">Отображает текущее состояние цикла и часто используемые кнопки</string>
     <string name="description_persistent_notification">Показывает текущие уведомления и краткий обзор событий цикла</string>
     <string name="description_profile_local">Определите профиль, доступный в автономном режиме.</string>
-    <string name="description_pump_mdi">Интеграция с помпой для тех, кто для компенсации диабета пользуется инъекциями шприц-ручек</string>
     <string name="description_pump_virtual">Интеграция с помпами, еще не имеющими драйвера (незамкнутый цикл)</string>
     <string name="description_sensitivity_aaps">Чувствительность вычисляется аналогично алгоритму oref0, но можно включить период прошлого. Минимальное усвоение углеводов вычисляется на основе макс усвоения из настроек.</string>
     <string name="description_sensitivity_oref1">Чувствительность рассчитывается на основе данных за прошедшие 8 часов и (неусвоенные) углеводы не учитываются после времени указанного в настройках. Плагин также вычисляет UAM.</string>
@@ -250,7 +249,6 @@
     <string name="basalvaluebelowminimum">значение базала ниже минимума. профиль не создан!</string>
     <string name="sms_actualbg">гликемия:</string>
     <string name="sms_lastbg">прошлый СК:</string>
-    <string name="mdi">Подача инсулина шприц-ручкой</string>
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">текущие уведомления</string>
     <string name="old_data">старые данные</string>
@@ -968,12 +966,9 @@
     <string name="wizard_no_active_profile">Активный профиль не установлен!</string>
     <string name="wizard_no_cob">Неизвестный COB! Отсутствуют данные ГК или приложения недавно перезапущено?</string>
     <string name="wizard_carbs_constraint">Нарушено ограничение по углеводам!</string>
-    <string name="wizard_explain_calc">Кальк (IC: %1$.1f, ISF: %2$.1f) из:\"</string>
     <string name="wizard_explain_carbs">Углеводов: %1$.2fгУ</string>
     <string name="wizard_explain_cob">Акт Инс COB: %1$.0fг %2$.2fед</string>
     <string name="wizard_explain_bg">ГК: %1$.2f</string>
-    <string name="wizard_explain_basal_iob">Базал IOB: %1$.2fед</string>
-    <string name="wizard_explain_bolus_iob">Болюсный IOB: %1$.2fед</string>
     <string name="wizard_explain_superbolus">Суперболюсный: %1$.2fед</string>
     <string name="wizard_explain_trend">тренд 15\': %1$.2f</string>
     <string name="wizard_explain_percent">Процент: %1$.2fU x %2$d%% = %3$.2f</string>

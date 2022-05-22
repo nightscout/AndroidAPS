@@ -29,7 +29,6 @@
     <string name="description_overview">Exibe o estado atual do seu loop e botões para ações mais comuns</string>
     <string name="description_persistent_notification">Mostra uma notificação em curso com um breve resumo do que o seu loop está a fazer</string>
     <string name="description_profile_local">Defina um perfil que está disponível offline.</string>
-    <string name="description_pump_mdi">Integração para as pessoas que fazem múltiplas injeções diárias para a sua terapia de diabetes</string>
     <string name="description_pump_virtual">Integração para as bombas que não têm qualquer driver ainda (Open Loop)</string>
     <string name="description_sensitivity_aaps">A sensibilidade é calculada da mesma forma que Oref0, mas você pode especificar um período de tempo no passado. A absorção mínima de carboidratos é calculada a partir do tempo de absorção máxima especificado nas preferências.</string>
     <string name="description_sensitivity_oref1">A sensibilidade é calculada a partir de dados de 8h ou 24h no passado (usando o que é mais sensível). Carboidratos (se não absorvidos) são cortados após o tempo especificado nas preferências. O plugin também calcula o UAM.</string>
@@ -249,7 +248,6 @@
     <string name="basalvaluebelowminimum">Valor da basal abaixo do mínimo. Perfil não definido!</string>
     <string name="sms_actualbg">BG:</string>
     <string name="sms_lastbg">Último BG:</string>
-    <string name="mdi">MDI</string>
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Notificação em curso</string>
     <string name="old_data">DADOS ANTIGOS</string>
@@ -876,7 +874,6 @@
     <string name="quick_wizard_not_available">O assistente rápido selecionado não está mais disponível, atualize seu atalho</string>
     <string name="wizard_no_actual_bg">Nenhuma glicemia recente para base de cálculo!</string>
     <string name="wizard_no_cob">CA desconhecido! Leitura de Glicemia faltando ou reinício recente do app?</string>
-    <string name="wizard_explain_calc">Calc (IC: %1$.1f, FSI: %2$.1f) de:\"</string>
     <string name="wizard_explain_cob">CA: %1$.0fg %2$.2fU</string>
     <string name="wizard_explain_trend">Tendência 15min: %1$.2fU</string>
     <string name="show_invalidated_records">Exibir registros invalidados / removidos</string>

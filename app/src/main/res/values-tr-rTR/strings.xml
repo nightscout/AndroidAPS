@@ -29,7 +29,6 @@
     <string name="description_overview">Döngünüzün mevcut durumunu ve en yaygın eylemler için düğmeleri görüntüler</string>
     <string name="description_persistent_notification">Döngü\'ün ne yaptığını kısa bir genel bakışla devam eden bir bildirimi gösterir</string>
     <string name="description_profile_local">Çevrimdışı kullanılabilen bir profil tanımlayın.</string>
-    <string name="description_pump_mdi">Diyabet tedavisi için günde birden fazla enjeksiyon yapan kişiler için pompa entegrasyonu</string>
     <string name="description_pump_virtual">Henüz herhangi bir sürücüye sahip olmayan pompalar için pompa entegrasyonu (Açık Döngü)</string>
     <string name="description_sensitivity_aaps">Duyarlılık, Oref0 ile aynı şekilde hesaplanır, ancak geçmişe yönelik zaman aralığı belirleyebilirsiniz. Minimum karbonhidrat emilimi, tercihlerden maksimum karbonhidrat emilim süresinden hesaplanır.</string>
     <string name="description_sensitivity_oref1">Duyarlılık, geçmişteki 8 veya 24 saatlik verilerden (hangisi daha hassas ise) hesaplanır. Karbonhidratlar (emilmemişse) tercihlerde belirtilen süreden sonra kesilir. Eklenti ayrıca UAM\'ı da (bildirilmemiş öğünler) hesaplar.</string>
@@ -250,7 +249,6 @@
     <string name="basalvaluebelowminimum">Bazal değer minimumun altında. Profil ayarlanmadı!</string>
     <string name="sms_actualbg">KŞ:</string>
     <string name="sms_lastbg">Son KŞ:</string>
-    <string name="mdi">MDI</string>
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Sürekli Bildirim</string>
     <string name="old_data">ESKİ VERİ</string>
@@ -971,12 +969,9 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="wizard_no_active_profile">Etkin profil ayarlanmadı!</string>
     <string name="wizard_no_cob">Aktif karbonhidrat bilinmiyor! KŞ okuması eksik veya son uygulama yeniden başlatılsın mı?</string>
     <string name="wizard_carbs_constraint">Karbonhidrat kısıtlaması ihlali!</string>
-    <string name="wizard_explain_calc">Tarafından hesaplanan (IC: %1$.1f, İDF: %2$.1f):\"</string>
     <string name="wizard_explain_carbs">Karb: %1$.2fÜ</string>
     <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fÜ</string>
     <string name="wizard_explain_bg">KŞ: %1$.2fÜ</string>
-    <string name="wizard_explain_basal_iob">Bazal IOB: %1$.2fÜ</string>
-    <string name="wizard_explain_bolus_iob">Bolus IOB: %1$.2fÜ</string>
     <string name="wizard_explain_superbolus">Süperbolus: %1$.2fÜ</string>
     <string name="wizard_explain_trend">15\' trend: %1$.2fÜ</string>
     <string name="wizard_explain_percent">Yüzde: %1$.2fÜ x %2$d%% ≈ %3$.2fÜ</string>

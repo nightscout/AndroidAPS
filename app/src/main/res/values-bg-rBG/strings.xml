@@ -28,7 +28,6 @@
     <string name="description_overview">Показва текущото състояние на вашия APS и бутони за най-често използваните действия</string>
     <string name="description_persistent_notification">Показва известие с резюме на това, което прави вашия APS</string>
     <string name="description_profile_local">Този тип профил е достъпен в офлайн режим.</string>
-    <string name="description_pump_mdi">Писалки - За хората, които правят множество ежедневни инжекции ( интензифицирано лечение с писалки)</string>
     <string name="description_pump_virtual">За помпи, който все още не работят с AndroidAPS(Open Loop)</string>
     <string name="description_sensitivity_aaps">Чувствителността се изчислява по същия начин като в Oref0, но можете да зададете времева рамка. Минимална въглехидрати абсорбция се изчислява от Макс време за усвояване на въглехидратите в опциите.</string>
     <string name="description_sensitivity_oref1">Чувствителността се изчислява за 8 или 24 назад в миналото, а въглехидрати (ако не са се абсорбирали) изчезват след изтичане на срока от настройките. Това е необходимо за изчисление на необявени хранения (UAM).</string>
@@ -246,7 +245,6 @@
     <string name="basalvaluebelowminimum">Базалните стойности са под минимума. Не е зададен профил!</string>
     <string name="sms_actualbg">КЗ:</string>
     <string name="sms_lastbg">Последна КЗ:</string>
-    <string name="mdi">Писалки</string>
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Текущи известия</string>
     <string name="old_data">СТАРИ ДАННИ</string>

@@ -29,7 +29,6 @@
     <string name="description_overview">Viser den aktuelle tilstand af dit loop og knapper til de mest almindelige handlinger</string>
     <string name="description_persistent_notification">Viser en løbende notifikation med en kort oversigt over, hvad dit loop gør</string>
     <string name="description_profile_local">Definér en profil, der er tilgængelig offline.</string>
-    <string name="description_pump_mdi">Pumpeintegration for folk, der tager flere daglige injektioner for deres diabetes behandling</string>
     <string name="description_pump_virtual">Pumpeintegration til pumper, som endnu ikke har nogen driver (Åbent Loop)</string>
     <string name="description_sensitivity_aaps">Sensitiviteten er beregnet på samme måde som Oref0, men du kan angive tidsramme for fortiden. Minimal optagelse af kulhydrater beregnes fra maks. kulhydrat optagelse fra præferencer.</string>
     <string name="description_sensitivity_oref1">Sensitiviteten beregnes fra 8t-eller 24t-data i fortiden (Ved hjælp af den der er mest sensitiv). Kulhydrater (hvis ikke optaget) er opdelt, efter den tid der er angivet i Indstillinger. Pluginnet beregner også UAM.</string>
@@ -250,7 +249,6 @@
     <string name="basalvaluebelowminimum">Basal værdi under minimum. Profil ikke angivet!</string>
     <string name="sms_actualbg">BG:</string>
     <string name="sms_lastbg">Sidste BG:</string>
-    <string name="mdi">MDI</string>
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Igangværende Notifikation</string>
     <string name="old_data">GAMLE DATA</string>
@@ -969,12 +967,9 @@
     <string name="wizard_no_active_profile">Ingen aktiv profil angivet!</string>
     <string name="wizard_no_cob">Ukendt COB! BG læsning mangler eller nylig app genstart?</string>
     <string name="wizard_carbs_constraint">KH begrænsninger overtrådt!</string>
-    <string name="wizard_explain_calc">Calc (IC: %1$.1f, ISF: %2$.1f) fra:\"</string>
     <string name="wizard_explain_carbs">Kulhydrater: %1$.2fE</string>
     <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fE</string>
     <string name="wizard_explain_bg">BS: %1$.2fE</string>
-    <string name="wizard_explain_basal_iob">Basal IOB: %1$.2fE</string>
-    <string name="wizard_explain_bolus_iob">Bolus IOB: %1$.2fE</string>
     <string name="wizard_explain_superbolus">Superbolus: %1$.2fE</string>
     <string name="wizard_explain_trend">15\' trend: %1$.2fE</string>
     <string name="wizard_explain_percent">Procent: %1$.2fE x %2$d%% ≈ %3$.2fE</string>

@@ -25,7 +25,6 @@
     <string name="description_overview">Wys die huidige staat van jou lus en knoppies vir mees algemene optrede</string>
     <string name="description_persistent_notification">Toon \'n voortgesette kennisgewing met \'n kort oorsig van wat jou lus besig is om te doen</string>
     <string name="description_profile_local">Definieer\'n profiel wat beskikbaar is aflyn.</string>
-    <string name="description_pump_mdi">Pomp integrasie vir mense wat veelvoudige daaglikse inspuitings doen vir hul diabetes terapie/regime</string>
     <string name="description_pump_virtual">Pomp integrasie vir pompe wat nog nie enige drywer het nie (oop lus)</string>
     <string name="description_sensitivity_aaps">Sensitiwiteit word bereken op dieselfde manier as Oref0, maar jy kan die tydsraamwerk spesifiseer in die verlede. Minimale karb absorpsie is bereken uit maks karb absorpsie tyd vanaf voorkeure.</string>
     <string name="description_sensitivity_weighted_average">Sensitiwiteit word bereken as \'n geweegde gemiddelde van dwalinge. Nuwer dwalinge het hoër gewig. Minimale karb absorpsie is bereken uit max karb absorpsie tyd vanaf voorkeure. Hierdie algoritme is die vinnigste om sensitiwiteit veranderinge te volg.</string>
@@ -182,7 +181,6 @@
     <string name="basalvaluebelowminimum">Basale waarde onder minimum. Profiel nie gestel nie!</string>
     <string name="sms_actualbg">BG:</string>
     <string name="sms_lastbg">Laaste BG:</string>
-    <string name="mdi">MDI</string>
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Voortgesette kennisgewing</string>
     <string name="old_data">OU DATA</string>

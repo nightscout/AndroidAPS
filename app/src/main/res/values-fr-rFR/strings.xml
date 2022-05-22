@@ -29,7 +29,6 @@
     <string name="description_overview">Affiche l’état actuel de votre Boucle et des boutons d’actions les plus courantes</string>
     <string name="description_persistent_notification">Affiche une notification en cours avec un bref aperçu de ce que fait votre Boucle</string>
     <string name="description_profile_local">Définissez un profil qui est disponible hors ligne.</string>
-    <string name="description_pump_mdi">Intégration pompe pour les personnes qui font des injections quotidiennes multiples pour le traitement de leur diabète</string>
     <string name="description_pump_virtual">Intégration pour les pompes qui n’ont pas encore de pilote (Boucle Ouverte)</string>
     <string name="description_sensitivity_aaps">La sensibilité est calculée de la même manière que Oref0, mais vous pouvez spécifier la période concernée. L\'absorption minimale des glucides est calculée à partir des temps d’absorption max des glucides du menu préférences.</string>
     <string name="description_sensitivity_oref1">La sensibilité est calculée à partir des données des dernières 8 heures et les glucides (si non absorbés) ne sont plus pris en compte après le temps spécifié dans les préférences. Le plugin calcule également les RNS (UAM).</string>
@@ -251,7 +250,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="basalvaluebelowminimum">Le débit Basal est inférieur au minimum autorisé. Profil non accepté !</string>
     <string name="sms_actualbg">G:</string>
     <string name="sms_lastbg">Dernière G:</string>
-    <string name="mdi">MIQ (Multiples Injections Quotidiennes)</string>
     <string name="MM640g">Medtronic 640g</string>
     <string name="ongoingnotificaction">Notification en cours</string>
     <string name="old_data">DONNÉES ANCIENNES</string>
@@ -970,12 +968,11 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="wizard_no_active_profile">Aucun profil activé !</string>
     <string name="wizard_no_cob">GA inconnu! glycémie manquante ou démarrage récent de l\'application ?</string>
     <string name="wizard_carbs_constraint">Violation de contrainte des glucides!</string>
-    <string name="wizard_explain_calc">Calcul (G/I: %1$.1f, SI: %2$.1f) de:\"</string>
+    <string name="wizard_explain_calc">Calcul (G/I: %1$.1f, SI: %2$.1f)</string>
     <string name="wizard_explain_carbs">Glucides : %1$.2fU</string>
     <string name="wizard_explain_cob">GA: %1$.0fg %2$.2fU</string>
     <string name="wizard_explain_bg">Gly: %1$.2fU</string>
-    <string name="wizard_explain_basal_iob">Basal IA: %1$.2fU</string>
-    <string name="wizard_explain_bolus_iob">Bolus IA: %1$.2fU</string>
+    <string name="wizard_explain_iob">IA: %1$.2fU</string>
     <string name="wizard_explain_superbolus">Superbolus : %1$.2fU</string>
     <string name="wizard_explain_trend">tendance 15\': %1$.2fU</string>
     <string name="wizard_explain_percent">Pourcentage : %1$.2fU x %2$d%% ≈ %3$.2fU</string>

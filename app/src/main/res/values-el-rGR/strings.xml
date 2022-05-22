@@ -26,7 +26,6 @@
     <string name="description_overview">Εμφανίζει την τρέχουσα κατάσταση του κυκλώματός σας και τα πλήκτρα για τις πιο κοινές ενέργειες</string>
     <string name="description_persistent_notification">Εμφανίζει μία τρέχουσα ειδοποίηση με σύντομη επισκόπηση του τι κάνει το κύκλωμα τώρα</string>
     <string name="description_profile_local">Ορίστε ένα προφίλ που είναι διαθέσιμο εκτός σύνδεσης.</string>
-    <string name="description_pump_mdi">Ολοκλήρωση αντλίας για ανθρώπους που κάνουν εντατικοποιημένο σχήμα ενέσεων για την θεραπεία τους</string>
     <string name="description_pump_virtual">Ολοκλήρωση αντλίας για αντλίες που δεν έχουν κανέναν οδηγό ακόμα (Ανοιχτό Κύκλωμα)</string>
     <string name="description_sensitivity_aaps">Η ευαισθησία υπολογίζεται με τον ίδιο τρόπο όπως το Oref0, αλλά μπορείτε να καθορίσετε το χρονικό διάστημα στο παρελθόν. Η ελάχιστη απορρόφηση υδατανθράκων υπολογίζεται από την μέγιστη απορρόφηση υδατανθράκων από τις επιλογές.</string>
     <string name="description_sensitivity_weighted_average">Η ευαισθησία υπολογίζεται ως ο σταθμισμένος μέσος όρος των αποκλίσεων. Νεότερες αποκλίσεις έχουν μεγαλύτερο βάρος. Η ελάχιστη απορρόφηση υδατανθράκων υπολογίζεται από τον χρόνο της μέγιστης απορρόφησης υδατανθράκων από τις επιλογές. Αυτός ο αλγόριθμος είναι ο πιο γρήγορος για να ακολουθεί τις αλλαγές της ευαισθησίας.</string>
@@ -184,7 +183,6 @@
     <string name="basalvaluebelowminimum">Τιμή βασικού κάτω από το ελάχιστο. Δεν έχει ρυθμιστεί το προφίλ!</string>
     <string name="sms_actualbg">BG:</string>
     <string name="sms_lastbg">Τελευταία BG:</string>
-    <string name="mdi">MDI</string>
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Συνεχής Ειδοποίηση</string>
     <string name="old_data">Παλιά Δεδομένα</string>

@@ -28,7 +28,6 @@
     <string name="description_overview">Mostra l\'estat actual del llaç i botons per les accions més habituals</string>
     <string name="description_persistent_notification">Va mostrant avisos amb un petit resum del que el llaç està fent</string>
     <string name="description_profile_local">Definir un perfil disponible fora de línia.</string>
-    <string name="description_pump_mdi">Integració de bomba d\'insulina per persones que fan servir teràpia amb múltiples injeccions</string>
     <string name="description_pump_virtual">Integració de bombes d\'insulina per les quals encara no existeix driver/controlador (Llaç obert)</string>
     <string name="description_sensitivity_aaps">Sensibilitat calculada com amb Oref0, però podent especificar un rang de temps en el passat. L\'absorció mínima dels carbohidrats es calcula a partir del temps màxim d\'absorció de carbohidrats indicat a la configuració.</string>
     <string name="description_sensitivity_oref1">Sensibilitat calculada amb dades de 8 o 24 hores en el passat (s\'agafa el cas més \"sensible\"). Els carbohidrats (els no absorbits), es desestimen un cop passat el temps indicat a la configuració. El plugin també calcula les UAM.</string>
@@ -216,7 +215,6 @@
     <string name="correctionbous">Corr</string>
     <string name="actions">Accions</string>
     <string name="ns_upload_only">(PERILLÓS DESACTIVAR) Només enviar a NS</string>
-    <string name="mdi">MDI (Múltiples injeccions diàries)</string>
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Avís en curs</string>
     <string name="old_data">DADES ANTIGUES</string>

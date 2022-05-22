@@ -28,7 +28,6 @@
     <string name="description_overview">Wyświetla bieżący stan twojej pętli i przyciski dla większości typowych działań</string>
     <string name="description_persistent_notification">Wyświetla bieżące powiadomienia z krótkim omówieniem działania pętli</string>
     <string name="description_profile_local">Zdefiniuj profil, który jest dostępny offline.</string>
-    <string name="description_pump_mdi">Integracja pompy dla pacjentów podających insulinę w formie wielu zastrzyków dziennie</string>
     <string name="description_pump_virtual">Integracja z pompami, które nie posiadają jeszcze żadnego sterownika (Open Loop)</string>
     <string name="description_sensitivity_aaps">Wrażliwość jest obliczana w taki sam sposób, jak algorytm Oref0, ale możliwe jest podanie okresu z przeszłości. Minimalne wchłanianie węglowodanów jest obliczana na podstawie czasu wchłaniania max carb, określonego w ustawieniu.</string>
     <string name="description_sensitivity_oref1">Wrażliwość oblicza się na podstawie danych z ostatnich 8 lub 24 godzin (przy użyciu danych o wyższej wrażliwości). Węglowodany (jeśli nie są wchłonięte) są skracane po upływie czasu określonego w ustawieniach. Wtyczka również oblicza UAM.</string>
@@ -247,7 +246,6 @@
     <string name="basalvaluebelowminimum">Wartość bazy poniżej minimum. Nie ustawiono profilu!</string>
     <string name="sms_actualbg">BG:</string>
     <string name="sms_lastbg">Ostatnia BG:</string>
-    <string name="mdi">PEN</string>
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Nadchodzące powiadomienia</string>
     <string name="old_data">NIEAKTUALNE DANE</string>

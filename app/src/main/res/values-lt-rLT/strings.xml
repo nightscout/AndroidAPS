@@ -28,7 +28,6 @@
     <string name="description_overview">Rodo dabartinę Ciklo būseną ir pagrindinių veiksmų mygtukus</string>
     <string name="description_persistent_notification">Rodo atsinaujinančius pranešimus su trumpa Ciklo veiklos apžvalga</string>
     <string name="description_profile_local">Nustatykite vietinį profilį.</string>
-    <string name="description_pump_mdi">Integracija žmonėms, naudojantiems insulino injektorius</string>
     <string name="description_pump_virtual">Integracija pompoms, kurios dar neturi reikalingo valdiklio (Atviras Ciklas)</string>
     <string name="description_sensitivity_aaps">Jautrumas insulinui apskaičiuojamas taip pat kaip ir Oref0, tačiau jūs galite nustatyti, koks praeities laikotarpis bus naudojamas. Minimalus angliavandenių įsisavinimo greitis apskaičiuojamas remiantis maksimaliu angliavandenių įsisavinimo greičiu, kuris įvestas Nustatymuose.</string>
     <string name="description_sensitivity_oref1">Jautrumas insulinui apskaičiuojamas remiantis praėjusių 8 val. duomenimis, o (neįsisavinti) angliavandeniai neįtraukiami į skaičiavimus praėjus Nustatymuose nurodytam laikui. Įskiepis taip pat įskaičiuoja NDM (nedeklaruotą maistą).</string>
@@ -247,7 +246,6 @@
     <string name="basalvaluebelowminimum">Valandinės bazės vertė mažesnė už minimalią. Profilis nenustatytas!</string>
     <string name="sms_actualbg">KG:</string>
     <string name="sms_lastbg">Paskutinė KG:</string>
-    <string name="mdi">Daugkartinės injekcijos</string>
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Nuolatinis pranešimas</string>
     <string name="old_data">SENI DUOMENYS</string>
