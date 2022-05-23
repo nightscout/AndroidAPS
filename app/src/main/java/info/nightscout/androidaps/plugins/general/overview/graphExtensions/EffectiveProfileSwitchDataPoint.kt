@@ -4,9 +4,8 @@ import android.content.Context
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.entities.EffectiveProfileSwitch
 import info.nightscout.androidaps.interfaces.ResourceHelper
-import javax.inject.Inject
 
-class EffectiveProfileSwitchDataPoint @Inject constructor(
+class EffectiveProfileSwitchDataPoint(
     val data: EffectiveProfileSwitch,
     private val rh: ResourceHelper,
     private var yValue: Double

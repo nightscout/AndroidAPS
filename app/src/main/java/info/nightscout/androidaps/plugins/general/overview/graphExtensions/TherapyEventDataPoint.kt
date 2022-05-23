@@ -1,17 +1,15 @@
 package info.nightscout.androidaps.plugins.general.overview.graphExtensions
 
 import android.content.Context
-import android.graphics.Color
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.utils.Translator
 import info.nightscout.androidaps.interfaces.ResourceHelper
-import javax.inject.Inject
+import info.nightscout.androidaps.utils.Translator
 
-class TherapyEventDataPoint @Inject constructor(
+class TherapyEventDataPoint(
     val data: TherapyEvent,
     private val rh: ResourceHelper,
     private val profileFunction: ProfileFunction,

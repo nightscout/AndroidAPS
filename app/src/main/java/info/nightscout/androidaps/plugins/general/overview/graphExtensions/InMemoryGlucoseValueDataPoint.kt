@@ -7,9 +7,8 @@ import info.nightscout.androidaps.data.InMemoryGlucoseValue
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.ResourceHelper
-import javax.inject.Inject
 
-class InMemoryGlucoseValueDataPoint @Inject constructor(
+class InMemoryGlucoseValueDataPoint(
     val data: InMemoryGlucoseValue,
     private val profileFunction: ProfileFunction,
     private val rh: ResourceHelper

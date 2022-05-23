@@ -9,9 +9,8 @@ import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.DefaultValueHelper
-import javax.inject.Inject
 
-class GlucoseValueDataPoint @Inject constructor(
+class GlucoseValueDataPoint(
     val data: GlucoseValue,
     private val defaultValueHelper: DefaultValueHelper,
     private val profileFunction: ProfileFunction,
