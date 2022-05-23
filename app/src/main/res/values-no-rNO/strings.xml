@@ -1008,6 +1008,11 @@
     <string name="configure">Konfigurer gjennomsiktighet</string>
     <string name="loop_status">Loop status</string>
     <string name="graph_scale">Diagram skala</string>
+    <string name="profile1">Profil 1</string>
+    <string name="profile2">Profil 2</string>
+    <string name="login">Logg inn</string>
+    <string name="remove_all">Fjern alt</string>
+    <string name="reset_start">Tilbakestill til oppstart</string>
     <string name="a11y_otp_qr_code">QR-kode for oppsett av engangspassord</string>
     <string name="a11y_open_settings">åpne innstillinger</string>
     <string name="a11y_set_carb_timer">angi karbo nedtellings alarm</string>
