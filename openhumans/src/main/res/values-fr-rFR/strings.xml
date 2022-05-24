@@ -16,4 +16,16 @@
     <string name="you_have_been_signed_out_of_open_humans">Vous avez été déconnecté d\'Open Humans</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Cliquez ici pour vous connecter à nouveau si ce n\'était pas volontaire.</string>
     <string name="upload_now">Télécharger maintenant</string>
+    <string name="next">Suivant</string>
+    <string name="welcome_to_open_humans">Bienvenue à Open Humans</string>
+    <string name="setup_data_upload">Pour configurer l\'envoi de données, cliquez sur \'Suivant\'.</string>
+    <string name="consent">Consentement</string>
+    <string name="terms_of_use">Conditions d\'utilisation</string>
+    <string name="please_read__information">Veuillez lire attentivement les informations suivantes et accepter les conditions d\'utilisation pour continuer.</string>
+    <string name="info_openhumans">Il s\'agit d\'un outil open source qui va copier vos données vers Open Humans. Nous ne conservons aucun droit de partage et vos données ne seront pas partagées avec des tiers sans votre autorisation explicite. Les données que le projet et l\'application reçoivent sont identifiées par un Identifiant utilisateur aléatoire et ne seront transmises à un compte Open Humans qu\'avec votre autorisation et en toute sécurité. Vous pouvez arrêter de télécharger et supprimer vos données de téléchargées à tout moment via www.openhumans.org.</string>
+    <string name="data_uploaded">Données téléchargées</string>
+    <string name="glucose_values">Valeurs de glycémie</string>
+    <string name="boluses">Bolus</string>
+    <string name="extended_boluses">Bolus étendus</string>
+    <string name="carbohydrates">Glucides</string>
 </resources>
