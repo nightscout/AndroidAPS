@@ -28,4 +28,21 @@
     <string name="boluses">Bolus</string>
     <string name="extended_boluses">Bolus étendus</string>
     <string name="carbohydrates">Glucides</string>
+    <string name="careportal_events">Événements Careportal (sauf les notes)</string>
+    <string name="profile_switches">Changements de profil</string>
+    <string name="total_daily_doses">Doses journalières totales</string>
+    <string name="temporary_basal_rates">Débits de basal temporaires</string>
+    <string name="temporary_targets">Cibles temporaires</string>
+    <string name="settings">Paramètres</string>
+    <string name="application_version">Version de l\'application</string>
+    <string name="device_model">Modèle d’appareil</string>
+    <string name="screen_dimensions">Dimensions de l\'écran</string>
+    <string name="algorithm_debug_data">Données de débogage de l\'algorithme</string>
+    <string name="data_not_uploaded">Données NON téléchargées</string>
+    <string name="passwords">Mots de passe</string>
+    <string name="nightscout_url">URL Nightscout</string>
+    <string name="nightscout_api_secret">API Secret de Nightscout</string>
+    <string name="free_text_fields">Champs de texte libre</string>
+    <string name="agree">Je comprends et je suis d\'accord.</string>
+    <string name="login_open_humans">Téléchargement vers Open Humans</string>
 </resources>
