@@ -41,6 +41,7 @@
     <string name="data_not_uploaded">Veriler YÜKLENMEDİ</string>
     <string name="passwords">Parolalar</string>
     <string name="nightscout_url">Nightscout URL</string>
+    <string name="nightscout_api_secret">Nightscout API parolası</string>
     <string name="free_text_fields">Serbest Metin Alanı</string>
     <string name="agree">Anladım ve kabul ediyorum.</string>
     <string name="login_open_humans">Open Humans için Giriş Yapın</string>
