@@ -53,8 +53,10 @@ class PrepareTreatmentsDataWorker(
 
         rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TREATMENTS_DATA, 0, null))
         data.overviewData.maxTreatmentsValue = 0.0
+        data.overviewData.maxEpsValue = 0.0
         val filteredTreatments: MutableList<DataPointWithLabelInterface> = ArrayList()
         val filteredTherapyEvents: MutableList<DataPointWithLabelInterface> = ArrayList()
+        val filteredEps: MutableList<DataPointWithLabelInterface> = ArrayList()
 
         repository.getBolusesDataFromTimeToTime(data.overviewData.fromTime, data.overviewData.endTime, true).blockingGet()
             .map { BolusDataPoint(it, rh, activePlugin, defaultValueHelper) }
@@ -72,8 +74,11 @@ class PrepareTreatmentsDataWorker(
 
         // ProfileSwitch
         repository.getEffectiveProfileSwitchDataFromTimeToTime(data.overviewData.fromTime, data.overviewData.endTime, true).blockingGet()
-            .map { EffectiveProfileSwitchDataPoint(it, rh, data.overviewData.maxBgValue) }
-            .forEach(filteredTreatments::add)
+            .map { EffectiveProfileSwitchDataPoint(it, rh, data.overviewData.epsScale) }
+            .forEach {
+                data.overviewData.maxEpsValue = maxOf(data.overviewData.maxEpsValue, it.data.originalPercentage.toDouble())
+                filteredEps.add(it)
+            }
 
         // OfflineEvent
         repository.getOfflineEventDataFromTimeToTime(data.overviewData.fromTime, data.overviewData.endTime, true).blockingGet()
@@ -119,6 +124,7 @@ class PrepareTreatmentsDataWorker(
 
         data.overviewData.treatmentsSeries = PointsWithLabelGraphSeries(filteredTreatments.toTypedArray())
         data.overviewData.therapyEventSeries = PointsWithLabelGraphSeries(filteredTherapyEvents.toTypedArray())
+        data.overviewData.epsSeries = PointsWithLabelGraphSeries(filteredEps.toTypedArray())
 
         rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TREATMENTS_DATA, 100, null))
         return Result.success()

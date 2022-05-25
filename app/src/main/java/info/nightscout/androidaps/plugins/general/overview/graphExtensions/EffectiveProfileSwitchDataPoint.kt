@@ -8,16 +8,12 @@ import info.nightscout.androidaps.interfaces.ResourceHelper
 class EffectiveProfileSwitchDataPoint(
     val data: EffectiveProfileSwitch,
     private val rh: ResourceHelper,
-    private var yValue: Double
+    private val scale: Scale
 ) : DataPointWithLabelInterface {
 
     override fun getX(): Double = data.timestamp.toDouble()
-    override fun getY(): Double = yValue
-
-    override fun setY(y: Double) {
-        yValue = y
-    }
-
+    override fun getY(): Double = scale.transform(data.originalPercentage.toDouble())
+    override fun setY(y: Double) {}
     override val label get() = if (data.originalPercentage != 100) data.originalPercentage.toString() + "%" else ""
     override val duration = 0L
     override val shape = PointsWithLabelGraphSeries.Shape.PROFILE

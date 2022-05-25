@@ -342,6 +342,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         graphData.addBgReadings(menuChartSettings[0][OverviewMenus.CharType.PRE.ordinal], context)
         if (buildHelper.isDev()) graphData.addBucketedData()
         graphData.addTreatments(context)
+        graphData.addEps(context, 0.95)
         if (menuChartSettings[0][OverviewMenus.CharType.TREAT.ordinal])
             graphData.addTherapyEvents()
         if (menuChartSettings[0][OverviewMenus.CharType.ACT.ordinal])

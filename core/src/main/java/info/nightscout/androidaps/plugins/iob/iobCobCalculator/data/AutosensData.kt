@@ -159,9 +159,9 @@ class AutosensData(injector: HasAndroidInjector) : DataPointWithLabelInterface {
     override fun getY(): Double = scale!!.transform(cob)
 
     override fun setY(y: Double) {}
-    override val label: String? = null
+    override val label: String = ""
     override val duration = 0L
-    override val shape = PointsWithLabelGraphSeries.Shape.COBFAILOVER
+    override val shape = PointsWithLabelGraphSeries.Shape.COB_FAIL_OVER
     override val size = 0.5f
     override fun color(context: Context?): Int {
         return rh.gac(context,R.attr.cobColor)

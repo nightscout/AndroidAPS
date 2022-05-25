@@ -89,9 +89,16 @@ class GraphData(
         maxY = maxOf(maxY, overviewData.maxTreatmentsValue)
         addSeries(overviewData.treatmentsSeries)
         overviewData.treatmentsSeries.setOnDataPointTapListener { _, dataPoint ->
-            if (dataPoint is EffectiveProfileSwitchDataPoint) ToastUtils.showToastInUiThread(context, dataPoint.data.originalCustomizedName)
             if (dataPoint is BolusDataPoint) ToastUtils.showToastInUiThread(context, dataPoint.label)
         }
+    }
+
+    fun addEps(context: Context?, scale: Double) {
+        addSeries(overviewData.epsSeries)
+        overviewData.epsSeries.setOnDataPointTapListener { _, dataPoint ->
+            if (dataPoint is EffectiveProfileSwitchDataPoint) ToastUtils.showToastInUiThread(context, dataPoint.data.originalCustomizedName)
+        }
+        overviewData.epsScale.multiplier = maxY * scale / overviewData.maxEpsValue
     }
 
     fun addTherapyEvents() {

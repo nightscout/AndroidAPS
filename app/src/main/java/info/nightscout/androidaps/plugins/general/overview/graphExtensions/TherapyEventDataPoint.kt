@@ -43,7 +43,7 @@ class TherapyEventDataPoint(
         yValue = y
     }
 
-    override val label get() = if (data.note.isNullOrBlank().not()) data.note else translator.translate(data.type)
+    override val label get() = if (data.note.isNullOrBlank().not()) data.note!! else translator.translate(data.type)
     override val duration get() = data.duration
     override val shape
         get() =
@@ -51,9 +51,9 @@ class TherapyEventDataPoint(
                 data.type == TherapyEvent.Type.NS_MBG                -> PointsWithLabelGraphSeries.Shape.MBG
                 data.type == TherapyEvent.Type.FINGER_STICK_BG_VALUE -> PointsWithLabelGraphSeries.Shape.BGCHECK
                 data.type == TherapyEvent.Type.ANNOUNCEMENT          -> PointsWithLabelGraphSeries.Shape.ANNOUNCEMENT
-                data.type == TherapyEvent.Type.APS_OFFLINE           -> PointsWithLabelGraphSeries.Shape.OPENAPSOFFLINE
+                data.type == TherapyEvent.Type.APS_OFFLINE           -> PointsWithLabelGraphSeries.Shape.OPENAPS_OFFLINE
                 data.type == TherapyEvent.Type.EXERCISE              -> PointsWithLabelGraphSeries.Shape.EXERCISE
-                duration > 0                                         -> PointsWithLabelGraphSeries.Shape.GENERALWITHDURATION
+                duration > 0                                         -> PointsWithLabelGraphSeries.Shape.GENERAL_WITH_DURATION
                 else                                                 -> PointsWithLabelGraphSeries.Shape.GENERAL
             }
 
