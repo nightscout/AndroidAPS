@@ -57,7 +57,7 @@ import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
-import io.reactivex.subjects.SingleSubject;
+import io.reactivex.rxjava3.subjects.SingleSubject;
 
 public class OmnipodManager {
     private static final int ACTION_VERIFICATION_TRIES = 1;

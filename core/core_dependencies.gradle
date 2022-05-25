@@ -27,7 +27,7 @@ dependencies {
     api "com.google.dagger:dagger-android-support:$dagger_version"
 
     //Firebase
-    api platform('com.google.firebase:firebase-bom:29.3.0')
+    api platform('com.google.firebase:firebase-bom:30.0.2')
     api "com.google.firebase:firebase-analytics-ktx"
     api "com.google.firebase:firebase-crashlytics-ktx"
     api "com.google.firebase:firebase-messaging-ktx"
@@ -40,7 +40,7 @@ dependencies {
     api "io.reactivex.rxjava3:rxandroid:$rxandroid_version"
     api "org.apache.commons:commons-lang3:$commonslang3_version"
     api "commons-codec:commons-codec:$commonscodec_version"
-    api "com.uber.rxdogtag:rxdogtag:1.0.1"
+    api "com.uber.rxdogtag2:rxdogtag:2.0.1"
 
     //CryptoUtil
     api 'com.madgag.spongycastle:core:1.58.0.0'
@@ -90,12 +90,12 @@ dependencies {
         exclude group: "org.json", module: "json"
     }
 
-    api 'com.google.guava:guava:30.0-jre'
+    api 'com.google.guava:guava:31.1-jre'
 
-    api 'org.mozilla:rhino:1.7.13'
+    api 'org.mozilla:rhino:1.7.14'
 
     api 'com.github.kenglxn.QRGen:android:2.6.0'
-    api 'com.eatthepath:java-otp:0.2.0'
+    api 'com.eatthepath:java-otp:0.3.1'
 
     api "commons-codec:commons-codec:$commonscodec_version"
 
