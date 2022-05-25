@@ -13,8 +13,8 @@ dependencies {
     api "androidx.appcompat:appcompat:$appcompat_version"
     api "androidx.preference:preference-ktx:$preferencektx_version"
     api 'androidx.biometric:biometric:1.1.0'
-    api "androidx.browser:browser:1.3.0"
-    api "androidx.activity:activity-ktx:${activity_version}"
+    api "androidx.browser:browser:1.4.0"
+    api "androidx.activity:activity-ktx:$activity_version"
     api "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
     api "androidx.lifecycle:lifecycle-process:$lifecycle_version"
     api 'androidx.cardview:cardview:1.0.0'
@@ -50,11 +50,11 @@ dependencies {
     api "com.jjoe64:graphview:4.0.1"
 
     //db
-    api "com.j256.ormlite:ormlite-core:${ormLite_version}"
-    api "com.j256.ormlite:ormlite-android:${ormLite_version}"
+    api "com.j256.ormlite:ormlite-core:$ormLite_version"
+    api "com.j256.ormlite:ormlite-android:$ormLite_version"
 
     // pumpCommon
-    api "com.google.code.gson:gson:2.8.7"
+    api "com.google.code.gson:gson:$gson_version"
 
     // don't kill my app
     api('dev.doubledot.doki:library:0.0.1@aar') {
@@ -82,8 +82,8 @@ dependencies {
     api "androidx.navigation:navigation-fragment-ktx:$nav_version"
     api "androidx.navigation:navigation-ui-ktx:$nav_version"
 
-    api 'com.google.android.gms:play-services-wearable:17.0.0'
-    api 'com.google.android.gms:play-services-location:17.1.0'
+    api "com.google.android.gms:play-services-wearable:$play_services_wearable_version"
+    api "com.google.android.gms:play-services-location:$play_services_location_version"
 
     api 'com.google.android.flexbox:flexbox:3.0.0'
     api("io.socket:socket.io-client:1.0.0") {
