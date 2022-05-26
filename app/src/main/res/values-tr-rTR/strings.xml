@@ -969,9 +969,11 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="wizard_no_active_profile">Etkin profil ayarlanmadı!</string>
     <string name="wizard_no_cob">Aktif karbonhidrat bilinmiyor! KŞ okuması eksik veya son uygulama yeniden başlatılsın mı?</string>
     <string name="wizard_carbs_constraint">Karbonhidrat kısıtlaması ihlali!</string>
+    <string name="wizard_explain_calc">Hesap (KİO: %1$.1f, İDF: %2$.1f)</string>
     <string name="wizard_explain_carbs">Karb: %1$.2fÜ</string>
     <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fÜ</string>
     <string name="wizard_explain_bg">KŞ: %1$.2fÜ</string>
+    <string name="wizard_explain_iob">Aktif İnsülin: %1$.2fÜ</string>
     <string name="wizard_explain_superbolus">Süperbolus: %1$.2fÜ</string>
     <string name="wizard_explain_trend">15\' trend: %1$.2fÜ</string>
     <string name="wizard_explain_percent">Yüzde: %1$.2fÜ x %2$d%% ≈ %3$.2fÜ</string>
@@ -1007,6 +1009,11 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="configure">Şeffaflığı yapılandır</string>
     <string name="loop_status">Döngü durumu</string>
     <string name="graph_scale">Grafik ölçeği</string>
+    <string name="profile1">Profil 1</string>
+    <string name="profile2">Profil 2</string>
+    <string name="login">Giriş</string>
+    <string name="remove_all">Tümünü kaldır</string>
+    <string name="reset_start">Başlatmayı sıfırla</string>
     <string name="a11y_otp_qr_code">Tek kullanımlık şifre kurulumu için QR Kodu</string>
     <string name="a11y_open_settings">ayarları aç</string>
     <string name="a11y_set_carb_timer">karbonhidrat zamanlayıcı alarmı kur</string>
