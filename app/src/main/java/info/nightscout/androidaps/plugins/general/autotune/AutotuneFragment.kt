@@ -381,10 +381,9 @@ class AutotuneFragment : DaggerFragment() {
     }
 
     private fun showResults() {
-        _binding ?: return
-        Thread {
-            context?.let { context ->
-                runOnUiThread {
+        context?.let { context ->
+            runOnUiThread {
+                _binding?.let {
                     binding.autotuneResults.removeAllViews()
                     if (autotunePlugin.result.isNotBlank()) {
                         var toMgDl = 1.0
@@ -455,7 +454,7 @@ class AutotuneFragment : DaggerFragment() {
                     binding.autotuneResultsCard.visibility = if (autotunePlugin.calculationRunning && autotunePlugin.result.isEmpty()) View.GONE else View.VISIBLE
                 }
             }
-        }.start()
+        }
     }
 
     private fun toTableRowHeader(basal:Boolean = false): TableRow =
