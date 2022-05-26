@@ -1296,30 +1296,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     override fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
-        val eventHandlingEnabled = sp.getBoolean(R.string.key_omnipod_common_time_change_event_enabled, false)
-
-        aapsLogger.info(
-            LTag.PUMP,
-            "Time, Date and/or TimeZone changed. [timeChangeType=" + timeChangeType.name + ", eventHandlingEnabled=" + eventHandlingEnabled + "]"
-        )
-
-        when {
-            !eventHandlingEnabled -> {
-                aapsLogger.info(LTag.PUMP, "Ignoring time change because automatic time handling is disabled in configuration")
-                return
-            }
-            timeChangeType == TimeChangeType.TimeChanged -> {
-                aapsLogger.info(LTag.PUMP, "Ignoring time change because it is not a DST or TZ change")
-                return
-            }
-            !podStateManager.isPodRunning -> {
-                aapsLogger.info(LTag.PUMP, "Ignoring time change because no Pod is active")
-                return
-            }
-        }
-        aapsLogger.info(LTag.PUMP, "Handling time change")
-
-        commandQueue.customCommand(CommandHandleTimeChange(false), null)
+        aapsLogger.info(LTag.PUMP, "Ignoring time change because automatic time handling is not implemented. timeChangeType=${timeChangeType.name}")
     }
 
     private fun executeProgrammingCommand(

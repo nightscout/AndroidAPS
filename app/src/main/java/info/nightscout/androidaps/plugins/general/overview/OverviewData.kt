@@ -77,6 +77,8 @@ class OverviewData @Inject constructor(
         ratioSeries = LineGraphSeries()
         dsMaxSeries = LineGraphSeries()
         dsMinSeries = LineGraphSeries()
+        treatmentsSeries = PointsWithLabelGraphSeries()
+        epsSeries = PointsWithLabelGraphSeries()
     }
 
     fun initRange() {
@@ -261,6 +263,9 @@ class OverviewData @Inject constructor(
     var activitySeries: FixedLineGraphSeries<ScaledDataPoint> = FixedLineGraphSeries()
     var activityPredictionSeries: FixedLineGraphSeries<ScaledDataPoint> = FixedLineGraphSeries()
 
+    var maxEpsValue = 0.0
+    val epsScale = Scale()
+    var epsSeries: PointsWithLabelGraphSeries<DataPointWithLabelInterface> = PointsWithLabelGraphSeries()
     var maxTreatmentsValue = 0.0
     var treatmentsSeries: PointsWithLabelGraphSeries<DataPointWithLabelInterface> = PointsWithLabelGraphSeries()
     var maxTherapyEventValue = 0.0

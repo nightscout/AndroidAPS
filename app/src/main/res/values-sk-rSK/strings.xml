@@ -29,7 +29,6 @@
     <string name="description_overview">Zobrazenie aktuálneho stavu vašeho uzavretého okruhu a tlačidlá k najpoužívanejším ovládacím prvkom</string>
     <string name="description_persistent_notification">Zobrazuje priebežné oznámenia v Androide s krátkym prehľadom, čo práve uzavretý okruh robí</string>
     <string name="description_profile_local">Definujte profil, ktorý je dostupný offline.</string>
-    <string name="description_pump_mdi">Ovládač pumpy pre užívateľov používajúcich k liečbe diabetu inzulínové perá</string>
     <string name="description_pump_virtual">Ovládač pumpy pre užívateľov bez podporovanej pumpy (Otvorený okruh)</string>
     <string name="description_sensitivity_aaps">Citlivosť je počítaná tým istým spôsobom ako v Oref0, ale je možné špecifikovať časové okno do minulosti. Minimálne vstrebávanie sacharidov je počítané dynamicky z maximálnej doby vstrebávania, definovanej v nastaveniach.</string>
     <string name="description_sensitivity_oref1">Citlivosť je počítaná za posledných 8h, alebo 24h (použiť to, ktoré je citlivejšie) a sacharidy (pokiaľ nie sú vstrebané), sú orezané po čase definovanom v nastaveniach. Modul tiež počíta s UAM (neoznámené jedlo).</string>
@@ -250,7 +249,6 @@
     <string name="basalvaluebelowminimum">Hodnota bazálu pod povoleným minimom. Profil nenastavený!</string>
     <string name="sms_actualbg">Glykémia:</string>
     <string name="sms_lastbg">Posledná glykémia:</string>
-    <string name="mdi">Perá</string>
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Priebežné notifikácie</string>
     <string name="old_data">ZASTARALÉ DÁTA</string>
@@ -970,12 +968,11 @@
     <string name="wizard_no_active_profile">Nie je nastavený žiadny aktívny profil!</string>
     <string name="wizard_no_cob">Neznáme COB! Chýbajú glykémie, alebo bola práve reštartovaná aplikácia?</string>
     <string name="wizard_carbs_constraint">Sacharidy mimo povolený rozsah!</string>
-    <string name="wizard_explain_calc">Kalk (IC: %1$.1f, ISF: %2$.1f) z:\"</string>
+    <string name="wizard_explain_calc">Kalk (IC: %1$.1f, ISF: %2$.1f)</string>
     <string name="wizard_explain_carbs">Sacharidy: %1$.2fJI</string>
     <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fJI</string>
     <string name="wizard_explain_bg">Gly: %1$.2fJI</string>
-    <string name="wizard_explain_basal_iob">Bazál IOB: %1$.2fJI</string>
-    <string name="wizard_explain_bolus_iob">Bolus IOB: %1$.2fJI</string>
+    <string name="wizard_explain_iob">IOB: %1$.2fJI</string>
     <string name="wizard_explain_superbolus">Superbolus: %1$.2fJI</string>
     <string name="wizard_explain_trend">15min trend: %1$.2fJI</string>
     <string name="wizard_explain_percent">Percentá: %1$.2fJI x %2$d%% ≈ %3$.2fJI</string>
@@ -1011,6 +1008,11 @@
     <string name="configure">Konfigurovať priehľadnosť</string>
     <string name="loop_status">Stav uzavretého okruhu</string>
     <string name="graph_scale">Mierka grafu</string>
+    <string name="profile1">Profil 1</string>
+    <string name="profile2">Profil 2</string>
+    <string name="login">Prihlásenie</string>
+    <string name="remove_all">Odstrániť všetko</string>
+    <string name="reset_start">Resetovať štart</string>
     <string name="a11y_otp_qr_code">QR kód pre nastavenie jednorázového hesla</string>
     <string name="a11y_open_settings">otvoriť nastavenia</string>
     <string name="a11y_set_carb_timer">nastaviť upozornenie na sacharidy</string>

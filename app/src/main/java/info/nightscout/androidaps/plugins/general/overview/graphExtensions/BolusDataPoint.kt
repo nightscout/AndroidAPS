@@ -1,16 +1,14 @@
 package info.nightscout.androidaps.plugins.general.overview.graphExtensions
 
 import android.content.Context
-import android.graphics.Color
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.DefaultValueHelper
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import javax.inject.Inject
 
-class BolusDataPoint @Inject constructor(
+class BolusDataPoint(
     val data: Bolus,
     private val rh: ResourceHelper,
     private val activePlugin: ActivePlugin,
@@ -31,8 +29,8 @@ class BolusDataPoint @Inject constructor(
 
     override fun color(context: Context?): Int =
         if (data.type == Bolus.Type.SMB) rh.gac(context, R.attr.smbColor)
-        else if (data.isValid) rh.gac(context,  R.attr.bolusDataPointColor)
-        else rh.gac(context,  R.attr.alarmColor)
+        else if (data.isValid) rh.gac(context, R.attr.bolusDataPointColor)
+        else rh.gac(context, R.attr.alarmColor)
 
     override fun setY(y: Double) {
         yValue = y

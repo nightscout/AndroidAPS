@@ -29,7 +29,6 @@
     <string name="description_overview">Zobrazení stavu a informací. Přístup k nejběžnějším ovládacím prvkům</string>
     <string name="description_persistent_notification">Zobrazení průběžného oznámení v Androidu s krátkým přehledem, co smyčka právě dělá</string>
     <string name="description_profile_local">Definujte profil, který je dostupný offline.</string>
-    <string name="description_pump_mdi">Ovladač pumpy pro uživatele inzulínových per</string>
     <string name="description_pump_virtual">Ovladač pumpy pro uživatele bez podporované pumpy (Otevřená smyčka)</string>
     <string name="description_sensitivity_aaps">Citlivost je počítána stejným způsobem jako v Oref0, ale je možné specifikovat dobu do minulosti. Minimální absorpce sacharidů je počítána dynamicky z maximální doby absorpce definované v nastavení.</string>
     <string name="description_sensitivity_oref1">Citlivost je počítána za 8h nebo 24h (použita je vyšší citlivost). Sacharidy, pokud nejsou absorbované, jsou oříznuty po čase definovaném v nastavení. Je také zároveň vyhodnocováno UAM (neoznámené jídlo).</string>
@@ -250,7 +249,6 @@
     <string name="basalvaluebelowminimum">Hodnota bazálu pod povoleným minimem. Nenastaveno!</string>
     <string name="sms_actualbg">Glykémie:</string>
     <string name="sms_lastbg">Poslední glykémie:</string>
-    <string name="mdi">Pera</string>
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Průběžné oznámení</string>
     <string name="old_data">ZASTARALÉ</string>
@@ -974,8 +972,7 @@
     <string name="wizard_explain_carbs">Sacharidy: %1$.2fU</string>
     <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fU</string>
     <string name="wizard_explain_bg">Glykémie: %1$.2fU</string>
-    <string name="wizard_explain_basal_iob">Bazální IOB: %1$.2fU</string>
-    <string name="wizard_explain_bolus_iob">Bolusové IOB: %1$.2fU</string>
+    <string name="wizard_explain_iob">IOB: %1$.2fU</string>
     <string name="wizard_explain_superbolus">Superbolus: %1$.2fU</string>
     <string name="wizard_explain_trend">15\' trend: %1$.2fU</string>
     <string name="wizard_explain_percent">Procentuální hodnota: %1$.2fU x %2$d%% ≈ %3$.2fU</string>
@@ -1010,6 +1007,12 @@
     <string name="widget_description">AndroidAPS widget</string>
     <string name="configure">Konfigurovat průhlednost</string>
     <string name="loop_status">Stav smyčky</string>
+    <string name="graph_scale">Měřítko grafu</string>
+    <string name="profile1">Profil 1</string>
+    <string name="profile2">Profil 2</string>
+    <string name="login">Přihlášení</string>
+    <string name="remove_all">Odstranit vše</string>
+    <string name="reset_start">Resetovat start</string>
     <string name="a11y_otp_qr_code">QR kód pro nastavení jednorázového hesla</string>
     <string name="a11y_open_settings">otevřít nastavení</string>
     <string name="a11y_set_carb_timer">nastavit upozornění na sacharidy</string>

@@ -288,6 +288,7 @@ enum class PumpType {
         pumpCapability = PumpCapability.YpsomedCapabilities),
     MDI(description = "MDI",
         manufacturer = ManufacturerType.AndroidAPS,
+        bolusSize = 0.5,
         model = "MDI",
         tbrSettings = DoseSettings(1.0, 15, 24 * 60, 0.0, 500.0),
         extendedBolusSettings = DoseSettings(0.1, 15, 12 * 60, 0.1),

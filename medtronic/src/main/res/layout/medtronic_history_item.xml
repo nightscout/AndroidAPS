@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="40dp"
     android:orientation="horizontal"
+    android:paddingEnd="0dp"
     android:paddingStart="20dp">
 
     <TextView

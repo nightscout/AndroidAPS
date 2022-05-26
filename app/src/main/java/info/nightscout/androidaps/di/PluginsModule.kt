@@ -44,7 +44,6 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorP
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.pump.combo.ComboPlugin
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
-import info.nightscout.androidaps.plugins.pump.mdi.MDIPlugin
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.OmnipodDashPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugin
@@ -182,14 +181,8 @@ abstract class PluginsModule {
     @Binds
     @PumpDriver
     @IntoMap
-    @IntKey(155)
-    abstract fun bindDiaconnG8Plugin(plugin: DiaconnG8Plugin): PluginBase
-
-    @Binds
-    @NotNSClient
-    @IntoMap
     @IntKey(160)
-    abstract fun bindMDIPlugin(plugin: MDIPlugin): PluginBase
+    abstract fun bindDiaconnG8Plugin(plugin: DiaconnG8Plugin): PluginBase
 
     @Binds
     @AllConfigs

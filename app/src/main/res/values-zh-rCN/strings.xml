@@ -29,7 +29,6 @@
     <string name="description_overview">显示闭环的当前状态和大多数常用操作的按钮</string>
     <string name="description_persistent_notification">显示持续的通知, 其中简要概述了您的闭环正在做什么</string>
     <string name="description_profile_local">定义一个离线可使用的配置文件。</string>
-    <string name="description_pump_mdi">与用于糖尿病治疗的多次每日注射的泵集成</string>
     <string name="description_pump_virtual">与我们还没有其驱动的泵集成（开环）</string>
     <string name="description_sensitivity_aaps">灵敏度的计算方式与 Oref0 相同, 但可以指定过去的时间范围。碳水化合物吸收最小值是根据参数选项里的碳水化合物吸收时间最大值计算得来的</string>
     <string name="description_sensitivity_oref1">根据过去的8小时或24小时数据计算胰岛素灵敏度（使用更敏感的数据）。碳水化合物（如果没有被吸收）则在首选项中指定的时间后被核减。插件还计算UAM。</string>
@@ -250,7 +249,6 @@
     <string name="basalvaluebelowminimum">基础率值低于泵支持的最小值。配置文件没有设定</string>
     <string name="sms_actualbg">血糖:</string>
     <string name="sms_lastbg">上次血糖：</string>
-    <string name="mdi">MDI</string>
     <string name="MM640g">美敦力640g</string>
     <string name="ongoingnotificaction">持续的的通知</string>
     <string name="old_data">旧数据</string>
@@ -969,12 +967,9 @@
     <string name="wizard_no_active_profile">没有激活的个人配置文件！</string>
     <string name="wizard_no_cob">未知的活性碳水！血糖读取缺失或最近重新启动了应用程序？</string>
     <string name="wizard_carbs_constraint">碳水违反约束条件!</string>
-    <string name="wizard_explain_calc">计算(IC: %1$.1f, ISF: %2$.1f) 从:\"</string>
     <string name="wizard_explain_carbs">碳水: %1$.2fU</string>
     <string name="wizard_explain_cob">活性碳水: %1$.0f克 %2$.2fU</string>
     <string name="wizard_explain_bg">血糖: %1$.2fU</string>
-    <string name="wizard_explain_basal_iob">基础率活性胰岛素: %1$.2fU</string>
-    <string name="wizard_explain_bolus_iob">大剂量活性胰岛素: %1$.2fU</string>
     <string name="wizard_explain_superbolus">超级大剂量：%1$.2fU</string>
     <string name="wizard_explain_trend">15分钟趋势：%1$.2fU</string>
     <string name="wizard_explain_percent">百分比：%1$.2fU x %2$d%% ≈ %3$.2fU</string>

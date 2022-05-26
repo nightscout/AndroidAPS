@@ -1,7 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="info.nightscout.androidaps.plugins.pump.omnipod.eros">
 
-    <application>
+    <application
+        android:supportsRtl="true">
         <service
             android:name=".rileylink.service.RileyLinkOmnipodService"
             android:enabled="true"

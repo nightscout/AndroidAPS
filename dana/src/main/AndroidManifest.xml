@@ -1,7 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="info.nightscout.androidaps.dana">
 
-    <application>
+    <application
+        android:supportsRtl="true">
         <activity
             android:name="info.nightscout.androidaps.dana.activities.DanaHistoryActivity"
             android:theme="@style/AppTheme" />

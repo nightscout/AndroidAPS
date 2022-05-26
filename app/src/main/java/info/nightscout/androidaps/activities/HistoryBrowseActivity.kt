@@ -339,9 +339,10 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         val graphData = GraphData(injector, binding.bgGraph, overviewData)
         val menuChartSettings = overviewMenus.setting
         graphData.addInRangeArea(overviewData.fromTime, overviewData.endTime, defaultValueHelper.determineLowLine(), defaultValueHelper.determineHighLine())
-        graphData.addBgReadings(menuChartSettings[0][OverviewMenus.CharType.PRE.ordinal])
+        graphData.addBgReadings(menuChartSettings[0][OverviewMenus.CharType.PRE.ordinal], context)
         if (buildHelper.isDev()) graphData.addBucketedData()
-        graphData.addTreatments()
+        graphData.addTreatments(context)
+        graphData.addEps(context, 0.95)
         if (menuChartSettings[0][OverviewMenus.CharType.TREAT.ordinal])
             graphData.addTherapyEvents()
         if (menuChartSettings[0][OverviewMenus.CharType.ACT.ordinal])

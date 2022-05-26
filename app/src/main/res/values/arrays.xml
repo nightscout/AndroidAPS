@@ -92,6 +92,7 @@
 
     <string-array name="virtualPumpTypes">
         <item>Generic AAPS</item>
+        <item>MDI</item>
         <item>Accu-Chek Combo</item>
         <item>Accu-Chek Spirit</item>
         <item>Accu-Chek Insight</item>

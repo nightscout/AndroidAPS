@@ -29,7 +29,6 @@
     <string name="description_overview">Visar loopens nuvarande tillstånd och knappar för de vanligaste funktionerna</string>
     <string name="description_persistent_notification">Visar en konstant avisering med en kort sammanfattning av vad din loop gör</string>
     <string name="description_profile_local">Definiera en profil som är tillgänglig offline.</string>
-    <string name="description_pump_mdi">Integration för de som endast använder insulinpennor</string>
     <string name="description_pump_virtual">Integration för pumpar som ännu inte stöds av AndroidAPS (Open loop)</string>
     <string name="description_sensitivity_aaps">Känsligheten beräknas på samma sätt som i Oref0, men du kan specificera hur mycket av historiken som ska tas med i beräkningen. Minimalt upptag av kolhydrater beräknas utifrån maximal upptagstid för kolhydrater som angetts i Inställningar.</string>
     <string name="description_sensitivity_oref1">Känsligheten beräknas både från 8 och 24 timmars data från historiken och väljer det resultat som har högst insulinkänslighet. Kolhydrater som ännu inte räknats av ignoreras efter tiden som ställts in i inställningarna. Insticksprogrammet beräknar också icke inmatade måltider, UAM.</string>
@@ -250,7 +249,6 @@ Eversense-appen.</string>
     <string name="basalvaluebelowminimum">Basal understiger miniminivå. Profilen sattes inte.</string>
     <string name="sms_actualbg">BG:</string>
     <string name="sms_lastbg">Senaste BG:</string>
-    <string name="mdi">Dagliga injektioner</string>
     <string name="MM640g">Minimed 640G</string>
     <string name="ongoingnotificaction">Konstant avisering i telefonen</string>
     <string name="old_data">Aktuellt BG saknas!</string>
@@ -953,12 +951,9 @@ Eversense-appen.</string>
     <string name="wizard_no_active_profile">Ingen aktiv profil vald!</string>
     <string name="wizard_no_cob">Okänt COB! Saknas BG eller är appen nyss omstartad?</string>
     <string name="wizard_carbs_constraint">Max KH uppnått!</string>
-    <string name="wizard_explain_calc">Kalkyl (IC: %1$.1f, ISF: %2$.1f) från:\"</string>
     <string name="wizard_explain_carbs">Kolhydrater: %1$.2fU</string>
     <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fU</string>
     <string name="wizard_explain_bg">BG: %1$.2fU</string>
-    <string name="wizard_explain_basal_iob">IOB från basal: %1$.2fU</string>
-    <string name="wizard_explain_bolus_iob">IOB från bolus: %1$.2fU</string>
     <string name="wizard_explain_superbolus">Superbolus: %1$.2fU</string>
     <string name="wizard_explain_trend">15\' trend: %1$.2fU</string>
     <string name="wizard_explain_percent">Procent: %1$.2fU x %2$d%% ≈ %3$.2fU</string>

@@ -29,7 +29,6 @@
     <string name="description_overview">מציג את המצב הנוכחי של הלולאה ולחצני פעולות שימושיות</string>
     <string name="description_persistent_notification">מציג הודעה קבועה עם סקירה קצרה של מה שהלולאה שלכם עושה</string>
     <string name="description_profile_local">הגדירו פרופיל שזמין באופן לא מקוון.</string>
-    <string name="description_pump_mdi">טיפול בזריקות יום-יומיות</string>
     <string name="description_pump_virtual">שימוש במשאבות אשר עדיין אין להם מנהל התקן כלשהו (לולאה פתוחה)</string>
     <string name="description_sensitivity_aaps">חישוב הרגישות נעשה בהתאם ל־Oref0, אך ניתן לשנות את מסגרת הזמן. ספיגת הפחמימות המינימלית מחושבת לפי משך ספיגת הפחמימות המרבי מההעדפות.</string>
     <string name="description_sensitivity_oref1">הרגישות מחושבת מנתונים מ-8 או 24 השעות האחרונות (הרגישות הנמוכה מביניהם). הפחמימות (אם לא נספגו) מפסיקות להיחשב לאחר משך זמן שהוגדר בהגדרות. תוסף זה מחשב גם ארוחות לא ידועות מראש (UAM).</string>
@@ -250,7 +249,6 @@
     <string name="basalvaluebelowminimum">ערך הבסיס מתחת למינימום. פרופיל אינו מוגדר!</string>
     <string name="sms_actualbg">ערכי סוכר בדם:</string>
     <string name="sms_lastbg">ערכי סוכר אחרונים:</string>
-    <string name="mdi">זריקות יומיות מרובות (MDI)</string>
     <string name="MM640g">Minimed 640G</string>
     <string name="ongoingnotificaction">התראה מתמשכת</string>
     <string name="old_data">נתונים ישנים</string>

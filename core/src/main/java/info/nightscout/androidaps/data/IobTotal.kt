@@ -111,7 +111,7 @@ class IobTotal(val time: Long) : DataPointWithLabelInterface {
     override fun setY(y: Double) {}
     override val label = ""
     override val duration = 0L
-    override val shape = PointsWithLabelGraphSeries.Shape.IOBPREDICTION
+    override val shape = PointsWithLabelGraphSeries.Shape.IOB_PREDICTION
     override val size = 0.5f
 
     override fun color(context: Context?): Int {

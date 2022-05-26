@@ -29,7 +29,6 @@
     <string name="description_overview">Muestra el estado actual de tu lazo y los botones para las acciones más usadas</string>
     <string name="description_persistent_notification">Muestra una notificación en curso con un breve resumen de lo que está haciendo tu lazo</string>
     <string name="description_profile_local">Define un perfil que esté disponible cuando tengas una desconexión</string>
-    <string name="description_pump_mdi">Integración de bomba de insulina para personas que usan múltiples dosis de insulina diarias, en su terapia de diabetes</string>
     <string name="description_pump_virtual">Integración de bombas de insulina que aún no tienen ningún controlador disponible (lazo abierto)</string>
     <string name="description_sensitivity_aaps">La sensibilidad se calcula de la misma manera que en Oref0, pero puede especificarse el rango de tiempo. La absorción de carbohidratos mínima se calcula con el máximo tiempo de absorción de carbohidratos en preferencias</string>
     <string name="description_sensitivity_oref1">La sensibilidad se calcula con las últimas 8h y los carbohidratos (si no son absorbidos) se anulan después del tiempo indicado en preferencias. Este complemento también calcula UAM</string>
@@ -250,7 +249,6 @@
     <string name="basalvaluebelowminimum">Valor basal por debajo del mínimo. Perfil no establecido.</string>
     <string name="sms_actualbg">Glucosa:</string>
     <string name="sms_lastbg">Última Glucosa:</string>
-    <string name="mdi">Múltiples dosis de insulina (MDI)</string>
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Notificaciones en curso</string>
     <string name="old_data">DATOS CADUCADOS</string>
@@ -970,12 +968,11 @@
     <string name="wizard_no_active_profile">¡No hay perfil activo!</string>
     <string name="wizard_no_cob">COB desconocido! ¿Valor de glucosa ausente o reincio reciente de la aplicación?</string>
     <string name="wizard_carbs_constraint">¡Violación de restricción de carbohidratos!</string>
-    <string name="wizard_explain_calc">Calc (CI: %1$.1f, ISF: %2$.1f) desde:\"</string>
+    <string name="wizard_explain_calc">Calcular (IC: %1$.1f, ISF: %2$.1f)</string>
     <string name="wizard_explain_carbs">Carbohidratos: %1$.2fU</string>
     <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fU</string>
     <string name="wizard_explain_bg">BG: %1$.2fU</string>
-    <string name="wizard_explain_basal_iob">Basal IOB: %1$.2fU</string>
-    <string name="wizard_explain_bolus_iob">Bolo IOB: %1$.2fU</string>
+    <string name="wizard_explain_iob">IOB: %1$.2fU</string>
     <string name="wizard_explain_superbolus">Superbolo: %1$.2fU</string>
     <string name="wizard_explain_trend">Tendencia 15\': %1$.2fU</string>
     <string name="wizard_explain_percent">Porcentaje: %1$.2fU x %2$d%% ≈ %3$.2fU</string>
@@ -1011,6 +1008,11 @@
     <string name="configure">Configurar opacidad</string>
     <string name="loop_status">Estado del lazo</string>
     <string name="graph_scale">Escala gráfica</string>
+    <string name="profile1">Perfil 1</string>
+    <string name="profile2">Perfil 2</string>
+    <string name="login">Inicio de sesión</string>
+    <string name="remove_all">Eliminar todos</string>
+    <string name="reset_start">Restablecer inicio</string>
     <string name="a11y_otp_qr_code">Código QR para la configuración de la contraseña de un sólo uso</string>
     <string name="a11y_open_settings">Abrir la configuración</string>
     <string name="a11y_set_carb_timer">Establecer alarma de carbohidratos</string>
