@@ -122,7 +122,7 @@ class PrepareTreatmentsDataWorker(
             ?.let(::addUpperChartMargin)
             ?.let { data.overviewData.maxTherapyEventValue = maxOf(data.overviewData.maxTherapyEventValue, it) }
 
-        data.overviewData.treatmentsSeries = PointsWithLabelGraphSeries(filteredTreatments.sortedBy { it.x }.toTypedArray())
+        data.overviewData.treatmentsSeries = PointsWithLabelGraphSeries(filteredTreatments.toTypedArray())
         data.overviewData.therapyEventSeries = PointsWithLabelGraphSeries(filteredTherapyEvents.toTypedArray())
         data.overviewData.epsSeries = PointsWithLabelGraphSeries(filteredEps.toTypedArray())
 

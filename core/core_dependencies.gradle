@@ -46,7 +46,8 @@ dependencies {
     api 'com.madgag.spongycastle:core:1.58.0.0'
     api "com.google.crypto.tink:tink-android:$tink_version"
 
-    api "com.jjoe64:graphview:4.2.2"
+    // Graphview cannot be upgraded
+    api "com.jjoe64:graphview:4.0.1"
 
     //db
     api "com.j256.ormlite:ormlite-core:$ormLite_version"

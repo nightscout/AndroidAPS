@@ -54,8 +54,8 @@ class ActivityGraph : GraphView {
             it.color = Color.MAGENTA
             it.backgroundColor = Color.argb(70, 255, 0, 255)
         })
-        secondScale.setMinY(0.0)
-        secondScale.setMaxY(1.0)
+        secondScale.minY = 0.0
+        secondScale.maxY = 1.0
         gridLabelRenderer.verticalLabelsSecondScaleColor = Color.MAGENTA
     }
 }
