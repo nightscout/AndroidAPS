@@ -38,7 +38,7 @@ class NSClientFragment : DaggerFragment() {
         const val ID_MENU_CLEAR_LOG = 6
         const val ID_MENU_RESTART = 7
         const val ID_MENU_SEND_NOW = 8
-        const val ID_MENU_FULL_SYNC = 8
+        const val ID_MENU_FULL_SYNC = 9
     }
 
     private val disposable = CompositeDisposable()
