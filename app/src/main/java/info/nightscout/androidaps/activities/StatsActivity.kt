@@ -10,6 +10,7 @@ import info.nightscout.androidaps.databinding.ActivityStatsBinding
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.utils.ActivityMonitor
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.androidaps.utils.stats.DexcomTirCalculator
 import info.nightscout.androidaps.utils.stats.TddCalculator
 import info.nightscout.androidaps.utils.stats.TirCalculator
 import javax.inject.Inject
@@ -18,6 +19,7 @@ class StatsActivity : NoSplashAppCompatActivity() {
 
     @Inject lateinit var tddCalculator: TddCalculator
     @Inject lateinit var tirCalculator: TirCalculator
+    @Inject lateinit var dexcomTirCalculator: DexcomTirCalculator
     @Inject lateinit var activityMonitor: ActivityMonitor
     @Inject lateinit var uel: UserEntryLogger
 
@@ -45,6 +47,13 @@ class StatsActivity : NoSplashAppCompatActivity() {
             runOnUiThread {
                 binding.tir.removeAllViews()
                 binding.tir.addView(tir)
+            }
+        }.start()
+        Thread {
+            val dexcomTir = dexcomTirCalculator.stats(this)
+            runOnUiThread {
+                binding.dexcomTir.removeAllViews()
+                binding.dexcomTir.addView(dexcomTir)
             }
         }.start()
         Thread {

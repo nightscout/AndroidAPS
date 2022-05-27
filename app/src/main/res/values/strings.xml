@@ -945,6 +945,11 @@
     <string name="invalidpct">Invalid % entry</string>
     <string name="average">Average</string>
     <string name="tir">TIR</string>
+    <string name="day_tir">Day TIR</string>
+    <string name="night_tir">Night TIR</string>
+    <string name="detailed_14_days">Detailed 14 days</string>
+    <string name="std_deviation">SD: %1$s</string>
+    <string name="hba1c">HbA1c: </string>
     <string name="activitymonitor">Activity monitor</string>
     <string name="doyouwantresetstats">Do you want to reset activity stats?</string>
     <string name="statistics">Statistics</string>
@@ -1201,6 +1206,10 @@
     <string name="count_selected">%1$d selected</string>
     <string name="sort_label">Sort</string>
     <string name="dialog_canceled">Dialog canceled</string>
+    <string name="veryLow" comment="below 3.1">Very low</string>
+    <string name="low" comment="3.1-3.9">Low</string>
+    <string name="high" comment="10.0-13.9">High</string>
+    <string name="veryHigh" comment="above 13.9">Very high</string>
     <string name="below" comment="below &quot;in range&quot;">Below</string>
     <string name="in_range">In range</string>
     <string name="above" comment="above &quot;in range&quot;">Above</string>
