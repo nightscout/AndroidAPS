@@ -126,6 +126,7 @@ class Objective2(injector: HasAndroidInjector) : Objective(injector, "exam", R.s
             .option(Option(R.string.sensitivity_cannula, true))
             .option(Option(R.string.sensitivity_time, true))
             .hint(Hint(R.string.sensitivity_hint1))
+            .hint(Hint(R.string.sensitivity_hint2))
         )
         tasks.add(ExamTask(this, R.string.objectives_label, R.string.objectives_howtosave, "objectives")
             .option(Option(R.string.objectives_notesettings, false))
