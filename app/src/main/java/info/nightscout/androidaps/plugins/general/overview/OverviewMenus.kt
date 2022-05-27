@@ -39,7 +39,7 @@ class OverviewMenus @Inject constructor(
 
     enum class CharType(@StringRes val nameId: Int, @AttrRes val attrId: Int, @AttrRes val attrTextId: Int, val primary: Boolean, val secondary: Boolean, @StringRes val shortnameId: Int) {
         PRE(R.string.overview_show_predictions, R.attr.predictionColor, R.attr.menuTextColor, primary = true, secondary = false, shortnameId = R.string.prediction_shortname),
-        TREAT(R.string.overview_show_treatments, R.attr.predictionColor, R.attr.menuTextColor, primary = true, secondary = false, shortnameId = R.string.treatments_shortname),
+        TREAT(R.string.overview_show_treatments, R.attr.cobColor, R.attr.menuTextColor, primary = true, secondary = false, shortnameId = R.string.treatments_shortname),
         BAS(R.string.overview_show_basals, R.attr.basal, R.attr.menuTextColor, primary = true, secondary = false, shortnameId = R.string.basal_shortname),
         ABS(R.string.overview_show_absinsulin, R.attr.iobColor, R.attr.menuTextColor, primary = false, secondary = true, shortnameId = R.string.abs_insulin_shortname),
         IOB(R.string.overview_show_iob, R.attr.iobColor, R.attr.menuTextColor, primary = false, secondary = true, shortnameId = R.string.iob),
