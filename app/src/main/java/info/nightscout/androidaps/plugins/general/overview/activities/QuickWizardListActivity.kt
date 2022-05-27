@@ -125,7 +125,7 @@ class QuickWizardListActivity : DaggerAppCompatActivityWithResult(), OnStartDrag
         binding = OverviewQuickwizardlistActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        actionHelper = ActionModeHelper(rh, this)
+        actionHelper = ActionModeHelper(rh, this, null)
         actionHelper.setUpdateListHandler { binding.recyclerview.adapter?.notifyDataSetChanged() }
         actionHelper.setOnRemoveHandler { removeSelected(it) }
         actionHelper.enableSort = true

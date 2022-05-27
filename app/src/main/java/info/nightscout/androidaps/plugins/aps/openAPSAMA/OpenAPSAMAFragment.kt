@@ -43,14 +43,11 @@ class OpenAPSAMAFragment : DaggerFragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        setHasOptionsMenu(true)
-        _binding = OpenapsamaFragmentBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
+        OpenapsamaFragmentBinding.inflate(inflater, container, false).also {
+            _binding = it
+            setHasOptionsMenu(true)
+        }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -67,9 +64,11 @@ class OpenAPSAMAFragment : DaggerFragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        menu.removeItem(ID_MENU_RUN)
-        menu.add(Menu.FIRST, ID_MENU_RUN, 0, rh.gs(R.string.openapsma_run)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
-        menu.setGroupDividerEnabled(true)
+        if (isResumed) {
+            menu.removeItem(ID_MENU_RUN)
+            menu.add(Menu.FIRST, ID_MENU_RUN, 0, rh.gs(R.string.openapsma_run)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+            menu.setGroupDividerEnabled(true)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =

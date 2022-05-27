@@ -23,6 +23,7 @@ import info.nightscout.androidaps.extensions.valueToUnitsString
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.ActionModeHelper
@@ -30,7 +31,6 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
@@ -61,14 +61,16 @@ class BGSourceFragment : DaggerFragment() {
     private val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-        BgsourceFragmentBinding.inflate(inflater, container, false).also { _binding = it }.root
+        BgsourceFragmentBinding.inflate(inflater, container, false).also {
+            _binding = it
+            actionHelper = ActionModeHelper(rh, activity, this)
+            actionHelper.setUpdateListHandler { binding.recyclerview.adapter?.notifyDataSetChanged() }
+            actionHelper.setOnRemoveHandler { handler -> removeSelected(handler) }
+            setHasOptionsMenu(true)
+        }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        actionHelper = ActionModeHelper(rh, activity)
-        actionHelper.setUpdateListHandler { binding.recyclerview.adapter?.notifyDataSetChanged() }
-        actionHelper.setOnRemoveHandler { removeSelected(it) }
-        setHasOptionsMenu(actionHelper.inMenu)
 
         binding.recyclerview.setHasFixedSize(true)
         binding.recyclerview.layoutManager = LinearLayoutManager(view.context)

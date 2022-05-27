@@ -30,6 +30,7 @@ import info.nightscout.androidaps.extensions.toTemporaryBasal
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.ActionModeHelper
@@ -38,7 +39,6 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
@@ -78,7 +78,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
     @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        actionHelper = ActionModeHelper(rh, activity)
+        actionHelper = ActionModeHelper(rh, activity, this)
         actionHelper.setUpdateListHandler { binding.recyclerview.adapter?.notifyDataSetChanged() }
         actionHelper.setOnRemoveHandler { removeSelected(it) }
         setHasOptionsMenu(true)

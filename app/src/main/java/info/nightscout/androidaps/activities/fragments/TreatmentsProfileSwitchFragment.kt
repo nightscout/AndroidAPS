@@ -78,7 +78,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
     @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        actionHelper = ActionModeHelper(rh, activity)
+        actionHelper = ActionModeHelper(rh, activity, this)
         actionHelper.setUpdateListHandler { binding.recyclerview.adapter?.notifyDataSetChanged() }
         actionHelper.setOnRemoveHandler { removeSelected(it) }
         setHasOptionsMenu(true)
