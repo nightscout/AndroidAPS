@@ -773,6 +773,11 @@
     <string name="invalidpct">Neplatný vstup %</string>
     <string name="average">Priemer</string>
     <string name="tir">Čas v rozsahu</string>
+    <string name="day_tir">Denný TIR</string>
+    <string name="night_tir">Nočný TIR</string>
+    <string name="detailed_14_days">Podrobne 14 dní</string>
+    <string name="std_deviation">SD: %1$s</string>
+    <string name="hba1c">HbA1c: </string>
     <string name="activitymonitor">Monitor aktivity</string>
     <string name="doyouwantresetstats">Chcete resetovať štatistiky aktivity?</string>
     <string name="statistics">Štatistiky</string>
@@ -999,6 +1004,10 @@
     <string name="count_selected">Vybrané: %1$d</string>
     <string name="sort_label">Zoradiť</string>
     <string name="dialog_canceled">Dialóg zrušený</string>
+    <string name="veryLow" comment="below 3.1">Veľmi nízka</string>
+    <string name="low" comment="3.1-3.9">Nízka</string>
+    <string name="high" comment="10.0-13.9">Vysoká</string>
+    <string name="veryHigh" comment="above 13.9">Veľmi vysoká</string>
     <string name="below" comment="below &quot;in range&quot;">Nižšie</string>
     <string name="in_range">V rozsahu</string>
     <string name="above" comment="above &quot;in range&quot;">Vyššie</string>
