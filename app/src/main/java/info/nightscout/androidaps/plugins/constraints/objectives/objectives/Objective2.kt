@@ -153,7 +153,7 @@ class Objective2(injector: HasAndroidInjector) : Objective(injector, "exam", R.s
         tasks.add(ExamTask(this, R.string.troubleshooting_label, R.string.troubleshooting_wheretoask, "troubleshooting")
             .option(Option(R.string.troubleshooting_fb, true))
             .option(Option(R.string.troubleshooting_wiki, true))
-            .option(Option(R.string.troubleshooting_gitter, true))
+            .option(Option(R.string.troubleshooting_discord, true))
             .option(Option(R.string.troubleshooting_yourendo, false))
             .hint(Hint(R.string.troubleshooting_hint1))
             .hint(Hint(R.string.troubleshooting_hint2))
