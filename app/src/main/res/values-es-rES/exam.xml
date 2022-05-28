@@ -123,6 +123,7 @@
     <string name="sensitivity_cannula">Registrar el cámbio de cánula reseteará Autosens, dejándolo de nuevo al 100%.</string>
     <string name="sensitivity_time">Algunas de las opciones del plugin tienen rangos de tiempo configurables que pueden ser definidos por el usuario.</string>
     <string name="sensitivity_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Sensitivity-detection-and-COB.html</string>
+    <string name="sensitivity_hint2">https://androidaps.readthedocs.io/es/latest/Usage/Open-APS-features.html?highlight=Autosens#autosens</string>
     <string name="wrongcarbs_label">Error de entrada de Carbohidratos</string>
     <string name="wrongcarbs_whattodo">¿Qué deberías hacer si has hecho una entrada incorrecta de carbohidratos?</string>
     <string name="wrongcarbs_treatmentstab">Elimina la entrada incorrecta en los tratamientos e introduce el valor correcto de carbohidratos.</string>
