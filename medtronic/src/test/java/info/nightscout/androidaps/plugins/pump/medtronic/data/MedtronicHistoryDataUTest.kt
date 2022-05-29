@@ -4,8 +4,8 @@ import java.lang.reflect.Type
 import com.google.gson.reflect.TypeToken
 import com.google.gson.Gson
 import com.google.gson.internal.LinkedTreeMap
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
+// import dagger.android.AndroidInjector
+// import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.PumpSync
@@ -24,28 +24,27 @@ import org.mockito.Mock
 
 class MedtronicHistoryDataUTest : TestBase() {
 
-    @Mock lateinit var activePlugin: ActivePlugin
-    @Mock lateinit var medtronicUtil: MedtronicUtil
-    @Mock lateinit var medtronicPumpHistoryDecoder: MedtronicPumpHistoryDecoder
+    //@Mock lateinit var activePlugin: ActivePlugin
+    //@Mock lateinit var medtronicUtil: MedtronicUtil
+    //@Mock lateinit var medtronicPumpHistoryDecoder: MedtronicPumpHistoryDecoder
     @Mock lateinit var medtronicPumpStatus: MedtronicPumpStatus
-    @Mock lateinit var pumpSync: PumpSync
-    @Mock lateinit var pumpSyncStorage: PumpSyncStorage
-    @Mock lateinit var sp: SP
-    @Mock lateinit var rh: ResourceHelper
-    @Mock lateinit var rxBus: RxBus
+    // @Mock lateinit var pumpSync: PumpSync
+    // @Mock lateinit var pumpSyncStorage: PumpSyncStorage
 
-    private val packetInjector = HasAndroidInjector {
-        AndroidInjector {
+    //@Mock lateinit var rxBus: RxBus
 
-        }
-    }
+    // val packetInjector = HasAndroidInjector {
+    //     AndroidInjector {
+    //
+    //     }
+    // }
 
 
     @Test
     fun createTBRProcessList() {
 
         var unitToTest = MedtronicHistoryData(packetInjector, aapsLogger, sp, rh, rxBus, activePlugin,
-        medtronicUtil,   medtronicPumpHistoryDecoder,
+        medtronicUtil,   decoder,
         medtronicPumpStatus,
         pumpSync,
         pumpSyncStorage)
@@ -72,7 +71,7 @@ class MedtronicHistoryDataUTest : TestBase() {
 
         System.out.println("TBR Pre-Process List: " + gson.toJson(yourClassList))
 
-        val createTBRProcessList = unitToTest.createTBRProcessList(yourClassList)
+        val createTBRProcessList = unitToTest.createTBRProcessList(yourClassList, mutableListOf())
 
         System.out.println("TBR Process List: " + createTBRProcessList.size)
 
@@ -86,7 +85,7 @@ class MedtronicHistoryDataUTest : TestBase() {
     fun createTBRProcessList_SpecialCase() {
 
         var unitToTest = MedtronicHistoryData(packetInjector, aapsLogger, sp, rh, rxBus, activePlugin,
-                                              medtronicUtil,   medtronicPumpHistoryDecoder,
+                                              medtronicUtil,   decoder,
                                               medtronicPumpStatus,
                                               pumpSync,
                                               pumpSyncStorage)
@@ -113,7 +112,7 @@ class MedtronicHistoryDataUTest : TestBase() {
 
         System.out.println("TBR Pre-Process List (Special): " + gson.toJson(yourClassList))
 
-        val createTBRProcessList = unitToTest.createTBRProcessList(yourClassList)
+        val createTBRProcessList = unitToTest.createTBRProcessList(yourClassList, mutableListOf())
 
         System.out.println("TBR Process List (Special): " + createTBRProcessList.size)
 

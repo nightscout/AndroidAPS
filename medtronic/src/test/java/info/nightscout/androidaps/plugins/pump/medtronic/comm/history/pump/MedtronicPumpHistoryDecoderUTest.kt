@@ -1,8 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump
 
-import dagger.android.HasAndroidInjector
+//import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil
@@ -25,15 +24,15 @@ import org.mockito.Mock
 @Suppress("SpellCheckingInspection")
 class MedtronicPumpHistoryDecoderUTest : TestBase() {
 
-    @Mock lateinit var injector: HasAndroidInjector
-    @Mock lateinit var rh: ResourceHelper
-    @Mock(answer = Answers.RETURNS_DEEP_STUBS) lateinit var activePlugin: ActivePlugin
+    //@Mock lateinit var injector: HasAndroidInjector
+    //@Mock lateinit var rh: ResourceHelper
+//    @Mock(answer = Answers.RETURNS_DEEP_STUBS) lateinit var activePlugin: ActivePlugin
     @Mock lateinit var rileyLinkUtil: RileyLinkUtil
-    @Mock lateinit var sp: SP
+    //@Mock lateinit var sp: SP
 
     private var medtronicPumpStatus: MedtronicPumpStatus? = null
-    private var medtronicUtil: MedtronicUtil? = null
-    private var decoder: MedtronicPumpHistoryDecoder? = null
+    //private var medtronicUtil: MedtronicUtil? = null
+    //private var decoder: MedtronicPumpHistoryDecoder? = null
     var rxBusWrapper = RxBus(TestAapsSchedulers(), aapsLogger)
     @Before fun setup() {
         medtronicPumpStatus =
