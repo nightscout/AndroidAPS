@@ -773,8 +773,8 @@
     <string name="invalidpct">Entrada % inválida</string>
     <string name="average">Promedio</string>
     <string name="tir">Tiempo en rango</string>
-    <string name="day_tir">TIR (Día)</string>
-    <string name="night_tir">TIR (Noche)</string>
+    <string name="day_tir">TIR Diurno</string>
+    <string name="night_tir">TIR Nocturno</string>
     <string name="detailed_14_days">Datos detallados de 14 días</string>
     <string name="std_deviation">Desviación estándar: %1$s</string>
     <string name="hba1c">HbA1c: </string>
