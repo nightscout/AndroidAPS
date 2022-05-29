@@ -830,6 +830,8 @@
     <string name="error_adding_treatment_message">A treatment (insulin: %1$.2f, carbs: %2$d, at: %3$s) could not be added to treatments. Please check and manually add a record as appropriate.</string>
     <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), delay: %3$d m</string>
     <string name="openaps_noasdata">No autosens data available</string>
+    <string name="log_files">Log files</string>
+    <string name="miscellaneous">Miscellaneous</string>
     <string name="nav_logsettings">Log settings</string>
     <string name="resettodefaults">Reset to defaults</string>
     <string name="nsmalfunction">NSClient malfunction. Consider NS and NSClient restart.</string>
