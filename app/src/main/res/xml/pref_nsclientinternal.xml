@@ -138,26 +138,36 @@
 
             <SwitchPreference
                 android:defaultValue="false"
-                android:disableDependentsState="true"
-                android:key="@string/key_ns_wifionly"
-                android:title="@string/ns_wifionly" />
+                android:key="@string/key_ns_cellular"
+                android:title="@string/ns_cellular" />
+
+            <SwitchPreference
+                android:defaultValue="true"
+                android:dependency="@string/key_ns_cellular"
+                android:key="@string/key_ns_allow_roaming"
+                android:title="@string/ns_allowroaming" />
+
+            <SwitchPreference
+                android:defaultValue="true"
+                android:key="@string/key_ns_wifi"
+                android:title="@string/ns_wifi" />
 
             <EditTextPreference
                 android:dialogMessage="@string/ns_wifi_allowedssids"
+                android:dependency="@string/key_ns_wifi"
                 android:inputType="text"
                 android:key="@string/key_ns_wifi_ssids"
                 android:title="@string/ns_wifi_ssids" />
 
             <SwitchPreference
                 android:defaultValue="true"
-                android:dependency="@string/key_ns_wifionly"
-                android:key="@string/key_ns_allowroaming"
-                android:title="@string/ns_allowroaming" />
+                android:key="@string/key_ns_battery"
+                android:title="@string/ns_battery" />
 
             <SwitchPreference
-                android:defaultValue="false"
-                android:key="@string/key_ns_chargingonly"
-                android:title="@string/ns_chargingonly" />
+                android:defaultValue="true"
+                android:key="@string/key_ns_charging"
+                android:title="@string/ns_charging" />
 
         </androidx.preference.PreferenceScreen>
 
