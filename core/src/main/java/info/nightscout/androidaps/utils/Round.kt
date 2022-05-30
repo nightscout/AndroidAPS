@@ -4,7 +4,7 @@ import java.math.BigDecimal
 import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.floor
-import kotlin.math.roundToLong
+import kotlin.math.round
 
 /**
  * Created by mike on 20.06.2016.
@@ -14,7 +14,7 @@ object Round {
     @JvmStatic
     fun roundTo(x: Double, step: Double): Double =
         if (x == 0.0) 0.0
-        else BigDecimal.valueOf((x / step).roundToLong()).multiply(BigDecimal.valueOf(step)).toDouble()
+        else BigDecimal.valueOf(round(x / step) * step).toDouble()
 
     @JvmStatic
     fun floorTo(x: Double, step: Double): Double =
