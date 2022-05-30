@@ -682,6 +682,8 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="error_adding_treatment_message">Tedavilere (insülin: %1$.2f, karbonhidrat: %2$d, %3$s) şeklinde bir tedavi eklenemedi. Lütfen kontrol edin ve uygun şekilde elle bir kayıt ekleyin.</string>
     <string name="generated_ecarbs_note">yKarb: %1$d g (%2$d sa), gecikme: %3$d dk</string>
     <string name="openaps_noasdata">Otoduyarlılık verileri mevcut değil</string>
+    <string name="log_files">Günlük dosyaları</string>
+    <string name="miscellaneous">Diğer Ayarlar</string>
     <string name="nav_logsettings">Günlük ayarları</string>
     <string name="resettodefaults">Varsayılanlara sıfırla</string>
     <string name="nsmalfunction">NSClient arızası. NS ve NSClient yeniden başlatmayı düşünün.</string>
