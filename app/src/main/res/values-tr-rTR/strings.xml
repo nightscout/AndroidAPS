@@ -774,6 +774,11 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="invalidpct">Geçersiz % giriş</string>
     <string name="average">Ortalama</string>
     <string name="tir">TIR</string>
+    <string name="day_tir">Gündüz TIR</string>
+    <string name="night_tir">Gece TIR</string>
+    <string name="detailed_14_days">Ayrıntılı 14 gün</string>
+    <string name="std_deviation">SD: %1$s</string>
+    <string name="hba1c">HbA1c: </string>
     <string name="activitymonitor">Aktivite monitörü</string>
     <string name="doyouwantresetstats">Etkinlik istatistiklerini sıfırlamak istiyor musunuz?</string>
     <string name="statistics">İstatistikler</string>
@@ -1000,6 +1005,10 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="count_selected">%1$d seçildi</string>
     <string name="sort_label">Sırala</string>
     <string name="dialog_canceled">İletişim kutusu iptal edildi</string>
+    <string name="veryLow" comment="below 3.1">Çok düşük</string>
+    <string name="low" comment="3.1-3.9">Düşük</string>
+    <string name="high" comment="10.0-13.9">Yüksek</string>
+    <string name="veryHigh" comment="above 13.9">Çok yüksek</string>
     <string name="below" comment="below &quot;in range&quot;">Altında</string>
     <string name="in_range">Aralık içinde</string>
     <string name="above" comment="above &quot;in range&quot;">Üstünde</string>
