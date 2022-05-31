@@ -603,9 +603,7 @@
     <string name="secondcarbsincrement">תוספת פחמימות שניה</string>
     <string name="thirdcarbsincrement">תוספת פחמימות שלישית</string>
     <string name="cgm">סנסור</string>
-    <string name="ns_wifionly">השתמש בחיבור WiFi בלבד</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="ns_chargingonly">במצב טעינה בלבד</string>
     <string name="connectionsettings_title">הגדרות חיבור</string>
     <string name="ns_wifi_allowedssids">SSID מורשים (מופרדים בנקודה-פסיק)</string>
     <string name="ns_allowroaming">אפשר חיבור בנדידה</string>
