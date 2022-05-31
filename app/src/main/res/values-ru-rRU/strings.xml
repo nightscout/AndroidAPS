@@ -603,9 +603,7 @@
     <string name="secondcarbsincrement">Второй шаг увеличения углеводов</string>
     <string name="thirdcarbsincrement">Третий шаг увеличения углеводов</string>
     <string name="cgm">Мониторинг ГК</string>
-    <string name="ns_wifionly">Использовать только WiFi соединение</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="ns_chargingonly">Только при зарядке</string>
     <string name="connectionsettings_title">Параметры подключения</string>
     <string name="ns_wifi_allowedssids">Разрешенные SSID (разделенные точкой с запятой)</string>
     <string name="ns_allowroaming">Разрешить подключение в роуминге</string>
