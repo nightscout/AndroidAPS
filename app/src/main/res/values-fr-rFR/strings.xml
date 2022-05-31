@@ -605,9 +605,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="secondcarbsincrement">Deuxième incrément de glucides</string>
     <string name="thirdcarbsincrement">Troisième incrément de glucides</string>
     <string name="cgm">MGC</string>
-    <string name="ns_wifionly">Utilisez uniquement connexion Wi-fi</string>
     <string name="ns_wifi_ssids">Wi-fi SSID</string>
-    <string name="ns_chargingonly">Uniquement si en charge</string>
     <string name="connectionsettings_title">Paramètres de connexion</string>
     <string name="ns_wifi_allowedssids">SSIDs autorisés (séparés par point-virgule)</string>
     <string name="ns_allowroaming">Autoriser connexion données itinérance</string>
