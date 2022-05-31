@@ -84,11 +84,13 @@
     <string name="quick_wizard_short">XL</string>
     <string name="action_duration">Длительность</string>
     <string name="action_tempt_confirmation">Запрошена временная цель</string>
+    <string name="action_quick_wizard_confirmation">Запрошен мастер настройки</string>
     <string name="action_treatment_confirmation">Запрошена терапия</string>
     <string name="action_bolus_confirmation">Запрошен Болюс</string>
     <string name="action_wizard_confirmation">Расчет запрошен</string>
     <string name="action_fill_confirmation">Заполнение запрошено</string>
     <string name="action_ecarb_confirmation">Углеводы запрошены</string>
+    <string name="action_profile_switch_confirmation">Запрос на смену профиля</string>
     <string name="action_target" comment="In temp target menu, single target value">Цель</string>
     <string name="action_low" comment="In temp target menu, lower value from range">Низкое значение</string>
     <string name="action_high" comment="In temp target menu, higher value from range">Высокое значение</string>
