@@ -597,9 +597,7 @@
     <string name="secondcarbsincrement">Zweite KH-Erhöhung</string>
     <string name="thirdcarbsincrement">Dritte KH-Erhöhung</string>
     <string name="cgm">CGM</string>
-    <string name="ns_wifionly">Benutze nur WLAN Verbindung</string>
     <string name="ns_wifi_ssids">WLAN SSID</string>
-    <string name="ns_chargingonly">Nur während des Ladens</string>
     <string name="connectionsettings_title">Verbindungs-Einstellungen</string>
     <string name="ns_wifi_allowedssids">Erlaubte SSIDs (durch Semikolon getrennt)</string>
     <string name="ns_allowroaming">Erlaube Verbindung bei Roaming</string>
