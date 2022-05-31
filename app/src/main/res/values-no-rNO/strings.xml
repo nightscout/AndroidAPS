@@ -604,9 +604,7 @@
     <string name="secondcarbsincrement">Andre økning hurtigknapp for karbohydrater</string>
     <string name="thirdcarbsincrement">Tredje økning hurtigknapp for karbohydrater</string>
     <string name="cgm">CGM</string>
-    <string name="ns_wifionly">Bare kun WiFi tilkoblinger</string>
     <string name="ns_wifi_ssids">WiFi nettverksnavn</string>
-    <string name="ns_chargingonly">Bare under lading</string>
     <string name="connectionsettings_title">Tilkoblingsinnstillinger</string>
     <string name="ns_wifi_allowedssids">Tillatte nettverksnavn SSID (separert med semikolon)</string>
     <string name="ns_allowroaming">Tillat tilkobling i roaming</string>
