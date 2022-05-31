@@ -61,6 +61,7 @@ class Connection(
     @Volatile
     var msgIO: MessageIO? = null
 
+    @Synchronized
     fun connect(connectionWaitCond: ConnectionWaitCondition) {
         aapsLogger.debug("Connecting connectionWaitCond=$connectionWaitCond")
         podState.connectionAttempts++
@@ -117,6 +118,7 @@ class Connection(
         dataBleIO.readyToRead()
     }
 
+    @Synchronized
     fun disconnect(closeGatt: Boolean) {
         aapsLogger.debug(LTag.PUMPBTCOMM, "Disconnecting closeGatt=$closeGatt")
         podState.bluetoothConnectionState = OmnipodDashPodStateManager.BluetoothConnectionState.DISCONNECTED
