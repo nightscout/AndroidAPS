@@ -28,6 +28,7 @@ import info.nightscout.androidaps.extensions.highValueToUnitsToString
 import info.nightscout.androidaps.extensions.lowValueToUnitsToString
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
@@ -35,7 +36,6 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHi
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
@@ -78,7 +78,7 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
     @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.recyclerview.setHasFixedSize(true)
-        actionHelper = ActionModeHelper(rh, activity)
+        actionHelper = ActionModeHelper(rh, activity, this)
         actionHelper.setUpdateListHandler { binding.recyclerview.adapter?.notifyDataSetChanged() }
         actionHelper.setOnRemoveHandler { removeSelected(it) }
         setHasOptionsMenu(true)
@@ -187,8 +187,8 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
             holder.binding.reason.text = translator.translate(tempTarget.reason)
             holder.binding.time.setTextColor(
                 when {
-                    tempTarget.id == currentlyActiveTarget?.id -> rh.gac(context , R.attr.activeColor)
-                    tempTarget.timestamp > dateUtil.now()      -> rh.gac(context , R.attr.scheduledColor)
+                    tempTarget.id == currentlyActiveTarget?.id -> rh.gac(context, R.attr.activeColor)
+                    tempTarget.timestamp > dateUtil.now()      -> rh.gac(context, R.attr.scheduledColor)
                     else                                       -> holder.binding.reasonColon.currentTextColor
                 }
             )

@@ -739,13 +739,17 @@
     <string name="secondcarbsincrement">Second carbs increment</string>
     <string name="thirdcarbsincrement">Third carbs increment</string>
     <string name="cgm">CGM</string>
-    <string name="key_ns_wifionly" translatable="false">ns_wifionly</string>
+    <string name="key_ns_cellular" translatable="false">ns_cellular</string>
+    <string name="key_ns_wifi" translatable="false">ns_wifi</string>
     <string name="key_ns_wifi_ssids" translatable="false">ns_wifi_ssids</string>
-    <string name="key_ns_allowroaming" translatable="false">ns_allowroaming</string>
-    <string name="key_ns_chargingonly" translatable="false">ns_chargingonly</string>
-    <string name="ns_wifionly">Use WiFi connection only</string>
+    <string name="key_ns_allow_roaming" translatable="false">ns_allowroaming</string>
+    <string name="key_ns_battery" translatable="false">ns_battery</string>
+    <string name="key_ns_charging" translatable="false">ns_charging</string>
+    <string name="ns_cellular">Use Cellular connection</string>
+    <string name="ns_wifi">Use WiFi connection</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="ns_chargingonly">Only if charging</string>
+    <string name="ns_charging">During charging</string>
+    <string name="ns_battery">On battery</string>
     <string name="connectionsettings_title">Connection settings</string>
     <string name="ns_wifi_allowedssids">Allowed SSIDs (semicolon separated)</string>
     <string name="ns_allowroaming">Allow connection in roaming</string>
@@ -836,6 +840,8 @@
     <string name="error_adding_treatment_message">A treatment (insulin: %1$.2f, carbs: %2$d, at: %3$s) could not be added to treatments. Please check and manually add a record as appropriate.</string>
     <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), delay: %3$d m</string>
     <string name="openaps_noasdata">No autosens data available</string>
+    <string name="log_files">Log files</string>
+    <string name="miscellaneous">Miscellaneous</string>
     <string name="nav_logsettings">Log settings</string>
     <string name="resettodefaults">Reset to defaults</string>
     <string name="nsmalfunction">NSClient malfunction. Consider NS and NSClient restart.</string>
@@ -951,6 +957,11 @@
     <string name="invalidpct">Invalid % entry</string>
     <string name="average">Average</string>
     <string name="tir">TIR</string>
+    <string name="day_tir">Day TIR</string>
+    <string name="night_tir">Night TIR</string>
+    <string name="detailed_14_days">Detailed 14 days</string>
+    <string name="std_deviation">SD: %1$s</string>
+    <string name="hba1c">HbA1c: </string>
     <string name="activitymonitor">Activity monitor</string>
     <string name="doyouwantresetstats">Do you want to reset activity stats?</string>
     <string name="statistics">Statistics</string>
@@ -1207,6 +1218,10 @@
     <string name="count_selected">%1$d selected</string>
     <string name="sort_label">Sort</string>
     <string name="dialog_canceled">Dialog canceled</string>
+    <string name="veryLow" comment="below 3.1">Very low</string>
+    <string name="low" comment="3.1-3.9">Low</string>
+    <string name="high" comment="10.0-13.9">High</string>
+    <string name="veryHigh" comment="above 13.9">Very high</string>
     <string name="below" comment="below &quot;in range&quot;">Below</string>
     <string name="in_range">In range</string>
     <string name="above" comment="above &quot;in range&quot;">Above</string>
@@ -1235,6 +1250,8 @@
     <string name="aidex">GlucoRx Aidex</string>
     <string name="aidex_short">Aidex</string>
     <string name="description_source_aidex">Receive BG values from GlucoRx Aidex CGMS.</string>
+    <string name="blocked_by_charging">Blocked by charging options</string>
+    <string name="blocked_by_connectivity">Blocked by connectivity options</string>
 
 
 </resources>

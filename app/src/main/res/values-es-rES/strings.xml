@@ -681,6 +681,8 @@
     <string name="error_adding_treatment_message">Un tratamiento (insulina: %1$.2f, carbs: %2$d, at: %3$s) no ha podido ser añadido a tratamientos. Por favor compruebe y añada manualmente el registro apropiadamente.</string>
     <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), retraso: %3$d m</string>
     <string name="openaps_noasdata">Sin datos autosens disponibles</string>
+    <string name="log_files">Archivos de registro</string>
+    <string name="miscellaneous">Misceláneo</string>
     <string name="nav_logsettings">Ajustes de registros</string>
     <string name="resettodefaults">Restablecer valores predeterminados</string>
     <string name="nsmalfunction">NSClient fallando. Considera reiniciar NS y NSClient.</string>
@@ -773,6 +775,11 @@
     <string name="invalidpct">Entrada % inválida</string>
     <string name="average">Promedio</string>
     <string name="tir">Tiempo en rango</string>
+    <string name="day_tir">TIR Diurno</string>
+    <string name="night_tir">TIR Nocturno</string>
+    <string name="detailed_14_days">Datos detallados de 14 días</string>
+    <string name="std_deviation">Desviación estándar: %1$s</string>
+    <string name="hba1c">HbA1c: </string>
     <string name="activitymonitor">Monitor de actividad</string>
     <string name="doyouwantresetstats">¿Desea restablecer las estadísticas de actividad?</string>
     <string name="statistics">Estadísticas</string>
@@ -999,6 +1006,10 @@
     <string name="count_selected">%1$d selecionado</string>
     <string name="sort_label">Ordenar</string>
     <string name="dialog_canceled">Diálogo cancelado</string>
+    <string name="veryLow" comment="below 3.1">Muy bajo</string>
+    <string name="low" comment="3.1-3.9">Bajo</string>
+    <string name="high" comment="10.0-13.9">Alto</string>
+    <string name="veryHigh" comment="above 13.9">Muy alto</string>
     <string name="below" comment="below &quot;in range&quot;">Bajo</string>
     <string name="in_range">En rango</string>
     <string name="above" comment="above &quot;in range&quot;">Alto</string>

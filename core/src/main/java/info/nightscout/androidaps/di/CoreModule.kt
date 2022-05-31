@@ -14,7 +14,8 @@ import javax.inject.Singleton
     includes = [
         CoreReceiversModule::class,
         CoreFragmentsModule::class,
-        CoreDataClassesModule::class
+        CoreDataClassesModule::class,
+        ValidatorsModule::class
     ]
 )
 open class CoreModule {

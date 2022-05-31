@@ -681,6 +681,8 @@
     <string name="error_adding_treatment_message">Ošetření (inzulín: %1$.2f, sacharidy: %2$d, čas: %3$s) nelze přidat. Zkontrolujte a podle potřeby ručně přidejte záznam.</string>
     <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), zpoždění: %3$d m</string>
     <string name="openaps_noasdata">Nedostupná data o glykémiích</string>
+    <string name="log_files">Soubory protokolu</string>
+    <string name="miscellaneous">Různé</string>
     <string name="nav_logsettings">Nastavení logování</string>
     <string name="resettodefaults">Obnovit výchozí</string>
     <string name="nsmalfunction">Chyba NSClienta. Zvažte restart NS a NSClienta.</string>
@@ -773,6 +775,11 @@
     <string name="invalidpct">Neplatný vstup %</string>
     <string name="average">Průměr</string>
     <string name="tir">Čas v rozsahu</string>
+    <string name="day_tir">Denní TIR</string>
+    <string name="night_tir">Noční TIR</string>
+    <string name="detailed_14_days">Podrobně 14 dní</string>
+    <string name="std_deviation">SD: %1$s</string>
+    <string name="hba1c">HbA1c: </string>
     <string name="activitymonitor">Monitor aktivity</string>
     <string name="doyouwantresetstats">Chcete resetovat statistiky aktivity?</string>
     <string name="statistics">Statistika</string>
@@ -999,6 +1006,10 @@
     <string name="count_selected">Vybráno: %1$d</string>
     <string name="sort_label">Seřadit</string>
     <string name="dialog_canceled">Dialog zrušen</string>
+    <string name="veryLow" comment="below 3.1">Velmi nízká</string>
+    <string name="low" comment="3.1-3.9">Nízká</string>
+    <string name="high" comment="10.0-13.9">Vysoká</string>
+    <string name="veryHigh" comment="above 13.9">Velmi vysoká</string>
     <string name="below" comment="below &quot;in range&quot;">Pod</string>
     <string name="in_range">V rozsahu</string>
     <string name="above" comment="above &quot;in range&quot;">Nad</string>

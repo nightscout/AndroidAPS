@@ -24,6 +24,7 @@
             <enum name="minLength" value="18" />
             <enum name="multiPhone" value="19" />
             <enum name="pinStrength" value="20" />
+            <enum name="bgRange" value="21" />
         </attr>
         <attr name="testErrorString" format="string" />
         <attr name="emptyErrorString" format="string" />
@@ -36,6 +37,8 @@
         <attr name="maxNumber" format="integer" />
         <attr name="floatminNumber" format="float" />
         <attr name="floatmaxNumber" format="float" />
+        <attr name="minMgdl" format="integer" />
+        <attr name="maxMgdl" format="integer" />
     </declare-styleable>
 
 </resources>

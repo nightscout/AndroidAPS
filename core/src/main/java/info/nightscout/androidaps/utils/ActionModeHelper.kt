@@ -5,12 +5,13 @@ import android.view.ActionMode
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import info.nightscout.androidaps.core.R
 
 import info.nightscout.androidaps.interfaces.ResourceHelper
 
-class ActionModeHelper<T>(val rh: ResourceHelper, val activity: FragmentActivity?) {
+class ActionModeHelper<T>(val rh: ResourceHelper, val activity: FragmentActivity?, val fragment: Fragment?) {
 
     var enableSort = false
     private var selectedItems: SparseArray<T> = SparseArray()
@@ -20,7 +21,7 @@ class ActionModeHelper<T>(val rh: ResourceHelper, val activity: FragmentActivity
     private var onRemove: ((selectedItems: SparseArray<T>) -> Unit)? = null
     private var onUpdate: (() -> Unit)? = null
 
-    val inMenu: Boolean
+    private val inSingleFragment: Boolean
         get() {
             val parentClass = this.activity?.let { it::class.simpleName }
             return parentClass == "SingleFragmentActivity"
@@ -67,8 +68,12 @@ class ActionModeHelper<T>(val rh: ResourceHelper, val activity: FragmentActivity
     }
 
     fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        if (inMenu) {
+        if (inSingleFragment) {
             inflater.inflate(R.menu.menu_actions, menu)
+        } else if (fragment?.isResumed == true) {
+            menu.add(Menu.FIRST, R.id.nav_remove_items, 0, rh.gs(R.string.remove_items)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+            menu.add(Menu.FIRST, R.id.nav_sort_items, 0, rh.gs(R.string.sort_items)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+            menu.setGroupDividerEnabled(true)
         }
     }
 
