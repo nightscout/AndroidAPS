@@ -603,9 +603,7 @@
     <string name="secondcarbsincrement">Secondo incremento di CHO</string>
     <string name="thirdcarbsincrement">Terzo incremento di CHO</string>
     <string name="cgm">CGM</string>
-    <string name="ns_wifionly">Usa solo connessione WiFi</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="ns_chargingonly">Solo se in carica</string>
     <string name="connectionsettings_title">Impostazioni connessione</string>
     <string name="ns_wifi_allowedssids">SSID ammessi (separati da punto e virgola)</string>
     <string name="ns_allowroaming">Consenti connessione in roaming</string>
