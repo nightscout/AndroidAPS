@@ -1,10 +1,10 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.defs.schedule;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.schedule.BasalTableEntry;
-
-import static junit.framework.Assert.assertEquals;
 
 public class BasalTableEntryTest {
     @Test

@@ -681,6 +681,8 @@
     <string name="error_adding_treatment_message">Ošetření (inzulín: %1$.2f, sacharidy: %2$d, čas: %3$s) nelze přidat. Zkontrolujte a podle potřeby ručně přidejte záznam.</string>
     <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), zpoždění: %3$d m</string>
     <string name="openaps_noasdata">Nedostupná data o glykémiích</string>
+    <string name="log_files">Soubory protokolu</string>
+    <string name="miscellaneous">Různé</string>
     <string name="nav_logsettings">Nastavení logování</string>
     <string name="resettodefaults">Obnovit výchozí</string>
     <string name="nsmalfunction">Chyba NSClienta. Zvažte restart NS a NSClienta.</string>

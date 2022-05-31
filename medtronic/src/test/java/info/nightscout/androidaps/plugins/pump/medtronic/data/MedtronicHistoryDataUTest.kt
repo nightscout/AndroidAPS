@@ -24,6 +24,7 @@ import org.junit.Ignore
 import org.junit.Test
 import org.mockito.Mock
 
+@Suppress("UNCHECKED_CAST") 
 class MedtronicHistoryDataUTest : TestBase() {
 
     //@Mock lateinit var activePlugin: ActivePlugin
