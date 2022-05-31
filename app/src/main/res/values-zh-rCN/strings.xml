@@ -603,9 +603,7 @@
     <string name="secondcarbsincrement">第二碳水化合物增量</string>
     <string name="thirdcarbsincrement">第三碳水化合物增量</string>
     <string name="cgm">CGM</string>
-    <string name="ns_wifionly">仅使用 WiFi 连接</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="ns_chargingonly">仅在充电时</string>
     <string name="connectionsettings_title">连接设置</string>
     <string name="ns_wifi_allowedssids">允许的 SSIDs (分号分隔)</string>
     <string name="ns_allowroaming">允许在漫游中连接</string>
