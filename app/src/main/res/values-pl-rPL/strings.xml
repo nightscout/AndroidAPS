@@ -595,9 +595,7 @@
     <string name="secondcarbsincrement">Drugi stopień przyrostu węglow.</string>
     <string name="thirdcarbsincrement">Trzeci stopień przyrostu węglow.</string>
     <string name="cgm">CGM</string>
-    <string name="ns_wifionly">Używaj tylko połączenia WiFi</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="ns_chargingonly">Tylko gdy się ładuje</string>
     <string name="connectionsettings_title">Ustawienia połączenia</string>
     <string name="ns_wifi_allowedssids">Dozwolone SSID (rozdzielone średnikiem)</string>
     <string name="ns_allowroaming">Zezwalaj na połączenia w roamingu</string>
