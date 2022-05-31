@@ -604,7 +604,11 @@
     <string name="secondcarbsincrement">Druhý prídavok sacharidov</string>
     <string name="thirdcarbsincrement">Tretí prídavok sacharidov</string>
     <string name="cgm">CGM</string>
+    <string name="ns_cellular">Použiť mobilné pripojenie</string>
+    <string name="ns_wifi">Použiť WiFi pripojenie</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="ns_charging">Počas nabíjania</string>
+    <string name="ns_battery">Na batérii</string>
     <string name="connectionsettings_title">Nastavenie pripojenia</string>
     <string name="ns_wifi_allowedssids">Povolené SSID (oddelené bodkočiarkou)</string>
     <string name="ns_allowroaming">Povoliť pripojenie pri roamingu</string>
@@ -1035,4 +1039,6 @@
     <string name="aidex">GlucoRx Aidex</string>
     <string name="aidex_short">Aidex</string>
     <string name="description_source_aidex">Prijímať hodnoty glykémie zo senzora GlucoRx Aidex.</string>
+    <string name="blocked_by_charging">Zablokované možnosti nabíjania</string>
+    <string name="blocked_by_connectivity">Zablokované možnosti pripojenia</string>
 </resources>
