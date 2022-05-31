@@ -20,20 +20,15 @@ class NsClientReceiverDelegateTest : TestBase() {
     @Mock lateinit var context: Context
     @Mock lateinit var sp: SP
     @Mock lateinit var rh: ResourceHelper
-
-    lateinit var receiverStatusStore: ReceiverStatusStore
     val rxBus = RxBus(aapsSchedulers, aapsLogger)
 
+    private lateinit var receiverStatusStore: ReceiverStatusStore
     private lateinit var sut: NsClientReceiverDelegate
+
 
     @Before
     fun prepare() {
         receiverStatusStore = ReceiverStatusStore(context, rxBus)
-        // `when`(sp.getLong(anyInt(), anyLong())).thenReturn(0L)
-        // `when`(sp.getBoolean(anyInt(), anyBoolean())).thenReturn(false)
-        // `when`(sp.getInt(anyInt(), anyInt())).thenReturn(0)
-        // `when`(sp.getString(anyInt(), anyString())).thenReturn("")
-
         sut = NsClientReceiverDelegate(rxBus, rh, sp, receiverStatusStore)
     }
 
@@ -52,37 +47,43 @@ class NsClientReceiverDelegateTest : TestBase() {
     @Test
     fun testCalculateStatusNetworkState() {
         `when`(sp.getBoolean(R.string.key_ns_cellular, true)).thenReturn(true)
+        `when`(sp.getBoolean(R.string.key_ns_allow_roaming, true)).thenReturn(true)
         `when`(sp.getBoolean(R.string.key_ns_wifi, true)).thenReturn(true)
         `when`(sp.getString(R.string.key_ns_wifi_ssids, "")).thenReturn("")
+        Assert.assertTrue(sut.calculateStatus(EventNetworkChange(mobileConnected = true, wifiConnected = false, roaming = true)))
+        Assert.assertTrue(sut.calculateStatus(EventNetworkChange(mobileConnected = true, wifiConnected = false, roaming = false)))
         Assert.assertTrue(sut.calculateStatus(EventNetworkChange(ssid = "<unknown ssid>", mobileConnected = true, wifiConnected = true)))
+        Assert.assertTrue(sut.calculateStatus(EventNetworkChange(ssid = "<unknown ssid>", mobileConnected = false, wifiConnected = true)))
+        Assert.assertFalse(sut.calculateStatus(EventNetworkChange()))
 
         `when`(sp.getString(R.string.key_ns_wifi_ssids, "")).thenReturn("test")
+        Assert.assertTrue(sut.calculateStatus(EventNetworkChange(mobileConnected = true, wifiConnected = false, roaming = true)))
+        Assert.assertTrue(sut.calculateStatus(EventNetworkChange(mobileConnected = true, wifiConnected = false, roaming = false)))
+        Assert.assertTrue(sut.calculateStatus(EventNetworkChange(ssid = "<unknown ssid>", mobileConnected = true, wifiConnected = true)))
+        Assert.assertFalse(sut.calculateStatus(EventNetworkChange(ssid = "<unknown ssid>", mobileConnected = false, wifiConnected = true)))
         Assert.assertTrue(sut.calculateStatus(EventNetworkChange(ssid = "test", mobileConnected = true, wifiConnected = true)))
-        Assert.assertFalse(sut.calculateStatus(EventNetworkChange(ssid = "unknown", mobileConnected = true, wifiConnected = true)))
-        Assert.assertTrue(sut.calculateStatus(EventNetworkChange(mobileConnected = true)))
+        Assert.assertTrue(sut.calculateStatus(EventNetworkChange(ssid = "test", mobileConnected = false, wifiConnected = true)))
+        Assert.assertFalse(sut.calculateStatus(EventNetworkChange()))
 
-        // wifiOnly = true
-        // allowRoaming = true as well
         `when`(sp.getBoolean(R.string.key_ns_cellular, true)).thenReturn(false)
         `when`(sp.getBoolean(R.string.key_ns_wifi, true)).thenReturn(true)
         `when`(sp.getBoolean(R.string.key_ns_allow_roaming, true)).thenReturn(true)
+        `when`(sp.getString(R.string.key_ns_wifi_ssids, "")).thenReturn("")
         Assert.assertTrue(sut.calculateStatus(EventNetworkChange(wifiConnected = true)))
         Assert.assertFalse(sut.calculateStatus(EventNetworkChange()))
         Assert.assertFalse(sut.calculateStatus(EventNetworkChange(mobileConnected = true)))
 
-        // wifiOnly = false
-        // allowRoaming = false as well
         `when`(sp.getBoolean(R.string.key_ns_cellular, true)).thenReturn(true)
         `when`(sp.getBoolean(R.string.key_ns_wifi, true)).thenReturn(true)
         `when`(sp.getBoolean(R.string.key_ns_allow_roaming, true)).thenReturn(false)
+        `when`(sp.getString(R.string.key_ns_wifi_ssids, "")).thenReturn("")
         Assert.assertTrue(sut.calculateStatus(EventNetworkChange(mobileConnected = true, roaming = false)))
         Assert.assertFalse(sut.calculateStatus(EventNetworkChange(mobileConnected = true, roaming = true)))
 
-        // wifiOnly = false
-        // allowRoaming = true
         `when`(sp.getBoolean(R.string.key_ns_cellular, true)).thenReturn(true)
         `when`(sp.getBoolean(R.string.key_ns_wifi, true)).thenReturn(true)
         `when`(sp.getBoolean(R.string.key_ns_allow_roaming, true)).thenReturn(true)
+        `when`(sp.getString(R.string.key_ns_wifi_ssids, "")).thenReturn("")
         Assert.assertTrue(sut.calculateStatus(EventNetworkChange(mobileConnected = true, roaming = false)))
         Assert.assertTrue(sut.calculateStatus(EventNetworkChange(mobileConnected = true, roaming = true)))
     }

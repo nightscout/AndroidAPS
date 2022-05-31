@@ -22,6 +22,7 @@ class NsClientReceiverDelegate @Inject constructor(
     private var allowedChargingState = true
     private var allowedNetworkState = true
     var allowed = true
+    var blockingReason = ""
 
     fun grabReceiversState() {
         receiverStatusStore.updateNetworkStatus()
@@ -48,6 +49,7 @@ class NsClientReceiverDelegate @Inject constructor(
         val newChargingState = calculateStatus(ev)
         if (newChargingState != allowedChargingState) {
             allowedChargingState = newChargingState
+            blockingReason = rh.gs(R.string.blocked_by_charging)
             processStateChange()
         }
     }
@@ -56,6 +58,7 @@ class NsClientReceiverDelegate @Inject constructor(
         val newNetworkState = calculateStatus(ev)
         if (newNetworkState != allowedNetworkState) {
             allowedNetworkState = newNetworkState
+            blockingReason = rh.gs(R.string.blocked_by_connectivity)
             processStateChange()
         }
     }

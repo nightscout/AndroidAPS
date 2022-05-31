@@ -1244,6 +1244,8 @@
     <string name="aidex">GlucoRx Aidex</string>
     <string name="aidex_short">Aidex</string>
     <string name="description_source_aidex">Receive BG values from GlucoRx Aidex CGMS.</string>
+    <string name="blocked_by_charging">Blocked by charging options</string>
+    <string name="blocked_by_connectivity">Blocked by connectivity options</string>
 
 
 </resources>

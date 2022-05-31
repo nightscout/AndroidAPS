@@ -21,8 +21,7 @@ import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.nsclient.data.AlarmAck
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSAlarm
@@ -35,11 +34,12 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HtmlHelper.fromHtml
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import java.util.*
+import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -80,62 +80,49 @@ class NSClientPlugin @Inject constructor(
     var nsClientService: NSClientService? = null
     val isAllowed: Boolean
         get() = nsClientReceiverDelegate.allowed
+    val blockingReason: String
+        get() = nsClientReceiverDelegate.blockingReason
 
     override fun onStart() {
         paused = sp.getBoolean(R.string.key_nsclientinternal_paused, false)
         autoscroll = sp.getBoolean(R.string.key_nsclientinternal_autoscroll, true)
-        val intent = Intent(context, NSClientService::class.java)
-        context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
+        context.bindService(Intent(context, NSClientService::class.java), mConnection, Context.BIND_AUTO_CREATE)
         super.onStart()
         nsClientReceiverDelegate.grabReceiversState()
-        disposable.add(
-            rxBus
-                .toObservable(EventNSClientStatus::class.java)
-                .observeOn(aapsSchedulers.io)
-                .subscribe({ event: EventNSClientStatus ->
-                               status = event.getStatus(rh)
-                               rxBus.send(EventNSClientUpdateGUI())
-                           }, fabricPrivacy::logException)
-        )
-        disposable.add(
-            rxBus
-                .toObservable(EventNetworkChange::class.java)
-                .observeOn(aapsSchedulers.io)
-                .subscribe({ ev -> nsClientReceiverDelegate.onStatusEvent(ev) }, fabricPrivacy::logException)
-        )
-        disposable.add(
-            rxBus
-                .toObservable(EventPreferenceChange::class.java)
-                .observeOn(aapsSchedulers.io)
-                .subscribe({ ev -> nsClientReceiverDelegate.onStatusEvent(ev) }, fabricPrivacy::logException)
-        )
-        disposable.add(
-            rxBus
-                .toObservable(EventAppExit::class.java)
-                .observeOn(aapsSchedulers.io)
-                .subscribe({ if (nsClientService != null) context.unbindService(mConnection) }, fabricPrivacy::logException)
-        )
-        disposable.add(
-            rxBus
-                .toObservable(EventNSClientNewLog::class.java)
-                .observeOn(aapsSchedulers.io)
-                .subscribe({ event: EventNSClientNewLog ->
-                               addToLog(event)
-                               aapsLogger.debug(LTag.NSCLIENT, event.action + " " + event.logText)
-                           }, fabricPrivacy::logException)
-        )
-        disposable.add(
-            rxBus
-                .toObservable(EventChargingState::class.java)
-                .observeOn(aapsSchedulers.io)
-                .subscribe({ ev -> nsClientReceiverDelegate.onStatusEvent(ev) }, fabricPrivacy::logException)
-        )
-        disposable.add(
-            rxBus
-                .toObservable(EventNSClientResend::class.java)
-                .observeOn(aapsSchedulers.io)
-                .subscribe({ event -> resend(event.reason) }, fabricPrivacy::logException)
-        )
+        disposable += rxBus
+            .toObservable(EventNSClientStatus::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ event: EventNSClientStatus ->
+                           status = event.getStatus(rh)
+                           rxBus.send(EventNSClientUpdateGUI())
+                       }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventNetworkChange::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ ev -> nsClientReceiverDelegate.onStatusEvent(ev) }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventPreferenceChange::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ ev -> nsClientReceiverDelegate.onStatusEvent(ev) }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventAppExit::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ if (nsClientService != null) context.unbindService(mConnection) }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventNSClientNewLog::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ event: EventNSClientNewLog ->
+                           addToLog(event)
+                           aapsLogger.debug(LTag.NSCLIENT, event.action + " " + event.logText)
+                       }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventChargingState::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ ev -> nsClientReceiverDelegate.onStatusEvent(ev) }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventNSClientResend::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ event -> resend(event.reason) }, fabricPrivacy::logException)
     }
 
     override fun onStop() {
