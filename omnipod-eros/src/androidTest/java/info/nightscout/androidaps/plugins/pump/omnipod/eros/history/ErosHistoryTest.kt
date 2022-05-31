@@ -44,11 +44,11 @@ class ErosHistoryTest {
 
         history = erosHistory.getAllErosHistoryRecordsFromTimestamp(0L)
         assert(history.size == 2)
-        assert(type.equals(history.first().podEntryTypeCode))
+        assert(type == history.first().podEntryTypeCode)
 
         val returnedEntity = erosHistory.findErosHistoryRecordByPumpId(entity.pumpId)
         assertNotNull(returnedEntity)
-        assert(type.equals(returnedEntity.podEntryTypeCode))
+        assert(type == returnedEntity?.podEntryTypeCode)
     }
 
     @After

@@ -96,6 +96,7 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
      * @param isSecondScale whether it is the second scale
      */
     @Override
+    @SuppressWarnings({"deprecation"})
     public void draw(GraphView graphView, Canvas canvas, boolean isSecondScale) {
         // Convert the sp to pixels
         float scaledTextSize = spSize * graphView.getContext().getResources().getDisplayMetrics().scaledDensity;

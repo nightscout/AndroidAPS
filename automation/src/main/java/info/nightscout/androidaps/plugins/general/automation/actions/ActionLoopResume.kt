@@ -45,9 +45,9 @@ class ActionLoopResume(injector: HasAndroidInjector) : Action(injector) {
                            })
             rxBus.send(EventRefreshOverview("ActionLoopResume"))
             uel.log(UserEntry.Action.RESUME, Sources.Automation, title)
-            callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok))?.run()
+            callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok)).run()
         } else {
-            callback.result(PumpEnactResult(injector).success(true).comment(R.string.notsuspended))?.run()
+            callback.result(PumpEnactResult(injector).success(true).comment(R.string.notsuspended)).run()
         }
     }
 
