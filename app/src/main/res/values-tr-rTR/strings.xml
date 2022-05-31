@@ -605,9 +605,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="secondcarbsincrement">İkinci karbonhidrat artışı</string>
     <string name="thirdcarbsincrement">Üçüncü karbonhidrat artışı</string>
     <string name="cgm">CGM</string>
-    <string name="ns_wifionly">Sadece WiFi bağlantı kullanın</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="ns_chargingonly">Sadece şarj olurken</string>
     <string name="connectionsettings_title">Bağlantı Ayarları</string>
     <string name="ns_wifi_allowedssids">İzin verilen SSID (noktalı virgülle ayrılmış)</string>
     <string name="ns_allowroaming">Roaming bağlantıya izin ver</string>
