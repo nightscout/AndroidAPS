@@ -440,6 +440,7 @@
     <string name="enableuam_summary">Поиск незапланированного приема пищи</string>
     <string name="insulin_oref_peak">Время пика действующего инс IOB</string>
     <string name="insulin_peak_time">время пика (в мин.)</string>
+    <string name="insulin_peak">Пик</string>
     <string name="free_peak_oref">Свободный от пиков Oref</string>
     <string name="rapid_acting_oref">Быстро действующий Oref</string>
     <string name="ultrarapid_oref">Сверхбыстрый Oref</string>
@@ -776,6 +777,8 @@
     <string name="invalidpct">Некорректный ввод %</string>
     <string name="average">Средний</string>
     <string name="tir">Время в целевом диапазоне TIR</string>
+    <string name="day_tir">Время в целевом диапазоне днем</string>
+    <string name="night_tir">Время в целевом диапазоне ночью</string>
     <string name="detailed_14_days">Подробно 14 дней</string>
     <string name="std_deviation">СтандОткл: %1$s</string>
     <string name="hba1c">HbA1c: </string>
@@ -1015,12 +1018,14 @@
     <string name="show_hide_records">Скрыть записи цикла</string>
     <string name="widget_description">Виджет androidAPS</string>
     <string name="configure">Настроить прозрачность</string>
+    <string name="loop_status">Статус цикла</string>
     <string name="graph_scale">Масштаб графика</string>
     <string name="profile1">Профиль 1</string>
     <string name="profile2">Профиль 2</string>
     <string name="login">Логин</string>
     <string name="remove_all">Удалить всё</string>
     <string name="reset_start">Перезапустить старт</string>
+    <string name="a11y_otp_qr_code">QR код для введения временного пароля</string>
     <string name="a11y_open_settings">открыть настройки</string>
     <string name="a11y_set_carb_timer">задать оповещение таймера углеводов</string>
     <string name="device_all">Все</string>
