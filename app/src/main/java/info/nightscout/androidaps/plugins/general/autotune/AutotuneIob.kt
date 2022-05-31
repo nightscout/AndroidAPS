@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.ceil
 import kotlin.math.roundToInt
 
 @Singleton
@@ -181,7 +182,7 @@ class AutotuneIob @Inject constructor(
     // even if profile rate is not the same
     private fun toSplittedTimestampTB(tb: TemporaryBasal, tunedProfile: ATProfile) {
         var splittedTimestamp = tb.timestamp
-        val cutInMilliSec = T.mins(30).msecs()                  //30 min to compare with oref0
+        val cutInMilliSec = T.mins(60).msecs()                  //30 min to compare with oref0, 60 min to improve accuracy
         var splittedDuration = tb.duration
         if (tb.isValid && tb.durationInMinutes > 0) {
             val endTimestamp = splittedTimestamp + splittedDuration
@@ -248,21 +249,20 @@ class AutotuneIob @Inject constructor(
 
     fun convertToBoluses(eb: ExtendedBolus): MutableList<Bolus> {
         val result: MutableList<Bolus> = ArrayList()
-        val tempBolusSize = 0.05
-        val tempBolusCount : Int = (eb.amount / tempBolusSize).roundToInt()
-        if(tempBolusCount > 0) {
-            val tempBolusSpacing = eb.duration / tempBolusCount
-            for (j in 0L until tempBolusCount) {
-                val calcDate = eb.timestamp + j * tempBolusSpacing
-                val bolusInterfaceIDs = InterfaceIDs().also { it.nightscoutId = eb.interfaceIDs.nightscoutId + "_eb_$j" }
-                val tempBolusPart = Bolus(
-                    interfaceIDs_backing = bolusInterfaceIDs,
-                    timestamp = calcDate,
-                    amount = tempBolusSize,
-                    type = Bolus.Type.NORMAL
-                )
-                result.add(tempBolusPart)
-            }
+        val aboutFiveMinIntervals = ceil(eb.duration / 5.0).toInt()
+        val spacing = eb.duration / aboutFiveMinIntervals.toDouble()
+        for (j in 0L until aboutFiveMinIntervals) {
+            // find middle of the interval
+            val calcDate = (eb.timestamp + j * spacing * 60 * 1000 + 0.5 * spacing * 60 * 1000).toLong()
+            val tempBolusSize: Double = eb.amount / aboutFiveMinIntervals
+            val bolusInterfaceIDs = InterfaceIDs().also { it.nightscoutId = eb.interfaceIDs.nightscoutId + "_eb_$j" }
+            val tempBolusPart = Bolus(
+                interfaceIDs_backing = bolusInterfaceIDs,
+                timestamp = calcDate,
+                amount = tempBolusSize,
+                type = Bolus.Type.NORMAL
+            )
+            result.add(tempBolusPart)
         }
         return result
     }
@@ -277,22 +277,20 @@ class AutotuneIob @Inject constructor(
         } else {
             tbr.rate / 100.0 * basalRate - tunedRate
         }, 0.001)
-        val tempBolusSize = if (netBasalRate < 0 ) -0.05 else 0.05
-        val netBasalAmount: Double = Round.roundTo(netBasalRate * realDuration / 60.0, 0.01)
-        val tempBolusCount : Int = (netBasalAmount / tempBolusSize).roundToInt()
-        if(tempBolusCount > 0) {
-            val tempBolusSpacing = realDuration * 60 * 1000 / tempBolusCount
-            for (j in 0L until tempBolusCount) {
-                val calcDate = tbr.timestamp + j * tempBolusSpacing
-                val bolusInterfaceIDs = InterfaceIDs().also { it.nightscoutId = tbr.interfaceIDs.nightscoutId + "_tbr_$j" }
-                val tempBolusPart = Bolus(
-                    interfaceIDs_backing = bolusInterfaceIDs,
-                    timestamp = calcDate,
-                    amount = tempBolusSize,
-                    type = Bolus.Type.NORMAL
-                )
-                result.add(tempBolusPart)
-            }
+        val aboutFiveMinIntervals = ceil(realDuration / 5.0).toInt()
+        val tempBolusSpacing = realDuration / aboutFiveMinIntervals.toDouble()
+        for (j in 0L until aboutFiveMinIntervals) {
+            // find middle of the interval
+            val calcDate = (tbr.timestamp + j * tempBolusSpacing * 60 * 1000 + 0.5 * tempBolusSpacing * 60 * 1000).toLong()
+            val tempBolusSize = netBasalRate * tempBolusSpacing / 60.0
+            val bolusInterfaceIDs = InterfaceIDs().also { it.nightscoutId = tbr.interfaceIDs.nightscoutId + "_tbr_$j" }
+            val tempBolusPart = Bolus(
+                interfaceIDs_backing = bolusInterfaceIDs,
+                timestamp = calcDate,
+                amount = tempBolusSize,
+                type = Bolus.Type.NORMAL
+            )
+            result.add(tempBolusPart)
         }
         return result
     }
