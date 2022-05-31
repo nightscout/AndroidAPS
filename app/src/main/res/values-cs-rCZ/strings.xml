@@ -604,9 +604,7 @@
     <string name="secondcarbsincrement">Druhý přídavek sacharidů</string>
     <string name="thirdcarbsincrement">Třetí přídavek sacharidů</string>
     <string name="cgm">CGM</string>
-    <string name="ns_wifionly">Používat pouze WiFi</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="ns_chargingonly">Pouze při nabíjení</string>
     <string name="connectionsettings_title">Nastavení připojení</string>
     <string name="ns_wifi_allowedssids">Povolené SSID (oddělené středníkem)</string>
     <string name="ns_allowroaming">Povolit připojení pro roamingu</string>
