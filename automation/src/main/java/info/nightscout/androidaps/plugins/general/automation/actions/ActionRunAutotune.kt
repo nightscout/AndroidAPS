@@ -22,6 +22,7 @@ import org.json.JSONObject
 import javax.inject.Inject
 
 class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
+
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var autotunePlugin: Autotune
     @Inject lateinit var profileFunction: ProfileFunction
@@ -48,7 +49,7 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
                 message = R.string.autotune_run_with_error
                 aapsLogger.error(LTag.AUTOMATION, "Error during Autotune Run")
             }
-            callback.result(PumpEnactResult(injector).success(autotunePlugin.lastRunSuccess).comment(message))?.run()
+            callback.result(PumpEnactResult(injector).success(autotunePlugin.lastRunSuccess).comment(message)).run()
         }.start()
         return
     }

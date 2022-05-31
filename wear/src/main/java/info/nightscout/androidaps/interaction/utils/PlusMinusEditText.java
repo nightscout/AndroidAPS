@@ -187,8 +187,7 @@ public class PlusMinusEditText implements View.OnKeyListener,
     public boolean onKey(View v, int keyCode, KeyEvent event) {
         boolean isKeyOfInterest = keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER;
         boolean isReleased = event.getAction() == KeyEvent.ACTION_UP;
-        boolean isPressed = event.getAction() == KeyEvent.ACTION_DOWN
-                && event.getAction() != KeyEvent.ACTION_MULTIPLE;
+        boolean isPressed = event.getAction() == KeyEvent.ACTION_DOWN;
 
         if (isKeyOfInterest && isReleased) {
             stopUpdating();
