@@ -1,14 +1,14 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data
 
-import java.lang.reflect.Type
-import com.google.gson.reflect.TypeToken
 import com.google.gson.Gson
 import com.google.gson.internal.LinkedTreeMap
+import com.google.gson.reflect.TypeToken
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.PumpSync
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncStorage
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.MedtronicPumpHistoryDecoder
@@ -16,13 +16,12 @@ import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpH
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.TempBasalPair
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
-
 import org.junit.Test
 import org.mockito.Mock
+import java.lang.reflect.Type
 
-class MedtronicHistoryDataUTest : TestBase() {
+@Suppress("UNCHECKED_CAST") class MedtronicHistoryDataUTest : TestBase() {
 
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var medtronicUtil: MedtronicUtil
@@ -40,15 +39,16 @@ class MedtronicHistoryDataUTest : TestBase() {
         }
     }
 
-
     @Test
     fun createTBRProcessList() {
 
-        var unitToTest = MedtronicHistoryData(packetInjector, aapsLogger, sp, rh, rxBus, activePlugin,
-        medtronicUtil,   medtronicPumpHistoryDecoder,
-        medtronicPumpStatus,
-        pumpSync,
-        pumpSyncStorage)
+        val unitToTest = MedtronicHistoryData(
+            packetInjector, aapsLogger, sp, rh, rxBus, activePlugin,
+            medtronicUtil, medtronicPumpHistoryDecoder,
+            medtronicPumpStatus,
+            pumpSync,
+            pumpSyncStorage
+        )
 
         val gson = Gson()
 
@@ -58,26 +58,26 @@ class MedtronicHistoryDataUTest : TestBase() {
         val yourClassList: MutableList<PumpHistoryEntry> = gson.fromJson(fileText, listType)
 
         for (pumpHistoryEntry in yourClassList) {
-            val stringObject = pumpHistoryEntry.decodedData["Object"] as LinkedTreeMap<String,Object>
+            val stringObject = pumpHistoryEntry.decodedData["Object"] as LinkedTreeMap<String, Any>
 
-            val rate : Double = stringObject.get("insulinRate") as Double
-            val durationMinutes: Double = stringObject.get("durationMinutes") as Double
-            val durationMinutesInt : Int = durationMinutes.toInt()
+            val rate: Double = stringObject["insulinRate"] as Double
+            val durationMinutes: Double = stringObject["durationMinutes"] as Double
+            val durationMinutesInt: Int = durationMinutes.toInt()
 
-            var  tmbPair = TempBasalPair(rate, false, durationMinutesInt)
+            val tmbPair = TempBasalPair(rate, false, durationMinutesInt)
 
             pumpHistoryEntry.decodedData.remove("Object")
             pumpHistoryEntry.addDecodedData("Object", tmbPair)
         }
 
-        System.out.println("TBR Pre-Process List: " + gson.toJson(yourClassList))
+        println("TBR Pre-Process List: " + gson.toJson(yourClassList))
 
         val createTBRProcessList = unitToTest.createTBRProcessList(yourClassList)
 
-        System.out.println("TBR Process List: " + createTBRProcessList.size)
+        println("TBR Process List: " + createTBRProcessList.size)
 
         for (tempBasalProcessDTO in createTBRProcessList) {
-            System.out.println(tempBasalProcessDTO.toTreatmentString())
+            println(tempBasalProcessDTO.toTreatmentString())
         }
 
     }
@@ -85,11 +85,13 @@ class MedtronicHistoryDataUTest : TestBase() {
     @Test
     fun createTBRProcessList_SpecialCase() {
 
-        var unitToTest = MedtronicHistoryData(packetInjector, aapsLogger, sp, rh, rxBus, activePlugin,
-                                              medtronicUtil,   medtronicPumpHistoryDecoder,
-                                              medtronicPumpStatus,
-                                              pumpSync,
-                                              pumpSyncStorage)
+        val unitToTest = MedtronicHistoryData(
+            packetInjector, aapsLogger, sp, rh, rxBus, activePlugin,
+            medtronicUtil, medtronicPumpHistoryDecoder,
+            medtronicPumpStatus,
+            pumpSync,
+            pumpSyncStorage
+        )
 
         val gson = Gson()
 
@@ -99,26 +101,26 @@ class MedtronicHistoryDataUTest : TestBase() {
         val yourClassList: MutableList<PumpHistoryEntry> = gson.fromJson(fileText, listType)
 
         for (pumpHistoryEntry in yourClassList) {
-            val stringObject = pumpHistoryEntry.decodedData["Object"] as LinkedTreeMap<String,Object>
+            val stringObject = pumpHistoryEntry.decodedData["Object"] as LinkedTreeMap<String, Any>
 
-            val rate : Double = stringObject.get("insulinRate") as Double
-            val durationMinutes: Double = stringObject.get("durationMinutes") as Double
-            val durationMinutesInt : Int = durationMinutes.toInt()
+            val rate: Double = stringObject["insulinRate"] as Double
+            val durationMinutes: Double = stringObject["durationMinutes"] as Double
+            val durationMinutesInt: Int = durationMinutes.toInt()
 
-            var  tmbPair = TempBasalPair(rate, false, durationMinutesInt)
+            val tmbPair = TempBasalPair(rate, false, durationMinutesInt)
 
             pumpHistoryEntry.decodedData.remove("Object")
             pumpHistoryEntry.addDecodedData("Object", tmbPair)
         }
 
-        System.out.println("TBR Pre-Process List (Special): " + gson.toJson(yourClassList))
+        println("TBR Pre-Process List (Special): " + gson.toJson(yourClassList))
 
         val createTBRProcessList = unitToTest.createTBRProcessList(yourClassList)
 
-        System.out.println("TBR Process List (Special): " + createTBRProcessList.size)
+        println("TBR Process List (Special): " + createTBRProcessList.size)
 
         for (tempBasalProcessDTO in createTBRProcessList) {
-            System.out.println(tempBasalProcessDTO.toTreatmentString())
+            println(tempBasalProcessDTO.toTreatmentString())
         }
 
     }
