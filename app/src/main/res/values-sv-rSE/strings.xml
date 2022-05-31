@@ -600,9 +600,7 @@ Eversense-appen.</string>
     <string name="secondcarbsincrement">Andra snabbknabben för kolhydrater</string>
     <string name="thirdcarbsincrement">Tredje snabbknabben för kolhydrater</string>
     <string name="cgm">CGM</string>
-    <string name="ns_wifionly">Använd endast WiFi</string>
     <string name="ns_wifi_ssids">WiFi nätverksnamn</string>
-    <string name="ns_chargingonly">Endast vid laddning</string>
     <string name="connectionsettings_title">Anslutningsinställningar</string>
     <string name="ns_wifi_allowedssids">Tillåtna nätverksnamn (separerade med semikolon)</string>
     <string name="ns_allowroaming">Tillåt NS-data vid roaming</string>
