@@ -18,6 +18,8 @@ import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpSta
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import org.junit.Before
+import org.junit.Ignore
 
 import org.junit.Test
 import org.mockito.Mock
@@ -38,6 +40,20 @@ class MedtronicHistoryDataUTest : TestBase() {
     //
     //     }
     // }
+
+    @Before
+    fun setUp() {
+        medtronicUtil = MedtronicUtil(
+            aapsLogger, rxBus, rileyLinkUtil,
+            medtronicPumpStatus
+        )
+
+        decoder = MedtronicPumpHistoryDecoder(
+            aapsLogger,
+            medtronicUtil, byteUtil
+        )
+    }
+
 
 
     @Test

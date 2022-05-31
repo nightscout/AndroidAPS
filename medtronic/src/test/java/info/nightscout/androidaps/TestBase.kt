@@ -6,7 +6,9 @@ import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
 import info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncStorage
+import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.MedtronicPumpHistoryDecoder
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntryType
@@ -29,6 +31,8 @@ open class TestBase {
     val aapsLogger = AAPSLoggerTest()
     val aapsSchedulers: AapsSchedulers = TestAapsSchedulers()
     var rxBus: RxBus = RxBus(TestAapsSchedulers(), aapsLogger)
+    var byteUtil = ByteUtil()
+    var rileyLinkUtil = RileyLinkUtil()
 
     @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var pumpSyncStorage: PumpSyncStorage

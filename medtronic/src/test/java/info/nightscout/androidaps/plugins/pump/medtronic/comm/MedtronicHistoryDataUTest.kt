@@ -45,8 +45,7 @@ class MedtronicHistoryDataUTest : TestBase() {
     //     )
 
 
-    var byteUtil = ByteUtil()
-    var rileyLinkUtil = RileyLinkUtil()
+
 
     //lateinit var rxBus: RxBus
     lateinit var medtronicHistoryData: MedtronicHistoryData

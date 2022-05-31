@@ -9,13 +9,11 @@ import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.RawHistory
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.TestAapsSchedulers
-import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
-import org.mockito.Answers
 import org.mockito.Mock
 
 /**
@@ -27,13 +25,14 @@ class MedtronicPumpHistoryDecoderUTest : TestBase() {
     //@Mock lateinit var injector: HasAndroidInjector
     //@Mock lateinit var rh: ResourceHelper
 //    @Mock(answer = Answers.RETURNS_DEEP_STUBS) lateinit var activePlugin: ActivePlugin
-    @Mock lateinit var rileyLinkUtil: RileyLinkUtil
+    //@Mock lateinit var rileyLinkUtil: RileyLinkUtil
     //@Mock lateinit var sp: SP
 
     private var medtronicPumpStatus: MedtronicPumpStatus? = null
     //private var medtronicUtil: MedtronicUtil? = null
     //private var decoder: MedtronicPumpHistoryDecoder? = null
     var rxBusWrapper = RxBus(TestAapsSchedulers(), aapsLogger)
+
     @Before fun setup() {
         medtronicPumpStatus =
             MedtronicPumpStatus(rh, sp, rxBusWrapper, rileyLinkUtil)
