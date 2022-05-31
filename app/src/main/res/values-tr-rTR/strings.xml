@@ -605,7 +605,11 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="secondcarbsincrement">İkinci karbonhidrat artışı</string>
     <string name="thirdcarbsincrement">Üçüncü karbonhidrat artışı</string>
     <string name="cgm">CGM</string>
+    <string name="ns_cellular">Mobil veri kullan</string>
+    <string name="ns_wifi">Wi-Fi bağlantısı kullan</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="ns_charging">Şarj olurken</string>
+    <string name="ns_battery">Pilde</string>
     <string name="connectionsettings_title">Bağlantı Ayarları</string>
     <string name="ns_wifi_allowedssids">İzin verilen SSID (noktalı virgülle ayrılmış)</string>
     <string name="ns_allowroaming">Roaming bağlantıya izin ver</string>
@@ -1036,4 +1040,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="aidex">GlucoRx Aidex</string>
     <string name="aidex_short">Aidex</string>
     <string name="description_source_aidex">GlucoRx Aidex CGMS\'den KŞ değerleri alır.</string>
+    <string name="blocked_by_charging">Şarj seçenekleri tarafından engellendi</string>
+    <string name="blocked_by_connectivity">Bağlantı seçenekleri tarafından engellendi</string>
 </resources>
