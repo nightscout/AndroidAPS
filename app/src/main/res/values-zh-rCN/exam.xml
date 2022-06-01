@@ -123,6 +123,7 @@
     <string name="sensitivity_cannula">记录输注导管更换会将Autosens比率重置回100%。</string>
     <string name="sensitivity_time">一些插件选项具有可配置的时间范围，可由用户设置。</string>
     <string name="sensitivity_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Sensitivity-detection-and-COB.html</string>
+    <string name="sensitivity_hint2">https://androidaps.readthedocs.io/en/latest/Usage/Open-APS-features.html?highlight=Autosens#autosens</string>
     <string name="wrongcarbs_label">碳水化合物输入错误</string>
     <string name="wrongcarbs_whattodo">如果您输入了不正确的碳水化合物，该怎么办?</string>
     <string name="wrongcarbs_treatmentstab">删除治疗数据中的错误条目，并重新输入正确的碳水值。</string>

@@ -591,9 +591,7 @@
     <string name="secondcarbsincrement">Стойност на втория бърз бутон [гр]</string>
     <string name="thirdcarbsincrement">Стойност на третия бърз бутон [гр]</string>
     <string name="cgm">CGM</string>
-    <string name="ns_wifionly">Използвай само WiFi</string>
     <string name="ns_wifi_ssids">WiFi име</string>
-    <string name="ns_chargingonly">Само при зареждане на телефона</string>
     <string name="connectionsettings_title">Настройки за свързване</string>
     <string name="ns_wifi_allowedssids">Разрешени WiFi мрежи(разделени с запетая)</string>
     <string name="ns_allowroaming">Позволи връзка в роуминг</string>

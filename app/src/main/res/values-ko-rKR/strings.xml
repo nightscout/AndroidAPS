@@ -586,9 +586,7 @@
     <string name="secondcarbsincrement">2차 탄수화물 증분</string>
     <string name="thirdcarbsincrement">3차 탄수화물 증분</string>
     <string name="cgm">CGM</string>
-    <string name="ns_wifionly">와이파이 연결만 사용하기</string>
     <string name="ns_wifi_ssids">와이파이 SSID</string>
-    <string name="ns_chargingonly">충전중일때만</string>
     <string name="connectionsettings_title">연결 설정</string>
     <string name="ns_wifi_allowedssids">허가된 SSIDs(세미콜론으로 구분)</string>
     <string name="ns_allowroaming">로밍에서 연결 허용</string>

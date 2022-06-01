@@ -604,9 +604,11 @@
     <string name="secondcarbsincrement">Segundo incremento de carbohidratos</string>
     <string name="thirdcarbsincrement">Tercer incremento de carbohidratos</string>
     <string name="cgm">MCG</string>
-    <string name="ns_wifionly">Usar sólo con WiFi</string>
+    <string name="ns_cellular">Usar conexión móvil</string>
+    <string name="ns_wifi">Usar conexión WiFi</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="ns_chargingonly">Sólo si está cargando</string>
+    <string name="ns_charging">Durante la carga</string>
+    <string name="ns_battery">Con batería</string>
     <string name="connectionsettings_title">Ajustes de conexión</string>
     <string name="ns_wifi_allowedssids">SSID\'s permitidos (separados por punto y coma)</string>
     <string name="ns_allowroaming">Permitir conexión en roaming</string>
@@ -1037,4 +1039,6 @@
     <string name="aidex">GlucoRx Aidex</string>
     <string name="aidex_short">Aidex</string>
     <string name="description_source_aidex">Recibir los valores de glucosa de GlucoRx Aidex CGMS</string>
+    <string name="blocked_by_charging">Bloqueado por opciones de carga</string>
+    <string name="blocked_by_connectivity">Bloqueado por opciones de conectividad</string>
 </resources>
