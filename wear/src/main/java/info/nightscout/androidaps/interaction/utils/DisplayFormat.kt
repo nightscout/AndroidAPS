@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.interaction.utils
 
-
 import info.nightscout.androidaps.interaction.utils.Pair.Companion.create
 import javax.inject.Singleton
 import javax.inject.Inject
@@ -10,12 +9,15 @@ import kotlin.math.max
 
 @Singleton
 class DisplayFormat @Inject internal constructor() {
+
     companion object {
+
         const val MAX_FIELD_LEN_LONG = 22 // this is found out empirical, for TYPE_LONG_TEXT
         const val MAX_FIELD_LEN_SHORT = 7 // according to Wear OS docs for TYPE_SHORT_TEXT
         const val MIN_FIELD_LEN_COB = 3 // since carbs are usually 0..99g
         const val MIN_FIELD_LEN_IOB = 3 // IoB can range from like .1U to 99U
     }
+
     @Inject lateinit var sp: SP
     @Inject lateinit var wearUtil: WearUtil
 
@@ -109,13 +111,13 @@ class DisplayFormat @Inject internal constructor() {
         val iob1 = SmallestDoubleString(raw.status.iobSum, SmallestDoubleString.Units.USE).minimise(MAX_FIELD_LEN_SHORT)
         var iob2 = ""
         if (raw.status.iobDetail.contains("|")) {
-            val iobs = raw.status.iobDetail.replace("(", "").replace(")", "").split("\\|").toTypedArray()
+            val iobs = raw.status.iobDetail.replace("(", "").replace(")", "").split("|").toTypedArray()
             var iobBolus = SmallestDoubleString(iobs[0]).minimise(MIN_FIELD_LEN_IOB)
-            if (iobBolus.trim { it <= ' ' }.isEmpty()) {
+            if (iobBolus.trim().isEmpty()) {
                 iobBolus = "--"
             }
             var iobBasal = SmallestDoubleString(iobs[1]).minimise(MAX_FIELD_LEN_SHORT - 1 - max(MIN_FIELD_LEN_IOB, iobBolus.length))
-            if (iobBasal.trim { it <= ' ' }.isEmpty()) {
+            if (iobBasal.trim().isEmpty()) {
                 iobBasal = "--"
             }
             iob2 = "$iobBolus $iobBasal"
