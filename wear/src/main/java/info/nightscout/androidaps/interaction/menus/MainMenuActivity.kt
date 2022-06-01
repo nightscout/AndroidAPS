@@ -21,7 +21,7 @@ class MainMenuActivity : MenuListActivity() {
         rxBus.send(EventWearToMobile(ActionResendData("MainMenuListActivity")))
     }
 
-    override fun getElements(): List<MenuItem> =
+    override fun provideElements(): List<MenuItem> =
         ArrayList<MenuItem>().apply {
             if (!sp.getBoolean(R.string.key_wear_control, false)) {
                 add(MenuItem(R.drawable.ic_settings, getString(R.string.menu_settings)))

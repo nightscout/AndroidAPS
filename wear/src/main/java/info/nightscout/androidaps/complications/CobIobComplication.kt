@@ -6,6 +6,7 @@ import android.app.PendingIntent
 import android.support.wearable.complications.ComplicationData
 import android.support.wearable.complications.ComplicationText
 import info.nightscout.androidaps.data.RawDisplayData
+import info.nightscout.androidaps.interaction.utils.DisplayFormat
 import info.nightscout.androidaps.interaction.utils.SmallestDoubleString
 import info.nightscout.shared.logging.LTag
 
@@ -18,7 +19,7 @@ class CobIobComplication : BaseComplicationProviderService() {
         var complicationData: ComplicationData? = null
         if (dataType == ComplicationData.TYPE_SHORT_TEXT) {
             val cob = raw.status.cob
-            val iob = SmallestDoubleString(raw.status.iobSum, SmallestDoubleString.Units.USE).minimise(displayFormat.MAX_FIELD_LEN_SHORT)
+            val iob = SmallestDoubleString(raw.status.iobSum, SmallestDoubleString.Units.USE).minimise(DisplayFormat.MAX_FIELD_LEN_SHORT)
             val builder = ComplicationData.Builder(ComplicationData.TYPE_SHORT_TEXT)
                 .setShortText(ComplicationText.plainText(cob))
                 .setShortTitle(ComplicationText.plainText(iob))
