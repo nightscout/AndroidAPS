@@ -603,9 +603,7 @@
     <string name="secondcarbsincrement">Anden kulhydratstigning</string>
     <string name="thirdcarbsincrement">Tredje kulhydratstigning</string>
     <string name="cgm">CGM</string>
-    <string name="ns_wifionly">Brug kun WiFi forbindelse</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="ns_chargingonly">Kun under opladning</string>
     <string name="connectionsettings_title">Indstillinger for forbindelse</string>
     <string name="ns_wifi_allowedssids">Tilladte SSID\'er (semikolon separeret)</string>
     <string name="ns_allowroaming">Tillad forbindelse i roaming</string>
