@@ -32,7 +32,8 @@
             <View
                 android:layout_width="0px"
                 android:layout_height="match_parent"
-                android:layout_weight="0.47" />
+                android:layout_weight="0.47"
+                tools:ignore="NestedWeights" />
 
             <LinearLayout
                 android:id="@+id/warnings"
@@ -115,7 +116,8 @@
             <View
                 android:layout_width="0px"
                 android:layout_height="match_parent"
-                android:layout_weight="0.08" />
+                android:layout_weight="0.08"
+                tools:ignore="NestedWeights" />
 
             <LinearLayout
                 android:id="@+id/panel1"
@@ -163,7 +165,8 @@
                     <TextView
                         android:layout_width="0px"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.35" />
+                        android:layout_weight="0.35"
+                        tools:ignore="NestedWeights" />
 
                     <TextView
                         android:id="@+id/timestamp"
@@ -342,7 +345,7 @@
                         android:textColor="@color/primary_text_dark"
                         android:textSize="28sp"
                         android:textStyle="bold"
-                        tools:ignore="HardcodedText" />
+                        tools:ignore="HardcodedText, NestedWeights" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -398,7 +401,8 @@
                     <View
                         android:layout_width="0px"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.1" />
+                        android:layout_weight="0.1"
+                        tools:ignore="NestedWeights" />
 
                     <TextView
                         android:id="@+id/loop"

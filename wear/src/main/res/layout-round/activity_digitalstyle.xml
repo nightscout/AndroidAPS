@@ -15,7 +15,8 @@
         android:layout_height="match_parent"
         android:background="@drawable/digitalstyle_bg_full_round"
         android:contentDescription="round-shape-elements"
-        android:orientation="horizontal" />
+        android:orientation="horizontal"
+        tools:ignore="HardcodedText"  />
 
     <!-- root-element-->
     <LinearLayout

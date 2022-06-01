@@ -15,7 +15,8 @@
         android:layout_height="match_parent"
         android:background="@drawable/digitalstyle_bg_full_rect"
         android:contentDescription="rect-shape-elements"
-        android:orientation="horizontal" />
+        android:orientation="horizontal"
+        tools:ignore="HardcodedText" />
 
     <!-- root-element-->
     <LinearLayout
@@ -38,7 +39,8 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="13.95" />
+                android:layout_weight="13.95"
+                tools:ignore="NestedWeights" />
 
             <!-- COB -->
             <LinearLayout
@@ -71,7 +73,7 @@
                         android:text="@string/activity_carb"
                         android:textColor="@color/light_grey"
                         android:textSize="10sp"
-                        tools:ignore="SmallSp" />
+                        tools:ignore="SmallSp, NestedWeights" />
 
                     <TextView
                         android:id="@+id/cobView"
@@ -131,7 +133,8 @@
                         android:baselineAligned="false"
                         android:gravity="center_vertical|center_horizontal"
                         android:orientation="horizontal"
-                        android:weightSum="10">
+                        android:weightSum="10"
+                        tools:ignore="NestedWeights">
 
                         <View
                             android:layout_width="0dp"
@@ -245,7 +248,7 @@
                         android:text="@string/activity_IOB"
                         android:textColor="@color/light_grey"
                         android:textSize="10sp"
-                        tools:ignore="SmallSp" />
+                        tools:ignore="SmallSp, NestedWeights" />
 
                     <TextView
                         android:id="@+id/iobView"
@@ -293,7 +296,8 @@
                 android:layout_marginStart="9dp"
                 android:layout_marginEnd="0dp"
                 android:layout_weight="1"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                tools:ignore="NestedWeights">
 
                 <!--  right side top - spacer    2/10 -->
                 <View
@@ -498,7 +502,7 @@
                         android:textColor="@color/light_grey"
                         android:textSize="10sp"
                         android:textStyle="bold"
-                        tools:ignore="HardcodedText,SmallSp" />
+                        tools:ignore="HardcodedText, SmallSp, NestedWeights" />
 
                     <TextView
                         android:id="@+id/avgdelta"
@@ -579,7 +583,8 @@
                         android:layout_height="0dp"
                         android:layout_gravity="bottom"
                         android:layout_weight="1"
-                        android:gravity="center_horizontal|top" />
+                        android:gravity="center_horizontal|top"
+                        tools:ignore="NestedWeights" />
 
                 </LinearLayout>
 

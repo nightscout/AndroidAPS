@@ -62,7 +62,8 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0px"
-                android:layout_weight="0.05" />
+                android:layout_weight="0.05"
+                tools:ignore="NestedWeights" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -172,7 +173,8 @@
             <View
                 android:layout_width="0px"
                 android:layout_height="match_parent"
-                android:layout_weight="0.25" />
+                android:layout_weight="0.25"
+                tools:ignore="NestedWeights" />
 
             <lecho.lib.hellocharts.view.LineChartView
                 android:id="@+id/chart"
@@ -222,7 +224,8 @@
             <View
                 android:layout_width="0px"
                 android:layout_height="match_parent"
-                android:layout_weight="0.32" />
+                android:layout_weight="0.32"
+                tools:ignore="NestedWeights" />
 
             <LinearLayout
                 android:layout_width="0px"
