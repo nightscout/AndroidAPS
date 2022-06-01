@@ -570,9 +570,7 @@
     <string name="secondcarbsincrement">Segundo incremento hidratos</string>
     <string name="thirdcarbsincrement">Terceiro incremento hidratos</string>
     <string name="cgm">CGM</string>
-    <string name="ns_wifionly">Utilize apenas uma conexão WiFi</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="ns_chargingonly">Apenas quando estiver a carregar</string>
     <string name="connectionsettings_title">Definições de ligação</string>
     <string name="ns_wifi_allowedssids">SSIDs permitidos (separada por ponto e vírgula)</string>
     <string name="ns_allowroaming">Permitir ligação em roaming</string>
