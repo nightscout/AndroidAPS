@@ -15,7 +15,7 @@ class FillMenuActivity : MenuListActivity() {
         super.onCreate(savedInstanceState)
     }
 
-    override fun getElements(): List<MenuItem> =
+    override fun provideElements(): List<MenuItem> =
         ArrayList<MenuItem>().apply {
             add(MenuItem(R.drawable.ic_canula, getString(R.string.action_preset_1)))
             add(MenuItem(R.drawable.ic_canula, getString(R.string.action_preset_2)))
