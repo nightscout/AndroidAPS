@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.tile
 
 import dagger.android.AndroidInjection
+import info.nightscout.androidaps.tile.source.QuickWizardSource
 import javax.inject.Inject
 
 class QuickWizardTileService : TileBase() {

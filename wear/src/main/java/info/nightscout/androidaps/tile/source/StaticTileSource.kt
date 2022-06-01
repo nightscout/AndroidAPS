@@ -1,9 +1,10 @@
-package info.nightscout.androidaps.tile
+package info.nightscout.androidaps.tile.source
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.content.res.Resources
 import androidx.annotation.DrawableRes
+import info.nightscout.androidaps.tile.Action
+import info.nightscout.androidaps.tile.TileSource
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.weardata.EventData

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.tile
+package info.nightscout.androidaps.tile.source
 
 import android.content.Context
 import android.content.res.Resources
