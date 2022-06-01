@@ -13,11 +13,11 @@ import android.os.Vibrator
 import android.support.wearable.watchface.WatchFaceStyle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat
@@ -100,14 +100,14 @@ abstract class BaseWatchFace : WatchFace() {
     var mDay: TextView? = null
     var mDayName: TextView? = null
     var mMonth: TextView? = null
-    var isAAPSv2: TextView? = null
+    var isAAPSv2: View? = null
     var mHighLight: TextView? = null
     var mLowLight: TextView? = null
     var mGlucoseDial: ImageView? = null
     var mDeltaGauge: ImageView? = null
     var mHourHand: ImageView? = null
     var mMinuteHand: ImageView? = null
-    var mRelativeLayout: RelativeLayout? = null
+    var mRelativeLayout: ViewGroup? = null
     var mLinearLayout: LinearLayout? = null
     var mLinearLayout2: LinearLayout? = null
     var mDate: LinearLayout? = null

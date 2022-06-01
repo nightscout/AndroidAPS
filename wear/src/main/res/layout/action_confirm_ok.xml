@@ -1,26 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center">
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <ImageView
+        android:id="@+id/confirmbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:gravity="center">
+        android:layout_margin="10sp"
+        android:background="@drawable/circle"
+        android:backgroundTint="@color/white"
+        android:contentDescription="@string/action_confirm"
+        android:padding="25sp"
+        android:src="@drawable/ic_confirm"
+        app:tint="@color/white" />
 
-        <ImageView
-            android:id="@+id/confirmbutton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@drawable/circle"
-            android:backgroundTint="#ffffff"
-            android:src="@drawable/ic_confirm"
-            android:tint="#ffffff"
-            android:padding="25sp"
-            android:layout_margin="10sp"/>
-
-    </LinearLayout>
-</RelativeLayout>
+</LinearLayout>
