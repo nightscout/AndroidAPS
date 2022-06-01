@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 
 public class HistoryEvent implements Comparable<HistoryEvent> {
     @SuppressWarnings("deprecation")
-    private static final Logger log = StacktraceLoggerWrapper.getLogger(HistoryEvent.class);
+    private static final Logger log = StacktraceLoggerWrapper.Companion.getLogger(HistoryEvent.class);
 
     private int eventYear;
     private int eventMonth;

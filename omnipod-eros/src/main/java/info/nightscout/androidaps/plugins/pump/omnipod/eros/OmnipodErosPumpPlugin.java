@@ -705,7 +705,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         }
 
         if (tbrCurrent != null && !enforceNew) {
-            if (Round.isSame(tbrCurrent.getRate(), absoluteRate)) {
+            if (Round.INSTANCE.isSame(tbrCurrent.getRate(), absoluteRate)) {
                 aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute - No enforceNew and same rate. Exiting.");
                 return new PumpEnactResult(getInjector()).success(true).enacted(false);
             }
