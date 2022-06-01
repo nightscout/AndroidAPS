@@ -42,6 +42,7 @@
     <string name="carbs">Углеводы</string>
     <string name="invalidprofile">Неверный профиль !!!</string>
     <string name="noprofileset">ПРОФИЛЬ НЕ ЗАДАН</string>
+    <string name="active"><![CDATA[Активен]]></string>
     <string name="date">дата</string>
     <string name="units_label">единицы</string>
     <string name="dia_label">DIA (время действия инсулина)</string>
@@ -438,7 +439,21 @@
     <string name="remove_items">Удалить элементы</string>
     <string name="sort_items">Сортировать элементы</string>
     <string name="remove_selected_items">Удалить выбранные элементы</string>
+    <string name="a11y_file">файл</string>
+    <string name="a11y_user">пользователь</string>
     <!-- Autotune -->
+    <string name="autotune">Автонастройка</string>
+    <string name="autotune_description">Помощь в возможной корректировке профиля (ISF, IC, базал)</string>
+    <string name="autotune_shortname">АвтТюн</string>
+    <string name="autotune_settings">Настройки Autotune</string>
+    <string name="autotune_auto_title">Профили Автонастройки </string>
+    <string name="autotune_auto_summary">При активации происходит обновление автонастройки и смена профиля на основе правила автоматизации  </string>
+    <string name="autotune_categorize_uam_as_basal_title">Классифицировать UAM как базал</string>
+    <string name="autotune_categorize_uam_as_basal_summary">Включите, если только вы точно ввели все съеденные углеводы. С этой опцией внезапные подъемы, зафиксированные Autotune, будут использованы для рекомендаций изменения базальной скорости.</string>
+    <string name="autotune_tune_insulin_curve_title">Настройка кривой инсулина</string>
+    <string name="autotune_default_tune_days_summary">Количество дней обработки данных Autotune по умолчанию (до 30)</string>
+    <string name="autotune_error">Ошибка ввода данных, попробуйте запустить снова autotune или уменьшить количество дней</string>
+    <string name="autotune_profile_invalid">Неверный профиль</string>
     <plurals name="days">
         <item quantity="one">%1$d день</item>
         <item quantity="few">%1$d дня</item>
