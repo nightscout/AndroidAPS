@@ -604,9 +604,11 @@
     <string name="secondcarbsincrement">Druhý prídavok sacharidov</string>
     <string name="thirdcarbsincrement">Tretí prídavok sacharidov</string>
     <string name="cgm">CGM</string>
-    <string name="ns_wifionly">Používať iba WiFi</string>
+    <string name="ns_cellular">Použiť mobilné pripojenie</string>
+    <string name="ns_wifi">Použiť WiFi pripojenie</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="ns_chargingonly">Len pri nabíjaní</string>
+    <string name="ns_charging">Počas nabíjania</string>
+    <string name="ns_battery">Na batérii</string>
     <string name="connectionsettings_title">Nastavenie pripojenia</string>
     <string name="ns_wifi_allowedssids">Povolené SSID (oddelené bodkočiarkou)</string>
     <string name="ns_allowroaming">Povoliť pripojenie pri roamingu</string>
@@ -681,6 +683,8 @@
     <string name="error_adding_treatment_message">Ošetrenie (inzulín: %1$.2f, sacharidy: %2$d, čas: %3$s) nie je možné pridať. Skontrolujte a podľa potreby manuálne pridajte záznam.</string>
     <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), Oneskorenie: %3$d m</string>
     <string name="openaps_noasdata">Nedostupné dáta o glykémiách</string>
+    <string name="log_files">Log súbory</string>
+    <string name="miscellaneous">Rôzne</string>
     <string name="nav_logsettings">Nastavenie logovania</string>
     <string name="resettodefaults">Obnoviť predvolené</string>
     <string name="nsmalfunction">Chyba NSClienta. Zvážte reštart NS a NSClienta.</string>
@@ -1035,4 +1039,6 @@
     <string name="aidex">GlucoRx Aidex</string>
     <string name="aidex_short">Aidex</string>
     <string name="description_source_aidex">Prijímať hodnoty glykémie zo senzora GlucoRx Aidex.</string>
+    <string name="blocked_by_charging">Zablokované možnosti nabíjania</string>
+    <string name="blocked_by_connectivity">Zablokované možnosti pripojenia</string>
 </resources>

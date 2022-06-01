@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    tools:deviceIds="wear_round">
+    tools:deviceIds="wear_round"
+    tools:ignore="MissingDefaultResource">
 
     <!-- background-image with shapes elements-->
     <LinearLayout
@@ -15,13 +15,15 @@
         android:layout_height="match_parent"
         android:background="@drawable/digitalstyle_bg_full_round"
         android:contentDescription="round-shape-elements"
-        android:orientation="horizontal" />
+        android:orientation="horizontal"
+        tools:ignore="HardcodedText"  />
 
     <!-- root-element-->
     <LinearLayout
         android:id="@+id/watchface_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:baselineAligned="false"
         android:orientation="horizontal"
         android:weightSum="8">
 
@@ -34,7 +36,7 @@
             android:orientation="vertical"
             android:weightSum="100">
 
-            <Space
+            <View
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="13.95" />
@@ -47,7 +49,7 @@
                 android:orientation="horizontal"
                 android:weightSum="13">
 
-                <Space
+                <View
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="4.9" />
@@ -69,7 +71,8 @@
                         android:gravity="bottom|center_horizontal"
                         android:text="@string/activity_carb"
                         android:textColor="@color/light_grey"
-                        android:textSize="10sp" />
+                        android:textSize="10sp"
+                        tools:ignore="SmallSp" />
 
                     <TextView
                         android:id="@+id/cobView"
@@ -80,19 +83,20 @@
                         android:gravity="top|center_horizontal"
                         android:letterSpacing="-0.075"
                         android:lines="1"
-                        android:text="000g"
+                        android:text="@string/cob_000g"
                         android:textColor="@color/white"
                         android:textSize="14sp" />
+
                 </LinearLayout>
 
-                <Space
+                <View
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1.1" />
 
             </LinearLayout>
 
-            <Space
+            <View
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="2.87" />
@@ -105,7 +109,7 @@
                 android:orientation="horizontal"
                 android:weightSum="13">
 
-                <Space
+                <View
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="3.2" />
@@ -130,7 +134,7 @@
                         android:orientation="horizontal"
                         android:weightSum="10">
 
-                        <Space
+                        <View
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="2" />
@@ -147,7 +151,8 @@
                             android:textAlignment="center"
                             android:textColor="@color/white"
                             android:textSize="16sp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            tools:ignore="HardcodedText" />
 
                         <TextView
                             android:id="@+id/timestamp"
@@ -160,12 +165,14 @@
                             android:fontFamily="sans-serif-condensed-light"
                             android:text="--'"
                             android:textColor="@color/light_grey"
-                            android:textSize="10sp" />
+                            android:textSize="10sp"
+                            tools:ignore="HardcodedText,SmallSp" />
 
-                        <Space
+                        <View
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="2" />
+
                     </LinearLayout>
 
                     <!-- 2nd line with sgv-->
@@ -187,21 +194,23 @@
                             android:gravity="top|center_horizontal"
                             android:letterSpacing="-0.05"
                             android:lines="1"
-                            android:text="00,0"
+                            android:text="@string/svg_00_0"
                             android:textColor="@color/white"
                             android:textSize="20sp"
                             android:textStyle="bold" />
+
                     </LinearLayout>
+
                 </LinearLayout>
 
-                <Space
+                <View
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1.1" />
 
             </LinearLayout>
 
-            <Space
+            <View
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="2.87" />
@@ -214,7 +223,7 @@
                 android:orientation="horizontal"
                 android:weightSum="13">
 
-                <Space
+                <View
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="4.9" />
@@ -236,7 +245,8 @@
                         android:gravity="bottom|center_horizontal"
                         android:text="@string/activity_IOB"
                         android:textColor="@color/light_grey"
-                        android:textSize="10sp" />
+                        android:textSize="10sp"
+                        tools:ignore="SmallSp" />
 
                     <TextView
                         android:id="@+id/iobView"
@@ -247,22 +257,24 @@
                         android:gravity="top|center_horizontal"
                         android:letterSpacing="-0.075"
                         android:lines="1"
-                        android:text="0,00U"
+                        android:text="@string/iob_0_00u"
                         android:textColor="@color/white"
                         android:textSize="14sp" />
+
                 </LinearLayout>
 
-                <Space
+                <View
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1.1" />
 
             </LinearLayout>
 
-            <Space
+            <View
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="13.95" />
+
         </LinearLayout>
 
         <!-- right side 5/8 width  -->
@@ -279,12 +291,13 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginLeft="9dp"
+                android:layout_marginStart="9dp"
+                android:layout_marginEnd="0dp"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
                 <!--  right side top - spacer    2/10 -->
-                <Space
+                <View
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="2" />
@@ -312,11 +325,11 @@
                             android:layout_height="match_parent"
                             android:layout_weight="5"
                             android:fontFamily="@font/roboto_condensed_regular"
-                            android:text="DDD"
                             android:textAllCaps="true"
                             android:textColor="@color/white"
                             android:textFontWeight="400"
-                            android:textSize="18sp" />
+                            android:textSize="18sp"
+                            tools:text="DDD" />
 
                         <TextView
                             android:id="@+id/weeknumber"
@@ -325,17 +338,18 @@
                             android:layout_weight="4"
                             android:fontFamily="@font/roboto_condensed_light"
                             android:letterSpacing="-0.1"
-                            android:text="ww"
                             android:textAllCaps="true"
                             android:textColor="@color/light_grey"
                             android:textFontWeight="400"
                             android:textSize="18sp"
-                            android:visibility="gone" />
+                            android:visibility="gone"
+                            tools:text="ww" />
 
-                        <Space
+                        <View
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="3" />
+
                     </LinearLayout>
 
                     <!-- day number + month (short)-->
@@ -355,10 +369,12 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/roboto_condensed_regular"
+                                android:paddingStart="0dp"
                                 android:paddingEnd="4dp"
-                                android:text="DD"
                                 android:textColor="@color/light_grey"
-                                android:textSize="18sp" />
+                                android:textSize="18sp"
+                                tools:text="DD" />
+
                         </LinearLayout>
                         <!-- month short-->
                         <LinearLayout
@@ -369,14 +385,17 @@
                                 android:id="@+id/month"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="5dp"
+                                android:layout_marginStart="5dp"
                                 android:fontFamily="@font/roboto_condensed_regular"
-                                android:text="MMM"
                                 android:textAllCaps="true"
                                 android:textColor="@color/light_grey"
-                                android:textSize="18sp" />
+                                android:textSize="18sp"
+                                tools:text="MMM" />
+
                         </LinearLayout>
+
                     </LinearLayout>
+
                 </LinearLayout>
 
                 <!--  right side top - hour minute    4/10 -->
@@ -384,29 +403,32 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="4"
-                    android:gravity="left|center_vertical"
+                    android:baselineAligned="false"
+                    android:gravity="start|center_vertical"
                     android:orientation="horizontal">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_marginTop="-5dp">
+
                         <!-- hour -->
                         <TextView
                             android:id="@+id/hour"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="left"
+                            android:layout_gravity="start"
                             android:fontFamily="@font/roboto_condensed_bold"
-                            android:text="HH"
                             android:textAllCaps="true"
                             android:textColor="@color/white"
                             android:textSize="40sp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            tools:text="HH" />
+
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:orientation="vertical">
@@ -416,29 +438,33 @@
                             android:id="@+id/minute"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="left"
-                            android:layout_marginLeft="6sp"
+                            android:layout_gravity="start"
+                            android:layout_marginStart="6sp"
                             android:layout_marginBottom="-8sp"
                             android:fontFamily="@font/roboto_condensed_bold"
-                            android:text="MI"
                             android:textColor="@color/light_grey"
                             android:textSize="26sp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            tools:text="MI" />
 
                         <!-- 12h period AM / PM -->
                         <TextView
                             android:id="@+id/timePeriod"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="8sp"
+                            android:layout_marginStart="8sp"
                             android:fontFamily="@font/roboto_condensed_bold"
                             android:gravity="top"
-                            android:text="AM"
                             android:textColor="@color/light_grey"
                             android:textSize="10sp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            tools:ignore="SmallSp"
+                            tools:text="AM" />
+
                     </LinearLayout>
+
                 </LinearLayout>
+
             </LinearLayout>
 
             <!-- right side 1/2 height - bottom halft -->
@@ -449,7 +475,7 @@
                 android:layout_marginRight="7dp"
                 android:layout_weight="1"
                 android:baselineAligned="false"
-                android:gravity="left|top"
+                android:gravity="start|top"
                 android:orientation="vertical"
                 android:weightSum="10">
 
@@ -472,7 +498,8 @@
                         android:text="+/-"
                         android:textColor="@color/light_grey"
                         android:textSize="10sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        tools:ignore="HardcodedText,SmallSp" />
 
                     <TextView
                         android:id="@+id/avgdelta"
@@ -480,10 +507,11 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center_horizontal|center_vertical"
-                        android:text="avg"
+                        android:text="@string/abbreviation_average"
                         android:textColor="@color/light_grey"
                         android:textSize="10sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        tools:ignore="SmallSp" />
 
                     <TextView
                         android:id="@+id/uploader_battery"
@@ -494,7 +522,8 @@
                         android:text="--%"
                         android:textColor="@color/light_grey"
                         android:textSize="10sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        tools:ignore="HardcodedText,SmallSp" />
 
                     <TextView
                         android:id="@+id/rig_battery"
@@ -506,7 +535,8 @@
                         android:textColor="@color/light_grey"
                         android:textSize="10sp"
                         android:textStyle="bold"
-                        android:visibility="gone" />
+                        android:visibility="gone"
+                        tools:ignore="HardcodedText,SmallSp" />
 
                     <TextView
                         android:id="@+id/tmpBasal"
@@ -514,10 +544,11 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1.7"
                         android:gravity="center_horizontal|center_vertical"
-                        android:text="-.--U/h"
+                        android:text="@string/no_tmp_basal_u_h"
                         android:textColor="@color/light_grey"
                         android:textSize="10sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        tools:ignore="SmallSp" />
 
                     <TextView
                         android:id="@+id/bgiView"
@@ -525,11 +556,13 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center_horizontal|center_vertical"
-                        android:text="bgi"
                         android:textColor="@color/light_grey"
                         android:textSize="10sp"
                         android:textStyle="bold"
-                        android:visibility="gone" />
+                        android:visibility="gone"
+                        tools:ignore="SmallSp"
+                        tools:text="bgi" />
+
                 </LinearLayout>
 
                 <!--  right side bottom - diagram 6/10 -->
@@ -552,22 +585,22 @@
                 </LinearLayout>
 
                 <!--  right side bottom - spacer    2/10 -->
-                <Space
+                <View
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="2" />
 
             </LinearLayout>
+
         </LinearLayout>
+
     </LinearLayout>
 
     <!--   FLAGs   -->
-    <TextView
+    <View
         android:id="@+id/AAPSv2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="0"
-        android:text=""
         android:visibility="gone" />
 
 </RelativeLayout>

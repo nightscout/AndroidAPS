@@ -222,5 +222,21 @@
     <string name="key_dark" translatable="false">dark</string>
     <string name="key_input_design" translatable="false">input_design</string>
     <string name="key_complication_tap_action" translatable="false">complication_tap_action</string>
+    <string name="increment">increment</string>
+    <string name="decrement">decrement</string>
+    <string name="first_char_high">H</string>
+    <string name="first_char_low">L</string>
+    <string name="abbreviation_average">avg</string>
+    <string name="no_iob_u">--U</string>
+    <string name="no_cob_g">--g</string>
+    <string name="no_tmp_basal_u_h">-.--U/h</string>
+    <string name="uploader_na">Uploader: ---%</string>
+    <string name="no_status">S: no status</string>
+    <string name="time_stamp_na_min_ago">-- Minutes ago</string>
+    <string name="delta_na">--- mg/dl</string>
+    <string name="no_loop_status">No Loop Status</string>
+    <string name="cob_000g">000g</string>
+    <string name="svg_00_0">00,0</string>
+    <string name="iob_0_00u">0,00U</string>
 
 </resources>

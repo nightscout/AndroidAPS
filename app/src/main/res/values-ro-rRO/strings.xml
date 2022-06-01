@@ -595,9 +595,7 @@
     <string name="secondcarbsincrement">Al doilea increment de carbohidrați</string>
     <string name="thirdcarbsincrement">Al treilea increment de carbohidrați</string>
     <string name="cgm">CGM</string>
-    <string name="ns_wifionly">Folosește doar conexiune WiFi</string>
     <string name="ns_wifi_ssids">SSID WiFi</string>
-    <string name="ns_chargingonly">Doar când se încarcă</string>
     <string name="connectionsettings_title">Setări conexiune</string>
     <string name="ns_wifi_allowedssids">SSIDuri permise (separare prin punct și virgulă)</string>
     <string name="ns_allowroaming">Permite conexiuni în roaming</string>

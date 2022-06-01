@@ -168,4 +168,20 @@
     <string name="tile_no_config">No hay configuración disponible</string>
     <string name="wear_control_not_enabled">Controles Wear desactivados</string>
     <string name="wear_control_no_data">No hay datos disponibles</string>
+    <string name="increment">incremento</string>
+    <string name="decrement">decremento</string>
+    <string name="first_char_high">A</string>
+    <string name="first_char_low">B</string>
+    <string name="abbreviation_average">media</string>
+    <string name="no_iob_u">--U</string>
+    <string name="no_cob_g">--g</string>
+    <string name="no_tmp_basal_u_h">-.--U/h</string>
+    <string name="uploader_na">Subido: ---%</string>
+    <string name="no_status">S: sin estado</string>
+    <string name="time_stamp_na_min_ago">-- minutos atrás</string>
+    <string name="delta_na">--- mg/dl</string>
+    <string name="no_loop_status">Sin estado del lazo</string>
+    <string name="cob_000g">000g</string>
+    <string name="svg_00_0">00,0</string>
+    <string name="iob_0_00u">0,00U</string>
 </resources>

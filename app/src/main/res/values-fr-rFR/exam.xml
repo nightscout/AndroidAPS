@@ -123,6 +123,7 @@
     <string name="sensitivity_cannula">Le changement de canule réinitialisera le ratio Autosens à 100%.</string>
     <string name="sensitivity_time">Certaines des options du plugin ont des plages de temps configurables qui peuvent être définies par l\'utilisateur.</string>
     <string name="sensitivity_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Sensitivity-detection-and-COB.html</string>
+    <string name="sensitivity_hint2">https://androidaps.readthedocs.io/fr/latest/Usage/Open-APS-features.html?highlight=Autosens#autosens</string>
     <string name="wrongcarbs_label">Entrées de glucides erronées</string>
     <string name="wrongcarbs_whattodo">Que devez-vous faire si vous avez renseigné une valeur erronée de glucides ?</string>
     <string name="wrongcarbs_treatmentstab">Supprimez l\'entrée incorrecte dans les Traitements et entrez la nouvelle valeur correcte de glucides.</string>
