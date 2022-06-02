@@ -200,6 +200,7 @@ class DataHandlerWear @Inject constructor(
                 .setContentIntent(cancelPendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setVibrate(vibratePattern)
+                .setOnlyAlertOnce(true)
                 .addAction(R.drawable.ic_cancel, context.getString(R.string.cancel_bolus), cancelPendingIntent)
         val notificationManager = NotificationManagerCompat.from(context)
         notificationManager.notify(DataLayerListenerServiceWear.BOLUS_PROGRESS_NOTIF_ID, notificationBuilder.build())
@@ -214,18 +215,20 @@ class DataHandlerWear @Inject constructor(
             longArrayOf(0, 50, 1000),
             DataLayerListenerServiceWear.AAPS_NOTIFY_CHANNEL_ID_BOLUS_PROGRESS,
             context.getString(R.string.bolus_progress_channel_name),
-            context.getString(R.string.bolus_progress_channel_description)
+            context.getString(R.string.bolus_progress_channel_description),
+            NotificationManager.IMPORTANCE_HIGH
         )
         createNotificationChannel(
-            longArrayOf(0, 1, 1000),
+            longArrayOf(0),
             DataLayerListenerServiceWear.AAPS_NOTIFY_CHANNEL_ID_BOLUS_PROGRESS_SILENT,
             context.getString(R.string.bolus_progress_silent_channel_name),
-            context.getString(R.string.bolus_progress_silent_channel_description)
+            context.getString(R.string.bolus_progress_silent_channel_description),
+            NotificationManager.IMPORTANCE_LOW
         )
     }
 
-    @TargetApi(value = 26) private fun createNotificationChannel(vibratePattern: LongArray, channelID: String, name: CharSequence, description: String) {
-        val channel = NotificationChannel(channelID, name, NotificationManager.IMPORTANCE_HIGH)
+    @TargetApi(value = 26) private fun createNotificationChannel(vibratePattern: LongArray, channelID: String, name: CharSequence, description: String, importance: Int) {
+        val channel = NotificationChannel(channelID, name, importance)
         channel.description = description
         channel.enableVibration(true)
         channel.vibrationPattern = vibratePattern
