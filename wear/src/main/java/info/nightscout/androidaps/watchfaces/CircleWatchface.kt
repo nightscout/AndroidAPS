@@ -197,7 +197,7 @@ class CircleWatchface : WatchFace() {
         myLayout?.layout(0, 0, myLayout?.measuredWidth ?: 0, myLayout?.measuredHeight ?: 0)
     }
 
-    val minutes: String
+    private val minutes: String
         get() {
             var minutes = "--'"
             if (singleBg.timeStamp != 0L) {

@@ -2,6 +2,15 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
+    <string name="label_watchface">AAPS</string>
+    <string name="label_watchface_large">AAPS (Большой)</string>
+    <string name="label_watchface_big_chart">AAPS (Крупный график)</string>
+    <string name="label_watchface_no_chart">AAPS (Без графика)</string>
+    <string name="label_watchface_circle">AAPS (круглый)</string>
+    <string name="label_watchface_v2">AAPS(v2)</string>
+    <string name="label_watchface_cockpit">AAPS (кабина пилота)</string>
+    <string name="label_watchface_steampunk">AAPS (Стимпанк)</string>
+    <string name="label_watchface_digital_style">AAPS (ЦифровойСтиль)</string>
     <string name="label_actions_tile">AAPS (Действия)</string>
     <string name="label_temp_target_tile">AAPS(ВремЦель)</string>
     <string name="label_quick_wizard_tile">AAPS(Мастер)</string>
@@ -55,11 +64,13 @@
     <string name="pref_complication_tap_action">Действия при нажатии кнопки расширений</string>
     <string name="pref_unicode_in_complications">Юникод в репликации</string>
     <string name="pref_version">Версия:</string>
+    <string name="pref_moreWatchfaceSettings">Еще настройки циферблатов</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Смотрите конфигурацию циферблата.</string>
     <string name="menu_tempt">ВремЦ</string>
     <string name="menu_wizard">Калькулятор</string>
     <string name="menu_wizard_short">Кальк</string>
     <string name="menu_treatment">Терапия</string>
+    <string name="menu_treatment_short">Терап</string>
     <string name="menu_bolus">Болюс</string>
     <string name="menu_carb">Углеводы</string>
     <string name="menu_ecarb">растянутые углеводы eCarbs </string>
@@ -70,18 +81,38 @@
     <string name="menu_none">Не показывать</string>
     <string name="menu_default">По умолчанию</string>
     <string name="menu_menu">Menu</string>
+    <string name="quick_wizard_short">XL</string>
+    <string name="action_duration">Длительность</string>
+    <string name="action_tempt_confirmation">Запрошена временная цель</string>
+    <string name="action_quick_wizard_confirmation">Запрошен мастер настройки</string>
+    <string name="action_treatment_confirmation">Запрошена терапия</string>
+    <string name="action_bolus_confirmation">Запрошен Болюс</string>
+    <string name="action_wizard_confirmation">Расчет запрошен</string>
+    <string name="action_fill_confirmation">Заполнение запрошено</string>
+    <string name="action_ecarb_confirmation">Углеводы запрошены</string>
+    <string name="action_profile_switch_confirmation">Запрос на смену профиля</string>
+    <string name="action_target" comment="In temp target menu, single target value">Цель</string>
+    <string name="action_low" comment="In temp target menu, lower value from range">Низкое значение</string>
+    <string name="action_high" comment="In temp target menu, higher value from range">Высокое значение</string>
+    <string name="action_carbs">Углеводы</string>
     <string name="action_ecarbs">растянутые углеводы eCarbs </string>
+    <string name="action_percentage">Процент</string>
+    <string name="action_start_min">Начало [min]</string>
+    <string name="action_duration_h">Продолжительность [h]</string>
+    <string name="action_insulin">Инсулин</string>
     <string name="action_preset_1">Предустановка 1</string>
     <string name="action_preset_2">Предустановка 2</string>
     <string name="action_preset_3">Предустановка 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Произвольное количество</string>
     <string name="action_confirm">ПОДТВЕРДИТЬ</string>
     <string name="action_timeshift">сдвиг по времени</string>
+    <string name="action_bolus">Болюс</string>
     <string name="bolus_progress">Подается болюс</string>
     <string name="press_to_cancel">нажмите для отмены</string>
     <string name="cancel_bolus">ОТМЕНИТЬ БОЛЮС</string>
     <string name="status_pump">Помпа</string>
     <string name="status_loop">Замкнутый цикл</string>
+    <string name="status_profile_switch">Смена профиля</string>
     <string name="status_tdd">TDD/общая суточная доза</string>
     <string name="activity_carb">Углеводы</string>
     <string name="activity_IOB">IOB</string>
@@ -128,4 +159,13 @@
     <string name="simple_ui_charging">Во время зарядки</string>
     <string name="simple_ui_always_on">Режим: всегда вкл</string>
     <string name="simple_ui_always_on_charging">Режим: всегда вкл при зарядке</string>
+    <string name="temp_target_eating_soon">Прием пищи</string>
+    <string name="temp_target_hypo">Гипо</string>
+    <string name="temp_target_activity">Нагрузка</string>
+    <string name="temp_target_manual">Вручную</string>
+    <string name="temp_target_cancel">Отмена</string>
+    <string name="tile_none">Отсутствует</string>
+    <string name="tile_no_config">Нет доступной конфигурации</string>
+    <string name="wear_control_not_enabled">Функция управления Wear выключена</string>
+    <string name="wear_control_no_data">Нет данных</string>
 </resources>

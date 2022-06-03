@@ -459,9 +459,7 @@
     <string name="secondcarbsincrement">Δεύτερη αύξηση υδατανθράκων</string>
     <string name="thirdcarbsincrement">Τρίτη αύξηση υδατανθράκων</string>
     <string name="cgm">CGM</string>
-    <string name="ns_wifionly">Χρησιμοποιήστε μόνο σύνδεση Wi-Fi</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="ns_chargingonly">Μόνο κατά τη φόρτιση</string>
     <string name="connectionsettings_title">Ρυθμίσεις σύνδεσης</string>
     <string name="ns_wifi_allowedssids">Επιτρέπονται SSID (διαχωρίζονται με ελληνικό ερωτηματικό)</string>
     <string name="ns_allowroaming">Επιτρέψτε τη σύνδεση περιαγωγής</string>

@@ -15,7 +15,7 @@ class StatusMenuActivity : MenuListActivity() {
         super.onCreate(savedInstanceState)
     }
 
-    override fun getElements(): List<MenuItem> =
+    override fun provideElements(): List<MenuItem> =
         ArrayList<MenuItem>().apply {
             add(MenuItem(R.drawable.ic_status, getString(R.string.status_pump)))
             add(MenuItem(R.drawable.ic_loop_closed, getString(R.string.status_loop)))

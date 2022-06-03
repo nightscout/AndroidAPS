@@ -123,6 +123,7 @@
     <string name="sensitivity_cannula">Внесение записи о замене катетера вернет коэффициент Autosens к 100%.</string>
     <string name="sensitivity_time">У некоторых опций модуля есть настраиваемые диапазоны времени, которые может задать пользователь.</string>
     <string name="sensitivity_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Sensitivity-detection-and-COB.html</string>
+    <string name="sensitivity_hint2">https://androidaps.readthedocs.io/en/latest/Usage/Open-APS-features.html?highlight=Autosens#autosens</string>
     <string name="wrongcarbs_label">Ошибки записи углеводов</string>
     <string name="wrongcarbs_whattodo">Что нужно делать, если сделан неправильный ввод углеводов?</string>
     <string name="wrongcarbs_treatmentstab">Удалить неверную запись в Журнале терапии и заново ввести правильное значение углеводов.</string>

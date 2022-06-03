@@ -457,9 +457,7 @@
     <string name="secondcarbsincrement">Tweede koolhidrate inkrement</string>
     <string name="thirdcarbsincrement">Derde koolhidrate inkrement</string>
     <string name="cgm">CGM</string>
-    <string name="ns_wifionly">Gebruik slegs WiFi verbinding</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="ns_chargingonly">Slegs wanneer laai</string>
     <string name="connectionsettings_title">Verbindinginstellings</string>
     <string name="ns_wifi_allowedssids">Toegelate SSID\'s (kommapunt geskei)</string>
     <string name="ns_allowroaming">Laat verbindings toe terwyl swerf</string>

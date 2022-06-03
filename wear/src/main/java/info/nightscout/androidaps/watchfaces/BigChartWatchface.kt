@@ -2,6 +2,7 @@
 
 package info.nightscout.androidaps.watchfaces
 
+import android.annotation.SuppressLint
 import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat
 import com.ustwo.clockwise.common.WatchMode
@@ -13,6 +14,7 @@ class BigChartWatchface : BaseWatchFace() {
         if (resources.displayMetrics.widthPixels < SCREEN_SIZE_SMALL || resources.displayMetrics.heightPixels < SCREEN_SIZE_SMALL) R.layout.activity_bigchart_small
         else R.layout.activity_bigchart
 
+    @SuppressLint("SetTextI18n")
     override fun setDataFields() {
         super.setDataFields()
         mStatus?.text = status.externalStatus + if (sp.getBoolean(R.string.key_show_cob, true)) (" " + this.status.cob) else ""

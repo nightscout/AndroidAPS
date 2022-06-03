@@ -13,11 +13,11 @@ import android.os.Vibrator
 import android.support.wearable.watchface.WatchFaceStyle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat
@@ -66,7 +66,6 @@ abstract class BaseWatchFace : WatchFace() {
     @Inject lateinit var dateUtil: DateUtil
 
     private var disposable = CompositeDisposable()
-
     private val rawData = RawDisplayData()
 
     protected val singleBg get() = rawData.singleBg
@@ -96,23 +95,23 @@ abstract class BaseWatchFace : WatchFace() {
     var mCOB2: TextView? = null
     var mBgi: TextView? = null
     var mLoop: TextView? = null
-    var mTimePeriod: TextView? = null
+    private var mTimePeriod: TextView? = null
     var mDay: TextView? = null
-    var mDayName: TextView? = null
+    private var mDayName: TextView? = null
     var mMonth: TextView? = null
-    var isAAPSv2: TextView? = null
+    private var isAAPSv2: View? = null
     var mHighLight: TextView? = null
     var mLowLight: TextView? = null
     var mGlucoseDial: ImageView? = null
     var mDeltaGauge: ImageView? = null
     var mHourHand: ImageView? = null
     var mMinuteHand: ImageView? = null
-    var mRelativeLayout: RelativeLayout? = null
+    var mRelativeLayout: ViewGroup? = null
     var mLinearLayout: LinearLayout? = null
     var mLinearLayout2: LinearLayout? = null
-    var mDate: LinearLayout? = null
-    var mChartTap: LinearLayout? = null // Steampunk only
-    var mMainMenuTap: LinearLayout? = null // Steampunk,Digital  only
+    private var mDate: LinearLayout? = null
+    private var mChartTap: LinearLayout? = null // Steampunk only
+    private var mMainMenuTap: LinearLayout? = null // Steampunk,Digital  only
     var chart: LineChartView? = null
 
     var ageLevel = 1
@@ -123,7 +122,7 @@ abstract class BaseWatchFace : WatchFace() {
     var gridColor = Color.WHITE
     var basalBackgroundColor = Color.BLUE
     var basalCenterColor = Color.BLUE
-    var bolusColor = Color.MAGENTA
+    private var bolusColor = Color.MAGENTA
     private var lowResMode = false
     private var layoutSet = false
     var bIsRound = false
@@ -137,8 +136,8 @@ abstract class BaseWatchFace : WatchFace() {
 
     // related endTime manual layout
     var layoutView: View? = null
-    var specW = 0
-    var specH = 0
+    private var specW = 0
+    private var specH = 0
     var forceSquareCanvas = false // Set to true by the Steampunk watch face.
     private var batteryReceiver: BroadcastReceiver? = null
     private var colorDarkHigh = 0
@@ -338,7 +337,7 @@ abstract class BaseWatchFace : WatchFace() {
         return (System.currentTimeMillis() - singleBg.timeStamp).toDouble()
     }
 
-    protected fun readingAge(shortString: Boolean): String {
+    private fun readingAge(shortString: Boolean): String {
         if (singleBg.timeStamp == 0L) {
             return if (shortString) "--" else "-- Minute ago"
         }
@@ -491,7 +490,7 @@ abstract class BaseWatchFace : WatchFace() {
         invalidate()
     }
 
-    protected fun setDateAndTime() {
+    private fun setDateAndTime() {
         mTime?.text = dateUtil.timeString()
         mHour?.text = dateUtil.hourString()
         mMinute?.text = dateUtil.minuteString()
@@ -512,7 +511,7 @@ abstract class BaseWatchFace : WatchFace() {
         }
     }
 
-    protected fun strikeThroughSgvIfNeeded() {
+    private fun strikeThroughSgvIfNeeded() {
         mSgv?.let { mSgv ->
             if (ageLevel() <= 0 && singleBg.timeStamp > 0) mSgv.paintFlags = mSgv.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
             else mSgv.paintFlags = mSgv.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()

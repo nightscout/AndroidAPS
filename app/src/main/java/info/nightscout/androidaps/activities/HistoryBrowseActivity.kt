@@ -99,7 +99,8 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
                 activePlugin,
                 defaultValueHelper,
                 profileFunction,
-                repository
+                repository,
+                fabricPrivacy
             )
         iobCobCalculator =
             IobCobCalculatorPlugin(

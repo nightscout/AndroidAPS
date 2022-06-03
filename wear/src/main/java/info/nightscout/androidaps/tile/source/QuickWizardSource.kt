@@ -1,9 +1,11 @@
-package info.nightscout.androidaps.tile
+package info.nightscout.androidaps.tile.source
 
 import android.content.Context
 import android.content.res.Resources
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interaction.actions.BackgroundActionActivity
+import info.nightscout.androidaps.tile.Action
+import info.nightscout.androidaps.tile.TileSource
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP

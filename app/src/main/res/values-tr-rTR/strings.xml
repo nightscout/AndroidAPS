@@ -475,7 +475,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="localalertsettings_title">Yerel uyarılar</string>
     <string name="enable_missed_bg_readings_alert">KŞ bilgisi alınmadığında uyar</string>
     <string name="enable_pump_unreachable_alert">Pompa ulaşılamıyorsa uyar</string>
-    <string name="pump_unreachable_threshold">Pompa ulaşılamaz eşiği [min]</string>
     <string name="enable_carbs_req_alert">Karbonhidrat gerekliyse uyar</string>
     <string name="urgent_alarm">Acil önemli Alarm</string>
     <string name="info">BİLGİ</string>
@@ -605,9 +604,11 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="secondcarbsincrement">İkinci karbonhidrat artışı</string>
     <string name="thirdcarbsincrement">Üçüncü karbonhidrat artışı</string>
     <string name="cgm">CGM</string>
-    <string name="ns_wifionly">Sadece WiFi bağlantı kullanın</string>
+    <string name="ns_cellular">Mobil veri kullan</string>
+    <string name="ns_wifi">Wi-Fi bağlantısı kullan</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="ns_chargingonly">Sadece şarj olurken</string>
+    <string name="ns_charging">Şarj olurken</string>
+    <string name="ns_battery">Pilde</string>
     <string name="connectionsettings_title">Bağlantı Ayarları</string>
     <string name="ns_wifi_allowedssids">İzin verilen SSID (noktalı virgülle ayrılmış)</string>
     <string name="ns_allowroaming">Roaming bağlantıya izin ver</string>
@@ -682,6 +683,8 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="error_adding_treatment_message">Tedavilere (insülin: %1$.2f, karbonhidrat: %2$d, %3$s) şeklinde bir tedavi eklenemedi. Lütfen kontrol edin ve uygun şekilde elle bir kayıt ekleyin.</string>
     <string name="generated_ecarbs_note">yKarb: %1$d g (%2$d sa), gecikme: %3$d dk</string>
     <string name="openaps_noasdata">Otoduyarlılık verileri mevcut değil</string>
+    <string name="log_files">Günlük dosyaları</string>
+    <string name="miscellaneous">Diğer Ayarlar</string>
     <string name="nav_logsettings">Günlük ayarları</string>
     <string name="resettodefaults">Varsayılanlara sıfırla</string>
     <string name="nsmalfunction">NSClient arızası. NS ve NSClient yeniden başlatmayı düşünün.</string>
@@ -774,6 +777,11 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="invalidpct">Geçersiz % giriş</string>
     <string name="average">Ortalama</string>
     <string name="tir">TIR</string>
+    <string name="day_tir">Gündüz TIR</string>
+    <string name="night_tir">Gece TIR</string>
+    <string name="detailed_14_days">Ayrıntılı 14 gün</string>
+    <string name="std_deviation">SD: %1$s</string>
+    <string name="hba1c">HbA1c: </string>
     <string name="activitymonitor">Aktivite monitörü</string>
     <string name="doyouwantresetstats">Etkinlik istatistiklerini sıfırlamak istiyor musunuz?</string>
     <string name="statistics">İstatistikler</string>
@@ -1000,6 +1008,10 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="count_selected">%1$d seçildi</string>
     <string name="sort_label">Sırala</string>
     <string name="dialog_canceled">İletişim kutusu iptal edildi</string>
+    <string name="veryLow" comment="below 3.1">Çok düşük</string>
+    <string name="low" comment="3.1-3.9">Düşük</string>
+    <string name="high" comment="10.0-13.9">Yüksek</string>
+    <string name="veryHigh" comment="above 13.9">Çok yüksek</string>
     <string name="below" comment="below &quot;in range&quot;">Altında</string>
     <string name="in_range">Aralık içinde</string>
     <string name="above" comment="above &quot;in range&quot;">Üstünde</string>
@@ -1027,4 +1039,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="aidex">GlucoRx Aidex</string>
     <string name="aidex_short">Aidex</string>
     <string name="description_source_aidex">GlucoRx Aidex CGMS\'den KŞ değerleri alır.</string>
+    <string name="blocked_by_charging">Şarj seçenekleri tarafından engellendi</string>
+    <string name="blocked_by_connectivity">Bağlantı seçenekleri tarafından engellendi</string>
 </resources>

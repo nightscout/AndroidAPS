@@ -1,9 +1,9 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.wear.widget.WearableRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.wear.widget.WearableRecyclerView
         android:id="@+id/action_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -26,16 +26,17 @@
             android:autoSizeMinTextSize="12sp"
             android:autoSizeTextType="uniform"
             android:gravity="center"
-            android:text="Title"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            tools:text="Title" />
+
     </LinearLayout>
 
     <androidx.wear.widget.CurvedTextView
         android:id="@+id/title_curved"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Title"
         android:textSize="18sp"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:text="Title" />
 
 </FrameLayout>

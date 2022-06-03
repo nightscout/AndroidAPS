@@ -595,9 +595,7 @@
     <string name="secondcarbsincrement">Antras angliavandenių kiekio žingsnis</string>
     <string name="thirdcarbsincrement">Trečias angliavandenių kiekio žingsnis</string>
     <string name="cgm">NGJ</string>
-    <string name="ns_wifionly">Naudoti tik WiFi</string>
     <string name="ns_wifi_ssids">WiFi pavadinimas</string>
-    <string name="ns_chargingonly">Tik įkraunant</string>
     <string name="connectionsettings_title">Ryšio nustatymai</string>
     <string name="ns_wifi_allowedssids">Leidžiami tinklai (atskirti kabliataškiais)</string>
     <string name="ns_allowroaming">Leisti sujungimą tarptinkliniu ryšiu</string>

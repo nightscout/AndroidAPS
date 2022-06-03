@@ -29,6 +29,7 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP
 import java.util.*
@@ -44,7 +45,8 @@ class OverviewData @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val defaultValueHelper: DefaultValueHelper,
     private val profileFunction: ProfileFunction,
-    private val repository: AppRepository
+    private val repository: AppRepository,
+    private val fabricPrivacy: FabricPrivacy
 ) {
 
     var rangeToDisplay = 6 // for graph
@@ -205,8 +207,8 @@ class OverviewData @Inject constructor(
      * IOB, COB
      */
 
-    fun bolusIob(iobCobCalculator: IobCobCalculator): IobTotal = iobCobCalculator.calculateIobFromBolus().round()
-    fun basalIob(iobCobCalculator: IobCobCalculator): IobTotal = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
+    fun bolusIob(iobCobCalculator: IobCobCalculator): IobTotal = iobCobCalculator.calculateIobFromBolus().round(fabricPrivacy)
+    fun basalIob(iobCobCalculator: IobCobCalculator): IobTotal = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round(fabricPrivacy)
     fun cobInfo(iobCobCalculator: IobCobCalculator): CobInfo = iobCobCalculator.getCobInfo(true, "Overview COB")
 
     val lastCarbsTime: Long
