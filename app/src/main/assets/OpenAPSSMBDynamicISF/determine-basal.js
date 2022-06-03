@@ -266,7 +266,6 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
         console.log("Insulin value for ISF based on profile: "+ins_val+"; ");
 
         var variable_sens = 1800 / ( TDD * (Math.log(( bg / ins_val ) + 1 ) ) );
-        var variable_sens_old = (277700 / (TDD * bg));
         variable_sens = round(variable_sens,1);
         variable_sens_old = round(variable_sens_old,1);
 
