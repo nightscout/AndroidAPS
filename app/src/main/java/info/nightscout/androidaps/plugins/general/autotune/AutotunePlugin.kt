@@ -161,7 +161,8 @@ class AutotunePlugin @Inject constructor(
                 updateProfile(tunedP)
                 uel.log(
                     UserEntry.Action.STORE_PROFILE,
-                    UserEntry.Sources.Autotune,
+                    UserEntry.Sources.Automation,
+                    rh.gs(R.string.autotune),
                     ValueWithUnit.SimpleString(tunedP.profilename)
                 )
                 updateButtonVisibility = View.GONE
@@ -178,8 +179,8 @@ class AutotunePlugin @Inject constructor(
                         log("Profile Switch succeed ${tunedP.profilename}")
                         uel.log(
                             UserEntry.Action.PROFILE_SWITCH,
-                            UserEntry.Sources.Autotune,
-                            "Autotune AutoSwitch",
+                            UserEntry.Sources.Automation,
+                            rh.gs(R.string.autotune),
                             ValueWithUnit.SimpleString(tunedP.profilename))
                     }
                     rxBus.send(EventLocalProfileChanged())
