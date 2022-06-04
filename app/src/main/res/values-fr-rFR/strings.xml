@@ -688,7 +688,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="miscellaneous">Divers</string>
     <string name="nav_logsettings">Paramètres journal</string>
     <string name="resettodefaults">Réinitialiser les valeurs par défaut</string>
-    <string name="nsmalfunction">Dysfonctionnement NSClient. Faites une réinitialisation de NS et de NSClient.</string>
+    <string name="nsmalfunction">Dysfonctionnement NSClient. Redémarrez NS et NSClient.</string>
     <string name="time_offset">Décalage horaire</string>
     <string name="bolus_reminder">Rappel du bolus plus tard</string>
     <string name="setupwizard_preferred_aps_mode">Mode APS préféré</string>
