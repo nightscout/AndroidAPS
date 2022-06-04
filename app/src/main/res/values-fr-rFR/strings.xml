@@ -1039,5 +1039,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="aidex">GlucoRx Aidex</string>
     <string name="aidex_short">Aidex</string>
     <string name="description_source_aidex">Recevoir les valeurs de glycémie du MGC GlucoRx Aidex.</string>
+    <string name="blocked_by_charging">Bloqué par les options de recharge</string>
     <string name="blocked_by_connectivity">Bloqué par les options de connectivité</string>
 </resources>
