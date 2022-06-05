@@ -10,6 +10,7 @@ import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.general.automation.elements.InputWeekDay
 import info.nightscout.androidaps.plugins.general.autotune.data.ATProfile
 import info.nightscout.androidaps.plugins.general.autotune.data.PreppedGlucose
 import info.nightscout.androidaps.plugins.general.autotune.events.EventAutotuneUpdateGui
@@ -27,11 +28,10 @@ import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
-/**
- * adaptation from oref0 autotune started by philoul on 2020 (complete refactoring of AutotunePlugin initialised by Rumen Georgiev on 1/29/2018.)
+/*
+ * adaptation from oref0 autotune developed by philoul on 2022 (complete refactoring of AutotunePlugin initialised by Rumen Georgiev on 1/29/2018.)
  *
  * TODO: replace Thread by Worker
- * TODO: future version: Allow day of the week selection to tune specifics days (training days, working days, WE days)
  */
 
 @Singleton
@@ -72,9 +72,23 @@ class AutotunePlugin @Inject constructor(
     @Volatile var tunedProfile: ATProfile? = null
     private var preppedGlucose: PreppedGlucose? = null
     private lateinit var profile: Profile
+    val days = InputWeekDay()
     val autotuneStartHour: Int = 4
 
-    override fun aapsAutotune(daysBack: Int, autoSwitch: Boolean, profileToTune: String): String {
+    override fun aapsAutotune(daysBack: Int, autoSwitch: Boolean, profileToTune: String, weekDays: BooleanArray?): String {
+        weekDays?.let {
+            for (i in weekDays.indices)
+                days.weekdays[i] = weekDays[i]
+        }
+        val calcDays = calcDays(daysBack)
+        val sb = StringBuilder()
+        sb.append("Selected days: ")
+        var counter = 0
+        for (i in days.getSelectedDays()) {
+            if (counter++ > 0) sb.append(",")
+            sb.append(Objects.requireNonNull(InputWeekDay.DayOfWeek.fromCalendarInt(i)))
+        }
+        log(sb.toString())
         tunedProfile = null
         updateButtonVisibility = View.GONE
         lastRunSuccess = false
@@ -111,41 +125,56 @@ class AutotunePlugin @Inject constructor(
         }
         autotuneFS.exportPumpProfile(pumpProfile)
 
+        if (calcDays==0) {
+            result = rh.gs(R.string.autotune_error_more_days)
+            log(result)
+            calculationRunning = false
+            tunedProfile = null
+            autotuneFS.exportResult(result)
+            autotuneFS.exportLogAndZip(lastRun)
+            rxBus.send(EventAutotuneUpdateGui())
+            return result
+        }
+        var currentCalcDay = 0
         for (i in 0 until daysBack) {
             val from = starttime + i * 24 * 60 * 60 * 1000L         // get 24 hours BG values from 4 AM to 4 AM next day
             val to = from + 24 * 60 * 60 * 1000L
-            log("Tune day " + (i + 1) + " of " + daysBack)
-            tunedProfile?.let { tunedProfile ->
-                autotuneIob.initializeData(from, to, tunedProfile)  //autotuneIob contains BG and Treatments data from history (<=> query for ns-treatments and ns-entries)
-                autotuneFS.exportEntries(autotuneIob)               //<=> ns-entries.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
-                autotuneFS.exportTreatments(autotuneIob)            //<=> ns-treatments.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine (include treatments ,tempBasal and extended
-                preppedGlucose = autotunePrep.categorize(tunedProfile) //<=> autotune.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
-            }
+            if (days.isSet(from)) {
+                currentCalcDay++
 
-            if (preppedGlucose == null || tunedProfile == null) {
-                result = rh.gs(R.string.autotune_error)
-                log(result)
-                calculationRunning = false
-                rxBus.send(EventAutotuneUpdateGui())
-                tunedProfile = null
-                autotuneFS.exportResult(result)
-                autotuneFS.exportLogAndZip(lastRun)
-                return result
+                log("Tune day " + (i + 1) + " of " + daysBack + " (" + currentCalcDay + " of " + calcDays + ")")
+                tunedProfile?.let { tunedProfile ->
+                    autotuneIob.initializeData(from, to, tunedProfile)  //autotuneIob contains BG and Treatments data from history (<=> query for ns-treatments and ns-entries)
+                    autotuneFS.exportEntries(autotuneIob)               //<=> ns-entries.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
+                    autotuneFS.exportTreatments(autotuneIob)            //<=> ns-treatments.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine (include treatments ,tempBasal and extended
+                    preppedGlucose = autotunePrep.categorize(tunedProfile) //<=> autotune.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
+                }
+
+                if (preppedGlucose == null || tunedProfile == null) {
+                    result = rh.gs(R.string.autotune_error)
+                    log(result)
+                    calculationRunning = false
+                    rxBus.send(EventAutotuneUpdateGui())
+                    tunedProfile = null
+                    autotuneFS.exportResult(result)
+                    autotuneFS.exportLogAndZip(lastRun)
+                    return result
+                }
+                preppedGlucose?.let { preppedGlucose ->         //preppedGlucose and tunedProfile should never be null here
+                    autotuneFS.exportPreppedGlucose(preppedGlucose)
+                    tunedProfile = autotuneCore.tuneAllTheThings(preppedGlucose, tunedProfile!!, pumpProfile)
+                }
+                // localInsulin = LocalInsulin("TunedInsulin", tunedProfile!!.peak, tunedProfile!!.dia)     // Todo: Add tune Insulin option
+                autotuneFS.exportTunedProfile(tunedProfile!!)   //<=> newprofile.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
+                if (currentCalcDay < calcDays) {
+                    log("Partial result for day ${i + 1}".trimIndent())
+                    result = rh.gs(R.string.autotune_partial_result, currentCalcDay, calcDays)
+                    rxBus.send(EventAutotuneUpdateGui())
+                }
+                logResult = showResults(tunedProfile, pumpProfile)
+                if (detailedLog)
+                    autotuneFS.exportLog(lastRun, i + 1)
             }
-            preppedGlucose?.let { preppedGlucose ->         //preppedGlucose and tunedProfile should never be null here
-                autotuneFS.exportPreppedGlucose(preppedGlucose)
-                tunedProfile = autotuneCore.tuneAllTheThings(preppedGlucose, tunedProfile!!, pumpProfile)
-            }
-            // localInsulin = LocalInsulin("TunedInsulin", tunedProfile!!.peak, tunedProfile!!.dia)     // Todo: Add tune Insulin option
-            autotuneFS.exportTunedProfile(tunedProfile!!)   //<=> newprofile.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
-            if (i < daysBack - 1) {
-                log("Partial result for day ${i + 1}".trimIndent())
-                result = rh.gs(R.string.autotune_partial_result, i + 1, daysBack)
-                rxBus.send(EventAutotuneUpdateGui())
-            }
-            logResult = showResults(tunedProfile, pumpProfile)
-            if (detailedLog)
-                autotuneFS.exportLog(lastRun, i + 1)
         }
         result = rh.gs(R.string.autotune_result, dateUtil.dateAndTimeString(lastRun))
         if (!detailedLog)
@@ -161,7 +190,8 @@ class AutotunePlugin @Inject constructor(
                 updateProfile(tunedP)
                 uel.log(
                     UserEntry.Action.STORE_PROFILE,
-                    UserEntry.Sources.Autotune,
+                    UserEntry.Sources.Automation,
+                    rh.gs(R.string.autotune),
                     ValueWithUnit.SimpleString(tunedP.profilename)
                 )
                 updateButtonVisibility = View.GONE
@@ -178,8 +208,8 @@ class AutotunePlugin @Inject constructor(
                         log("Profile Switch succeed ${tunedP.profilename}")
                         uel.log(
                             UserEntry.Action.PROFILE_SWITCH,
-                            UserEntry.Sources.Autotune,
-                            "Autotune AutoSwitch",
+                            UserEntry.Sources.Automation,
+                            rh.gs(R.string.autotune),
                             ValueWithUnit.SimpleString(tunedP.profilename))
                     }
                     rxBus.send(EventLocalProfileChanged())
@@ -296,6 +326,17 @@ class AutotunePlugin @Inject constructor(
         localProfilePlugin.storeSettings()
     }
 
+    fun calcDays(daysBack:Int): Int {
+            var endTime = MidnightTime.calc(dateUtil.now()) + autotuneStartHour * 60 * 60 * 1000L
+            if (endTime > dateUtil.now()) endTime -= T.days(1).msecs()      // Check if 4 AM is before now
+            val starttime = endTime - daysBack * T.days(1).msecs()
+            var result = 0
+            for (i in 0 until daysBack) {
+                if (days.isSet(starttime + i * T.days(1).msecs()))
+                    result++
+            }
+            return result
+        }
 
     private fun log(message: String) {
         atLog("[Plugin] $message")

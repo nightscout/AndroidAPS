@@ -29,8 +29,10 @@ import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.extensions.runOnUiThread
+import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.UserEntryLogger
+import info.nightscout.androidaps.plugins.general.automation.elements.InputWeekDay
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.MidnightTime
@@ -67,6 +69,10 @@ class AutotuneFragment : DaggerFragment() {
     private lateinit var profileStore: ProfileStore
     private var profileName = ""
     private lateinit var profile: ATProfile
+    private val days get() = autotunePlugin.days
+    private val daysBack get() = SafeParse.stringToInt(binding.tuneDays.text)
+    private val calcDays get() = autotunePlugin.calcDays(daysBack)
+
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -79,6 +85,7 @@ class AutotuneFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         sp.putBoolean(R.string.key_autotune_tune_insulin_curve, false)  // put to false tune insulin curve
+        sp.putBoolean(R.string.key_autotune_additional_log, false)      // put to false additional log
         autotunePlugin.lastRun = sp.getLong(R.string.key_autotune_last_run, 0)
         if (autotunePlugin.lastNbDays.isEmpty())
             autotunePlugin.lastNbDays = sp.getInt(R.string.key_autotune_default_tune_days, 5).toString()
@@ -88,12 +95,22 @@ class AutotuneFragment : DaggerFragment() {
         profileFunction.getProfile()?.let { currentProfile ->
             profile = ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(it) } ?:currentProfile, LocalInsulin(""), injector)
         }
+        days.addToLayout(binding.selectWeekDays)
+        days.view?.setOnWeekdaysChangeListener { i: Int, selected: Boolean ->
+            if (autotunePlugin.calculationRunning)
+                days.view?.setSelectedDays(days.getSelectedDays())
+            else {
+                days.set(InputWeekDay.DayOfWeek.fromCalendarInt(i), selected)
+                resetParam()
+                updateGui()
+            }
+        }
 
         binding.tuneDays.setParams(
             savedInstanceState?.getDouble("tunedays")
                 ?: defaultValue, 1.0, 30.0, 1.0, DecimalFormat("0"), false, null, textWatcher)
+
         binding.autotuneRun.setOnClickListener {
-            val daysBack = SafeParse.stringToInt(binding.tuneDays.text)
             autotunePlugin.calculationRunning = true
             autotunePlugin.lastNbDays = daysBack.toString()
             log("Run Autotune $profileName, $daysBack days")
@@ -102,6 +119,13 @@ class AutotuneFragment : DaggerFragment() {
             }.start()
             updateGui()
         }
+
+        binding.showWeekDaysCheckbox.setOnCheckedChangeListener { _, isChecked ->
+            run {
+                binding.selectWeekDays.visibility = isChecked.toVisibility()
+            }
+        }
+
         binding.profileList.onItemClickListener = AdapterView.OnItemClickListener { _, _, _, _ ->
             if (!autotunePlugin.calculationRunning)
             {
@@ -263,6 +287,7 @@ class AutotuneFragment : DaggerFragment() {
                 updateGui()
             }, { fabricPrivacy.logException(it) })
         checkNewDay()
+        binding.selectWeekDays.visibility = binding.showWeekDaysCheckbox.isChecked.toVisibility()
         binding.tuneDays.value = autotunePlugin.lastNbDays.toDouble()
         updateGui()
     }
@@ -292,6 +317,7 @@ class AutotuneFragment : DaggerFragment() {
         else {
             binding.profileList.setText(profileList[0], false)
         }
+        days.view?.setSelectedDays(days.getSelectedDays())
         binding.autotuneRun.visibility = View.GONE
         binding.autotuneCheckInputProfile.visibility = View.GONE
         binding.autotuneCopylocal.visibility = View.GONE
@@ -312,11 +338,13 @@ class AutotuneFragment : DaggerFragment() {
                 binding.autotuneCompare.visibility = View.VISIBLE
             }
             else                              -> {
-                if (profile.isValid)
+                if (profile.isValid && calcDays > 0)
                     binding.autotuneRun.visibility = View.VISIBLE
                 binding.autotuneCheckInputProfile.visibility = View.VISIBLE
             }
         }
+        binding.calcDays.text = calcDays.toString()
+        binding.calcDays.visibility = (daysBack != calcDays).toVisibility()
         binding.tuneLastrun.text = dateUtil.dateAndTimeString(autotunePlugin.lastRun)
         showResults()
     }
@@ -328,6 +356,7 @@ class AutotuneFragment : DaggerFragment() {
             binding.tuneWarning.text = rh.gs(R.string.autotune_warning_after_run)
         } else if (!runToday || autotunePlugin.result.isEmpty()) { //if new day reinit result, default days, warning and button's visibility
             resetParam(!runToday)
+            days.setAll(true)
         }
     }
 

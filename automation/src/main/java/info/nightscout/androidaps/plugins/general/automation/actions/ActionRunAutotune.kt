@@ -12,6 +12,7 @@ import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.automation.elements.InputDuration
 import info.nightscout.androidaps.plugins.general.automation.elements.InputProfileName
+import info.nightscout.androidaps.plugins.general.automation.elements.InputWeekDay
 import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder
 import info.nightscout.androidaps.queue.Callback
@@ -28,11 +29,11 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var sp: SP
-    @Inject lateinit var uel: UserEntryLogger
 
     var defaultValue = 0
     private var inputProfileName = InputProfileName(rh, activePlugin, "", true)
     private var daysBack = InputDuration(0, InputDuration.TimeUnit.DAYS)
+    private val days = InputWeekDay().also { it.setAll(true) }
 
     override fun friendlyName(): Int = R.string.autotune_run
     override fun shortDescription(): String = resourceHelper.gs(R.string.autotune_profile_name, inputProfileName.value)
@@ -44,7 +45,7 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
         var message = if (autoSwitch) R.string.autotune_run_with_autoswitch else R.string.autotune_run_without_autoswitch
         Thread {
             autotunePlugin.atLog("[Automation] Run Autotune $profileName, ${daysBack.value} days, Autoswitch $autoSwitch")
-            autotunePlugin.aapsAutotune(daysBack.value, autoSwitch, profileName)
+            autotunePlugin.aapsAutotune(daysBack.value, autoSwitch, profileName, days.weekdays)
             if (!autotunePlugin.lastRunSuccess) {
                 message = R.string.autotune_run_with_error
                 aapsLogger.error(LTag.AUTOMATION, "Error during Autotune Run")
@@ -61,6 +62,7 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
         LayoutBuilder()
             .add(LabelWithElement(rh, rh.gs(R.string.autotune_select_profile), "", inputProfileName))
             .add(LabelWithElement(rh, rh.gs(R.string.autotune_tune_days), "", daysBack))
+            .add(days)
             .build(root)
     }
 
@@ -70,6 +72,9 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
         val data = JSONObject()
             .put("profileToTune", inputProfileName.value)
             .put("tunedays", daysBack.value)
+        for (i in days.weekdays.indices) {
+            data.put(InputWeekDay.DayOfWeek.values()[i].name, days.weekdays[i])
+        }
         return JSONObject()
             .put("type", this.javaClass.name)
             .put("data", data)
@@ -78,6 +83,8 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
 
     override fun fromJSON(data: String): Action {
         val o = JSONObject(data)
+        for (i in days.weekdays.indices)
+            days.weekdays[i] = JsonHelper.safeGetBoolean(o, InputWeekDay.DayOfWeek.values()[i].name,true)
         inputProfileName.value = JsonHelper.safeGetString(o, "profileToTune", "")
         defaultValue = JsonHelper.safeGetInt(o, "tunedays")
         if (defaultValue == 0)
