@@ -267,7 +267,7 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
 
         var variable_sens = 1800 / ( TDD * (Math.log(( bg / ins_val ) + 1 ) ) );
         variable_sens = round(variable_sens,1);
-        variable_sens_old = round(variable_sens_old,1);
+        
 
         var dynISFadjust = profile.DynISFAdjust;
 
