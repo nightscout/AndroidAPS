@@ -265,11 +265,13 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
 
         console.log("Insulin value for ISF based on profile: "+ins_val+"; ");
 
-        var variable_sens = 1800 / ( TDD * (Math.log(( bg / ins_val ) + 1 ) ) );
-        variable_sens = round(variable_sens,1);
-        
-
         var dynISFadjust = profile.DynISFAdjust;
+        TDD = ( dynISFadjust * TDD );
+
+        var variable_sens = 1800 / ( TDD * (Math.log(( bg / ins_val ) + 1 ) ) );
+        
+        variable_sens = round(variable_sens,1);
+           
 
         if (dynISFadjust > 1 ) {
             console.log("TDD adjustment factor is: " +dynISFadjust+"; ");
