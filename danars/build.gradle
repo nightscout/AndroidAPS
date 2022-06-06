@@ -11,6 +11,7 @@ apply from: "${project.rootDir}/core/jacoco_global.gradle"
 
 android {
     ndkVersion "21.1.6352462"
+    namespace 'info.nightscout.androidaps.danars'
 
     defaultConfig {
 

@@ -8,6 +8,9 @@ apply from: "${project.rootDir}/core/android_dependencies.gradle"
 apply from: "${project.rootDir}/core/android_module_dependencies.gradle"
 apply from: "${project.rootDir}/core/test_dependencies.gradle"
 apply from: "${project.rootDir}/core/jacoco_global.gradle"
+android {
+    namespace 'info.nightscout.androidaps.automation'
+}
 
 
 dependencies {

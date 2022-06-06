@@ -15,3 +15,7 @@ dependencies {
     implementation project(':shared')
     implementation project(':database')
 }
+
+android {
+    namespace 'info.nightscout.androidaps.core'
+}
