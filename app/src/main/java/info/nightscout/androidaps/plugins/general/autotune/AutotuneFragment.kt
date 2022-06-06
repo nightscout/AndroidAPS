@@ -79,7 +79,7 @@ class AutotuneFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         sp.putBoolean(R.string.key_autotune_tune_insulin_curve, false)  // put to false tune insulin curve
-        autotunePlugin.lastRun = sp.getLong(R.string.key_autotune_last_run, 0)
+        autotunePlugin.loadLastRun()
         if (autotunePlugin.lastNbDays.isEmpty())
             autotunePlugin.lastNbDays = sp.getInt(R.string.key_autotune_default_tune_days, 5).toString()
         val defaultValue = sp.getInt(R.string.key_autotune_default_tune_days, 5).toDouble()
@@ -144,6 +144,7 @@ class AutotuneFragment : DaggerFragment() {
                                  autotunePlugin.tunedProfile?.profilename = localName
                                  autotunePlugin.updateProfile(autotunePlugin.tunedProfile)
                                  autotunePlugin.updateButtonVisibility = View.GONE
+                                 autotunePlugin.saveLastRun()
                                  uel.log(
                                      UserEntry.Action.STORE_PROFILE,
                                      UserEntry.Sources.Autotune,
@@ -163,6 +164,7 @@ class AutotuneFragment : DaggerFragment() {
                                  autotunePlugin.tunedProfile?.profilename = ""
                                  autotunePlugin.updateProfile(autotunePlugin.pumpProfile)
                                  autotunePlugin.updateButtonVisibility = View.VISIBLE
+                                 autotunePlugin.saveLastRun()
                                  uel.log(
                                      UserEntry.Action.STORE_PROFILE,
                                      UserEntry.Sources.Autotune,
