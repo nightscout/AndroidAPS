@@ -245,7 +245,7 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
 
     //TDD = ( tdd_last8_wt * 0.6) + ( tdd7 * 0.4 );
 
-    TDD = ( tdd_last8_wt * 0.33 ) + ( tdd7 * 0.34 ) + (tdd1 * 0.33);
+    var TDD = ( tdd_last8_wt * 0.33 ) + ( tdd7 * 0.34 ) + (tdd1 * 0.33);
     console.log("TDD = " +TDD+ " using average of 7-day, 1-day and weighted 8hr average");
 
 
