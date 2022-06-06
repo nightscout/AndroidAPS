@@ -218,7 +218,7 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
         //*********************************************************************************
 
             console.error("---------------------------------------------------------");
-            console.error( " Dynamic ISF version Beta 1.6.3 ");
+            console.error( " Dynamic ISF version Beta 1.6.4 ");
             console.error("---------------------------------------------------------");
 
 
@@ -266,6 +266,7 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
         console.log("Insulin value for ISF based on profile: "+ins_val+"; ");
 
         var dynISFadjust = profile.DynISFAdjust;
+        dynISFadjust = ( dynISFadjust / 100 );
         TDD = ( dynISFadjust * TDD );
 
         var variable_sens = 1800 / ( TDD * (Math.log(( bg / ins_val ) + 1 ) ) );
