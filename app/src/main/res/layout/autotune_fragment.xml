@@ -140,7 +140,8 @@
                         android:gravity="start"
                         android:paddingStart="5dp"
                         android:paddingEnd="5dp"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        android:textColor="@color/colorCalculatorButton"/>
 
                 </LinearLayout>
 

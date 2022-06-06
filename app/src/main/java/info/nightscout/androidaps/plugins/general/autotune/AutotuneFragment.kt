@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.autotune
 
+import android.graphics.Paint
 import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Editable
@@ -253,6 +254,12 @@ class AutotuneFragment : DaggerFragment() {
                 }
             }
         }
+
+        binding.tuneLastrun.setOnClickListener {
+            autotunePlugin.loadLastRun()
+            updateGui()
+        }
+        binding.tuneLastrun.paintFlags = binding.tuneLastrun.paintFlags or Paint.UNDERLINE_TEXT_FLAG
     }
 
     @Synchronized
@@ -265,7 +272,6 @@ class AutotuneFragment : DaggerFragment() {
                 updateGui()
             }, { fabricPrivacy.logException(it) })
         checkNewDay()
-        binding.tuneDays.value = autotunePlugin.lastNbDays.toDouble()
         updateGui()
     }
 
@@ -278,6 +284,7 @@ class AutotuneFragment : DaggerFragment() {
     @Synchronized
     private fun updateGui() {
         _binding ?: return
+        binding.tuneDays.value = autotunePlugin.lastNbDays.toDouble()
         profileStore = activePlugin.activeProfileSource.profile ?: ProfileStore(injector, JSONObject(), dateUtil)
         profileName = if (binding.profileList.text.toString() == rh.gs(R.string.active)) "" else binding.profileList.text.toString()
         profileFunction.getProfile()?.let { currentProfile ->
