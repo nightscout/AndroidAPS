@@ -22,8 +22,8 @@ class StatusMenuActivity : MenuListActivity() {
             add(MenuItem(R.drawable.ic_tdd, getString(R.string.status_tdd)))
         }
 
-    override fun doAction(action: String) {
-        when (action) {
+    override fun doAction(position: String) {
+        when (position) {
             getString(R.string.status_pump) -> rxBus.send(EventWearToMobile(ActionPumpStatus(System.currentTimeMillis())))
             getString(R.string.status_loop) -> rxBus.send(EventWearToMobile(ActionLoopStatus(System.currentTimeMillis())))
             getString(R.string.status_tdd)  -> rxBus.send(EventWearToMobile(ActionTddStatus(System.currentTimeMillis())))

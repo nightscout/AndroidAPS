@@ -7,6 +7,8 @@ apply from: "${project.rootDir}/core/android_dependencies.gradle"
 apply from: "${project.rootDir}/core/android_module_dependencies.gradle"
 
 android {
+
+    namespace 'info.nightscout.androidaps.database'
     defaultConfig {
         kapt {
             arguments {

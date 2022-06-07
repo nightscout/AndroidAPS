@@ -76,6 +76,7 @@ android {
             versionName version + "-nsclient"
         }
     }
+    namespace 'info.nightscout.androidaps'
 }
 
 allprojects {
