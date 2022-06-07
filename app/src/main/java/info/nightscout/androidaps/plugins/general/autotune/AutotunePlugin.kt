@@ -7,6 +7,7 @@ import info.nightscout.androidaps.data.LocalInsulin
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.ValueWithUnit
+import info.nightscout.androidaps.extensions.pureProfileFromJson
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
@@ -17,6 +18,7 @@ import info.nightscout.androidaps.plugins.general.autotune.events.EventAutotuneU
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.MidnightTime
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
@@ -219,7 +221,7 @@ class AutotunePlugin @Inject constructor(
             }
         }
         lastRunSuccess = true
-        sp.putLong(R.string.key_autotune_last_run, lastRun)
+        saveLastRun()
         rxBus.send(EventAutotuneUpdateGui())
         calculationRunning = false
         tunedProfile?.let {
@@ -326,6 +328,54 @@ class AutotunePlugin @Inject constructor(
         localProfilePlugin.currentProfile()?.ic = newProfile.ic(circadian)
         localProfilePlugin.currentProfile()?.isf = newProfile.isf(circadian)
         localProfilePlugin.storeSettings()
+    }
+
+    fun saveLastRun() {
+        val json = JSONObject()
+        json.put("lastNbDays", lastNbDays)
+        json.put("lastRun",lastRun)
+        json.put("pumpProfile", pumpProfile.profile.toPureNsJson(dateUtil))
+        json.put("pumpProfileName", pumpProfile.profilename)
+        json.put("pumpPeak", pumpProfile.peak)
+        json.put("pumpDia", pumpProfile.dia)
+        json.put("tunedProfile", tunedProfile?.profile?.toPureNsJson(dateUtil))
+        json.put("tunedCircadianProfile", tunedProfile?.circadianProfile?.toPureNsJson(dateUtil))
+        json.put("tunedProfileName", tunedProfile?.profilename)
+        json.put("tunedPeak", tunedProfile?.peak)
+        json.put("tunedDia", tunedProfile?.dia)
+        json.put("result", result)
+        json.put("updateButtonVisibility", updateButtonVisibility)
+        sp.putString(R.string.key_autotune_last_run, json.toString())
+    }
+
+    fun loadLastRun() {
+        result = ""
+        lastRunSuccess = false
+        val json = JSONObject(sp.getString(R.string.key_autotune_last_run, ""))
+        lastNbDays = JsonHelper.safeGetString(json, "lastNbDays", "")
+        lastRun = JsonHelper.safeGetLong(json, "lastRun")
+        val pumpPeak = JsonHelper.safeGetInt(json, "pumpPeak")
+        val pumpDia = JsonHelper.safeGetDouble(json, "pumpDia")
+        var localInsulin = LocalInsulin("PumpInsulin", pumpPeak, pumpDia)
+        selectedProfile = JsonHelper.safeGetString(json, "pumpProfileName", "")
+        val profile = JsonHelper.safeGetJSONObject(json, "pumpProfile", null)?.let { pureProfileFromJson(it, dateUtil) }
+            ?:return
+        pumpProfile = ATProfile(ProfileSealed.Pure(profile), localInsulin, injector).also { it.profilename = selectedProfile }
+        val tunedPeak = JsonHelper.safeGetInt(json, "tunedPeak")
+        val tunedDia = JsonHelper.safeGetDouble(json, "tunedDia")
+        localInsulin = LocalInsulin("PumpInsulin", tunedPeak, tunedDia)
+        val tunedProfileName = JsonHelper.safeGetString(json, "tunedProfileName", "")
+        val tuned = JsonHelper.safeGetJSONObject(json, "tunedProfile", null)?.let { pureProfileFromJson(it, dateUtil) }
+            ?: return
+        val circadianTuned = JsonHelper.safeGetJSONObject(json, "tunedCircadianProfile", null)?.let { pureProfileFromJson(it, dateUtil) }
+            ?: return
+        tunedProfile = ATProfile(ProfileSealed.Pure(tuned), localInsulin, injector).also { atProfile ->
+            atProfile.profilename = tunedProfileName
+            atProfile.circadianProfile = ProfileSealed.Pure(circadianTuned)
+        }
+        result = JsonHelper.safeGetString(json, "result", "")
+        updateButtonVisibility = JsonHelper.safeGetInt(json, "updateButtonVisibility")
+        lastRunSuccess = true
     }
 
     fun calcDays(daysBack:Int): Int {
