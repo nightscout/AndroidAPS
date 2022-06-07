@@ -224,7 +224,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         disposable += activePlugin.activeOverview.overviewBus
             .toObservable(EventUpdateOverviewIobCob::class.java)
             .debounce(1L, TimeUnit.SECONDS)
-            .observeOn(aapsSchedulers.main)
+            .observeOn(aapsSchedulers.io)
             .subscribe({ updateIobCob() }, fabricPrivacy::logException)
         disposable += activePlugin.activeOverview.overviewBus
             .toObservable(EventUpdateOverviewSensitivity::class.java)
@@ -256,7 +256,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         disposable += rxBus
             .toObservable(EventNewBG::class.java)
             .debounce(1L, TimeUnit.SECONDS)
-            .observeOn(aapsSchedulers.main)
+            .observeOn(aapsSchedulers.io)
             .subscribe({ updateBg() }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventRefreshOverview::class.java)
@@ -287,19 +287,19 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                        }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventEffectiveProfileSwitchChanged::class.java)
-            .observeOn(aapsSchedulers.main)
+            .observeOn(aapsSchedulers.io)
             .subscribe({ updateProfile() }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventTempTargetChange::class.java)
-            .observeOn(aapsSchedulers.main)
+            .observeOn(aapsSchedulers.io)
             .subscribe({ updateTemporaryTarget() }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventExtendedBolusChange::class.java)
-            .observeOn(aapsSchedulers.main)
+            .observeOn(aapsSchedulers.io)
             .subscribe({ updateExtendedBolus() }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventTempBasalChange::class.java)
-            .observeOn(aapsSchedulers.main)
+            .observeOn(aapsSchedulers.io)
             .subscribe({ updateTemporaryBasal() }, fabricPrivacy::logException)
 
         refreshLoop = Runnable {
@@ -316,17 +316,19 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     fun refreshAll() {
         runOnUiThread {
             _binding ?: return@runOnUiThread
-            updateBg()
             updateTime()
-            updateProfile()
-            updateTemporaryBasal()
-            updateExtendedBolus()
-            updateTemporaryTarget()
-            updateIobCob()
             updateSensitivity()
             updateGraph()
             updateNotification()
         }
+        updateBg()
+        updateTemporaryBasal()
+        updateExtendedBolus()
+        updateIobCob()
+        processButtonsVisibility()
+        processAps()
+        updateProfile()
+        updateTemporaryTarget()
     }
 
     @Synchronized
@@ -513,13 +515,16 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
         // QuickWizard button
         val quickWizardEntry = quickWizard.getActive()
-        if (quickWizardEntry != null && lastBG != null && profile != null && pump.isInitialized() && !pump.isSuspended() && !loop.isDisconnected) {
-            binding.buttonsLayout.quickWizardButton.visibility = View.VISIBLE
-            val wizard = quickWizardEntry.doCalc(profile, profileName, lastBG, false)
-            binding.buttonsLayout.quickWizardButton.text = quickWizardEntry.buttonText() + "\n" + rh.gs(R.string.format_carbs, quickWizardEntry.carbs()) +
-                " " + rh.gs(R.string.formatinsulinunits, wizard.calculatedTotalInsulin)
-            if (wizard.calculatedTotalInsulin <= 0) binding.buttonsLayout.quickWizardButton.visibility = View.GONE
-        } else binding.buttonsLayout.quickWizardButton.visibility = View.GONE
+        runOnUiThread {
+            _binding ?: return@runOnUiThread
+            if (quickWizardEntry != null && lastBG != null && profile != null && pump.isInitialized() && !pump.isSuspended() && !loop.isDisconnected) {
+                binding.buttonsLayout.quickWizardButton.visibility = View.VISIBLE
+                val wizard = quickWizardEntry.doCalc(profile, profileName, lastBG, false)
+                binding.buttonsLayout.quickWizardButton.text = quickWizardEntry.buttonText() + "\n" + rh.gs(R.string.format_carbs, quickWizardEntry.carbs()) +
+                    " " + rh.gs(R.string.formatinsulinunits, wizard.calculatedTotalInsulin)
+                if (wizard.calculatedTotalInsulin <= 0) binding.buttonsLayout.quickWizardButton.visibility = View.GONE
+            } else binding.buttonsLayout.quickWizardButton.visibility = View.GONE
+        }
 
         // **** Temp button ****
         val lastRun = loop.lastRun
@@ -530,72 +535,76 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             (lastRun.lastOpenModeAccept == 0L || lastRun.lastOpenModeAccept < lastRun.lastAPSRun) &&// never accepted or before last result
             lastRun.constraintsProcessed?.isChangeRequested == true // change is requested
 
-        if (showAcceptButton && pump.isInitialized() && !pump.isSuspended() && (loop as PluginBase).isEnabled()) {
-            binding.buttonsLayout.acceptTempButton.visibility = View.VISIBLE
-            binding.buttonsLayout.acceptTempButton.text = "${rh.gs(R.string.setbasalquestion)}\n${lastRun!!.constraintsProcessed}"
-        } else {
-            binding.buttonsLayout.acceptTempButton.visibility = View.GONE
-        }
-
-        // **** Various treatment buttons ****
-        binding.buttonsLayout.carbsButton.visibility =
-            ((!activePlugin.activePump.pumpDescription.storesCarbInfo || pump.isInitialized() && !pump.isSuspended()) && profile != null
-                && sp.getBoolean(R.string.key_show_carbs_button, true)).toVisibility()
-        binding.buttonsLayout.treatmentButton.visibility = (!loop.isDisconnected && pump.isInitialized() && !pump.isSuspended() && profile != null
-            && sp.getBoolean(R.string.key_show_treatment_button, false)).toVisibility()
-        binding.buttonsLayout.wizardButton.visibility = (!loop.isDisconnected && pump.isInitialized() && !pump.isSuspended() && profile != null
-            && sp.getBoolean(R.string.key_show_wizard_button, true)).toVisibility()
-        binding.buttonsLayout.insulinButton.visibility = (!loop.isDisconnected && pump.isInitialized() && !pump.isSuspended() && profile != null
-            && sp.getBoolean(R.string.key_show_insulin_button, true)).toVisibility()
-
-        // **** Calibration & CGM buttons ****
-        val xDripIsBgSource = xdripPlugin.isEnabled()
-        val dexcomIsSource = dexcomPlugin.isEnabled()
-        binding.buttonsLayout.calibrationButton.visibility = (xDripIsBgSource && actualBG != null && sp.getBoolean(R.string.key_show_calibration_button, true)).toVisibility()
-        if (dexcomIsSource) {
-            binding.buttonsLayout.cgmButton.setCompoundDrawablesWithIntrinsicBounds(null, rh.gd(R.drawable.ic_byoda), null, null)
-            for (drawable in binding.buttonsLayout.cgmButton.compoundDrawables) {
-                drawable?.mutate()
-                drawable?.colorFilter = PorterDuffColorFilter(rh.gac(context, R.attr.cgmDexColor), PorterDuff.Mode.SRC_IN)
+        runOnUiThread {
+            _binding ?: return@runOnUiThread
+            if (showAcceptButton && pump.isInitialized() && !pump.isSuspended() && (loop as PluginBase).isEnabled()) {
+                binding.buttonsLayout.acceptTempButton.visibility = View.VISIBLE
+                binding.buttonsLayout.acceptTempButton.text = "${rh.gs(R.string.setbasalquestion)}\n${lastRun!!.constraintsProcessed}"
+            } else {
+                binding.buttonsLayout.acceptTempButton.visibility = View.GONE
             }
-            binding.buttonsLayout.cgmButton.setTextColor(rh.gac(context, R.attr.cgmDexColor))
-        } else if (xDripIsBgSource) {
-            binding.buttonsLayout.cgmButton.setCompoundDrawablesWithIntrinsicBounds(null, rh.gd(R.drawable.ic_xdrip), null, null)
-            for (drawable in binding.buttonsLayout.cgmButton.compoundDrawables) {
-                drawable?.mutate()
-                drawable?.colorFilter = PorterDuffColorFilter(rh.gac(context, R.attr.cgmXdripColor), PorterDuff.Mode.SRC_IN)
+
+            // **** Various treatment buttons ****
+            binding.buttonsLayout.carbsButton.visibility =
+                ((!activePlugin.activePump.pumpDescription.storesCarbInfo || pump.isInitialized() && !pump.isSuspended()) && profile != null
+                    && sp.getBoolean(R.string.key_show_carbs_button, true)).toVisibility()
+            binding.buttonsLayout.treatmentButton.visibility = (!loop.isDisconnected && pump.isInitialized() && !pump.isSuspended() && profile != null
+                && sp.getBoolean(R.string.key_show_treatment_button, false)).toVisibility()
+            binding.buttonsLayout.wizardButton.visibility = (!loop.isDisconnected && pump.isInitialized() && !pump.isSuspended() && profile != null
+                && sp.getBoolean(R.string.key_show_wizard_button, true)).toVisibility()
+            binding.buttonsLayout.insulinButton.visibility = (!loop.isDisconnected && pump.isInitialized() && !pump.isSuspended() && profile != null
+                && sp.getBoolean(R.string.key_show_insulin_button, true)).toVisibility()
+
+            // **** Calibration & CGM buttons ****
+            val xDripIsBgSource = xdripPlugin.isEnabled()
+            val dexcomIsSource = dexcomPlugin.isEnabled()
+            binding.buttonsLayout.calibrationButton.visibility = (xDripIsBgSource && actualBG != null && sp.getBoolean(R.string.key_show_calibration_button, true)).toVisibility()
+            if (dexcomIsSource) {
+                binding.buttonsLayout.cgmButton.setCompoundDrawablesWithIntrinsicBounds(null, rh.gd(R.drawable.ic_byoda), null, null)
+                for (drawable in binding.buttonsLayout.cgmButton.compoundDrawables) {
+                    drawable?.mutate()
+                    drawable?.colorFilter = PorterDuffColorFilter(rh.gac(context, R.attr.cgmDexColor), PorterDuff.Mode.SRC_IN)
+                }
+                binding.buttonsLayout.cgmButton.setTextColor(rh.gac(context, R.attr.cgmDexColor))
+            } else if (xDripIsBgSource) {
+                binding.buttonsLayout.cgmButton.setCompoundDrawablesWithIntrinsicBounds(null, rh.gd(R.drawable.ic_xdrip), null, null)
+                for (drawable in binding.buttonsLayout.cgmButton.compoundDrawables) {
+                    drawable?.mutate()
+                    drawable?.colorFilter = PorterDuffColorFilter(rh.gac(context, R.attr.cgmXdripColor), PorterDuff.Mode.SRC_IN)
+                }
+                binding.buttonsLayout.cgmButton.setTextColor(rh.gac(context, R.attr.cgmXdripColor))
             }
-            binding.buttonsLayout.cgmButton.setTextColor(rh.gac(context, R.attr.cgmXdripColor))
-        }
-        binding.buttonsLayout.cgmButton.visibility = (sp.getBoolean(R.string.key_show_cgm_button, false) && (xDripIsBgSource || dexcomIsSource)).toVisibility()
+            binding.buttonsLayout.cgmButton.visibility = (sp.getBoolean(R.string.key_show_cgm_button, false) && (xDripIsBgSource || dexcomIsSource)).toVisibility()
 
-        // Automation buttons
-        binding.buttonsLayout.userButtonsLayout.removeAllViews()
-        val events = automationPlugin.userEvents()
-        if (!loop.isDisconnected && pump.isInitialized() && !pump.isSuspended() && profile != null)
-            for (event in events)
-                if (event.isEnabled && event.trigger.shouldRun())
-                    context?.let { context ->
-                        SingleClickButton(context).also {
-                            it.setTextColor(rh.gac(context, R.attr.treatmentButton))
-                            it.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10f)
-                            it.layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 0.5f).also { l ->
-                                l.setMargins(0, 0, rh.dpToPx(-4), 0)
-                            }
-                            it.setCompoundDrawablesWithIntrinsicBounds(null, rh.gd(R.drawable.ic_danar_useropt), null, null)
-                            it.text = event.title
+            // Automation buttons
+            binding.buttonsLayout.userButtonsLayout.removeAllViews()
+            val events = automationPlugin.userEvents()
+            if (!loop.isDisconnected && pump.isInitialized() && !pump.isSuspended() && profile != null)
+                for (event in events)
+                    if (event.isEnabled && event.trigger.shouldRun())
+                        context?.let { context ->
+                            SingleClickButton(context).also {
+                                it.setTextColor(rh.gac(context, R.attr.treatmentButton))
+                                it.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10f)
+                                it.layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 0.5f).also { l ->
+                                    l.setMargins(0, 0, rh.dpToPx(-4), 0)
+                                }
+                                it.setCompoundDrawablesWithIntrinsicBounds(null, rh.gd(R.drawable.ic_danar_useropt), null, null)
+                                it.text = event.title
 
-                            it.setOnClickListener {
-                                OKDialog.showConfirmation(context, rh.gs(R.string.run_question, event.title), { handler.post { automationPlugin.processEvent(event) } })
+                                it.setOnClickListener {
+                                    OKDialog.showConfirmation(context, rh.gs(R.string.run_question, event.title), { handler.post { automationPlugin.processEvent(event) } })
+                                }
+                                binding.buttonsLayout.userButtonsLayout.addView(it)
                             }
-                            binding.buttonsLayout.userButtonsLayout.addView(it)
                         }
-                    }
-        binding.buttonsLayout.userButtonsLayout.visibility = events.isNotEmpty().toVisibility()
+            binding.buttonsLayout.userButtonsLayout.visibility = events.isNotEmpty().toVisibility()
+        }
     }
 
     private fun processAps() {
         val pump = activePlugin.activePump
+        val profile = profileFunction.getProfile()
 
         // aps mode
         val closedLoopEnabled = constraintChecker.isClosedLoopAllowed()
@@ -608,103 +617,106 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             }
         }
 
-        if (config.APS && pump.pumpDescription.isTempBasalCapable) {
-            binding.infoLayout.apsMode.visibility = View.VISIBLE
-            binding.infoLayout.timeLayout.visibility = View.GONE
-            when {
-                (loop as PluginBase).isEnabled() && loop.isSuperBolus                       -> {
-                    binding.infoLayout.apsMode.setImageResource(R.drawable.ic_loop_superbolus)
-                    apsModeSetA11yLabel(R.string.superbolus)
-                    binding.infoLayout.apsModeText.text = dateUtil.age(loop.minutesToEndOfSuspend() * 60000L, true, rh)
-                    binding.infoLayout.apsModeText.visibility = View.VISIBLE
-                }
+        runOnUiThread {
+            _binding ?: return@runOnUiThread
+            if (config.APS && pump.pumpDescription.isTempBasalCapable) {
+                binding.infoLayout.apsMode.visibility = View.VISIBLE
+                binding.infoLayout.timeLayout.visibility = View.GONE
+                when {
+                    (loop as PluginBase).isEnabled() && loop.isSuperBolus                       -> {
+                        binding.infoLayout.apsMode.setImageResource(R.drawable.ic_loop_superbolus)
+                        apsModeSetA11yLabel(R.string.superbolus)
+                        binding.infoLayout.apsModeText.text = dateUtil.age(loop.minutesToEndOfSuspend() * 60000L, true, rh)
+                        binding.infoLayout.apsModeText.visibility = View.VISIBLE
+                    }
 
-                loop.isDisconnected                                                         -> {
-                    binding.infoLayout.apsMode.setImageResource(R.drawable.ic_loop_disconnected)
-                    apsModeSetA11yLabel(R.string.disconnected)
-                    binding.infoLayout.apsModeText.text = dateUtil.age(loop.minutesToEndOfSuspend() * 60000L, true, rh)
-                    binding.infoLayout.apsModeText.visibility = View.VISIBLE
-                }
+                    loop.isDisconnected                                                         -> {
+                        binding.infoLayout.apsMode.setImageResource(R.drawable.ic_loop_disconnected)
+                        apsModeSetA11yLabel(R.string.disconnected)
+                        binding.infoLayout.apsModeText.text = dateUtil.age(loop.minutesToEndOfSuspend() * 60000L, true, rh)
+                        binding.infoLayout.apsModeText.visibility = View.VISIBLE
+                    }
 
-                (loop as PluginBase).isEnabled() && loop.isSuspended                        -> {
-                    binding.infoLayout.apsMode.setImageResource(R.drawable.ic_loop_paused)
-                    apsModeSetA11yLabel(R.string.suspendloop_label)
-                    binding.infoLayout.apsModeText.text = dateUtil.age(loop.minutesToEndOfSuspend() * 60000L, true, rh)
-                    binding.infoLayout.apsModeText.visibility = View.VISIBLE
-                }
+                    (loop as PluginBase).isEnabled() && loop.isSuspended                        -> {
+                        binding.infoLayout.apsMode.setImageResource(R.drawable.ic_loop_paused)
+                        apsModeSetA11yLabel(R.string.suspendloop_label)
+                        binding.infoLayout.apsModeText.text = dateUtil.age(loop.minutesToEndOfSuspend() * 60000L, true, rh)
+                        binding.infoLayout.apsModeText.visibility = View.VISIBLE
+                    }
 
-                pump.isSuspended()                                                          -> {
-                    binding.infoLayout.apsMode.setImageResource(
-                        if (pump.model() == PumpType.OMNIPOD_EROS || pump.model() == PumpType.OMNIPOD_DASH) {
-                            // For Omnipod, indicate the pump as disconnected when it's suspended.
-                            // The only way to 'reconnect' it, is through the Omnipod tab
-                            apsModeSetA11yLabel(R.string.disconnected)
-                            R.drawable.ic_loop_disconnected
-                        } else {
-                            apsModeSetA11yLabel(R.string.pump_paused)
-                            R.drawable.ic_loop_paused
-                        }
-                    )
-                    binding.infoLayout.apsModeText.visibility = View.GONE
-                }
-
-                (loop as PluginBase).isEnabled() && closedLoopEnabled.value() && loop.isLGS -> {
-                    binding.infoLayout.apsMode.setImageResource(R.drawable.ic_loop_lgs)
-                    apsModeSetA11yLabel(R.string.uel_lgs_loop_mode)
-                    binding.infoLayout.apsModeText.visibility = View.GONE
-                }
-
-                (loop as PluginBase).isEnabled() && closedLoopEnabled.value()               -> {
-                    binding.infoLayout.apsMode.setImageResource(R.drawable.ic_loop_closed)
-                    apsModeSetA11yLabel(R.string.closedloop)
-                    binding.infoLayout.apsModeText.visibility = View.GONE
-                }
-
-                (loop as PluginBase).isEnabled() && !closedLoopEnabled.value()              -> {
-                    binding.infoLayout.apsMode.setImageResource(R.drawable.ic_loop_open)
-                    apsModeSetA11yLabel(R.string.openloop)
-                    binding.infoLayout.apsModeText.visibility = View.GONE
-                }
-
-                else                                                                        -> {
-                    binding.infoLayout.apsMode.setImageResource(R.drawable.ic_loop_disabled)
-                    apsModeSetA11yLabel(R.string.disabledloop)
-                    binding.infoLayout.apsModeText.visibility = View.GONE
-                }
-            }
-            // Show variable sensitivity
-            val request = loop.lastRun?.request
-            if (request is DetermineBasalResultSMB) {
-                val isfMgdl = profileFunction.getProfile()?.getIsfMgdl()
-                val variableSens = request.variableSens
-                if (variableSens != isfMgdl && variableSens != null && isfMgdl != null) {
-                    binding.infoLayout.variableSensitivity.text =
-                        String.format(
-                            Locale.getDefault(), "%1$.1f→%2$.1f",
-                            Profile.toUnits(isfMgdl, isfMgdl * Constants.MGDL_TO_MMOLL, profileFunction.getUnits()),
-                            Profile.toUnits(variableSens, variableSens * Constants.MGDL_TO_MMOLL, profileFunction.getUnits())
+                    pump.isSuspended()                                                          -> {
+                        binding.infoLayout.apsMode.setImageResource(
+                            if (pump.model() == PumpType.OMNIPOD_EROS || pump.model() == PumpType.OMNIPOD_DASH) {
+                                // For Omnipod, indicate the pump as disconnected when it's suspended.
+                                // The only way to 'reconnect' it, is through the Omnipod tab
+                                apsModeSetA11yLabel(R.string.disconnected)
+                                R.drawable.ic_loop_disconnected
+                            } else {
+                                apsModeSetA11yLabel(R.string.pump_paused)
+                                R.drawable.ic_loop_paused
+                            }
                         )
-                    binding.infoLayout.variableSensitivity.visibility = View.VISIBLE
+                        binding.infoLayout.apsModeText.visibility = View.GONE
+                    }
+
+                    (loop as PluginBase).isEnabled() && closedLoopEnabled.value() && loop.isLGS -> {
+                        binding.infoLayout.apsMode.setImageResource(R.drawable.ic_loop_lgs)
+                        apsModeSetA11yLabel(R.string.uel_lgs_loop_mode)
+                        binding.infoLayout.apsModeText.visibility = View.GONE
+                    }
+
+                    (loop as PluginBase).isEnabled() && closedLoopEnabled.value()               -> {
+                        binding.infoLayout.apsMode.setImageResource(R.drawable.ic_loop_closed)
+                        apsModeSetA11yLabel(R.string.closedloop)
+                        binding.infoLayout.apsModeText.visibility = View.GONE
+                    }
+
+                    (loop as PluginBase).isEnabled() && !closedLoopEnabled.value()              -> {
+                        binding.infoLayout.apsMode.setImageResource(R.drawable.ic_loop_open)
+                        apsModeSetA11yLabel(R.string.openloop)
+                        binding.infoLayout.apsModeText.visibility = View.GONE
+                    }
+
+                    else                                                                        -> {
+                        binding.infoLayout.apsMode.setImageResource(R.drawable.ic_loop_disabled)
+                        apsModeSetA11yLabel(R.string.disabledloop)
+                        binding.infoLayout.apsModeText.visibility = View.GONE
+                    }
+                }
+                // Show variable sensitivity
+                val request = loop.lastRun?.request
+                if (request is DetermineBasalResultSMB) {
+                    val isfMgdl = profile?.getIsfMgdl()
+                    val variableSens = request.variableSens
+                    if (variableSens != isfMgdl && variableSens != null && isfMgdl != null) {
+                        binding.infoLayout.variableSensitivity.text =
+                            String.format(
+                                Locale.getDefault(), "%1$.1f→%2$.1f",
+                                Profile.toUnits(isfMgdl, isfMgdl * Constants.MGDL_TO_MMOLL, profileFunction.getUnits()),
+                                Profile.toUnits(variableSens, variableSens * Constants.MGDL_TO_MMOLL, profileFunction.getUnits())
+                            )
+                        binding.infoLayout.variableSensitivity.visibility = View.VISIBLE
+                    } else binding.infoLayout.variableSensitivity.visibility = View.GONE
                 } else binding.infoLayout.variableSensitivity.visibility = View.GONE
-            } else binding.infoLayout.variableSensitivity.visibility = View.GONE
-        } else {
-            //nsclient
-            binding.infoLayout.apsMode.visibility = View.GONE
-            binding.infoLayout.apsModeText.visibility = View.GONE
-            binding.infoLayout.timeLayout.visibility = View.VISIBLE
+            } else {
+                //nsclient
+                binding.infoLayout.apsMode.visibility = View.GONE
+                binding.infoLayout.apsModeText.visibility = View.GONE
+                binding.infoLayout.timeLayout.visibility = View.VISIBLE
+            }
+
+            // pump status from ns
+            binding.pump.text = nsDeviceStatus.pumpStatus
+            binding.pump.setOnClickListener { activity?.let { OKDialog.show(it, rh.gs(R.string.pump), nsDeviceStatus.extendedPumpStatus) } }
+
+            // OpenAPS status from ns
+            binding.openaps.text = nsDeviceStatus.openApsStatus
+            binding.openaps.setOnClickListener { activity?.let { OKDialog.show(it, rh.gs(R.string.openaps), nsDeviceStatus.extendedOpenApsStatus) } }
+
+            // Uploader status from ns
+            binding.uploader.text = nsDeviceStatus.uploaderStatusSpanned
+            binding.uploader.setOnClickListener { activity?.let { OKDialog.show(it, rh.gs(R.string.uploader), nsDeviceStatus.extendedUploaderStatus) } }
         }
-
-        // pump status from ns
-        binding.pump.text = nsDeviceStatus.pumpStatus
-        binding.pump.setOnClickListener { activity?.let { OKDialog.show(it, rh.gs(R.string.pump), nsDeviceStatus.extendedPumpStatus) } }
-
-        // OpenAPS status from ns
-        binding.openaps.text = nsDeviceStatus.openApsStatus
-        binding.openaps.setOnClickListener { activity?.let { OKDialog.show(it, rh.gs(R.string.openaps), nsDeviceStatus.extendedOpenApsStatus) } }
-
-        // Uploader status from ns
-        binding.uploader.text = nsDeviceStatus.uploaderStatusSpanned
-        binding.uploader.setOnClickListener { activity?.let { OKDialog.show(it, rh.gs(R.string.uploader), nsDeviceStatus.extendedUploaderStatus) } }
     }
 
     private fun prepareGraphsIfNeeded(numOfGraphs: Int) {
@@ -760,59 +772,67 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
     @SuppressLint("SetTextI18n")
     fun updateBg() {
-        _binding ?: return
         val units = profileFunction.getUnits()
-        binding.infoLayout.bg.text = overviewData.lastBg?.valueToUnitsString(units)
-            ?: rh.gs(R.string.notavailable)
-        binding.infoLayout.bg.setTextColor(overviewData.lastBgColor(context))
-        binding.infoLayout.arrow.setImageResource(trendCalculator.getTrendArrow(overviewData.lastBg).directionToIcon())
-        binding.infoLayout.arrow.setColorFilter(overviewData.lastBgColor(context))
-        binding.infoLayout.arrow.contentDescription = overviewData.lastBgDescription + " " + rh.gs(R.string.and) + " " + trendCalculator.getTrendDescription(overviewData.lastBg)
-
+        val lastBg = overviewData.lastBg
+        val lastBgColor = overviewData.lastBgColor(context)
+        val isActualBg = overviewData.isActualBg
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData
-        if (glucoseStatus != null) {
-            binding.infoLayout.deltaLarge.text = Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
-            binding.infoLayout.deltaLarge.setTextColor(overviewData.lastBgColor(context))
-            binding.infoLayout.delta.text = Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
-            binding.infoLayout.avgDelta.text = Profile.toSignedUnitsString(glucoseStatus.shortAvgDelta, glucoseStatus.shortAvgDelta * Constants.MGDL_TO_MMOLL, units)
-            binding.infoLayout.longAvgDelta.text = Profile.toSignedUnitsString(glucoseStatus.longAvgDelta, glucoseStatus.longAvgDelta * Constants.MGDL_TO_MMOLL, units)
-        } else {
-            binding.infoLayout.deltaLarge.text = ""
-            binding.infoLayout.delta.text = "Δ " + rh.gs(R.string.notavailable)
-            binding.infoLayout.avgDelta.text = ""
-            binding.infoLayout.longAvgDelta.text = ""
-        }
+        val trendDescription = trendCalculator.getTrendDescription(lastBg)
+        val trendArrow = trendCalculator.getTrendArrow(lastBg)
+        val lastBgDescription = overviewData.lastBgDescription
+        runOnUiThread {
+            _binding ?: return@runOnUiThread
+            binding.infoLayout.bg.text = lastBg?.valueToUnitsString(units)
+                ?: rh.gs(R.string.notavailable)
+            binding.infoLayout.bg.setTextColor(lastBgColor)
+            binding.infoLayout.arrow.setImageResource(trendArrow.directionToIcon())
+            binding.infoLayout.arrow.setColorFilter(lastBgColor)
+            binding.infoLayout.arrow.contentDescription = lastBgDescription + " " + rh.gs(R.string.and) + " " + trendDescription
 
-        // strike through if BG is old
-        binding.infoLayout.bg.paintFlags =
-            if (!overviewData.isActualBg) binding.infoLayout.bg.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-            else binding.infoLayout.bg.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-
-        val outDate = (if (!overviewData.isActualBg) rh.gs(R.string.a11y_bg_outdated) else "")
-        binding.infoLayout.bg.contentDescription =
-            rh.gs(R.string.a11y_blood_glucose) + " " + binding.infoLayout.bg.text.toString() + " " + overviewData.lastBgDescription + " " + outDate
-
-        binding.infoLayout.timeAgo.text = dateUtil.minAgo(rh, overviewData.lastBg?.timestamp)
-        binding.infoLayout.timeAgo.contentDescription = dateUtil.minAgoLong(rh, overviewData.lastBg?.timestamp)
-        binding.infoLayout.timeAgoShort.text = "(" + dateUtil.minAgoShort(overviewData.lastBg?.timestamp) + ")"
-
-        val qualityIcon = bgQualityCheckPlugin.icon()
-        if (qualityIcon != 0) {
-            binding.infoLayout.bgQuality.visibility = View.VISIBLE
-            binding.infoLayout.bgQuality.setImageResource(qualityIcon)
-            binding.infoLayout.bgQuality.contentDescription = rh.gs(R.string.a11y_bg_quality) + " " + bgQualityCheckPlugin.stateDescription()
-            binding.infoLayout.bgQuality.setOnClickListener {
-                context?.let { context -> OKDialog.show(context, rh.gs(R.string.data_status), bgQualityCheckPlugin.message) }
+            if (glucoseStatus != null) {
+                binding.infoLayout.deltaLarge.text = Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
+                binding.infoLayout.deltaLarge.setTextColor(lastBgColor)
+                binding.infoLayout.delta.text = Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
+                binding.infoLayout.avgDelta.text = Profile.toSignedUnitsString(glucoseStatus.shortAvgDelta, glucoseStatus.shortAvgDelta * Constants.MGDL_TO_MMOLL, units)
+                binding.infoLayout.longAvgDelta.text = Profile.toSignedUnitsString(glucoseStatus.longAvgDelta, glucoseStatus.longAvgDelta * Constants.MGDL_TO_MMOLL, units)
+            } else {
+                binding.infoLayout.deltaLarge.text = ""
+                binding.infoLayout.delta.text = "Δ " + rh.gs(R.string.notavailable)
+                binding.infoLayout.avgDelta.text = ""
+                binding.infoLayout.longAvgDelta.text = ""
             }
-        } else {
-            binding.infoLayout.bgQuality.visibility = View.GONE
+
+            // strike through if BG is old
+            binding.infoLayout.bg.paintFlags =
+                if (!isActualBg) binding.infoLayout.bg.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                else binding.infoLayout.bg.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+
+            val outDate = (if (!isActualBg) rh.gs(R.string.a11y_bg_outdated) else "")
+            binding.infoLayout.bg.contentDescription = rh.gs(R.string.a11y_blood_glucose) + " " + binding.infoLayout.bg.text.toString() + " " + lastBgDescription + " " + outDate
+
+            binding.infoLayout.timeAgo.text = dateUtil.minAgo(rh, lastBg?.timestamp)
+            binding.infoLayout.timeAgo.contentDescription = dateUtil.minAgoLong(rh, lastBg?.timestamp)
+            binding.infoLayout.timeAgoShort.text = "(" + dateUtil.minAgoShort(lastBg?.timestamp) + ")"
+
+            val qualityIcon = bgQualityCheckPlugin.icon()
+            if (qualityIcon != 0) {
+                binding.infoLayout.bgQuality.visibility = View.VISIBLE
+                binding.infoLayout.bgQuality.setImageResource(qualityIcon)
+                binding.infoLayout.bgQuality.contentDescription = rh.gs(R.string.a11y_bg_quality) + " " + bgQualityCheckPlugin.stateDescription()
+                binding.infoLayout.bgQuality.setOnClickListener {
+                    context?.let { context -> OKDialog.show(context, rh.gs(R.string.data_status), bgQualityCheckPlugin.message) }
+                }
+            } else {
+                binding.infoLayout.bgQuality.visibility = View.GONE
+            }
         }
     }
 
     fun updateProfile() {
-        _binding ?: return
-        val profileBackgroundColor =
-            profileFunction.getProfile()?.let {
+        val profile = profileFunction.getProfile()
+        runOnUiThread {
+            _binding ?: return@runOnUiThread
+            val profileBackgroundColor = profile?.let {
                 if (it is ProfileSealed.EPS) {
                     if (it.value.originalPercentage != 100 || it.value.originalTimeshift != 0L || it.value.originalDuration != 0L)
                         R.attr.ribbonWarningColor
@@ -824,8 +844,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 }
             } ?: R.attr.ribbonCriticalColor
 
-        val profileTextColor =
-            profileFunction.getProfile()?.let {
+            val profileTextColor = profile?.let {
                 if (it is ProfileSealed.EPS) {
                     if (it.value.originalPercentage != 100 || it.value.originalTimeshift != 0L || it.value.originalDuration != 0L)
                         R.attr.ribbonTextWarningColor
@@ -836,27 +855,35 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     R.attr.ribbonTextDefaultColor
                 }
             } ?: R.attr.ribbonTextDefaultColor
-        setRibbon(binding.activeProfile, profileTextColor, profileBackgroundColor, profileFunction.getProfileNameWithRemainingTime())
+            setRibbon(binding.activeProfile, profileTextColor, profileBackgroundColor, profileFunction.getProfileNameWithRemainingTime())
+        }
     }
 
     private fun updateTemporaryBasal() {
-        _binding ?: return
-        binding.infoLayout.baseBasal.text = overviewData.temporaryBasalText(iobCobCalculator)
-        binding.infoLayout.baseBasal.setTextColor(overviewData.temporaryBasalColor(context, iobCobCalculator))
-        binding.infoLayout.baseBasalIcon.setImageResource(overviewData.temporaryBasalIcon(iobCobCalculator))
-        binding.infoLayout.basalLayout.setOnClickListener {
-            activity?.let { OKDialog.show(it, rh.gs(R.string.basal), overviewData.temporaryBasalDialogText(iobCobCalculator)) }
+        val temporaryBasalText = overviewData.temporaryBasalText(iobCobCalculator)
+        val temporaryBasalColor = overviewData.temporaryBasalColor(context, iobCobCalculator)
+        val temporaryBasalIcon = overviewData.temporaryBasalIcon(iobCobCalculator)
+        val temporaryBasalDialogText = overviewData.temporaryBasalDialogText(iobCobCalculator)
+        runOnUiThread {
+            _binding ?: return@runOnUiThread
+            binding.infoLayout.baseBasal.text = temporaryBasalText
+            binding.infoLayout.baseBasal.setTextColor(temporaryBasalColor)
+            binding.infoLayout.baseBasalIcon.setImageResource(temporaryBasalIcon)
+            binding.infoLayout.basalLayout.setOnClickListener { activity?.let { OKDialog.show(it, rh.gs(R.string.basal), temporaryBasalDialogText) } }
         }
     }
 
     private fun updateExtendedBolus() {
-        _binding ?: return
         val pump = activePlugin.activePump
-        binding.infoLayout.extendedBolus.text = overviewData.extendedBolusText(iobCobCalculator)
-        binding.infoLayout.extendedLayout.setOnClickListener {
-            activity?.let { OKDialog.show(it, rh.gs(R.string.extended_bolus), overviewData.extendedBolusDialogText(iobCobCalculator)) }
+        val extendedBolus = iobCobCalculator.getExtendedBolus(dateUtil.now())
+        val extendedBolusText = overviewData.extendedBolusText(iobCobCalculator)
+        val extendedBolusDialogText = overviewData.extendedBolusDialogText(iobCobCalculator)
+        runOnUiThread {
+            _binding ?: return@runOnUiThread
+            binding.infoLayout.extendedBolus.text = extendedBolusText
+            binding.infoLayout.extendedLayout.setOnClickListener { activity?.let { OKDialog.show(it, rh.gs(R.string.extended_bolus), extendedBolusDialogText) } }
+            binding.infoLayout.extendedLayout.visibility = (extendedBolus != null && !pump.isFakingTempsByExtendedBoluses).toVisibility()
         }
-        binding.infoLayout.extendedLayout.visibility = (iobCobCalculator.getExtendedBolus(dateUtil.now()) != null && !pump.isFakingTempsByExtendedBoluses).toVisibility()
     }
 
     fun updateTime() {
@@ -887,69 +914,73 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             binding.statusLightsLayout.pbAge,
             binding.statusLightsLayout.batteryLevel
         )
-        processButtonsVisibility()
-        processAps()
     }
 
     fun updateIobCob() {
-        _binding ?: return
-        binding.infoLayout.iob.text = overviewData.iobText(iobCobCalculator)
-        binding.infoLayout.iobLayout.setOnClickListener {
-            activity?.let { OKDialog.show(it, rh.gs(R.string.iob), overviewData.iobDialogText(iobCobCalculator)) }
-        }
-        // cob
-        var cobText = overviewData.cobInfo(iobCobCalculator).displayText(rh, dateUtil, buildHelper.isEngineeringMode()) ?: rh.gs(R.string.value_unavailable_short)
+        val iobText = overviewData.iobText(iobCobCalculator)
+        val iobDialogText = overviewData.iobDialogText(iobCobCalculator)
+        val displayText = overviewData.cobInfo(iobCobCalculator).displayText(rh, dateUtil, buildHelper.isEngineeringMode())
+        val lastCarbsTime = overviewData.lastCarbsTime
+        runOnUiThread {
+            _binding ?: return@runOnUiThread
+            binding.infoLayout.iob.text = iobText
+            binding.infoLayout.iobLayout.setOnClickListener { activity?.let { OKDialog.show(it, rh.gs(R.string.iob), iobDialogText) } }
+            // cob
+            var cobText = displayText ?: rh.gs(R.string.value_unavailable_short)
 
-        val constraintsProcessed = loop.lastRun?.constraintsProcessed
-        val lastRun = loop.lastRun
-        if (config.APS && constraintsProcessed != null && lastRun != null) {
-            if (constraintsProcessed.carbsReq > 0) {
-                //only display carbsreq when carbs have not been entered recently
-                if (overviewData.lastCarbsTime < lastRun.lastAPSRun) {
-                    cobText += " | " + constraintsProcessed.carbsReq + " " + rh.gs(R.string.required)
+            val constraintsProcessed = loop.lastRun?.constraintsProcessed
+            val lastRun = loop.lastRun
+            if (config.APS && constraintsProcessed != null && lastRun != null) {
+                if (constraintsProcessed.carbsReq > 0) {
+                    //only display carbsreq when carbs have not been entered recently
+                    if (lastCarbsTime < lastRun.lastAPSRun) {
+                        cobText += " | " + constraintsProcessed.carbsReq + " " + rh.gs(R.string.required)
+                    }
+                    if (carbAnimation?.isRunning == false)
+                        carbAnimation?.start()
+                } else {
+                    carbAnimation?.stop()
+                    carbAnimation?.selectDrawable(0)
                 }
-                if (carbAnimation?.isRunning == false)
-                    carbAnimation?.start()
-            } else {
-                carbAnimation?.stop()
-                carbAnimation?.selectDrawable(0)
             }
+            binding.infoLayout.cob.text = cobText
         }
-        binding.infoLayout.cob.text = cobText
     }
 
     @SuppressLint("SetTextI18n")
     fun updateTemporaryTarget() {
-        _binding ?: return
         val units = profileFunction.getUnits()
         val tempTarget = overviewData.temporaryTarget
-        if (tempTarget != null) {
-            setRibbon(
-                binding.tempTarget,
-                R.attr.ribbonTextWarningColor,
-                R.attr.ribbonWarningColor,
-                Profile.toTargetRangeString(tempTarget.lowTarget, tempTarget.highTarget, GlucoseUnit.MGDL, units) + " " + dateUtil.untilString(tempTarget.end, rh)
-            )
-        } else {
-            // If the target is not the same as set in the profile then oref has overridden it
-            profileFunction.getProfile()?.let { profile ->
-                val targetUsed = loop.lastRun?.constraintsProcessed?.targetBG ?: 0.0
+        runOnUiThread {
+            _binding ?: return@runOnUiThread
+            if (tempTarget != null) {
+                setRibbon(
+                    binding.tempTarget,
+                    R.attr.ribbonTextWarningColor,
+                    R.attr.ribbonWarningColor,
+                    Profile.toTargetRangeString(tempTarget.lowTarget, tempTarget.highTarget, GlucoseUnit.MGDL, units) + " " + dateUtil.untilString(tempTarget.end, rh)
+                )
+            } else {
+                // If the target is not the same as set in the profile then oref has overridden it
+                profileFunction.getProfile()?.let { profile ->
+                    val targetUsed = loop.lastRun?.constraintsProcessed?.targetBG ?: 0.0
 
-                if (targetUsed != 0.0 && abs(profile.getTargetMgdl() - targetUsed) > 0.01) {
-                    aapsLogger.debug("Adjusted target. Profile: ${profile.getTargetMgdl()} APS: $targetUsed")
-                    setRibbon(
-                        binding.tempTarget,
-                        R.attr.ribbonTextWarningColor,
-                        R.attr.tempTargetBackgroundColor,
-                        Profile.toTargetRangeString(targetUsed, targetUsed, GlucoseUnit.MGDL, units)
-                    )
-                } else {
-                    setRibbon(
-                        binding.tempTarget,
-                        R.attr.ribbonTextDefaultColor,
-                        R.attr.ribbonDefaultColor,
-                        Profile.toTargetRangeString(profile.getTargetLowMgdl(), profile.getTargetHighMgdl(), GlucoseUnit.MGDL, units)
-                    )
+                    if (targetUsed != 0.0 && abs(profile.getTargetMgdl() - targetUsed) > 0.01) {
+                        aapsLogger.debug("Adjusted target. Profile: ${profile.getTargetMgdl()} APS: $targetUsed")
+                        setRibbon(
+                            binding.tempTarget,
+                            R.attr.ribbonTextWarningColor,
+                            R.attr.tempTargetBackgroundColor,
+                            Profile.toTargetRangeString(targetUsed, targetUsed, GlucoseUnit.MGDL, units)
+                        )
+                    } else {
+                        setRibbon(
+                            binding.tempTarget,
+                            R.attr.ribbonTextDefaultColor,
+                            R.attr.ribbonDefaultColor,
+                            Profile.toTargetRangeString(profile.getTargetLowMgdl(), profile.getTargetHighMgdl(), GlucoseUnit.MGDL, units)
+                        )
+                    }
                 }
             }
         }
