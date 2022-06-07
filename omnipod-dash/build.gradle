@@ -17,6 +17,8 @@ detekt { // TODO move to `subprojects` section in global build.gradle
 }
 
 android {
+
+    namespace 'info.nightscout.androidaps.plugins.pump.omnipod.dash'
     defaultConfig {
         kapt {
             arguments {
