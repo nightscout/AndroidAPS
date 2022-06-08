@@ -220,14 +220,15 @@ class AutotunePlugin @Inject constructor(
                 }
             }
         }
-        lastRunSuccess = true
-        saveLastRun()
-        rxBus.send(EventAutotuneUpdateGui())
-        calculationRunning = false
+
         tunedProfile?.let {
+            lastRunSuccess = true
+            saveLastRun()
+            rxBus.send(EventAutotuneUpdateGui())
+            calculationRunning = false
             return result
         }
-        return "No Result"  // should never occurs
+        return rh.gs(R.string.autotune_error)
     }
 
     private fun showResults(tunedProfile: ATProfile?, pumpProfile: ATProfile): String {

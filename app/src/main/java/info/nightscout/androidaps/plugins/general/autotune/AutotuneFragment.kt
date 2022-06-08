@@ -87,7 +87,6 @@ class AutotuneFragment : DaggerFragment() {
         super.onViewCreated(view, savedInstanceState)
         sp.putBoolean(R.string.key_autotune_tune_insulin_curve, false)  // put to false tune insulin curve
         sp.putBoolean(R.string.key_autotune_additional_log, false)      // put to false additional log
-        autotunePlugin.lastRun = sp.getLong(R.string.key_autotune_last_run, 0)
         autotunePlugin.loadLastRun()
         if (autotunePlugin.lastNbDays.isEmpty())
             autotunePlugin.lastNbDays = sp.getInt(R.string.key_autotune_default_tune_days, 5).toString()
