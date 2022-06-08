@@ -605,7 +605,11 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="secondcarbsincrement">Deuxième incrément de glucides</string>
     <string name="thirdcarbsincrement">Troisième incrément de glucides</string>
     <string name="cgm">MGC</string>
+    <string name="ns_cellular">Utiliser la connexion mobile</string>
+    <string name="ns_wifi">Utilisez la connexion Wi-Fi</string>
     <string name="ns_wifi_ssids">Wi-fi SSID</string>
+    <string name="ns_charging">Pendant la charge</string>
+    <string name="ns_battery">Sur batterie</string>
     <string name="connectionsettings_title">Paramètres de connexion</string>
     <string name="ns_wifi_allowedssids">SSIDs autorisés (séparés par point-virgule)</string>
     <string name="ns_allowroaming">Autoriser connexion données itinérance</string>
@@ -684,7 +688,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="miscellaneous">Divers</string>
     <string name="nav_logsettings">Paramètres journal</string>
     <string name="resettodefaults">Réinitialiser les valeurs par défaut</string>
-    <string name="nsmalfunction">Dysfonctionnement NSClient. Faites une réinitialisation de NS et de NSClient.</string>
+    <string name="nsmalfunction">Dysfonctionnement NSClient. Redémarrez NS et NSClient.</string>
     <string name="time_offset">Décalage horaire</string>
     <string name="bolus_reminder">Rappel du bolus plus tard</string>
     <string name="setupwizard_preferred_aps_mode">Mode APS préféré</string>
@@ -1035,4 +1039,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="aidex">GlucoRx Aidex</string>
     <string name="aidex_short">Aidex</string>
     <string name="description_source_aidex">Recevoir les valeurs de glycémie du MGC GlucoRx Aidex.</string>
+    <string name="blocked_by_charging">Bloqué par les options de recharge</string>
+    <string name="blocked_by_connectivity">Bloqué par les options de connectivité</string>
 </resources>

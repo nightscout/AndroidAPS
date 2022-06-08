@@ -168,4 +168,20 @@
     <string name="tile_no_config">Нет доступной конфигурации</string>
     <string name="wear_control_not_enabled">Функция управления Wear выключена</string>
     <string name="wear_control_no_data">Нет данных</string>
+    <string name="increment">приращение</string>
+    <string name="decrement">декремент</string>
+    <string name="first_char_high">В</string>
+    <string name="first_char_low">Н</string>
+    <string name="abbreviation_average">сред</string>
+    <string name="no_iob_u">--ед</string>
+    <string name="no_cob_g">--г</string>
+    <string name="no_tmp_basal_u_h">-.--ед/ч</string>
+    <string name="uploader_na">Загрузчик: --%</string>
+    <string name="no_status">S: статус отсутствует</string>
+    <string name="time_stamp_na_min_ago">-- Минут назад</string>
+    <string name="delta_na">--- мг/дл</string>
+    <string name="no_loop_status">Нет статуса</string>
+    <string name="cob_000g">000г</string>
+    <string name="svg_00_0">00,0</string>
+    <string name="iob_0_00u">0,00 ед</string>
 </resources>

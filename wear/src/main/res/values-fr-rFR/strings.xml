@@ -168,4 +168,17 @@
     <string name="tile_no_config">Aucune configuration disponible</string>
     <string name="wear_control_not_enabled">Contrôles Wear désactivés</string>
     <string name="wear_control_no_data">Aucune donnée disponible</string>
+    <string name="first_char_high">H</string>
+    <string name="first_char_low">B</string>
+    <string name="abbreviation_average">moy</string>
+    <string name="no_iob_u">--U</string>
+    <string name="no_cob_g">--g</string>
+    <string name="no_tmp_basal_u_h">-.-- U/h</string>
+    <string name="uploader_na">Téléchargement : ---%</string>
+    <string name="time_stamp_na_min_ago">Il y a -- minutes</string>
+    <string name="delta_na">--- mg/dl</string>
+    <string name="no_loop_status">Aucun statut de la boucle</string>
+    <string name="cob_000g">000 g</string>
+    <string name="svg_00_0">00,0</string>
+    <string name="iob_0_00u">0,00 U</string>
 </resources>

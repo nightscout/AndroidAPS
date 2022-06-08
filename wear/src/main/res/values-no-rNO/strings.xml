@@ -168,4 +168,20 @@
     <string name="tile_no_config">Ingen konfigurasjon tilgjengelig</string>
     <string name="wear_control_not_enabled">Wear kontroller deaktivert</string>
     <string name="wear_control_no_data">Ingen data tilgjengelig</string>
+    <string name="increment">økning</string>
+    <string name="decrement">reduksjon</string>
+    <string name="first_char_high">H</string>
+    <string name="first_char_low">L</string>
+    <string name="abbreviation_average">snitt</string>
+    <string name="no_iob_u">--E</string>
+    <string name="no_cob_g">--g</string>
+    <string name="no_tmp_basal_u_h">-.--E/t</string>
+    <string name="uploader_na">Opplaster: ---%</string>
+    <string name="no_status">S: ingen status</string>
+    <string name="time_stamp_na_min_ago">-- Minutter siden</string>
+    <string name="delta_na">--- mg/dl</string>
+    <string name="no_loop_status">Ingen loop status</string>
+    <string name="cob_000g">000g</string>
+    <string name="svg_00_0">00,0</string>
+    <string name="iob_0_00u">0,00E</string>
 </resources>
