@@ -343,6 +343,9 @@ class AutotunePlugin @Inject constructor(
         json.put("tunedProfileName", tunedProfile?.profilename)
         json.put("tunedPeak", tunedProfile?.peak)
         json.put("tunedDia", tunedProfile?.dia)
+        for (i in days.weekdays.indices) {
+            json.put(InputWeekDay.DayOfWeek.values()[i].name, days.weekdays[i])
+        }
         json.put("result", result)
         json.put("updateButtonVisibility", updateButtonVisibility)
         sp.putString(R.string.key_autotune_last_run, json.toString())
@@ -374,6 +377,8 @@ class AutotunePlugin @Inject constructor(
                 atProfile.profilename = tunedProfileName
                 atProfile.circadianProfile = ProfileSealed.Pure(circadianTuned)
             }
+            for (i in days.weekdays.indices)
+                days.weekdays[i] = JsonHelper.safeGetBoolean(json, InputWeekDay.DayOfWeek.values()[i].name,true)
             result = JsonHelper.safeGetString(json, "result", "")
             updateButtonVisibility = JsonHelper.safeGetInt(json, "updateButtonVisibility")
             lastRunSuccess = true
