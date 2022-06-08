@@ -115,37 +115,39 @@ class AutotunePlugin @Inject constructor(
             val from = starttime + i * 24 * 60 * 60 * 1000L         // get 24 hours BG values from 4 AM to 4 AM next day
             val to = from + 24 * 60 * 60 * 1000L
             log("Tune day " + (i + 1) + " of " + daysBack)
-            tunedProfile?.let { tunedProfile ->
-                autotuneIob.initializeData(from, to, tunedProfile)  //autotuneIob contains BG and Treatments data from history (<=> query for ns-treatments and ns-entries)
+            tunedProfile?.let { it ->
+                autotuneIob.initializeData(from, to, it)  //autotuneIob contains BG and Treatments data from history (<=> query for ns-treatments and ns-entries)
                 autotuneFS.exportEntries(autotuneIob)               //<=> ns-entries.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
                 autotuneFS.exportTreatments(autotuneIob)            //<=> ns-treatments.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine (include treatments ,tempBasal and extended
-                preppedGlucose = autotunePrep.categorize(tunedProfile) //<=> autotune.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
+                preppedGlucose = autotunePrep.categorize(it) //<=> autotune.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
+                preppedGlucose?.let { preppedGlucose ->
+                    autotuneFS.exportPreppedGlucose(preppedGlucose)
+                    tunedProfile = autotuneCore.tuneAllTheThings(preppedGlucose, it, pumpProfile).also { tunedProfile ->
+                        autotuneFS.exportTunedProfile(tunedProfile)   //<=> newprofile.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
+                        if (i < daysBack - 1) {
+                            log("Partial result for day ${i + 1}".trimIndent())
+                            result = rh.gs(R.string.autotune_partial_result, i + 1, daysBack)
+                            rxBus.send(EventAutotuneUpdateGui())
+                        }
+                        logResult = showResults(tunedProfile, pumpProfile)
+                        if (detailedLog)
+                            autotuneFS.exportLog(lastRun, i + 1)
+                    }
+                }
+                    ?: {
+                        log("preppedGlucose is null on day ${i + 1}")
+                        tunedProfile = null
+                    }
             }
-
-            if (preppedGlucose == null || tunedProfile == null) {
+            if (tunedProfile == null) {
                 result = rh.gs(R.string.autotune_error)
-                log(result)
+                log("TunedProfile is null on day ${i + 1}")
                 calculationRunning = false
                 rxBus.send(EventAutotuneUpdateGui())
-                tunedProfile = null
                 autotuneFS.exportResult(result)
                 autotuneFS.exportLogAndZip(lastRun)
                 return result
             }
-            preppedGlucose?.let { preppedGlucose ->         //preppedGlucose and tunedProfile should never be null here
-                autotuneFS.exportPreppedGlucose(preppedGlucose)
-                tunedProfile = autotuneCore.tuneAllTheThings(preppedGlucose, tunedProfile!!, pumpProfile)
-            }
-            // localInsulin = LocalInsulin("TunedInsulin", tunedProfile!!.peak, tunedProfile!!.dia)     // Todo: Add tune Insulin option
-            autotuneFS.exportTunedProfile(tunedProfile!!)   //<=> newprofile.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
-            if (i < daysBack - 1) {
-                log("Partial result for day ${i + 1}".trimIndent())
-                result = rh.gs(R.string.autotune_partial_result, i + 1, daysBack)
-                rxBus.send(EventAutotuneUpdateGui())
-            }
-            logResult = showResults(tunedProfile, pumpProfile)
-            if (detailedLog)
-                autotuneFS.exportLog(lastRun, i + 1)
         }
         result = rh.gs(R.string.autotune_result, dateUtil.dateAndTimeString(lastRun))
         if (!detailedLog)
@@ -187,11 +189,12 @@ class AutotunePlugin @Inject constructor(
                 }
             }
         }
-        lastRunSuccess = true
-        sp.putLong(R.string.key_autotune_last_run, lastRun)
-        rxBus.send(EventAutotuneUpdateGui())
-        calculationRunning = false
+
         tunedProfile?.let {
+            lastRunSuccess = true
+            sp.putLong(R.string.key_autotune_last_run, lastRun)
+            rxBus.send(EventAutotuneUpdateGui())
+            calculationRunning = false
             return result
         }
         return "No Result"  // should never occurs
