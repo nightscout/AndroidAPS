@@ -319,31 +319,34 @@ class AutotunePlugin @Inject constructor(
     fun loadLastRun() {
         result = ""
         lastRunSuccess = false
-        val json = JSONObject(sp.getString(R.string.key_autotune_last_run, ""))
-        lastNbDays = JsonHelper.safeGetString(json, "lastNbDays", "")
-        lastRun = JsonHelper.safeGetLong(json, "lastRun")
-        val pumpPeak = JsonHelper.safeGetInt(json, "pumpPeak")
-        val pumpDia = JsonHelper.safeGetDouble(json, "pumpDia")
-        var localInsulin = LocalInsulin("PumpInsulin", pumpPeak, pumpDia)
-        selectedProfile = JsonHelper.safeGetString(json, "pumpProfileName", "")
-        val profile = JsonHelper.safeGetJSONObject(json, "pumpProfile", null)?.let { pureProfileFromJson(it, dateUtil) }
-            ?:return
-        pumpProfile = ATProfile(ProfileSealed.Pure(profile), localInsulin, injector).also { it.profilename = selectedProfile }
-        val tunedPeak = JsonHelper.safeGetInt(json, "tunedPeak")
-        val tunedDia = JsonHelper.safeGetDouble(json, "tunedDia")
-        localInsulin = LocalInsulin("PumpInsulin", tunedPeak, tunedDia)
-        val tunedProfileName = JsonHelper.safeGetString(json, "tunedProfileName", "")
-        val tuned = JsonHelper.safeGetJSONObject(json, "tunedProfile", null)?.let { pureProfileFromJson(it, dateUtil) }
-            ?: return
-        val circadianTuned = JsonHelper.safeGetJSONObject(json, "tunedCircadianProfile", null)?.let { pureProfileFromJson(it, dateUtil) }
-            ?: return
-        tunedProfile = ATProfile(ProfileSealed.Pure(tuned), localInsulin, injector).also { atProfile ->
-            atProfile.profilename = tunedProfileName
-            atProfile.circadianProfile = ProfileSealed.Pure(circadianTuned)
+        try {
+            val json = JSONObject(sp.getString(R.string.key_autotune_last_run, ""))
+            lastNbDays = JsonHelper.safeGetString(json, "lastNbDays", "")
+            lastRun = JsonHelper.safeGetLong(json, "lastRun")
+            val pumpPeak = JsonHelper.safeGetInt(json, "pumpPeak")
+            val pumpDia = JsonHelper.safeGetDouble(json, "pumpDia")
+            var localInsulin = LocalInsulin("PumpInsulin", pumpPeak, pumpDia)
+            selectedProfile = JsonHelper.safeGetString(json, "pumpProfileName", "")
+            val profile = JsonHelper.safeGetJSONObject(json, "pumpProfile", null)?.let { pureProfileFromJson(it, dateUtil) }
+                ?: return
+            pumpProfile = ATProfile(ProfileSealed.Pure(profile), localInsulin, injector).also { it.profilename = selectedProfile }
+            val tunedPeak = JsonHelper.safeGetInt(json, "tunedPeak")
+            val tunedDia = JsonHelper.safeGetDouble(json, "tunedDia")
+            localInsulin = LocalInsulin("PumpInsulin", tunedPeak, tunedDia)
+            val tunedProfileName = JsonHelper.safeGetString(json, "tunedProfileName", "")
+            val tuned = JsonHelper.safeGetJSONObject(json, "tunedProfile", null)?.let { pureProfileFromJson(it, dateUtil) }
+                ?: return
+            val circadianTuned = JsonHelper.safeGetJSONObject(json, "tunedCircadianProfile", null)?.let { pureProfileFromJson(it, dateUtil) }
+                ?: return
+            tunedProfile = ATProfile(ProfileSealed.Pure(tuned), localInsulin, injector).also { atProfile ->
+                atProfile.profilename = tunedProfileName
+                atProfile.circadianProfile = ProfileSealed.Pure(circadianTuned)
+            }
+            result = JsonHelper.safeGetString(json, "result", "")
+            updateButtonVisibility = JsonHelper.safeGetInt(json, "updateButtonVisibility")
+            lastRunSuccess = true
+        } catch (e: Exception) {
         }
-        result = JsonHelper.safeGetString(json, "result", "")
-        updateButtonVisibility = JsonHelper.safeGetInt(json, "updateButtonVisibility")
-        lastRunSuccess = true
     }
 
     private fun log(message: String) {
