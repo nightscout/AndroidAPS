@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.autotune
 
+import android.graphics.Paint
 import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Editable
@@ -80,7 +81,7 @@ class AutotuneFragment : DaggerFragment() {
         super.onViewCreated(view, savedInstanceState)
         sp.putBoolean(R.string.key_autotune_tune_insulin_curve, false)  // put to false tune insulin curve
         sp.putBoolean(R.string.key_autotune_additional_log, false)      // put to false additional log
-        autotunePlugin.lastRun = sp.getLong(R.string.key_autotune_last_run, 0)
+        autotunePlugin.loadLastRun()
         if (autotunePlugin.lastNbDays.isEmpty())
             autotunePlugin.lastNbDays = sp.getInt(R.string.key_autotune_default_tune_days, 5).toString()
         val defaultValue = sp.getInt(R.string.key_autotune_default_tune_days, 5).toDouble()
@@ -145,6 +146,7 @@ class AutotuneFragment : DaggerFragment() {
                                  autotunePlugin.tunedProfile?.profilename = localName
                                  autotunePlugin.updateProfile(autotunePlugin.tunedProfile)
                                  autotunePlugin.updateButtonVisibility = View.GONE
+                                 autotunePlugin.saveLastRun()
                                  uel.log(
                                      UserEntry.Action.STORE_PROFILE,
                                      UserEntry.Sources.Autotune,
@@ -164,6 +166,7 @@ class AutotuneFragment : DaggerFragment() {
                                  autotunePlugin.tunedProfile?.profilename = ""
                                  autotunePlugin.updateProfile(autotunePlugin.pumpProfile)
                                  autotunePlugin.updateButtonVisibility = View.VISIBLE
+                                 autotunePlugin.saveLastRun()
                                  uel.log(
                                      UserEntry.Action.STORE_PROFILE,
                                      UserEntry.Sources.Autotune,
@@ -252,6 +255,14 @@ class AutotuneFragment : DaggerFragment() {
                 }
             }
         }
+
+        binding.tuneLastrun.setOnClickListener {
+            if (!autotunePlugin.calculationRunning) {
+                autotunePlugin.loadLastRun()
+                updateGui()
+            }
+        }
+        binding.tuneLastrun.paintFlags = binding.tuneLastrun.paintFlags or Paint.UNDERLINE_TEXT_FLAG
     }
 
     @Synchronized
@@ -264,7 +275,6 @@ class AutotuneFragment : DaggerFragment() {
                 updateGui()
             }, { fabricPrivacy.logException(it) })
         checkNewDay()
-        binding.tuneDays.value = autotunePlugin.lastNbDays.toDouble()
         updateGui()
     }
 
@@ -277,6 +287,7 @@ class AutotuneFragment : DaggerFragment() {
     @Synchronized
     private fun updateGui() {
         _binding ?: return
+        binding.tuneDays.value = autotunePlugin.lastNbDays.toDouble()
         profileStore = activePlugin.activeProfileSource.profile ?: ProfileStore(injector, JSONObject(), dateUtil)
         profileName = if (binding.profileList.text.toString() == rh.gs(R.string.active)) "" else binding.profileList.text.toString()
         profileFunction.getProfile()?.let { currentProfile ->
