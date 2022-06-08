@@ -28,8 +28,8 @@ class AlarmSoundServiceHelper @Inject constructor(
     private val notificationHolder: NotificationHolder
 ) {
 
-    fun startAlarm(context: Context, sound: Int) {
-        aapsLogger.debug(LTag.CORE, "Starting alarm")
+    fun startAlarm(context: Context, sound: Int, reason: String) {
+        aapsLogger.debug(LTag.CORE, "Starting alarm from $reason")
         val connection = object : ServiceConnection {
             override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
                 // The binder of the service that returns the instance that is created.
@@ -62,8 +62,8 @@ class AlarmSoundServiceHelper @Inject constructor(
         }
     }
 
-    fun stopService(context: Context) {
-        aapsLogger.debug(LTag.CORE, "Stopping alarm")
+    fun stopService(context: Context, reason: String) {
+        aapsLogger.debug(LTag.CORE, "Stopping alarm from $reason")
         val alarm = Intent(context, AlarmSoundService::class.java)
         context.stopService(alarm)
     }
