@@ -36,11 +36,12 @@
             android:key="@string/key_autotune_circadian_ic_isf"
             android:summary="@string/autotune_circadian_ic_isf_summary"
             android:title="@string/autotune_circadian_ic_isf_title" />
-
+        <!--  Hide autotune_additional_log option
         <SwitchPreference
             android:defaultValue="false"
             android:key="@string/key_autotune_additional_log"
             android:summary="@string/autotune_additional_log_summary"
             android:title="@string/autotune_additional_log_title" />
+        -->
     </PreferenceCategory>
 </androidx.preference.PreferenceScreen>

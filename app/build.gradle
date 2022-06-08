@@ -104,6 +104,8 @@ tasks.matching { it instanceof Test }.all {
 }
 
 android {
+
+    namespace 'info.nightscout.androidaps'
     ndkVersion "21.1.6352462"
 
     defaultConfig {
