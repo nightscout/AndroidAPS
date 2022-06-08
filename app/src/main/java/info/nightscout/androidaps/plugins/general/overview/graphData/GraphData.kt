@@ -73,6 +73,7 @@ class GraphData(
     }
 
     fun addBasals() {
+        maxY = max(maxY, defaultValueHelper.determineHighLine())
         val scale = defaultValueHelper.determineLowLine() / maxY / 1.2
         addSeries(overviewData.baseBasalGraphSeries)
         addSeries(overviewData.tempBasalGraphSeries)

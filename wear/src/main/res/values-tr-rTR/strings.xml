@@ -168,4 +168,20 @@
     <string name="tile_no_config">Mevcut yapılandırma yok</string>
     <string name="wear_control_not_enabled">Saat kontrolleri devre dışı</string>
     <string name="wear_control_no_data">Veri yok</string>
+    <string name="increment">artış</string>
+    <string name="decrement">azalma</string>
+    <string name="first_char_high">Y</string>
+    <string name="first_char_low">D</string>
+    <string name="abbreviation_average">ort</string>
+    <string name="no_iob_u">--Ü</string>
+    <string name="no_cob_g">--g</string>
+    <string name="no_tmp_basal_u_h">-.--Ü/sa</string>
+    <string name="uploader_na">Yükleyici: ---%</string>
+    <string name="no_status">S: durum yok</string>
+    <string name="time_stamp_na_min_ago">-- Dakika önce</string>
+    <string name="delta_na">--- mg/dl</string>
+    <string name="no_loop_status">Döngü Durumu Yok</string>
+    <string name="cob_000g">000g</string>
+    <string name="svg_00_0">00,0</string>
+    <string name="iob_0_00u">0,00Ü</string>
 </resources>

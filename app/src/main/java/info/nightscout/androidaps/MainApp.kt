@@ -249,7 +249,7 @@ class MainApp : DaggerApplication() {
     override fun onTerminate() {
         aapsLogger.debug(LTag.CORE, "onTerminate")
         unregisterActivityLifecycleCallbacks(activityMonitor)
-        alarmSoundServiceHelper.stopService(this)
+        alarmSoundServiceHelper.stopService(this, "onTerminate")
         super.onTerminate()
     }
 }

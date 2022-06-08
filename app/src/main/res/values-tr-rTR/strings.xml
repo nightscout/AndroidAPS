@@ -475,6 +475,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="localalertsettings_title">Yerel uyarılar</string>
     <string name="enable_missed_bg_readings_alert">KŞ bilgisi alınmadığında uyar</string>
     <string name="enable_pump_unreachable_alert">Pompa ulaşılamıyorsa uyar</string>
+    <string name="pump_unreachable_threshold">Pompa ulaşılamaz eşiği [dk]</string>
     <string name="enable_carbs_req_alert">Karbonhidrat gerekliyse uyar</string>
     <string name="urgent_alarm">Acil önemli Alarm</string>
     <string name="info">BİLGİ</string>
