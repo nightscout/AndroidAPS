@@ -257,8 +257,10 @@ class AutotuneFragment : DaggerFragment() {
         }
 
         binding.tuneLastrun.setOnClickListener {
-            autotunePlugin.loadLastRun()
-            updateGui()
+            if (!autotunePlugin.calculationRunning) {
+                autotunePlugin.loadLastRun()
+                updateGui()
+            }
         }
         binding.tuneLastrun.paintFlags = binding.tuneLastrun.paintFlags or Paint.UNDERLINE_TEXT_FLAG
     }
