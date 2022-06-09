@@ -83,7 +83,6 @@ class GraphData(
         maxY = max(maxY, defaultValueHelper.determineHighLine())
         val scale = defaultValueHelper.determineLowLine() / maxY / 1.2
         overviewData.basalScale.multiplier = maxY * scale / maxBasalValue
-        aapsLogger.debug("XXXXXX maxY:$maxY maxBasalValueFound:${maxBasalValue} multiplier:${overviewData.basalScale.multiplier}")
     }
 
     fun addTargetLine() {
