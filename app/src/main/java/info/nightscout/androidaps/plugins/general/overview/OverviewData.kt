@@ -251,7 +251,6 @@ class OverviewData @Inject constructor(
     var bgReadingGraphSeries: PointsWithLabelGraphSeries<DataPointWithLabelInterface> = PointsWithLabelGraphSeries()
     var predictionsGraphSeries: PointsWithLabelGraphSeries<DataPointWithLabelInterface> = PointsWithLabelGraphSeries()
 
-    var maxBasalValueFound = 0.0
     val basalScale = Scale()
     var baseBasalGraphSeries: LineGraphSeries<ScaledDataPoint> = LineGraphSeries()
     var tempBasalGraphSeries: LineGraphSeries<ScaledDataPoint> = LineGraphSeries()
