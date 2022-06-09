@@ -8,7 +8,6 @@ import info.nightscout.androidaps.utils.DecimalFormatter.to0Decimal
 import info.nightscout.androidaps.utils.DecimalFormatter.to1Decimal
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.Round
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import org.joda.time.DateTime
 import org.json.JSONObject
 
@@ -62,6 +61,7 @@ interface Profile {
      * ISF value according to "now"" in MGDL
      */
     fun getIsfMgdl(): Double
+
     /**
      * ISF value according to timestamp in MGDL
      */

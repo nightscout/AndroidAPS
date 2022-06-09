@@ -31,7 +31,6 @@ import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
 import info.nightscout.androidaps.plugins.source.GlimpPlugin
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.Profiler
-import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.buildHelper.BuildHelperImpl
 import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert

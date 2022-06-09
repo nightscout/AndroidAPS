@@ -20,7 +20,7 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.MidnightTime
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.buildHelper.BuildHelper
+import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONException
@@ -50,7 +50,7 @@ class AutotunePlugin @Inject constructor(
     private val autotuneIob: AutotuneIob,
     private val autotunePrep: AutotunePrep,
     private val autotuneCore: AutotuneCore,
-    private val buildHelper:BuildHelper,
+    private val buildHelper: BuildHelper,
     private val uel: UserEntryLogger,
     aapsLogger: AAPSLogger
 ) : PluginBase(PluginDescription()
