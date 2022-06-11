@@ -13,7 +13,7 @@ import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.receivers.Intents
-import info.nightscout.androidaps.utils.buildHelper.BuildHelper
+import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import javax.inject.Inject

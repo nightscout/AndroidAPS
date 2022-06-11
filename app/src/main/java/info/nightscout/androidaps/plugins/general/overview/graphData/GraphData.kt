@@ -73,13 +73,16 @@ class GraphData(
     }
 
     fun addBasals() {
-        maxY = max(maxY, defaultValueHelper.determineHighLine())
-        val scale = defaultValueHelper.determineLowLine() / maxY / 1.2
+        overviewData.basalScale.multiplier = 1.0 // get unscaled Y-values for max calculation
+        var maxBasalValue = maxOf(0.1, overviewData.baseBasalGraphSeries.highestValueY, overviewData.tempBasalGraphSeries.highestValueY)
+        maxBasalValue = maxOf(maxBasalValue, overviewData.basalLineGraphSeries.highestValueY, overviewData.absoluteBasalGraphSeries.highestValueY)
         addSeries(overviewData.baseBasalGraphSeries)
         addSeries(overviewData.tempBasalGraphSeries)
         addSeries(overviewData.basalLineGraphSeries)
         addSeries(overviewData.absoluteBasalGraphSeries)
-        overviewData.basalScale.multiplier = maxY * scale / overviewData.maxBasalValueFound
+        maxY = max(maxY, defaultValueHelper.determineHighLine())
+        val scale = defaultValueHelper.determineLowLine() / maxY / 1.2
+        overviewData.basalScale.multiplier = maxY * scale / maxBasalValue
     }
 
     fun addTargetLine() {

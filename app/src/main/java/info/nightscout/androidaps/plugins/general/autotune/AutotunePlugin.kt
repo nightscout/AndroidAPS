@@ -21,7 +21,7 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.MidnightTime
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.buildHelper.BuildHelper
+import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONException
@@ -50,7 +50,7 @@ class AutotunePlugin @Inject constructor(
     private val autotuneIob: AutotuneIob,
     private val autotunePrep: AutotunePrep,
     private val autotuneCore: AutotuneCore,
-    private val buildHelper:BuildHelper,
+    private val buildHelper: BuildHelper,
     private val uel: UserEntryLogger,
     aapsLogger: AAPSLogger
 ) : PluginBase(PluginDescription()
@@ -339,11 +339,16 @@ class AutotunePlugin @Inject constructor(
         json.put("pumpProfileName", pumpProfile.profilename)
         json.put("pumpPeak", pumpProfile.peak)
         json.put("pumpDia", pumpProfile.dia)
-        json.put("tunedProfile", tunedProfile?.profile?.toPureNsJson(dateUtil))
-        json.put("tunedCircadianProfile", tunedProfile?.circadianProfile?.toPureNsJson(dateUtil))
-        json.put("tunedProfileName", tunedProfile?.profilename)
-        json.put("tunedPeak", tunedProfile?.peak)
-        json.put("tunedDia", tunedProfile?.dia)
+        tunedProfile?.let { atProfile ->
+            json.put("tunedProfile", atProfile.profile.toPureNsJson(dateUtil))
+            json.put("tunedCircadianProfile", atProfile.circadianProfile.toPureNsJson(dateUtil))
+            json.put("tunedProfileName", atProfile.profilename)
+            json.put("tunedPeak", atProfile.peak)
+            json.put("tunedDia", atProfile.dia)
+            for (i in 0..23) {
+                json.put("missingDays_$i", atProfile.basalUntuned[i])
+            }
+        }
         for (i in days.weekdays.indices) {
             json.put(InputWeekDay.DayOfWeek.values()[i].name, days.weekdays[i])
         }
@@ -377,6 +382,9 @@ class AutotunePlugin @Inject constructor(
             tunedProfile = ATProfile(ProfileSealed.Pure(tuned), localInsulin, injector).also { atProfile ->
                 atProfile.profilename = tunedProfileName
                 atProfile.circadianProfile = ProfileSealed.Pure(circadianTuned)
+                for (i in 0..23) {
+                    atProfile.basalUntuned[i] = JsonHelper.safeGetInt(json,"missingDays_$i")
+                }
             }
             for (i in days.weekdays.indices)
                 days.weekdays[i] = JsonHelper.safeGetBoolean(json, InputWeekDay.DayOfWeek.values()[i].name,true)

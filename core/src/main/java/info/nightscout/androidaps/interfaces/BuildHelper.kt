@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils.buildHelper
+package info.nightscout.androidaps.interfaces
 
 interface BuildHelper {
 
