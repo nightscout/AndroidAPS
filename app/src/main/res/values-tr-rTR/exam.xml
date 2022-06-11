@@ -123,6 +123,7 @@
     <string name="sensitivity_cannula">Bir kanül değişikliğinin kaydedilmesi, Otoduyarlılık oranını %100\'e sıfırlayacaktır.</string>
     <string name="sensitivity_time">Eklenti seçeneklerinden bazıları, kullanıcı tarafından ayarlanabilen yapılandırılabilir zaman aralıklarına sahiptir.</string>
     <string name="sensitivity_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Sensitivity-detection-and-COB.html</string>
+    <string name="sensitivity_hint2">https://androidaps.readthedocs.io/tr/latest/Usage/Open-APS-features.html?highlight=Autosens#autosens</string>
     <string name="wrongcarbs_label">Karbonhidrat Giriş Hataları</string>
     <string name="wrongcarbs_whattodo">Yanlış bir karbonhidrat girişi yaptıysanız ne yapmalısınız?</string>
     <string name="wrongcarbs_treatmentstab">Tedavilerdeki yanlış girişi siler ve doğru karbonhidrat değerini girerim.</string>

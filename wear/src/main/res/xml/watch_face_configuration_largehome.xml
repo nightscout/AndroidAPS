@@ -4,15 +4,14 @@
 
     <CheckBoxPreference
         android:defaultValue="true"
-        android:key="dark"
-        android:summary="Dark theme"
+        android:key="@string/key_dark"
         android:title="@string/pref_dark"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
 
     <CheckBoxPreference
         android:defaultValue="false"
-        android:key="match_divider"
+        android:key="@string/key_match_divider"
         android:summary="Status bar divider background matches watchface background"
         android:title="@string/pref_matching_divider"
         app:wear_iconOff="@drawable/settings_off"
@@ -20,7 +19,7 @@
 
     <CheckBoxPreference
         android:defaultValue="false"
-        android:key="vibrate_Hourly"
+        android:key="@string/key_vibrate_hourly"
         android:title="@string/pref_vibrate_hourly"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
@@ -29,7 +28,7 @@
         android:defaultValue="off"
         android:entries="@array/watchface_simplify_ui_name"
         android:entryValues="@array/watchface_simplify_ui_values"
-        android:key="simplify_ui"
+        android:key="@string/key_simplify_ui"
         android:summary="@string/pref_simplify_ui_sum"
         android:title="@string/pref_simplify_ui" />
 

@@ -29,8 +29,9 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/omnipod_wizard_vertical_spacing"
         android:layout_marginBottom="@dimen/omnipod_wizard_vertical_spacing"
-        app:srcCompat="@drawable/ic_omnipod_wizard_success"
-        android:visibility="gone" />
+        android:contentDescription="@string/success"
+        android:visibility="gone"
+        app:srcCompat="@drawable/ic_omnipod_wizard_success" />
 
     <TextView
         android:id="@+id/omnipod_wizard_action_error"
@@ -49,7 +50,8 @@
         android:layout_height="wrap_content"
         android:gravity="end"
         android:orientation="horizontal"
-        android:paddingEnd="50dp">
+        android:paddingEnd="50dp"
+        android:paddingStart="0dp">
 
         <com.google.android.material.button.MaterialButton
             style="@style/GrayButton"
@@ -77,5 +79,7 @@
             android:layout_marginStart="10dp"
             android:text="@string/omnipod_common_wizard_button_retry"
             android:visibility="gone" />
+
     </LinearLayout>
+
 </LinearLayout>

@@ -16,27 +16,24 @@ abstract class HistoryRecordDao {
     @Query("SELECT * from historyrecords")
     abstract fun all(): Single<List<HistoryRecordEntity>>
 
-    @Query("SELECT * from historyrecords")
-    abstract fun allBlocking(): List<HistoryRecordEntity>
+    @Query("SELECT * from historyrecords ORDER BY id LIMIT 1")
+    abstract fun first(): HistoryRecordEntity?
 
     @Query("SELECT * from historyrecords WHERE createdAt >= :since ORDER BY createdAt DESC")
     abstract fun allSince(since: Long): Single<List<HistoryRecordEntity>>
 
     @Query("SELECT * FROM historyrecords WHERE id = :id LIMIT 1")
-    abstract fun byIdBlocking(id: String): HistoryRecordEntity?
+    abstract fun byIdBlocking(id: Long): HistoryRecordEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun saveBlocking(historyRecordEntity: HistoryRecordEntity)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun save(historyRecordEntity: HistoryRecordEntity): Completable
+    abstract fun save(historyRecordEntity: HistoryRecordEntity): Single<Long>
 
     @Delete
     abstract fun delete(historyRecordEntity: HistoryRecordEntity): Completable
 
     @Query("UPDATE historyrecords SET resolvedResult = :resolvedResult, resolvedAt = :resolvedAt WHERE id = :id ")
-    abstract fun markResolved(id: String, resolvedResult: ResolvedResult, resolvedAt: Long): Completable
+    abstract fun markResolved(id: Long, resolvedResult: ResolvedResult, resolvedAt: Long): Completable
 
     @Query("UPDATE historyrecords SET initialResult = :initialResult  WHERE id = :id ")
-    abstract fun setInitialResult(id: String, initialResult: InitialResult): Completable
+    abstract fun setInitialResult(id: Long, initialResult: InitialResult): Completable
 }

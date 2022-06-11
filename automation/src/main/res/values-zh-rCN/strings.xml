@@ -120,4 +120,7 @@
     <string name="confirm_remove_multiple_items">你确定要删除 %1$d 吗？</string>
     <string name="sort_label">排序</string>
     <string name="system_automation">系统自动化</string>
+    <string name="run_automations">运行自动化</string>
+    <string name="add_automation">添加规则</string>
+    <string name="remove_sort">移除/排序</string>
 </resources>

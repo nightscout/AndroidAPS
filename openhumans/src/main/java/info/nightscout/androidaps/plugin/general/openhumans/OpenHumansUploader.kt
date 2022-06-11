@@ -91,7 +91,7 @@ class OpenHumansUploader @Inject internal constructor(
     }
 
     private fun onSharedPreferenceChanged(event: EventPreferenceChange) {
-        if (event.changedKey in arrayOf("key_oh_charging_only", "key_oh_wifi_only")  && openHumansState != null) scheduleWorker(true)
+        if (event.changedKey in arrayOf("key_oh_charging_only", "key_oh_wifi_only") && openHumansState != null) scheduleWorker(true)
     }
 
     suspend fun login(bearerToken: String) = withContext(Dispatchers.IO) {
@@ -234,10 +234,7 @@ class OpenHumansUploader @Inject internal constructor(
 
         val displayMetrics = DisplayMetrics()
         @Suppress("DEPRECATION")
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R)
-            context.display?.getRealMetrics(displayMetrics)
-        else
-            (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.getMetrics(displayMetrics)
+        (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.getMetrics(displayMetrics)
 
         val displayInfo = JSONObject()
         displayInfo.put("height", displayMetrics.heightPixels)
@@ -614,13 +611,14 @@ class OpenHumansUploader @Inject internal constructor(
             .setAutoCancel(true)
             .setContentIntent(
                 PendingIntent.getActivity(
-                context,
-                0,
-                Intent(context, OHLoginActivity::class.java).apply {
-                    flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                },
-                0
-            ))
+                    context,
+                    0,
+                    Intent(context, OHLoginActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    },
+                    0
+                )
+            )
             .build()
         NotificationManagerCompat.from(context).notify(SIGNED_OUT_NOTIFICATION_ID, notification)
         withContext(Dispatchers.Main) {
@@ -646,7 +644,9 @@ class OpenHumansUploader @Inject internal constructor(
     }
 
     private companion object {
+
         val HEX_DIGITS = "0123456789ABCDEF".toCharArray()
+
         @Suppress("PrivatePropertyName")
         private val FILE_NAME_DATE_FORMAT = SimpleDateFormat("yyyyMMdd'T'HHmmss", Locale.US).apply { timeZone = TimeZone.getTimeZone("UTC") }
         const val WORK_NAME_PERIODIC = "Open Humans Periodic"

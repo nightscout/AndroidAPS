@@ -44,8 +44,8 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="5dp"
                 android:gravity="center"
-                tools:ignore="RtlSymmetry"
-                tools:text="{fa-clock-o}" />
+                tools:ignore="HardcodedText,RtlSymmetry"
+                android:text="{fa-clock-o}" />
 
             <TextView
                 android:id="@+id/calc_time"
@@ -86,8 +86,8 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="5dp"
                 android:gravity="center"
-                tools:ignore="RtlSymmetry"
-                tools:text="{fa-clock-o}" />
+                tools:ignore="HardcodedText,RtlSymmetry"
+                android:text="{fa-clock-o}" />
 
             <TextView
                 android:id="@+id/bolus_time"
@@ -143,7 +143,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:textColor="?attr/setTempButton"
-                tools:text="NS" />
+                android:text="NS"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/bolus_pump"
@@ -151,7 +152,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:textColor="?attr/setTempButton"
-                tools:text="PH" />
+                android:text="PH"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/bolus_invalid"
@@ -188,8 +190,8 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="5dp"
                 android:gravity="center"
-                tools:ignore="RtlSymmetry"
-                tools:text="{fa-clock-o}" />
+                tools:ignore="HardcodedText,RtlSymmetry"
+                android:text="{fa-clock-o}" />
 
             <TextView
                 android:id="@+id/carbs_time"
@@ -234,7 +236,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:textColor="?attr/setTempButton"
-                tools:text="NS" />
+                android:text="NS"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/carbs_pump"
@@ -242,7 +245,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:textColor="?attr/setTempButton"
-                tools:text="PH" />
+                android:text="PH"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/carbs_invalid"

@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".watchfaces.SteampunkWatchface"
-    tools:deviceIds="wear_square">
+    tools:deviceIds="wear_round"
+    tools:ignore="MissingDefaultResource">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,6 +19,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:gravity="center"
+            android:importantForAccessibility="no"
             android:src="@drawable/steampunk_dial_mgdl" />
 
     </LinearLayout>
@@ -57,13 +59,11 @@
             android:orientation="vertical"
             android:weightSum="1">
 
-            <LinearLayout
+            <View
                 android:layout_width="match_parent"
                 android:layout_height="0px"
-                android:layout_gravity="center"
                 android:layout_weight="0.05"
-                android:gravity="center"
-                android:orientation="horizontal" />
+                tools:ignore="NestedWeights" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -86,7 +86,7 @@
                 <LinearLayout
                     android:layout_width="0px"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.16"
+                    android:layout_weight="0.165"
                     android:orientation="horizontal">
 
                     <TextView
@@ -97,10 +97,10 @@
                         android:gravity="center"
                         android:paddingTop="7dp"
                         android:rotation="-28"
-                        android:text="--g"
+                        android:text="@string/no_cob_g"
                         android:textAlignment="center"
                         android:textColor="@color/black_86p"
-                        android:textSize="11sp"
+                        android:textSize="13sp"
                         android:textStyle="bold" />
 
                 </LinearLayout>
@@ -108,7 +108,7 @@
                 <LinearLayout
                     android:layout_width="0px"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.24"
+                    android:layout_weight="0.27"
                     android:orientation="horizontal">
 
                     <TextView
@@ -117,12 +117,12 @@
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
                         android:gravity="center"
-                        android:paddingBottom="12dp"
-                        android:rotation="-1"
-                        android:text="-.--U/h"
+                        android:paddingBottom="14dp"
+                        android:rotation="0"
+                        android:text="@string/no_tmp_basal_u_h"
                         android:textAlignment="center"
                         android:textColor="@color/black_86p"
-                        android:textSize="11sp"
+                        android:textSize="13sp"
                         android:textStyle="bold" />
 
                 </LinearLayout>
@@ -130,7 +130,7 @@
                 <LinearLayout
                     android:layout_width="0px"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.2"
+                    android:layout_weight="0.165"
                     android:orientation="horizontal">
 
                     <TextView
@@ -141,10 +141,10 @@
                         android:gravity="center"
                         android:paddingTop="6dp"
                         android:rotation="28"
-                        android:text="0.00U"
+                        android:text="@string/no_iob_u"
                         android:textAlignment="center"
                         android:textColor="@color/black_86p"
-                        android:textSize="11sp"
+                        android:textSize="13sp"
                         android:textStyle="bold" />
 
                 </LinearLayout>
@@ -170,11 +170,11 @@
             android:orientation="horizontal"
             android:weightSum="1">
 
-            <LinearLayout
+            <View
                 android:layout_width="0px"
                 android:layout_height="match_parent"
                 android:layout_weight="0.25"
-                android:orientation="horizontal" />
+                tools:ignore="NestedWeights" />
 
             <lecho.lib.hellocharts.view.LineChartView
                 android:id="@+id/chart"
@@ -182,7 +182,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.5" />
 
-            <LinearLayout
+            <View
                 android:layout_width="0px"
                 android:layout_height="match_parent"
                 android:layout_weight="0.25"
@@ -190,11 +190,10 @@
 
         </LinearLayout>
 
-        <LinearLayout
+        <View
             android:layout_width="match_parent"
             android:layout_height="0px"
-            android:layout_weight="0.03"
-            android:orientation="vertical" />
+            android:layout_weight="0.03" />
 
     </LinearLayout>
 
@@ -207,26 +206,26 @@
         android:orientation="vertical"
         android:weightSum="1">
 
-        <LinearLayout
+        <View
             android:layout_width="match_parent"
             android:layout_height="0px"
-            android:layout_weight="0.15"
-            android:orientation="horizontal" />
+            android:layout_weight="0.15" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0px"
             android:layout_gravity="center"
             android:layout_weight="0.21"
+            android:baselineAligned="false"
             android:gravity="center"
             android:orientation="horizontal"
             android:weightSum="1">
 
-            <LinearLayout
+            <View
                 android:layout_width="0px"
                 android:layout_height="match_parent"
                 android:layout_weight="0.32"
-                android:orientation="horizontal" />
+                tools:ignore="NestedWeights" />
 
             <LinearLayout
                 android:layout_width="0px"
@@ -240,14 +239,16 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:paddingEnd="8dp"
+                    android:paddingStart="0dp"
                     android:paddingTop="8dp"
+                    android:paddingEnd="8dp"
                     android:rotation="-24"
                     android:text="-'"
                     android:textAlignment="center"
                     android:textColor="@color/black_86p"
-                    android:textSize="10sp"
-                    android:textStyle="bold" />
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    tools:ignore="HardcodedText" />
 
             </LinearLayout>
 
@@ -268,9 +269,10 @@
                     android:text="--%"
                     android:textAlignment="center"
                     android:textColor="@color/black_86p"
-                    android:textSize="10sp"
+                    android:textSize="12sp"
                     android:textStyle="bold"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    tools:ignore="HardcodedText" />
 
                 <TextView
                     android:id="@+id/uploader_battery"
@@ -281,8 +283,9 @@
                     android:text="--%"
                     android:textAlignment="center"
                     android:textColor="@color/black_86p"
-                    android:textSize="10sp"
-                    android:textStyle="bold" />
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    tools:ignore="HardcodedText" />
 
             </LinearLayout>
 
@@ -300,28 +303,28 @@
                     android:gravity="center"
                     android:paddingStart="10dp"
                     android:paddingTop="8dp"
+                    android:paddingEnd="0dp"
                     android:rotation="24"
                     android:text="-'"
                     android:textAlignment="center"
                     android:textColor="@color/black_86p"
-                    android:textSize="10sp"
-                    android:textStyle="bold" />
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    tools:ignore="HardcodedText" />
 
             </LinearLayout>
 
-            <LinearLayout
+            <View
                 android:layout_width="0px"
                 android:layout_height="match_parent"
-                android:layout_weight="0.32"
-                android:orientation="horizontal" />
+                android:layout_weight="0.32" />
 
         </LinearLayout>
 
-        <LinearLayout
+        <View
             android:layout_width="match_parent"
             android:layout_height="0px"
-            android:layout_weight="0.64"
-            android:orientation="horizontal" />
+            android:layout_weight="0.64" />
 
     </LinearLayout>
 
@@ -330,8 +333,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/steampunk_cover_plate"
-        android:orientation="vertical">
-    </LinearLayout>
+        android:orientation="vertical" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -370,10 +372,10 @@
 
     </LinearLayout>
 
-    <TextView
+    <View
         android:id="@+id/AAPSv2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 </RelativeLayout>

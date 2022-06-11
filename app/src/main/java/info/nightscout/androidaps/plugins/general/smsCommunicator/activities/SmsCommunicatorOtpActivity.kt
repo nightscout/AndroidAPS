@@ -18,7 +18,6 @@ import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.databinding.ActivitySmscommunicatorOtpBinding
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.androidaps.plugins.general.smsCommunicator.otp.OneTimePassword
 import info.nightscout.androidaps.plugins.general.smsCommunicator.otp.OneTimePasswordValidationResult
@@ -55,12 +54,14 @@ class SmsCommunicatorOtpActivity : NoSplashAppCompatActivity() {
                     OneTimePasswordValidationResult.ERROR_WRONG_OTP    -> "WRONG OTP"
                 }
 
-                binding.otpVerifyLabel.setTextColor(when (checkResult) {
-                    OneTimePasswordValidationResult.OK                 -> Color.GREEN
-                    OneTimePasswordValidationResult.ERROR_WRONG_LENGTH -> Color.YELLOW
-                    OneTimePasswordValidationResult.ERROR_WRONG_PIN    -> Color.RED
-                    OneTimePasswordValidationResult.ERROR_WRONG_OTP    -> Color.RED
-                })
+                binding.otpVerifyLabel.setTextColor(
+                    when (checkResult) {
+                        OneTimePasswordValidationResult.OK                 -> Color.GREEN
+                        OneTimePasswordValidationResult.ERROR_WRONG_LENGTH -> Color.YELLOW
+                        OneTimePasswordValidationResult.ERROR_WRONG_PIN    -> Color.RED
+                        OneTimePasswordValidationResult.ERROR_WRONG_OTP    -> Color.RED
+                    }
+                )
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -69,7 +70,8 @@ class SmsCommunicatorOtpActivity : NoSplashAppCompatActivity() {
         })
 
         binding.otpReset.setOnClickListener {
-            OKDialog.showConfirmation(this,
+            OKDialog.showConfirmation(
+                this,
                 rh.gs(R.string.smscommunicator_otp_reset_title),
                 rh.gs(R.string.smscommunicator_otp_reset_prompt),
                 Runnable {
@@ -81,7 +83,8 @@ class SmsCommunicatorOtpActivity : NoSplashAppCompatActivity() {
         }
 
         binding.otpProvisioning.setOnLongClickListener {
-            OKDialog.showConfirmation(this,
+            OKDialog.showConfirmation(
+                this,
                 rh.gs(R.string.smscommunicator_otp_export_title),
                 rh.gs(R.string.smscommunicator_otp_export_prompt),
                 Runnable {
@@ -118,7 +121,5 @@ class SmsCommunicatorOtpActivity : NoSplashAppCompatActivity() {
         } else {
             binding.otpProvisioning.visibility = View.GONE
         }
-
-        binding.otpVerifyEdit.text = binding.otpVerifyEdit.text
     }
 }

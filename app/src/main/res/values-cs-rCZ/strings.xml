@@ -29,7 +29,6 @@
     <string name="description_overview">Zobrazení stavu a informací. Přístup k nejběžnějším ovládacím prvkům</string>
     <string name="description_persistent_notification">Zobrazení průběžného oznámení v Androidu s krátkým přehledem, co smyčka právě dělá</string>
     <string name="description_profile_local">Definujte profil, který je dostupný offline.</string>
-    <string name="description_pump_mdi">Ovladač pumpy pro uživatele inzulínových per</string>
     <string name="description_pump_virtual">Ovladač pumpy pro uživatele bez podporované pumpy (Otevřená smyčka)</string>
     <string name="description_sensitivity_aaps">Citlivost je počítána stejným způsobem jako v Oref0, ale je možné specifikovat dobu do minulosti. Minimální absorpce sacharidů je počítána dynamicky z maximální doby absorpce definované v nastavení.</string>
     <string name="description_sensitivity_oref1">Citlivost je počítána za 8h nebo 24h (použita je vyšší citlivost). Sacharidy, pokud nejsou absorbované, jsou oříznuty po čase definovaném v nastavení. Je také zároveň vyhodnocováno UAM (neoznámené jídlo).</string>
@@ -250,7 +249,6 @@
     <string name="basalvaluebelowminimum">Hodnota bazálu pod povoleným minimem. Nenastaveno!</string>
     <string name="sms_actualbg">Glykémie:</string>
     <string name="sms_lastbg">Poslední glykémie:</string>
-    <string name="mdi">Pera</string>
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Průběžné oznámení</string>
     <string name="old_data">ZASTARALÉ</string>
@@ -442,6 +440,7 @@
     <string name="enableuam_summary">Detekce neoznámených jídel</string>
     <string name="insulin_oref_peak">Čas vrcholu IOB křivky</string>
     <string name="insulin_peak_time">Vrchol křivky [min]</string>
+    <string name="insulin_peak">Vrchol</string>
     <string name="free_peak_oref">Volitelný vrchol - Oref</string>
     <string name="rapid_acting_oref">Rychle působící - Oref</string>
     <string name="ultrarapid_oref">Ultra rychlý - Oref</string>
@@ -605,9 +604,11 @@
     <string name="secondcarbsincrement">Druhý přídavek sacharidů</string>
     <string name="thirdcarbsincrement">Třetí přídavek sacharidů</string>
     <string name="cgm">CGM</string>
-    <string name="ns_wifionly">Používat pouze WiFi</string>
+    <string name="ns_cellular">Použít mobilní připojení</string>
+    <string name="ns_wifi">Použít WiFi připojení</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="ns_chargingonly">Pouze při nabíjení</string>
+    <string name="ns_charging">Při nabíjení</string>
+    <string name="ns_battery">Na baterii</string>
     <string name="connectionsettings_title">Nastavení připojení</string>
     <string name="ns_wifi_allowedssids">Povolené SSID (oddělené středníkem)</string>
     <string name="ns_allowroaming">Povolit připojení pro roamingu</string>
@@ -682,6 +683,8 @@
     <string name="error_adding_treatment_message">Ošetření (inzulín: %1$.2f, sacharidy: %2$d, čas: %3$s) nelze přidat. Zkontrolujte a podle potřeby ručně přidejte záznam.</string>
     <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), zpoždění: %3$d m</string>
     <string name="openaps_noasdata">Nedostupná data o glykémiích</string>
+    <string name="log_files">Soubory protokolu</string>
+    <string name="miscellaneous">Různé</string>
     <string name="nav_logsettings">Nastavení logování</string>
     <string name="resettodefaults">Obnovit výchozí</string>
     <string name="nsmalfunction">Chyba NSClienta. Zvažte restart NS a NSClienta.</string>
@@ -774,6 +777,11 @@
     <string name="invalidpct">Neplatný vstup %</string>
     <string name="average">Průměr</string>
     <string name="tir">Čas v rozsahu</string>
+    <string name="day_tir">Denní TIR</string>
+    <string name="night_tir">Noční TIR</string>
+    <string name="detailed_14_days">Podrobně 14 dní</string>
+    <string name="std_deviation">SD: %1$s</string>
+    <string name="hba1c">HbA1c: </string>
     <string name="activitymonitor">Monitor aktivity</string>
     <string name="doyouwantresetstats">Chcete resetovat statistiky aktivity?</string>
     <string name="statistics">Statistika</string>
@@ -969,12 +977,11 @@
     <string name="wizard_no_active_profile">Není nastaven žádný aktivní profil!</string>
     <string name="wizard_no_cob">Neznámý COB! Chybějící glykémie nebo nedávný restart aplikace?</string>
     <string name="wizard_carbs_constraint">Sacharidy mimo povolený rozsah!</string>
-    <string name="wizard_explain_calc">Kalk (IC: %2$.1f, ISF: %2$.1f) z:\"</string>
+    <string name="wizard_explain_calc">Kalk (IC: %1$.1f, ISF: %2$.1f)</string>
     <string name="wizard_explain_carbs">Sacharidy: %1$.2fU</string>
     <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fU</string>
     <string name="wizard_explain_bg">Glykémie: %1$.2fU</string>
-    <string name="wizard_explain_basal_iob">Bazální IOB: %1$.2fU</string>
-    <string name="wizard_explain_bolus_iob">Bolusové IOB: %1$.2fU</string>
+    <string name="wizard_explain_iob">IOB: %1$.2fU</string>
     <string name="wizard_explain_superbolus">Superbolus: %1$.2fU</string>
     <string name="wizard_explain_trend">15\' trend: %1$.2fU</string>
     <string name="wizard_explain_percent">Procentuální hodnota: %1$.2fU x %2$d%% ≈ %3$.2fU</string>
@@ -1001,6 +1008,10 @@
     <string name="count_selected">Vybráno: %1$d</string>
     <string name="sort_label">Seřadit</string>
     <string name="dialog_canceled">Dialog zrušen</string>
+    <string name="veryLow" comment="below 3.1">Velmi nízká</string>
+    <string name="low" comment="3.1-3.9">Nízká</string>
+    <string name="high" comment="10.0-13.9">Vysoká</string>
+    <string name="veryHigh" comment="above 13.9">Velmi vysoká</string>
     <string name="below" comment="below &quot;in range&quot;">Pod</string>
     <string name="in_range">V rozsahu</string>
     <string name="above" comment="above &quot;in range&quot;">Nad</string>
@@ -1009,6 +1020,12 @@
     <string name="widget_description">AndroidAPS widget</string>
     <string name="configure">Konfigurovat průhlednost</string>
     <string name="loop_status">Stav smyčky</string>
+    <string name="graph_scale">Měřítko grafu</string>
+    <string name="profile1">Profil 1</string>
+    <string name="profile2">Profil 2</string>
+    <string name="login">Přihlášení</string>
+    <string name="remove_all">Odstranit vše</string>
+    <string name="reset_start">Resetovat start</string>
     <string name="a11y_otp_qr_code">QR kód pro nastavení jednorázového hesla</string>
     <string name="a11y_open_settings">otevřít nastavení</string>
     <string name="a11y_set_carb_timer">nastavit upozornění na sacharidy</string>
@@ -1022,4 +1039,6 @@
     <string name="aidex">GlucoRx Aidex</string>
     <string name="aidex_short">Aidex</string>
     <string name="description_source_aidex">Přijímat hodnoty glykémie ze senzoru GlucoRx Aidex.</string>
+    <string name="blocked_by_charging">Zablokováno možností nabíjení</string>
+    <string name="blocked_by_connectivity">Zablokováno možností připojení</string>
 </resources>

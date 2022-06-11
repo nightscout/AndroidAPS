@@ -78,7 +78,6 @@
     <string name="dia">DIA</string>
     <string name="sms_actualbg">BG:</string>
     <string name="sms_lastbg">GF deiridh:</string>
-    <string name="mdi">MDI</string>
     <string name="MM640g">MM640g</string>
     <string name="sms_minago">%1$dnóim ó shin</string>
     <string name="openapsama">OpenAPS AMA</string>
@@ -160,7 +159,6 @@
     <string name="next_button">Ar Aghaidh</string>
     <string name="previous_button">Roimhe seo</string>
     <string name="cgm">CGM</string>
-    <string name="ns_wifionly">Úsáid WiFi nasc amháin</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
     <string name="wear_general_settings">Socruithe Ginearálta</string>
     <string name="poctech">Poctech</string>

@@ -261,6 +261,7 @@ class AutomationPlugin @Inject constructor(
     @Synchronized
     fun add(event: AutomationEvent) {
         automationEvents.add(event)
+        event.position = automationEvents.size - 1
         rxBus.send(EventAutomationDataChanged())
     }
 
@@ -332,6 +333,7 @@ class AutomationPlugin @Inject constructor(
             ActionCarePortalEvent(injector),
             ActionProfileSwitchPercent(injector),
             ActionProfileSwitch(injector),
+            ActionRunAutotune(injector),
             ActionSendSMS(injector)
         )
     }

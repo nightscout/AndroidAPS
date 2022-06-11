@@ -268,8 +268,8 @@ class SWDefinition @Inject constructor(
         .add(SWButton(injector)
             .text(R.string.doprofileswitch)
             .action { ProfileSwitchDialog().show(activity.supportFragmentManager, "ProfileSwitchDialog") })
-        .validator { profileFunction.getProfile() != null }
-        .visibility { profileFunction.getProfile() == null }
+        .validator { profileFunction.getRequestedProfile() != null }
+        .visibility { profileFunction.getRequestedProfile() == null }
     private val screenPump = SWScreen(injector, R.string.configbuilder_pump)
         .skippable(false)
         .add(SWPlugin(injector, this)

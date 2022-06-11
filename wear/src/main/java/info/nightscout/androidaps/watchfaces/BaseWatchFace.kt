@@ -13,11 +13,11 @@ import android.os.Vibrator
 import android.support.wearable.watchface.WatchFaceStyle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat
@@ -43,8 +43,6 @@ import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.weardata.EventData
 import info.nightscout.shared.weardata.EventData.ActionResendData
-import info.nightscout.shared.weardata.EventData.SingleBg
-import info.nightscout.shared.weardata.EventData.TreatmentData
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import lecho.lib.hellocharts.view.LineChartView
@@ -68,13 +66,12 @@ abstract class BaseWatchFace : WatchFace() {
     @Inject lateinit var dateUtil: DateUtil
 
     private var disposable = CompositeDisposable()
-
     private val rawData = RawDisplayData()
 
     protected val singleBg get() = rawData.singleBg
     protected val status get() = rawData.status
-    protected val treatmentData get() = rawData.treatmentData
-    protected val graphData get() = rawData.graphData
+    private val treatmentData get() = rawData.treatmentData
+    private val graphData get() = rawData.graphData
 
     // Layout
     @LayoutRes abstract fun layoutResource(): Int
@@ -98,22 +95,23 @@ abstract class BaseWatchFace : WatchFace() {
     var mCOB2: TextView? = null
     var mBgi: TextView? = null
     var mLoop: TextView? = null
+    private var mTimePeriod: TextView? = null
     var mDay: TextView? = null
-    var mDayName: TextView? = null
+    private var mDayName: TextView? = null
     var mMonth: TextView? = null
-    var isAAPSv2: TextView? = null
+    private var isAAPSv2: View? = null
     var mHighLight: TextView? = null
     var mLowLight: TextView? = null
     var mGlucoseDial: ImageView? = null
     var mDeltaGauge: ImageView? = null
     var mHourHand: ImageView? = null
     var mMinuteHand: ImageView? = null
-    var mRelativeLayout: RelativeLayout? = null
+    var mRelativeLayout: ViewGroup? = null
     var mLinearLayout: LinearLayout? = null
     var mLinearLayout2: LinearLayout? = null
-    var mDate: LinearLayout? = null
-    var mChartTap: LinearLayout? = null // Steampunk only
-    var mMainMenuTap: LinearLayout? = null // Steampunk,Digital  only
+    private var mDate: LinearLayout? = null
+    private var mChartTap: LinearLayout? = null // Steampunk only
+    private var mMainMenuTap: LinearLayout? = null // Steampunk,Digital  only
     var chart: LineChartView? = null
 
     var ageLevel = 1
@@ -124,7 +122,7 @@ abstract class BaseWatchFace : WatchFace() {
     var gridColor = Color.WHITE
     var basalBackgroundColor = Color.BLUE
     var basalCenterColor = Color.BLUE
-    var bolusColor = Color.MAGENTA
+    private var bolusColor = Color.MAGENTA
     private var lowResMode = false
     private var layoutSet = false
     var bIsRound = false
@@ -138,8 +136,8 @@ abstract class BaseWatchFace : WatchFace() {
 
     // related endTime manual layout
     var layoutView: View? = null
-    var specW = 0
-    var specH = 0
+    private var specW = 0
+    private var specH = 0
     var forceSquareCanvas = false // Set to true by the Steampunk watch face.
     private var batteryReceiver: BroadcastReceiver? = null
     private var colorDarkHigh = 0
@@ -237,7 +235,7 @@ abstract class BaseWatchFace : WatchFace() {
     open fun changeChartTimeframe() {
         var timeframe = sp.getInt(R.string.key_chart_time_frame, 3)
         timeframe = timeframe % 5 + 1
-        sp.putInt(R.string.key_chart_time_frame, timeframe)
+        sp.putString(R.string.key_chart_time_frame, timeframe.toString())
     }
 
     override fun getWatchFaceStyle(): WatchFaceStyle {
@@ -245,7 +243,7 @@ abstract class BaseWatchFace : WatchFace() {
     }
 
     private fun setupBatteryReceiver() {
-        val setting = sp.getString("simplify_ui", "off")
+        val setting = sp.getString(R.string.key_simplify_ui, "off")
         if ((setting == "charging" || setting == "ambient_charging") && batteryReceiver == null) {
             val intentBatteryFilter = IntentFilter()
             intentBatteryFilter.addAction(BatteryManager.ACTION_CHARGING)
@@ -296,6 +294,7 @@ abstract class BaseWatchFace : WatchFace() {
         mDay = layoutView?.findViewById(R.id.day)
         mDayName = layoutView?.findViewById(R.id.dayname)
         mMonth = layoutView?.findViewById(R.id.month)
+        mTimePeriod = layoutView?.findViewById(R.id.timePeriod)
         mDate = layoutView?.findViewById(R.id.date_time)
         mLoop = layoutView?.findViewById(R.id.loop)
         mSgv = layoutView?.findViewById(R.id.sgv)
@@ -338,7 +337,7 @@ abstract class BaseWatchFace : WatchFace() {
         return (System.currentTimeMillis() - singleBg.timeStamp).toDouble()
     }
 
-    protected fun readingAge(shortString: Boolean): String {
+    private fun readingAge(shortString: Boolean): String {
         if (singleBg.timeStamp == 0L) {
             return if (shortString) "--" else "-- Minute ago"
         }
@@ -383,7 +382,7 @@ abstract class BaseWatchFace : WatchFace() {
         mDirectionPaint.color = getBgColour(singleBg.sgvLevel)
         val sSvg = singleBg.sgvString
         val svgWidth = mSvgPaint.measureText(sSvg)
-        val sDirection = " " + singleBg.sgvString + "\uFE0E"
+        val sDirection = " " + singleBg.slopeArrow + "\uFE0E"
         val directionWidth = mDirectionPaint.measureText(sDirection)
         val xSvg = xHalf - (svgWidth + directionWidth) / 2
         canvas.drawText(sSvg, xSvg, yThird + mYOffset, mSvgPaint)
@@ -420,7 +419,7 @@ abstract class BaseWatchFace : WatchFace() {
 
     @Suppress("DEPRECATION")
     private fun checkVibrateHourly(oldTime: WatchFaceTime, newTime: WatchFaceTime) {
-        val hourlyVibratePref = sp.getBoolean("vibrate_Hourly", false)
+        val hourlyVibratePref = sp.getBoolean(R.string.key_vibrate_hourly, false)
         if (hourlyVibratePref && layoutSet && newTime.hasHourChanged(oldTime)) {
             aapsLogger.info(LTag.WEAR, "hourlyVibratePref", "true --> $newTime")
             val vibrator = getSystemService(VIBRATOR_SERVICE) as Vibrator
@@ -435,8 +434,8 @@ abstract class BaseWatchFace : WatchFace() {
         mSgv?.text = singleBg.sgvString
         mSgv?.visibility = sp.getBoolean(R.string.key_show_bg, true).toVisibilityKeepSpace()
         strikeThroughSgvIfNeeded()
-        mDirection?.text = "${singleBg.sgvString}\uFE0E"
-        mDirection?.visibility = sp.getBoolean("show_direction", true).toVisibility()
+        mDirection?.text = "${singleBg.slopeArrow}\uFE0E"
+        mDirection?.visibility = sp.getBoolean(R.string.key_show_direction, true).toVisibility()
         mDelta?.text = singleBg.delta
         mDelta?.visibility = sp.getBoolean(R.string.key_show_delta, true).toVisibility()
         mAvgDelta?.text = singleBg.avgDelta
@@ -444,23 +443,23 @@ abstract class BaseWatchFace : WatchFace() {
         mCOB1?.visibility = sp.getBoolean(R.string.key_show_cob, true).toVisibility()
         mCOB2?.text = status.cob
         mCOB2?.visibility = sp.getBoolean(R.string.key_show_cob, true).toVisibility()
-        mIOB1?.visibility = sp.getBoolean("show_iob", true).toVisibility()
-        mIOB2?.visibility = sp.getBoolean("show_iob", true).toVisibility()
-        mIOB1?.text = if (sp.getBoolean("show_iob", true)) status.iobSum else getString(R.string.activity_IOB)
-        mIOB2?.text = if (sp.getBoolean("show_iob", true)) status.iobDetail else status.iobSum
+        mIOB1?.visibility = sp.getBoolean(R.string.key_show_iob, true).toVisibility()
+        mIOB2?.visibility = sp.getBoolean(R.string.key_show_iob, true).toVisibility()
+        mIOB1?.text = if (status.detailedIob) status.iobSum else getString(R.string.activity_IOB)
+        mIOB2?.text = if (status.detailedIob) status.iobDetail else status.iobSum
         mTimestamp?.visibility = sp.getBoolean(R.string.key_show_ago, true).toVisibility()
         mTimestamp?.text = readingAge(if (isAAPSv2 != null) true else sp.getBoolean(R.string.key_show_external_status, true))
-        mUploaderBattery?.visibility = sp.getBoolean("show_uploader_battery", true).toVisibility()
+        mUploaderBattery?.visibility = sp.getBoolean(R.string.key_show_uploader_battery, true).toVisibility()
         mUploaderBattery?.text =
             when {
                 isAAPSv2 != null                                       -> status.battery + "%"
                 sp.getBoolean(R.string.key_show_external_status, true) -> "U: ${status.battery}%"
                 else                                                   -> "Uploader: ${status.battery}%"
             }
-        mRigBattery?.visibility = sp.getBoolean("show_rig_battery", false).toVisibility()
+        mRigBattery?.visibility = sp.getBoolean(R.string.key_show_rig_battery, false).toVisibility()
         mRigBattery?.text = status.rigBattery
         mBasalRate?.text = status.currentBasal
-        mBasalRate?.visibility = sp.getBoolean("show_temp_basal", true).toVisibility()
+        mBasalRate?.visibility = sp.getBoolean(R.string.key_show_temp_basal, true).toVisibility()
         mBgi?.text = status.bgi
         mBgi?.visibility = status.showBgi.toVisibility()
         mStatus?.text = status.externalStatus
@@ -491,7 +490,7 @@ abstract class BaseWatchFace : WatchFace() {
         invalidate()
     }
 
-    protected fun setDateAndTime() {
+    private fun setDateAndTime() {
         mTime?.text = dateUtil.timeString()
         mHour?.text = dateUtil.hourString()
         mMinute?.text = dateUtil.minuteString()
@@ -499,18 +498,20 @@ abstract class BaseWatchFace : WatchFace() {
         mDayName?.text = dateUtil.dayNameString()
         mDay?.text = dateUtil.dayString()
         mMonth?.text = dateUtil.monthString()
+        mTimePeriod?.visibility = android.text.format.DateFormat.is24HourFormat(this).not().toVisibility()
+        mTimePeriod?.text = dateUtil.amPm()
     }
 
     private fun setColor() {
-        dividerMatchesBg = sp.getBoolean("match_divider", false)
+        dividerMatchesBg = sp.getBoolean(R.string.key_match_divider, false)
         when {
-            lowResMode                  -> setColorLowRes()
-            sp.getBoolean("dark", true) -> setColorDark()
-            else                        -> setColorBright()
+            lowResMode                             -> setColorLowRes()
+            sp.getBoolean(R.string.key_dark, true) -> setColorDark()
+            else                                   -> setColorBright()
         }
     }
 
-    protected fun strikeThroughSgvIfNeeded() {
+    private fun strikeThroughSgvIfNeeded() {
         mSgv?.let { mSgv ->
             if (ageLevel() <= 0 && singleBg.timeStamp > 0) mSgv.paintFlags = mSgv.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
             else mSgv.paintFlags = mSgv.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
@@ -537,7 +538,7 @@ abstract class BaseWatchFace : WatchFace() {
 
     private val isSimpleUi: Boolean
         get() {
-            val simplify = sp.getString("simplify_ui", "off")
+            val simplify = sp.getString(R.string.key_simplify_ui, "off")
             return if (simplify == "off") false
             else if ((simplify == "ambient" || simplify == "ambient_charging") && currentWatchMode == WatchMode.AMBIENT) true
             else (simplify == "charging" || simplify == "ambient_charging") && isCharging

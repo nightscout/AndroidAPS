@@ -29,7 +29,6 @@
     <string name="description_overview">Viser loopens nåværende tilstand og knapper for de vanligste funksjonene</string>
     <string name="description_persistent_notification">Viser en konstant melding med en kort oppsummering av hva loop gjør</string>
     <string name="description_profile_local">Definer en profil som er tilgjengelig offline.</string>
-    <string name="description_pump_mdi">Integrasjon mot de som kun bruker insulinpenner i sin diabetesbehandling</string>
     <string name="description_pump_virtual">Integrasjon mot pumper som ikke støttes av AndroidAPS (åpen loop)</string>
     <string name="description_sensitivity_aaps">Sensitiviteten beregnes på samme måte som i Oref0, men du kan angi hvor mye av historikken som skal tas med i beregningen. Minimum opptak av karbohydrater beregnes ut fra maks karbohydratopptak angitt i dine innstillinger.</string>
     <string name="description_sensitivity_oref1">Sensitivitet beregnes fra 8t og 24t historiske dat (velger alltid det resultatet som gir høyest insulinsensitivitet. Karbohydrater som ikke er absorbert blir avsluttet etter tiden som er angitt i innstillinger. Plugin beregner også UAM.</string>
@@ -250,7 +249,6 @@
     <string name="basalvaluebelowminimum">Basal verdi under minimum. Profilen settes ikke!</string>
     <string name="sms_actualbg">BS:</string>
     <string name="sms_lastbg">Siste BS:</string>
-    <string name="mdi">MDI</string>
     <string name="MM640g">MM640G</string>
     <string name="ongoingnotificaction">Pågående varslinger</string>
     <string name="old_data">GAMLE DATA</string>
@@ -442,6 +440,7 @@
     <string name="enableuam_summary">Oppdaget uannonsert måltid (UAM)</string>
     <string name="insulin_oref_peak">IOB kurvens topp tid</string>
     <string name="insulin_peak_time">Topp tid [min]</string>
+    <string name="insulin_peak">Topp</string>
     <string name="free_peak_oref">Free-Peak Oref</string>
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
     <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
@@ -605,9 +604,11 @@
     <string name="secondcarbsincrement">Andre økning hurtigknapp for karbohydrater</string>
     <string name="thirdcarbsincrement">Tredje økning hurtigknapp for karbohydrater</string>
     <string name="cgm">CGM</string>
-    <string name="ns_wifionly">Bare kun WiFi tilkoblinger</string>
+    <string name="ns_cellular">Bruk mobildata</string>
+    <string name="ns_wifi">Bruk Wi-Fi-tilkobling</string>
     <string name="ns_wifi_ssids">WiFi nettverksnavn</string>
-    <string name="ns_chargingonly">Bare under lading</string>
+    <string name="ns_charging">Under lading</string>
+    <string name="ns_battery">På batteri</string>
     <string name="connectionsettings_title">Tilkoblingsinnstillinger</string>
     <string name="ns_wifi_allowedssids">Tillatte nettverksnavn SSID (separert med semikolon)</string>
     <string name="ns_allowroaming">Tillat tilkobling i roaming</string>
@@ -682,6 +683,8 @@
     <string name="error_adding_treatment_message">En behandling (insulin: %1$.2f, karbohydrater: %2$d, tid: %3$s) kunne ikke legges til Behandlinger. Vennligst kontroller og manuelt legg til en registrering der det er aktuelt.</string>
     <string name="generated_ecarbs_note">eKarbo: %1$d g (%2$d t), forsinkelse: %3$d m</string>
     <string name="openaps_noasdata">Ingen data tilgjengelig for autosens</string>
+    <string name="log_files">Loggfiler</string>
+    <string name="miscellaneous">Annet</string>
     <string name="nav_logsettings">Logginnstillinger</string>
     <string name="resettodefaults">Gjenopprett standardinnstillinger</string>
     <string name="nsmalfunction">NSClient feil. Vurder omstart av NS og NSClient.</string>
@@ -774,6 +777,11 @@
     <string name="invalidpct">Ugyldig % oppføring</string>
     <string name="average">Gjennomsnitt</string>
     <string name="tir">TIR</string>
+    <string name="day_tir">Dag TIR</string>
+    <string name="night_tir">Natt TIR</string>
+    <string name="detailed_14_days">Detaljert 14 dager</string>
+    <string name="std_deviation">SD: %1$s</string>
+    <string name="hba1c">HbA1c: </string>
     <string name="activitymonitor">Overvåking av aktivitet</string>
     <string name="doyouwantresetstats">Vil du tilbakestille aktivitets statistikk?</string>
     <string name="statistics">Statistikk</string>
@@ -969,12 +977,11 @@
     <string name="wizard_no_active_profile">Det er ikke angitt noen aktiv profil!</string>
     <string name="wizard_no_cob">Ukjent COB! BS verdier mangler eller nylig oppstart av appen?</string>
     <string name="wizard_carbs_constraint">Brudd på karbo begrensning!</string>
-    <string name="wizard_explain_calc">Kalk (IC: %2$.1f, ISF: %2$.1f) fra:\"</string>
+    <string name="wizard_explain_calc">Kalk (IC: %1$.1f, ISF: %2$.1f)</string>
     <string name="wizard_explain_carbs">Karbo: %1$.2fE</string>
     <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fE</string>
     <string name="wizard_explain_bg">BS: %1$.2fE</string>
-    <string name="wizard_explain_basal_iob">Basal IOB: %1$.2fE</string>
-    <string name="wizard_explain_bolus_iob">Bolus IOB: %1$.2fE</string>
+    <string name="wizard_explain_iob">IOB: %1$.2fE</string>
     <string name="wizard_explain_superbolus">Superbolus: %1$.2fE</string>
     <string name="wizard_explain_trend">15\' trend: %1$.2fE</string>
     <string name="wizard_explain_percent">Prosent: %1$.2fE x %2$d%% ° %3$.2fE</string>
@@ -1001,6 +1008,10 @@
     <string name="count_selected">%1$d valgt</string>
     <string name="sort_label">Sorter</string>
     <string name="dialog_canceled">Dialog avbrutt</string>
+    <string name="veryLow" comment="below 3.1">Veldig lavt</string>
+    <string name="low" comment="3.1-3.9">Lavt</string>
+    <string name="high" comment="10.0-13.9">Høyt</string>
+    <string name="veryHigh" comment="above 13.9">Veldig høyt</string>
     <string name="below" comment="below &quot;in range&quot;">Under</string>
     <string name="in_range">I målområdet</string>
     <string name="above" comment="above &quot;in range&quot;">Over</string>
@@ -1009,6 +1020,12 @@
     <string name="widget_description">AndroidAPS widget</string>
     <string name="configure">Konfigurer gjennomsiktighet</string>
     <string name="loop_status">Loop status</string>
+    <string name="graph_scale">Diagram skala</string>
+    <string name="profile1">Profil 1</string>
+    <string name="profile2">Profil 2</string>
+    <string name="login">Logg inn</string>
+    <string name="remove_all">Fjern alt</string>
+    <string name="reset_start">Tilbakestill til oppstart</string>
     <string name="a11y_otp_qr_code">QR-kode for oppsett av engangspassord</string>
     <string name="a11y_open_settings">åpne innstillinger</string>
     <string name="a11y_set_carb_timer">angi karbo nedtellings alarm</string>
@@ -1022,4 +1039,6 @@
     <string name="aidex">GlucoRx Aidex</string>
     <string name="aidex_short">Aidex</string>
     <string name="description_source_aidex">Motta BS verdier fra GlucoRx Aidex CGM.</string>
+    <string name="blocked_by_charging">Blokkert på grunn av ladealternativer</string>
+    <string name="blocked_by_connectivity">Blokkert på grunn av tilkoblingsalternativer</string>
 </resources>

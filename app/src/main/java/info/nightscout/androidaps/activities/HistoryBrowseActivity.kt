@@ -17,6 +17,7 @@ import info.nightscout.androidaps.databinding.ActivityHistorybrowseBinding
 import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.events.EventCustomCalculationFinished
 import info.nightscout.androidaps.events.EventRefreshOverview
+import info.nightscout.androidaps.events.EventScale
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.extensions.toVisibilityKeepSpace
 import info.nightscout.androidaps.interfaces.ActivePlugin
@@ -36,7 +37,7 @@ import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.Translator
-import info.nightscout.androidaps.utils.buildHelper.BuildHelper
+import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.workflow.CalculationWorkflow
 import info.nightscout.shared.logging.LTag
@@ -98,7 +99,8 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
                 activePlugin,
                 defaultValueHelper,
                 profileFunction,
-                repository
+                repository,
+                fabricPrivacy
             )
         iobCobCalculator =
             IobCobCalculatorPlugin(
@@ -130,10 +132,9 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
             loadAll("onClickEnd")
         }
         binding.zoom.setOnClickListener {
-            rangeToDisplay += 6
-            rangeToDisplay = if (rangeToDisplay > 24) 6 else rangeToDisplay
-            setTime(overviewData.fromTime)
-            loadAll("rangeChange")
+            var hours = rangeToDisplay + 6
+            hours = if (hours > 24) 6 else hours
+            rxBus.send(EventScale(hours))
         }
         binding.zoom.setOnLongClickListener {
             Calendar.getInstance().also { calendar ->
@@ -214,6 +215,14 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
             .toObservable(EventUpdateOverviewGraph::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ updateGUI("EventRefreshOverview") }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventScale::class.java)
+            .observeOn(aapsSchedulers.main)
+            .subscribe({
+                           rangeToDisplay = it.hours
+                           setTime(overviewData.fromTime)
+                           loadAll("rangeChange")
+                       }, fabricPrivacy::logException)
 
         if (overviewData.fromTime == 0L) {
             // set start of current day
@@ -331,9 +340,10 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         val graphData = GraphData(injector, binding.bgGraph, overviewData)
         val menuChartSettings = overviewMenus.setting
         graphData.addInRangeArea(overviewData.fromTime, overviewData.endTime, defaultValueHelper.determineLowLine(), defaultValueHelper.determineHighLine())
-        graphData.addBgReadings(menuChartSettings[0][OverviewMenus.CharType.PRE.ordinal])
+        graphData.addBgReadings(menuChartSettings[0][OverviewMenus.CharType.PRE.ordinal], context)
         if (buildHelper.isDev()) graphData.addBucketedData()
-        graphData.addTreatments()
+        graphData.addTreatments(context)
+        graphData.addEps(context, 0.95)
         if (menuChartSettings[0][OverviewMenus.CharType.TREAT.ordinal])
             graphData.addTherapyEvents()
         if (menuChartSettings[0][OverviewMenus.CharType.ACT.ordinal])

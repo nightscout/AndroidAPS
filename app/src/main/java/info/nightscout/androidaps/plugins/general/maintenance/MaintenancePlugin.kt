@@ -13,7 +13,7 @@ import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus
-import info.nightscout.androidaps.utils.buildHelper.BuildHelper
+import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import java.io.*
@@ -69,11 +69,24 @@ class MaintenancePlugin @Inject constructor(
         val files = logDir.listFiles { _: File?, name: String ->
             (name.startsWith("AndroidAPS") && name.endsWith(".zip"))
         }
+        val autotunefiles = logDir.listFiles { _: File?, name: String ->
+            (name.startsWith("autotune") && name.endsWith(".zip"))
+        }
+        val amount = sp.getInt(R.string.key_logshipper_amount, keep)
+        val keepIndex = amount - 1
+        if (autotunefiles != null && autotunefiles.isNotEmpty()) {
+            Arrays.sort(autotunefiles) { f1: File, f2: File -> f2.name.compareTo(f1.name) }
+            var delAutotuneFiles = listOf(*autotunefiles)
+            if (keepIndex < delAutotuneFiles.size) {
+                delAutotuneFiles = delAutotuneFiles.subList(keepIndex, delAutotuneFiles.size)
+                for (file in delAutotuneFiles) {
+                    file.delete()
+                }
+            }
+        }
         if (files == null || files.isEmpty()) return
         Arrays.sort(files) { f1: File, f2: File -> f2.name.compareTo(f1.name) }
         var delFiles = listOf(*files)
-        val amount = sp.getInt(R.string.key_logshipper_amount, keep)
-        val keepIndex = amount - 1
         if (keepIndex < delFiles.size) {
             delFiles = delFiles.subList(keepIndex, delFiles.size)
             for (file in delFiles) {

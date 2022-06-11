@@ -29,7 +29,6 @@
     <string name="description_overview">Affiche l’état actuel de votre Boucle et des boutons d’actions les plus courantes</string>
     <string name="description_persistent_notification">Affiche une notification en cours avec un bref aperçu de ce que fait votre Boucle</string>
     <string name="description_profile_local">Définissez un profil qui est disponible hors ligne.</string>
-    <string name="description_pump_mdi">Intégration pompe pour les personnes qui font des injections quotidiennes multiples pour le traitement de leur diabète</string>
     <string name="description_pump_virtual">Intégration pour les pompes qui n’ont pas encore de pilote (Boucle Ouverte)</string>
     <string name="description_sensitivity_aaps">La sensibilité est calculée de la même manière que Oref0, mais vous pouvez spécifier la période concernée. L\'absorption minimale des glucides est calculée à partir des temps d’absorption max des glucides du menu préférences.</string>
     <string name="description_sensitivity_oref1">La sensibilité est calculée à partir des données des dernières 8 heures et les glucides (si non absorbés) ne sont plus pris en compte après le temps spécifié dans les préférences. Le plugin calcule également les RNS (UAM).</string>
@@ -251,7 +250,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="basalvaluebelowminimum">Le débit Basal est inférieur au minimum autorisé. Profil non accepté !</string>
     <string name="sms_actualbg">G:</string>
     <string name="sms_lastbg">Dernière G:</string>
-    <string name="mdi">MIQ (Multiples Injections Quotidiennes)</string>
     <string name="MM640g">Medtronic 640g</string>
     <string name="ongoingnotificaction">Notification en cours</string>
     <string name="old_data">DONNÉES ANCIENNES</string>
@@ -443,6 +441,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="enableuam_summary">Détection des Repas Non Signalés</string>
     <string name="insulin_oref_peak">Durée du Pic de la Courbe IA</string>
     <string name="insulin_peak_time">Temps du Pic [min]</string>
+    <string name="insulin_peak">Pic</string>
     <string name="free_peak_oref">Profil d\'insuline ajustable Oref</string>
     <string name="rapid_acting_oref">Insuline à Action Rapide Oref </string>
     <string name="ultrarapid_oref">Insuline Ultra Rapide Oref</string>
@@ -606,9 +605,11 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="secondcarbsincrement">Deuxième incrément de glucides</string>
     <string name="thirdcarbsincrement">Troisième incrément de glucides</string>
     <string name="cgm">MGC</string>
-    <string name="ns_wifionly">Utilisez uniquement connexion Wi-fi</string>
+    <string name="ns_cellular">Utiliser la connexion mobile</string>
+    <string name="ns_wifi">Utilisez la connexion Wi-Fi</string>
     <string name="ns_wifi_ssids">Wi-fi SSID</string>
-    <string name="ns_chargingonly">Uniquement si en charge</string>
+    <string name="ns_charging">Pendant la charge</string>
+    <string name="ns_battery">Sur batterie</string>
     <string name="connectionsettings_title">Paramètres de connexion</string>
     <string name="ns_wifi_allowedssids">SSIDs autorisés (séparés par point-virgule)</string>
     <string name="ns_allowroaming">Autoriser connexion données itinérance</string>
@@ -683,9 +684,11 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="error_adding_treatment_message">Le traitement (insuline : %1$.2f, glucides : %2$d, à : %3$s) n\'a pas pu être ajouté aux traitements. Vérifiez et ajoutez SVP manuellement ce traitement.</string>
     <string name="generated_ecarbs_note">eCarbs : %1$d g (%2$d h), retard : %3$d m</string>
     <string name="openaps_noasdata">Pas de données d\'Autosens disponibles</string>
+    <string name="log_files">Fichiers log</string>
+    <string name="miscellaneous">Divers</string>
     <string name="nav_logsettings">Paramètres journal</string>
     <string name="resettodefaults">Réinitialiser les valeurs par défaut</string>
-    <string name="nsmalfunction">Dysfonctionnement NSClient. Faites une réinitialisation de NS et de NSClient.</string>
+    <string name="nsmalfunction">Dysfonctionnement NSClient. Redémarrez NS et NSClient.</string>
     <string name="time_offset">Décalage horaire</string>
     <string name="bolus_reminder">Rappel du bolus plus tard</string>
     <string name="setupwizard_preferred_aps_mode">Mode APS préféré</string>
@@ -775,6 +778,11 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="invalidpct">% saisi invalide</string>
     <string name="average">Moyenne</string>
     <string name="tir">Cible Gly</string>
+    <string name="day_tir">TIR Jour</string>
+    <string name="night_tir">TIR Nuit</string>
+    <string name="detailed_14_days">Détail de 14 jours</string>
+    <string name="std_deviation">SD: %1$s</string>
+    <string name="hba1c">HbA1c : </string>
     <string name="activitymonitor">Moniteur d\'activité</string>
     <string name="doyouwantresetstats">Voulez-vous réinitialiser les stats d\'activité ?</string>
     <string name="statistics">Statistiques</string>
@@ -969,12 +977,11 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="wizard_no_active_profile">Aucun profil activé !</string>
     <string name="wizard_no_cob">GA inconnu! glycémie manquante ou démarrage récent de l\'application ?</string>
     <string name="wizard_carbs_constraint">Violation de contrainte des glucides!</string>
-    <string name="wizard_explain_calc">Calcul (G/I: %2$.1f, SI: %2$.1f) de:\"</string>
+    <string name="wizard_explain_calc">Calcul (G/I: %1$.1f, SI: %2$.1f)</string>
     <string name="wizard_explain_carbs">Glucides : %1$.2fU</string>
     <string name="wizard_explain_cob">GA: %1$.0fg %2$.2fU</string>
     <string name="wizard_explain_bg">Gly: %1$.2fU</string>
-    <string name="wizard_explain_basal_iob">Basal IA: %1$.2fU</string>
-    <string name="wizard_explain_bolus_iob">Bolus IA: %1$.2fU</string>
+    <string name="wizard_explain_iob">IA: %1$.2fU</string>
     <string name="wizard_explain_superbolus">Superbolus : %1$.2fU</string>
     <string name="wizard_explain_trend">tendance 15\': %1$.2fU</string>
     <string name="wizard_explain_percent">Pourcentage : %1$.2fU x %2$d%% ≈ %3$.2fU</string>
@@ -1001,6 +1008,10 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="count_selected">%1$d sélectionnée(s)</string>
     <string name="sort_label">Trier</string>
     <string name="dialog_canceled">Boîte de dialogue annulée</string>
+    <string name="veryLow" comment="below 3.1">Très bas</string>
+    <string name="low" comment="3.1-3.9">Bas</string>
+    <string name="high" comment="10.0-13.9">Haut</string>
+    <string name="veryHigh" comment="above 13.9">Très haut</string>
     <string name="below" comment="below &quot;in range&quot;">En-dessous</string>
     <string name="in_range">Dans la cible</string>
     <string name="above" comment="above &quot;in range&quot;">Au-dessus</string>
@@ -1009,6 +1020,12 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="widget_description">Widget AndroidAPS</string>
     <string name="configure">Configurer l’opacité</string>
     <string name="loop_status">État de la boucle</string>
+    <string name="graph_scale">Échelle du graph.</string>
+    <string name="profile1">Profil 1</string>
+    <string name="profile2">Profil2</string>
+    <string name="login">Connexion</string>
+    <string name="remove_all">Supprimer tout</string>
+    <string name="reset_start">Réinitialiser le démarrage</string>
     <string name="a11y_otp_qr_code">Code QR pour configurer un mot de passe à usage unique</string>
     <string name="a11y_open_settings">ouvrir les paramètres</string>
     <string name="a11y_set_carb_timer">définir l\'alarme du minuteur de glucides</string>
@@ -1022,4 +1039,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="aidex">GlucoRx Aidex</string>
     <string name="aidex_short">Aidex</string>
     <string name="description_source_aidex">Recevoir les valeurs de glycémie du MGC GlucoRx Aidex.</string>
+    <string name="blocked_by_charging">Bloqué par les options de recharge</string>
+    <string name="blocked_by_connectivity">Bloqué par les options de connectivité</string>
 </resources>

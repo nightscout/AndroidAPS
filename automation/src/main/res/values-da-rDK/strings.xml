@@ -81,6 +81,7 @@
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>
+    <string name="a11y_autosenslabel">Auto sens</string>
     <string name="deltacompared">%3$s %1$s %2$s</string>
     <string name="deltalabel">BS forskel</string>
     <string name="deltalabel_u">BS difference [%1$s]</string>
@@ -112,4 +113,14 @@
     <string name="automation_event">Automatiserings event</string>
     <string name="reorder_label">Omorganisering</string>
     <string name="user_action">Brugerhandling</string>
+    <string name="remove_automation">Fjern automatisering</string>
+    <string name="sort_automation">Sortér automatisering</string>
+    <string name="remove_selected_items">Fjern valgte emner</string>
+    <string name="count_selected">%1$d valgt</string>
+    <string name="confirm_remove_multiple_items">Er du sikker på, at du vil fjerne %1$d elementer?</string>
+    <string name="sort_label">Sortér</string>
+    <string name="system_automation">System automatisering</string>
+    <string name="run_automations">Kør automatisering</string>
+    <string name="add_automation">Tilføj regel</string>
+    <string name="remove_sort">Fjern/sorter</string>
 </resources>

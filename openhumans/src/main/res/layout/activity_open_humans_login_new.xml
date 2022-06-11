@@ -32,6 +32,7 @@
                 <ImageView
                     android:layout_width="160dp"
                     android:layout_height="160dp"
+                    android:importantForAccessibility="no"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:srcCompat="@drawable/open_humans" />
@@ -41,7 +42,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:gravity="center"
-                    android:text="Welcome to Open Humans"
+                    android:text="@string/welcome_to_open_humans"
                     android:textAppearance="?textAppearanceHeadline5"
                     android:textColor="?colorPrimary"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -61,7 +62,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:gravity="center"
-                    android:text="To setup data upload, click 'Next'."
+                    android:text="@string/setup_data_upload"
                     android:textAppearance="?textAppearanceSubtitle1"
                     android:textColor="?colorSecondary" />
 
@@ -70,7 +71,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="Next" />
+                    android:text="@string/next" />
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
@@ -92,7 +93,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Consent"
+                    android:text="@string/consent"
                     android:textAppearance="?textAppearanceHeadline5"
                     android:textColor="?colorPrimary" />
 
@@ -100,7 +101,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="Please carefully read the following information and accept the terms of use to proceed."
+                    android:text="@string/please_read__information"
                     android:textAppearance="?textAppearanceSubtitle1"
                     android:textColor="?colorSecondary" />
 
@@ -109,14 +110,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="8dp"
-                    android:text="Terms of Use"
+                    android:text="@string/terms_of_use"
                     android:textAppearance="?textAppearanceHeadline6"
                     android:textColor="?colorPrimary" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="This is an open source tool that will copy your data to Open Humans. We retain no rights to share your data with third parties without your explicit authorization. The data the project and app receive are identified via a random user ID and will only be securely transmitted to an Open Humans account with your authorization of that process. You can stop uploading and delete your upload data at any time via www.openhumans.org."
+                    android:text="@string/info_openhumans"
                     android:textAppearance="?textAppearanceBody2"
                     android:textColor="?colorOnBackground" />
 
@@ -125,7 +126,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="8dp"
-                    android:text="Data Uploaded"
+                    android:text="@string/data_uploaded"
                     android:textAppearance="?textAppearanceHeadline6"
                     android:textColor="?colorPrimary" />
 
@@ -147,7 +148,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:text="Glucose values"
+                        android:text="@string/glucose_values"
                         android:textAppearance="?textAppearanceBody1"
                         android:textColor="?colorOnBackground" />
                 </LinearLayout>
@@ -170,7 +171,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:text="Boluses"
+                        android:text="@string/boluses"
                         android:textAppearance="?textAppearanceBody1"
                         android:textColor="?colorOnBackground" />
                 </LinearLayout>
@@ -193,7 +194,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:text="Extended boluses"
+                        android:text="@string/extended_boluses"
                         android:textAppearance="?textAppearanceBody1"
                         android:textColor="?colorOnBackground" />
                 </LinearLayout>
@@ -216,7 +217,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:text="Carbohydrates"
+                        android:text="@string/carbohydrates"
                         android:textAppearance="?textAppearanceBody1"
                         android:textColor="?colorOnBackground" />
                 </LinearLayout>
@@ -239,7 +240,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:text="Careportal Events (except notes)"
+                        android:text="@string/careportal_events"
                         android:textAppearance="?textAppearanceBody1"
                         android:textColor="?colorOnBackground" />
                 </LinearLayout>
@@ -262,7 +263,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:text="Profile Switches"
+                        android:text="@string/profile_switches"
                         android:textAppearance="?textAppearanceBody1"
                         android:textColor="?colorOnBackground" />
                 </LinearLayout>
@@ -285,7 +286,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:text="Total Daily Doses"
+                        android:text="@string/total_daily_doses"
                         android:textAppearance="?textAppearanceBody1"
                         android:textColor="?colorOnBackground" />
                 </LinearLayout>
@@ -308,7 +309,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:text="Temporary Basal Rates"
+                        android:text="@string/temporary_basal_rates"
                         android:textAppearance="?textAppearanceBody1"
                         android:textColor="?colorOnBackground" />
                 </LinearLayout>
@@ -331,7 +332,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:text="Temporary Targets"
+                        android:text="@string/temporary_targets"
                         android:textAppearance="?textAppearanceBody1"
                         android:textColor="?colorOnBackground" />
                 </LinearLayout>
@@ -354,7 +355,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:text="Settings"
+                        android:text="@string/settings"
                         android:textAppearance="?textAppearanceBody1"
                         android:textColor="?colorOnBackground" />
                 </LinearLayout>
@@ -377,7 +378,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:text="Application Version"
+                        android:text="@string/application_version"
                         android:textAppearance="?textAppearanceBody1"
                         android:textColor="?colorOnBackground" />
                 </LinearLayout>
@@ -400,7 +401,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:text="Device Model"
+                        android:text="@string/device_model"
                         android:textAppearance="?textAppearanceBody1"
                         android:textColor="?colorOnBackground" />
                 </LinearLayout>
@@ -423,7 +424,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:text="Screen Dimensions"
+                        android:text="@string/screen_dimensions"
                         android:textAppearance="?textAppearanceBody1"
                         android:textColor="?colorOnBackground" />
                 </LinearLayout>
@@ -446,7 +447,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:text="Algorithm Debug Data"
+                        android:text="@string/algorithm_debug_data"
                         android:textAppearance="?textAppearanceBody1"
                         android:textColor="?colorOnBackground" />
                 </LinearLayout>
@@ -456,7 +457,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="8dp"
-                    android:text="Data NOT Uploaded"
+                    android:text="@string/data_not_uploaded"
                     android:textAppearance="?textAppearanceHeadline6"
                     android:textColor="?colorPrimary" />
 
@@ -478,7 +479,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:text="Passwords"
+                        android:text="@string/passwords"
                         android:textAppearance="?textAppearanceBody1"
                         android:textColor="?colorOnBackground" />
                 </LinearLayout>
@@ -501,7 +502,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:text="Nightscout URL"
+                        android:text="@string/nightscout_url"
                         android:textAppearance="?textAppearanceBody1"
                         android:textColor="?colorOnBackground" />
                 </LinearLayout>
@@ -524,7 +525,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:text="Nightscout API Secret"
+                        android:text="@string/nightscout_api_secret"
                         android:textAppearance="?textAppearanceBody1"
                         android:textColor="?colorOnBackground" />
                 </LinearLayout>
@@ -547,7 +548,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:text="Free Text Fields"
+                        android:text="@string/free_text_fields"
                         android:textAppearance="?textAppearanceBody1"
                         android:textColor="?colorOnBackground" />
                 </LinearLayout>
@@ -557,7 +558,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:text="I understand and agree." />
+                    android:text="@string/agree" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/login"
@@ -567,7 +568,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="32dp"
                     android:enabled="false"
-                    android:text="Login to Open Humans" />
+                    android:text="@string/login_open_humans" />
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
@@ -590,7 +591,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Final touches"
+                    android:text="@string/final_touches"
                     android:textAppearance="?textAppearanceHeadline4"
                     android:textColor="?colorPrimary" />
 
@@ -599,7 +600,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:gravity="center"
-                    android:text="You are just one step away from uploading your data to Open Humans. Do you want to proceed?"
+                    android:text="@string/uploading_proceed"
                     android:textAppearance="?textAppearanceBody1" />
 
                 <LinearLayout
@@ -614,14 +615,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
-                        android:text="Cancel" />
+                        android:text="@string/cancel" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/proceed"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="Proceed" />
+                        android:text="@string/proceed" />
                 </LinearLayout>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
@@ -645,7 +646,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Finishing..."
+                    android:text="@string/finishing"
                     android:textAppearance="?textAppearanceHeadline4"
                     android:textColor="?colorPrimary" />
 
@@ -654,7 +655,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:gravity="center"
-                    android:text="This may take a few seconds."
+                    android:text="@string/this_may_take_a_few_seconds"
                     android:textAppearance="?textAppearanceBody1" />
 
                 <com.google.android.material.progressindicator.LinearProgressIndicator
@@ -683,6 +684,7 @@
                 <ImageView
                     android:layout_width="160dp"
                     android:layout_height="wrap_content"
+                    android:importantForAccessibility="no"
                     app:srcCompat="@drawable/tick_mark" />
 
                 <TextView
@@ -690,7 +692,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:gravity="center"
-                    android:text="We're done!"
+                    android:text="@string/we_re_done"
                     android:textAppearance="?textAppearanceHeadline4"
                     android:textColor="?colorPrimary" />
 
@@ -699,7 +701,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:gravity="center"
-                    android:text="From now on, your phone will silently upload data in the background from time to time."
+                    android:text="@string/silently_upload_date_note"
                     android:textAppearance="?textAppearanceBody1" />
 
                 <com.google.android.material.button.MaterialButton
@@ -707,7 +709,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="Close" />
+                    android:text="@string/close" />
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
     </FrameLayout>

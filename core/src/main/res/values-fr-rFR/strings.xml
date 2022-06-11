@@ -446,10 +446,12 @@
     <string name="autotune_description">Aide pour ajuster le profil (SI, rapport G/I et débits de basal)</string>
     <string name="autotune_shortname">AT</string>
     <string name="autotune_settings">Paramètres Autotune</string>
-    <string name="autotune_auto_title">Changement de profil avec l\'Automatisation</string>
+    <string name="autotune_auto_title">Changr le profil avec l\'automatisation</string>
     <string name="autotune_auto_summary">Si activé, Autotune mettra à jour automatiquement à jour le profil sélectionné et activera le profil calculé effectué à partir d\'une règle d\'automatisation.</string>
     <string name="autotune_categorize_uam_as_basal_title">Catégoriser UAM en tant que Basal</string>
     <string name="autotune_categorize_uam_as_basal_summary">Activer uniquement si vous avez correctement saisi tous les glucides consommés, avec cette option, des hausses soudaines vues par Autotune seront utilisées pour modifier les débits de basal.</string>
+    <string name="autotune_tune_insulin_curve_title">Ajuster la courbe d\'insuline</string>
+    <string name="autotune_tune_insulin_curve_summary">Activer uniquement si vous utilisez le Profil d\'insuline ajustable. Cette option réglera le pic et la DAI</string>
     <string name="autotune_default_tune_days_title">Nombre de jours de données</string>
     <string name="autotune_circadian_ic_isf_title">Appliquer le résultat G/I et SI moyen sur le profil circadien</string>
     <string name="autotune_circadian_ic_isf_summary">Autotune ne réglera pas les variations circadiennes, cette option ne fait que appliquer le réglage moyen du G/I et de la SI à votre profil d\'entrée circadien</string>
@@ -459,7 +461,7 @@
     <string name="autotune_tunedprofile_name">Tuned</string>
     <string name="autotune_profile">Profil :</string>
     <string name="autotune_tune_days">Nb jours :</string>
-    <string name="autotune_last_run">Dernière exécution :</string>
+    <string name="autotune_last_run">Dernier run :</string>
     <string name="autotune_warning">Avertissement :</string>
     <string name="autotune_select_profile">Sélectionnez le profil à optimiser</string>
     <string name="autotune_ic_warning">Autotune ne fonctionne qu\'avec une seule valeur G/I, votre profil a %1$d valeurs. La valeur moyenne est de %2$.2f g/U</string>
@@ -478,7 +480,7 @@
     <string name="autotune_compare_profile">Comparer les profils</string>
     <string name="autotune_copy_localprofile_button">Copier vers Profil Local</string>
     <string name="autotune_update_input_profile_button">Mettre à jour profil d\'entrée</string>
-    <string name="autotune_revert_input_profile_button">Réinitialisé profil d\'entrée</string>
+    <string name="autotune_revert_input_profile_button">Réinitialiser profil d\'entrée</string>
     <string name="autotune_copy_local_profile_message">Créer un nouveau profil local à partir de ce profil Autotune ?</string>
     <string name="autotune_update_local_profile_message">Mettre à jour le profil %1$s avec le profil Autotune ?</string>
     <string name="autotune_revert_local_profile_message">Annuler la mise à jour du profil %1$s et remettre le profil d\'entrée ?</string>

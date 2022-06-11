@@ -185,7 +185,7 @@ class SteampunkWatchface : BaseWatchFace() {
         }
 
         //if both batteries are shown, make them smaller.
-        if (sp.getBoolean("show_uploader_battery", true) && sp.getBoolean("show_rig_battery", false)) {
+        if (sp.getBoolean(R.string.key_show_uploader_battery, true) && sp.getBoolean(R.string.key_show_rig_battery, false)) {
             mUploaderBattery?.textSize = fontSmall
             mRigBattery?.textSize = fontSmall
         } else {
@@ -198,6 +198,6 @@ class SteampunkWatchface : BaseWatchFace() {
         var timeframe = sp.getInt(R.string.key_chart_time_frame, 3)
         timeframe = timeframe % 5 + 1
         pointSize = if (timeframe < 3) 2 else 1
-        sp.putInt(R.string.key_chart_time_frame, timeframe)
+        sp.putString(R.string.key_chart_time_frame, timeframe.toString())
     }
 }

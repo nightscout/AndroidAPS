@@ -200,7 +200,7 @@ public abstract class RileyLinkCommunicationManager<T extends RLMessage> {
         double[] scanFrequencies = rileyLinkServiceData.rileyLinkTargetFrequency.getScanFrequencies();
 
         if (scanFrequencies.length == 1) {
-            return Round.isSame(scanFrequencies[0], frequency);
+            return Round.INSTANCE.isSame(scanFrequencies[0], frequency);
         } else {
             return (scanFrequencies[0] <= frequency && scanFrequencies[scanFrequencies.length - 1] >= frequency);
         }

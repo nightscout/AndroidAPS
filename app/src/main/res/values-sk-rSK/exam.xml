@@ -123,6 +123,7 @@
     <string name="sensitivity_cannula">Výmena kanyly, alebo zmena profilu automaticky nastaví Autosense späť na 100%.</string>
     <string name="sensitivity_time">Niektoré pluginy majú konfigurovateľné časové rozmedzie, ktoré môže nastaviť používateľ.</string>
     <string name="sensitivity_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Configuration/Config-Builder.html#detekce-citlivosti</string>
+    <string name="sensitivity_hint2">https://androidaps.readthedocs.io/en/latest/Usage/Open-APS-features.html?highlight=Autosens#autosens</string>
     <string name="wrongcarbs_label">Chyby pri zadávaní sacharidov</string>
     <string name="wrongcarbs_whattodo">Čo by ste mali urobiť, pokiaľ ste chybne zadali sacharidy?</string>
     <string name="wrongcarbs_treatmentstab">Odstráňte nesprávny záznam v Ošetreniach a zadajte správnu novú hodnotu sacharidov.</string>

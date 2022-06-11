@@ -52,11 +52,11 @@ class QuickWizardListActivity : DaggerAppCompatActivityWithResult(), OnStartDrag
 
     private inner class RecyclerViewAdapter(var fragmentManager: FragmentManager) : RecyclerView.Adapter<RecyclerViewAdapter.QuickWizardEntryViewHolder>(), ItemTouchHelperAdapter {
 
-        private inner class QuickWizardEntryViewHolder(val binding: OverviewQuickwizardlistItemBinding, val fragmentManager: FragmentManager) : RecyclerView.ViewHolder(binding.root)
+        private inner class QuickWizardEntryViewHolder(val binding: OverviewQuickwizardlistItemBinding) : RecyclerView.ViewHolder(binding.root)
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuickWizardEntryViewHolder {
             val binding = OverviewQuickwizardlistItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            return QuickWizardEntryViewHolder(binding, fragmentManager)
+            return QuickWizardEntryViewHolder(binding)
         }
 
         @SuppressLint("ClickableViewAccessibility")
@@ -125,7 +125,7 @@ class QuickWizardListActivity : DaggerAppCompatActivityWithResult(), OnStartDrag
         binding = OverviewQuickwizardlistActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        actionHelper = ActionModeHelper(rh, this)
+        actionHelper = ActionModeHelper(rh, this, null)
         actionHelper.setUpdateListHandler { binding.recyclerview.adapter?.notifyDataSetChanged() }
         actionHelper.setOnRemoveHandler { removeSelected(it) }
         actionHelper.enableSort = true
@@ -174,7 +174,7 @@ class QuickWizardListActivity : DaggerAppCompatActivityWithResult(), OnStartDrag
         })
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_actions, menu)
         return super.onCreateOptionsMenu(menu)
     }

@@ -29,7 +29,6 @@
     <string name="description_overview">מציג את המצב הנוכחי של הלולאה ולחצני פעולות שימושיות</string>
     <string name="description_persistent_notification">מציג הודעה קבועה עם סקירה קצרה של מה שהלולאה שלכם עושה</string>
     <string name="description_profile_local">הגדירו פרופיל שזמין באופן לא מקוון.</string>
-    <string name="description_pump_mdi">טיפול בזריקות יום-יומיות</string>
     <string name="description_pump_virtual">שימוש במשאבות אשר עדיין אין להם מנהל התקן כלשהו (לולאה פתוחה)</string>
     <string name="description_sensitivity_aaps">חישוב הרגישות נעשה בהתאם ל־Oref0, אך ניתן לשנות את מסגרת הזמן. ספיגת הפחמימות המינימלית מחושבת לפי משך ספיגת הפחמימות המרבי מההעדפות.</string>
     <string name="description_sensitivity_oref1">הרגישות מחושבת מנתונים מ-8 או 24 השעות האחרונות (הרגישות הנמוכה מביניהם). הפחמימות (אם לא נספגו) מפסיקות להיחשב לאחר משך זמן שהוגדר בהגדרות. תוסף זה מחשב גם ארוחות לא ידועות מראש (UAM).</string>
@@ -250,7 +249,6 @@
     <string name="basalvaluebelowminimum">ערך הבסיס מתחת למינימום. פרופיל אינו מוגדר!</string>
     <string name="sms_actualbg">ערכי סוכר בדם:</string>
     <string name="sms_lastbg">ערכי סוכר אחרונים:</string>
-    <string name="mdi">זריקות יומיות מרובות (MDI)</string>
     <string name="MM640g">Minimed 640G</string>
     <string name="ongoingnotificaction">התראה מתמשכת</string>
     <string name="old_data">נתונים ישנים</string>
@@ -605,9 +603,7 @@
     <string name="secondcarbsincrement">תוספת פחמימות שניה</string>
     <string name="thirdcarbsincrement">תוספת פחמימות שלישית</string>
     <string name="cgm">סנסור</string>
-    <string name="ns_wifionly">השתמש בחיבור WiFi בלבד</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="ns_chargingonly">במצב טעינה בלבד</string>
     <string name="connectionsettings_title">הגדרות חיבור</string>
     <string name="ns_wifi_allowedssids">SSID מורשים (מופרדים בנקודה-פסיק)</string>
     <string name="ns_allowroaming">אפשר חיבור בנדידה</string>
@@ -680,6 +676,8 @@
     <string name="error_adding_treatment_message">לא ניתן להוסיף טיפול (אינסולין: %1$.2f, פחמ\': %2$d, בשעה: %3$s) לטיפולים. נא לבדוק ולהוסיף רשומה באופן ידני כנדרש.</string>
     <string name="generated_ecarbs_note">פחמימות ממושכות: %1$d גר\' (%2$d ש\'), עיכוב %3$d דק\'</string>
     <string name="openaps_noasdata">אין נתוני Autosens זמינים</string>
+    <string name="log_files">קבצי יומן</string>
+    <string name="miscellaneous">שונות</string>
     <string name="nav_logsettings">הגדרות יומן רישום</string>
     <string name="resettodefaults">אפס לברירת המחדל</string>
     <string name="nsmalfunction">תקלה ב-NSClient. שקלו להפעיל את Nightscout ו-NSClient מחדש.</string>
@@ -840,7 +838,7 @@
     <string name="setupwizard_pump_riley_link_status">מצב ריילילינק:</string>
     <string name="filter">סינון</string>
     <string name="copytolocalprofile_invalid">לא ניתן ליצור פרופיל מקומי. הפרופיל אינו חוקי.</string>
-    <string name="cta_dont_kill_my_app_info">לא להשבית את האפליקציה שלי?</string>
+    <string name="cta_dont_kill_my_app_info">איך לא להשבית את האפליקציה שלי?</string>
     <string name="smscommunicator_report_pump_ureachable_summary">שולח SMS אם מופעל אירוע \"המשאבה אינה נגישה\"</string>
     <string name="smscommunicator_pump_ureachable">דווח שהמשאבה אינה נגישה</string>
     <string name="advisoralarm">הפעל התראה כשצריכים לאכול</string>
@@ -979,6 +977,7 @@
     <string name="show_hide_records">החבא רשומות לולאה</string>
     <string name="widget_description">ווידג\'ט AndroidAPS</string>
     <string name="configure">הגדרת אטימות</string>
+    <string name="graph_scale">קנה מידה של הגרף</string>
     <string name="device_phone">טלפון</string>
     <string name="device_watch">שעון</string>
     <string name="a11y_only_on_watch">על השעון בלבד</string>

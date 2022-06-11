@@ -9,9 +9,9 @@ interface DataPointWithLabelInterface : DataPointInterface {
     override fun getY(): Double
     fun setY(y: Double)
 
-    val label: String?
+    val label: String
     val duration: Long
-    val shape: PointsWithLabelGraphSeries.Shape?
+    val shape: PointsWithLabelGraphSeries.Shape
     val size: Float
     fun color(context: Context?): Int
 }

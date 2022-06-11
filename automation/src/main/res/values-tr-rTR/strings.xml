@@ -120,4 +120,7 @@
     <string name="confirm_remove_multiple_items">%1$d öğeyi kaldırmak istediğinizden emin misiniz</string>
     <string name="sort_label">Sırala</string>
     <string name="system_automation">Sistem otomasyonu</string>
+    <string name="run_automations">Otomasyonları çalıştır</string>
+    <string name="add_automation">Kural ekle</string>
+    <string name="remove_sort">Kaldır/sırala</string>
 </resources>

@@ -123,6 +123,7 @@
     <string name="sensitivity_cannula">Hvis du logger bytte av kanyle vil Autosens verdien tilbakestilles til 100%.</string>
     <string name="sensitivity_time">Noen plugins har konfigurerbare tidsintervall som kan settes av brukeren.</string>
     <string name="sensitivity_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Sensitivity-detection-and-COB.html</string>
+    <string name="sensitivity_hint2">https://androidaps.readthedocs.io/en/latest/Usage/Open-APS-features.html?highlight=Autosens#autosens</string>
     <string name="wrongcarbs_label">Feil i KH angivelse</string>
     <string name="wrongcarbs_whattodo">Hva skal du gjøre hvis du har gjort en feilaktig registrering av karbohydrater?</string>
     <string name="wrongcarbs_treatmentstab">Fjern den feilaktige registreringen i Behandlinger og legg inn riktig verdi for karbohydrater.</string>

@@ -91,4 +91,6 @@
     <string name="set_neutral_temps_summary">Hvis aktiveret, vil det annullere en midlertidig basal inden udgangen af hver time. Denne metode kan hjælpe med at stoppe nogle pumper i at bippe/vibrere hver time.</string>
     <string name="mdt_tbr_remaining">%1$.1f E/t (%2$d min. tilbage)</string>
     <string name="invalid_history_data">Ugyldig pumpehistorikdata registreret. Åbn nyt problem og upload logfiler.</string>
+    <string name="riley_statistics">RL Statistik</string>
+    <string name="medtronic_history_type">Type:</string>
 </resources>

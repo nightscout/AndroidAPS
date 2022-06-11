@@ -1,10 +1,7 @@
 package info.nightscout.androidaps.plugins.general.nsclient
 
-import android.graphics.Paint
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ScrollView
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
@@ -12,13 +9,13 @@ import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.databinding.NsClientFragmentBinding
 import info.nightscout.androidaps.interfaces.DataSyncSelector
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientUpdateGUI
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -36,6 +33,14 @@ class NSClientFragment : DaggerFragment() {
     @Inject lateinit var dataSyncSelector: DataSyncSelector
     @Inject lateinit var uel: UserEntryLogger
 
+    companion object {
+
+        const val ID_MENU_CLEAR_LOG = 6
+        const val ID_MENU_RESTART = 7
+        const val ID_MENU_SEND_NOW = 8
+        const val ID_MENU_FULL_SYNC = 9
+    }
+
     private val disposable = CompositeDisposable()
 
     private var _binding: NsClientFragmentBinding? = null
@@ -45,7 +50,10 @@ class NSClientFragment : DaggerFragment() {
     private val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-        NsClientFragmentBinding.inflate(inflater, container, false).also { _binding = it }.root
+        NsClientFragmentBinding.inflate(inflater, container, false).also {
+            _binding = it
+            setHasOptionsMenu(true)
+        }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -63,22 +71,48 @@ class NSClientFragment : DaggerFragment() {
             nsClientPlugin.pause(isChecked)
             updateGui()
         }
-        binding.clearLog.setOnClickListener { nsClientPlugin.clearLog() }
-        binding.clearLog.paintFlags = binding.clearLog.paintFlags or Paint.UNDERLINE_TEXT_FLAG
-        binding.restart.setOnClickListener { rxBus.send(EventNSClientRestart()) }
-        binding.restart.paintFlags = binding.restart.paintFlags or Paint.UNDERLINE_TEXT_FLAG
-        binding.deliverNow.setOnClickListener { nsClientPlugin.resend("GUI") }
-        binding.deliverNow.paintFlags = binding.deliverNow.paintFlags or Paint.UNDERLINE_TEXT_FLAG
-        binding.fullSync.setOnClickListener {
-            context?.let { context ->
-                OKDialog.showConfirmation(context, rh.gs(R.string.nsclientinternal),
-                                          rh.gs(R.string.full_sync_comment), Runnable {
-                        dataSyncSelector.resetToNextFullSync()
-                    })
-            }
-        }
-        binding.fullSync.paintFlags = binding.fullSync.paintFlags or Paint.UNDERLINE_TEXT_FLAG
     }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        if (isResumed) {
+            menu.add(Menu.FIRST, ID_MENU_CLEAR_LOG, 0, rh.gs(R.string.clearlog)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+            menu.add(Menu.FIRST, ID_MENU_RESTART, 0, rh.gs(R.string.restart)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+            menu.add(Menu.FIRST, ID_MENU_SEND_NOW, 0, rh.gs(R.string.deliver_now)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+            menu.add(Menu.FIRST, ID_MENU_FULL_SYNC, 0, rh.gs(R.string.full_sync)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+            menu.setGroupDividerEnabled(true)
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
+            ID_MENU_CLEAR_LOG -> {
+                nsClientPlugin.clearLog()
+                true
+            }
+
+            ID_MENU_RESTART   -> {
+                rxBus.send(EventNSClientRestart())
+                true
+            }
+
+            ID_MENU_SEND_NOW  -> {
+                nsClientPlugin.resend("GUI")
+                true
+            }
+
+            ID_MENU_FULL_SYNC -> {
+                context?.let { context ->
+                    OKDialog.showConfirmation(
+                        context, rh.gs(R.string.nsclientinternal), rh.gs(R.string.full_sync_comment),
+                        Runnable { dataSyncSelector.resetToNextFullSync() }
+                    )
+                }
+                true
+            }
+
+            else              -> false
+        }
 
     @Synchronized override fun onResume() {
         super.onResume()

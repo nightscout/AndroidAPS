@@ -108,6 +108,7 @@ class UserEntryMapper {
         Announcement (UserEntry.Sources.Announcement),
         Actions (UserEntry.Sources.Actions),
         Automation (UserEntry.Sources.Automation),
+        Autotune (UserEntry.Sources.Autotune),
         BG (UserEntry.Sources.BG),
         Aidex (UserEntry.Sources.Aidex),
         Dexcom (UserEntry.Sources.Dexcom),

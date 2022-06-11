@@ -103,7 +103,8 @@ public class InitializePumpManagerTask extends ServiceTask {
             }
         } else {
 
-            if (!Round.isSame(lastGoodFrequency, RileyLinkTargetFrequency.Omnipod.getScanFrequencies()[0])) {
+            if (!Round.INSTANCE.isSame(lastGoodFrequency,
+                    RileyLinkTargetFrequency.Omnipod.getScanFrequencies()[0])) {
                 lastGoodFrequency = RileyLinkTargetFrequency.Omnipod.getScanFrequencies()[0];
                 lastGoodFrequency = Math.round(lastGoodFrequency * 1000d) / 1000d;
 

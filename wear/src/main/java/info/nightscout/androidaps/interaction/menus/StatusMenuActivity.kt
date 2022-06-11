@@ -15,15 +15,15 @@ class StatusMenuActivity : MenuListActivity() {
         super.onCreate(savedInstanceState)
     }
 
-    override fun getElements(): List<MenuItem> =
+    override fun provideElements(): List<MenuItem> =
         ArrayList<MenuItem>().apply {
             add(MenuItem(R.drawable.ic_status, getString(R.string.status_pump)))
             add(MenuItem(R.drawable.ic_loop_closed, getString(R.string.status_loop)))
             add(MenuItem(R.drawable.ic_tdd, getString(R.string.status_tdd)))
         }
 
-    override fun doAction(action: String) {
-        when (action) {
+    override fun doAction(position: String) {
+        when (position) {
             getString(R.string.status_pump) -> rxBus.send(EventWearToMobile(ActionPumpStatus(System.currentTimeMillis())))
             getString(R.string.status_loop) -> rxBus.send(EventWearToMobile(ActionLoopStatus(System.currentTimeMillis())))
             getString(R.string.status_tdd)  -> rxBus.send(EventWearToMobile(ActionTddStatus(System.currentTimeMillis())))

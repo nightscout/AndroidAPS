@@ -74,7 +74,7 @@ open class ViewSelectorActivity : DaggerActivity() {
     }
 
     fun getInflatedPlusMinusView(container: ViewGroup?): View =
-        when (sp.getInt("input_design", 1)) {
+        when (sp.getInt(R.string.key_input_design, 1)) {
             2    -> LayoutInflater.from(applicationContext).inflate(R.layout.action_editplusminus_item_quickrighty, container, false)
             3    -> LayoutInflater.from(applicationContext).inflate(R.layout.action_editplusminus_item_quicklefty, container, false)
             4    -> LayoutInflater.from(applicationContext).inflate(R.layout.action_editplusminus_item_viktoria, container, false)

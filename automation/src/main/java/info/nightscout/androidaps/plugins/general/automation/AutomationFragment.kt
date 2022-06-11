@@ -69,7 +69,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = AutomationFragmentBinding.inflate(inflater, container, false)
-        actionHelper = ActionModeHelper(rh, activity)
+        actionHelper = ActionModeHelper(rh, activity, this)
         actionHelper.setUpdateListHandler { binding.eventListView.adapter?.notifyDataSetChanged() }
         actionHelper.setOnRemoveHandler { removeSelected(it) }
         actionHelper.enableSort = true

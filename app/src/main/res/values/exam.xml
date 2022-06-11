@@ -123,6 +123,7 @@
     <string name="sensitivity_cannula">Logging a cannula change will reset Autosens ratio back to 100%.</string>
     <string name="sensitivity_time">Some of the plugin options have configurable time ranges that can be set by the user.</string>
     <string name="sensitivity_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Sensitivity-detection-and-COB.html</string>
+    <string name="sensitivity_hint2">https://androidaps.readthedocs.io/en/latest/Usage/Open-APS-features.html?highlight=Autosens#autosens</string>
     <string name="wrongcarbs_label">Carb Entry Errors</string>
     <string name="wrongcarbs_whattodo">What should you do if you’ve made an incorrect carb entry?</string>
     <string name="wrongcarbs_treatmentstab">Delete the incorrect entry in Treatments and enter the correct new carb value.</string>
