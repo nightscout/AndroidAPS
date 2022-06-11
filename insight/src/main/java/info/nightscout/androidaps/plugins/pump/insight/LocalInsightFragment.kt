@@ -89,6 +89,7 @@ class LocalInsightFragment : DaggerFragment(), View.OnClickListener {
                         when (localInsightPlugin.operatingMode) {
                             OperatingMode.PAUSED, OperatingMode.STOPPED -> commandQueue.startPump(operatingModeCallback)
                             OperatingMode.STARTED                       -> commandQueue.stopPump(operatingModeCallback)
+                            null                                        -> Unit
                         }
                     }
                 }
@@ -228,6 +229,8 @@ class LocalInsightFragment : DaggerFragment(), View.OnClickListener {
                     binding.operatingMode.setText(R.string.start_pump)
                     string = R.string.paused
                 }
+
+            null                  -> Unit
         }
         statusItems.add(getStatusItem(rh.gs(R.string.operating_mode), rh.gs(string)))
     }

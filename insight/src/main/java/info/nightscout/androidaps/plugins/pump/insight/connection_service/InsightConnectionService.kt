@@ -289,6 +289,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
             InsightState.NOT_PAIRED,
             InsightState.DISCONNECTED,
             InsightState.RECOVERING -> return
+            else -> Unit
         }
         aapsLogger.info(LTag.PUMP, "Exception occurred: " + e.javaClass.simpleName)
         if (pairingDataStorage.paired) {
