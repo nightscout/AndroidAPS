@@ -640,6 +640,8 @@ class MedtronicPumpPlugin @Inject constructor(
                 }
                 val now = System.currentTimeMillis()
 
+                detailedBolusInfo.timestamp = now
+
                 pumpSyncStorage.addBolusWithTempId(detailedBolusInfo, true, this)
 
                 // we subtract insulin, exact amount will be visible with next remainingInsulin update.
