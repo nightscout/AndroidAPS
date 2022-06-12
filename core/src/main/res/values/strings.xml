@@ -569,8 +569,8 @@
     <string name="autotune_last_run">Last run :</string>
     <string name="autotune_warning">Warning :</string>
     <string name="autotune_select_profile">Select profile to tune</string>
-    <string name="autotune_ic_warning">Autotune works with only one IC value, your profile has %1$d values. Average value is %2$.2fg/U</string>
-    <string name="autotune_isf_warning">Autotune works with only one ISF value, your profile has %1$d values. Average value is %2$.1f%3$s/U</string>
+    <string name="autotune_ic_warning">Selected profile has %1$d IC values. Autotune will use %2$.2f g/U</string>
+    <string name="autotune_isf_warning">Selected profile has %1$d ISF values. Autotune will use %2$.1f %3$s/U</string>
     <string name="autotune_error">Error in input data, try to run again autotune or reduce the number of days</string>
     <string name="autotune_warning_during_run">Autotune calculation started, please be patient</string>
     <string name="autotune_warning_after_run">Check the results carefully before using it!</string>
