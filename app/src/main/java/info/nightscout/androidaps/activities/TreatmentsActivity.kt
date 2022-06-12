@@ -11,7 +11,7 @@ import info.nightscout.androidaps.activities.fragments.*
 import info.nightscout.androidaps.databinding.TreatmentsFragmentBinding
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.utils.buildHelper.BuildHelper
+import info.nightscout.androidaps.interfaces.BuildHelper
 import javax.inject.Inject
 
 class TreatmentsActivity : NoSplashAppCompatActivity() {

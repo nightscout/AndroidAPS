@@ -7,6 +7,7 @@ import info.nightscout.androidaps.data.LocalInsulin
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.ValueWithUnit
+import info.nightscout.androidaps.extensions.pureProfileFromJson
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
@@ -16,9 +17,10 @@ import info.nightscout.androidaps.plugins.general.autotune.events.EventAutotuneU
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.MidnightTime
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.buildHelper.BuildHelper
+import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONException
@@ -48,7 +50,7 @@ class AutotunePlugin @Inject constructor(
     private val autotuneIob: AutotuneIob,
     private val autotunePrep: AutotunePrep,
     private val autotuneCore: AutotuneCore,
-    private val buildHelper:BuildHelper,
+    private val buildHelper: BuildHelper,
     private val uel: UserEntryLogger,
     aapsLogger: AAPSLogger
 ) : PluginBase(PluginDescription()
@@ -115,37 +117,39 @@ class AutotunePlugin @Inject constructor(
             val from = starttime + i * 24 * 60 * 60 * 1000L         // get 24 hours BG values from 4 AM to 4 AM next day
             val to = from + 24 * 60 * 60 * 1000L
             log("Tune day " + (i + 1) + " of " + daysBack)
-            tunedProfile?.let { tunedProfile ->
-                autotuneIob.initializeData(from, to, tunedProfile)  //autotuneIob contains BG and Treatments data from history (<=> query for ns-treatments and ns-entries)
+            tunedProfile?.let { it ->
+                autotuneIob.initializeData(from, to, it)  //autotuneIob contains BG and Treatments data from history (<=> query for ns-treatments and ns-entries)
                 autotuneFS.exportEntries(autotuneIob)               //<=> ns-entries.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
                 autotuneFS.exportTreatments(autotuneIob)            //<=> ns-treatments.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine (include treatments ,tempBasal and extended
-                preppedGlucose = autotunePrep.categorize(tunedProfile) //<=> autotune.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
+                preppedGlucose = autotunePrep.categorize(it) //<=> autotune.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
+                preppedGlucose?.let { preppedGlucose ->
+                    autotuneFS.exportPreppedGlucose(preppedGlucose)
+                    tunedProfile = autotuneCore.tuneAllTheThings(preppedGlucose, it, pumpProfile).also { tunedProfile ->
+                        autotuneFS.exportTunedProfile(tunedProfile)   //<=> newprofile.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
+                        if (i < daysBack - 1) {
+                            log("Partial result for day ${i + 1}".trimIndent())
+                            result = rh.gs(R.string.autotune_partial_result, i + 1, daysBack)
+                            rxBus.send(EventAutotuneUpdateGui())
+                        }
+                        logResult = showResults(tunedProfile, pumpProfile)
+                        if (detailedLog)
+                            autotuneFS.exportLog(lastRun, i + 1)
+                    }
+                }
+                    ?: {
+                        log("preppedGlucose is null on day ${i + 1}")
+                        tunedProfile = null
+                    }
             }
-
-            if (preppedGlucose == null || tunedProfile == null) {
+            if (tunedProfile == null) {
                 result = rh.gs(R.string.autotune_error)
-                log(result)
+                log("TunedProfile is null on day ${i + 1}")
                 calculationRunning = false
                 rxBus.send(EventAutotuneUpdateGui())
-                tunedProfile = null
                 autotuneFS.exportResult(result)
                 autotuneFS.exportLogAndZip(lastRun)
                 return result
             }
-            preppedGlucose?.let { preppedGlucose ->         //preppedGlucose and tunedProfile should never be null here
-                autotuneFS.exportPreppedGlucose(preppedGlucose)
-                tunedProfile = autotuneCore.tuneAllTheThings(preppedGlucose, tunedProfile!!, pumpProfile)
-            }
-            // localInsulin = LocalInsulin("TunedInsulin", tunedProfile!!.peak, tunedProfile!!.dia)     // Todo: Add tune Insulin option
-            autotuneFS.exportTunedProfile(tunedProfile!!)   //<=> newprofile.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
-            if (i < daysBack - 1) {
-                log("Partial result for day ${i + 1}".trimIndent())
-                result = rh.gs(R.string.autotune_partial_result, i + 1, daysBack)
-                rxBus.send(EventAutotuneUpdateGui())
-            }
-            logResult = showResults(tunedProfile, pumpProfile)
-            if (detailedLog)
-                autotuneFS.exportLog(lastRun, i + 1)
         }
         result = rh.gs(R.string.autotune_result, dateUtil.dateAndTimeString(lastRun))
         if (!detailedLog)
@@ -161,7 +165,8 @@ class AutotunePlugin @Inject constructor(
                 updateProfile(tunedP)
                 uel.log(
                     UserEntry.Action.STORE_PROFILE,
-                    UserEntry.Sources.Autotune,
+                    UserEntry.Sources.Automation,
+                    rh.gs(R.string.autotune),
                     ValueWithUnit.SimpleString(tunedP.profilename)
                 )
                 updateButtonVisibility = View.GONE
@@ -178,22 +183,23 @@ class AutotunePlugin @Inject constructor(
                         log("Profile Switch succeed ${tunedP.profilename}")
                         uel.log(
                             UserEntry.Action.PROFILE_SWITCH,
-                            UserEntry.Sources.Autotune,
-                            "Autotune AutoSwitch",
+                            UserEntry.Sources.Automation,
+                            rh.gs(R.string.autotune),
                             ValueWithUnit.SimpleString(tunedP.profilename))
                     }
                     rxBus.send(EventLocalProfileChanged())
                 }
             }
         }
-        lastRunSuccess = true
-        sp.putLong(R.string.key_autotune_last_run, lastRun)
-        rxBus.send(EventAutotuneUpdateGui())
-        calculationRunning = false
+
         tunedProfile?.let {
+            lastRunSuccess = true
+            saveLastRun()
+            rxBus.send(EventAutotuneUpdateGui())
+            calculationRunning = false
             return result
         }
-        return "No Result"  // should never occurs
+        return rh.gs(R.string.autotune_error)
     }
 
     private fun showResults(tunedProfile: ATProfile?, pumpProfile: ATProfile): String {
@@ -296,6 +302,56 @@ class AutotunePlugin @Inject constructor(
         localProfilePlugin.storeSettings()
     }
 
+    fun saveLastRun() {
+        val json = JSONObject()
+        json.put("lastNbDays", lastNbDays)
+        json.put("lastRun",lastRun)
+        json.put("pumpProfile", pumpProfile.profile.toPureNsJson(dateUtil))
+        json.put("pumpProfileName", pumpProfile.profilename)
+        json.put("pumpPeak", pumpProfile.peak)
+        json.put("pumpDia", pumpProfile.dia)
+        json.put("tunedProfile", tunedProfile?.profile?.toPureNsJson(dateUtil))
+        json.put("tunedCircadianProfile", tunedProfile?.circadianProfile?.toPureNsJson(dateUtil))
+        json.put("tunedProfileName", tunedProfile?.profilename)
+        json.put("tunedPeak", tunedProfile?.peak)
+        json.put("tunedDia", tunedProfile?.dia)
+        json.put("result", result)
+        json.put("updateButtonVisibility", updateButtonVisibility)
+        sp.putString(R.string.key_autotune_last_run, json.toString())
+    }
+
+    fun loadLastRun() {
+        result = ""
+        lastRunSuccess = false
+        try {
+            val json = JSONObject(sp.getString(R.string.key_autotune_last_run, ""))
+            lastNbDays = JsonHelper.safeGetString(json, "lastNbDays", "")
+            lastRun = JsonHelper.safeGetLong(json, "lastRun")
+            val pumpPeak = JsonHelper.safeGetInt(json, "pumpPeak")
+            val pumpDia = JsonHelper.safeGetDouble(json, "pumpDia")
+            var localInsulin = LocalInsulin("PumpInsulin", pumpPeak, pumpDia)
+            selectedProfile = JsonHelper.safeGetString(json, "pumpProfileName", "")
+            val profile = JsonHelper.safeGetJSONObject(json, "pumpProfile", null)?.let { pureProfileFromJson(it, dateUtil) }
+                ?: return
+            pumpProfile = ATProfile(ProfileSealed.Pure(profile), localInsulin, injector).also { it.profilename = selectedProfile }
+            val tunedPeak = JsonHelper.safeGetInt(json, "tunedPeak")
+            val tunedDia = JsonHelper.safeGetDouble(json, "tunedDia")
+            localInsulin = LocalInsulin("PumpInsulin", tunedPeak, tunedDia)
+            val tunedProfileName = JsonHelper.safeGetString(json, "tunedProfileName", "")
+            val tuned = JsonHelper.safeGetJSONObject(json, "tunedProfile", null)?.let { pureProfileFromJson(it, dateUtil) }
+                ?: return
+            val circadianTuned = JsonHelper.safeGetJSONObject(json, "tunedCircadianProfile", null)?.let { pureProfileFromJson(it, dateUtil) }
+                ?: return
+            tunedProfile = ATProfile(ProfileSealed.Pure(tuned), localInsulin, injector).also { atProfile ->
+                atProfile.profilename = tunedProfileName
+                atProfile.circadianProfile = ProfileSealed.Pure(circadianTuned)
+            }
+            result = JsonHelper.safeGetString(json, "result", "")
+            updateButtonVisibility = JsonHelper.safeGetInt(json, "updateButtonVisibility")
+            lastRunSuccess = true
+        } catch (e: Exception) {
+        }
+    }
 
     private fun log(message: String) {
         atLog("[Plugin] $message")

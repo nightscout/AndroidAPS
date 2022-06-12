@@ -60,7 +60,7 @@ class WizardInfoDialog : DaggerDialogFragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString("data", data.toJson(true, dateUtil).toString())
+        outState.putString("data", data.toJson(true, dateUtil, profileFunction).toString())
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

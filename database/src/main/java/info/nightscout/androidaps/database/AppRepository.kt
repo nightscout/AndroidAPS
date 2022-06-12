@@ -2,6 +2,7 @@ package info.nightscout.androidaps.database
 
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.database.data.NewEntries
+import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.entities.*
 import info.nightscout.androidaps.database.interfaces.DBEntry
 import info.nightscout.androidaps.database.transactions.Transaction
@@ -58,6 +59,10 @@ import kotlin.math.roundToInt
     }
 
     fun clearDatabases() = database.clearAllTables()
+
+    fun clearCachedData(from: Long) {
+        database.totalDailyDoseDao.deleteNewerThan(from, InterfaceIDs.PumpType.CACHE)
+    }
 
     //BG READINGS -- only valid records
     fun compatGetBgReadingsDataFromTime(timestamp: Long, ascending: Boolean): Single<List<GlucoseValue>> =
@@ -775,21 +780,25 @@ import kotlin.math.roundToInt
     fun getOldestExtendedBolusRecord(): ExtendedBolus? =
         database.extendedBolusDao.getOldestRecord()
 
-    // TotalDailyDose
-    fun getAllTotalDailyDoses(ascending: Boolean): Single<List<TotalDailyDose>> =
-        database.totalDailyDoseDao.getAllTotalDailyDoses()
-            .map { if (!ascending) it.reversed() else it }
+    fun getLastExtendedBolusIdWrapped(): Single<ValueWrapper<Long>> =
+        database.extendedBolusDao.getLastId()
             .subscribeOn(Schedulers.io())
+            .toWrappedSingle()
 
+    // TotalDailyDose
     fun getLastTotalDailyDoses(count: Int, ascending: Boolean): Single<List<TotalDailyDose>> =
         database.totalDailyDoseDao.getLastTotalDailyDoses(count)
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
 
-    fun getLastExtendedBolusIdWrapped(): Single<ValueWrapper<Long>> =
-        database.extendedBolusDao.getLastId()
+    fun getCalculatedTotalDailyDose(timestamp: Long): Single<ValueWrapper<TotalDailyDose>> =
+        database.totalDailyDoseDao.findByTimestamp(timestamp, InterfaceIDs.PumpType.CACHE)
             .subscribeOn(Schedulers.io())
             .toWrappedSingle()
+
+    fun createTotalDailyDose(tdd: TotalDailyDose) {
+        database.totalDailyDoseDao.insert(tdd)
+    }
 
     // OFFLINE EVENT
     /*

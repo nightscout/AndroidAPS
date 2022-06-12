@@ -74,11 +74,11 @@ class ErrorDialog : DaggerDialogFragment() {
         }
         binding.mute.setOnClickListener {
             uel.log(Action.ERROR_DIALOG_MUTE, Sources.Unknown)
-            stopAlarm()
+            stopAlarm("Mute")
         }
         binding.mute5min.setOnClickListener {
             uel.log(Action.ERROR_DIALOG_MUTE_5MIN, Sources.Unknown)
-            stopAlarm()
+            stopAlarm("Mute 5 min")
             handler.postDelayed(this::startAlarm, T.mins(5).msecs())
         }
         startAlarm()
@@ -110,14 +110,14 @@ class ErrorDialog : DaggerDialogFragment() {
         super.dismissAllowingStateLoss()
         helperActivity?.finish()
         handler.removeCallbacksAndMessages(null)
-        stopAlarm()
+        stopAlarm("Dismiss")
     }
 
     private fun startAlarm() {
         if (sound != 0)
-            alarmSoundServiceHelper.startAlarm(ctx, sound)
+            alarmSoundServiceHelper.startAlarm(ctx, sound, "$title:$status")
     }
 
-    private fun stopAlarm() =
-        alarmSoundServiceHelper.stopService(ctx)
+    private fun stopAlarm(reason: String) =
+        alarmSoundServiceHelper.stopService(ctx, reason)
 }
