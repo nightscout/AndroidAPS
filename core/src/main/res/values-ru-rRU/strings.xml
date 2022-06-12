@@ -464,8 +464,6 @@
     <string name="autotune_last_run">Последнее выполнение:</string>
     <string name="autotune_warning">Внимание:</string>
     <string name="autotune_select_profile">Выберите профиль для изменения</string>
-    <string name="autotune_ic_warning">Autotune работает только с одним значением IC, у вас %1$d значений. Среднее значение - %2$.2f г/ед</string>
-    <string name="autotune_isf_warning">Autotune работает только с одним значением ISF, ваш профиль имеет %1$d значений. Среднее значение - %2$.1f%3$s/ед</string>
     <string name="autotune_error">Ошибка ввода данных, попробуйте запустить снова autotune или уменьшить количество дней</string>
     <string name="autotune_warning_during_run">Идет настройка автоматизации, ждите</string>
     <string name="autotune_warning_after_run">Перед использованием внимательно проверьте результаты!</string>
