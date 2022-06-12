@@ -116,7 +116,7 @@ class MedtronicPumpPlugin @Inject constructor(
     private var isBusy = false
 
     override fun onStart() {
-        aapsLogger.debug(LTag.PUMP, deviceID() + " started. (V2.0005)")
+        aapsLogger.debug(LTag.PUMP, deviceID() + " started. (V2.0006)")
         serviceConnection = object : ServiceConnection {
             override fun onServiceDisconnected(name: ComponentName) {
                 aapsLogger.debug(LTag.PUMP, "RileyLinkMedtronicService is disconnected")
@@ -639,6 +639,8 @@ class MedtronicPumpPlugin @Inject constructor(
                     }.start()
                 }
                 val now = System.currentTimeMillis()
+
+                detailedBolusInfo.timestamp = now
 
                 pumpSyncStorage.addBolusWithTempId(detailedBolusInfo, true, this)
 
