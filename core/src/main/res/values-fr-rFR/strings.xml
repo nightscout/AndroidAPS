@@ -464,8 +464,8 @@
     <string name="autotune_last_run">Dernier run :</string>
     <string name="autotune_warning">Avertissement :</string>
     <string name="autotune_select_profile">Sélectionnez le profil à optimiser</string>
-    <string name="autotune_ic_warning">Autotune ne fonctionne qu\'avec une seule valeur G/I, votre profil a %1$d valeurs. La valeur moyenne est de %2$.2f g/U</string>
-    <string name="autotune_isf_warning">Autotune ne calcule qu\'une seule valeur de SI, votre profil a %1$d valeurs. La valeur moyenne est de %2$.1f %3$s/U</string>
+    <string name="autotune_ic_warning">Le profil sélectionné %1$d valeurs de G/I. Autotune va utiliser la moyenne %2$.2f g/U</string>
+    <string name="autotune_isf_warning">Le profil sélectionné a %1$d valeurs de SI. Autotune va utiliser la moyenne %2$.1f %3$s/U</string>
     <string name="autotune_error">Erreur dans les données d\'entrée, essayez de relancer le calcul ou réduire le nombre de jours</string>
     <string name="autotune_warning_during_run">Le calcul Autotune a commencé, veuillez patienter</string>
     <string name="autotune_warning_after_run">Vérifiez attentivement les résultats avant de les utiliser!</string>

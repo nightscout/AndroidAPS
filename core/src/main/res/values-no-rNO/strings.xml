@@ -464,8 +464,8 @@
     <string name="autotune_last_run">Siste beregning :</string>
     <string name="autotune_warning">Varsel:</string>
     <string name="autotune_select_profile">Velg profil du vil justere</string>
-    <string name="autotune_ic_warning">Autotune fungerer bare med én IC-verdi, og din profil har %1$d verdier. Gjennomsnittlig verdi er %2$.2fg/E</string>
-    <string name="autotune_isf_warning">Autotune fungerer med bare én ISF verdi, og din profil har %1$d verdier. Gjennomsnittsverdi er %2$.1f%3$s/E</string>
+    <string name="autotune_ic_warning">Valgt profil har %1$d IK verdier. Autotune vil bruke %2$.2f g/E</string>
+    <string name="autotune_isf_warning">Valgte profil har %1$d ISF-verdier. Autotune vil bruke %2$.1f %3$s/E</string>
     <string name="autotune_error">Feil i innleste datasett, prøv å kjør Autotune en gang til eller reduser antall dager</string>
     <string name="autotune_warning_during_run">Har startet Autotune beregning, vennligst vent</string>
     <string name="autotune_warning_after_run">Kontroller resultatene nøye før du bruker dem!</string>

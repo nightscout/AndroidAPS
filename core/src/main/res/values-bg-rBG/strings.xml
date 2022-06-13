@@ -4,6 +4,7 @@
     <!--    General-->
     <string name="refresh">Обнови</string>
     <string name="error">Грешка</string>
+    <string name="save">Съхрани</string>
     <string name="not_set_short">Не е зададен</string>
     <string name="failedupdatebasalprofile">Неуспешно обновяване на базалния профил</string>
     <string name="profile_set_ok">Профила на помпата е обновен</string>
@@ -41,6 +42,7 @@
     <string name="carbs">въглехидрати</string>
     <string name="invalidprofile">Грешен профил !!!</string>
     <string name="noprofileset">НЕ Е АКТИВИРАН ПРОФИЛ</string>
+    <string name="active"><![CDATA[<Активно>]]></string>
     <string name="date">Дата</string>
     <string name="units_label">Единици</string>
     <string name="dia_label">DIA (Време на действие на инсулина):</string>
@@ -285,6 +287,7 @@
     <string name="valuelimitedto">%1$.2f ограничен до %2$.2f</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="sms" comment="26 characters max for translation">SMS</string>
+    <string name="basal">Базал</string>
     <!-- Autotune -->
     <plurals name="days">
         <item quantity="one">%1$d дeн</item>
