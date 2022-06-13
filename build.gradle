@@ -17,7 +17,7 @@ buildscript {
         gson_version = '2.9.0'
         nav_version = '2.4.2'
         appcompat_version = '1.4.2'
-        material_version = '1.6.0'
+        material_version = '1.6.1'
         constraintlayout_version = '2.1.4'
         preferencektx_version = '1.2.0'
         commonslang3_version = '3.12.0'
@@ -40,7 +40,7 @@ buildscript {
 
         wearable_version = '2.9.0'
         play_services_wearable_version = '17.1.0'
-        play_services_location_version = '19.0.1'
+        play_services_location_version = '20.0.0'
     }
     repositories {
         google()
