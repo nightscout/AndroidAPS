@@ -59,6 +59,7 @@
     <string name="nav_export">Socruithe Easpórtáil</string>
     <string name="nav_import">Socruithe Iompórtáil</string>
     <string name="check_preferences_import_btn">Iompórtáil</string>
+    <string name="save">Sábháil</string>
     <string name="reloadprofile">Athlódáil próifíl</string>
     <string name="smscommunicator_loophasbeendisabled">Is lúb díchumasaithe</string>
     <string name="smscommunicator_loophasbeenenabled">Is lúb cumasaithe</string>
