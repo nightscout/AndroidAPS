@@ -4,6 +4,7 @@
     <!--    General-->
     <string name="refresh">Atnaujinti</string>
     <string name="error">Klaida</string>
+    <string name="save">Išsaugoti</string>
     <string name="not_set_short">Nenustatyta</string>
     <string name="failedupdatebasalprofile">Nepavyko atnaujinti bazės profilio</string>
     <string name="profile_set_ok">Bazės profilis pompoje atnaujintas</string>
@@ -41,6 +42,7 @@
     <string name="carbs">AV</string>
     <string name="invalidprofile">Netinkamas profilis!!!</string>
     <string name="noprofileset">Nenustatytas profilis</string>
+    <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">Data</string>
     <string name="units_label">Vienetai</string>
     <string name="dia_label">IVT</string>
@@ -418,6 +420,7 @@
     <string name="bolus_ok" comment="26 characters max for translation">Bolusas OK</string>
     <string name="pump_paired" comment="26 characters max for translation">Pompa suporuota</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight Mygtukas Naujinti</string>
+    <string name="basal">Valandinė bazė</string>
     <!-- Autotune -->
     <plurals name="days">
         <item quantity="one">%1$d d.</item>
