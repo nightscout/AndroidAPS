@@ -327,7 +327,7 @@ class CommandQueueImplementation @Inject constructor(
         }
         removeAll(CommandType.BOLUS)
         removeAll(CommandType.SMB_BOLUS)
-        Thread { activePlugin.activePump.stopBolusDelivering() }.run()
+        Thread { activePlugin.activePump.stopBolusDelivering() }.start()
     }
 
     // returns true if command is queued
