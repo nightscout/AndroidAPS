@@ -2,6 +2,8 @@
 <resources>
     <!--    Keys-->
     <!--    General-->
+    <string name="save">Desar</string>
+    <string name="active"><![CDATA[<Actiu>]]></string>
     <!--    Constraints-->
     <!--    Dialogs-->
     <!--    BlePreCheck-->
@@ -66,5 +68,6 @@
     <string name="valuelimitedto">%1$.2f limitat a %2$.2f</string>
     <string name="valueoutofrange">»%1$s« supera els límits</string>
     <!-- Command Queue + readStatus reasons -->
+    <string name="basal">Basal</string>
     <!-- Autotune -->
 </resources>
