@@ -6,18 +6,19 @@
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
 
-    <application
-        android:supportsRtl="true">
+    <application android:supportsRtl="true">
         <activity
             android:name="info.nightscout.androidaps.diaconn.activities.DiaconnG8HistoryActivity"
+            android:exported="false"
             android:theme="@style/AppTheme" />
         <activity
             android:name="info.nightscout.androidaps.diaconn.activities.DiaconnG8UserOptionsActivity"
+            android:exported="false"
             android:theme="@style/AppTheme" />
         <activity
             android:name="info.nightscout.androidaps.diaconn.activities.DiaconnG8BLEScanActivity"
-            android:theme="@style/AppTheme"
-            android:exported="false">
+            android:exported="false"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.plugins.PumpDiaconnG8.activities.DiaconnG8BLEScanActivity" />
                 <category android:name="android.intent.category.DEFAULT" />

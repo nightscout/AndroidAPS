@@ -7,11 +7,18 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
-    <application
-        android:supportsRtl="true">
-        <activity android:name=".ui.wizard.activation.DashPodActivationWizardActivity" />
-        <activity android:name=".ui.wizard.deactivation.DashPodDeactivationWizardActivity" />
-        <activity android:name=".ui.DashPodManagementActivity" />
-        <activity android:name=".ui.DashPodHistoryActivity" />
+    <application android:supportsRtl="true">
+        <activity
+            android:name=".ui.wizard.activation.DashPodActivationWizardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.wizard.deactivation.DashPodDeactivationWizardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.DashPodManagementActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.DashPodHistoryActivity"
+            android:exported="false" />
     </application>
 </manifest>
