@@ -159,6 +159,7 @@
     <string name="end_user_license_agreement">Endbenutzervereinbarung</string>
     <string name="end_user_license_agreement_text">DAS PROGRAMM DARF NICHT FÜR MEDIZINISCHE ENTSCHEIDUNGEN BENUTZT WERDEN. ES GIBT IN DIESEM PROJEKT KEINE GEWÄHRLEISTUNG ODER GARANTIERTE UNTERSTÜTZUNG IN IRGENDEINER ART. WENN DU DICH ENTSCHEIDEST, ES ZU NUTZEN, HÄNGT DIE QUALITÄT UND LEISTUNGSFÄHIGKEIT DIESES PROJEKTES VON DIR SELBST AB. ES WIRD \"WIE BESEHEN\" ZUR VERFÜGUNG GESTELLT. SOLLTE SICH DAS PROGRAMM ALS FEHLERHAFT ERWEISEN, ÜBERNIMMST DU ALLE NOTWENDIGEN KRANKHEITSKOSTEN, SERVICELEISTUNGEN, REPARATUREN ODER KORREKTUREN.</string>
     <string name="end_user_license_agreement_i_understand">Ich verstehe und stimme zu.</string>
+    <string name="save">Speichern</string>
     <string name="reloadprofile">Profil neuladen</string>
     <string name="smscommunicator">SMS-Kommunikator</string>
     <string name="smscommunicator_allowednumbers">Erlaubte Telefonnummern</string>
@@ -939,5 +940,7 @@ Unerwartetes Verhalten.</string>
     <string name="carbs_and_bolus">Kohlenhydrate &amp; Bolus</string>
     <string name="confirm_remove_multiple_items">Sind Sie sicher, dass Sie diese(s) %1$d Element(e) löschen möchten?</string>
     <string name="count_selected">%1$d ausgewählt</string>
+    <string name="sort_label">Sortieren</string>
+    <string name="login">Login</string>
     <!-- Aidex Cgms -->
 </resources>
