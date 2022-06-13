@@ -464,8 +464,8 @@
     <string name="autotune_last_run">הפעלה אחרונה :</string>
     <string name="autotune_warning">אזהרה :</string>
     <string name="autotune_select_profile">בחרו פרופיל לכוונון</string>
-    <string name="autotune_ic_warning">כוונון אוטומטי עובד עם ערך IC אחד בלבד, לפרופיל שלכם יש %1$d ערכים. הערך הממוצע הוא %2$.2f גר\'\\יח\'</string>
-    <string name="autotune_isf_warning">כוונון אוטומטי עובד עם ערך ISF אחד בלבד, לפרופיל שלכם יש %1$d ערכים. הערך הממוצע הוא %2$.1f %3$s\\יח\'</string>
+    <string name="autotune_ic_warning">בפרופיל הנבחר יש %1$d ערכי יחס פחמימות. הכיוונון האוטומטי ישתמש ב-%2$.2f גר\'\\יח\'</string>
+    <string name="autotune_isf_warning">בפרופיל הנבחר יש %1$d ערכי יחס תיקון. הכיוונון האוטומטי ישתמש ב-%2$.1f %3$s\\יח\'</string>
     <string name="autotune_error">שגיאה בנתוני הקלט, נסו להפעיל בשנית או שנסו לצמצם את מספר הימים</string>
     <string name="autotune_warning_during_run">חישוב הכוונון האוטומטי התחיל, אנא התאזרו בסבלנות</string>
     <string name="autotune_warning_after_run">בדקו היטב את התוצאות לפני השימוש בהן!</string>

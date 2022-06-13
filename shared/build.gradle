@@ -11,6 +11,8 @@ apply from: "${project.rootDir}/core/test_dependencies.gradle"
 apply from: "${project.rootDir}/core/jacoco_global.gradle"
 
 android {
+
+    namespace 'info.nightscout.shared'
     defaultConfig {
         minSdkVersion 23  // for wear
     }

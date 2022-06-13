@@ -161,6 +161,7 @@ Eversense-appen.</string>
     <string name="end_user_license_agreement">Licensavtal för slutanvändare</string>
     <string name="end_user_license_agreement_text">FÅR INTE ANVÄNDAS FÖR ATT FATTA MEDICINSKA BESLUT. DET FINNS INGEN GARANTI FÖR PROGRAMMET I DEN UTSTRÄCKNING SOM TILLÅTS AV GÄLLANDE LAG. FÖRUTOM NÄR ANNAT ANGES SKRIFTLIGEN LEVERERAS APPLIKATIONEN SOM DEN ÄR HELT UTAN GARANTIER I NÅGON SOM HELST FORM, VARKEN UTTRYCKTA ELLER UNDERFÖRSTÅDDA, INKLUSIVE MEN INTE BEGRÄNSAT TILL SÄLJBARHET OCH LÄMPLIGHET FÖR ETT VISST ÄNDAMÅL. HELA RISKEN VAD GÄLLER KVALITET OCH PRESTANDA AV PROGRAMMET ÅLIGGER ANVÄNDAREN. OM PROGRAMMET VISAR SIG VARA DEFEKT ANTAR ANVÄNDAREN DEN FULLA FÖR KOSTNADEN FÖR ALL NÖDVÄNDIG SERVICE, REPARATION ELLER KORRIGERING.</string>
     <string name="end_user_license_agreement_i_understand">JAG FÖRSTÅR OCH GODKÄNNER</string>
+    <string name="save">Spara</string>
     <string name="reloadprofile">Ladda om profil</string>
     <string name="smscommunicator">SMS-tjänst</string>
     <string name="smscommunicator_allowednumbers">Godkända telefonnummer</string>
@@ -962,5 +963,6 @@ Eversense-appen.</string>
     <string name="wear_unknown_action_string">Okänt kommando:</string>
     <string name="overview_editquickwizard_percentage">Procent</string>
     <string name="app_default">Appens standardinställning</string>
+    <string name="login">Logga in</string>
     <!-- Aidex Cgms -->
 </resources>

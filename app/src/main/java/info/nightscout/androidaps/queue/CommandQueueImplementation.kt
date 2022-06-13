@@ -35,7 +35,7 @@ import info.nightscout.androidaps.utils.AndroidPermission
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HtmlHelper
-import info.nightscout.androidaps.utils.buildHelper.BuildHelper
+import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
@@ -327,7 +327,7 @@ class CommandQueueImplementation @Inject constructor(
         }
         removeAll(CommandType.BOLUS)
         removeAll(CommandType.SMB_BOLUS)
-        Thread { activePlugin.activePump.stopBolusDelivering() }.run()
+        Thread { activePlugin.activePump.stopBolusDelivering() }.start()
     }
 
     // returns true if command is queued

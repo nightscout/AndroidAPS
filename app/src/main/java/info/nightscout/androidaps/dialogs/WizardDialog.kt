@@ -3,6 +3,8 @@ package info.nightscout.androidaps.dialogs
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
+import android.os.HandlerThread
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -24,6 +26,7 @@ import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.databinding.DialogWizardBinding
 import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.extensions.formatColor
+import info.nightscout.androidaps.extensions.runOnUiThread
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.extensions.valueToUnits
 import info.nightscout.androidaps.interfaces.*
@@ -62,6 +65,8 @@ class WizardDialog : DaggerDialogFragment() {
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var protectionCheck: ProtectionCheck
+
+    private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
     private var queryingProtection = false
     private var wizard: BolusWizard? = null
@@ -168,7 +173,7 @@ class WizardDialog : DaggerDialogFragment() {
             savedInstanceState?.getDouble("carb_time_input")
                 ?: 0.0, -60.0, 60.0, 5.0, DecimalFormat("0"), false, binding.okcancel.ok, timeTextWatcher
         )
-        initDialog()
+        handler.post { initDialog() }
         calculatedPercentage = sp.getInt(R.string.key_boluswizard_percentage, 100).toDouble()
         binding.percentUsed.text = rh.gs(R.string.format_percent, sp.getInt(R.string.key_boluswizard_percentage, 100))
         // ok button
@@ -257,6 +262,7 @@ class WizardDialog : DaggerDialogFragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         disposable.clear()
+        handler.removeCallbacksAndMessages(null)
         _binding = null
     }
 
@@ -323,14 +329,9 @@ class WizardDialog : DaggerDialogFragment() {
         else DecimalFormatter.to1Decimal(value * Constants.MGDL_TO_MMOLL)
 
     private fun initDialog() {
-        if (carbsPassedIntoWizard != 0.0) {
-            binding.carbsInput.value = carbsPassedIntoWizard
-        }
-        if (notesPassedIntoWizard.isNotBlank()) {
-            binding.notesLayout.notes.setText(notesPassedIntoWizard)
-        }
         val profile = profileFunction.getProfile()
         val profileStore = activePlugin.activeProfileSource.profile
+        val tempTarget = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
 
         if (profile == null || profileStore == null) {
             ToastUtils.showToastInUiThread(ctx, rh.gs(R.string.noprofile))
@@ -338,32 +339,40 @@ class WizardDialog : DaggerDialogFragment() {
             return
         }
 
-        val profileList: ArrayList<CharSequence> = profileStore.getProfileList()
-        profileList.add(0, rh.gs(R.string.active))
-        context?.let { context ->
-            binding.profileList.setAdapter(ArrayAdapter(context, R.layout.spinner_centered, profileList))
-            binding.profileList.setText(profileList[0], false)
-        }
-
-        val units = profileFunction.getUnits()
-        binding.bgUnits.text = units.asText
-        binding.bgInput.step = if (units == GlucoseUnit.MGDL) 1.0 else 0.1
-
-        // Set BG if not old
-        binding.bgInput.value = iobCobCalculator.ads.actualBg()?.valueToUnits(units) ?: 0.0
-
-        binding.ttCheckbox.isEnabled = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing
-        binding.ttCheckboxIcon.visibility = binding.ttCheckbox.isEnabled.toVisibility()
-
         // IOB calculation
         val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
         val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
 
-        binding.iobInsulin.text = rh.gs(R.string.formatinsulinunits, -bolusIob.iob - basalIob.basaliob)
+        runOnUiThread {
+            if (carbsPassedIntoWizard != 0.0) {
+                binding.carbsInput.value = carbsPassedIntoWizard
+            }
+            if (notesPassedIntoWizard.isNotBlank()) {
+                binding.notesLayout.notes.setText(notesPassedIntoWizard)
+            }
 
-        calculateInsulin()
+            val profileList: ArrayList<CharSequence> = profileStore.getProfileList()
+            profileList.add(0, rh.gs(R.string.active))
+            context?.let { context ->
+                binding.profileList.setAdapter(ArrayAdapter(context, R.layout.spinner_centered, profileList))
+                binding.profileList.setText(profileList[0], false)
+            }
 
-        binding.percentUsed.visibility = (sp.getInt(R.string.key_boluswizard_percentage, 100) != 100 || correctionPercent).toVisibility()
+            val units = profileFunction.getUnits()
+            binding.bgUnits.text = units.asText
+            binding.bgInput.step = if (units == GlucoseUnit.MGDL) 1.0 else 0.1
+
+            // Set BG if not old
+            binding.bgInput.value = iobCobCalculator.ads.actualBg()?.valueToUnits(units) ?: 0.0
+
+            binding.ttCheckbox.isEnabled =  tempTarget is ValueWrapper.Existing
+            binding.ttCheckboxIcon.visibility = binding.ttCheckbox.isEnabled.toVisibility()
+            binding.iobInsulin.text = rh.gs(R.string.formatinsulinunits, -bolusIob.iob - basalIob.basaliob)
+
+            calculateInsulin()
+
+            binding.percentUsed.visibility = (sp.getInt(R.string.key_boluswizard_percentage, 100) != 100 || correctionPercent).toVisibility()
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -496,7 +505,7 @@ class WizardDialog : DaggerDialogFragment() {
 
     override fun onResume() {
         super.onResume()
-        if(!queryingProtection) {
+        if (!queryingProtection) {
             queryingProtection = true
             activity?.let { activity ->
                 val cancelFail = {

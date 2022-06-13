@@ -4,6 +4,7 @@
     <!--    General-->
     <string name="refresh">Odśwież</string>
     <string name="error">Błąd</string>
+    <string name="save">ZACHOWAJ</string>
     <string name="not_set_short">Nie ustawiono</string>
     <string name="failedupdatebasalprofile">Nieudane uaktualnienie profilu bazy</string>
     <string name="profile_set_ok">Profil bazowy w pompie uaktualniony</string>
@@ -41,6 +42,7 @@
     <string name="carbs">Węglowodany</string>
     <string name="invalidprofile">Nieprawidłowy profil !!!</string>
     <string name="noprofileset">NIE USTAWIONO PROFILU</string>
+    <string name="active"><![CDATA[<Aktywny>]]></string>
     <string name="date">Data</string>
     <string name="units_label">Jednostki</string>
     <string name="dia_label">DIA</string>
@@ -418,6 +420,9 @@
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="pump_paired" comment="26 characters max for translation">Pompa sparowana</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Przycisk Odświeżania Insight</string>
+    <string name="basal">Baza</string>
+    <string name="count_selected">Wybrany %1$d</string>
+    <string name="sort_label">Sortuj</string>
     <!-- Autotune -->
     <plurals name="days">
         <item quantity="one">%1$d dzień</item>

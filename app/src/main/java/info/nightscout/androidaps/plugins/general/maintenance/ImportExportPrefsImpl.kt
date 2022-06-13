@@ -39,7 +39,7 @@ import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.alertDialogs.PrefImportSummaryDialog
 import info.nightscout.androidaps.utils.alertDialogs.TwoMessagesAlertDialog
 import info.nightscout.androidaps.utils.alertDialogs.WarningDialog
-import info.nightscout.androidaps.utils.buildHelper.BuildHelper
+import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.utils.protection.PasswordCheck
 import info.nightscout.androidaps.utils.storage.Storage
 import info.nightscout.androidaps.utils.userEntry.UserEntryPresentationHelper

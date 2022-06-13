@@ -28,7 +28,6 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var sp: SP
-    @Inject lateinit var uel: UserEntryLogger
 
     var defaultValue = 0
     private var inputProfileName = InputProfileName(rh, activePlugin, "", true)

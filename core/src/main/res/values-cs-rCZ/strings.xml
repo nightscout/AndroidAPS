@@ -464,8 +464,8 @@
     <string name="autotune_last_run">Poslední spuštění :</string>
     <string name="autotune_warning">Varování :</string>
     <string name="autotune_select_profile">Vyberte profil pro ladění</string>
-    <string name="autotune_ic_warning">Autotune funguje pouze s jedinou hodnotou IC, váš profil má %1$d hodnot. Průměrná hodnota je %2$.2fg/U</string>
-    <string name="autotune_isf_warning">Autotune funguje pouze s jedinou hodnotou ISF, váš profil má %1$d hodnot. Průměrná hodnota je %2$.1f%3$s/U</string>
+    <string name="autotune_ic_warning">Vybraný profil má %1$d hodnot IC. Autotune bude používat %2$.2f g/U</string>
+    <string name="autotune_isf_warning">Vybraný profil má %1$d hodnot ISF. Autotune bude používat %2$.1f %3$s/U</string>
     <string name="autotune_error">Chyba vstupních dat, zkuste autotune spustit znovu nebo snížit počet dní</string>
     <string name="autotune_warning_during_run">Autotune spuštěno, prosím buďte trpěliví</string>
     <string name="autotune_warning_after_run">Před použitím výsledky pečlivě zkontrolujte!</string>

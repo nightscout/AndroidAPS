@@ -461,8 +461,6 @@
     <string name="autotune_last_run">Sidst kørt :</string>
     <string name="autotune_warning">Advarsel :</string>
     <string name="autotune_select_profile">Vælg profil, der skal justeres</string>
-    <string name="autotune_ic_warning">Autotune fungerer med kun én IC-værdi, din profil har %1$d værdier. Gennemsnitsværdi er %2$.2fg/E</string>
-    <string name="autotune_isf_warning">Autotune virker med kun én ISF-værdi, din profil har %1$d værdier. Gennemsnitlig værdi er %2$.1f%3$s/E</string>
     <string name="autotune_warning_during_run">Automatisk beregning startet, vær venligst tålmodig</string>
     <string name="autotune_warning_after_run">Kontrollér resultaterne omhyggeligt, før du bruger dem!</string>
     <string name="autotune_partial_result">Delvis resultat dag %1$d / %2$d justeret</string>

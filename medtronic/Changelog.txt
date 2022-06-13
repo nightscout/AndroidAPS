@@ -9,3 +9,4 @@ V2 - Rewrite into kotlin, new database (for v3.0)
 0003 - SMB fix (798)
 0004 - Zero TBR Duration fix (798), refactoring of TempBasalProcessDTO
 0005 - fixes to MedtronicHistoryEntry lateinit problem
+0006 - when bolus is placed, we adjust detailedBolusInfo with current timestamp

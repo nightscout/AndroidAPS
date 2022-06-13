@@ -4,6 +4,7 @@
     <!--    General-->
     <string name="refresh">Actualizează</string>
     <string name="error">Eroare</string>
+    <string name="save">Salvează</string>
     <string name="not_set_short">Nesetată</string>
     <string name="failedupdatebasalprofile">Actualizarea profilului bazalei a eșuat</string>
     <string name="profile_set_ok">Profilul bazalei a fost modificat în pompă</string>
@@ -41,6 +42,7 @@
     <string name="carbs">Carbohidrați</string>
     <string name="invalidprofile">Profil invalid!!!</string>
     <string name="noprofileset">NICIUN PROFIL SETAT</string>
+    <string name="active"><![CDATA[<Activ>]]></string>
     <string name="date">Data</string>
     <string name="units_label">Unități</string>
     <string name="dia_label">DIA</string>
@@ -419,6 +421,8 @@
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="pump_paired" comment="26 characters max for translation">Pompă împerecheată</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Buton Reîmprospătare Insight</string>
+    <string name="basal">Rate bazale</string>
+    <string name="sort_label">Sortează</string>
     <!-- Autotune -->
     <plurals name="days">
         <item quantity="one">%1$d zi</item>
