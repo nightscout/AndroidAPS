@@ -705,7 +705,7 @@
     <string name="smb_frequency_exceeded">A bolus was delivered within the last 3 minutes, skipping SMB</string>
     <string name="basal_set_correctly">Basal set correctly</string>
     <string name="key_treatmentssafety_maxbolus" translatable="false">treatmentssafety_maxbolus</string>
-    <string name="key_treatmentssafety_lgsThreshold" translatable="false">lgsThreshold</string>
+    <string name="key_lgs_threshold" translatable="false">lgsThreshold</string>
     <string name="limitingextendedbolus">Limiting extended bolus to %1$.1f U because of %2$s</string>
     <string name="limitingcarbs">Limiting carbs to %1$d g because of %2$s</string>
     <string name="limitingiob">Limiting IOB to %1$.1f U because of %2$s</string>

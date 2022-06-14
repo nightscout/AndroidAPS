@@ -99,41 +99,9 @@ class TddCalculator @Inject constructor(
         return result
     }
 
-    fun calculateDaily(): TotalDailyDose {
-        val startTime = MidnightTime.calc(dateUtil.now())
-        val endTime = dateUtil.now()
-        val tdd = TotalDailyDose(timestamp = startTime)
-        //val result = TotalDailyDose()
-        repository.getBolusesDataFromTimeToTime(startTime, endTime, true).blockingGet()
-            .filter { it.type != Bolus.Type.PRIMING }
-            .forEach { t ->
-                tdd.bolusAmount += t.amount
-            }
-        repository.getCarbsDataFromTimeToTimeExpanded(startTime, endTime, true).blockingGet().forEach { t ->
-            tdd.carbs += t.amount
-        }
-        val calculationStep = T.mins(5).msecs()
-        for (t in startTime until endTime step calculationStep) {
-            val tbr = iobCobCalculator.getTempBasalIncludingConvertedExtended(t)
-            val profile = profileFunction.getProfile(t) ?: continue
-            val absoluteRate = tbr?.convertedToAbsolute(t, profile) ?: profile.getBasal(t)
-            tdd.basalAmount += absoluteRate / 60.0 * 5.0
-
-            if (!activePlugin.activePump.isFakingTempsByExtendedBoluses) {
-                // they are not included in TBRs
-                val eb = iobCobCalculator.getExtendedBolus(t)
-                val absoluteEbRate = eb?.rate ?: 0.0
-                tdd.bolusAmount += absoluteEbRate / 60.0 * 5.0
-            }
-        }
-        tdd.totalAmount = tdd.bolusAmount + tdd.basalAmount
-        aapsLogger.debug(LTag.CORE, tdd.toString())
-        return tdd
-    }
-
-    fun calculate24Daily(): TotalDailyDose {
-        val startTime = dateUtil.now() - T.hours(hour = 24).msecs()
-        val endTime = dateUtil.now()
+    fun calculateDaily(startHours: Long, endHours: Long): TotalDailyDose {
+        val startTime = dateUtil.now() + T.hours(hour = startHours).msecs()
+        val endTime = dateUtil.now() + T.hours(hour = endHours).msecs()
         val tdd = TotalDailyDose(timestamp = startTime)
         repository.getBolusesDataFromTimeToTime(startTime, endTime, true).blockingGet()
             .filter { it.type != Bolus.Type.PRIMING }
@@ -158,102 +126,6 @@ class TddCalculator @Inject constructor(
             }
         }
         tdd.totalAmount = tdd.bolusAmount + tdd.basalAmount
-        aapsLogger.debug(LTag.CORE, tdd.toString())
-        return tdd
-    }
-    fun calculate4Daily():TotalDailyDose {
-        val  startTime = dateUtil.now() - T.hours(hour = 4).msecs()
-        val endTime = dateUtil.now()
-        val tdd = TotalDailyDose(timestamp = startTime)
-        //val result = TotalDailyDose()
-        repository.getBolusesDataFromTimeToTime(startTime, endTime, true).blockingGet()
-            .filter { it.type != Bolus.Type.PRIMING }
-            .forEach { t ->
-                //val midnight = MidnightTime.calc(t.timestamp)
-                //val tdd = result[midnight] ?: TotalDailyDose(timestamp = midnight)
-                tdd.bolusAmount += t.amount
-                //result.put(midnight, tdd)
-            }
-        repository.getCarbsDataFromTimeToTimeExpanded(startTime, endTime, true).blockingGet().forEach { t ->
-            //val midnight = MidnightTime.calc(t.timestamp)
-            //val tdd = result[midnight] ?: TotalDailyDose(timestamp = midnight)
-            tdd.carbs += t.amount
-            //result.put(midnight, tdd)
-        }
-        val calculationStep = T.mins(5).msecs()
-        val tempBasals = iobCobCalculator.getTempBasalIncludingConvertedExtendedForRange(startTime, endTime, calculationStep)
-        for (t in startTime until endTime step calculationStep) {
-
-            //val midnight = MidnightTime.calc(t)
-            //val tdd = result[midnight] ?: TotalDailyDose(timestamp = midnight)
-            val tbr = iobCobCalculator.getTempBasalIncludingConvertedExtended(t)
-            val profile = profileFunction.getProfile(t) ?: continue
-            val absoluteRate = tbr?.convertedToAbsolute(t, profile) ?: profile.getBasal(t)
-            tdd.basalAmount += absoluteRate / 60.0 * 5.0
-
-            if (!activePlugin.activePump.isFakingTempsByExtendedBoluses) {
-                // they are not included in TBRs
-                val eb = iobCobCalculator.getExtendedBolus(t)
-                val absoluteEbRate = eb?.rate ?: 0.0
-                tdd.bolusAmount += absoluteEbRate / 60.0 * 5.0
-            }
-            //result.put(midnight, tdd)
-        }
-        //for (i in 0 until tdd.size()) {
-        //val tdd = result.valueAt(i)
-        tdd.totalAmount = tdd.bolusAmount + tdd.basalAmount
-        //}
-
-
-        aapsLogger.debug(LTag.CORE, tdd.toString())
-        return tdd
-    }
-
-
-    fun calculate8Gap():TotalDailyDose {
-        val  startTime = dateUtil.now() - T.hours(hour = 8).msecs()
-        val endTime = dateUtil.now() - T.hours(hour = 4).msecs()
-        val tdd = TotalDailyDose(timestamp = startTime)
-        //val result = TotalDailyDose()
-        repository.getBolusesDataFromTimeToTime(startTime, endTime, true).blockingGet()
-            .filter { it.type != Bolus.Type.PRIMING }
-            .forEach { t ->
-                //val midnight = MidnightTime.calc(t.timestamp)
-                //val tdd = result[midnight] ?: TotalDailyDose(timestamp = midnight)
-                tdd.bolusAmount += t.amount
-                //result.put(midnight, tdd)
-            }
-        repository.getCarbsDataFromTimeToTimeExpanded(startTime, endTime, true).blockingGet().forEach { t ->
-            //val midnight = MidnightTime.calc(t.timestamp)
-            //val tdd = result[midnight] ?: TotalDailyDose(timestamp = midnight)
-            tdd.carbs += t.amount
-            //result.put(midnight, tdd)
-        }
-        val calculationStep = T.mins(5).msecs()
-        val tempBasals = iobCobCalculator.getTempBasalIncludingConvertedExtendedForRange(startTime, endTime, calculationStep)
-        for (t in startTime until endTime step calculationStep) {
-
-            //val midnight = MidnightTime.calc(t)
-            //val tdd = result[midnight] ?: TotalDailyDose(timestamp = midnight)
-            val tbr = iobCobCalculator.getTempBasalIncludingConvertedExtended(t)
-            val profile = profileFunction.getProfile(t) ?: continue
-            val absoluteRate = tbr?.convertedToAbsolute(t, profile) ?: profile.getBasal(t)
-            tdd.basalAmount += absoluteRate / 60.0 * 5.0
-
-            if (!activePlugin.activePump.isFakingTempsByExtendedBoluses) {
-                // they are not included in TBRs
-                val eb = iobCobCalculator.getExtendedBolus(t)
-                val absoluteEbRate = eb?.rate ?: 0.0
-                tdd.bolusAmount += absoluteEbRate / 60.0 * 5.0
-            }
-            //result.put(midnight, tdd)
-        }
-        //for (i in 0 until tdd.size()) {
-        //val tdd = result.valueAt(i)
-        tdd.totalAmount = tdd.bolusAmount + tdd.basalAmount
-        //}
-
-
         aapsLogger.debug(LTag.CORE, tdd.toString())
         return tdd
     }
