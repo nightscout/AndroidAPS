@@ -2,5 +2,10 @@
 <resources>
     <!-- PumoCommon - Pump Abstract -->
     <!-- PumoCommon - Pump Status -->
+    <string name="pump_status_never_contacted">Nunca contactado</string>
+    <string name="pump_status_error_comm">Error con la comunicación</string>
+    <string name="pump_status_timeout_comm">Tiempo de espera en la comunicación</string>
+    <string name="pump_status_invalid_config">Configuración inválida</string>
+    <string name="pump_status_active">Activo</string>
     <!-- PumpCommon - History Group -->
 </resources>
