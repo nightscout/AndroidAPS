@@ -176,6 +176,7 @@
     <string name="no_iob_u">--JI</string>
     <string name="no_cob_g">--g</string>
     <string name="no_tmp_basal_u_h">-.--JI/h</string>
+    <string name="uploader_na">Uploader: ---%</string>
     <string name="no_status">S: žiadny stav</string>
     <string name="time_stamp_na_min_ago">Pred -- minútami</string>
     <string name="delta_na">--- mg/dl</string>

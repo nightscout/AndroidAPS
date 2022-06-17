@@ -140,7 +140,7 @@
     <string name="openapsma_maxbasal_title">Maks Ü/s geçici Bazal ayarlanabilir</string>
     <string name="openapsma_maxbasal_summary">Bu değer OpenAPS\'te \"maksimum bazal\" olarak adlandırılır</string>
     <string name="openapsma_maxiob_title">OpenAPS\'nin vermesine izin verilen maksimum bazal IOB (Aktif insülin) [U]</string>
-    <string name="openapsma_maxiob_summary">Bu değere OpenAPS bağlamında Max IOB denir.\nAPS\'de bir kerede verilebilen maksimum insülin [U] ü.</string>
+    <string name="openapsma_maxiob_summary">Bu değere OpenAPS bağlamında Maks IOB denir.\nAPS\'de bir kerede verilebilen maksimum insülin [U] ü.</string>
     <string name="password_preferences_encrypt_prompt">Dışa aktarılan tercihleri şifrelemek için kullanılacak ana parola sorulacaktır.</string>
     <string name="password_preferences_decrypt_prompt">İçe aktarılan tercihlerin şifresini çözmek için gerekli olan ana parola sorulacaktır.</string>
     <string name="preferences_export_canceled">Aktarım iptal edildi! Tercihler dışa aktarılmadı!</string>
