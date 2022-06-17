@@ -3,8 +3,10 @@
     <!-- PumoCommon - Pump Abstract -->
     <string name="pump_operation_not_supported_by_pump_driver">Operación no soportada por la bomba y/o por el controlador.</string>
     <string name="pump_operation_not_yet_supported_by_pump">Operación no soportada todavía por la bomba.</string>
+    <string name="common_resultok">OK</string>
     <!-- PumoCommon - Pump Status -->
     <string name="pump_status_never_contacted">Nunca contactado</string>
+    <string name="pump_status_waking_up">En fase de inicio</string>
     <string name="pump_status_error_comm">Error con la comunicación</string>
     <string name="pump_status_timeout_comm">Tiempo de espera en la comunicación</string>
     <string name="pump_status_pump_unreachable">Bomba no alcanzable</string>
