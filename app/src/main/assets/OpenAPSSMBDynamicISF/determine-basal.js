@@ -270,13 +270,15 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
         //console.log("Initial insulin value for ISF: "+ins_val+"; ");
         //console.log("Current value for insulin: "+insulin+"; ");
 
-        var ins_val = 75; // Lyumjev peak: 75
-            if (profile.insulinPeak > 65) { // lyumjev peak: 45
-                ins_val = 55;
-            } else if (profile.insulinPeak > 50 ){ // ultra rapid peak: 55
-                ins_val = 65;
-            }
-            console.log("For "+profile.insulinType+" (insulin peak: "+profile.insulinPeak+") divisor is: "+ins_val+"; ");
+        var ins_val;
+        if (profile.insulinPeak > 65) { // lyumjev peak: 45
+            ins_val = 55;
+        } else if (profile.insulinPeak > 50 ){ // ultra rapid peak: 55
+            ins_val = 65;
+        } else {
+            ins_val = 75; // rapid peak: 75
+        }
+        console.log("For "+profile.insulinType+" (insulin peak: "+profile.insulinPeak+") divisor is: "+ins_val+"; ");
 
         console.log("Insulin value for ISF based on profile: "+ins_val+"; ");
 
@@ -824,25 +826,25 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
 
          if (bg > target_bg && glucose_status.delta < 3 && glucose_status.delta > -3 && glucose_status.short_avgdelta > -3 && glucose_status.short_avgdelta < 3 && eventualBG > target_bg && eventualBG < bg ) {
              var future_sens = ( 1800 / (Math.log((((eventualBG * 0.5) + (bg * 0.5))/ins_val)+1)*TDD));
-             var future_sens_old = ( 277700 / (TDD * ((bg * 0.5) + (eventualBG * 0.5 ))));
-                 console.log("Future state sensitivity is " +future_sens+" based on eventual and current bg due to flat glucose level above target");
-                 rT.reason += "Dosing sensitivity: " +future_sens+" using eventual BG;";
+             //var future_sens_old = ( 277700 / (TDD * ((bg * 0.5) + (eventualBG * 0.5 ))));
+             console.log("Future state sensitivity is " +future_sens+" based on eventual and current bg due to flat glucose level above target");
+             rT.reason += "Dosing sensitivity: " +future_sens+" using eventual BG;";
          }
 
          else if( glucose_status.delta > 0 && eventualBG > target_bg ) {
              var future_sens = ( 1800 / (Math.log((bg/ins_val)+1)*TDD));
-             var future_sens_old = ( 277700 / (TDD * bg));
+             //var future_sens_old = ( 277700 / (TDD * bg));
              console.log("Future state sensitivity is " +future_sens+" using current bg due to small delta or variation");
              rT.reason += "Dosing sensitivity: " +future_sens+" using current BG;";
              }
 
          else {
-             var future_sens = ( 1800 / (Math.log((eventualBG/ins_val)+1)*TDD));
-             var future_sens_old = ( 277700 / (TDD * eventualBG));
-         console.log("Future state sensitivity is " +future_sens+" based on eventual bg due to -ve delta");
-         rT.reason += "Dosing sensitivity: " +future_sens+" using eventual BG;";
+            var future_sens = ( 1800 / (Math.log((eventualBG/ins_val)+1)*TDD));
+            //var future_sens_old = ( 277700 / (TDD * eventualBG));
+            console.log("Future state sensitivity is " +future_sens+" based on eventual bg due to -ve delta");
+            rT.reason += "Dosing sensitivity: " +future_sens+" using eventual BG;";
          }
-         var future_sens = round(future_sens,1);
+         future_sens = round(future_sens,1);
 
 
 
