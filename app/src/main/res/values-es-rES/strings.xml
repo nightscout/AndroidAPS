@@ -6,6 +6,7 @@
     <string name="treatmentssafety_title">Seguridad de tratamientos</string>
     <string name="treatmentssafety_maxbolus_title">Máximo bolo permitido [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Máximos carbohidratos permitidos [g]</string>
+    <string name="treatmentssafety_lgsThreshold_title">Nivel de glucosa por debajo de valor LGS (Suspensión por glucosa baja)</string>
     <string name="nav_preferences_plugin">Preferencias de %1$s</string>
     <string name="nav_preferences">Preferencias</string>
     <string name="nav_refreshtreatments">Actualizar los tratamientos desde Nightscout</string>
@@ -592,6 +593,7 @@
     <string name="openapssmb_maxiob_summary">Este valor se denomina \"Max IOB\", en el contexto de OpenAPS\nOpenAPS no podrá superar esta cantidad de insulina activa (IOB)</string>
     <string name="absorption_cutoff_title">Tiempo máximo de absorción de la comida [h]</string>
     <string name="absorption_cutoff_summary">Tiempo en el que cualquier comida se considera absorbida. Los carbohidratos restantes serán cortados. </string>
+    <string name="treatmentssafety_lgsThreshold_summary">Valor de glucosa por debajo del cual se suspende la administración de insulina. El valor predeterminado utiliza el modelo de objetivo estándar. El usuario puede establecer un valor entre 60mg/dl (3. mmol/l) y 100mg/dl (5.5mmol/l). Valores por debajo de 65/3.6 usan el modelo predeterminado</string>
     <string name="overview_show_notes_field_in_dialogs_title">Mostrar el campo notas en diálogos de tratamientos</string>
     <string name="next_button">Siguiente</string>
     <string name="previous_button">Anterior</string>
