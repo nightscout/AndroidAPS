@@ -5,17 +5,13 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.events.EventChargingState
 import info.nightscout.androidaps.events.EventNetworkChange
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.mockito.ArgumentMatchers.anyBoolean
-import org.mockito.ArgumentMatchers.anyInt
-import org.mockito.ArgumentMatchers.anyLong
-import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 
@@ -24,98 +20,71 @@ class NsClientReceiverDelegateTest : TestBase() {
     @Mock lateinit var context: Context
     @Mock lateinit var sp: SP
     @Mock lateinit var rh: ResourceHelper
-
-    lateinit var receiverStatusStore: ReceiverStatusStore
     val rxBus = RxBus(aapsSchedulers, aapsLogger)
 
-    private var sut: NsClientReceiverDelegate? = null
+    private lateinit var receiverStatusStore: ReceiverStatusStore
+    private lateinit var sut: NsClientReceiverDelegate
 
-    @Before fun prepare() {
+
+    @Before
+    fun prepare() {
         receiverStatusStore = ReceiverStatusStore(context, rxBus)
-        `when`(sp.getLong(anyInt(), anyLong())).thenReturn(0L)
-        `when`(sp.getBoolean(anyInt(), anyBoolean())).thenReturn(false)
-        `when`(sp.getInt(anyInt(), anyInt())).thenReturn(0)
-        `when`(sp.getString(anyInt(), anyString())).thenReturn("")
-
         sut = NsClientReceiverDelegate(rxBus, rh, sp, receiverStatusStore)
     }
 
-    @Test fun testCalculateStatusChargingState() {
-        `when`(sp.getBoolean(anyInt(), anyBoolean())).thenReturn(false)
-        var ev = EventChargingState(true, 0)
-        Assert.assertTrue(sut!!.calculateStatus(ev))
-        ev = EventChargingState(false, 0)
-        Assert.assertTrue(sut!!.calculateStatus(ev))
-        `when`(sp.getBoolean(anyInt(), anyBoolean())).thenReturn(true)
-        ev = EventChargingState(true, 0)
-        Assert.assertTrue(sut!!.calculateStatus(ev))
-        ev = EventChargingState(false, 0)
-        Assert.assertTrue(!sut!!.calculateStatus(ev))
+    @Test
+    fun testCalculateStatusChargingState() {
+        `when`(sp.getBoolean(R.string.key_ns_battery, true)).thenReturn(true)
+        `when`(sp.getBoolean(R.string.key_ns_charging, true)).thenReturn(false)
+        Assert.assertTrue(sut.calculateStatus(EventChargingState(false, 0)))
+        Assert.assertFalse(sut.calculateStatus(EventChargingState(true, 0)))
+        `when`(sp.getBoolean(R.string.key_ns_battery, true)).thenReturn(false)
+        `when`(sp.getBoolean(R.string.key_ns_charging, true)).thenReturn(true)
+        Assert.assertTrue(sut.calculateStatus(EventChargingState(true, 0)))
+        Assert.assertFalse(sut.calculateStatus(EventChargingState(false, 0)))
     }
 
-    @Test fun testCalculateStatusNetworkState() {
-        // wifiOnly = false
-        // allowRoaming = false as well
-        `when`(sp.getBoolean(anyInt(), anyBoolean())).thenReturn(false)
-        `when`(sp.getString(anyInt(), anyString())).thenReturn("")
-        val ev = EventNetworkChange()
-        ev.ssid = "<unknown ssid>"
-        ev.mobileConnected = true
-        ev.wifiConnected = true
-        Assert.assertTrue(sut!!.calculateStatus(ev))
-        ev.ssid = "test"
-        `when`(sp.getString(anyInt(), anyString())).thenReturn("test")
-        Assert.assertTrue(sut!!.calculateStatus(ev))
-        ev.ssid = "test"
-        Assert.assertTrue(sut!!.calculateStatus(ev))
-        ev.wifiConnected = false
-        Assert.assertTrue(sut!!.calculateStatus(ev))
+    @Test
+    fun testCalculateStatusNetworkState() {
+        `when`(sp.getBoolean(R.string.key_ns_cellular, true)).thenReturn(true)
+        `when`(sp.getBoolean(R.string.key_ns_allow_roaming, true)).thenReturn(true)
+        `when`(sp.getBoolean(R.string.key_ns_wifi, true)).thenReturn(true)
+        `when`(sp.getString(R.string.key_ns_wifi_ssids, "")).thenReturn("")
+        Assert.assertTrue(sut.calculateStatus(EventNetworkChange(mobileConnected = true, wifiConnected = false, roaming = true)))
+        Assert.assertTrue(sut.calculateStatus(EventNetworkChange(mobileConnected = true, wifiConnected = false, roaming = false)))
+        Assert.assertTrue(sut.calculateStatus(EventNetworkChange(ssid = "<unknown ssid>", mobileConnected = true, wifiConnected = true)))
+        Assert.assertTrue(sut.calculateStatus(EventNetworkChange(ssid = "<unknown ssid>", mobileConnected = false, wifiConnected = true)))
+        Assert.assertFalse(sut.calculateStatus(EventNetworkChange()))
 
-        // wifiOnly = true
-        // allowRoaming = true as well
-        `when`(sp.getBoolean(anyInt(), anyBoolean())).thenReturn(true)
-        ev.wifiConnected = true
-        Assert.assertTrue(sut!!.calculateStatus(ev))
-        ev.wifiConnected = false
-        Assert.assertTrue(!sut!!.calculateStatus(ev))
+        `when`(sp.getString(R.string.key_ns_wifi_ssids, "")).thenReturn("test")
+        Assert.assertTrue(sut.calculateStatus(EventNetworkChange(mobileConnected = true, wifiConnected = false, roaming = true)))
+        Assert.assertTrue(sut.calculateStatus(EventNetworkChange(mobileConnected = true, wifiConnected = false, roaming = false)))
+        Assert.assertTrue(sut.calculateStatus(EventNetworkChange(ssid = "<unknown ssid>", mobileConnected = true, wifiConnected = true)))
+        Assert.assertFalse(sut.calculateStatus(EventNetworkChange(ssid = "<unknown ssid>", mobileConnected = false, wifiConnected = true)))
+        Assert.assertTrue(sut.calculateStatus(EventNetworkChange(ssid = "test", mobileConnected = true, wifiConnected = true)))
+        Assert.assertTrue(sut.calculateStatus(EventNetworkChange(ssid = "test", mobileConnected = false, wifiConnected = true)))
+        Assert.assertFalse(sut.calculateStatus(EventNetworkChange()))
 
-        // wifiOnly = false
-        // allowRoaming = false as well
-        `when`(sp.getBoolean(anyInt(), anyBoolean())).thenReturn(false)
-        ev.wifiConnected = false
-        ev.roaming = true
-        Assert.assertTrue(!sut!!.calculateStatus(ev))
+        `when`(sp.getBoolean(R.string.key_ns_cellular, true)).thenReturn(false)
+        `when`(sp.getBoolean(R.string.key_ns_wifi, true)).thenReturn(true)
+        `when`(sp.getBoolean(R.string.key_ns_allow_roaming, true)).thenReturn(true)
+        `when`(sp.getString(R.string.key_ns_wifi_ssids, "")).thenReturn("")
+        Assert.assertTrue(sut.calculateStatus(EventNetworkChange(wifiConnected = true)))
+        Assert.assertFalse(sut.calculateStatus(EventNetworkChange()))
+        Assert.assertFalse(sut.calculateStatus(EventNetworkChange(mobileConnected = true)))
 
-        // wifiOnly = false
-        // allowRoaming = true
-        `when`(sp.getBoolean(R.string.key_ns_wifionly, false)).thenReturn(false)
-        `when`(sp.getBoolean(R.string.key_ns_allowroaming, true)).thenReturn(true)
-        ev.wifiConnected = false
-        ev.roaming = true
-        Assert.assertTrue(sut!!.calculateStatus(ev))
+        `when`(sp.getBoolean(R.string.key_ns_cellular, true)).thenReturn(true)
+        `when`(sp.getBoolean(R.string.key_ns_wifi, true)).thenReturn(true)
+        `when`(sp.getBoolean(R.string.key_ns_allow_roaming, true)).thenReturn(false)
+        `when`(sp.getString(R.string.key_ns_wifi_ssids, "")).thenReturn("")
+        Assert.assertTrue(sut.calculateStatus(EventNetworkChange(mobileConnected = true, roaming = false)))
+        Assert.assertFalse(sut.calculateStatus(EventNetworkChange(mobileConnected = true, roaming = true)))
 
-        // wifiOnly = true
-        // allowRoaming = true
-        `when`(sp.getBoolean(R.string.key_ns_wifionly, false)).thenReturn(true)
-        `when`(sp.getBoolean(R.string.key_ns_allowroaming, true)).thenReturn(true)
-        ev.wifiConnected = false
-        ev.roaming = true
-        Assert.assertTrue(!sut!!.calculateStatus(ev))
-
-        // wifiOnly = true
-        // allowRoaming = true
-        `when`(sp.getBoolean(R.string.key_ns_wifionly, false)).thenReturn(true)
-        `when`(sp.getBoolean(R.string.key_ns_allowroaming, true)).thenReturn(true)
-        ev.wifiConnected = true
-        ev.roaming = true
-        Assert.assertTrue(sut!!.calculateStatus(ev))
-
-        // wifiOnly = false
-        // allowRoaming = false
-        `when`(sp.getBoolean(R.string.key_ns_wifionly, false)).thenReturn(false)
-        `when`(sp.getBoolean(R.string.key_ns_allowroaming, true)).thenReturn(false)
-        ev.wifiConnected = true
-        ev.roaming = true
-        Assert.assertTrue(sut!!.calculateStatus(ev))
+        `when`(sp.getBoolean(R.string.key_ns_cellular, true)).thenReturn(true)
+        `when`(sp.getBoolean(R.string.key_ns_wifi, true)).thenReturn(true)
+        `when`(sp.getBoolean(R.string.key_ns_allow_roaming, true)).thenReturn(true)
+        `when`(sp.getString(R.string.key_ns_wifi_ssids, "")).thenReturn("")
+        Assert.assertTrue(sut.calculateStatus(EventNetworkChange(mobileConnected = true, roaming = false)))
+        Assert.assertTrue(sut.calculateStatus(EventNetworkChange(mobileConnected = true, roaming = true)))
     }
 }

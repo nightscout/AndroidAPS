@@ -464,8 +464,8 @@
     <string name="autotune_last_run">Son Çalıştırma :</string>
     <string name="autotune_warning">Uyarı :</string>
     <string name="autotune_select_profile">Ayarlanacak profili seçin</string>
-    <string name="autotune_ic_warning">OtoAyar yalnızca bir IC değeriyle çalışır, profilinizde %1$d değer mevcut. Ortalama değer: %2$.2fg/Ü</string>
-    <string name="autotune_isf_warning">OtoAyar yalnızca bir İDF değeriyle çalışır, profilinizde %1$d değer mevcut. Ortalama değer: %2$.1f%3$s/Ü</string>
+    <string name="autotune_ic_warning">Seçilen profilde %1$d KİO değeri var. OtoAyar %2$.2f g/Ü kullanacak</string>
+    <string name="autotune_isf_warning">Seçilen profilde %1$d İDF değeri var. OtoAyar %2$.1f %3$s/Ü kullanacak</string>
     <string name="autotune_error">Giriş verilerinde hata, otoayarı tekrar çalıştırmayı deneyin veya gün sayısını azaltın</string>
     <string name="autotune_warning_during_run">OtoAyar hesaplaması başladı, lütfen sabırlı olun</string>
     <string name="autotune_warning_after_run">Kullanmadan önce sonuçları dikkatlice kontrol edin!</string>

@@ -28,7 +28,7 @@ import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.Profiler
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.buildHelper.BuildHelper
+import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.workflow.CalculationWorkflow
 import info.nightscout.shared.logging.AAPSLogger

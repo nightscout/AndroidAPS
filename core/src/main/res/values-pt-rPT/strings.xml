@@ -4,6 +4,7 @@
     <!--    General-->
     <string name="refresh">Actualizar</string>
     <string name="error">Erro</string>
+    <string name="save">Guardar</string>
     <string name="not_set_short">Não definido</string>
     <string name="failedupdatebasalprofile">Falha a actualizar perfil da basal</string>
     <string name="profile_set_ok">Perfil Basal actualizado na bomba</string>
@@ -40,6 +41,7 @@
     <string name="carbs">Hidratos</string>
     <string name="invalidprofile">Perfil inválido !!!</string>
     <string name="noprofileset">SEM PERFIL DEFINIDO</string>
+    <string name="active"><![CDATA[<Activo>]]></string>
     <string name="date">Data</string>
     <string name="units_label">Unidades</string>
     <string name="dia_label">DIA</string>
@@ -337,6 +339,7 @@
     <string name="valuelimitedto">%1$.2f limitado a %2$.2f</string>
     <string name="valueoutofrange">»%1$s« está fora dos limites máximos</string>
     <!-- Command Queue + readStatus reasons -->
+    <string name="basal">Basal</string>
     <!-- Autotune -->
     <plurals name="days">
         <item quantity="one">%1$d dia</item>

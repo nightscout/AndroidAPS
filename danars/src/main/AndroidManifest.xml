@@ -1,5 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="info.nightscout.androidaps.danars">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
@@ -7,7 +6,9 @@
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
 
     <application>
-        <activity android:name="info.nightscout.androidaps.danars.activities.BLEScanActivity">
+        <activity
+            android:name="info.nightscout.androidaps.danars.activities.BLEScanActivity"
+            android:exported="false">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.plugins.PumpDanaRS.activities.BLEScanActivity" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -15,9 +16,11 @@
         </activity>
         <activity
             android:name="info.nightscout.androidaps.danars.activities.PairingHelperActivity"
+            android:exported="false"
             android:launchMode="singleTask" />
         <activity
             android:name="info.nightscout.androidaps.danars.activities.EnterPinActivity"
+            android:exported="false"
             android:launchMode="singleTask" />
 
         <service

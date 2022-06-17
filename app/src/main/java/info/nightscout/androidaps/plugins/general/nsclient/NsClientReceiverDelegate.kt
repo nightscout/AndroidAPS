@@ -22,19 +22,26 @@ class NsClientReceiverDelegate @Inject constructor(
     private var allowedChargingState = true
     private var allowedNetworkState = true
     var allowed = true
+    var blockingReason = ""
 
     fun grabReceiversState() {
         receiverStatusStore.updateNetworkStatus()
     }
 
     fun onStatusEvent(ev: EventPreferenceChange) {
-        if (ev.isChanged(rh, R.string.key_ns_wifionly) ||
-            ev.isChanged(rh, R.string.key_ns_wifi_ssids) ||
-            ev.isChanged(rh, R.string.key_ns_allowroaming)) {
-            receiverStatusStore.updateNetworkStatus()
-            onStatusEvent(receiverStatusStore.lastNetworkEvent)
-        } else if (ev.isChanged(rh, R.string.key_ns_chargingonly)) {
-            receiverStatusStore.broadcastChargingState()
+        when {
+            ev.isChanged(rh, R.string.key_ns_wifi) ||
+                ev.isChanged(rh, R.string.key_ns_cellular) ||
+                ev.isChanged(rh, R.string.key_ns_wifi_ssids) ||
+                ev.isChanged(rh, R.string.key_ns_allow_roaming) -> {
+                receiverStatusStore.updateNetworkStatus()
+                receiverStatusStore.lastNetworkEvent?.let { onStatusEvent(it) }
+            }
+
+            ev.isChanged(rh, R.string.key_ns_charging) ||
+                ev.isChanged(rh, R.string.key_ns_battery)       -> {
+                receiverStatusStore.broadcastChargingState()
+            }
         }
     }
 
@@ -42,14 +49,16 @@ class NsClientReceiverDelegate @Inject constructor(
         val newChargingState = calculateStatus(ev)
         if (newChargingState != allowedChargingState) {
             allowedChargingState = newChargingState
+            blockingReason = rh.gs(R.string.blocked_by_charging)
             processStateChange()
         }
     }
 
-    fun onStatusEvent(ev: EventNetworkChange?) {
+    fun onStatusEvent(ev: EventNetworkChange) {
         val newNetworkState = calculateStatus(ev)
         if (newNetworkState != allowedNetworkState) {
             allowedNetworkState = newNetworkState
+            blockingReason = rh.gs(R.string.blocked_by_connectivity)
             processStateChange()
         }
     }
@@ -62,30 +71,13 @@ class NsClientReceiverDelegate @Inject constructor(
         }
     }
 
-    fun calculateStatus(ev: EventChargingState): Boolean {
-        val chargingOnly = sp.getBoolean(R.string.key_ns_chargingonly, false)
-        var newAllowedState = true
-        if (!ev.isCharging && chargingOnly) {
-            newAllowedState = false
-        }
-        return newAllowedState
-    }
+    fun calculateStatus(ev: EventChargingState): Boolean =
+        !ev.isCharging && sp.getBoolean(R.string.key_ns_battery, true) ||
+            ev.isCharging && sp.getBoolean(R.string.key_ns_charging, true)
 
-    fun calculateStatus(ev: EventNetworkChange?): Boolean {
-        val wifiOnly = sp.getBoolean(R.string.key_ns_wifionly, false)
-        val allowedSsidString = sp.getString(R.string.key_ns_wifi_ssids, "")
-        val allowedSSIDs: List<String> = if (allowedSsidString.isEmpty()) List(0) { "" } else allowedSsidString.split(";")
-        val allowRoaming = sp.getBoolean(R.string.key_ns_allowroaming, true)
-        var newAllowedState = true
-        if (ev?.wifiConnected == true) {
-            if (allowedSSIDs.isNotEmpty() && !allowedSSIDs.contains(ev.ssid)) {
-                newAllowedState = false
-            }
-        } else {
-            if (!allowRoaming && ev?.roaming == true || wifiOnly) {
-                newAllowedState = false
-            }
-        }
-        return newAllowedState
-    }
+    fun calculateStatus(ev: EventNetworkChange): Boolean =
+        ev.mobileConnected && sp.getBoolean(R.string.key_ns_cellular, true) && !ev.roaming ||
+            ev.mobileConnected && sp.getBoolean(R.string.key_ns_cellular, true) && ev.roaming && sp.getBoolean(R.string.key_ns_allow_roaming, true) ||
+            ev.wifiConnected && sp.getBoolean(R.string.key_ns_wifi, true) && sp.getString(R.string.key_ns_wifi_ssids, "").isEmpty() ||
+            ev.wifiConnected && sp.getBoolean(R.string.key_ns_wifi, true) && sp.getString(R.string.key_ns_wifi_ssids, "").split(";").contains(ev.ssid)
 }

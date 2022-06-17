@@ -440,6 +440,7 @@
     <string name="enableuam_summary">Поиск незапланированного приема пищи</string>
     <string name="insulin_oref_peak">Время пика действующего инс IOB</string>
     <string name="insulin_peak_time">время пика (в мин.)</string>
+    <string name="insulin_peak">Пик</string>
     <string name="free_peak_oref">Свободный от пиков Oref</string>
     <string name="rapid_acting_oref">Быстро действующий Oref</string>
     <string name="ultrarapid_oref">Сверхбыстрый Oref</string>
@@ -603,9 +604,11 @@
     <string name="secondcarbsincrement">Второй шаг увеличения углеводов</string>
     <string name="thirdcarbsincrement">Третий шаг увеличения углеводов</string>
     <string name="cgm">Мониторинг ГК</string>
-    <string name="ns_wifionly">Использовать только WiFi соединение</string>
+    <string name="ns_cellular">Использовать мобильное подключение</string>
+    <string name="ns_wifi">Использовать WiFi соединение</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="ns_chargingonly">Только при зарядке</string>
+    <string name="ns_charging">Во время зарядки</string>
+    <string name="ns_battery">От батареи</string>
     <string name="connectionsettings_title">Параметры подключения</string>
     <string name="ns_wifi_allowedssids">Разрешенные SSID (разделенные точкой с запятой)</string>
     <string name="ns_allowroaming">Разрешить подключение в роуминге</string>
@@ -680,6 +683,8 @@
     <string name="error_adding_treatment_message">Назначение (инсулин: %1$.2f, углеводы: %2$d, в: %3$s) не было добавлено. Пожалуйста, проверьте и при необходимости добавьте запись вручную.</string>
     <string name="generated_ecarbs_note">eCarbs: %1$d г. (%2$d h), задержка: %3$d m</string>
     <string name="openaps_noasdata">Данные autosens недоступны</string>
+    <string name="log_files">Файлы журналов</string>
+    <string name="miscellaneous">Разное</string>
     <string name="nav_logsettings">Настройки журнала</string>
     <string name="resettodefaults">Восстановить значения по умолчанию</string>
     <string name="nsmalfunction">Некорректная работа NSClient. Возможно следует перезапустить NS и NSClient.</string>
@@ -772,6 +777,11 @@
     <string name="invalidpct">Некорректный ввод %</string>
     <string name="average">Средний</string>
     <string name="tir">Время в целевом диапазоне TIR</string>
+    <string name="day_tir">Время в целевом диапазоне днем</string>
+    <string name="night_tir">Время в целевом диапазоне ночью</string>
+    <string name="detailed_14_days">Подробно 14 дней</string>
+    <string name="std_deviation">СтандОткл: %1$s</string>
+    <string name="hba1c">HbA1c: </string>
     <string name="activitymonitor">Монитор активности</string>
     <string name="doyouwantresetstats">Хотите сбросить статистику активности?</string>
     <string name="statistics">Статистика</string>
@@ -966,9 +976,11 @@
     <string name="wizard_no_active_profile">Активный профиль не установлен!</string>
     <string name="wizard_no_cob">Неизвестный COB! Отсутствуют данные ГК или приложения недавно перезапущено?</string>
     <string name="wizard_carbs_constraint">Нарушено ограничение по углеводам!</string>
+    <string name="wizard_explain_calc">Кальк (IC:%1$.1f ISF: %2$.1f)</string>
     <string name="wizard_explain_carbs">Углеводов: %1$.2fгУ</string>
     <string name="wizard_explain_cob">Акт Инс COB: %1$.0fг %2$.2fед</string>
     <string name="wizard_explain_bg">ГК: %1$.2f</string>
+    <string name="wizard_explain_iob">IOB: %1$.2fед</string>
     <string name="wizard_explain_superbolus">Суперболюсный: %1$.2fед</string>
     <string name="wizard_explain_trend">тренд 15\': %1$.2f</string>
     <string name="wizard_explain_percent">Процент: %1$.2fU x %2$d%% = %3$.2f</string>
@@ -995,6 +1007,10 @@
     <string name="count_selected">%1$d выбрано</string>
     <string name="sort_label">Сортировать</string>
     <string name="dialog_canceled">Диалог отменен</string>
+    <string name="veryLow" comment="below 3.1">Очень низкий</string>
+    <string name="low" comment="3.1-3.9">Низкий</string>
+    <string name="high" comment="10.0-13.9">Высокий</string>
+    <string name="veryHigh" comment="above 13.9">Очень высокий</string>
     <string name="below" comment="below &quot;in range&quot;">Ниже целевых</string>
     <string name="in_range">В целевом диапазоне</string>
     <string name="above" comment="above &quot;in range&quot;">Выше целевых</string>
@@ -1002,5 +1018,26 @@
     <string name="show_hide_records">Скрыть записи цикла</string>
     <string name="widget_description">Виджет androidAPS</string>
     <string name="configure">Настроить прозрачность</string>
+    <string name="loop_status">Статус цикла</string>
+    <string name="graph_scale">Масштаб графика</string>
+    <string name="profile1">Профиль 1</string>
+    <string name="profile2">Профиль 2</string>
+    <string name="login">Логин</string>
+    <string name="remove_all">Удалить всё</string>
+    <string name="reset_start">Перезапустить старт</string>
+    <string name="a11y_otp_qr_code">QR код для введения временного пароля</string>
+    <string name="a11y_open_settings">открыть настройки</string>
+    <string name="a11y_set_carb_timer">задать оповещение таймера углеводов</string>
+    <string name="device_all">Все</string>
+    <string name="device_phone">Телефон</string>
+    <string name="device_watch">Часы</string>
+    <string name="a11y_only_on_watch">только на часах</string>
+    <string name="a11y_only_on_phone">только на телефоне</string>
+    <string name="a11y_drag_and_drop_handle">якорь перетягивания</string>
     <!-- Aidex Cgms -->
+    <string name="aidex">Aidex GlucoRx</string>
+    <string name="aidex_short">Aidex </string>
+    <string name="description_source_aidex">Получить значения ГК от GlucoRx Aidex</string>
+    <string name="blocked_by_charging">Заблокировано опциями зарядки</string>
+    <string name="blocked_by_connectivity">Заблокировано настройками подключения</string>
 </resources>

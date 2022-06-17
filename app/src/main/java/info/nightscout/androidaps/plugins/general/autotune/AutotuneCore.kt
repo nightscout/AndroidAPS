@@ -28,9 +28,9 @@ class AutotuneCore @Inject constructor(
         //console.error(isf);
         var carbRatio = previousAutotune.ic
         //console.error(carbRatio);
-        var csf = isf / carbRatio
-        var dia = previousAutotune.dia
-        var peak = previousAutotune.peak
+        val csf = isf / carbRatio
+        val dia = previousAutotune.dia
+        val peak = previousAutotune.peak
         val csfGlucose = preppedGlucose.csfGlucoseData
         val isfGlucose = preppedGlucose.isfGlucoseData
         val basalGlucose = preppedGlucose.basalGlucoseData

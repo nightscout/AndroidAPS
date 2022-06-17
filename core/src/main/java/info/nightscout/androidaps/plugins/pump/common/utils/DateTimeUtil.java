@@ -273,6 +273,13 @@ public class DateTimeUtil {
     }
 
 
+    public static long getATDWithAddedMinutes(Long atd, int minutesDiff) {
+        GregorianCalendar oldestEntryTime = DateTimeUtil.toGregorianCalendar(atd);
+        oldestEntryTime.add(Calendar.MINUTE, minutesDiff);
+
+        return toATechDate(oldestEntryTime);
+    }
+
     public static long getATDWithAddedMinutes(GregorianCalendar oldestEntryTime, int minutesDiff) {
         oldestEntryTime.add(Calendar.MINUTE, minutesDiff);
 

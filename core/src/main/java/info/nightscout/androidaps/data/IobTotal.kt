@@ -4,6 +4,7 @@ import android.content.Context
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.Round
 import org.json.JSONException
 import org.json.JSONObject
@@ -50,15 +51,15 @@ class IobTotal(val time: Long) : DataPointWithLabelInterface {
         return this
     }
 
-    fun round(): IobTotal {
-        iob = Round.roundTo(iob, 0.001)
-        activity = Round.roundTo(activity, 0.0001)
-        bolussnooze = Round.roundTo(bolussnooze, 0.0001)
-        basaliob = Round.roundTo(basaliob, 0.001)
-        netbasalinsulin = Round.roundTo(netbasalinsulin, 0.001)
-        hightempinsulin = Round.roundTo(hightempinsulin, 0.001)
-        netInsulin = Round.roundTo(netInsulin, 0.001)
-        extendedBolusInsulin = Round.roundTo(extendedBolusInsulin, 0.001)
+    fun round(fabricPrivacy: FabricPrivacy? = null): IobTotal {
+        iob = Round.roundTo(iob, 0.001, fabricPrivacy)
+        activity = Round.roundTo(activity, 0.0001, fabricPrivacy)
+        bolussnooze = Round.roundTo(bolussnooze, 0.0001, fabricPrivacy)
+        basaliob = Round.roundTo(basaliob, 0.001, fabricPrivacy)
+        netbasalinsulin = Round.roundTo(netbasalinsulin, 0.001, fabricPrivacy)
+        hightempinsulin = Round.roundTo(hightempinsulin, 0.001, fabricPrivacy)
+        netInsulin = Round.roundTo(netInsulin, 0.001, fabricPrivacy)
+        extendedBolusInsulin = Round.roundTo(extendedBolusInsulin, 0.001, fabricPrivacy)
         return this
     }
 

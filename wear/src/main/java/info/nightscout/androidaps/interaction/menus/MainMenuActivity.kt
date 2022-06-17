@@ -21,7 +21,7 @@ class MainMenuActivity : MenuListActivity() {
         rxBus.send(EventWearToMobile(ActionResendData("MainMenuListActivity")))
     }
 
-    override fun getElements(): List<MenuItem> =
+    override fun provideElements(): List<MenuItem> =
         ArrayList<MenuItem>().apply {
             if (!sp.getBoolean(R.string.key_wear_control, false)) {
                 add(MenuItem(R.drawable.ic_settings, getString(R.string.menu_settings)))
@@ -40,8 +40,8 @@ class MainMenuActivity : MenuListActivity() {
             }
         }
 
-    override fun doAction(action: String) {
-        when (action) {
+    override fun doAction(position: String) {
+        when (position) {
             getString(R.string.menu_settings)         -> startActivity(Intent(this, WatchfaceConfigurationActivity::class.java).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })
             getString(R.string.menu_resync)           -> rxBus.send(EventWearToMobile(ActionResendData("Re-Sync")))
             getString(R.string.status_profile_switch) -> rxBus.send(EventWearToMobile(EventData.ActionProfileSwitchSendInitialData(System.currentTimeMillis())))

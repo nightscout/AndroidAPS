@@ -603,9 +603,7 @@
     <string name="secondcarbsincrement">תוספת פחמימות שניה</string>
     <string name="thirdcarbsincrement">תוספת פחמימות שלישית</string>
     <string name="cgm">סנסור</string>
-    <string name="ns_wifionly">השתמש בחיבור WiFi בלבד</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="ns_chargingonly">במצב טעינה בלבד</string>
     <string name="connectionsettings_title">הגדרות חיבור</string>
     <string name="ns_wifi_allowedssids">SSID מורשים (מופרדים בנקודה-פסיק)</string>
     <string name="ns_allowroaming">אפשר חיבור בנדידה</string>
@@ -678,6 +676,8 @@
     <string name="error_adding_treatment_message">לא ניתן להוסיף טיפול (אינסולין: %1$.2f, פחמ\': %2$d, בשעה: %3$s) לטיפולים. נא לבדוק ולהוסיף רשומה באופן ידני כנדרש.</string>
     <string name="generated_ecarbs_note">פחמימות ממושכות: %1$d גר\' (%2$d ש\'), עיכוב %3$d דק\'</string>
     <string name="openaps_noasdata">אין נתוני Autosens זמינים</string>
+    <string name="log_files">קבצי יומן</string>
+    <string name="miscellaneous">שונות</string>
     <string name="nav_logsettings">הגדרות יומן רישום</string>
     <string name="resettodefaults">אפס לברירת המחדל</string>
     <string name="nsmalfunction">תקלה ב-NSClient. שקלו להפעיל את Nightscout ו-NSClient מחדש.</string>

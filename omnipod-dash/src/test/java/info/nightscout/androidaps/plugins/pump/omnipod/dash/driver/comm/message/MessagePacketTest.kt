@@ -16,7 +16,6 @@ class MessagePacketTest {
         )
 
     @Test fun testParseMessagePacket() {
-        val aapsLogger = AAPSLoggerTest()
         val msg = MessagePacket.parse(Hex.decode(payload))
         assertEquals(msg.type, MessageType.ENCRYPTED)
         assertEquals(msg.source, Id.fromLong(136326824))

@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <androidx.wear.widget.CurvedTextView
         android:id="@+id/title_curved"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Title"
         android:textSize="18sp"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:text="Title" />
 
     <TextView
         android:id="@+id/title"
@@ -20,8 +21,8 @@
         android:autoSizeMinTextSize="12sp"
         android:autoSizeTextType="uniform"
         android:gravity="center"
-        android:text="Title"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        tools:text="Title" />
 
     <android.support.wearable.view.GridViewPager
         android:id="@+id/pager"
@@ -34,6 +35,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|bottom"
-        app:dotFadeOutDelay="100000"/>
+        app:dotFadeOutDelay="100000" />
 
 </FrameLayout>

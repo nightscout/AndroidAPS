@@ -733,13 +733,17 @@
     <string name="secondcarbsincrement">Second carbs increment</string>
     <string name="thirdcarbsincrement">Third carbs increment</string>
     <string name="cgm">CGM</string>
-    <string name="key_ns_wifionly" translatable="false">ns_wifionly</string>
+    <string name="key_ns_cellular" translatable="false">ns_cellular</string>
+    <string name="key_ns_wifi" translatable="false">ns_wifi</string>
     <string name="key_ns_wifi_ssids" translatable="false">ns_wifi_ssids</string>
-    <string name="key_ns_allowroaming" translatable="false">ns_allowroaming</string>
-    <string name="key_ns_chargingonly" translatable="false">ns_chargingonly</string>
-    <string name="ns_wifionly">Use WiFi connection only</string>
+    <string name="key_ns_allow_roaming" translatable="false">ns_allowroaming</string>
+    <string name="key_ns_battery" translatable="false">ns_battery</string>
+    <string name="key_ns_charging" translatable="false">ns_charging</string>
+    <string name="ns_cellular">Use Cellular connection</string>
+    <string name="ns_wifi">Use WiFi connection</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="ns_chargingonly">Only if charging</string>
+    <string name="ns_charging">During charging</string>
+    <string name="ns_battery">On battery</string>
     <string name="connectionsettings_title">Connection settings</string>
     <string name="ns_wifi_allowedssids">Allowed SSIDs (semicolon separated)</string>
     <string name="ns_allowroaming">Allow connection in roaming</string>
@@ -1240,6 +1244,8 @@
     <string name="aidex">GlucoRx Aidex</string>
     <string name="aidex_short">Aidex</string>
     <string name="description_source_aidex">Receive BG values from GlucoRx Aidex CGMS.</string>
+    <string name="blocked_by_charging">Blocked by charging options</string>
+    <string name="blocked_by_connectivity">Blocked by connectivity options</string>
 
 
 </resources>

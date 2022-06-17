@@ -1,12 +1,10 @@
 package info.nightscout.androidaps.events
 
-class EventNetworkChange : Event() {
-
-    var mobileConnected = false
-    var wifiConnected = false
-    var vpnConnected = false
-
-    var ssid = ""
-    var roaming = false
-    var metered = false
-}
+class EventNetworkChange(
+    var mobileConnected: Boolean = false,
+    var wifiConnected: Boolean = false,
+    var vpnConnected: Boolean = false,
+    var ssid: String = "",
+    var roaming: Boolean = false,
+    var metered: Boolean = false
+) : Event()

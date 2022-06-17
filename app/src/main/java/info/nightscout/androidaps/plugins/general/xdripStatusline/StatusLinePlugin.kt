@@ -123,8 +123,8 @@ class StatusLinePlugin @Inject constructor(
             status += activeTemp.toStringShort() + " "
         }
         //IOB
-        val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
-        val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
+        val bolusIob = iobCobCalculator.calculateIobFromBolus().round(fabricPrivacy)
+        val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round(fabricPrivacy)
         status += DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U"
         if (sp.getBoolean(R.string.key_xdripstatus_detailediob, true)) {
             status += ("("

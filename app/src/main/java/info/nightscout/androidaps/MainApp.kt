@@ -43,7 +43,7 @@ import info.nightscout.androidaps.utils.ActivityMonitor
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.LocalAlertUtils
 import info.nightscout.androidaps.utils.ProcessLifecycleListener
-import info.nightscout.androidaps.utils.buildHelper.BuildHelper
+import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.utils.locale.LocaleHelper
 import info.nightscout.androidaps.widget.updateWidget
 import info.nightscout.shared.logging.AAPSLogger
@@ -188,11 +188,33 @@ class MainApp : DaggerApplication() {
         }
     }
 
+    @Suppress("SpellCheckingInspection")
     private fun doMigrations() {
         // set values for different builds
         if (!sp.contains(R.string.key_ns_alarms)) sp.putBoolean(R.string.key_ns_alarms, config.NSCLIENT)
         if (!sp.contains(R.string.key_ns_announcements)) sp.putBoolean(R.string.key_ns_announcements, config.NSCLIENT)
         if (!sp.contains(R.string.key_language)) sp.putString(R.string.key_language, "default")
+        // 3.1.0
+        if (sp.contains("ns_wifionly")) {
+            if (sp.getBoolean("ns_wifionly", false)) {
+                sp.putBoolean(R.string.key_ns_cellular, false)
+                sp.putBoolean(R.string.key_ns_wifi, true)
+            } else {
+                sp.putBoolean(R.string.key_ns_cellular, true)
+                sp.putBoolean(R.string.key_ns_wifi, false)
+            }
+            sp.remove("ns_wifionly")
+        }
+        if (sp.contains("ns_charginonly")) {
+            if (sp.getBoolean("ns_charginonly", false)) {
+                sp.putBoolean(R.string.key_ns_battery, false)
+                sp.putBoolean(R.string.key_ns_charging, true)
+            } else {
+                sp.putBoolean(R.string.key_ns_battery, true)
+                sp.putBoolean(R.string.key_ns_charging, true)
+            }
+            sp.remove("ns_charginonly")
+        }
     }
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
@@ -227,7 +249,7 @@ class MainApp : DaggerApplication() {
     override fun onTerminate() {
         aapsLogger.debug(LTag.CORE, "onTerminate")
         unregisterActivityLifecycleCallbacks(activityMonitor)
-        alarmSoundServiceHelper.stopService(this)
+        alarmSoundServiceHelper.stopService(this, "onTerminate")
         super.onTerminate()
     }
 }

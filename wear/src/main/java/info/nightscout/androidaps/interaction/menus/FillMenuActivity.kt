@@ -15,7 +15,7 @@ class FillMenuActivity : MenuListActivity() {
         super.onCreate(savedInstanceState)
     }
 
-    override fun getElements(): List<MenuItem> =
+    override fun provideElements(): List<MenuItem> =
         ArrayList<MenuItem>().apply {
             add(MenuItem(R.drawable.ic_canula, getString(R.string.action_preset_1)))
             add(MenuItem(R.drawable.ic_canula, getString(R.string.action_preset_2)))
@@ -23,8 +23,8 @@ class FillMenuActivity : MenuListActivity() {
             add(MenuItem(R.drawable.ic_canula, getString(R.string.action_free_amount)))
         }
 
-    override fun doAction(action: String) {
-        when (action) {
+    override fun doAction(position: String) {
+        when (position) {
             getString(R.string.action_preset_1)    -> rxBus.send(EventWearToMobile(EventData.ActionFillPresetPreCheck(1)))
             getString(R.string.action_preset_2)    -> rxBus.send(EventWearToMobile(EventData.ActionFillPresetPreCheck(2)))
             getString(R.string.action_preset_3)    -> rxBus.send(EventWearToMobile(EventData.ActionFillPresetPreCheck(3)))
