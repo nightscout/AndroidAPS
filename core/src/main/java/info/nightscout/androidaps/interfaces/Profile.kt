@@ -188,6 +188,9 @@ interface Profile {
             if (isMmol(anyBg)) toUnitsString(anyBg * Constants.MMOLL_TO_MGDL, anyBg, profileFunction.getUnits())
             else toUnitsString(anyBg, anyBg * Constants.MGDL_TO_MMOLL, profileFunction.getUnits())
 
+        fun toMgdl(value: Double): Double =
+            if (isMgdl(value)) value else value * Constants.MMOLL_TO_MGDL
+
         fun toMgdl(value: Double, units: GlucoseUnit): Double =
             if (units == GlucoseUnit.MGDL) value else value * Constants.MMOLL_TO_MGDL
 
