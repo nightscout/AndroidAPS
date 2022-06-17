@@ -164,6 +164,9 @@
     <string name="closedloop">Closed Loop</string>
     <string name="openloop">Open Loop</string>
    <string name="lowglucosesuspend">Low Glucose Suspend</string>
+    <string name="rapidacting">Humalog/Novolog</string>
+    <string name="Fiasp">Fiasp</string>
+    <string name="Lyumjev">Lyumjev</string>
     <string name="disabledloop">Loop Disabled</string>
     <string name="openloop_newsuggestion">New suggestion available</string>
     <string name="carbssuggestion">Carbs Suggestion</string>
