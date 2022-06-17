@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.autotune
 
+import android.content.Context
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.plugins.general.autotune.data.*
 import info.nightscout.androidaps.utils.DateUtil
@@ -11,12 +12,14 @@ import org.mockito.Mock
 import java.io.File
 
 class PreppedGlucoseTest : TestBase() {
-    @Mock lateinit var dateUtil: DateUtil
+    @Mock lateinit var context: Context
+    lateinit var dateUtil: DateUtil
     lateinit var prep1: PreppedGlucose
     lateinit var prepjson1: String
 
     @Before
     fun initData() {
+        dateUtil = DateUtil(context)
         prepjson1 = File("src/test/res/autotune/test1/autotune.2022-05-21.json").readText()
         prep1 = PreppedGlucose(JSONObject(prepjson1), dateUtil)
     }
