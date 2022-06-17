@@ -77,4 +77,15 @@ class BGDatum {
         }
         return bgjson
     }
+
+    fun equals(obj: BGDatum): Boolean {
+        var isEqual = true
+        if (date / 1000 != obj.date / 1000) isEqual = false
+        if (deviation != obj.deviation) isEqual = false
+        if (avgDelta != obj.avgDelta) isEqual = false
+        if (bgi != obj.bgi) isEqual = false
+        if (mealAbsorption != obj.mealAbsorption) isEqual = false
+        if (mealCarbs != obj.mealCarbs) isEqual = false
+        return isEqual
+    }
 }
