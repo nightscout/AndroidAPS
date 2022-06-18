@@ -11,6 +11,7 @@ fun Carbs.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
     JSONObject()
         .put("eventType", if (amount < 12) TherapyEvent.Type.CARBS_CORRECTION.text else TherapyEvent.Type.MEAL_BOLUS.text)
         .put("carbs", amount)
+        .put("notes", notes)
         .put("created_at", dateUtil.toISOString(timestamp))
         .put("isValid", isValid)
         .put("date", timestamp).also {
@@ -29,6 +30,7 @@ fun carbsFromNsIdForInvalidating(nsId: String): Carbs =
         JSONObject()
             .put("mills", 1)
             .put("carbs", -1.0)
+            .put("notes", null)
             .put("_id", nsId)
             .put("isValid", false)
     )!!
@@ -37,6 +39,7 @@ fun carbsFromJson(jsonObject: JSONObject): Carbs? {
     val timestamp = JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null) ?: return null
     val duration = JsonHelper.safeGetLong(jsonObject, "duration")
     val amount = JsonHelper.safeGetDoubleAllowNull(jsonObject, "carbs") ?: return null
+    val notes = JsonHelper.safeGetStringAllowNull(jsonObject, "notes", null)
     val isValid = JsonHelper.safeGetBoolean(jsonObject, "isValid", true)
     val id = JsonHelper.safeGetStringAllowNull(jsonObject, "_id", null) ?: return null
     val pumpId = JsonHelper.safeGetLongAllowNull(jsonObject, "pumpId", null)
@@ -50,6 +53,7 @@ fun carbsFromJson(jsonObject: JSONObject): Carbs? {
         timestamp = timestamp,
         duration = duration,
         amount = amount,
+        notes = notes,
         isValid = isValid
     ).also {
         it.interfaceIDs.nightscoutId = id

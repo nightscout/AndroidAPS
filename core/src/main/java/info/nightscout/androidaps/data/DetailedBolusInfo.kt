@@ -116,7 +116,8 @@ class DetailedBolusInfo {
             Carbs(
                 timestamp = carbsTimestamp ?: timestamp,
                 amount = carbs,
-                duration = carbsDuration
+                duration = carbsDuration,
+                notes = notes,
             )
         else null
 
