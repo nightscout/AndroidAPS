@@ -283,7 +283,7 @@
     <string name="openapsama_autosens_min_summary">Varsayılan değer: 0.7\nBu otoduyarlılık için diğer güvenlik önlemidir. Otoduyarlılığın bazal oranlarını ne kadar düşürebileceğini ve İnsülin Duyarlılık Faktörü ve KŞ hedeflerini ne kadar yüksek tutabileceğini gösterir.</string>
     <string name="openapsama_autosens_adjusttargets">Otoduyarlılık, hedefleri de ayarlar</string>
     <string name="openapsama_autosens_adjusttargets_summary">Varsayılan değer: true\nBu otoduyarlılığın İnsülin Duyarlılık Faktörü ve bazallara ek olarak KŞ hedeflerinin ayarlanmasında kullanılır.</string>
-    <string name="openapsama_bolussnooze_dia_divisor_summary">Varsayılan değer: 2\nYemek bolusu yaptıktan sonra bolus erteleme devreye girer, bu nedenle döngü, yeni yemek yediğinizde düşük geçici bazallar-hedefler ile etkileşime girmez. Buradaki örnek ve varsayılan 2\'dir; bu nedenle 3 saatlik bir DIA, bolus ertelemenin kademeli olarak 1,5 saat (3DIA/2) üzerinden aşamalı olarak sonlandırılacağı anlamına gelir.</string>
+    <string name="openapsama_bolussnooze_dia_divisor_summary">Varsayılan değer: 2\nYemek bolusu yaptıktan sonra bolus erteleme devreye girer, bu nedenle döngü, yeni yemek yediğinizde düşük geçici bazallar-hedefler ile etkileşime girmez. Buradaki örnek ve varsayılan 2\'dir; bu nedenle 3 saatlik bir İES, bolus ertelemenin kademeli olarak 1,5 saat (3İES/2) üzerinden aşamalı olarak sonlandırılacağı anlamına gelir.</string>
     <string name="openapsama_min_5m_carbimpact_summary">Varsayılan değer: 3.0 (AMA) Gelişmiş Yemek Asistanı veya 8.0 (SMB) Super Micro Bolus. Bu 5 dakika başına varsayılan karbonhidrat emilimi için bir ayardır. Standart değer AMA için 3mg/dl/5dk aynı şekilde SMB 8mg/dl/5dk dir.
 Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden daha fazla düştüğü veya beklenildiği kadar yükselmediği zamanlarda gelecekte yapılacak tahminlerde KŞ\'nin hesaplanmasında ne kadar karbonhidrat emilimi gerçekleşeceğini öngörür.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Dikkat!\nNormalde aşağıdaki bu değerleri değiştirmek zorunda değilsiniz. Lütfen burayı TIKLAYIN ve metni OKUYUN ve bu değerlerden herhangi birini değiştirmeden önce ANLADIĞINIZDAN emin olun.</string>
@@ -593,6 +593,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="openapssmb_maxiob_summary">Bu değer OpenAPS bağlamında Max IOB (Aktif İnsülin) olarak adlandırılır\nOpenAPS, mevcut IOB bu değerden daha büyükse daha fazla insülin eklemez</string>
     <string name="absorption_cutoff_title">Besinin maksimum emilim süresi [h]</string>
     <string name="absorption_cutoff_summary">Herhangi bir öğünün emildiği kabul edilen zaman. Kalan karbonhidratlar kesilecek.</string>
+    <string name="treatmentssafety_lgsThreshold_summary">Altına düştüğünde insülinin askıya alındığı KŞ değeri. Varsayılan değer, standart hedef modeli kullanır. Kullanıcı değeri 60mg/dl (3,3mmol/l) ile 100mg/dl(5.5mmol/l) arasında ayarlayabilir. 65/3,6\'nın altındaki değerler varsayılan modelin kullanılmasına neden olur</string>
     <string name="overview_show_notes_field_in_dialogs_title">Tedavi diyaloglarında not alanını göster</string>
     <string name="next_button">İleri</string>
     <string name="previous_button">Önceki</string>

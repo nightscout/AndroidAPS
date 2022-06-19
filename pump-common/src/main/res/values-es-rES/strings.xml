@@ -3,17 +3,22 @@
     <!-- PumoCommon - Pump Abstract -->
     <string name="pump_operation_not_supported_by_pump_driver">Operación no soportada por la bomba y/o por el controlador.</string>
     <string name="pump_operation_not_yet_supported_by_pump">Operación no soportada todavía por la bomba.</string>
+    <string name="common_resultok">OK</string>
     <!-- PumoCommon - Pump Status -->
     <string name="pump_status_never_contacted">Nunca contactado</string>
+    <string name="pump_status_waking_up">En fase de inicio</string>
     <string name="pump_status_error_comm">Error con la comunicación</string>
     <string name="pump_status_timeout_comm">Tiempo de espera en la comunicación</string>
     <string name="pump_status_pump_unreachable">Bomba no alcanzable</string>
     <string name="pump_status_invalid_config">Configuración inválida</string>
     <string name="pump_status_active">Activo</string>
+    <string name="pump_status_sleeping">Suspendida</string>
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">Basales</string>
+    <string name="history_group_configuration">Configuraciones</string>
     <string name="history_group_notification">Notificaciones</string>
     <string name="history_group_statistic">Estadísticas</string>
+    <string name="history_group_unknown">Desconocidas</string>
     <string name="history_group_all">Todo</string>
     <string name="history_group_bolus">Bolos</string>
     <string name="history_group_prime">Cebado</string>
