@@ -128,6 +128,7 @@ abstract class Trigger(val injector: HasAndroidInjector) {
         } catch (e: Exception) {
             aapsLogger.error(LTag.AUTOMATION, "Error parsing $obj")
         }
+        return TriggerConnector(injector)
     }
 
     fun createAddButton(context: Context, trigger: TriggerConnector): ImageButton =
