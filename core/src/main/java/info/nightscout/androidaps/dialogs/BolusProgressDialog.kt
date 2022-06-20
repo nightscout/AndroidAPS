@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.dialogs
 
-import android.content.res.Resources
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.LayoutInflater
@@ -16,15 +15,15 @@ import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -75,17 +74,12 @@ class BolusProgressDialog : DaggerDialogFragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
         isCancelable = false
         dialog?.setCanceledOnTouchOutside(false)
-
-        val theme: Resources.Theme? = context?.theme
-        theme?.applyStyle(R.style.AppTheme_NoActionBar,  true)
+        context?.theme?.applyStyle(R.style.AppTheme_NoActionBar, true)
 
         _binding = DialogBolusprogressBinding.inflate(inflater, container, false)
         return binding.root
@@ -95,6 +89,7 @@ class BolusProgressDialog : DaggerDialogFragment() {
         savedInstanceState?.let {
             amount = it.getDouble("amount")
             timestamp = it.getLong("timestamp")
+            state = it.getString("state") ?: rh.gs(R.string.waitingforpump)
         }
         binding.title.text = rh.gs(R.string.goingtodeliver, amount)
         binding.stop.setOnClickListener {
@@ -103,11 +98,9 @@ class BolusProgressDialog : DaggerDialogFragment() {
             binding.stoppressed.visibility = View.VISIBLE
             binding.stop.visibility = View.INVISIBLE
             uel.log(Action.CANCEL_BOLUS, Sources.Overview, state)
-            commandQueue.cancelAllBoluses()
+            commandQueue.cancelAllBoluses(timestamp)
         }
-        val defaultState = rh.gs(R.string.waitingforpump)
         binding.progressbar.max = 100
-        state = savedInstanceState?.getString("state", defaultState) ?: defaultState
         binding.status.text = state
         stopPressed = false
     }
@@ -134,7 +127,7 @@ class BolusProgressDialog : DaggerDialogFragment() {
             .toObservable(EventDismissBolusProgressIfRunning::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({
-                aapsLogger.debug(LTag.PUMP, "Running timestamp $timestamp. Close request timestamp  ${it.bolusTimestamp}")
+                           aapsLogger.debug(LTag.PUMP, "Running timestamp $timestamp. Close request timestamp  ${it.bolusTimestamp}")
                            if (it.bolusTimestamp == null || it.bolusTimestamp == timestamp)
                                if (running) dismiss()
                        }, fabricPrivacy::logException)

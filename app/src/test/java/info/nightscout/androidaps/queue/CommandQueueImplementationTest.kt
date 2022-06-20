@@ -241,7 +241,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         Assert.assertEquals(2, commandQueue.size())
 
         // when
-        commandQueue.cancelAllBoluses()
+        commandQueue.cancelAllBoluses(anyLong())
 
         // then
         Assert.assertEquals(0, commandQueue.size())
