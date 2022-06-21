@@ -40,6 +40,7 @@ class AutotuneCoreTest : TestBaseWithProfile() {
         @Before
     fun initData() {
         autotuneCore = AutotuneCore(sp,autotuneFS)
+        TimeZone.setDefault(TimeZone.getTimeZone("GMT+2"))
         prepjson = File("src/test/res/autotune/test1/autotune.2022-05-21.json").readText()
         val inputProfileJson = File("src/test/res/autotune/test1/profile.pump.json").readText()
         inputProfile = atProfileFromOapsJson(JSONObject(inputProfileJson), dateUtil)!!
