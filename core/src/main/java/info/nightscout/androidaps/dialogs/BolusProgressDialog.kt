@@ -48,12 +48,12 @@ class BolusProgressDialog : DaggerDialogFragment() {
 
     private var running = true
     private var amount = 0.0
-    var timestamp: Long = 0L
+    var id: Long = 0L
     private var state: String? = null
     private var helpActivity: BolusProgressHelperActivity? = null
 
-    fun setTimestamp(timestamp: Long): BolusProgressDialog {
-        this.timestamp = timestamp
+    fun setId(id: Long): BolusProgressDialog {
+        this.id = id
         return this
     }
 
@@ -88,7 +88,7 @@ class BolusProgressDialog : DaggerDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         savedInstanceState?.let {
             amount = it.getDouble("amount")
-            timestamp = it.getLong("timestamp")
+            id = it.getLong("id")
             state = it.getString("state") ?: rh.gs(R.string.waitingforpump)
         }
         binding.title.text = rh.gs(R.string.goingtodeliver, amount)
@@ -98,7 +98,7 @@ class BolusProgressDialog : DaggerDialogFragment() {
             binding.stoppressed.visibility = View.VISIBLE
             binding.stop.visibility = View.INVISIBLE
             uel.log(Action.CANCEL_BOLUS, Sources.Overview, state)
-            commandQueue.cancelAllBoluses(timestamp)
+            commandQueue.cancelAllBoluses(id)
         }
         binding.progressbar.max = 100
         binding.status.text = state
@@ -127,22 +127,24 @@ class BolusProgressDialog : DaggerDialogFragment() {
             .toObservable(EventDismissBolusProgressIfRunning::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({
-                           aapsLogger.debug(LTag.PUMP, "Running timestamp $timestamp. Close request timestamp  ${it.bolusTimestamp}")
-                           if (it.bolusTimestamp == null || it.bolusTimestamp == timestamp)
+                           aapsLogger.debug(LTag.PUMP, "Running id $id. Close request id  ${it.id}")
+                           if (it.id == null || it.id == id)
                                if (running) dismiss()
                        }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventOverviewBolusProgress::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({
-                           aapsLogger.debug(LTag.UI, "Status: ${it.status} Percent: ${it.percent}")
-                           binding.status.text = it.status
-                           binding.progressbar.progress = it.percent
-                           if (it.percent == 100) {
-                               binding.stop.visibility = View.INVISIBLE
-                               scheduleDismiss()
+                           if (it.t?.id == id) {
+                               aapsLogger.debug(LTag.UI, "Status: ${it.status} Percent: ${it.percent}")
+                               binding.status.text = it.status
+                               binding.progressbar.progress = it.percent
+                               if (it.percent == 100) {
+                                   binding.stop.visibility = View.INVISIBLE
+                                   scheduleDismiss()
+                               }
+                               state = it.status
                            }
-                           state = it.status
                        }, fabricPrivacy::logException)
     }
 
@@ -170,7 +172,7 @@ class BolusProgressDialog : DaggerDialogFragment() {
         super.onSaveInstanceState(outState)
         outState.putString("state", state)
         outState.putDouble("amount", amount)
-        outState.putLong("timestamp", timestamp)
+        outState.putLong("id", id)
     }
 
     override fun onDestroyView() {

@@ -219,7 +219,7 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
     }
 
     public void bolusStop() {
-        aapsLogger.debug(LTag.PUMP, "bolusStop >>>>> @ " + (danaPump.getBolusingTreatment() == null ? "" : danaPump.getBolusingTreatment().insulin));
+        aapsLogger.debug(LTag.PUMP, "bolusStop >>>>> @ " + (danaPump.getBolusingTreatment() == null ? "" : danaPump.getBolusingTreatment().getInsulin()));
         MsgBolusStop stop = new MsgBolusStop(injector);
         danaPump.setBolusStopForced(true);
         if (isConnected()) {
