@@ -87,7 +87,7 @@ class RileyLinkBLEConfigActivity : DaggerAppCompatActivity() {
             sp.putString(RileyLinkConst.Prefs.RileyLinkAddress, bleAddress)
             sp.putString(RileyLinkConst.Prefs.RileyLinkName, deviceName)
             val rileyLinkPump = activePlugin.activePump as RileyLinkPumpDevice
-            rileyLinkPump.rileyLinkService.verifyConfiguration(true) // force reloading of address to assure that the RL gets reconnected (even if the address didn't change)
+            rileyLinkPump.rileyLinkService?.verifyConfiguration(true) // force reloading of address to assure that the RL gets reconnected (even if the address didn't change)
             rileyLinkPump.triggerPumpConfigurationChangedEvent()
             finish()
         }

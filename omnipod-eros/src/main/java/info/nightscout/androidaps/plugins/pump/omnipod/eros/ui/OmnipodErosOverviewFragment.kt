@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.ui
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
@@ -15,6 +14,7 @@ import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
@@ -48,10 +48,9 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.androidaps.utils.ui.UIRunnable
+import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import org.apache.commons.lang3.StringUtils
@@ -59,7 +58,6 @@ import org.joda.time.DateTime
 import org.joda.time.Duration
 import java.util.*
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
 class OmnipodErosOverviewFragment : DaggerFragment() {
     companion object {
@@ -96,17 +94,17 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
         }
     }
 
-    var _binding: OmnipodErosOverviewBinding? = null
-    var _rileyLinkStatusBinding: OmnipodErosOverviewRileyLinkStatusBinding? = null
-    var _podInfoBinding: OmnipodCommonOverviewPodInfoBinding? = null
-    var _buttonBinding: OmnipodCommonOverviewButtonsBinding? = null
+    private var _binding: OmnipodErosOverviewBinding? = null
+    private var _rileyLinkStatusBinding: OmnipodErosOverviewRileyLinkStatusBinding? = null
+    private var _podInfoBinding: OmnipodCommonOverviewPodInfoBinding? = null
+    private var _buttonBinding: OmnipodCommonOverviewButtonsBinding? = null
 
     // These properties are only valid between onCreateView and
     // onDestroyView.
-    val binding get() = _binding!!
-    val rileyLinkStatusBinding get() = _rileyLinkStatusBinding!!
-    val podInfoBinding get() = _podInfoBinding!!
-    val buttonBinding get() = _buttonBinding!!
+    private val binding get() = _binding!!
+    private val rileyLinkStatusBinding get() = _rileyLinkStatusBinding!!
+    private val podInfoBinding get() = _podInfoBinding!!
+    private val buttonBinding get() = _buttonBinding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         OmnipodErosOverviewBinding.inflate(inflater, container, false).also {
@@ -256,9 +254,9 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
 
         val errors = ArrayList<String>()
         if (omnipodErosPumpPlugin.rileyLinkService != null) {
-            val rileyLinkErrorDescription = omnipodErosPumpPlugin.rileyLinkService.errorDescription
+            val rileyLinkErrorDescription = omnipodErosPumpPlugin.rileyLinkService?.errorDescription
             if (StringUtils.isNotEmpty(rileyLinkErrorDescription)) {
-                errors.add(rileyLinkErrorDescription)
+                errors.add(rileyLinkErrorDescription!!)
             }
         }
 

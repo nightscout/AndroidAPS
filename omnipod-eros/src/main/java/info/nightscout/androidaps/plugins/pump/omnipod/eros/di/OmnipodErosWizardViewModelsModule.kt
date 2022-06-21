@@ -1,11 +1,11 @@
-package info.nightscout.androidaps.plugins.pump.omnipod.eros.dagger
+package info.nightscout.androidaps.plugins.pump.omnipod.eros.di
 
 import androidx.lifecycle.ViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
-import info.nightscout.androidaps.plugins.pump.omnipod.common.dagger.OmnipodPluginQualifier
-import info.nightscout.androidaps.plugins.pump.omnipod.common.dagger.ViewModelKey
+import info.nightscout.androidaps.plugins.pump.omnipod.common.di.OmnipodPluginQualifier
+import info.nightscout.androidaps.plugins.pump.omnipod.common.di.ViewModelKey
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.viewmodel.action.InitializePodViewModel
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.viewmodel.action.InsertCannulaViewModel
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.viewmodel.info.AttachPodViewModel

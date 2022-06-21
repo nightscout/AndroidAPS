@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.pump.omnipod.dash.dagger
+package info.nightscout.androidaps.plugins.pump.omnipod.dash.di
 
 import android.content.Context
 import dagger.Module
