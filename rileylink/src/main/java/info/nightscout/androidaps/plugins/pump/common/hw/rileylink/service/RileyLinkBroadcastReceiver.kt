@@ -40,7 +40,7 @@ class RileyLinkBroadcastReceiver : DaggerBroadcastReceiver() {
         createBroadcastIdentifiers()
     }
 
-    private val rileyLinkService: RileyLinkService
+    private val rileyLinkService: RileyLinkService?
         get() = (activePlugin.activePump as RileyLinkPumpDevice).rileyLinkService
 
     private fun createBroadcastIdentifiers() {
@@ -102,13 +102,13 @@ class RileyLinkBroadcastReceiver : DaggerBroadcastReceiver() {
             RileyLinkConst.Intents.RileyLinkReady         -> {
                 aapsLogger.warn(LTag.PUMPBTCOMM, "RileyLinkConst.Intents.RileyLinkReady")
                 // sendIPCNotification(RT2Const.IPC.MSG_note_WakingPump);
-                rileyLinkService.rileyLinkBLE.enableNotifications()
-                rileyLinkService.rfSpy.startReader() // call startReader from outside?
-                rileyLinkService.rfSpy.initializeRileyLink()
-                val bleVersion = rileyLinkService.rfSpy.bleVersionCached
+                rileyLinkService?.rileyLinkBLE?.enableNotifications()
+                rileyLinkService?.rfSpy?.startReader() // call startReader from outside?
+                rileyLinkService?.rfSpy?.initializeRileyLink()
+                val bleVersion = rileyLinkService?.rfSpy?.bleVersionCached
                 val rlVersion = rileyLinkServiceData.firmwareVersion
                 aapsLogger.debug(LTag.PUMPBTCOMM, "RfSpy version (BLE113): $bleVersion")
-                rileyLinkService.rileyLinkServiceData.versionBLE113 = bleVersion
+                rileyLinkService?.rileyLinkServiceData?.versionBLE113 = bleVersion
 
                 aapsLogger.debug(LTag.PUMPBTCOMM, "RfSpy Radio version (CC110): " + rlVersion.name)
                 rileyLinkServiceData.firmwareVersion = rlVersion
@@ -122,12 +122,12 @@ class RileyLinkBroadcastReceiver : DaggerBroadcastReceiver() {
                 val rileylinkBLEAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "")
                 if (rileylinkBLEAddress == "") {
                     aapsLogger.error("No Rileylink BLE Address saved in app")
-                } else rileyLinkService.reconfigureRileyLink(rileylinkBLEAddress)
+                } else rileyLinkService?.reconfigureRileyLink(rileylinkBLEAddress)
                 true
             }
 
             RileyLinkConst.Intents.RileyLinkDisconnect    -> {
-                rileyLinkService.disconnectRileyLink()
+                rileyLinkService?.disconnectRileyLink()
                 true
             }
 
@@ -144,7 +144,7 @@ class RileyLinkBroadcastReceiver : DaggerBroadcastReceiver() {
 
             RileyLinkConst.Intents.BluetoothReconnected -> {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "Bluetooth - Reconnecting")
-                rileyLinkService.bluetoothInit()
+                rileyLinkService?.bluetoothInit()
                 serviceTaskExecutor.startTask(DiscoverGattServicesTask(injector, true))
                 true
             }
@@ -154,7 +154,7 @@ class RileyLinkBroadcastReceiver : DaggerBroadcastReceiver() {
 
     private fun processTuneUpBroadcasts(action: String): Boolean =
         if (broadcastIdentifiers["TuneUp"]?.contains(action) == true) {
-            if (rileyLinkService.rileyLinkTargetDevice.isTuneUpEnabled) serviceTaskExecutor.startTask(WakeAndTuneTask(injector))
+            if (rileyLinkService?.rileyLinkTargetDevice?.isTuneUpEnabled == true) serviceTaskExecutor.startTask(WakeAndTuneTask(injector))
             true
         } else false
 }
