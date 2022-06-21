@@ -6,6 +6,7 @@
     <string name="treatmentssafety_title">Sikkerhet ved behandlinger</string>
     <string name="treatmentssafety_maxbolus_title">Maks tillat bolus [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Maks tillat karbo [g]</string>
+    <string name="treatmentssafety_lgsThreshold_title">BS er under terskelverdi slik at all insulintilførsel stoppes</string>
     <string name="nav_preferences_plugin">%1$s innstillinger</string>
     <string name="nav_preferences">Innstillinger</string>
     <string name="nav_refreshtreatments">Oppdater behandlinger fra NS</string>
@@ -592,6 +593,7 @@
     <string name="openapssmb_maxiob_summary">Denne verdien kalles Maks IOB av OpenAPS\nOpenAPS vil ikke gi mere insulin hvis mengden insulin ombord (IOB) overstiger denne verdien</string>
     <string name="absorption_cutoff_title">Maks absorpsjonstid for måltid [h]</string>
     <string name="absorption_cutoff_summary">Etter denne tiden forventes det at måltidet er absorbert. Eventuelle gjenværende karbo vil tas ut av beregninger.</string>
+    <string name="treatmentssafety_lgsThreshold_summary">BS er under terskelverdi slik at all insulintilførsel stoppes. Mulighet for bruker å definere verdier mellom 3.3mmol/l (60mg/dl) og 5.5mmol/l (100mg/dl). Verdier under 3.6/65 bruker standard målverdier</string>
     <string name="overview_show_notes_field_in_dialogs_title">Vis merknadsfelt i dialogvindu for Behandlinger</string>
     <string name="next_button">Neste</string>
     <string name="previous_button">Forrige</string>
