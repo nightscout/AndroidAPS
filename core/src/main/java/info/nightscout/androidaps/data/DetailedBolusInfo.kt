@@ -107,7 +107,8 @@ class DetailedBolusInfo {
             Bolus(
                 timestamp = bolusTimestamp ?: timestamp,
                 amount = insulin,
-                type = bolusType.toDBbBolusType()
+                type = bolusType.toDBbBolusType(),
+                notes = notes,
             )
         else null
 

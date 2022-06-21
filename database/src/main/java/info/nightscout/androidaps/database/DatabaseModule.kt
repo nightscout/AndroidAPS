@@ -73,6 +73,7 @@ open class DatabaseModule {
     private val migration21to22 = object : Migration(21,22) {
         override fun migrate(database: SupportSQLiteDatabase) {
             database.execSQL("ALTER TABLE `carbs` ADD COLUMN `notes` TEXT")
+            database.execSQL("ALTER TABLE `boluses` ADD COLUMN `notes` TEXT")
         }
     }
 

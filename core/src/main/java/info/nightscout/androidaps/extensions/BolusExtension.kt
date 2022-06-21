@@ -30,6 +30,7 @@ fun Bolus.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
         .put("created_at", dateUtil.toISOString(timestamp))
         .put("date", timestamp)
         .put("type", type.name)
+        .put("notes", notes)
         .put("isValid", isValid)
         .put("isSMB", type == Bolus.Type.SMB).also {
             if (interfaceIDs.pumpId != null) it.put("pumpId", interfaceIDs.pumpId)
@@ -55,6 +56,7 @@ fun bolusFromJson(jsonObject: JSONObject): Bolus? {
     val amount = JsonHelper.safeGetDoubleAllowNull(jsonObject, "insulin") ?: return null
     val type = Bolus.Type.fromString(JsonHelper.safeGetString(jsonObject, "type"))
     val isValid = JsonHelper.safeGetBoolean(jsonObject, "isValid", true)
+    val notes = JsonHelper.safeGetStringAllowNull(jsonObject, "notes", null)
     val id = JsonHelper.safeGetStringAllowNull(jsonObject, "_id", null) ?: return null
     val pumpId = JsonHelper.safeGetLongAllowNull(jsonObject, "pumpId", null)
     val pumpType = InterfaceIDs.PumpType.fromString(JsonHelper.safeGetStringAllowNull(jsonObject, "pumpType", null))
@@ -67,7 +69,8 @@ fun bolusFromJson(jsonObject: JSONObject): Bolus? {
         timestamp = timestamp,
         amount = amount,
         type = type,
-        isValid = isValid
+        notes = notes,
+        isValid = isValid,
     ).also {
         it.interfaceIDs.nightscoutId = id
         it.interfaceIDs.pumpId = pumpId
