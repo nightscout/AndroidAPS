@@ -74,6 +74,8 @@ open class DatabaseModule {
         override fun migrate(database: SupportSQLiteDatabase) {
             database.execSQL("ALTER TABLE `carbs` ADD COLUMN `notes` TEXT")
             database.execSQL("ALTER TABLE `boluses` ADD COLUMN `notes` TEXT")
+            // Custom indexes must be dropped on migration to pass room schema checking after upgrade
+            dropCustomIndexes(database)
         }
     }
 
