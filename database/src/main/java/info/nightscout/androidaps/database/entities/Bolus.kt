@@ -56,7 +56,7 @@ data class Bolus(
             utcOffset == other.utcOffset &&
             amount == other.amount &&
             type == other.type &&
-            notes == notes &&
+            notes == other.notes &&
             isBasalInsulin == other.isBasalInsulin
 
     fun onlyNsIdAdded(previous: Bolus): Boolean =
