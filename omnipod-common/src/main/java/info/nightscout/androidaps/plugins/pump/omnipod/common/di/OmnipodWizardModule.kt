@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.pump.omnipod.common.dagger
+package info.nightscout.androidaps.plugins.pump.omnipod.common.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

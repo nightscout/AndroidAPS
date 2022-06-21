@@ -1,10 +1,10 @@
-package info.nightscout.androidaps.plugins.pump.omnipod.eros.dagger
+package info.nightscout.androidaps.plugins.pump.omnipod.eros.di
 
 import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
-import info.nightscout.androidaps.plugins.pump.omnipod.common.dagger.ActivityScope
-import info.nightscout.androidaps.plugins.pump.omnipod.common.dagger.OmnipodWizardModule
+import info.nightscout.androidaps.plugins.pump.omnipod.common.di.ActivityScope
+import info.nightscout.androidaps.plugins.pump.omnipod.common.di.OmnipodWizardModule
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.data.RLHistoryItemOmnipod
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.ErosPodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsErosPodStateManager

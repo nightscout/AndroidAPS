@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugin.general.openhumans.dagger
+package info.nightscout.androidaps.plugin.general.openhumans.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
