@@ -28,6 +28,7 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.JsonHelper.safeGetLong
 import info.nightscout.androidaps.interfaces.BuildHelper
+import info.nightscout.androidaps.utils.XDripBroadcast
 import info.nightscout.shared.sharedPreferences.SP
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -49,6 +50,7 @@ class NSClientAddUpdateWorker(
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var virtualPumpPlugin: VirtualPumpPlugin
+    @Inject lateinit var xDripBroadcast: XDripBroadcast
 
     override fun doWork(): Result {
         val treatments = dataWorker.pickupJSONArray(inputData.getLong(DataWorker.STORE_KEY, -1))
@@ -508,6 +510,7 @@ class NSClientAddUpdateWorker(
                 }
         }
         nsClientPlugin.updateLatestDateReceivedIfNewer(latestDateInReceivedData)
+        xDripBroadcast.sendTreatments(treatments)
         return ret
     }
 
