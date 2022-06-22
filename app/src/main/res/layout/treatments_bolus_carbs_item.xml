@@ -271,6 +271,16 @@
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/notes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="20dp"
+            android:paddingEnd="10dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            tools:ignore="RtlSymmetry"
+            tools:text="Notes" />
+
     </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>
