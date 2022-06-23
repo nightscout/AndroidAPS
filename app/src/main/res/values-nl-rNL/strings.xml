@@ -6,6 +6,7 @@
     <string name="treatmentssafety_title">Behandelingen veiligheid</string>
     <string name="treatmentssafety_maxbolus_title">Max toegestane bolus [E]</string>
     <string name="treatmentssafety_maxcarbs_title">Max toegestane koolhydraten [g]</string>
+    <string name="treatmentssafety_lgsThreshold_title">BG niveau waarbij lage glucose onderbreking wordt geactiveerd</string>
     <string name="nav_preferences_plugin">%1$s Instellingen</string>
     <string name="nav_preferences">Instellingen</string>
     <string name="nav_refreshtreatments">Haal behandelingen op van NS</string>
@@ -592,6 +593,7 @@
     <string name="openapssmb_maxiob_summary">Deze waarde heet MAX IOB in OpenAPS context\nOpenAPS zal geen extra insuline toedienen als de actuele IOB onderstaande waarde overschreden heeft</string>
     <string name="absorption_cutoff_title">Maximum maaltijd absorptie tijd [uur]</string>
     <string name="absorption_cutoff_summary">Tijdspanne waarbinnen elke maaltijd volledig is opgenomen. Resterende KH worden niet mee gerekend.</string>
+    <string name="treatmentssafety_lgsThreshold_summary">BG waarde waarbij insuline afgifte wordt onderbroken. De standaard waarde gebruikt het standaard doelmodel. Gebruiker kan waarde instellen tussen 60 mg/dl (3.3 mmol/l) en 100mg/dl(5.6mmol/l). Waarden lager dan 65/3.6 resulteren in gebruik van het standaard model</string>
     <string name="overview_show_notes_field_in_dialogs_title">Toon notities veld in behandeling dialoogvensters</string>
     <string name="next_button">Volgende</string>
     <string name="previous_button">Vorige</string>
