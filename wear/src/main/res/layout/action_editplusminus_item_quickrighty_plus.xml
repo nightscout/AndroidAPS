@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <View
+        android:id="@+id/center"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/amountfield"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-10dp"
+        android:layout_marginHorizontal="10dp"
+        android:cursorVisible="false"
+        android:inputType="numberDecimal"
+        android:textColor="@color/white"
+        android:textSize="40sp"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="@+id/value_background"
+        app:layout_constraintStart_toStartOf="@+id/value_background"
+        app:layout_constraintTop_toTopOf="@+id/value_background"
+        tools:text="123" />
+
+    <TextView
+        android:id="@+id/label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-8dp"
+        android:layout_below="@+id/amountfield"
+        android:gravity="center"
+        android:labelFor="@+id/amountfield"
+        android:textColor="@color/white"
+        android:textSize="25sp"
+        app:layout_constraintEnd_toEndOf="@+id/amountfield"
+        app:layout_constraintStart_toStartOf="@+id/amountfield"
+        app:layout_constraintTop_toBottomOf="@id/amountfield"
+        tools:ignore="LabelFor"
+        tools:text="label" />
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/minusbutton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@drawable/circle"
+        android:backgroundTint="@color/white"
+        android:contentDescription="@string/decrement"
+        android:src="@drawable/ic_action_minus"
+        android:tint="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintCircle="@+id/center"
+        app:layout_constraintCircleAngle="215"
+        app:layout_constraintCircleRadius="70dp"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/plusbutton3"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@drawable/circle"
+        android:backgroundTint="@color/white"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="25sp"
+        android:visibility="visible"
+        app:layout_constraintCircle="@+id/center"
+        app:layout_constraintCircleAngle="35"
+        app:layout_constraintCircleRadius="70dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="+10" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/plusbutton2"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@drawable/circle"
+        android:backgroundTint="@color/white"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toTopOf="@+id/plusbutton"
+        app:layout_constraintCircle="@+id/center"
+        app:layout_constraintCircleAngle="90"
+        app:layout_constraintCircleRadius="70dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/plusbutton3"
+        tools:text="+5" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/value_background"
+        android:layout_width="108dp"
+        android:layout_height="108dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/circle"
+        android:backgroundTint="@color/gray_700"
+        android:contentDescription="@string/increment"
+        app:layout_constraintBottom_toTopOf="@+id/minusbutton"
+        app:layout_constraintCircle="@+id/center"
+        app:layout_constraintCircleAngle="305"
+        app:layout_constraintCircleRadius="40dp"
+        app:layout_constraintRight_toLeftOf="@id/plusbutton">
+
+    </androidx.appcompat.widget.AppCompatImageView>
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/plusbutton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center"
+        android:background="@drawable/circle"
+        android:backgroundTint="@color/white"
+        android:contentDescription="@string/increment"
+        android:src="@drawable/ic_action_add"
+        android:tint="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintCircle="@+id/center"
+        app:layout_constraintCircleAngle="145"
+        app:layout_constraintCircleRadius="70dp"
+        app:layout_constraintRight_toRightOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

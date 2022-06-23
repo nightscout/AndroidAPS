@@ -208,7 +208,11 @@ sealed class EventData : Event() {
         val unitsMgdl: Boolean,
         val bolusPercentage: Int,
         val maxCarbs: Int,
-        val maxBolus: Double
+        val maxBolus: Double,
+        val insulin_button_increment_1: Double,
+        val insulin_button_increment_2: Double,
+        val carbs_button_increment_1: Int,
+        val carbs_button_increment_2: Int
     ) : EventData()
 
     @Serializable

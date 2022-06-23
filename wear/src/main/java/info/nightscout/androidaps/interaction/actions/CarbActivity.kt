@@ -30,19 +30,23 @@ class CarbActivity : ViewSelectorActivity() {
 
     private inner class MyGridViewPagerAdapter : GridPagerAdapter() {
 
+        val increment1 = sp.getInt(R.string.key_carbs_button_increment_1, 5).toDouble()
+        val increment2 = sp.getInt(R.string.key_carbs_button_increment_2, 10).toDouble()
+
         override fun getColumnCount(arg0: Int): Int = 2
         override fun getRowCount(): Int = 1
 
         override fun instantiateItem(container: ViewGroup, row: Int, col: Int): Any {
             val view: View
             if (col == 0) {
-                view = getInflatedPlusMinusView(container)
+                view = getInflatedPlusMinusView(container, true)
                 var def = 0.0
                 if (editCarbs != null) {
                     def = SafeParse.stringToDouble(editCarbs?.editText?.text.toString())
                 }
                 val maxCarbs = sp.getInt(getString(R.string.key_treatments_safety_max_carbs), 48)
-                editCarbs = PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0.0, maxCarbs.toDouble(), 1.0, DecimalFormat("0"), true)
+                val buttons = listOf(Pair(R.id.plusbutton, 1.0), Pair(R.id.plusbutton2, increment1), Pair(R.id.plusbutton3, increment2))
+                editCarbs = PlusMinusEditText(view, R.id.amountfield, buttons, R.id.minusbutton, def, 0.0, maxCarbs.toDouble(), 1.0, DecimalFormat("0"), true)
                 setLabelToPlusMinusView(view, getString(R.string.action_carbs))
                 container.addView(view)
                 view.requestFocus()

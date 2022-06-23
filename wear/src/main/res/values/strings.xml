@@ -206,6 +206,10 @@
     <string name="key_dark" translatable="false">dark</string>
     <string name="key_input_design" translatable="false">input_design</string>
     <string name="key_complication_tap_action" translatable="false">complication_tap_action</string>
+    <string name="key_insulin_button_increment_1" translatable="false">insulin_button_increment_1</string>
+    <string name="key_insulin_button_increment_2" translatable="false">insulin_button_increment_2</string>
+    <string name="key_carbs_button_increment_1" translatable="false">carbs_button_increment_1</string>
+    <string name="key_carbs_button_increment_2" translatable="false">carbs_button_increment_2</string>
     <string name="increment">increment</string>
     <string name="decrement">decrement</string>
     <string name="first_char_high">H</string>

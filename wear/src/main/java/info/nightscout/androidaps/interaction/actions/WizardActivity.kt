@@ -35,16 +35,19 @@ class WizardActivity : ViewSelectorActivity() {
 
         override fun getColumnCount(arg0: Int): Int = if (hasPercentage) 3 else 2
         override fun getRowCount(): Int = 1
+        private val increment1 = sp.getInt(R.string.key_carbs_button_increment_1, 5).toDouble()
+        private val increment2 = sp.getInt(R.string.key_carbs_button_increment_2, 10).toDouble()
 
         override fun instantiateItem(container: ViewGroup, row: Int, col: Int): Any {
             return if (col == 0) {
-                val view = getInflatedPlusMinusView(container)
+                val view = getInflatedPlusMinusView(container, true)
                 val maxCarbs = sp.getInt(getString(R.string.key_treatments_safety_max_carbs), 48)
+                val buttons = listOf(Pair(R.id.plusbutton, 1.0), Pair(R.id.plusbutton2, increment1), Pair(R.id.plusbutton3, increment2))
                 editCarbs = if (editCarbs == null) {
-                    PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, 0.0, 0.0, maxCarbs.toDouble(), 1.0, DecimalFormat("0"), false)
+                    PlusMinusEditText(view, R.id.amountfield, buttons, R.id.minusbutton, 0.0, 0.0, maxCarbs.toDouble(), 1.0, DecimalFormat("0"), false)
                 } else {
                     val def = SafeParse.stringToDouble(editCarbs?.editText?.text.toString())
-                    PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0.0, maxCarbs.toDouble(), 1.0, DecimalFormat("0"), false)
+                    PlusMinusEditText(view, R.id.amountfield, buttons, R.id.minusbutton, def, 0.0, maxCarbs.toDouble(), 1.0, DecimalFormat("0"), false)
                 }
                 setLabelToPlusMinusView(view, getString(R.string.action_carbs))
                 container.addView(view)
