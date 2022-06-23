@@ -123,6 +123,7 @@
     <string name="sensitivity_cannula">Het vastleggen van een canulewissel zet de Autosens-ratio terug naar 100%.</string>
     <string name="sensitivity_time">Sommige van de plugins hebben configureerbare tijdbereiken die kunnen worden ingesteld door de gebruiker.</string>
     <string name="sensitivity_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/nl/Configuration/Sensitivity-detection-and-COB.html</string>
+    <string name="sensitivity_hint2">https://androidaps.readthedocs.io/nl/latest/Usage/Open-APS-features.html?highlight=Autosens#autosens</string>
     <string name="wrongcarbs_label">Koolhydraatinvoerfouten</string>
     <string name="wrongcarbs_whattodo">Wat moet u doen als u een onjuiste hoeveelheid koolhydraten hebt ingevoerd?</string>
     <string name="wrongcarbs_treatmentstab">Verwijder het onjuiste record in Behandelingen en voer de juiste koolhydraten opnieuw in.</string>
