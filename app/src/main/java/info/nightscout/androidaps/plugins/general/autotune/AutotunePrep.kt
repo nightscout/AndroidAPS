@@ -302,7 +302,7 @@ class AutotunePrep @Inject constructor(
 
             // Then, calculate carb absorption for that 5m interval using the deviation.
             if (mealCOB > 0) {
-                val ci = Math.max(deviation, sp.getDouble("openapsama_min_5m_carbimpact", 3.0))
+                val ci = Math.max(deviation, sp.getDouble(R.string.key_openapsama_min_5m_carbimpact, 3.0))
                 val absorbed = ci * tunedprofile.ic / sens
                 // Store the COB, and use it as the starting point for the next data point.
                 mealCOB = Math.max(0.0, mealCOB - absorbed)

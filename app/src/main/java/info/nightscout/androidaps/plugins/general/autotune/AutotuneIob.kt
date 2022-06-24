@@ -29,7 +29,7 @@ import kotlin.math.ceil
 import kotlin.math.roundToInt
 
 @Singleton
-class AutotuneIob @Inject constructor(
+open class AutotuneIob @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val repository: AppRepository,
     private val profileFunction: ProfileFunction,
@@ -41,10 +41,10 @@ class AutotuneIob @Inject constructor(
 
     private val nsTreatments = ArrayList<NsTreatment>()
     private var dia: Double = Constants.defaultDIA
-    var boluses: MutableList<Bolus> = ArrayList()
+    var boluses: ArrayList<Bolus> = ArrayList()
     var meals = ArrayList<Carbs>()
     lateinit var glucose: List<GlucoseValue> // newest at index 0
-    private lateinit var tempBasals: MutableList<TemporaryBasal>
+    private lateinit var tempBasals: ArrayList<TemporaryBasal>
     var startBG: Long = 0
     var endBG: Long = 0
     private fun range(): Long = (60 * 60 * 1000L * dia + T.hours(2).msecs()).toLong()
@@ -225,7 +225,7 @@ class AutotuneIob @Inject constructor(
         }
     }
 
-    fun getIOB(time: Long, localInsulin: LocalInsulin): IobTotal {
+    open fun getIOB(time: Long, localInsulin: LocalInsulin): IobTotal {
         val bolusIob = getCalculationToTimeTreatments(time, localInsulin).round()
         return bolusIob
     }
