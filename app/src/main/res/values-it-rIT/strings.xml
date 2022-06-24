@@ -432,8 +432,6 @@
     <string name="ns_localbroadcasts_title">Abilita trasmissioni locali</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">ISF Dinamico</string>
-    <string name="DynISFAdjust_title">%% fattore di regolazione ISF dinamico</string>
-    <string name="DynISFAdjust_summary">Fattore di regolazione per ISF dinamico. Imposta più del 100%% per correzioni più aggressive, meno del 100%% per correzioni meno aggressive.</string>
     <string name="enableuam">Abilita UAM</string>
     <string name="enablesmb">Abilita SMB</string>
     <string name="enablesmb_summary">Usa super-micro-boli al posto della basale temporanea per un\'azione più veloce</string>
