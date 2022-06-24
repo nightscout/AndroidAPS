@@ -960,13 +960,18 @@
     <string name="light_theme">ערכת נושא בהירה</string>
     <string name="follow_system_theme">השתמש בערכת הנושא של המכשיר</string>
     <!-- WEAR OS-->
+    <string name="wear_action_tempt_cancel_message">מבטל ערך מטרה זמני נוכחי</string>
     <string name="wear_action_tempt_unit_error">יחידות המידה שונות בין הטלפון והשעון!</string>
     <string name="wear_action_tempt_min_bg_error">ערך הסוכר המינימלי מחוץ לטווח!</string>
     <string name="wear_action_tempt_max_bg_error">ערך הסוכר המקסימלי מחוץ לטווח!</string>
     <string name="wear_action_tempt_manual_range_message">ע\' מטרה זמני:\nמינ\': %1$s\nמקס\': %2$s\nמשך: %3$s</string>
     <string name="wear_action_tempt_manual_message">ע\' מטרה זמני:\nמטרה: %1$s\n משך: %2$s</string>
     <string name="wear_action_tempt_preset_message">ע\' מטרה זמני:\nסיבה: %1$s\nמטרה: %2$s\nמשך: %3$s</string>
+    <string name="quick_wizard_message">אשף מהיר: %1$s\n אינס\': %2$.2f יח\'\nפחמ\': %3$d גר\'</string>
+    <string name="wizard_result">מחשבון: %1$s\n אינס\': %2$.2f יח\'\nפחמ\': %3$d גר\'</string>
     <string name="overview_editquickwizard_show_on_device">הצג רשומה על המכשיר:</string>
+    <string name="quick_wizard_not_available">האשף המהיר שנבחר אינו זמין, נא לרענן את האריח</string>
+    <string name="wizard_no_actual_bg">אין נתוני סוכר לביסוס חישוב!</string>
     <string name="wizard_no_active_profile">לא הופעל פרופיל!</string>
     <string name="wizard_no_cob">הפחמימות הפעילות לא ידועות! חסרות קריאות סוכר או שאותחל היישום לאחרונה?</string>
     <string name="wizard_carbs_constraint">הפרת מגבלות פחמימה!</string>
@@ -977,6 +982,8 @@
     <string name="wizard_explain_iob">אינ\' פעיל: %1$.2f יח\'</string>
     <string name="wizard_explain_superbolus">סופר בולוס: %1$.2f יח\'</string>
     <string name="wizard_explain_trend">מגמת 15 דק\': %1$.2f יח\'</string>
+    <string name="wizard_explain_percent">אחוזים: %1$.2f יח\' x %2$d%% ≈ %3$.2f יח\'</string>
+    <string name="wizard_constraint_bolus_size">הופעלה מגבלת אינסולין!\nלא ניתן להזריק %1$.2f יח\'</string>
     <string name="wizard_explain_tt">ע\' מטרה זמני: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s ל-%2$s</string>
     <string name="wizard_pump_not_available">המשאבה אינה זמינה!</string>
@@ -1017,7 +1024,9 @@
     <string name="login">התחברות</string>
     <string name="remove_all">הסר הכל</string>
     <string name="reset_start">אתחל התחלה</string>
+    <string name="a11y_otp_qr_code">ברקוד QR ליצירת סיסמה חד פעמית</string>
     <string name="a11y_open_settings">פתח הגדרות</string>
+    <string name="a11y_set_carb_timer">הגדרת אזעקה טיימר פחמימות</string>
     <string name="device_all">הכול</string>
     <string name="device_phone">טלפון</string>
     <string name="device_watch">שעון</string>
