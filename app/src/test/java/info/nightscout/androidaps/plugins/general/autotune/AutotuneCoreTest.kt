@@ -30,9 +30,6 @@ class AutotuneCoreTest : TestBaseWithProfile() {
     @Mock lateinit var injector: HasAndroidInjector
     @Mock lateinit var activePlugin: ActivePlugin
     lateinit var autotuneCore: AutotuneCore
-    lateinit var prep: PreppedGlucose
-    lateinit var prepjson: String
-    lateinit var inputProfile: ATProfile
     var min5mCarbImpact = 0.0
     var autotuneMin = 0.0
     var autotuneMax = 0.0
@@ -41,14 +38,15 @@ class AutotuneCoreTest : TestBaseWithProfile() {
     fun initData() {
         autotuneCore = AutotuneCore(sp,autotuneFS)
         TimeZone.setDefault(TimeZone.getTimeZone("GMT+2"))
-        prepjson = File("src/test/res/autotune/test1/autotune.2022-05-21.json").readText()
-        val inputProfileJson = File("src/test/res/autotune/test1/profile.pump.json").readText()
-        inputProfile = atProfileFromOapsJson(JSONObject(inputProfileJson), dateUtil)!!
-        prep = PreppedGlucose(JSONObject(prepjson), dateUtil)
     }
 
     @Test
     fun autotuneCoreTest() { // Test if load from file of OpenAPS categorisation is Ok
+        val prepjson = File("src/test/res/autotune/test1/autotune.2022-05-21.json").readText()
+        val inputProfileJson = File("src/test/res/autotune/test1/profile.pump.json").readText()
+        val inputProfile = atProfileFromOapsJson(JSONObject(inputProfileJson), dateUtil)!!
+        val prep = PreppedGlucose(JSONObject(prepjson), dateUtil)
+
         `when`(sp.getDouble(R.string.key_openapsama_autosens_max, 1.2)).thenReturn(autotuneMax)
         `when`(sp.getDouble(R.string.key_openapsama_autosens_min, 0.7)).thenReturn(autotuneMin)
         `when`(sp.getDouble(R.string.key_openapsama_min_5m_carbimpact, 3.0)).thenReturn(min5mCarbImpact)
