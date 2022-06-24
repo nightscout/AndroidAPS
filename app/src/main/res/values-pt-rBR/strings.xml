@@ -413,8 +413,6 @@
     <string name="ns_localbroadcasts_title">Ativar partilha local.</string>
     <string name="openapssmb">SMB OpenAPS</string>
     <string name="openaps_smb_dynamic_isf">FSI Dinâmico</string>
-    <string name="DynISFAdjust_title">Fator de Ajuste FSI dinâmico %%</string>
-    <string name="DynISFAdjust_summary">Fator de ajuste para FSI dinâmico. Defina mais de 100%% para doses de correção mais agressivas e menos de 100%% para correções menos agressivas.</string>
     <string name="enableuam">Ativar UAM</string>
     <string name="enablesmb">Ativar SMB</string>
     <string name="enablesmb_summary">Use Super Micro Boluses em vez de basal temp para uma ação mais rápida</string>
