@@ -796,6 +796,9 @@ class MedtronicHistoryData @Inject constructor(
             }
         }
 
+        val suspendList = getFilteredItems(newHistory,  //
+                                             setOf(PumpHistoryEntryType.SuspendPump))
+
         // see if rewind items, need to fix any of current tempBasalProcessDTO items (bug 1724)
         if (rewindList.isNotEmpty()) {
             for (rewindEntry in rewindList) {
