@@ -954,7 +954,6 @@
     <string name="wear_action_tempt_max_bg_error">Max-BS udenfor området!</string>
     <string name="wear_action_tempt_manual_range_message">Midlertidigt mål:\nMin: %1$s\nMax: %2$s\nVarighed: %3$s</string>
     <string name="wear_action_tempt_manual_message">Midlertigt mål:\nMål: %1$s\nVarighed: %2$s</string>
-    <string name="wear_action_tempt_preset_message">Midlertigt mål:\Grund: %1$s\nMål: %2$s\nVarighed: %3$s</string>
     <string name="quick_wizard_message">Hurtigguide: %1$s\nInsulin: %2$.2fE\nKH: %3$dg</string>
     <string name="wizard_result">Guide:\nInsulin: %1$.2fE\nKH: %2$dg</string>
     <string name="overview_editquickwizard_show_on_device">Vis post på enhed:</string>
