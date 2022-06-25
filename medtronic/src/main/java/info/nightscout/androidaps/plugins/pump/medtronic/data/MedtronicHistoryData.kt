@@ -799,7 +799,11 @@ class MedtronicHistoryData @Inject constructor(
         val suspendList = getFilteredItems(newHistory,  //
                                              setOf(PumpHistoryEntryType.SuspendPump))
 
-        // see if rewind items, need to fix any of current tempBasalProcessDTO items (bug 1724)
+        val stopList : MutableList<PumpHistoryEntry> = mutableListOf()
+        stopList.addAll(suspendList);
+        stopList.addAll(rewindList);
+
+        // TODO remove see if rewind items, need to fix any of current tempBasalProcessDTO items (bug 1724)
         if (rewindList.isNotEmpty()) {
             for (rewindEntry in rewindList) {
                 for (tempBasalProcessDTO in processList) {
@@ -816,7 +820,43 @@ class MedtronicHistoryData @Inject constructor(
             }
         }
 
+        // see if have rewind/stop items that need to fix any of current tempBasalProcessDTO items (bug 1724)
+        if (stopList.isNotEmpty()) {
+            for (tempBasalProcessDTO in processList) {
+                if (tempBasalProcessDTO.itemTwo==null) {
+                    val endTime: Long = DateTimeUtil.getATDWithAddedMinutes(tempBasalProcessDTO.itemOne.atechDateTime, tempBasalProcessDTO.itemOneTbr!!.durationMinutes)
+
+                    val findNearestEntry = findNearestEntry(tempBasalProcessDTO.itemOne.atechDateTime, endTime, stopList);
+
+                    if (findNearestEntry!=null) {
+                        tempBasalProcessDTO.itemTwo = findNearestEntry
+                        stopList.remove(findNearestEntry)
+                    }
+                }
+            }
+        }
+
         return processList
+    }
+
+    fun findNearestEntry(startTime: Long, endTime: Long, list: MutableList<PumpHistoryEntry>) : PumpHistoryEntry? {
+        val outList: MutableList<PumpHistoryEntry> = mutableListOf()
+
+        for (pumpHistoryEntry in list) {
+            if ((pumpHistoryEntry.atechDateTime > startTime) &&
+                (pumpHistoryEntry.atechDateTime < endTime)) {
+                outList.add(pumpHistoryEntry)
+            }
+        }
+
+        if (outList.size == 0) {
+            return null
+        } else if (outList.size==1) {
+            return outList[0]
+        } else {
+            // TODO
+            return null
+        }
     }
 
     fun isTBRActive(dbEntry: PumpDbEntryTBR): Boolean {
