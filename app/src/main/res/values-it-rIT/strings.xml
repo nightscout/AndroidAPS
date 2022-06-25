@@ -438,6 +438,7 @@
     <string name="enableuam_summary">Rilevamento dei pasti non annunciati</string>
     <string name="insulin_oref_peak">Tempo picco Curva IOB</string>
     <string name="insulin_peak_time">Tempo del picco [min]</string>
+    <string name="insulin_peak">Picco</string>
     <string name="free_peak_oref">Free-Peak Oref</string>
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
     <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
@@ -601,7 +602,11 @@
     <string name="secondcarbsincrement">Secondo incremento di CHO</string>
     <string name="thirdcarbsincrement">Terzo incremento di CHO</string>
     <string name="cgm">CGM</string>
+    <string name="ns_cellular">Usa connessione cellulare</string>
+    <string name="ns_wifi">Usa connessione WiFi</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="ns_charging">Durante la ricarica</string>
+    <string name="ns_battery">Utilizzo batteria</string>
     <string name="connectionsettings_title">Impostazioni connessione</string>
     <string name="ns_wifi_allowedssids">SSID ammessi (separati da punto e virgola)</string>
     <string name="ns_allowroaming">Consenti connessione in roaming</string>
@@ -676,6 +681,8 @@
     <string name="error_adding_treatment_message">Un trattamento (insulina: %1$.2f, carboidrati: %2$d, a: %3$s) non può essere aggiunto ai trattamenti. Controlla e aggiungi il record necessario.</string>
     <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), ritardo: %3$d m</string>
     <string name="openaps_noasdata">Nessun dato autosens disponibile</string>
+    <string name="log_files">File di log</string>
+    <string name="miscellaneous">Miscellanea</string>
     <string name="nav_logsettings">Impostazioni Log</string>
     <string name="resettodefaults">Ripristina valori predefiniti</string>
     <string name="nsmalfunction">Malfunzionamento NSClient. Considera il riavvio di NS e NSClient.</string>
@@ -768,6 +775,11 @@
     <string name="invalidpct">Inserimento % non valido</string>
     <string name="average">Media</string>
     <string name="tir">TIR</string>
+    <string name="day_tir">TIR giorno</string>
+    <string name="night_tir">TIR notte</string>
+    <string name="detailed_14_days">Dettaglio 14 giorni</string>
+    <string name="std_deviation">SD: %1$s</string>
+    <string name="hba1c">HbA1c: </string>
     <string name="activitymonitor">Monitor attività</string>
     <string name="doyouwantresetstats">Vuoi resettare le statistiche sull\'attività?</string>
     <string name="statistics">Statistiche</string>
@@ -963,9 +975,11 @@
     <string name="wizard_no_active_profile">Nessun profilo attivo!</string>
     <string name="wizard_no_cob">Valore COB sconosciuto! Lettura BG mancante o recente riavvio dell\'app?</string>
     <string name="wizard_carbs_constraint">Violazione vincolo CHO!</string>
+    <string name="wizard_explain_calc">Calc (IC: %1$.1f, ISF: %2$.1f)</string>
     <string name="wizard_explain_carbs">CHO: %1$.2fU</string>
     <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fU</string>
     <string name="wizard_explain_bg">BG: %1$.2fU</string>
+    <string name="wizard_explain_iob">IOB: %1$.2fU</string>
     <string name="wizard_explain_superbolus">Superbolo: %1$.2fU</string>
     <string name="wizard_explain_trend">Trend di 15\': %1$.2fU</string>
     <string name="wizard_explain_percent">Percentuale: %1$.2fU x %2$d%% ≈ %3$.2fU</string>
@@ -992,6 +1006,10 @@
     <string name="count_selected">%1$d selezionati</string>
     <string name="sort_label">Ordina</string>
     <string name="dialog_canceled">Finestra di dialogo cancellata</string>
+    <string name="veryLow" comment="below 3.1">Molto basso</string>
+    <string name="low" comment="3.1-3.9">Basso</string>
+    <string name="high" comment="10.0-13.9">Alto</string>
+    <string name="veryHigh" comment="above 13.9">Molto alto</string>
     <string name="below" comment="below &quot;in range&quot;">Sotto</string>
     <string name="in_range">In range</string>
     <string name="above" comment="above &quot;in range&quot;">Sopra</string>
@@ -999,6 +1017,12 @@
     <string name="show_hide_records">Nascondi record di loop</string>
     <string name="widget_description">Widget di AndroidAPS</string>
     <string name="configure">Configura opacità</string>
+    <string name="loop_status">Stato loop</string>
+    <string name="graph_scale">Scala del grafico</string>
+    <string name="profile1">Profilo 1</string>
+    <string name="profile2">Profilo 2</string>
+    <string name="login">Login</string>
+    <string name="remove_all">Rimuovi tutto</string>
     <string name="a11y_otp_qr_code">Codice QR per configurare OTP</string>
     <string name="a11y_open_settings">apri impostazioni</string>
     <string name="a11y_set_carb_timer">imposta allarme timer CHO</string>
@@ -1012,4 +1036,6 @@
     <string name="aidex">GlucoRx Aidex</string>
     <string name="aidex_short">GlucoRx Aidex</string>
     <string name="description_source_aidex">Ricevi valori glicemia da CGM GlucoRx Aidex.</string>
+    <string name="blocked_by_charging">Bloccato dalle opzioni di ricarica</string>
+    <string name="blocked_by_connectivity">Bloccato dalle opzioni di connettività</string>
 </resources>
