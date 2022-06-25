@@ -31,5 +31,27 @@
     <string name="careportal_events">Eventi Portale (eccetto le note)</string>
     <string name="profile_switches">Cambi profilo</string>
     <string name="total_daily_doses">Dosi giornaliere totali</string>
+    <string name="temporary_basal_rates">Velocità basali temporanee</string>
+    <string name="temporary_targets">Target temporanei</string>
+    <string name="settings">Impostazioni</string>
+    <string name="application_version">Versione applicazione</string>
+    <string name="device_model">Modello dispositivo</string>
+    <string name="screen_dimensions">Dimensioni schermo</string>
+    <string name="algorithm_debug_data">Dati di debug dell\'algoritmo</string>
+    <string name="data_not_uploaded">Dati NON caricati</string>
+    <string name="passwords">Password</string>
+    <string name="nightscout_url">URL di Nightscout</string>
+    <string name="nightscout_api_secret">API Secret di Nightscout</string>
+    <string name="free_text_fields">Campi di testo libero</string>
+    <string name="agree">Comprendo e accetto.</string>
+    <string name="login_open_humans">Accesso a Open Humans</string>
+    <string name="final_touches">Tocchi finali</string>
+    <string name="uploading_proceed">Sei a solo un passo dal caricare i tuoi dati su Open Humans. Vuoi procedere?</string>
+    <string name="cancel">Annulla</string>
+    <string name="proceed">Continua</string>
+    <string name="finishing">Completamento...</string>
+    <string name="this_may_take_a_few_seconds">Potrebbe richiedere alcuni secondi.</string>
+    <string name="we_re_done">Abbiamo fatto!</string>
+    <string name="silently_upload_date_note">D\'ora in poi, il tuo telefono caricherà i dati in background di tanto in tanto.</string>
     <string name="close">Chiudi</string>
 </resources>
