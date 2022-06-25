@@ -44,7 +44,6 @@ class AutotunePrepTest : TestBaseWithProfile() {
     var autotuneMax = 0.0
     var startDayTime = 0L
 
-
     @Before
     fun initData() {
         TimeZone.setDefault(TimeZone.getTimeZone("GMT+2"))

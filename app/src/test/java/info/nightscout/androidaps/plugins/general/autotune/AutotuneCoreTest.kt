@@ -41,7 +41,7 @@ class AutotuneCoreTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun autotuneCoreTest() { // Test if load from file of OpenAPS categorisation is Ok
+    fun autotuneCoreTest1() { // Test if AutotuneCore with input files of OpenAPS categorisation gives correct ouput profile
         val prepjson = File("src/test/res/autotune/test1/autotune.2022-05-21.json").readText()
         val inputProfileJson = File("src/test/res/autotune/test1/profile.pump.json").readText()
         val inputProfile = atProfileFromOapsJson(JSONObject(inputProfileJson), dateUtil)!!
@@ -62,6 +62,28 @@ class AutotuneCoreTest : TestBaseWithProfile() {
             ?:Assert.fail()
     }
 
+    @Test
+    fun autotuneCoreTest4() { // Test if limiting modification with Min Max Autosens parameter works (18h on basal and on ISF value)
+        val prepjson = File("src/test/res/autotune/test4/autotune.2022-05-30.json").readText()
+        val inputProfileJson = File("src/test/res/autotune/test4/profile.2022-05-30.json").readText()
+        val inputProfile = atProfileFromOapsJson(JSONObject(inputProfileJson), dateUtil)!!
+        val pumpProfileJson = File("src/test/res/autotune/test4/profile.pump.json").readText()
+        val pumpProfile = atProfileFromOapsJson(JSONObject(pumpProfileJson), dateUtil)!!
+        val prep = PreppedGlucose(JSONObject(prepjson), dateUtil)
+        `when`(sp.getDouble(R.string.key_openapsama_autosens_max, 1.2)).thenReturn(autotuneMax)
+        `when`(sp.getDouble(R.string.key_openapsama_autosens_min, 0.7)).thenReturn(autotuneMin)
+        `when`(sp.getDouble(R.string.key_openapsama_min_5m_carbimpact, 3.0)).thenReturn(min5mCarbImpact)
+        val OapsOutputProfileJson = File("src/test/res/autotune/test4/newprofile.2022-05-30.json").readText()
+        val OapsOutputProfile = atProfileFromOapsJson(JSONObject(OapsOutputProfileJson),dateUtil)
+        val outProfile = autotuneCore.tuneAllTheThings(prep, inputProfile, pumpProfile)
+        OapsOutputProfile?.let {
+            Assert.assertEquals(OapsOutputProfile.isf, outProfile.isf, 0.0)
+            Assert.assertEquals(OapsOutputProfile.ic, outProfile.ic, 0.0)
+            for (i in 0..23)
+                Assert.assertEquals(OapsOutputProfile.basal[i], outProfile.basal[i], 0.0)
+        }
+            ?:Assert.fail()
+    }
 
 
     /**
