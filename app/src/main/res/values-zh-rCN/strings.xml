@@ -955,7 +955,6 @@
     <string name="wear_action_tempt_max_bg_error">目标血糖最大值超出范围！</string>
     <string name="wear_action_tempt_manual_range_message">临时目标:\n最小: %1$s\n最大: %2$s\n持续时间: %3$s</string>
     <string name="wear_action_tempt_manual_message">临时目标:\n目标: %1$s\n持续时间: %2$s</string>
-    <string name="wear_action_tempt_preset_message">临时目标:\原因: %1$s\n目标: %2$s\n持续时间: %3$s</string>
     <string name="quick_wizard_message">快速向导: %1$s\n胰岛素: %2$.2fU\n碳水: %3$d克</string>
     <string name="wizard_result">计算. 向导:\n胰岛素: %1$.2fU\n碳水: %2$d克</string>
     <string name="overview_editquickwizard_show_on_device">在设备上显示条目：</string>
