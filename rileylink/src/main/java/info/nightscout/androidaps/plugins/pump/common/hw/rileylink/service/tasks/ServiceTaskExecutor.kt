@@ -30,7 +30,7 @@ class ServiceTaskExecutor @Inject constructor() : ThreadPoolExecutor(1, 1, 10000
         task.preOp()
     }
 
-    override fun afterExecute(r: Runnable, t: Throwable) {
+    override fun afterExecute(r: Runnable, t: Throwable?) {
         // This is run on either caller UI thread or Service UI thread.
         val task = r as ServiceTask
         task.postOp()
