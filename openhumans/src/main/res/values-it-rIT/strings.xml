@@ -16,4 +16,20 @@
     <string name="you_have_been_signed_out_of_open_humans">Sei stato disconnesso da Open Humans</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Fare click qui per accedere di nuovo.</string>
     <string name="upload_now">Carica adesso</string>
+    <string name="next">Avanti</string>
+    <string name="welcome_to_open_humans">Benvenuto in Open Humans</string>
+    <string name="setup_data_upload">Per configurare il caricamento dei dati, fai click su \'Avanti\'.</string>
+    <string name="consent">Consenso</string>
+    <string name="terms_of_use">Termini d\'uso</string>
+    <string name="please_read__information">Leggi attentamente le seguenti informazioni e accetta i termini d\'uso per procedere.</string>
+    <string name="info_openhumans">Questo è uno strumento open source che copierà i tuoi dati su Open Humans. Non ci riserviamo alcun diritto di condividere i tuoi dati con terze parti senza la tua esplicita autorizzazione. I dati che il progetto e l\'app ricevono vengono identificati tramite un ID utente casuale e verranno trasmessi in modo sicuro a un account Open Humans solo con la tua autorizzazione per tale processo. Puoi interrompere il caricamento ed eliminare i dati di caricamento in qualsiasi momento tramite www.openhumans.org.</string>
+    <string name="data_uploaded">Dati caricati</string>
+    <string name="glucose_values">Valori glicemia</string>
+    <string name="boluses">Boli</string>
+    <string name="extended_boluses">Boli estesi</string>
+    <string name="carbohydrates">Carboidrati</string>
+    <string name="careportal_events">Eventi Portale (eccetto le note)</string>
+    <string name="profile_switches">Cambi profilo</string>
+    <string name="total_daily_doses">Dosi giornaliere totali</string>
+    <string name="close">Chiudi</string>
 </resources>
