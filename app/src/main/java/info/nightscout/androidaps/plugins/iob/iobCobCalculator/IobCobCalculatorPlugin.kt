@@ -481,6 +481,7 @@ class IobCobCalculatorPlugin @Inject constructor(
         val profile = profileFunction.getProfile() ?: return total
         val dia = profile.dia
         val divisor = sp.getDouble(R.string.key_openapsama_bolussnooze_dia_divisor, 2.0)
+        assert(divisor > 0)
 
         val boluses = repository.getBolusesDataFromTime(toTime - range(), true).blockingGet()
 
