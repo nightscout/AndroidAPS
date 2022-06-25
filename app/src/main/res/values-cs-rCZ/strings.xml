@@ -970,6 +970,7 @@
     <string name="wear_action_tempt_max_bg_error">Maximální glykémie mimo dosah!</string>
     <string name="wear_action_tempt_manual_range_message">Doč. cíl:\nMin: %1$s\nMax: %2$s\nTrvání: %3$s</string>
     <string name="wear_action_tempt_manual_message">Doč. cíl:\nCíl: %1$s\nTrvání: %2$s</string>
+    <string name="wear_action_tempt_preset_message">Doč. cíl:\nDůvod: %1$s\nCíl: %2$s\nTrvání: %3$s</string>
     <string name="quick_wizard_message">Rychlý bolus: %1$s\nInzulín: %2$.2fU\nSacharidy: %3$dg</string>
     <string name="wizard_result">Kalkulátor: \nInzulín: %1$.2fU\nSacharidy: %2$dg</string>
     <string name="overview_editquickwizard_show_on_device">Zobrazit záznam na zařízení:</string>
