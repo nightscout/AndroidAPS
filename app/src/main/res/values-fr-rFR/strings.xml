@@ -968,7 +968,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="wear_action_tempt_max_bg_error">Gly maxi hors limite!</string>
     <string name="wear_action_tempt_manual_range_message">Cible temporaire:\nMin: %1$s\nMax : %2$s\nDurée : %3$s</string>
     <string name="wear_action_tempt_manual_message">Cible temporaire:\nCible: %1$s\nDurée: %2$s</string>
-    <string name="wear_action_tempt_preset_message">Cible temporaire:\nRaison: %1$s\nCible : %2$s\nDurée : %3$s</string>
     <string name="quick_wizard_message">Assistant: %1$s\nInsuline : %2$.2fU\nGlucides : %3$dg</string>
     <string name="wizard_result">Assistant Calc :\nInsuline : %1$.2fU\nGlucides : %2$dg</string>
     <string name="overview_editquickwizard_show_on_device">Afficher l\'entrée sur l\'appareil :</string>
