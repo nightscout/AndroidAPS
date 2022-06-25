@@ -151,7 +151,7 @@ class AutotunePrepTest : TestBaseWithProfile() {
                     Assert.assertTrue(oapsPreppedGlucose.crData[i].equals(aapsPreppedGlucose.crData[i]))
                 for (i in aapsPreppedGlucose.csfGlucoseData.indices)
                     Assert.assertTrue(oapsPreppedGlucose.csfGlucoseData[i].equals(aapsPreppedGlucose.csfGlucoseData[i]))
-                aapsLogger.debug("Oaps ISF Size ${oapsPreppedGlucose.isfGlucoseData.size} / Aaps ISF Size ${aapsPreppedGlucose.isfGlucoseData.size}")
+                aapsLogger.debug("Oaps ISF Size ${oapsPreppedGlucose.isfGlucoseData} / Aaps ISF Size ${aapsPreppedGlucose.isfGlucoseData}")
                 Assert.assertEquals(oapsPreppedGlucose.isfGlucoseData.size, aapsPreppedGlucose.isfGlucoseData.size)
                 for (i in aapsPreppedGlucose.isfGlucoseData.indices)
                     Assert.assertTrue(isInList(oapsPreppedGlucose.isfGlucoseData[i], aapsPreppedGlucose.isfGlucoseData))
