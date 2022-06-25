@@ -441,6 +441,7 @@
     <string name="a11y_file">file</string>
     <string name="a11y_user">utente</string>
     <!-- Autotune -->
+    <string name="autotune_revert_local_profile_message">Ripristinare il profilo %1$s con il profilo di input?</string>
     <plurals name="days">
         <item quantity="one">%1$d giorno</item>
         <item quantity="other">%1$d giorni</item>
