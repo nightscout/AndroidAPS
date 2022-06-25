@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- PumoCommon - Pump Abstract -->
+    <string name="pump_operation_not_supported_by_pump_driver">Operazione non supportata dal micro e/o dal driver.</string>
     <string name="pump_operation_not_yet_supported_by_pump">Operazione NON ANCORA supportata dal micro.</string>
     <string name="common_resultok">OK</string>
     <!-- PumoCommon - Pump Status -->
