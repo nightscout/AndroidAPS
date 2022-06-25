@@ -6,6 +6,7 @@
     <string name="treatmentssafety_title">Sicurezza trattamenti</string>
     <string name="treatmentssafety_maxbolus_title">Max bolo consentito [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Max CHO consentiti [g]</string>
+    <string name="treatmentssafety_lgsThreshold_title">Glicemia sotto la quale si attiva la sospensione per glicemia bassa</string>
     <string name="nav_preferences_plugin">%1$s Preferenze</string>
     <string name="nav_preferences">Preferenze</string>
     <string name="nav_refreshtreatments">Aggiorna trattamenti da NS</string>
@@ -432,6 +433,8 @@
     <string name="ns_localbroadcasts_title">Abilita trasmissioni locali</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">ISF Dinamico</string>
+    <string name="DynISFAdjust_title" formatted="false">Fattore di regolazione per ISF Dinamico (%)</string>
+    <string name="DynISFAdjust_summary" formatted="false">Fattore di regolazione per ISF Dinamico. Imposta più del 100% per dosi di correzione più aggressive e meno del 100% per correzioni meno aggressive.</string>
     <string name="enableuam">Abilita UAM</string>
     <string name="enablesmb">Abilita SMB</string>
     <string name="enablesmb_summary">Usa super-micro-boli al posto della basale temporanea per un\'azione più veloce</string>
@@ -590,6 +593,7 @@
     <string name="openapssmb_maxiob_summary">Questo valore è chiamato Max IOB nel contesto OpenAPS\nOpenAPS non aggiungerà ulteriore insulina se IOB corrente è maggiore di questo valore</string>
     <string name="absorption_cutoff_title">Max tempo assorbimento pasto [h]</string>
     <string name="absorption_cutoff_summary">Tempo entro il quale ogni pasto si considera assorbito. Eventuali carboidrati rimanenti verranno tagliati fuori.</string>
+    <string name="treatmentssafety_lgsThreshold_summary">Glicemia sotto la quale l\'erogazione d\'insulina è sospesa. Il valore predefinito utilizza il modello target standard. L\'utente può impostare un valore compreso tra 60 mg/dl (3.3mmol/l) e 100mg/dl (5.5mmol/l). Con valori inferiori a 65/3.6 viene usato il modello predefinito</string>
     <string name="overview_show_notes_field_in_dialogs_title">Finestre tratt.nto: mostra campo note</string>
     <string name="next_button">Avanti</string>
     <string name="previous_button">Indietro</string>
@@ -1023,6 +1027,7 @@
     <string name="profile2">Profilo 2</string>
     <string name="login">Login</string>
     <string name="remove_all">Rimuovi tutto</string>
+    <string name="reset_start">Avvio reset</string>
     <string name="a11y_otp_qr_code">Codice QR per configurare OTP</string>
     <string name="a11y_open_settings">apri impostazioni</string>
     <string name="a11y_set_carb_timer">imposta allarme timer CHO</string>
