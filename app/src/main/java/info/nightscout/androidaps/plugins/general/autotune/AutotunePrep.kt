@@ -466,7 +466,9 @@ class AutotunePrep @Inject constructor(
                 basalGlucoseData.addAll(uamGlucoseData)
                 //log.debug(basalGlucoseData);
                 // if too much data is excluded as UAM, add in the UAM deviations, but then discard the highest 50%
-                basalGlucoseData.sortWith(object: Comparator<BGDatum>{ override fun compare(o1: BGDatum, o2: BGDatum): Int = (100 * o1.deviation - 100 * o2.deviation).toInt() })  //deviation rouded to 0.01, so *100 to avoid crash during sort
+                //basalGlucoseData.sortWith(object: Comparator<BGDatum>{ override fun compare(o1: BGDatum, o2: BGDatum): Int = (100 * o1.deviation - 100 * o2.deviation).toInt() })  //deviation
+                // rouded to 0.01, so *100 to avoid crash during sort
+                basalGlucoseData = basalGlucoseData.sortedBy { it.deviation }.toMutableList()
                 val newBasalGlucose: MutableList<BGDatum> = ArrayList()
                 for (i in 0 until basalGlucoseData.size / 2) {
                     newBasalGlucose.add(basalGlucoseData[i])
@@ -481,7 +483,9 @@ class AutotunePrep @Inject constructor(
                     log("Adding $UAMLength UAM deviations to $ISFLength ISF ones")
                 isfGlucoseData.addAll(uamGlucoseData)
                 // if too much data is excluded as UAM, add in the UAM deviations to ISF, but then discard the highest 50%
-                isfGlucoseData.sortWith(object: Comparator<BGDatum>{ override fun compare(o1: BGDatum, o2: BGDatum): Int = (100 * o1.deviation - 100 * o2.deviation).toInt() })   //deviation rouded to 0.01, so *100 to avoid crash during sort
+                //isfGlucoseData.sortWith(object: Comparator<BGDatum>{ override fun compare(o1: BGDatum, o2: BGDatum): Int = (100 * o1.deviation - 100 * o2.deviation).toInt() })   //deviation rouded
+                // to 0.01, so *100 to avoid crash during sort
+                isfGlucoseData = isfGlucoseData.sortedBy { it.deviation }.toMutableList()
                 val newISFGlucose: MutableList<BGDatum> = ArrayList()
                 for (i in 0 until isfGlucoseData.size / 2) {
                     newISFGlucose.add(isfGlucoseData[i])
