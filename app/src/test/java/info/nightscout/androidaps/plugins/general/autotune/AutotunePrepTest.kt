@@ -39,7 +39,6 @@ class AutotunePrepTest : TestBaseWithProfile() {
     @Mock lateinit var repository: AppRepository
     lateinit var autotunePrep: AutotunePrep
     lateinit var autotuneIob: TestAutotuneIob
-    lateinit var inputProfile: ATProfile
     var min5mCarbImpact = 0.0
     var autotuneMin = 0.0
     var autotuneMax = 0.0
@@ -49,16 +48,16 @@ class AutotunePrepTest : TestBaseWithProfile() {
     @Before
     fun initData() {
         TimeZone.setDefault(TimeZone.getTimeZone("GMT+2"))
-        val inputProfileJson = File("src/test/res/autotune/test1/profile.pump.json").readText()
-        inputProfile = atProfileFromOapsJson(JSONObject(inputProfileJson), dateUtil)!!
+    }
+
+    @Test
+    fun autotunePrepTest1() { // Test if categorisation with standard treatments with carbs is Ok
         val inputIobJson = File("src/test/res/autotune/test1/oaps-iobCalc.2022-05-21.json").readText() //json files build with iob/activity calculated by OAPS
         val iobOapsCalcul = buildIobOaps(JSONArray(inputIobJson))
         autotuneIob = TestAutotuneIob(aapsLogger, repository, profileFunction, sp, dateUtil, activePlugin, autotuneFS, iobOapsCalcul)
         autotunePrep = AutotunePrep(sp, dateUtil, autotuneFS, autotuneIob)
-    }
-
-    @Test
-    fun autotunePrepTest() { // Test if load from file of OpenAPS categorisation is Ok
+        val inputProfileJson = File("src/test/res/autotune/test1/profile.pump.json").readText()
+        val inputProfile = atProfileFromOapsJson(JSONObject(inputProfileJson), dateUtil)!!
         val prepjson = File("src/test/res/autotune/test1/autotune.2022-05-21.json").readText()
         val oapsPreppedGlucose = PreppedGlucose(JSONObject(prepjson), dateUtil) //prep data calculated by OpenAPS autotune
         val oapsEntriesJson = File("src/test/res/autotune/test1/aaps-entries.2022-05-21.json").readText()
@@ -67,7 +66,7 @@ class AutotunePrepTest : TestBaseWithProfile() {
         autotuneIob.meals =  buildMeals(JSONArray(oapsTreatmentsJson))  //Only meals is used in unit test, Insulin only used for iob calculation
         autotuneIob.boluses = buildBoluses(oapsPreppedGlucose) //Values from oapsPrepData because linked to iob calculation method for TBR
         `when`(sp.getDouble(R.string.key_openapsama_min_5m_carbimpact, 3.0)).thenReturn(min5mCarbImpact)
-
+        `when`(sp.getBoolean(R.string.key_autotune_categorize_uam_as_basal, false)).thenReturn(false)
         val aapsPreppedGlucose = autotunePrep.categorizeBGDatums(inputProfile, inputProfile.localInsulin, false)
         try {
             aapsPreppedGlucose?.let {       // compare all categorization calculated by aaps plugin (aapsPreppedGlucose) with categorization calculated by OpenAPS (oapsPreppedGlucose)
@@ -75,8 +74,12 @@ class AutotunePrepTest : TestBaseWithProfile() {
                     Assert.assertTrue(oapsPreppedGlucose.crData[i].equals(aapsPreppedGlucose.crData[i]))
                 for (i in aapsPreppedGlucose.csfGlucoseData.indices)
                     Assert.assertTrue(oapsPreppedGlucose.csfGlucoseData[i].equals(aapsPreppedGlucose.csfGlucoseData[i]))
+                oapsPreppedGlucose.isfGlucoseData = oapsPreppedGlucose.isfGlucoseData.sortedBy { it.date }
+                aapsPreppedGlucose.isfGlucoseData = aapsPreppedGlucose.isfGlucoseData.sortedBy { it.date }
                 for (i in aapsPreppedGlucose.isfGlucoseData.indices)
                     Assert.assertTrue(oapsPreppedGlucose.isfGlucoseData[i].equals(aapsPreppedGlucose.isfGlucoseData[i]))
+                oapsPreppedGlucose.basalGlucoseData = oapsPreppedGlucose.basalGlucoseData.sortedBy { it.date }
+                aapsPreppedGlucose.basalGlucoseData = aapsPreppedGlucose.basalGlucoseData.sortedBy { it.date }
                 for (i in aapsPreppedGlucose.basalGlucoseData.indices)
                     Assert.assertTrue(oapsPreppedGlucose.basalGlucoseData[i].equals(aapsPreppedGlucose.basalGlucoseData[i]))
             }
@@ -87,8 +90,85 @@ class AutotunePrepTest : TestBaseWithProfile() {
     }
 
 
+    @Test
+    fun autotunePrepTest2() { // Test if categorisation without carbs (full UAM) and categorize UAM as basal false is Ok
+        val inputIobJson = File("src/test/res/autotune/test2/oaps-iobCalc.2022-05-21.json").readText() //json files build with iob/activity calculated by OAPS
+        val iobOapsCalcul = buildIobOaps(JSONArray(inputIobJson))
+        autotuneIob = TestAutotuneIob(aapsLogger, repository, profileFunction, sp, dateUtil, activePlugin, autotuneFS, iobOapsCalcul)
+        autotunePrep = AutotunePrep(sp, dateUtil, autotuneFS, autotuneIob)
+        val inputProfileJson = File("src/test/res/autotune/test2/profile.pump.json").readText()
+        val inputProfile = atProfileFromOapsJson(JSONObject(inputProfileJson), dateUtil)!!
+        val prepjson = File("src/test/res/autotune/test2/autotune.2022-05-21.json").readText()
+        val oapsPreppedGlucose = PreppedGlucose(JSONObject(prepjson), dateUtil) //prep data calculated by OpenAPS autotune
+        val oapsEntriesJson = File("src/test/res/autotune/test2/aaps-entries.2022-05-21.json").readText()
+        autotuneIob.glucose =  buildGlucose(JSONArray(oapsEntriesJson))
+        val oapsTreatmentsJson = File("src/test/res/autotune/test2/aaps-treatments.2022-05-21.json").readText()
+        autotuneIob.meals =  buildMeals(JSONArray(oapsTreatmentsJson))  //Only meals is used in unit test, Insulin only used for iob calculation
+        autotuneIob.boluses = buildBoluses(oapsPreppedGlucose) //Values from oapsPrepData because linked to iob calculation method for TBR
+        `when`(sp.getDouble(R.string.key_openapsama_min_5m_carbimpact, 3.0)).thenReturn(min5mCarbImpact)
+        `when`(sp.getBoolean(R.string.key_autotune_categorize_uam_as_basal, false)).thenReturn(false)           // CategorizeUAM as Basal = False
+        val aapsPreppedGlucose = autotunePrep.categorizeBGDatums(inputProfile, inputProfile.localInsulin, false)
+        try {
+            aapsPreppedGlucose?.let {       // compare all categorization calculated by aaps plugin (aapsPreppedGlucose) with categorization calculated by OpenAPS (oapsPreppedGlucose)
+                for (i in aapsPreppedGlucose.crData.indices)
+                    Assert.assertTrue(oapsPreppedGlucose.crData[i].equals(aapsPreppedGlucose.crData[i]))
+                for (i in aapsPreppedGlucose.csfGlucoseData.indices)
+                    Assert.assertTrue(oapsPreppedGlucose.csfGlucoseData[i].equals(aapsPreppedGlucose.csfGlucoseData[i]))
+                oapsPreppedGlucose.isfGlucoseData = oapsPreppedGlucose.isfGlucoseData.sortedBy { it.date }
+                aapsPreppedGlucose.isfGlucoseData = aapsPreppedGlucose.isfGlucoseData.sortedBy { it.date }
+                for (i in aapsPreppedGlucose.isfGlucoseData.indices)
+                    Assert.assertTrue(oapsPreppedGlucose.isfGlucoseData[i].equals(aapsPreppedGlucose.isfGlucoseData[i]))
+                oapsPreppedGlucose.basalGlucoseData = oapsPreppedGlucose.basalGlucoseData.sortedBy { it.date }
+                aapsPreppedGlucose.basalGlucoseData = aapsPreppedGlucose.basalGlucoseData.sortedBy { it.date }
+                for (i in aapsPreppedGlucose.basalGlucoseData.indices)
+                    Assert.assertTrue(oapsPreppedGlucose.basalGlucoseData[i].equals(aapsPreppedGlucose.basalGlucoseData[i]))
+            }
+                ?: Assert.fail()
+        } catch (e: Exception) {
+            Assert.fail()
+        }
+    }
 
-    /**
+    @Test
+    fun autotunePrepTest3() { // Test if categorisation without carbs (full UAM) and categorize UAM as basal true is Ok
+        val inputIobJson = File("src/test/res/autotune/test3/oaps-iobCalc.2022-05-21.json").readText() //json files build with iob/activity calculated by OAPS
+        val iobOapsCalcul = buildIobOaps(JSONArray(inputIobJson))
+        autotuneIob = TestAutotuneIob(aapsLogger, repository, profileFunction, sp, dateUtil, activePlugin, autotuneFS, iobOapsCalcul)
+        autotunePrep = AutotunePrep(sp, dateUtil, autotuneFS, autotuneIob)
+        val inputProfileJson = File("src/test/res/autotune/test3/profile.pump.json").readText()
+        val inputProfile = atProfileFromOapsJson(JSONObject(inputProfileJson), dateUtil)!!
+        val prepjson = File("src/test/res/autotune/test3/autotune.2022-05-21.json").readText()
+        val oapsPreppedGlucose = PreppedGlucose(JSONObject(prepjson), dateUtil) //prep data calculated by OpenAPS autotune
+        val oapsEntriesJson = File("src/test/res/autotune/test3/aaps-entries.2022-05-21.json").readText()
+        autotuneIob.glucose =  buildGlucose(JSONArray(oapsEntriesJson))
+        val oapsTreatmentsJson = File("src/test/res/autotune/test3/aaps-treatments.2022-05-21.json").readText()
+        autotuneIob.meals =  buildMeals(JSONArray(oapsTreatmentsJson))  //Only meals is used in unit test, Insulin only used for iob calculation
+        autotuneIob.boluses = buildBoluses(oapsPreppedGlucose) //Values from oapsPrepData because linked to iob calculation method for TBR
+        `when`(sp.getDouble(R.string.key_openapsama_min_5m_carbimpact, 3.0)).thenReturn(min5mCarbImpact)
+        `when`(sp.getBoolean(R.string.key_autotune_categorize_uam_as_basal, false)).thenReturn(true)           // CategorizeUAM as Basal = True
+        val aapsPreppedGlucose = autotunePrep.categorizeBGDatums(inputProfile, inputProfile.localInsulin, false)
+        try {
+            aapsPreppedGlucose?.let {       // compare all categorization calculated by aaps plugin (aapsPreppedGlucose) with categorization calculated by OpenAPS (oapsPreppedGlucose)
+                for (i in aapsPreppedGlucose.crData.indices)
+                    Assert.assertTrue(oapsPreppedGlucose.crData[i].equals(aapsPreppedGlucose.crData[i]))
+                for (i in aapsPreppedGlucose.csfGlucoseData.indices)
+                    Assert.assertTrue(oapsPreppedGlucose.csfGlucoseData[i].equals(aapsPreppedGlucose.csfGlucoseData[i]))
+                oapsPreppedGlucose.isfGlucoseData = oapsPreppedGlucose.isfGlucoseData.sortedBy { it.date }
+                aapsPreppedGlucose.isfGlucoseData = aapsPreppedGlucose.isfGlucoseData.sortedBy { it.date }
+                for (i in aapsPreppedGlucose.isfGlucoseData.indices)
+                    Assert.assertTrue(oapsPreppedGlucose.isfGlucoseData[i].equals(aapsPreppedGlucose.isfGlucoseData[i]))
+                oapsPreppedGlucose.basalGlucoseData = oapsPreppedGlucose.basalGlucoseData.sortedBy { it.date }
+                aapsPreppedGlucose.basalGlucoseData = aapsPreppedGlucose.basalGlucoseData.sortedBy { it.date }
+                for (i in aapsPreppedGlucose.basalGlucoseData.indices)
+                    Assert.assertTrue(oapsPreppedGlucose.basalGlucoseData[i].equals(aapsPreppedGlucose.basalGlucoseData[i]))
+            }
+                ?: Assert.fail()
+        } catch (e: Exception) {
+            Assert.fail()
+        }
+    }
+
+    /*************************************************************************************************************************************************************************************
      * OpenAPS profile for Autotune only have one ISF value and one IC value
      */
     fun atProfileFromOapsJson(jsonObject: JSONObject, dateUtil: DateUtil, defaultUnits: String? = null): ATProfile? {
@@ -172,6 +252,14 @@ class AutotunePrepTest : TestBaseWithProfile() {
                 )
             }
         } catch (e: Exception) { }
+        if (boluses.size == 0)  //Add at least one insulin treatment for tests to avoid return null in categorization
+            boluses.add(
+                Bolus(
+                    timestamp = startDayTime,
+                    amount = 1.0,
+                    type = Bolus.Type.NORMAL
+                )
+            )
         return boluses
     }
 
