@@ -968,7 +968,6 @@
     <string name="wear_action_tempt_max_bg_error">¡Glucosa máxima fuera de rango!</string>
     <string name="wear_action_tempt_manual_range_message">Objetivo temporal:\nMin: %1$s\nMax: %2$s\nDuración: %3$s</string>
     <string name="wear_action_tempt_manual_message">Objetivo temporal:\nObjetivo: %1$s\nDuración: %2$s</string>
-    <string name="wear_action_tempt_preset_message">ObjetivoTemporal:\Razón: %1$s\nObjetivo: %2$s\nDuración: %3$s</string>
     <string name="quick_wizard_message">Asistente Rápido: %1$s\nInsulina: %2$.2fU\nCarbohidratos: %3$dg</string>
     <string name="wizard_result">Calc. Asistente:\nInsulina: %1$.2fU\nCarbohidratos: %2$dg</string>
     <string name="overview_editquickwizard_show_on_device">Mostrar entrada en dispositivo:</string>
