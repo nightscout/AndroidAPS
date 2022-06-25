@@ -965,7 +965,6 @@
     <string name="wear_action_tempt_max_bg_error">Макс ГК вне диапазона!</string>
     <string name="wear_action_tempt_manual_range_message">ВремЦель:\nМин: %1$s\nМакс.: %2$s\nДлительность: %3$s</string>
     <string name="wear_action_tempt_manual_message">ВремЦель:\nЦель: %1$s\nДлительность: %2$s</string>
-    <string name="wear_action_tempt_preset_message">ВремЦель:\Причина: %1$s\nЦель.: %2$s\nДлительность: %3$s</string>
     <string name="quick_wizard_message">Мастер: %1$s\nИнсулин: %2$.2fЕд\nУгл: %3$dg</string>
     <string name="wizard_result">Мастер:\nИнсулин: %1$.2fЕд\nУгл: %2$dg</string>
     <string name="overview_editquickwizard_show_on_device">Показать запись на устройстве:</string>
