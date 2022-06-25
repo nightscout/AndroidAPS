@@ -6,6 +6,7 @@
     <string name="treatmentssafety_title">Sicurezza trattamenti</string>
     <string name="treatmentssafety_maxbolus_title">Max bolo consentito [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Max CHO consentiti [g]</string>
+    <string name="treatmentssafety_lgsThreshold_title">Glicemia sotto la quale si attiva la sospensione per glicemia bassa</string>
     <string name="nav_preferences_plugin">%1$s Preferenze</string>
     <string name="nav_preferences">Preferenze</string>
     <string name="nav_refreshtreatments">Aggiorna trattamenti da NS</string>
@@ -432,14 +433,15 @@
     <string name="ns_localbroadcasts_title">Abilita trasmissioni locali</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">ISF Dinamico</string>
-    <string name="DynISFAdjust_title">%% fattore di regolazione ISF dinamico</string>
-    <string name="DynISFAdjust_summary">Fattore di regolazione per ISF dinamico. Imposta più del 100%% per correzioni più aggressive, meno del 100%% per correzioni meno aggressive.</string>
+    <string name="DynISFAdjust_title" formatted="false">Fattore di regolazione per ISF Dinamico (%)</string>
+    <string name="DynISFAdjust_summary" formatted="false">Fattore di regolazione per ISF Dinamico. Imposta più del 100% per dosi di correzione più aggressive e meno del 100% per correzioni meno aggressive.</string>
     <string name="enableuam">Abilita UAM</string>
     <string name="enablesmb">Abilita SMB</string>
     <string name="enablesmb_summary">Usa super-micro-boli al posto della basale temporanea per un\'azione più veloce</string>
     <string name="enableuam_summary">Rilevamento dei pasti non annunciati</string>
     <string name="insulin_oref_peak">Tempo picco Curva IOB</string>
     <string name="insulin_peak_time">Tempo del picco [min]</string>
+    <string name="insulin_peak">Picco</string>
     <string name="free_peak_oref">Free-Peak Oref</string>
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
     <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
@@ -591,6 +593,7 @@
     <string name="openapssmb_maxiob_summary">Questo valore è chiamato Max IOB nel contesto OpenAPS\nOpenAPS non aggiungerà ulteriore insulina se IOB corrente è maggiore di questo valore</string>
     <string name="absorption_cutoff_title">Max tempo assorbimento pasto [h]</string>
     <string name="absorption_cutoff_summary">Tempo entro il quale ogni pasto si considera assorbito. Eventuali carboidrati rimanenti verranno tagliati fuori.</string>
+    <string name="treatmentssafety_lgsThreshold_summary">Glicemia sotto la quale l\'erogazione d\'insulina è sospesa. Il valore predefinito utilizza il modello target standard. L\'utente può impostare un valore compreso tra 60 mg/dl (3.3mmol/l) e 100mg/dl (5.5mmol/l). Con valori inferiori a 65/3.6 viene usato il modello predefinito</string>
     <string name="overview_show_notes_field_in_dialogs_title">Finestre tratt.nto: mostra campo note</string>
     <string name="next_button">Avanti</string>
     <string name="previous_button">Indietro</string>
@@ -603,7 +606,11 @@
     <string name="secondcarbsincrement">Secondo incremento di CHO</string>
     <string name="thirdcarbsincrement">Terzo incremento di CHO</string>
     <string name="cgm">CGM</string>
+    <string name="ns_cellular">Usa connessione cellulare</string>
+    <string name="ns_wifi">Usa connessione WiFi</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="ns_charging">Durante la ricarica</string>
+    <string name="ns_battery">Utilizzo batteria</string>
     <string name="connectionsettings_title">Impostazioni connessione</string>
     <string name="ns_wifi_allowedssids">SSID ammessi (separati da punto e virgola)</string>
     <string name="ns_allowroaming">Consenti connessione in roaming</string>
@@ -678,6 +685,8 @@
     <string name="error_adding_treatment_message">Un trattamento (insulina: %1$.2f, carboidrati: %2$d, a: %3$s) non può essere aggiunto ai trattamenti. Controlla e aggiungi il record necessario.</string>
     <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), ritardo: %3$d m</string>
     <string name="openaps_noasdata">Nessun dato autosens disponibile</string>
+    <string name="log_files">File di log</string>
+    <string name="miscellaneous">Miscellanea</string>
     <string name="nav_logsettings">Impostazioni Log</string>
     <string name="resettodefaults">Ripristina valori predefiniti</string>
     <string name="nsmalfunction">Malfunzionamento NSClient. Considera il riavvio di NS e NSClient.</string>
@@ -770,6 +779,11 @@
     <string name="invalidpct">Inserimento % non valido</string>
     <string name="average">Media</string>
     <string name="tir">TIR</string>
+    <string name="day_tir">TIR giorno</string>
+    <string name="night_tir">TIR notte</string>
+    <string name="detailed_14_days">Dettaglio 14 giorni</string>
+    <string name="std_deviation">SD: %1$s</string>
+    <string name="hba1c">HbA1c: </string>
     <string name="activitymonitor">Monitor attività</string>
     <string name="doyouwantresetstats">Vuoi resettare le statistiche sull\'attività?</string>
     <string name="statistics">Statistiche</string>
@@ -956,7 +970,6 @@
     <string name="wear_action_tempt_max_bg_error">Max-BG fuori range!</string>
     <string name="wear_action_tempt_manual_range_message">Temptarget:\nMin: %1$s\nMax: %2$s\nDurata: %3$s</string>
     <string name="wear_action_tempt_manual_message">Temptarget:\nTarget: %1$s\nDurata: %2$s</string>
-    <string name="wear_action_tempt_preset_message">Temptarget:\Motivo: %1$s\nTarget: %2$s\nDurata: %3$s</string>
     <string name="quick_wizard_message">QuickWizard: %1$s\nInsulina: %2$.2fU\nCHO: %3$dg</string>
     <string name="wizard_result">Calc. Wizard:\nInsulina: %1$.2fU\nCHO: %2$dg</string>
     <string name="overview_editquickwizard_show_on_device">Mostra voce sul dispositivo:</string>
@@ -965,9 +978,11 @@
     <string name="wizard_no_active_profile">Nessun profilo attivo!</string>
     <string name="wizard_no_cob">Valore COB sconosciuto! Lettura BG mancante o recente riavvio dell\'app?</string>
     <string name="wizard_carbs_constraint">Violazione vincolo CHO!</string>
+    <string name="wizard_explain_calc">Calc (IC: %1$.1f, ISF: %2$.1f)</string>
     <string name="wizard_explain_carbs">CHO: %1$.2fU</string>
     <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fU</string>
     <string name="wizard_explain_bg">BG: %1$.2fU</string>
+    <string name="wizard_explain_iob">IOB: %1$.2fU</string>
     <string name="wizard_explain_superbolus">Superbolo: %1$.2fU</string>
     <string name="wizard_explain_trend">Trend di 15\': %1$.2fU</string>
     <string name="wizard_explain_percent">Percentuale: %1$.2fU x %2$d%% ≈ %3$.2fU</string>
@@ -994,6 +1009,10 @@
     <string name="count_selected">%1$d selezionati</string>
     <string name="sort_label">Ordina</string>
     <string name="dialog_canceled">Finestra di dialogo cancellata</string>
+    <string name="veryLow" comment="below 3.1">Molto basso</string>
+    <string name="low" comment="3.1-3.9">Basso</string>
+    <string name="high" comment="10.0-13.9">Alto</string>
+    <string name="veryHigh" comment="above 13.9">Molto alto</string>
     <string name="below" comment="below &quot;in range&quot;">Sotto</string>
     <string name="in_range">In range</string>
     <string name="above" comment="above &quot;in range&quot;">Sopra</string>
@@ -1001,6 +1020,13 @@
     <string name="show_hide_records">Nascondi record di loop</string>
     <string name="widget_description">Widget di AndroidAPS</string>
     <string name="configure">Configura opacità</string>
+    <string name="loop_status">Stato loop</string>
+    <string name="graph_scale">Scala del grafico</string>
+    <string name="profile1">Profilo 1</string>
+    <string name="profile2">Profilo 2</string>
+    <string name="login">Login</string>
+    <string name="remove_all">Rimuovi tutto</string>
+    <string name="reset_start">Avvio reset</string>
     <string name="a11y_otp_qr_code">Codice QR per configurare OTP</string>
     <string name="a11y_open_settings">apri impostazioni</string>
     <string name="a11y_set_carb_timer">imposta allarme timer CHO</string>
@@ -1014,4 +1040,6 @@
     <string name="aidex">GlucoRx Aidex</string>
     <string name="aidex_short">GlucoRx Aidex</string>
     <string name="description_source_aidex">Ricevi valori glicemia da CGM GlucoRx Aidex.</string>
+    <string name="blocked_by_charging">Bloccato dalle opzioni di ricarica</string>
+    <string name="blocked_by_connectivity">Bloccato dalle opzioni di connettività</string>
 </resources>

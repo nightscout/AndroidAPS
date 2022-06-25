@@ -433,8 +433,8 @@
     <string name="ns_localbroadcasts_title">Habilitar la emisión de mensajes localmente.</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">ISF Dinámico</string>
-    <string name="DynISFAdjust_title">Factor de ajuste de ISF Dinámico %</string>
-    <string name="DynISFAdjust_summary">Porcentaje del factor de ajuste de ISF Dinámico\nValor predeterminado: 100\nEstablecer valores por encima del 100%% para que el algoritmo aplique correcciones más agresivas y valores por debajo del 100%% para correcciones menos agresivas.</string>
+    <string name="DynISFAdjust_title" formatted="false">Factor de ajuste de ISF Dinámico %</string>
+    <string name="DynISFAdjust_summary" formatted="false">Porcentaje del factor de ajuste de ISF Dinámico\nValor predeterminado: 100\nEstablecer valores por encima del 100% para que el algoritmo aplique correcciones más agresivas y valores por debajo del 100% para correcciones menos agresivas.</string>
     <string name="enableuam">Activar UAM</string>
     <string name="enablesmb">Activar SMB</string>
     <string name="enablesmb_summary">Usar microbolos en lugar de basales temporales, para corregir más rápidamente</string>
@@ -970,7 +970,7 @@
     <string name="wear_action_tempt_max_bg_error">¡Glucosa máxima fuera de rango!</string>
     <string name="wear_action_tempt_manual_range_message">Objetivo temporal:\nMin: %1$s\nMax: %2$s\nDuración: %3$s</string>
     <string name="wear_action_tempt_manual_message">Objetivo temporal:\nObjetivo: %1$s\nDuración: %2$s</string>
-    <string name="wear_action_tempt_preset_message">ObjetivoTemporal:\Razón: %1$s\nObjetivo: %2$s\nDuración: %3$s</string>
+    <string name="wear_action_tempt_preset_message">ObjetivoTemporal:\nRazón: %1$s\nObjetivo: %2$s\nDuración: %3$s</string>
     <string name="quick_wizard_message">Asistente Rápido: %1$s\nInsulina: %2$.2fU\nCarbohidratos: %3$dg</string>
     <string name="wizard_result">Calc. Asistente:\nInsulina: %1$.2fU\nCarbohidratos: %2$dg</string>
     <string name="overview_editquickwizard_show_on_device">Mostrar entrada en dispositivo:</string>

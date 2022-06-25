@@ -432,8 +432,6 @@
     <string name="ns_localbroadcasts_title">Aktiver lokale udsendelser.</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dynamisk ISF</string>
-    <string name="DynISFAdjust_title">DynamicISF-justeringsfaktor %%</string>
-    <string name="DynISFAdjust_summary">Justeringsfaktor for Dynamisk ISF. Indstil mere end 100%% for mere aggressive korrektionsdoser og mindre end 100%% for mindre aggressive korrektioner.</string>
     <string name="enableuam">Aktiver UAM</string>
     <string name="enablesmb">Aktiver SMB</string>
     <string name="enablesmb_summary">Brug Super Mikro Boluser i stedet for midlertidig basal for hurtigere handling</string>
@@ -956,7 +954,6 @@
     <string name="wear_action_tempt_max_bg_error">Max-BS udenfor området!</string>
     <string name="wear_action_tempt_manual_range_message">Midlertidigt mål:\nMin: %1$s\nMax: %2$s\nVarighed: %3$s</string>
     <string name="wear_action_tempt_manual_message">Midlertigt mål:\nMål: %1$s\nVarighed: %2$s</string>
-    <string name="wear_action_tempt_preset_message">Midlertigt mål:\Grund: %1$s\nMål: %2$s\nVarighed: %3$s</string>
     <string name="quick_wizard_message">Hurtigguide: %1$s\nInsulin: %2$.2fE\nKH: %3$dg</string>
     <string name="wizard_result">Guide:\nInsulin: %1$.2fE\nKH: %2$dg</string>
     <string name="overview_editquickwizard_show_on_device">Vis post på enhed:</string>

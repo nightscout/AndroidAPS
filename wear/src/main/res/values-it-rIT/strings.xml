@@ -2,6 +2,15 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
+    <string name="label_watchface">AAPS</string>
+    <string name="label_watchface_large">AAPS(Large)</string>
+    <string name="label_watchface_big_chart">AAPS(BigChart)</string>
+    <string name="label_watchface_no_chart">AAPS(NoChart)</string>
+    <string name="label_watchface_circle">AAPS(Circle)</string>
+    <string name="label_watchface_v2">AAPS(v2)</string>
+    <string name="label_watchface_cockpit">AAPS(Cockpit)</string>
+    <string name="label_watchface_steampunk">AAPS(Steampunk)</string>
+    <string name="label_watchface_digital_style">AAPS(DigitalStyle)</string>
     <string name="label_actions_tile">AAPS(azioni)</string>
     <string name="label_temp_target_tile">AAPS(Temp Target)</string>
     <string name="label_quick_wizard_tile">AAPS(Quick Wizard)</string>
@@ -55,6 +64,7 @@
     <string name="pref_complication_tap_action">Complication Tap Action</string>
     <string name="pref_unicode_in_complications">Unicode in Complications</string>
     <string name="pref_version">Versione:</string>
+    <string name="pref_moreWatchfaceSettings">Più impostazioni watchface</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Controlla configurazione watchface.</string>
     <string name="menu_tempt">TempT</string>
     <string name="menu_wizard">Calcolatore</string>
@@ -80,6 +90,7 @@
     <string name="action_wizard_confirmation">Calcolo richiesto</string>
     <string name="action_fill_confirmation">Riempimento richiesto</string>
     <string name="action_ecarb_confirmation">CHO richiesti</string>
+    <string name="action_profile_switch_confirmation">Cambio profilo richiesto</string>
     <string name="action_target" comment="In temp target menu, single target value">Target</string>
     <string name="action_low" comment="In temp target menu, lower value from range">Basso</string>
     <string name="action_high" comment="In temp target menu, higher value from range">Alto</string>
@@ -101,6 +112,7 @@
     <string name="cancel_bolus">CANCELLA BOLO</string>
     <string name="status_pump">Micro</string>
     <string name="status_loop">Loop</string>
+    <string name="status_profile_switch">Cambio profilo</string>
     <string name="status_tdd">TDD</string>
     <string name="activity_carb">CHO</string>
     <string name="activity_IOB">IOB</string>
@@ -156,4 +168,20 @@
     <string name="tile_no_config">Nessuna configurazione disponibile</string>
     <string name="wear_control_not_enabled">Controlli smartwatch disabilitati</string>
     <string name="wear_control_no_data">Nessun dato disponibile</string>
+    <string name="increment">incremento</string>
+    <string name="decrement">decremento</string>
+    <string name="first_char_high">H</string>
+    <string name="first_char_low">L</string>
+    <string name="abbreviation_average">media</string>
+    <string name="no_iob_u">--U</string>
+    <string name="no_cob_g">--g</string>
+    <string name="no_tmp_basal_u_h">-.--U/h</string>
+    <string name="uploader_na">Caricamento: ---%</string>
+    <string name="no_status">S: nessuno stato</string>
+    <string name="time_stamp_na_min_ago">-- Minuti fa</string>
+    <string name="delta_na">--- mg/dl</string>
+    <string name="no_loop_status">Nessun stato di loop</string>
+    <string name="cob_000g">000g</string>
+    <string name="svg_00_0">00,0</string>
+    <string name="iob_0_00u">0,00U</string>
 </resources>

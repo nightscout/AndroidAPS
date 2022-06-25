@@ -941,7 +941,6 @@ Eversense-appen.</string>
     <string name="wear_action_tempt_max_bg_error">Ogiltigt maximum BG!</string>
     <string name="wear_action_tempt_manual_range_message">Temp-mål:\nMin: %1$s\nMax: %2$s\nVaraktighet: %3$s</string>
     <string name="wear_action_tempt_manual_message">Temp-mål:\nMål: %1$s\nDuration: %2$s</string>
-    <string name="wear_action_tempt_preset_message">Temp-mål:\Orsak: %1$s\nMål: %2$s\nVaraktighet: %3$s</string>
     <string name="quick_wizard_message">Snabbsteg: %1$s\nInsulin: %2$.2fU\nKolhydrater: %3$dg</string>
     <string name="wizard_result">Kalkylator:\nInsulin: %1$.2fU\nKolhydrater: %2$dg</string>
     <string name="overview_editquickwizard_show_on_device">Visa post på enhet:</string>

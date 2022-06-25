@@ -6,6 +6,7 @@
     <string name="treatmentssafety_title">Bezpečnosť zadania ošetrenia</string>
     <string name="treatmentssafety_maxbolus_title">Maximálny povolený bolus [JI]</string>
     <string name="treatmentssafety_maxcarbs_title">Maximálne povolené množstvo sacharidov [g]</string>
+    <string name="treatmentssafety_lgsThreshold_title">Hodnota glykémie, pri ktorej sa aktivuje LGS</string>
     <string name="nav_preferences_plugin">Nastavenie pluginu %1$s</string>
     <string name="nav_preferences">Nastavenia</string>
     <string name="nav_refreshtreatments">Obnoviť ošetrenia z NS</string>
@@ -432,8 +433,8 @@
     <string name="ns_localbroadcasts_title">Povoliť lokálne vysielanie.</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dynamická ISF</string>
-    <string name="DynISFAdjust_title">Korekčný faktor pre Dynamickú ISF v %%</string>
-    <string name="DynISFAdjust_summary">Korekčný faktor pre dynamickú ISF. Pre agresivnejšie korekčné dávky nastavte hodnoty väčšie ako 100%% a pre menej agresivne korekcie menšie než 100%%.</string>
+    <string name="DynISFAdjust_title" formatted="false">Korekčný faktor pre Dynamickú ISF v %</string>
+    <string name="DynISFAdjust_summary" formatted="false">Korekčný faktor pre dynamickú ISF. Pre agresivnejšie korekčné dávky nastavte hodnoty väčšie ako 100%, pre menej agresívne korekcie, menšie než 100%.</string>
     <string name="enableuam">Povoliť UAM</string>
     <string name="enablesmb">Povoliť SMB</string>
     <string name="enablesmb_summary">Použiť Super Mikro Bolusy namiesto dočasných bazálov, pre zrýchleniu účinku</string>
@@ -592,6 +593,7 @@
     <string name="openapssmb_maxiob_summary">Táto hodnota je v kontexte OpenAPS nazývaná Max IOB.\nOpenAPS nikdy nepridá inzulín, pokiaľ je súčasné IOB väčšie, ako táto hodnota</string>
     <string name="absorption_cutoff_title">Maximálna doba vstrebávania sacharidov [h]</string>
     <string name="absorption_cutoff_summary">Doba, po ktorej sú všetky sacharidy považované za vstrebané. Zvyšné budú orezané.</string>
+    <string name="treatmentssafety_lgsThreshold_summary">Hodnota glykémie, pri ktorej bude podávanie inzulínu zastavené. Východzia hodnota využíva štandardný cieľový model. Užívateľ môže nastaviť hodnoty od 3,3 mmol/l do 5,5 mmol/l. Pri hodnotách pod 3,6 mmol/l se použije východzí model.</string>
     <string name="overview_show_notes_field_in_dialogs_title">Zobrazovať kolónku poznámky v dialógoch ošetrení</string>
     <string name="next_button">Ďalšia</string>
     <string name="previous_button">Späť</string>
@@ -968,7 +970,6 @@
     <string name="wear_action_tempt_max_bg_error">Maximálna glykémia mimo rozsah!</string>
     <string name="wear_action_tempt_manual_range_message">Doč. cieľ:\nMin: %1$s\nMax: %2$s\nTrvanie: %3$s</string>
     <string name="wear_action_tempt_manual_message">Doč. cieľ:\nCieľ: %1$s\nTrvanie: %2$s</string>
-    <string name="wear_action_tempt_preset_message">Doč. cieľ:\nDôvod: %1$s\nCieľ: %2$s\nTrvanie: %3$s</string>
     <string name="quick_wizard_message">Rýchly bolus: %1$s\nInzulín: %2$.2fJI\nSacharidy: %3$dg</string>
     <string name="wizard_result">Kalkulačka: \nInzulín: %1$.2fJI\nSacharidy: %2$dg</string>
     <string name="overview_editquickwizard_show_on_device">Zobraziť záznam na zariadení:</string>

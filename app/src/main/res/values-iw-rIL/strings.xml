@@ -6,6 +6,7 @@
     <string name="treatmentssafety_title">בטיחות טיפולים</string>
     <string name="treatmentssafety_maxbolus_title">בולוס מקסימלי מותר [U]</string>
     <string name="treatmentssafety_maxcarbs_title">מקסימום פחמימות מותר [g]</string>
+    <string name="treatmentssafety_lgsThreshold_title">רמת הסוכר נמוכה מסף ההשהיה עקב סוכר נמוך</string>
     <string name="nav_preferences_plugin">העדפות %1$s</string>
     <string name="nav_preferences">העדפות</string>
     <string name="nav_refreshtreatments">רענן טיפול מ-Nightscout</string>
@@ -432,14 +433,15 @@
     <string name="ns_localbroadcasts_title">אפשר שידורים מקומיים.</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">רגישות דינאמית</string>
-    <string name="DynISFAdjust_title">כיוונון פקטור הרגישות הדינאמית %%</string>
-    <string name="DynISFAdjust_summary">כיוונון פקטור הרגישות הדינאמית. קבעו יותר מ-100%% לקבלת תיקונים אגרסיביים יותר ופחות מ-100%% לקבלת תיקונים עדינים יותר.</string>
+    <string name="DynISFAdjust_title" formatted="false">כיוונון פקטור הרגישות הדינאמית %</string>
+    <string name="DynISFAdjust_summary" formatted="false">כיוונון פקטור הרגישות הדינאמית. הגדירו יותר מ-100% לקבלת תיקונים אגרסיביים יותר ופחות מ-100% לקבלת תיקונים עדינים יותר.</string>
     <string name="enableuam">הפעלת UAM</string>
     <string name="enablesmb">אפשר SMB</string>
     <string name="enablesmb_summary">השתמש בסופר מיקרו בולוסים במקום בבזאלי זמני לפעילות מהירה יותר</string>
     <string name="enableuam_summary">זיהוי של ארוחות לא מוכרזות</string>
     <string name="insulin_oref_peak">שעת שיא של עקומת IOB</string>
     <string name="insulin_peak_time">זמן שיא [min]</string>
+    <string name="insulin_peak">שיא</string>
     <string name="free_peak_oref">Oref שיא חופשי</string>
     <string name="rapid_acting_oref">Oref אינסולין מהיר</string>
     <string name="ultrarapid_oref">Oref אינסולין אולטרה מהיר</string>
@@ -591,6 +593,7 @@
     <string name="openapssmb_maxiob_summary">ב-OpenAPS ערך זה נקרא מקסימום אינסולין פעיל (maxIOB). \nלא יוזרק עוד אינסולין אם כמות האינסולין הפעיל הנוכחי גדול מערך זה</string>
     <string name="absorption_cutoff_title">זמן ספיגה מקסימלי של הארוחה [h]</string>
     <string name="absorption_cutoff_summary">משך זמן בו כל ארוחה תחשב כנספגה. לא תהיה התחשבות בפחמימות שנותרו.</string>
+    <string name="treatmentssafety_lgsThreshold_summary">ערך הסוכר שמתחתיו מושעה הזרקת אינסולין. ערך ברירת המחדל משתמש במודל מטרה סטנדרטי. המשתמש יכול להגדיר ערך בין 60 ל-100 מג\"\\ד\"ל. ערכים מתחת ל-65 מביאים לשימוש במודל ברירת המחדל</string>
     <string name="overview_show_notes_field_in_dialogs_title">הצגת שדות הערות בתיבות דו-שיח של טיפול</string>
     <string name="next_button">הבא</string>
     <string name="previous_button">הקודם</string>
@@ -603,7 +606,11 @@
     <string name="secondcarbsincrement">תוספת פחמימות שניה</string>
     <string name="thirdcarbsincrement">תוספת פחמימות שלישית</string>
     <string name="cgm">סנסור</string>
+    <string name="ns_cellular">השתמש באינטרנט סלולרי</string>
+    <string name="ns_wifi">השתמש בחיבור WiFi</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="ns_charging">בזמן טעינה</string>
+    <string name="ns_battery">משתמש בסוללה</string>
     <string name="connectionsettings_title">הגדרות חיבור</string>
     <string name="ns_wifi_allowedssids">SSID מורשים (מופרדים בנקודה-פסיק)</string>
     <string name="ns_allowroaming">אפשר חיבור בנדידה</string>
@@ -770,6 +777,11 @@
     <string name="invalidpct">רשומת אחוזים לא חוקית</string>
     <string name="average">ממוצע</string>
     <string name="tir">זמן בטווח</string>
+    <string name="day_tir">זמן בטווח ביום</string>
+    <string name="night_tir">זמן בטווח בלילה</string>
+    <string name="detailed_14_days">פירוט 14 יום</string>
+    <string name="std_deviation">סטיית תקן: %1$s</string>
+    <string name="hba1c">HbA1c: </string>
     <string name="activitymonitor">מוניטור פעילות</string>
     <string name="doyouwantresetstats">האם ברצונכם לאפס את הסטטיסטיקות הפעילות?</string>
     <string name="statistics">סטטיסטיקה</string>
@@ -880,6 +892,8 @@
     <string name="ns_receive_profile_switch_summary">קבלת החלפות פרופיל שהוגדרו בנייטסקאוט או ב-NSClient</string>
     <string name="ns_receive_offline_event">אחזר אירועים לא מקוונים</string>
     <string name="ns_receive_offline_event_summary">קבל אירועים לא מקוונים שנרשמו דרך נייטסקאוט או NSClient</string>
+    <string name="ns_receive_tbr_eb">קבל מינון בזאלי זמני ובולוס מושהה</string>
+    <string name="ns_receive_tbr_eb_summary">קבל מינוני בזאלי זמני ובולוסים מושהים שהופעלו ממכשיר עוקב</string>
     <string name="ns_receive_insulin">קבלת אינסולין</string>
     <string name="ns_receive_insulin_summary">קבלת אינסולין שהוזן באמצעות נייטסקאוט או NSClient (הוא לא מוזרק, רק מחושב רק כאינסולין פעיל)</string>
     <string name="ns_receive_carbs">קבלת פחמימות</string>
@@ -946,12 +960,33 @@
     <string name="light_theme">ערכת נושא בהירה</string>
     <string name="follow_system_theme">השתמש בערכת הנושא של המכשיר</string>
     <!-- WEAR OS-->
+    <string name="wear_action_tempt_cancel_message">מבטל ערך מטרה זמני נוכחי</string>
+    <string name="wear_action_tempt_unit_error">יחידות המידה שונות בין הטלפון והשעון!</string>
+    <string name="wear_action_tempt_min_bg_error">ערך הסוכר המינימלי מחוץ לטווח!</string>
+    <string name="wear_action_tempt_max_bg_error">ערך הסוכר המקסימלי מחוץ לטווח!</string>
+    <string name="wear_action_tempt_manual_range_message">ע\' מטרה זמני:\nמינ\': %1$s\nמקס\': %2$s\nמשך: %3$s</string>
+    <string name="wear_action_tempt_manual_message">ע\' מטרה זמני:\nמטרה: %1$s\n משך: %2$s</string>
+    <string name="quick_wizard_message">אשף מהיר: %1$s\n אינס\': %2$.2f יח\'\nפחמ\': %3$d גר\'</string>
+    <string name="wizard_result">מחשבון: %1$s\n אינס\': %2$.2f יח\'\nפחמ\': %3$d גר\'</string>
+    <string name="overview_editquickwizard_show_on_device">הצג רשומה על המכשיר:</string>
+    <string name="quick_wizard_not_available">האשף המהיר שנבחר אינו זמין, נא לרענן את האריח</string>
+    <string name="wizard_no_actual_bg">אין נתוני סוכר לביסוס חישוב!</string>
+    <string name="wizard_no_active_profile">לא הופעל פרופיל!</string>
+    <string name="wizard_no_cob">הפחמימות הפעילות לא ידועות! חסרות קריאות סוכר או שאותחל היישום לאחרונה?</string>
     <string name="wizard_carbs_constraint">הפרת מגבלות פחמימה!</string>
+    <string name="wizard_explain_calc">מחשבון (IC: %1$.1f, ISF: %2$.1f)</string>
     <string name="wizard_explain_carbs">פחמ\': %1$.2f יח\'</string>
     <string name="wizard_explain_cob">פחמ\': %1$.0f גר\' %2$.2f יח\'</string>
     <string name="wizard_explain_bg">סוכר: %1$.2f יח\'</string>
+    <string name="wizard_explain_iob">אינ\' פעיל: %1$.2f יח\'</string>
     <string name="wizard_explain_superbolus">סופר בולוס: %1$.2f יח\'</string>
     <string name="wizard_explain_trend">מגמת 15 דק\': %1$.2f יח\'</string>
+    <string name="wizard_explain_percent">אחוזים: %1$.2f יח\' x %2$d%% ≈ %3$.2f יח\'</string>
+    <string name="wizard_constraint_bolus_size">הופעלה מגבלת אינסולין!\nלא ניתן להזריק %1$.2f יח\'</string>
+    <string name="wizard_explain_tt">ע\' מטרה זמני: %1$s</string>
+    <string name="wizard_explain_tt_to">%1$s ל-%2$s</string>
+    <string name="wizard_pump_not_available">המשאבה אינה זמינה!</string>
+    <string name="wear_unknown_action_string">פקודה לא ידועה:</string>
     <string name="overview_editquickwizard_percentage">אחוזים</string>
     <string name="app_default">ברירת המחדל של היישום</string>
     <string name="show_invalidated_records">הצג רשומות מבוטלות\\מחוקות</string>
@@ -970,6 +1005,10 @@
     <string name="count_selected">%1$d נבחרו</string>
     <string name="sort_label">מיין</string>
     <string name="dialog_canceled">דו-שיח בוטל</string>
+    <string name="veryLow" comment="below 3.1">נמוך מאוד</string>
+    <string name="low" comment="3.1-3.9">נמוך</string>
+    <string name="high" comment="10.0-13.9">גבוה</string>
+    <string name="veryHigh" comment="above 13.9">גבוה מאוד</string>
     <string name="below" comment="below &quot;in range&quot;">מתחת</string>
     <string name="in_range">בטווח</string>
     <string name="above" comment="above &quot;in range&quot;">מעל</string>
@@ -977,7 +1016,17 @@
     <string name="show_hide_records">החבא רשומות לולאה</string>
     <string name="widget_description">ווידג\'ט AndroidAPS</string>
     <string name="configure">הגדרת אטימות</string>
+    <string name="loop_status">סטטוס הלולאה</string>
     <string name="graph_scale">קנה מידה של הגרף</string>
+    <string name="profile1">פרופיל 1</string>
+    <string name="profile2">פרופיל 2</string>
+    <string name="login">התחברות</string>
+    <string name="remove_all">הסר הכל</string>
+    <string name="reset_start">אתחל התחלה</string>
+    <string name="a11y_otp_qr_code">ברקוד QR ליצירת סיסמה חד פעמית</string>
+    <string name="a11y_open_settings">פתח הגדרות</string>
+    <string name="a11y_set_carb_timer">הגדרת אזעקה טיימר פחמימות</string>
+    <string name="device_all">הכול</string>
     <string name="device_phone">טלפון</string>
     <string name="device_watch">שעון</string>
     <string name="a11y_only_on_watch">על השעון בלבד</string>
@@ -987,4 +1036,6 @@
     <string name="aidex">GlucoRx Aidex</string>
     <string name="aidex_short">Aidex</string>
     <string name="description_source_aidex">קבלת נתוני סוכר מחיישני GlucoRx Aidex.</string>
+    <string name="blocked_by_charging">חסום ע\"י הגדרות טעינה</string>
+    <string name="blocked_by_connectivity">חסום ע\"י הגדרות חיבור</string>
 </resources>

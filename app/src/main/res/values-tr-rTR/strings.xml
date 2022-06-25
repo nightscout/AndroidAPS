@@ -433,8 +433,8 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="ns_localbroadcasts_title">Yerel yayınları etkinleştirin.</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dinamik İDF</string>
-    <string name="DynISFAdjust_title">DinamikİDF ayarlama faktörü %%</string>
-    <string name="DynISFAdjust_summary">DinamikİDF için ayarlama faktörü. Daha agresif düzeltme dozları için %%100\'den fazla ve de az agresif düzeltmeler için %%100\'den az ayarlayın.</string>
+    <string name="DynISFAdjust_title" formatted="false">DinamikİDF Ayar Faktörü %</string>
+    <string name="DynISFAdjust_summary" formatted="false">DinamikİDF için ayarlama faktörü. Daha agresif düzeltme dozları için %100\'den fazla ve daha az agresif düzeltmeler için %100\'den az ayarlayın.</string>
     <string name="enableuam">UAM etkinleştir</string>
     <string name="enablesmb">SMB (Super Micro Bolus) etkinleştir</string>
     <string name="enablesmb_summary">Daha hızlı bir etki için geçici bazal yerine Super Micro Bolus kullanın</string>
@@ -970,7 +970,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="wear_action_tempt_max_bg_error">Maks-KŞ aralık dışında!</string>
     <string name="wear_action_tempt_manual_range_message">Geçici Hedef:\nMin: %1$s\nMaks: %2$s\nSüre: %3$s</string>
     <string name="wear_action_tempt_manual_message">Geçici Hedef:\nHedef: %1$s\nSüre: %2$s</string>
-    <string name="wear_action_tempt_preset_message">Geçici Hedef:\Neden: %1$s\nHedef: %2$s\nSüre: %3$s</string>
     <string name="quick_wizard_message">Hızlı Asistan: %1$s\nİnsülin: %2$.2fU\nKarb: %3$dg</string>
     <string name="wizard_result">Hesap Mak.:\nİnsulin: %1$.2fÜ\nKarb: %2$dg</string>
     <string name="overview_editquickwizard_show_on_device">Girişi cihazda göster:</string>
