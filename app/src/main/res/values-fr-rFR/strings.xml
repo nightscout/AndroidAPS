@@ -6,6 +6,7 @@
     <string name="treatmentssafety_title">Traitements de sécurité</string>
     <string name="treatmentssafety_maxbolus_title">Maximum Bolus autorisé [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Maximum de Glucides autorisé [g]</string>
+    <string name="treatmentssafety_lgsThreshold_title">Glycémie au-dessous de laquelle se déclenche l\'Arrêt Glycémie Basse</string>
     <string name="nav_preferences_plugin">Préférences de %1$s</string>
     <string name="nav_preferences">Préférences</string>
     <string name="nav_refreshtreatments">Actualiser les données depuis NS</string>
@@ -593,6 +594,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="openapssmb_maxiob_summary">Cette valeur est appelée Max IA (Insuline Active) dans le contaxte OpenAPS\nOpenAPS n’ajoutera pas plus d’insuline si l\'IA (Insuline Active) actuelle est supérieure à cette valeur</string>
     <string name="absorption_cutoff_title">Durée maximale d’absorption pour un repas [h]</string>
     <string name="absorption_cutoff_summary">Durée où n’importe quel repas est considéré absorbé. Les glucides restants ne seront pas pris en compte.</string>
+    <string name="treatmentssafety_lgsThreshold_summary">Valeur glycémique au-dessous de laquelle l\'injection de l\'insuline est suspendu. La valeur par défaut utilise le modèle standard de la cible. L\'utilisateur peut choisir entre 60mg/dl (3.3mmol/l) et 100mg/dl (5.5mmol/l). Les valeurs au-dessous de 65/3.6 déclenchent l\'utilisation du modèle standard</string>
     <string name="overview_show_notes_field_in_dialogs_title">Affiche les notes dans les dialogues</string>
     <string name="next_button">Suivant</string>
     <string name="previous_button">Préc</string>

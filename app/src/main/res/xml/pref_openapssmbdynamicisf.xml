@@ -39,6 +39,16 @@
             validate:floatminNumber="1"
             validate:testType="floatNumericRange" />
 
+        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+            android:defaultValue="65"
+            android:inputType="numberDecimal"
+            android:dialogMessage="@string/treatmentssafety_lgsThreshold_summary"
+            android:key="@string/key_lgs_threshold"
+            android:title="@string/treatmentssafety_lgsThreshold_title"
+            validate:floatmaxNumber="120"
+            validate:floatminNumber="65"
+            validate:testType="bgRange" />
+
         <SwitchPreference
             android:defaultValue="false"
             android:key="openapsama_useautosens"

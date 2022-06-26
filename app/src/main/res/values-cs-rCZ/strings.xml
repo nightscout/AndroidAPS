@@ -6,6 +6,7 @@
     <string name="treatmentssafety_title">Bezpečnost zadání ošetřeni</string>
     <string name="treatmentssafety_maxbolus_title">Maximální povolený bolus [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Maximální počet sacharidů [g]</string>
+    <string name="treatmentssafety_lgsThreshold_title">Hodnota glykémie pro zastavení inzulínu</string>
     <string name="nav_preferences_plugin">Nastavení pluginu %1$s</string>
     <string name="nav_preferences">Nastavení</string>
     <string name="nav_refreshtreatments">Obnovit ošetření z NS</string>
@@ -592,6 +593,7 @@
     <string name="openapssmb_maxiob_summary">Tato hodnota je v kontextu OpenAPS nazývána Max IOB.\nOpenAPS nikdy nepřidá inzulín, pokud je současné IOB větší než tato hodnota</string>
     <string name="absorption_cutoff_title">Maximální doba absorpce sacharidů [h]</string>
     <string name="absorption_cutoff_summary">Doba, po které jsou všechny sacharidy považovány za strávené. Zbylé budou oříznuty.</string>
+    <string name="treatmentssafety_lgsThreshold_summary">Hodnota glykémie, při níž bude vydávání inzulinu zastaveno. Výchozí hodnota využívá standardní cílový model. Uživatel může nastavit hodnoty od 3,3 mmol/l do 5,5 mmol/l. Při hodnotách pod 3,6 mmol/l se použije výchozí model. </string>
     <string name="overview_show_notes_field_in_dialogs_title">Zobrazovat kolonku poznámky v dialozích ošetření</string>
     <string name="next_button">Další</string>
     <string name="previous_button">Zpět</string>

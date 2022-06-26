@@ -148,7 +148,7 @@ class MaintenancePlugin @Inject constructor(
      * @return
      */
     private fun constructName(): String {
-        return "AndroidAPS_LOG_" + Date().time + loggerUtils.suffix
+        return "AndroidAPS_LOG_" + System.currentTimeMillis() + loggerUtils.suffix
     }
 
     private fun zip(zipFile: File?, files: List<File>) {

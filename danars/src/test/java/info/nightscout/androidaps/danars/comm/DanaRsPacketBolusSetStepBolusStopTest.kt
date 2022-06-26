@@ -29,7 +29,7 @@ class DanaRsPacketBolusSetStepBolusStopTest : DanaRSTestBase() {
     @Test fun runTest() {
         `when`(rh.gs(Mockito.anyInt())).thenReturn("SomeString")
 
-        danaPump.bolusingTreatment = EventOverviewBolusProgress.Treatment(0.0, 0, true)
+        danaPump.bolusingTreatment = EventOverviewBolusProgress.Treatment(0.0, 0, true, 0)
         val testPacket = DanaRSPacketBolusSetStepBolusStop(packetInjector)
         // test message decoding
         testPacket.handleMessage(byteArrayOf(0.toByte(), 0.toByte(), 0.toByte()))

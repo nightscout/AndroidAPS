@@ -245,7 +245,7 @@
         <!---Nightscout client TitelColor -->
         <item name="nsTitleColor">@color/defaultText</item>
         <!---Icons in Loop area -->
-        <item name="profileColor">@color/white</item>
+        <item name="profileColor">@color/black</item>
         <item name="crossTargetColor">@color/white</item>
     </style>
 

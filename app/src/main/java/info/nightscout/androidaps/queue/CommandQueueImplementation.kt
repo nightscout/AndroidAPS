@@ -321,9 +321,9 @@ class CommandQueueImplementation @Inject constructor(
     }
 
     @Synchronized
-    override fun cancelAllBoluses() {
+    override fun cancelAllBoluses(id: Long) {
         if (!isRunning(CommandType.BOLUS)) {
-            rxBus.send(EventDismissBolusProgressIfRunning(PumpEnactResult(injector).success(true).enacted(false), null))
+            rxBus.send(EventDismissBolusProgressIfRunning(PumpEnactResult(injector).success(true).enacted(false), id))
         }
         removeAll(CommandType.BOLUS)
         removeAll(CommandType.SMB_BOLUS)
@@ -598,12 +598,12 @@ class CommandQueueImplementation @Inject constructor(
         if (detailedBolusInfo.context != null) {
             val bolusProgressDialog = BolusProgressDialog()
             bolusProgressDialog.setInsulin(detailedBolusInfo.insulin)
-            bolusProgressDialog.setTimestamp(detailedBolusInfo.timestamp)
+            bolusProgressDialog.setId(detailedBolusInfo.id)
             bolusProgressDialog.show((detailedBolusInfo.context as AppCompatActivity).supportFragmentManager, "BolusProgress")
         } else {
             val i = Intent()
             i.putExtra("insulin", detailedBolusInfo.insulin)
-            i.putExtra("timestamp", detailedBolusInfo.timestamp)
+            i.putExtra("id", detailedBolusInfo.id)
             i.setClass(context, BolusProgressHelperActivity::class.java)
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             context.startActivity(i)
