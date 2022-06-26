@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start|center_vertical"
         android:gravity="center"
-        android:labelFor="@+id/amountfield"
+        android:labelFor="@+id/edit_text"
         android:rotation="90"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/white"
@@ -26,7 +26,7 @@
         android:orientation="vertical">
 
         <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/plusbutton"
+            android:id="@+id/plus_button1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|center_horizontal"
@@ -36,7 +36,7 @@
             android:tint="@color/white" />
 
         <EditText
-            android:id="@+id/amountfield"
+            android:id="@+id/edit_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical|center_horizontal"
@@ -51,7 +51,7 @@
             tools:text="112" />
 
         <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/minusbutton"
+            android:id="@+id/minus_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|center_horizontal"

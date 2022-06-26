@@ -15,7 +15,7 @@
         android:orientation="vertical">
 
         <EditText
-            android:id="@+id/amountfield"
+            android:id="@+id/edit_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:labelFor="@+id/amountfield"
+            android:labelFor="@+id/edit_text"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/white"
             android:textSize="25sp"
@@ -42,7 +42,7 @@
             tools:text="label" />
 
         <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/minusbutton"
+            android:id="@+id/minus_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -62,35 +62,8 @@
         android:orientation="vertical"
         tools:visibility="visible">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/plusbutton3"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_gravity="center"
-            android:background="@drawable/circle"
-            android:backgroundTint="@color/white"
-            android:gravity="center"
-            android:textColor="@color/white"
-            android:textSize="25sp"
-            android:visibility="gone"
-            tools:text="+10" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/plusbutton2"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_gravity="end"
-            android:layout_marginVertical="7dp"
-            android:background="@drawable/circle"
-            android:backgroundTint="@color/white"
-            android:gravity="center"
-            android:textColor="@color/white"
-            android:visibility="gone"
-            android:textSize="25sp"
-            tools:text="+5" />
-
         <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/plusbutton"
+            android:id="@+id/plus_button1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

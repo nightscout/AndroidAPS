@@ -9,7 +9,6 @@ import android.view.View
 import android.view.View.OnGenericMotionListener
 import android.view.View.OnTouchListener
 import android.widget.TextView
-import androidx.appcompat.widget.AppCompatButton
 import androidx.core.view.InputDeviceCompat
 import androidx.core.view.MotionEventCompat
 import java.text.DecimalFormat
@@ -17,47 +16,38 @@ import java.text.NumberFormat
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
-import kotlin.Pair
 
 /**
  * Created by mike on 28.06.2016.
  */
 @SuppressLint("SetTextI18n") class PlusMinusEditText @JvmOverloads constructor(
-    view: View,
-    editTextID: Int,
-    private var plusButtons: List<Pair<Int, Double>>,
-    minusID: Int,
+    private val binding: EditPlusMinusViewAdapter,
     initValue: Double,
     private val minValue: Double,
     private val maxValue: Double,
-    private val stepGeneral: Double,
+    private val stepValues: List<Double>,
     private val formatter: NumberFormat,
     private val allowZero: Boolean,
+    label: String,
     private val roundRobin: Boolean = false,
 ) : View.OnKeyListener, OnTouchListener, View.OnClickListener, OnGenericMotionListener {
 
     constructor(
-        view: View,
-        editTextID: Int,
-        plusID: Int,
-        minusID: Int,
+        binding: EditPlusMinusViewAdapter,
         initValue: Double,
         minValue: Double,
         maxValue: Double,
-        stepGeneral: Double,
+        step: Double,
         formatter: NumberFormat,
         allowZero: Boolean,
+        label: String,
         roundRobin: Boolean = false
-    ) : this(view, editTextID, listOf(Pair(plusID, stepGeneral)), minusID, initValue, minValue, maxValue, stepGeneral, formatter, allowZero, roundRobin)
+    ) : this(binding, initValue, minValue, maxValue, listOf(step), formatter, allowZero, label, roundRobin)
 
+    private val stepGeneral: Double = stepValues[0]
     var editText: TextView
         private set
-    private var minusImage: View
-    private var plusImage1: View
-    private var plusImage2: AppCompatButton? = null
-    private var plusImage3: AppCompatButton? = null
     private var value: Double
-    private val context: Context
     private var mChangeCounter = 0
     private var mLastChange: Long = 0
     private val mHandler: Handler
@@ -70,11 +60,11 @@ import kotlin.Pair
         override fun run() {
             val msg = Message()
             val doubleLimit = 5
-            val multipleButtons = mInc && (plusImage2 != null || plusImage3 != null)
+            val multipleButtons = mInc && (binding.plusButton2 != null || binding.plusButton3 != null)
             if (!multipleButtons && repeated % doubleLimit == 0) multiplier *= 2
             val bundle = Bundle()
-            bundle.putDouble("step", step)
-            bundle.putInt("multiplier", multiplier)
+            bundle.putDouble(STEP, step)
+            bundle.putInt(MULTIPLIER, multiplier)
             msg.data = bundle
 
             if (mInc) {
@@ -114,14 +104,14 @@ import kotlin.Pair
         if (vibrate) vibrateDevice()
     }
 
-    fun vibrateDevice() {
+    private fun vibrateDevice() {
         val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             val vibratorManager =
-                context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+                binding.root.context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
             vibratorManager.defaultVibrator
         } else {
             @Suppress("DEPRECATION")
-            context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            binding.root.context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -155,19 +145,19 @@ import kotlin.Pair
 
     private fun getStep(v: View): Double {
         return when (v) {
-            plusImage1 -> plusButtons[0].second
-            plusImage2 -> plusButtons[1].second
-            plusImage3 -> plusButtons[2].second
-            else       -> stepGeneral
+            binding.plusButton1 -> stepValues[0]
+            binding.plusButton2 -> stepValues[1]
+            binding.plusButton3 -> stepValues[2]
+            else                -> stepValues[0]
         }
     }
 
     private fun isIncrement(v: View): Boolean {
         return when (v) {
-            plusImage1 -> true
-            plusImage2 -> true
-            plusImage3 -> true
-            else       -> false
+            binding.plusButton1 -> true
+            binding.plusButton2 -> true
+            binding.plusButton3 -> true
+            else                -> false
         }
     }
 
@@ -229,30 +219,22 @@ import kotlin.Pair
         private const val THRESHOLD_TIME = 100
         private const val MSG_INC = 0
         private const val MSG_DEC = 1
+        private const val STEP = "step"
+        private const val MULTIPLIER = "multiplier"
     }
 
     init {
-        context = view.context
-        editText = view.findViewById(editTextID)
-        minusImage = view.findViewById(minusID)
-        plusImage1 = view.findViewById(plusButtons.first().first)
+        editText = binding.editText
+        binding.label.text = label
         val format = DecimalFormat("#.#")
-        plusButtons.getOrNull(1)?.let {
-            plusImage2 = view.findViewById(it.first)
-            plusImage2?.text = "+${format.format(it.second).replaceFirst("^0+(?!$)".toRegex(), "")}"
-            plusImage2?.visibility = View.VISIBLE
-        }
-        plusButtons.getOrNull(2)?.let {
-            plusImage3 = view.findViewById(it.first)
-            plusImage3?.text = "+${format.format(it.second).replaceFirst("^0+(?!$)".toRegex(), "")}"
-            plusImage3?.visibility = View.VISIBLE
-        }
+        binding.plusButton2?.text = "+${format.format(stepValues[1]).replaceFirst("^0+(?!$)".toRegex(), "")}"
+        binding.plusButton3?.text = "+${format.format(stepValues[2]).replaceFirst("^0+(?!$)".toRegex(), "")}"
 
         value = initValue
         mHandler = object : Handler(Looper.getMainLooper()) {
             override fun handleMessage(msg: Message) {
-                val multiplier = msg.data.getInt("multiplier")
-                val step = msg.data.getDouble("step")
+                val multiplier = msg.data.getInt(MULTIPLIER)
+                val step = msg.data.getDouble(STEP)
 
                 when (msg.what) {
                     MSG_INC -> {
@@ -271,18 +253,18 @@ import kotlin.Pair
 
         editText.showSoftInputOnFocus = false
         editText.setTextIsSelectable(false)
-        minusImage.setOnTouchListener(this)
-        minusImage.setOnKeyListener(this)
-        minusImage.setOnClickListener(this)
-        plusImage1.setOnTouchListener(this)
-        plusImage1.setOnKeyListener(this)
-        plusImage1.setOnClickListener(this)
-        plusImage2?.setOnTouchListener(this)
-        plusImage2?.setOnKeyListener(this)
-        plusImage2?.setOnClickListener(this)
-        plusImage3?.setOnTouchListener(this)
-        plusImage3?.setOnKeyListener(this)
-        plusImage3?.setOnClickListener(this)
+        binding.minusButton.setOnTouchListener(this)
+        binding.minusButton.setOnKeyListener(this)
+        binding.minusButton.setOnClickListener(this)
+        binding.plusButton1.setOnTouchListener(this)
+        binding.plusButton1.setOnKeyListener(this)
+        binding.plusButton1.setOnClickListener(this)
+        binding.plusButton2?.setOnTouchListener(this)
+        binding.plusButton2?.setOnKeyListener(this)
+        binding.plusButton2?.setOnClickListener(this)
+        binding.plusButton3?.setOnTouchListener(this)
+        binding.plusButton3?.setOnKeyListener(this)
+        binding.plusButton3?.setOnClickListener(this)
         editText.setOnGenericMotionListener(this)
         updateEditText()
     }

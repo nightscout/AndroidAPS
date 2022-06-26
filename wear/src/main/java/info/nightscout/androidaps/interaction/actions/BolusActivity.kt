@@ -37,20 +37,23 @@ class BolusActivity : ViewSelectorActivity() {
 
         val increment1 = (sp.getDouble(R.string.key_insulin_button_increment_1, 0.5) * 10).roundToInt() / 10.0
         val increment2 = (sp.getDouble(R.string.key_insulin_button_increment_2, 1.0) * 10).roundToInt() / 10.0
+        val stepValues = listOf(0.1, increment1, increment2)
 
-        override fun instantiateItem(container: ViewGroup, row: Int, col: Int): Any {
-            val view: View
-            if (col == 0) {
-                view = EditPlusMinusViewAdapter.getInflatedPlusMinusView(sp, applicationContext, container, true).root
+        override fun instantiateItem(container: ViewGroup, row: Int, col: Int): View = when (col) {
+            0    -> {
+                val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, container, true)
                 val initValue = if (editInsulin != null) SafeParse.stringToDouble(editInsulin?.editText?.text.toString()) else 0.0
                 val maxBolus = sp.getDouble(getString(R.string.key_treatments_safety_max_bolus), 3.0)
-                val buttons = listOf(Pair(R.id.plusbutton, 0.1), Pair(R.id.plusbutton2, increment1), Pair(R.id.plusbutton3, increment2)) //  When taken form phone settings round.
-                editInsulin = PlusMinusEditText(view, R.id.amountfield, buttons, R.id.minusbutton, initValue, 0.0, maxBolus, 0.1, DecimalFormat("#0.0"), false)
-                setLabelToPlusMinusView(view, getString(R.string.action_insulin))
+                val title = getString(R.string.action_insulin)
+                editInsulin = PlusMinusEditText(viewAdapter, initValue, 0.0, maxBolus, stepValues, DecimalFormat("#0.0"), false, title)
+                val view = viewAdapter.root
                 container.addView(view)
                 view.requestFocus()
-            } else {
-                view = LayoutInflater.from(applicationContext).inflate(R.layout.action_confirm_ok, container, false)
+                view
+            }
+
+            else -> {
+                val view = LayoutInflater.from(applicationContext).inflate(R.layout.action_confirm_ok, container, false)
                 val confirmButton = view.findViewById<ImageView>(R.id.confirmbutton)
                 confirmButton.setOnClickListener {
                     rxBus.send(EventWearToMobile(ActionBolusPreCheck(SafeParse.stringToDouble(editInsulin?.editText?.text.toString()), 0)))
@@ -58,8 +61,8 @@ class BolusActivity : ViewSelectorActivity() {
                     finishAffinity()
                 }
                 container.addView(view)
+                view
             }
-            return view
         }
 
         override fun destroyItem(container: ViewGroup, row: Int, col: Int, view: Any) {
