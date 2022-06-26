@@ -117,10 +117,8 @@ class AutotunePrepTest : TestBaseWithProfile() {
                 aapsPreppedGlucose.isfGlucoseData = aapsPreppedGlucose.isfGlucoseData.sortedBy { it.date }
                 oapsPreppedGlucose.isfGlucoseData = oapsPreppedGlucose.isfGlucoseData.sortedBy { it.date }
                 for (i in aapsPreppedGlucose.isfGlucoseData.indices) {
-                    val oaps = "$i ${dateUtil.dateAndTimeString(oapsPreppedGlucose.isfGlucoseData[i].date)} ${oapsPreppedGlucose.isfGlucoseData[i].deviation} ${oapsPreppedGlucose.isfGlucoseData[i]
-                        .bgReading}"
-                    val aaps = "$i ${dateUtil.dateAndTimeString(aapsPreppedGlucose.isfGlucoseData[i].date)} ${aapsPreppedGlucose.isfGlucoseData[i].deviation} ${aapsPreppedGlucose.isfGlucoseData[i]
-                        .bgReading}"
+                    val oaps = "${dateUtil.dateAndTimeString(oapsPreppedGlucose.isfGlucoseData[i].date)} $i ${oapsPreppedGlucose.isfGlucoseData[i].deviation} ${oapsPreppedGlucose.isfGlucoseData[i].bgi}"
+                    val aaps = "${dateUtil.dateAndTimeString(aapsPreppedGlucose.isfGlucoseData[i].date)} $i ${aapsPreppedGlucose.isfGlucoseData[i].deviation} ${aapsPreppedGlucose.isfGlucoseData[i].bgi}"
                     Assert.assertEquals(oaps, aaps)
                 }
                 Assert.assertEquals(oapsPreppedGlucose.basalGlucoseData.size, aapsPreppedGlucose.basalGlucoseData.size)
@@ -161,10 +159,8 @@ class AutotunePrepTest : TestBaseWithProfile() {
                 aapsPreppedGlucose.isfGlucoseData = aapsPreppedGlucose.isfGlucoseData.sortedBy { it.date }
                 oapsPreppedGlucose.isfGlucoseData = oapsPreppedGlucose.isfGlucoseData.sortedBy { it.date }
                 for (i in aapsPreppedGlucose.isfGlucoseData.indices) {
-                    val oaps = "$i ${dateUtil.dateAndTimeString(oapsPreppedGlucose.isfGlucoseData[i].date)} ${oapsPreppedGlucose.isfGlucoseData[i].deviation} ${oapsPreppedGlucose.isfGlucoseData[i]
-                        .bgReading}"
-                    val aaps = "$i ${dateUtil.dateAndTimeString(aapsPreppedGlucose.isfGlucoseData[i].date)} ${aapsPreppedGlucose.isfGlucoseData[i].deviation} ${aapsPreppedGlucose.isfGlucoseData[i]
-                        .bgReading}"
+                    val oaps = "${dateUtil.dateAndTimeString(oapsPreppedGlucose.isfGlucoseData[i].date)} $i ${oapsPreppedGlucose.isfGlucoseData[i].deviation} ${oapsPreppedGlucose.isfGlucoseData[i].bgi}"
+                    val aaps = "${dateUtil.dateAndTimeString(aapsPreppedGlucose.isfGlucoseData[i].date)} $i ${aapsPreppedGlucose.isfGlucoseData[i].deviation} ${aapsPreppedGlucose.isfGlucoseData[i].bgi}"
                     Assert.assertEquals(oaps, aaps)
                 }
                 Assert.assertEquals(oapsPreppedGlucose.basalGlucoseData.size, aapsPreppedGlucose.basalGlucoseData.size)

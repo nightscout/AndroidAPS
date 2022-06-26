@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.general.autotune.data
 import info.nightscout.androidaps.database.entities.GlucoseValue.TrendArrow
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.T
 import org.json.JSONException
 import org.json.JSONObject
@@ -30,18 +31,15 @@ class BGDatum {
     constructor(dateUtil: DateUtil) { this.dateUtil = dateUtil}
     constructor(json: JSONObject, dateUtil: DateUtil) {
         this.dateUtil = dateUtil
-        try {
-            //if (json.has("_id")) id = json.getLong("_id")
-            if (json.has("date")) date = json.getLong("date")
-            if (json.has("sgv")) value = json.getDouble("sgv")
-            if (json.has("direction")) direction = TrendArrow.fromString(json.getString("direction"))
-            if (json.has("deviation")) deviation = json.getDouble("deviation")
-            if (json.has("BGI")) bgi = json.getDouble("BGI")
-            if (json.has("avgDelta")) avgDelta = json.getDouble("avgDelta")
-            if (json.has("mealAbsorption")) mealAbsorption = json.getString("mealAbsorption")
-            if (json.has("mealCarbs")) mealCarbs = json.getInt("mealCarbs")
-        } catch (e: JSONException) {
-        }
+        //if (json.has("_id")) id = json.getLong("_id")
+        if (json.has("date")) date = JsonHelper.safeGetLong(json,"date")
+        if (json.has("sgv")) value = JsonHelper.safeGetDouble(json,"sgv")
+        if (json.has("direction")) direction = TrendArrow.fromString(JsonHelper.safeGetString(json,"direction", "Flat"))
+        if (json.has("deviation")) deviation = JsonHelper.safeGetDouble(json, "deviation")
+        if (json.has("BGI")) bgi = JsonHelper.safeGetDouble(json, "BGI")
+        if (json.has("avgDelta")) avgDelta = JsonHelper.safeGetDouble(json, "avgDelta")
+        if (json.has("mealAbsorption")) mealAbsorption = JsonHelper.safeGetString(json,"mealAbsorption", "")
+        if (json.has("mealCarbs")) mealCarbs = JsonHelper.safeGetInt(json,"mealCarbs")
     }
 
     constructor(glucoseValue: GlucoseValue, dateUtil: DateUtil) {
