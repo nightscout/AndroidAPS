@@ -41,9 +41,9 @@ class QuickSnoozeActivity : DaggerActivity() {
         finish()
     }
 
-    private fun isPackageExisted(targetPackage: String?): Boolean {
+    private fun isPackageExisted(targetPackage: String): Boolean {
         try {
-            packageManager.getPackageInfo(targetPackage!!, PackageManager.GET_META_DATA)
+            packageManager.getPackageInfo(targetPackage, PackageManager.GET_META_DATA)
         } catch (e: PackageManager.NameNotFoundException) {
             return false
         }
