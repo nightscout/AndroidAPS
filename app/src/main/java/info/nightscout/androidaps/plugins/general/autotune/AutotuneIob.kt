@@ -2,31 +2,31 @@ package info.nightscout.androidaps.plugins.general.autotune
 
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.*
+import info.nightscout.androidaps.data.IobTotal
+import info.nightscout.androidaps.data.LocalInsulin
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.embedments.InterfaceIDs
-import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.database.entities.*
 import info.nightscout.androidaps.extensions.durationInMinutes
 import info.nightscout.androidaps.extensions.iobCalc
 import info.nightscout.androidaps.extensions.toJson
 import info.nightscout.androidaps.extensions.toTemporaryBasal
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Profile
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.general.autotune.data.ATProfile
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.T
 import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONArray
 import org.json.JSONObject
-import org.slf4j.LoggerFactory
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.ceil
-import kotlin.math.roundToInt
 
 @Singleton
 open class AutotuneIob @Inject constructor(
@@ -59,24 +59,24 @@ open class AutotuneIob @Inject constructor(
         initializeTreatmentData(from - range(), to)
         initializeTempBasalData(from - range(), to, tunedProfile)
         initializeExtendedBolusData(from - range(), to, tunedProfile)
-        Collections.sort(tempBasals) { o1: TemporaryBasal, o2: TemporaryBasal -> (o2.timestamp - o1.timestamp).toInt() }
+        tempBasals.sortWith { o1: TemporaryBasal, o2: TemporaryBasal -> (o2.timestamp - o1.timestamp).toInt() }
         // Without Neutral TBR, Autotune Web will ignore iob for periods without TBR running
         addNeutralTempBasal(from - range(), to, tunedProfile)
-        Collections.sort(nsTreatments) { o1: NsTreatment, o2: NsTreatment -> (o2.date - o1.date).toInt() }
-        Collections.sort(boluses) { o1: Bolus, o2: Bolus -> (o2.timestamp - o1.timestamp).toInt() }
-        log.debug("D/AutotunePlugin: Nb Treatments: " + nsTreatments.size + " Nb meals: " + meals.size)
+        nsTreatments.sortWith { o1: NsTreatment, o2: NsTreatment -> (o2.date - o1.date).toInt() }
+        this.boluses.sortWith { o1: Bolus, o2: Bolus -> (o2.timestamp - o1.timestamp).toInt() }
+        aapsLogger.debug(LTag.AUTOTUNE, "Nb Treatments: " + nsTreatments.size + " Nb meals: " + meals.size)
     }
 
     private fun initializeBgreadings(from: Long, to: Long) {
-        glucose = repository.compatGetBgReadingsDataFromTime(from, to, false).blockingGet();
+        glucose = repository.compatGetBgReadingsDataFromTime(from, to, false).blockingGet()
     }
 
     //nsTreatment is used only for export data, meals is used in AutotunePrep
     private fun initializeTreatmentData(from: Long, to: Long) {
-        val oldestBgDate = if (glucose.size > 0) glucose[glucose.size - 1].timestamp else from
-        log.debug("AutotunePlugin Check BG date: BG Size: " + glucose.size + " OldestBG: " + dateUtil.dateAndTimeAndSecondsString(oldestBgDate) + " to: " + dateUtil.dateAndTimeAndSecondsString(to))
+        val oldestBgDate = if (glucose.isNotEmpty()) glucose[glucose.size - 1].timestamp else from
+        aapsLogger.debug(LTag.AUTOTUNE, "Check BG date: BG Size: " + glucose.size + " OldestBG: " + dateUtil.dateAndTimeAndSecondsString(oldestBgDate) + " to: " + dateUtil.dateAndTimeAndSecondsString(to))
         val tmpCarbs = repository.getCarbsDataFromTimeToTimeExpanded(from, to, false).blockingGet()
-        log.debug("AutotunePlugin Nb treatments after query: " + tmpCarbs.size)
+        aapsLogger.debug(LTag.AUTOTUNE, "Nb treatments after query: " + tmpCarbs.size)
         meals.clear()
         boluses.clear()
         var nbCarbs = 0
@@ -217,7 +217,7 @@ open class AutotuneIob @Inject constructor(
                     tempBasals.add(newtb)
                     nsTreatments.add(NsTreatment(newtb))
                     splittedTimestamp += durationFilled
-                    splittedDuration = splittedDuration - durationFilled
+                    splittedDuration -= durationFilled
                     val profile = profileFunction.getProfile(newtb.timestamp) ?:continue
                     boluses.addAll(convertToBoluses(newtb, profile, tunedProfile.profile))           // required for correct iob calculation with oref0 algo
                 }
@@ -376,9 +376,5 @@ open class AutotuneIob @Inject constructor(
 
     private fun log(message: String) {
         autotuneFS.atLog("[iob] $message")
-    }
-
-    companion object {
-        private val log = LoggerFactory.getLogger(AutotunePlugin::class.java)
     }
 }
