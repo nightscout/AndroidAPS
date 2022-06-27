@@ -27,6 +27,7 @@ import info.nightscout.androidaps.plugins.general.overview.graphExtensions.Gluco
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
+import info.nightscout.androidaps.services.AlarmSoundServiceHelper
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.wizard.BolusWizard
@@ -73,7 +74,8 @@ class DataHandlerMobile @Inject constructor(
     private val uel: UserEntryLogger,
     private val activePlugin: ActivePlugin,
     private val commandQueue: CommandQueue,
-    private val fabricPrivacy: FabricPrivacy
+    private val fabricPrivacy: FabricPrivacy,
+    private val alarmSoundServiceHelper: AlarmSoundServiceHelper
 ) {
 
     private val disposable = CompositeDisposable()
@@ -259,6 +261,13 @@ class DataHandlerMobile @Inject constructor(
                                doBolus(lastBolusWizard!!.calculatedTotalInsulin, lastBolusWizard!!.carbs, null, 0)
                            }
                            lastBolusWizard = null
+                       }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventData.SnoozeAlert::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({
+                           aapsLogger.debug(LTag.WEAR, "SnoozeAlert received $it from ${it.sourceNodeId}")
+                           alarmSoundServiceHelper.stopService(context, "Muted from wear")
                        }, fabricPrivacy::logException)
     }
 

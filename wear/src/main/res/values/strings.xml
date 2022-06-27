@@ -222,4 +222,7 @@
     <string name="cob_000g">000g</string>
     <string name="svg_00_0" comment="use , or . only">00,0</string>
     <string name="iob_0_00u">0,00U</string>
+    <string name="snooze_alert">AAPS Snooze Alert</string>
+    <string name="sending_snooze">Sending Snooze to AAPS</string>
+
 </resources>

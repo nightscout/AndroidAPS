@@ -234,4 +234,7 @@ sealed class EventData : Event() {
 
     @Serializable // returnCommand is sent back to Mobile after confirmation
     data class ConfirmAction(val title: String, val message: String, val returnCommand: EventData?) : EventData()
+    
+    @Serializable
+    data class SnoozeAlert(val timeStamp: Long) : EventData()
 }
