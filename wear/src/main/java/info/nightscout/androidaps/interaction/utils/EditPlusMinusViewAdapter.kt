@@ -4,13 +4,13 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.databinding.ActionEditplusminusItemBinding
-import info.nightscout.androidaps.databinding.ActionEditplusminusItemPlusBinding
-import info.nightscout.androidaps.databinding.ActionEditplusminusItemQuickleftyPlusBinding
-import info.nightscout.androidaps.databinding.ActionEditplusminusItemQuickleftyBinding
-import info.nightscout.androidaps.databinding.ActionEditplusminusItemQuickrightyBinding
-import info.nightscout.androidaps.databinding.ActionEditplusminusItemQuickrightyPlusBinding
-import info.nightscout.androidaps.databinding.ActionEditplusminusItemViktoriaBinding
+import info.nightscout.androidaps.databinding.ActionEditplusminBinding
+import info.nightscout.androidaps.databinding.ActionEditplusminMultiBinding
+import info.nightscout.androidaps.databinding.ActionEditplusminQuickleftyMultiBinding
+import info.nightscout.androidaps.databinding.ActionEditplusminQuickleftyBinding
+import info.nightscout.androidaps.databinding.ActionEditplusminQuickrightyBinding
+import info.nightscout.androidaps.databinding.ActionEditplusminQuickrightyMultiBinding
+import info.nightscout.androidaps.databinding.ActionEditplusminViktoriaBinding
 import info.nightscout.shared.sharedPreferences.SP
 
 /**
@@ -18,13 +18,13 @@ import info.nightscout.shared.sharedPreferences.SP
  * Requires at least one of the ViewBinding as a parameter. Recommended to use the factory object to create the binding.
  */
 class EditPlusMinusViewAdapter(
-    eD: ActionEditplusminusItemBinding?,
-    eDP: ActionEditplusminusItemPlusBinding?,
-    eQL: ActionEditplusminusItemQuickleftyBinding?,
-    eQLP: ActionEditplusminusItemQuickleftyPlusBinding?,
-    eQR: ActionEditplusminusItemQuickrightyBinding?,
-    eQRP: ActionEditplusminusItemQuickrightyPlusBinding?,
-    eV: ActionEditplusminusItemViktoriaBinding?
+    eD: ActionEditplusminBinding?,
+    eDP: ActionEditplusminMultiBinding?,
+    eQL: ActionEditplusminQuickleftyBinding?,
+    eQLP: ActionEditplusminQuickleftyMultiBinding?,
+    eQR: ActionEditplusminQuickrightyBinding?,
+    eQRP: ActionEditplusminQuickrightyMultiBinding?,
+    eV: ActionEditplusminViktoriaBinding?
 ) {
 
     init {
@@ -59,35 +59,35 @@ class EditPlusMinusViewAdapter(
             return when (sp.getInt(R.string.key_input_design, 1)) {
                 2    -> {
                     if (multiple) {
-                        val bindLayout = ActionEditplusminusItemQuickrightyPlusBinding.inflate(inflater, container, false)
+                        val bindLayout = ActionEditplusminQuickrightyMultiBinding.inflate(inflater, container, false)
                         EditPlusMinusViewAdapter(null, null, null, null, null, bindLayout, null)
                     } else {
-                        val bindLayout = ActionEditplusminusItemQuickrightyBinding.inflate(inflater, container, false)
+                        val bindLayout = ActionEditplusminQuickrightyBinding.inflate(inflater, container, false)
                         EditPlusMinusViewAdapter(null, null, null, null, bindLayout, null, null)
                     }
                 }
 
                 3    -> {
                     if (multiple) {
-                        val bindLayout = ActionEditplusminusItemQuickleftyPlusBinding.inflate(inflater, container, false)
+                        val bindLayout = ActionEditplusminQuickleftyMultiBinding.inflate(inflater, container, false)
                         EditPlusMinusViewAdapter(null, null, null, bindLayout, null, null, null)
                     } else {
-                        val bindLayout = ActionEditplusminusItemQuickleftyBinding.inflate(inflater, container, false)
+                        val bindLayout = ActionEditplusminQuickleftyBinding.inflate(inflater, container, false)
                         EditPlusMinusViewAdapter(null, null, bindLayout, null, null, null, null)
                     }
                 }
 
                 4    -> {
-                    val bindLayout = ActionEditplusminusItemViktoriaBinding.inflate(inflater, container, false)
+                    val bindLayout = ActionEditplusminViktoriaBinding.inflate(inflater, container, false)
                     EditPlusMinusViewAdapter(null, null, null, null, null, null, bindLayout)
                 }
 
                 else -> {
                     if (multiple) {
-                        val bindLayout = ActionEditplusminusItemPlusBinding.inflate(inflater, container, false)
+                        val bindLayout = ActionEditplusminMultiBinding.inflate(inflater, container, false)
                         EditPlusMinusViewAdapter(null, bindLayout, null, null, null, null, null)
                     } else {
-                        val bindLayout = ActionEditplusminusItemBinding.inflate(inflater, container, false)
+                        val bindLayout = ActionEditplusminBinding.inflate(inflater, container, false)
                         EditPlusMinusViewAdapter(bindLayout, null, null, null, null, null, null)
                     }
                 }

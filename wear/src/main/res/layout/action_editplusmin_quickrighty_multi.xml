@@ -35,7 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/edit_text"
-        android:layout_marginTop="-8dp"
+        android:layout_marginTop="-9dp"
         android:gravity="center"
         android:labelFor="@+id/edit_text"
         android:textColor="@color/white"
