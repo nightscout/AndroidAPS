@@ -110,7 +110,7 @@
     <string name="apsmode_title">APS modu</string>
     <string name="closedloop">Kapalı Döngü</string>
     <string name="openloop">Açık Döngü</string>
-    <string name="lowglucosesuspend">Düşük Glikoz Süspansiyonu</string>
+    <string name="lowglucosesuspend">Düşük Glikoz Duraklatma (LGS)</string>
     <string name="disabledloop">Döngü devre dışı</string>
     <string name="openloop_newsuggestion">Yeni öneri mevcut</string>
     <string name="carbssuggestion">Karbonhidrat Önerisi</string>
