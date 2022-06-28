@@ -20,6 +20,7 @@ import info.nightscout.plugins.sync.nsclient.data.ProcessedDeviceStatusData
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.T
+import info.nightscout.shared.sharedPreferences.SP
 import java.util.Calendar
 import javax.inject.Inject
 import kotlin.math.ceil
@@ -43,6 +44,7 @@ class PreparePredictionsWorker(
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var rh: ResourceHelper
+    @Inject lateinit var sp: SP
 
     init {
         (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
@@ -83,7 +85,7 @@ class PreparePredictionsWorker(
 
         val bgListArray: MutableList<DataPointWithLabelInterface> = ArrayList()
         val predictions: MutableList<GlucoseValueDataPoint>? = apsResult?.predictions
-            ?.map { bg -> GlucoseValueDataPoint(bg, defaultValueHelper, profileFunction, rh) }
+            ?.map { bg -> GlucoseValueDataPoint(bg, defaultValueHelper, profileFunction, rh, sp) }
             ?.toMutableList()
         if (predictions != null) {
             predictions.sortWith { o1: GlucoseValueDataPoint, o2: GlucoseValueDataPoint -> o1.x.compareTo(o2.x) }

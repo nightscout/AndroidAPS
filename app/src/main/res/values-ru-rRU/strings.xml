@@ -715,4 +715,11 @@
     <string name="database_cleanup">Очистка базы данных</string>
     <string name="cleanup_db_confirm">Вы хотите очистить базу данных?\nЭто удалит отслеживаемые изменения и данные старше 3 месяцев.</string>
     <string name="cleared_entries">Удалённые записи</string>
+
+    <!-- Tsunami Data Smoothing -->
+    <string name="key_use_data_smoothing" translatable="false">use_data_smoothing</string>
+    <string name="use_data_smoothing_summary" translatable="false">Использовать сглаженные показания данных ГК с сенсора. Рекомендуется в случе, если ваш сенсор не поддерживает сглаживание сам, а вы всё же хотите использовать SMB.</string>
+    <string name="use_data_smoothing_title" translatable="false">Сглаживать данные ГК с сенсора</string>
+    <string name="internal_smoothing_enabled">Сглаживание значений сенсора включено.</string>
+    <!-- Tsunami Data Smoothing end-->
 </resources>

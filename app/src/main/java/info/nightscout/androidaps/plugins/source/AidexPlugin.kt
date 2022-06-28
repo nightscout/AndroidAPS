@@ -99,6 +99,7 @@ class AidexPlugin @Inject constructor(
             glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(
                 timestamp = timestamp,
                 value = bgValueTarget,
+                smoothed = null,
                 raw = null,
                 noise = null,
                 trendArrow = GlucoseValue.TrendArrow.fromString(bundle.getString(Intents.AIDEX_BG_SLOPE_NAME)),

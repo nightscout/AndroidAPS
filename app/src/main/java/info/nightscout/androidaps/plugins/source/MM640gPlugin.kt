@@ -80,6 +80,7 @@ class MM640gPlugin @Inject constructor(
                                         timestamp = jsonObject.getLong("date"),
                                         value = jsonObject.getDouble("sgv"),
                                         raw = jsonObject.getDouble("sgv"),
+                                        smoothed = null,
                                         noise = null,
                                         trendArrow = GlucoseValue.TrendArrow.fromString(jsonObject.getString("direction")),
                                         sourceSensor = GlucoseValue.SourceSensor.MM_600_SERIES

@@ -135,6 +135,7 @@ class IntelligoPlugin @Inject constructor(
                         timestamp = timestamp,
                         value = value * Constants.MMOLL_TO_MGDL,
                         raw = 0.0,
+                        smoothed = null,
                         noise = null,
                         trendArrow = GlucoseValue.TrendArrow.NONE,
                         sourceSensor = GlucoseValue.SourceSensor.INTELLIGO_NATIVE

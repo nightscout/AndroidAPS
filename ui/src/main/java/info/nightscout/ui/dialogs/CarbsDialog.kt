@@ -17,6 +17,7 @@ import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
 import info.nightscout.androidaps.dialogs.DialogFragmentWithDate
 import info.nightscout.androidaps.extensions.formatColor
+import info.nightscout.androidaps.extensions.rawOrSmoothed
 import info.nightscout.interfaces.ActivityNames
 import info.nightscout.interfaces.BolusTimer
 import info.nightscout.interfaces.CarbTimer
@@ -198,7 +199,7 @@ class CarbsDialog : DialogFragmentWithDate() {
         }
 
         iobCobCalculator.ads.actualBg()?.let { bgReading ->
-            if (bgReading.value < 72)
+            if (bgReading.rawOrSmoothed(sp) < 72)
                 binding.hypoTt.isChecked = true
         }
         binding.hypoTt.setOnClickListener {
