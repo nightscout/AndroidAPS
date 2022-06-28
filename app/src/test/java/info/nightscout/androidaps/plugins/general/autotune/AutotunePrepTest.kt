@@ -46,7 +46,7 @@ class AutotunePrepTest : TestBaseWithProfile() {
 
     @Before
     fun initData() {
-        TimeZone.setDefault(TimeZone.getTimeZone("GMT+2"))
+        //TimeZone.setDefault(TimeZone.getTimeZone("GMT+2"))
     }
 
     @Test
