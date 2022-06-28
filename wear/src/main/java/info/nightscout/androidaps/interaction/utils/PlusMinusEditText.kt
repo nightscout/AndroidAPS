@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.interaction.utils
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.*
 import android.view.KeyEvent
@@ -20,7 +19,7 @@ import java.util.concurrent.TimeUnit
 /**
  * Created by mike on 28.06.2016.
  */
-@SuppressLint("SetTextI18n") class PlusMinusEditText @JvmOverloads constructor(
+class PlusMinusEditText @JvmOverloads constructor(
     private val binding: EditPlusMinusViewAdapter,
     initValue: Double,
     private val minValue: Double,
@@ -106,9 +105,7 @@ import java.util.concurrent.TimeUnit
 
     private fun vibrateDevice() {
         val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val vibratorManager =
-                binding.root.context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
-            vibratorManager.defaultVibrator
+            (binding.root.context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager).defaultVibrator
         } else {
             @Suppress("DEPRECATION")
             binding.root.context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator

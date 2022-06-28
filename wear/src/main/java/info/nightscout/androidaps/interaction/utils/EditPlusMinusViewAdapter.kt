@@ -14,7 +14,7 @@ import info.nightscout.androidaps.databinding.ActionEditplusminViktoriaBinding
 import info.nightscout.shared.sharedPreferences.SP
 
 /**
- * EditPlusMinusViewAdapter binds both ActionEditplusminusItemBinding variants shared attributes to one common view adapter.
+ * EditPlusMinusViewAdapter binds both ActionEditplusminBinding variants shared attributes to one common view adapter.
  * Requires at least one of the ViewBinding as a parameter. Recommended to use the factory object to create the binding.
  */
 class EditPlusMinusViewAdapter(
@@ -32,28 +32,28 @@ class EditPlusMinusViewAdapter(
             throw IllegalArgumentException("Require at least on Binding parameter")
         }
     }
-
+    private val errorMessage = "Missing require View Binding parameter"
     val editText =
         eD?.editText ?: eDP?.editText ?: eQL?.editText ?: eQLP?.editText ?: eQR?.editText ?: eQRP?.editText ?: eV?.editText
-        ?: throw IllegalArgumentException("Missing require View Binding parameter display")
+        ?: throw IllegalArgumentException(errorMessage)
     val minButton =
         eD?.minButton ?: eDP?.minButton ?: eQL?.minButton ?: eQLP?.minButton ?: eQR?.minButton ?: eQRP?.minButton ?: eV?.minButton
-        ?: throw IllegalArgumentException("Missing require View Binding parameter display")
+        ?: throw IllegalArgumentException(errorMessage)
     val plusButton1 =
         eD?.plusButton1 ?: eDP?.plusButton1 ?: eQL?.plusButton1 ?: eQLP?.plusButton1 ?: eQR?.plusButton1 ?: eQRP?.plusButton1 ?: eV?.plusButton1
-        ?: throw IllegalArgumentException("Missing require View Binding parameter display")
+        ?: throw IllegalArgumentException(errorMessage)
     val label =
         eD?.label ?: eDP?.label ?: eQL?.label ?: eQLP?.label ?: eQR?.label ?: eQRP?.label ?: eV?.label
-        ?: throw IllegalArgumentException("Missing require View Binding parameter display")
+        ?: throw IllegalArgumentException(errorMessage)
     val plusButton2 = eDP?.plusButton2 ?: eQLP?.plusButton2 ?: eQRP?.plusButton2
     val plusButton3 = eDP?.plusButton3 ?: eQLP?.plusButton3 ?: eQRP?.plusButton3
     val root =
         eD?.root ?: eDP?.root ?: eQL?.root ?: eQLP?.root ?: eQR?.root ?: eQRP?.root ?: eV?.root
-        ?: throw IllegalArgumentException("Missing require View Binding parameter display")
+        ?: throw IllegalArgumentException(errorMessage)
 
     companion object {
 
-        fun getViewAdapter(sp: SP, context: Context, container: ViewGroup?, multiple: Boolean = false): EditPlusMinusViewAdapter {
+        fun getViewAdapter(sp: SP, context: Context, container: ViewGroup, multiple: Boolean = false): EditPlusMinusViewAdapter {
             val inflater = LayoutInflater.from(context)
 
             return when (sp.getInt(R.string.key_input_design, 1)) {

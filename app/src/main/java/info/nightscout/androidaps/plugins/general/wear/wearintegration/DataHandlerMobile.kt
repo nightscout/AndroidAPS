@@ -697,10 +697,10 @@ class DataHandlerMobile @Inject constructor(
                     bolusPercentage = sp.getInt(R.string.key_boluswizard_percentage, 100),
                     maxCarbs = sp.getInt(R.string.key_treatmentssafety_maxcarbs, 48),
                     maxBolus = sp.getDouble(R.string.key_treatmentssafety_maxbolus, 3.0),
-                    insulin_button_increment_1 = sp.getDouble(R.string.key_insulin_button_increment_1, InsulinDialog.PLUS1_DEFAULT),
-                    insulin_button_increment_2 = sp.getDouble(R.string.key_insulin_button_increment_2, InsulinDialog.PLUS2_DEFAULT),
-                    carbs_button_increment_1 = sp.getInt(R.string.key_carbs_button_increment_1, CarbsDialog.FAV1_DEFAULT),
-                    carbs_button_increment_2 = sp.getInt(R.string.key_carbs_button_increment_2, CarbsDialog.FAV2_DEFAULT)
+                    insulinButtonIncrement1 = sp.getDouble(R.string.key_insulin_button_increment_1, InsulinDialog.PLUS1_DEFAULT),
+                    insulinButtonIncrement2 = sp.getDouble(R.string.key_insulin_button_increment_2, InsulinDialog.PLUS2_DEFAULT),
+                    carbsButtonIncrement1 = sp.getInt(R.string.key_carbs_button_increment_1, CarbsDialog.FAV1_DEFAULT),
+                    carbsButtonIncrement2 = sp.getInt(R.string.key_carbs_button_increment_2, CarbsDialog.FAV2_DEFAULT)
                 )
             )
         )

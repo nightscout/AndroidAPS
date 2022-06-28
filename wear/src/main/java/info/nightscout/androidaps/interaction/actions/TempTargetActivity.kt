@@ -74,7 +74,6 @@ class TempTargetActivity : ViewSelectorActivity() {
                     if (lowRange != null) def = SafeParse.stringToDouble(lowRange?.editText?.text.toString())
                     lowRange = PlusMinusEditText(viewAdapter, def, 4.0, 10.0, 0.1, DecimalFormat("#0.0"), false, title)
                 }
-
                 container.addView(view)
                 view
             }
