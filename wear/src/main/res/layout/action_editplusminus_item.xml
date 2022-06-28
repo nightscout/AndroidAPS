@@ -1,131 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <View
-        android:id="@+id/center"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/edit_text"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="-10dp"
-        android:layout_marginHorizontal="10dp"
-        android:cursorVisible="false"
-        android:inputType="numberDecimal"
-        android:textColor="@color/white"
-        android:textSize="40sp"
-        android:gravity="center"
-        app:layout_constraintEnd_toEndOf="@+id/value_background"
-        app:layout_constraintStart_toStartOf="@+id/value_background"
-        app:layout_constraintTop_toTopOf="@+id/value_background"
-        tools:text="123" />
-
-    <TextView
-        android:id="@+id/label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="-8dp"
-        android:layout_below="@+id/edit_text"
-        android:gravity="center"
-        android:labelFor="@+id/edit_text"
-        android:textColor="@color/white"
-        android:textSize="25sp"
-        app:layout_constraintEnd_toEndOf="@+id/edit_text"
-        app:layout_constraintStart_toStartOf="@+id/edit_text"
-        app:layout_constraintTop_toBottomOf="@id/edit_text"
-        tools:ignore="LabelFor"
-        tools:text="label" />
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:orientation="horizontal">
 
     <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/minus_button"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:id="@+id/min_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:background="@drawable/circle"
         android:backgroundTint="@color/white"
         android:contentDescription="@string/decrement"
         android:src="@drawable/ic_action_minus"
-        android:tint="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintCircle="@+id/center"
-        app:layout_constraintCircleAngle="145"
-        app:layout_constraintCircleRadius="70dp"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        android:tint="@color/white" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/plus_button3"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:background="@drawable/circle"
-        android:backgroundTint="@color/white"
-        android:gravity="center"
-        android:textColor="@color/white"
-        android:textSize="25sp"
-        android:visibility="visible"
-        app:layout_constraintCircle="@+id/center"
-        app:layout_constraintCircleAngle="325"
-        app:layout_constraintCircleRadius="70dp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="+10" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/plus_button2"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:background="@drawable/circle"
-        android:backgroundTint="@color/white"
-        android:gravity="center"
-        android:textColor="@color/white"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/plus_button1"
-        app:layout_constraintCircle="@+id/center"
-        app:layout_constraintCircleAngle="270"
-        app:layout_constraintCircleRadius="70dp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/plus_button3"
-        tools:text="+5" />
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/value_background"
-        android:layout_width="108dp"
-        android:layout_height="108dp"
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/circle"
-        android:backgroundTint="@color/gray_700"
-        android:contentDescription="@string/increment"
-        app:layout_constraintBottom_toTopOf="@+id/minus_button"
-        app:layout_constraintCircle="@+id/center"
-        app:layout_constraintCircleAngle="55"
-        app:layout_constraintCircleRadius="40dp"
-        app:layout_constraintRight_toLeftOf="@id/plus_button1">
+        android:orientation="vertical">
 
-    </androidx.appcompat.widget.AppCompatImageView>
+        <EditText
+            android:id="@+id/edit_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:cursorVisible="false"
+            android:gravity="center_horizontal"
+            android:inputType="numberDecimal"
+            android:minWidth="50dp"
+            android:padding="10dp"
+            android:textColor="@color/white"
+            android:textSize="45sp"
+            tools:text="112" />
+
+        <TextView
+            android:id="@+id/label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:labelFor="@+id/edit_text"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/white"
+            android:textSize="25sp"
+            tools:ignore="LabelFor"
+            tools:text="label" />
+
+    </LinearLayout>
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/plus_button1"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="@drawable/circle"
         android:backgroundTint="@color/white"
         android:contentDescription="@string/increment"
         android:src="@drawable/ic_action_add"
-        android:tint="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintCircle="@+id/center"
-        app:layout_constraintCircleAngle="215"
-        app:layout_constraintCircleRadius="70dp"
-        app:layout_constraintRight_toRightOf="parent" />
+        android:tint="@color/white" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

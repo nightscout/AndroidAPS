@@ -253,9 +253,9 @@ import java.util.concurrent.TimeUnit
 
         editText.showSoftInputOnFocus = false
         editText.setTextIsSelectable(false)
-        binding.minusButton.setOnTouchListener(this)
-        binding.minusButton.setOnKeyListener(this)
-        binding.minusButton.setOnClickListener(this)
+        binding.minButton.setOnTouchListener(this)
+        binding.minButton.setOnKeyListener(this)
+        binding.minButton.setOnClickListener(this)
         binding.plusButton1.setOnTouchListener(this)
         binding.plusButton1.setOnKeyListener(this)
         binding.plusButton1.setOnClickListener(this)

@@ -36,8 +36,8 @@ class EditPlusMinusViewAdapter(
     val editText =
         eD?.editText ?: eDP?.editText ?: eQL?.editText ?: eQLP?.editText ?: eQR?.editText ?: eQRP?.editText ?: eV?.editText
         ?: throw IllegalArgumentException("Missing require View Binding parameter display")
-    val minusButton =
-        eD?.minusButton ?: eDP?.minusButton ?: eQL?.minusButton ?: eQLP?.minusButton ?: eQR?.minusButton ?: eQRP?.minusButton ?: eV?.minusButton
+    val minButton =
+        eD?.minButton ?: eDP?.minButton ?: eQL?.minButton ?: eQLP?.minButton ?: eQR?.minButton ?: eQRP?.minButton ?: eV?.minButton
         ?: throw IllegalArgumentException("Missing require View Binding parameter display")
     val plusButton1 =
         eD?.plusButton1 ?: eDP?.plusButton1 ?: eQL?.plusButton1 ?: eQLP?.plusButton1 ?: eQR?.plusButton1 ?: eQRP?.plusButton1 ?: eV?.plusButton1

@@ -18,13 +18,13 @@
         android:id="@+id/edit_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="-6dp"
         android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="-6dp"
         android:cursorVisible="false"
+        android:gravity="center"
         android:inputType="numberDecimal"
         android:textColor="@color/white"
         android:textSize="40sp"
-        android:gravity="center"
         app:layout_constraintEnd_toEndOf="@+id/value_background"
         app:layout_constraintStart_toStartOf="@+id/value_background"
         app:layout_constraintTop_toTopOf="@+id/value_background"
@@ -34,8 +34,8 @@
         android:id="@+id/label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="-10dp"
         android:layout_below="@+id/edit_text"
+        android:layout_marginTop="-10dp"
         android:gravity="center"
         android:labelFor="@+id/edit_text"
         android:textColor="@color/white"
@@ -47,7 +47,7 @@
         tools:text="label" />
 
     <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/minus_button"
+        android:id="@+id/min_button"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:background="@drawable/circle"
@@ -95,13 +95,10 @@
         app:layout_constraintTop_toBottomOf="@+id/plus_button3"
         tools:text="+5" />
 
-    <androidx.appcompat.widget.AppCompatImageView
+    <View
         android:id="@+id/value_background"
         android:layout_width="108dp"
         android:layout_height="108dp"
-        android:layout_gravity="center"
-        android:backgroundTint="@color/gray_700"
-        android:contentDescription="@string/increment"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
