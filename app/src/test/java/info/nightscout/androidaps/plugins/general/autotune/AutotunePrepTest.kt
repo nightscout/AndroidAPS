@@ -54,7 +54,7 @@ class AutotunePrepTest : TestBaseWithProfile() {
         val inputIobJson = File("src/test/res/autotune/test1/oaps-iobCalc.2022-05-21.json").readText() //json files build with iob/activity calculated by OAPS
         val iobOapsCalculation = buildIobOaps(JSONArray(inputIobJson))
         autotuneIob = TestAutotuneIob(aapsLogger, repository, profileFunction, sp, dateUtil, activePlugin, autotuneFS, iobOapsCalculation)
-        autotunePrep = AutotunePrep(sp, dateUtil, autotuneFS, autotuneIob)
+        autotunePrep = AutotunePrep(aapsLogger, sp, dateUtil, autotuneFS, autotuneIob)
         val inputProfileJson = File("src/test/res/autotune/test1/profile.pump.json").readText()
         val inputProfile = atProfileFromOapsJson(JSONObject(inputProfileJson), dateUtil)!!
         val prepJson = File("src/test/res/autotune/test1/autotune.2022-05-21.json").readText()
@@ -93,7 +93,7 @@ class AutotunePrepTest : TestBaseWithProfile() {
         val inputIobJson = File("src/test/res/autotune/test2/oaps-iobCalc.2022-05-21.json").readText() //json files build with iob/activity calculated by OAPS
         val iobOapsCalculation = buildIobOaps(JSONArray(inputIobJson))
         autotuneIob = TestAutotuneIob(aapsLogger, repository, profileFunction, sp, dateUtil, activePlugin, autotuneFS, iobOapsCalculation)
-        autotunePrep = AutotunePrep(sp, dateUtil, autotuneFS, autotuneIob)
+        autotunePrep = AutotunePrep(aapsLogger, sp, dateUtil, autotuneFS, autotuneIob)
         val inputProfileJson = File("src/test/res/autotune/test2/profile.pump.json").readText()
         val inputProfile = atProfileFromOapsJson(JSONObject(inputProfileJson), dateUtil)!!
         val prepJson = File("src/test/res/autotune/test2/autotune.2022-05-21.json").readText()
@@ -132,7 +132,7 @@ class AutotunePrepTest : TestBaseWithProfile() {
         val inputIobJson = File("src/test/res/autotune/test3/oaps-iobCalc.2022-05-21.json").readText() //json files build with iob/activity calculated by OAPS
         val iobOapsCalculation = buildIobOaps(JSONArray(inputIobJson))
         autotuneIob = TestAutotuneIob(aapsLogger, repository, profileFunction, sp, dateUtil, activePlugin, autotuneFS, iobOapsCalculation)
-        autotunePrep = AutotunePrep(sp, dateUtil, autotuneFS, autotuneIob)
+        autotunePrep = AutotunePrep(aapsLogger, sp, dateUtil, autotuneFS, autotuneIob)
         val inputProfileJson = File("src/test/res/autotune/test3/profile.pump.json").readText()
         val inputProfile = atProfileFromOapsJson(JSONObject(inputProfileJson), dateUtil)!!
         val prepJson = File("src/test/res/autotune/test3/autotune.2022-05-21.json").readText()
@@ -239,7 +239,6 @@ class AutotunePrepTest : TestBaseWithProfile() {
 
     private fun buildBoluses(preppedGlucose: PreppedGlucose): ArrayList<Bolus> { //if categorization is correct then I return for dose function the crInsulin calculated in Oaps
         val boluses: ArrayList<Bolus> = ArrayList()
-//        try {
         for (i in preppedGlucose.crData.indices) {
             boluses.add(
                 Bolus(
@@ -249,7 +248,6 @@ class AutotunePrepTest : TestBaseWithProfile() {
                 )
             )
         }
-//        } catch (e: Exception) { }
         if (boluses.size == 0)  //Add at least one insulin treatment for tests to avoid return null in categorization
             boluses.add(
                 Bolus(
@@ -263,7 +261,6 @@ class AutotunePrepTest : TestBaseWithProfile() {
 
     private fun buildMeals(jsonArray: JSONArray): ArrayList<Carbs> {
         val list: ArrayList<Carbs> = ArrayList()
-//        try {
         for (index in 0 until jsonArray.length()) {
             val json = jsonArray.getJSONObject(index)
             val value = JsonHelper.safeGetDouble(json, "carbs", 0.0)
@@ -272,20 +269,17 @@ class AutotunePrepTest : TestBaseWithProfile() {
                 list.add(Carbs(timestamp = timestamp, amount = value, duration = 0))
             }
         }
-//        } catch (e: Exception) { }
         return list
     }
 
     private fun buildGlucose(jsonArray: JSONArray): List<GlucoseValue> {
         val list: ArrayList<GlucoseValue> = ArrayList()
-//        try {
         for (index in 0 until jsonArray.length()) {
             val json = jsonArray.getJSONObject(index)
             val value = JsonHelper.safeGetDouble(json, "sgv")
             val timestamp = JsonHelper.safeGetLong(json, "date")
             list.add(GlucoseValue(raw = value, noise = 0.0, value = value, timestamp = timestamp, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         }
-//        } catch (e: Exception) { }
         if (list.size > 0)
             startDayTime = list[list.size - 1].timestamp
         return list
