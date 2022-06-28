@@ -566,7 +566,7 @@
     <string name="start_hypo_tt">Start Hypo TT</string>
     <string name="closed_loop_disabled_on_dev_branch">Du kjører dev-versjonen. Lukket loop ikke aktivert.</string>
     <string name="engineering_mode_enabled">Engineering Mode aktivert</string>
-    <string name="profileswitch_ismissing">Profil bytte mangler. Utfør et profil bytte og trykk på \"Aktiver profil\" i din lokale profil.</string>
+    <string name="profileswitch_ismissing">Profilbytte mangler. Utfør et profilbytte og trykk på \"Aktiver profil\" i din lokale profil.</string>
     <string name="pumpisnottempbasalcapable">Pumpen støtter ikke temp basaler</string>
     <string name="closedmodedisabledinpreferences">Lukket Loop deaktivert i innstillinger</string>
     <string name="autosensdisabledinpreferences">Autosens deaktivert i innstillinger</string>
@@ -1000,7 +1000,7 @@
     <string name="refresh_from_nightscout">Oppdater fra Nightscout</string>
     <string name="remove_selected_items">Fjern valgte elementer</string>
     <string name="select_for_removal">Velg hva som skal fjernes</string>
-    <string name="profile_changes">Profil endringer</string>
+    <string name="profile_changes">Profilendringer</string>
     <string name="tempt_targets">Temp Target</string>
     <string name="carbs_and_bolus">Karbohydrater og bolus</string>
     <string name="confirm_remove_multiple_items">Er du sikker på at du vil fjerne %1$d elementer</string>
