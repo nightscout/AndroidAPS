@@ -17,9 +17,15 @@ import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientU
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.sdk.NSAndroidClient
+import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class NSClientFragment : DaggerFragment() {
@@ -32,6 +38,7 @@ class NSClientFragment : DaggerFragment() {
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var dataSyncSelector: DataSyncSelector
     @Inject lateinit var uel: UserEntryLogger
+    @Inject lateinit var aapsLogger: AAPSLogger
 
     companion object {
 
@@ -39,6 +46,7 @@ class NSClientFragment : DaggerFragment() {
         const val ID_MENU_RESTART = 7
         const val ID_MENU_SEND_NOW = 8
         const val ID_MENU_FULL_SYNC = 9
+        const val ID_MENU_STATUS = 10
     }
 
     private val disposable = CompositeDisposable()
@@ -80,6 +88,7 @@ class NSClientFragment : DaggerFragment() {
             menu.add(Menu.FIRST, ID_MENU_RESTART, 0, rh.gs(R.string.restart)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
             menu.add(Menu.FIRST, ID_MENU_SEND_NOW, 0, rh.gs(R.string.deliver_now)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
             menu.add(Menu.FIRST, ID_MENU_FULL_SYNC, 0, rh.gs(R.string.full_sync)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+            menu.add(Menu.FIRST, ID_MENU_STATUS, 0, "TEST STATUS").setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
             menu.setGroupDividerEnabled(true)
         }
     }
@@ -107,6 +116,25 @@ class NSClientFragment : DaggerFragment() {
                         context, rh.gs(R.string.nsclientinternal), rh.gs(R.string.full_sync_comment),
                         Runnable { dataSyncSelector.resetToNextFullSync() }
                     )
+                }
+                true
+            }
+
+            ID_MENU_STATUS    -> {
+                context?.let { context ->
+                    val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+                    scope.launch {
+                        val client = NSAndroidClient(
+                            baseUrl = sp.getString(R.string.key_nsclientinternal_url, "").lowercase().replace("https://", ""),
+                            accessToken = sp.getString(R.string.key_nsclient_token, ""),
+                            context = context,
+                            logging = true
+                        )
+                        val status = client.getStatus()
+                        aapsLogger.debug(status.toString())
+                        val svgs = client.getSgvs()
+                        aapsLogger.debug(svgs.toString())
+                    }
                 }
                 true
             }
