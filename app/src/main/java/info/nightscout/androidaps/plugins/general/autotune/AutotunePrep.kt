@@ -263,6 +263,7 @@ class AutotunePrep @Inject constructor(
                 if (verbose)
                     log("Could not find glucose data")
             }
+            val rawAvgDelta = avgDelta
             avgDelta = Round.roundTo(avgDelta, 0.01)
             glucoseDatum.avgDelta = avgDelta
 
@@ -283,6 +284,7 @@ class AutotunePrep @Inject constructor(
             val currentBasal = tunedprofile.getBasal(BGTime)
 
             // basalBGI is BGI of basal insulin activity.
+            val rawBasalBGI = currentBasal * sens / 60 * 5
             val basalBGI = Round.roundTo(currentBasal * sens / 60 * 5, 0.01) // U/hr * mg/dL/U * 1 hr / 60 minutes * 5 = mg/dL/5m
             //console.log(JSON.stringify(IOBInputs.profile));
             // call iob since calculated elsewhere
@@ -292,6 +294,7 @@ class AutotunePrep @Inject constructor(
             val iob = autotuneIob.getIOB(BGTime, localInsulin)    // add localInsulin to be independent to InsulinPlugin
 
             // activity times ISF times 5 minutes is BGI
+            val rawBGI = -iob.activity * sens * 5
             val BGI = Round.roundTo(-iob.activity * sens * 5, 0.01)
             // datum = one glucose data point (being prepped to store in output)
             glucoseDatum.bgi = BGI
@@ -444,11 +447,14 @@ class AutotunePrep @Inject constructor(
                             isfGlucoseData.add(glucoseDatum)
                         }
                     }
+                    if (BGTime>1653156849000 && BGTime < 1653157750000) { // Log only the 2 isf / basal value different between local and dotests
+                        aapsLogger.debug(LTag.AUTOTUNE,"rawBasalBGI: $rawBasalBGI rawBGI: $rawBGI rawAvgDelta: $rawAvgDelta (basalBGI>-4*BGI: ${basalBGI>-4*BGI} avgDelta>0&&avgDelta>-2*BGI: " +
+                            "${avgDelta>0&&avgDelta>-2*BGI} $type")
+                    }
                 }
             }
             // debug line to print out all the things
-            aapsLogger.debug(LTag.AUTOTUNE, "${(if (absorbing) 1 else 0).toString()} mealCOB: ${Round.roundTo(mealCOB, 0.1)} mealCarbs: ${Math.round(mealCarbs)} basalBGI: ${Round.roundTo(basalBGI, 0.1)} BGI: ${Round
-                .roundTo(BGI, 0.1)} IOB: ${iob.iob} Activity: ${iob.activity} at ${dateUtil.timeStringWithSeconds(BGTime)} dev: $deviation avgDelta: $avgDelta $type")
+            aapsLogger.debug(LTag.AUTOTUNE, "${(if (absorbing) 1 else 0).toString()} mealCOB: ${Round.roundTo(mealCOB, 0.1)} mealCarbs: ${Math.round(mealCarbs)} basalBGI: $basalBGI BGI: $BGI IOB: ${iob.iob} Activity: ${iob.activity} at ${dateUtil.timeStringWithSeconds(BGTime)} dev: $deviation avgDelta: $avgDelta $type")
             if (verbose)
                 log("${(if (absorbing) 1 else 0).toString()} mealCOB: ${Round.roundTo(mealCOB, 0.1)} mealCarbs: ${Math.round(mealCarbs)} basalBGI: ${Round.roundTo(basalBGI, 0.1)} BGI: ${Round
                         .roundTo(BGI, 0.1)} IOB: ${iob.iob} Activity: ${iob.activity} at ${dateUtil.timeStringWithSeconds(BGTime)} dev: $deviation avgDelta: $avgDelta $type")
