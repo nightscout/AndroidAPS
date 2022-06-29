@@ -10,7 +10,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 @Suppress("SpellCheckingInspection")
-class IobTotal(val time: Long) : DataPointWithLabelInterface {
+class   IobTotal(val time: Long) : DataPointWithLabelInterface {
 
     var iob = 0.0
     var activity = 0.0
@@ -51,15 +51,15 @@ class IobTotal(val time: Long) : DataPointWithLabelInterface {
         return this
     }
 
-    fun round(fabricPrivacy: FabricPrivacy? = null): IobTotal {
-        iob = Round.roundTo(iob, 0.001, fabricPrivacy)
-        activity = Round.roundTo(activity, 0.0001, fabricPrivacy)
-        bolussnooze = Round.roundTo(bolussnooze, 0.0001, fabricPrivacy)
-        basaliob = Round.roundTo(basaliob, 0.001, fabricPrivacy)
-        netbasalinsulin = Round.roundTo(netbasalinsulin, 0.001, fabricPrivacy)
-        hightempinsulin = Round.roundTo(hightempinsulin, 0.001, fabricPrivacy)
-        netInsulin = Round.roundTo(netInsulin, 0.001, fabricPrivacy)
-        extendedBolusInsulin = Round.roundTo(extendedBolusInsulin, 0.001, fabricPrivacy)
+    fun round(): IobTotal {
+        iob = Round.roundTo(iob, 0.001)
+        activity = Round.roundTo(activity, 0.0001)
+        bolussnooze = Round.roundTo(bolussnooze, 0.0001)
+        basaliob = Round.roundTo(basaliob, 0.001)
+        netbasalinsulin = Round.roundTo(netbasalinsulin, 0.001)
+        hightempinsulin = Round.roundTo(hightempinsulin, 0.001)
+        netInsulin = Round.roundTo(netInsulin, 0.001)
+        extendedBolusInsulin = Round.roundTo(extendedBolusInsulin, 0.001)
         return this
     }
 

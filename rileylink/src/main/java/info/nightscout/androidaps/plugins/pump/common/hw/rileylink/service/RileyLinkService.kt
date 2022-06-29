@@ -41,18 +41,18 @@ abstract class RileyLinkService : DaggerService() {
     @Inject lateinit var rileyLinkServiceData: RileyLinkServiceData
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var rileyLinkBLE: RileyLinkBLE     // android-bluetooth management
-    @Inject lateinit var rfspy: RFSpy // interface for RL xxx Mhz radio.
+    @Inject lateinit var rfSpy: RFSpy // interface for RL xxx Mhz radio.
 
     private val bluetoothAdapter: BluetoothAdapter? get() = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
-    protected var mBroadcastReceiver: RileyLinkBroadcastReceiver? = null
+    protected var broadcastReceiver: RileyLinkBroadcastReceiver? = null
     private var bluetoothStateReceiver: RileyLinkBluetoothStateReceiver? = null
 
     override fun onCreate() {
         super.onCreate()
         rileyLinkUtil.encoding = encoding
         initRileyLinkServiceData()
-        mBroadcastReceiver = RileyLinkBroadcastReceiver(this)
-        mBroadcastReceiver?.registerBroadcasts(this)
+        broadcastReceiver = RileyLinkBroadcastReceiver()
+        broadcastReceiver?.registerBroadcasts(this)
         bluetoothStateReceiver = RileyLinkBluetoothStateReceiver()
         bluetoothStateReceiver?.registerBroadcasts(this)
     }
@@ -80,7 +80,7 @@ abstract class RileyLinkService : DaggerService() {
         super.onDestroy()
 
         rileyLinkBLE.disconnect() // dispose of Gatt (disconnect and close)
-        mBroadcastReceiver?.unregisterBroadcasts(this)
+        broadcastReceiver?.unregisterBroadcasts(this)
         bluetoothStateReceiver?.unregisterBroadcasts(this)
     }
 
@@ -139,7 +139,7 @@ abstract class RileyLinkService : DaggerService() {
         }
     }
 
-    // FIXME: This needs to be run in a session so that is interruptible, has a separate thread, etc.
+    // FIXME: This needs to be run in a session so that is incorruptible, has a separate thread, etc.
     fun doTuneUpDevice() {
         rileyLinkServiceData.setRileyLinkServiceState(RileyLinkServiceState.TuneUpDevice)
         setPumpDeviceState(PumpDeviceState.Sleeping)
@@ -178,7 +178,7 @@ abstract class RileyLinkService : DaggerService() {
         get() = rileyLinkServiceData.targetDevice
 
     fun changeRileyLinkEncoding(encodingType: RileyLinkEncodingType?) {
-        rfspy.setRileyLinkEncoding(encodingType)
+        rfSpy.setRileyLinkEncoding(encodingType)
     }
 
     val error: RileyLinkError?

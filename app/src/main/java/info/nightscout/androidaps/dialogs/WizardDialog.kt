@@ -72,7 +72,7 @@ class WizardDialog : DaggerDialogFragment() {
     private var wizard: BolusWizard? = null
     private var calculatedPercentage = 100.0
     private var calculatedCorrection = 0.0
-    private var correctionPercent = false
+    private var usePercentage = false
     private var carbsPassedIntoWizard = 0.0
     private var notesPassedIntoWizard = ""
     private var okClicked: Boolean = false // one shot guards
@@ -157,7 +157,7 @@ class WizardDialog : DaggerDialogFragment() {
                 ?: 0.0, 0.0, maxCarbs.toDouble(), 1.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher
         )
 
-        if (correctionPercent) {
+        if (usePercentage) {
             calculatedPercentage = sp.getInt(R.string.key_boluswizard_percentage, 100).toDouble()
             binding.correctionInput.setParams(calculatedPercentage, 10.0, 200.0, 5.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher)
             binding.correctionInput.value = calculatedPercentage
@@ -176,6 +176,7 @@ class WizardDialog : DaggerDialogFragment() {
         handler.post { initDialog() }
         calculatedPercentage = sp.getInt(R.string.key_boluswizard_percentage, 100).toDouble()
         binding.percentUsed.text = rh.gs(R.string.format_percent, sp.getInt(R.string.key_boluswizard_percentage, 100))
+        binding.percentUsed.visibility = (sp.getInt(R.string.key_boluswizard_percentage, 100) != 100 || usePercentage).toVisibility()
         // ok button
         binding.okcancel.ok.setOnClickListener {
             if (okClicked) {
@@ -227,8 +228,8 @@ class WizardDialog : DaggerDialogFragment() {
             run {
                 sp.putBoolean(rh.gs(R.string.key_wizard_correction_percent), isChecked)
                 binding.correctionUnit.text = if (isChecked) "%" else rh.gs(R.string.insulin_unit_shortname)
-                correctionPercent = binding.correctionPercent.isChecked
-                if (correctionPercent) {
+                usePercentage = binding.correctionPercent.isChecked
+                if (usePercentage) {
                     binding.correctionInput.setParams(calculatedPercentage, 10.0, 200.0, 5.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher)
                     binding.correctionInput.customContentDescription = rh.gs(R.string.a11_correction_percentage)
                 } else {
@@ -239,7 +240,7 @@ class WizardDialog : DaggerDialogFragment() {
                     binding.correctionInput.customContentDescription = rh.gs(R.string.a11_correction_units)
                 }
                 binding.correctionInput.updateA11yDescription()
-                binding.correctionInput.value = if (correctionPercent) calculatedPercentage else Round.roundTo(calculatedCorrection, bolusStep)
+                binding.correctionInput.value = if (usePercentage) calculatedPercentage else Round.roundTo(calculatedCorrection, bolusStep)
             }
         }
         // profile
@@ -320,8 +321,8 @@ class WizardDialog : DaggerDialogFragment() {
     private fun loadCheckedStates() {
         binding.bgTrendCheckbox.isChecked = sp.getBoolean(R.string.key_wizard_include_trend_bg, false)
         binding.cobCheckbox.isChecked = sp.getBoolean(R.string.key_wizard_include_cob, false)
-        correctionPercent = sp.getBoolean(R.string.key_wizard_correction_percent, false)
-        binding.correctionPercent.isChecked = correctionPercent
+        usePercentage = sp.getBoolean(R.string.key_wizard_correction_percent, false)
+        binding.correctionPercent.isChecked = usePercentage
     }
 
     private fun valueToUnitsToString(value: Double, units: String): String =
@@ -370,8 +371,6 @@ class WizardDialog : DaggerDialogFragment() {
             binding.iobInsulin.text = rh.gs(R.string.formatinsulinunits, -bolusIob.iob - basalIob.basaliob)
 
             calculateInsulin()
-
-            binding.percentUsed.visibility = (sp.getInt(R.string.key_boluswizard_percentage, 100) != 100 || correctionPercent).toVisibility()
         }
     }
 

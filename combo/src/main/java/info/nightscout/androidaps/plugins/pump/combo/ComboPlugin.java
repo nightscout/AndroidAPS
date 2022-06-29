@@ -566,7 +566,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
                 return new PumpEnactResult(getInjector()).success(true).enacted(false);
             }
 
-            EventOverviewBolusProgress.Treatment treatment = new EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB);
+            EventOverviewBolusProgress.Treatment treatment = new EventOverviewBolusProgress.Treatment(0.0, 0,detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.getId());
             EventOverviewBolusProgress.INSTANCE.setT(treatment);
 
             // start bolus delivery

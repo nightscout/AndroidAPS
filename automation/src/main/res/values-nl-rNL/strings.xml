@@ -120,4 +120,7 @@
     <string name="confirm_remove_multiple_items">Weet je zeker dat je %1$d items wilt verwijderen</string>
     <string name="sort_label">Sorteren</string>
     <string name="system_automation">Systeem automatisering</string>
+    <string name="run_automations">Automatisering uitvoeren</string>
+    <string name="add_automation">Regel toevoegen</string>
+    <string name="remove_sort">Verwijderen/sorteren</string>
 </resources>

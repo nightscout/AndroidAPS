@@ -6,6 +6,7 @@
     <string name="treatmentssafety_title">Behandelingen veiligheid</string>
     <string name="treatmentssafety_maxbolus_title">Max toegestane bolus [E]</string>
     <string name="treatmentssafety_maxcarbs_title">Max toegestane koolhydraten [g]</string>
+    <string name="treatmentssafety_lgsThreshold_title">BG niveau waarbij lage glucose onderbreking wordt geactiveerd</string>
     <string name="nav_preferences_plugin">%1$s Instellingen</string>
     <string name="nav_preferences">Instellingen</string>
     <string name="nav_refreshtreatments">Haal behandelingen op van NS</string>
@@ -432,8 +433,8 @@
     <string name="ns_localbroadcasts_title">Activeer locaal delen.</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dynamische ISF</string>
-    <string name="DynISFAdjust_title">Dynamische ISF aanpassingsfactor %%</string>
-    <string name="DynISFAdjust_summary">Aanpassingsfactor voor Dynamische ISF. Stel meer dan 100%% in voor een agressievere correctie dosis en minder dan 100%% voor minder agressieve correcties.</string>
+    <string name="DynISFAdjust_title" formatted="false">Dynamische Isf aanpassingsfactor %</string>
+    <string name="DynISFAdjust_summary" formatted="false">Aanpassingsfactor voor DynamicISF. Stel meer dan 100% in voor een agressievere correctie en minder dan 100% voor minder agressieve correctie.</string>
     <string name="enableuam">Activeer UAM</string>
     <string name="enablesmb">Activeer SMB</string>
     <string name="enablesmb_summary">SMB in plaats van tijdelijke basalen voor snellere reactie</string>
@@ -592,6 +593,7 @@
     <string name="openapssmb_maxiob_summary">Deze waarde heet MAX IOB in OpenAPS context\nOpenAPS zal geen extra insuline toedienen als de actuele IOB onderstaande waarde overschreden heeft</string>
     <string name="absorption_cutoff_title">Maximum maaltijd absorptie tijd [uur]</string>
     <string name="absorption_cutoff_summary">Tijdspanne waarbinnen elke maaltijd volledig is opgenomen. Resterende KH worden niet mee gerekend.</string>
+    <string name="treatmentssafety_lgsThreshold_summary">BG waarde waarbij insuline afgifte wordt onderbroken. De standaard waarde gebruikt het standaard doelmodel. Gebruiker kan waarde instellen tussen 60 mg/dl (3.3 mmol/l) en 100mg/dl(5.6mmol/l). Waarden lager dan 65/3.6 resulteren in gebruik van het standaard model</string>
     <string name="overview_show_notes_field_in_dialogs_title">Toon notities veld in behandeling dialoogvensters</string>
     <string name="next_button">Volgende</string>
     <string name="previous_button">Vorige</string>
@@ -604,7 +606,11 @@
     <string name="secondcarbsincrement">Tweede koolhydraten increment</string>
     <string name="thirdcarbsincrement">Derde koolhydraten increment</string>
     <string name="cgm">CGM</string>
+    <string name="ns_cellular">Mobiele verbinding gebruiken</string>
+    <string name="ns_wifi">Gebruik WiFi verbinding</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="ns_charging">Tijdens opladen</string>
+    <string name="ns_battery">Op batterij</string>
     <string name="connectionsettings_title">Verbindings instellingen</string>
     <string name="ns_wifi_allowedssids">Toegelaten SSIDs (gescheiden door puntkomma)</string>
     <string name="ns_allowroaming">Sta verbinding tijdens roaming toe</string>
@@ -679,6 +685,8 @@
     <string name="error_adding_treatment_message">Een Behandeling (insuline: %1$.2f, koolhydraten: %2$d, in: %3$s) niet konden worden toegevoegd aan Behandelingen. Gelieve te controleren en handmatig een record toe te voegen indien nodig.</string>
     <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), vertraging: %3$d m</string>
     <string name="openaps_noasdata">Geen autosens-gegevens beschikbaar</string>
+    <string name="log_files">Logbestanden</string>
+    <string name="miscellaneous">Overige</string>
     <string name="nav_logsettings">Log instellingen</string>
     <string name="resettodefaults">Terug naar standaardinstellingen</string>
     <string name="nsmalfunction">NSClient werkt niet goed. Overweg een herstart van NS en NSClient.</string>
@@ -771,6 +779,11 @@
     <string name="invalidpct">Ongeldig % invoer</string>
     <string name="average">Gemiddelde</string>
     <string name="tir">TIR</string>
+    <string name="day_tir">TIR overdag</string>
+    <string name="night_tir">TIR s\'nachts</string>
+    <string name="detailed_14_days">14 dagen details</string>
+    <string name="std_deviation">SD: %1$s</string>
+    <string name="hba1c">HbA1c: </string>
     <string name="activitymonitor">Activiteitsmonitor</string>
     <string name="doyouwantresetstats">Wil je de activiteitenstatistieken resetten?</string>
     <string name="statistics">Statistieken</string>
@@ -957,7 +970,6 @@
     <string name="wear_action_tempt_max_bg_error">Max BG buiten bereik!</string>
     <string name="wear_action_tempt_manual_range_message">Tijdelijk streefdoel:\nMin: %1$s\nMax: %2$s\nDuur: %3$s</string>
     <string name="wear_action_tempt_manual_message">Tijdelijk streefdoel:\nDoel: %1$s\nDuur: %2$s</string>
-    <string name="wear_action_tempt_preset_message">Tijdelijk streefdoel:\Reden: %1$s\nDoel: %2$s\nDuur: %3$s</string>
     <string name="quick_wizard_message">QuickWizard: %1$s\nInsuline: %2$.2fE\nKoolhy.: %3$dg</string>
     <string name="wizard_result">Reken. Wizard:\nInsuline: %1$.2fE\nKoolhy.: %2$dg</string>
     <string name="overview_editquickwizard_show_on_device">Toon invoer op apparaat:</string>
@@ -997,6 +1009,10 @@
     <string name="count_selected">%1$d geselecteerd</string>
     <string name="sort_label">Sorteren</string>
     <string name="dialog_canceled">Dialoog geannuleerd</string>
+    <string name="veryLow" comment="below 3.1">Zeer laag</string>
+    <string name="low" comment="3.1-3.9">Laag</string>
+    <string name="high" comment="10.0-13.9">Hoog</string>
+    <string name="veryHigh" comment="above 13.9">Zeer hoog</string>
     <string name="below" comment="below &quot;in range&quot;">Onder</string>
     <string name="in_range">Binnen bereik</string>
     <string name="above" comment="above &quot;in range&quot;">Boven</string>
@@ -1004,6 +1020,7 @@
     <string name="show_hide_records">Verberg loop records</string>
     <string name="widget_description">AndroidAPS widget</string>
     <string name="configure">Configureer transparantie</string>
+    <string name="loop_status">Loop status</string>
     <string name="graph_scale">Grafiek schaal</string>
     <string name="profile1">Profiel 1</string>
     <string name="profile2">Profiel 2</string>
@@ -1023,4 +1040,6 @@
     <string name="aidex">GlucoRx Aidex</string>
     <string name="aidex_short">Aidex</string>
     <string name="description_source_aidex">Ontvang BG waarden van GlucoRx Aidex CGMS.</string>
+    <string name="blocked_by_charging">Geblokkeerd door oplaad instellingen</string>
+    <string name="blocked_by_connectivity">Geblokkeerd door verbindings instellingen</string>
 </resources>

@@ -432,8 +432,6 @@
     <string name="ns_localbroadcasts_title">启用本地广播。</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">动态ISF(胰岛素敏感系数)</string>
-    <string name="DynISFAdjust_title">动态ISF胰岛素敏系数调整比例 %%</string>
-    <string name="DynISFAdjust_summary">动态ISF的调整因子。设置100%%以上用于更积极的校正，100%%以下则不那么积极校正。</string>
     <string name="enableuam">启用 UAM</string>
     <string name="enablesmb">启用微型大剂量</string>
     <string name="enablesmb_summary">使用微型大剂量代替使用临时基础率，更快的干预</string>
@@ -957,7 +955,6 @@
     <string name="wear_action_tempt_max_bg_error">目标血糖最大值超出范围！</string>
     <string name="wear_action_tempt_manual_range_message">临时目标:\n最小: %1$s\n最大: %2$s\n持续时间: %3$s</string>
     <string name="wear_action_tempt_manual_message">临时目标:\n目标: %1$s\n持续时间: %2$s</string>
-    <string name="wear_action_tempt_preset_message">临时目标:\原因: %1$s\n目标: %2$s\n持续时间: %3$s</string>
     <string name="quick_wizard_message">快速向导: %1$s\n胰岛素: %2$.2fU\n碳水: %3$d克</string>
     <string name="wizard_result">计算. 向导:\n胰岛素: %1$.2fU\n碳水: %2$d克</string>
     <string name="overview_editquickwizard_show_on_device">在设备上显示条目：</string>

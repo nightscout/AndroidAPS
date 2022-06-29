@@ -27,9 +27,13 @@ class ServiceDiscoverer(
     fun discoverServices(connectionWaitCond: ConnectionWaitCondition): Map<CharacteristicType, BluetoothGattCharacteristic> {
         logger.debug(LTag.PUMPBTCOMM, "Discovering services")
         bleCallbacks.startServiceDiscovery()
-        val discover = gatt.discoverServices()
-        if (!discover) {
-            throw ConnectException("Could not start discovering services`")
+        try {
+            val discover = gatt.discoverServices()
+            if (!discover) {
+                throw ConnectException("Could not start discovering services`")
+            }
+        } catch (ex: SecurityException) {
+            throw ConnectException("Missing bluetooth permission")
         }
         connectionWaitCond.timeoutMs?.let {
             bleCallbacks.waitForServiceDiscovery(it)
