@@ -447,7 +447,8 @@ class AutotunePrep @Inject constructor(
                 }
             }
             // debug line to print out all the things
-            aapsLogger.debug(LTag.AUTOTUNE, "basal: $currentBasal ${(if (absorbing) 1 else 0)} mealCOB: ${Round.roundTo(mealCOB, 0.1)} mealCarbs: ${Math.round(mealCarbs)} basalBGI: $basalBGI BGI:  $BGI IOB: ${iob.iob} Activity: ${iob.activity} at ${dateUtil.timeStringWithSeconds(BGTime)} dev: $deviation avgDelta: $avgDelta $type")
+            aapsLogger.debug(LTag.AUTOTUNE, "${(if (absorbing) 1 else 0)} mealCOB: ${Round.roundTo(mealCOB, 0.1)} mealCarbs: ${Math.round(mealCarbs)} basalBGI: ${Round.roundTo(basalBGI, 0.1)} BGI: ${Round
+                .roundTo(BGI, 0.1)} IOB: ${iob.iob} Activity: ${iob.activity} at ${dateUtil.timeStringWithSeconds(BGTime)} dev: $deviation avgDelta: $avgDelta $type")
             if (verbose)
                 log("${(if (absorbing) 1 else 0)} mealCOB: ${Round.roundTo(mealCOB, 0.1)} mealCarbs: ${Math.round(mealCarbs)} basalBGI: ${Round.roundTo(basalBGI, 0.1)} BGI: ${Round
                         .roundTo(BGI, 0.1)} IOB: ${iob.iob} Activity: ${iob.activity} at ${dateUtil.timeStringWithSeconds(BGTime)} dev: $deviation avgDelta: $avgDelta $type")

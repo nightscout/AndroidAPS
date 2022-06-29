@@ -13,7 +13,10 @@ import info.nightscout.androidaps.database.data.TargetBlock
 import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.database.entities.Carbs
 import info.nightscout.androidaps.database.entities.GlucoseValue
+import info.nightscout.androidaps.database.entities.ProfileSwitch
+import info.nightscout.androidaps.extensions.shiftBlock
 import info.nightscout.androidaps.interfaces.*
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctionImplementation
 import info.nightscout.androidaps.plugins.general.autotune.data.*
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
@@ -39,6 +42,7 @@ class AutotunePrepTest : TestBaseWithProfile() {
     @Mock lateinit var repository: AppRepository
     private lateinit var autotunePrep: AutotunePrep
     private lateinit var autotuneIob: TestAutotuneIob
+    private var ts = 0
     private var min5mCarbImpact = 0.0
     private var autotuneMin = 0.0
     private var autotuneMax = 0.0
@@ -46,7 +50,7 @@ class AutotunePrepTest : TestBaseWithProfile() {
 
     @Before
     fun initData() {
-        //TimeZone.setDefault(TimeZone.getTimeZone("GMT+2"))
+        ts = T.msecs(TimeZone.getDefault().getOffset(System.currentTimeMillis()).toLong()).hours().toInt() - 2
     }
 
     @Test
@@ -199,7 +203,7 @@ class AutotunePrepTest : TestBaseWithProfile() {
 
             val pure = PureProfile(
                 jsonObject = jsonObject,
-                basalBlocks = basalBlocks,
+                basalBlocks = basalBlocks.shiftBlock(1.0,ts),
                 isfBlocks = isfBlocks,
                 icBlocks = icBlocks,
                 targetBlocks = targetBlocks,
