@@ -472,7 +472,7 @@ class DataHandlerMobile @Inject constructor(
     }
 
     private fun handleECarbsPreCheck(command: EventData.ActionECarbsPreCheck) {
-        val startTimeStamp = System.currentTimeMillis() + T.hours(command.carbsTimeShift.toLong()).msecs()
+        val startTimeStamp = System.currentTimeMillis() + T.mins(command.carbsTimeShift.toLong()).msecs()
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(command.carbs)).value()
         var message = rh.gs(R.string.carbs) + ": " + carbsAfterConstraints + "g" +
             "\n" + rh.gs(R.string.time) + ": " + dateUtil.timeString(startTimeStamp) +
