@@ -448,8 +448,8 @@ class AutotunePrep @Inject constructor(
                         }
                     }
                     if (BGTime>1653156849000 && BGTime < 1653157750000) { // Log only the 2 isf / basal value different between local and dotests
-                        aapsLogger.debug(LTag.AUTOTUNE,"rawBasalBGI: $rawBasalBGI rawBGI: $rawBGI rawAvgDelta: $rawAvgDelta (basalBGI>-4*BGI: ${basalBGI>-4*BGI} avgDelta>0&&avgDelta>-2*BGI: " +
-                            "${avgDelta>0&&avgDelta>-2*BGI} $type")
+                        aapsLogger.debug(LTag.AUTOTUNE,"rawBasalBGI: $rawBasalBGI rawBGI: $rawBGI rawAvgDelta: $rawAvgDelta test1(basal): ${basalBGI> -4 * BGI} test2(basal/isf): " +
+                            "${avgDelta > 0 && avgDelta > -2 * BGI} $type")
                     }
                 }
             }
