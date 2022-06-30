@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PumoCommon - Pump Abstract -->
+    <string name="pump_operation_not_supported_by_pump_driver">Operasjonen støttes ikke av pumpen og/eller driveren.</string>
+    <string name="pump_operation_not_yet_supported_by_pump">Operasjonen støttes ikke av pumpen ennå.</string>
+    <string name="common_resultok">OK</string>
+    <!-- PumoCommon - Pump Status -->
+    <string name="pump_status_never_contacted">Aldri kontaktet</string>
+    <string name="pump_status_waking_up">Våkner opp</string>
+    <string name="pump_status_error_comm">Feil med kommunikasjonen</string>
+    <string name="pump_status_timeout_comm">Tidsavbrudd ved kommunikasjonen</string>
+    <string name="pump_status_pump_unreachable">Pumpe er utilgjengelig</string>
+    <string name="pump_status_invalid_config">Ugyldig oppsett av pumpe</string>
+    <string name="pump_status_active">Aktiv</string>
+    <string name="pump_status_sleeping">Hvilemodus</string>
+    <!-- PumpCommon - History Group -->
+    <string name="history_group_basal">Basaldoser</string>
+    <string name="history_group_configuration">Konfigurasjoner</string>
+    <string name="history_group_notification">Varsler</string>
+    <string name="history_group_statistic">Statistikker</string>
+    <string name="history_group_unknown">Ukjente</string>
+    <string name="history_group_all">Alle</string>
+    <string name="history_group_bolus">Boluser</string>
+    <string name="history_group_prime">Prime</string>
+    <string name="history_group_alarm">Alarmer</string>
+    <string name="history_group_glucose">Blodsukker</string>
+</resources>

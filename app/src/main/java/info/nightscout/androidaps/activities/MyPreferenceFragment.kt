@@ -350,7 +350,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             }
         }
         if (pref is EditTextPreference) {
-            if (pref.getKey().contains("password") || pref.getKey().contains("pin") || pref.getKey().contains("secret")) {
+            if (pref.getKey().contains("password") || pref.getKey().contains("pin") || pref.getKey().contains("secret") || pref.getKey().contains("token")) {
                 pref.setSummary("******")
             } else if (pref.text != null) {
                 pref.dialogMessage = pref.dialogMessage

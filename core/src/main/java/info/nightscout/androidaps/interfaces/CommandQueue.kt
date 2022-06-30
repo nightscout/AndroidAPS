@@ -17,7 +17,7 @@ interface CommandQueue {
     fun independentConnect(reason: String, callback: Callback?)
     fun bolusInQueue(): Boolean
     fun bolus(detailedBolusInfo: DetailedBolusInfo, callback: Callback?): Boolean
-    fun cancelAllBoluses()
+    fun cancelAllBoluses(id: Long)
     fun stopPump(callback: Callback?)
     fun startPump(callback: Callback?)
     fun setTBROverNotification(callback: Callback?, enable: Boolean)

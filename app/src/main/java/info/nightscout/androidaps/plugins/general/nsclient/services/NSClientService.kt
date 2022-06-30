@@ -14,6 +14,7 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.events.EventAppExit
 import info.nightscout.androidaps.events.EventConfigBuilderChange
 import info.nightscout.androidaps.events.EventPreferenceChange
+import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.DataSyncSelector
 import info.nightscout.androidaps.interfaces.ResourceHelper
@@ -47,8 +48,6 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.JsonHelper.safeGetString
 import info.nightscout.androidaps.utils.JsonHelper.safeGetStringAllowNull
 import info.nightscout.androidaps.utils.T.Companion.mins
-import info.nightscout.androidaps.utils.XDripBroadcast
-import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
@@ -83,7 +82,6 @@ class NSClientService : DaggerService() {
     @Inject lateinit var dataWorker: DataWorker
     @Inject lateinit var dataSyncSelector: DataSyncSelector
     @Inject lateinit var repository: AppRepository
-    @Inject lateinit var xDripBroadcast: XDripBroadcast
 
     companion object {
 
@@ -473,7 +471,6 @@ class NSClientService : DaggerService() {
                                     .setInputData(dataWorker.storeInputData(profileStoreJson))
                                     .build()
                             )
-                            xDripBroadcast.sendProfile(profileStoreJson)
                         }
                     }
                     if (data.has("treatments")) {
@@ -492,7 +489,6 @@ class NSClientService : DaggerService() {
                                     .setInputData(dataWorker.storeInputData(addedOrUpdatedTreatments))
                                     .build()
                             )
-                            xDripBroadcast.sendTreatments(addedOrUpdatedTreatments)
                         }
                     }
                     if (data.has("devicestatus")) {
@@ -536,7 +532,6 @@ class NSClientService : DaggerService() {
                                     .setInputData(dataWorker.storeInputData(sgvs))
                                     .build()
                             )
-                            xDripBroadcast.sendSgvs(sgvs)
                         }
                     }
                     rxBus.send(EventNSClientNewLog("LAST", dateUtil.dateAndTimeString(latestDateInReceivedData)))

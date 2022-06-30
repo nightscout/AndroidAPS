@@ -879,5 +879,6 @@
     <string name="not_available_full">Недостъпно</string>
     <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
+    <string name="login">Вход</string>
     <!-- Aidex Cgms -->
 </resources>

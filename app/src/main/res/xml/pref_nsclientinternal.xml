@@ -38,6 +38,11 @@
 
             <SwitchPreference
                 android:defaultValue="false"
+                android:key="@string/key_dexcomg5_nsupload"
+                android:title="@string/dexcomg5_nsupload_title" />
+
+            <SwitchPreference
+                android:defaultValue="false"
                 android:key="@string/key_ns_receive_cgm"
                 android:summary="@string/ns_receive_cgm_summary"
                 android:title="@string/ns_receive_cgm" />
