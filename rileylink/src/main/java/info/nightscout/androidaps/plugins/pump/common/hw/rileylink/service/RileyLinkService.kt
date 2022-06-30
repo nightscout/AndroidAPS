@@ -44,7 +44,7 @@ abstract class RileyLinkService : DaggerService() {
     @Inject lateinit var rfSpy: RFSpy // interface for RL xxx Mhz radio.
 
     private val bluetoothAdapter: BluetoothAdapter? get() = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
-    protected var broadcastReceiver: RileyLinkBroadcastReceiver? = null
+    private var broadcastReceiver: RileyLinkBroadcastReceiver? = null
     private var bluetoothStateReceiver: RileyLinkBluetoothStateReceiver? = null
 
     override fun onCreate() {

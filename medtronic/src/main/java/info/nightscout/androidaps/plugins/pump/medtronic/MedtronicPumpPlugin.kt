@@ -55,6 +55,7 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.TimeChangeType
 import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
@@ -215,27 +216,13 @@ class MedtronicPumpPlugin @Inject constructor(
         }.start()
     }
 
-    override val serviceClass: Class<*>
-        get() = RileyLinkMedtronicService::class.java
-
-    override val pumpStatusData: info.nightscout.androidaps.plugins.pump.common.data.PumpStatus
-        get() = medtronicPumpStatus
-
-    override fun deviceID(): String {
-        return "Medtronic"
-    }
-
-    override val isFakingTempsByExtendedBoluses: Boolean
-        get() = false
-
-    override fun canHandleDST(): Boolean {
-        return false
-    }
-
-    // Pump Plugin
+    override val serviceClass: Class<*> = RileyLinkMedtronicService::class.java
+    override val pumpStatusData: PumpStatus get() = medtronicPumpStatus
+    override fun deviceID(): String = "Medtronic"
+    override val isFakingTempsByExtendedBoluses: Boolean = false
+    override fun canHandleDST(): Boolean = false
     private var isServiceSet: Boolean = false
-
-    override val rileyLinkService: RileyLinkMedtronicService? = rileyLinkMedtronicService
+    override val rileyLinkService: RileyLinkMedtronicService? get() = rileyLinkMedtronicService
 
     override val pumpInfo: RileyLinkPumpInfo
         get() = RileyLinkPumpInfo(
@@ -244,7 +231,7 @@ class MedtronicPumpPlugin @Inject constructor(
             medtronicPumpStatus.serialNumber
         )
 
-    override val lastConnectionTimeMillis: Long = medtronicPumpStatus.lastConnection
+    override val lastConnectionTimeMillis: Long get() = medtronicPumpStatus.lastConnection
 
     override fun setLastCommunicationToNow() {
         medtronicPumpStatus.setLastCommunicationToNow()

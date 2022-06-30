@@ -120,9 +120,8 @@ class RileyLinkBroadcastReceiver : DaggerBroadcastReceiver() {
 
             RileyLinkConst.Intents.RileyLinkNewAddressSet -> {
                 val rileylinkBLEAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "")
-                if (rileylinkBLEAddress == "") {
-                    aapsLogger.error("No Rileylink BLE Address saved in app")
-                } else rileyLinkService?.reconfigureRileyLink(rileylinkBLEAddress)
+                if (rileylinkBLEAddress == "") aapsLogger.error("No Rileylink BLE Address saved in app")
+                else rileyLinkService?.reconfigureRileyLink(rileylinkBLEAddress)
                 true
             }
 
