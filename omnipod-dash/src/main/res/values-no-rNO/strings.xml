@@ -4,6 +4,7 @@
     <string name="omnipod_dash_pump_description">Pumpeintegrering for Omnipod Dash (den nye, Bluetooth-aktiverte modellen med en blå kanylehette).</string>
     <!-- Omnipod Dash - Keys -->
     <!-- Omnipod Dash - History -->
+    <string name="omnipod_dash_history_title">Pod-historikk</string>
     <string name="omnipod_dash_history_item_description">Beskrivelse</string>
     <string name="omnipod_dash_history_item_source">Kilde</string>
     <string name="omnipod_dash_history_item_date">Dato</string>
@@ -12,6 +13,7 @@
     <string name="omnipod_dash_history_bolus_value_with_carbs">%1$.2f E, KH=%2$.1f g</string>
     <string name="omnipod_dash_history_tbr_value">Dosering: %1$.2f E, varighet: %2$d min</string>
     <!-- Omnipod Dash - Overview -->
+    <string name="omnipod_dash_overview_bluetooth_status">Bluetooth-status</string>
     <string name="omnipod_dash_overview_bluetooth_address">Bluetooth-adresse</string>
     <string name="omnipod_dash_overview_firmware_version_value">Firmware %1$s / Bluetooth %2$s</string>
     <string name="omnipod_dash_overview_bluetooth_connection_quality">Bluetooth tilkoblingskvalitet</string>
