@@ -19,7 +19,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="10dp"
-        android:layout_marginTop="-10dp"
+        android:layout_marginTop="-5dp"
         android:cursorVisible="false"
         android:gravity="center"
         android:inputType="numberDecimal"
@@ -44,7 +44,7 @@
         app:layout_constraintStart_toStartOf="@+id/edit_text"
         app:layout_constraintTop_toBottomOf="@id/edit_text"
         tools:ignore="LabelFor"
-        tools:text="label123" />
+        tools:text="label" />
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/min_button"
@@ -57,7 +57,7 @@
         android:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintCircle="@+id/center"
-        app:layout_constraintCircleAngle="215"
+        app:layout_constraintCircleAngle="145"
         app:layout_constraintCircleRadius="70dp"
         app:layout_constraintLeft_toLeftOf="parent" />
 
@@ -72,7 +72,7 @@
         android:textSize="25sp"
         android:visibility="visible"
         app:layout_constraintCircle="@+id/center"
-        app:layout_constraintCircleAngle="35"
+        app:layout_constraintCircleAngle="325"
         app:layout_constraintCircleRadius="70dp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -89,25 +89,21 @@
         android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@+id/plus_button1"
         app:layout_constraintCircle="@+id/center"
-        app:layout_constraintCircleAngle="90"
+        app:layout_constraintCircleAngle="270"
         app:layout_constraintCircleRadius="70dp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/plus_button3"
         tools:text="+5" />
 
-    <androidx.appcompat.widget.AppCompatImageView
+    <View
         android:id="@+id/value_background"
         android:layout_width="108dp"
-        android:layout_height="108dp"
-        android:layout_gravity="center"
-        android:background="@drawable/circle"
-        android:backgroundTint="@color/gray_700"
-        android:importantForAccessibility="no"
+        android:layout_height="108dp"        
         app:layout_constraintBottom_toTopOf="@+id/min_button"
         app:layout_constraintCircle="@+id/center"
-        app:layout_constraintCircleAngle="305"
+        app:layout_constraintCircleAngle="55"
         app:layout_constraintCircleRadius="40dp"
-        app:layout_constraintRight_toLeftOf="@id/plus_button1" />
+        app:layout_constraintLeft_toRightOf="@id/plus_button3" />
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/plus_button1"
@@ -121,7 +117,7 @@
         android:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintCircle="@+id/center"
-        app:layout_constraintCircleAngle="145"
+        app:layout_constraintCircleAngle="215"
         app:layout_constraintCircleRadius="70dp"
         app:layout_constraintRight_toRightOf="parent" />
 

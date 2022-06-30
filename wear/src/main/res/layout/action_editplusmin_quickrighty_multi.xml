@@ -19,7 +19,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="10dp"
-        android:layout_marginTop="-1dp"
+        android:layout_marginTop="-5dp"
         android:cursorVisible="false"
         android:gravity="center"
         android:inputType="numberDecimal"
@@ -95,15 +95,10 @@
         app:layout_constraintTop_toBottomOf="@+id/plus_button3"
         tools:text="+5" />
 
-    <androidx.appcompat.widget.AppCompatImageView
+    <View
         android:id="@+id/value_background"
         android:layout_width="108dp"
         android:layout_height="108dp"
-        android:layout_gravity="center"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/circle"
-        android:backgroundTint="@color/gray_700"
-        android:contentDescription="@string/increment"
         app:layout_constraintBottom_toTopOf="@+id/min_button"
         app:layout_constraintCircle="@+id/center"
         app:layout_constraintCircleAngle="305"
