@@ -103,7 +103,7 @@ class AutotuneFragment : DaggerFragment() {
                 days.view?.setSelectedDays(days.getSelectedDays())
             else {
                 days.set(InputWeekDay.DayOfWeek.fromCalendarInt(i), selected)
-                resetParam()
+                resetParam(false)
                 updateGui()
             }
         }
@@ -135,7 +135,7 @@ class AutotuneFragment : DaggerFragment() {
                     profile = ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(it) } ?: currentProfile, LocalInsulin(""), injector)
                 }
                 autotunePlugin.selectedProfile = profileName
-                resetParam()
+                resetParam(true)
             }
             updateGui()
         }
@@ -364,10 +364,8 @@ class AutotuneFragment : DaggerFragment() {
         val runToday = autotunePlugin.lastRun > MidnightTime.calc(dateUtil.now() - autotunePlugin.autotuneStartHour * 3600 * 1000L) + autotunePlugin.autotuneStartHour * 3600 * 1000L
         if (runToday && autotunePlugin.result != "") {
             binding.tuneWarning.text = rh.gs(R.string.autotune_warning_after_run)
-        } else if (!runToday || autotunePlugin.result.isEmpty()) { //if new day re-init result, default days, warning and button's visibility
+        } else if (!runToday || autotunePlugin.result.isEmpty()) //if new day re-init result, default days, warning and button's visibility
             resetParam(!runToday)
-            days.setAll(true)
-        }
     }
 
     private fun addWarnings(): String {
@@ -392,10 +390,12 @@ class AutotuneFragment : DaggerFragment() {
         return warning
     }
 
-    private fun resetParam(resetDay: Boolean = true) {
+    private fun resetParam(resetDay: Boolean) {
         binding.tuneWarning.text = addWarnings()
-        if (resetDay)
+        if (resetDay) {
             autotunePlugin.lastNbDays = sp.getInt(R.string.key_autotune_default_tune_days, 5).toString()
+            days.setAll(true)
+        }
         autotunePlugin.result = ""
         binding.autotuneResults.removeAllViews()
         autotunePlugin.tunedProfile = null
