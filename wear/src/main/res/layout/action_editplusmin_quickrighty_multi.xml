@@ -100,10 +100,8 @@
         android:layout_width="108dp"
         android:layout_height="108dp"
         app:layout_constraintBottom_toTopOf="@+id/min_button"
-        app:layout_constraintCircle="@+id/center"
-        app:layout_constraintCircleAngle="305"
-        app:layout_constraintCircleRadius="40dp"
-        app:layout_constraintRight_toLeftOf="@id/plus_button1" />
+        app:layout_constraintRight_toRightOf="@id/min_button"
+        app:layout_constraintLeft_toLeftOf="@id/min_button"/>
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/plus_button1"
