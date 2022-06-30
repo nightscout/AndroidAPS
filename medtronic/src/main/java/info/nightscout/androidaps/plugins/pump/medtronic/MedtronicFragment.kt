@@ -188,7 +188,7 @@ class MedtronicFragment : DaggerFragment() {
     @Synchronized
     private fun setDeviceStatus() {
         val resourceId = rileyLinkServiceData.rileyLinkServiceState.resourceId
-        val rileyLinkError = medtronicPumpPlugin.rileyLinkService?.error
+        val rileyLinkError =rileyLinkServiceData.rileyLinkError
         binding.rlStatus.text =
             when {
                 rileyLinkServiceData.rileyLinkServiceState == RileyLinkServiceState.NotStarted -> rh.gs(resourceId)

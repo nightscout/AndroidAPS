@@ -153,7 +153,7 @@ class RileyLinkBroadcastReceiver : DaggerBroadcastReceiver() {
 
     private fun processTuneUpBroadcasts(action: String): Boolean =
         if (broadcastIdentifiers["TuneUp"]?.contains(action) == true) {
-            if (rileyLinkService?.rileyLinkTargetDevice?.isTuneUpEnabled == true) serviceTaskExecutor.startTask(WakeAndTuneTask(injector))
+            if (rileyLinkServiceData.targetDevice?.isTuneUpEnabled == true) serviceTaskExecutor.startTask(WakeAndTuneTask(injector))
             true
         } else false
 }
