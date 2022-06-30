@@ -110,7 +110,7 @@
     <string name="apsmode_title">APS modu</string>
     <string name="closedloop">Kapalı Döngü</string>
     <string name="openloop">Açık Döngü</string>
-    <string name="lowglucosesuspend">Düşük Glikoz Süspansiyonu</string>
+    <string name="lowglucosesuspend">Düşük Glikoz Duraklatma (LGS)</string>
     <string name="disabledloop">Döngü devre dışı</string>
     <string name="openloop_newsuggestion">Yeni öneri mevcut</string>
     <string name="carbssuggestion">Karbonhidrat Önerisi</string>
@@ -970,6 +970,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="wear_action_tempt_max_bg_error">Maks-KŞ aralık dışında!</string>
     <string name="wear_action_tempt_manual_range_message">Geçici Hedef:\nMin: %1$s\nMaks: %2$s\nSüre: %3$s</string>
     <string name="wear_action_tempt_manual_message">Geçici Hedef:\nHedef: %1$s\nSüre: %2$s</string>
+    <string name="wear_action_tempt_preset_message">Geçicihedef:\nNeden: %1$s\nHedef: %2$s\nSüre: %3$s</string>
     <string name="quick_wizard_message">Hızlı Asistan: %1$s\nİnsülin: %2$.2fU\nKarb: %3$dg</string>
     <string name="wizard_result">Hesap Mak.:\nİnsulin: %1$.2fÜ\nKarb: %2$dg</string>
     <string name="overview_editquickwizard_show_on_device">Girişi cihazda göster:</string>

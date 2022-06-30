@@ -970,6 +970,7 @@
     <string name="wear_action_tempt_max_bg_error">Max-BG fuori range!</string>
     <string name="wear_action_tempt_manual_range_message">Temptarget:\nMin: %1$s\nMax: %2$s\nDurata: %3$s</string>
     <string name="wear_action_tempt_manual_message">Temptarget:\nTarget: %1$s\nDurata: %2$s</string>
+    <string name="wear_action_tempt_preset_message">Temptarget:\nMotivo: %1$s\nTarget: %2$s\nDurata: %3$s</string>
     <string name="quick_wizard_message">QuickWizard: %1$s\nInsulina: %2$.2fU\nCHO: %3$dg</string>
     <string name="wizard_result">Calc. Wizard:\nInsulina: %1$.2fU\nCHO: %2$dg</string>
     <string name="overview_editquickwizard_show_on_device">Mostra voce sul dispositivo:</string>

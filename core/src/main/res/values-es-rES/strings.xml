@@ -464,6 +464,8 @@
     <string name="autotune_last_run">Última ejecución :</string>
     <string name="autotune_warning">Advertencia :</string>
     <string name="autotune_select_profile">Selecciona el perfil para a ajustar</string>
+    <string name="autotune_ic_warning">Autotune sólo funciona con un único valor de IC. Tu perfil tiene %1$d valores. El valor promedio es %2$.2fg/U</string>
+    <string name="autotune_isf_warning">Autotune sólo funciona con un único valor de ISF. Tu perfil tiene %1$d valores. El valor promedio es %2$.1f%3$s/U</string>
     <string name="autotune_error">Error en los datos de entrada, intenta ejecutar de nuevo autotune o reducir el número de días</string>
     <string name="autotune_warning_during_run">Cálculo de autototune iniciado, por favor ten paciencia</string>
     <string name="autotune_warning_after_run">¡Comprueba los resultados cuidadosamente antes de usarlos!</string>
