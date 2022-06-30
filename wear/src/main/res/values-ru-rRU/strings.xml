@@ -184,4 +184,6 @@
     <string name="cob_000g">000г</string>
     <string name="svg_00_0" comment="use , or . only">00,0</string>
     <string name="iob_0_00u">0,00 ед</string>
+    <string name="snooze_alert">Отложить оповещения AAPS</string>
+    <string name="sending_snooze">Отправка команды отложить оповещения AAPS</string>
 </resources>
