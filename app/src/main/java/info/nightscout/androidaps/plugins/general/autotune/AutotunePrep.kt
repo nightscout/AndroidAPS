@@ -10,6 +10,8 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.MidnightTime
 import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import java.util.*
 import javax.inject.Inject
@@ -17,6 +19,7 @@ import javax.inject.Singleton
 
 @Singleton
 class AutotunePrep @Inject constructor(
+    private val aapsLogger: AAPSLogger,
     private val sp: SP,
     private val dateUtil: DateUtil,
     private val autotuneFS: AutotuneFS,
@@ -146,6 +149,7 @@ class AutotunePrep @Inject constructor(
             }
         }
         if (glucose.size == 0 || glucoseData.size == 0 ) {
+            //aapsLogger.debug(LTag.AUTOTUNE, "No BG value received")
             if (verbose)
                 log("No BG value received")
             return null
@@ -159,11 +163,13 @@ class AutotunePrep @Inject constructor(
         //val boluses = 0
         //val maxCarbs = 0
         if (treatments.size == 0) {
+            //aapsLogger.debug(LTag.AUTOTUNE, "No Carbs entries")
             if (verbose)
                 log("No Carbs entries")
             //return null
         }
         if (autotuneIob.boluses.size == 0) {
+            //aapsLogger.debug(LTag.AUTOTUNE, "No treatment received")
             if (verbose)
                 log("No treatment received")
             return null
@@ -253,6 +259,7 @@ class AutotunePrep @Inject constructor(
                 }
                 avgDelta = (bg - bucketedData[i + 4].value) / 4
             } else {
+                //aapsLogger.debug(LTag.AUTOTUNE, "Could not find glucose data")
                 if (verbose)
                     log("Could not find glucose data")
             }
@@ -320,8 +327,9 @@ class AutotunePrep @Inject constructor(
                     crInitialIOB = iob.iob
                     crInitialBG = glucoseDatum.value
                     crInitialCarbTime = glucoseDatum.date
+                    //aapsLogger.debug(LTag.AUTOTUNE, "CRInitialIOB: $crInitialIOB CRInitialBG: $crInitialBG CRInitialCarbTime: ${dateUtil.toISOString(crInitialCarbTime)}")
                     if (verbose)
-                        log("CRInitialIOB: " + crInitialIOB + " CRInitialBG: " + crInitialBG + " CRInitialCarbTime: " + dateUtil.toISOString(crInitialCarbTime))
+                        log("CRInitialIOB: $crInitialIOB CRInitialBG: $crInitialBG CRInitialCarbTime: ${dateUtil.toISOString(crInitialCarbTime)}")
                 }
                 // keep calculatingCR as long as we have COB or enough IOB
                 if (mealCOB > 0 && i > 1) {
@@ -333,8 +341,9 @@ class AutotunePrep @Inject constructor(
                     val crEndIOB = iob.iob
                     val crEndBG = glucoseDatum.value
                     val crEndTime = glucoseDatum.date
+                    //aapsLogger.debug(LTag.AUTOTUNE, "CREndIOB: $crEndIOB CREndBG: $crEndBG CREndTime: ${dateUtil.toISOString(crEndTime)}")
                     if (verbose)
-                        log("CREndIOB: " + crEndIOB + " CREndBG: " + crEndBG + " CREndTime: " + dateUtil.toISOString(crEndTime))
+                        log("CREndIOB: $crEndIOB CREndBG: $crEndBG CREndTime: ${dateUtil.toISOString(crEndTime)}")
                     val crDatum = CRDatum(dateUtil)
                     crDatum.crInitialBG = crInitialBG
                     crDatum.crInitialIOB = crInitialIOB
@@ -349,6 +358,7 @@ class AutotunePrep @Inject constructor(
 
                     //log.debug(CREndTime - CRInitialCarbTime, CRElapsedMinutes);
                     if (CRElapsedMinutes < 60 || i == 1 && mealCOB > 0) {
+                        //aapsLogger.debug(LTag.AUTOTUNE, "Ignoring $CRElapsedMinutes m CR period.")
                         if (verbose)
                             log("Ignoring $CRElapsedMinutes m CR period.")
                     } else {
@@ -378,8 +388,9 @@ class AutotunePrep @Inject constructor(
                 //log.debug(type);
                 if (type != "csf") {
                     glucoseDatum.mealAbsorption = "start"
+                    //aapsLogger.debug(LTag.AUTOTUNE, "${glucoseDatum.mealAbsorption} carb absorption")
                     if (verbose)
-                        log(glucoseDatum.mealAbsorption + " carb absorption")
+                        log("${glucoseDatum.mealAbsorption} carb absorption")
                 }
                 type = "csf"
                 glucoseDatum.mealCarbs = mealCarbs.toInt()
@@ -389,8 +400,9 @@ class AutotunePrep @Inject constructor(
                 // check previous "type" value, and if it was csf, set a mealAbsorption end flag
                 if (type == "csf") {
                     csfGlucoseData[csfGlucoseData.size - 1].mealAbsorption = "end"
+                    //aapsLogger.debug(LTag.AUTOTUNE, "${csfGlucoseData[csfGlucoseData.size - 1].mealAbsorption} carb absorption")
                     if (verbose)
-                        log(csfGlucoseData[csfGlucoseData.size - 1].mealAbsorption + " carb absorption")
+                        log("${csfGlucoseData[csfGlucoseData.size - 1].mealAbsorption} carb absorption")
                 }
                 if (iob.iob > 2 * currentBasal || deviation > 6 || uam) {
                     uam = if (deviation > 0) {
@@ -400,6 +412,7 @@ class AutotunePrep @Inject constructor(
                     }
                     if (type != "uam") {
                         glucoseDatum.uamAbsorption = "start"
+                        //aapsLogger.debug(LTag.AUTOTUNE, "${glucoseDatum.uamAbsorption} unannnounced meal absorption")
                         if (verbose)
                             log(glucoseDatum.uamAbsorption + " unannnounced meal absorption")
                     }
@@ -407,6 +420,7 @@ class AutotunePrep @Inject constructor(
                     uamGlucoseData.add(glucoseDatum)
                 } else {
                     if (type == "uam") {
+                        //aapsLogger.debug(LTag.AUTOTUNE, "end unannounced meal absorption")
                         if (verbose)
                             log("end unannounced meal absorption")
                     }
@@ -433,8 +447,10 @@ class AutotunePrep @Inject constructor(
                 }
             }
             // debug line to print out all the things
+            //aapsLogger.debug(LTag.AUTOTUNE, "${(if (absorbing) 1 else 0)} mealCOB: ${Round.roundTo(mealCOB, 0.1)} mealCarbs: ${Math.round(mealCarbs)} basalBGI: ${Round.roundTo(basalBGI, 0.1)} BGI: ${Round.roundTo(BGI, 0.1)} IOB: ${iob.iob} Activity: ${iob.activity} at ${dateUtil.timeStringWithSeconds(BGTime)} dev: $deviation avgDelta: $avgDelta $type")
             if (verbose)
-                log((if (absorbing) 1 else 0).toString() + " mealCOB: " + Round.roundTo(mealCOB, 0.1) + " mealCarbs: " + Math.round(mealCarbs) + " basalBGI: " + Round.roundTo(basalBGI, 0.1) + " BGI: " + Round.roundTo(BGI, 0.1) + " IOB: " + iob.iob+ " Activity: " + iob.activity + " at " + dateUtil.timeStringWithSeconds(BGTime) + " dev: " + deviation + " avgDelta: " + avgDelta + " " + type)
+                log("${(if (absorbing) 1 else 0)} mealCOB: ${Round.roundTo(mealCOB, 0.1)} mealCarbs: ${Math.round(mealCarbs)} basalBGI: ${Round.roundTo(basalBGI, 0.1)} BGI: ${Round
+                        .roundTo(BGI, 0.1)} IOB: ${iob.iob} Activity: ${iob.activity} at ${dateUtil.timeStringWithSeconds(BGTime)} dev: $deviation avgDelta: $avgDelta $type")
         }
 
 //****************************************************************************************************************************************
@@ -449,16 +465,20 @@ class AutotunePrep @Inject constructor(
         val UAMLength = uamGlucoseData.size
         var basalLength = basalGlucoseData.size
         if (sp.getBoolean(R.string.key_autotune_categorize_uam_as_basal, false)) {
+            //aapsLogger.debug(LTag.AUTOTUNE, "Categorizing all UAM data as basal.")
             if (verbose)
                 log("Categorizing all UAM data as basal.")
             basalGlucoseData.addAll(uamGlucoseData)
         } else if (CSFLength > 12) {
+            //aapsLogger.debug(LTag.AUTOTUNE, "Found at least 1h of carb: assuming meals were announced, and categorizing UAM data as basal.")
             if (verbose)
                 log("Found at least 1h of carb: assuming meals were announced, and categorizing UAM data as basal.")
             basalGlucoseData.addAll(uamGlucoseData)
         } else {
             if (2 * basalLength < UAMLength) {
                 //log.debug(basalGlucoseData, UAMGlucoseData);
+                //aapsLogger.debug(LTag.AUTOTUNE, "Warning: too many deviations categorized as UnAnnounced Meals")
+                //aapsLogger.debug(LTag.AUTOTUNE, "Adding $UAMLength UAM deviations to $basalLength basal ones")
                 if (verbose) {
                     log("Warning: too many deviations categorized as UnAnnounced Meals")
                     log("Adding $UAMLength UAM deviations to $basalLength basal ones")
@@ -473,10 +493,12 @@ class AutotunePrep @Inject constructor(
                 }
                 //log.debug(newBasalGlucose);
                 basalGlucoseData = newBasalGlucose
+                //aapsLogger.debug(LTag.AUTOTUNE, "and selecting the lowest 50%, leaving ${basalGlucoseData.size} basal+UAM ones")
                 if (verbose)
-                    log("and selecting the lowest 50%, leaving " + basalGlucoseData.size + " basal+UAM ones")
+                    log("and selecting the lowest 50%, leaving ${basalGlucoseData.size} basal+UAM ones")
             }
             if (2 * ISFLength < UAMLength) {
+                //aapsLogger.debug(LTag.AUTOTUNE, "Adding $UAMLength UAM deviations to $ISFLength ISF ones")
                 if (verbose)
                     log("Adding $UAMLength UAM deviations to $ISFLength ISF ones")
                 isfGlucoseData.addAll(uamGlucoseData)
@@ -488,14 +510,17 @@ class AutotunePrep @Inject constructor(
                 }
                 //console.error(newISFGlucose);
                 isfGlucoseData = newISFGlucose
+                //aapsLogger.debug(LTag.AUTOTUNE, "and selecting the lowest 50%, leaving ${isfGlucoseData.size} ISF+UAM ones")
                 if (verbose)
-                    log("and selecting the lowest 50%, leaving " + isfGlucoseData.size + " ISF+UAM ones")
+                    log("and selecting the lowest 50%, leaving ${isfGlucoseData.size} ISF+UAM ones")
                 //log.error(ISFGlucoseData.length, UAMLength);
             }
         }
         basalLength = basalGlucoseData.size
         ISFLength = isfGlucoseData.size
         if (4 * basalLength + ISFLength < CSFLength && ISFLength < 10) {
+            //aapsLogger.debug(LTag.AUTOTUNE, "Warning: too many deviations categorized as meals")
+            //aapsLogger.debug(LTag.AUTOTUNE, "Adding $CSFLength CSF deviations to $ISFLength ISF ones")
             if (verbose) {
                 log("Warning: too many deviations categorized as meals")
                 //log.debug("Adding",CSFLength,"CSF deviations to",basalLength,"basal ones");
@@ -507,8 +532,9 @@ class AutotunePrep @Inject constructor(
         }
 
 // categorize.js Lines 437-444
+        //aapsLogger.debug(LTag.AUTOTUNE, "CRData: ${crData.size} CSFGlucoseData: ${csfGlucoseData.size} ISFGlucoseData: ${isfGlucoseData.size} BasalGlucoseData: ${basalGlucoseData.size}")
         if (verbose)
-            log("CRData: " + crData.size + " CSFGlucoseData: " + csfGlucoseData.size + " ISFGlucoseData: " + isfGlucoseData.size + " BasalGlucoseData: " + basalGlucoseData.size)
+            log("CRData: ${crData.size} CSFGlucoseData: ${csfGlucoseData.size} ISFGlucoseData: ${isfGlucoseData.size} BasalGlucoseData: ${basalGlucoseData.size}")
 
         return PreppedGlucose(autotuneIob.startBG, crData, csfGlucoseData, isfGlucoseData, basalGlucoseData, dateUtil)
     }
@@ -516,6 +542,7 @@ class AutotunePrep @Inject constructor(
     //dosed.js full
     private fun dosed(start: Long, end: Long, treatments: List<Bolus>): Double {
         var insulinDosed = 0.0
+        //aapsLogger.debug(LTag.AUTOTUNE, "No treatments to process.")
         if (treatments.size == 0) {
             log("No treatments to process.")
             return 0.0

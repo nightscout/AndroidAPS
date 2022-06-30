@@ -15,6 +15,13 @@ dependencies {
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
 }
 
+tasks.matching { it instanceof Test }.all {
+    //testLogging.events = ["failed", "skipped", "started"]
+    // use to display stdout in travis
+    testLogging.events = ["failed", "skipped", "started", "standard_out"]
+    testLogging.exceptionFormat = "full"
+}
+
 android {
     testOptions {
         unitTests {
