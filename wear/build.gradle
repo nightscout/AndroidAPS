@@ -53,6 +53,10 @@ android {
         buildConfigField "String", "BUILDVERSION", generateGitBuild()
     }
 
+    buildFeatures {
+        viewBinding true
+    }
+
     flavorDimensions "standard"
     productFlavors {
         full {
@@ -98,6 +102,7 @@ dependencies {
     implementation "androidx.preference:preference-ktx:$preferencektx_version"
     implementation 'androidx.wear:wear:1.2.0'
     implementation "androidx.wear.tiles:tiles:1.0.1"
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
     compileOnly "com.google.android.wearable:wearable:$wearable_version"
     implementation "com.google.android.support:wearable:$wearable_version"
