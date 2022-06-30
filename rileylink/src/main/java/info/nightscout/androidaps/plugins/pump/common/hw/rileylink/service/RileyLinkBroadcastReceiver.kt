@@ -110,7 +110,7 @@ class RileyLinkBroadcastReceiver : DaggerBroadcastReceiver() {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "RfSpy version (BLE113): $bleVersion")
                 rileyLinkService?.rileyLinkServiceData?.versionBLE113 = bleVersion
 
-                aapsLogger.debug(LTag.PUMPBTCOMM, "RfSpy Radio version (CC110): " + rlVersion.name)
+                aapsLogger.debug(LTag.PUMPBTCOMM, "RfSpy Radio version (CC110): ${rlVersion?.name}")
                 rileyLinkServiceData.firmwareVersion = rlVersion
                 val task: ServiceTask = InitializePumpManagerTask(injector, context)
                 serviceTaskExecutor.startTask(task)

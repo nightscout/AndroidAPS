@@ -31,27 +31,27 @@ public class RileyLinkServiceData {
     @Inject RxBus rxBus;
 
     boolean tuneUpDone = false;
-    public RileyLinkError rileyLinkError;
+    @Nullable public RileyLinkError rileyLinkError;
     public RileyLinkServiceState rileyLinkServiceState = RileyLinkServiceState.NotStarted;
     private long lastServiceStateChange = 0L;
-    public RileyLinkFirmwareVersion firmwareVersion; // here we have "compatibility level" version
+    @Nullable public RileyLinkFirmwareVersion firmwareVersion; // here we have "compatibility level" version
     @Nullable public RileyLinkTargetFrequency rileyLinkTargetFrequency;
     @Nullable public String rileyLinkAddress;
     @Nullable public String rileyLinkName;
-    public Integer batteryLevel;
+    @Nullable public Integer batteryLevel;
     public boolean showBatteryLevel = false;
     long lastTuneUpTime = 0L;
-    public Double lastGoodFrequency;
+    @Nullable public Double lastGoodFrequency;
 
     // bt version
-    public String versionBLE113;
+    @Nullable public String versionBLE113;
     // radio version
-    public String versionCC110;
+    @Nullable public String versionCC110;
 
     // orangeLink
-    public boolean isOrange;
-    public String versionOrangeFirmware;
-    public String versionOrangeHardware;
+    public boolean isOrange = false;
+    @Nullable public String versionOrangeFirmware;
+    @Nullable public String versionOrangeHardware;
 
     public RileyLinkTargetDevice targetDevice;
 

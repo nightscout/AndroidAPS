@@ -340,19 +340,15 @@ class MedtronicFragment : DaggerFragment() {
         medtronicPumpPlugin.rileyLinkService?.verifyConfiguration()
         binding.errors.text = medtronicPumpStatus.errorInfo
 
-        val showRileyLinkBatteryLevel: Boolean = rileyLinkServiceData.showBatteryLevel
-
-        if (showRileyLinkBatteryLevel) {
+        if (rileyLinkServiceData.showBatteryLevel) {
             binding.rlBatteryView.visibility = View.VISIBLE
             binding.rlBatteryLabel.visibility = View.VISIBLE
             binding.rlBatteryState.visibility = View.VISIBLE
             binding.rlBatteryLayout.visibility = View.VISIBLE
             binding.rlBatterySemicolon.visibility = View.VISIBLE
-            if (rileyLinkServiceData.batteryLevel == null) {
-                binding.rlBatteryState.text = " ?"
-            } else {
-                binding.rlBatteryState.text = "{fa-battery-" + rileyLinkServiceData.batteryLevel / 25 + "}  " + rileyLinkServiceData.batteryLevel + "%"
-            }
+            binding.rlBatteryState.text =
+                if (rileyLinkServiceData.batteryLevel == null) " ?"
+                else "{fa-battery-${rileyLinkServiceData.batteryLevel!! / 25}}  ${rileyLinkServiceData.batteryLevel}%"
         } else {
             binding.rlBatteryView.visibility = View.GONE
             binding.rlBatteryLabel.visibility = View.GONE
