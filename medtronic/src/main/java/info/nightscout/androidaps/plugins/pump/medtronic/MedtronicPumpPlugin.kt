@@ -20,6 +20,7 @@ import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.pump.common.PumpPluginAbstract
+import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.common.events.EventRefreshButtonState
@@ -54,8 +55,6 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil.Comp
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.TimeChangeType
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
@@ -306,12 +305,8 @@ class MedtronicPumpPlugin @Inject constructor(
     private val isPumpNotReachable: Boolean
         get() {
             val rileyLinkServiceState = rileyLinkServiceData.rileyLinkServiceState
-            if (rileyLinkServiceState == null) {
-                aapsLogger.debug(LTag.PUMP, "RileyLink unreachable. RileyLinkServiceState is null.")
-                return false
-            }
-            if (rileyLinkServiceState != RileyLinkServiceState.PumpConnectorReady //
-                && rileyLinkServiceState != RileyLinkServiceState.RileyLinkReady //
+            if (rileyLinkServiceState != RileyLinkServiceState.PumpConnectorReady
+                && rileyLinkServiceState != RileyLinkServiceState.RileyLinkReady
                 && rileyLinkServiceState != RileyLinkServiceState.TuneUpDevice
             ) {
                 aapsLogger.debug(LTag.PUMP, "RileyLink unreachable.")
@@ -998,11 +993,7 @@ class MedtronicPumpPlugin @Inject constructor(
     }
 
     @Synchronized
-    private fun workWithStatusRefresh(
-        action: StatusRefreshAction,  //
-        statusRefreshType: MedtronicStatusRefreshType?,  //
-        time: Long?
-    ): Map<MedtronicStatusRefreshType, Long>? {
+    private fun workWithStatusRefresh(action: StatusRefreshAction, statusRefreshType: MedtronicStatusRefreshType?, time: Long?): Map<MedtronicStatusRefreshType, Long>? {
         return when (action) {
             StatusRefreshAction.Add     -> {
                 statusRefreshMap[statusRefreshType!!] = time!!
