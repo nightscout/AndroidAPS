@@ -6,6 +6,7 @@
     <string name="treatmentssafety_title">Tedavi güvenliği</string>
     <string name="treatmentssafety_maxbolus_title">Maks izin verilen bolus [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Maks izin verilen karbonhidrat [g]</string>
+    <string name="treatmentssafety_lgsThreshold_title">KŞ seviyesi altında düşük glikoz duraklatma meydana gelir</string>
     <string name="nav_preferences_plugin">%1$s Tercihler</string>
     <string name="nav_preferences">Tercihler</string>
     <string name="nav_refreshtreatments">NS\'tan tedavileri güncelle</string>
