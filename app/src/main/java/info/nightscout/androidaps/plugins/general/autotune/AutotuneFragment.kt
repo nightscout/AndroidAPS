@@ -355,7 +355,7 @@ class AutotuneFragment : DaggerFragment() {
             }
         }
         binding.calcDays.text = calcDays.toString()
-        binding.calcDays.visibility = (daysBack != calcDays).toVisibility()
+        binding.calcDays.visibility = if (daysBack == calcDays) View.INVISIBLE else View.VISIBLE
         binding.tuneLastrun.text = dateUtil.dateAndTimeString(autotunePlugin.lastRun)
         showResults()
     }
