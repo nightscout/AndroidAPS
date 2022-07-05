@@ -1,85 +1,76 @@
 package info.nightscout.androidaps.watchfaces
 
-import androidx.annotation.LayoutRes
+import android.view.LayoutInflater
 import androidx.core.content.ContextCompat
+import androidx.viewbinding.ViewBinding
 import com.ustwo.clockwise.common.WatchMode
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.databinding.ActivityBigchartBinding
+import info.nightscout.androidaps.databinding.ActivityBigchartSmallBinding
+import info.nightscout.androidaps.databinding.ActivityNochartBinding
+import info.nightscout.androidaps.databinding.ActivityNochartSmallBinding
+import info.nightscout.androidaps.watchfaces.utils.BaseWatchFace
+import info.nightscout.androidaps.watchfaces.utils.WatchfaceViewAdapter
 
 class NoChartWatchface : BaseWatchFace() {
 
-    @LayoutRes override fun layoutResource(): Int =
-        if (resources.displayMetrics.widthPixels < SCREEN_SIZE_SMALL || resources.displayMetrics.heightPixels < SCREEN_SIZE_SMALL) R.layout.activity_nochart_small
-        else R.layout.activity_nochart
+    private lateinit var binding: WatchfaceViewAdapter
+
+    override fun inflateLayout(inflater: LayoutInflater): ViewBinding {
+        if (resources.displayMetrics.widthPixels < SCREEN_SIZE_SMALL || resources.displayMetrics.heightPixels < SCREEN_SIZE_SMALL) {
+            val layoutBinding = ActivityNochartSmallBinding.inflate(inflater)
+            binding = WatchfaceViewAdapter.getBinding(layoutBinding)
+            return layoutBinding
+        }
+        val layoutBinding = ActivityNochartBinding.inflate(inflater)
+        binding = WatchfaceViewAdapter.getBinding(layoutBinding)
+        return layoutBinding
+    }
 
     override fun setColorLowRes() {
-        mTime?.setTextColor(ContextCompat.getColor(this, R.color.dark_mTime))
-        mStatus?.setTextColor(ContextCompat.getColor(this, R.color.dark_statusView))
-        mRelativeLayout?.setBackgroundColor(ContextCompat.getColor(this, R.color.dark_background))
-        mSgv?.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor))
-        mDelta?.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor))
-        mAvgDelta?.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor))
-        mTimestamp?.setTextColor(ContextCompat.getColor(this, R.color.dark_Timestamp))
+        binding.time?.setTextColor(ContextCompat.getColor(this, R.color.dark_mTime))
+        binding.status?.setTextColor(ContextCompat.getColor(this, R.color.dark_statusView))
+        binding.mainLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.dark_background))
+        binding.sgv?.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor))
+        binding.delta?.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor))
+        binding.avgDelta?.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor))
+        binding.timestamp.setTextColor(ContextCompat.getColor(this, R.color.dark_Timestamp))
     }
 
     override fun setColorDark() {
-        mTime?.setTextColor(ContextCompat.getColor(this, R.color.dark_mTime))
-        mStatus?.setTextColor(ContextCompat.getColor(this, R.color.dark_statusView))
-        mRelativeLayout?.setBackgroundColor(ContextCompat.getColor(this, R.color.dark_background))
-        when (singleBg.sgvLevel) {
-            1L  -> {
-                mSgv?.setTextColor(ContextCompat.getColor(this, R.color.dark_highColor))
-                mDelta?.setTextColor(ContextCompat.getColor(this, R.color.dark_highColor))
-                mAvgDelta?.setTextColor(ContextCompat.getColor(this, R.color.dark_highColor))
-            }
-
-            0L  -> {
-                mSgv?.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor))
-                mDelta?.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor))
-                mAvgDelta?.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor))
-            }
-
-            -1L -> {
-                mSgv?.setTextColor(ContextCompat.getColor(this, R.color.dark_lowColor))
-                mDelta?.setTextColor(ContextCompat.getColor(this, R.color.dark_lowColor))
-                mAvgDelta?.setTextColor(ContextCompat.getColor(this, R.color.dark_lowColor))
-            }
+        binding.time?.setTextColor(ContextCompat.getColor(this, R.color.dark_mTime))
+        binding.status?.setTextColor(ContextCompat.getColor(this, R.color.dark_statusView))
+        binding.mainLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.dark_background))
+        val color = when (singleBg.sgvLevel) {
+            1L   -> R.color.dark_highColor
+            0L   -> R.color.dark_midColor
+            -1L  -> R.color.dark_lowColor
+            else -> R.color.dark_midColor
         }
-        if (ageLevel == 1) {
-            mTimestamp?.setTextColor(ContextCompat.getColor(this, R.color.dark_Timestamp))
-        } else {
-            mTimestamp?.setTextColor(ContextCompat.getColor(this, R.color.dark_TimestampOld))
-        }
+        binding.sgv?.setTextColor(ContextCompat.getColor(this, color))
+        binding.delta?.setTextColor(ContextCompat.getColor(this, color))
+        binding.avgDelta?.setTextColor(ContextCompat.getColor(this, color))
+        val colorTime = if (ageLevel == 1) R.color.dark_Timestamp else R.color.dark_TimestampOld
+        binding.timestamp.setTextColor(ContextCompat.getColor(this, colorTime))
     }
 
     override fun setColorBright() {
         if (currentWatchMode == WatchMode.INTERACTIVE) {
-            mTime?.setTextColor(ContextCompat.getColor(this, R.color.light_bigchart_time))
-            mStatus?.setTextColor(ContextCompat.getColor(this, R.color.light_bigchart_status))
-            mRelativeLayout?.setBackgroundColor(ContextCompat.getColor(this, R.color.light_background))
-            when (singleBg.sgvLevel) {
-                1L  -> {
-                    mSgv?.setTextColor(ContextCompat.getColor(this, R.color.light_highColor))
-                    mDelta?.setTextColor(ContextCompat.getColor(this, R.color.light_highColor))
-                    mAvgDelta?.setTextColor(ContextCompat.getColor(this, R.color.light_highColor))
-                }
-
-                0L  -> {
-                    mSgv?.setTextColor(ContextCompat.getColor(this, R.color.light_midColor))
-                    mDelta?.setTextColor(ContextCompat.getColor(this, R.color.light_midColor))
-                    mAvgDelta?.setTextColor(ContextCompat.getColor(this, R.color.light_midColor))
-                }
-
-                -1L -> {
-                    mSgv?.setTextColor(ContextCompat.getColor(this, R.color.light_lowColor))
-                    mDelta?.setTextColor(ContextCompat.getColor(this, R.color.light_lowColor))
-                    mAvgDelta?.setTextColor(ContextCompat.getColor(this, R.color.light_lowColor))
-                }
+            binding.time?.setTextColor(ContextCompat.getColor(this, R.color.light_bigchart_time))
+            binding.status?.setTextColor(ContextCompat.getColor(this, R.color.light_bigchart_status))
+            binding.mainLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.light_background))
+            val color = when (singleBg.sgvLevel) {
+                1L   -> R.color.light_highColor
+                0L   -> R.color.light_midColor
+                -1L  -> R.color.light_lowColor
+                else -> R.color.light_midColor
             }
-            if (ageLevel == 1) {
-                mTimestamp?.setTextColor(ContextCompat.getColor(this, R.color.light_mTimestamp1))
-            } else {
-                mTimestamp?.setTextColor(ContextCompat.getColor(this, R.color.light_mTimestamp))
-            }
+            binding.sgv?.setTextColor(ContextCompat.getColor(this, color))
+            binding.delta?.setTextColor(ContextCompat.getColor(this, color))
+            binding.avgDelta?.setTextColor(ContextCompat.getColor(this, color))
+            val colorTime = if (ageLevel == 1) R.color.light_mTimestamp1 else R.color.light_mTimestamp
+            binding.timestamp.setTextColor(ContextCompat.getColor(this, colorTime))
+
         } else {
             setColorDark()
         }
