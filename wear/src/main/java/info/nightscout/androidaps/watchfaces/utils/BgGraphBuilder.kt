@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.watchfaces
+package info.nightscout.androidaps.watchfaces.utils
 
 import android.graphics.DashPathEffect
 import info.nightscout.androidaps.R
