@@ -42,7 +42,7 @@ class BolusActivity : ViewSelectorActivity() {
         override fun instantiateItem(container: ViewGroup, row: Int, col: Int): View = when (col) {
             0    -> {
                 val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, container, true)
-                val initValue = if (editInsulin != null) SafeParse.stringToDouble(editInsulin?.editText?.text.toString()) else 0.0
+                val initValue = SafeParse.stringToDouble(editInsulin?.editText?.text.toString(), 0.0)
                 val maxBolus = sp.getDouble(getString(R.string.key_treatments_safety_max_bolus), 3.0)
                 val title = getString(R.string.action_insulin)
                 editInsulin = PlusMinusEditText(viewAdapter, initValue, 0.0, maxBolus, stepValues, DecimalFormat("#0.0"), false, title)

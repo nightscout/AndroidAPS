@@ -48,11 +48,8 @@ class ProfileSwitchActivity : ViewSelectorActivity() {
             0    -> {
                 val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, container, false)
                 val view = viewAdapter.root
-                var def = timeshift.toDouble()
-                if (editTimeshift != null) {
-                    def = SafeParse.stringToDouble(editTimeshift?.editText?.text.toString())
-                }
-                editTimeshift = PlusMinusEditText(viewAdapter, def, 0.0, 23.0, 1.0, DecimalFormat("0"), true, getString(R.string.action_timeshift), true)
+                var initValue = SafeParse.stringToDouble(editTimeshift?.editText?.text.toString(), timeshift.toDouble())
+                editTimeshift = PlusMinusEditText(viewAdapter, initValue, 0.0, 23.0, 1.0, DecimalFormat("0"), true, getString(R.string.action_timeshift), true)
                 container.addView(view)
                 view.requestFocus()
                 view
@@ -61,12 +58,8 @@ class ProfileSwitchActivity : ViewSelectorActivity() {
             1    -> {
                 val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, container, false)
                 val view = viewAdapter.root
-                var def = percentage.toDouble()
-                if (editPercentage != null) {
-                    def = SafeParse.stringToDouble(editPercentage?.editText?.text.toString())
-                }
-                editPercentage = PlusMinusEditText(viewAdapter, def, 30.0, 250.0, 1.0, DecimalFormat("0"), false, getString(R.string.action_percentage))
-
+                var initValue = SafeParse.stringToDouble(editPercentage?.editText?.text.toString(), percentage.toDouble())
+                editPercentage = PlusMinusEditText(viewAdapter, initValue, 30.0, 250.0, 1.0, DecimalFormat("0"), false, getString(R.string.action_percentage))
                 container.addView(view)
                 view
             }
