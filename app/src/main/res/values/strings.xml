@@ -1249,6 +1249,7 @@
     <string name="description_source_aidex">Receive BG values from GlucoRx Aidex CGMS.</string>
     <string name="blocked_by_charging">Blocked by charging options</string>
     <string name="blocked_by_connectivity">Blocked by connectivity options</string>
+    <string name="no_watch_connected">(No Watch Connected)</string>
 
 
 </resources>

@@ -134,7 +134,7 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
             aapsLogger.debug(LTag.WEAR, "Nodes: ${capabilityInfo.nodes.joinToString(", ") { it.displayName + "(" + it.id + ")" }}")
             val bestNode = pickBestNodeId(capabilityInfo.nodes)
             transcriptionNodeId = bestNode?.id
-            wearPlugin.connectedDevice = bestNode?.displayName ?: "---"
+            wearPlugin.connectedDevice = bestNode?.displayName ?: rh.gs(R.string.no_watch_connected)
             rxBus.send(EventWearUpdateGui())
             aapsLogger.debug(LTag.WEAR, "Selected node: ${bestNode?.displayName} $transcriptionNodeId")
             rxBus.send(EventMobileToWear(EventData.ActionPing(System.currentTimeMillis())))
