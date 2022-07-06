@@ -126,7 +126,7 @@ class AutotuneFragment : DaggerFragment() {
             autotunePlugin.tunedProfile?.let { tunedProfile ->
                 showConfirmation(requireContext(),
                                  rh.gs(R.string.autotune_copy_localprofile_button),
-                                 rh.gs(R.string.autotune_copy_local_profile_message) + "\n" + localName + " " + dateUtil.dateAndTimeString(autotunePlugin.lastRun),
+                                 rh.gs(R.string.autotune_copy_local_profile_message) + "\n" + localName,
                                  Runnable {
                                      localProfilePlugin.addProfile(localProfilePlugin.copyFrom(tunedProfile.getProfile(circadian), localName))
                                      rxBus.send(EventLocalProfileChanged())
