@@ -137,7 +137,6 @@
     <string name="wronginsulin_prime">Bolo una proporción de la insulina calculada “perdida” por jeringa/pluma o usando menú de llenado.</string>
     <string name="wronginsulin_donothing">No haga nada y permite que AndroidAPS corrija cualquier nivel alto de glucosa en la sangre resultante.</string>
     <string name="iob_label">Insulina a bordo (IOB)</string>
-    <string name="iob_which">Marca todas las respuestas correctas.</string>
     <string name="iob_value">El valor del IOB se ve afectado por las bases temporales ejecutadas.</string>
     <string name="iob_hightemp">No se dará alta tasa basal temporal cuando su nivel de azúcar en sangre esté por debajo del objetivo.</string>
     <string name="iob_negiob">El IOB negativo durante un período sustancial en ausencia de ejercicio sugiere que tu perfil es demasiado fuerte y que se necesita menos insulina en tus ajustes.</string>
