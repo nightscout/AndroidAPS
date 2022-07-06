@@ -42,12 +42,9 @@ class CarbActivity : ViewSelectorActivity() {
             0    -> {
                 val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, container, true)
                 val view = viewAdapter.root
-                var def = 0.0
-                if (editCarbs != null) {
-                    def = SafeParse.stringToDouble(editCarbs?.editText?.text.toString())
-                }
-                val maxCarbs = sp.getInt(getString(R.string.key_treatments_safety_max_carbs), 48)
-                editCarbs = PlusMinusEditText(viewAdapter, def, 0.0, maxCarbs.toDouble(), stepValues, DecimalFormat("0"), true, getString(R.string.action_carbs))
+                var initValue = SafeParse.stringToDouble(editCarbs?.editText?.text.toString(), 0.0)
+                val maxCarbs = sp.getInt(getString(R.string.key_treatments_safety_max_carbs), 48).toDouble()
+                editCarbs = PlusMinusEditText(viewAdapter, initValue, 0.0, maxCarbs, stepValues, DecimalFormat("0"), true, getString(R.string.action_carbs))
                 container.addView(view)
                 view.requestFocus()
                 view

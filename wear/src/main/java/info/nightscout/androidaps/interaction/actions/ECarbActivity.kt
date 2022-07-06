@@ -45,12 +45,9 @@ class ECarbActivity : ViewSelectorActivity() {
             0    -> {
                 val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, container, true)
                 val view = viewAdapter.root
-                var def = 0.0
-                if (editCarbs != null) {
-                    def = stringToDouble(editCarbs?.editText?.text.toString())
-                }
-                val maxCarbs = sp.getInt(getString(R.string.key_treatments_safety_max_carbs), 48)
-                editCarbs = PlusMinusEditText(viewAdapter, def, 0.0, maxCarbs.toDouble(), stepValues, DecimalFormat("0"), true, getString(R.string.action_carbs))
+                var initValue = stringToDouble(editCarbs?.editText?.text.toString(), 0.0)
+                val maxCarbs = sp.getInt(getString(R.string.key_treatments_safety_max_carbs), 48).toDouble()
+                editCarbs = PlusMinusEditText(viewAdapter, initValue, 0.0, maxCarbs, stepValues, DecimalFormat("0"), true, getString(R.string.action_carbs))
                 container.addView(view)
                 view.requestFocus()
                 view
@@ -59,11 +56,8 @@ class ECarbActivity : ViewSelectorActivity() {
             1    -> {
                 val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, container, false)
                 val view = viewAdapter.root
-                var def = 0.0
-                if (editStartTime != null) {
-                    def = stringToDouble(editStartTime?.editText?.text.toString())
-                }
-                editStartTime = PlusMinusEditText(viewAdapter, 15.0, def, -60.0, 300.0, DecimalFormat("0"), false, getString(R.string.action_start_min))
+                var initValue = stringToDouble(editStartTime?.editText?.text.toString(), 0.0)
+                editStartTime = PlusMinusEditText(viewAdapter, initValue, -60.0, 300.0, 15.0, DecimalFormat("0"), false, getString(R.string.action_start_min))
                 container.addView(view)
                 view
             }
@@ -71,11 +65,8 @@ class ECarbActivity : ViewSelectorActivity() {
             2    -> {
                 val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, container, false)
                 val view = viewAdapter.root
-                var def = 0.0
-                if (editDuration != null) {
-                    def = stringToDouble(editDuration?.editText?.text.toString())
-                }
-                editDuration = PlusMinusEditText(viewAdapter, 1.0, def, 0.0, 8.0, DecimalFormat("0"), false, getString(R.string.action_duration_h))
+                var initValue = stringToDouble(editDuration?.editText?.text.toString(), 0.0)
+                editDuration = PlusMinusEditText(viewAdapter, initValue, 0.0, 8.0, 1.0, DecimalFormat("0"), false, getString(R.string.action_duration_h))
                 container.addView(view)
                 view
             }

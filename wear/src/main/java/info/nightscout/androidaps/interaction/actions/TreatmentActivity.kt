@@ -48,10 +48,9 @@ class TreatmentActivity : ViewSelectorActivity() {
             0    -> {
                 val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, container, true)
                 val view = viewAdapter.root
-                var def = 0.0
-                if (editInsulin != null) def = stringToDouble(editInsulin?.editText?.text.toString())
+                var initValue =  stringToDouble(editInsulin?.editText?.text.toString(), 0.0)
                 val maxBolus = sp.getDouble(getString(R.string.key_treatments_safety_max_bolus), 3.0)
-                editInsulin = PlusMinusEditText(viewAdapter, def, 0.0, maxBolus, stepValuesInsulin, DecimalFormat("#0.0"), false, getString(R.string.action_insulin))
+                editInsulin = PlusMinusEditText(viewAdapter, initValue, 0.0, maxBolus, stepValuesInsulin, DecimalFormat("#0.0"), false, getString(R.string.action_insulin))
                 container.addView(view)
                 view.requestFocus()
                 view
@@ -60,11 +59,9 @@ class TreatmentActivity : ViewSelectorActivity() {
             1    -> {
                 val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, container, true)
                 val view = viewAdapter.root
-                var def = 0.0
-                val maxCarbs = sp.getInt(getString(R.string.key_treatments_safety_max_carbs), 48)
-                if (editCarbs != null) def = stringToDouble(editCarbs?.editText?.text.toString())
-
-                editCarbs = PlusMinusEditText(viewAdapter, def, 0.0, maxCarbs.toDouble(), stepValuesCarbs, DecimalFormat("0"), false, getString(R.string.action_carbs))
+                val maxCarbs = sp.getInt(getString(R.string.key_treatments_safety_max_carbs), 48).toDouble()
+                var initValue = stringToDouble(editCarbs?.editText?.text.toString(), 0.0)
+                editCarbs = PlusMinusEditText(viewAdapter, initValue, 0.0, maxCarbs, stepValuesCarbs, DecimalFormat("0"), false, getString(R.string.action_carbs))
                 container.addView(view)
                 view
             }

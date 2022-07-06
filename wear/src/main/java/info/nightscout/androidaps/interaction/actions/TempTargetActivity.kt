@@ -50,12 +50,8 @@ class TempTargetActivity : ViewSelectorActivity() {
             col == 0                    -> {
                 val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, container, false)
                 val view = viewAdapter.root
-                time = if (time == null) {
-                    PlusMinusEditText(viewAdapter, 60.0, 0.0, 24 * 60.0, 5.0, DecimalFormat("0"), false, getString(R.string.action_duration))
-                } else {
-                    val def = SafeParse.stringToDouble(time?.editText?.text.toString())
-                    PlusMinusEditText(viewAdapter, def, 0.0, 24 * 60.0, 5.0, DecimalFormat("0"), false, getString(R.string.action_duration))
-                }
+                val initValue = SafeParse.stringToDouble(time?.editText?.text.toString(), 60.0)
+                time = PlusMinusEditText(viewAdapter, initValue, 0.0, 24 * 60.0, 5.0, DecimalFormat("0"), false, getString(R.string.action_duration))
                 container.addView(view)
                 view.requestFocus()
                 view
@@ -66,13 +62,11 @@ class TempTargetActivity : ViewSelectorActivity() {
                 val view = viewAdapter.root
                 val title = if (isSingleTarget) getString(R.string.action_target) else getString(R.string.action_low)
                 if (isMGDL) {
-                    var def = 100.0
-                    if (lowRange != null) def = SafeParse.stringToDouble(lowRange?.editText?.text.toString())
-                    lowRange = PlusMinusEditText(viewAdapter, def, 72.0, 180.0, 1.0, DecimalFormat("0"), false, title)
+                    var initValue = SafeParse.stringToDouble(lowRange?.editText?.text.toString(), 100.0)
+                    lowRange = PlusMinusEditText(viewAdapter, initValue, 72.0, 180.0, 1.0, DecimalFormat("0"), false, title)
                 } else {
-                    var def = 5.5
-                    if (lowRange != null) def = SafeParse.stringToDouble(lowRange?.editText?.text.toString())
-                    lowRange = PlusMinusEditText(viewAdapter, def, 4.0, 10.0, 0.1, DecimalFormat("#0.0"), false, title)
+                    var initValue = SafeParse.stringToDouble(lowRange?.editText?.text.toString(), 5.5)
+                    lowRange = PlusMinusEditText(viewAdapter, initValue, 4.0, 10.0, 0.1, DecimalFormat("#0.0"), false, title)
                 }
                 container.addView(view)
                 view
@@ -82,13 +76,11 @@ class TempTargetActivity : ViewSelectorActivity() {
                 val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, container, false)
                 val view = viewAdapter.root
                 if (isMGDL) {
-                    var def = 100.0
-                    if (highRange != null) def = SafeParse.stringToDouble(highRange?.editText?.text.toString())
-                    highRange = PlusMinusEditText(viewAdapter, def, 72.0, 180.0, 1.0, DecimalFormat("0"), false, getString(R.string.action_high))
+                    var initValue = SafeParse.stringToDouble(highRange?.editText?.text.toString(), 100.0)
+                    highRange = PlusMinusEditText(viewAdapter, initValue, 72.0, 180.0, 1.0, DecimalFormat("0"), false, getString(R.string.action_high))
                 } else {
-                    var def = 5.5
-                    if (highRange != null) def = SafeParse.stringToDouble(highRange?.editText?.text.toString())
-                    highRange = PlusMinusEditText(viewAdapter, def, 4.0, 10.0, 0.1, DecimalFormat("#0.0"), false, getString(R.string.action_high))
+                    var initValue = SafeParse.stringToDouble(highRange?.editText?.text.toString(), 5.5)
+                    highRange = PlusMinusEditText(viewAdapter, initValue, 4.0, 10.0, 0.1, DecimalFormat("#0.0"), false, getString(R.string.action_high))
                 }
                 container.addView(view)
                 view
