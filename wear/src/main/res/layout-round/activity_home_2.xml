@@ -132,7 +132,7 @@
                 tools:ignore="HardcodedText" />
 
             <TextView
-                android:id="@+id/avgdelta"
+                android:id="@+id/avg_delta"
                 android:layout_width="0px"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -174,7 +174,7 @@
                 tools:ignore="HardcodedText" />
 
             <TextView
-                android:id="@+id/tmpBasal"
+                android:id="@+id/basalRate"
                 android:layout_width="0px"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -187,7 +187,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/bgiView"
+                android:id="@+id/bgi"
                 android:layout_width="0px"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -233,7 +233,7 @@
             android:textAlignment="center">
 
             <TextView
-                android:id="@+id/cob_text"
+                android:id="@+id/cob1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -245,7 +245,7 @@
                 tools:ignore="SmallSp" />
 
             <TextView
-                android:id="@+id/cobView"
+                android:id="@+id/cob2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -265,7 +265,7 @@
             tools:ignore="NestedWeights" />
 
         <TextView
-            android:id="@+id/watch_time"
+            android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -322,7 +322,7 @@
             android:textAlignment="center">
 
             <TextView
-                android:id="@+id/iob_text"
+                android:id="@+id/iob1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -335,7 +335,7 @@
                 tools:ignore="SmallSp" />
 
             <TextView
-                android:id="@+id/iobView"
+                android:id="@+id/iob2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
