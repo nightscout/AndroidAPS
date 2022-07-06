@@ -134,7 +134,6 @@
     <string name="wronginsulin_prime">Ge en bolus med en del av det insulin du saknar antingen med penna eller genom att använda förfyllningsfunktionen.</string>
     <string name="wronginsulin_donothing">Gör ingenting och låt AndroidAPS korrigera eventuella höga blodglukosnivåer.</string>
     <string name="iob_label">Aktivt Insulin (IOB)</string>
-    <string name="iob_which">Markera ett eller flera alternativ.</string>
     <string name="iob_value">IOB-värdet påverkas av temp basaler.</string>
     <string name="iob_hightemp">Hög temp basal kommer inte att ges när ditt BG-värde är under målet.</string>
     <string name="iob_negiob">Negativ IOB under en längre period även om du inte motionerat, tyder på att din profil ger för mycket insulin.</string>
