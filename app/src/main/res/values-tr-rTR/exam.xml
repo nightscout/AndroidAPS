@@ -161,7 +161,6 @@
     <string name="nsclient_data">AndroidAPS\'yi uzaktan takip etmek için her iki cihazın da internet erişimine sahip olması gerekir (ör. Wi-Fi veya mobil/hücresel ağ verileri aracılığıyla).</string>
     <string name="nsclient_fullcontrol">Uzak takipçi olarak kullanılan NS İstemcisi, AndroidAPS\'i hem izleyecek hem de tam kontrol sağlayacaktır.</string>
     <string name="nsclient_hint1">https://androidaps.readthedocs.io/en/latest/EN/Children/Children.html</string>
-    <string name="isf_label_exam">İnsülin Duyarlılık Faktörü (ISF)</string>
     <string name="isf_increasingvalue">ISF değerlerini yükseltmek, belirli bir karbonhidrat miktarını karşılamak için daha fazla insülin verilmesine yol açacaktır.</string>
     <string name="isf_decreasingvalue">ISF değerinin düşürülmesi, hedeflenen kan şekerinin üzerinde bir düzeltme için daha fazla insülin verilmesine yol açar.</string>
     <string name="isf_noeffect">Kan şekeri seviyeleri hedefin altında olduğunda ISF\'yi yükseltmenin veya düşürmenin insülin iletimi üzerinde hiçbir etkisi yoktur.</string>
