@@ -1044,4 +1044,5 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="description_source_aidex">GlucoRx Aidex CGMS\'den KŞ değerleri alır.</string>
     <string name="blocked_by_charging">Şarj seçenekleri tarafından engellendi</string>
     <string name="blocked_by_connectivity">Bağlantı seçenekleri tarafından engellendi</string>
+    <string name="no_watch_connected">(Saat Bağlı Değil)</string>
 </resources>
