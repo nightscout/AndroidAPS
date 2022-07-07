@@ -45,27 +45,19 @@
     <string name="description_sms_communicator">SMS komutlarını kullanarak uzaktan AndroidAPS kontrolü.</string>
     <string name="treatments_insulin_label_string">İnsülin:</string>
     <string name="treatments_carbs_label_string">Karbonhidrat:</string>
-    <string name="treatments_iob_label_string">IOB:</string>
-    <string name="sms_iob">IOB:</string>
-    <string name="treatments_iobtotal_label_string">Toplam IOB:</string>
-    <string name="treatments_iobactivitytotal_label_string">Toplam IOB etkinliği:</string>
     <string name="tempbasals_realduration_label_string">Süre:</string>
     <string name="tempbasals_netratio_label_string">Oran:</string>
     <string name="tempbasals_netinsulin_label_string">İns:</string>
-    <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">Toplam IOB:</string>
     <string name="treatments_wizard_bg_label">KŞ</string>
     <string name="treatments_wizard_tt_label">GH</string>
     <string name="treatments_wizard_carbs_label">Karbonhidrat</string>
     <string name="treatments_wizard_correction_label">Düzeltme</string>
-    <string name="bolus_iob_label">Bolus IOB</string>
     <string name="openapsma_run">Şimdi Çalıştır</string>
     <string name="vitualpump_label">SANAL POMPA</string>
     <string name="openapsma_lastrun_label">Son Çalıştırma</string>
     <string name="openapsma_inputparameters_label">Girdi Parametreleri</string>
     <string name="openapsma_glucosestatus_label">Glikoz durumu</string>
     <string name="openapsma_currenttemp_label">Mevcut Geçici Bazal</string>
-    <string name="openapsma_iobdata_label">IOB Verisi</string>
     <string name="openapsma_profile_label">Profil</string>
     <string name="openapsma_mealdata_label">Yemek Verisi</string>
     <string name="result">Sonuç</string>
@@ -116,7 +108,6 @@
     <string name="openloop_newsuggestion">Yeni öneri mevcut</string>
     <string name="carbssuggestion">Karbonhidrat Önerisi</string>
     <string name="unsupportednsversion">Nightscout\'un desteklenmeyen sürümü</string>
-    <string name="treatments_wizard_basaliob_label">Bazal IOB</string>
     <string name="bolusconstraintapplied">Bolus kısıtlaması uygulandı</string>
     <string name="carbsconstraintapplied">Karbonhidrat kısıtlaması uygulandı</string>
     <string name="careportal_newnstreatment_other">Diğer</string>
@@ -140,8 +131,6 @@
     <string name="nav_import">İçe aktarma ayarları</string>
     <string name="openapsma_maxbasal_title">Maks Ü/s geçici Bazal ayarlanabilir</string>
     <string name="openapsma_maxbasal_summary">Bu değer OpenAPS\'te \"maksimum bazal\" olarak adlandırılır</string>
-    <string name="openapsma_maxiob_title">OpenAPS\'nin vermesine izin verilen maksimum bazal IOB (Aktif insülin) [U]</string>
-    <string name="openapsma_maxiob_summary">Bu değere OpenAPS bağlamında Maks IOB denir.\nAPS\'de bir kerede verilebilen maksimum insülin [U] ü.</string>
     <string name="password_preferences_encrypt_prompt">Dışa aktarılan tercihleri şifrelemek için kullanılacak ana parola sorulacaktır.</string>
     <string name="password_preferences_decrypt_prompt">İçe aktarılan tercihlerin şifresini çözmek için gerekli olan ana parola sorulacaktır.</string>
     <string name="preferences_export_canceled">Aktarım iptal edildi! Tercihler dışa aktarılmadı!</string>
@@ -317,7 +306,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="clearlog">Günlüğü temizle</string>
     <string name="nowritepermission">NSCLIENT yazma izni yok. Yanlış API Anahtarı?</string>
     <string name="wear_settings">Wear ayarları</string>
-    <string name="wear_detailedIOB_title">Ayrıntılı IOB göster</string>
     <string name="wear_detailedIOB_summary">Saat arayüzü üzerinde IOB\'yi bolus ve bazal olarak ayırın</string>
     <string name="nosuccess">başarısız - lütfen telefonu kontrol edin</string>
     <string name="notavailable">n/a</string>
@@ -357,7 +345,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="smscommunicator_loopsuspended">Döngü duraklatıldı</string>
     <string name="smscommunicator_loopresumed">Döngü devam ettirildi</string>
     <string name="bg_trend_label">15 dk eğilim</string>
-    <string name="treatments_wizard_cob_label">COB</string>
     <string name="superbolus">Süperbolus</string>
     <string name="ns_logappstartedevent">NS\'a uygulama başlangıcını kaydet</string>
     <string name="restartingapp">Ayarları uygulamak için uygulamadan çıkılıyor.</string>
@@ -502,7 +489,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="overview_editquickwizard_usesuperbolus">Süperbolus hesapla</string>
     <string name="positiveonly">Sadece pozitif</string>
     <string name="negativeonly">Sadece negatif</string>
-    <string name="overview_editquickwizard_usecob">COB (Aktif Karbonhidrat) hesaplaması</string>
     <string name="overview_editquickwizard_usetemptarget">Geçici hedef hesaplaması</string>
     <string name="overview_editquickwizard_usepercentage">Yüzde Hesaplaması</string>
     <string name="loopenabled">Döngü etkin</string>
@@ -515,9 +501,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="enablesmbalways">SMB\'yi her zaman etkinleştir</string>
     <string name="enablesmbalways_summary">SMB\'yi her zaman bağımsız olarak boluslarla etkinleştirin. G5 gibi verilerin yalnızca filtrelenmesiyle yalnızca KŞ kaynağıyla mümkündür</string>
     <string name="enablesmbaftercarbs">Yemeklerden sonra SMB\'yi etkinleştir</string>
-    <string name="enablesmbaftercarbs_summary">Karbonhidrat alındıktan sonra 6 saat süreyle SMB\'yi (Super Micro Bolus) etkinleştirin.0 COB (Aktif Karbonhidrat) ile de çalışır, Şayet KŞ kaynağıyla kullanılacaksa verilerin iyice filtrelenmesiyle mümkündür.örn. Dexcom G5 gibi</string>
-    <string name="enablesmbwithcob">SMB\'yi COB ile etkinleştir</string>
-    <string name="enablesmbwithcob_summary">COB (Aktif Karbonhidrat) aktif olduğunda SMB\'yi (Super Micro Bolus) etkinleştirin.</string>
     <string name="enablesmbwithtemptarget">Geçici hedeflerle SMB\'yi etkinleştir</string>
     <string name="enablesmbwithtemptarget_summary">Geçici hedef aktif olduğunda SMB\'yi etkinleştir (yakında yeme, egzersiz)</string>
     <string name="enablesmbwithhightemptarget">Yüksek geçici hedeflerle SMB\'yi etkinleştir</string>
@@ -633,7 +616,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="readstatus">Durum oku</string>
     <string name="exitwizard">Kurulum sihirbazını atla</string>
     <string name="setupwizard_loop_description">AndroidAPS\'ın bazal değişiklikleri önerme/yapmasını sağlamak için aşağıdaki düğmeye basın</string>
-    <string name="setupwizard_sensitivity_description">Duyarlılık eklentisi, duyarlılık tespiti ve COB hesaplaması için kullanılır. Daha fazla bilgi için ziyaret edin:</string>
     <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="nsclientinfotext">NSClient, Nightscout\'a bağlantıyı sağlar. Şimdi bu kısmı atlayabilirsiniz, ancak ayarlamadan görevleri geçemezsiniz.</string>
     <string name="diawarning">Lütfen unutmayın: yeni insülin profilleri en az 5 saat DIA gerektirir. Yeni profildeki DIA 5–6 saat, eski insülin profillerinde DIA 3saat\'e eşittir.</string>
@@ -737,9 +719,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">\'Kendi Dexcom Uygulamanızı Oluşturun\' uygulamasından KŞ değerlerini alın.</string>
-    <string name="cobvsiob">COB vs IOB</string>
     <string name="bolusconstraintappliedwarn">Bolus kısıtlaması uygulandı: %1$.2f Ü ile %2$.2f Ü</string>
-    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Yavaş karbonhidrat emilimi tespit edildi: zamanın %2$d%% si. Hesaplamanızı iki kez kontrol edin. Aktif Karbonhidrat (COB) olduğundan fazla tahmin edilebilir, bu nedenle daha fazla insülin verilebilir !!!!!</font>]]></string>
     <string name="partialboluswizard">Bolus sihirbazı sonucunun bu kadarını ilet [%]</string>
     <string name="deliverpartofboluswizard">Bolus sihirbazı hesaplamayı gerçekleştirir ancak hesaplanan insülinin yalnızca bu kısmı iletilir. SMB algoritması ile kullanışlıdır.</string>
     <string name="snooze">Ertele</string>
@@ -747,7 +727,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="smscommunicator_messagebody">Geçersiz mesaj</string>
     <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_percent">%1$d%%</string>
     <string name="unit_minute_short">dk.</string>
     <string name="profile_name">Profil adı:</string>
@@ -978,11 +957,9 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="quick_wizard_not_available">Seçili hızlı asistan artık mevcut değil, lütfen kutucuğu yenileyin</string>
     <string name="wizard_no_actual_bg">Hesaplamayı temel alacak yeni bir KŞ yok!</string>
     <string name="wizard_no_active_profile">Etkin profil ayarlanmadı!</string>
-    <string name="wizard_no_cob">Aktif karbonhidrat bilinmiyor! KŞ okuması eksik veya son uygulama yeniden başlatılsın mı?</string>
     <string name="wizard_carbs_constraint">Karbonhidrat kısıtlaması ihlali!</string>
     <string name="wizard_explain_calc">Hesap (KİO: %1$.1f, İDF: %2$.1f)</string>
     <string name="wizard_explain_carbs">Karb: %1$.2fÜ</string>
-    <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fÜ</string>
     <string name="wizard_explain_bg">KŞ: %1$.2fÜ</string>
     <string name="wizard_explain_iob">Aktif İnsülin: %1$.2fÜ</string>
     <string name="wizard_explain_superbolus">Süperbolus: %1$.2fÜ</string>
