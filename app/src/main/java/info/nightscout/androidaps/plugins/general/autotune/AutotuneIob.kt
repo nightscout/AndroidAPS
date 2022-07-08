@@ -39,7 +39,7 @@ open class AutotuneIob @Inject constructor(
     private val autotuneFS: AutotuneFS
 ) {
 
-    private val nsTreatments = ArrayList<NsTreatment>()
+    private var nsTreatments = ArrayList<NsTreatment>()
     private var dia: Double = Constants.defaultDIA
     var boluses: ArrayList<Bolus> = ArrayList()
     var meals = ArrayList<Carbs>()
@@ -59,11 +59,11 @@ open class AutotuneIob @Inject constructor(
         initializeTreatmentData(from - range(), to)
         initializeTempBasalData(from - range(), to, tunedProfile)
         initializeExtendedBolusData(from - range(), to, tunedProfile)
-        tempBasals.sortWith { o1: TemporaryBasal, o2: TemporaryBasal -> (o2.timestamp - o1.timestamp).toInt() }
+        tempBasals = ArrayList(tempBasals.toList().sortedWith { o1: TemporaryBasal, o2: TemporaryBasal -> (o2.timestamp - o1.timestamp).toInt() })
         // Without Neutral TBR, Autotune Web will ignore iob for periods without TBR running
         addNeutralTempBasal(from - range(), to, tunedProfile)
-        nsTreatments.sortWith { o1: NsTreatment, o2: NsTreatment -> (o2.date - o1.date).toInt() }
-        this.boluses.sortWith { o1: Bolus, o2: Bolus -> (o2.timestamp - o1.timestamp).toInt() }
+        nsTreatments = ArrayList(nsTreatments.toList().sortedWith { o1: NsTreatment, o2: NsTreatment -> (o2.date - o1.date).toInt() })
+        boluses = ArrayList(boluses.toList().sortedWith { o1: Bolus, o2: Bolus -> (o2.timestamp - o1.timestamp).toInt() })
         aapsLogger.debug(LTag.AUTOTUNE, "Nb Treatments: " + nsTreatments.size + " Nb meals: " + meals.size)
     }
 
