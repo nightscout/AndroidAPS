@@ -139,6 +139,12 @@
     <string name="cob_label">Carbohidratos activos (COB)</string>
     <string name="cob_question">¿Cómo afecta el cambio del valor ISF al cálculo de COB?</string>
     <string name="cob_longer">Incrementar el ISF hará que los carbohidratos se absorban más lentamente</string>
+    <string name="cob_shorter">Incrementar el ISF hará que los carbohidratos se absorban más rápidamente</string>
+    <string name="cob_no_effect">Incrementar el ISF no afectará la absorción calculada de carbohidratos</string>
+    <string name="cob2_question">¿Cómo afecta cambiar los valores de IC a los cálculos de COB?</string>
+    <string name="cob2_longer">Incrementar el IC hará que los carbohidratos se absorban más lentamente</string>
+    <string name="cob2_shorter">Incrementar el IC hará que los carbohidratos se absorban más rápidamente</string>
+    <string name="cob2_no_effect">Incrementar el IC no afectará la absorción calculada de carbohidratos</string>
     <string name="iob_label">Insulina a bordo (IOB)</string>
     <string name="iob_value">El valor del IOB se ve afectado por las bases temporales ejecutadas.</string>
     <string name="iob_hightemp">No se dará alta tasa basal temporal cuando su nivel de azúcar en sangre esté por debajo del objetivo.</string>
