@@ -145,6 +145,10 @@
     <string name="cob2_longer">Incrementar el IC hará que los carbohidratos se absorban más lentamente</string>
     <string name="cob2_shorter">Incrementar el IC hará que los carbohidratos se absorban más rápidamente</string>
     <string name="cob2_no_effect">Incrementar el IC no afectará la absorción calculada de carbohidratos</string>
+    <string name="cob3_question">¿Cómo afecta el cambio de porcentaje del perfil al cálculo de los COB?</string>
+    <string name="cob3_longer">Poner el perfil a 150% hará que los carbohidratos se absorban más lentamente</string>
+    <string name="cob3_shorter">Poner el perfil a 150% hará que los carbohidratos se absorban más rápidamente</string>
+    <string name="cob3_no_effect">Establecer el perfil a 150% no afectará la absorción calculada de carbohidratos</string>
     <string name="iob_label">Insulina a bordo (IOB)</string>
     <string name="iob_value">El valor del IOB se ve afectado por las bases temporales ejecutadas.</string>
     <string name="iob_hightemp">No se dará alta tasa basal temporal cuando su nivel de azúcar en sangre esté por debajo del objetivo.</string>
