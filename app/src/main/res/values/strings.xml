@@ -1242,8 +1242,9 @@
     <string name="a11y_only_on_watch">only on watch</string>
     <string name="a11y_only_on_phone">only on phone</string>
     <string name="a11y_drag_and_drop_handle">drag and drop handle</string>
+    <string name="search">Search</string>
 
-  <!-- Aidex Cgms -->
+    <!-- Aidex Cgms -->
     <string name="aidex">GlucoRx Aidex</string>
     <string name="aidex_short">Aidex</string>
     <string name="description_source_aidex">Receive BG values from GlucoRx Aidex CGMS.</string>
