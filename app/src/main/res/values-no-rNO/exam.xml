@@ -138,10 +138,16 @@
     <string name="wronginsulin_donothing">Ikke gjør noe og la AndroidAPS korrigere eventuelle høye blodsukkerverdier.</string>
     <string name="cob_label">Karbohydrater ombord (COB)</string>
     <string name="cob_question">Hvordan vil endring av ISF-verdi påvirke COB-beregning?</string>
+    <string name="cob_longer">Økning av ISF gjør at karbohydrater absorberes over lengre tid</string>
+    <string name="cob_shorter">Økning av ISF gjør at karbohydrater absorberes over kortere tid</string>
     <string name="cob_no_effect">Økning av ISF påvirker ikke beregningen av absorbering av karbohydrater</string>
     <string name="cob2_question">Hvordan vil endring av IC-verdi påvirke COB-beregning?</string>
+    <string name="cob2_longer">Økning av IC gjør at karbohydrater absorberes over lengre tid</string>
+    <string name="cob2_shorter">Økning av IC gjør at karbohydrater absorberes over kortere tid</string>
     <string name="cob2_no_effect">Økning av IC påvirker ikke beregningen av absorbering av karbohydrater</string>
     <string name="cob3_question">Hvordan vil endring av profil-prosent påvirke COB-beregning?</string>
+    <string name="cob3_longer">Ved å sette profilen til 150% vil karbohydrater absorberes over lengre tid</string>
+    <string name="cob3_shorter">Ved å sette profilen til 150% vil karbohydrater absorberes over kortere tid</string>
     <string name="cob3_no_effect">Ved å sette profilen til 150% påvirkes ikke beregningen av absorbering av karbohydrater</string>
     <string name="iob_label">Aktivt insulin (IOB)</string>
     <string name="iob_value">IOB verdi påvirkes av midlertidige temp basaler.</string>
