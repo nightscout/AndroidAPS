@@ -1043,4 +1043,5 @@
     <string name="description_source_aidex">Recibir los valores de glucosa de GlucoRx Aidex CGMS</string>
     <string name="blocked_by_charging">Bloqueado por opciones de carga</string>
     <string name="blocked_by_connectivity">Bloqueado por opciones de conectividad</string>
+    <string name="no_watch_connected">(Ningún reloj conectado)</string>
 </resources>

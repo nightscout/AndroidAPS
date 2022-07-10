@@ -1043,4 +1043,5 @@
     <string name="description_source_aidex">Přijímat hodnoty glykémie ze senzoru GlucoRx Aidex.</string>
     <string name="blocked_by_charging">Zablokováno možností nabíjení</string>
     <string name="blocked_by_connectivity">Zablokováno možností připojení</string>
+    <string name="no_watch_connected">(Žádné hodinky nejsou připojeny)</string>
 </resources>

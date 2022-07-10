@@ -6,6 +6,7 @@
     <string name="treatmentssafety_title">Безопасность терапии</string>
     <string name="treatmentssafety_maxbolus_title">Макс разрешенный болюс [U] ед.</string>
     <string name="treatmentssafety_maxcarbs_title">Макс разрешенные углеводы (г)</string>
+    <string name="treatmentssafety_lgsThreshold_title">Уровень ГК, ниже которого происходит остановка подачи инсулина</string>
     <string name="nav_preferences_plugin">Настройки %1$s</string>
     <string name="nav_preferences">Настройки</string>
     <string name="nav_refreshtreatments">Синхронизировать назначения с NS</string>
@@ -432,6 +433,8 @@
     <string name="ns_localbroadcasts_title">Активировать локальную передачу</string>
     <string name="openapssmb">Супер микро болюс OpenAPS</string>
     <string name="openaps_smb_dynamic_isf">Динамический ISF</string>
+    <string name="DynISFAdjust_title" formatted="false">Коэффициент регулировки динамического диапазона чувствительности ISF %</string>
+    <string name="DynISFAdjust_summary" formatted="false">Коэффициент корректировки динамического диапазона чувствительности ISF. Установите более 100% для агрессивных доз коррекции и менее 100% для менее агрессивной коррекции.</string>
     <string name="enableuam">Включить непредвиденный прием пищи UAM</string>
     <string name="enablesmb">Включить супер микро болюс SMB</string>
     <string name="enablesmb_summary">Для ускорения действия используйте супер микро болюсы SMB вместо временного базала</string>
@@ -590,6 +593,7 @@
     <string name="openapssmb_maxiob_summary">Эта величина называется Max IOB в OpenAPS context\nOpenAPS не будет добавлять инсулин если текущий активный инсулин ее превысит</string>
     <string name="absorption_cutoff_title">Максимальное время усваимости пищи [h]</string>
     <string name="absorption_cutoff_summary">Время, за которое любая еда считается усвоившейся. Оставшиеся углеводы не будут учтены.</string>
+    <string name="treatmentssafety_lgsThreshold_summary">Значение уровня ГК, на котором происходит приостановка подачи инсулина. Значения по умолчанию являются стандартными для целевого диапазона. Пользователь может установить значения между 60 мг/дл (3.3 ммоль/л) и 100 мг/дл (5.5 ммоль/л) Параметры, заданные ниже 65/3.6 приводят к использованию значений по умолчанию</string>
     <string name="overview_show_notes_field_in_dialogs_title">Показать поле примечаний в диалогах назначений</string>
     <string name="next_button">Далее</string>
     <string name="previous_button">Назад</string>
@@ -965,6 +969,7 @@
     <string name="wear_action_tempt_max_bg_error">Макс ГК вне диапазона!</string>
     <string name="wear_action_tempt_manual_range_message">ВремЦель:\nМин: %1$s\nМакс.: %2$s\nДлительность: %3$s</string>
     <string name="wear_action_tempt_manual_message">ВремЦель:\nЦель: %1$s\nДлительность: %2$s</string>
+    <string name="wear_action_tempt_preset_message">ВремЦель:\nПричина: %1$s\nЦель.: %2$s\nДлительность: %3$s</string>
     <string name="quick_wizard_message">Мастер: %1$s\nИнсулин: %2$.2fЕд\nУгл: %3$dg</string>
     <string name="wizard_result">Мастер:\nИнсулин: %1$.2fЕд\nУгл: %2$dg</string>
     <string name="overview_editquickwizard_show_on_device">Показать запись на устройстве:</string>

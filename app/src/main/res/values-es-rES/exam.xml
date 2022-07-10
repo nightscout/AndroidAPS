@@ -136,8 +136,14 @@
     <string name="wronginsulin_compare">Comparar valores en AndroidAPS con el historial de la bomba (si la bomba lo soporta).</string>
     <string name="wronginsulin_prime">Bolo una proporción de la insulina calculada “perdida” por jeringa/pluma o usando menú de llenado.</string>
     <string name="wronginsulin_donothing">No haga nada y permite que AndroidAPS corrija cualquier nivel alto de glucosa en la sangre resultante.</string>
+    <string name="cob_label">Carbohidratos activos (COB)</string>
+    <string name="cob_question">¿Cómo afecta el cambio del valor ISF al cálculo de COB?</string>
+    <string name="cob_no_effect">Incrementar el ISF no afectará la absorción calculada de carbohidratos</string>
+    <string name="cob2_question">¿Cómo afecta cambiar los valores de IC a los cálculos de COB?</string>
+    <string name="cob2_no_effect">Incrementar el IC no afectará la absorción calculada de carbohidratos</string>
+    <string name="cob3_question">¿Cómo afecta el cambio de porcentaje del perfil al cálculo de los COB?</string>
+    <string name="cob3_no_effect">Establecer el perfil a 150% no afectará la absorción calculada de carbohidratos</string>
     <string name="iob_label">Insulina a bordo (IOB)</string>
-    <string name="iob_which">Marca todas las respuestas correctas.</string>
     <string name="iob_value">El valor del IOB se ve afectado por las bases temporales ejecutadas.</string>
     <string name="iob_hightemp">No se dará alta tasa basal temporal cuando su nivel de azúcar en sangre esté por debajo del objetivo.</string>
     <string name="iob_negiob">El IOB negativo durante un período sustancial en ausencia de ejercicio sugiere que tu perfil es demasiado fuerte y que se necesita menos insulina en tus ajustes.</string>
