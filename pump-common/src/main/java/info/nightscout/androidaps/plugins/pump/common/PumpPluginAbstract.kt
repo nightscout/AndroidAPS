@@ -269,44 +269,20 @@ abstract class PumpPluginAbstract protected constructor(
         ret += if (pumpStatusData.lastConnection == 0L) {
             "LastConn: never\n"
         } else {
-            val agoMsec = System.currentTimeMillis() - pumpStatusData.lastConnection
-            val agoMin = (agoMsec / 60.0 / 1000.0).toInt()
+            val agoMin = ((System.currentTimeMillis() - pumpStatusData.lastConnection) / 60.0 / 1000.0).toInt()
             "LastConn: $agoMin min ago\n"
         }
 
-        if (pumpStatusData.lastBolusTime?.time != 0L) {
-            ret += "LastBolus: ${to2Decimal(pumpStatusData.lastBolusAmount!!)}U @${DateFormat.format("HH:mm", pumpStatusData.lastBolusTime)}"
+        pumpStatusData.lastBolusTime?.let {
+            if (it.time != 0L) {
+                ret += "LastBolus: ${to2Decimal(pumpStatusData.lastBolusAmount!!)}U @${DateFormat.format("HH:mm", it)}\n"
+            }
         }
-        val activeTemp = pumpSync.expectedPumpState().temporaryBasal
-        if (activeTemp != null) {
-            ret += """
-                Temp: ${activeTemp.toStringFull(dateUtil)}
-                
-                """.trimIndent()
-        }
-        val activeExtendedBolus = pumpSync.expectedPumpState().extendedBolus
-        if (activeExtendedBolus != null) {
-            ret += """
-                Extended: ${activeExtendedBolus.toStringFull(dateUtil)}
-                
-                """.trimIndent()
-        }
-        // if (!veryShort) {
-        // ret += "TDD: " + DecimalFormatter.to0Decimal(pumpStatus.dailyTotalUnits) + " / "
-        // + pumpStatus.maxDailyTotalUnits + " U\n";
-        // }
-        ret += """
-            IOB: ${pumpStatusData.iob}U
-            
-            """.trimIndent()
-        ret += """
-            Reserv: ${to0Decimal(pumpStatusData.reservoirRemainingUnits)}U
-            
-            """.trimIndent()
-        ret += """
-            Batt: ${pumpStatusData.batteryRemaining}
-            
-            """.trimIndent()
+        pumpSync.expectedPumpState().temporaryBasal?.let { ret += "Temp: ${it.toStringFull(dateUtil)}\n" }
+        pumpSync.expectedPumpState().extendedBolus?.let { ret += "Extended: ${it.toStringFull(dateUtil)}\n" }
+        ret += "IOB: ${pumpStatusData.iob}U\n"
+        ret += "Reserv: ${to0Decimal(pumpStatusData.reservoirRemainingUnits)}U\n"
+        ret += "Batt: ${pumpStatusData.batteryRemaining}\n"
         return ret
     }
 
