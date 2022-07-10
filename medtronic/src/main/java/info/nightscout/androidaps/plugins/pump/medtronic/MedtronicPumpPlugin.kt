@@ -34,6 +34,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.WakeAndTuneTask
 import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryTBR
 import info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncEntriesCreator
+import info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncStorage
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
 import info.nightscout.androidaps.plugins.pump.common.utils.ProfileUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry
@@ -90,7 +91,7 @@ class MedtronicPumpPlugin @Inject constructor(
     dateUtil: DateUtil,
     aapsSchedulers: AapsSchedulers,
     pumpSync: PumpSync,
-    pumpSyncStorage: info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncStorage
+    pumpSyncStorage: PumpSyncStorage
 ) : PumpPluginAbstract(
     PluginDescription() //
         .mainType(PluginType.PUMP) //
