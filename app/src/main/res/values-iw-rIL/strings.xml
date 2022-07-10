@@ -966,6 +966,7 @@
     <string name="wear_action_tempt_max_bg_error">ערך הסוכר המקסימלי מחוץ לטווח!</string>
     <string name="wear_action_tempt_manual_range_message">ע\' מטרה זמני:\nמינ\': %1$s\nמקס\': %2$s\nמשך: %3$s</string>
     <string name="wear_action_tempt_manual_message">ע\' מטרה זמני:\nמטרה: %1$s\n משך: %2$s</string>
+    <string name="wear_action_tempt_preset_message">ע\' מטרה זמני:\nסיבה: %1$s\nמטרה: %2$s\nמשך: %3$s</string>
     <string name="quick_wizard_message">אשף מהיר: %1$s\n אינס\': %2$.2f יח\'\nפחמ\': %3$d גר\'</string>
     <string name="wizard_result">מחשבון: %1$s\n אינס\': %2$.2f יח\'\nפחמ\': %3$d גר\'</string>
     <string name="overview_editquickwizard_show_on_device">הצג רשומה על המכשיר:</string>
@@ -1038,4 +1039,5 @@
     <string name="description_source_aidex">קבלת נתוני סוכר מחיישני GlucoRx Aidex.</string>
     <string name="blocked_by_charging">חסום ע\"י הגדרות טעינה</string>
     <string name="blocked_by_connectivity">חסום ע\"י הגדרות חיבור</string>
+    <string name="no_watch_connected">(השעון לא מחובר)</string>
 </resources>

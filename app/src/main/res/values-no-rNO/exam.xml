@@ -136,8 +136,14 @@
     <string name="wronginsulin_compare">Sammenlign verdiene i AndroidAPS og pumpehistorikken (hvis pumpen støtter dette).</string>
     <string name="wronginsulin_prime">Gi en bolus med en del av det insulinet du mangler enten med penn eller ved å bruke prime funksjonen.</string>
     <string name="wronginsulin_donothing">Ikke gjør noe og la AndroidAPS korrigere eventuelle høye blodsukkerverdier.</string>
+    <string name="cob_label">Karbohydrater ombord (COB)</string>
+    <string name="cob_question">Hvordan vil endring av ISF-verdi påvirke COB-beregning?</string>
+    <string name="cob_no_effect">Økning av ISF påvirker ikke beregningen av absorbering av karbohydrater</string>
+    <string name="cob2_question">Hvordan vil endring av IC-verdi påvirke COB-beregning?</string>
+    <string name="cob2_no_effect">Økning av IC påvirker ikke beregningen av absorbering av karbohydrater</string>
+    <string name="cob3_question">Hvordan vil endring av profil-prosent påvirke COB-beregning?</string>
+    <string name="cob3_no_effect">Ved å sette profilen til 150% påvirkes ikke beregningen av absorbering av karbohydrater</string>
     <string name="iob_label">Aktivt insulin (IOB)</string>
-    <string name="iob_which">Marker alle riktige svar.</string>
     <string name="iob_value">IOB verdi påvirkes av midlertidige temp basaler.</string>
     <string name="iob_hightemp">Høy temp basal vil ikke bli gitt når ditt blodsukker er under målverdi.</string>
     <string name="iob_negiob">Negativ IOB i en lengre periode selv om du ikke trener tyder på at profilen din gir for mye insulin og kanskje bør reduseres i innstillingene.</string>

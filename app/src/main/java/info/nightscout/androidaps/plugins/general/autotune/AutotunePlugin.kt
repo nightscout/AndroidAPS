@@ -22,6 +22,7 @@ import info.nightscout.androidaps.utils.MidnightTime
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONException
 import org.json.JSONObject
@@ -65,7 +66,7 @@ class AutotunePlugin @Inject constructor(
 ), Autotune {
     @Volatile override var lastRunSuccess: Boolean = false
     @Volatile var result: String = ""
-    @Volatile var calculationRunning: Boolean = false
+    @Volatile override var calculationRunning: Boolean = false
     @Volatile var lastRun: Long = 0
     @Volatile var selectedProfile = ""
     @Volatile var lastNbDays: String = ""
@@ -76,21 +77,34 @@ class AutotunePlugin @Inject constructor(
     private lateinit var profile: Profile
     val autotuneStartHour: Int = 4
 
-    override fun aapsAutotune(daysBack: Int, autoSwitch: Boolean, profileToTune: String): String {
+    override fun aapsAutotune(daysBack: Int, autoSwitch: Boolean, profileToTune: String) {
+        lastRunSuccess = false
+        if (calculationRunning) {
+            aapsLogger.debug(LTag.AUTOMATION, "Autotune run detected, Autotune Run Cancelled")
+            return
+        }
+        calculationRunning = true
         tunedProfile = null
         updateButtonVisibility = View.GONE
-        lastRunSuccess = false
         var logResult = ""
         result = ""
         if (profileFunction.getProfile() == null) {
             result = rh.gs(R.string.profileswitch_ismissing)
-            return result
+            rxBus.send(EventAutotuneUpdateGui())
+            calculationRunning = false
+            return
         }
         val detailedLog = sp.getBoolean(R.string.key_autotune_additional_log, false)
         calculationRunning = true
         lastNbDays = "" + daysBack
         lastRun = dateUtil.now()
-        val profileStore = activePlugin.activeProfileSource.profile ?: return rh.gs(R.string.profileswitch_ismissing)
+        val profileStore = activePlugin.activeProfileSource.profile
+        if (profileStore == null) {
+            result = rh.gs(R.string.profileswitch_ismissing)
+            rxBus.send(EventAutotuneUpdateGui())
+            calculationRunning = false
+            return
+        }
         selectedProfile = if (profileToTune.isEmpty()) profileFunction.getProfileName() else profileToTune
         profileFunction.getProfile()?.let { currentProfile ->
             profile = profileStore.getSpecificProfile(profileToTune)?.let { ProfileSealed.Pure(it) } ?: currentProfile
@@ -144,11 +158,11 @@ class AutotunePlugin @Inject constructor(
             if (tunedProfile == null) {
                 result = rh.gs(R.string.autotune_error)
                 log("TunedProfile is null on day ${i + 1}")
-                calculationRunning = false
-                rxBus.send(EventAutotuneUpdateGui())
                 autotuneFS.exportResult(result)
                 autotuneFS.exportLogAndZip(lastRun)
-                return result
+                rxBus.send(EventAutotuneUpdateGui())
+                calculationRunning = false
+                return
             }
         }
         result = rh.gs(R.string.autotune_result, dateUtil.dateAndTimeString(lastRun))
@@ -193,13 +207,16 @@ class AutotunePlugin @Inject constructor(
         }
 
         tunedProfile?.let {
-            lastRunSuccess = true
             saveLastRun()
+            lastRunSuccess = true
             rxBus.send(EventAutotuneUpdateGui())
             calculationRunning = false
-            return result
+            return
         }
-        return rh.gs(R.string.autotune_error)
+        result = rh.gs(R.string.autotune_error)
+        rxBus.send(EventAutotuneUpdateGui())
+        calculationRunning = false
+        return
     }
 
     private fun showResults(tunedProfile: ATProfile?, pumpProfile: ATProfile): String {

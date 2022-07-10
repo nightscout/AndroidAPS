@@ -137,7 +137,6 @@
     <string name="wronginsulin_prime">Pošlite bolus na vypočítaný „chýbajúci“ inzulín buď injekčnou striekačkou, alebo perom, alebo pomocou plnenia na pumpe.</string>
     <string name="wronginsulin_donothing">Nerobte nič a dovoľte AndroidAPS upraviť akúkoľvek výslednú vysokú hladinu glukózy v krvi.</string>
     <string name="iob_label">Aktívny inzulín (IOB)</string>
-    <string name="iob_which">Zaškrtnite všetky správne odpovede.</string>
     <string name="iob_value">Hodnota IOB je ovplyvnená vydanými dočasnými bazálmi.</string>
     <string name="iob_hightemp">Vysoký dočasný bazál nebude spustený, pokiaľ je Vaša glykémia nižšia, ako cieľ.</string>
     <string name="iob_negiob">Negatívne IOB po značnú dobu bez cvičenia naznačuje, že váš profil je príliš \"silný\" a vo vašom profile je potrebného menej inzulínu.</string>

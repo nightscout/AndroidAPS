@@ -97,12 +97,6 @@ def allCommitted = { ->
     return stringBuilder.toString().isEmpty()
 }
 
-tasks.matching { it instanceof Test }.all {
-    testLogging.events = ["failed", "skipped", "started"]
-    // testLogging.events = ["failed", "skipped", "started", "standard_out"] use to display stdout in travis
-    testLogging.exceptionFormat = "full"
-}
-
 android {
 
     namespace 'info.nightscout.androidaps'
@@ -111,7 +105,7 @@ android {
     defaultConfig {
         multiDexEnabled true
         versionCode 1500
-        version "3.0.0.2-dev-n"
+        version "3.0.0.2-dev-o"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "REMOTE", '"' + generateGitRemote() + '"'

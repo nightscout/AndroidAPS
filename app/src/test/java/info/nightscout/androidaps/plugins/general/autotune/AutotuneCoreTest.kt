@@ -25,49 +25,74 @@ import java.io.File
 import java.util.*
 
 class AutotuneCoreTest : TestBaseWithProfile() {
+
     @Mock lateinit var sp: SP
     @Mock lateinit var autotuneFS: AutotuneFS
     @Mock lateinit var injector: HasAndroidInjector
     @Mock lateinit var activePlugin: ActivePlugin
-    lateinit var autotuneCore: AutotuneCore
-    var min5mCarbImpact = 0.0
-    var autotuneMin = 0.0
-    var autotuneMax = 0.0
+    private lateinit var autotuneCore: AutotuneCore
+    private var min5mCarbImpact = 0.0
+    private var autotuneMin = 0.0
+    private var autotuneMax = 0.0
 
-        @Before
+    @Before
     fun initData() {
-        autotuneCore = AutotuneCore(sp,autotuneFS)
+        autotuneCore = AutotuneCore(sp, autotuneFS)
         TimeZone.setDefault(TimeZone.getTimeZone("GMT+2"))
     }
 
+    @Suppress("SpellCheckingInspection")
     @Test
-    fun autotuneCoreTest() { // Test if load from file of OpenAPS categorisation is Ok
-        val prepjson = File("src/test/res/autotune/test1/autotune.2022-05-21.json").readText()
+    fun autotuneCoreTest1() { // Test if AutotuneCore with input files of OpenAPS categorisation gives correct output profile
+        val prepJson = File("src/test/res/autotune/test1/autotune.2022-05-21.json").readText()
         val inputProfileJson = File("src/test/res/autotune/test1/profile.pump.json").readText()
         val inputProfile = atProfileFromOapsJson(JSONObject(inputProfileJson), dateUtil)!!
-        val prep = PreppedGlucose(JSONObject(prepjson), dateUtil)
+        val prep = PreppedGlucose(JSONObject(prepJson), dateUtil)
 
         `when`(sp.getDouble(R.string.key_openapsama_autosens_max, 1.2)).thenReturn(autotuneMax)
         `when`(sp.getDouble(R.string.key_openapsama_autosens_min, 0.7)).thenReturn(autotuneMin)
         `when`(sp.getDouble(R.string.key_openapsama_min_5m_carbimpact, 3.0)).thenReturn(min5mCarbImpact)
-        val OapsOutputProfileJson = File("src/test/res/autotune/test1/aapsorefprofile.json").readText()
-        val OapsOutputProfile = atProfileFromOapsJson(JSONObject(OapsOutputProfileJson),dateUtil)
+        val oapsOutputProfileJson = File("src/test/res/autotune/test1/aapsorefprofile.json").readText()
+        val oapsOutputProfile = atProfileFromOapsJson(JSONObject(oapsOutputProfileJson), dateUtil)
         val outProfile = autotuneCore.tuneAllTheThings(prep, inputProfile, inputProfile)
-        OapsOutputProfile?.let {
-            Assert.assertEquals(OapsOutputProfile.isf, outProfile.isf, 0.0)
-            Assert.assertEquals(OapsOutputProfile.ic, outProfile.ic, 0.0)
+        oapsOutputProfile?.let {
+            Assert.assertEquals(oapsOutputProfile.isf, outProfile.isf, 0.0)
+            Assert.assertEquals(oapsOutputProfile.ic, outProfile.ic, 0.0)
             for (i in 0..23)
-                Assert.assertEquals(OapsOutputProfile.basal[i], outProfile.basal[i], 0.0)
+                Assert.assertEquals(oapsOutputProfile.basal[i], outProfile.basal[i], 0.0)
         }
-            ?:Assert.fail()
+            ?: Assert.fail()
     }
 
-
+    @Suppress("SpellCheckingInspection")
+    @Test
+    fun autotuneCoreTest4() { // Test if limiting modification with Min Max Autosens parameter works (18h on basal and on ISF value)
+        val prepJson = File("src/test/res/autotune/test4/autotune.2022-05-30.json").readText()
+        val inputProfileJson = File("src/test/res/autotune/test4/profile.2022-05-30.json").readText()
+        val inputProfile = atProfileFromOapsJson(JSONObject(inputProfileJson), dateUtil)!!
+        val pumpProfileJson = File("src/test/res/autotune/test4/profile.pump.json").readText()
+        val pumpProfile = atProfileFromOapsJson(JSONObject(pumpProfileJson), dateUtil)!!
+        val prep = PreppedGlucose(JSONObject(prepJson), dateUtil)
+        `when`(sp.getDouble(R.string.key_openapsama_autosens_max, 1.2)).thenReturn(autotuneMax)
+        `when`(sp.getDouble(R.string.key_openapsama_autosens_min, 0.7)).thenReturn(autotuneMin)
+        `when`(sp.getDouble(R.string.key_openapsama_min_5m_carbimpact, 3.0)).thenReturn(min5mCarbImpact)
+        val oapsOutputProfileJson = File("src/test/res/autotune/test4/newprofile.2022-05-30.json").readText()
+        val oapsOutputProfile = atProfileFromOapsJson(JSONObject(oapsOutputProfileJson), dateUtil)
+        val outProfile = autotuneCore.tuneAllTheThings(prep, inputProfile, pumpProfile)
+        oapsOutputProfile?.let {
+            Assert.assertEquals(oapsOutputProfile.isf, outProfile.isf, 0.0)
+            Assert.assertEquals(oapsOutputProfile.ic, outProfile.ic, 0.0)
+            for (i in 0..23)
+                Assert.assertEquals(oapsOutputProfile.basal[i], outProfile.basal[i], 0.0)
+        }
+            ?: Assert.fail()
+    }
 
     /**
      * OpenAPS profile for Autotune only have one ISF value and one IC value
      */
-    fun atProfileFromOapsJson(jsonObject: JSONObject, dateUtil: DateUtil, defaultUnits: String? = null): ATProfile? {
+    @Suppress("SpellCheckingInspection")
+    private fun atProfileFromOapsJson(jsonObject: JSONObject, dateUtil: DateUtil, defaultUnits: String? = null): ATProfile? {
         try {
             min5mCarbImpact = JsonHelper.safeGetDoubleAllowNull(jsonObject, "min_5m_carbimpact") ?: return null
             autotuneMin = JsonHelper.safeGetDoubleAllowNull(jsonObject, "autosens_min") ?: return null
@@ -82,13 +107,13 @@ class AutotuneCoreTest : TestBaseWithProfile() {
             val isfBlocks = ArrayList<Block>(1).also {
                 val isfJsonArray = isfJson.getJSONArray("sensitivities")
                 val value = isfJsonArray.getJSONObject(0).getDouble("sensitivity")
-                it.add(0,Block((T.hours(24).secs()) * 1000L, value))
+                it.add(0, Block((T.hours(24).secs()) * 1000L, value))
             }
             val icBlocks = ArrayList<Block>(1).also {
                 val value = jsonObject.getDouble("carb_ratio")
-                it.add(0,Block((T.hours(24).secs()) * 1000L, value))
+                it.add(0, Block((T.hours(24).secs()) * 1000L, value))
             }
-            val basalBlocks = blockFromJsonArray(jsonObject.getJSONArray("basalprofile"), dateUtil)
+            val basalBlocks = blockFromJsonArray(jsonObject.getJSONArray("basalprofile"))
                 ?: return null
             val targetBlocks = ArrayList<TargetBlock>(1).also {
                 it.add(0, TargetBlock((T.hours(24).secs()) * 1000L, 100.0, 100.0))
@@ -104,14 +129,13 @@ class AutotuneCoreTest : TestBaseWithProfile() {
                 timeZone = timezone,
                 dia = dia
             )
-            return ATProfile(ProfileSealed.Pure(pure), localInsulin, profileInjector).also { it.dateUtil = dateUtil}
+            return ATProfile(ProfileSealed.Pure(pure), localInsulin, profileInjector).also { it.dateUtil = dateUtil }
         } catch (ignored: Exception) {
             return null
         }
     }
 
-
-    fun blockFromJsonArray(jsonArray: JSONArray?, dateUtil: DateUtil): List<Block>? {
+    private fun blockFromJsonArray(jsonArray: JSONArray?): List<Block>? {
         val size = jsonArray?.length() ?: return null
         val ret = ArrayList<Block>(size)
         try {

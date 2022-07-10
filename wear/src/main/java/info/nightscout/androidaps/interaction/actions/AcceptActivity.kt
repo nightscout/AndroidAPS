@@ -56,10 +56,9 @@ class AcceptActivity : ViewSelectorActivity() {
         override fun getColumnCount(arg0: Int): Int = 2
         override fun getRowCount(): Int = 1
 
-        override fun instantiateItem(container: ViewGroup, row: Int, col: Int): Any {
-            val view: View
-            if (col == 0) {
-                view = LayoutInflater.from(applicationContext).inflate(R.layout.action_confirm_text, container, false)
+        override fun instantiateItem(container: ViewGroup, row: Int, col: Int): View = when (col) {
+            0    -> {
+                val view = LayoutInflater.from(applicationContext).inflate(R.layout.action_confirm_text, container, false)
                 val textView = view.findViewById<TextView>(R.id.message)
                 val scrollView = view.findViewById<View>(R.id.message_scroll)
                 textView.text = message
@@ -79,8 +78,11 @@ class AcceptActivity : ViewSelectorActivity() {
                     false
                 }
                 scrollView.requestFocus()
-            } else {
-                view = LayoutInflater.from(applicationContext).inflate(R.layout.action_confirm_ok, container, false)
+                view
+            }
+
+            else -> {
+                val view = LayoutInflater.from(applicationContext).inflate(R.layout.action_confirm_ok, container, false)
                 val confirmButton = view.findViewById<ImageView>(R.id.confirmbutton)
                 confirmButton.setOnClickListener {
                     if (actionKey.isNotEmpty()) startService(IntentWearToMobile(this@AcceptActivity, actionKey))
@@ -88,8 +90,8 @@ class AcceptActivity : ViewSelectorActivity() {
                     finishAffinity()
                 }
                 container.addView(view)
+                view
             }
-            return view
         }
 
         override fun destroyItem(container: ViewGroup, row: Int, col: Int, view: Any) {

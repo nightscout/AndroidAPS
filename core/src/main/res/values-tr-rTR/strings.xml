@@ -103,7 +103,7 @@
     <string name="notexists">yok</string>
     <string name="glucose">Glikoz</string>
     <string name="iob">IOB</string>
-    <string name="cob">COB</string>
+    <string name="cob">AKRB</string>
     <string name="name_short">İsim:</string>
     <string name="time">Zaman</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>

@@ -394,6 +394,7 @@ class LocalProfileFragment : DaggerFragment() {
     }
 
     private fun updateProtectedUi() {
+        _binding ?: return
         val isLocked = protectionCheck.isLocked(ProtectionCheck.Protection.PREFERENCES)
         binding.mainLayout.visibility = isLocked.not().toVisibility()
         binding.unlock.visibility = isLocked.toVisibility()

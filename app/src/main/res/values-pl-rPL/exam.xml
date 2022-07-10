@@ -134,7 +134,6 @@
     <string name="wronginsulin_prime">Podaj obliczoną dawkę „pominiętej” insuliny za pomocą strzykawki / wstrzykiwacza lub za pomocą pompy funkcji wypełnienia.</string>
     <string name="wronginsulin_donothing">Nie rób nic i pozwól AndroidAPS na skorygowanie każdego uzyskanego wysokiego stężenia glukozy we krwi.</string>
     <string name="iob_label">Aktywna insulina (IOB)</string>
-    <string name="iob_which">Sprawdź/Zaznacz wszystkie prawidłowe odpowiedzi.</string>
     <string name="iob_value">Na wartość IOB mają wpływ wykonane tymczasowe dawki bazowe.</string>
     <string name="iob_hightemp">Wysoka tymczasowa dawka bazowa nie zostanie podana, gdy twóje poziom cukru we krwi jest poniżej poziomu docelowego.</string>
     <string name="iob_negiob">Negatywne IOB utrzymujące się przez znaczny okres czasu bez wysiłku fizycznego sugeruje, że Twój profil jest zbyt silny i mniej insuliny jest wymagane w Twoich ustawieniach.</string>

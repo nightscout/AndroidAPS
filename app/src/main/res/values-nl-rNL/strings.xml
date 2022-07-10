@@ -970,6 +970,7 @@
     <string name="wear_action_tempt_max_bg_error">Max BG buiten bereik!</string>
     <string name="wear_action_tempt_manual_range_message">Tijdelijk streefdoel:\nMin: %1$s\nMax: %2$s\nDuur: %3$s</string>
     <string name="wear_action_tempt_manual_message">Tijdelijk streefdoel:\nDoel: %1$s\nDuur: %2$s</string>
+    <string name="wear_action_tempt_preset_message">Tijdelijk streefdoel:\nReden: %1$s\nDoel: %2$s\nDuur: %3$s</string>
     <string name="quick_wizard_message">QuickWizard: %1$s\nInsuline: %2$.2fE\nKoolhy.: %3$dg</string>
     <string name="wizard_result">Reken. Wizard:\nInsuline: %1$.2fE\nKoolhy.: %2$dg</string>
     <string name="overview_editquickwizard_show_on_device">Toon invoer op apparaat:</string>

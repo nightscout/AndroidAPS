@@ -177,7 +177,7 @@ class RileyLinkMedtronicService : RileyLinkService() {
                     medtronicPumpStatus.pumpFrequency = pumpFrequency
                     val isFrequencyUS = pumpFrequency == frequencies[0]
                     val newTargetFrequency = if (isFrequencyUS) //
-                        RileyLinkTargetFrequency.Medtronic_US else RileyLinkTargetFrequency.Medtronic_WorldWide
+                        RileyLinkTargetFrequency.MedtronicUS else RileyLinkTargetFrequency.MedtronicWorldWide
                     if (rileyLinkServiceData.rileyLinkTargetFrequency != newTargetFrequency) {
                         rileyLinkServiceData.rileyLinkTargetFrequency = newTargetFrequency
                     }
