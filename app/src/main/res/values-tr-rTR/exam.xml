@@ -138,10 +138,16 @@
     <string name="wronginsulin_donothing">Hiçbir şey yapmayın ve AndroidAPS\'in ortaya çıkabilecek yüksek kan şekeri seviyesini düzeltmesine müsade edin.</string>
     <string name="cob_label">Aktif Karbonhidrat (AKRB)</string>
     <string name="cob_question">İDF değerinin değiştirilmesi AKRB (Aktif karbonhidrat) hesaplamasını nasıl etkiler?</string>
+    <string name="cob_longer">Artan İDF, karbonhidratların daha uzun süre emilmesini sağlayacaktır</string>
+    <string name="cob_shorter">Artan İDF, karbonhidratların daha kısa sürede emilmesini sağlayacaktır</string>
     <string name="cob_no_effect">Artan İDF, hesaplanan karbonhidrat emilimini etkilemez</string>
     <string name="cob2_question">Değişen Kİ değeri AKRB hesaplamasını nasıl etkiler?</string>
+    <string name="cob2_longer">Artan Kİ oranı, karbonhidratların daha uzun sürede emilmesini sağlar</string>
+    <string name="cob2_shorter">Artan Kİ, karbonhidratların daha kısa sürede emilmesini sağlayacaktır</string>
     <string name="cob2_no_effect">Artan Kİ oranı, hesaplanan karbonhidrat emilimini etkilemez</string>
     <string name="cob3_question">Değişen profil yüzdesi AKRB hesaplamasını nasıl etkiler?</string>
+    <string name="cob3_longer">Profili %150\'ye ayarlamak karbonhidratların daha uzun sürede emilmesini sağlar</string>
+    <string name="cob3_shorter">Profili %150\'ye ayarlamak karbonhidratların daha kısa sürede emilmesini sağlar</string>
     <string name="cob3_no_effect">Profili %150\'ye ayarlamak hesaplanan karbonhidrat emilimini etkilemez</string>
     <string name="iob_label">Aktif İnsülin (AİNS)</string>
     <string name="iob_value">AİNS değeri, verilen geçici bazallardan etkilenir.</string>
