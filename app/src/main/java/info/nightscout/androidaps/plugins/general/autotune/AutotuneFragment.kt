@@ -100,7 +100,6 @@ class AutotuneFragment : DaggerFragment() {
         )
         binding.autotuneRun.setOnClickListener {
             val daysBack = SafeParse.stringToInt(binding.tuneDays.text)
-            autotunePlugin.calculationRunning = true
             autotunePlugin.lastNbDays = daysBack.toString()
             log("Run Autotune $profileName, $daysBack days")
             Thread {

@@ -6,4 +6,5 @@ interface Autotune {
     fun atLog(message: String)
 
     var lastRunSuccess: Boolean
+    var calculationRunning: Boolean
 }

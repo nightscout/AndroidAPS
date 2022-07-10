@@ -59,12 +59,26 @@ open class AutotuneIob @Inject constructor(
         initializeTreatmentData(from - range(), to)
         initializeTempBasalData(from - range(), to, tunedProfile)
         initializeExtendedBolusData(from - range(), to, tunedProfile)
-        tempBasals = ArrayList(tempBasals.toList().sortedWith { o1: TemporaryBasal, o2: TemporaryBasal -> (o2.timestamp - o1.timestamp).toInt() })
-        // Without Neutral TBR, Autotune Web will ignore iob for periods without TBR running
-        addNeutralTempBasal(from - range(), to, tunedProfile)
-        nsTreatments = ArrayList(nsTreatments.toList().sortedWith { o1: NsTreatment, o2: NsTreatment -> (o2.date - o1.date).toInt() })
-        boluses = ArrayList(boluses.toList().sortedWith { o1: Bolus, o2: Bolus -> (o2.timestamp - o1.timestamp).toInt() })
+        sortTempBasal()
+        addNeutralTempBasal(from - range(), to, tunedProfile)        // Without Neutral TBR, Autotune Web will ignore iob for periods without TBR running
+        sortNsTreatments()
+        sortBoluses()
         aapsLogger.debug(LTag.AUTOTUNE, "Nb Treatments: " + nsTreatments.size + " Nb meals: " + meals.size)
+    }
+
+    @Synchronized
+    private fun sortTempBasal() {
+        tempBasals = ArrayList(tempBasals.toList().sortedWith { o1: TemporaryBasal, o2: TemporaryBasal -> (o2.timestamp - o1.timestamp).toInt() })
+    }
+
+    @Synchronized
+    private fun sortNsTreatments() {
+        nsTreatments = ArrayList(nsTreatments.toList().sortedWith { o1: NsTreatment, o2: NsTreatment -> (o2.date - o1.date).toInt() })
+    }
+
+    @Synchronized
+    private fun sortBoluses() {
+        boluses = ArrayList(boluses.toList().sortedWith { o1: Bolus, o2: Bolus -> (o2.timestamp - o1.timestamp).toInt() })
     }
 
     private fun initializeBgreadings(from: Long, to: Long) {
@@ -146,6 +160,7 @@ open class AutotuneIob @Inject constructor(
 
     // addNeutralTempBasal will add a fake neutral TBR (100%) to have correct basal rate in exported file for periods without TBR running
     // to be able to compare results between oref0 algo and aaps
+    @Synchronized
     private fun addNeutralTempBasal(from: Long, to: Long, tunedProfile: ATProfile) {
         var previousStart = to
         for (i in tempBasals.indices) {
@@ -180,6 +195,7 @@ open class AutotuneIob @Inject constructor(
 
     // toSplittedTimestampTB will split all TBR across hours in different TBR with correct absolute value to be sure to have correct basal rate
     // even if profile rate is not the same
+    @Synchronized
     private fun toSplittedTimestampTB(tb: TemporaryBasal, tunedProfile: ATProfile) {
         var splittedTimestamp = tb.timestamp
         val cutInMilliSec = T.mins(60).msecs()                  //30 min to compare with oref0, 60 min to improve accuracy
@@ -295,7 +311,7 @@ open class AutotuneIob @Inject constructor(
         return result
     }
 
-
+    @Synchronized
     fun glucoseToJSON(): String {
         val glucoseJson = JSONArray()
         for (bgreading in glucose)
@@ -303,6 +319,7 @@ open class AutotuneIob @Inject constructor(
         return glucoseJson.toString(2)
     }
 
+    @Synchronized
     fun bolusesToJSON(): String {
         val bolusesJson = JSONArray()
         for (bolus in boluses)
@@ -310,6 +327,7 @@ open class AutotuneIob @Inject constructor(
         return bolusesJson.toString(2)
     }
 
+    @Synchronized
     fun nsHistoryToJSON(): String {
         val json = JSONArray()
         for (t in nsTreatments) {

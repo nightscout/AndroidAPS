@@ -600,6 +600,7 @@
     <string name="autotune_run_without_autoswitch">Autotune runned without profile switch</string>
     <string name="autotune_run_with_autoswitch">Autotune runned and profile automatically switched</string>
     <string name="autotune_run_with_error">Error during last Autotune run</string>
+    <string name="autotune_run_cancelled">Another run of Autotune is detected, run cancelled</string>
 
     <plurals name="days">
         <item quantity="one">%1$d day</item>
