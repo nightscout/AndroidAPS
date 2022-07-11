@@ -488,6 +488,7 @@
     <string name="autotune_run_without_autoswitch">Autotune выполнен без переключения профиля</string>
     <string name="autotune_run_with_autoswitch">Autotune выполнен и профиль переключён автоматически</string>
     <string name="autotune_run_with_error">Ошибка во время последнего выполнения Autotune</string>
+    <string name="autotune_run_cancelled">Обнаружен другой запуск Autotune, выполнение отменено</string>
     <plurals name="days">
         <item quantity="one">%1$d день</item>
         <item quantity="few">%1$d дня</item>
