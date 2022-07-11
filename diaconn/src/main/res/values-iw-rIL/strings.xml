@@ -136,4 +136,5 @@
     <string name="diaconn_g8_errorcode_33">מצב השהייה עקב סוכר נמוך מופעל, פקודת ON נדחתה.</string>
     <string name="diaconn_g8_errorcode_34">מצב השהייה עקב סוכר נמוך כבוי, פקודת OFF נדחתה.</string>
     <string name="diaconn_g8_cloudsend_summary">שלח יומני משאבה לענן Diaconn.</string>
+    <string name="diaconn_g8_cloudsend_title">סנכרון Diaconn Cloud </string>
 </resources>
