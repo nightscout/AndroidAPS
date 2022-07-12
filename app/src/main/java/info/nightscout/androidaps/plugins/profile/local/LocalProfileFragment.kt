@@ -23,6 +23,7 @@ import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Profile
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
@@ -52,6 +53,7 @@ class LocalProfileFragment : DaggerFragment() {
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var localProfilePlugin: LocalProfilePlugin
+    @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var hardLimits: HardLimits
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var dateUtil: DateUtil
@@ -117,6 +119,11 @@ class LocalProfileFragment : DaggerFragment() {
         })
         binding.diaLabel.labelFor = binding.dia.editTextId
         binding.unlock.setOnClickListener { queryProtection() }
+
+        val profiles = localProfilePlugin.profile?.getProfileList() ?: ArrayList()
+        val activeProfile = profileFunction.getProfileName()
+        val profileIndex = profiles.indexOf(activeProfile)
+        localProfilePlugin.currentProfileIndex = if (profileIndex >= 0) profileIndex else 0
     }
 
     fun build() {
@@ -387,10 +394,10 @@ class LocalProfileFragment : DaggerFragment() {
 
     private fun processVisibility(position: Int) {
         binding.diaPlaceholder.visibility = (position == 0).toVisibility()
-        binding.ic.visibility  = (position == 1).toVisibility()
-        binding.isf.visibility  = (position == 2).toVisibility()
-        binding.basal.visibility  = (position == 3).toVisibility()
-        binding.target.visibility  = (position == 4).toVisibility()
+        binding.ic.visibility = (position == 1).toVisibility()
+        binding.isf.visibility = (position == 2).toVisibility()
+        binding.basal.visibility = (position == 3).toVisibility()
+        binding.target.visibility = (position == 4).toVisibility()
     }
 
     private fun updateProtectedUi() {
