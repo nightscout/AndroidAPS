@@ -33,6 +33,7 @@ abstract class AutomationModule {
     @ContributesAndroidInjector abstract fun triggerWifiSsidInjector(): TriggerWifiSsid
 
     @ContributesAndroidInjector abstract fun actionInjector(): Action
+    @ContributesAndroidInjector abstract fun actionStopProcessingInjector(): ActionStopProcessing
     @ContributesAndroidInjector abstract fun actionLoopDisableInjector(): ActionLoopDisable
     @ContributesAndroidInjector abstract fun actionLoopEnableInjector(): ActionLoopEnable
     @ContributesAndroidInjector abstract fun actionLoopResumeInjector(): ActionLoopResume
