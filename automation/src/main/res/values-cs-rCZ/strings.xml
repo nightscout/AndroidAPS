@@ -123,4 +123,5 @@
     <string name="run_automations">Spustit automatizace</string>
     <string name="add_automation">Přidat pravidlo</string>
     <string name="remove_sort">Odstranit/řadit</string>
+    <string name="stop_processing">Zastavit zpracovávání</string>
 </resources>
