@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.text.format.DateFormat
+import com.google.gson.GsonBuilder
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.PumpEnactResult
@@ -69,30 +70,41 @@ abstract class PumpPluginAbstract protected constructor(
     protected var displayConnectionMessages = false
 
     var pumpType: PumpType = PumpType.GENERIC_AAPS
+        get() = field
         set(value) {
             field = value
             pumpDescription.fillFor(value)
         }
 
+    protected var gson = GsonBuilder().excludeFieldsWithoutExposeAnnotation().create()
+
     abstract fun initPumpStatusData()
+
+    open fun hasService(): Boolean {
+        return true
+    }
 
     override fun onStart() {
         super.onStart()
         initPumpStatusData()
-        val intent = Intent(context, serviceClass)
-        context.bindService(intent, serviceConnection!!, Context.BIND_AUTO_CREATE)
+        if (hasService()) {
+            val intent = Intent(context, serviceClass)
+            context.bindService(intent, serviceConnection!!, Context.BIND_AUTO_CREATE)
+            disposable.add(rxBus
+                               .toObservable(EventAppExit::class.java)
+                               .observeOn(aapsSchedulers.io)
+                               .subscribe({ _ -> context.unbindService(serviceConnection!!) }) { throwable: Throwable? -> fabricPrivacy.logException(throwable!!) }
+            )
+        }
         serviceRunning = true
-        disposable.add(rxBus
-                           .toObservable(EventAppExit::class.java)
-                           .observeOn(aapsSchedulers.io)
-                           .subscribe({ context.unbindService(serviceConnection!!) }) { throwable: Throwable? -> fabricPrivacy.logException(throwable!!) }
-        )
-        onStartCustomActions()
+        onStartScheduledPumpActions()
     }
 
     override fun onStop() {
-        aapsLogger.debug(LTag.PUMP, deviceID() + " onStop()")
-        context.unbindService(serviceConnection!!)
+        aapsLogger.debug(LTag.PUMP, model().model + " onStop()")
+        if (hasService()) {
+            context.unbindService(serviceConnection!!)
+        }
         serviceRunning = false
         disposable.clear()
         super.onStop()
@@ -101,7 +113,7 @@ abstract class PumpPluginAbstract protected constructor(
     /**
      * If we need to run any custom actions in onStart (triggering events, etc)
      */
-    abstract fun onStartCustomActions()
+    abstract fun onStartScheduledPumpActions()
 
     /**
      * Service class (same one you did serviceConnection for)
@@ -232,7 +244,7 @@ abstract class PumpPluginAbstract protected constructor(
         val extended = JSONObject()
         try {
             battery.put("percent", pumpStatusData.batteryRemaining)
-            status.put("status", pumpStatusData.pumpStatusType.status)
+            status.put("status", pumpStatusData.pumpRunningState.status)
             extended.put("Version", version)
             try {
                 extended.put("ActiveProfile", profileName)
@@ -298,6 +310,7 @@ abstract class PumpPluginAbstract protected constructor(
                 // bolus needed, ask pump to deliver it
                 deliverBolus(detailedBolusInfo)
             } else {
+                detailedBolusInfo.timestamp = System.currentTimeMillis()
 
                 // no bolus required, carb only treatment
                 pumpSyncStorage.addCarbs(PumpDbEntryCarbs(detailedBolusInfo, this))

@@ -195,7 +195,11 @@ class MedtronicPumpPlugin @Inject constructor(
         }
     }
 
-    override fun onStartCustomActions() {
+    override fun hasService(): Boolean {
+        return true
+    }
+
+    override fun onStartScheduledPumpActions() {
 
         // check status every minute (if any status needs refresh we send readStatus command)
         Thread {
@@ -674,7 +678,7 @@ class MedtronicPumpPlugin @Inject constructor(
     }
 
     // if enforceNew===true current temp basal is canceled and new TBR set (duration is prolonged),
-// if false and the same rate is requested enacted=false and success=true is returned and TBR is not changed
+    // if false and the same rate is requested enacted=false and success=true is returned and TBR is not changed
     @Synchronized
     override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
         setRefreshButtonEnabled(false)
@@ -744,7 +748,7 @@ class MedtronicPumpPlugin @Inject constructor(
             PumpEnactResult(injector).success(false).enacted(false) //
                 .comment(R.string.medtronic_cmd_tbr_could_not_be_delivered)
         } else {
-            medtronicPumpStatus.tempBasalStart = Date()
+            medtronicPumpStatus.tempBasalStart = System.currentTimeMillis()
             medtronicPumpStatus.tempBasalAmount = absoluteRate
             medtronicPumpStatus.tempBasalLength = durationInMinutes
 
