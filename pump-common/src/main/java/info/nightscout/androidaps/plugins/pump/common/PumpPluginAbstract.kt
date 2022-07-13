@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.text.format.DateFormat
+import com.google.gson.GsonBuilder
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.PumpEnactResult
@@ -243,7 +244,7 @@ abstract class PumpPluginAbstract protected constructor(
         val extended = JSONObject()
         try {
             battery.put("percent", pumpStatusData.batteryRemaining)
-            status.put("status", pumpStatusData.pumpStatusType.status)
+            status.put("status", pumpStatusData.pumpRunningState.status)
             extended.put("Version", version)
             try {
                 extended.put("ActiveProfile", profileName)
