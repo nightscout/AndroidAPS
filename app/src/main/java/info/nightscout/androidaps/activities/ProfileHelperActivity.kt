@@ -5,9 +5,9 @@ import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.Menu
-import android.widget.PopupMenu
+import android.widget.ArrayAdapter
 import android.widget.TextView
+import com.google.common.collect.Lists
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.data.PureProfile
@@ -18,7 +18,6 @@ import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
 import info.nightscout.androidaps.utils.DateUtil
@@ -79,54 +78,40 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
             switchTab(1, typeSelected[1])
         }
 
-        binding.profileType.setOnClickListener {
-            PopupMenu(this, binding.profileType).apply {
-                menuInflater.inflate(R.menu.menu_profilehelper, menu)
-                setOnMenuItemClickListener { item ->
-                    binding.profileType.setText(item.title)
-                    when (item.itemId) {
-                        R.id.menu_default       -> switchTab(tabSelected, ProfileType.MOTOL_DEFAULT)
-                        R.id.menu_default_dpv   -> switchTab(tabSelected, ProfileType.DPV_DEFAULT)
-                        R.id.menu_current       -> switchTab(tabSelected, ProfileType.CURRENT)
-                        R.id.menu_available     -> switchTab(tabSelected, ProfileType.AVAILABLE_PROFILE)
-                        R.id.menu_profileswitch -> switchTab(tabSelected, ProfileType.PROFILE_SWITCH)
-                    }
-                    true
-                }
-                show()
+        val profileTypeList = Lists.newArrayList(
+            rh.gs(R.string.motoldefaultprofile),
+            rh.gs(R.string.dpvdefaultprofile),
+            rh.gs(R.string.currentprofile),
+            rh.gs(R.string.availableprofile),
+            rh.gs(R.string.careportal_profileswitch)
+        )
+        binding.profileType.setAdapter(ArrayAdapter(this, R.layout.spinner_centered, profileTypeList))
+
+        binding.profileType.setOnItemClickListener { _, _, _, _ ->
+            when (binding.profileType.text.toString()) {
+                rh.gs(R.string.motoldefaultprofile)      -> switchTab(tabSelected, ProfileType.MOTOL_DEFAULT)
+                rh.gs(R.string.dpvdefaultprofile)        -> switchTab(tabSelected, ProfileType.DPV_DEFAULT)
+                rh.gs(R.string.currentprofile)           -> switchTab(tabSelected, ProfileType.CURRENT)
+                rh.gs(R.string.availableprofile)         -> switchTab(tabSelected, ProfileType.AVAILABLE_PROFILE)
+                rh.gs(R.string.careportal_profileswitch) -> switchTab(tabSelected, ProfileType.PROFILE_SWITCH)
             }
         }
 
         // Active profile
         profileList = activePlugin.activeProfileSource.profile?.getProfileList() ?: ArrayList()
 
-        binding.availableProfileList.setOnClickListener {
-            PopupMenu(this, binding.availableProfileList).apply {
-                var order = 0
-                for (name in profileList) menu.add(Menu.NONE, order, order++, name)
-                setOnMenuItemClickListener { item ->
-                    binding.availableProfileList.setText(item.title)
-                    profileUsed[tabSelected] = item.itemId
-                    true
-                }
-                show()
-            }
+        binding.availableProfileList.setAdapter(ArrayAdapter(this, R.layout.spinner_centered, profileList))
+        binding.availableProfileList.setOnItemClickListener { _, _, index, _ ->
+            profileUsed[tabSelected] = index
         }
 
         // Profile switch
         profileSwitch = repository.getEffectiveProfileSwitchDataFromTime(dateUtil.now() - T.months(2).msecs(), true).blockingGet()
-
-        binding.profileswitchList.setOnClickListener {
-            PopupMenu(this, binding.profileswitchList).apply {
-                var order = 0
-                for (name in profileSwitch) menu.add(Menu.NONE, order, order++, name.originalCustomizedName)
-                setOnMenuItemClickListener { item ->
-                    binding.profileswitchList.setText(item.title)
-                    profileSwitchUsed[tabSelected] = item.itemId
-                    true
-                }
-                show()
-            }
+        
+        val profileswitchListNames = profileSwitch.map { it.originalCustomizedName }
+        binding.profileswitchList.setAdapter(ArrayAdapter(this, R.layout.spinner_centered, profileswitchListNames))
+        binding.profileswitchList.setOnItemClickListener { _, _, index, _ ->
+            profileSwitchUsed[tabSelected] = index
         }
 
         // Default profile
@@ -285,7 +270,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
 
         tabSelected = tab
         typeSelected[tabSelected] = newContent
-        binding.profileTypeTitle.defaultHintTextColor = ColorStateList.valueOf(rh.gac( this, if (tab == 0) R.attr.helperProfileColor else R.attr.examinedProfileColor))
+        binding.profileTypeTitle.defaultHintTextColor = ColorStateList.valueOf(rh.gac(this, if (tab == 0) R.attr.helperProfileColor else R.attr.examinedProfileColor))
 
         // show new content
         binding.profileType.setText(
@@ -295,7 +280,8 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
                 ProfileType.CURRENT           -> rh.gs(R.string.currentprofile)
                 ProfileType.AVAILABLE_PROFILE -> rh.gs(R.string.availableprofile)
                 ProfileType.PROFILE_SWITCH    -> rh.gs(R.string.careportal_profileswitch)
-            }
+            },
+            false
         )
         binding.defaultProfile.visibility = (newContent == ProfileType.MOTOL_DEFAULT || newContent == ProfileType.DPV_DEFAULT).toVisibility()
         binding.currentProfile.visibility = (newContent == ProfileType.CURRENT).toVisibility()
@@ -309,10 +295,12 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
         binding.basalPctFromTdd.value = pctUsed[tabSelected]
 
         binding.basalPctFromTddRow.visibility = (newContent == ProfileType.DPV_DEFAULT).toVisibility()
-        if (profileList.isNotEmpty())
-            binding.availableProfileList.setText(profileList[profileUsed[tabSelected]].toString())
-        if (profileSwitch.isNotEmpty())
-            binding.profileswitchList.setText(profileSwitch[profileSwitchUsed[tabSelected]].originalCustomizedName)
+        if (profileList.isNotEmpty()) {
+            binding.availableProfileList.setText(profileList[profileUsed[tabSelected]].toString(), false)
+        }
+        if (profileSwitch.isNotEmpty()) {
+            binding.profileswitchList.setText(profileSwitch[profileSwitchUsed[tabSelected]].originalCustomizedName, false)
+        }
     }
 
     private fun setBackgroundColorOnSelected(tab: Int) {
