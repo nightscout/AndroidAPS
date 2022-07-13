@@ -537,6 +537,8 @@
                 android:resource="@drawable/quick_wizard_tile_preview" />
         </service>
 
+        <service android:name=".comm.ExceptionService" android:process=":error"/>
+
         <receiver android:name=".complications.ComplicationTapBroadcastReceiver" />
 
         <activity

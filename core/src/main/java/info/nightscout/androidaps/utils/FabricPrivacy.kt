@@ -77,6 +77,10 @@ class FabricPrivacy @Inject constructor(
         }
     }
 
+    fun getInstance(): FirebaseCrashlytics {
+        return FirebaseCrashlytics.getInstance()
+    }
+
     // Crashlytics log message
     fun logMessage(message: String) {
         aapsLogger.info(LTag.CORE,"Crashlytics log message: $message")
