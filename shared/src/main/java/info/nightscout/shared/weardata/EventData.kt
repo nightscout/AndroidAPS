@@ -35,7 +35,18 @@ sealed class EventData : Event() {
         val model: String,
         val manufacturer: String,
         val product: String
-    ) : EventData()
+    ) : EventData() {
+
+        override fun equals(other: Any?): Boolean =
+            when (other) {
+                !is WearException -> false
+                else              -> timeStamp == other.timeStamp && fingerprint == other.fingerprint
+            }
+
+        override fun hashCode(): Int {
+            return Objects.hash(timeStamp, fingerprint)
+        }
+    }
 
     @Serializable
     data class Error(val timeStamp: Long) : EventData() // ignored
@@ -146,9 +157,9 @@ sealed class EventData : Event() {
 
         override fun equals(other: Any?): Boolean =
             when {
-                other !is SingleBg -> false
+                other !is SingleBg   -> false
                 color != other.color -> false
-                else -> timeStamp == other.timeStamp
+                else                 -> timeStamp == other.timeStamp
             }
 
         override fun hashCode(): Int {
