@@ -26,6 +26,18 @@ sealed class EventData : Event() {
     data class ActionPong(val timeStamp: Long, val apiLevel: Int) : EventData()
 
     @Serializable
+    data class WearException(
+        val timeStamp: Long,
+        val exception: ByteArray,
+        val board: String,
+        val fingerprint: String,
+        val sdk: String,
+        val model: String,
+        val manufacturer: String,
+        val product: String
+    ) : EventData()
+
+    @Serializable
     data class Error(val timeStamp: Long) : EventData() // ignored
 
     @Serializable
@@ -134,9 +146,9 @@ sealed class EventData : Event() {
 
         override fun equals(other: Any?): Boolean =
             when {
-                other !is SingleBg   -> false
+                other !is SingleBg -> false
                 color != other.color -> false
-                else                 -> timeStamp == other.timeStamp
+                else -> timeStamp == other.timeStamp
             }
 
         override fun hashCode(): Int {

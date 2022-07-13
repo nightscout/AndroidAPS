@@ -9,7 +9,7 @@ import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import info.nightscout.androidaps.comm.DataHandlerWear
 import info.nightscout.androidaps.comm.DataLayerListenerServiceWear
-import info.nightscout.androidaps.comm.ExceptionWear
+import info.nightscout.androidaps.comm.ExceptionHandlerWear
 import info.nightscout.androidaps.di.DaggerWearComponent
 import info.nightscout.androidaps.events.EventWearPreferenceChange
 import info.nightscout.androidaps.plugins.bus.RxBus
@@ -22,10 +22,11 @@ class Aaps : DaggerApplication(), OnSharedPreferenceChangeListener {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var dataHandlerWear: DataHandlerWear // instantiate only
+    @Inject lateinit var exceptionHandlerWear: ExceptionHandlerWear
 
     override fun onCreate() {
         super.onCreate()
-        ExceptionWear(this)
+        exceptionHandlerWear.register()
         aapsLogger.debug(LTag.WEAR, "onCreate")
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this)
         startService(Intent(this, DataLayerListenerServiceWear::class.java))

@@ -208,10 +208,6 @@
                     android:host="*"
                     android:pathPrefix="@string/path_rx_bridge"
                     android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="@string/path_log_exception"
-                    android:scheme="wear" />
             </intent-filter>
         </service>
         <service

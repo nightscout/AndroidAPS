@@ -26,9 +26,6 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
-import java.io.ByteArrayInputStream
-import java.io.IOException
-import java.io.ObjectInputStream
 import javax.inject.Inject
 
 class DataLayerListenerServiceMobile : WearableListenerService() {
@@ -62,7 +59,6 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
     private val disposable = CompositeDisposable()
 
     private val rxPath get() = getString(R.string.path_rx_bridge)
-    private val exceptionPath get() = getString(R.string.path_log_exception)
 
     override fun onCreate() {
         AndroidInjection.inject(this)
@@ -114,37 +110,12 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
 
         if (wearPlugin.isEnabled()) {
             when (messageEvent.path) {
-                rxPath        -> {
+                rxPath -> {
                     aapsLogger.debug(LTag.WEAR, "onMessageReceived rxPath: ${String(messageEvent.data)}")
                     val command = EventData.deserialize(String(messageEvent.data))
                     rxBus.send(command.also { it.sourceNodeId = messageEvent.sourceNodeId })
                 }
-
-                exceptionPath -> logWearException(messageEvent)
             }
-        }
-    }
-
-    private fun logWearException(messageEvent: MessageEvent) {
-        aapsLogger.debug(LTag.WEAR, "logWearException")
-        val map = DataMap.fromByteArray(messageEvent.data)
-        val bis = ByteArrayInputStream(map.getByteArray("exception"))
-        try {
-            val ois = ObjectInputStream(bis)
-            fabricPrivacy.getInstance().apply {
-                setCustomKey("wear_exception", true)
-                setCustomKey("wear_board", map.getString("board") ?: "unknown")
-                setCustomKey("wear_fingerprint", map.getString("fingerprint") ?: "unknown")
-                setCustomKey("wear_sdk", map.getString("sdk") ?: "unknown")
-                setCustomKey("wear_model", map.getString("model") ?: "unknown")
-                setCustomKey("wear_manufacturer", map.getString("manufacturer") ?: "unknown")
-                setCustomKey("wear_product", map.getString("product") ?: "unknown")
-            }
-            fabricPrivacy.logException(ois.readObject() as Throwable)
-        } catch (e: IOException) {
-            e.printStackTrace()
-        } catch (e: ClassNotFoundException) {
-            e.printStackTrace()
         }
     }
 
