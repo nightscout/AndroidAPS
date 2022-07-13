@@ -2,24 +2,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:parentTag="android.widget.LinearLayout">
 
     <!-- Unique ID -->
     <LinearLayout
         android:id="@+id/omnipod_common_overview_pod_unique_id_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:focusable="true">
+        android:focusable="true"
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1.5"
-            android:textAlignment="viewEnd"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
             android:text="@string/omnipod_common_overview_pod_unique_id"
+            android:textAlignment="viewEnd"
             android:textSize="14sp" />
 
         <TextView
@@ -38,9 +40,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textAlignment="viewStart"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
+            android:textAlignment="viewStart"
             android:textSize="14sp" />
     </LinearLayout>
 
@@ -49,17 +51,17 @@
         android:id="@+id/omnipod_common_overview_lot_number_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:focusable="true">
+        android:focusable="true"
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1.5"
-            android:textAlignment="viewEnd"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
             android:text="@string/omnipod_common_overview_lot_number"
+            android:textAlignment="viewEnd"
             android:textSize="14sp" />
 
         <TextView
@@ -78,9 +80,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textAlignment="viewStart"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
+            android:textAlignment="viewStart"
             android:textSize="14sp" />
     </LinearLayout>
 
@@ -88,17 +90,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:focusable="true">
+        android:focusable="true"
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1.5"
-            android:textAlignment="viewEnd"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
             android:text="@string/omnipod_common_overview_pod_sequence_number"
+            android:textAlignment="viewEnd"
             android:textSize="14sp" />
 
         <TextView
@@ -117,9 +119,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textAlignment="viewStart"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
+            android:textAlignment="viewStart"
             android:textSize="14sp" />
     </LinearLayout>
 
@@ -127,17 +129,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:focusable="true">
+        android:focusable="true"
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1.5"
-            android:textAlignment="viewEnd"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
             android:text="@string/omnipod_common_overview_firmware_version"
+            android:textAlignment="viewEnd"
             android:textSize="14sp" />
 
         <TextView
@@ -156,9 +158,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textAlignment="viewStart"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
+            android:textAlignment="viewStart"
             android:textSize="14sp" />
     </LinearLayout>
 
@@ -166,17 +168,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:focusable="true">
+        android:focusable="true"
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1.5"
-            android:textAlignment="viewEnd"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
             android:text="@string/omnipod_common_overview_time_on_pod"
+            android:textAlignment="viewEnd"
             android:textSize="14sp" />
 
         <TextView
@@ -195,9 +197,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textAlignment="viewStart"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
+            android:textAlignment="viewStart"
             android:textSize="14sp" />
 
     </LinearLayout>
@@ -206,17 +208,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:focusable="true">
+        android:focusable="true"
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1.5"
-            android:textAlignment="viewEnd"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
             android:text="@string/omnipod_common_overview_pod_expiry_date"
+            android:textAlignment="viewEnd"
             android:textSize="14sp" />
 
         <TextView
@@ -235,9 +237,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textAlignment="viewStart"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
+            android:textAlignment="viewStart"
             android:textSize="14sp" />
 
     </LinearLayout>
@@ -246,17 +248,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:focusable="true">
+        android:focusable="true"
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1.5"
-            android:textAlignment="viewEnd"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
             android:text="@string/omnipod_common_overview_pod_status"
+            android:textAlignment="viewEnd"
             android:textSize="14sp" />
 
         <TextView
@@ -275,10 +277,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textAlignment="viewStart"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
             android:text=""
+            android:textAlignment="viewStart"
             android:textSize="14sp" />
 
     </LinearLayout>
@@ -302,17 +304,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:focusable="true">
+        android:focusable="true"
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1.5"
-            android:textAlignment="viewEnd"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
             android:text="@string/omnipod_common_overview_last_connection"
+            android:textAlignment="viewEnd"
             android:textSize="14sp" />
 
         <TextView
@@ -331,9 +333,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textAlignment="viewStart"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
+            android:textAlignment="viewStart"
             android:textSize="14sp" />
 
     </LinearLayout>
@@ -350,17 +352,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:focusable="true">
+        android:focusable="true"
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1.5"
-            android:textAlignment="viewEnd"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
             android:text="@string/omnipod_common_overview_last_bolus"
+            android:textAlignment="viewEnd"
             android:textSize="14sp" />
 
         <TextView
@@ -379,9 +381,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textAlignment="viewStart"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
+            android:textAlignment="viewStart"
             android:textSize="14sp" />
 
     </LinearLayout>
@@ -398,17 +400,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:focusable="true">
+        android:focusable="true"
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1.5"
-            android:textAlignment="viewEnd"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
             android:text="@string/omnipod_common_overview_base_basal_rate"
+            android:textAlignment="viewEnd"
             android:textSize="14sp" />
 
         <TextView
@@ -427,9 +429,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textAlignment="viewStart"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
+            android:textAlignment="viewStart"
             android:textSize="14sp" />
 
     </LinearLayout>
@@ -446,17 +448,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:focusable="true">
+        android:focusable="true"
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1.5"
-            android:textAlignment="viewEnd"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
             android:text="@string/omnipod_common_overview_temp_basal_rate"
+            android:textAlignment="viewEnd"
             android:textSize="14sp" />
 
         <TextView
@@ -475,9 +477,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textAlignment="viewStart"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
+            android:textAlignment="viewStart"
             android:textSize="14sp" />
 
     </LinearLayout>
@@ -494,17 +496,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:focusable="true">
+        android:focusable="true"
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1.5"
-            android:textAlignment="viewEnd"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
             android:text="@string/omnipod_common_overview_reservoir"
+            android:textAlignment="viewEnd"
             android:textSize="14sp" />
 
         <TextView
@@ -523,9 +525,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textAlignment="viewStart"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
+            android:textAlignment="viewStart"
             android:textSize="14sp" />
 
     </LinearLayout>
@@ -542,17 +544,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:focusable="true">
+        android:focusable="true"
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1.5"
-            android:textAlignment="viewEnd"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
             android:text="@string/omnipod_common_overview_total_delivered"
+            android:textAlignment="viewEnd"
             android:textSize="14sp" />
 
         <TextView
@@ -571,9 +573,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textAlignment="viewStart"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
+            android:textAlignment="viewStart"
             android:textSize="14sp" />
 
     </LinearLayout>
@@ -590,17 +592,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:focusable="true">
+        android:focusable="true"
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1.5"
-            android:textAlignment="viewEnd"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
             android:text="@string/omnipod_common_overview_errors"
+            android:textAlignment="viewEnd"
             android:textSize="14sp" />
 
         <TextView
@@ -619,9 +621,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textAlignment="viewStart"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
+            android:textAlignment="viewStart"
             android:textSize="14sp" />
 
     </LinearLayout>
@@ -638,17 +640,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:focusable="true">
+        android:focusable="true"
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1.5"
-            android:textAlignment="viewEnd"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
             android:text="@string/omnipod_common_overview_pod_active_alerts"
+            android:textAlignment="viewEnd"
             android:textSize="14sp" />
 
         <TextView
@@ -667,9 +669,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textAlignment="viewStart"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
+            android:textAlignment="viewStart"
             android:textSize="14sp" />
 
     </LinearLayout>
@@ -691,4 +693,5 @@
         android:rotationX="180"
         android:rotationY="180"
         app:drawableTopCompat="@drawable/ic_pod" />
+
 </merge>

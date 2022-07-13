@@ -1,6 +1,5 @@
 @file:Suppress("DEPRECATION")
-
-package info.nightscout.androidaps.watchfaces
+package info.nightscout.androidaps.watchfaces.utils
 
 import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
@@ -13,14 +12,10 @@ import android.os.Vibrator
 import android.support.wearable.watchface.WatchFaceStyle
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.WindowInsets
 import android.view.WindowManager
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat
+import androidx.viewbinding.ViewBinding
 import com.ustwo.clockwise.common.WatchFaceTime
 import com.ustwo.clockwise.common.WatchMode
 import com.ustwo.clockwise.common.WatchShape
@@ -45,7 +40,6 @@ import info.nightscout.shared.weardata.EventData
 import info.nightscout.shared.weardata.EventData.ActionResendData
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
-import lecho.lib.hellocharts.view.LineChartView
 import javax.inject.Inject
 import kotlin.math.floor
 
@@ -55,6 +49,7 @@ import kotlin.math.floor
  * Refactored by dlvoy on 2019-11-2019
  * Refactored by MilosKozak 24/04/2022
  */
+
 abstract class BaseWatchFace : WatchFace() {
 
     @Inject lateinit var wearUtil: WearUtil
@@ -74,45 +69,10 @@ abstract class BaseWatchFace : WatchFace() {
     private val graphData get() = rawData.graphData
 
     // Layout
-    @LayoutRes abstract fun layoutResource(): Int
+    // @LayoutRes abstract fun layoutResource(): Int
+    abstract fun inflateLayout(inflater: LayoutInflater): ViewBinding
 
     private val displaySize = Point()
-    var mTime: TextView? = null
-    var mHour: TextView? = null
-    var mMinute: TextView? = null
-    var mSgv: TextView? = null
-    var mDirection: TextView? = null
-    var mTimestamp: TextView? = null
-    var mUploaderBattery: TextView? = null
-    var mRigBattery: TextView? = null
-    var mDelta: TextView? = null
-    var mAvgDelta: TextView? = null
-    var mStatus: TextView? = null
-    var mBasalRate: TextView? = null
-    var mIOB1: TextView? = null
-    var mIOB2: TextView? = null
-    var mCOB1: TextView? = null
-    var mCOB2: TextView? = null
-    var mBgi: TextView? = null
-    var mLoop: TextView? = null
-    private var mTimePeriod: TextView? = null
-    var mDay: TextView? = null
-    private var mDayName: TextView? = null
-    var mMonth: TextView? = null
-    private var isAAPSv2: View? = null
-    var mHighLight: TextView? = null
-    var mLowLight: TextView? = null
-    var mGlucoseDial: ImageView? = null
-    var mDeltaGauge: ImageView? = null
-    var mHourHand: ImageView? = null
-    var mMinuteHand: ImageView? = null
-    var mRelativeLayout: ViewGroup? = null
-    var mLinearLayout: LinearLayout? = null
-    var mLinearLayout2: LinearLayout? = null
-    private var mDate: LinearLayout? = null
-    private var mChartTap: LinearLayout? = null // Steampunk only
-    private var mMainMenuTap: LinearLayout? = null // Steampunk,Digital  only
-    var chart: LineChartView? = null
 
     var ageLevel = 1
     var loopLevel = -1
@@ -148,10 +108,12 @@ abstract class BaseWatchFace : WatchFace() {
     private lateinit var mTimePaint: Paint
     private lateinit var mSvgPaint: Paint
     private lateinit var mDirectionPaint: Paint
+    private lateinit var binding: WatchfaceViewAdapter
 
     private var mLastSvg = ""
     private var mLastDirection = ""
     private var mYOffset = 0f
+
     override fun onCreate() {
         // Not derived from DaggerService, do injection here
         AndroidInjection.inject(this)
@@ -188,13 +150,17 @@ abstract class BaseWatchFace : WatchFace() {
         persistence.turnOff()
         setupBatteryReceiver()
         setupSimpleUi()
-        layoutView = (getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(layoutResource(), null)
+
+        val inflater = (getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater)
+        val bindLayout = inflateLayout(inflater)
+        binding = WatchfaceViewAdapter.getBinding(bindLayout)
+        layoutView = binding.root
         performViewSetup()
         rxBus.send(EventWearToMobile(ActionResendData("BaseWatchFace::onCreate")))
     }
 
     override fun onTapCommand(tapType: Int, x: Int, y: Int, eventTime: Long) {
-        chart?.let { chart ->
+        binding.chart?.let { chart ->
             if (tapType == TAP_TYPE_TAP && x >= chart.left && x <= chart.right && y >= chart.top && y <= chart.bottom) {
                 if (eventTime - chartTapTime < 800) {
                     changeChartTimeframe()
@@ -203,7 +169,7 @@ abstract class BaseWatchFace : WatchFace() {
                 return
             }
         }
-        mSgv?.let { mSgv ->
+        binding.sgv?.let { mSgv ->
             val extra = (mSgv.right - mSgv.left) / 2
             if (tapType == TAP_TYPE_TAP && x + extra >= mSgv.left && x - extra <= mSgv.right && y >= mSgv.top && y <= mSgv.bottom) {
                 if (eventTime - sgvTapTime < 800) {
@@ -212,7 +178,7 @@ abstract class BaseWatchFace : WatchFace() {
                 sgvTapTime = eventTime
             }
         }
-        mChartTap?.let { mChartTap ->
+        binding.chartZoomTap?.let { mChartTap ->
             if (tapType == TAP_TYPE_TAP && x >= mChartTap.left && x <= mChartTap.right && y >= mChartTap.top && y <= mChartTap.bottom) {
                 if (eventTime - chartTapTime < 800) {
                     changeChartTimeframe()
@@ -221,7 +187,7 @@ abstract class BaseWatchFace : WatchFace() {
                 return
             }
         }
-        mMainMenuTap?.let { mMainMenuTap ->
+        binding.mainMenuTap?.let { mMainMenuTap ->
             if (tapType == TAP_TYPE_TAP && x >= mMainMenuTap.left && x <= mMainMenuTap.right && y >= mMainMenuTap.top && y <= mMainMenuTap.bottom) {
                 if (eventTime - mainMenuTapTime < 800) {
                     startActivity(Intent(this, MainMenuActivity::class.java).also { it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })
@@ -288,42 +254,6 @@ abstract class BaseWatchFace : WatchFace() {
     }
 
     private fun performViewSetup() {
-        mTime = layoutView?.findViewById(R.id.watch_time)
-        mHour = layoutView?.findViewById(R.id.hour)
-        mMinute = layoutView?.findViewById(R.id.minute)
-        mDay = layoutView?.findViewById(R.id.day)
-        mDayName = layoutView?.findViewById(R.id.dayname)
-        mMonth = layoutView?.findViewById(R.id.month)
-        mTimePeriod = layoutView?.findViewById(R.id.timePeriod)
-        mDate = layoutView?.findViewById(R.id.date_time)
-        mLoop = layoutView?.findViewById(R.id.loop)
-        mSgv = layoutView?.findViewById(R.id.sgv)
-        mDirection = layoutView?.findViewById(R.id.direction)
-        mTimestamp = layoutView?.findViewById(R.id.timestamp)
-        mIOB1 = layoutView?.findViewById(R.id.iob_text)
-        mIOB2 = layoutView?.findViewById(R.id.iobView)
-        mCOB1 = layoutView?.findViewById(R.id.cob_text)
-        mCOB2 = layoutView?.findViewById(R.id.cobView)
-        mBgi = layoutView?.findViewById(R.id.bgiView)
-        mStatus = layoutView?.findViewById(R.id.externaltstatus)
-        mBasalRate = layoutView?.findViewById(R.id.tmpBasal)
-        mUploaderBattery = layoutView?.findViewById(R.id.uploader_battery)
-        mRigBattery = layoutView?.findViewById(R.id.rig_battery)
-        mDelta = layoutView?.findViewById(R.id.delta)
-        mAvgDelta = layoutView?.findViewById(R.id.avgdelta)
-        isAAPSv2 = layoutView?.findViewById(R.id.AAPSv2)
-        mHighLight = layoutView?.findViewById(R.id.highLight)
-        mLowLight = layoutView?.findViewById(R.id.lowLight)
-        mRelativeLayout = layoutView?.findViewById(R.id.main_layout)
-        mLinearLayout = layoutView?.findViewById(R.id.secondary_layout)
-        mLinearLayout2 = layoutView?.findViewById(R.id.tertiary_layout)
-        mGlucoseDial = layoutView?.findViewById(R.id.glucose_dial)
-        mDeltaGauge = layoutView?.findViewById(R.id.delta_pointer)
-        mHourHand = layoutView?.findViewById(R.id.hour_hand)
-        mMinuteHand = layoutView?.findViewById(R.id.minute_hand)
-        mChartTap = layoutView?.findViewById(R.id.chart_zoom_tap)
-        mMainMenuTap = layoutView?.findViewById(R.id.main_menu_tap)
-        chart = layoutView?.findViewById(R.id.chart)
         layoutSet = true
         setupCharts()
         setDataFields()
@@ -364,10 +294,10 @@ abstract class BaseWatchFace : WatchFace() {
             onDrawSimpleUi(canvas)
         } else {
             if (layoutSet) {
-                mRelativeLayout?.measure(specW, specH)
+                binding.mainLayout.measure(specW, specH)
                 val y = if (forceSquareCanvas) displaySize.x else displaySize.y // Square Steampunk
-                mRelativeLayout?.layout(0, 0, displaySize.x, y)
-                mRelativeLayout?.draw(canvas)
+                binding.mainLayout.layout(0, 0, displaySize.x, y)
+                binding.mainLayout.draw(canvas)
             }
         }
     }
@@ -417,6 +347,7 @@ abstract class BaseWatchFace : WatchFace() {
             return status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL
         }
 
+    @SuppressLint("MissingPermission")
     @Suppress("DEPRECATION")
     private fun checkVibrateHourly(oldTime: WatchFaceTime, newTime: WatchFaceTime) {
         val hourlyVibratePref = sp.getBoolean(R.string.key_vibrate_hourly, false)
@@ -431,54 +362,54 @@ abstract class BaseWatchFace : WatchFace() {
     @SuppressLint("SetTextI18n")
     open fun setDataFields() {
         setDateAndTime()
-        mSgv?.text = singleBg.sgvString
-        mSgv?.visibility = sp.getBoolean(R.string.key_show_bg, true).toVisibilityKeepSpace()
+        binding.sgv?.text = singleBg.sgvString
+        binding.sgv?.visibility = sp.getBoolean(R.string.key_show_bg, true).toVisibilityKeepSpace()
         strikeThroughSgvIfNeeded()
-        mDirection?.text = "${singleBg.slopeArrow}\uFE0E"
-        mDirection?.visibility = sp.getBoolean(R.string.key_show_direction, true).toVisibility()
-        mDelta?.text = singleBg.delta
-        mDelta?.visibility = sp.getBoolean(R.string.key_show_delta, true).toVisibility()
-        mAvgDelta?.text = singleBg.avgDelta
-        mAvgDelta?.visibility = sp.getBoolean(R.string.key_show_avg_delta, true).toVisibility()
-        mCOB1?.visibility = sp.getBoolean(R.string.key_show_cob, true).toVisibility()
-        mCOB2?.text = status.cob
-        mCOB2?.visibility = sp.getBoolean(R.string.key_show_cob, true).toVisibility()
-        mIOB1?.visibility = sp.getBoolean(R.string.key_show_iob, true).toVisibility()
-        mIOB2?.visibility = sp.getBoolean(R.string.key_show_iob, true).toVisibility()
-        mIOB1?.text = if (status.detailedIob) status.iobSum else getString(R.string.activity_IOB)
-        mIOB2?.text = if (status.detailedIob) status.iobDetail else status.iobSum
-        mTimestamp?.visibility = sp.getBoolean(R.string.key_show_ago, true).toVisibility()
-        mTimestamp?.text = readingAge(if (isAAPSv2 != null) true else sp.getBoolean(R.string.key_show_external_status, true))
-        mUploaderBattery?.visibility = sp.getBoolean(R.string.key_show_uploader_battery, true).toVisibility()
-        mUploaderBattery?.text =
+        binding.direction?.text = "${singleBg.slopeArrow}\uFE0E"
+        binding.direction?.visibility = sp.getBoolean(R.string.key_show_direction, true).toVisibility()
+        binding.delta?.text = singleBg.delta
+        binding.delta?.visibility = sp.getBoolean(R.string.key_show_delta, true).toVisibility()
+        binding.avgDelta?.text = singleBg.avgDelta
+        binding.avgDelta?.visibility = sp.getBoolean(R.string.key_show_avg_delta, true).toVisibility()
+        binding.cob1?.visibility = sp.getBoolean(R.string.key_show_cob, true).toVisibility()
+        binding.cob2?.text = status.cob
+        binding.cob2?.visibility = sp.getBoolean(R.string.key_show_cob, true).toVisibility()
+        binding.iob1?.visibility = sp.getBoolean(R.string.key_show_iob, true).toVisibility()
+        binding.iob2?.visibility = sp.getBoolean(R.string.key_show_iob, true).toVisibility()
+        binding.iob1?.text = if (status.detailedIob) status.iobSum else getString(R.string.activity_IOB)
+        binding.iob2?.text = if (status.detailedIob) status.iobDetail else status.iobSum
+        binding.timestamp.visibility = sp.getBoolean(R.string.key_show_ago, true).toVisibility()
+        binding.timestamp.text = readingAge(if (binding.AAPSv2 != null) true else sp.getBoolean(R.string.key_show_external_status, true))
+        binding.uploaderBattery?.visibility = sp.getBoolean(R.string.key_show_uploader_battery, true).toVisibility()
+        binding.uploaderBattery?.text =
             when {
-                isAAPSv2 != null                                       -> status.battery + "%"
+                binding.AAPSv2 != null                                       -> status.battery + "%"
                 sp.getBoolean(R.string.key_show_external_status, true) -> "U: ${status.battery}%"
                 else                                                   -> "Uploader: ${status.battery}%"
             }
-        mRigBattery?.visibility = sp.getBoolean(R.string.key_show_rig_battery, false).toVisibility()
-        mRigBattery?.text = status.rigBattery
-        mBasalRate?.text = status.currentBasal
-        mBasalRate?.visibility = sp.getBoolean(R.string.key_show_temp_basal, true).toVisibility()
-        mBgi?.text = status.bgi
-        mBgi?.visibility = status.showBgi.toVisibility()
-        mStatus?.text = status.externalStatus
-        mStatus?.visibility = sp.getBoolean(R.string.key_show_external_status, true).toVisibility()
-        mLoop?.visibility = sp.getBoolean(R.string.key_show_external_status, true).toVisibility()
+        binding.rigBattery?.visibility = sp.getBoolean(R.string.key_show_rig_battery, false).toVisibility()
+        binding.rigBattery?.text = status.rigBattery
+        binding.basalRate?.text = status.currentBasal
+        binding.basalRate?.visibility = sp.getBoolean(R.string.key_show_temp_basal, true).toVisibility()
+        binding.bgi?.text = status.bgi
+        binding.bgi?.visibility = status.showBgi.toVisibility()
+        binding.status?.text = status.externalStatus
+        binding.status?.visibility = sp.getBoolean(R.string.key_show_external_status, true).toVisibility()
+        binding.loop?.visibility = sp.getBoolean(R.string.key_show_external_status, true).toVisibility()
         if (status.openApsStatus != -1L) {
             val minutes = ((System.currentTimeMillis() - status.openApsStatus) / 1000 / 60).toInt()
-            mLoop?.text = "$minutes'"
+            binding.loop?.text = "$minutes'"
             if (minutes > 14) {
                 loopLevel = 0
-                mLoop?.setBackgroundResource(R.drawable.loop_red_25)
+                binding.loop?.setBackgroundResource(R.drawable.loop_red_25)
             } else {
                 loopLevel = 1
-                mLoop?.setBackgroundResource(R.drawable.loop_green_25)
+                binding.loop?.setBackgroundResource(R.drawable.loop_green_25)
             }
         } else {
             loopLevel = -1
-            mLoop?.text = "-"
-            mLoop?.setBackgroundResource(R.drawable.loop_grey_25)
+            binding.loop?.text = "-"
+            binding.loop?.setBackgroundResource(R.drawable.loop_grey_25)
         }
         setColor()
     }
@@ -491,15 +422,15 @@ abstract class BaseWatchFace : WatchFace() {
     }
 
     private fun setDateAndTime() {
-        mTime?.text = dateUtil.timeString()
-        mHour?.text = dateUtil.hourString()
-        mMinute?.text = dateUtil.minuteString()
-        mDate?.visibility = sp.getBoolean(R.string.key_show_date, false).toVisibility()
-        mDayName?.text = dateUtil.dayNameString()
-        mDay?.text = dateUtil.dayString()
-        mMonth?.text = dateUtil.monthString()
-        mTimePeriod?.visibility = android.text.format.DateFormat.is24HourFormat(this).not().toVisibility()
-        mTimePeriod?.text = dateUtil.amPm()
+        binding.time?.text = dateUtil.timeString()
+        binding.hour?.text = dateUtil.hourString()
+        binding.minute?.text = dateUtil.minuteString()
+        binding.dateTime?.visibility = sp.getBoolean(R.string.key_show_date, false).toVisibility()
+        binding.dayName?.text = dateUtil.dayNameString()
+        binding.day?.text = dateUtil.dayString()
+        binding.month?.text = dateUtil.monthString()
+        binding.timePeriod?.visibility = android.text.format.DateFormat.is24HourFormat(this).not().toVisibility()
+        binding.timePeriod?.text = dateUtil.amPm()
     }
 
     private fun setColor() {
@@ -512,7 +443,8 @@ abstract class BaseWatchFace : WatchFace() {
     }
 
     private fun strikeThroughSgvIfNeeded() {
-        mSgv?.let { mSgv ->
+        @Suppress("DEPRECATION")
+        binding.sgv?.let { mSgv ->
             if (ageLevel() <= 0 && singleBg.timeStamp > 0) mSgv.paintFlags = mSgv.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
             else mSgv.paintFlags = mSgv.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
         }
@@ -559,7 +491,7 @@ abstract class BaseWatchFace : WatchFace() {
         if (isSimpleUi) {
             return
         }
-        if (chart != null && graphData.entries.size > 0) {
+        if (binding.chart != null && graphData.entries.size > 0) {
             val timeframe = sp.getInt(R.string.key_chart_time_frame, 3)
             val bgGraphBuilder =
                 if (lowResMode)
@@ -572,8 +504,8 @@ abstract class BaseWatchFace : WatchFace() {
                         sp, dateUtil, graphData.entries, treatmentData.predictions, treatmentData.temps, treatmentData.basals, treatmentData.boluses,
                         pointSize, highColor, lowColor, midColor, gridColor, basalBackgroundColor, basalCenterColor, bolusColor, Color.GREEN, timeframe
                     )
-            chart?.lineChartData = bgGraphBuilder.lineData()
-            chart?.isViewportCalculationEnabled = true
+            binding.chart?.lineChartData = bgGraphBuilder.lineData()
+            binding.chart?.isViewportCalculationEnabled = true
         }
     }
 

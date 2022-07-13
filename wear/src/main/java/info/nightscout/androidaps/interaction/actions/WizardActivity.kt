@@ -44,13 +44,9 @@ class WizardActivity : ViewSelectorActivity() {
             col == 0                  -> {
                 val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, container, true)
                 val view = viewAdapter.root
-                val maxCarbs = sp.getInt(getString(R.string.key_treatments_safety_max_carbs), 48)
-                editCarbs = if (editCarbs == null) {
-                    PlusMinusEditText(viewAdapter, 0.0, 0.0, maxCarbs.toDouble(), stepValues, DecimalFormat("0"), false, getString(R.string.action_carbs))
-                } else {
-                    val def = SafeParse.stringToDouble(editCarbs?.editText?.text.toString())
-                    PlusMinusEditText(viewAdapter, def, 0.0, maxCarbs.toDouble(), 1.0, DecimalFormat("0"), false, getString(R.string.action_carbs))
-                }
+                val maxCarbs = sp.getInt(getString(R.string.key_treatments_safety_max_carbs), 48).toDouble()
+                val initValue = SafeParse.stringToDouble(editCarbs?.editText?.text.toString(), 0.0)
+                editCarbs = PlusMinusEditText(viewAdapter, initValue, 0.0, maxCarbs, stepValues, DecimalFormat("0"), false, getString(R.string.action_carbs))
                 container.addView(view)
                 view.requestFocus()
                 view
@@ -59,13 +55,9 @@ class WizardActivity : ViewSelectorActivity() {
             col == 1 && hasPercentage -> {
                 val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, container, false)
                 val view = viewAdapter.root
-                val percentage = sp.getInt(getString(R.string.key_bolus_wizard_percentage), 100)
-                editPercentage = if (editPercentage == null) {
-                    PlusMinusEditText(viewAdapter, percentage.toDouble(), 50.0, 150.0, 1.0, DecimalFormat("0"), false, getString(R.string.action_percentage))
-                } else {
-                    val def = SafeParse.stringToDouble(editPercentage?.editText?.text.toString())
-                    PlusMinusEditText(viewAdapter, def, 50.0, 150.0, 1.0, DecimalFormat("0"), false, getString(R.string.action_percentage))
-                }
+                val percentage = sp.getInt(getString(R.string.key_bolus_wizard_percentage), 100).toDouble()
+                val initValue = SafeParse.stringToDouble(editPercentage?.editText?.text.toString(), percentage)
+                editPercentage = PlusMinusEditText(viewAdapter, initValue, 50.0, 150.0, 1.0, DecimalFormat("0"), false, getString(R.string.action_percentage))
                 container.addView(view)
                 view
             }

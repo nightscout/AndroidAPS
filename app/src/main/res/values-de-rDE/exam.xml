@@ -134,7 +134,6 @@
     <string name="wronginsulin_prime">Gib einen Teil-Bolus des \'nicht erhaltenen\' Insulins mit Spritze / Pen oder durch Befüllen der Kanüle.</string>
     <string name="wronginsulin_donothing">Unternimm nichts und lass AndroidAPS die entstehenden hohen Glukosewerte korrigieren.</string>
     <string name="iob_label">Aktives Insulin (IOB)</string>
-    <string name="iob_which">Kreuze alle richtigen Antworten an.</string>
     <string name="iob_value">IOB wird von den abgegebenen temporären Basalraten beeinflusst.</string>
     <string name="iob_hightemp">Eine hohe temporäre Basalrate wird nicht abgegeben, wenn der BZ unterhalb des Zielwerts liegt.</string>
     <string name="iob_negiob">Ein negativer IOB über einen längeren Zeitraum bei fehlender Bewegung deutet darauf hin, dass Dein Profil zu stark ist und weniger Insulin in Deinen Einstellungen benötigt wird.</string>

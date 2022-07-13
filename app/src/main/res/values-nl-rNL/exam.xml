@@ -137,7 +137,6 @@
     <string name="wronginsulin_prime">Bolus een deel van je berekende \'gemiste\' insuline door een injectiespuit/pen of door de uitvulfunctie te gebruiken.</string>
     <string name="wronginsulin_donothing">Doe niets en laat AndroidAPS de resulterende hoge bloedglucosespiegel corrigeren.</string>
     <string name="iob_label">Insuline aan boord (IOB)</string>
-    <string name="iob_which">Selecteer alle juiste antwoorden.</string>
     <string name="iob_value">De IOB-waarde wordt beïnvloed door eerdere tijdelijke basaalstanden.</string>
     <string name="iob_hightemp">Een hoge tijdelijke basaal zal niet worden ingesteld wanneer je bloedsuiker onder het streefdoel ligt.</string>
     <string name="iob_negiob">Negatieve IOB voor een aanzienlijke periode vrij van inspanning, suggereert dat je profiel te hoog is ingesteld, dus dat er minder insuline nodig is.</string>

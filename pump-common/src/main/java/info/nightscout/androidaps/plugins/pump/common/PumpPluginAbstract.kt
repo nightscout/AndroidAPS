@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.text.format.DateFormat
-import com.google.gson.GsonBuilder
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.PumpEnactResult
@@ -26,6 +25,8 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter.to0Decimal
 import info.nightscout.androidaps.utils.DecimalFormatter.to2Decimal
 import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncStorage
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
@@ -39,9 +40,9 @@ import org.json.JSONObject
  */
 // When using this class, make sure that your first step is to create mConnection (see MedtronicPumpPlugin)
 abstract class PumpPluginAbstract protected constructor(
-    pluginDescription: PluginDescription?,
+    pluginDescription: PluginDescription,
     pumpType: PumpType,
-    injector: HasAndroidInjector?,
+    injector: HasAndroidInjector,
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
     commandQueue: CommandQueue,
@@ -53,10 +54,10 @@ abstract class PumpPluginAbstract protected constructor(
     var dateUtil: DateUtil,
     var aapsSchedulers: AapsSchedulers,
     var pumpSync: PumpSync,
-    var pumpSyncStorage: info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncStorage
-) : PumpPluginBase(pluginDescription!!, injector!!, aapsLogger, rh, commandQueue), Pump, Constraints, info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncEntriesCreator {
+    var pumpSyncStorage: PumpSyncStorage
+) : PumpPluginBase(pluginDescription, injector, aapsLogger, rh, commandQueue), Pump, Constraints, info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncEntriesCreator {
 
-    val disposable = CompositeDisposable()
+    private val disposable = CompositeDisposable()
 
     // Pump capabilities
     final override var pumpDescription = PumpDescription()
@@ -242,8 +243,7 @@ abstract class PumpPluginAbstract protected constructor(
         val extended = JSONObject()
         try {
             battery.put("percent", pumpStatusData.batteryRemaining)
-// TODO check this            status.put("status", pumpStatusData.pumpStatusType.status)
-            status.put("status", pumpStatusData.pumpRunningState.status)
+            status.put("status", pumpStatusData.pumpStatusType.status)
             extended.put("Version", version)
             try {
                 extended.put("ActiveProfile", profileName)
@@ -277,50 +277,23 @@ abstract class PumpPluginAbstract protected constructor(
     override fun shortStatus(veryShort: Boolean): String {
         var ret = ""
 
-        if (pumpStatusData.lastConnection == 0L) {
-            ret += "LastConn: never\n"
+        ret += if (pumpStatusData.lastConnection == 0L) {
+            "LastConn: never\n"
         } else {
-            val agoMsec = System.currentTimeMillis() - pumpStatusData.lastConnection
-            val agoMin = (agoMsec / 60.0 / 1000.0).toInt()
-            ret += "LastConn: $agoMin min ago\n"
+            val agoMin = ((System.currentTimeMillis() - pumpStatusData.lastConnection) / 60.0 / 1000.0).toInt()
+            "LastConn: $agoMin min ago\n"
         }
 
-        if (pumpStatusData.lastBolusTime != null && pumpStatusData.lastBolusTime!!.time != 0L) {
-            ret += """
-                LastBolus: ${to2Decimal(pumpStatusData.lastBolusAmount!!)}U @${DateFormat.format("HH:mm", pumpStatusData.lastBolusTime)}
-                
-                """.trimIndent()
+        pumpStatusData.lastBolusTime?.let {
+            if (it.time != 0L) {
+                ret += "LastBolus: ${to2Decimal(pumpStatusData.lastBolusAmount!!)}U @${DateFormat.format("HH:mm", it)}\n"
+            }
         }
-        val activeTemp = pumpSync.expectedPumpState().temporaryBasal
-        if (activeTemp != null) {
-            ret += """
-                Temp: ${activeTemp.toStringFull(dateUtil)}
-                
-                """.trimIndent()
-        }
-        val activeExtendedBolus = pumpSync.expectedPumpState().extendedBolus
-        if (activeExtendedBolus != null) {
-            ret += """
-                Extended: ${activeExtendedBolus.toStringFull(dateUtil)}
-                
-                """.trimIndent()
-        }
-        // if (!veryShort) {
-        // ret += "TDD: " + DecimalFormatter.to0Decimal(pumpStatus.dailyTotalUnits) + " / "
-        // + pumpStatus.maxDailyTotalUnits + " U\n";
-        // }
-        ret += """
-            IOB: ${pumpStatusData.iob}U
-            
-            """.trimIndent()
-        ret += """
-            Reserv: ${to0Decimal(pumpStatusData.reservoirRemainingUnits)}U
-            
-            """.trimIndent()
-        ret += """
-            Batt: ${pumpStatusData.batteryRemaining}
-            
-            """.trimIndent()
+        pumpSync.expectedPumpState().temporaryBasal?.let { ret += "Temp: ${it.toStringFull(dateUtil)}\n" }
+        pumpSync.expectedPumpState().extendedBolus?.let { ret += "Extended: ${it.toStringFull(dateUtil)}\n" }
+        ret += "IOB: ${pumpStatusData.iob}U\n"
+        ret += "Reserv: ${to0Decimal(pumpStatusData.reservoirRemainingUnits)}U\n"
+        ret += "Batt: ${pumpStatusData.batteryRemaining}\n"
         return ret
     }
 

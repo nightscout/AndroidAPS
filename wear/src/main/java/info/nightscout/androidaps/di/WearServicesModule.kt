@@ -6,6 +6,7 @@ import info.nightscout.androidaps.comm.DataLayerListenerServiceWear
 import info.nightscout.androidaps.complications.*
 import info.nightscout.androidaps.tile.*
 import info.nightscout.androidaps.watchfaces.*
+import info.nightscout.androidaps.watchfaces.utils.BaseWatchFace
 
 @Module
 @Suppress("unused")
