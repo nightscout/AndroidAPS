@@ -1,12 +1,12 @@
 package info.nightscout.androidaps.activities
 
 import android.annotation.SuppressLint
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import com.google.android.material.tabs.TabLayout
 import com.google.common.collect.Lists
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.ProfileSealed
@@ -71,12 +71,14 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
         binding = ActivityProfilehelperBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.menu1.setOnClickListener {
-            switchTab(0, typeSelected[0])
-        }
-        binding.menu2.setOnClickListener {
-            switchTab(1, typeSelected[1])
-        }
+        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                switchTab(tab.position, typeSelected[tab.position])
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
+            override fun onTabReselected(tab: TabLayout.Tab) {}
+        })
 
         val profileTypeList = Lists.newArrayList(
             rh.gs(R.string.motoldefaultprofile),
@@ -107,7 +109,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
 
         // Profile switch
         profileSwitch = repository.getEffectiveProfileSwitchDataFromTime(dateUtil.now() - T.months(2).msecs(), true).blockingGet()
-        
+
         val profileswitchListNames = profileSwitch.map { it.originalCustomizedName }
         binding.profileswitchList.setAdapter(ArrayAdapter(this, R.layout.spinner_centered, profileswitchListNames))
         binding.profileswitchList.setOnItemClickListener { _, _, index, _ ->
@@ -235,7 +237,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
     }
 
     private fun getProfile(age: Double, tdd: Double, weight: Double, basalPct: Double, tab: Int): PureProfile? =
-        try { // profile must not exist
+        try { // Profile must not exist
             when (typeSelected[tab]) {
                 ProfileType.MOTOL_DEFAULT     -> defaultProfile.profile(age, tdd, weight, profileFunction.getUnits())
                 ProfileType.DPV_DEFAULT       -> defaultProfileDPV.profile(age, tdd, basalPct, profileFunction.getUnits())
@@ -264,15 +266,13 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
     }
 
     private fun switchTab(tab: Int, newContent: ProfileType, storeOld: Boolean = true) {
-        setBackgroundColorOnSelected(tab)
         // Store values for selected tab. listBox values are stored on selection change
         if (storeOld) storeValues()
 
         tabSelected = tab
         typeSelected[tabSelected] = newContent
-        binding.profileTypeTitle.defaultHintTextColor = ColorStateList.valueOf(rh.gac(this, if (tab == 0) R.attr.helperProfileColor else R.attr.examinedProfileColor))
 
-        // show new content
+        // Show new content
         binding.profileType.setText(
             when (typeSelected[tabSelected]) {
                 ProfileType.MOTOL_DEFAULT     -> rh.gs(R.string.motoldefaultprofile)
@@ -288,7 +288,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
         binding.availableProfile.visibility = (newContent == ProfileType.AVAILABLE_PROFILE).toVisibility()
         binding.profileSwitch.visibility = (newContent == ProfileType.PROFILE_SWITCH).toVisibility()
 
-        // restore selected values
+        // Restore selected values
         binding.age.value = ageUsed[tabSelected]
         binding.weight.value = weightUsed[tabSelected]
         binding.tdd.value = tddUsed[tabSelected]
@@ -303,8 +303,4 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
         }
     }
 
-    private fun setBackgroundColorOnSelected(tab: Int) {
-        binding.menu1.setBackgroundColor(rh.gac(this, if (tab == 1) R.attr.defaultBackground else R.attr.helperProfileColor))
-        binding.menu2.setBackgroundColor(rh.gac(this, if (tab == 0) R.attr.defaultBackground else R.attr.examinedProfileColor))
-    }
 }
