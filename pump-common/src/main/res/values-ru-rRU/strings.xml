@@ -4,7 +4,7 @@
     <string name="pump_operation_not_supported_by_pump_driver">Операция не поддерживается помпой и/или драйвером.</string>
     <string name="pump_operation_not_yet_supported_by_pump">Операция ЕЩЕ не поддерживается помпой.</string>
     <string name="common_resultok">OK</string>
-    <!-- PumoCommon - Pump Status -->
+    <!-- PumpCommon - Pump Status -->
     <string name="pump_status_never_contacted">Никогда не подключалась</string>
     <string name="pump_status_waking_up">Пробуждение</string>
     <string name="pump_status_error_comm">Ошибка связи</string>
@@ -24,4 +24,9 @@
     <string name="history_group_prime">Заполнение</string>
     <string name="history_group_alarm">Оповещения</string>
     <string name="history_group_glucose">Гликемия</string>
+    <!-- Time -->
+    <!-- BLE Config -->
+    <!-- BLE Errors -->
+    <!-- Pump Error -->
+    <!-- Pump History -->
 </resources>
