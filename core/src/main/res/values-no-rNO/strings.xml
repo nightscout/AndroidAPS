@@ -488,6 +488,7 @@
     <string name="autotune_run_without_autoswitch">Autotune utført uten profilbytte</string>
     <string name="autotune_run_with_autoswitch">Autotune utført og profil automatisk skiftet ut</string>
     <string name="autotune_run_with_error">Feil oppdaget under siste Autotune kjøring</string>
+    <string name="autotune_run_cancelled">Autotune kjører allerede. Kjøring avbrutt</string>
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dager</item>

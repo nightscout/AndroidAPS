@@ -1033,6 +1033,7 @@
     <string name="a11y_only_on_watch">על השעון בלבד</string>
     <string name="a11y_only_on_phone">על הטלפון בלבד</string>
     <string name="a11y_drag_and_drop_handle">ידית גרירה</string>
+    <string name="search">חיפוש</string>
     <!-- Aidex Cgms -->
     <string name="aidex">GlucoRx Aidex</string>
     <string name="aidex_short">Aidex</string>

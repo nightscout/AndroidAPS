@@ -1037,6 +1037,7 @@
     <string name="a11y_only_on_watch">Sólo en reloj</string>
     <string name="a11y_only_on_phone">Sólo en teléfono</string>
     <string name="a11y_drag_and_drop_handle">Arrastrar y soltar </string>
+    <string name="search">Buscar</string>
     <!-- Aidex Cgms -->
     <string name="aidex">GlucoRx Aidex</string>
     <string name="aidex_short">Aidex</string>

@@ -488,6 +488,7 @@
     <string name="autotune_run_without_autoswitch">כוונון אוטומטי מופעל ללא החלפת פרופיל</string>
     <string name="autotune_run_with_autoswitch">כוונון אוטומטי הופעל והפרופיל הוחלף אוטומטית</string>
     <string name="autotune_run_with_error">שגיאה במהלך הכיוונון האוטומטי האחרון</string>
+    <string name="autotune_run_cancelled">נמצאה הפעלה נוספת של הכוונון האוטומטי ברקע, ההפעלה מבוטלת</string>
     <plurals name="days">
         <item quantity="one">%1$d יום</item>
         <item quantity="two">%1$d ימים</item>

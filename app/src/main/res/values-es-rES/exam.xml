@@ -138,10 +138,16 @@
     <string name="wronginsulin_donothing">No haga nada y permite que AndroidAPS corrija cualquier nivel alto de glucosa en la sangre resultante.</string>
     <string name="cob_label">Carbohidratos activos (COB)</string>
     <string name="cob_question">¿Cómo afecta el cambio del valor ISF al cálculo de COB?</string>
+    <string name="cob_longer">Incrementar el ISF hará que los carbohidratos se absorban más lentamente</string>
+    <string name="cob_shorter">Incrementar el ISF hará que los carbohidratos se absorban más rápidamente</string>
     <string name="cob_no_effect">Incrementar el ISF no afectará la absorción calculada de carbohidratos</string>
     <string name="cob2_question">¿Cómo afecta cambiar los valores de IC a los cálculos de COB?</string>
+    <string name="cob2_longer">Incrementar el IC hará que los carbohidratos se absorban más lentamente</string>
+    <string name="cob2_shorter">Incrementar el IC hará que los carbohidratos se absorban más rápidamente</string>
     <string name="cob2_no_effect">Incrementar el IC no afectará la absorción calculada de carbohidratos</string>
     <string name="cob3_question">¿Cómo afecta el cambio de porcentaje del perfil al cálculo de los COB?</string>
+    <string name="cob3_longer">Establecer el perfil a 150% hará que los carbohidratos se absorban más lentamente</string>
+    <string name="cob3_shorter">Establecer el perfil a 150% hará que los carbohidratos se absorban más rápidamente</string>
     <string name="cob3_no_effect">Establecer el perfil a 150% no afectará la absorción calculada de carbohidratos</string>
     <string name="iob_label">Insulina a bordo (IOB)</string>
     <string name="iob_value">El valor del IOB se ve afectado por las bases temporales ejecutadas.</string>

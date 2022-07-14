@@ -1036,10 +1036,12 @@
     <string name="a11y_only_on_watch">только на часах</string>
     <string name="a11y_only_on_phone">только на телефоне</string>
     <string name="a11y_drag_and_drop_handle">якорь перетягивания</string>
+    <string name="search">Поиск</string>
     <!-- Aidex Cgms -->
     <string name="aidex">Aidex GlucoRx</string>
     <string name="aidex_short">Aidex </string>
     <string name="description_source_aidex">Получить значения ГК от GlucoRx Aidex</string>
     <string name="blocked_by_charging">Заблокировано опциями зарядки</string>
     <string name="blocked_by_connectivity">Заблокировано настройками подключения</string>
+    <string name="no_watch_connected">(Часы не подключены)</string>
 </resources>

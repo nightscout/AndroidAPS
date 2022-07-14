@@ -1037,6 +1037,7 @@
     <string name="a11y_only_on_watch">kun på klokke</string>
     <string name="a11y_only_on_phone">kun på telefon</string>
     <string name="a11y_drag_and_drop_handle">dra og slipp håndtering</string>
+    <string name="search">Søk</string>
     <!-- Aidex Cgms -->
     <string name="aidex">GlucoRx Aidex</string>
     <string name="aidex_short">Aidex</string>

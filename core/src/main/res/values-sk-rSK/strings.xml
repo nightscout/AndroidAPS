@@ -488,6 +488,7 @@
     <string name="autotune_run_without_autoswitch">Autotune spustený bez prepnutia profilu</string>
     <string name="autotune_run_with_autoswitch">Autotune spustený a profil automaticky prepnutý</string>
     <string name="autotune_run_with_error">Chyba pri poslednom spustení Autotune</string>
+    <string name="autotune_run_cancelled">Bola zistená iná spustená úloha Autotune, spustenie zrušené</string>
     <plurals name="days">
         <item quantity="one">%1$d deň</item>
         <item quantity="few">%1$d dní</item>

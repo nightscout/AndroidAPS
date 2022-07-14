@@ -123,4 +123,5 @@
     <string name="run_automations">Otomasyonları çalıştır</string>
     <string name="add_automation">Kural ekle</string>
     <string name="remove_sort">Kaldır/sırala</string>
+    <string name="stop_processing">İşlemeyi durdur</string>
 </resources>

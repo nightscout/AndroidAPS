@@ -1037,6 +1037,7 @@
     <string name="a11y_only_on_watch">pouze na hodinkách</string>
     <string name="a11y_only_on_phone">pouze na telefonu</string>
     <string name="a11y_drag_and_drop_handle">úchyt pro přetažení</string>
+    <string name="search">Hledat</string>
     <!-- Aidex Cgms -->
     <string name="aidex">GlucoRx Aidex</string>
     <string name="aidex_short">Aidex</string>
