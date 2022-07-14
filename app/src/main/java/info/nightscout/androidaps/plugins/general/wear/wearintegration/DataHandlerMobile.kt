@@ -271,6 +271,13 @@ class DataHandlerMobile @Inject constructor(
                            aapsLogger.debug(LTag.WEAR, "SnoozeAlert received $it from ${it.sourceNodeId}")
                            alarmSoundServiceHelper.stopService(context, "Muted from wear")
                        }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventData.WearException::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({
+                           aapsLogger.debug(LTag.WEAR, "WearException received $it from ${it.sourceNodeId}")
+                           fabricPrivacy.logWearException(it)
+                       }, fabricPrivacy::logException)
     }
 
     private fun handleTddStatus() {

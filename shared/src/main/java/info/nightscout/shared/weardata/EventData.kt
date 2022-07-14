@@ -26,6 +26,29 @@ sealed class EventData : Event() {
     data class ActionPong(val timeStamp: Long, val apiLevel: Int) : EventData()
 
     @Serializable
+    data class WearException(
+        val timeStamp: Long,
+        val exception: ByteArray,
+        val board: String,
+        val fingerprint: String,
+        val sdk: String,
+        val model: String,
+        val manufacturer: String,
+        val product: String
+    ) : EventData() {
+
+        override fun equals(other: Any?): Boolean =
+            when (other) {
+                !is WearException -> false
+                else              -> timeStamp == other.timeStamp && fingerprint == other.fingerprint
+            }
+
+        override fun hashCode(): Int {
+            return Objects.hash(timeStamp, fingerprint)
+        }
+    }
+
+    @Serializable
     data class Error(val timeStamp: Long) : EventData() // ignored
 
     @Serializable
