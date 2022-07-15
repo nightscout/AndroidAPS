@@ -17,6 +17,10 @@
     <string name="pump_status_not_initialized">Нет инициализации</string>
     <string name="pump_status_initialized">Инициализировано</string>
     <string name="pump_status_encrypt">Шифрование коммуникации</string>
+    <string name="pump_status_ready">Помпа готова</string>
+    <string name="pump_status_busy">Обработка</string>
+    <string name="pump_status_suspended">Помпа остановлена</string>
+    <string name="pump_status_executing_command">Выполнение команды</string>
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">Базалы</string>
     <string name="history_group_configuration">Конфигурации</string>
@@ -28,7 +32,14 @@
     <string name="history_group_prime">Заполнение</string>
     <string name="history_group_alarm">Оповещения</string>
     <string name="history_group_glucose">Гликемия</string>
+    <string name="history_group_base">База</string>
+    <string name="history_group_other">Другое</string>
+    <string name="history_group_events">Все события</string>
+    <string name="history_group_events_no_stat">События (без статистики)</string>
     <!-- Time -->
+    <string name="time_today">Сегодня</string>
+    <string name="time_last_hour">За прошедший час</string>
+    <string name="time_last_3_hours">За прошедшие 3 часа</string>
     <!-- BLE Config -->
     <!-- BLE Errors -->
     <!-- Pump Error -->
