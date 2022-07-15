@@ -218,7 +218,7 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
         //*********************************************************************************
 
             console.error("---------------------------------------------------------");
-            console.error( " Dynamic ISF version Beta 1.6.4 ");
+            console.error( " Dynamic ISF version Beta 1.6.5 ");
             console.error("---------------------------------------------------------");
 
 
@@ -824,14 +824,21 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
 
          console.log("EventualBG is" +eventualBG+" ;");
 
+        minIOBPredBG = Math.max(39,minIOBPredBG);
+        minCOBPredBG = Math.max(39,minCOBPredBG);
+        minUAMPredBG = Math.max(39,minUAMPredBG);
+        minPredBG = round(minIOBPredBG);
+
+        var fSensBG = Math.min(minPredBG,bg);
+
          if (bg > target_bg && glucose_status.delta < 3 && glucose_status.delta > -3 && glucose_status.short_avgdelta > -3 && glucose_status.short_avgdelta < 3 && eventualBG > target_bg && eventualBG < bg ) {
-             var future_sens = ( 1800 / (Math.log((((eventualBG * 0.5) + (bg * 0.5))/ins_val)+1)*TDD));
+             var future_sens = ( 1800 / (Math.log((((fSensBG * 0.5) + (bg * 0.5))/ins_val)+1)*TDD));
              //var future_sens_old = ( 277700 / (TDD * ((bg * 0.5) + (eventualBG * 0.5 ))));
              console.log("Future state sensitivity is " +future_sens+" based on eventual and current bg due to flat glucose level above target");
              rT.reason += "Dosing sensitivity: " +future_sens+" using eventual BG;";
          }
 
-         else if( glucose_status.delta > 0 && eventualBG > target_bg ) {
+         else if( glucose_status.delta > 0 && eventualBG > target_bg || eventualBG > bg && bg < 198 ) {
              var future_sens = ( 1800 / (Math.log((bg/ins_val)+1)*TDD));
              //var future_sens_old = ( 277700 / (TDD * bg));
              console.log("Future state sensitivity is " +future_sens+" using current bg due to small delta or variation");
@@ -839,7 +846,7 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
              }
 
          else {
-            var future_sens = ( 1800 / (Math.log((eventualBG/ins_val)+1)*TDD));
+            var future_sens = ( 1800 / (Math.log((fSensBG/ins_val)+1)*TDD));
             //var future_sens_old = ( 277700 / (TDD * eventualBG));
             console.log("Future state sensitivity is " +future_sens+" based on eventual bg due to -ve delta");
             rT.reason += "Dosing sensitivity: " +future_sens+" using eventual BG;";
@@ -848,10 +855,7 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
 
 
 
-    minIOBPredBG = Math.max(39,minIOBPredBG);
-    minCOBPredBG = Math.max(39,minCOBPredBG);
-    minUAMPredBG = Math.max(39,minUAMPredBG);
-    minPredBG = round(minIOBPredBG);
+
 
     var fractionCarbsLeft = meal_data.mealCOB/meal_data.carbs;
     // if we have COB and UAM is enabled, average both
