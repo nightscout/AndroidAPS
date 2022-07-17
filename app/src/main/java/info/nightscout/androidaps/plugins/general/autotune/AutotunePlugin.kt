@@ -149,7 +149,7 @@ class AutotunePlugin @Inject constructor(
             autotuneFS.exportResult(result)
             autotuneFS.exportLogAndZip(lastRun)
             rxBus.send(EventAutotuneUpdateGui())
-            return result
+            return
         }
         var currentCalcDay = 0
         for (i in 0 until daysBack) {
