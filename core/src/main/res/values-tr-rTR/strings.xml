@@ -103,7 +103,7 @@
     <string name="notexists">yok</string>
     <string name="glucose">Glikoz</string>
     <string name="iob">IOB</string>
-    <string name="cob">COB</string>
+    <string name="cob">AKRB</string>
     <string name="name_short">İsim:</string>
     <string name="time">Zaman</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
@@ -488,6 +488,7 @@
     <string name="autotune_run_without_autoswitch">OtoAyar profil değiştirme olmadan çalıştırıldı</string>
     <string name="autotune_run_with_autoswitch">OtoAyar çalıştırıldı ve profil otomatik olarak değiştirildi</string>
     <string name="autotune_run_with_error">Son OtoAyar çalışması sırasında hata oluştu</string>
+    <string name="autotune_run_cancelled">Başka bir OtoAyar çalıştırması tespit edildi, çalıştırma iptal edildi</string>
     <plurals name="days">
         <item quantity="one">%1$d gün</item>
         <item quantity="other">%1$d gün</item>

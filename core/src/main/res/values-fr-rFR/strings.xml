@@ -488,6 +488,7 @@
     <string name="autotune_run_without_autoswitch">Autotune exécuté sans changement de profil</string>
     <string name="autotune_run_with_autoswitch">Autotune exécuté et le profil automatiquement activé</string>
     <string name="autotune_run_with_error">Erreur lors de la dernière exécution d\'Autotune</string>
+    <string name="autotune_run_cancelled">Une autre exécution d\'Autotune est détectée, l\'exécution est annulée</string>
     <plurals name="days">
         <item quantity="one">%1$d jour</item>
         <item quantity="other">%1$d jours</item>

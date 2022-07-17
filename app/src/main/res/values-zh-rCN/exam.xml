@@ -137,7 +137,6 @@
     <string name="wronginsulin_prime">通过注射器或胰岛素笔输注你计算出的“遗漏”胰岛素的一部分。</string>
     <string name="wronginsulin_donothing">不做任何事情，允许AndroidAPS纠正高血糖导致的任何结果。</string>
     <string name="iob_label">活性胰岛素(IOB)</string>
-    <string name="iob_which">选择所有正确的答案。</string>
     <string name="iob_value">活性胰岛素IOB数值受发布的临时基础率影响。</string>
     <string name="iob_hightemp">当您的血糖低于目标值时，不会被给予高临时基础率。</string>
     <string name="iob_negiob">在没有运动的情况下，活性胰岛素IOB长时间负数表明你的个人配置太强，你需要在配置中减少的胰岛素用量。</string>

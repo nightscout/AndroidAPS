@@ -434,6 +434,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="ns_localbroadcasts_title">Activer les transmissions locales</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">SI dynamique</string>
+    <string name="DynISFAdjust_title" formatted="false">Facteur d\'ajustement Si dynamique %</string>
+    <string name="DynISFAdjust_summary" formatted="false">Facteur d\'ajustement pour Si dynamique. Définissez plus de 100 % pour des corrections plus agressives et moins de 100 % pour des corrections moins agressives.</string>
     <string name="enableuam">Activer RNS</string>
     <string name="enablesmb">Activer SMB</string>
     <string name="enablesmb_summary">Utiliser les Super Micro Bolus au lieu des débits de base temporaires pour une action rapide</string>
@@ -968,6 +970,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="wear_action_tempt_max_bg_error">Gly maxi hors limite!</string>
     <string name="wear_action_tempt_manual_range_message">Cible temporaire:\nMin: %1$s\nMax : %2$s\nDurée : %3$s</string>
     <string name="wear_action_tempt_manual_message">Cible temporaire:\nCible: %1$s\nDurée: %2$s</string>
+    <string name="wear_action_tempt_preset_message">Cible temp:\nRaison: %1$s\nCible : %2$s\nDurée : %3$s</string>
     <string name="quick_wizard_message">Assistant: %1$s\nInsuline : %2$.2fU\nGlucides : %3$dg</string>
     <string name="wizard_result">Assistant Calc :\nInsuline : %1$.2fU\nGlucides : %2$dg</string>
     <string name="overview_editquickwizard_show_on_device">Afficher l\'entrée sur l\'appareil :</string>
@@ -1034,10 +1037,12 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="a11y_only_on_watch">seulement sur la montre</string>
     <string name="a11y_only_on_phone">uniquement sur le téléphone</string>
     <string name="a11y_drag_and_drop_handle">glissez déposez ici</string>
+    <string name="search">Chercher</string>
     <!-- Aidex Cgms -->
     <string name="aidex">GlucoRx Aidex</string>
     <string name="aidex_short">Aidex</string>
     <string name="description_source_aidex">Recevoir les valeurs de glycémie du MGC GlucoRx Aidex.</string>
     <string name="blocked_by_charging">Bloqué par les options de recharge</string>
     <string name="blocked_by_connectivity">Bloqué par les options de connectivité</string>
+    <string name="no_watch_connected">(Pas de montre connectée)</string>
 </resources>

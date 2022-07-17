@@ -2,12 +2,15 @@
 
 package info.nightscout.androidaps.watchfaces
 
+import android.view.LayoutInflater
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
-import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat
+import androidx.viewbinding.ViewBinding
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.databinding.ActivitySteampunkBinding
+import info.nightscout.androidaps.watchfaces.utils.BaseWatchFace
 import info.nightscout.shared.SafeParse.stringToFloat
 import org.joda.time.TimeOfDay
 
@@ -19,8 +22,12 @@ class SteampunkWatchface : BaseWatchFace() {
 
     private var lastEndDegrees = 0f
     private var deltaRotationAngle = 0f
+    private lateinit var binding: ActivitySteampunkBinding
 
-    @LayoutRes override fun layoutResource(): Int = R.layout.activity_steampunk
+    override fun inflateLayout(inflater: LayoutInflater): ViewBinding {
+        binding = ActivitySteampunkBinding.inflate(inflater)
+        return binding
+    }
 
     override fun onCreate() {
         forceSquareCanvas = true
@@ -29,48 +36,48 @@ class SteampunkWatchface : BaseWatchFace() {
 
     override fun setColorDark() {
         if (ageLevel() <= 0 && singleBg.timeStamp != 0L) {
-            mLinearLayout2?.setBackgroundResource(R.drawable.redline)
-            mTimestamp?.setTextColor(ContextCompat.getColor(this, R.color.red_600))
+            binding.tertiaryLayout.setBackgroundResource(R.drawable.redline)
+            binding.timestamp.setTextColor(ContextCompat.getColor(this, R.color.red_600))
         } else {
-            mLinearLayout2?.setBackgroundResource(0)
-            mTimestamp?.setTextColor(ContextCompat.getColor(this, R.color.black_86p))
+            binding.tertiaryLayout.setBackgroundResource(0)
+            binding.timestamp.setTextColor(ContextCompat.getColor(this, R.color.black_86p))
         }
-        mLoop?.setTextColor(ContextCompat.getColor(this, if (loopLevel == 0) R.color.red_600 else R.color.black_86p))
+        binding.loop.setTextColor(ContextCompat.getColor(this, if (loopLevel == 0) R.color.red_600 else R.color.black_86p))
         if (singleBg.sgvString != "---") {
-            var rotationAngle = 0f //by default, show ? on the dial (? is at 0 degrees on the dial)
+            var rotationAngle = 0f // by default, show ? on the dial (? is at 0 degrees on the dial)
             if (singleBg.glucoseUnits != "-") {
 
-                //ensure the glucose dial is the correct units
-                mGlucoseDial?.setImageResource(if (singleBg.glucoseUnits == "mmol") R.drawable.steampunk_dial_mmol else R.drawable.steampunk_dial_mgdl)
+                // ensure the glucose dial is the correct units
+                binding.glucoseDial.setImageResource(if (singleBg.glucoseUnits == "mmol") R.drawable.steampunk_dial_mmol else R.drawable.steampunk_dial_mgdl)
 
-                //convert the Sgv to degrees of rotation
+                // convert the Sgv to degrees of rotation
                 rotationAngle =
                     if (singleBg.glucoseUnits == "mmol") stringToFloat(singleBg.sgvString) * 18f //convert to mg/dL, which is equivalent to degrees
-                    else stringToFloat(singleBg.sgvString) //if glucose a value is received, use it to determine the amount of rotation of the dial.
+                    else stringToFloat(singleBg.sgvString) // if glucose a value is received, use it to determine the amount of rotation of the dial.
             }
-            if (rotationAngle > 330) rotationAngle = 330f //if the glucose value is higher than 330 then show "HIGH" on the dial. ("HIGH" is at 330 degrees on the dial)
-            if (rotationAngle != 0f && rotationAngle < 30) rotationAngle = 30f //if the glucose value is lower than 30 show "LOW" on the dial. ("LOW" is at 30 degrees on the dial)
+            if (rotationAngle > 330) rotationAngle = 330f // if the glucose value is higher than 330 then show "HIGH" on the dial. ("HIGH" is at 330 degrees on the dial)
+            if (rotationAngle != 0f && rotationAngle < 30) rotationAngle = 30f // if the glucose value is lower than 30 show "LOW" on the dial. ("LOW" is at 30 degrees on the dial)
             if (lastEndDegrees == 0f) lastEndDegrees = rotationAngle
 
-            //rotate glucose dial
+            // rotate glucose dial
             val rotate = RotateAnimation(lastEndDegrees, rotationAngle - lastEndDegrees, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f).apply {
                 fillAfter = true
                 interpolator = LinearInterpolator()
                 duration = 1
             }
-            mGlucoseDial?.startAnimation(rotate)
+            binding.glucoseDial.startAnimation(rotate)
             lastEndDegrees = rotationAngle //store the final angle as a starting point for the next rotation.
         }
 
-        //set the delta gauge and rotate the delta pointer
-        var deltaIsNegative = 1f //by default go clockwise
-        if (singleBg.avgDelta != "--") {      //if a legitimate delta value is
+        // set the delta gauge and rotate the delta pointer
+        var deltaIsNegative = 1f // by default go clockwise
+        if (singleBg.avgDelta != "--") {      // if a legitimate delta value is
             // received,
             // then...
             if (singleBg.avgDelta[0] == '-') deltaIsNegative = -1f //if the delta is negative, go counter-clockwise
             val absAvgDelta = stringToFloat(singleBg.avgDelta.substring(1)) //get rid of the sign so it can be converted to float.
             var autoGranularity = "0" //auto-granularity off
-            //ensure the delta gauge is the right units and granularity
+            // ensure the delta gauge is the right units and granularity
             if (singleBg.glucoseUnits != "-") {
                 if (singleBg.glucoseUnits == "mmol") {
                     if (sp.getString("delta_granularity", "2") == "4") {  //Auto granularity
@@ -82,15 +89,15 @@ class SteampunkWatchface : BaseWatchFace() {
                             }
                     }
                     if (sp.getString("delta_granularity", "2") == "1" || autoGranularity == "1") {  //low
-                        mLinearLayout?.setBackgroundResource(R.drawable.steampunk_gauge_mmol_10)
+                        binding.secondaryLayout.setBackgroundResource(R.drawable.steampunk_gauge_mmol_10)
                         deltaRotationAngle = absAvgDelta * 30f
                     }
                     if (sp.getString("delta_granularity", "2") == "2" || autoGranularity == "2") {  //medium
-                        mLinearLayout?.setBackgroundResource(R.drawable.steampunk_gauge_mmol_05)
+                        binding.secondaryLayout.setBackgroundResource(R.drawable.steampunk_gauge_mmol_05)
                         deltaRotationAngle = absAvgDelta * 60f
                     }
                     if (sp.getString("delta_granularity", "2") == "3" || autoGranularity == "3") {  //high
-                        mLinearLayout?.setBackgroundResource(R.drawable.steampunk_gauge_mmol_03)
+                        binding.secondaryLayout.setBackgroundResource(R.drawable.steampunk_gauge_mmol_03)
                         deltaRotationAngle = absAvgDelta * 100f
                     }
                 } else {
@@ -103,44 +110,40 @@ class SteampunkWatchface : BaseWatchFace() {
                             }
                     }
                     if (sp.getString("delta_granularity", "2") == "1" || autoGranularity == "1") {  //low
-                        mLinearLayout?.setBackgroundResource(R.drawable.steampunk_gauge_mgdl_20)
+                        binding.secondaryLayout.setBackgroundResource(R.drawable.steampunk_gauge_mgdl_20)
                         deltaRotationAngle = absAvgDelta * 1.5f
                     }
                     if (sp.getString("delta_granularity", "2") == "2" || autoGranularity == "2") {  //medium
-                        mLinearLayout?.setBackgroundResource(R.drawable.steampunk_gauge_mgdl_10)
+                        binding.secondaryLayout.setBackgroundResource(R.drawable.steampunk_gauge_mgdl_10)
                         deltaRotationAngle = absAvgDelta * 3f
                     }
                     if (sp.getString("delta_granularity", "2") == "3" || autoGranularity == "3") {  //high
-                        mLinearLayout?.setBackgroundResource(R.drawable.steampunk_gauge_mgdl_5)
+                        binding.secondaryLayout.setBackgroundResource(R.drawable.steampunk_gauge_mgdl_5)
                         deltaRotationAngle = absAvgDelta * 6f
                     }
                 }
             }
             if (deltaRotationAngle > 40) deltaRotationAngle = 40f
-            mDeltaGauge?.rotation = deltaRotationAngle * deltaIsNegative
+            binding.deltaPointer.rotation = deltaRotationAngle * deltaIsNegative
         }
 
-        //rotate the minute hand.
-        mMinuteHand?.rotation = TimeOfDay().minuteOfHour * 6f
+        // rotate the minute hand.
+        binding.minuteHand.rotation = TimeOfDay().minuteOfHour * 6f
 
-        //rotate the hour hand.
-        mHourHand?.rotation = TimeOfDay().hourOfDay * 30f + TimeOfDay().minuteOfHour * 0.5f
+        // rotate the hour hand.
+        binding.hourHand.rotation = TimeOfDay().hourOfDay * 30f + TimeOfDay().minuteOfHour * 0.5f
         setTextSizes()
-        mLoop?.setBackgroundResource(0)
-        if (chart != null) {
-            highColor = ContextCompat.getColor(this, R.color.black)
-            lowColor = ContextCompat.getColor(this, R.color.black)
-            midColor = ContextCompat.getColor(this, R.color.black)
-            gridColor = ContextCompat.getColor(this, R.color.grey_steampunk)
-            basalBackgroundColor = ContextCompat.getColor(this, R.color.basal_dark)
-            basalCenterColor = ContextCompat.getColor(this, R.color.basal_dark)
-            pointSize = if (sp.getInt(R.string.key_chart_time_frame, 3) < 3) {
-                2
-            } else {
-                1
-            }
-            setupCharts()
-        }
+        binding.loop.setBackgroundResource(0)
+
+        highColor = ContextCompat.getColor(this, R.color.black)
+        lowColor = ContextCompat.getColor(this, R.color.black)
+        midColor = ContextCompat.getColor(this, R.color.black)
+        gridColor = ContextCompat.getColor(this, R.color.grey_steampunk)
+        basalBackgroundColor = ContextCompat.getColor(this, R.color.basal_dark)
+        basalCenterColor = ContextCompat.getColor(this, R.color.basal_dark)
+        pointSize = if (sp.getInt(R.string.key_chart_time_frame, 3) < 3) 2  else 1
+        setupCharts()
+
         invalidate()
     }
 
@@ -162,36 +165,23 @@ class SteampunkWatchface : BaseWatchFace() {
             fontLarge = 13f
         }
 
-        //top row. large font unless text too big (i.e. detailedIOB)
-        mCOB2?.textSize = fontLarge
-        mBasalRate?.textSize = fontLarge
-        if (status.iobDetail.length < 7) {
-            mIOB2?.textSize = fontLarge
-        } else {
-            mIOB2?.textSize = fontSmall
-        }
+        // top row. large font unless text too big (i.e. detailedIOB)
+        binding.cob2.textSize = fontLarge
+        binding.basalRate.textSize = fontLarge
+        val fontIob = if (status.iobDetail.length < 7) fontLarge else fontSmall
+        binding.iob2.textSize = fontIob
 
-        //bottom row. font medium unless text too long (i.e. longer than 9' timestamp)
-        mLoop?.let { mLoop ->
-            mTimestamp?.let { mTimestamp ->
-                if (mTimestamp.text.length < 3 || mLoop.text.length < 3) {     //always resize these fields together, for symmetry.
-                    mTimestamp.textSize = fontMedium
-                    mLoop.textSize = fontMedium
-                } else {
-                    mTimestamp.textSize = fontSmall
-                    mLoop.textSize = fontSmall
-                }
-            }
-        }
+        // bottom row. font medium unless text too long (i.e. longer than 9' timestamp)
+        // always resize these fields together, for symmetry.
+        val font = if (binding.timestamp.text.length < 3 || binding.loop.text.length < 3) fontMedium else fontSmall
+        binding.loop.textSize = font
+        binding.timestamp.textSize = font
 
-        //if both batteries are shown, make them smaller.
-        if (sp.getBoolean(R.string.key_show_uploader_battery, true) && sp.getBoolean(R.string.key_show_rig_battery, false)) {
-            mUploaderBattery?.textSize = fontSmall
-            mRigBattery?.textSize = fontSmall
-        } else {
-            mUploaderBattery?.textSize = fontMedium
-            mRigBattery?.textSize = fontMedium
-        }
+        // if both batteries are shown, make them smaller.
+        val fontBat = if (sp.getBoolean(R.string.key_show_uploader_battery, true) && sp.getBoolean(R.string.key_show_rig_battery, false)) fontSmall else fontMedium
+        binding.uploaderBattery.textSize = fontBat
+        binding.rigBattery.textSize = fontBat
+
     }
 
     override fun changeChartTimeframe() {

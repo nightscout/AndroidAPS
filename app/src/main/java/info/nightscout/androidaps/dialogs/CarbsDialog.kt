@@ -56,9 +56,9 @@ class CarbsDialog : DialogFragmentWithDate() {
 
     companion object {
 
-        private const val FAV1_DEFAULT = 5
-        private const val FAV2_DEFAULT = 10
-        private const val FAV3_DEFAULT = 20
+        const val FAV1_DEFAULT = 5
+        const val FAV2_DEFAULT = 10
+        const val FAV3_DEFAULT = 20
     }
 
     private var queryingProtection = false

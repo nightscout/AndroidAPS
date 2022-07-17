@@ -123,4 +123,5 @@
     <string name="run_automations">Exécuter les automatisations</string>
     <string name="add_automation">Ajouter une règle</string>
     <string name="remove_sort">Supprimer/trier</string>
+    <string name="stop_processing">Arrêter le traitement</string>
 </resources>

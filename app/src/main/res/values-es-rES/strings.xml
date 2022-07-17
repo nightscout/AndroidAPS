@@ -1037,10 +1037,12 @@
     <string name="a11y_only_on_watch">Sólo en reloj</string>
     <string name="a11y_only_on_phone">Sólo en teléfono</string>
     <string name="a11y_drag_and_drop_handle">Arrastrar y soltar </string>
+    <string name="search">Buscar</string>
     <!-- Aidex Cgms -->
     <string name="aidex">GlucoRx Aidex</string>
     <string name="aidex_short">Aidex</string>
     <string name="description_source_aidex">Recibir los valores de glucosa de GlucoRx Aidex CGMS</string>
     <string name="blocked_by_charging">Bloqueado por opciones de carga</string>
     <string name="blocked_by_connectivity">Bloqueado por opciones de conectividad</string>
+    <string name="no_watch_connected">(Ningún reloj conectado)</string>
 </resources>

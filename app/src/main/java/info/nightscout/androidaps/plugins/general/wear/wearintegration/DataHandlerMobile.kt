@@ -12,6 +12,8 @@ import info.nightscout.androidaps.database.entities.*
 import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.database.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
 import info.nightscout.androidaps.database.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
+import info.nightscout.androidaps.dialogs.CarbsDialog
+import info.nightscout.androidaps.dialogs.InsulinDialog
 import info.nightscout.androidaps.events.EventMobileToWear
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.toStringShort
@@ -268,6 +270,13 @@ class DataHandlerMobile @Inject constructor(
             .subscribe({
                            aapsLogger.debug(LTag.WEAR, "SnoozeAlert received $it from ${it.sourceNodeId}")
                            alarmSoundServiceHelper.stopService(context, "Muted from wear")
+                       }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventData.WearException::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({
+                           aapsLogger.debug(LTag.WEAR, "WearException received $it from ${it.sourceNodeId}")
+                           fabricPrivacy.logWearException(it)
                        }, fabricPrivacy::logException)
     }
 
@@ -694,7 +703,11 @@ class DataHandlerMobile @Inject constructor(
                     unitsMgdl = profileFunction.getUnits() == GlucoseUnit.MGDL,
                     bolusPercentage = sp.getInt(R.string.key_boluswizard_percentage, 100),
                     maxCarbs = sp.getInt(R.string.key_treatmentssafety_maxcarbs, 48),
-                    maxBolus = sp.getDouble(R.string.key_treatmentssafety_maxbolus, 3.0)
+                    maxBolus = sp.getDouble(R.string.key_treatmentssafety_maxbolus, 3.0),
+                    insulinButtonIncrement1 = sp.getDouble(R.string.key_insulin_button_increment_1, InsulinDialog.PLUS1_DEFAULT),
+                    insulinButtonIncrement2 = sp.getDouble(R.string.key_insulin_button_increment_2, InsulinDialog.PLUS2_DEFAULT),
+                    carbsButtonIncrement1 = sp.getInt(R.string.key_carbs_button_increment_1, CarbsDialog.FAV1_DEFAULT),
+                    carbsButtonIncrement2 = sp.getInt(R.string.key_carbs_button_increment_2, CarbsDialog.FAV2_DEFAULT)
                 )
             )
         )

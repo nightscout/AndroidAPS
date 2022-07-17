@@ -10,6 +10,10 @@ import info.nightscout.androidaps.core.R
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.weardata.EventData
+import java.io.ByteArrayInputStream
+import java.io.IOException
+import java.io.ObjectInputStream
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -79,7 +83,7 @@ class FabricPrivacy @Inject constructor(
 
     // Crashlytics log message
     fun logMessage(message: String) {
-        aapsLogger.info(LTag.CORE,"Crashlytics log message: $message")
+        aapsLogger.info(LTag.CORE, "Crashlytics log message: $message")
         FirebaseCrashlytics.getInstance().log(message)
     }
 
@@ -91,5 +95,32 @@ class FabricPrivacy @Inject constructor(
 
     fun fabricEnabled(): Boolean {
         return sp.getBoolean(R.string.key_enable_fabric, true)
+    }
+
+    fun logWearException(wearException: EventData.WearException) {
+        aapsLogger.debug(LTag.WEAR, "logWearException")
+        FirebaseCrashlytics.getInstance().apply {
+            setCustomKey("wear_exception", true)
+            setCustomKey("wear_board", wearException.board)
+            setCustomKey("wear_fingerprint", wearException.fingerprint)
+            setCustomKey("wear_sdk", wearException.sdk)
+            setCustomKey("wear_model", wearException.model)
+            setCustomKey("wear_manufacturer", wearException.manufacturer)
+            setCustomKey("wear_product", wearException.product)
+        }
+        logException(byteArrayToThrowable(wearException.exception))
+    }
+
+    private fun byteArrayToThrowable(wearExceptionData: ByteArray): Throwable {
+        val bis = ByteArrayInputStream(wearExceptionData)
+        try {
+            val ois = ObjectInputStream(bis)
+            return ois.readObject() as Throwable
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } catch (e: ClassNotFoundException) {
+            e.printStackTrace()
+        }
+        return IllegalArgumentException("Wear Exception could not be de-serialized")
     }
 }

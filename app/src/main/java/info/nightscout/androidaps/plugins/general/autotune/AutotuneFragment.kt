@@ -113,7 +113,6 @@ class AutotuneFragment : DaggerFragment() {
                 ?: defaultValue, 1.0, 30.0, 1.0, DecimalFormat("0"), false, null, textWatcher
         )
         binding.autotuneRun.setOnClickListener {
-            autotunePlugin.calculationRunning = true
             autotunePlugin.lastNbDays = daysBack.toString()
             log("Run Autotune $profileName, $daysBack days")
             Thread {
@@ -146,7 +145,7 @@ class AutotuneFragment : DaggerFragment() {
             autotunePlugin.tunedProfile?.let { tunedProfile ->
                 showConfirmation(requireContext(),
                                  rh.gs(R.string.autotune_copy_localprofile_button),
-                                 rh.gs(R.string.autotune_copy_local_profile_message) + "\n" + localName + " " + dateUtil.dateAndTimeString(autotunePlugin.lastRun),
+                                 rh.gs(R.string.autotune_copy_local_profile_message) + "\n" + localName,
                                  Runnable {
                                      localProfilePlugin.addProfile(localProfilePlugin.copyFrom(tunedProfile.getProfile(circadian), localName))
                                      rxBus.send(EventLocalProfileChanged())

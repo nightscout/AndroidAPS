@@ -34,16 +34,15 @@ class InitializePumpManagerTask(injector: HasAndroidInjector, private val contex
             lastGoodFrequency = sp.getDouble(RileyLinkConst.Prefs.LastGoodDeviceFrequency, 0.0)
             lastGoodFrequency = (lastGoodFrequency * 1000.0).roundToLong() / 1000.0
             rileyLinkServiceData.lastGoodFrequency = lastGoodFrequency
-
-        } else lastGoodFrequency = rileyLinkServiceData.lastGoodFrequency
+        } else lastGoodFrequency = rileyLinkServiceData.lastGoodFrequency ?: 0.0
 
         val rileyLinkCommunicationManager = pumpDevice?.rileyLinkService?.deviceCommunicationManager
         if (activePlugin.activePump.manufacturer() === ManufacturerType.Medtronic) {
             if (lastGoodFrequency > 0.0 && rileyLinkCommunicationManager?.isValidFrequency(lastGoodFrequency) == true) {
-                rileyLinkServiceData.setRileyLinkServiceState(RileyLinkServiceState.RileyLinkReady)
+                rileyLinkServiceData.rileyLinkServiceState = RileyLinkServiceState.RileyLinkReady
                 aapsLogger.info(LTag.PUMPBTCOMM, "Setting radio frequency to $lastGoodFrequency MHz")
                 rileyLinkCommunicationManager.setRadioFrequencyForPump(lastGoodFrequency)
-                if (rileyLinkCommunicationManager.tryToConnectToDevice()) rileyLinkServiceData.setRileyLinkServiceState(RileyLinkServiceState.PumpConnectorReady)
+                if (rileyLinkCommunicationManager.tryToConnectToDevice()) rileyLinkServiceData.rileyLinkServiceState = RileyLinkServiceState.PumpConnectorReady
                 else {
                     rileyLinkServiceData.setServiceState(RileyLinkServiceState.PumpConnectorError, RileyLinkError.NoContactWithDevice)
                     rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.IPC.MSG_PUMP_tunePump, context)
@@ -55,11 +54,11 @@ class InitializePumpManagerTask(injector: HasAndroidInjector, private val contex
                 lastGoodFrequency = (lastGoodFrequency * 1000.0).roundToLong() / 1000.0
                 rileyLinkServiceData.lastGoodFrequency = lastGoodFrequency
             }
-            rileyLinkServiceData.setRileyLinkServiceState(RileyLinkServiceState.RileyLinkReady)
+            rileyLinkServiceData.rileyLinkServiceState = RileyLinkServiceState.RileyLinkReady
             rileyLinkServiceData.rileyLinkTargetFrequency = RileyLinkTargetFrequency.Omnipod // TODO shouldn't be needed
             aapsLogger.info(LTag.PUMPBTCOMM, "Setting radio frequency to $lastGoodFrequency MHz")
             rileyLinkCommunicationManager?.setRadioFrequencyForPump(lastGoodFrequency)
-            rileyLinkServiceData.setRileyLinkServiceState(RileyLinkServiceState.PumpConnectorReady)
+            rileyLinkServiceData.rileyLinkServiceState = RileyLinkServiceState.PumpConnectorReady
         }
     }
 }

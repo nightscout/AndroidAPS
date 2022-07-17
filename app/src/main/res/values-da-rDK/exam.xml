@@ -136,7 +136,6 @@
     <string name="wronginsulin_prime">Bolus en del af din beregnede \"glemte\" insulin med enten sprøjter / pen eller brug af en kanylefyldning.</string>
     <string name="wronginsulin_donothing">Gør ingenting og tillad AndroidAPS at rette op på højt blodsukker.</string>
     <string name="iob_label">Insulin om bord (IOB)</string>
-    <string name="iob_which">Tjek alle de korrekte svar.</string>
     <string name="iob_value">IOB-værdi påvirkes af midlertidige basaler.</string>
     <string name="iob_hightemp">Høj midlertidlig basal vil ikke blive givet, når dit blodsukker er under målet.</string>
     <string name="iob_negiob">Negative IOB i en længere periode uden motion tyder på, at din profil er for stærk, og at der er behov for mindre insulin i dine indstillinger.</string>

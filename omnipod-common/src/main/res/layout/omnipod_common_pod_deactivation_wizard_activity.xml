@@ -10,6 +10,6 @@
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
         app:navGraph="@navigation/omnipod_common_pod_deactivation_wizard_navigation_graph" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
