@@ -123,6 +123,7 @@
     <string name="sensitivity_cannula">La registrazione di un cambio cannula ripristinerà il rapporto Autosens al 100%.</string>
     <string name="sensitivity_time">Alcune opzioni del plugin hanno intervalli di tempo configurabili che possono essere impostati dall\'utente.</string>
     <string name="sensitivity_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Sensitivity-detection-and-COB.html</string>
+    <string name="sensitivity_hint2">https://androidaps.readthedocs.io/en/latest/Usage/Open-APS-features.html?highlight=Autosens#autosens</string>
     <string name="wrongcarbs_label">Errori inserimento CHO</string>
     <string name="wrongcarbs_whattodo">Cosa dovresti fare se hai fatto un inserimento non corretto di carboidrati?</string>
     <string name="wrongcarbs_treatmentstab">Eliminare nei Trattamenti l\'inserimento non corretto e immettere il nuovo valore CHO.</string>
@@ -136,7 +137,6 @@
     <string name="wronginsulin_prime">Erogare un bolo con parte della tua insulina calcolata \"mancante\" usando una siringa/penna o la funzione caricamento.</string>
     <string name="wronginsulin_donothing">Non fare nulla e permettere ad AndroidAPS di correggere eventuali glicemie alte.</string>
     <string name="iob_label">Insulina attiva (IOB)</string>
-    <string name="iob_which">Seleziona tutte le risposte corrette.</string>
     <string name="iob_value">Il valore IOB è influenzato dalle basali temporanee emesse.</string>
     <string name="iob_hightemp">Non verrà emessa una basale temporanea alta quando la tua glicemia è al di sotto del target.</string>
     <string name="iob_negiob">IOB negativo per un periodo considerevole in assenza di esercizio fisico suggerisce che il tuo profilo è troppo incisivo e che è necessaria meno insulina nelle tue impostazioni.</string>

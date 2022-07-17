@@ -154,6 +154,7 @@
     <string name="end_user_license_agreement">Acord de llicència per a l\'usuari final</string>
     <string name="end_user_license_agreement_text">NO S\'HA D\'UTILITZAR PER A PRENDRE DECISIONS MÈDIQUES. EL PROGRAMA NO TÉ GARANTIA, EN LA MESURA QUE HO PERMET LA LLEI APLICABLE. EXCEPTE QUAN S\'INDIQUI EL CONTRARI PER ESCRIT, ELS PROPIETARIS DEL COPYRIGHT I/O ALTRES PARTS PROPORCIONEN EL PROGRAMA \"TAL QUAL\" SENSE CAP MENA DE GARANTIA, NI IMPLÍCITA NI EXPLÍCITA, INCLOENT, PERÒ SENSE ESTAR LIMITADES A, LES GARANTIES IMPLÍCITES DE COMERCIALITZACIÓ I ADEQUACIÓ A UN OBJECTIU PARTICULAR. US FEU RESPONSABLES TOTALMENT DELS RISCOS EN QUANT A LA QUALITAT I EL RENDIMENT DEL PROGRAMA. SI EL PROGRAMA FOS DEFECTUÓS, VOSALTRES ASSUMIU EL COST DE TOT SERVEI, REPARACIÓ O CORRECCIÓ.</string>
     <string name="end_user_license_agreement_i_understand">ENTENC I ACCEPTO</string>
+    <string name="save">Desar</string>
     <string name="reloadprofile">Recarregar perfil</string>
     <string name="smscommunicator">Comunicador SMS</string>
     <string name="smscommunicator_allowednumbers">Nrs. de telèfon permesos</string>
@@ -314,5 +315,6 @@
     <!-- SMS Communicator & OTP Authenticator -->
     <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
+    <string name="login">Iniciar sessió</string>
     <!-- Aidex Cgms -->
 </resources>

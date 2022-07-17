@@ -207,8 +207,8 @@ class OverviewData @Inject constructor(
      * IOB, COB
      */
 
-    fun bolusIob(iobCobCalculator: IobCobCalculator): IobTotal = iobCobCalculator.calculateIobFromBolus().round(fabricPrivacy)
-    fun basalIob(iobCobCalculator: IobCobCalculator): IobTotal = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round(fabricPrivacy)
+    fun bolusIob(iobCobCalculator: IobCobCalculator): IobTotal = iobCobCalculator.calculateIobFromBolus().round()
+    fun basalIob(iobCobCalculator: IobCobCalculator): IobTotal = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
     fun cobInfo(iobCobCalculator: IobCobCalculator): CobInfo = iobCobCalculator.getCobInfo(true, "Overview COB")
 
     val lastCarbsTime: Long

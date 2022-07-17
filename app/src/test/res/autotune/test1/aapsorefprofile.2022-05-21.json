@@ -1,0 +1,147 @@
+{
+  "name": "Tuned Dyn2",
+  "min_5m_carbimpact": 8,
+  "dia": 6,
+  "curve": "ultra-rapid",
+  "useCustomPeakTime": true,
+  "insulinPeakTime": 45,
+  "basalprofile": [
+    {
+      "start": "00:00:00",
+      "minutes": 0,
+      "rate": 0.966
+    },
+    {
+      "start": "01:00:00",
+      "minutes": 60,
+      "rate": 0.977
+    },
+    {
+      "start": "02:00:00",
+      "minutes": 120,
+      "rate": 0.971
+    },
+    {
+      "start": "03:00:00",
+      "minutes": 180,
+      "rate": 1.111
+    },
+    {
+      "start": "04:00:00",
+      "minutes": 240,
+      "rate": 0.974
+    },
+    {
+      "start": "05:00:00",
+      "minutes": 300,
+      "rate": 0.923
+    },
+    {
+      "start": "06:00:00",
+      "minutes": 360,
+      "rate": 0.823
+    },
+    {
+      "start": "07:00:00",
+      "minutes": 420,
+      "rate": 0.855
+    },
+    {
+      "start": "08:00:00",
+      "minutes": 480,
+      "rate": 0.902
+    },
+    {
+      "start": "09:00:00",
+      "minutes": 540,
+      "rate": 0.934
+    },
+    {
+      "start": "10:00:00",
+      "minutes": 600,
+      "rate": 0.938
+    },
+    {
+      "start": "11:00:00",
+      "minutes": 660,
+      "rate": 0.903
+    },
+    {
+      "start": "12:00:00",
+      "minutes": 720,
+      "rate": 0.882
+    },
+    {
+      "start": "13:00:00",
+      "minutes": 780,
+      "rate": 0.874
+    },
+    {
+      "start": "14:00:00",
+      "minutes": 840,
+      "rate": 0.866
+    },
+    {
+      "start": "15:00:00",
+      "minutes": 900,
+      "rate": 0.848
+    },
+    {
+      "start": "16:00:00",
+      "minutes": 960,
+      "rate": 0.758
+    },
+    {
+      "start": "17:00:00",
+      "minutes": 1020,
+      "rate": 0.65
+    },
+    {
+      "start": "18:00:00",
+      "minutes": 1080,
+      "rate": 0.648
+    },
+    {
+      "start": "19:00:00",
+      "minutes": 1140,
+      "rate": 0.738
+    },
+    {
+      "start": "20:00:00",
+      "minutes": 1200,
+      "rate": 0.847
+    },
+    {
+      "start": "21:00:00",
+      "minutes": 1260,
+      "rate": 0.861
+    },
+    {
+      "start": "22:00:00",
+      "minutes": 1320,
+      "rate": 0.863
+    },
+    {
+      "start": "23:00:00",
+      "minutes": 1380,
+      "rate": 0.843
+    }
+  ],
+  "isfProfile": {
+    "sensitivities": [
+      {
+        "i": 0,
+        "start": "00:00:00",
+        "sensitivity": 86.2,
+        "offset": 0,
+        "x": 0,
+        "endoffset": 1440
+      }
+    ]
+  },
+  "carb_ratio": 5.75,
+  "autosens_max": 1.3,
+  "autosens_min": 0.7,
+  "units": "mg/dl",
+  "timezone": "Europe/Paris"
+}

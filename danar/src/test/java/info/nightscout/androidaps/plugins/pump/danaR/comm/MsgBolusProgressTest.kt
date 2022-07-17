@@ -12,7 +12,7 @@ class MsgBolusProgressTest : DanaRTestBase() {
 
     @Test fun runTest() {
         `when`(rh.gs(ArgumentMatchers.eq(R.string.bolusdelivering), ArgumentMatchers.anyDouble())).thenReturn("Delivering %1\$.2fU")
-        danaPump.bolusingTreatment = EventOverviewBolusProgress.Treatment(0.0, 0, true)
+        danaPump.bolusingTreatment = EventOverviewBolusProgress.Treatment(0.0, 0, true, 0)
         danaPump.bolusAmountToBeDelivered = 3.0
         val packet = MsgBolusProgress(injector)
 

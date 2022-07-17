@@ -159,6 +159,7 @@
     <string name="end_user_license_agreement">Licență utilizator final</string>
     <string name="end_user_license_agreement_text">NU FOLOSIȚI PENTRU LUAREA DE DECIZII MEDICALE. NU EXISTĂ RĂSPUNDERE LEGALĂ SAU GARANȚIE PENTRU ACEST PROGRAM, ÎN LIMITA APLICABILĂ A LEGII. CU EXCEPTIA CAZURILOR SPECIAL MENȚIONATE, AUTORUL ȘI/SAU ALTE PERSOANE IMPLICATE PUN LA DISPOZIȚIE ACEST PROGRAM FĂRĂ NICIO GARANȚIE, IMPLICITĂ SAU EXPLICITĂ, INCLUZÂND, DAR FĂRĂ A SE LIMITA LA, GARANȚIILE LEGATE DE VĂNZAREA SAU POTRIVIREA PENTRU UN ANUME SCOP. ÎNTREGUL RISC LEGAT DE CALITATEA ȘI PERFORMANȚA ACESTUI PROGRAM CAD ÎN RESPONSABILITATEA DUMNEAVOASTRĂ. DACĂ PROGRAMUL SE DOVEDEȘTE A FI DEFECT, DUMNEAVOASTRĂ VĂ ASUMAȚI ÎNTREAGA RĂSPUNDERE, PRECUM ȘI TOATE COSTURILE LEGATE DE SERVICE, REPARAȚII SAU CORECȚII.</string>
     <string name="end_user_license_agreement_i_understand">ÎNȚELEG ȘI SUNT DE ACORD</string>
+    <string name="save">Salvează</string>
     <string name="reloadprofile">Reîncarcă profilul</string>
     <string name="smscommunicator">Comunicator SMS</string>
     <string name="smscommunicator_allowednumbers">Numere de telefon permise</string>
@@ -894,5 +895,8 @@
     <string name="not_available_full">Nu este disponibil</string>
     <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
+    <string name="confirm_remove_multiple_items">Sigur vrei să elimini %1$d element(e)</string>
+    <string name="sort_label">Sortează</string>
+    <string name="login">Autentificare</string>
     <!-- Aidex Cgms -->
 </resources>

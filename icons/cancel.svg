@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="24px"
+	 height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+<g id="cancel">
+	<circle fill="none" stroke="#CCCCCC" stroke-width="1.9843" stroke-miterlimit="10" cx="12" cy="12" r="9.146"/>
+	<g>
+		
+			<line fill="none" stroke="#CCCCCC" stroke-width="1.9843" stroke-miterlimit="10" x1="8.854" y1="15.146" x2="15.146" y2="8.854"/>
+		
+			<line fill="none" stroke="#CCCCCC" stroke-width="1.9843" stroke-miterlimit="10" x1="15.146" y1="15.146" x2="8.854" y2="8.854"/>
+	</g>
+</g>
+</svg>

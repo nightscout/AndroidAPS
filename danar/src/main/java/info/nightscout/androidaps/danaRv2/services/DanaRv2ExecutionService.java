@@ -362,7 +362,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
             if (!danaPump.getBolusStopped()) {
                 mSerialIOThread.sendMessage(start);
             } else {
-                t.insulin = 0d;
+                t.setInsulin(0d);
                 return false;
             }
             while (!danaPump.getBolusStopped() && !start.getFailed()) {

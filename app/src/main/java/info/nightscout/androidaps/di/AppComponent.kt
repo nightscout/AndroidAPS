@@ -16,12 +16,12 @@ import info.nightscout.androidaps.dependencyInjection.AutotuneModule
 import info.nightscout.androidaps.diaconn.di.DiaconnG8Module
 import info.nightscout.androidaps.insight.di.InsightDatabaseModule
 import info.nightscout.androidaps.insight.di.InsightModule
-import info.nightscout.androidaps.plugin.general.openhumans.dagger.OpenHumansModule
+import info.nightscout.androidaps.plugin.general.openhumans.di.OpenHumansModule
 import info.nightscout.androidaps.plugins.pump.common.di.PumpCommonModule
 import info.nightscout.androidaps.plugins.pump.common.di.RileyLinkModule
 import info.nightscout.androidaps.plugins.pump.medtronic.di.MedtronicModule
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.dagger.OmnipodDashModule
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.dagger.OmnipodErosModule
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.di.OmnipodDashModule
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.di.OmnipodErosModule
 import info.nightscout.shared.di.SharedModule
 import javax.inject.Singleton
 

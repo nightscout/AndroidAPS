@@ -6,19 +6,23 @@
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
     <uses-permission android:name="android.permission.VIBRATE" />
+
     <application>
         <activity
             android:name="info.nightscout.androidaps.plugins.pump.insight.activities.InsightPairingActivity"
+            android:exported="false"
             android:label="@string/insight_pairing"
             android:theme="@style/AppTheme" />
         <activity
             android:name="info.nightscout.androidaps.plugins.pump.insight.activities.InsightAlertActivity"
-            android:label="@string/pump_alert"
             android:excludeFromRecents="true"
+            android:exported="false"
+            android:label="@string/pump_alert"
             android:launchMode="singleInstance"
             android:theme="@style/InsightAlertDialog" />
         <activity
             android:name="info.nightscout.androidaps.plugins.pump.insight.activities.InsightPairingInformationActivity"
+            android:exported="false"
             android:label="@string/pairing_information"
             android:theme="@style/AppTheme" />
 

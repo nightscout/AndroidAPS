@@ -14,12 +14,39 @@ sealed class EventData : Event() {
 
     companion object {
 
-        fun deserialize(json: String) = Json.decodeFromString(serializer(), json)
+        fun deserialize(json: String) = try {
+            Json.decodeFromString(serializer(), json)
+        } catch (ignored: Exception) {
+            Error(System.currentTimeMillis())
+        }
     }
 
     // Mobile <- Wear
     @Serializable
     data class ActionPong(val timeStamp: Long, val apiLevel: Int) : EventData()
+
+    @Serializable
+    data class WearException(
+        val timeStamp: Long,
+        val exception: ByteArray,
+        val board: String,
+        val fingerprint: String,
+        val sdk: String,
+        val model: String,
+        val manufacturer: String,
+        val product: String
+    ) : EventData() {
+
+        override fun equals(other: Any?): Boolean =
+            when (other) {
+                !is WearException -> false
+                else              -> timeStamp == other.timeStamp && fingerprint == other.fingerprint
+            }
+
+        override fun hashCode(): Int {
+            return Objects.hash(timeStamp, fingerprint)
+        }
+    }
 
     @Serializable
     data class Error(val timeStamp: Long) : EventData() // ignored
@@ -208,7 +235,11 @@ sealed class EventData : Event() {
         val unitsMgdl: Boolean,
         val bolusPercentage: Int,
         val maxCarbs: Int,
-        val maxBolus: Double
+        val maxBolus: Double,
+        val insulinButtonIncrement1: Double,
+        val insulinButtonIncrement2: Double,
+        val carbsButtonIncrement1: Int,
+        val carbsButtonIncrement2: Int
     ) : EventData()
 
     @Serializable
@@ -234,4 +265,7 @@ sealed class EventData : Event() {
 
     @Serializable // returnCommand is sent back to Mobile after confirmation
     data class ConfirmAction(val title: String, val message: String, val returnCommand: EventData?) : EventData()
+
+    @Serializable
+    data class SnoozeAlert(val timeStamp: Long) : EventData()
 }

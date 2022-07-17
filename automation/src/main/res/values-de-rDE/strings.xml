@@ -113,4 +113,5 @@
     <string name="automation_event">Automatisierungs-Ereignis</string>
     <string name="reorder_label">Umsortieren</string>
     <string name="user_action">Benutzeraktion</string>
+    <string name="confirm_remove_multiple_items">Sind Sie sicher, dass Sie diese(s) %1$d Element(e) löschen möchten?</string>
 </resources>

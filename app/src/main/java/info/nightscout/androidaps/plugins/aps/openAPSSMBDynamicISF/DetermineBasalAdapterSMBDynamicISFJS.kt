@@ -192,6 +192,11 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scri
         this.profile.put("sens", profile.getIsfMgdl())
         this.profile.put("max_daily_safety_multiplier", sp.getInt(R.string.key_openapsama_max_daily_safety_multiplier, 3))
         this.profile.put("current_basal_safety_multiplier", sp.getDouble(R.string.key_openapsama_current_basal_safety_multiplier, 4.0))
+        this.profile.put("lgsThreshold", Profile.toMgdl(sp.getDouble(R.string.key_lgs_threshold, 65.0)))
+
+        val insulin = activePlugin.activeInsulin
+        val insulinType = insulin.friendlyName
+        val insulinPeak = insulin.peak
 
         //mProfile.put("high_temptarget_raises_sensitivity", SP.getBoolean(R.string.key_high_temptarget_raises_sensitivity, SMBDefaults.high_temptarget_raises_sensitivity));
         this.profile.put("high_temptarget_raises_sensitivity", sp.getBoolean(R.string.key_high_temptarget_raises_sensitivity, SMBDefaults.high_temptarget_raises_sensitivity))
@@ -222,7 +227,9 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scri
         this.profile.put("enableSMB_after_carbs", smbEnabled && sp.getBoolean(R.string.key_enableSMB_after_carbs, false) && advancedFiltering)
         this.profile.put("maxSMBBasalMinutes", sp.getInt(R.string.key_smbmaxminutes, SMBDefaults.maxSMBBasalMinutes))
         this.profile.put("maxUAMSMBBasalMinutes", sp.getInt(R.string.key_uamsmbmaxminutes, SMBDefaults.maxUAMSMBBasalMinutes))
-        this.profile.put("DynISFAdjust",  SafeParse.stringToDouble(sp.getString(R.string.key_DynISFAdjust,"100")))
+        this.profile.put("DynISFAdjust", SafeParse.stringToDouble(sp.getString(R.string.key_DynISFAdjust, "100")))
+        this.profile.put("insulinType", insulinType)
+        this.profile.put("insulinPeak", insulinPeak)
         this.profile.put("maxUAMSMBBasalMinutes", sp.getInt(R.string.key_uamsmbmaxminutes, SMBDefaults.maxUAMSMBBasalMinutes))
         //set the min SMB amount to be the amount set by the pump.
         this.profile.put("bolus_increment", pumpBolusStep)
@@ -263,9 +270,13 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scri
         this.mealData.put("lastBolusTime", mealData.lastBolusTime)
         this.mealData.put("lastCarbTime", mealData.lastCarbTime)
 
+        this.mealData.put("TDDAIMI1", tddCalculator.averageTDD(tddCalculator.calculate(1))?.totalAmount)
         this.mealData.put("TDDAIMI7", tddCalculator.averageTDD(tddCalculator.calculate(7))?.totalAmount)
-        this.mealData.put("TDDPUMP", tddCalculator.calculateDaily().totalAmount)
-        this.mealData.put("TDDLast24", tddCalculator.calculate24Daily().totalAmount)
+        this.mealData.put("TDDLast4", tddCalculator.calculateDaily(-4, 0).totalAmount)
+        this.mealData.put("TDD4to8", tddCalculator.calculateDaily(-8, -4).totalAmount)
+        this.mealData.put("TDD24", tddCalculator.calculateDaily(-24, 0).totalAmount)
+
+
 
         if (constraintChecker.isAutosensModeEnabled().value()) {
             autosensData.put("ratio", autosensDataRatio)

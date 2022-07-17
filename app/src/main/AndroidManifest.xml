@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
@@ -47,7 +46,7 @@
         android:restoreAnyVersion="true"
         android:roundIcon="${appIconRound}"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme.Launcher" >
+        android:theme="@style/AppTheme.Launcher">
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -64,7 +63,7 @@
 
         <receiver
             android:name=".widget.Widget"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -82,69 +81,86 @@
             android:name="com.google.android.gms.car.application"
             android:resource="@xml/automotive_app_desc" />
 
-        <activity android:name=".MainActivity"
-            android:theme="@style/AppTheme"
-            android:exported="true">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.PreferencesActivity" />
-        <activity android:name=".plugins.general.overview.activities.QuickWizardListActivity"
-            android:theme="@style/AppTheme"
-            android:exported="false">
+        <activity
+            android:name=".activities.PreferencesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".plugins.general.overview.activities.QuickWizardListActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".plugins.general.maintenance.activities.PrefImportListActivity"
+        <activity
+            android:name=".plugins.general.maintenance.activities.PrefImportListActivity"
+            android:exported="false"
             android:theme="@style/AppTheme" />
-        <activity android:name=".activities.HistoryBrowseActivity"
+        <activity
+            android:name=".activities.HistoryBrowseActivity"
+            android:exported="false"
             android:theme="@style/AppTheme" />
-        <activity android:name=".activities.TreatmentsActivity"
+        <activity
+            android:name=".activities.TreatmentsActivity"
+            android:exported="false"
             android:theme="@style/AppTheme" />
-        <activity android:name=".activities.SurveyActivity"
+        <activity
+            android:name=".activities.SurveyActivity"
+            android:exported="false"
             android:theme="@style/AppTheme" />
-        <activity android:name=".activities.ProfileHelperActivity"
+        <activity
+            android:name=".activities.ProfileHelperActivity"
+            android:exported="false"
             android:theme="@style/AppTheme" />
-        <activity android:name=".activities.StatsActivity"
+        <activity
+            android:name=".activities.StatsActivity"
+            android:exported="false"
             android:theme="@style/AppTheme" />
 
         <!-- Receive new BG readings from other local apps -->
         <receiver
-                android:name=".receivers.DataReceiver"
-                android:enabled="true"
-                android:exported="true">
+            android:name=".receivers.DataReceiver"
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
                 <!-- Receiver from xDrip -->
-                <action android:name="com.eveningoutpost.dexdrip.BgEstimate"/>
+                <action android:name="com.eveningoutpost.dexdrip.BgEstimate" />
                 <!-- Receiver from 640g uploader -->
-                <action android:name="com.eveningoutpost.dexdrip.NS_EMULATOR"/>
+                <action android:name="com.eveningoutpost.dexdrip.NS_EMULATOR" />
                 <!-- Receiver from glimp -->
-                <action android:name="it.ct.glicemia.ACTION_GLUCOSE_MEASURED"/>
+                <action android:name="it.ct.glicemia.ACTION_GLUCOSE_MEASURED" />
                 <!-- Receiver from Dexcom -->
-                <action android:name="com.dexcom.cgm.EXTERNAL_BROADCAST"/>
+                <action android:name="com.dexcom.cgm.EXTERNAL_BROADCAST" />
                 <!-- Receiver from Poctech -->
-                <action android:name="com.china.poctech.data"/>
+                <action android:name="com.china.poctech.data" />
                 <!-- Receiver from Tomato -->
-                <action android:name="com.fanqies.tomatofn.BgEstimate"/>
+                <action android:name="com.fanqies.tomatofn.BgEstimate" />
                 <!-- Receiver from GlucoRx Aidex -->
-                <action android:name="com.microtechmd.cgms.aidex.action.BgEstimate"/>
+                <action android:name="com.microtechmd.cgms.aidex.action.BgEstimate" />
             </intent-filter>
         </receiver>
 
         <!-- Receive new SMS messages -->
         <receiver
-                android:name=".receivers.SmsReceiver"
-                android:enabled="true"
-                android:exported="true"
-                android:permission="android.permission.BROADCAST_SMS">
+            android:name=".receivers.SmsReceiver"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.BROADCAST_SMS">
             <intent-filter>
-                <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
 
@@ -211,15 +227,23 @@
         <activity
             android:name=".setupwizard.SetupWizardActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/AppTheme"
-            android:label="@string/title_activity_setup_wizard" />
+            android:exported="false"
+            android:label="@string/title_activity_setup_wizard"
+            android:theme="@style/AppTheme" />
 
         <activity
             android:name=".activities.SingleFragmentActivity"
+            android:exported="false"
             android:theme="@style/AppTheme" />
-        <activity android:name=".plugins.general.maintenance.activities.LogSettingActivity" />
-        <activity android:name=".activities.RequestDexcomPermissionActivity" />
-        <activity android:name=".plugins.general.smsCommunicator.activities.SmsCommunicatorOtpActivity">
+        <activity
+            android:name=".plugins.general.maintenance.activities.LogSettingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.RequestDexcomPermissionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".plugins.general.smsCommunicator.activities.SmsCommunicatorOtpActivity"
+            android:exported="false">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.plugins.general.smsCommunicator.activities.SmsCommunicatorOtpActivity" />
 
@@ -227,7 +251,9 @@
             </intent-filter>
         </activity>
 
-        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
 
     </application>
 

@@ -6,6 +6,7 @@
     <string name="treatmentssafety_title">Bezpečnosť zadania ošetrenia</string>
     <string name="treatmentssafety_maxbolus_title">Maximálny povolený bolus [JI]</string>
     <string name="treatmentssafety_maxcarbs_title">Maximálne povolené množstvo sacharidov [g]</string>
+    <string name="treatmentssafety_lgsThreshold_title">Hodnota glykémie, pri ktorej sa aktivuje LGS</string>
     <string name="nav_preferences_plugin">Nastavenie pluginu %1$s</string>
     <string name="nav_preferences">Nastavenia</string>
     <string name="nav_refreshtreatments">Obnoviť ošetrenia z NS</string>
@@ -432,8 +433,8 @@
     <string name="ns_localbroadcasts_title">Povoliť lokálne vysielanie.</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dynamická ISF</string>
-    <string name="DynISFAdjust_title">Korekčný faktor pre Dynamickú ISF v %%</string>
-    <string name="DynISFAdjust_summary">Korekčný faktor pre dynamickú ISF. Pre agresivnejšie korekčné dávky nastavte hodnoty väčšie ako 100%% a pre menej agresivne korekcie menšie než 100%%.</string>
+    <string name="DynISFAdjust_title" formatted="false">Korekčný faktor pre Dynamickú ISF v %</string>
+    <string name="DynISFAdjust_summary" formatted="false">Korekčný faktor pre dynamickú ISF. Pre agresivnejšie korekčné dávky nastavte hodnoty väčšie ako 100%, pre menej agresívne korekcie, menšie než 100%.</string>
     <string name="enableuam">Povoliť UAM</string>
     <string name="enablesmb">Povoliť SMB</string>
     <string name="enablesmb_summary">Použiť Super Mikro Bolusy namiesto dočasných bazálov, pre zrýchleniu účinku</string>
@@ -592,6 +593,7 @@
     <string name="openapssmb_maxiob_summary">Táto hodnota je v kontexte OpenAPS nazývaná Max IOB.\nOpenAPS nikdy nepridá inzulín, pokiaľ je súčasné IOB väčšie, ako táto hodnota</string>
     <string name="absorption_cutoff_title">Maximálna doba vstrebávania sacharidov [h]</string>
     <string name="absorption_cutoff_summary">Doba, po ktorej sú všetky sacharidy považované za vstrebané. Zvyšné budú orezané.</string>
+    <string name="treatmentssafety_lgsThreshold_summary">Hodnota glykémie, pri ktorej bude podávanie inzulínu zastavené. Východzia hodnota využíva štandardný cieľový model. Užívateľ môže nastaviť hodnoty od 3,3 mmol/l do 5,5 mmol/l. Pri hodnotách pod 3,6 mmol/l se použije východzí model.</string>
     <string name="overview_show_notes_field_in_dialogs_title">Zobrazovať kolónku poznámky v dialógoch ošetrení</string>
     <string name="next_button">Ďalšia</string>
     <string name="previous_button">Späť</string>
@@ -1035,10 +1037,12 @@
     <string name="a11y_only_on_watch">iba na hodinkách</string>
     <string name="a11y_only_on_phone">iba na telefóne</string>
     <string name="a11y_drag_and_drop_handle">úchop potiahni a pusť</string>
+    <string name="search">Hľadať</string>
     <!-- Aidex Cgms -->
     <string name="aidex">GlucoRx Aidex</string>
     <string name="aidex_short">Aidex</string>
     <string name="description_source_aidex">Prijímať hodnoty glykémie zo senzora GlucoRx Aidex.</string>
     <string name="blocked_by_charging">Zablokované možnosti nabíjania</string>
     <string name="blocked_by_connectivity">Zablokované možnosti pripojenia</string>
+    <string name="no_watch_connected">(Žiadne hodinky nie sú pripojené)</string>
 </resources>

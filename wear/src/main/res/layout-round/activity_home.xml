@@ -127,7 +127,7 @@
                 tools:ignore="SmallSp" />
 
             <TextView
-                android:id="@+id/externaltstatus"
+                android:id="@+id/status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingStart="10sp"
@@ -143,7 +143,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/watch_time"
+        android:id="@+id/time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
