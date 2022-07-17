@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 class PairingDataStorage(context: Context) {
 
-    lateinit var preferences: SharedPreferences
+    var preferences: SharedPreferences
     private var _paired: Boolean = false
     private var _macAddress: String? = null
     private var _lastNonceSent: Nonce? = null

@@ -430,7 +430,7 @@ class LocalInsightPlugin @Inject constructor(
                     bolusCancelled = false
                 }
                 result.success(true).enacted(true)
-                val t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType === DetailedBolusInfo.BolusType.SMB)
+                val t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType === DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.id)
                 val bolusingEvent = EventOverviewBolusProgress
                 bolusingEvent.t = t
                 bolusingEvent.status = rh.gs(R.string.insight_delivered, 0.0, insulin)
