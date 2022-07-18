@@ -36,6 +36,7 @@ fun bolusCalculatorResultFromJson(jsonObject: JSONObject): BolusCalculatorResult
                 it.id = 0
                 it.isValid = isValid
                 it.interfaceIDs.nightscoutId = id
+                it.version = 0
             }
     } catch (e: JsonSyntaxException) {
         null
