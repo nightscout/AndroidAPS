@@ -2,15 +2,18 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_xdrip">AAPS</string>
-    <string name="label_xdrip_large">AAPS (גדול)</string>
-    <string name="label_xdrip_big_chart">AAPS (תרשים גדול)</string>
-    <string name="label_xdrip_no_chart">AAPS (ללא תרשים)</string>
-    <string name="label_xdrip_circle">AAPS (עיגול)</string>
-    <string name="label_xdrip_v2">AAPSv2</string>
-    <string name="label_xdrip_cockpit">AAPS (קוקפיט)</string>
-    <string name="label_xdrip_steampunk">AAPS (סטימפאנק)</string>
-    <string name="label_digitalstyle">AAPS (דיגיטלי)</string>
+    <string name="label_watchface">AAPS</string>
+    <string name="label_watchface_large">AAPS (גדול)</string>
+    <string name="label_watchface_big_chart">AAPS (תרשים גדול)</string>
+    <string name="label_watchface_no_chart">AAPS (ללא תרשים)</string>
+    <string name="label_watchface_circle">AAPS (עיגול)</string>
+    <string name="label_watchface_v2">AAPS (v2)</string>
+    <string name="label_watchface_cockpit">AAPS (תא טייס)</string>
+    <string name="label_watchface_steampunk">AAPS (סטימפאנק)</string>
+    <string name="label_watchface_digital_style">AAPS (דיגיטלי)</string>
+    <string name="label_actions_tile">AAPS (פעולות)</string>
+    <string name="label_temp_target_tile">AAPS (מטרה זמנית)</string>
+    <string name="label_quick_wizard_tile">AAPS (אשף מהיר)</string>
     <string name="label_warning_sync">אין נתונים!</string>
     <string name="label_warning_old">נתונים ישנים!</string>
     <string name="label_warning_since">מאז %1$s</string>
@@ -25,7 +28,7 @@
     <string name="pref_show_delta">הצג דלתא</string>
     <string name="pref_show_avgdelta">הצג דלתא ממוצעת</string>
     <string name="pref_show_phone_battery">הצג את סוללת הטלפון</string>
-    <string name="pref_show_rig_battery">הצג את סוללת ה-Rig</string>
+    <string name="pref_show_rig_battery">הצג מצב סוללה משולבת</string>
     <string name="pref_show_basal_rate">הצג מינון בזאלי</string>
     <string name="pref_show_loop_status">הצג סטטוס לולאה</string>
     <string name="pref_show_bg">הצג רמת סוכר</string>
@@ -54,18 +57,22 @@
     <string name="pref_ring_history">היסטוריית צלצולים</string>
     <string name="pref_light_ring_history">היסטוריה של טבעת אור</string>
     <string name="pref_animations">אנימציות</string>
-    <string name="pref_wizard_in_menu">אשף בתפריט</string>
+    <string name="pref_wizard_in_menu">מחשבון בתפריט</string>
     <string name="pref_prime_in_menu">תיחול בתפריט</string>
     <string name="pref_single_target">מטרה יחידה</string>
-    <string name="pref_wizard_percentage">אחוז אשף</string>
+    <string name="pref_wizard_percentage">אחוז החישוב</string>
     <string name="pref_complication_tap_action">פעולת הקשה על סיבוך</string>
     <string name="pref_unicode_in_complications">יוניקוד בסיבוכים</string>
     <string name="pref_version">גירסה:</string>
     <string name="pref_moreWatchfaceSettings">עוד הגדרות פני שעון</string>
     <string name="pref_lookInYourWatchfaceConfiguration">עיינו בהגדרות פני השעון בבקשה.</string>
     <string name="menu_tempt">מטרה זמנית</string>
-    <string name="menu_wizard">אשף</string>
+    <string name="menu_wizard">מחשבון</string>
+    <string name="menu_wizard_short">מחשבון</string>
+    <string name="menu_treatment">טיפול</string>
+    <string name="menu_treatment_short">טיפול</string>
     <string name="menu_bolus">בולוס</string>
+    <string name="menu_carb">פחמימות</string>
     <string name="menu_ecarb">פחמימות ממושכות</string>
     <string name="menu_settings">הגדרות</string>
     <string name="menu_status">סטטוס</string>
@@ -74,11 +81,21 @@
     <string name="menu_none">ללא</string>
     <string name="menu_default">ברירת מחדל</string>
     <string name="menu_menu">תפריט</string>
+    <string name="quick_wizard_short">XL</string>
     <string name="action_duration">משך</string>
-    <string name="action_target" comment="In temp target menu, single target value">מטרה</string>
+    <string name="action_tempt_confirmation">התבקש ערך מטרה זמני</string>
+    <string name="action_quick_wizard_confirmation">התבקש אשף מהיר</string>
+    <string name="action_treatment_confirmation">התבקש טיפול</string>
+    <string name="action_bolus_confirmation">התבקש בולוס</string>
+    <string name="action_wizard_confirmation">התבקש חישוב</string>
+    <string name="action_fill_confirmation">התבקש מילוי</string>
+    <string name="action_ecarb_confirmation">נדרשו פחמימות</string>
+    <string name="action_profile_switch_confirmation">התבקשה החלפת פרופיל</string>
+    <string name="action_target" comment="In temp target menu, single target value">ערך מטרה</string>
     <string name="action_low" comment="In temp target menu, lower value from range">נמוך</string>
     <string name="action_high" comment="In temp target menu, higher value from range">גבוה</string>
     <string name="action_carbs">פחמימות</string>
+    <string name="action_ecarbs">פחמימות ממושכות</string>
     <string name="action_percentage">אחוז</string>
     <string name="action_start_min">התחלה [min]</string>
     <string name="action_duration_h">משך [h]</string>
@@ -95,7 +112,7 @@
     <string name="cancel_bolus">ביטול בולוס</string>
     <string name="status_pump">משאבה</string>
     <string name="status_loop">לולאה</string>
-    <string name="status_cpp">CPP</string>
+    <string name="status_profile_switch">החלפת פרופיל</string>
     <string name="status_tdd">סה\"כ מינון אינסולין יומי TDD</string>
     <string name="activity_carb">פחמימות</string>
     <string name="activity_IOB">כמות אינסולין פעילה</string>
@@ -122,8 +139,8 @@
     <string name="color_name_white">לבן</string>
     <string name="color_name_black">שחור</string>
     <string name="color_name_multicolor">צבעוני</string>
-    <string name="pref_simplify_ui_charging">פשט את ממשק הטעינה</string>
-    <string name="pref_simplify_ui_charging_sum">מציג את השעה ואת רמת הסוכר בלבד בזמן טעינה</string>
+    <string name="pref_simplify_ui">פשט את הממשק</string>
+    <string name="pref_simplify_ui_sum">מציג רק את השעה ואת רמת הסוכר</string>
     <string name="pref_vibrate_hourly">רטט אחת לשעה</string>
     <string name="pref_show_weeknumber">הצג מס\' שבוע</string>
     <string name="digitalstyle_pref_your_style">הסגנון שלכם:</string>
@@ -138,4 +155,33 @@
     <string name="bolus_progress_silent_channel_name">התקדמות בולוס שקטה</string>
     <string name="bolus_progress_channel_description">התקדמות הבולוס וביטול</string>
     <string name="bolus_progress_silent_channel_description">התקדמות הבולוס וביטול עם פחות רטט</string>
+    <string name="simple_ui_off">כבוי</string>
+    <string name="simple_ui_charging">בזמן טעינה</string>
+    <string name="simple_ui_always_on">מצב דלוק תמיד</string>
+    <string name="simple_ui_always_on_charging">דלוק תמיד וטוען</string>
+    <string name="temp_target_eating_soon">אוכל בקרוב</string>
+    <string name="temp_target_hypo">היפו</string>
+    <string name="temp_target_activity">פעילות</string>
+    <string name="temp_target_manual">ידני</string>
+    <string name="temp_target_cancel">ביטול</string>
+    <string name="tile_none">ללא</string>
+    <string name="tile_no_config">אין הגדרה</string>
+    <string name="wear_control_not_enabled">שליטה משעון Wear אינה מאופשרת</string>
+    <string name="wear_control_no_data">אין נתונים זמינים</string>
+    <string name="increment">תוספת</string>
+    <string name="decrement">הפחתה</string>
+    <string name="first_char_high">גב\'</string>
+    <string name="first_char_low">נמ\'</string>
+    <string name="abbreviation_average">ממוצע</string>
+    <string name="no_iob_u">-- יח\'</string>
+    <string name="no_cob_g">-- גר\'</string>
+    <string name="no_tmp_basal_u_h">-.--יח\' לשעה</string>
+    <string name="uploader_na">מעלה: --- %</string>
+    <string name="no_status">אין סטטוס</string>
+    <string name="time_stamp_na_min_ago">לפני -- דקות</string>
+    <string name="delta_na">--- mg/dl</string>
+    <string name="no_loop_status">חסר סטטוס לולאה</string>
+    <string name="cob_000g">000 גר\'</string>
+    <string name="svg_00_0" comment="use , or . only">00,0</string>
+    <string name="iob_0_00u">0,00 יח\'</string>
 </resources>

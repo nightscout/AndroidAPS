@@ -28,7 +28,6 @@
     <string name="description_overview">Wyświetla bieżący stan twojej pętli i przyciski dla większości typowych działań</string>
     <string name="description_persistent_notification">Wyświetla bieżące powiadomienia z krótkim omówieniem działania pętli</string>
     <string name="description_profile_local">Zdefiniuj profil, który jest dostępny offline.</string>
-    <string name="description_pump_mdi">Integracja pompy dla pacjentów podających insulinę w formie wielu zastrzyków dziennie</string>
     <string name="description_pump_virtual">Integracja z pompami, które nie posiadają jeszcze żadnego sterownika (Open Loop)</string>
     <string name="description_sensitivity_aaps">Wrażliwość jest obliczana w taki sam sposób, jak algorytm Oref0, ale możliwe jest podanie okresu z przeszłości. Minimalne wchłanianie węglowodanów jest obliczana na podstawie czasu wchłaniania max carb, określonego w ustawieniu.</string>
     <string name="description_sensitivity_oref1">Wrażliwość oblicza się na podstawie danych z ostatnich 8 lub 24 godzin (przy użyciu danych o wyższej wrażliwości). Węglowodany (jeśli nie są wchłonięte) są skracane po upływie czasu określonego w ustawieniach. Wtyczka również oblicza UAM.</string>
@@ -102,7 +101,6 @@
     <string name="overview_calculator_label">Kalkulator</string>
     <string name="constraintapllied">Ograniczenie nałożone!</string>
     <string name="sms_bolus">Bolus:</string>
-    <string name="basal">Baza</string>
     <string name="sms_basal">Baza:</string>
     <string name="changeyourinput">Zmień wprowadzone dane!</string>
     <string name="configbuilder_bgsource">Źródło BG</string>
@@ -246,11 +244,9 @@
     <string name="wear">Oprogramowanie Wear (Smartwatch)</string>
     <string name="resend_all_data">Prześlij ponownie wszystkie dane</string>
     <string name="open_settings_on_wear">Otwórz ustawienia dla Wear</string>
-    <string name="basal_rate">Dawka bazowa:</string>
     <string name="basalvaluebelowminimum">Wartość bazy poniżej minimum. Nie ustawiono profilu!</string>
     <string name="sms_actualbg">BG:</string>
     <string name="sms_lastbg">Ostatnia BG:</string>
-    <string name="mdi">PEN</string>
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Nadchodzące powiadomienia</string>
     <string name="old_data">NIEAKTUALNE DANE</string>
@@ -427,8 +423,6 @@
     <string name="keep_screen_on_summary">Nie pozwól, aby system Android wyłączał ekran. Zwiększy to zużycie energii, gdy zasilanie sieciowe jest wyłączone.</string>
     <string name="sensitivity_warning">Przy włączonej funkcji Autosens pamiętaj, żeby wprowadzać wszystkie węglowodany. W innym wypadku odchylenia węglowodanów będą błędnie identyfikowane jako zmiany wrażliwości !!</string>
     <string name="sensitivityweightedaverage">Wrażliwość ŚredniaWażona</string>
-    <string name="mdtp_ok">OK</string>
-    <string name="mdtp_cancel">Anuluj</string>
     <string name="notloadedplugins">Nie wszystkie profile zostały załadowane!</string>
     <string name="valuesnotstored">Wartości nie są przechowywane!</string>
     <string name="ns_localbroadcasts">Włącz rozgłaszanie do innych aplikacji (takich jak xDrip+). Nie należy włączać, jeśli zainstalowana jest więcej niż jedna instancja AAPS lub NSClient!</string>
@@ -466,7 +460,6 @@
     <string name="shortenergy">En</string>
     <string name="shortprotein">Bi</string>
     <string name="shortfat">Tł</string>
-    <string name="active"><![CDATA[<Aktywny>]]></string>
     <string name="executingrightnow">Polecenie jest teraz wykonywane</string>
     <string name="missed_bg_readings">Pominięte odczyty BG</string>
     <string name="raise_notifications_as_android_notifications">Użyj powiadomień systemowych dla alertów i powiadomień</string>
@@ -603,9 +596,7 @@
     <string name="secondcarbsincrement">Drugi stopień przyrostu węglow.</string>
     <string name="thirdcarbsincrement">Trzeci stopień przyrostu węglow.</string>
     <string name="cgm">CGM</string>
-    <string name="ns_wifionly">Używaj tylko połączenia WiFi</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="ns_chargingonly">Tylko gdy się ładuje</string>
     <string name="connectionsettings_title">Ustawienia połączenia</string>
     <string name="ns_wifi_allowedssids">Dozwolone SSID (rozdzielone średnikiem)</string>
     <string name="ns_allowroaming">Zezwalaj na połączenia w roamingu</string>
@@ -757,8 +748,6 @@
     <string name="profilenamecontainsdot">Nazwa profilu zawiera kropki.\nTo nie jest obsługiwane przez NS.\nProfil nie zostanie przesyłany do NS.</string>
     <string name="low_mark_comment">Dolna wartość zakresu docelowego (tylko do wyświetlania)</string>
     <string name="high_mark_comment">Górna wartość zakresu docelowego (tylko do wyświetlania)</string>
-    <string name="age">Czas:</string>
-    <string name="weight_label">Waga:</string>
     <string name="id">ID:</string>
     <string name="submit">Wyślij</string>
     <string name="mostcommonprofile">Najczęściej używany profil:</string>
@@ -766,7 +755,6 @@
     <string name="invalidage">Nieprawidłowy wpis wieku</string>
     <string name="invalidweight">Nieprawidłowy wpis wagi</string>
     <string name="invalidpct">Nieprawidłowa wartość procentowa</string>
-    <string name="tirformat"><![CDATA[<b>%1$s:</b> Od: <b>%2$02d%%</b> Cel: <b>%3$02d%%</b> Do: <b>%4$02d%%</b>]]></string>
     <string name="average">Średnio</string>
     <string name="tir">TIR</string>
     <string name="activitymonitor">Monitor aktywności</string>
@@ -904,4 +892,12 @@
     <string name="identification">Identyfikator (email, nick na FB lub Discordzie itp.)</string>
     <string name="identification_not_set">Identyfikator nie jest ustawiony w trybie dev</string>
     <string name="not_available_full">Niedostępne</string>
+    <!-- Theme switcher dark and light mode-->
+    <!-- WEAR OS-->
+    <string name="remove_selected_items">Usuń wybrane pozycje</string>
+    <string name="confirm_remove_multiple_items">Czy na pewno chcesz usunąć %1$d pozycji</string>
+    <string name="count_selected">Wybrany %1$d</string>
+    <string name="sort_label">Sortuj</string>
+    <string name="login">Zaloguj się</string>
+    <!-- Aidex Cgms -->
 </resources>

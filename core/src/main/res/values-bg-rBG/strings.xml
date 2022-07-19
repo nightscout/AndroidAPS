@@ -4,6 +4,7 @@
     <!--    General-->
     <string name="refresh">Обнови</string>
     <string name="error">Грешка</string>
+    <string name="save">Съхрани</string>
     <string name="not_set_short">Не е зададен</string>
     <string name="failedupdatebasalprofile">Неуспешно обновяване на базалния профил</string>
     <string name="profile_set_ok">Профила на помпата е обновен</string>
@@ -41,6 +42,7 @@
     <string name="carbs">въглехидрати</string>
     <string name="invalidprofile">Грешен профил !!!</string>
     <string name="noprofileset">НЕ Е АКТИВИРАН ПРОФИЛ</string>
+    <string name="active"><![CDATA[<Активно>]]></string>
     <string name="date">Дата</string>
     <string name="units_label">Единици</string>
     <string name="dia_label">DIA (Време на действие на инсулина):</string>
@@ -125,24 +127,6 @@
     <string name="ble_not_enabled">Bluetooth не е включен.</string>
     <string name="location_not_found_title">Локацията не е включена</string>
     <string name="location_not_found_message">За да работи откриването на нови устройсва чрез Bluetooth, трябва да включите локацията. AAPS не проследява вашето местоположение и ще можете да я изключите след успешното свързване.</string>
-    <!--    DateUtil-->
-    <string name="minago">преди %1$d мин</string>
-    <string name="hoursago">преди %1$.1fч</string>
-    <string name="shorthour">ч.</string>
-    <string name="days">дни</string>
-    <string name="hours">часа</string>
-    <string name="unit_second">секунда</string>
-    <string name="unit_minute">минута</string>
-    <string name="unit_hour">час</string>
-    <string name="unit_day">ден</string>
-    <string name="unit_week">седмица</string>
-    <string name="unit_seconds">секунди</string>
-    <string name="unit_minutes">минути</string>
-    <string name="unit_hours">часове</string>
-    <string name="unit_days">дни</string>
-    <string name="unit_weeks">седмици</string>
-    <string name="shortminute">мин.</string>
-    <string name="shortday">д</string>
     <!--    Protection-->
     <string name="wrongpassword">Грешна парола</string>
     <string name="passwords_dont_match">Паролите не съвпадат</string>
@@ -168,10 +152,6 @@
     <string name="zerovalueinprofile">Грешен профил: %1$s</string>
     <!--    Temptarget-->
     <string name="mins">%1$d мин</string>
-    <!--    TDD-->
-    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fЕ</b> Бол: <b>%3$.2fЕ</b> Баз: <b>%4$.2fЕ(%5$.0f%%)</b>]]></string>
-    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fЕ</b> Бол: <b>%3$.2fЕ</b> Баз: <b>%4$.2fЕ(%5$.0f%%)</b> Въгл: <b>%6$.0fгр</b>]]></string>
-    <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> in <b>%3$d</b> days<br>]]></string>
     <!--    Translator-->
     <string name="careportal">Careportal</string>
     <string name="careportal_bgcheck">Проверка на КЗ</string>
@@ -307,6 +287,8 @@
     <string name="valuelimitedto">%1$.2f ограничен до %2$.2f</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="sms" comment="26 characters max for translation">SMS</string>
+    <string name="basal">Базал</string>
+    <!-- Autotune -->
     <plurals name="days">
         <item quantity="one">%1$d дeн</item>
         <item quantity="other">%1$d дни</item>

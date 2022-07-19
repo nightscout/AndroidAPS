@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.general.tidepool.messages
 
-
 class DatasetReplyMessage {
 
     internal var data: Data? = null

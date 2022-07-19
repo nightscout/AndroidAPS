@@ -11,7 +11,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import java.util.*
 import javax.inject.Inject
@@ -176,7 +176,7 @@ abstract class Objective(injector: HasAndroidInjector, spName: String, @StringRe
             textView.setText(hint)
             textView.autoLinkMask = Linkify.WEB_URLS
             textView.linksClickable = true
-            textView.setLinkTextColor(Color.YELLOW)
+            textView.setLinkTextColor(rh.gac(context, R.attr.colorSecondary))
             Linkify.addLinks(textView, Linkify.WEB_URLS)
             return textView
         }

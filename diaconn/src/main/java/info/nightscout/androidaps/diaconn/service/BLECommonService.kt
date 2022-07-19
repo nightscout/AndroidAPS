@@ -15,7 +15,7 @@ import info.nightscout.androidaps.extensions.waitMillis
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import java.util.*
 import java.util.concurrent.ScheduledFuture
 import javax.inject.Inject
@@ -47,7 +47,6 @@ class BLECommonService @Inject internal constructor(
     private val bluetoothAdapter: BluetoothAdapter? get() = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
     private var connectDeviceName: String? = null
     private var bluetoothGatt: BluetoothGatt? = null
-
 
     var isConnected = false
     var isConnecting = false
@@ -291,35 +290,20 @@ class BLECommonService @Inject internal constructor(
             if(message is InjectionBlockReportPacket ) {
                 message.handleMessage(data)
                 diaconnG8Pump.bolusBlocked = true
-                val i = Intent(context, ErrorHelperActivity::class.java)
-                i.putExtra("soundid", R.raw.boluserror)
-                i.putExtra("status", rh.gs(R.string.injectionblocked))
-                i.putExtra("title", rh.gs(R.string.injectionblocked))
-                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                context.startActivity(i)
+                ErrorHelperActivity.runAlarm(context, rh.gs(R.string.injectionblocked), rh.gs(R.string.injectionblocked), R.raw.boluserror )
                 return
             }
             // battery warning report
             if(message is BatteryWarningReportPacket ) {
                 message.handleMessage(data)
-                val i = Intent(context, ErrorHelperActivity::class.java)
-                i.putExtra("soundid", R.raw.boluserror)
-                i.putExtra("status", rh.gs(R.string.needbatteryreplace))
-                i.putExtra("title", rh.gs(R.string.batterywarning))
-                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                context.startActivity(i)
+                ErrorHelperActivity.runAlarm(context, rh.gs(R.string.needbatteryreplace), rh.gs(R.string.batterywarning), R.raw.boluserror )
                 return
             }
 
             // insulin lack warning report
             if(message is InsulinLackReportPacket ) {
                 message.handleMessage(data)
-                val i = Intent(context, ErrorHelperActivity::class.java)
-                i.putExtra("soundid", R.raw.boluserror)
-                i.putExtra("status", rh.gs(R.string.needinsullinreplace))
-                i.putExtra("title", rh.gs(R.string.insulinlackwarning))
-                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                context.startActivity(i)
+                ErrorHelperActivity.runAlarm(context, rh.gs(R.string.needinsullinreplace), rh.gs(R.string.insulinlackwarning), R.raw.boluserror )
                 return
             }
 

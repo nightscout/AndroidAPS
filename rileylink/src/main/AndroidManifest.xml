@@ -1,5 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="info.nightscout.androidaps.plugins.pump.common.hw.rileylink">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
@@ -13,7 +12,10 @@
     <uses-permission android:name="android.permission.LOCAL_MAC_ADDRESS" />
 
     <application>
-        <activity android:name="info.nightscout.androidaps.plugins.pump.common.dialog.RileyLinkBLEConfigActivity">
+        <activity
+            android:name="info.nightscout.androidaps.plugins.pump.common.dialog.RileyLinkBLEConfigActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.plugins.PumpCommon.dialog.RileyLinkBLEConfigActivity" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -22,8 +24,9 @@
 
         <activity
             android:name="info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity"
+            android:exported="false"
             android:label="@string/title_activity_rileylink_settings"
-            android:theme="@style/Theme.AppCompat.NoTitle" />
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

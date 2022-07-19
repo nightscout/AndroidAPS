@@ -25,10 +25,10 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.Round
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.sharedPreferences.SP
-import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs
@@ -122,7 +122,7 @@ class DanaRKoreanPlugin @Inject constructor(
         detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(Constraint(detailedBolusInfo.insulin)).value()
         if (detailedBolusInfo.carbs > 0) throw IllegalArgumentException()
         return if (detailedBolusInfo.insulin > 0) {
-            val t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB)
+            val t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.id)
             var connectionOK = false
             if (detailedBolusInfo.insulin > 0)
                 connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, detailedBolusInfo.carbs.toInt(), detailedBolusInfo.carbsTimestamp

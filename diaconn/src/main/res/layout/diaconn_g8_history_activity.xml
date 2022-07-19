@@ -6,21 +6,20 @@
     android:layout_height="fill_parent"
     tools:context="info.nightscout.androidaps.diaconn.activities.DiaconnG8HistoryActivity">
 
-
     <RelativeLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_gravity="center"
-        android:background="@color/activity_title_background"
+        android:background="?attr/activity_title_backgroundColor"
         android:orientation="horizontal"
         android:padding="5dp">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/pumphistory"
+            android:importantForAccessibility="no"
             app:srcCompat="@drawable/ic_pump_history" />
 
         <TextView
@@ -28,8 +27,8 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_gravity="center"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:text="@string/pumphistory"
             android:textAlignment="center"
             android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -44,34 +43,29 @@
         android:orientation="horizontal"
         android:padding="5dp" />
 
-    <LinearLayout
-        android:id="@+id/spinner_layout"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/typeListLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/spacer"
-        android:orientation="horizontal">
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:hint="@string/eventtype">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+            android:id="@+id/typeList"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="20dp"
-            android:text="@string/eventtype"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:inputType="none" />
 
-        <Spinner
-            android:id="@+id/spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="20dp" />
-
-    </LinearLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
         android:id="@+id/status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/spinner_layout"
+        android:layout_below="@id/typeListLayout"
         android:layout_gravity="center_horizontal"
         android:gravity="center_horizontal" />
 
@@ -82,13 +76,14 @@
         android:layout_above="@id/reload"
         android:layout_below="@+id/status" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/reload"
-        style="@style/Widget.AppCompat.Button"
+        style="@style/GrayButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:drawableStart="@drawable/ic_actions_refill"
-        android:text="@string/reload" />
+        android:text="@string/reload"
+        app:icon="@drawable/ic_actions_refill"
+        app:iconTint="@color/ic_actions_refill" />
 
 </RelativeLayout>

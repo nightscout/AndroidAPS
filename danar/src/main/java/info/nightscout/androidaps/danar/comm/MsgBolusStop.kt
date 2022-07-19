@@ -10,7 +10,7 @@ class MsgBolusStop(
 ) : MessageBase(injector) {
 
     init {
-        SetCommand(0x0101)
+        setCommand(0x0101)
         aapsLogger.debug(LTag.PUMPCOMM, "New message")
     }
 

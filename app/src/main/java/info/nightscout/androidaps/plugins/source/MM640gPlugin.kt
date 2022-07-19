@@ -18,7 +18,7 @@ import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.XDripBroadcast
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONArray
 import org.json.JSONException
@@ -75,7 +75,7 @@ class MM640gPlugin @Inject constructor(
                             when (val type = jsonObject.getString("type")) {
                                 "sgv" ->
                                     glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(
-                                        timestamp = jsonObject.getLong("sgv"),
+                                        timestamp = jsonObject.getLong("date"),
                                         value = jsonObject.getDouble("sgv"),
                                         raw = jsonObject.getDouble("sgv"),
                                         noise = null,

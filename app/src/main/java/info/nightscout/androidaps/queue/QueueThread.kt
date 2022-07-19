@@ -16,7 +16,7 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBo
 import info.nightscout.androidaps.queue.events.EventQueueChanged
 import info.nightscout.androidaps.utils.AndroidPermission
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
@@ -52,7 +52,7 @@ class QueueThread internal constructor(
                 val secondsElapsed = (System.currentTimeMillis() - connectionStartTime) / 1000
                 val pump = activePlugin.activePump
                 //  Manifest.permission.BLUETOOTH_CONNECT
-                if (config.PUMPDRIVERS && Build.VERSION.SDK_INT >= /*Build.VERSION_CODES.S*/31)
+                if (config.PUMPDRIVERS && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
                     if (androidPermission.permissionNotGranted(context, "android.permission.BLUETOOTH_CONNECT")) {
                         aapsLogger.debug(LTag.PUMPQUEUE, "no permission")
                         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTING))

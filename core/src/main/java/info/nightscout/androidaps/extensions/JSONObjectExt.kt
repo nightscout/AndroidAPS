@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.extensions
 
 import androidx.annotation.StringRes
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONObject
 
@@ -44,5 +44,3 @@ fun JSONObject.storeBoolean(@StringRes key: Int, sp: SP, rh: ResourceHelper): JS
     if (has(rh.gs(key))) sp.putString(key, getBoolean(rh.gs(key)).toString())
     return this
 }
-
-

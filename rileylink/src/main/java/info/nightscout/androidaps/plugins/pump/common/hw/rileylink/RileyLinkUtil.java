@@ -20,9 +20,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.enco
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkEncodingType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.BleAdvertisedData;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.data.ServiceResult;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.data.ServiceTransport;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTask;
+import info.nightscout.shared.logging.AAPSLogger;
 
 /**
  * Created by andy on 17/05/2018.
@@ -32,10 +30,11 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks
 public class RileyLinkUtil {
 
     private final List<RLHistoryItem> historyRileyLink = new ArrayList<>();
-    private ServiceTask currentTask;
 
     private RileyLinkEncodingType encoding;
     private Encoding4b6b encoding4b6b;
+
+    @Inject AAPSLogger aapsLogger;
 
     @Inject
     public RileyLinkUtil() {
@@ -50,7 +49,7 @@ public class RileyLinkUtil {
         this.encoding = encoding;
 
         if (encoding == RileyLinkEncodingType.FourByteSixByteLocal) {
-            this.encoding4b6b = new Encoding4b6bGeoff();
+            this.encoding4b6b = new Encoding4b6bGeoff(aapsLogger);
         }
     }
 
@@ -58,40 +57,6 @@ public class RileyLinkUtil {
     public void sendBroadcastMessage(String message, Context context) {
         Intent intent = new Intent(message);
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-    }
-
-    // FIXME remove ?
-    public void setCurrentTask(ServiceTask task) {
-        if (currentTask == null) {
-            currentTask = task;
-        } else {
-            //LOG.error("setCurrentTask: Cannot replace current task");
-        }
-    }
-
-
-    public void finishCurrentTask(ServiceTask task) {
-        if (task != currentTask) {
-            //LOG.error("finishCurrentTask: task does not match");
-        }
-        // hack to force deep copy of transport contents
-        ServiceTransport transport = task.getServiceTransport().clone();
-
-        if (transport.hasServiceResult()) {
-            sendServiceTransportResponse(transport, transport.getServiceResult());
-        }
-        currentTask = null;
-    }
-
-
-    private static void sendServiceTransportResponse(ServiceTransport transport, ServiceResult serviceResult) {
-        // get the key (hashcode) of the client who requested this
-        Integer clientHashcode = transport.getSenderHashcode();
-        // make a new bundle to send as the message data
-        transport.setServiceResult(serviceResult);
-        // FIXME
-        // transport.setTransportType(RT2Const.IPC.MSG_ServiceResult);
-        // rileyLinkIPCConnection.sendTransport(transport, clientHashcode);
     }
 
 

@@ -2,10 +2,9 @@ package info.nightscout.androidaps.interfaces
 
 import android.text.Spanned
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.queue.commands.CustomCommand
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.queue.commands.Command
+import info.nightscout.androidaps.queue.commands.CustomCommand
 
 interface CommandQueue {
 
@@ -18,7 +17,7 @@ interface CommandQueue {
     fun independentConnect(reason: String, callback: Callback?)
     fun bolusInQueue(): Boolean
     fun bolus(detailedBolusInfo: DetailedBolusInfo, callback: Callback?): Boolean
-    fun cancelAllBoluses()
+    fun cancelAllBoluses(id: Long)
     fun stopPump(callback: Callback?)
     fun startPump(callback: Callback?)
     fun setTBROverNotification(callback: Callback?, enable: Boolean)

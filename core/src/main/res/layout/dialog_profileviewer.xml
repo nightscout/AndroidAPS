@@ -1,11 +1,10 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/StyleDialog"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusableInTouchMode="true"
-    android:minWidth="300dp"
-    android:orientation="vertical"
     tools:context="info.nightscout.androidaps.dialogs.ProfileViewerDialog">
 
     <LinearLayout
@@ -14,18 +13,17 @@
         android:orientation="vertical">
 
         <RelativeLayout
+            style="@style/StyleDialogHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@color/dialog_title_background"
-            android:orientation="horizontal"
-            android:padding="5dp">
+            android:layout_gravity="center">
 
             <ImageView
                 android:id="@+id/header_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:importantForAccessibility="no"
                 app:srcCompat="@drawable/ic_home_profile" />
 
             <TextView
@@ -35,8 +33,8 @@
                 android:layout_centerInParent="true"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_toEndOf="@id/header_icon"
                 android:textAlignment="center"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -57,7 +55,7 @@
             android:gravity="center_horizontal"
             android:text="@string/invalidprofile"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@android:color/holo_red_light"
+            android:textColor="?attr/alarmColor"
             android:textStyle="bold"
             android:visibility="gone" />
 
@@ -68,7 +66,7 @@
             android:gravity="center_horizontal"
             android:text="@string/noprofileset"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@android:color/holo_red_light"
+            android:textColor="?attr/alarmColor"
             android:textStyle="bold"
             android:visibility="gone" />
 
@@ -84,8 +82,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:layout_weight="2"
-                android:gravity="end"
                 android:text="@string/date"
+                android:textAlignment="viewEnd"
                 android:textSize="14sp" />
 
             <TextView
@@ -96,7 +94,8 @@
                 android:layout_weight="0"
                 android:gravity="center_horizontal"
                 android:text=":"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/date"
@@ -104,8 +103,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_weight="1"
-                android:gravity="start"
-                android:textColor="@android:color/white"
+                android:textAlignment="viewStart"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -113,15 +111,16 @@
         <View
             android:layout_width="fill_parent"
             android:layout_height="2dip"
-            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="5dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginEnd="20dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/list_delimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:focusable="true"
             android:orientation="horizontal">
 
             <TextView
@@ -129,8 +128,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:layout_weight="2"
-                android:gravity="end"
                 android:text="@string/units_label"
+                android:textAlignment="viewEnd"
                 android:textSize="14sp" />
 
             <TextView
@@ -141,7 +140,8 @@
                 android:layout_weight="0"
                 android:gravity="center_horizontal"
                 android:text=":"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/units"
@@ -149,24 +149,25 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_weight="1"
-                android:gravity="start"
-                android:textColor="@android:color/white"
-                android:textSize="14sp" />
+                android:textAlignment="viewStart"
+                android:textSize="14sp"
+                tools:text="mmol" />
 
         </LinearLayout>
 
         <View
             android:layout_width="fill_parent"
             android:layout_height="2dip"
-            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="5dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginEnd="20dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/list_delimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:focusable="true"
             android:orientation="horizontal">
 
             <TextView
@@ -174,8 +175,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:layout_weight="2"
-                android:gravity="end"
                 android:text="@string/dia_label"
+                android:textAlignment="viewEnd"
                 android:textSize="14sp" />
 
             <TextView
@@ -186,7 +187,8 @@
                 android:layout_weight="0"
                 android:gravity="center_horizontal"
                 android:text=":"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/dia"
@@ -194,24 +196,25 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_weight="1"
-                android:gravity="start"
-                android:textColor="@android:color/white"
-                android:textSize="14sp" />
+                android:textAlignment="viewStart"
+                android:textSize="14sp"
+                tools:text="6.50 h" />
 
         </LinearLayout>
 
         <View
             android:layout_width="fill_parent"
             android:layout_height="2dip"
-            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="5dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginEnd="20dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/list_delimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:focusable="true"
             android:orientation="horizontal">
 
             <TextView
@@ -219,8 +222,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:layout_weight="2"
-                android:gravity="end"
                 android:text="@string/ic_label"
+                android:textAlignment="viewEnd"
                 android:textSize="14sp" />
 
             <TextView
@@ -231,7 +234,8 @@
                 android:layout_weight="0"
                 android:gravity="center_horizontal"
                 android:text=":"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/ic"
@@ -239,9 +243,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_weight="1"
-                android:gravity="start"
-                android:textColor="@android:color/white"
-                android:textSize="14sp" />
+                android:textAlignment="viewStart"
+                android:textSize="14sp"
+                tools:text="00:00 13.8 g/U" />
 
         </LinearLayout>
 
@@ -254,11 +258,11 @@
         <View
             android:layout_width="fill_parent"
             android:layout_height="2dip"
-            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="5dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginEnd="20dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/list_delimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -270,8 +274,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:layout_weight="2"
-                android:gravity="end"
+                android:focusable="true"
                 android:text="@string/isf_label"
+                android:textAlignment="viewEnd"
                 android:textSize="14sp" />
 
             <TextView
@@ -282,7 +287,8 @@
                 android:layout_weight="0"
                 android:gravity="center_horizontal"
                 android:text=":"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/isf"
@@ -290,8 +296,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_weight="1"
-                android:gravity="start"
-                android:textColor="@android:color/white"
+                android:textAlignment="viewStart"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -305,15 +310,16 @@
         <View
             android:layout_width="fill_parent"
             android:layout_height="2dip"
-            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="5dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginEnd="20dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/list_delimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:focusable="true"
             android:orientation="horizontal">
 
             <TextView
@@ -321,8 +327,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:layout_weight="2"
-                android:gravity="end"
                 android:text="@string/basal_label"
+                android:textAlignment="viewEnd"
                 android:textSize="14sp" />
 
             <TextView
@@ -333,7 +339,8 @@
                 android:layout_weight="0"
                 android:gravity="center_horizontal"
                 android:text=":"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/basal"
@@ -341,8 +348,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_weight="1"
-                android:gravity="start"
-                android:textColor="@android:color/white"
+                android:textAlignment="viewStart"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -357,8 +363,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:layout_weight="2"
-                android:gravity="end"
                 android:text=""
+                android:textAlignment="viewEnd"
                 android:textSize="14sp" />
 
             <TextView
@@ -377,8 +383,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="17dp"
                 android:layout_weight="1"
-                android:gravity="start"
-                android:textColor="@android:color/white"
+                android:textAlignment="viewStart"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -392,15 +397,16 @@
         <View
             android:layout_width="fill_parent"
             android:layout_height="2dip"
-            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="5dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginEnd="20dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/list_delimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:focusable="true"
             android:orientation="horizontal">
 
             <TextView
@@ -408,8 +414,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:layout_weight="2"
-                android:gravity="end"
                 android:text="@string/target_label"
+                android:textAlignment="viewEnd"
                 android:textSize="14sp" />
 
             <TextView
@@ -420,7 +426,8 @@
                 android:layout_weight="0"
                 android:gravity="center_horizontal"
                 android:text=":"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/target"
@@ -428,11 +435,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_weight="1"
-                android:gravity="start"
-                android:textColor="@android:color/white"
+                android:textAlignment="viewStart"
                 android:textSize="14sp" />
 
         </LinearLayout>
+
+        <info.nightscout.androidaps.utils.ui.TargetBgProfileGraph
+            android:id="@+id/target_graph"
+            android:layout_width="match_parent"
+            android:layout_height="100dip"
+            android:layout_margin="20dp" />
 
         <include
             android:id="@+id/close_layout"

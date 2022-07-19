@@ -20,7 +20,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONException
 import org.json.JSONObject
@@ -53,8 +53,6 @@ class SensitivityOref1Plugin @Inject constructor(
 ) {
 
     override fun detectSensitivity(ads: AutosensDataStore, fromTime: Long, toTime: Long): AutosensResult {
-        // todo this method is called from the IobCobCalculatorPlugin, which leads to a circular
-        // dependency, this should be avoided
         val profile = profileFunction.getProfile()
         if (profile == null) {
             aapsLogger.error("No profile")
@@ -203,6 +201,8 @@ class SensitivityOref1Plugin @Inject constructor(
             + " mealCOB: " + current.cob)
         return output
     }
+
+    override fun maxAbsorptionHours(): Double = sp.getDouble(R.string.key_absorption_cutoff, Constants.DEFAULT_MAX_ABSORPTION_TIME)
 
     override fun configuration(): JSONObject {
         val c = JSONObject()

@@ -5,7 +5,7 @@ import androidx.preference.PreferenceFragmentCompat
 import dagger.android.HasAndroidInjector
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 
 /**
  * Created by mike on 09.06.2016.

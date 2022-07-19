@@ -1,6 +1,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/StyleDialog"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".plugins.general.overview.dialogs.EditQuickWizardDialog">
@@ -11,17 +12,15 @@
         android:orientation="vertical">
 
         <RelativeLayout
+            style="@style/StyleDialogHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@color/dialog_title_background"
-            android:orientation="horizontal"
-            android:padding="5dp">
+            android:layout_gravity="center">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/quickwizard"
+                android:importantForAccessibility="no"
                 app:srcCompat="@drawable/ic_quick_wizard" />
 
             <TextView
@@ -29,8 +28,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:text="@string/quickwizardsettings"
                 android:textAlignment="center"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -86,15 +85,16 @@
                 android:layout_gravity="center"
                 android:gravity="center_horizontal|center_vertical"
                 android:padding="10dp"
-                android:text="08:20pm"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                tools:text="08:20pm" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:text="-"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/to"
@@ -103,11 +103,40 @@
                 android:layout_gravity="center"
                 android:gravity="center_horizontal|center_vertical"
                 android:padding="10dp"
-                android:text="08:20pm"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                tools:text="08:20pm" />
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/device_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/overview_editquickwizard_show_on_device"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+        <RadioGroup
+            android:id="@+id/device"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="15dp">
+
+            <RadioButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/device_all" />
+
+            <RadioButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/device_phone" />
+
+            <RadioButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/device_watch" />
+
+        </RadioGroup>
 
         <TextView
             android:layout_width="match_parent"
@@ -217,7 +246,6 @@
 
         </RadioGroup>
 
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -276,7 +304,6 @@
 
         </RadioGroup>
 
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -301,6 +328,47 @@
 
         </RadioGroup>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/overview_editquickwizard_usepercentage"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+        <RadioGroup
+            android:id="@+id/use_percentage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="15dp">
+
+            <RadioButton
+                android:id="@+id/use_percentage_default"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/app_default" />
+
+            <RadioButton
+                android:id="@+id/use_percentage_custom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/custom" />
+
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/percentage_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/overview_editquickwizard_percentage"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+        <EditText
+            android:id="@+id/percentage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:importantForAutofill="no"
+            android:inputType="number"
+            android:maxLength="3"/>
 
         <include
             android:id="@+id/okcancel"

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.activities.SingleFragmentActivity
 import info.nightscout.androidaps.dana.database.DanaHistoryDatabase
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.UserEntry.Action
@@ -14,6 +15,7 @@ import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.databinding.MaintenanceFragmentBinding
 import info.nightscout.androidaps.diaconn.database.DiaconnHistoryDatabase
 import info.nightscout.androidaps.events.EventPreferenceChange
+import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.insight.database.InsightDatabase
 import info.nightscout.androidaps.interfaces.DataSyncSelector
 import info.nightscout.androidaps.interfaces.ImportExportPrefs
@@ -27,11 +29,13 @@ import info.nightscout.androidaps.plugins.general.overview.OverviewData
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.database.DashHistoryDatabase
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.database.ErosHistoryDatabase
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.protection.ProtectionCheck
+import info.nightscout.androidaps.utils.protection.ProtectionCheck.Protection.PREFERENCES
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import io.reactivex.Completable.fromAction
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.rxjava3.core.Completable.fromAction
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
 class MaintenanceFragment : DaggerFragment() {
@@ -48,6 +52,7 @@ class MaintenanceFragment : DaggerFragment() {
     @Inject lateinit var diaconnDatabase: DiaconnHistoryDatabase
     @Inject lateinit var erosDatabase: ErosHistoryDatabase
     @Inject lateinit var dashDatabase: DashHistoryDatabase
+    @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var dataSyncSelector: DataSyncSelector
     @Inject lateinit var pumpSync: PumpSync
@@ -55,11 +60,11 @@ class MaintenanceFragment : DaggerFragment() {
     @Inject lateinit var overviewData: OverviewData
 
     private val compositeDisposable = CompositeDisposable()
-
+    private var inMenu = false
+    private var queryingProtection = false
     private var _binding: MaintenanceFragmentBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
+    // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -69,6 +74,9 @@ class MaintenanceFragment : DaggerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val parentClass = this.activity?.let { it::class.java }
+        inMenu = parentClass == SingleFragmentActivity::class.java
+        updateProtectedUi()
         binding.logSend.setOnClickListener { maintenancePlugin.sendLogs() }
         binding.logDelete.setOnClickListener {
             uel.log(Action.DELETE_LOGS, Sources.Maintenance)
@@ -128,6 +136,13 @@ class MaintenanceFragment : DaggerFragment() {
                 }
             }
         }
+
+        binding.unlock.setOnClickListener { queryProtection() }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (inMenu) queryProtection() else updateProtectedUi()
     }
 
     @Synchronized
@@ -135,5 +150,22 @@ class MaintenanceFragment : DaggerFragment() {
         super.onDestroyView()
         compositeDisposable.clear()
         _binding = null
+    }
+
+    private fun updateProtectedUi() {
+        val isLocked = protectionCheck.isLocked(PREFERENCES)
+        binding.mainLayout.visibility = isLocked.not().toVisibility()
+        binding.unlock.visibility = isLocked.toVisibility()
+    }
+
+    private fun queryProtection() {
+        val isLocked = protectionCheck.isLocked(PREFERENCES)
+        if (isLocked && !queryingProtection) {
+            activity?.let { activity ->
+                queryingProtection = true
+                val doUpdate = { activity.runOnUiThread { queryingProtection = false; updateProtectedUi() } }
+                protectionCheck.queryProtection(activity, PREFERENCES, doUpdate, doUpdate, doUpdate)
+            }
+        }
     }
 }

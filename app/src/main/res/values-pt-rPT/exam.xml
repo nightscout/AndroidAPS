@@ -104,11 +104,9 @@
     <string name="troubleshooting_wheretoask">Onde pode procurar ajuda com o AndroidAPS?</string>
     <string name="troubleshooting_fb">Pedir conselhos no grupo de Facebook AndroidAPS Users.</string>
     <string name="troubleshooting_wiki">Deve ler (e reler) a documentação do AndroidAPS.</string>
-    <string name="troubleshooting_gitter">Pode solicitar aconselhamento e registar problemas técnicos ou problemas na sala Gitter do AndroidAPS.</string>
     <string name="troubleshooting_yourendo">Deveria pedir à sua clínica de diabetes/endocrinologista.</string>
     <string name="troubleshooting_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
-    <string name="troubleshooting_hint3">https://gitter.im/MilosKozak/AndroidAPS</string>
     <string name="insulin_label">Plugins de Insulina</string>
     <string name="insulin_ultrarapid">Que insulina deve utilizar com o plugin Oref Ultra-Rápida ?</string>
     <string name="insulin_fiasp">Fiasp®</string>
@@ -132,10 +130,10 @@
     <string name="wronginsulin_label">Erros de entrada/administração de insulina</string>
     <string name="wronginsulin_whattodo">O que deve fazer se receber menos insulina do que o histórico da bomba sugere por exemplo devido a uma oclusão, uma cânula danificada ou esquecer-se de reanexar a bomba após um banho? </string>
     <string name="wronginsulin_careportal">Elimine dados de insulina do Nightscout Careportal para removê-lo do histórico da bomba.</string>
+    <string name="wronginsulin_compare">Compare valores no AndroidAPS e no histórico da bomba.</string>
     <string name="wronginsulin_prime">Bólus uma proporção de insulina calculada \'não administrada\' ou com seringa/caneta ou purgando.</string>
     <string name="wronginsulin_donothing">Faça nada e permita que o AndroidAPS corrija qualquer nível de glicose elevado que daí resulte.</string>
     <string name="iob_label">Insulina ativa (IA )</string>
-    <string name="iob_which">Marque todas as respostas corretas.</string>
     <string name="iob_value">O valor do IA é afectado por basais temporárias emitidas.</string>
     <string name="iob_hightemp">Basal temporária alta não será dada quando a sua glicose estiver abaixo do alvo.</string>
     <string name="iob_negiob">IA negativa por um período substancial na ausência de exercício, sugere que o seu perfil é muito alto e é necessária menos insulina nas suas configurações.</string>

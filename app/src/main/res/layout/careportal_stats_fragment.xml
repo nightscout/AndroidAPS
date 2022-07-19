@@ -8,7 +8,8 @@
 
     <TableRow
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:focusable="true">
 
         <TextView
             android:layout_width="wrap_content"
@@ -19,7 +20,6 @@
             android:text="@string/careportal_sensor_label"
             android:textSize="14sp"
             app:drawableStartCompat="@drawable/ic_cp_age_sensor" />
-
 
         <TextView
             android:id="@+id/sensor_age_label"
@@ -36,11 +36,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:paddingLeft="2dp"
-            android:paddingRight="2dp"
-            android:textColor="@android:color/white"
+            android:paddingStart="2dp"
+            android:paddingEnd="2dp"
             android:textSize="14sp" />
-
 
         <TextView
             android:id="@+id/sensor_level_label"
@@ -59,7 +57,6 @@
             android:layout_marginEnd="20dp"
             android:gravity="center_vertical"
             android:paddingStart="2dp"
-            android:textColor="@android:color/white"
             android:textSize="14sp"
             tools:ignore="RtlSymmetry" />
 
@@ -72,18 +69,19 @@
         <View
             android:layout_width="fill_parent"
             android:layout_height="2dip"
-            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="2dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginEnd="20dp"
             android:layout_marginBottom="2dp"
             android:layout_span="5"
-            android:background="@color/list_delimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
     </TableRow>
 
     <TableRow
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:focusable="true">
 
         <TextView
             android:layout_width="wrap_content"
@@ -94,7 +92,6 @@
             android:text="@string/careportal_insulin_label"
             android:textSize="14sp"
             app:drawableStartCompat="@drawable/ic_cp_age_insulin" />
-
 
         <TextView
             android:id="@+id/insulin_age_label"
@@ -111,11 +108,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:paddingLeft="2dp"
-            android:paddingRight="2dp"
-            android:textColor="@android:color/white"
+            android:paddingStart="2dp"
+            android:paddingEnd="2dp"
             android:textSize="14sp" />
-
 
         <TextView
             android:id="@+id/insulin_level_label"
@@ -134,7 +129,6 @@
             android:layout_marginEnd="20dp"
             android:gravity="center_vertical"
             android:paddingStart="2dp"
-            android:textColor="@android:color/white"
             android:textSize="14sp"
             tools:ignore="RtlSymmetry" />
 
@@ -147,20 +141,22 @@
         <View
             android:layout_width="fill_parent"
             android:layout_height="2dip"
-            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="2dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginEnd="20dp"
             android:layout_marginBottom="2dp"
             android:layout_span="5"
-            android:background="@color/list_delimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
     </TableRow>
 
     <TableRow
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:focusable="true">
 
         <TextView
+            android:id="@+id/cannula_or_patch"
             android:layout_width="wrap_content"
             android:layout_height="25dp"
             android:gravity="center_vertical"
@@ -185,12 +181,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:paddingLeft="2dp"
-            android:paddingRight="2dp"
-            android:textColor="@android:color/white"
+            android:paddingStart="2dp"
+            android:paddingEnd="2dp"
             android:textSize="14sp" />
 
         <TextView
+            android:id="@+id/cannula_placeholder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -205,7 +201,6 @@
             android:gravity="center_vertical"
             android:paddingStart="2dp"
             android:text=""
-            android:textColor="@android:color/white"
             android:textSize="14sp"
             tools:ignore="RtlSymmetry" />
 
@@ -218,18 +213,20 @@
         <View
             android:layout_width="fill_parent"
             android:layout_height="2dip"
-            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="2dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginEnd="20dp"
             android:layout_marginBottom="2dp"
             android:layout_span="5"
-            android:background="@color/list_delimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
     </TableRow>
 
     <TableRow
+        android:id="@+id/battery_layout"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:focusable="true">
 
         <TextView
             android:id="@+id/pb_label"
@@ -241,7 +238,6 @@
             android:text="@string/careportal_pb_label"
             android:textSize="14sp"
             app:drawableStartCompat="@drawable/ic_cp_age_battery" />
-
 
         <TextView
             android:id="@+id/pb_age_label"
@@ -258,9 +254,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:paddingLeft="2dp"
-            android:paddingRight="2dp"
-            android:textColor="@android:color/white"
+            android:paddingStart="2dp"
+            android:paddingEnd="2dp"
             android:textSize="14sp" />
 
         <TextView
@@ -280,25 +275,8 @@
             android:layout_marginEnd="20dp"
             android:gravity="center_vertical"
             android:paddingStart="2dp"
-            android:textColor="@android:color/white"
             android:textSize="14sp"
             tools:ignore="RtlSymmetry" />
-
-    </TableRow>
-
-    <TableRow
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
-
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="2dip"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="2dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="2dp"
-            android:layout_span="5"
-            android:background="@color/list_delimiter" />
 
     </TableRow>
 

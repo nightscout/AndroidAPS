@@ -8,18 +8,16 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
-import info.nightscout.androidaps.interfaces.BgSource
-import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PluginDescription
-import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.interfaces.*
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.XDripBroadcast
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
+import info.nightscout.androidaps.utils.extensions.isRunningTest
 import info.nightscout.shared.sharedPreferences.SP
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -33,7 +31,9 @@ class RandomBgPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     private val sp: SP,
     private val repository: AppRepository,
-    private val xDripBroadcast: XDripBroadcast
+    private val xDripBroadcast: XDripBroadcast,
+    private val virtualPumpPlugin: VirtualPumpPlugin,
+    private val buildHelper: BuildHelper
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
@@ -89,8 +89,8 @@ class RandomBgPlugin @Inject constructor(
     }
 
     override fun specialEnableCondition(): Boolean {
-//        return isRunningTest() || virtualPumpPlugin.isEnabled() && buildHelper.isEngineeringMode()
-        return true
+        return isRunningTest() || virtualPumpPlugin.isEnabled() && buildHelper.isEngineeringMode()
+//        return true
     }
 
     private fun handleNewData() {

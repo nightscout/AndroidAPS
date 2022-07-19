@@ -20,6 +20,7 @@ interface Sensitivity : ConfigExportImport {
 
     val id: SensitivityType
     fun detectSensitivity(ads: AutosensDataStore, fromTime: Long, toTime: Long): AutosensResult
+    fun maxAbsorptionHours(): Double
 
     companion object {
 

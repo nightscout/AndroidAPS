@@ -16,14 +16,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@color/activity_title_background"
+        android:background="?attr/activity_title_backgroundColor"
         android:orientation="horizontal"
         android:padding="5dp">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/carbs"
+            android:importantForAccessibility="no"
             app:srcCompat="@mipmap/ic_launcher" />
 
         <TextView
@@ -31,8 +31,8 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_gravity="center"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:text="@string/nav_logsettings"
             android:textAlignment="center"
             android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -62,21 +62,21 @@
             android:layout_gravity="center_vertical"
             android:paddingBottom="8dp">
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/reset"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_marginEnd="8dp"
-                style="@style/mdtp_ActionButton.Text"
+                style="@style/OkCancelButton.Text"
                 android:text="@string/resettodefaults" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/ok"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
-                style="@style/mdtp_ActionButton.Text"
-                android:text="@string/mdtp_ok" />
+                style="@style/OkCancelButton.Text"
+                android:text="@string/ok" />
 
         </LinearLayout>
 

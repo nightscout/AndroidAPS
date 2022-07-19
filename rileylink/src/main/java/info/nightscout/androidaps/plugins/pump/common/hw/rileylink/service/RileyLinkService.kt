@@ -18,7 +18,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.Rile
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkError
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
@@ -41,18 +41,18 @@ abstract class RileyLinkService : DaggerService() {
     @Inject lateinit var rileyLinkServiceData: RileyLinkServiceData
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var rileyLinkBLE: RileyLinkBLE     // android-bluetooth management
-    @Inject lateinit var rfspy: RFSpy // interface for RL xxx Mhz radio.
+    @Inject lateinit var rfSpy: RFSpy // interface for RL xxx Mhz radio.
 
     private val bluetoothAdapter: BluetoothAdapter? get() = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
-    protected var mBroadcastReceiver: RileyLinkBroadcastReceiver? = null
+    private var broadcastReceiver: RileyLinkBroadcastReceiver? = null
     private var bluetoothStateReceiver: RileyLinkBluetoothStateReceiver? = null
 
     override fun onCreate() {
         super.onCreate()
         rileyLinkUtil.encoding = encoding
         initRileyLinkServiceData()
-        mBroadcastReceiver = RileyLinkBroadcastReceiver(this)
-        mBroadcastReceiver?.registerBroadcasts(this)
+        broadcastReceiver = RileyLinkBroadcastReceiver()
+        broadcastReceiver?.registerBroadcasts(this)
         bluetoothStateReceiver = RileyLinkBluetoothStateReceiver()
         bluetoothStateReceiver?.registerBroadcasts(this)
     }
@@ -80,7 +80,7 @@ abstract class RileyLinkService : DaggerService() {
         super.onDestroy()
 
         rileyLinkBLE.disconnect() // dispose of Gatt (disconnect and close)
-        mBroadcastReceiver?.unregisterBroadcasts(this)
+        broadcastReceiver?.unregisterBroadcasts(this)
         bluetoothStateReceiver?.unregisterBroadcasts(this)
     }
 
@@ -94,7 +94,7 @@ abstract class RileyLinkService : DaggerService() {
 
     fun bluetoothInit(): Boolean {
         aapsLogger.debug(LTag.PUMPBTCOMM, "bluetoothInit: attempting to get an adapter")
-        rileyLinkServiceData.setRileyLinkServiceState(RileyLinkServiceState.BluetoothInitializing)
+        rileyLinkServiceData.rileyLinkServiceState = RileyLinkServiceState.BluetoothInitializing
         if (bluetoothAdapter == null) {
             aapsLogger.error("Unable to obtain a BluetoothAdapter.")
             rileyLinkServiceData.setServiceState(RileyLinkServiceState.BluetoothError, RileyLinkError.NoBluetoothAdapter)
@@ -103,7 +103,7 @@ abstract class RileyLinkService : DaggerService() {
                 aapsLogger.error("Bluetooth is not enabled.")
                 rileyLinkServiceData.setServiceState(RileyLinkServiceState.BluetoothError, RileyLinkError.BluetoothDisabled)
             } else {
-                rileyLinkServiceData.setRileyLinkServiceState(RileyLinkServiceState.BluetoothReady)
+                rileyLinkServiceData.rileyLinkServiceState = RileyLinkServiceState.BluetoothReady
                 return true
             }
         }
@@ -112,7 +112,7 @@ abstract class RileyLinkService : DaggerService() {
 
     // returns true if our Rileylink configuration changed
     fun reconfigureRileyLink(deviceAddress: String): Boolean {
-        rileyLinkServiceData.setRileyLinkServiceState(RileyLinkServiceState.RileyLinkInitializing)
+        rileyLinkServiceData.rileyLinkServiceState = RileyLinkServiceState.RileyLinkInitializing
         return if (rileyLinkBLE.isConnected) {
             if (deviceAddress == rileyLinkServiceData.rileyLinkAddress) {
                 aapsLogger.info(LTag.PUMPBTCOMM, "No change to RL address.  Not reconnecting.")
@@ -128,9 +128,9 @@ abstract class RileyLinkService : DaggerService() {
             }
         } else {
             aapsLogger.debug(LTag.PUMPBTCOMM, "Using RL $deviceAddress")
-            if (rileyLinkServiceData.getRileyLinkServiceState() == RileyLinkServiceState.NotStarted) {
+            if (rileyLinkServiceData.rileyLinkServiceState == RileyLinkServiceState.NotStarted) {
                 if (!bluetoothInit()) {
-                    aapsLogger.error("RileyLink can't get activated, Bluetooth is not functioning correctly. ${error?.name ?: "Unknown error (null)"}")
+                    aapsLogger.error("RileyLink can't get activated, Bluetooth is not functioning correctly. ${rileyLinkServiceData.rileyLinkError?.name ?: "Unknown error (null)"}")
                     return false
                 }
             }
@@ -139,9 +139,9 @@ abstract class RileyLinkService : DaggerService() {
         }
     }
 
-    // FIXME: This needs to be run in a session so that is interruptible, has a separate thread, etc.
+    // FIXME: This needs to be run in a session so that is incorruptible, has a separate thread, etc.
     fun doTuneUpDevice() {
-        rileyLinkServiceData.setRileyLinkServiceState(RileyLinkServiceState.TuneUpDevice)
+        rileyLinkServiceData.rileyLinkServiceState = RileyLinkServiceState.TuneUpDevice
         setPumpDeviceState(PumpDeviceState.Sleeping)
         val lastGoodFrequency =  rileyLinkServiceData.lastGoodFrequency ?: sp.getDouble(RileyLinkConst.Prefs.LastGoodDeviceFrequency, 0.0)
         val newFrequency = deviceCommunicationManager.tuneForDevice()
@@ -157,7 +157,7 @@ abstract class RileyLinkService : DaggerService() {
             rileyLinkServiceData.setServiceState(RileyLinkServiceState.PumpConnectorError, RileyLinkError.TuneUpOfDeviceFailed)
         } else {
             deviceCommunicationManager.clearNotConnectedCount()
-            rileyLinkServiceData.setRileyLinkServiceState(RileyLinkServiceState.PumpConnectorReady)
+            rileyLinkServiceData.rileyLinkServiceState = RileyLinkServiceState.PumpConnectorReady
         }
     }
 
@@ -168,21 +168,12 @@ abstract class RileyLinkService : DaggerService() {
             rileyLinkServiceData.rileyLinkAddress = null
             rileyLinkServiceData.rileyLinkName = null
         }
-        rileyLinkServiceData.setRileyLinkServiceState(RileyLinkServiceState.BluetoothReady)
+        rileyLinkServiceData.rileyLinkServiceState = RileyLinkServiceState.BluetoothReady
     }
-
-    /**
-     * Get Target Device for Service
-     */
-    val rileyLinkTargetDevice: RileyLinkTargetDevice
-        get() = rileyLinkServiceData.targetDevice
 
     fun changeRileyLinkEncoding(encodingType: RileyLinkEncodingType?) {
-        rfspy.setRileyLinkEncoding(encodingType)
+        rfSpy.setRileyLinkEncoding(encodingType)
     }
-
-    val error: RileyLinkError?
-        get() = rileyLinkServiceData.rileyLinkError
 
     fun verifyConfiguration(): Boolean {
         return verifyConfiguration(false)

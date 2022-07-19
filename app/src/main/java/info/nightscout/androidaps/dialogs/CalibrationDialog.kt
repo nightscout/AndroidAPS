@@ -19,7 +19,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProv
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.XDripBroadcast
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import java.text.DecimalFormat
 import java.util.*
 import javax.inject.Inject
@@ -64,6 +64,7 @@ class CalibrationDialog : DialogFragmentWithDate() {
             binding.bg.setParams(savedInstanceState?.getDouble("bg")
                 ?: bg, 36.0, 500.0, 1.0, DecimalFormat("0"), false, binding.okcancel.ok)
         binding.units.text = if (units == GlucoseUnit.MMOL) rh.gs(R.string.mmol) else rh.gs(R.string.mgdl)
+        binding.bgLabel.labelFor = binding.bg.editTextId
     }
 
     override fun onDestroyView() {

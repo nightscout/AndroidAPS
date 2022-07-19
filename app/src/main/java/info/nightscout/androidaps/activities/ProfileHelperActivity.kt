@@ -1,12 +1,13 @@
 package info.nightscout.androidaps.activities
 
 import android.annotation.SuppressLint
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.Menu
-import android.widget.PopupMenu
+import android.widget.ArrayAdapter
+import android.widget.TextView
+import com.google.android.material.tabs.TabLayout
+import com.google.common.collect.Lists
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.data.PureProfile
@@ -17,7 +18,6 @@ import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
 import info.nightscout.androidaps.utils.DateUtil
@@ -37,7 +37,6 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var defaultProfile: DefaultProfile
     @Inject lateinit var defaultProfileDPV: DefaultProfileDPV
     @Inject lateinit var localProfilePlugin: LocalProfilePlugin
-    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var repository: AppRepository
@@ -66,71 +65,59 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
 
     private lateinit var binding: ActivityProfilehelperBinding
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityProfilehelperBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.menu1.setOnClickListener {
-            switchTab(0, typeSelected[0])
-        }
-        binding.menu2.setOnClickListener {
-            switchTab(1, typeSelected[1])
-        }
+        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                switchTab(tab.position, typeSelected[tab.position])
+            }
 
-        binding.profiletype.setOnClickListener {
-            PopupMenu(this, binding.profiletype).apply {
-                menuInflater.inflate(R.menu.menu_profilehelper, menu)
-                setOnMenuItemClickListener { item ->
-                    binding.profiletype.setText(item.title)
-                    when (item.itemId) {
-                        R.id.menu_default       -> switchTab(tabSelected, ProfileType.MOTOL_DEFAULT)
-                        R.id.menu_default_dpv   -> switchTab(tabSelected, ProfileType.DPV_DEFAULT)
-                        R.id.menu_current       -> switchTab(tabSelected, ProfileType.CURRENT)
-                        R.id.menu_available     -> switchTab(tabSelected, ProfileType.AVAILABLE_PROFILE)
-                        R.id.menu_profileswitch -> switchTab(tabSelected, ProfileType.PROFILE_SWITCH)
-                    }
-                    true
-                }
-                show()
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
+            override fun onTabReselected(tab: TabLayout.Tab) {}
+        })
+
+        val profileTypeList = Lists.newArrayList(
+            rh.gs(R.string.motoldefaultprofile),
+            rh.gs(R.string.dpvdefaultprofile),
+            rh.gs(R.string.currentprofile),
+            rh.gs(R.string.availableprofile),
+            rh.gs(R.string.careportal_profileswitch)
+        )
+        binding.profileType.setAdapter(ArrayAdapter(this, R.layout.spinner_centered, profileTypeList))
+
+        binding.profileType.setOnItemClickListener { _, _, _, _ ->
+            when (binding.profileType.text.toString()) {
+                rh.gs(R.string.motoldefaultprofile)      -> switchTab(tabSelected, ProfileType.MOTOL_DEFAULT)
+                rh.gs(R.string.dpvdefaultprofile)        -> switchTab(tabSelected, ProfileType.DPV_DEFAULT)
+                rh.gs(R.string.currentprofile)           -> switchTab(tabSelected, ProfileType.CURRENT)
+                rh.gs(R.string.availableprofile)         -> switchTab(tabSelected, ProfileType.AVAILABLE_PROFILE)
+                rh.gs(R.string.careportal_profileswitch) -> switchTab(tabSelected, ProfileType.PROFILE_SWITCH)
             }
         }
 
         // Active profile
         profileList = activePlugin.activeProfileSource.profile?.getProfileList() ?: ArrayList()
 
-        binding.availableProfileList.setOnClickListener {
-            PopupMenu(this, binding.availableProfileList).apply {
-                var order = 0
-                for (name in profileList) menu.add(Menu.NONE, order, order++, name)
-                setOnMenuItemClickListener { item ->
-                    binding.availableProfileList.setText(item.title)
-                    profileUsed[tabSelected] = item.itemId
-                    true
-                }
-                show()
-            }
+        binding.availableProfileList.setAdapter(ArrayAdapter(this, R.layout.spinner_centered, profileList))
+        binding.availableProfileList.setOnItemClickListener { _, _, index, _ ->
+            profileUsed[tabSelected] = index
         }
 
         // Profile switch
         profileSwitch = repository.getEffectiveProfileSwitchDataFromTime(dateUtil.now() - T.months(2).msecs(), true).blockingGet()
 
-        binding.profileswitchList.setOnClickListener {
-            PopupMenu(this, binding.profileswitchList).apply {
-                var order = 0
-                for (name in profileSwitch) menu.add(Menu.NONE, order, order++, name.originalCustomizedName)
-                setOnMenuItemClickListener { item ->
-                    binding.profileswitchList.setText(item.title)
-                    profileSwitchUsed[tabSelected] = item.itemId
-                    true
-                }
-                show()
-            }
+        val profileswitchListNames = profileSwitch.map { it.originalCustomizedName }
+        binding.profileswitchList.setAdapter(ArrayAdapter(this, R.layout.spinner_centered, profileswitchListNames))
+        binding.profileswitchList.setOnItemClickListener { _, _, index, _ ->
+            profileSwitchUsed[tabSelected] = index
         }
 
         // Default profile
-        binding.copytolocalprofile.setOnClickListener {
+        binding.copyToLocalProfile.setOnClickListener {
             storeValues()
             val age = ageUsed[tabSelected]
             val weight = weightUsed[tabSelected]
@@ -168,20 +155,22 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
             }
         })
 
-        binding.basalpctfromtdd.setParams(32.0, 32.0, 37.0, 1.0, DecimalFormat("0"), false, null)
+        binding.basalPctFromTdd.setParams(32.0, 32.0, 37.0, 1.0, DecimalFormat("0"), false, null)
 
-        @SuppressLint("SetTextI18n")
-        binding.tdds.text = getString(R.string.tdd) + ": " + rh.gs(R.string.calculation_in_progress)
+        binding.tdds.addView(TextView(this).apply { text = rh.gs(R.string.tdd) + ": " + rh.gs(R.string.calculation_in_progress) })
         Thread {
-            val tdds = tddCalculator.stats()
-            runOnUiThread { binding.tdds.text = tdds }
+            val tdds = tddCalculator.stats(this)
+            runOnUiThread {
+                binding.tdds.removeAllViews()
+                binding.tdds.addView(tdds)
+            }
         }.start()
 
         // Current profile
         binding.currentProfileText.text = profileFunction.getProfileName()
 
         // General
-        binding.compareprofile.setOnClickListener {
+        binding.compareProfiles.setOnClickListener {
             storeValues()
             for (i in 0..1) {
                 if (typeSelected[i] == ProfileType.MOTOL_DEFAULT) {
@@ -239,12 +228,16 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
             }
             ToastUtils.showToastInUiThread(this, R.string.invalidinput)
         }
+        binding.ageLabel.labelFor = binding.age.editTextId
+        binding.tddLabel.labelFor = binding.tdd.editTextId
+        binding.weightLabel.labelFor = binding.weight.editTextId
+        binding.basalPctFromTddLabel.labelFor = binding.basalPctFromTdd.editTextId
 
         switchTab(0, typeSelected[0], false)
     }
 
     private fun getProfile(age: Double, tdd: Double, weight: Double, basalPct: Double, tab: Int): PureProfile? =
-        try { // profile must not exist
+        try { // Profile must not exist
             when (typeSelected[tab]) {
                 ProfileType.MOTOL_DEFAULT     -> defaultProfile.profile(age, tdd, weight, profileFunction.getUnits())
                 ProfileType.DPV_DEFAULT       -> defaultProfileDPV.profile(age, tdd, basalPct, profileFunction.getUnits())
@@ -269,48 +262,45 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
         ageUsed[tabSelected] = binding.age.value
         weightUsed[tabSelected] = binding.weight.value
         tddUsed[tabSelected] = binding.tdd.value
-        pctUsed[tabSelected] = binding.basalpctfromtdd.value
+        pctUsed[tabSelected] = binding.basalPctFromTdd.value
     }
 
     private fun switchTab(tab: Int, newContent: ProfileType, storeOld: Boolean = true) {
-        setBackgroundColorOnSelected(tab)
         // Store values for selected tab. listBox values are stored on selection change
         if (storeOld) storeValues()
 
         tabSelected = tab
         typeSelected[tabSelected] = newContent
-        binding.profiletypeTitle.defaultHintTextColor = ColorStateList.valueOf(rh.gc(if (tab == 0) R.color.tabBgColorSelected else R.color.examinedProfile))
 
-        // show new content
-        binding.profiletype.setText(
+        // Show new content
+        binding.profileType.setText(
             when (typeSelected[tabSelected]) {
                 ProfileType.MOTOL_DEFAULT     -> rh.gs(R.string.motoldefaultprofile)
                 ProfileType.DPV_DEFAULT       -> rh.gs(R.string.dpvdefaultprofile)
                 ProfileType.CURRENT           -> rh.gs(R.string.currentprofile)
                 ProfileType.AVAILABLE_PROFILE -> rh.gs(R.string.availableprofile)
                 ProfileType.PROFILE_SWITCH    -> rh.gs(R.string.careportal_profileswitch)
-            }
+            },
+            false
         )
         binding.defaultProfile.visibility = (newContent == ProfileType.MOTOL_DEFAULT || newContent == ProfileType.DPV_DEFAULT).toVisibility()
         binding.currentProfile.visibility = (newContent == ProfileType.CURRENT).toVisibility()
         binding.availableProfile.visibility = (newContent == ProfileType.AVAILABLE_PROFILE).toVisibility()
         binding.profileSwitch.visibility = (newContent == ProfileType.PROFILE_SWITCH).toVisibility()
 
-        // restore selected values
+        // Restore selected values
         binding.age.value = ageUsed[tabSelected]
         binding.weight.value = weightUsed[tabSelected]
         binding.tdd.value = tddUsed[tabSelected]
-        binding.basalpctfromtdd.value = pctUsed[tabSelected]
+        binding.basalPctFromTdd.value = pctUsed[tabSelected]
 
-        binding.basalpctfromtddRow.visibility = (newContent == ProfileType.DPV_DEFAULT).toVisibility()
-        if (profileList.isNotEmpty())
-            binding.availableProfileList.setText(profileList[profileUsed[tabSelected]].toString())
-        if (profileSwitch.isNotEmpty())
-            binding.profileswitchList.setText(profileSwitch[profileSwitchUsed[tabSelected]].originalCustomizedName)
+        binding.basalPctFromTddRow.visibility = (newContent == ProfileType.DPV_DEFAULT).toVisibility()
+        if (profileList.isNotEmpty()) {
+            binding.availableProfileList.setText(profileList[profileUsed[tabSelected]].toString(), false)
+        }
+        if (profileSwitch.isNotEmpty()) {
+            binding.profileswitchList.setText(profileSwitch[profileSwitchUsed[tabSelected]].originalCustomizedName, false)
+        }
     }
 
-    private fun setBackgroundColorOnSelected(tab: Int) {
-        binding.menu1.setBackgroundColor(rh.gc(if (tab == 1) R.color.defaultbackground else R.color.tempbasal))
-        binding.menu2.setBackgroundColor(rh.gc(if (tab == 0) R.color.defaultbackground else R.color.examinedProfile))
-    }
 }

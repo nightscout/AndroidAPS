@@ -20,6 +20,8 @@ interface IobCobCalculator {
 
     fun calculateFromTreatmentsAndTemps(toTime: Long, profile: Profile): IobTotal
 
+    fun calculateDetectionStart(from: Long, limitDataToOldestAvailable: Boolean): Long
+
     fun getBasalData(profile: Profile, fromTime: Long): BasalData
 
     fun calculateIobArrayInDia(profile: Profile): Array<IobTotal>

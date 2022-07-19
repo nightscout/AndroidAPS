@@ -1,52 +1,49 @@
 package info.nightscout.androidaps.activities.fragments
 
 import android.annotation.SuppressLint
-import android.content.DialogInterface
-import android.graphics.Paint
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.SparseArray
+import android.view.*
+import androidx.core.util.forEach
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.activities.fragments.TreatmentsTempTargetFragment.RecyclerViewAdapter.TempTargetsViewHolder
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
-import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.database.transactions.InvalidateTemporaryTargetTransaction
 import info.nightscout.androidaps.databinding.TreatmentsTemptargetFragmentBinding
 import info.nightscout.androidaps.databinding.TreatmentsTemptargetItemBinding
+import info.nightscout.androidaps.events.EventEffectiveProfileSwitchChanged
+import info.nightscout.androidaps.events.EventProfileSwitchChanged
 import info.nightscout.androidaps.events.EventTempTargetChange
-import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
-import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
-import info.nightscout.androidaps.events.EventTreatmentUpdateGui
-import info.nightscout.androidaps.activities.fragments.TreatmentsTempTargetFragment.RecyclerViewAdapter.TempTargetsViewHolder
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.Translator
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.extensions.friendlyDescription
 import info.nightscout.androidaps.extensions.highValueToUnitsToString
 import info.nightscout.androidaps.extensions.lowValueToUnitsToString
 import info.nightscout.androidaps.extensions.toVisibility
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.logging.UserEntryLogger
+import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData
+import info.nightscout.androidaps.utils.*
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
-import io.reactivex.Completable
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
-import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
+import io.reactivex.rxjava3.kotlin.subscribeBy
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -65,72 +62,77 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var repository: AppRepository
 
-    private val disposable = CompositeDisposable()
-
-    private val millsToThePast = T.days(30).msecs()
-
     private var _binding: TreatmentsTemptargetFragmentBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
+    // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
+    private var menu: Menu? = null
+    private lateinit var actionHelper: ActionModeHelper<TemporaryTarget>
+    private val disposable = CompositeDisposable()
+    private val millsToThePast = T.days(30).msecs()
+    private var showInvalidated = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         TreatmentsTemptargetFragmentBinding.inflate(inflater, container, false).also { _binding = it }.root
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.recyclerview.setHasFixedSize(true)
+        actionHelper = ActionModeHelper(rh, activity, this)
+        actionHelper.setUpdateListHandler { binding.recyclerview.adapter?.notifyDataSetChanged() }
+        actionHelper.setOnRemoveHandler { removeSelected(it) }
+        setHasOptionsMenu(true)
         binding.recyclerview.layoutManager = LinearLayoutManager(view.context)
-        binding.refreshFromNightscout.setOnClickListener {
-            context?.let { context ->
-                OKDialog.showConfirmation(context, rh.gs(R.string.refresheventsfromnightscout) + " ?", {
-                    uel.log(Action.TT_NS_REFRESH, Sources.Treatments)
-                    disposable += Completable.fromAction { repository.deleteAllTempTargetEntries() }
+        binding.recyclerview.emptyView = binding.noRecordsText
+        binding.recyclerview.loadingView = binding.progressBar
+    }
+
+    private fun refreshFromNightscout() {
+        activity?.let { activity ->
+            OKDialog.showConfirmation(activity, rh.gs(R.string.refresheventsfromnightscout) + "?") {
+                uel.log(Action.TREATMENTS_NS_REFRESH, Sources.Treatments)
+                disposable +=
+                    Completable.fromAction {
+                        repository.deleteAllEffectiveProfileSwitches()
+                        repository.deleteAllProfileSwitches()
+                    }
                         .subscribeOn(aapsSchedulers.io)
                         .observeOn(aapsSchedulers.main)
                         .subscribeBy(
                             onError = { aapsLogger.error("Error removing entries", it) },
-                            onComplete = { rxBus.send(EventTempTargetChange()) }
+                            onComplete = {
+                                rxBus.send(EventProfileSwitchChanged())
+                                rxBus.send(EventEffectiveProfileSwitchChanged(0L))
+                                rxBus.send(EventNewHistoryData(0, false))
+                            }
                         )
-
-                    rxBus.send(EventNSClientRestart())
-                })
+                rxBus.send(EventNSClientRestart())
             }
-        }
-        val nsUploadOnly = !sp.getBoolean(R.string.key_ns_receive_temp_target, false) || !buildHelper.isEngineeringMode()
-        if (nsUploadOnly) binding.refreshFromNightscout.visibility = View.INVISIBLE
-        binding.showInvalidated.setOnCheckedChangeListener { _, _ ->
-            rxBus.send(EventTreatmentUpdateGui())
         }
     }
 
     fun swapAdapter() {
         val now = System.currentTimeMillis()
-        if (binding.showInvalidated.isChecked)
-            repository
-                .getTemporaryTargetDataIncludingInvalidFromTime(now - millsToThePast, false)
-                .observeOn(aapsSchedulers.main)
-                .subscribe { list -> binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true) }
-        else
-            repository
-                .getTemporaryTargetDataFromTime(now - millsToThePast, false)
-                .observeOn(aapsSchedulers.main)
-                .subscribe { list -> binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true) }
+        binding.recyclerview.isLoading = true
+        disposable +=
+            if (showInvalidated)
+                repository
+                    .getTemporaryTargetDataIncludingInvalidFromTime(now - millsToThePast, false)
+                    .observeOn(aapsSchedulers.main)
+                    .subscribe { list -> binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true) }
+            else
+                repository
+                    .getTemporaryTargetDataFromTime(now - millsToThePast, false)
+                    .observeOn(aapsSchedulers.main)
+                    .subscribe { list -> binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true) }
     }
 
     @Synchronized
     override fun onResume() {
         super.onResume()
         swapAdapter()
-
         disposable += rxBus
             .toObservable(EventTempTargetChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .debounce(1L, TimeUnit.SECONDS)
-            .subscribe({ swapAdapter() }, fabricPrivacy::logException)
-
-        disposable += rxBus
-            .toObservable(EventTreatmentUpdateGui::class.java) // TODO join with above
             .observeOn(aapsSchedulers.io)
             .debounce(1L, TimeUnit.SECONDS)
             .subscribe({ swapAdapter() }, fabricPrivacy::logException)
@@ -139,6 +141,7 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
     @Synchronized
     override fun onPause() {
         super.onPause()
+        actionHelper.finish()
         disposable.clear()
     }
 
@@ -163,52 +166,119 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
             val tempTarget = tempTargetList[position]
             holder.binding.ns.visibility = (tempTarget.interfaceIDs.nightscoutId != null).toVisibility()
             holder.binding.invalid.visibility = tempTarget.isValid.not().toVisibility()
-            holder.binding.remove.visibility = tempTarget.isValid.toVisibility()
-            holder.binding.date.text = dateUtil.dateAndTimeString(tempTarget.timestamp) + " - " + dateUtil.timeString(tempTarget.end)
+            holder.binding.cbRemove.visibility = (tempTarget.isValid && actionHelper.isRemoving).toVisibility()
+            if (actionHelper.isRemoving) {
+                holder.binding.cbRemove.setOnCheckedChangeListener { _, value ->
+                    actionHelper.updateSelection(position, tempTarget, value)
+                }
+                holder.binding.root.setOnClickListener {
+                    holder.binding.cbRemove.toggle()
+                    actionHelper.updateSelection(position, tempTarget, holder.binding.cbRemove.isChecked)
+                }
+                holder.binding.cbRemove.isChecked = actionHelper.isSelected(position)
+            }
+            val newDay = position == 0 || !dateUtil.isSameDayGroup(tempTarget.timestamp, tempTargetList[position - 1].timestamp)
+            holder.binding.date.visibility = newDay.toVisibility()
+            holder.binding.date.text = if (newDay) dateUtil.dateStringRelative(tempTarget.timestamp, rh) else ""
+            holder.binding.time.text = dateUtil.timeRangeString(tempTarget.timestamp, tempTarget.end)
             holder.binding.duration.text = rh.gs(R.string.format_mins, T.msecs(tempTarget.duration).mins())
             holder.binding.low.text = tempTarget.lowValueToUnitsToString(units)
             holder.binding.high.text = tempTarget.highValueToUnitsToString(units)
             holder.binding.reason.text = translator.translate(tempTarget.reason)
-            holder.binding.date.setTextColor(
+            holder.binding.time.setTextColor(
                 when {
-                    tempTarget.id == currentlyActiveTarget?.id -> rh.gc(R.color.colorActive)
-                    tempTarget.timestamp > dateUtil.now()      -> rh.gc(R.color.colorScheduled)
+                    tempTarget.id == currentlyActiveTarget?.id -> rh.gac(context, R.attr.activeColor)
+                    tempTarget.timestamp > dateUtil.now()      -> rh.gac(context, R.attr.scheduledColor)
                     else                                       -> holder.binding.reasonColon.currentTextColor
-                })
-            holder.binding.remove.tag = tempTarget
+                }
+            )
         }
 
-        override fun getItemCount(): Int = tempTargetList.size
+        override fun getItemCount() = tempTargetList.size
 
         inner class TempTargetsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
             val binding = TreatmentsTemptargetItemBinding.bind(view)
 
-            init {
-                binding.remove.setOnClickListener { v: View ->
-                    val tempTarget = v.tag as TemporaryTarget
-                    context?.let { context ->
-                        OKDialog.showConfirmation(context, rh.gs(R.string.removerecord),
-                            """
-                        ${rh.gs(R.string.careportal_temporarytarget)}: ${tempTarget.friendlyDescription(profileFunction.getUnits(), rh)}
-                        ${dateUtil.dateAndTimeString(tempTarget.timestamp)}
-                        """.trimIndent(),
-                            { _: DialogInterface?, _: Int ->
-                                uel.log(Action.TT_REMOVED, Sources.Treatments,
-                                    ValueWithUnit.Timestamp(tempTarget.timestamp),
-                                    ValueWithUnit.TherapyEventTTReason(tempTarget.reason),
-                                    ValueWithUnit.Mgdl(tempTarget.lowTarget),
-                                    ValueWithUnit.Mgdl(tempTarget.highTarget).takeIf { tempTarget.lowTarget != tempTarget.highTarget },
-                                    ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tempTarget.duration).toInt()))
-                                disposable += repository.runTransactionForResult(InvalidateTemporaryTargetTransaction(tempTarget.id))
-                                    .subscribe(
-                                        { aapsLogger.debug(LTag.DATABASE, "Removed temp target $tempTarget") },
-                                        { aapsLogger.error(LTag.DATABASE, "Error while invalidating temporary target", it) })
-                            }, null)
-                    }
-                }
-                binding.remove.paintFlags = binding.remove.paintFlags or Paint.UNDERLINE_TEXT_FLAG
-            }
         }
     }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        this.menu = menu
+        inflater.inflate(R.menu.menu_treatments_temp_target, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    private fun updateMenuVisibility() {
+        menu?.findItem(R.id.nav_hide_invalidated)?.isVisible = showInvalidated
+        menu?.findItem(R.id.nav_show_invalidated)?.isVisible = !showInvalidated
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        updateMenuVisibility()
+        val nsUploadOnly = !sp.getBoolean(R.string.key_ns_receive_temp_target, false) || !buildHelper.isEngineeringMode()
+        menu.findItem(R.id.nav_refresh_ns)?.isVisible = !nsUploadOnly
+
+        return super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
+            R.id.nav_remove_items -> actionHelper.startRemove()
+
+            R.id.nav_show_invalidated -> {
+                showInvalidated = true
+                updateMenuVisibility()
+                ToastUtils.showToastInUiThread(context, rh.gs(R.string.show_invalidated_records))
+                swapAdapter()
+                true
+            }
+
+            R.id.nav_hide_invalidated -> {
+                showInvalidated = false
+                updateMenuVisibility()
+                ToastUtils.showToastInUiThread(context, rh.gs(R.string.show_invalidated_records))
+                swapAdapter()
+                true
+            }
+
+            R.id.nav_refresh_ns -> {
+                refreshFromNightscout()
+                true
+            }
+
+            else -> false
+        }
+
+    private fun getConfirmationText(selectedItems: SparseArray<TemporaryTarget>): String {
+        if (selectedItems.size() == 1) {
+            val tempTarget = selectedItems.valueAt(0)
+            return "${rh.gs(R.string.careportal_temporarytarget)}: ${tempTarget.friendlyDescription(profileFunction.getUnits(), rh)}\n" +
+                dateUtil.dateAndTimeString(tempTarget.timestamp)
+        }
+        return rh.gs(R.string.confirm_remove_multiple_items, selectedItems.size())
+    }
+
+    private fun removeSelected(selectedItems: SparseArray<TemporaryTarget>) {
+        activity?.let { activity ->
+            OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord), getConfirmationText(selectedItems), Runnable {
+                selectedItems.forEach { _, tempTarget ->
+                    uel.log(
+                        Action.TT_REMOVED, Sources.Treatments,
+                        ValueWithUnit.Timestamp(tempTarget.timestamp),
+                        ValueWithUnit.TherapyEventTTReason(tempTarget.reason),
+                        ValueWithUnit.Mgdl(tempTarget.lowTarget),
+                        ValueWithUnit.Mgdl(tempTarget.highTarget).takeIf { tempTarget.lowTarget != tempTarget.highTarget },
+                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tempTarget.duration).toInt())
+                    )
+                    disposable += repository.runTransactionForResult(InvalidateTemporaryTargetTransaction(tempTarget.id))
+                        .subscribe(
+                            { aapsLogger.debug(LTag.DATABASE, "Removed temp target $tempTarget") },
+                            { aapsLogger.error(LTag.DATABASE, "Error while invalidating temporary target", it) })
+                }
+                actionHelper.finish()
+            })
+        }
+    }
+
 }

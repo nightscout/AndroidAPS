@@ -84,6 +84,45 @@ class PumpHistoryEntry : MedtronicHistoryEntry() {
         return atechDateTime < this.atechDateTime
     }
 
+    override fun toEntryString(): String {
+        val sb = StringBuilder()
+        // if (DT == null) {
+        //     Log.e("", "DT is null. RawData=" + ByteUtil.getHex(rawData))
+        // }
+        sb.append("PumpHistoryEntry [type=" + StringUtil.getStringInLength(entryType.name, 20))
+        sb.append(" " + if (DT == null) "null" else StringUtil.getStringInLength(DT, 19))
+
+        val hasData = (decodedData.size > 0)
+        if (hasData) {
+            if (hasDecodedDataEntry("Object")) {
+                val oo = getDecodedDataEntry("Object")
+                sb.append(", $oo")
+            } else {
+                sb.append(", data=$decodedDataAsString")
+            }
+        } else {
+            if (head.isNotEmpty()) {
+                sb.append(", head=")
+                sb.append(ByteUtil.shortHexString(head))
+            }
+            if (datetime.size != 0) {
+                sb.append(", datetime=")
+                sb.append(ByteUtil.shortHexString(datetime))
+            }
+            if (body.size != 0) {
+                sb.append(", body=")
+                sb.append(ByteUtil.shortHexString(body))
+            }
+            sb.append(", rawData=")
+            sb.append(ByteUtil.shortHexString(rawData))
+            sb.append("]")
+        }
+
+        // sb.append(" Ext: ");
+        return sb.toString()
+
+    }
+
     class Comparator : java.util.Comparator<PumpHistoryEntry> {
 
         override fun compare(o1: PumpHistoryEntry, o2: PumpHistoryEntry): Int {

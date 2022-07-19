@@ -2,11 +2,10 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/StyleDialog"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusableInTouchMode="true"
-    android:minWidth="300dp"
-    android:orientation="vertical"
     tools:context=".dialogs.CarbsDialog">
 
     <LinearLayout
@@ -15,17 +14,15 @@
         android:orientation="vertical">
 
         <RelativeLayout
+            style="@style/StyleDialogHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@color/dialog_title_background"
-            android:orientation="horizontal"
-            android:padding="5dp">
+            android:layout_gravity="center">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/carbs"
+                android:importantForAccessibility="no"
                 app:srcCompat="@drawable/ic_cp_bolus_carbs" />
 
             <TextView
@@ -33,8 +30,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:text="@string/carbs"
                 android:textAlignment="center"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -78,6 +75,7 @@
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingStart="0dp"
             android:paddingEnd="5dp">
 
             <TableRow
@@ -93,47 +91,48 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:id="@+id/time_label"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:width="120dp"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp"
                         android:text="@string/time_offset"
                         android:gravity="center_vertical"
                         android:layout_weight="1"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small"
                         android:textStyle="bold" />
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_access_alarm_24dp" />
-
                     <CheckBox
                         android:id="@+id/alarmCheckBox"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="40dp"
                         android:layout_gravity="center_vertical"
                         android:checked="false"
-                        android:padding="2dp" />
+                        android:padding="2dp"
+                        android:layoutDirection="rtl"
+                        android:contentDescription="@string/a11y_carb_reminder"
+                        android:drawableEnd="@drawable/ic_access_alarm_24dp" />
+
                 </LinearLayout>
 
-                    <info.nightscout.androidaps.utils.ui.MinutesNumberPicker
-                        android:id="@+id/time"
-                        android:layout_width="130dp"
-                        android:layout_height="40dp" />
+                <info.nightscout.androidaps.utils.ui.MinutesNumberPicker
+                    android:id="@+id/time"
+                    android:layout_width="130dp"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="2dp"
+                    app:customContentDescription="@string/time_offset" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:gravity="start"
-                        android:paddingStart="5dp"
-                        android:paddingEnd="5dp"
-                        android:text="@string/unit_minute_short"
-                        android:textAppearance="?android:attr/textAppearanceSmall" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="start"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:text="@string/unit_minute_short"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
             </TableRow>
 
@@ -143,6 +142,7 @@
                 android:layout_gravity="center_vertical">
 
                 <TextView
+                    android:id="@+id/duration_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -156,7 +156,9 @@
                     android:id="@+id/duration"
                     android:layout_width="130dp"
                     android:layout_height="40dp"
-                    android:layout_gravity="center_horizontal" />
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="2dp"
+                    app:customContentDescription="@string/careportal_newnstreatment_duration_label" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -176,13 +178,14 @@
                 android:layout_gravity="center_vertical">
 
                     <TextView
+                        android:id="@+id/carbs_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="10dp"
                         android:width="120dp"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp"
                         android:text="@string/treatments_wizard_carbs_label"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small"
                         android:textStyle="bold" />
@@ -190,7 +193,8 @@
                     <info.nightscout.androidaps.utils.ui.NumberPicker
                         android:id="@+id/carbs"
                         android:layout_width="130dp"
-                        android:layout_height="40dp" />
+                        android:layout_height="40dp"
+                        app:customContentDescription="@string/treatments_wizard_carbs_label" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -211,26 +215,32 @@
             android:orientation="horizontal"
             android:padding="5dp">
 
-            <Button
+            <com.google.android.material.button.MaterialButton
+                style="@style/GrayButton"
                 android:id="@+id/plus1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="+5" />
+                android:text="+5"
+                tools:ignore="HardcodedText" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
+                style="@style/GrayButton"
                 android:id="@+id/plus2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="+10" />
+                android:text="+10"
+                tools:ignore="HardcodedText" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
+                style="@style/GrayButton"
                 android:id="@+id/plus3"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="+20" />
+                android:text="+20"
+                tools:ignore="HardcodedText" />
 
         </LinearLayout>
 
@@ -246,8 +256,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
                 android:text="@string/bolus_reminder"
                 android:gravity="center_vertical"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
@@ -257,6 +267,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:importantForAccessibility="no"
                 android:src="@drawable/ic_access_alarm_24dp" />
 
             <CheckBox
@@ -266,6 +277,7 @@
                 android:layout_gravity="center_vertical"
                 android:checked="false"
                 android:padding="2dp" />
+
         </LinearLayout>
 
         <include

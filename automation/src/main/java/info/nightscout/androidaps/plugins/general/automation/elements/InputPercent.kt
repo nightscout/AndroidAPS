@@ -25,7 +25,7 @@ class InputPercent() : Element() {
 
     companion object {
 
-        const val MIN = 70.0
+        const val MIN = 50.0
         const val MAX = 130.0
     }
 }

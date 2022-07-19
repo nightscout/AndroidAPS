@@ -17,12 +17,12 @@ import info.nightscout.androidaps.databinding.OverviewNotificationItemBinding
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.IconsProvider
 import info.nightscout.androidaps.interfaces.NotificationHolder
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewNotification
 import info.nightscout.androidaps.services.AlarmSoundServiceHelper
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import java.util.*
 import javax.inject.Inject
@@ -68,7 +68,7 @@ class NotificationStore @Inject constructor(
         store.add(n)
         if (sp.getBoolean(R.string.key_raise_notifications_as_android_notifications, true) && n !is NotificationWithAction)
             raiseSystemNotification(n)
-        if (n.soundId != null && n.soundId != 0) alarmSoundServiceHelper.startAlarm(context, n.soundId!!)
+        if (n.soundId != null && n.soundId != 0) alarmSoundServiceHelper.startAlarm(context, n.soundId!!, n.text)
         Collections.sort(store, NotificationComparator())
         return true
     }
@@ -77,7 +77,7 @@ class NotificationStore @Inject constructor(
     fun remove(id: Int): Boolean {
         for (i in store.indices) {
             if (store[i].id == id) {
-                if (store[i].soundId != null) alarmSoundServiceHelper.stopService(context)
+                if (store[i].soundId != null) alarmSoundServiceHelper.stopService(context, "Removed " + store[i].text)
                 aapsLogger.debug(LTag.NOTIFICATION, "Notification removed: " + store[i].text)
                 store.removeAt(i)
                 return true
@@ -92,7 +92,7 @@ class NotificationStore @Inject constructor(
         while (i < store.size) {
             val n = store[i]
             if (n.validTo != 0L && n.validTo < System.currentTimeMillis()) {
-                if (store[i].soundId != null) alarmSoundServiceHelper.stopService(context)
+                if (store[i].soundId != null) alarmSoundServiceHelper.stopService(context, "Expired " + store[i].text)
                 aapsLogger.debug(LTag.NOTIFICATION, "Notification expired: " + store[i].text)
                 store.removeAt(i)
                 i--
@@ -164,11 +164,11 @@ class NotificationStore @Inject constructor(
             @Suppress("SetTextI18n")
             holder.binding.text.text = dateUtil.timeString(notification.date) + " " + notification.text
             when (notification.level) {
-                Notification.URGENT       -> holder.binding.cv.setBackgroundColor(rh.gc(R.color.notificationUrgent))
-                Notification.NORMAL       -> holder.binding.cv.setBackgroundColor(rh.gc(R.color.notificationNormal))
-                Notification.LOW          -> holder.binding.cv.setBackgroundColor(rh.gc(R.color.notificationLow))
-                Notification.INFO         -> holder.binding.cv.setBackgroundColor(rh.gc(R.color.notificationInfo))
-                Notification.ANNOUNCEMENT -> holder.binding.cv.setBackgroundColor(rh.gc(R.color.notificationAnnouncement))
+                Notification.URGENT       -> holder.binding.cv.setBackgroundColor(rh.gac(R.attr.notificationUrgent))
+                Notification.NORMAL       -> holder.binding.cv.setBackgroundColor(rh.gac(R.attr.notificationNormal))
+                Notification.LOW          -> holder.binding.cv.setBackgroundColor(rh.gac(R.attr.notificationLow))
+                Notification.INFO         -> holder.binding.cv.setBackgroundColor(rh.gac(R.attr.notificationInfo))
+                Notification.ANNOUNCEMENT -> holder.binding.cv.setBackgroundColor(rh.gac(R.attr.notificationAnnouncement))
             }
         }
 

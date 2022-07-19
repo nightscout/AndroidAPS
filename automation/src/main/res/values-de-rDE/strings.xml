@@ -81,6 +81,7 @@
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>
+    <string name="a11y_autosenslabel">Auto sens</string>
     <string name="deltacompared">%3$s %1$s %2$s</string>
     <string name="deltalabel">BZ-Unterschied</string>
     <string name="deltalabel_u">BZ-Unterschied [%1$s]</string>
@@ -112,4 +113,5 @@
     <string name="automation_event">Automatisierungs-Ereignis</string>
     <string name="reorder_label">Umsortieren</string>
     <string name="user_action">Benutzeraktion</string>
+    <string name="confirm_remove_multiple_items">Sind Sie sicher, dass Sie diese(s) %1$d Element(e) löschen möchten?</string>
 </resources>

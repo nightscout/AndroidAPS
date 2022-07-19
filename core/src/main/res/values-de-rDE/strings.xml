@@ -4,6 +4,7 @@
     <!--    General-->
     <string name="refresh">Aktualisieren</string>
     <string name="error">Fehler</string>
+    <string name="save">Speichern</string>
     <string name="not_set_short">Nicht angegeben</string>
     <string name="failedupdatebasalprofile">Fehler beim Aktualisieren des Basalprofils</string>
     <string name="profile_set_ok">Basal-Profil in der Pumpe aktualisiert</string>
@@ -41,6 +42,7 @@
     <string name="carbs">Kohlenhydrate</string>
     <string name="invalidprofile">Ungültiges oder defektes Profil!</string>
     <string name="noprofileset">KEIN PROFIL GESETZT</string>
+    <string name="active"><![CDATA[<Aktiv>]]></string>
     <string name="date">Datum</string>
     <string name="units_label">Einheiten</string>
     <string name="dia_label">DIA</string>
@@ -48,6 +50,11 @@
     <string name="isf_label">ISF</string>
     <string name="basal_label">Basal</string>
     <string name="target_label">Ziel</string>
+    <string name="dia_long_label">Insulinwirkdauer (duration of insulin action)</string>
+    <string name="ic_long_label">Insulin-zu-KH-Faktor</string>
+    <string name="isf_long_label">ISF: Insulin Sensitivitäts-Faktor (\"Korrektur-Faktor\")</string>
+    <string name="basal_long_label">Basalrate</string>
+    <string name="target_long_label">BZ Ziel</string>
     <string name="initializing">Initialisierung...</string>
     <string name="serialnumber">Seriennummer</string>
     <string name="battery_label">Batterie</string>
@@ -105,6 +112,7 @@
     <string name="notes_label">Notizen</string>
     <string name="remove_button">Löschen</string>
     <string name="addnew">Weiteren hinzufügen</string>
+    <string name="addnew_above">Neu oben hinzufügen</string>
     <string name="wrong_pump_data">Daten kommen von einer anderen Pumpe. Wechsle den Pumpentreiber.</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Begrenzung der max. Basalrate auf %1$.2f IE/h wegen %2$s</string>
@@ -125,24 +133,6 @@
     <string name="ble_not_enabled">Bluetooth nicht aktiviert.</string>
     <string name="location_not_found_title">Standortdienst ist nicht aktiviert</string>
     <string name="location_not_found_message">Auf neueren Geräten muss für die Bluetooth-Erkennung der Standortdienst aktiviert sein. AAPS speichert keine Standortdaten und der Dienst kann nach erfolgreichem Pairing wieder deaktiviert werden.</string>
-    <!--    DateUtil-->
-    <string name="minago">vor %1$d Min.</string>
-    <string name="hoursago">vor %1$.1f Stunde</string>
-    <string name="shorthour">h</string>
-    <string name="days">Tage</string>
-    <string name="hours">Stunden</string>
-    <string name="unit_second">Sekunde</string>
-    <string name="unit_minute">Minute</string>
-    <string name="unit_hour">Stunde</string>
-    <string name="unit_day">Tag</string>
-    <string name="unit_week">Woche</string>
-    <string name="unit_seconds">Sekunden</string>
-    <string name="unit_minutes">Minuten</string>
-    <string name="unit_hours">Stunden</string>
-    <string name="unit_days">Tage</string>
-    <string name="unit_weeks">Wochen</string>
-    <string name="shortminute">min</string>
-    <string name="shortday">d</string>
     <!--    Protection-->
     <string name="wrongpassword">Falsches Passwort</string>
     <string name="passwords_dont_match">Die Passwörter stimmen nicht überein.</string>
@@ -168,10 +158,6 @@
     <string name="zerovalueinprofile">Ungültiges Profil: %1$s</string>
     <!--    Temptarget-->
     <string name="mins">%1$d min.</string>
-    <!--    TDD-->
-    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f IE</b> Bol: <b>%3$.2f U</b> Bas: <b>%4$.2f IE(%5$.0f%%)</b>]]></string>
-    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f IE</b> Bol: <b>%3$.2f U</b> Bas: <b>%4$.2f IE(%5$.0f%%)</b> KH: <b>%6$.0f g</b>]]></string>
-    <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> in <b>%3$d</b> Tagen<br>]]></string>
     <!--    Translator-->
     <string name="careportal">Careportal</string>
     <string name="careportal_bgcheck">BZ-Test</string>
@@ -369,6 +355,7 @@
     <string name="uel_stat_reset">STATISTIKEN ZURÜCKGESETZT</string>
     <string name="uel_delete_logs">LOGS LÖSCHEN</string>
     <string name="uel_delete_future_treatments">BEHANDLUNGEN IN DER ZUKUNFT ENTFERNEN</string>
+    <string name="delete_future_treatments">Zukünftige Behandlungen löschen</string>
     <string name="uel_export_settings">EINSTELLUNGEN EXPORTIEREN</string>
     <string name="uel_import_settings">EINSTELLUNGEN IMPORTIEREN</string>
     <string name="uel_reset_databases">DATENBANK ZURÜCKSETZEN</string>
@@ -440,6 +427,12 @@
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="pump_paired" comment="26 characters max for translation">Pumpe gekoppelt</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight Refresh Button</string>
+    <string name="a11y_min_button_description">abnehmend %1$s mit %2$s</string>
+    <string name="a11y_plus_button_description">zunehmend %1$s mit %2$s</string>
+    <string name="basal">Basal</string>
+    <string name="count_selected">%1$d ausgewählt</string>
+    <string name="sort_label">Sortieren</string>
+    <!-- Autotune -->
     <plurals name="days">
         <item quantity="one">%1$d Tag</item>
         <item quantity="other">%1$d Tage</item>

@@ -25,10 +25,10 @@ import info.nightscout.androidaps.plugin.general.openhumans.delegates.OHStateDel
 import info.nightscout.androidaps.plugin.general.openhumans.ui.OHFragment
 import info.nightscout.androidaps.plugin.general.openhumans.ui.OHLoginActivity
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.withContext
@@ -91,7 +91,7 @@ class OpenHumansUploader @Inject internal constructor(
     }
 
     private fun onSharedPreferenceChanged(event: EventPreferenceChange) {
-        if (event.changedKey in arrayOf("key_oh_charging_only", "key_oh_wifi_only")  && openHumansState != null) scheduleWorker(true)
+        if (event.changedKey in arrayOf("key_oh_charging_only", "key_oh_wifi_only") && openHumansState != null) scheduleWorker(true)
     }
 
     suspend fun login(bearerToken: String) = withContext(Dispatchers.IO) {
@@ -233,10 +233,8 @@ class OpenHumansUploader @Inject internal constructor(
         tags.add("DeviceInfo")
 
         val displayMetrics = DisplayMetrics()
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R)
-            context.display?.getRealMetrics(displayMetrics)
-        else
-            @Suppress("DEPRECATION") (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.getMetrics(displayMetrics)
+        @Suppress("DEPRECATION")
+        (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.getMetrics(displayMetrics)
 
         val displayInfo = JSONObject()
         displayInfo.put("height", displayMetrics.heightPixels)
@@ -249,12 +247,12 @@ class OpenHumansUploader @Inject internal constructor(
         tags.add("DisplayInfo")
 
         val uploadNumber = this.uploadCounter++
-        val uploadDate = Date()
+        val uploadDate = System.currentTimeMillis()
         val uploadInfo = JSONObject()
         uploadInfo.put("fileVersion", 2)
         uploadInfo.put("counter", uploadNumber)
         uploadInfo.put("timestamp", until)
-        uploadInfo.put("utcOffset", TimeZone.getDefault().getOffset(uploadDate.time))
+        uploadInfo.put("utcOffset", TimeZone.getDefault().getOffset(uploadDate))
         zos.writeFile("UploadInfo.json", uploadInfo.toString().toByteArray())
         tags.add("UploadInfo")
 
@@ -523,7 +521,7 @@ class OpenHumansUploader @Inject internal constructor(
             tags = tags,
             description = "AndroidAPS Database Upload",
             md5 = MessageDigest.getInstance("MD5").digest(bytes).toHexString(),
-            creationDate = uploadDate.time
+            creationDate = uploadDate
         )
 
         refreshAccessTokenIfNeeded()
@@ -613,13 +611,14 @@ class OpenHumansUploader @Inject internal constructor(
             .setAutoCancel(true)
             .setContentIntent(
                 PendingIntent.getActivity(
-                context,
-                0,
-                Intent(context, OHLoginActivity::class.java).apply {
-                    flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                },
-                0
-            ))
+                    context,
+                    0,
+                    Intent(context, OHLoginActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    },
+                    0
+                )
+            )
             .build()
         NotificationManagerCompat.from(context).notify(SIGNED_OUT_NOTIFICATION_ID, notification)
         withContext(Dispatchers.Main) {
@@ -645,7 +644,9 @@ class OpenHumansUploader @Inject internal constructor(
     }
 
     private companion object {
+
         val HEX_DIGITS = "0123456789ABCDEF".toCharArray()
+
         @Suppress("PrivatePropertyName")
         private val FILE_NAME_DATE_FORMAT = SimpleDateFormat("yyyyMMdd'T'HHmmss", Locale.US).apply { timeZone = TimeZone.getTimeZone("UTC") }
         const val WORK_NAME_PERIODIC = "Open Humans Periodic"

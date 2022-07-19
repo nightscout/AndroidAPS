@@ -10,25 +10,28 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
+        android:paddingStart="16dp"
         android:paddingTop="16dp"
+        android:paddingEnd="16dp"
         android:visibility="gone">
 
         <CheckBox
             android:id="@+id/fake"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp"
             android:layout_weight="1"
-            android:text="Enable fake time and progress" />
+            android:text="Enable fake time and progress"
+            tools:ignore="HardcodedText" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/reset"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            style="@style/OkCancelButton.Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Reset" />
+            android:text="Reset"
+            tools:ignore="HardcodedText" />
+
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -38,4 +41,5 @@
         android:layout_weight="1"
         android:clipToPadding="false"
         android:paddingBottom="16dp" />
+
 </LinearLayout>

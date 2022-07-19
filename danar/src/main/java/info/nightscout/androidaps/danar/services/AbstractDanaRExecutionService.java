@@ -50,10 +50,10 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.ToastUtils;
-import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.interfaces.ResourceHelper;
 import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import info.nightscout.shared.sharedPreferences.SP;
-import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 /**
  * Created by mike on 28.01.2018.
@@ -191,22 +191,23 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
 
     protected void getBTSocketForSelectedPump() {
         mDevName = sp.getString(R.string.key_danar_bt_name, "");
-        BluetoothAdapter bluetoothAdapter = ((BluetoothManager)context.getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
+        BluetoothAdapter bluetoothAdapter = ((BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
 
         if (bluetoothAdapter != null) {
             Set<BluetoothDevice> bondedDevices = bluetoothAdapter.getBondedDevices();
 
-            for (BluetoothDevice device : bondedDevices) {
-                if (mDevName.equals(device.getName())) {
-                    mBTDevice = device;
-                    try {
-                        mRfcommSocket = mBTDevice.createRfcommSocketToServiceRecord(SPP_UUID);
-                    } catch (IOException e) {
-                        aapsLogger.error("Error creating socket: ", e);
+            if (bondedDevices != null)
+                for (BluetoothDevice device : bondedDevices) {
+                    if (mDevName.equals(device.getName())) {
+                        mBTDevice = device;
+                        try {
+                            mRfcommSocket = mBTDevice.createRfcommSocketToServiceRecord(SPP_UUID);
+                        } catch (IOException e) {
+                            aapsLogger.error("Error creating socket: ", e);
+                        }
+                        break;
                     }
-                    break;
                 }
-            }
         } else {
             ToastUtils.INSTANCE.showToastInUiThread(context.getApplicationContext(),
                     rh.gs(R.string.nobtadapter));
@@ -218,7 +219,7 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
     }
 
     public void bolusStop() {
-        aapsLogger.debug(LTag.PUMP, "bolusStop >>>>> @ " + (danaPump.getBolusingTreatment() == null ? "" : danaPump.getBolusingTreatment().insulin));
+        aapsLogger.debug(LTag.PUMP, "bolusStop >>>>> @ " + (danaPump.getBolusingTreatment() == null ? "" : danaPump.getBolusingTreatment().getInsulin()));
         MsgBolusStop stop = new MsgBolusStop(injector);
         danaPump.setBolusStopForced(true);
         if (isConnected()) {

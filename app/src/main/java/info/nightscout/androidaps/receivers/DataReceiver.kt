@@ -6,16 +6,14 @@ import android.provider.Telephony
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequest
 import dagger.android.DaggerBroadcastReceiver
+import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
+import info.nightscout.androidaps.plugins.source.*
+import info.nightscout.androidaps.utils.extensions.copyDouble
+import info.nightscout.androidaps.utils.extensions.copyLong
+import info.nightscout.androidaps.utils.extensions.copyString
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.BundleLogger
 import info.nightscout.shared.logging.LTag
-import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
-import info.nightscout.androidaps.plugins.source.*
-import info.nightscout.androidaps.services.Intents
-import info.nightscout.androidaps.utils.extensions.copyDouble
-import info.nightscout.androidaps.utils.extensions.copyInt
-import info.nightscout.androidaps.utils.extensions.copyLong
-import info.nightscout.androidaps.utils.extensions.copyString
 import javax.inject.Inject
 
 open class DataReceiver : DaggerBroadcastReceiver() {
@@ -28,11 +26,10 @@ open class DataReceiver : DaggerBroadcastReceiver() {
         val bundle = intent.extras ?: return
         aapsLogger.debug(LTag.DATABASE, "onReceive ${intent.action} ${BundleLogger.log(bundle)}")
 
-
         when (intent.action) {
             Intents.ACTION_NEW_BG_ESTIMATE            ->
                 OneTimeWorkRequest.Builder(XdripPlugin.XdripWorker::class.java)
-                    .setInputData(dataWorker.storeInputData(bundle, intent)).build()
+                    .setInputData(dataWorker.storeInputData(bundle, intent.action)).build()
             Intents.POCTECH_BG                        ->
                 OneTimeWorkRequest.Builder(PoctechPlugin.PoctechWorker::class.java)
                     .setInputData(Data.Builder().also {
@@ -55,22 +52,21 @@ open class DataReceiver : DaggerBroadcastReceiver() {
             Intents.NS_EMULATOR                       ->
                 OneTimeWorkRequest.Builder(MM640gPlugin.MM640gWorker::class.java)
                     .setInputData(Data.Builder().also {
-                        it.copyDouble(Intents.EXTRA_BG_ESTIMATE, bundle)
-                        it.copyString(Intents.EXTRA_BG_SLOPE_NAME, bundle)
-                        it.copyLong(Intents.EXTRA_TIMESTAMP, bundle)
-                        it.copyDouble(Intents.EXTRA_RAW, bundle)
-                        it.copyInt(Intents.EXTRA_SENSOR_BATTERY, bundle, -1)
-                        it.copyString(Intents.XDRIP_DATA_SOURCE_DESCRIPTION, bundle)
+                        it.copyString("collection", bundle)
+                        it.copyString("data", bundle)
                     }.build()).build()
             Telephony.Sms.Intents.SMS_RECEIVED_ACTION ->
                 OneTimeWorkRequest.Builder(SmsCommunicatorPlugin.SmsCommunicatorWorker::class.java)
-                    .setInputData(dataWorker.storeInputData(bundle, intent)).build()
+                    .setInputData(dataWorker.storeInputData(bundle, intent.action)).build()
             Intents.EVERSENSE_BG                      ->
                 OneTimeWorkRequest.Builder(EversensePlugin.EversenseWorker::class.java)
-                    .setInputData(dataWorker.storeInputData(bundle, intent)).build()
+                    .setInputData(dataWorker.storeInputData(bundle, intent.action)).build()
             Intents.DEXCOM_BG                         ->
                 OneTimeWorkRequest.Builder(DexcomPlugin.DexcomWorker::class.java)
-                    .setInputData(dataWorker.storeInputData(bundle, intent)).build()
+                    .setInputData(dataWorker.storeInputData(bundle, intent.action)).build()
+            Intents.AIDEX_NEW_BG_ESTIMATE             ->
+                OneTimeWorkRequest.Builder(AidexPlugin.AidexWorker::class.java)
+                    .setInputData(dataWorker.storeInputData(bundle, intent.action)).build()
             else                                      -> null
         }?.let { request -> dataWorker.enqueue(request) }
     }

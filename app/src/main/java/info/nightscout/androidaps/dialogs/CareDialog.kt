@@ -30,9 +30,9 @@ import info.nightscout.androidaps.utils.Translator
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.extensions.fromConstant
 import info.nightscout.androidaps.interfaces.GlucoseUnit
-import info.nightscout.androidaps.utils.resources.ResourceHelper
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
+import info.nightscout.androidaps.interfaces.ResourceHelper
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
 import java.text.DecimalFormat
 import java.util.*
 import javax.inject.Inject
@@ -165,6 +165,8 @@ class CareDialog : DialogFragmentWithDate() {
             ?: 0.0, 0.0, Constants.MAX_PROFILE_SWITCH_DURATION, 10.0, DecimalFormat("0"), false, binding.okcancel.ok)
         if (options == EventType.NOTE || options == EventType.QUESTION || options == EventType.ANNOUNCEMENT || options == EventType.EXERCISE)
             binding.notesLayout.root.visibility = View.VISIBLE // independent to preferences
+        binding.bgLabel.labelFor = binding.bg.editTextId
+        binding.durationLabel.labelFor = binding.duration.editTextId
     }
 
     override fun onDestroyView() {

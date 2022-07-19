@@ -4,6 +4,7 @@
     <!--    General-->
     <string name="refresh">Oppdater</string>
     <string name="error">Feil</string>
+    <string name="save">Lagre</string>
     <string name="not_set_short">Ikke angitt</string>
     <string name="failedupdatebasalprofile">Kunne ikke oppdatere basal profil</string>
     <string name="profile_set_ok">Basal profil i pumpen er oppdatert</string>
@@ -41,6 +42,7 @@
     <string name="carbs">Karbohydrater</string>
     <string name="invalidprofile">Ugyldig profil!!!</string>
     <string name="noprofileset">INGEN PROFIL VALGT</string>
+    <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">Dato</string>
     <string name="units_label">Enheter</string>
     <string name="dia_label">DIA</string>
@@ -48,6 +50,11 @@
     <string name="isf_label">ISF</string>
     <string name="basal_label">Basal</string>
     <string name="target_label">Målverdi</string>
+    <string name="dia_long_label">Insulinets virkningstid (DIA)</string>
+    <string name="ic_long_label">Insulin- til karbohydratfaktor</string>
+    <string name="isf_long_label">Insulin sensitivitetsfaktor (ISF)</string>
+    <string name="basal_long_label">Basal rate</string>
+    <string name="target_long_label">Blodsukkermål</string>
     <string name="initializing">Starter opp...</string>
     <string name="serialnumber">Serienummer</string>
     <string name="battery_label">Batteri</string>
@@ -105,6 +112,7 @@
     <string name="notes_label">Merknader</string>
     <string name="remove_button">Fjern</string>
     <string name="addnew">Legg til ny</string>
+    <string name="addnew_above">Legg til ny over</string>
     <string name="wrong_pump_data">Data kommer fra forskjellige pumper. Bytt pumpevalg for å nullstille pumpens tilstand.</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Begrenser maks basal dose til %1$.2f E/t på grunn av %2$s</string>
@@ -125,27 +133,11 @@
     <string name="ble_not_enabled">Bluetooth er ikke aktivert.</string>
     <string name="location_not_found_title">Stedstjeneste er ikke aktivert</string>
     <string name="location_not_found_message">Bluetooth søk på nye mobiler virker bare når posisjonstjeneste er aktivert. AAPS lagrer ikke dine posisjonsdata og den kan derfor slås av etter vellykket sammenkobling.</string>
-    <!--    DateUtil-->
-    <string name="minago">%1$d min siden</string>
-    <string name="hoursago">%1$.1f timer siden</string>
-    <string name="shorthour">t</string>
-    <string name="days">dager</string>
-    <string name="hours">timer</string>
-    <string name="unit_second">sekund</string>
-    <string name="unit_minute">minutt</string>
-    <string name="unit_hour">time</string>
-    <string name="unit_day">dag</string>
-    <string name="unit_week">uke</string>
-    <string name="unit_seconds">sekunder</string>
-    <string name="unit_minutes">minutter</string>
-    <string name="unit_hours">timer</string>
-    <string name="unit_days">dager</string>
-    <string name="unit_weeks">uker</string>
-    <string name="shortminute">m</string>
-    <string name="shortday">d</string>
     <!--    Protection-->
     <string name="wrongpassword">Feil passord</string>
+    <string name="wrongpin">Feil PIN-kode</string>
     <string name="passwords_dont_match">Passord stemmer ikke overens</string>
+    <string name="pin_dont_match">PIN-kodene samsvarer ikke</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Basal verdier er ikke angitt på hele timer: %1$s</string>
     <string name="minimalbasalvaluereplaced">Basal verdi erstattet med laveste tillate verdi: %1$s</string>
@@ -168,10 +160,6 @@
     <string name="zerovalueinprofile">Ugyldig profil: %1$s</string>
     <!--    Temptarget-->
     <string name="mins">%1$d min</string>
-    <!--    TDD-->
-    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f E</b> Bol: <b>%3$.2f E</b> Bas: <b>%4$.2f E(%5$.0f%%)</b>]]></string>
-    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f E</b> Bol: <b>%3$.2f E</b> Bas: <b>%4$.2f E(%5$.0f%%)</b> Karbo: <b>%6$.0f g</b>]]></string>
-    <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> i <b>%3$d</b> dager<br>]]></string>
     <!--    Translator-->
     <string name="careportal">Careportal</string>
     <string name="careportal_bgcheck">BS kontroll</string>
@@ -369,6 +357,7 @@
     <string name="uel_stat_reset">TILBAKESTILL STATISTIKK</string>
     <string name="uel_delete_logs">SLETT LOGGER</string>
     <string name="uel_delete_future_treatments">SLETT FRAMTIDIG BEHANDLING</string>
+    <string name="delete_future_treatments">Slett behandlinger i fremtiden</string>
     <string name="uel_export_settings">EKSPORTER INNSTILLINGER</string>
     <string name="uel_import_settings">IMPORTER INNSTILLINGER</string>
     <string name="uel_reset_databases">TILBAKESTILL DATABASER</string>
@@ -440,6 +429,66 @@
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="pump_paired" comment="26 characters max for translation">Pumpe sammenkoblet</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight oppdateringsknapp</string>
+    <string name="a11y_min_button_description">reduser %1$s med %2$s</string>
+    <string name="a11y_plus_button_description">øk %1$s med %2$s</string>
+    <string name="formatPercent">%1$.0f%%</string>
+    <string name="basal">Basal</string>
+    <string name="basalpct">Basal %</string>
+    <string name="count_selected">%1$d valgt</string>
+    <string name="sort_label">Sorter</string>
+    <string name="remove_items">Slett elementer</string>
+    <string name="sort_items">Sorter elementer</string>
+    <string name="remove_selected_items">Slett valgte elementer</string>
+    <string name="a11y_file">fil</string>
+    <string name="a11y_user">bruker</string>
+    <!-- Autotune -->
+    <string name="autotune">Autotune</string>
+    <string name="autotune_description">Hjelp til å justere profilen (insulinfølsomhet, karbohydratfaktor og basal doser)</string>
+    <string name="autotune_shortname">AT</string>
+    <string name="autotune_settings">Autotune innstillinger</string>
+    <string name="autotune_auto_title">Automatisering profilbytte</string>
+    <string name="autotune_auto_summary">Hvis det er aktivert så vil Autotune automatisk oppdatere profilen og skifte til denne etter beregninger fra en automatiserings regel.</string>
+    <string name="autotune_categorize_uam_as_basal_title">Kategoriser UAM (uannonsert måltid) som basal</string>
+    <string name="autotune_categorize_uam_as_basal_summary">Aktiver kun hvis du korrekt har angitt alle spiste karbohydrater. Med dette alternativet vil Autotune foreslå endringer i basal doser hvis den plutselig oppdager BS stigninger.</string>
+    <string name="autotune_tune_insulin_curve_title">Tilpass insulinkurven</string>
+    <string name="autotune_tune_insulin_curve_summary">Aktiver kun hvis du bruker egendefinert topp punkt. Dette alternativet vil justere topp- og DIA-varigheten</string>
+    <string name="autotune_default_tune_days_title">Antall dager med data</string>
+    <string name="autotune_circadian_ic_isf_title">Bruk gjennomsnittsverdier i cirkadisk IK/ISF</string>
+    <string name="autotune_circadian_ic_isf_summary">Autotune vil ikke justere cirkadiske variasjoner. Dette valget benytter gjennomsnittsverdier til å justere IK og ISF i din cirkadiske inngangsprofil</string>
+    <string name="autotune_additional_log_title">Inkluder mer logginformasjon for feilsøking</string>
+    <string name="autotune_additional_log_summary">Slå på kun dersom det er forespurt av utviklere for å sende mer logginformasjon for å hjelpe i feilsøking av Autotune</string>
+    <string name="autotune_default_tune_days_summary">Standard antall dager som skal analyseres av Autotune (opp til 30)</string>
+    <string name="autotune_tunedprofile_name">Innstilt</string>
+    <string name="autotune_profile">Profil :</string>
+    <string name="autotune_tune_days">Antall dager:</string>
+    <string name="autotune_last_run">Siste beregning :</string>
+    <string name="autotune_warning">Varsel:</string>
+    <string name="autotune_select_profile">Velg profil du vil justere</string>
+    <string name="autotune_ic_warning">Valgt profil har %1$d IK verdier. Autotune vil bruke %2$.2f g/E</string>
+    <string name="autotune_isf_warning">Valgte profil har %1$d ISF-verdier. Autotune vil bruke %2$.1f %3$s/E</string>
+    <string name="autotune_error">Feil i innleste datasett, prøv å kjør Autotune en gang til eller reduser antall dager</string>
+    <string name="autotune_warning_during_run">Har startet Autotune beregning, vennligst vent</string>
+    <string name="autotune_warning_after_run">Kontroller resultatene nøye før du bruker dem!</string>
+    <string name="autotune_partial_result">Delvis resultat dag %1$d / %2$d justert</string>
+    <string name="autotune_result">Resultat: %1$s</string>
+    <string name="autotune_param">Parametre</string>
+    <string name="autotune_percent">%</string>
+    <string name="autotune_missing">Mangler</string>
+    <string name="autotune_profile_name">Autotune profil %1$s</string>
+    <string name="autotune_run">Kjør Autotune</string>
+    <string name="autotune_check_input_profile_button">Sjekk inngangsprofil</string>
+    <string name="autotune_compare_profile">Sammenlign profiler</string>
+    <string name="autotune_copy_localprofile_button">Kopier til lokal profil</string>
+    <string name="autotune_update_input_profile_button">Oppdater inngangsprofil</string>
+    <string name="autotune_revert_input_profile_button">Tilbakestill inngangsprofil</string>
+    <string name="autotune_copy_local_profile_message">Opprette ny lokal profil fra denne Autotune profilen?</string>
+    <string name="autotune_update_local_profile_message">Oppdater %1$s profil med Autotune profil?</string>
+    <string name="autotune_revert_local_profile_message">Tilbakestill %1$s profil med inngangsprofil?</string>
+    <string name="autotune_profile_invalid">Ugyldig profil</string>
+    <string name="autotune_run_without_autoswitch">Autotune utført uten profilbytte</string>
+    <string name="autotune_run_with_autoswitch">Autotune utført og profil automatisk skiftet ut</string>
+    <string name="autotune_run_with_error">Feil oppdaget under siste Autotune kjøring</string>
+    <string name="autotune_run_cancelled">Autotune kjører allerede. Kjøring avbrutt</string>
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dager</item>

@@ -4,4 +4,4 @@
     android:layout_height="2dip"
     android:layout_marginTop="5dp"
     android:layout_marginBottom="5dp"
-    android:background="@color/list_delimiter" />
+    android:background="?android:attr/dividerHorizontal" />

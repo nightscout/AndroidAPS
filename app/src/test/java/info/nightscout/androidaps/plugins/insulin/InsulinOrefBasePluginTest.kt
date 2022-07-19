@@ -9,17 +9,17 @@ import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.Insulin
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.insulin.InsulinOrefBasePlugin.Companion.MIN_DIA
-import info.nightscout.androidaps.utils.DefaultValueHelper
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.HardLimits
+import info.nightscout.shared.logging.AAPSLogger
 import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnit
 import org.mockito.junit.MockitoRule
 
@@ -35,10 +35,9 @@ class InsulinOrefBasePluginTest {
         profileFunction: ProfileFunction,
         rxBus: RxBus,
         aapsLogger: AAPSLogger,
-        config: Config
-    ) : InsulinOrefBasePlugin(
-        injector, rh, profileFunction, rxBus, aapsLogger, config
-    ) {
+        config: Config,
+        hardLimits: HardLimits
+    ) : InsulinOrefBasePlugin(injector, rh, profileFunction, rxBus, aapsLogger, config, hardLimits) {
 
         override fun sendShortDiaNotification(dia: Double) {
             shortDiaNotificationSend = true
@@ -62,13 +61,13 @@ class InsulinOrefBasePluginTest {
 
     private lateinit var sut: InsulinBaseTest
 
-    @Mock lateinit var defaultValueHelper: DefaultValueHelper
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var rxBus: RxBus
     @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var config: Config
+    @Mock lateinit var hardLimits: HardLimits
 
     private var injector: HasAndroidInjector = HasAndroidInjector {
         AndroidInjector {
@@ -77,30 +76,23 @@ class InsulinOrefBasePluginTest {
 
     @Before
     fun setUp() {
-        sut = InsulinBaseTest(injector, rh, profileFunction, rxBus, aapsLogger, config)
+        sut = InsulinBaseTest(injector, rh, profileFunction, rxBus, aapsLogger, config, hardLimits)
+        `when`(hardLimits.minDia()).thenReturn(5.0)
     }
 
     @Test
     fun testGetDia() {
-        Assert.assertEquals(MIN_DIA, sut.dia, 0.0)
-        testUserDefinedDia = MIN_DIA + 1
-        Assert.assertEquals(MIN_DIA + 1, sut.dia, 0.0)
-        testUserDefinedDia = MIN_DIA - 1
-        Assert.assertEquals(MIN_DIA, sut.dia, 0.0)
+        Assert.assertEquals(5.0, sut.dia, 0.0)
+        testUserDefinedDia = 5.0 + 1
+        Assert.assertEquals(5.0 + 1, sut.dia, 0.0)
+        testUserDefinedDia = 5.0 - 1
+        Assert.assertEquals(5.0, sut.dia, 0.0)
         Assert.assertTrue(shortDiaNotificationSend)
-    }
-
-    @Test
-    fun minDiaTes() {
-        Assert.assertEquals(5.0, MIN_DIA, 0.0001)
     }
 
     @Test
     fun testIobCalcForTreatment() {
         val treatment = Bolus(timestamp = 0, amount = 10.0, type = Bolus.Type.NORMAL)
-        val expected = Iob()
-        Assert.assertEquals(expected.iobContrib, sut.iobCalcForTreatment(treatment, 0, 0.0).iobContrib, 0.001)
-        Assert.assertEquals(expected.activityContrib, sut.iobCalcForTreatment(treatment, 0, 0.0).activityContrib, 0.001)
         testPeak = 30
         testUserDefinedDia = 4.0
         val time = System.currentTimeMillis()

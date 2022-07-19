@@ -1,17 +1,14 @@
 package info.nightscout.shared
 
-import java.lang.Exception
-
 object SafeParse {
 
-    // TODO return logging with dagger
     //    private static Logger log = StacktraceLoggerWrapper.getLogger(SafeParse.class);
-    @JvmStatic fun stringToDouble(inputString: String?): Double {
-        var input = inputString ?: return 0.0
-        var result = 0.0
+    fun stringToDouble(inputString: String?, defaultValue: Double = 0.0): Double {
+        var input = inputString ?: return defaultValue
+        var result = defaultValue
         input = input.replace(",", ".")
         input = input.replace("−", "-")
-        if (input == "") return 0.0
+        if (input == "") return defaultValue
         try {
             result = input.toDouble()
         } catch (e: Exception) {
@@ -20,7 +17,7 @@ object SafeParse {
         return result
     }
 
-    @JvmStatic fun stringToFloat(inputString: String?): Float {
+    fun stringToFloat(inputString: String?): Float {
         var input = inputString ?: return 0f
         var result = 0f
         input = input.replace(",", ".")
@@ -34,7 +31,7 @@ object SafeParse {
         return result
     }
 
-    @JvmStatic fun stringToInt(inputString: String?): Int {
+    fun stringToInt(inputString: String?): Int {
         var input = inputString ?: return 0
         var result = 0
         input = input.replace(",", ".")

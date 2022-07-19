@@ -6,9 +6,8 @@ import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothProfile
 import android.content.Context
 import android.os.SystemClock
+import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.extensions.toHex
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.BuildConfig
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Ids
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.ServiceDiscoverer
@@ -22,6 +21,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.DataB
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.IncomingPackets
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageIO
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import java.lang.IllegalArgumentException
 import java.util.concurrent.CountDownLatch
 
@@ -61,6 +62,7 @@ class Connection(
     @Volatile
     var msgIO: MessageIO? = null
 
+    @Synchronized
     fun connect(connectionWaitCond: ConnectionWaitCondition) {
         aapsLogger.debug("Connecting connectionWaitCond=$connectionWaitCond")
         podState.connectionAttempts++
@@ -117,6 +119,7 @@ class Connection(
         dataBleIO.readyToRead()
     }
 
+    @Synchronized
     fun disconnect(closeGatt: Boolean) {
         aapsLogger.debug(LTag.PUMPBTCOMM, "Disconnecting closeGatt=$closeGatt")
         podState.bluetoothConnectionState = OmnipodDashPodStateManager.BluetoothConnectionState.DISCONNECTED
@@ -137,10 +140,15 @@ class Connection(
             connectionWaitCond.timeoutMs?.let {
                 bleCommCallbacks.waitForConnection(it)
             }
+            val startWaiting = System.currentTimeMillis()
             connectionWaitCond.stopConnection?.let {
                 while (!bleCommCallbacks.waitForConnection(STOP_CONNECTING_CHECK_INTERVAL_MS)) {
                     if (it.count == 0L) {
                         throw ConnectException("stopConnecting called")
+                    }
+                    val secondsElapsed = (System.currentTimeMillis() - startWaiting) / 1000
+                    if (secondsElapsed > MAX_WAIT_FOR_CONNECTION_SECONDS) {
+                        throw ConnectException("connection timeout")
                     }
                 }
             }
@@ -199,6 +207,7 @@ class Connection(
         const val BASE_CONNECT_TIMEOUT_MS = 10000L
         const val MIN_DISCOVERY_TIMEOUT_MS = 10000L
         const val STOP_CONNECTING_CHECK_INTERVAL_MS = 500L
+        const val MAX_WAIT_FOR_CONNECTION_SECONDS = Constants.PUMP_MAX_CONNECTION_TIME_IN_SECONDS + 10
         const val SLEEP_WHEN_FAILING_TO_CONNECT_GATT = 10000L
     }
 }

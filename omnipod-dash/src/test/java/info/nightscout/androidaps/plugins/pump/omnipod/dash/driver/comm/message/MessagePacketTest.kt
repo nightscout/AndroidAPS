@@ -2,8 +2,8 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message
 
 import com.google.crypto.tink.subtle.Hex
 import info.nightscout.androidaps.extensions.toHex
-import info.nightscout.shared.logging.AAPSLoggerTest
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
+import info.nightscout.shared.logging.AAPSLoggerTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -16,7 +16,6 @@ class MessagePacketTest {
         )
 
     @Test fun testParseMessagePacket() {
-        val aapsLogger = AAPSLoggerTest()
         val msg = MessagePacket.parse(Hex.decode(payload))
         assertEquals(msg.type, MessageType.ENCRYPTED)
         assertEquals(msg.source, Id.fromLong(136326824))

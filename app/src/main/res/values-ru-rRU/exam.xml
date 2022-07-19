@@ -104,13 +104,11 @@
     <string name="troubleshooting_wheretoask">Где искать помощь с AndroidAPS?</string>
     <string name="troubleshooting_fb">Вы можете попросить совета в группе AndroidAPS Users Facebook.</string>
     <string name="troubleshooting_wiki">Вам следует прочитать (и перечитать) документацию AndroidAPS.</string>
-    <string name="troubleshooting_gitter">Можно консультироваться и пересылать логи технических проблем и неполадок в чате Gitter по AndroidAPS.</string>
+    <string name="troubleshooting_gitter">Можно консультироваться, a также пересылать логи технических проблем и неполадок в чате Discord по AndroidAPS.</string>
     <string name="troubleshooting_yourendo">Вы должны спросить в диабетической клинике / у вашего врача-эндокринолога.</string>
     <string name="troubleshooting_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
-    <string name="troubleshooting_hint3">https://gitter.im/MilosKozak/AndroidAPS
- 
-Context | Edit Context</string>
+    <string name="troubleshooting_hint3">https://discord.gg/4fQUWHZ4Mw</string>
     <string name="insulin_label">Модули для инсулинов</string>
     <string name="insulin_ultrarapid">Какой инсулин следует использовать с модулем Сверхбыстрый Oref?</string>
     <string name="insulin_fiasp">Fiasp®</string>
@@ -125,6 +123,7 @@ Context | Edit Context</string>
     <string name="sensitivity_cannula">Внесение записи о замене катетера вернет коэффициент Autosens к 100%.</string>
     <string name="sensitivity_time">У некоторых опций модуля есть настраиваемые диапазоны времени, которые может задать пользователь.</string>
     <string name="sensitivity_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Sensitivity-detection-and-COB.html</string>
+    <string name="sensitivity_hint2">https://androidaps.readthedocs.io/en/latest/Usage/Open-APS-features.html?highlight=Autosens#autosens</string>
     <string name="wrongcarbs_label">Ошибки записи углеводов</string>
     <string name="wrongcarbs_whattodo">Что нужно делать, если сделан неправильный ввод углеводов?</string>
     <string name="wrongcarbs_treatmentstab">Удалить неверную запись в Журнале терапии и заново ввести правильное значение углеводов.</string>
@@ -137,8 +136,20 @@ Context | Edit Context</string>
     <string name="wronginsulin_compare">Сравните значения в истории AndroidAPS и помпы (если помпа это поддерживает).</string>
     <string name="wronginsulin_prime">Рассчитать и ввести «пропущенный» вами инсулин шприцем/ручкой или через кнопку заполнения канюли.</string>
     <string name="wronginsulin_donothing">Ничего не делать и позволить AndroidAPS исправить возможный высокий уровень ГК.</string>
+    <string name="cob_label">Активные углеводы COB - углеводы в процессе компенсации</string>
+    <string name="cob_question">Как изменение значения ISF влияет на расчет COB?</string>
+    <string name="cob_longer">Увеличение фактора чувствительности ISF потребует больше времени на усвоение углеводов</string>
+    <string name="cob_shorter">Увеличение фактора чувствительности ISF потребует меньше времени на усвоение углеводов</string>
+    <string name="cob_no_effect">Увеличение фактора чувствительности ISF не повлияет на расчетное время усвоения углеводов</string>
+    <string name="cob2_question">Как изменение значения IC влияет на расчет COB?</string>
+    <string name="cob2_longer">Увеличение IC увеличит время усвоения углеводов</string>
+    <string name="cob2_shorter">Увеличение IC уменьшит время усвоения углеводов</string>
+    <string name="cob2_no_effect">Увеличение IC не повлияет на расчетное время усвоения углеводов</string>
+    <string name="cob3_question">Как изменение процента профиля влияет на расчет активных углеводов COB?</string>
+    <string name="cob3_longer">Установка профиля на 150% потребует больше времени на усвоение углеводов</string>
+    <string name="cob3_shorter">Установка профиля на 150% потребует меньше времени на усвоение углеводов</string>
+    <string name="cob3_no_effect">Установка профиля на 150% не повлияет на расчетное время усвоения углеводов</string>
     <string name="iob_label">Активный инсулин (IOB)</string>
-    <string name="iob_which">Отметьте все правильные ответы.</string>
     <string name="iob_value">На величину IOB влияют устанавливаемые ВБС.</string>
     <string name="iob_hightemp">Высокая ВБС не будет применяться, если уровень сахара в крови ниже целевого.</string>
     <string name="iob_negiob">Отрицательный IOB в течение длительного периода при отсутствии физнагрузки указывает на то, что ваш профиль завышен и требуется снизить кол-во инсулина в настройках.</string>

@@ -1,23 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.MaterialComponents.CardView"
+    android:id="@+id/extended_bolus_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    card_view:cardBackgroundColor="?android:colorBackground">
+    android:layout_marginStart="4dp"
+    android:layout_marginBottom="4dp"
+    app:cardCornerRadius="4dp"
+    app:contentPadding="2dp"
+    android:layout_gravity="center">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="?android:attr/dividerHorizontal"
+            android:gravity="center"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            tools:text="1.1.2000" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:baselineAligned="true"
             android:orientation="horizontal">
-
 
             <com.joanzapata.iconify.widget.IconTextView
                 android:layout_width="wrap_content"
@@ -30,33 +48,32 @@
                 tools:ignore="HardcodedText" />
 
             <TextView
-                android:id="@+id/date"
+                android:id="@+id/time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1.1.2000 18:00"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                tools:ignore="HardcodedText" />
+                tools:text="18:00" />
 
             <TextView
                 android:id="@+id/insulin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingStart="10dp"
-                android:text="150%"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                tools:ignore="HardcodedText,RtlSymmetry" />
+                tools:ignore="RtlSymmetry"
+                tools:text="150%" />
 
             <TextView
                 android:id="@+id/duration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingStart="10dp"
-                android:text="30 min"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                tools:ignore="HardcodedText,RtlSymmetry" />
+                tools:ignore="RtlSymmetry"
+                tools:text="30 min" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
                 android:layout_weight="1"
@@ -67,8 +84,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
+                android:textColor="?attr/setTempButton"
                 android:text="PH"
-                android:textColor="@color/colorSetTempButton"
                 tools:ignore="HardcodedText" />
 
             <TextView
@@ -76,8 +93,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
+                android:textColor="?attr/setTempButton"
                 android:text="NS"
-                android:textColor="@color/colorSetTempButton"
                 tools:ignore="HardcodedText" />
 
         </LinearLayout>
@@ -91,7 +108,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
-                android:paddingLeft="10dp"
+                android:paddingStart="10dp"
                 android:paddingEnd="5dp"
                 android:text="@string/tempbasals_netratio_label_string"
                 android:textAppearance="?android:attr/textAppearanceSmall"
@@ -103,17 +120,18 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:paddingEnd="10dp"
-                android:text="0.05 U/h"
                 android:textStyle="bold"
-                tools:ignore="HardcodedText,RtlSymmetry" />
+                tools:ignore="RtlSymmetry"
+                tools:text="0.05 U/h" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
-                android:paddingRight="10dp"
+                android:paddingEnd="10dp"
                 android:text="@string/tempbasals_iob_label_string"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                tools:ignore="RtlSymmetry" />
 
             <TextView
                 android:id="@+id/iob"
@@ -121,12 +139,11 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="30dp"
-                android:text="0.12 U"
                 android:textStyle="bold"
-                tools:ignore="HardcodedText" />
+                tools:text="0.12 U" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
                 android:layout_weight="1"
@@ -138,16 +155,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:text="@string/invalid"
-                android:textColor="@android:color/holo_red_light" />
+                android:textColor="?attr/alarmColor" />
 
-            <TextView
-                android:id="@+id/remove"
+            <CheckBox
+                android:id="@+id/cb_remove"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:text="@string/remove_button"
-                android:textAlignment="viewEnd"
-                android:textColor="@android:color/holo_orange_light" />
+                android:layout_height="19dp"
+                android:contentDescription="@string/select_for_removal"
+                android:minWidth="0dp"
+                android:visibility="gone" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -157,15 +173,6 @@
 
         </LinearLayout>
 
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="2dip"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="5dp"
-            android:background="@color/list_delimiter" />
-
     </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

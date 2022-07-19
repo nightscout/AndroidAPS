@@ -104,11 +104,11 @@
     <string name="troubleshooting_wheretoask">איפה אפשר לחפש עזרה עם AndroidAPS?</string>
     <string name="troubleshooting_fb">אפשר לבקש עצות בקבוצת הפייסבוק \"AndroidAPS Users\" (אנגלית).</string>
     <string name="troubleshooting_wiki">צריך לקרוא (ולקרוא מחדש) את מסמכי AndroidAPS.</string>
-    <string name="troubleshooting_gitter">תוכלו לבקש עצות ולרשום בעיות טכניות או בעיות בחדר ה-Gitter של AndroidAPS.</string>
+    <string name="troubleshooting_gitter">תוכלו לבקש עצות ולרשום בעיות טכניות או בעיות ב-Discord של AndroidAPS.</string>
     <string name="troubleshooting_yourendo">עליכם לשאול את המרפאה\\הרופא האנדוקרינולוג שלכם.</string>
     <string name="troubleshooting_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
-    <string name="troubleshooting_hint3">https://gitter.im/MilosKozak/AndroidAPS</string>
+    <string name="troubleshooting_hint3">https://discord.gg/4fQUWHZ4Mw</string>
     <string name="insulin_label">תוספי אינסולין</string>
     <string name="insulin_ultrarapid">באיזה אינסולין להשתמש עם תוסף האולטרה מהיר?</string>
     <string name="insulin_fiasp">Fiasp®</string>
@@ -123,6 +123,7 @@
     <string name="sensitivity_cannula">רישום החלפת צינורית יאפס את היחס של Autosens בחזרה ל-100%.</string>
     <string name="sensitivity_time">חלק מאפשרויות התוסף כוללות טווחי זמן הניתנים להגדרה ע\"י המשתמש.</string>
     <string name="sensitivity_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Sensitivity-detection-and-COB.html</string>
+    <string name="sensitivity_hint2">https://androidaps.readthedocs.io/en/latest/Usage/Open-APS-features.html?highlight=Autosens#autosens</string>
     <string name="wrongcarbs_label">שגיאות רישום פחמימות</string>
     <string name="wrongcarbs_whattodo">מה לעשות אם טעיתם ברישום הפחמימות?</string>
     <string name="wrongcarbs_treatmentstab">מחקו את הרשומה השגויה בטיפולים וציינו את ערך הפחמימות הנכון.</string>
@@ -135,8 +136,20 @@
     <string name="wronginsulin_compare">השוו את הרשומות שב-AndroidAPS עם היסטוריית המשאבה (אם המשאבה תומכת בכך).</string>
     <string name="wronginsulin_prime">מזריקים בולוס על חלק מהאינסולין המחושב \"שחסר\" עם מזרק\\עט או באמצעות תיחול (Prime).</string>
     <string name="wronginsulin_donothing">לא לעשות דבר ולאפשר ל-AndroidAPS לתקן כל רמת סוכר גבוהה.</string>
+    <string name="cob_label">פחמ\' פעילות</string>
+    <string name="cob_question">איך שינויים ביחס התיקון משפיעים על חישוב הפחמימות הפעילות?</string>
+    <string name="cob_longer">הגדלת ערך יחס התיקון תגרום להארכת משך ספיגת הפחמימות</string>
+    <string name="cob_shorter">הגדלת ערך יחס התיקון תגרום לקיצור משך ספיגת הפחמימות</string>
+    <string name="cob_no_effect">הגדלת ערך יחס התיקון לא תשפיע על חישוב ספיגת הפחמימות</string>
+    <string name="cob2_question">איך שינויים ביחס הפחמימות משפיעים על חישוב הפחמימות הפעילות?</string>
+    <string name="cob2_longer">הגדלת ערך יחס הפחמימות תגרום להארכת משך ספיגת הפחמימות</string>
+    <string name="cob2_shorter">הגדלת ערך יחס הפחמימות תגרום לקיצור משך ספיגת הפחמימות</string>
+    <string name="cob2_no_effect">הגדלת ערך יחס הפחמימות לא תשפיע על חישוב ספיגת הפחמימות</string>
+    <string name="cob3_question">איך שינויים באחוזי הפרופיל משפיעים על חישוב הפחמימות הפעילות?</string>
+    <string name="cob3_longer">הגדרת 150% פרופיל תגרום להארכת משך ספיגת הפחמימות</string>
+    <string name="cob3_shorter">הגדרת 150% פרופיל תגרום לקיצור משך ספיגת הפחמימות</string>
+    <string name="cob3_no_effect">הגדרת 150% פרופיל לא תשפיע על חישוב משך ספיגת הפחמימות</string>
     <string name="iob_label">אינסולין פעיל בגוף (IOB)</string>
-    <string name="iob_which">סמנו את כל התשובות הנכונות.</string>
     <string name="iob_value">ערך האינסולין הפעיל (IOB) מושפע ממינונים בזאליים זמניים שסופקו.</string>
     <string name="iob_hightemp">מינון בזאלי גבוה לא יינתן כאשר רמת הסוכר נמוכה מערך המטרה.</string>
     <string name="iob_negiob">אינסולין פעיל שלילי לאורך זמן בו לא נעשית פעילות מצביע על כך שהפרופיל חזק מדי, נדרש פחות אינסולין ויש להגדיר זאת בפרופיל.</string>

@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.constraints.objectives
 
-import android.graphics.Color
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
@@ -37,11 +37,11 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.SntpClient
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import io.reactivex.rxkotlin.plusAssign
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import io.reactivex.rxjava3.kotlin.plusAssign
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.sharedPreferences.SP
-import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 
 class ObjectivesFragment : DaggerFragment() {
@@ -153,6 +153,7 @@ class ObjectivesFragment : DaggerFragment() {
             return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.objectives_item, parent, false))
         }
 
+        @SuppressLint("SetTextI18n")
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val objective = objectivesPlugin.objectives[position]
             holder.binding.title.text = rh.gs(R.string.nth_objective, position + 1)
@@ -167,7 +168,7 @@ class ObjectivesFragment : DaggerFragment() {
             } else
                 holder.binding.gate.visibility = View.GONE
             if (!objective.isStarted) {
-                holder.binding.gate.setTextColor(-0x1)
+                holder.binding.gate.setTextColor(rh.gac(context, R.attr.defaultTextColor))
                 holder.binding.verify.visibility = View.GONE
                 holder.binding.progress.visibility = View.GONE
                 holder.binding.accomplished.visibility = View.GONE
@@ -178,7 +179,7 @@ class ObjectivesFragment : DaggerFragment() {
                 else
                     holder.binding.start.visibility = View.GONE
             } else if (objective.isAccomplished) {
-                holder.binding.gate.setTextColor(-0xb350b0)
+                holder.binding.gate.setTextColor(rh.gac(context, R.attr.isAccomplishedColor))
                 holder.binding.verify.visibility = View.GONE
                 holder.binding.progress.visibility = View.GONE
                 holder.binding.start.visibility = View.GONE
@@ -186,7 +187,7 @@ class ObjectivesFragment : DaggerFragment() {
                 holder.binding.unfinish.visibility = View.VISIBLE
                 holder.binding.unstart.visibility = View.GONE
             } else if (objective.isStarted) {
-                holder.binding.gate.setTextColor(-0x1)
+                holder.binding.gate.setTextColor(rh.gac(context,R.attr.defaultTextColor))
                 holder.binding.verify.visibility = View.VISIBLE
                 holder.binding.verify.isEnabled = objective.isCompleted || binding.fake.isChecked
                 holder.binding.start.visibility = View.GONE
@@ -200,7 +201,7 @@ class ObjectivesFragment : DaggerFragment() {
                     // name
                     val name = TextView(holder.binding.progress.context)
                     name.text = "${rh.gs(task.task)}:"
-                    name.setTextColor(-0x1)
+                    name.setTextColor(rh.gac(context,R.attr.defaultTextColor) )
                     holder.binding.progress.addView(name, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                     // hint
                     task.hints.forEach { h ->
@@ -209,9 +210,9 @@ class ObjectivesFragment : DaggerFragment() {
                     }
                     // state
                     val state = TextView(holder.binding.progress.context)
-                    state.setTextColor(-0x1)
+                    state.setTextColor(rh.gac(context,R.attr.defaultTextColor))
                     val basicHTML = "<font color=\"%1\$s\"><b>%2\$s</b></font>"
-                    val formattedHTML = String.format(basicHTML, if (task.isCompleted()) "#4CAF50" else "#FF9800", task.progress)
+                    val formattedHTML = String.format(basicHTML, if (task.isCompleted()) rh.gac(context, R.attr.isCompletedColor) else rh.gac(context, R.attr.isNotCompletedColor), task.progress)
                     state.text = HtmlHelper.fromHtml(formattedHTML)
                     state.gravity = Gravity.END
                     holder.binding.progress.addView(state, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
@@ -228,12 +229,12 @@ class ObjectivesFragment : DaggerFragment() {
                     }
                     // horizontal line
                     val separator = View(holder.binding.progress.context)
-                    separator.setBackgroundColor(Color.DKGRAY)
+                    separator.setBackgroundColor(rh.gac(context, R.attr.separatorColor))
                     holder.binding.progress.addView(separator, LinearLayout.LayoutParams.MATCH_PARENT, 2)
                 }
             }
             holder.binding.accomplished.text = rh.gs(R.string.accomplished, dateUtil.dateAndTimeString(objective.accomplishedOn))
-            holder.binding.accomplished.setTextColor(-0x3e3e3f)
+            holder.binding.accomplished.setTextColor(rh.gac(context,R.attr.defaultTextColor))
             holder.binding.verify.setOnClickListener {
                 receiverStatusStore.updateNetworkStatus()
                 if (binding.fake.isChecked) {

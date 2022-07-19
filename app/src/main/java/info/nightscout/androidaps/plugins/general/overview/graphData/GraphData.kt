@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.general.overview.graphData
 
-import android.graphics.Color
+import android.content.Context
 import android.graphics.DashPathEffect
 import android.graphics.Paint
 import com.jjoe64.graphview.GraphView
@@ -11,14 +11,13 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.general.overview.OverviewData
-import info.nightscout.androidaps.plugins.general.overview.graphExtensions.AreaGraphSeries
-import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DoubleDataPoint
-import info.nightscout.androidaps.plugins.general.overview.graphExtensions.TimeAsXAxisLabelFormatter
+import info.nightscout.androidaps.plugins.general.overview.graphExtensions.*
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.Round
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.shared.logging.AAPSLogger
 import java.util.*
 import javax.inject.Inject
 import kotlin.math.abs
@@ -49,13 +48,16 @@ class GraphData(
         addSeries(overviewData.bucketedGraphSeries)
     }
 
-    fun addBgReadings(addPredictions: Boolean) {
+    fun addBgReadings(addPredictions: Boolean, context: Context?) {
         maxY = if (overviewData.bgReadingsArray.isEmpty()) {
             if (units == GlucoseUnit.MGDL) 180.0 else 10.0
         } else overviewData.maxBgValue
         minY = 0.0
         addSeries(overviewData.bgReadingGraphSeries)
         if (addPredictions) addSeries(overviewData.predictionsGraphSeries)
+        overviewData.bgReadingGraphSeries.setOnDataPointTapListener { _, dataPoint ->
+            if (dataPoint is GlucoseValueDataPoint) ToastUtils.showToastInUiThread(context, dataPoint.label)
+        }
     }
 
     fun addInRangeArea(fromTime: Long, toTime: Long, lowLine: Double, highLine: Double) {
@@ -66,26 +68,46 @@ class GraphData(
         addSeries(AreaGraphSeries(inRangeAreaDataPoints).also {
             it.color = 0
             it.isDrawBackground = true
-            it.backgroundColor = rh.gc(R.color.inrangebackground)
+            it.backgroundColor = rh.gac(graph.context, R.attr.inRangeBackground)
         })
     }
 
     fun addBasals() {
-        val scale = defaultValueHelper.determineLowLine() / maxY / 1.2
+        overviewData.basalScale.multiplier = 1.0 // get unscaled Y-values for max calculation
+        var maxBasalValue = maxOf(0.1, overviewData.baseBasalGraphSeries.highestValueY, overviewData.tempBasalGraphSeries.highestValueY)
+        maxBasalValue = maxOf(maxBasalValue, overviewData.basalLineGraphSeries.highestValueY, overviewData.absoluteBasalGraphSeries.highestValueY)
         addSeries(overviewData.baseBasalGraphSeries)
         addSeries(overviewData.tempBasalGraphSeries)
         addSeries(overviewData.basalLineGraphSeries)
         addSeries(overviewData.absoluteBasalGraphSeries)
-        overviewData.basalScale.multiplier = maxY * scale / overviewData.maxBasalValueFound
+        maxY = max(maxY, defaultValueHelper.determineHighLine())
+        val scale = defaultValueHelper.determineLowLine() / maxY / 1.2
+        overviewData.basalScale.multiplier = maxY * scale / maxBasalValue
     }
 
     fun addTargetLine() {
         addSeries(overviewData.temporaryTargetSeries)
     }
 
-    fun addTreatments() {
+    fun addTreatments(context: Context?) {
         maxY = maxOf(maxY, overviewData.maxTreatmentsValue)
         addSeries(overviewData.treatmentsSeries)
+        overviewData.treatmentsSeries.setOnDataPointTapListener { _, dataPoint ->
+            if (dataPoint is BolusDataPoint) ToastUtils.showToastInUiThread(context, dataPoint.label)
+        }
+    }
+
+    fun addEps(context: Context?, scale: Double) {
+        addSeries(overviewData.epsSeries)
+        overviewData.epsSeries.setOnDataPointTapListener { _, dataPoint ->
+            if (dataPoint is EffectiveProfileSwitchDataPoint) ToastUtils.showToastInUiThread(context, dataPoint.data.originalCustomizedName)
+        }
+        overviewData.epsScale.multiplier = maxY * scale / overviewData.maxEpsValue
+    }
+
+    fun addTherapyEvents() {
+        maxY = maxOf(maxY, overviewData.maxTherapyEventValue)
+        addSeries(overviewData.therapyEventSeries)
     }
 
     fun addActivity(scale: Double) {
@@ -196,7 +218,7 @@ class GraphData(
                 paint.style = Paint.Style.STROKE
                 paint.strokeWidth = 2f
                 paint.pathEffect = DashPathEffect(floatArrayOf(10f, 20f), 0f)
-                paint.color = Color.WHITE
+                paint.color = rh.gac(graph.context, R.attr.dotLineColor)
             })
         })
     }

@@ -6,7 +6,7 @@ import androidx.activity.result.contract.ActivityResultContract
 import androidx.fragment.app.FragmentActivity
 import info.nightscout.androidaps.plugins.general.maintenance.activities.PrefImportListActivity
 
-class PrefsFileContract : ActivityResultContract<Void, PrefsFile>() {
+class PrefsFileContract : ActivityResultContract<Void?, PrefsFile?>() {
 
     companion object {
 

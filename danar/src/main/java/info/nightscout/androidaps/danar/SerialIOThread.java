@@ -74,10 +74,11 @@ public class SerialIOThread extends Thread {
                         message = hashTable.findMessage(command);
                     }
 
-                    aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + message.getMessageName() + " " + MessageBase.toHexString(extractedBuff));
+                    aapsLogger.debug(LTag.PUMPBTCOMM,
+                            "<<<<< " + message.getMessageName() + " " + MessageBase.Companion.toHexString(extractedBuff));
 
                     // process the message content
-                    message.received = true;
+                    message.setReceived(true);
                     message.handleMessage(extractedBuff);
                     synchronized (message) {
                         message.notify();
@@ -108,7 +109,7 @@ public class SerialIOThread extends Thread {
                 return null;
             }
             if (mReadBuff[length - 2] != (byte) 0x2E || mReadBuff[length - 1] != (byte) 0x2E) {
-                aapsLogger.error("wrong packet lenght=" + length + " data " + MessageBase.toHexString(mReadBuff));
+                aapsLogger.error("wrong packet lenght=" + length + " data " + MessageBase.Companion.toHexString(mReadBuff));
                 disconnect("wrong packet");
                 return null;
             }
@@ -134,7 +135,7 @@ public class SerialIOThread extends Thread {
             mReadBuff = unprocessedData;
             return extractedBuff;
         } else {
-            aapsLogger.error("Wrong beginning of packet len=" + mReadBuff.length + "    " + MessageBase.toHexString(mReadBuff));
+            aapsLogger.error("Wrong beginning of packet len=" + mReadBuff.length + "    " + MessageBase.Companion.toHexString(mReadBuff));
             disconnect("Wrong beginning of packet");
             return null;
         }
@@ -148,7 +149,7 @@ public class SerialIOThread extends Thread {
         processedMessage = message;
 
         byte[] messageBytes = message.getRawMessageBytes();
-        aapsLogger.debug(LTag.PUMPBTCOMM, ">>>>> " + message.getMessageName() + " " + MessageBase.toHexString(messageBytes));
+        aapsLogger.debug(LTag.PUMPBTCOMM, ">>>>> " + message.getMessageName() + " " + MessageBase.Companion.toHexString(messageBytes));
 
         try {
             mOutputStream.write(messageBytes);

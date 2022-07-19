@@ -27,6 +27,7 @@
     <string name="key_virtualpump_type" translatable="false">virtualpump_type</string>
     <string name="key_quickwizard" translatable="false">QuickWizard</string>
     <string name="key_wear_control" translatable="false">wearcontrol</string>
+    <string name="key_units_mgdl" translatable="false">units_mgdl</string>
     <string name="key_show_notes_entry_dialogs" translatable="false">show_notes_entry_dialogs</string>
     <string name="key_openapsama_autosens_max" translatable="false">autosens_max</string>
     <string name="key_openapsama_autosens_min" translatable="false">autosens_min</string>
@@ -63,10 +64,21 @@
     <string name="key_resistantadult" translatable="false">resistantadult</string>
     <string name="key_pregnant" translatable="false">pregnant</string>
     <string name="key_app_expiration" translatable="false">app_expiration</string>
+    <string name="key_use_dark_mode" translatable="false">use_dark_mode</string>
+    <string name="key_insulin_oref_peak" translatable="false">insulin_oref_peak</string>
+    <string name="key_autotune_auto" translatable="false">autotune_auto</string>
+    <string name="key_autotune_categorize_uam_as_basal" translatable="false">categorize_uam_as_basal</string>
+    <string name="key_autotune_tune_insulin_curve" translatable="false">autotune_tune_insulin_curve</string>
+    <string name="key_autotune_default_tune_days" translatable="false">autotune_default_tune_days</string>
+    <string name="key_autotune_circadian_ic_isf" translatable="false">autotune_circadian_ic_isf</string>
+    <string name="key_autotune_additional_log" translatable="false">autotune_additional_log</string>
+    <string name="key_autotune_plugin" translatable="false">key_autotune_plugin</string>
+    <string name="key_autotune_last_run" translatable="false">key_autotune_last_run</string>
 
     <!--    General-->
     <string name="refresh">Refresh</string>
     <string name="error">Error</string>
+    <string name="save">Save</string>
     <string name="not_set_short">Not set</string>
     <string name="failedupdatebasalprofile">Failed to update basal profile</string>
     <string name="profile_set_ok">Basal profile in pump updated</string>
@@ -104,6 +116,7 @@
     <string name="carbs">Carbs</string>
     <string name="invalidprofile">Invalid profile !!!</string>
     <string name="noprofileset">NO PROFILE SET</string>
+    <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">Date</string>
     <string name="units_label">Units</string>
     <string name="dia_label">DIA</string>
@@ -111,6 +124,11 @@
     <string name="isf_label">ISF</string>
     <string name="basal_label">Basal</string>
     <string name="target_label">Target</string>
+    <string name="dia_long_label">Duration of Insulin Action</string>
+    <string name="ic_long_label">Insulin to Carb ratio</string>
+    <string name="isf_long_label">Insulin Sensitivity Factor</string>
+    <string name="basal_long_label">Basel rate</string>
+    <string name="target_long_label">Blood Glucose Target</string>
     <string name="initializing">Initializing ...</string>
     <string name="serialnumber">Serial number</string>
     <string name="battery_label">Battery</string>
@@ -168,6 +186,7 @@
     <string name="notes_label">Notes</string>
     <string name="remove_button">Remove</string>
     <string name="addnew">Add new</string>
+    <string name="addnew_above">Add new above</string>
     <string name="wrong_pump_data">Data is coming from different pump. Change pump driver to reset pump state.</string>
 
     <!--    Constraints-->
@@ -192,28 +211,11 @@
     <string name="location_not_found_title">Location Is Not Enabled</string>
     <string name="location_not_found_message">For Bluetooth discovery to work on newer devices, location must be enabled. AAPS does not track your location and it can be disabled after pairing is successful.</string>
 
-    <!--    DateUtil-->
-    <string name="minago">%1$d m ago</string>
-    <string name="hoursago">%1$.1f h ago</string>
-    <string name="shorthour">h</string>
-    <string name="days">days</string>
-    <string name="hours">hours</string>
-    <string name="unit_second">second</string>
-    <string name="unit_minute">minute</string>
-    <string name="unit_hour">hour</string>
-    <string name="unit_day">day</string>
-    <string name="unit_week">week</string>
-    <string name="unit_seconds">seconds</string>
-    <string name="unit_minutes">minutes</string>
-    <string name="unit_hours">hours</string>
-    <string name="unit_days">days</string>
-    <string name="unit_weeks">weeks</string>
-    <string name="shortminute">m</string>
-    <string name="shortday">d</string>
-
     <!--    Protection-->
     <string name="wrongpassword">Wrong password</string>
+    <string name="wrongpin">Wrong PIN</string>
     <string name="passwords_dont_match">Passwords don\'t match</string>
+    <string name="pin_dont_match">PINs don\'t match</string>
 
     <!--    Profile-->
     <string name="basalprofilenotaligned">Basal values not aligned to hours: %1$s</string>
@@ -242,11 +244,6 @@
 
     <!--    Temptarget-->
     <string name="mins">%1$d min</string>
-
-    <!--    TDD-->
-    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f U</b> Bol: <b>%3$.2f U</b> Bas: <b>%4$.2f U(%5$.0f%%)</b>]]></string>
-    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f U</b> Bol: <b>%3$.2f U</b> Bas: <b>%4$.2f U(%5$.0f%%)</b> Carbs: <b>%6$.0f g</b>]]></string>
-    <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> in <b>%3$d</b> days<br>]]></string>
 
     <!--    Translator-->
     <string name="careportal">Careportal</string>
@@ -461,6 +458,7 @@
     <string name="uel_stat_reset">STAT RESET</string>
     <string name="uel_delete_logs">DELETE LOGS</string>
     <string name="uel_delete_future_treatments">DELETE FUTURE TREATMENTS</string>
+    <string name="delete_future_treatments">Delete future treatments</string>
     <string name="uel_export_settings">EXPORT SETTINGS</string>
     <string name="uel_import_settings">IMPORT SETTINGS</string>
     <string name="uel_reset_databases">RESET DATABASES</string>
@@ -535,6 +533,74 @@
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="pump_paired" comment="26 characters max for translation">Pump paired</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight Refresh Button</string>
+    <string name="a11y_min_button_description">decrement %1$s by %2$s</string>
+    <string name="a11y_plus_button_description">increment %1$s by %2$s</string>
+    <string name="formatPercent">%1$.0f%%</string>
+    <string name="basal">Basal</string>
+    <string name="basalpct">Basal %</string>
+    <string name="count_selected">%1$d selected</string>
+    <string name="sort_label">Sort</string>
+    <string name="remove_items">Remove Items</string>
+    <string name="sort_items">Sort Items</string>
+    <string name="remove_selected_items">Remove Selected Items</string>
+    <string name="a11y_file">file</string>
+    <string name="a11y_user">user</string>
+
+    <!-- Autotune -->
+    <string name="autotune">Autotune</string>
+    <string name="autotune_description">Help for potential adjustments of profile (ISF, carb ratio, and basal rates)</string>
+    <string name="autotune_shortname">AT</string>
+    <string name="autotune_settings">Autotune settings</string>
+    <string name="autotune_auto_title">Automation Switch Profile</string>
+    <string name="autotune_auto_summary">If enabled, Autotune will automatically update and switch to input profile after calculation from an automation rule.</string>
+    <string name="autotune_categorize_uam_as_basal_title">Categorize UAM as basal</string>
+    <string name="autotune_categorize_uam_as_basal_summary">Enable only if you have reliably entered all carbs eaten, with this option sudden rises seen by Autotune will be used to recommend changes to the basal rate.</string>
+    <string name="autotune_tune_insulin_curve_title">Tune insulin curve</string>
+    <string name="autotune_tune_insulin_curve_summary">Enable only if you use free peak. This option will tune peak and DIA durations</string>
+    <string name="autotune_default_tune_days_title">Number of days of data</string>
+    <string name="autotune_circadian_ic_isf_title">Apply average result in circadian IC/ISF</string>
+    <string name="autotune_circadian_ic_isf_summary">Autotune will not tune circadian variations, this option only apply the average tuning of IC and ISF to your circadian input profile</string>
+    <string name="autotune_additional_log_title">Include more log information for debugging</string>
+    <string name="autotune_additional_log_summary">Switch on only if requested by dev to send more log information to help debugging Autotune plugin</string>
+    <string name="autotune_default_tune_days_summary">Default number of days of data to be processed by Autotune (up to 30)</string>
+    <string name="autotune_tunedprofile_name">Tuned</string>
+    <string name="autotune_profile">Profile :</string>
+    <string name="autotune_tune_days">Tune days :</string>
+    <string name="autotune_last_run">Last run :</string>
+    <string name="autotune_warning">Warning :</string>
+    <string name="autotune_select_profile">Select profile to tune</string>
+    <string name="autotune_ic_warning">Selected profile has %1$d IC values. Autotune will use %2$.2f g/U</string>
+    <string name="autotune_isf_warning">Selected profile has %1$d ISF values. Autotune will use %2$.1f %3$s/U</string>
+    <string name="autotune_error">Error in input data, try to run again autotune or reduce the number of days</string>
+    <string name="autotune_warning_during_run">Autotune calculation started, please be patient</string>
+    <string name="autotune_warning_after_run">Check the results carefully before using it!</string>
+    <string name="autotune_partial_result">Partial result day %1$d / %2$d tuned</string>
+    <string name="autotune_result">Result: %1$s</string>
+    <string name="autotune_param">Param</string>
+    <string name="autotune_percent">%</string>
+    <string name="autotune_missing">Missing</string>
+    <string name="autotune_profile_name">Autotune profile %1$s</string>
+    <string name="autotune_run">Run Autotune</string>
+    <string name="autotune_check_input_profile_button">Check input profile</string>
+    <string name="autotune_compare_profile">Compare profiles</string>
+    <string name="autotune_copy_localprofile_button">Copy to local profile</string>
+    <string name="autotune_update_input_profile_button">Update input profile</string>
+    <string name="autotune_revert_input_profile_button">Revert input profile</string>
+    <string name="autotune_copy_local_profile_message">Create a new local profile from this Autotune Profile?</string>
+    <string name="autotune_update_local_profile_message">Update %1$s profile with Autotune Profile?</string>
+    <string name="autotune_revert_local_profile_message">Revert %1$s profile with Input Profile?</string>
+    <string name="autotune_profile_invalid">Profile invalid</string>
+    <string name="autotune_log_title" translatable="false">|Param|Profile|Tuned|%/Miss.\n</string>
+    <string name="autotune_log_separator" translatable="false">+------------------------------------------\n</string>
+    <string name="autotune_log_peak" translatable="false">| %1$4.4s |\t%2$d |\t%3$d |\n</string>
+    <string name="autotune_log_dia" translatable="false">| %1$4.4s |\t%2$3.1f |\t%3$3.1f |\n</string>
+    <string name="autotune_log_ic_isf" translatable="false">| %1$4.4s | %2$3.3f |\t%3$3.3f |\n</string>
+    <string name="autotune_log_basal" translatable="false">|\t%1$02.0f\t| %2$3.3f |%3$3.3f\t| %5$.0f%% / %4$d\n</string>
+    <string name="autotune_log_sum_basal"  translatable="false">|\t∑\t|\t%1$3.1f |\t%2$3.1f |\n</string>
+    <string name="autotune_run_without_autoswitch">Autotune runned without profile switch</string>
+    <string name="autotune_run_with_autoswitch">Autotune runned and profile automatically switched</string>
+    <string name="autotune_run_with_error">Error during last Autotune run</string>
+    <string name="autotune_run_cancelled">Another run of Autotune is detected, run cancelled</string>
 
     <plurals name="days">
         <item quantity="one">%1$d day</item>

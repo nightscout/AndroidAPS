@@ -13,10 +13,14 @@ files:
     translation: /core/src/main/res/values-%android_code%/validator.xml
   - source: /core/src/main/res/values/strings.xml
     translation: /core/src/main/res/values-%android_code%/strings.xml
+  - source: /shared/src/main/res/values/strings.xml
+    translation: /shared/src/main/res/values-%android_code%/strings.xml
   - source: /combo/src/main/res/values/strings.xml
     translation: /combo/src/main/res/values-%android_code%/strings.xml
   - source: /dana/src/main/res/values/strings.xml
     translation: /dana/src/main/res/values-%android_code%/strings.xml
+  - source: /danar/src/main/res/values/strings.xml
+    translation: /danar/src/main/res/values-%android_code%/strings.xml
   - source: /medtronic/src/main/res/values/strings.xml
     translation: /medtronic/src/main/res/values-%android_code%/strings.xml
   - source: /omnipod-common/src/main/res/values/strings.xml
@@ -41,6 +45,8 @@ files:
     translation: /automation/src/main/res/values-%android_code%/strings.xml
   - source: /diaconn/src/main/res/values/strings.xml
     translation: /diaconn/src/main/res/values-%android_code%/strings.xml
+  - source: /pump-common/src/main/res/values/strings.xml
+    translation: /pump-common/src/main/res/values-%android_code%/strings.xml
   - source: /openhumans/src/main/res/values/strings.xml
     translation: /openhumans/src/main/res/values-%android_code%/strings.xml
     translate_attributes: 0

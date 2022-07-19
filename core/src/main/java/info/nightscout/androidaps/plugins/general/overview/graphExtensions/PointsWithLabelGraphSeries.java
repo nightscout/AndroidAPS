@@ -1,40 +1,23 @@
 package info.nightscout.androidaps.plugins.general.overview.graphExtensions;
 
-/**
- * GraphView
- * Copyright (C) 2014  Jonas Gehring
- * <p>
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License,
- * with the "Linking Exception", which can be found at the license.txt
- * file in this program.
- * <p>
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * <p>
- * You should have received a copy of the GNU General Public License
- * with the "Linking Exception" along with this program; if not,
- * write to the author Jonas Gehring <g.jjoe64@gmail.com>.
- */
-
-/*
- * Added by mike
- */
-
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
+
+import androidx.core.content.ContextCompat;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.BaseSeries;
 
 import java.util.Iterator;
+
+import info.nightscout.androidaps.core.R;
 
 /**
  * Series that plots the data as points.
@@ -65,12 +48,12 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
         MBG,
         BGCHECK,
         ANNOUNCEMENT,
-        OPENAPSOFFLINE,
+        OPENAPS_OFFLINE,
         EXERCISE,
         GENERAL,
-        GENERALWITHDURATION,
-        COBFAILOVER,
-        IOBPREDICTION,
+        GENERAL_WITH_DURATION,
+        COB_FAIL_OVER,
+        IOB_PREDICTION,
         BUCKETED_BG
     }
 
@@ -89,7 +72,7 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
     /**
      * creates the series with data
      *
-     * @param data datapoints
+     * @param data dataPoints
      */
     public PointsWithLabelGraphSeries(E[] data) {
         super(data);
@@ -97,7 +80,7 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
     }
 
     /**
-     * inits the internal objects
+     * init the internal objects
      * set the defaults
      */
     protected void init() {
@@ -108,11 +91,12 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
     /**
      * plot the data to the viewport
      *
-     * @param graphView graphview
-     * @param canvas canvas to draw on
+     * @param graphView     graphview
+     * @param canvas        canvas to draw on
      * @param isSecondScale whether it is the second scale
      */
     @Override
+    @SuppressWarnings({"deprecation"})
     public void draw(GraphView graphView, Canvas canvas, boolean isSecondScale) {
         // Convert the sp to pixels
         float scaledTextSize = spSize * graphView.getContext().getResources().getDisplayMetrics().scaledDensity;
@@ -148,11 +132,10 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
 
         float scaleX = (float) (graphWidth / diffX);
 
-        int i = 0;
         while (values.hasNext()) {
             E value = values.next();
 
-            mPaint.setColor(value.getColor());
+            mPaint.setColor(value.color(graphView.getContext()));
 
             double valY = value.getY() - minY;
             double ratY = valY / diffY;
@@ -163,10 +146,8 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
             double x = graphWidth * ratX;
 
             // overdraw
-            boolean overdraw = false;
-            if (x > graphWidth) { // end right
-                overdraw = true;
-            }
+            boolean overdraw = x > graphWidth;
+            // end right
             if (y < 0) { // end bottom
                 overdraw = true;
             }
@@ -190,24 +171,24 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
             float endY = (float) (graphTop - y) + graphHeight;
             registerDataPoint(endX, endY, value);
 
-            float xpluslength = 0;
+            float xPlusLength = 0;
             if (duration > 0) {
-                xpluslength = Math.min(endWithDuration, graphLeft + graphWidth);
+                xPlusLength = Math.min(endWithDuration, graphLeft + graphWidth);
             }
 
             // draw data point
             if (!overdraw) {
-                if (value.getShape() == Shape.BG || value.getShape() == Shape.COBFAILOVER) {
+                if (value.getShape() == Shape.BG || value.getShape() == Shape.COB_FAIL_OVER) {
                     mPaint.setStyle(Paint.Style.FILL);
                     mPaint.setStrokeWidth(0);
                     canvas.drawCircle(endX, endY, value.getSize() * scaledPxSize, mPaint);
-                } else if (value.getShape() == Shape.BG || value.getShape() == Shape.IOBPREDICTION || value.getShape() == Shape.BUCKETED_BG) {
-                    mPaint.setColor(value.getColor());
+                } else if (value.getShape() == Shape.BG || value.getShape() == Shape.IOB_PREDICTION || value.getShape() == Shape.BUCKETED_BG) {
+                    mPaint.setColor(value.color(graphView.getContext()));
                     mPaint.setStyle(Paint.Style.FILL);
                     mPaint.setStrokeWidth(0);
                     canvas.drawCircle(endX, endY, value.getSize() * scaledPxSize, mPaint);
                 } else if (value.getShape() == Shape.PREDICTION) {
-                    mPaint.setColor(value.getColor());
+                    mPaint.setColor(value.color(graphView.getContext()));
                     mPaint.setStyle(Paint.Style.FILL);
                     mPaint.setStrokeWidth(0);
                     canvas.drawCircle(endX, endY, scaledPxSize, mPaint);
@@ -231,9 +212,8 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
                     points[2] = new Point((int) (endX - scaledPxSize), (int) (endY + scaledPxSize * 0.67));
                     mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
                     drawArrows(points, canvas, mPaint);
-                    if (value.getLabel() != null) {
+                    if (!value.getLabel().isEmpty())
                         drawLabel45Right(endX, endY, value, canvas, scaledPxSize, scaledTextSize);
-                    }
                 } else if (value.getShape() == Shape.CARBS) {
                     mPaint.setStrokeWidth(0);
                     Point[] points = new Point[3];
@@ -242,9 +222,8 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
                     points[2] = new Point((int) (endX - scaledPxSize), (int) (endY + scaledPxSize * 0.67));
                     mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
                     drawArrows(points, canvas, mPaint);
-                    if (value.getLabel() != null) {
+                    if (!value.getLabel().isEmpty())
                         drawLabel45Left(endX, endY, value, canvas, scaledPxSize, scaledTextSize);
-                    }
                 } else if (value.getShape() == Shape.SMB) {
                     mPaint.setStrokeWidth(2);
                     Point[] points = new Point[3];
@@ -256,8 +235,8 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
                     drawArrows(points, canvas, mPaint);
                 } else if (value.getShape() == Shape.EXTENDEDBOLUS) {
                     mPaint.setStrokeWidth(0);
-                    if (value.getLabel() != null) {
-                        Rect bounds = new Rect((int) endX, (int) endY + 3, (int) (xpluslength), (int) endY + 8);
+                    if (!value.getLabel().isEmpty()) {
+                        Rect bounds = new Rect((int) endX, (int) endY + 3, (int) (xPlusLength), (int) endY + 8);
                         mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
                         canvas.drawRect(bounds, mPaint);
                         mPaint.setTextSize(scaledTextSize);
@@ -266,99 +245,89 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
                         canvas.drawText(value.getLabel(), endX, endY, mPaint);
                     }
                 } else if (value.getShape() == Shape.PROFILE) {
-                    mPaint.setStrokeWidth(0);
-                    if (value.getLabel() != null) {
-                        //mPaint.setTextSize((int) (scaledPxSize * 3));
-                        mPaint.setTextSize((float) (scaledTextSize * 1.2));
-                        mPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
-                        Rect bounds = new Rect();
-                        mPaint.getTextBounds(value.getLabel(), 0, value.getLabel().length(), bounds);
-                        float px = endX + bounds.height() / 2.0f;
-                        float py = (float) (graphHeight * ratY + bounds.width() + 10);
-                        canvas.save();
-                        canvas.rotate(-90, px, py);
-                        mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-                        canvas.drawText(value.getLabel(), px, py, mPaint);
-                        mPaint.setStyle(Paint.Style.STROKE);
-                        canvas.drawRect(px - 3, bounds.top + py - 3, bounds.right + px + 3, bounds.bottom + py + 3, mPaint);
-                        canvas.restore();
-                    }
+                    Drawable drawable = ContextCompat.getDrawable(graphView.getContext(), R.drawable.ic_ribbon_profile);
+                    assert drawable != null;
+                    drawable.setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
+                    drawable.setBounds(
+                            (int) (endX - drawable.getIntrinsicWidth() / 2),
+                            (int) (endY - drawable.getIntrinsicHeight() / 2),
+                            (int) (endX + drawable.getIntrinsicWidth() / 2),
+                            (int) (endY + drawable.getIntrinsicHeight() / 2));
+                    drawable.draw(canvas);
+
+                    mPaint.setTextSize(scaledTextSize * 0.8f);
+                    mPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
+                    mPaint.setColor(value.color(graphView.getContext()));
+                    Rect bounds = new Rect();
+                    mPaint.getTextBounds(value.getLabel(), 0, value.getLabel().length(), bounds);
+                    float px = endX - bounds.width() / 2.0f;
+                    float py = endY + drawable.getIntrinsicHeight();
+                    mPaint.setStyle(Paint.Style.FILL);
+                    canvas.drawText(value.getLabel(), px, py, mPaint);
                 } else if (value.getShape() == Shape.MBG) {
                     mPaint.setStyle(Paint.Style.STROKE);
                     mPaint.setStrokeWidth(5);
-                    float w = mPaint.getStrokeWidth();
                     canvas.drawCircle(endX, endY, scaledPxSize, mPaint);
                 } else if (value.getShape() == Shape.BGCHECK) {
                     mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
                     mPaint.setStrokeWidth(0);
                     canvas.drawCircle(endX, endY, scaledPxSize, mPaint);
-                    if (value.getLabel() != null) {
+                    if (!value.getLabel().isEmpty()) {
                         drawLabel45Right(endX, endY, value, canvas, scaledPxSize, scaledTextSize);
                     }
                 } else if (value.getShape() == Shape.ANNOUNCEMENT) {
                     mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
                     mPaint.setStrokeWidth(0);
                     canvas.drawCircle(endX, endY, scaledPxSize, mPaint);
-                    if (value.getLabel() != null) {
+                    if (!value.getLabel().isEmpty()) {
                         drawLabel45Right(endX, endY, value, canvas, scaledPxSize, scaledTextSize);
                     }
                 } else if (value.getShape() == Shape.GENERAL) {
                     mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
                     mPaint.setStrokeWidth(0);
                     canvas.drawCircle(endX, endY, scaledPxSize, mPaint);
-                    if (value.getLabel() != null) {
+                    if (!value.getLabel().isEmpty()) {
                         drawLabel45Right(endX, endY, value, canvas, scaledPxSize, scaledTextSize);
                     }
                 } else if (value.getShape() == Shape.EXERCISE) {
                     mPaint.setStrokeWidth(0);
-                    if (value.getLabel() != null) {
+                    if (!value.getLabel().isEmpty()) {
                         mPaint.setStrokeWidth(0);
                         mPaint.setTextSize((float) (scaledTextSize * 1.2));
                         mPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
                         Rect bounds = new Rect();
                         mPaint.getTextBounds(value.getLabel(), 0, value.getLabel().length(), bounds);
                         mPaint.setStyle(Paint.Style.STROKE);
-                        float px = endX;
                         float py = graphTop + 20;
-                        canvas.drawText(value.getLabel(), px, py, mPaint);
+                        canvas.drawText(value.getLabel(), endX, py, mPaint);
                         mPaint.setStrokeWidth(5);
-                        canvas.drawRect(px - 3, bounds.top + py - 3, xpluslength + 3, bounds.bottom + py + 3, mPaint);
+                        canvas.drawRect(endX - 3, bounds.top + py - 3, xPlusLength + 3, bounds.bottom + py + 3, mPaint);
                     }
-                } else if (value.getShape() == Shape.OPENAPSOFFLINE && value.getDuration() != 0) {
+                } else if (value.getShape() == Shape.OPENAPS_OFFLINE && value.getDuration() != 0) {
                     mPaint.setStrokeWidth(0);
-                    if (value.getLabel() != null) {
-                        //mPaint.setStrokeWidth(0);
-                        //mPaint.setTextSize(scaledTextSize);
-                        //mPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
-                        Rect bounds = new Rect();
-                        //mPaint.getTextBounds(value.getLabel(), 0, value.getLabel().length(), bounds);
+                    if (!value.getLabel().isEmpty()) {
                         mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-                        float px = endX;
-                        float py = graphTop + 50;
-                        //canvas.drawText(value.getLabel(), px, py, mPaint);
                         mPaint.setStrokeWidth(5);
-                        canvas.drawRect(px - 3, graphTop, xpluslength + 3, graphTop + graphHeight, mPaint);
+                        canvas.drawRect(endX - 3, graphTop, xPlusLength + 3, graphTop + graphHeight, mPaint);
                     }
-                } else if (value.getShape() == Shape.GENERALWITHDURATION) {
+                } else if (value.getShape() == Shape.GENERAL_WITH_DURATION) {
                     mPaint.setStrokeWidth(0);
-                    if (value.getLabel() != null) {
+                    if (!value.getLabel().isEmpty()) {
                         mPaint.setStrokeWidth(0);
                         mPaint.setTextSize((float) (scaledTextSize * 1.5));
                         mPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
                         Rect bounds = new Rect();
                         mPaint.getTextBounds(value.getLabel(), 0, value.getLabel().length(), bounds);
                         mPaint.setStyle(Paint.Style.STROKE);
-                        float px = endX;
                         float py = graphTop + 80;
-                        canvas.drawText(value.getLabel(), px, py, mPaint);
+                        canvas.drawText(value.getLabel(), endX, py, mPaint);
                         mPaint.setStrokeWidth(5);
-                        canvas.drawRect(px - 3, bounds.top + py - 3, xpluslength + 3, bounds.bottom + py + 3, mPaint);
+                        canvas.drawRect(endX - 3, bounds.top + py - 3, xPlusLength + 3, bounds.bottom + py + 3, mPaint);
                     }
                 }
                 // set values above point
             }
 
-            i++;
         }
 
     }
@@ -366,9 +335,9 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
     /**
      * helper to render triangle
      *
-     * @param point array with 3 coordinates
+     * @param point  array with 3 coordinates
      * @param canvas canvas to draw on
-     * @param paint paint object
+     * @param paint  paint object
      */
     private void drawArrows(Point[] point, Canvas canvas, Paint paint) {
         canvas.save();
@@ -382,27 +351,25 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
     }
 
     void drawLabel45Right(float endX, float endY, E value, Canvas canvas, Float scaledPxSize, Float scaledTextSize) {
-        float px = endX;
         float py = endY - scaledPxSize;
         canvas.save();
-        canvas.rotate(-45, px, py);
+        canvas.rotate(-45, endX, py);
         mPaint.setTextSize((float) (scaledTextSize * 0.8));
         mPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
         mPaint.setFakeBoldText(true);
-        canvas.drawText(value.getLabel(), px + scaledPxSize, py, mPaint);
+        canvas.drawText(value.getLabel(), endX + scaledPxSize, py, mPaint);
         canvas.restore();
     }
 
     void drawLabel45Left(float endX, float endY, E value, Canvas canvas, Float scaledPxSize, Float scaledTextSize) {
-        float px = endX;
         float py = endY + scaledPxSize;
         canvas.save();
-        canvas.rotate(-45, px, py);
+        canvas.rotate(-45, endX, py);
         mPaint.setTextSize((float) (scaledTextSize * 0.8));
         mPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
         mPaint.setFakeBoldText(true);
         mPaint.setTextAlign(Paint.Align.RIGHT);
-        canvas.drawText(value.getLabel(), px - scaledPxSize, py, mPaint);
+        canvas.drawText(value.getLabel(), endX - scaledPxSize, py, mPaint);
         mPaint.setTextAlign(Paint.Align.LEFT);
         canvas.restore();
     }

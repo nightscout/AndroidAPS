@@ -104,11 +104,11 @@
     <string name="troubleshooting_wheretoask">Kde môžete hľadať pomoc s AndroidAPS?</string>
     <string name="troubleshooting_fb">Môžete požiadať o radu vo Facebookovej skupine používateľov AndroidAPS.</string>
     <string name="troubleshooting_wiki">Mali by ste si prečítať (a znovu prečítať) dokumentáciu k AndroidAPS.</string>
-    <string name="troubleshooting_gitter">Môžete požiadať o radu a nahlásiť technické problémy, alebo chyby na Gitteri.</string>
+    <string name="troubleshooting_gitter">Môžete požiadať o radu a nahlásiť technické problémy, alebo chyby na Discorde AAPS.</string>
     <string name="troubleshooting_yourendo">Mali by ste se spýtať svojho lekára/endokrinológa.</string>
     <string name="troubleshooting_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/index.html#poradce-pri-potizich</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
-    <string name="troubleshooting_hint3">https://gitter.im/MilosKozak/AndroidAPS</string>
+    <string name="troubleshooting_hint3">https://discord.gg/4fQUWHZ4Mw</string>
     <string name="insulin_label">Pluginy Inzulín</string>
     <string name="insulin_ultrarapid">Ktorý inzulín by ste mali používať s pluginom Ultra-rýchly Oref?</string>
     <string name="insulin_fiasp">Fiasp®</string>
@@ -123,6 +123,7 @@
     <string name="sensitivity_cannula">Výmena kanyly, alebo zmena profilu automaticky nastaví Autosense späť na 100%.</string>
     <string name="sensitivity_time">Niektoré pluginy majú konfigurovateľné časové rozmedzie, ktoré môže nastaviť používateľ.</string>
     <string name="sensitivity_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Configuration/Config-Builder.html#detekce-citlivosti</string>
+    <string name="sensitivity_hint2">https://androidaps.readthedocs.io/en/latest/Usage/Open-APS-features.html?highlight=Autosens#autosens</string>
     <string name="wrongcarbs_label">Chyby pri zadávaní sacharidov</string>
     <string name="wrongcarbs_whattodo">Čo by ste mali urobiť, pokiaľ ste chybne zadali sacharidy?</string>
     <string name="wrongcarbs_treatmentstab">Odstráňte nesprávny záznam v Ošetreniach a zadajte správnu novú hodnotu sacharidov.</string>
@@ -135,8 +136,20 @@
     <string name="wronginsulin_compare">Porovnaj hodnoty v AndroidAPS z históriou v tvojej pumpe (ak pumpa má túto funkciu).</string>
     <string name="wronginsulin_prime">Pošlite bolus na vypočítaný „chýbajúci“ inzulín buď injekčnou striekačkou, alebo perom, alebo pomocou plnenia na pumpe.</string>
     <string name="wronginsulin_donothing">Nerobte nič a dovoľte AndroidAPS upraviť akúkoľvek výslednú vysokú hladinu glukózy v krvi.</string>
+    <string name="cob_label">Aktívne sacharidy (COB)</string>
+    <string name="cob_question">Ako ovplyvňuje zmena hodnoty citlivosti výpočet COB?</string>
+    <string name="cob_longer">Zvýšenie hodnoty citlivosti predĺži dobu absorbcie sacharidov</string>
+    <string name="cob_shorter">Zvýšenie hodnoty citlivosti skráti dobu absorbcie sacharidov</string>
+    <string name="cob_no_effect">Zvýšenie citlivosti neovplyvní vypočítanú absorbciu sacharidov</string>
+    <string name="cob2_question">Ako ovplyvňuje zmena inzulíno-sacharidového pomeru výpočet COB?</string>
+    <string name="cob2_longer">Zvýšenie hodnoty inzulíno-sacharidového pomeru predĺži dobu absorbcie sacharidov</string>
+    <string name="cob2_shorter">Zvýšenie hodnoty inzulíno-sacharidového pomeru skráti dobu absorbcie sacharidov</string>
+    <string name="cob2_no_effect">Zvýšenie inzulíno-sacharidového pomeru neovplyvní vypočítanú absorbciu sacharidov</string>
+    <string name="cob3_question">Ako ovplyvňuje percentuálna zmena profilu výpočet COB?</string>
+    <string name="cob3_longer">Nastavením profilu na 150 % dôjde k predĺženiu doby absorbcie sacharidov</string>
+    <string name="cob3_shorter">Nastavením profilu na 150 % dôjde ku skráteniu doby absorbcie sacharidov</string>
+    <string name="cob3_no_effect">Nastavenie profilu na 150% neovplyvní vypočítanú absorbciu sacharidov</string>
     <string name="iob_label">Aktívny inzulín (IOB)</string>
-    <string name="iob_which">Zaškrtnite všetky správne odpovede.</string>
     <string name="iob_value">Hodnota IOB je ovplyvnená vydanými dočasnými bazálmi.</string>
     <string name="iob_hightemp">Vysoký dočasný bazál nebude spustený, pokiaľ je Vaša glykémia nižšia, ako cieľ.</string>
     <string name="iob_negiob">Negatívne IOB po značnú dobu bez cvičenia naznačuje, že váš profil je príliš \"silný\" a vo vašom profile je potrebného menej inzulínu.</string>

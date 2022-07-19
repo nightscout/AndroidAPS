@@ -10,8 +10,8 @@ import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
-import info.nightscout.androidaps.services.Intents
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.receivers.Intents
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONArray
 import org.json.JSONException

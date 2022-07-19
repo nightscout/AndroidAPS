@@ -12,7 +12,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.defs.BasalProfileStatus
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.BatteryType
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import java.util.*
 import javax.inject.Inject
@@ -122,7 +122,7 @@ class MedtronicPumpStatus @Inject constructor(private val rh: ResourceHelper,
         get() {
             if (tempBasalStart == null) return null
             if (tempBasalEnd == null) {
-                val startTime = tempBasalStart!!.time
+                val startTime = tempBasalStart!!
                 tempBasalEnd = startTime + tempBasalLength!! * 60 * 1000
             }
             if (System.currentTimeMillis() > tempBasalEnd!!) {

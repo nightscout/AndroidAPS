@@ -3,6 +3,7 @@
     <!--    Keys-->
     <!--    General-->
     <string name="error">Earráid</string>
+    <string name="save">Sábháil</string>
     <string name="waitingforpump">Ag fanacht do caidéil</string>
     <string name="connectingfor">Ag nascadh le %1$d s</string>
     <string name="bolusdelivering">Ag seachadadh %1$.2f A</string>
@@ -63,24 +64,6 @@
     <string name="ok">Ceart go leor</string>
     <string name="cancel">Cuir ar ceal</string>
     <!--    BlePreCheck-->
-    <!--    DateUtil-->
-    <string name="minago">%1$d nóim ó shin</string>
-    <string name="hoursago">%1$.1f u ó shin</string>
-    <string name="shorthour">u</string>
-    <string name="days">lá</string>
-    <string name="hours">uair</string>
-    <string name="unit_second">soicind</string>
-    <string name="unit_minute">nóiméad</string>
-    <string name="unit_hour">uair</string>
-    <string name="unit_day">lá</string>
-    <string name="unit_week">seachtain</string>
-    <string name="unit_seconds">soicind</string>
-    <string name="unit_minutes">nóiméad</string>
-    <string name="unit_hours">uair</string>
-    <string name="unit_days">lá</string>
-    <string name="unit_weeks">seachtaine</string>
-    <string name="shortminute">n</string>
-    <string name="shortday">lá</string>
     <!--    Protection-->
     <!--    Profile-->
     <string name="profile_per_unit">/A</string>
@@ -97,7 +80,6 @@
     <string name="zerovalueinprofile">Próifíl neamhbhailí: %1$s</string>
     <!--    Temptarget-->
     <string name="mins">%1$d nóim</string>
-    <!--    TDD-->
     <!--    Translator-->
     <string name="careportal_announcement">Fógra</string>
     <string name="careportal_note">Nóta</string>
@@ -133,4 +115,6 @@
     <!-- User Entry -->
     <!-- HardLimits -->
     <!-- Command Queue + readStatus reasons -->
+    <string name="basal">Bunaidh</string>
+    <!-- Autotune -->
 </resources>

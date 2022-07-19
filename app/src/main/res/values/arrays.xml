@@ -92,6 +92,7 @@
 
     <string-array name="virtualPumpTypes">
         <item>Generic AAPS</item>
+        <item>MDI</item>
         <item>Accu-Chek Combo</item>
         <item>Accu-Chek Spirit</item>
         <item>Accu-Chek Insight</item>
@@ -136,6 +137,7 @@
         <item>@string/biometric</item>
         <item>@string/master_password</item>
         <item>@string/custom_password</item>
+        <item>@string/custom_pin</item>
     </string-array>
 
     <string-array name="protectiontypeValues">
@@ -143,6 +145,19 @@
         <item>1</item>
         <item>2</item>
         <item>3</item>
+        <item>4</item>
+    </string-array>
+
+    <string-array name="darkMode">
+        <item>@string/dark_theme</item>
+        <item>@string/light_theme</item>
+        <item>@string/follow_system_theme</item>
+    </string-array>
+
+    <string-array name="darkModeValues">
+        <item>@string/value_dark_theme</item>
+        <item>@string/value_light_theme</item>
+        <item>@string/value_system_theme</item>
     </string-array>
 
 </resources>

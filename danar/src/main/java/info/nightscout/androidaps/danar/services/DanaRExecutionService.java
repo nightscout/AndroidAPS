@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.danar.services;
 
+import android.annotation.SuppressLint;
 import android.os.Binder;
 import android.os.SystemClock;
 
@@ -61,7 +62,7 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.commands.Command;
-import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.interfaces.ResourceHelper;
 import info.nightscout.shared.sharedPreferences.SP;
 
 public class DanaRExecutionService extends AbstractDanaRExecutionService {
@@ -93,7 +94,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
         }
     }
 
-    public void connect() {
+    @SuppressLint("MissingPermission") public void connect() {
         if (mConnectionInProgress)
             return;
 
@@ -139,7 +140,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
 
             if (danaPump.isNewPump()) {
                 mSerialIOThread.sendMessage(checkValue);
-                if (!checkValue.received) {
+                if (!checkValue.isReceived()) {
                     return;
                 }
             }
@@ -289,10 +290,10 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
             if (!danaPump.getBolusStopped()) {
                 mSerialIOThread.sendMessage(start);
             } else {
-                t.insulin = 0d;
+                t.setInsulin(0d);
                 return false;
             }
-            while (!danaPump.getBolusStopped() && !start.failed) {
+            while (!danaPump.getBolusStopped() && !start.getFailed()) {
                 SystemClock.sleep(100);
                 if ((System.currentTimeMillis() - danaPump.getBolusProgressLastTimeStamp()) > 15 * 1000L) { // if i didn't receive status for more than 15 sec expecting broken comm
                     danaPump.setBolusStopped(true);
@@ -321,7 +322,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
                     break;
             }
             // try to find real amount if bolusing was interrupted or comm failed
-            if (t.insulin != amount) {
+            if (t.getInsulin() != amount) {
                 disconnect("bolusingInterrupted");
                 long bolusDurationInMSec = (long) (amount * speed * 1000);
                 long expectedEnd = bolusStart + bolusDurationInMSec + 3000;
@@ -339,7 +340,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
                         @Override
                         public void run() {
                             if (danaPump.getLastBolusTime() > System.currentTimeMillis() - 60 * 1000L) { // last bolus max 1 min old
-                                t.insulin = danaPump.getLastBolusAmount();
+                                t.setInsulin(danaPump.getLastBolusAmount());
                                 aapsLogger.debug(LTag.PUMP, "Used bolus amount from history: " + danaPump.getLastBolusAmount());
                             } else {
                                 aapsLogger.debug(LTag.PUMP, "Bolus amount in history too old: " + dateUtil.dateAndTimeString(danaPump.getLastBolusTime()));
@@ -359,7 +360,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
                 commandQueue.readStatus(rh.gs(R.string.bolus_ok), null);
             }
         }
-        return !start.failed;
+        return !start.getFailed();
     }
 
     public boolean carbsEntry(int amount) {
@@ -400,6 +401,6 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
         MsgSetUserOptions msg = new MsgSetUserOptions(injector);
         mSerialIOThread.sendMessage(msg);
         SystemClock.sleep(200);
-        return new PumpEnactResult(injector).success(!msg.failed);
+        return new PumpEnactResult(injector).success(!msg.getFailed());
     }
 }

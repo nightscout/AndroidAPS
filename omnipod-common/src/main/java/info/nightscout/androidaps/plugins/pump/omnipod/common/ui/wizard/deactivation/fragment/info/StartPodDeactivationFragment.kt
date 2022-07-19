@@ -5,7 +5,7 @@ import androidx.annotation.IdRes
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import info.nightscout.androidaps.plugins.pump.omnipod.common.R
-import info.nightscout.androidaps.plugins.pump.omnipod.common.dagger.OmnipodPluginQualifier
+import info.nightscout.androidaps.plugins.pump.omnipod.common.di.OmnipodPluginQualifier
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.common.fragment.InfoFragmentBase
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.deactivation.viewmodel.info.StartPodDeactivationViewModel
 import javax.inject.Inject

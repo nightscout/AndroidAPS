@@ -8,17 +8,17 @@ import android.os.Bundle
 import androidx.annotation.XmlRes
 import androidx.preference.*
 import dagger.android.support.AndroidSupportInjection
-import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
 import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.diaconn.DiaconnG8Plugin
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.events.EventRebuildTabs
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.PluginBase
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugin.general.openhumans.OpenHumansUploader
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
@@ -28,6 +28,7 @@ import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin
+import info.nightscout.androidaps.plugins.general.autotune.AutotunePlugin
 import info.nightscout.androidaps.plugins.general.maintenance.MaintenancePlugin
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus
@@ -43,17 +44,13 @@ import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
-import info.nightscout.androidaps.plugins.source.DexcomPlugin
-import info.nightscout.androidaps.plugins.source.EversensePlugin
-import info.nightscout.androidaps.plugins.source.GlimpPlugin
-import info.nightscout.androidaps.plugins.source.PoctechPlugin
-import info.nightscout.androidaps.plugins.source.TomatoPlugin
-import info.nightscout.androidaps.plugins.source.GlunovoPlugin
-import info.nightscout.shared.SafeParse
+import info.nightscout.androidaps.plugins.source.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog.show
 import info.nightscout.androidaps.utils.protection.PasswordCheck
-import info.nightscout.androidaps.utils.protection.ProtectionCheck
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.protection.ProtectionCheck.ProtectionType.*
+import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.plugins.aps.openAPSSMBDynamicISF.OpenAPSSMBDynamicISFPlugin
+import info.nightscout.shared.SafeParse
 import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 
@@ -70,6 +67,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var config: Config
 
     @Inject lateinit var automationPlugin: AutomationPlugin
+    @Inject lateinit var autotunePlugin: AutotunePlugin
     @Inject lateinit var danaRPlugin: DanaRPlugin
     @Inject lateinit var danaRKoreanPlugin: DanaRKoreanPlugin
     @Inject lateinit var danaRv2Plugin: DanaRv2Plugin
@@ -82,6 +80,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var nsClientPlugin: NSClientPlugin
     @Inject lateinit var openAPSAMAPlugin: OpenAPSAMAPlugin
     @Inject lateinit var openAPSSMBPlugin: OpenAPSSMBPlugin
+    @Inject lateinit var openAPSSMBDynamicISFPlugin: OpenAPSSMBDynamicISFPlugin
     @Inject lateinit var safetyPlugin: SafetyPlugin
     @Inject lateinit var sensitivityAAPSPlugin: SensitivityAAPSPlugin
     @Inject lateinit var sensitivityOref1Plugin: SensitivityOref1Plugin
@@ -92,6 +91,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var poctechPlugin: PoctechPlugin
     @Inject lateinit var tomatoPlugin: TomatoPlugin
     @Inject lateinit var glunovoPlugin: GlunovoPlugin
+    @Inject lateinit var aidexPlugin: AidexPlugin
     @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
     @Inject lateinit var statusLinePlugin: StatusLinePlugin
     @Inject lateinit var tidepoolPlugin: TidepoolPlugin
@@ -123,9 +123,11 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
 
     override fun onDestroy() {
         super.onDestroy()
-        PreferenceManager
-            .getDefaultSharedPreferences(context)
-            .unregisterOnSharedPreferenceChangeListener(this)
+        context?.let { context ->
+            PreferenceManager
+                .getDefaultSharedPreferences(context)
+                .unregisterOnSharedPreferenceChangeListener(this)
+        }
     }
 
     private fun addPreferencesFromResourceIfEnabled(p: PluginBase?, rootKey: String?, enabled: Boolean) {
@@ -139,9 +141,11 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        PreferenceManager
-            .getDefaultSharedPreferences(context)
-            .registerOnSharedPreferenceChangeListener(this)
+        context?.let { context ->
+            PreferenceManager
+                .getDefaultSharedPreferences(context)
+                .registerOnSharedPreferenceChangeListener(this)
+        }
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -164,10 +168,12 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             addPreferencesFromResourceIfEnabled(tomatoPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(glunovoPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(poctechPlugin, rootKey)
+            addPreferencesFromResourceIfEnabled(aidexPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(glimpPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(loopPlugin, rootKey, config.APS)
             addPreferencesFromResourceIfEnabled(openAPSAMAPlugin, rootKey, config.APS)
             addPreferencesFromResourceIfEnabled(openAPSSMBPlugin, rootKey, config.APS)
+            addPreferencesFromResourceIfEnabled(openAPSSMBDynamicISFPlugin, rootKey, config.APS)
             addPreferencesFromResourceIfEnabled(sensitivityAAPSPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(sensitivityWeightedAveragePlugin, rootKey)
             addPreferencesFromResourceIfEnabled(sensitivityOref1Plugin, rootKey)
@@ -186,6 +192,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             addPreferencesFromResourceIfEnabled(tidepoolPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(smsCommunicatorPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(automationPlugin, rootKey)
+            addPreferencesFromResourceIfEnabled(autotunePlugin, rootKey)
             addPreferencesFromResourceIfEnabled(wearPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(statusLinePlugin, rootKey)
             addPreferencesFromResource(R.xml.pref_alerts, rootKey)
@@ -235,7 +242,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
                 rh.gs(R.string.key_application_protection) == key ||
                 rh.gs(R.string.key_bolus_protection) == key) &&
             sp.getString(R.string.key_master_password, "") == "" &&
-            sp.getInt(key, ProtectionCheck.ProtectionType.NONE.ordinal) == ProtectionCheck.ProtectionType.BIOMETRIC.ordinal
+            sp.getInt(key, NONE.ordinal) == BIOMETRIC.ordinal
         ) {
             activity?.let {
                 val title = rh.gs(R.string.unsecure_fallback_biometric)
@@ -245,9 +252,9 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         }
 
         // Master password erased with activated Biometric protection
-        val isBiometricActivated = sp.getInt(R.string.key_settings_protection, ProtectionCheck.ProtectionType.NONE.ordinal) == ProtectionCheck.ProtectionType.BIOMETRIC.ordinal ||
-            sp.getInt(R.string.key_application_protection, ProtectionCheck.ProtectionType.NONE.ordinal) == ProtectionCheck.ProtectionType.BIOMETRIC.ordinal ||
-            sp.getInt(R.string.key_bolus_protection, ProtectionCheck.ProtectionType.NONE.ordinal) == ProtectionCheck.ProtectionType.BIOMETRIC.ordinal
+        val isBiometricActivated = sp.getInt(R.string.key_settings_protection, NONE.ordinal) == BIOMETRIC.ordinal ||
+            sp.getInt(R.string.key_application_protection, NONE.ordinal) == BIOMETRIC.ordinal ||
+            sp.getInt(R.string.key_bolus_protection, NONE.ordinal) == BIOMETRIC.ordinal
         if (rh.gs(R.string.key_master_password) == key && sp.getString(key, "") == "" && isBiometricActivated) {
             activity?.let {
                 val title = rh.gs(R.string.unsecure_fallback_biometric)
@@ -263,19 +270,19 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
 
     @SuppressLint("RestrictedApi")
     private fun addPreferencesFromResource(@XmlRes preferencesResId: Int, key: String?) {
-        val xmlRoot = preferenceManager.inflateFromResource(context,
-            preferencesResId, null)
-        val root: Preference?
-        if (key != null) {
-            root = xmlRoot.findPreference(key)
-            if (root == null) return
-            require(root is PreferenceScreen) {
-                ("Preference object with key " + key
-                    + " is not a PreferenceScreen")
+        context?.let { context ->
+            val xmlRoot = preferenceManager.inflateFromResource(context, preferencesResId, null)
+            val root: Preference?
+            if (key != null) {
+                root = xmlRoot.findPreference(key)
+                if (root == null) return
+                require(root is PreferenceScreen) {
+                    ("Preference object with key $key is not a PreferenceScreen")
+                }
+                preferenceScreen = root
+            } else {
+                addPreferencesFromResource(preferencesResId)
             }
-            preferenceScreen = root
-        } else {
-            addPreferencesFromResource(preferencesResId)
         }
     }
 
@@ -305,15 +312,9 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
                 p.initialExpandedChildrenCount = Int.MAX_VALUE
             }
         } else {
-            if (p.key != null) {
-                visible = visible || p.key.contains(filter, true)
-            }
-            if (p.title != null) {
-                visible = visible || p.title.contains(filter, true)
-            }
-            if (p.summary != null) {
-                visible = visible || p.summary.contains(filter, true)
-            }
+                visible = visible || p.key?.contains(filter, true) == true
+                visible = visible || p.title?.contains(filter, true) == true
+                visible = visible || p.summary?.contains(filter, true) == true
         }
 
         p.isVisible = visible
@@ -324,26 +325,35 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         if (pref is ListPreference) {
             pref.setSummary(pref.entry)
             // Preferences
-            // Preferences
             if (pref.getKey() == rh.gs(R.string.key_settings_protection)) {
                 val pass: Preference? = findPreference(rh.gs(R.string.key_settings_password))
-                if (pass != null) pass.isEnabled = pref.value == ProtectionCheck.ProtectionType.CUSTOM_PASSWORD.ordinal.toString()
+                val usePassword = pref.value == CUSTOM_PASSWORD.ordinal.toString()
+                pass?.let { it.isVisible = usePassword }
+                val pin: Preference? = findPreference(rh.gs(R.string.key_settings_pin))
+                val usePin = pref.value == CUSTOM_PIN.ordinal.toString()
+                pin?.let { it.isVisible = usePin }
             }
-            // Application
             // Application
             if (pref.getKey() == rh.gs(R.string.key_application_protection)) {
                 val pass: Preference? = findPreference(rh.gs(R.string.key_application_password))
-                if (pass != null) pass.isEnabled = pref.value == ProtectionCheck.ProtectionType.CUSTOM_PASSWORD.ordinal.toString()
+                val usePassword = pref.value == CUSTOM_PASSWORD.ordinal.toString()
+                pass?.let { it.isVisible = usePassword }
+                val pin: Preference? = findPreference(rh.gs(R.string.key_application_pin))
+                val usePin = pref.value == CUSTOM_PIN.ordinal.toString()
+                pin?.let { it.isVisible = usePin }
             }
-            // Bolus
             // Bolus
             if (pref.getKey() == rh.gs(R.string.key_bolus_protection)) {
                 val pass: Preference? = findPreference(rh.gs(R.string.key_bolus_password))
-                if (pass != null) pass.isEnabled = pref.value == ProtectionCheck.ProtectionType.CUSTOM_PASSWORD.ordinal.toString()
+                val usePassword = pref.value == CUSTOM_PASSWORD.ordinal.toString()
+                pass?.let { it.isVisible = usePassword }
+                val pin: Preference? = findPreference(rh.gs(R.string.key_bolus_pin))
+                val usePin = pref.value == CUSTOM_PIN.ordinal.toString()
+                pin?.let { it.isVisible = usePin }
             }
         }
         if (pref is EditTextPreference) {
-            if (pref.getKey().contains("password") || pref.getKey().contains("secret")) {
+            if (pref.getKey().contains("password") || pref.getKey().contains("pin") || pref.getKey().contains("secret") || pref.getKey().contains("token")) {
                 pref.setSummary("******")
             } else if (pref.text != null) {
                 pref.dialogMessage = pref.dialogMessage
@@ -359,7 +369,10 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             rh.gs(R.string.key_bolus_password),
             rh.gs(R.string.key_master_password),
             rh.gs(R.string.key_application_password),
-            rh.gs(R.string.key_settings_password)
+            rh.gs(R.string.key_settings_password),
+            rh.gs(R.string.key_bolus_pin),
+            rh.gs(R.string.key_application_pin),
+            rh.gs(R.string.key_settings_pin)
         )
 
         if (pref is Preference) {
@@ -367,7 +380,11 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
                 if (sp.getString(pref.key, "").startsWith("hmac:")) {
                     pref.summary = "******"
                 } else {
-                    pref.summary = rh.gs(R.string.password_not_set)
+                    if (pref.key.contains("pin")) {
+                        pref.summary = rh.gs(R.string.pin_not_set)
+                    }else {
+                        pref.summary = rh.gs(R.string.password_not_set)
+                    }
                 }
             }
         }
@@ -393,32 +410,42 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     // We use Preference and custom editor instead of EditTextPreference
     // to hash password while it is saved and never have to show it, even hashed
 
-    override fun onPreferenceTreeClick(preference: Preference?): Boolean {
+    override fun onPreferenceTreeClick(preference: Preference): Boolean {
         context?.let { context ->
-            if (preference != null) {
-                if (preference.key == rh.gs(R.string.key_master_password)) {
-                    passwordCheck.queryPassword(context, R.string.current_master_password, R.string.key_master_password, {
-                        passwordCheck.setPassword(context, R.string.master_password, R.string.key_master_password)
-                    })
-                    return true
-                }
-                if (preference.key == rh.gs(R.string.key_settings_password)) {
-                    passwordCheck.setPassword(context, R.string.settings_password, R.string.key_settings_password)
-                    return true
-                }
-                if (preference.key == rh.gs(R.string.key_bolus_password)) {
-                    passwordCheck.setPassword(context, R.string.bolus_password, R.string.key_bolus_password)
-                    return true
-                }
-                if (preference.key == rh.gs(R.string.key_application_password)) {
-                    passwordCheck.setPassword(context, R.string.application_password, R.string.key_application_password)
-                    return true
-                }
-                // NSClient copy settings
-                if (preference.key == rh.gs(R.string.key_statuslights_copy_ns)) {
-                    nsSettingStatus.copyStatusLightsNsSettings(context)
-                    return true
-                }
+            if (preference.key == rh.gs(R.string.key_master_password)) {
+                passwordCheck.queryPassword(context, R.string.current_master_password, R.string.key_master_password, {
+                    passwordCheck.setPassword(context, R.string.master_password, R.string.key_master_password)
+                })
+                return true
+            }
+            if (preference.key == rh.gs(R.string.key_settings_password)) {
+                passwordCheck.setPassword(context, R.string.settings_password, R.string.key_settings_password)
+                return true
+            }
+            if (preference.key == rh.gs(R.string.key_bolus_password)) {
+                passwordCheck.setPassword(context, R.string.bolus_password, R.string.key_bolus_password)
+                return true
+            }
+            if (preference.key == rh.gs(R.string.key_application_password)) {
+                passwordCheck.setPassword(context, R.string.application_password, R.string.key_application_password)
+                return true
+            }
+            if (preference.key == rh.gs(R.string.key_settings_pin)) {
+                passwordCheck.setPassword(context, R.string.settings_pin, R.string.key_settings_pin, pinInput = true)
+                return true
+            }
+            if (preference.key == rh.gs(R.string.key_bolus_pin)) {
+                passwordCheck.setPassword(context, R.string.bolus_pin, R.string.key_bolus_pin, pinInput = true)
+                return true
+            }
+            if (preference.key == rh.gs(R.string.key_application_pin)) {
+                passwordCheck.setPassword(context, R.string.application_pin, R.string.key_application_pin, pinInput = true)
+                return true
+            }
+            // NSClient copy settings
+            if (preference.key == rh.gs(R.string.key_statuslights_copy_ns)) {
+                nsSettingStatus.copyStatusLightsNsSettings(context)
+                return true
             }
         }
         return super.onPreferenceTreeClick(preference)
