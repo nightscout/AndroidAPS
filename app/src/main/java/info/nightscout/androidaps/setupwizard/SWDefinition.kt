@@ -30,7 +30,7 @@ import info.nightscout.androidaps.utils.AndroidPermission
 import info.nightscout.androidaps.utils.CryptoUtil
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.extensions.isRunningTest
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import java.util.*
 import javax.inject.Inject
@@ -268,8 +268,8 @@ class SWDefinition @Inject constructor(
         .add(SWButton(injector)
             .text(R.string.doprofileswitch)
             .action { ProfileSwitchDialog().show(activity.supportFragmentManager, "ProfileSwitchDialog") })
-        .validator { profileFunction.getProfile() != null }
-        .visibility { profileFunction.getProfile() == null }
+        .validator { profileFunction.getRequestedProfile() != null }
+        .visibility { profileFunction.getRequestedProfile() == null }
     private val screenPump = SWScreen(injector, R.string.configbuilder_pump)
         .skippable(false)
         .add(SWPlugin(injector, this)

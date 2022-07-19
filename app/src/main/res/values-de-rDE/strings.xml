@@ -28,7 +28,6 @@
     <string name="description_overview">Zeigt den aktuellen Status deines Loops und Schaltflächen für die geläufigsten Aktionen an</string>
     <string name="description_persistent_notification">Zeigt eine fortlaufende Benachrichtigung mit einer kurzen Übersicht darüber, was dein Loop derzeit tut</string>
     <string name="description_profile_local">Definiere ein Profil, was auch offline verfügbar ist.</string>
-    <string name="description_pump_mdi">Pumpenintegration für Personen, die täglich mehrere Injektionen für ihre Diabetestherapie vornehmen</string>
     <string name="description_pump_virtual">Pumpenintegration für Pumpen, die noch nicht über einen Treiber verfügen (Open Loop)</string>
     <string name="description_sensitivity_aaps">Die Sensitivität wird genauso wie bei Oref0 berechnet, aber Du kannst dafür ein Zeitfenster bestimmen. Die minimale Kohlenhydrat-Absorptionsrate wird aus der maximalen Absorptionsdauer aus den Einstellungen abgeleitet.</string>
     <string name="description_sensitivity_oref1">Die Sensitivität wird aus den Daten der letzten 8 Stunden berechnet und Kohlenhydrate (falls nicht bereits absorbiert) werden nach der in den Einstellungen angegebenen Zeit als absorbiert betrachtet. Das Plugin bezieht Zeiträume, in denen UAM annimmt, dass Kohlenhydrate aktiv waren, nicht mit in die Berechnung ein.</string>
@@ -102,7 +101,6 @@
     <string name="overview_calculator_label">Rechner</string>
     <string name="constraintapllied">Beschränkung angewendet!</string>
     <string name="sms_bolus">Bolus:</string>
-    <string name="basal">Basal</string>
     <string name="sms_basal">Basal:</string>
     <string name="changeyourinput">Ändere deine Eingabe!</string>
     <string name="configbuilder_bgsource">BZ-Quelle</string>
@@ -246,11 +244,10 @@
     <string name="wear">Wear</string>
     <string name="resend_all_data">Alle Daten erneut senden</string>
     <string name="open_settings_on_wear">Öffne Einstellungen auf der Uhr</string>
-    <string name="basal_rate">Basalrate:</string>
+    <string name="basal_rate">Basalrate</string>
     <string name="basalvaluebelowminimum">Wert der Basalrate unter Minimum. Profil nicht gesetzt!</string>
     <string name="sms_actualbg">BZ:</string>
     <string name="sms_lastbg">Letzter BZ:</string>
-    <string name="mdi">ICT</string>
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Anhaltende Benachrichtigung</string>
     <string name="old_data">VERALTETE DATEN</string>
@@ -427,13 +424,12 @@
     <string name="keep_screen_on_summary">Hindere Android daran, den Bildschirm abzuschalten. Dies erhöht den Energieverbrauch, wenn das Gerät nicht an einem Ladegerät angeschlossen ist.</string>
     <string name="sensitivity_warning">Stelle bei aktivierter Autosens-Funktion sicher, dass du alle eingenommenen Kohlenhydrate eingibst. Ansonsten können die Kohlenhydrat-Abweichungen zu falschen Sensitivitätswerten führen!</string>
     <string name="sensitivityweightedaverage">Durchschnittliche Sensitivität</string>
-    <string name="mdtp_ok">OK</string>
-    <string name="mdtp_cancel">Abbrechen</string>
     <string name="notloadedplugins">Es sind nicht alle Profile geladen!</string>
     <string name="valuesnotstored">Werte nicht gespeichert!</string>
     <string name="ns_localbroadcasts">Aktiviere die Datenübertragung zu anderen Apps (z.B. xDrip+). Nicht aktivieren, falls Du mehr als eine Instanz von AAPS oder NSClient installiert hast!</string>
     <string name="ns_localbroadcasts_title">Aktiviere lokale Broadcasts</string>
     <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openaps_smb_dynamic_isf">Dynamischer ISF</string>
     <string name="enableuam">Aktiviere UAM</string>
     <string name="enablesmb">Aktiviere SMB</string>
     <string name="enablesmb_summary">Benutze Super-Mikro-Boli anstelle von temporären Basalraten, um eine schnellere Wirkung zu erreichen.</string>
@@ -466,7 +462,6 @@
     <string name="shortenergy">En</string>
     <string name="shortprotein">Prot</string>
     <string name="shortfat">Ft</string>
-    <string name="active"><![CDATA[<Aktiv>]]></string>
     <string name="executingrightnow">Befehl wird zurzeit ausgeführt</string>
     <string name="missed_bg_readings">BZ-Werte fehlen</string>
     <string name="raise_notifications_as_android_notifications">Benutze Systemmeldungen für Alarme und Meldungen</string>
@@ -603,9 +598,7 @@
     <string name="secondcarbsincrement">Zweite KH-Erhöhung</string>
     <string name="thirdcarbsincrement">Dritte KH-Erhöhung</string>
     <string name="cgm">CGM</string>
-    <string name="ns_wifionly">Benutze nur WLAN Verbindung</string>
     <string name="ns_wifi_ssids">WLAN SSID</string>
-    <string name="ns_chargingonly">Nur während des Ladens</string>
     <string name="connectionsettings_title">Verbindungs-Einstellungen</string>
     <string name="ns_wifi_allowedssids">Erlaubte SSIDs (durch Semikolon getrennt)</string>
     <string name="ns_allowroaming">Erlaube Verbindung bei Roaming</string>
@@ -662,6 +655,7 @@
     <string name="sensitivity_raises_target_title">Empfindlichkeit erhöht den Zielwert</string>
     <string name="sensitivity_raises_target_summary">Wenn eine höhere Empfindlichkeit festgestellt wird, wird der Glukose-Zielwert erhöht.</string>
     <string name="careportal_removestartedevents">\"AndroidAPS gestartet\" Ereignisse löschen</string>
+    <string name="remove_items">Objekte entfernen</string>
     <string name="storedsettingsfound">Gespeicherte Einstellungen gefunden</string>
     <string name="allow_hardware_pump_text">WARNUNG: Wenn Du eine echte Pumpe aktivierst und anschließt, kopiert AndroidAPS die Basaleinstellungen vom aktiven Profil zur Pumpe (und behält sie bei). Die Einstellungen in der Pumpe werden hierbei überschrieben. Wenn Du Dir nicht sicher bist oder die Basaleinstellungen in der Pumpe nicht überschreiben möchten, drücke \"Abbrechen\" und vollziehe den Wechsel zur Pumpe später.</string>
     <string name="error_adding_treatment_title">Behandlungsdaten unvollständig</string>
@@ -758,8 +752,8 @@ Unerwartetes Verhalten.</string>
     <string name="profilenamecontainsdot">Profilname enthält Punkte.\nDies wird von NS nicht unterstützt.\nProfil wird nicht zu NS hochgeladen.</string>
     <string name="low_mark_comment">Unterer Wert des Zielbereichs (nur Anzeige)</string>
     <string name="high_mark_comment">Oberer Wert des Zielbereichs (nur Anzeige)</string>
-    <string name="age">Alter:</string>
-    <string name="weight_label">Gewicht:</string>
+    <string name="age">Alter</string>
+    <string name="weight_label">Gewicht</string>
     <string name="id">ID:</string>
     <string name="submit">Senden</string>
     <string name="mostcommonprofile">Meistgenutztes Profil:</string>
@@ -767,7 +761,6 @@ Unerwartetes Verhalten.</string>
     <string name="invalidage">Ungültige Altersangabe</string>
     <string name="invalidweight">Ungültige Gewichtsangabe</string>
     <string name="invalidpct">Ungültige % Eingabe</string>
-    <string name="tirformat"><![CDATA[<b>%1$s:</b> Low: <b>%2$02d%%</b> In: <b>%3$02d%%</b> High: <b>%4$02d%%</b>]]></string>
     <string name="average">Durchschnitt</string>
     <string name="tir">TIR</string>
     <string name="activitymonitor">Aktivitätsmonitor</string>
@@ -900,9 +893,54 @@ Unerwartetes Verhalten.</string>
     <string name="errors">Fehler</string>
     <string name="ns_sync_slow">Hochladen verlangsamen</string>
     <string name="data_status">Status BZ-Daten</string>
+    <string name="statuslights_cannula_age">Kanülenalter</string>
+    <string name="statuslights_patch_pump_age">Alter Patchpumpe</string>
+    <string name="patch_pump">Patch-Pumpe</string>
     <string name="recalculated_data_used">Verwendete Daten neu berechnet</string>
     <string name="bg_too_close">BZ zu nah:\n%1$s\n%2$s</string>
     <string name="identification">Identifikation (E-Mail, Facebook oder Discord Nickname)</string>
     <string name="identification_not_set">Identifikation im Dev-Modus nicht gesetzt</string>
+    <string name="a11y_dialog">Dialog</string>
+    <string name="a11y_current_bg">Aktueller Blutzucker</string>
+    <string name="a11_correction_percentage">korrektes Ergebnis mit %</string>
+    <string name="a11_correction_units">korrektes Ergebnis mit Einheiten</string>
     <string name="not_available_full">Nicht verfügbar</string>
+    <string name="a11y_high">hoch</string>
+    <string name="a11y_inrange">im Zielbereich</string>
+    <string name="a11y_low">niedrig</string>
+    <string name="a11y_arrow_double_down">schnell fallend</string>
+    <string name="a11y_arrow_single_down">fallend</string>
+    <string name="a11y_arrow_forty_five_down">langsam fallend</string>
+    <string name="a11y_arrow_flat">stabil</string>
+    <string name="a11y_arrow_forty_five_up">Langsamer Anstieg</string>
+    <string name="a11y_arrow_single_up">steigend</string>
+    <string name="a11y_arrow_double_up">schnell steigend</string>
+    <string name="a11y_arrow_none">kein(e)</string>
+    <string name="a11y_arrow_unknown">unbekannt</string>
+    <string name="a11y_graph">Diagramm</string>
+    <string name="a11y_bg_quality">BZ-Qualität</string>
+    <string name="a11y_bg_quality_recalculated">neu berechnet</string>
+    <string name="a11y_bg_quality_doubles">doppelte Einträge</string>
+    <string name="a11y_insulin_label">Insulin</string>
+    <string name="a11y_blood_glucose">Blutzucker</string>
+    <string name="a11y_bg_outdated">veraltet</string>
+    <string name="a11y_carb_reminder">Erinnerung einstellen</string>
+    <string name="a11y_add_new_profile">Neues Profil hinzufügen</string>
+    <string name="a11y_clone_profile">aktuelles Profil klonen (kopieren)</string>
+    <string name="a11y_delete_current_profile">aktuelles Profil löschen</string>
+    <string name="a11y_add_new_to_list">neu zur Liste hinzufügen</string>
+    <!-- Theme switcher dark and light mode-->
+    <!-- WEAR OS-->
+    <string name="select_profile">Profil zum Bearbeiten auswählen</string>
+    <string name="refresh_from_nightscout">Aktualisiere von Nightscout</string>
+    <string name="remove_selected_items">Ausgewähltes Objekt löschen</string>
+    <string name="select_for_removal">Zum Entfernen auswählen</string>
+    <string name="profile_changes">Profilwechsel</string>
+    <string name="tempt_targets">Temporäre Ziele</string>
+    <string name="carbs_and_bolus">Kohlenhydrate &amp; Bolus</string>
+    <string name="confirm_remove_multiple_items">Sind Sie sicher, dass Sie diese(s) %1$d Element(e) löschen möchten?</string>
+    <string name="count_selected">%1$d ausgewählt</string>
+    <string name="sort_label">Sortieren</string>
+    <string name="login">Login</string>
+    <!-- Aidex Cgms -->
 </resources>

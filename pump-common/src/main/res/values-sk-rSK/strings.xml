@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PumoCommon - Pump Abstract -->
+    <string name="pump_operation_not_supported_by_pump_driver">Operácia nepodporovaná pumpou a/alebo ovládačom.</string>
+    <string name="pump_operation_not_yet_supported_by_pump">Operácia zatiaľ nepodporovaná pumpou.</string>
+    <string name="common_resultok">OK</string>
+    <!-- PumpCommon - Pump Status -->
+    <string name="pump_status_never_contacted">Nikdy nepripojené</string>
+    <string name="pump_status_waking_up">Prebúdzanie</string>
+    <string name="pump_status_error_comm">Chyba komunikácie</string>
+    <string name="pump_status_timeout_comm">Uplynul časový limit komunikácie</string>
+    <string name="pump_status_pump_unreachable">Pumpa nedostupná</string>
+    <string name="pump_status_invalid_config">Neplatná konfigurácia</string>
+    <string name="pump_status_active">Aktívna</string>
+    <string name="pump_status_sleeping">Spiaca</string>
+    <!-- PumpCommon - History Group -->
+    <string name="history_group_basal">Bazály</string>
+    <string name="history_group_configuration">Konfigurácie</string>
+    <string name="history_group_notification">Notifikácie</string>
+    <string name="history_group_statistic">Štatistiky</string>
+    <string name="history_group_unknown">Neznáme</string>
+    <string name="history_group_all">Všetko</string>
+    <string name="history_group_bolus">Bolusy</string>
+    <string name="history_group_prime">Plnenie</string>
+    <string name="history_group_alarm">Alarmy</string>
+    <string name="history_group_glucose">Glykémia</string>
+    <!-- Time -->
+    <!-- BLE Config -->
+    <!-- BLE Errors -->
+    <!-- Pump Error -->
+    <!-- Pump History -->
+</resources>

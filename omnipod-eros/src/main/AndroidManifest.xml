@@ -1,15 +1,22 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="info.nightscout.androidaps.plugins.pump.omnipod.eros">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <application>
+    <application android:supportsRtl="true">
         <service
             android:name=".rileylink.service.RileyLinkOmnipodService"
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".ui.wizard.activation.ErosPodActivationWizardActivity" />
-        <activity android:name=".ui.wizard.deactivation.ErosPodDeactivationWizardActivity" />
-        <activity android:name=".ui.ErosPodManagementActivity" />
-        <activity android:name=".ui.ErosPodHistoryActivity" />
+        <activity
+            android:name=".ui.wizard.activation.ErosPodActivationWizardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.wizard.deactivation.ErosPodDeactivationWizardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.ErosPodManagementActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.ErosPodHistoryActivity"
+            android:exported="false" />
     </application>
 </manifest>

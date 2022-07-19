@@ -38,7 +38,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.Riley
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.ThreadUtil;
-import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.interfaces.ResourceHelper;
 import info.nightscout.shared.sharedPreferences.SP;
 
 /**
@@ -309,7 +309,7 @@ public class RFSpy {
         aapsLogger.error(LTag.PUMPBTCOMM, "RileyLinkTargetFrequency: " + frequency);
 
         switch (frequency) {
-            case Medtronic_WorldWide:
+            case MedtronicWorldWide:
                 setRXFilterMode(RXFilterMode.Wide);
                 updateRegister(CC111XRegister.mdmcfg1, 0x62);
                 updateRegister(CC111XRegister.mdmcfg0, 0x1A);
@@ -317,7 +317,7 @@ public class RFSpy {
                 setMedtronicEncoding();
                 break;
 
-            case Medtronic_US:
+            case MedtronicUS:
                 setRXFilterMode(RXFilterMode.Narrow);
                 updateRegister(CC111XRegister.mdmcfg1, 0x61);
                 updateRegister(CC111XRegister.mdmcfg0, 0x7E);
@@ -400,7 +400,7 @@ public class RFSpy {
 
     private void setRXFilterMode(RXFilterMode mode) {
         byte drate_e = (byte) 0x9; // exponent of symbol rate (16kbps)
-        byte chanbw = mode.value;
+        byte chanbw = mode.getValue();
 
         updateRegister(CC111XRegister.mdmcfg4, (byte) (chanbw | drate_e));
     }

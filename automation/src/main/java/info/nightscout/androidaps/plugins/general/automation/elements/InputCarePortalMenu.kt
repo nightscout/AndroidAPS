@@ -10,7 +10,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.database.entities.TherapyEvent
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 
 class InputCarePortalMenu(private val rh: ResourceHelper) : Element() {
 

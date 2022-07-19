@@ -5,6 +5,7 @@ import info.nightscout.androidaps.danars.encryption.BleEncryption
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.utils.DateUtil
 import org.joda.time.DateTime
+import org.joda.time.IllegalInstantException
 import java.nio.charset.StandardCharsets
 import javax.inject.Inject
 
@@ -69,15 +70,30 @@ open class DanaRSPacket(protected var injector: HasAndroidInjector) {
             else -> -1
         }
 
-    @Synchronized fun dateTimeSecFromBuff(buff: ByteArray, offset: Int): Long =
-        DateTime(
-            2000 + intFromBuff(buff, offset, 1),
-            intFromBuff(buff, offset + 1, 1),
-            intFromBuff(buff, offset + 2, 1),
-            intFromBuff(buff, offset + 3, 1),
-            intFromBuff(buff, offset + 4, 1),
-            intFromBuff(buff, offset + 5, 1)
-        ).millis
+    @Synchronized
+    fun dateTimeSecFromBuff(buff: ByteArray, offset: Int): Long =
+        try {
+            DateTime(
+                2000 + intFromBuff(buff, offset, 1),
+                intFromBuff(buff, offset + 1, 1),
+                intFromBuff(buff, offset + 2, 1),
+                intFromBuff(buff, offset + 3, 1),
+                intFromBuff(buff, offset + 4, 1),
+                intFromBuff(buff, offset + 5, 1)
+            ).millis
+        } catch (e: IllegalInstantException) {
+            // expect
+            // org.joda.time.IllegalInstantException: Illegal instant due to time zone offset transition (daylight savings time 'gap')
+            // add 1 hour
+            DateTime(
+                2000 + intFromBuff(buff, offset, 1),
+                intFromBuff(buff, offset + 1, 1),
+                intFromBuff(buff, offset + 2, 1),
+                intFromBuff(buff, offset + 3, 1) + 1,
+                intFromBuff(buff, offset + 4, 1),
+                intFromBuff(buff, offset + 5, 1)
+            ).millis
+        }
 
     protected fun intFromBuff(b: ByteArray, srcStart: Int, srcLength: Int): Int =
         when (srcLength) {

@@ -6,7 +6,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger
 import info.nightscout.androidaps.queue.Callback
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject
@@ -71,6 +71,8 @@ abstract class Action(val injector: HasAndroidInjector) {
                 ActionProfileSwitch::class.java.simpleName        -> ActionProfileSwitch(injector).fromJSON(data.toString())
                 ActionProfileSwitchPercent::class.java.name,
                 ActionProfileSwitchPercent::class.java.simpleName -> ActionProfileSwitchPercent(injector).fromJSON(data.toString())
+                ActionRunAutotune::class.java.name,
+                ActionRunAutotune::class.java.simpleName          -> ActionRunAutotune(injector).fromJSON(data.toString())
                 ActionSendSMS::class.java.name,
                 ActionSendSMS::class.java.simpleName              -> ActionSendSMS(injector).fromJSON(data.toString())
                 ActionStartTempTarget::class.java.name,

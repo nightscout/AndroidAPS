@@ -15,9 +15,9 @@ class BasalProgram(
 
     fun hasZeroUnitSegments() = segments.any { it.basalRateInHundredthUnitsPerHour == 0 }
 
-    fun rateAt(date: Date): Double {
+    fun rateAt(date: Long): Double {
         val instance = Calendar.getInstance()
-        instance.time = date
+        instance.timeInMillis = date
         val hourOfDay = instance[Calendar.HOUR_OF_DAY]
         val minuteOfHour = instance[Calendar.MINUTE]
         val slotIndex = hourOfDay * 2 + minuteOfHour.div(30)

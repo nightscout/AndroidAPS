@@ -4,10 +4,8 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Binder
 import android.os.IBinder
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RFSpy
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkEncodingType
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkTargetFrequency
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
@@ -21,6 +19,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceTyp
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
+import info.nightscout.shared.logging.LTag
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -33,7 +32,6 @@ class RileyLinkMedtronicService : RileyLinkService() {
     @Inject lateinit var medtronicPumpPlugin: MedtronicPumpPlugin
     @Inject lateinit var medtronicUtil: MedtronicUtil
     @Inject lateinit var medtronicPumpStatus: MedtronicPumpStatus
-    @Inject lateinit var rfSpy: RFSpy
     @Inject lateinit var medtronicCommunicationManager: MedtronicCommunicationManager
     @Inject lateinit var medtronicUIComm: MedtronicUIComm
 
@@ -79,7 +77,7 @@ class RileyLinkMedtronicService : RileyLinkService() {
         // get most recently used RileyLink address and name
         rileyLinkServiceData.rileyLinkAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "")
         rileyLinkServiceData.rileyLinkName = sp.getString(RileyLinkConst.Prefs.RileyLinkName, "")
-        rfspy.startReader()
+        rfSpy.startReader()
         aapsLogger.debug(LTag.PUMPCOMM, "RileyLinkMedtronicService newly constructed")
     }
 
@@ -179,7 +177,7 @@ class RileyLinkMedtronicService : RileyLinkService() {
                     medtronicPumpStatus.pumpFrequency = pumpFrequency
                     val isFrequencyUS = pumpFrequency == frequencies[0]
                     val newTargetFrequency = if (isFrequencyUS) //
-                        RileyLinkTargetFrequency.Medtronic_US else RileyLinkTargetFrequency.Medtronic_WorldWide
+                        RileyLinkTargetFrequency.MedtronicUS else RileyLinkTargetFrequency.MedtronicWorldWide
                     if (rileyLinkServiceData.rileyLinkTargetFrequency != newTargetFrequency) {
                         rileyLinkServiceData.rileyLinkTargetFrequency = newTargetFrequency
                     }

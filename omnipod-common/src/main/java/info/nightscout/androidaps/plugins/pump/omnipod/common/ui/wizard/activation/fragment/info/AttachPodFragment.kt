@@ -9,7 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import info.nightscout.androidaps.plugins.pump.omnipod.common.R
-import info.nightscout.androidaps.plugins.pump.omnipod.common.dagger.OmnipodPluginQualifier
+import info.nightscout.androidaps.plugins.pump.omnipod.common.di.OmnipodPluginQualifier
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.viewmodel.info.AttachPodViewModel
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.common.fragment.InfoFragmentBase
 import javax.inject.Inject
@@ -37,7 +37,7 @@ class AttachPodFragment : InfoFragmentBase() {
 
         view.findViewById<Button>(R.id.button_next).setOnClickListener {
             context?.let {
-                AlertDialog.Builder(it)
+                AlertDialog.Builder(it, R.style.DialogTheme)
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setTitle(getString(getTitleId()))
                     .setMessage(getString(R.string.omnipod_common_pod_activation_wizard_attach_pod_confirm_insert_cannula_text))

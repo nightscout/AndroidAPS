@@ -35,5 +35,5 @@ class PluginDescription {
     fun enableByDefault(enableByDefault: Boolean): PluginDescription = this.also { it.enableByDefault = enableByDefault }
     fun visibleByDefault(visibleByDefault: Boolean): PluginDescription = this.also { it.visibleByDefault = visibleByDefault }
     fun description(description: Int): PluginDescription = this.also { it.description = description }
-    fun setDefault(): PluginDescription = this.also { it.defaultPlugin = true }
+    fun setDefault(value: Boolean = true): PluginDescription = this.also { it.defaultPlugin = value }
 }

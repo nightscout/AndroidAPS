@@ -81,7 +81,7 @@ class TriggerLocation(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyDescription(): String =
         rh.gs(R.string.locationis, rh.gs(modeSelected.value.stringRes), " " + name.value)
 
-    override fun icon(): Optional<Int?> = Optional.of(R.drawable.ic_location_on)
+    override fun icon(): Optional<Int> = Optional.of(R.drawable.ic_location_on)
 
     override fun duplicate(): Trigger = TriggerLocation(injector, this)
 

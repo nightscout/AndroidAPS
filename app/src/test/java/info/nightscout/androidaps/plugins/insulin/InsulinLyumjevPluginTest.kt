@@ -6,9 +6,10 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.Insulin
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.HardLimits
+import info.nightscout.shared.logging.AAPSLogger
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -31,6 +32,7 @@ class InsulinLyumjevPluginTest {
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var config: Config
+    @Mock lateinit var hardLimits: HardLimits
 
     private var injector: HasAndroidInjector = HasAndroidInjector {
         AndroidInjector {
@@ -39,7 +41,7 @@ class InsulinLyumjevPluginTest {
 
     @Before
     fun setup() {
-        sut = InsulinLyumjevPlugin(injector, rh, profileFunction, rxBus, aapsLogger, config)
+        sut = InsulinLyumjevPlugin(injector, rh, profileFunction, rxBus, aapsLogger, config, hardLimits)
     }
 
     @Test

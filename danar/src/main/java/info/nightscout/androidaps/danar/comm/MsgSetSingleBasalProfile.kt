@@ -13,9 +13,9 @@ class MsgSetSingleBasalProfile(
 
     // index 0-3
     init {
-        SetCommand(0x3302)
+        setCommand(0x3302)
         for (i in 0..23) {
-            AddParamInt((values[i] * 100).toInt())
+            addParamInt((values[i] * 100).toInt())
         }
         aapsLogger.debug(LTag.PUMPCOMM, "New message")
     }

@@ -74,7 +74,7 @@ class TriggerWifiSsid(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyDescription(): String =
         rh.gs(R.string.wifissidcompared, rh.gs(comparator.value.stringRes), ssid.value)
 
-    override fun icon(): Optional<Int?> = Optional.of(R.drawable.ic_network_wifi)
+    override fun icon(): Optional<Int> = Optional.of(R.drawable.ic_network_wifi)
 
     override fun duplicate(): Trigger = TriggerWifiSsid(injector, this)
 

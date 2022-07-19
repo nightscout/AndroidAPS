@@ -4,9 +4,9 @@ import android.content.Context
 import android.os.PowerManager
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
-import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.database.AppRepository
@@ -25,12 +25,12 @@ import info.nightscout.androidaps.queue.commands.*
 import info.nightscout.androidaps.utils.AndroidPermission
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.buildHelper.BuildHelper
+import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.utils.buildHelper.BuildHelperImpl
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.sharedPreferences.SP
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Single
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -137,6 +137,8 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         val percentageConstraint = Constraint(0)
         `when`(constraintChecker.applyBasalPercentConstraints(anyObject(), anyObject())).thenReturn(percentageConstraint)
         `when`(rh.gs(R.string.connectiontimedout)).thenReturn("Connection timed out")
+        `when`(rh.gs(R.string.formatinsulinunits)).thenReturn("%1\$.2f U")
+        `when`(rh.gs(R.string.bolusrequested)).thenReturn("Going to deliver %1\$.2f U")
     }
 
     @Test
@@ -239,7 +241,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         Assert.assertEquals(2, commandQueue.size())
 
         // when
-        commandQueue.cancelAllBoluses()
+        commandQueue.cancelAllBoluses(anyLong())
 
         // then
         Assert.assertEquals(0, commandQueue.size())
@@ -297,7 +299,6 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         Assert.assertTrue(commandQueue.isCustomCommandRunning(CustomCommand1::class.java))
         Assert.assertFalse(commandQueue.isCustomCommandRunning(CustomCommand2::class.java))
         Assert.assertFalse(commandQueue.isCustomCommandRunning(CustomCommand3::class.java))
-
 
         Assert.assertEquals(1, commandQueue.size())
     }

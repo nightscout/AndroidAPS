@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PumoCommon - Pump Abstract -->
+    <string name="pump_operation_not_supported_by_pump_driver">Pompa ve/veya sürücü tarafından desteklenmeyen işlem.</string>
+    <string name="pump_operation_not_yet_supported_by_pump">İşlem HENÜZ pompa tarafından desteklenmiyor.</string>
+    <string name="common_resultok">Tamam</string>
+    <!-- PumpCommon - Pump Status -->
+    <string name="pump_status_never_contacted">Hiç bağlantı yapılmadı</string>
+    <string name="pump_status_waking_up">Uyanıyor</string>
+    <string name="pump_status_error_comm">İletişim hatası</string>
+    <string name="pump_status_timeout_comm">İletişimde zaman aşımı</string>
+    <string name="pump_status_pump_unreachable">Pompa ulaşılamıyor</string>
+    <string name="pump_status_invalid_config">Geçersiz yapılandırma</string>
+    <string name="pump_status_active">Aktif</string>
+    <string name="pump_status_sleeping">Uyuyor</string>
+    <!-- PumpCommon - History Group -->
+    <string name="history_group_basal">Bazallar</string>
+    <string name="history_group_configuration">Konfigürasyon</string>
+    <string name="history_group_notification">Bildirimler</string>
+    <string name="history_group_statistic">İstatistikler</string>
+    <string name="history_group_unknown">Bilinmeyenler</string>
+    <string name="history_group_all">Tümü</string>
+    <string name="history_group_bolus">Boluslar</string>
+    <string name="history_group_prime">Dolumlar</string>
+    <string name="history_group_alarm">Alarmlar</string>
+    <string name="history_group_glucose">Glikoz</string>
+    <!-- Time -->
+    <!-- BLE Config -->
+    <!-- BLE Errors -->
+    <!-- Pump Error -->
+    <!-- Pump History -->
+</resources>

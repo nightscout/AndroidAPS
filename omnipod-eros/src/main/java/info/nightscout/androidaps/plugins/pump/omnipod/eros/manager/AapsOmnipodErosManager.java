@@ -79,10 +79,10 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.manager.Om
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.OmnipodAlertUtil;
 import info.nightscout.androidaps.utils.T;
-import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.interfaces.ResourceHelper;
 import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import info.nightscout.shared.sharedPreferences.SP;
-import io.reactivex.subjects.SingleSubject;
+import io.reactivex.rxjava3.subjects.SingleSubject;
 
 @Singleton
 public class AapsOmnipodErosManager {
@@ -362,6 +362,8 @@ public class AapsOmnipodErosManager {
         OmnipodManager.BolusCommandResult bolusCommandResult;
 
         boolean beepsEnabled = detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB ? isSmbBeepsEnabled() : isBolusBeepsEnabled();
+
+        EventOverviewBolusProgress.INSTANCE.setT(new EventOverviewBolusProgress.Treatment(detailedBolusInfo.insulin, 0,detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.getId()));
 
         Date bolusStarted;
         try {

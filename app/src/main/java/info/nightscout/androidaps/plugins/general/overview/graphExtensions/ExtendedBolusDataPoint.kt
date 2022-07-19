@@ -1,12 +1,14 @@
 package info.nightscout.androidaps.plugins.general.overview.graphExtensions
 
-import android.graphics.Color
+import android.content.Context
+import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.entities.ExtendedBolus
 import info.nightscout.androidaps.extensions.toStringTotal
-import javax.inject.Inject
+import info.nightscout.androidaps.interfaces.ResourceHelper
 
-class ExtendedBolusDataPoint @Inject constructor(
-    val data: ExtendedBolus
+class ExtendedBolusDataPoint(
+    val data: ExtendedBolus,
+    private val rh: ResourceHelper
 ) : DataPointWithLabelInterface {
 
     private var yValue = 0.0
@@ -17,7 +19,9 @@ class ExtendedBolusDataPoint @Inject constructor(
     override val duration get() = data.duration
     override val size = 10f
     override val shape = PointsWithLabelGraphSeries.Shape.EXTENDEDBOLUS
-    override val color = Color.CYAN
+    override fun color(context: Context?): Int {
+        return rh.gac(context, R.attr.extBolusColor)
+    }
 
     override fun setY(y: Double) {
         yValue = y

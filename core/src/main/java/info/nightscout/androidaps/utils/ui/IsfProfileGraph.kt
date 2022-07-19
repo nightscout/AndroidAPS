@@ -11,6 +11,7 @@ import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.utils.Round
 import java.text.NumberFormat
 import kotlin.math.max
+import kotlin.math.min
 
 class IsfProfileGraph : GraphView {
 
@@ -45,18 +46,20 @@ class IsfProfileGraph : GraphView {
 
         val nf: NumberFormat = NumberFormat.getInstance()
         nf.maximumFractionDigits = 1
-        gridLabelRenderer.setLabelFormatter(DefaultLabelFormatter(nf, nf))
+        gridLabelRenderer.labelFormatter = DefaultLabelFormatter(nf, nf)
     }
 
     fun show(profile1: Profile, profile2: Profile) {
         removeAllSeries()
 
+        var minIsf = 1000.0
         var maxIsf = 0.0
         val units = profile1.units
         // isf 1
         val isfArray1: MutableList<DataPoint> = ArrayList()
         for (hour in 0..23) {
             val isf = Profile.fromMgdlToUnits(profile1.getIsfMgdlTimeFromMidnight(hour * 60 * 60), units)
+            minIsf = min(minIsf, isf)
             maxIsf = max(maxIsf, isf)
             isfArray1.add(DataPoint(hour.toDouble(), isf))
             isfArray1.add(DataPoint((hour + 1).toDouble(), isf))
@@ -70,6 +73,7 @@ class IsfProfileGraph : GraphView {
         val isfArray2: MutableList<DataPoint> = ArrayList()
         for (hour in 0..23) {
             val isf = Profile.fromMgdlToUnits(profile2.getIsfMgdlTimeFromMidnight(hour * 60 * 60), units)
+            minIsf = min(minIsf, isf)
             maxIsf = max(maxIsf, isf)
             isfArray2.add(DataPoint(hour.toDouble(), isf))
             isfArray2.add(DataPoint((hour + 1).toDouble(), isf))
@@ -84,8 +88,12 @@ class IsfProfileGraph : GraphView {
         viewport.setMinX(0.0)
         viewport.setMaxX(24.0)
         viewport.isYAxisBoundsManual = true
-        viewport.setMinY(0.0)
+        viewport.setMinY(Round.floorTo(minIsf / 1.1, 0.5))
         viewport.setMaxY(Round.ceilTo(maxIsf * 1.1, 0.5))
         gridLabelRenderer.numHorizontalLabels = 13
+
+        val nf: NumberFormat = NumberFormat.getInstance()
+        nf.maximumFractionDigits = 1
+        gridLabelRenderer.labelFormatter = DefaultLabelFormatter(nf, nf)
     }
 }

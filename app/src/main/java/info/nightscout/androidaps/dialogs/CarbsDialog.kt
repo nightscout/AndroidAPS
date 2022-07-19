@@ -27,9 +27,11 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProv
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.resources.ResourceHelper
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
+import info.nightscout.androidaps.utils.protection.ProtectionCheck
+import info.nightscout.androidaps.utils.protection.ProtectionCheck.Protection.BOLUS
+import info.nightscout.androidaps.interfaces.ResourceHelper
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
 import java.text.DecimalFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -50,14 +52,16 @@ class CarbsDialog : DialogFragmentWithDate() {
     @Inject lateinit var bolusTimer: BolusTimer
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var repository: AppRepository
+    @Inject lateinit var protectionCheck: ProtectionCheck
 
     companion object {
 
-        private const val FAV1_DEFAULT = 5
-        private const val FAV2_DEFAULT = 10
-        private const val FAV3_DEFAULT = 20
+        const val FAV1_DEFAULT = 5
+        const val FAV2_DEFAULT = 10
+        const val FAV3_DEFAULT = 20
     }
 
+    private var queryingProtection = false
     private val disposable = CompositeDisposable()
 
     private val textWatcher: TextWatcher = object : TextWatcher {
@@ -72,7 +76,7 @@ class CarbsDialog : DialogFragmentWithDate() {
     private fun validateInputs() {
         val maxCarbs = constraintChecker.getMaxCarbsAllowed().value().toDouble()
         val time = binding.time.value.toInt()
-        if (time > 12 * 60 || time < -12 * 60) {
+        if (time > 12 * 60 || time < -7 * 24 * 60) {
             binding.time.value = 0.0
             ToastUtils.showToastInUiThread(ctx, rh.gs(R.string.constraintapllied))
         }
@@ -125,7 +129,7 @@ class CarbsDialog : DialogFragmentWithDate() {
         val maxCarbs = constraintChecker.getMaxCarbsAllowed().value().toDouble()
         binding.time.setParams(
             savedInstanceState?.getDouble("time")
-                ?: 0.0, -12 * 60.0, 12 * 60.0, 5.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher
+                ?: 0.0, -7 * 24 * 60.0, 12 * 60.0, 5.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher
         )
 
         binding.duration.setParams(
@@ -137,38 +141,45 @@ class CarbsDialog : DialogFragmentWithDate() {
             savedInstanceState?.getDouble("carbs")
                 ?: 0.0, 0.0, maxCarbs, 1.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher
         )
-
-        binding.plus1.text = toSignedString(sp.getInt(R.string.key_carbs_button_increment_1, FAV1_DEFAULT))
+        val plus1text = toSignedString(sp.getInt(R.string.key_carbs_button_increment_1, FAV1_DEFAULT))
+        binding.plus1.text = plus1text
+        binding.plus1.contentDescription = rh.gs(R.string.treatments_wizard_carbs_label) + " " + plus1text
         binding.plus1.setOnClickListener {
             binding.carbs.value = max(
                 0.0, binding.carbs.value
                     + sp.getInt(R.string.key_carbs_button_increment_1, FAV1_DEFAULT)
             )
             validateInputs()
+            binding.carbs.announceValue()
         }
 
-        binding.plus2.text = toSignedString(sp.getInt(R.string.key_carbs_button_increment_2, FAV2_DEFAULT))
+        val plus2text = toSignedString(sp.getInt(R.string.key_carbs_button_increment_2, FAV2_DEFAULT))
+        binding.plus2.text = plus2text
+        binding.plus2.contentDescription = rh.gs(R.string.treatments_wizard_carbs_label) + " " + plus2text
         binding.plus2.setOnClickListener {
             binding.carbs.value = max(
                 0.0, binding.carbs.value
                     + sp.getInt(R.string.key_carbs_button_increment_2, FAV2_DEFAULT)
             )
             validateInputs()
+            binding.carbs.announceValue()
         }
-
-        binding.plus3.text = toSignedString(sp.getInt(R.string.key_carbs_button_increment_3, FAV3_DEFAULT))
+        val plus3text = toSignedString(sp.getInt(R.string.key_carbs_button_increment_3, FAV3_DEFAULT))
+        binding.plus3.text = plus3text
+        binding.plus2.contentDescription = rh.gs(R.string.treatments_wizard_carbs_label) + " " + plus3text
         binding.plus3.setOnClickListener {
             binding.carbs.value = max(
                 0.0, binding.carbs.value
                     + sp.getInt(R.string.key_carbs_button_increment_3, FAV3_DEFAULT)
             )
             validateInputs()
+            binding.carbs.announceValue()
         }
 
         setOnValueChangedListener { eventTime: Long ->
             run {
                 val timeOffset = ((eventTime - eventTimeOriginal) / (1000 * 60)).toDouble()
-                binding.time.value = timeOffset
+                if (_binding != null) binding.time.value = timeOffset
             }
         }
 
@@ -188,6 +199,9 @@ class CarbsDialog : DialogFragmentWithDate() {
             binding.hypoTt.isChecked = false
             binding.activityTt.isChecked = false
         }
+        binding.durationLabel.labelFor = binding.duration.editTextId
+        binding.timeLabel.labelFor = binding.time.editTextId
+        binding.carbsLabel.labelFor = binding.carbs.editTextId
     }
 
     override fun onDestroyView() {
@@ -220,8 +234,9 @@ class CarbsDialog : DialogFragmentWithDate() {
         if (activitySelected)
             actions.add(
                 rh.gs(R.string.temptargetshort) + ": " + (DecimalFormatter.to1Decimal(activityTT) + " " + unitLabel + " (" + rh.gs(R.string.format_mins, activityTTDuration) + ")").formatColor(
+                    context,
                     rh,
-                    R.color.tempTargetConfirmation
+                    R.attr.tempTargetConfirmation
                 )
             )
         val eatingSoonSelected = binding.eatingSoonTt.isChecked
@@ -230,27 +245,28 @@ class CarbsDialog : DialogFragmentWithDate() {
                 rh.gs(R.string.temptargetshort) + ": " + (DecimalFormatter.to1Decimal(eatingSoonTT) + " " + unitLabel + " (" + rh.gs(
                     R.string.format_mins,
                     eatingSoonTTDuration
-                ) + ")").formatColor(rh, R.color.tempTargetConfirmation)
+                ) + ")").formatColor(context, rh, R.attr.tempTargetConfirmation)
             )
         val hypoSelected = binding.hypoTt.isChecked
         if (hypoSelected)
             actions.add(
                 rh.gs(R.string.temptargetshort) + ": " + (DecimalFormatter.to1Decimal(hypoTT) + " " + unitLabel + " (" + rh.gs(R.string.format_mins, hypoTTDuration) + ")").formatColor(
+                    context,
                     rh,
-                    R.color.tempTargetConfirmation
+                    R.attr.tempTargetConfirmation
                 )
             )
 
         val timeOffset = binding.time.value.toInt()
         if (useAlarm && carbs > 0 && timeOffset > 0)
-            actions.add(rh.gs(R.string.alarminxmin, timeOffset).formatColor(rh, R.color.info))
+            actions.add(rh.gs(R.string.alarminxmin, timeOffset).formatColor(context, rh, R.attr.infoColor))
         val duration = binding.duration.value.toInt()
         if (duration > 0)
             actions.add(rh.gs(R.string.duration) + ": " + duration + rh.gs(R.string.shorthour))
         if (carbsAfterConstraints > 0) {
-            actions.add(rh.gs(R.string.carbs) + ": " + "<font color='" + rh.gc(R.color.carbs) + "'>" + rh.gs(R.string.format_carbs, carbsAfterConstraints) + "</font>")
+            actions.add(rh.gs(R.string.carbs) + ": " + "<font color='" + rh.gac(context, R.attr.carbsColor) + "'>" + rh.gs(R.string.format_carbs, carbsAfterConstraints) + "</font>")
             if (carbsAfterConstraints != carbs)
-                actions.add("<font color='" + rh.gc(R.color.warning) + "'>" + rh.gs(R.string.carbsconstraintapplied) + "</font>")
+                actions.add("<font color='" + rh.gac(context, R.attr.warningColor) + "'>" + rh.gs(R.string.carbsconstraintapplied) + "</font>")
         }
         val notes = binding.notesLayout.notes.text.toString()
         if (notes.isNotEmpty())
@@ -366,5 +382,21 @@ class CarbsDialog : DialogFragmentWithDate() {
                 OKDialog.show(activity, rh.gs(R.string.carbs), rh.gs(R.string.no_action_selected))
             }
         return true
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (!queryingProtection) {
+            queryingProtection = true
+            activity?.let { activity ->
+                val cancelFail = {
+                    queryingProtection = false
+                    aapsLogger.debug(LTag.APS, "Dialog canceled on resume protection: ${this.javaClass.name}")
+                    ToastUtils.showToastInUiThread(ctx, R.string.dialog_canceled)
+                    dismiss()
+                }
+                protectionCheck.queryProtection(activity, BOLUS, { queryingProtection = false }, cancelFail, cancelFail)
+            }
+        }
     }
 }

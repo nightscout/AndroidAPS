@@ -22,7 +22,11 @@ import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.shared.SafeParse
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.extensions.formatColor
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.androidaps.utils.protection.ProtectionCheck
+import info.nightscout.androidaps.utils.protection.ProtectionCheck.Protection.BOLUS
+import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.logging.LTag
 import java.text.DecimalFormat
 import java.util.*
 import javax.inject.Inject
@@ -36,11 +40,12 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var uel: UserEntryLogger
+    @Inject lateinit var protectionCheck: ProtectionCheck
 
+    private var queryingProtection = false
     private var _binding: DialogExtendedbolusBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
+    // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
@@ -70,6 +75,8 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
         val extendedMaxDuration = pumpDescription.extendedBolusMaxDuration
         binding.duration.setParams(savedInstanceState?.getDouble("duration")
             ?: extendedDurationStep, extendedDurationStep, extendedMaxDuration, extendedDurationStep, DecimalFormat("0"), false, binding.okcancel.ok)
+        binding.insulinLabel.labelFor = binding.insulin.editTextId
+        binding.durationLabel.labelFor = binding.duration.editTextId
     }
 
     override fun onDestroyView() {
@@ -86,7 +93,7 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
         actions.add(rh.gs(R.string.formatinsulinunits, insulinAfterConstraint))
         actions.add(rh.gs(R.string.duration) + ": " + rh.gs(R.string.format_mins, durationInMinutes))
         if (abs(insulinAfterConstraint - insulin) > 0.01)
-            actions.add(rh.gs(R.string.constraintapllied).formatColor(rh, R.color.warning))
+            actions.add(rh.gs(R.string.constraintapllied).formatColor(context, rh, R.attr.warningColor))
 
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, rh.gs(R.string.extended_bolus), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
@@ -103,5 +110,21 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
             }, null)
         }
         return true
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(!queryingProtection) {
+            queryingProtection = true
+            activity?.let { activity ->
+                val cancelFail = {
+                    queryingProtection = false
+                    aapsLogger.debug(LTag.APS, "Dialog canceled on resume protection: ${this.javaClass.name}")
+                    ToastUtils.showToastInUiThread(ctx, R.string.dialog_canceled)
+                    dismiss()
+                }
+                protectionCheck.queryProtection(activity, BOLUS, { queryingProtection = false }, cancelFail, cancelFail)
+            }
+        }
     }
 }

@@ -1,41 +1,42 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
     android:paddingTop="2dp"
     tools:context=".plugins.general.wear.WearFragment">
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/connected_device"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:gravity="center_vertical|center_horizontal"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:text="@string/no_watch_connected"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        tools:ignore="HardcodedText" />
 
-        <Button
-            android:id="@+id/resend"
-            style="?android:attr/buttonStyle"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="3dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="3dp"
-            android:layout_weight="0.5"
-            android:text="@string/resend_all_data"
-            android:textColor="@color/colorTreatmentButton" />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/resend"
+        style="@style/GrayButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableTop="@drawable/ic_refresh"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:text="@string/resend_all_data"
+        android:textColor="?attr/treatmentButton" />
 
-        <Button
-            android:id="@+id/opensettings"
-            style="?android:attr/buttonStyle"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="3dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="3dp"
-            android:layout_weight="0.5"
-            android:text="@string/open_settings_on_wear"
-            android:textColor="@color/colorTreatmentButton" />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/open_settings"
+        style="@style/GrayButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableTop="@drawable/ic_settings"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:text="@string/open_settings_on_wear"
+        android:textColor="?attr/treatmentButton" />
 
-    </LinearLayout>
-
-</FrameLayout>
+</LinearLayout>

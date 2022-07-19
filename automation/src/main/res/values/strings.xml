@@ -83,6 +83,7 @@
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>
+    <string name="a11y_autosenslabel">Auto sens</string>
     <string name="deltacompared">%3$s %1$s %2$s</string>
     <string name="deltalabel">BG difference</string>
     <string name="deltalabel_u">BG difference [%1$s]</string>
@@ -115,5 +116,16 @@
     <string name="reorder_label">Reorder</string>
     <string name="key_automation_settings" translatable="false">automation_settings</string>
     <string name="user_action">User action</string>
+    <string name="remove_automation">Remove automation</string>
+    <string name="sort_automation">Sort automation</string>
+    <string name="remove_selected_items">Remove selected items</string>
+    <string name="count_selected">%1$d selected</string>
+    <string name="confirm_remove_multiple_items">Are you sure you want to remove %1$d items</string>
+    <string name="sort_label">Sort</string>
+    <string name="system_automation">System automation</string>
+    <string name="run_automations">Run automations</string>
+    <string name="add_automation">Add rule</string>
+    <string name="remove_sort">Remove/sort</string>
+    <string name="stop_processing">Stop processing</string>
 
 </resources>

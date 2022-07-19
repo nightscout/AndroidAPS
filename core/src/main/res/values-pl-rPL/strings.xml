@@ -4,6 +4,7 @@
     <!--    General-->
     <string name="refresh">Odśwież</string>
     <string name="error">Błąd</string>
+    <string name="save">ZACHOWAJ</string>
     <string name="not_set_short">Nie ustawiono</string>
     <string name="failedupdatebasalprofile">Nieudane uaktualnienie profilu bazy</string>
     <string name="profile_set_ok">Profil bazowy w pompie uaktualniony</string>
@@ -41,6 +42,7 @@
     <string name="carbs">Węglowodany</string>
     <string name="invalidprofile">Nieprawidłowy profil !!!</string>
     <string name="noprofileset">NIE USTAWIONO PROFILU</string>
+    <string name="active"><![CDATA[<Aktywny>]]></string>
     <string name="date">Data</string>
     <string name="units_label">Jednostki</string>
     <string name="dia_label">DIA</string>
@@ -125,24 +127,6 @@
     <string name="ble_not_enabled">Bluetooth nie jest włączony.</string>
     <string name="location_not_found_title">Lokalizacja nie jest włączona</string>
     <string name="location_not_found_message">Aby uruchomić odnajdywanie Bluetooth na nowszych urządzeniach, lokalizacja musi być uruchomiona. AAPS nie śledzi twojej lokalizacji więc po udanym parowaniu urządzenia Bluetooth można wyłączyć lokalizację.</string>
-    <!--    DateUtil-->
-    <string name="minago">%1$d min temu</string>
-    <string name="hoursago">%1$.1f godz. temu</string>
-    <string name="shorthour">h</string>
-    <string name="days">dni</string>
-    <string name="hours">godzin</string>
-    <string name="unit_second">sekunda</string>
-    <string name="unit_minute">minuta</string>
-    <string name="unit_hour">godzina</string>
-    <string name="unit_day">dzień</string>
-    <string name="unit_week">tydzień</string>
-    <string name="unit_seconds">sekund</string>
-    <string name="unit_minutes">minut</string>
-    <string name="unit_hours">godzin</string>
-    <string name="unit_days">dni</string>
-    <string name="unit_weeks">tygodni</string>
-    <string name="shortminute">m</string>
-    <string name="shortday">d</string>
     <!--    Protection-->
     <string name="wrongpassword">Złe hasło</string>
     <string name="passwords_dont_match">Hasła się nie zgadzają</string>
@@ -168,10 +152,6 @@
     <string name="zerovalueinprofile">Nieprawidłowy profil: %1$s</string>
     <!--    Temptarget-->
     <string name="mins">%1$d min</string>
-    <!--    TDD-->
-    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f U</b> Bol: <b>%3$.2f U</b> Baz: <b>%4$.2f U(%5$.0f%%)</b>]]></string>
-    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f U</b> Bol: <b>%3$.2f U</b> Baz: <b>%4$.2f U(%5$.0f%%)</b> Węgl.: <b>%6$.0f g</b>]]></string>
-    <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> w <b>%3$d</b> dni<br>]]></string>
     <!--    Translator-->
     <string name="careportal">PortalOpieki</string>
     <string name="careportal_bgcheck">Sprawdź BG</string>
@@ -440,6 +420,10 @@
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="pump_paired" comment="26 characters max for translation">Pompa sparowana</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Przycisk Odświeżania Insight</string>
+    <string name="basal">Baza</string>
+    <string name="count_selected">Wybrany %1$d</string>
+    <string name="sort_label">Sortuj</string>
+    <!-- Autotune -->
     <plurals name="days">
         <item quantity="one">%1$d dzień</item>
         <item quantity="few">%1$d dni</item>

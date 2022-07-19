@@ -81,4 +81,5 @@
     </plurals>
     <string name="orange_use_scanning_level">Použít vyhledávání</string>
     <string name="orange_use_scanning_level_summary">Vyhledat před připojením k OrangeLink. Mělo by to zlepšit spojení (může být také použito s ostatními klony RileyLink, pokud je to nutné)</string>
+    <string name="rileylink_configuration">Konfigurace RileyLinku</string>
 </resources>

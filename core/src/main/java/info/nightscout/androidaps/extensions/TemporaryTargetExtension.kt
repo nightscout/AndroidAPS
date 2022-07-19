@@ -10,7 +10,7 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import org.json.JSONObject
 import java.util.concurrent.TimeUnit
 
@@ -66,19 +66,11 @@ fun temporaryTargetFromJson(jsonObject: JSONObject): TemporaryTarget? {
 
     if (duration > 0L) {
         // not ending event
-        if (units == GlucoseUnit.MMOL) {
-            if (low < Constants.MIN_TT_MMOL) return null
-            if (low > Constants.MAX_TT_MMOL) return null
-            if (high < Constants.MIN_TT_MMOL) return null
-            if (high > Constants.MAX_TT_MMOL) return null
-            if (low > high) return null
-        } else {
-            if (low < Constants.MIN_TT_MGDL) return null
-            if (low > Constants.MAX_TT_MGDL) return null
-            if (high < Constants.MIN_TT_MGDL) return null
-            if (high > Constants.MAX_TT_MGDL) return null
-            if (low > high) return null
-        }
+        if (low < Constants.MIN_TT_MGDL) return null
+        if (low > Constants.MAX_TT_MGDL) return null
+        if (high < Constants.MIN_TT_MGDL) return null
+        if (high > Constants.MAX_TT_MGDL) return null
+        if (low > high) return null
     }
     val tt = TemporaryTarget(
         timestamp = timestamp,
@@ -99,6 +91,7 @@ fun TemporaryTarget.toJson(isAdd: Boolean, units: GlucoseUnit, dateUtil: DateUti
         .put("durationInMilliseconds", duration)
         .put("isValid", isValid)
         .put("created_at", dateUtil.toISOString(timestamp))
+        .put("timestamp", timestamp)
         .put("enteredBy", "AndroidAPS").also {
             if (lowTarget > 0) it
                 .put("reason", reason.text)

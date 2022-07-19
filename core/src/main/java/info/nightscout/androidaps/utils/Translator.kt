@@ -7,7 +7,7 @@ import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -255,6 +255,7 @@ class Translator @Inject internal constructor(
         Sources.MM640g                             -> TODO()
         Sources.NSClientSource                     -> TODO()
         Sources.PocTech                            -> TODO()
+        Sources.Aidex                              -> TODO()
         Sources.Tomato                             -> TODO()
         Sources.Xdrip                              -> TODO()
         Sources.LocalProfile                       -> TODO()
@@ -284,10 +285,11 @@ class Translator @Inject internal constructor(
         Sources.Aaps                               -> TODO()
         */
         Sources.Automation -> rh.gs(R.string.automation)
+        Sources.Autotune   -> rh.gs(R.string.autotune)
         Sources.Loop       -> rh.gs(R.string.loop)
         Sources.NSClient   -> rh.gs(R.string.ns)
         Sources.Pump       -> rh.gs(R.string.pump)
-        Sources.SMS        -> rh.gs(R.string.smb_shortname)
+        Sources.SMS        -> rh.gs(R.string.sms)
         Sources.Wear       -> rh.gs(R.string.wear)
         Sources.Unknown    -> rh.gs(R.string.unknown)
 

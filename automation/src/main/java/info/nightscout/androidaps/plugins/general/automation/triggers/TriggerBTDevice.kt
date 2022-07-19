@@ -57,7 +57,7 @@ class TriggerBTDevice(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyDescription(): String =
         rh.gs(R.string.btdevicecompared, btDevice.value, rh.gs(comparator.value.stringRes))
 
-    override fun icon(): Optional<Int?> = Optional.of(R.drawable.ic_bluetooth_white_48dp)
+    override fun icon(): Optional<Int> = Optional.of(R.drawable.ic_bluetooth_white_48dp)
 
     override fun duplicate(): Trigger = TriggerBTDevice(injector, this)
 

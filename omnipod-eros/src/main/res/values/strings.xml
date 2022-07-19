@@ -27,7 +27,6 @@
     <string name="omnipod_eros_overview_firmware_version_value" translatable="false">PM %1$s / PI %2$s</string>
 
     <!-- Omnipod Eros - Preferences -->
-    <string name="omnipod_eros_preferences_riley_link_configuration">RileyLink Configuration</string>
     <string name="omnipod_eros_preferences_category_notifications">Notifications</string>
     <string name="omnipod_eros_preferences_pulse_log_button_enabled">Show Pulse Log button in Pod Management menu</string>
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Show RileyLink Stats button in Pod Management menu</string>

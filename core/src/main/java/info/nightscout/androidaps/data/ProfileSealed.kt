@@ -21,7 +21,7 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import org.json.JSONArray
 import org.json.JSONObject
 import java.text.DecimalFormat
@@ -376,7 +376,7 @@ sealed class ProfileSealed(
             var elapsedSec = 0
             array.shiftBlock(multiplier, timeshift).forEach {
                 if (elapsedSec != 0) sb.append("\n")
-                sb.append(dateUtil.format_HH_MM(elapsedSec))
+                sb.append(dateUtil.formatHHMM(elapsedSec))
                     .append("    ")
                     .append(format.format(it.amount * multiplier))
                     .append(" $units")
@@ -389,7 +389,7 @@ sealed class ProfileSealed(
             var elapsedSec = 0
             array.shiftTargetBlock(timeshift).forEach {
                 if (elapsedSec != 0) sb.append("\n")
-                sb.append(dateUtil.format_HH_MM(elapsedSec))
+                sb.append(dateUtil.formatHHMM(elapsedSec))
                     .append("    ")
                     .append(format.format(it.lowTarget))
                     .append(" - ")

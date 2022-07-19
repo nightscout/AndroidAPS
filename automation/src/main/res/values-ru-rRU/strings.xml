@@ -81,6 +81,7 @@
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Автосенс %1$s %2$s %%</string>
     <string name="autosenslabel">Автосенс %</string>
+    <string name="a11y_autosenslabel">Auto sens</string>
     <string name="deltacompared">%3$s%1$s%2$s</string>
     <string name="deltalabel">Разница Гк</string>
     <string name="deltalabel_u">Разница ГК [%1$s]</string>
@@ -112,4 +113,15 @@
     <string name="automation_event">Автоматизированное событие</string>
     <string name="reorder_label">Повторный заказ</string>
     <string name="user_action">Действия пользователя</string>
+    <string name="remove_automation">Удалить автоматизацию</string>
+    <string name="sort_automation">Сортировать автоматизацию</string>
+    <string name="remove_selected_items">Удалить выбранные элементы</string>
+    <string name="count_selected">%1$d выбрано</string>
+    <string name="confirm_remove_multiple_items">Вы уверены, что хотите удалить %1$d элемент</string>
+    <string name="sort_label">Сортировать</string>
+    <string name="system_automation">Автоматизация системы</string>
+    <string name="run_automations">Запустить автоматизацию</string>
+    <string name="add_automation">Добавить правило</string>
+    <string name="remove_sort">Удаление/сортировка</string>
+    <string name="stop_processing">Остановить обработку</string>
 </resources>

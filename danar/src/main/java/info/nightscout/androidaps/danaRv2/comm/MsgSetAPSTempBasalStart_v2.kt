@@ -16,16 +16,16 @@ class MsgSetAPSTempBasalStart_v2(
     val PARAM15MIN = 150
 
     init {
-        SetCommand(0xE002)
+        setCommand(0xE002)
         //HARDCODED LIMITS
         if (percent < 0) percent = 0
         if (percent > 500) percent = 500
-        AddParamInt(percent)
+        addParamInt(percent)
         if (thirtyMinutes && percent <= 200) { // 30 min is allowed up to 200%
-            AddParamByte(PARAM30MIN.toByte())
+            addParamByte(PARAM30MIN.toByte())
             aapsLogger.debug(LTag.PUMPCOMM, "APS Temp basal start percent: $percent duration 30 min")
         } else {
-            AddParamByte(PARAM15MIN.toByte())
+            addParamByte(PARAM15MIN.toByte())
             aapsLogger.debug(LTag.PUMPCOMM, "APS Temp basal start percent: $percent duration 15 min")
         }
     }

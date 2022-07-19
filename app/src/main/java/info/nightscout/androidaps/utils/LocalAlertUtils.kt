@@ -12,18 +12,18 @@ import info.nightscout.androidaps.database.transactions.InsertTherapyEventAnnoun
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.min
@@ -128,7 +128,7 @@ class LocalAlertUtils @Inject constructor(
             rxBus.send(EventNewNotification(n))
             uel.log(Action.CAREPORTAL, Sources.Aaps, rh.gs(R.string.missed_bg_readings), ValueWithUnit.TherapyEventType(TherapyEvent.Type.ANNOUNCEMENT))
             if (sp.getBoolean(R.string.key_ns_create_announcements_from_errors, true)) {
-                n.text?.let { disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(it)).subscribe() }
+                disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(n.text)).subscribe()
             }
         } else if (dateUtil.isOlderThan(bgReading.timestamp, 5).not()) {
             rxBus.send(EventDismissNotification(Notification.BG_READINGS_MISSED))

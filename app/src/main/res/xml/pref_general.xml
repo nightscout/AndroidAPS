@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:validate="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
         android:key="@string/key_configbuilder_general_settings"
@@ -24,9 +25,8 @@
         <EditTextPreference
             android:inputType="textPersonName"
             android:key="@string/key_patient_name"
-            android:title="@string/patient_name"
             android:summary="@string/patient_name_summary"
-            />
+            android:title="@string/patient_name" />
 
         <PreferenceCategory
             android:key="@string/key_protection_settings"
@@ -35,8 +35,7 @@
             <Preference
                 android:inputType="textPassword"
                 android:key="@string/key_master_password"
-                android:title="@string/master_password"
-                />
+                android:title="@string/master_password" />
 
             <ListPreference
                 android:defaultValue="0"
@@ -46,9 +45,12 @@
                 android:title="@string/settings_protection" />
 
             <Preference
-                android:inputType="textPassword"
                 android:key="@string/key_settings_password"
                 android:title="@string/settings_password" />
+
+            <Preference
+                android:key="@string/key_settings_pin"
+                android:title="@string/settings_pin" />
 
             <ListPreference
                 android:defaultValue="0"
@@ -58,9 +60,12 @@
                 android:title="@string/application_protection" />
 
             <Preference
-                android:inputType="textPassword"
                 android:key="@string/key_application_password"
                 android:title="@string/application_password" />
+
+            <Preference
+                android:key="@string/key_application_pin"
+                android:title="@string/application_pin" />
 
             <ListPreference
                 android:defaultValue="0"
@@ -70,15 +75,39 @@
                 android:title="@string/bolus_protection" />
 
             <Preference
-                android:inputType="textPassword"
                 android:key="@string/key_bolus_password"
                 android:title="@string/bolus_password" />
+
+            <Preference
+                android:key="@string/key_bolus_pin"
+                android:title="@string/bolus_pin" />
+
+            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+                android:defaultValue="1"
+                android:digits="0123456789"
+                android:inputType="number"
+                android:key="@string/key_protection_timeout"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:summary="@string/protection_timeout_summary"
+                android:title="@string/protection_timeout_title"
+                validate:maxNumber="180"
+                validate:minNumber="1"
+                validate:testType="numericRange" />
 
         </PreferenceCategory>
 
         <info.nightscout.androidaps.skins.SkinListPreference
             android:key="@string/key_skin"
             android:title="@string/skin" />
+
+        <ListPreference
+            android:defaultValue="dark"
+            android:entries="@array/darkMode"
+            android:entryValues="@array/darkModeValues"
+            android:key="@string/key_use_dark_mode"
+            android:summary="@string/theme_switcher_summary"
+            android:title="@string/app_color_scheme" />
 
     </PreferenceCategory>
 

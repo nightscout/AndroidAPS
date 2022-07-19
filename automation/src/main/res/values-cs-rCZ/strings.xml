@@ -81,6 +81,7 @@
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>
+    <string name="a11y_autosenslabel">Automatická detekce senzitivity</string>
     <string name="deltacompared">%3$s %1$s %2$s</string>
     <string name="deltalabel">Rozdíl glykémie</string>
     <string name="deltalabel_u">Rozdíl glykémie [%1$s]</string>
@@ -112,4 +113,15 @@
     <string name="automation_event">Událost automatizace</string>
     <string name="reorder_label">Změna pořadí</string>
     <string name="user_action">Uživatelská akce</string>
+    <string name="remove_automation">Odstranit automatizaci</string>
+    <string name="sort_automation">Seřadit automatizace</string>
+    <string name="remove_selected_items">Odstranit zvolené položky</string>
+    <string name="count_selected">Vybráno: %1$d</string>
+    <string name="confirm_remove_multiple_items">Opravdu chcete odstranit %1$d položek</string>
+    <string name="sort_label">Seřadit</string>
+    <string name="system_automation">Automatizace systému</string>
+    <string name="run_automations">Spustit automatizace</string>
+    <string name="add_automation">Přidat pravidlo</string>
+    <string name="remove_sort">Odstranit/řadit</string>
+    <string name="stop_processing">Zastavit zpracovávání</string>
 </resources>

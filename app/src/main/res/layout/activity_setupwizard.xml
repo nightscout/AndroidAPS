@@ -20,6 +20,7 @@
             android:layout_marginTop="16dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
+            android:importantForAccessibility="no"
             android:onClick="exitPressed"
             app:srcCompat="@drawable/ic_exit_to_app" />
 
@@ -41,7 +42,6 @@
         android:layout_height="wrap_content"
         android:keepScreenOn="true"
         android:textAlignment="center"
-        android:textColor="#FFFFFF"
         android:textSize="32sp"
         tools:text="Title" />
 
@@ -63,10 +63,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
-        android:background="@color/black_overlay"
+        android:background="@color/black_alpha_40"
         android:orientation="horizontal"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp">
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
 
         <Button
             android:id="@+id/previous_button"
@@ -74,8 +74,7 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:onClick="showPreviousPage"
-            android:text="@string/previous_button"
-            android:textColor="#FFFFFF" />
+            android:text="@string/previous_button" />
 
         <View
             android:layout_width="0dp"
@@ -88,8 +87,7 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:onClick="showNextPage"
-            android:text="@string/next_button"
-            android:textColor="#FFFFFF" />
+            android:text="@string/next_button" />
 
         <Button
             android:id="@+id/finish_button"
@@ -97,8 +95,7 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:onClick="finishSetupWizard"
-            android:text="@string/setupwizard_finish"
-            android:textColor="#FFFFFF" />
+            android:text="@string/setupwizard_finish" />
 
     </LinearLayout>
 

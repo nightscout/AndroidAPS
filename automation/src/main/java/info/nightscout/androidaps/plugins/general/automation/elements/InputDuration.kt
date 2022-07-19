@@ -13,7 +13,7 @@ class InputDuration(
 ) : Element() {
 
     enum class TimeUnit {
-        MINUTES, HOURS
+        MINUTES, HOURS, DAYS
     }
 
     override fun addToLayout(root: LinearLayout) {
@@ -21,6 +21,9 @@ class InputDuration(
         if (unit == TimeUnit.MINUTES) {
             numberPicker = MinutesNumberPicker(root.context, null)
             numberPicker.setParams(value.toDouble(), 5.0, 24 * 60.0, 10.0, DecimalFormat("0"), false, root.findViewById(R.id.ok))
+        } else if (unit == TimeUnit.DAYS) {
+            numberPicker = MinutesNumberPicker(root.context, null)
+            numberPicker.setParams(value.toDouble(), 1.0, 30.0, 1.0, DecimalFormat("0"), false, root.findViewById(R.id.ok))
         } else {
             numberPicker = NumberPicker(root.context, null)
             numberPicker.setParams(value.toDouble(), 1.0, 24.0, 1.0, DecimalFormat("0"), false, root.findViewById(R.id.ok))

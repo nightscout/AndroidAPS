@@ -13,7 +13,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import org.junit.Assert
 import org.junit.Test
 import org.mockito.Mock
@@ -48,6 +48,7 @@ class BolusWizardTest : TestBase() {
                 it.activePlugin = activePlugin
                 it.commandQueue = commandQueue
                 it.loop = loop
+                it.dateUtil = dateUtil
                 it.iobCobCalculator = iobCobCalculator
                 it.glucoseStatusProvider = GlucoseStatusProvider(aapsLogger = aapsLogger, iobCobCalculator = iobCobCalculator, dateUtil = dateUtil)
             }

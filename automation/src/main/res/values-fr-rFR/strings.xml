@@ -8,7 +8,7 @@
     <string name="automation_missing_action">Veuillez spécifier au moins une action.</string>
     <string name="alarm_message">Alarme: %1$s</string>
     <string name="alarm_short">Alarme:</string>
-    <string name="message_short">Mess :</string>
+    <string name="message_short">Message :</string>
     <string name="alreadyenabled">Déjà activé</string>
     <string name="alreadydisabled">Déjà désactivé</string>
     <string name="alreadysuspended">Déjà suspendu</string>
@@ -81,6 +81,7 @@
     <string name="wifissidcompared">SSID WiFi %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>
+    <string name="a11y_autosenslabel">Auto sens</string>
     <string name="deltacompared">%3$s %1$s %2$s</string>
     <string name="deltalabel">Delta de glycémies</string>
     <string name="deltalabel_u">Delta Glyc. [%1$s]</string>
@@ -112,4 +113,15 @@
     <string name="automation_event">Evénement auto.</string>
     <string name="reorder_label">Réordonner</string>
     <string name="user_action">Actions utilisateur</string>
+    <string name="remove_automation">Supprimer l\'automatisation</string>
+    <string name="sort_automation">Trier les automatisations</string>
+    <string name="remove_selected_items">Supprimer les entrées sélectionnées</string>
+    <string name="count_selected">%1$d sélectionnée(s)</string>
+    <string name="confirm_remove_multiple_items">Êtes-vous sûr de vouloir supprimer %1$d entrée(s)</string>
+    <string name="sort_label">Trier</string>
+    <string name="system_automation">Système d\'automatisation</string>
+    <string name="run_automations">Exécuter les automatisations</string>
+    <string name="add_automation">Ajouter une règle</string>
+    <string name="remove_sort">Supprimer/trier</string>
+    <string name="stop_processing">Arrêter le traitement</string>
 </resources>

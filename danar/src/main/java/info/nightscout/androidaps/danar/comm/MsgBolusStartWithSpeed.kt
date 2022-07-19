@@ -11,11 +11,11 @@ class MsgBolusStartWithSpeed(
 ) : MessageBase(injector) {
 
     init {
-        SetCommand(0x0104)
+        setCommand(0x0104)
         // HARDCODED LIMIT
         amount = constraintChecker.applyBolusConstraints(Constraint(amount)).value()
-        AddParamInt((amount * 100).toInt())
-        AddParamByte(speed.toByte())
+        addParamInt((amount * 100).toInt())
+        addParamByte(speed.toByte())
         aapsLogger.debug(LTag.PUMPBTCOMM, "Bolus start : $amount speed: $speed")
     }
 

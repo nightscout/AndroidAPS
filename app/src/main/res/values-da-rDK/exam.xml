@@ -104,11 +104,11 @@
     <string name="troubleshooting_wheretoask">Hvor kan du søge efter hjælp til AndroidAPS?</string>
     <string name="troubleshooting_fb">Du kan bede om råd i \"AndroidAPS-users\" Facebook-gruppen.</string>
     <string name="troubleshooting_wiki">Du bør læse (og genlæse) AndroidAPS dokumentation.</string>
-    <string name="troubleshooting_gitter">Du kan bede om råd og notere tekniske problemer eller problemer i AndroidAPS Gitter-rummet.</string>
+    <string name="troubleshooting_gitter">Du kan bede om råd og logge tekniske problemer eller andre problemer i AndroidAPS Discord.</string>
     <string name="troubleshooting_yourendo">Du bør spørge din diabetessygeplejerske/endokrinolog.</string>
     <string name="troubleshooting_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
-    <string name="troubleshooting_hint3">https://gitter.im/MilosKozak/AndroidAPS</string>
+    <string name="troubleshooting_hint3">https://discord.gg/4fQUWHZ4Mw</string>
     <string name="insulin_label">Insulin Plugins</string>
     <string name="insulin_ultrarapid">Hvilken insulin skal du bruge sammen med Ultra-Rapid Oref-pluginnet?</string>
     <string name="insulin_fiasp">Fiasp®</string>
@@ -136,7 +136,6 @@
     <string name="wronginsulin_prime">Bolus en del af din beregnede \"glemte\" insulin med enten sprøjter / pen eller brug af en kanylefyldning.</string>
     <string name="wronginsulin_donothing">Gør ingenting og tillad AndroidAPS at rette op på højt blodsukker.</string>
     <string name="iob_label">Insulin om bord (IOB)</string>
-    <string name="iob_which">Tjek alle de korrekte svar.</string>
     <string name="iob_value">IOB-værdi påvirkes af midlertidige basaler.</string>
     <string name="iob_hightemp">Høj midlertidlig basal vil ikke blive givet, når dit blodsukker er under målet.</string>
     <string name="iob_negiob">Negative IOB i en længere periode uden motion tyder på, at din profil er for stærk, og at der er behov for mindre insulin i dine indstillinger.</string>

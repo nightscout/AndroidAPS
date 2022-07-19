@@ -40,7 +40,7 @@ abstract class PodActivationWizardActivity : OmnipodWizardActivityBase() {
         val navController = getNavController()
         val navInflater = navController.navInflater
         val graph = navInflater.inflate(R.navigation.omnipod_common_pod_activation_wizard_navigation_graph)
-        graph.startDestination = startDestination
+        graph.setStartDestination(startDestination)
         navController.graph = graph
     }
 
