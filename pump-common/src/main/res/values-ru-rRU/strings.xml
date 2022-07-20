@@ -40,7 +40,19 @@
     <string name="time_today">Сегодня</string>
     <string name="time_last_hour">За прошедший час</string>
     <string name="time_last_3_hours">За прошедшие 3 часа</string>
+    <string name="time_last_6_hours">За прошедшие 6 часов</string>
+    <string name="time_last_12_hours">За прошедшие 12 часов</string>
+    <string name="time_last_2_days">За прошедшие 2 дня</string>
+    <string name="time_last_4_days">За прошедшие 4 дня</string>
+    <string name="time_last_week">За прошедшую неделю</string>
+    <string name="time_last_month">За прошлый месяц</string>
     <!-- BLE Config -->
+    <string name="ble_config_button_scan_start">Сканирование</string>
+    <string name="ble_config_scan_stop">Прервать</string>
+    <string name="ble_config_scan_selected">Выбрано</string>
+    <string name="ble_config_scan_scanning">Сканирование</string>
+    <string name="ble_config_scan_finished">Сканирование завершено</string>
+    <string name="ble_config_scan_error">Ошибка сканирования: %1$d</string>
     <!-- BLE Errors -->
     <!-- Pump Error -->
     <!-- Pump History -->
