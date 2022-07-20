@@ -61,6 +61,7 @@ class AutotunePlugin @Inject constructor(
     .pluginName(R.string.autotune)
     .shortName(R.string.autotune_shortname)
     .preferencesId(R.xml.pref_autotune)
+    .showInList(buildHelper.isEngineeringMode() && buildHelper.isDev())
     .description(R.string.autotune_description),
     aapsLogger, resourceHelper, injector
 ), Autotune {
