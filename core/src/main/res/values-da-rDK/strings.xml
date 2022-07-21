@@ -482,6 +482,7 @@
     <string name="autotune_run_without_autoswitch">Autotune kørt uden profilskift</string>
     <string name="autotune_run_with_autoswitch">Autotune kørt, profilen er automatisk skiftet</string>
     <string name="autotune_run_with_error">Fejl under sidste Autotune kørsel</string>
+    <string name="needconnectpermission">Applikationen kræver tilladelse til bluetooth</string>
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dage</item>
