@@ -134,8 +134,8 @@ class OverviewMenus @Inject constructor(
                         val item = popup.menu.add(Menu.NONE, m.ordinal + 100 * (g + 1), Menu.NONE, rh.gs(m.nameId))
                         val title = item.title
                         val s = SpannableString(" $title ")
-                        s.setSpan(ForegroundColorSpan(rh.gac(context, m.attrTextId)), 0, s.length, 0)
-                        s.setSpan(BackgroundColorSpan(rh.gac(context, m.attrId)), 0, s.length, 0)
+                        s.setSpan(ForegroundColorSpan(rh.gac(m.attrTextId)), 0, s.length, 0)
+                        s.setSpan(BackgroundColorSpan(rh.gac(m.attrId)), 0, s.length, 0)
                         item.title = s
                         item.isCheckable = true
                         item.isChecked = settingsCopy[g][m.ordinal]
