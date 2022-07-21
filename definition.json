@@ -3,43 +3,7 @@
  ,{"minAndroid":24,"maxAndroid":25,"supported":"2.6.2"}
  ,{"minAndroid":26,"maxAndroid":27,"supported":"2.8.2"}
  ,{"minAndroid":28,"maxAndroid":99,"supported":"3.0.0"}
- ,{"endDate":"2021-11-24","version":"2.8.2.5-dev"}
- ,{"endDate":"2021-11-24","version":"2.8.2.6-dev"}
- ,{"endDate":"2021-11-24","version":"2.8.2.7-dev"}
- ,{"endDate":"2021-11-42","version":"2.8.2.8-dev"}
- ,{"endDate":"2021-11-24","version":"2.8.2.9-dev"}
- ,{"endDate":"2021-11-24","version":"2.8.2.10-dev"}
- ,{"endDate":"2021-11-24","version":"2.8.2.11-dev"}
- ,{"endDate":"2021-11-24","version":"2.8.2.12-dev"}
- ,{"endDate":"2021-12-14","version":"2.8.2.13-dev"}
- ,{"endDate":"2021-12-15","version":"2.8.2.14-dev"}
- ,{"endDate":"2021-12-15","version":"2.8.2.15-dev"}
- ,{"endDate":"2021-12-15","version":"2.8.2.16-dev"}
- ,{"endDate":"2021-12-31","version":"2.8.2.17-dev"}
- ,{"endDate":"2022-01-10","version":"2.8.2.18-dev"}
- ,{"endDate":"2022-01-31","version":"2.8.2.19-dev"}
- ,{"endDate":"2022-02-03","version":"2.8.2.20-dev"}
- ,{"endDate":"2021-11-04","version":"3.0-beta1"}
- ,{"endDate":"2021-11-04","version":"3.0-beta2"}
- ,{"endDate":"2021-11-10","version":"3.0-beta3"}
- ,{"endDate":"2021-11-14","version":"3.0-beta4"}
- ,{"endDate":"2021-11-18","version":"3.0-beta5"}
- ,{"endDate":"2021-11-24","version":"3.0-beta6"}
- ,{"endDate":"2021-12-03","version":"3.0-beta7"}
- ,{"endDate":"2021-12-18","version":"3.0-beta8"}
- ,{"endDate":"2021-12-18","version":"3.0-beta9"}
- ,{"endDate":"2021-12-31","version":"3.0-beta10"}
- ,{"endDate":"2022-01-15","version":"3.0-beta11"}
- ,{"endDate":"2022-01-25","version":"3.0-rc1"}
- ,{"endDate":"2022-01-25","version":"3.0-rc2"}
- ,{"endDate":"2022-02-03","version":"3.0-rc3"}
- ,{"endDate":"2022-03-10","version":"3.0.0.1-dev-a"}
- ,{"endDate":"2022-03-10","version":"3.0.0.1-dev-b"}
- ,{"endDate":"2022-03-10","version":"3.0.0.1-dev-c"}
- ,{"endDate":"2022-03-10","version":"3.0.0.1-dev-d"}
  ,{"endDate":"2022-03-19","version":"3.0.0.1-dev-e"}
- ,{"endDate":"2022-04-03","version":"3.0.0.1-dev-f"}
- ,{"endDate":"2022-04-03","version":"3.0.0.1-dev-g"}
  ,{"endDate":"2022-04-09","version":"3.0.0.1-dev-h"}
  ,{"endDate":"2022-05-15","version":"3.0.0.1-dev-i"}
  ,{"endDate":"2022-05-15","version":"3.0.0.1-dev-j"}
