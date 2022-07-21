@@ -442,6 +442,7 @@
     <string name="a11y_file">文件</string>
     <string name="a11y_user">用户</string>
     <!-- Autotune -->
+    <string name="needconnectpermission">应用程序需要蓝牙权限。</string>
     <plurals name="days">
         <item quantity="other">%1$d　天</item>
     </plurals>
