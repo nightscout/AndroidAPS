@@ -1,8 +1,11 @@
 package info.nightscout.androidaps.plugins.general.automation.triggers
 
+import android.Manifest
 import android.bluetooth.BluetoothManager
 import android.content.Context
+import android.content.pm.PackageManager
 import android.widget.LinearLayout
+import androidx.core.app.ActivityCompat
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.automation.R
@@ -13,9 +16,9 @@ import info.nightscout.androidaps.plugins.general.automation.elements.InputDropd
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder
 import info.nightscout.androidaps.plugins.general.automation.elements.StaticLabel
 import info.nightscout.androidaps.utils.JsonHelper
+import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.shared.logging.LTag
 import org.json.JSONObject
-import java.util.*
 import javax.inject.Inject
 
 class TriggerBTDevice(injector: HasAndroidInjector) : Trigger(injector) {
@@ -74,7 +77,11 @@ class TriggerBTDevice(injector: HasAndroidInjector) : Trigger(injector) {
     // Get the list of paired BT devices to use in dropdown menu
     private fun devicesPaired(): ArrayList<CharSequence> {
         val s = ArrayList<CharSequence>()
-        (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter?.bondedDevices?.forEach { s.add(it.name) }
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
+            (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter?.bondedDevices?.forEach { s.add(it.name) }
+        } else {
+            ToastUtils.errorToast(context, context.getString(R.string.needconnectpermission))
+        }
         return s
     }
 
