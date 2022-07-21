@@ -646,7 +646,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="needsystemwindowpermission">L\'application a besoin de l\'autorisation d\'accès à la fenêtre système pour les notifications</string>
     <string name="needlocationpermission">L\'application a besoin de l\'autorisation de localisation pour l\'analyse BT et l\'identification WiFi</string>
     <string name="needstoragepermission">L\'application a besoin d\'une autorisation de stockage pour pouvoir stocker les fichiers journaux et les paramètres d\'exportation</string>
-    <string name="needconnectpermission">L\'application a besoin de l\'autorisation Bluetooth</string>
     <string name="request">Demande</string>
     <string name="open_navigation">Ouvrir navigation</string>
     <string name="close_navigation">Fermer navigation</string>
