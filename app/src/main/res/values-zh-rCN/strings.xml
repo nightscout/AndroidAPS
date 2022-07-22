@@ -432,6 +432,7 @@
     <string name="ns_localbroadcasts_title">启用本地广播。</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">动态ISF(胰岛素敏感系数)</string>
+    <string name="DynISFAdjust_summary" formatted="false">动态ISF的调整因子。设置100%以上用于更积极的校正，100%以下则不那么积极校正。</string>
     <string name="enableuam">启用 UAM</string>
     <string name="enablesmb">启用微型大剂量</string>
     <string name="enablesmb_summary">使用微型大剂量代替使用临时基础率，更快的干预</string>
@@ -636,7 +637,6 @@
     <string name="needsystemwindowpermission">应用程序需要悬浮窗权限用于发送通知。</string>
     <string name="needlocationpermission">应用程序需要定位权限，才能进行蓝牙扫描及WIFI识别。</string>
     <string name="needstoragepermission">应用程序需要文件存储权限，才能存储日志文件及导出设置。</string>
-    <string name="needconnectpermission">应用程序需要蓝牙权限。</string>
     <string name="request">请求</string>
     <string name="open_navigation">打开导航栏</string>
     <string name="close_navigation">关闭导航栏</string>
