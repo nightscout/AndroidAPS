@@ -4,6 +4,7 @@ import android.Manifest
 import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Build
 import android.widget.LinearLayout
 import androidx.core.app.ActivityCompat
 import com.google.common.base.Optional
@@ -77,7 +78,7 @@ class TriggerBTDevice(injector: HasAndroidInjector) : Trigger(injector) {
     // Get the list of paired BT devices to use in dropdown menu
     private fun devicesPaired(): ArrayList<CharSequence> {
         val s = ArrayList<CharSequence>()
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
             (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter?.bondedDevices?.forEach { s.add(it.name) }
         } else {
             ToastUtils.errorToast(context, context.getString(R.string.needconnectpermission))

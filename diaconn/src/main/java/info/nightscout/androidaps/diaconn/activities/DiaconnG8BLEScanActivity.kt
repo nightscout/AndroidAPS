@@ -13,6 +13,7 @@ import android.bluetooth.le.ScanSettings
 import android.content.Context
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -64,7 +65,7 @@ class DiaconnG8BLEScanActivity : NoSplashAppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
             bluetoothAdapter?.let { bluetoothAdapter ->
                 if (!bluetoothAdapter.isEnabled) bluetoothAdapter.enable()
                 bluetoothLeScanner = bluetoothAdapter.bluetoothLeScanner
@@ -77,7 +78,7 @@ class DiaconnG8BLEScanActivity : NoSplashAppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
             stopScan()
         }
     }
@@ -107,7 +108,9 @@ class DiaconnG8BLEScanActivity : NoSplashAppCompatActivity() {
         } // ignore BT not on
 
     private fun addBleDevice(device: BluetoothDevice?) {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED
+        ) {
             ToastUtils.errorToast(context, context.getString(info.nightscout.androidaps.core.R.string.needconnectpermission))
             return
         }
