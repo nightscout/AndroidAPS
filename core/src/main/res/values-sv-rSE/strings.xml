@@ -430,6 +430,7 @@
     <string name="a11y_plus_button_description">öka %1$s med %2$s</string>
     <string name="basal">Basal</string>
     <!-- Autotune -->
+    <string name="needconnectpermission">Applikationen behöver bluetooth-behörighet</string>
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagar</item>

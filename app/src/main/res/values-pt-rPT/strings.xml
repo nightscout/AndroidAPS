@@ -631,7 +631,6 @@
     <string name="needsystemwindowpermission">Aplicação precisa de permissão de janela do sistema para notificações</string>
     <string name="needlocationpermission">Aplicação necessita de permissão de localização para pesquisa Bluetooth e identificação Wi-Fi</string>
     <string name="needstoragepermission">A aplicação precisa da permissão de armazenamento para poder armazenar ficheiros de registo e exportar definições</string>
-    <string name="needconnectpermission">Aplicação precisa de permissão Bluetooth</string>
     <string name="request">Pedido</string>
     <string name="open_navigation">Abrir a navegação</string>
     <string name="close_navigation">Fechar a navegação</string>

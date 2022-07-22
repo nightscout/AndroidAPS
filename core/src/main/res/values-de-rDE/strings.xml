@@ -433,6 +433,7 @@
     <string name="count_selected">%1$d ausgewählt</string>
     <string name="sort_label">Sortieren</string>
     <!-- Autotune -->
+    <string name="needconnectpermission">App benötigt Bluetooth-Berechtigung</string>
     <plurals name="days">
         <item quantity="one">%1$d Tag</item>
         <item quantity="other">%1$d Tage</item>

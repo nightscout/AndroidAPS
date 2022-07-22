@@ -645,7 +645,6 @@
     <string name="needsystemwindowpermission">App trenger tillatelse til å bruke Varslinger for å vise meldinger</string>
     <string name="needlocationpermission">App trenger tilgang til Posisjon for å søke etter Bluetooth og Wifi enheter</string>
     <string name="needstoragepermission">App trenger tilgang til Lagring for lagre logg filer og eksportere innstillinger</string>
-    <string name="needconnectpermission">Appen trenger bluetooth tillatelse</string>
     <string name="request">Forespørsel</string>
     <string name="open_navigation">Åpne meny</string>
     <string name="close_navigation">Lukk meny</string>

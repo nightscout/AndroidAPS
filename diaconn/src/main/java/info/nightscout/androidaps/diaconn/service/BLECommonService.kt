@@ -1,9 +1,12 @@
 package info.nightscout.androidaps.diaconn.service
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.bluetooth.*
 import android.content.Context
-import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.SystemClock
+import androidx.core.app.ActivityCompat
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.diaconn.DiaconnG8Pump
@@ -12,10 +15,11 @@ import info.nightscout.androidaps.diaconn.packet.*
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.extensions.notify
 import info.nightscout.androidaps.extensions.waitMillis
+import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import java.util.*
 import java.util.concurrent.ScheduledFuture
 import javax.inject.Inject
@@ -66,6 +70,11 @@ class BLECommonService @Inject internal constructor(
 
     @Synchronized
     fun connect(from: String, address: String?): Boolean {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+            ToastUtils.errorToast(context, context.getString(info.nightscout.androidaps.core.R.string.needconnectpermission))
+            aapsLogger.error(LTag.PUMPBTCOMM, "missing permission: $from")
+            return false
+        }
         aapsLogger.debug(LTag.PUMPBTCOMM, "Initializing Bluetooth ")
         if (bluetoothAdapter == null) {
             aapsLogger.error("Unable to obtain a BluetoothAdapter.")
@@ -98,6 +107,10 @@ class BLECommonService @Inject internal constructor(
 
     @Synchronized
     fun disconnect(from: String) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+            aapsLogger.error(LTag.PUMPBTCOMM, "missing permission: $from")
+            return
+        }
         aapsLogger.debug(LTag.PUMPBTCOMM, "disconnect from: $from")
 
         // cancel previous scheduled disconnection to prevent closing upcoming connection
@@ -117,6 +130,7 @@ class BLECommonService @Inject internal constructor(
         SystemClock.sleep(2000)
     }
 
+    @SuppressLint("MissingPermission")
     @Synchronized
     fun close() {
         aapsLogger.debug(LTag.PUMPBTCOMM, "BluetoothAdapter close")
@@ -133,6 +147,9 @@ class BLECommonService @Inject internal constructor(
             aapsLogger.debug(LTag.PUMPBTCOMM, "onServicesDiscovered")
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 findCharacteristic()
+                SystemClock.sleep(1600)
+                isConnected = true
+                isConnecting = false
             }
         }
 
@@ -156,6 +173,7 @@ class BLECommonService @Inject internal constructor(
         }
     }
 
+    @SuppressLint("MissingPermission")
     @Synchronized
     private fun writeCharacteristicNoResponse(characteristic: BluetoothGattCharacteristic, data: ByteArray) {
         Thread(Runnable {
@@ -194,6 +212,7 @@ class BLECommonService @Inject internal constructor(
         return bluetoothGatt?.services
     }
 
+    @SuppressLint("MissingPermission")
     @Synchronized
     private fun findCharacteristic() {
         val gattServices = getSupportedGattServices() ?: return
@@ -206,6 +225,7 @@ class BLECommonService @Inject internal constructor(
                     uartIndicate = gattCharacteristic
                     //setCharacteristicNotification(uartIndicate, true)
                     bluetoothGatt?.setCharacteristicNotification(uartIndicate, true)
+
                     // nRF Connect 참고하여 추가함
                     val descriptor: BluetoothGattDescriptor = uartIndicate!!.getDescriptor(UUID.fromString(CHARACTERISTIC_CONFIG_UUID))
                     descriptor.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
@@ -218,13 +238,12 @@ class BLECommonService @Inject internal constructor(
         }
     }
 
+    @SuppressLint("MissingPermission")
     @Synchronized
     private fun onConnectionStateChangeSynchronized(gatt: BluetoothGatt, newState: Int) {
         aapsLogger.debug(LTag.PUMPBTCOMM, "onConnectionStateChange newState : $newState")
         if (newState == BluetoothProfile.STATE_CONNECTED) {
             gatt.discoverServices()
-            isConnected = true
-            isConnecting = false
             rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTED))
         } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
             close()
@@ -268,6 +287,7 @@ class BLECommonService @Inject internal constructor(
     // process common packet response
     private fun processResponseMessage(data: ByteArray) {
         isConnected = true
+        isConnecting = false
 
         //요청정보
         val originalMessageSeq = processedMessage?.getSeq(processedMessageByte)
