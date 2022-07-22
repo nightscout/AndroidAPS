@@ -12,6 +12,7 @@ import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
@@ -228,7 +229,7 @@ class RileyLinkBLEConfigActivity : DaggerAppCompatActivity() {
             binding.rileyLinkBleConfigButtonScanStop.visibility = View.VISIBLE
         }
         scanning = true
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
             bleScanner?.startScan(filters, settings, bleScanCallback)
             aapsLogger.debug(LTag.PUMPBTCOMM, "startLeDeviceScan: Scanning Start")
             Toast.makeText(this@RileyLinkBLEConfigActivity, R.string.riley_link_ble_config_scan_scanning, Toast.LENGTH_SHORT).show()
@@ -239,7 +240,7 @@ class RileyLinkBLEConfigActivity : DaggerAppCompatActivity() {
         if (scanning) {
             scanning = false
             if (bluetoothAdapter?.isEnabled == true && bluetoothAdapter?.state == BluetoothAdapter.STATE_ON)
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
                     bleScanner?.stopScan(bleScanCallback)
                 }
             aapsLogger.debug(LTag.PUMPBTCOMM, "stopLeDeviceScan: Scanning Stop")

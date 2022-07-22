@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.bluetooth.*
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.SystemClock
 import androidx.core.app.ActivityCompat
 import dagger.android.HasAndroidInjector
@@ -35,9 +36,10 @@ class BLECommonService @Inject internal constructor(
     private val diaconnG8ResponseMessageHashTable: DiaconnG8ResponseMessageHashTable,
     private val diaconnG8SettingResponseMessageHashTable: DiaconnG8SettingResponseMessageHashTable,
     private val diaconnG8Pump: DiaconnG8Pump,
-){
+) {
 
     companion object {
+
         private const val WRITE_DELAY_MILLIS: Long = 50
         private const val INDICATION_UUID = "6e400003-b5a3-f393-e0a9-e50e24dcca9e"
         private const val WRITE_UUID = "6e400002-b5a3-f393-e0a9-e50e24dcca9e"
@@ -57,7 +59,7 @@ class BLECommonService @Inject internal constructor(
     private var uartIndicate: BluetoothGattCharacteristic? = null
     private var uartWrite: BluetoothGattCharacteristic? = null
 
-    private var mSequence : Int = 0
+    private var mSequence: Int = 0
 
     private fun getMsgSequence(): Int {
         val seq = mSequence % 255
@@ -70,7 +72,9 @@ class BLECommonService @Inject internal constructor(
 
     @Synchronized
     fun connect(from: String, address: String?): Boolean {
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+            ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED
+        ) {
             ToastUtils.errorToast(context, context.getString(info.nightscout.androidaps.core.R.string.needconnectpermission))
             aapsLogger.error(LTag.PUMPBTCOMM, "missing permission: $from")
             return false
@@ -107,7 +111,9 @@ class BLECommonService @Inject internal constructor(
 
     @Synchronized
     fun disconnect(from: String) {
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+            ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED
+        ) {
             aapsLogger.error(LTag.PUMPBTCOMM, "missing permission: $from")
             return
         }
@@ -156,7 +162,7 @@ class BLECommonService @Inject internal constructor(
         override fun onCharacteristicChanged(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "(응답) onCharacteristicChanged: " + DiaconnG8Packet.toHex(characteristic.value))
             // 대량로그응답 처리.
-            if(characteristic.value[1] == 0xb2.toByte()) {
+            if (characteristic.value[1] == 0xb2.toByte()) {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "(대량 로그 처리 응답) onCharacteristicChanged: " + DiaconnG8Packet.toHex(characteristic.value))
                 val message = BigLogInquireResponsePacket(injector)
                 message.handleMessage(characteristic.value)
@@ -269,7 +275,7 @@ class BLECommonService @Inject internal constructor(
         writeCharacteristicNoResponse(uartWriteBTGattChar, bytes)
         // 요청 큐에 요청할 바이트 정보 담기.
         synchronized(mSendQueue) {
-            if(mSendQueue.size > 10) mSendQueue.clear()
+            if (mSendQueue.size > 10) mSendQueue.clear()
             mSendQueue.add(bytes)
         }
         aapsLogger.debug(LTag.PUMPBTCOMM, "sendMessage() after mSendQueue.size :: ${mSendQueue.size}")
@@ -301,29 +307,29 @@ class BLECommonService @Inject internal constructor(
         aapsLogger.debug(LTag.PUMPBTCOMM, "receivedCommand :: $receivedCommand")
 
         // 응답메시지가 조회응답인지. 설정응답인지 구분해야됨.
-        var message:DiaconnG8Packet? = null
+        var message: DiaconnG8Packet? = null
         // 요청시퀀스와 응답의 시퀀스가 동일한 경우에만 처리.
         // 펌프로부터 받은 보고응답의 경우 처리
-        if(receivedType == 3) {
+        if (receivedType == 3) {
             message = diaconnG8ResponseMessageHashTable.findMessage(receivedCommand)
             // injection Blocked Report
-            if(message is InjectionBlockReportPacket ) {
+            if (message is InjectionBlockReportPacket) {
                 message.handleMessage(data)
                 diaconnG8Pump.bolusBlocked = true
-                ErrorHelperActivity.runAlarm(context, rh.gs(R.string.injectionblocked), rh.gs(R.string.injectionblocked), R.raw.boluserror )
+                ErrorHelperActivity.runAlarm(context, rh.gs(R.string.injectionblocked), rh.gs(R.string.injectionblocked), R.raw.boluserror)
                 return
             }
             // battery warning report
-            if(message is BatteryWarningReportPacket ) {
+            if (message is BatteryWarningReportPacket) {
                 message.handleMessage(data)
-                ErrorHelperActivity.runAlarm(context, rh.gs(R.string.needbatteryreplace), rh.gs(R.string.batterywarning), R.raw.boluserror )
+                ErrorHelperActivity.runAlarm(context, rh.gs(R.string.needbatteryreplace), rh.gs(R.string.batterywarning), R.raw.boluserror)
                 return
             }
 
             // insulin lack warning report
-            if(message is InsulinLackReportPacket ) {
+            if (message is InsulinLackReportPacket) {
                 message.handleMessage(data)
-                ErrorHelperActivity.runAlarm(context, rh.gs(R.string.needinsullinreplace), rh.gs(R.string.insulinlackwarning), R.raw.boluserror )
+                ErrorHelperActivity.runAlarm(context, rh.gs(R.string.needinsullinreplace), rh.gs(R.string.insulinlackwarning), R.raw.boluserror)
                 return
             }
 
@@ -332,7 +338,7 @@ class BLECommonService @Inject internal constructor(
             synchronized(mSendQueue) {
                 val sendQueueSize = mSendQueue.size
                 if (sendQueueSize > 0) {
-                    for (i in sendQueueSize-1 downTo 0 ) {
+                    for (i in sendQueueSize - 1 downTo 0) {
                         val sendQueueSeq = DiaconnG8Packet(injector).getSeq(mSendQueue[i])
                         val sendQueueType = DiaconnG8Packet(injector).getType(mSendQueue[i])
                         if (sendQueueSeq == receivedSeq) {

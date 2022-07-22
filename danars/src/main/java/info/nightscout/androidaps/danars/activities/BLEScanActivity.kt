@@ -11,6 +11,7 @@ import android.bluetooth.le.ScanResult
 import android.content.Context
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -60,7 +61,7 @@ class BLEScanActivity : NoSplashAppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
             if (bluetoothAdapter?.isEnabled != true) bluetoothAdapter?.enable()
             startScan()
         } else {
@@ -74,7 +75,7 @@ class BLEScanActivity : NoSplashAppCompatActivity() {
     }
 
     private fun startScan() =
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
             try {
                 bluetoothLeScanner?.startScan(mBleScanCallback)
             } catch (ignore: IllegalStateException) {
@@ -84,7 +85,7 @@ class BLEScanActivity : NoSplashAppCompatActivity() {
         }
 
     private fun stopScan() =
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
             try {
                 bluetoothLeScanner?.stopScan(mBleScanCallback)
             } catch (ignore: IllegalStateException) {
@@ -147,7 +148,7 @@ class BLEScanActivity : NoSplashAppCompatActivity() {
             override fun onClick(v: View) {
                 sp.putString(R.string.key_danars_address, item.device.address)
                 sp.putString(R.string.key_danars_name, name.text.toString())
-                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
                     item.device.createBond()
                     rxBus.send(EventDanaRSDeviceChange())
                 } else {
