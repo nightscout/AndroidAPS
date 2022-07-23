@@ -34,7 +34,6 @@
         android:gravity="start"
         android:paddingStart="5dp"
         android:paddingEnd="0dp"
-        android:textColor="@android:color/white"
         android:textSize="14sp" />
 
 </LinearLayout>
