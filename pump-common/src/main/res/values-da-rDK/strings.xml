@@ -8,4 +8,12 @@
     <!-- BLE Errors -->
     <!-- Pump Error -->
     <!-- Pump History -->
+    <plurals name="duration_days">
+        <item quantity="one">%1$d dag</item>
+        <item quantity="other">%1$d dage</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">%1$d time</item>
+        <item quantity="other">%1$d timer</item>
+    </plurals>
 </resources>

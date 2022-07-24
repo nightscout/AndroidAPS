@@ -422,6 +422,7 @@
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight Mygtukas Naujinti</string>
     <string name="basal">Valandinė bazė</string>
     <!-- Autotune -->
+    <string name="needconnectpermission">Programai reikalinga Bluetooth prieigos teisė</string>
     <plurals name="days">
         <item quantity="one">%1$d d.</item>
         <item quantity="few">%1$d d.</item>

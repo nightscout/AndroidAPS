@@ -29,7 +29,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <Spinner
-            android:theme="@style/YourSpinnerItemStyle"
+            android:theme="@style/CommonSpinnerItemStyle"
             android:id="@+id/pump_history_type"
             android:layout_width="100dp"
 

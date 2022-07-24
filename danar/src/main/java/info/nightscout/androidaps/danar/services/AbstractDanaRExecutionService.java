@@ -1,13 +1,18 @@
 package info.nightscout.androidaps.danar.services;
 
+import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.SystemClock;
+
+import androidx.core.app.ActivityCompat;
 
 import java.io.IOException;
 import java.util.Set;
@@ -41,8 +46,7 @@ import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.interfaces.PumpSync;
-import info.nightscout.shared.logging.AAPSLogger;
-import info.nightscout.shared.logging.LTag;
+import info.nightscout.androidaps.interfaces.ResourceHelper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
@@ -50,8 +54,9 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.ToastUtils;
-import info.nightscout.androidaps.interfaces.ResourceHelper;
 import info.nightscout.androidaps.utils.rx.AapsSchedulers;
+import info.nightscout.shared.logging.AAPSLogger;
+import info.nightscout.shared.logging.LTag;
 import info.nightscout.shared.sharedPreferences.SP;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
@@ -191,30 +196,32 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
 
     protected void getBTSocketForSelectedPump() {
         mDevName = sp.getString(R.string.key_danar_bt_name, "");
-        BluetoothAdapter bluetoothAdapter = ((BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
+            BluetoothAdapter bluetoothAdapter = ((BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
 
-        if (bluetoothAdapter != null) {
-            Set<BluetoothDevice> bondedDevices = bluetoothAdapter.getBondedDevices();
+            if (bluetoothAdapter != null) {
+                Set<BluetoothDevice> bondedDevices = bluetoothAdapter.getBondedDevices();
 
-            if (bondedDevices != null)
-                for (BluetoothDevice device : bondedDevices) {
-                    if (mDevName.equals(device.getName())) {
-                        mBTDevice = device;
-                        try {
-                            mRfcommSocket = mBTDevice.createRfcommSocketToServiceRecord(SPP_UUID);
-                        } catch (IOException e) {
-                            aapsLogger.error("Error creating socket: ", e);
+                if (bondedDevices != null)
+                    for (BluetoothDevice device : bondedDevices) {
+                        if (mDevName.equals(device.getName())) {
+                            mBTDevice = device;
+                            try {
+                                mRfcommSocket = mBTDevice.createRfcommSocketToServiceRecord(SPP_UUID);
+                            } catch (IOException e) {
+                                aapsLogger.error("Error creating socket: ", e);
+                            }
+                            break;
                         }
-                        break;
                     }
-                }
+            } else {
+                ToastUtils.INSTANCE.showToastInUiThread(context.getApplicationContext(), rh.gs(R.string.nobtadapter));
+            }
+            if (mBTDevice == null) {
+                ToastUtils.INSTANCE.showToastInUiThread(context.getApplicationContext(), rh.gs(R.string.devicenotfound));
+            }
         } else {
-            ToastUtils.INSTANCE.showToastInUiThread(context.getApplicationContext(),
-                    rh.gs(R.string.nobtadapter));
-        }
-        if (mBTDevice == null) {
-            ToastUtils.INSTANCE.showToastInUiThread(context.getApplicationContext(),
-                    rh.gs(R.string.devicenotfound));
+            ToastUtils.INSTANCE.errorToast(context, context.getString(R.string.needconnectpermission));
         }
     }
 

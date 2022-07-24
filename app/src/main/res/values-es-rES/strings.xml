@@ -645,7 +645,6 @@
     <string name="needsystemwindowpermission">La aplicación necesita permisos del sistema para poder mostrarse sobre otras aplicaciones, para las notificaciones</string>
     <string name="needlocationpermission">La aplicación necesita permiso de ubicación para poder buscar dispositivos Bluetooth y redes WiFi</string>
     <string name="needstoragepermission">La aplicación necesita permiso de almacenamiento para poder almacenar archivos de registro y valores de exportación</string>
-    <string name="needconnectpermission">La aplicación necesita permiso de bluetooth</string>
     <string name="request">Solicitar</string>
     <string name="open_navigation">Abrir navegación</string>
     <string name="close_navigation">Cerrar navegación</string>

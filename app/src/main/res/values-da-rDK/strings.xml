@@ -636,7 +636,6 @@
     <string name="needsystemwindowpermission">Applikationen mangler system vindues tilladelse til notifikationer</string>
     <string name="needlocationpermission">Applikationen mangler lokations tilladelse til BT scanning og WIFI identifikation</string>
     <string name="needstoragepermission">Applikationen mangler lagerstyrings tilladelse for at gemme logfiler og exporteringsindstillinger</string>
-    <string name="needconnectpermission">Applikationen kræver tilladelse til bluetooth</string>
     <string name="request">Anmod</string>
     <string name="open_navigation">Åbn navigation</string>
     <string name="close_navigation">Luk navigation</string>

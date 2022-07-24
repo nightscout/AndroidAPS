@@ -645,7 +645,6 @@
     <string name="needsystemwindowpermission">האפליקציה צריכה הרשאת מערכת של חלונות לצורך התראות</string>
     <string name="needlocationpermission">דרושה הרשאת מיקום עבור סריקת בלוטות\' וזיהוי WiFi</string>
     <string name="needstoragepermission">דרושה הרשאת אחסון כדי שתוכלו לאחסן קובצי יומן והגדרות יצוא.</string>
-    <string name="needconnectpermission">האפליקציה צריכה הרשאה לבלוטות\'</string>
     <string name="request">בקשה</string>
     <string name="open_navigation">פתח ניווט</string>
     <string name="close_navigation">סגור ניווט</string>

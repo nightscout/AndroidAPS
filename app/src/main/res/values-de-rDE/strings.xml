@@ -633,7 +633,6 @@
     <string name="needsystemwindowpermission">Die App benötigt die Systemberechtigung für App-Benachrichtigungen</string>
     <string name="needlocationpermission">Die App benötigt die Berechtigung für den Standort, um Bluetooth und WLAN nutzen zu können</string>
     <string name="needstoragepermission">Die App benötigt Zugriffsrechte für den Speicher um Log-Dateien zu sichern und die Einstellungen zu exportieren.</string>
-    <string name="needconnectpermission">App benötigt Bluetooth-Berechtigung</string>
     <string name="request">Anfordern</string>
     <string name="open_navigation">Menü öffnen</string>
     <string name="close_navigation">Menü schließen</string>
