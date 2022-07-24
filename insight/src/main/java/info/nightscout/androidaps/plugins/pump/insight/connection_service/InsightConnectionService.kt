@@ -1,68 +1,57 @@
 package info.nightscout.androidaps.plugins.pump.insight.connection_service
 
+import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothSocket
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Binder
+import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
-import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.Cryptograph.generateRSAKey
-import info.nightscout.androidaps.plugins.pump.insight.utils.DelayedActionThread.Companion.runDelayed
-import info.nightscout.androidaps.plugins.pump.insight.satl.SatlMessage.Companion.hasCompletePacket
-import info.nightscout.androidaps.plugins.pump.insight.satl.SatlMessage.Companion.deserialize
-import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.Cryptograph.deriveKeys
-import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.Cryptograph.combine
-import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.Cryptograph.decryptRSA
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage.Companion.unwrap
-import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.Cryptograph.getServicePasswordHash
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage.Companion.wrap
+import androidx.core.app.ActivityCompat
 import dagger.android.DaggerService
 import info.nightscout.androidaps.insight.R
-import javax.inject.Inject
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.InsightState
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlPairingRejectedException
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.configuration.WriteConfigurationBlockMessage
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.configuration.OpenConfigurationWriteSessionMessage
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.configuration.CloseConfigurationWriteSessionMessage
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.connection.ActivateServiceMessage
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.connection.ServiceChallengeMessage
-import info.nightscout.shared.logging.LTag
-import org.spongycastle.crypto.InvalidCipherTextException
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.connection.BindMessage
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.connection.ConnectMessage
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlInvalidNonceErrorException
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlInvalidCRCErrorException
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlInvalidMacErrorException
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlDecryptVerifyFailedErrorException
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlInvalidPayloadLengthErrorException
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlInvalidMessageTypeErrorException
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlIncompatibleVersionErrorException
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlCompatibleStateErrorException
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlInvalidCommIdErrorException
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlInvalidPacketErrorException
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlWrongStateException
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlUndefinedErrorException
-import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.SatlNoneErrorException
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.status.GetFirmwareVersionsMessage
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage.Companion.unwrap
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage.Companion.wrap
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.ReadParameterBlockMessage
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.Service
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.configuration.CloseConfigurationWriteSessionMessage
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.configuration.OpenConfigurationWriteSessionMessage
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.configuration.WriteConfigurationBlockMessage
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.connection.ActivateServiceMessage
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.connection.BindMessage
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.connection.ConnectMessage
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.connection.DisconnectMessage
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.connection.ServiceChallengeMessage
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.SystemIdentificationBlock
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.status.GetFirmwareVersionsMessage
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.FirmwareVersions
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.InsightState
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.SystemIdentification
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.*
+import info.nightscout.androidaps.plugins.pump.insight.exceptions.satl_errors.*
 import info.nightscout.androidaps.plugins.pump.insight.satl.*
+import info.nightscout.androidaps.plugins.pump.insight.satl.SatlMessage.Companion.deserialize
+import info.nightscout.androidaps.plugins.pump.insight.satl.SatlMessage.Companion.hasCompletePacket
 import info.nightscout.androidaps.plugins.pump.insight.utils.*
+import info.nightscout.androidaps.plugins.pump.insight.utils.DelayedActionThread.Companion.runDelayed
+import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.Cryptograph.combine
+import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.Cryptograph.decryptRSA
+import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.Cryptograph.deriveKeys
+import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.Cryptograph.generateRSAKey
+import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.Cryptograph.getServicePasswordHash
 import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.KeyPair
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
+import info.nightscout.shared.sharedPreferences.SP
+import org.spongycastle.crypto.InvalidCipherTextException
 import java.io.IOException
-import java.lang.Exception
 import java.security.SecureRandom
-import java.util.ArrayList
+import javax.inject.Inject
 import kotlin.math.max
 import kotlin.math.min
 
@@ -81,7 +70,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
     private var disconnectTimer: DelayedActionThread? = null
     private var recoveryTimer: DelayedActionThread? = null
     private var timeoutTimer: DelayedActionThread? = null
-    private lateinit var bluetoothAdapter: BluetoothAdapter
+    private var bluetoothAdapter: BluetoothAdapter? = null
     private var bluetoothDevice: BluetoothDevice? = null
     private var bluetoothSocket: BluetoothSocket? = null
     private var connectionEstablisher: ConnectionEstablisher? = null
@@ -197,8 +186,10 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
 
     @Synchronized override fun onCreate() {
         super.onCreate()
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) === PackageManager.PERMISSION_GRANTED) {
+            bluetoothAdapter = (applicationContext.getSystemService(BLUETOOTH_SERVICE) as BluetoothManager).adapter
+        }
         pairingDataStorage = PairingDataStorage(this)
-        bluetoothAdapter = (applicationContext.getSystemService(BLUETOOTH_SERVICE) as BluetoothManager).adapter
         state = if (pairingDataStorage.paired) InsightState.DISCONNECTED else InsightState.NOT_PAIRED
         wakeLock = (getSystemService(POWER_SERVICE) as PowerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS:InsightConnectionService")
     }
@@ -350,10 +341,13 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
     }
 
     @Synchronized private fun connect() {
-        if (bluetoothDevice == null) bluetoothDevice = bluetoothAdapter.getRemoteDevice(pairingDataStorage.macAddress)
-        setState(InsightState.CONNECTING)
-        connectionEstablisher = ConnectionEstablisher(this, !pairingDataStorage.paired, bluetoothAdapter, bluetoothDevice, bluetoothSocket)
-        connectionEstablisher!!.start()
+        bluetoothAdapter?.let { bluetoothAdapter ->
+            if (bluetoothDevice == null) bluetoothDevice = bluetoothAdapter.getRemoteDevice(pairingDataStorage.macAddress)
+            setState(InsightState.CONNECTING)
+            connectionEstablisher = ConnectionEstablisher(this, !pairingDataStorage.paired, bluetoothAdapter, bluetoothDevice, bluetoothSocket).also {
+                it.start()
+            }
+        }
     }
 
     @Synchronized override fun onSocketCreated(bluetoothSocket: BluetoothSocket) {
