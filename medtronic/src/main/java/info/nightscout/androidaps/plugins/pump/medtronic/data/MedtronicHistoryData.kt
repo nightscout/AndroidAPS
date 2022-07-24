@@ -797,45 +797,46 @@ class MedtronicHistoryData @Inject constructor(
             }
         }
 
-        val suspendList = getFilteredItems(newHistory,  //
-                                             setOf(PumpHistoryEntryType.SuspendPump))
-
-        val stopList : MutableList<PumpHistoryEntry> = mutableListOf()
-        stopList.addAll(suspendList);
-        stopList.addAll(rewindList);
-
-        // TODO remove see if rewind items, need to fix any of current tempBasalProcessDTO items (bug 1724)
-        if (rewindList.isNotEmpty()) {
-            for (rewindEntry in rewindList) {
-                for (tempBasalProcessDTO in processList) {
-                    if (tempBasalProcessDTO.itemTwo==null) {
-                        val endTime: Long = DateTimeUtil.getATDWithAddedMinutes(tempBasalProcessDTO.itemOne.atechDateTime, tempBasalProcessDTO.itemOneTbr!!.durationMinutes)
-
-                        if ((rewindEntry.atechDateTime > tempBasalProcessDTO.itemOne.atechDateTime) &&
-                            (rewindEntry.atechDateTime < endTime)) {
-                            tempBasalProcessDTO.itemTwo = rewindEntry
-                            continue
-                        }
-                    }
-                }
-            }
-        }
-
-        // see if have rewind/stop items that need to fix any of current tempBasalProcessDTO items (bug 1724)
-        if (stopList.isNotEmpty()) {
-            for (tempBasalProcessDTO in processList) {
-                if (tempBasalProcessDTO.itemTwo==null) {
-                    val endTime: Long = DateTimeUtil.getATDWithAddedMinutes(tempBasalProcessDTO.itemOne.atechDateTime, tempBasalProcessDTO.itemOneTbr!!.durationMinutes)
-
-                    val findNearestEntry = findNearestEntry(tempBasalProcessDTO.itemOne.atechDateTime, endTime, stopList);
-
-                    if (findNearestEntry!=null) {
-                        tempBasalProcessDTO.itemTwo = findNearestEntry
-                        stopList.remove(findNearestEntry)
-                    }
-                }
-            }
-        }
+        // TODO this solution needs to be overworked, commenting out for now
+        // val suspendList = getFilteredItems(newHistory,  //
+        //                                      setOf(PumpHistoryEntryType.SuspendPump))
+        //
+        // val stopList : MutableList<PumpHistoryEntry> = mutableListOf()
+        // stopList.addAll(suspendList);
+        // stopList.addAll(rewindList);
+        //
+        // // TODO remove see if rewind items, need to fix any of current tempBasalProcessDTO items (bug 1724)
+        // if (rewindList.isNotEmpty()) {
+        //     for (rewindEntry in rewindList) {
+        //         for (tempBasalProcessDTO in processList) {
+        //             if (tempBasalProcessDTO.itemTwo==null) {
+        //                 val endTime: Long = DateTimeUtil.getATDWithAddedMinutes(tempBasalProcessDTO.itemOne.atechDateTime, tempBasalProcessDTO.itemOneTbr!!.durationMinutes)
+        //
+        //                 if ((rewindEntry.atechDateTime > tempBasalProcessDTO.itemOne.atechDateTime) &&
+        //                     (rewindEntry.atechDateTime < endTime)) {
+        //                     tempBasalProcessDTO.itemTwo = rewindEntry
+        //                     continue
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+        //
+        // // see if have rewind/stop items that need to fix any of current tempBasalProcessDTO items (bug 1724)
+        // if (stopList.isNotEmpty()) {
+        //     for (tempBasalProcessDTO in processList) {
+        //         if (tempBasalProcessDTO.itemTwo==null) {
+        //             val endTime: Long = DateTimeUtil.getATDWithAddedMinutes(tempBasalProcessDTO.itemOne.atechDateTime, tempBasalProcessDTO.itemOneTbr!!.durationMinutes)
+        //
+        //             val findNearestEntry = findNearestEntry(tempBasalProcessDTO.itemOne.atechDateTime, endTime, stopList);
+        //
+        //             if (findNearestEntry!=null) {
+        //                 tempBasalProcessDTO.itemTwo = findNearestEntry
+        //                 stopList.remove(findNearestEntry)
+        //             }
+        //         }
+        //     }
+        // }
 
         return processList
     }
