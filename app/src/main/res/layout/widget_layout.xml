@@ -337,6 +337,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="9dp"
                 android:contentDescription="@string/a11y_autosenslabel"
                 android:src="@drawable/ic_swap_vert_black_48dp_green" />
 
@@ -347,6 +348,7 @@
                 android:gravity="center_horizontal"
                 android:paddingTop="3dp"
                 android:paddingBottom="3dp"
+                android:layout_marginTop="-9dp"
                 android:text="n/a"
                 android:textColor="@color/white"
                 android:textSize="18sp"
@@ -357,8 +359,9 @@
                 android:id="@+id/variable_sensitivity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="-9dp"
                 android:gravity="center_horizontal"
+                android:layout_marginTop="-9dp"
+                android:paddingTop="3dp"
                 android:paddingBottom="3dp"
                 android:text="n/a"
                 android:textColor="@color/white"
