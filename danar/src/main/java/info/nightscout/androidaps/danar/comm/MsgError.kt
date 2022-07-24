@@ -29,6 +29,8 @@ class MsgError(
             danaPump.bolusStopped = true
             bolusingEvent.status = errorString
             rxBus.send(bolusingEvent)
+            // at least on Occlusion pump stops communication. Try to force reconnecting
+            activePlugin.activePump.disconnect("Error from pump received")
             failed = true
         } else {
             failed = false

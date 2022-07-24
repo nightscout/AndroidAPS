@@ -46,6 +46,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -81,6 +82,7 @@ class CommandQueueImplementation @Inject constructor(
         disposable += rxBus
             .toObservable(EventProfileSwitchChanged::class.java)
             .observeOn(aapsSchedulers.io)
+            .throttleLatest(3L, TimeUnit.SECONDS)
             .subscribe({
                            if (config.NSCLIENT) { // Effective profileswitch should be synced over NS, do not create EffectiveProfileSwitch here
                                return@subscribe
@@ -321,13 +323,13 @@ class CommandQueueImplementation @Inject constructor(
     }
 
     @Synchronized
-    override fun cancelAllBoluses() {
+    override fun cancelAllBoluses(id: Long) {
         if (!isRunning(CommandType.BOLUS)) {
-            rxBus.send(EventDismissBolusProgressIfRunning(PumpEnactResult(injector).success(true).enacted(false), null))
+            rxBus.send(EventDismissBolusProgressIfRunning(PumpEnactResult(injector).success(true).enacted(false), id))
         }
         removeAll(CommandType.BOLUS)
         removeAll(CommandType.SMB_BOLUS)
-        Thread { activePlugin.activePump.stopBolusDelivering() }.run()
+        Thread { activePlugin.activePump.stopBolusDelivering() }.start()
     }
 
     // returns true if command is queued
@@ -598,12 +600,12 @@ class CommandQueueImplementation @Inject constructor(
         if (detailedBolusInfo.context != null) {
             val bolusProgressDialog = BolusProgressDialog()
             bolusProgressDialog.setInsulin(detailedBolusInfo.insulin)
-            bolusProgressDialog.setTimestamp(detailedBolusInfo.timestamp)
+            bolusProgressDialog.setId(detailedBolusInfo.id)
             bolusProgressDialog.show((detailedBolusInfo.context as AppCompatActivity).supportFragmentManager, "BolusProgress")
         } else {
             val i = Intent()
             i.putExtra("insulin", detailedBolusInfo.insulin)
-            i.putExtra("timestamp", detailedBolusInfo.timestamp)
+            i.putExtra("id", detailedBolusInfo.id)
             i.setClass(context, BolusProgressHelperActivity::class.java)
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             context.startActivity(i)

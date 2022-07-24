@@ -464,8 +464,8 @@
     <string name="autotune_last_run">הפעלה אחרונה :</string>
     <string name="autotune_warning">אזהרה :</string>
     <string name="autotune_select_profile">בחרו פרופיל לכוונון</string>
-    <string name="autotune_ic_warning">כוונון אוטומטי עובד עם ערך IC אחד בלבד, לפרופיל שלכם יש %1$d ערכים. הערך הממוצע הוא %2$.2f גר\'\\יח\'</string>
-    <string name="autotune_isf_warning">כוונון אוטומטי עובד עם ערך ISF אחד בלבד, לפרופיל שלכם יש %1$d ערכים. הערך הממוצע הוא %2$.1f %3$s\\יח\'</string>
+    <string name="autotune_ic_warning">בפרופיל הנבחר יש %1$d ערכי יחס פחמימות. הכיוונון האוטומטי ישתמש ב-%2$.2f גר\'\\יח\'</string>
+    <string name="autotune_isf_warning">בפרופיל הנבחר יש %1$d ערכי יחס תיקון. הכיוונון האוטומטי ישתמש ב-%2$.1f %3$s\\יח\'</string>
     <string name="autotune_error">שגיאה בנתוני הקלט, נסו להפעיל בשנית או שנסו לצמצם את מספר הימים</string>
     <string name="autotune_warning_during_run">חישוב הכוונון האוטומטי התחיל, אנא התאזרו בסבלנות</string>
     <string name="autotune_warning_after_run">בדקו היטב את התוצאות לפני השימוש בהן!</string>
@@ -488,6 +488,8 @@
     <string name="autotune_run_without_autoswitch">כוונון אוטומטי מופעל ללא החלפת פרופיל</string>
     <string name="autotune_run_with_autoswitch">כוונון אוטומטי הופעל והפרופיל הוחלף אוטומטית</string>
     <string name="autotune_run_with_error">שגיאה במהלך הכיוונון האוטומטי האחרון</string>
+    <string name="autotune_run_cancelled">נמצאה הפעלה נוספת של הכוונון האוטומטי ברקע, ההפעלה מבוטלת</string>
+    <string name="needconnectpermission">האפליקציה צריכה הרשאה לבלוטות\'</string>
     <plurals name="days">
         <item quantity="one">%1$d יום</item>
         <item quantity="two">%1$d ימים</item>

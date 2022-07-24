@@ -3,6 +3,7 @@
     <!--    Keys-->
     <!--    General-->
     <string name="error">Earráid</string>
+    <string name="save">Sábháil</string>
     <string name="waitingforpump">Ag fanacht do caidéil</string>
     <string name="connectingfor">Ag nascadh le %1$d s</string>
     <string name="bolusdelivering">Ag seachadadh %1$.2f A</string>
@@ -114,5 +115,6 @@
     <!-- User Entry -->
     <!-- HardLimits -->
     <!-- Command Queue + readStatus reasons -->
+    <string name="basal">Bunaidh</string>
     <!-- Autotune -->
 </resources>

@@ -26,5 +26,6 @@
     <!-- User Entry -->
     <!-- HardLimits -->
     <!-- Command Queue + readStatus reasons -->
+    <string name="basal">Bázis</string>
     <!-- Autotune -->
 </resources>

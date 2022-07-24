@@ -159,6 +159,7 @@
     <string name="end_user_license_agreement">Licencinė sutartis su vartotoju</string>
     <string name="end_user_license_agreement_text">PROGRAMA NEGALI BŪTI NAUDOJAMA GYDYMO SPRENDIMAMS PRIIMTI. PAGAL GALIOJANČIUS ĮSTATYMUS PROGRAMA NESUTEIKIA JOKIŲ GARANTIJŲ VARTOTOJUI. JEI RAŠTU NENURODYTA KITAIP, PROGRAMOS AUTORINIŲ TEISIŲ TURĖTOJAS IR/AR KITOS ŠALYS PATEIKIA PROGRAMĄ \"KAIP YRA\" BE JOKIŲ GARANTIJŲ, TIEK AKIVAIZDŽIŲ, TIEK NUMANOMŲ, ĮSKAITANT, BET NEAPSIRIBOJANT GALIMYBĘ NAUDOTI PROGRAMĄ KOMERCINIAMS AR KITOKIEMS DALINIAMS TIKSLAMS. RIZIKĄ, KYLANČIĄ NAUDOJANT PROGRAMĄ PRISIIMA PATS VARTOTOJAS. JEI PROGRAMA VEIKIA NETINKAMAI, IŠLAIDOS, SUSIJUSIOS SU PROGRAMOS SERVISU, TAISYMU AR KOREGAVIMU, TENKA VARTOTOJUI.</string>
     <string name="end_user_license_agreement_i_understand">SUPRATAU IR SUTINKU</string>
+    <string name="save">Išsaugoti</string>
     <string name="reloadprofile">Atnaujinti profilį</string>
     <string name="smscommunicator">SMS komunikatorius</string>
     <string name="smscommunicator_allowednumbers">Leidžiami telefono numeriai</string>
@@ -630,7 +631,6 @@
     <string name="needsystemwindowpermission">Norint gauti pranešimus, programai reikalingas sisteminio lango leidimas</string>
     <string name="needlocationpermission">Programai reikia vietos nustatymo leidimo, kad būtų galima naudoti Bluetooth ir WiFi</string>
     <string name="needstoragepermission">Aplikacijai reikia leidimo prieigai prie saugyklos, kad galėtų išsaugoti žurnalo įrašus ir eksportavimo nustatymus</string>
-    <string name="needconnectpermission">Programai reikalinga Bluetooth prieigos teisė</string>
     <string name="request">Užklausa</string>
     <string name="open_navigation">Atidaryti meniu</string>
     <string name="close_navigation">Uždaryti meniu</string>
@@ -893,5 +893,7 @@
     <string name="not_available_full">Negalimas</string>
     <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
+    <string name="sort_label">Rūšiuoti</string>
+    <string name="login">Prisijungti</string>
     <!-- Aidex Cgms -->
 </resources>

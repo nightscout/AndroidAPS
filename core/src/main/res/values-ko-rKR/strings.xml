@@ -4,6 +4,7 @@
     <!--    General-->
     <string name="refresh">새로고침</string>
     <string name="error">에러</string>
+    <string name="save">저장</string>
     <string name="not_set_short">설정되지 않음</string>
     <string name="failedupdatebasalprofile">Basal 프로파일 갱신 실패</string>
     <string name="profile_set_ok">Basal 프로파일이 펌프에 업데이트 되었습니다</string>
@@ -40,6 +41,7 @@
     <string name="carbs">탄수화물</string>
     <string name="invalidprofile">프로파일이 유효하지 않습니다!!!</string>
     <string name="noprofileset">프로파일이 설정되지 않았습니다.</string>
+    <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">날짜</string>
     <string name="units_label">단위</string>
     <string name="dia_label">인슐린활동시간(DIA):</string>
@@ -376,6 +378,7 @@
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f이 \'고정된 한계값\'을 벗어났습니다.</string>
     <string name="basal_value">Basal 값</string>
     <!-- Command Queue + readStatus reasons -->
+    <string name="basal">Basal</string>
     <!-- Autotune -->
     <plurals name="days">
         <item quantity="other">%1$d 일</item>

@@ -2,8 +2,10 @@
 <resources>
     <!--    Keys-->
     <!--    General-->
+    <string name="close">Zatvori</string>
     <!--    Constraints-->
     <!--    Dialogs-->
+    <string name="cancel">Otkaži</string>
     <!--    BlePreCheck-->
     <!--    Protection-->
     <!--    Profile-->

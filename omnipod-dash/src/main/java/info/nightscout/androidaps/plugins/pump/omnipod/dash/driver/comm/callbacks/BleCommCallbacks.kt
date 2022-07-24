@@ -40,7 +40,7 @@ class BleCommCallbacks(
         if (newState == BluetoothProfile.STATE_CONNECTED && status == BluetoothGatt.GATT_SUCCESS) {
             connected.countDown()
         }
-        if (newState == BluetoothProfile.STATE_DISCONNECTED && status != BluetoothGatt.GATT_SUCCESS) {
+        if (newState == BluetoothProfile.STATE_DISCONNECTED) {
             // If status == SUCCESS, it means that we initiated the disconnect.
             disconnectHandler.onConnectionLost(status)
         }

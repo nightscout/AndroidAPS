@@ -5,28 +5,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/filter"
-        app:endIconMode="clear_text">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/pref_filter"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:autofillHints="@string/filter"
-            android:gravity="start"
-            android:textStyle="bold"
-            android:inputType="text"
-            android:background="@color/transparent"/>
-
-    </com.google.android.material.textfield.TextInputLayout>
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

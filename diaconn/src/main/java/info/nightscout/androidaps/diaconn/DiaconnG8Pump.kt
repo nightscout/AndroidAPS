@@ -19,7 +19,9 @@ class DiaconnG8Pump @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val dateUtil: DateUtil
 ) {
-
+    //var bleResultInfo: Pair<Int?, Boolean> = Pair(null, false)
+    var bolusConfirmMessage: Byte = 0
+    var isReadyToBolus: Boolean = false
     var maxBolusePerDay: Double = 0.0
     var pumpIncarnationNum: Int = 65536
     var isPumpVersionGe2_63: Boolean = false // is pumpVersion higher then 2.63

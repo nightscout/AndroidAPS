@@ -51,4 +51,17 @@ class CRDatum {
         }
         return crjson
     }
+
+    fun equals(obj: CRDatum): Boolean {
+        var isEqual = true
+        if (crInitialIOB != obj.crInitialIOB) isEqual = false
+        if (crInitialBG != obj.crInitialBG) isEqual = false
+        if (crInitialCarbTime / 1000 != obj.crInitialCarbTime / 1000) isEqual = false
+        if (crEndIOB != obj.crEndIOB) isEqual = false
+        if (crEndBG != obj.crEndBG) isEqual = false
+        if (crEndTime / 1000 != obj.crEndTime / 1000) isEqual = false
+        if (crCarbs != obj.crCarbs) isEqual = false
+        if (crInsulin != obj.crInsulin) isEqual = false
+        return isEqual
+    }
 }

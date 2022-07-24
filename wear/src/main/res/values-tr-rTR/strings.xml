@@ -24,7 +24,7 @@
     <string name="pref_units_for_actions">Eylemler için Birimler</string>
     <string name="pref_show_date">Tarihi Göster</string>
     <string name="pref_show_iob">IOB\'yi göster</string>
-    <string name="pref_show_cob">COB\'u göster</string>
+    <string name="pref_show_cob">AKRB göster</string>
     <string name="pref_show_delta">Deltayı göster</string>
     <string name="pref_show_avgdelta">OrtDelta\'yı Göster</string>
     <string name="pref_show_phone_battery">Telefon Pilini Göster</string>
@@ -182,6 +182,8 @@
     <string name="delta_na">--- mg/dl</string>
     <string name="no_loop_status">Döngü Durumu Yok</string>
     <string name="cob_000g">000g</string>
-    <string name="svg_00_0">00,0</string>
+    <string name="svg_00_0" comment="use , or . only">00,0</string>
     <string name="iob_0_00u">0,00Ü</string>
+    <string name="snooze_alert">AAPS Uyarı Erteleme</string>
+    <string name="sending_snooze">AAPS\'ye Erteleme Gönderme</string>
 </resources>

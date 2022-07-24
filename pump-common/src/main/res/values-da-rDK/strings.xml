@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PumoCommon - Pump Abstract -->
+    <!-- PumpCommon - Pump Status -->
+    <!-- PumpCommon - History Group -->
+    <!-- Time -->
+    <!-- BLE Config -->
+    <!-- BLE Errors -->
+    <!-- Pump Error -->
+    <!-- Pump History -->
+    <plurals name="duration_days">
+        <item quantity="one">%1$d dag</item>
+        <item quantity="other">%1$d dage</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">%1$d time</item>
+        <item quantity="other">%1$d timer</item>
+    </plurals>
+</resources>

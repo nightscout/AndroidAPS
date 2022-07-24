@@ -8,12 +8,11 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.*
 import info.nightscout.androidaps.extensions.toStringShort
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -123,8 +122,8 @@ class StatusLinePlugin @Inject constructor(
             status += activeTemp.toStringShort() + " "
         }
         //IOB
-        val bolusIob = iobCobCalculator.calculateIobFromBolus().round(fabricPrivacy)
-        val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round(fabricPrivacy)
+        val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
+        val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
         status += DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U"
         if (sp.getBoolean(R.string.key_xdripstatus_detailediob, true)) {
             status += ("("

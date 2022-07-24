@@ -2,19 +2,14 @@ package info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump
 
 //import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.RawHistoryPage
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
-import info.nightscout.androidaps.utils.rx.TestAapsSchedulers
 import org.junit.Assert
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
-import org.mockito.Mock
 
 /**
  * Created by andy on 11/1/18.
@@ -28,17 +23,17 @@ class MedtronicPumpHistoryDecoderUTest : TestBase() {
     //@Mock lateinit var rileyLinkUtil: RileyLinkUtil
     //@Mock lateinit var sp: SP
 
-    private var medtronicPumpStatus: MedtronicPumpStatus? = null
+    private lateinit var medtronicPumpStatus: MedtronicPumpStatus
+
     //private var medtronicUtil: MedtronicUtil? = null
     //private var decoder: MedtronicPumpHistoryDecoder? = null
-    var rxBusWrapper = RxBus(TestAapsSchedulers(), aapsLogger)
 
     @Before fun setup() {
         medtronicPumpStatus =
-            MedtronicPumpStatus(rh, sp, rxBusWrapper, rileyLinkUtil)
+            MedtronicPumpStatus(rh, sp, rxBus, rileyLinkUtil)
         medtronicUtil =
-            MedtronicUtil(aapsLogger, rxBusWrapper, rileyLinkUtil, medtronicPumpStatus!!)
-        decoder = MedtronicPumpHistoryDecoder(aapsLogger, medtronicUtil!!, ByteUtil())
+            MedtronicUtil(aapsLogger, rxBus, rileyLinkUtil, medtronicPumpStatus)
+        decoder = MedtronicPumpHistoryDecoder(aapsLogger, medtronicUtil, ByteUtil())
     }
 
     /*
@@ -191,12 +186,11 @@ class MedtronicPumpHistoryDecoderUTest : TestBase() {
     ): List<PumpHistoryEntry> {
         val historyPageData = ByteUtil.createByteArrayFromString(historyPageString)
         aapsLogger.debug("History Page Length:" + historyPageData.size)
-        medtronicUtil!!.medtronicPumpModel = medtronicDeviceType
-        medtronicUtil!!.isModelSet = true
+        medtronicUtil.medtronicPumpModel = medtronicDeviceType
+        medtronicUtil.isModelSet = true
         val historyPage = RawHistoryPage(aapsLogger)
         historyPage.appendData(historyPageData)
-        val pumpHistoryEntries: List<PumpHistoryEntry> =
-            decoder!!.processPageAndCreateRecords(historyPage)
+        val pumpHistoryEntries: List<PumpHistoryEntry> = decoder.processPageAndCreateRecords(historyPage)
         displayHistoryRecords(pumpHistoryEntries)
         return pumpHistoryEntries
     }

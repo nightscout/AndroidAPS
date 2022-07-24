@@ -161,6 +161,7 @@ Eversense-appen.</string>
     <string name="end_user_license_agreement">Licensavtal för slutanvändare</string>
     <string name="end_user_license_agreement_text">FÅR INTE ANVÄNDAS FÖR ATT FATTA MEDICINSKA BESLUT. DET FINNS INGEN GARANTI FÖR PROGRAMMET I DEN UTSTRÄCKNING SOM TILLÅTS AV GÄLLANDE LAG. FÖRUTOM NÄR ANNAT ANGES SKRIFTLIGEN LEVERERAS APPLIKATIONEN SOM DEN ÄR HELT UTAN GARANTIER I NÅGON SOM HELST FORM, VARKEN UTTRYCKTA ELLER UNDERFÖRSTÅDDA, INKLUSIVE MEN INTE BEGRÄNSAT TILL SÄLJBARHET OCH LÄMPLIGHET FÖR ETT VISST ÄNDAMÅL. HELA RISKEN VAD GÄLLER KVALITET OCH PRESTANDA AV PROGRAMMET ÅLIGGER ANVÄNDAREN. OM PROGRAMMET VISAR SIG VARA DEFEKT ANTAR ANVÄNDAREN DEN FULLA FÖR KOSTNADEN FÖR ALL NÖDVÄNDIG SERVICE, REPARATION ELLER KORRIGERING.</string>
     <string name="end_user_license_agreement_i_understand">JAG FÖRSTÅR OCH GODKÄNNER</string>
+    <string name="save">Spara</string>
     <string name="reloadprofile">Ladda om profil</string>
     <string name="smscommunicator">SMS-tjänst</string>
     <string name="smscommunicator_allowednumbers">Godkända telefonnummer</string>
@@ -635,7 +636,6 @@ Eversense-appen.</string>
     <string name="needsystemwindowpermission">Applikationen behöver förhöjd behörighet för aviseringar</string>
     <string name="needlocationpermission">Appen behöver platsåtkomst för bluetooth- och WiFi-identifiering</string>
     <string name="needstoragepermission">Applikationen behöver lagringsbehörighet för att kunna lagra loggfiler och exportinställningar</string>
-    <string name="needconnectpermission">Applikationen behöver bluetooth-behörighet</string>
     <string name="request">Begäran</string>
     <string name="open_navigation">Öppna menyn</string>
     <string name="close_navigation">Stäng menyn</string>
@@ -940,7 +940,6 @@ Eversense-appen.</string>
     <string name="wear_action_tempt_max_bg_error">Ogiltigt maximum BG!</string>
     <string name="wear_action_tempt_manual_range_message">Temp-mål:\nMin: %1$s\nMax: %2$s\nVaraktighet: %3$s</string>
     <string name="wear_action_tempt_manual_message">Temp-mål:\nMål: %1$s\nDuration: %2$s</string>
-    <string name="wear_action_tempt_preset_message">Temp-mål:\Orsak: %1$s\nMål: %2$s\nVaraktighet: %3$s</string>
     <string name="quick_wizard_message">Snabbsteg: %1$s\nInsulin: %2$.2fU\nKolhydrater: %3$dg</string>
     <string name="wizard_result">Kalkylator:\nInsulin: %1$.2fU\nKolhydrater: %2$dg</string>
     <string name="overview_editquickwizard_show_on_device">Visa post på enhet:</string>
@@ -962,5 +961,6 @@ Eversense-appen.</string>
     <string name="wear_unknown_action_string">Okänt kommando:</string>
     <string name="overview_editquickwizard_percentage">Procent</string>
     <string name="app_default">Appens standardinställning</string>
+    <string name="login">Logga in</string>
     <!-- Aidex Cgms -->
 </resources>

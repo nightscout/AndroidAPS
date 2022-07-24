@@ -46,6 +46,7 @@ import info.nightscout.androidaps.interfaces.Pump;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
 import info.nightscout.androidaps.interfaces.PumpSync;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.schedule.BasalSchedule;
 import info.nightscout.shared.logging.AAPSLogger;
 import info.nightscout.shared.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBus;
@@ -375,7 +376,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
     }
 
     public boolean isRileyLinkReady() {
-        return rileyLinkServiceData.rileyLinkServiceState.isReady();
+        return rileyLinkServiceData.getRileyLinkServiceState().isReady();
     }
 
     private void handleCancelledTbr() {
@@ -628,8 +629,9 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         if (!podStateManager.isPodRunning()) {
             return 0.0d;
         }
-
-        return podStateManager.getBasalSchedule().rateAt(TimeUtil.toDuration(DateTime.now()));
+        BasalSchedule schedule = podStateManager.getBasalSchedule();
+        if (schedule != null) return schedule.rateAt(TimeUtil.toDuration(DateTime.now()));
+        else return 0;
     }
 
     @Override
@@ -1014,7 +1016,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
                 // - RileyLink has been connecting for over RILEY_LINK_CONNECT_TIMEOUT
                 return (podStateManager.getLastFailedCommunication() != null && podStateManager.getLastSuccessfulCommunication().isBefore(podStateManager.getLastFailedCommunication())) ||
                         podStateManager.isSuspended() ||
-                        rileyLinkServiceData.rileyLinkServiceState.isError() ||
+                        rileyLinkServiceData.getRileyLinkServiceState().isError() ||
                         // The below clause is a hack for working around the RL service state forever staying in connecting state on startup if the RL is switched off / unreachable
                         (rileyLinkServiceData.getRileyLinkServiceState().isConnecting() && rileyLinkServiceData.getLastServiceStateChange() + RILEY_LINK_CONNECT_TIMEOUT_MILLIS < currentTimeMillis);
             }

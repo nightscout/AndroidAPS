@@ -134,7 +134,6 @@
     <string name="wronginsulin_prime">Susileisti trūkstamą insulino kiekį švirkštu ar naudojantis infuzinės sistemos užpildymo funkcija.</string>
     <string name="wronginsulin_donothing">Nieko nedaryti ir leisti AndroidAPS koreguoti padidėjusį gliukozės kiekį kraujyje.</string>
     <string name="iob_label">Aktyvus insulinas organizme (AIO)</string>
-    <string name="iob_which">Pasirinkite visus teisingus atsakymus.</string>
     <string name="iob_value">AIO reikšmei įtakos turi nustatyta laikina valandinė bazė.</string>
     <string name="iob_hightemp">Padidinta laikina bazė nebus nustatyta, jei kraujo glikemija yra žemiau nustatyto tikslo.</string>
     <string name="iob_negiob">Jei ilgą laiką stebima neigiama AIO reikšmė ir nėra fizinio aktyvumo, tai rodo, kad jūsų nustatymai yra per „agresyvūs“ ir kad jums reikia mažiau insulino nei nustatyta.</string>

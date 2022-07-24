@@ -103,7 +103,7 @@
     <string name="notexists">yok</string>
     <string name="glucose">Glikoz</string>
     <string name="iob">IOB</string>
-    <string name="cob">COB</string>
+    <string name="cob">AKRB</string>
     <string name="name_short">İsim:</string>
     <string name="time">Zaman</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
@@ -464,8 +464,8 @@
     <string name="autotune_last_run">Son Çalıştırma :</string>
     <string name="autotune_warning">Uyarı :</string>
     <string name="autotune_select_profile">Ayarlanacak profili seçin</string>
-    <string name="autotune_ic_warning">OtoAyar yalnızca bir IC değeriyle çalışır, profilinizde %1$d değer mevcut. Ortalama değer: %2$.2fg/Ü</string>
-    <string name="autotune_isf_warning">OtoAyar yalnızca bir İDF değeriyle çalışır, profilinizde %1$d değer mevcut. Ortalama değer: %2$.1f%3$s/Ü</string>
+    <string name="autotune_ic_warning">Seçilen profilde %1$d KİO değeri var. OtoAyar %2$.2f g/Ü kullanacak</string>
+    <string name="autotune_isf_warning">Seçilen profilde %1$d İDF değeri var. OtoAyar %2$.1f %3$s/Ü kullanacak</string>
     <string name="autotune_error">Giriş verilerinde hata, otoayarı tekrar çalıştırmayı deneyin veya gün sayısını azaltın</string>
     <string name="autotune_warning_during_run">OtoAyar hesaplaması başladı, lütfen sabırlı olun</string>
     <string name="autotune_warning_after_run">Kullanmadan önce sonuçları dikkatlice kontrol edin!</string>
@@ -488,6 +488,8 @@
     <string name="autotune_run_without_autoswitch">OtoAyar profil değiştirme olmadan çalıştırıldı</string>
     <string name="autotune_run_with_autoswitch">OtoAyar çalıştırıldı ve profil otomatik olarak değiştirildi</string>
     <string name="autotune_run_with_error">Son OtoAyar çalışması sırasında hata oluştu</string>
+    <string name="autotune_run_cancelled">Başka bir OtoAyar çalıştırması tespit edildi, çalıştırma iptal edildi</string>
+    <string name="needconnectpermission">Uygulama bluetooth iznine ihtiyac duyuyor</string>
     <plurals name="days">
         <item quantity="one">%1$d gün</item>
         <item quantity="other">%1$d gün</item>

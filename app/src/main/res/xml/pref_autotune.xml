@@ -4,7 +4,7 @@
     <PreferenceCategory
         android:key="@string/key_autotune_plugin"
         android:title="@string/autotune_settings"
-        app:initialExpandedChildrenCount="10">
+        app:initialExpandedChildrenCount="0">
 
         <SwitchPreference
             android:defaultValue="false"

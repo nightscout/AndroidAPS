@@ -25,7 +25,7 @@
     <string name="rileylink_address">地址：</string>
     <string name="rileylink_name">名称:</string>
     <string name="rileylink_battery_level">电池电量：</string>
-    <string name="rileylink_battery_level_value">%1$d %</string>
+    <string name="rileylink_battery_level_value">%1$d%%</string>
     <string name="rileylink_connection_status">连接状态:</string>
     <string name="rileylink_connection_error">连接错误:</string>
     <string name="rileylink_device">设备</string>

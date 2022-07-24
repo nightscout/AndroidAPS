@@ -6,7 +6,7 @@
     <string name="objectivenotstarted">Цель %1$d не начата</string>
     <string name="objectivenotfinished">Цель %1$d не завершена</string>
     <string name="objectives_0_objective">Настройка визуализации и мониторинга, анализ базала и коэффициентов</string>
-    <string name="objectives_0_gate">Убедитесь, что BG доступен в Nightscut, и данные инсулина помпы загружаются</string>
+    <string name="objectives_0_gate">Убедитесь, что значения ГК и данные по инсулину помпы передаются в Nightscout</string>
     <string name="objectives_openloop_objective">Старт незамкнутого цикла</string>
     <string name="objectives_openloop_gate">Начинайте работу в режиме незамкнутого цикла и ручной подстройки величины временного базала. Установите и применяйте временные цели и временные цели по умолчанию (напр. углеводы при нагрузке или купировании гипо)</string>
     <string name="objectives_maxbasal_objective">Глубже понимаем незакольцованную систему Open Loop, включая ее рекомендации по временным базалам</string>

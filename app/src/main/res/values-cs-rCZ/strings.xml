@@ -6,6 +6,7 @@
     <string name="treatmentssafety_title">Bezpečnost zadání ošetřeni</string>
     <string name="treatmentssafety_maxbolus_title">Maximální povolený bolus [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Maximální počet sacharidů [g]</string>
+    <string name="treatmentssafety_lgsThreshold_title">Hodnota glykémie pro zastavení inzulínu</string>
     <string name="nav_preferences_plugin">Nastavení pluginu %1$s</string>
     <string name="nav_preferences">Nastavení</string>
     <string name="nav_refreshtreatments">Obnovit ošetření z NS</string>
@@ -432,8 +433,8 @@
     <string name="ns_localbroadcasts_title">Povolení odesílaní</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dynamická ISF</string>
-    <string name="DynISFAdjust_title">Korekční faktor pro DynamicISF v %%</string>
-    <string name="DynISFAdjust_summary">Korekční faktor pro DynamicISF. Pro agresivnější korekční dávky nastavte hodnoty větší než 100%%, a pro méně agresivní korekce menší než 100%%.</string>
+    <string name="DynISFAdjust_title" formatted="false">Korekční faktor pro DynamicISF v %</string>
+    <string name="DynISFAdjust_summary" formatted="false">Korekční faktor pro DynamicISF. Pro agresivnější korekční dávky nastavte hodnoty vyšší než 100 %, pro méně agresivní korekce nižší než 100 %.</string>
     <string name="enableuam">Povolit UAM</string>
     <string name="enablesmb">Povolit SMB</string>
     <string name="enablesmb_summary">Použít super mikro bolusy místo dočasných bazálů pro zrychlení účinku</string>
@@ -592,6 +593,7 @@
     <string name="openapssmb_maxiob_summary">Tato hodnota je v kontextu OpenAPS nazývána Max IOB.\nOpenAPS nikdy nepřidá inzulín, pokud je současné IOB větší než tato hodnota</string>
     <string name="absorption_cutoff_title">Maximální doba absorpce sacharidů [h]</string>
     <string name="absorption_cutoff_summary">Doba, po které jsou všechny sacharidy považovány za strávené. Zbylé budou oříznuty.</string>
+    <string name="treatmentssafety_lgsThreshold_summary">Hodnota glykémie, při níž bude vydávání inzulinu zastaveno. Výchozí hodnota využívá standardní cílový model. Uživatel může nastavit hodnoty od 3,3 mmol/l do 5,5 mmol/l. Při hodnotách pod 3,6 mmol/l se použije výchozí model. </string>
     <string name="overview_show_notes_field_in_dialogs_title">Zobrazovat kolonku poznámky v dialozích ošetření</string>
     <string name="next_button">Další</string>
     <string name="previous_button">Zpět</string>
@@ -643,7 +645,6 @@
     <string name="needsystemwindowpermission">Pro oznámení vyžaduje aplikace oprávnění systémového okna</string>
     <string name="needlocationpermission">Aplikace potřebuje oprávnění k přístupu k poloze kvůli skenování BT a WiFi identifikaci</string>
     <string name="needstoragepermission">Aby bylo možné nahrávat logy a exportovat nastavení, je nutné pro aplikaci povolit oprávnění přístupu k úložišti</string>
-    <string name="needconnectpermission">Aplikace potřebuje oprávnění bluetooth</string>
     <string name="request">Požadavek</string>
     <string name="open_navigation">Otevřít menu</string>
     <string name="close_navigation">Zavřít menu</string>
@@ -1035,10 +1036,12 @@
     <string name="a11y_only_on_watch">pouze na hodinkách</string>
     <string name="a11y_only_on_phone">pouze na telefonu</string>
     <string name="a11y_drag_and_drop_handle">úchyt pro přetažení</string>
+    <string name="search">Hledat</string>
     <!-- Aidex Cgms -->
     <string name="aidex">GlucoRx Aidex</string>
     <string name="aidex_short">Aidex</string>
     <string name="description_source_aidex">Přijímat hodnoty glykémie ze senzoru GlucoRx Aidex.</string>
     <string name="blocked_by_charging">Zablokováno možností nabíjení</string>
     <string name="blocked_by_connectivity">Zablokováno možností připojení</string>
+    <string name="no_watch_connected">(Žádné hodinky nejsou připojeny)</string>
 </resources>

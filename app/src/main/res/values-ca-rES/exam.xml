@@ -134,7 +134,6 @@
     <string name="wronginsulin_prime">Lliurar un bolus amb part de la insulina que falta utilitzant una jeringa/ploma o el menú d\'encebat.</string>
     <string name="wronginsulin_donothing">No fer res i permetre que AndroidAPS corregeixi els possibles valors alts de glucèmia que es produeixin.</string>
     <string name="iob_label">Insulina \"a bord\" (IOB)</string>
-    <string name="iob_which">Marqueu totes les respostes correctes.</string>
     <string name="iob_value">El valor d\'IOB es veu afectat per les basals temporals lliurades.</string>
     <string name="iob_hightemp">Una basal temporal alta no serà lliurada si la glucèmia està per sota de l\'objectiu.</string>
     <string name="iob_posiob">Un valor d\'IOB positiu durant un període de temps important suggereix resistència a la insulina o àpats no anunciats.</string>

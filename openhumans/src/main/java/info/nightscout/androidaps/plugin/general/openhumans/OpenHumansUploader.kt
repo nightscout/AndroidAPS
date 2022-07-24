@@ -247,12 +247,12 @@ class OpenHumansUploader @Inject internal constructor(
         tags.add("DisplayInfo")
 
         val uploadNumber = this.uploadCounter++
-        val uploadDate = Date()
+        val uploadDate = System.currentTimeMillis()
         val uploadInfo = JSONObject()
         uploadInfo.put("fileVersion", 2)
         uploadInfo.put("counter", uploadNumber)
         uploadInfo.put("timestamp", until)
-        uploadInfo.put("utcOffset", TimeZone.getDefault().getOffset(uploadDate.time))
+        uploadInfo.put("utcOffset", TimeZone.getDefault().getOffset(uploadDate))
         zos.writeFile("UploadInfo.json", uploadInfo.toString().toByteArray())
         tags.add("UploadInfo")
 
@@ -521,7 +521,7 @@ class OpenHumansUploader @Inject internal constructor(
             tags = tags,
             description = "AndroidAPS Database Upload",
             md5 = MessageDigest.getInstance("MD5").digest(bytes).toHexString(),
-            creationDate = uploadDate.time
+            creationDate = uploadDate
         )
 
         refreshAccessTokenIfNeeded()

@@ -155,6 +155,7 @@
     <string name="end_user_license_agreement">최종 사용자 라이선스 동의서</string>
     <string name="end_user_license_agreement_text">이 프로그램을 의학적 결정을 내리는 데 사용해서는 안되며, 여기에 대한 어떠한 보증도 없습니다. 이 프로그램의 품질과 성능에 관한 모든 위험은 사용자에게 있습니다.\nMUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
     <string name="end_user_license_agreement_i_understand">모두 이해하였고 동의합니다.</string>
+    <string name="save">저장</string>
     <string name="reloadprofile">프로파일 새로고침</string>
     <string name="smscommunicator">SMS 통신기</string>
     <string name="smscommunicator_allowednumbers">허가된 전화번호</string>
@@ -849,5 +850,6 @@
     <string name="calculation_in_progress">계산 진행 중</string>
     <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
+    <string name="login">로그인</string>
     <!-- Aidex Cgms -->
 </resources>

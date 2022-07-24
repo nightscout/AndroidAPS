@@ -12,6 +12,8 @@ import info.nightscout.androidaps.database.entities.*
 import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.database.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
 import info.nightscout.androidaps.database.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
+import info.nightscout.androidaps.dialogs.CarbsDialog
+import info.nightscout.androidaps.dialogs.InsulinDialog
 import info.nightscout.androidaps.events.EventMobileToWear
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.toStringShort
@@ -27,6 +29,7 @@ import info.nightscout.androidaps.plugins.general.overview.graphExtensions.Gluco
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
+import info.nightscout.androidaps.services.AlarmSoundServiceHelper
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.wizard.BolusWizard
@@ -73,7 +76,8 @@ class DataHandlerMobile @Inject constructor(
     private val uel: UserEntryLogger,
     private val activePlugin: ActivePlugin,
     private val commandQueue: CommandQueue,
-    private val fabricPrivacy: FabricPrivacy
+    private val fabricPrivacy: FabricPrivacy,
+    private val alarmSoundServiceHelper: AlarmSoundServiceHelper
 ) {
 
     private val disposable = CompositeDisposable()
@@ -259,6 +263,20 @@ class DataHandlerMobile @Inject constructor(
                                doBolus(lastBolusWizard!!.calculatedTotalInsulin, lastBolusWizard!!.carbs, null, 0)
                            }
                            lastBolusWizard = null
+                       }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventData.SnoozeAlert::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({
+                           aapsLogger.debug(LTag.WEAR, "SnoozeAlert received $it from ${it.sourceNodeId}")
+                           alarmSoundServiceHelper.stopService(context, "Muted from wear")
+                       }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventData.WearException::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({
+                           aapsLogger.debug(LTag.WEAR, "WearException received $it from ${it.sourceNodeId}")
+                           fabricPrivacy.logWearException(it)
                        }, fabricPrivacy::logException)
     }
 
@@ -463,7 +481,7 @@ class DataHandlerMobile @Inject constructor(
     }
 
     private fun handleECarbsPreCheck(command: EventData.ActionECarbsPreCheck) {
-        val startTimeStamp = System.currentTimeMillis() + T.hours(command.carbsTimeShift.toLong()).msecs()
+        val startTimeStamp = System.currentTimeMillis() + T.mins(command.carbsTimeShift.toLong()).msecs()
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(command.carbs)).value()
         var message = rh.gs(R.string.carbs) + ": " + carbsAfterConstraints + "g" +
             "\n" + rh.gs(R.string.time) + ": " + dateUtil.timeString(startTimeStamp) +
@@ -685,7 +703,11 @@ class DataHandlerMobile @Inject constructor(
                     unitsMgdl = profileFunction.getUnits() == GlucoseUnit.MGDL,
                     bolusPercentage = sp.getInt(R.string.key_boluswizard_percentage, 100),
                     maxCarbs = sp.getInt(R.string.key_treatmentssafety_maxcarbs, 48),
-                    maxBolus = sp.getDouble(R.string.key_treatmentssafety_maxbolus, 3.0)
+                    maxBolus = sp.getDouble(R.string.key_treatmentssafety_maxbolus, 3.0),
+                    insulinButtonIncrement1 = sp.getDouble(R.string.key_insulin_button_increment_1, InsulinDialog.PLUS1_DEFAULT),
+                    insulinButtonIncrement2 = sp.getDouble(R.string.key_insulin_button_increment_2, InsulinDialog.PLUS2_DEFAULT),
+                    carbsButtonIncrement1 = sp.getInt(R.string.key_carbs_button_increment_1, CarbsDialog.FAV1_DEFAULT),
+                    carbsButtonIncrement2 = sp.getInt(R.string.key_carbs_button_increment_2, CarbsDialog.FAV2_DEFAULT)
                 )
             )
         )
