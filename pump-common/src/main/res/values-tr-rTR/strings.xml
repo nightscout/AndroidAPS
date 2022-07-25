@@ -27,6 +27,24 @@
     <!-- Time -->
     <!-- BLE Config -->
     <!-- BLE Errors -->
+    <string name="ble_error_pump_found_unbonded">Bağlı Pompa Bulunamadı</string>
     <!-- Pump Error -->
     <!-- Pump History -->
+    <string name="pump_history_type">Tip:</string>
+    <plurals name="duration_days">
+        <item quantity="one">%1$d gün</item>
+        <item quantity="other">%1$d gün</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">%1$d saat</item>
+        <item quantity="other">%1$d saat</item>
+    </plurals>
+    <plurals name="hoursago">
+        <item quantity="one">%1$d saat önce</item>
+        <item quantity="other">%1$d saat önce</item>
+    </plurals>
+    <plurals name="daysago">
+        <item quantity="one">%1$d gün önce</item>
+        <item quantity="other">%1$d gün önce</item>
+    </plurals>
 </resources>
