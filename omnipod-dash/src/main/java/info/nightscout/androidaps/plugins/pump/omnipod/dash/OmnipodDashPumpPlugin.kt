@@ -698,7 +698,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             }
             val percent = (waited.toFloat() / estimatedDeliveryTimeSeconds) * 100
             updateBolusProgressDialog(
-                rh.gs(R.string.dash_bolusdelivering, requestedBolusAmount),
+                rh.gs(R.string.bolus_delivered, percent*requestedBolusAmount/100, requestedBolusAmount),
                 percent.toInt()
             )
         }
@@ -729,7 +729,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 val remainingUnits = podStateManager.lastBolus!!.bolusUnitsRemaining
                 val percent = ((requestedBolusAmount - remainingUnits) / requestedBolusAmount) * 100
                 updateBolusProgressDialog(
-                    rh.gs(R.string.bolusdelivering, requestedBolusAmount),
+                    rh.gs(R.string.bolus_delivered, requestedBolusAmount - remainingUnits, requestedBolusAmount),
                     percent.toInt()
                 )
 
