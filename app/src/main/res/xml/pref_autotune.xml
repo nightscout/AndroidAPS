@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:validate="http://schemas.android.com/apk/res-auto">
+
     <PreferenceCategory
         android:key="@string/key_autotune_plugin"
         android:title="@string/autotune_settings"
@@ -24,12 +26,19 @@
             android:summary="@string/autotune_tune_insulin_curve_summary"
             android:title="@string/autotune_tune_insulin_curve_title" />
         -->
-        <EditTextPreference
+
+        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
             android:defaultValue="5"
-            android:inputType="number"
             android:key="@string/key_autotune_default_tune_days"
-            android:summary="@string/autotune_default_tune_days_summary"
-            android:title="@string/autotune_default_tune_days_title" />
+            android:title="@string/autotune_default_tune_days_title"
+            android:dialogMessage="@string/autotune_default_tune_days_summary"
+            android:digits="0123456789"
+            android:inputType="number"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            validate:maxNumber="30"
+            validate:minNumber="1"
+            validate:testType="numericRange" />
 
         <SwitchPreference
             android:defaultValue="false"
