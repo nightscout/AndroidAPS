@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".plugins.general.overview.OverviewFragment">
 
@@ -24,80 +24,60 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-                <LinearLayout
-                    android:id="@+id/loop_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal" >
-
-                    <TextView
-                        android:id="@+id/active_profile"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="end"
-                        android:layout_marginEnd="5dp"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:paddingTop="4dp"
-                        android:paddingBottom="4dp"
-                        android:hint="active profile"
-                        android:text="Profile"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:foreground="?attr/selectableItemBackgroundBorderless"
-                        app:drawableStartCompat="@drawable/ic_ribbon_profile"
-                        tools:ignore="HardcodedText" />
-
-                    <TextView
-                        android:id="@+id/temp_target"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="end"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:paddingTop="4dp"
-                        android:paddingBottom="4dp"
-                        android:hint="temp target"
-                        android:text="@string/notavailable"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:foreground="?attr/selectableItemBackgroundBorderless"
-                        app:drawableStartCompat="@drawable/ic_crosstarget"
-                        tools:ignore="HardcodedText" />
-
-                </LinearLayout>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/infoCard"
-                style="@style/Widget.MaterialComponents.CardView"
+            <LinearLayout
+                android:id="@+id/loop_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginTop="4dp"
-                app:cardCornerRadius="4dp"
-                app:contentPadding="2dp"
-                app:cardElevation="2dp"
-                app:cardUseCompatPadding="false"
-                android:layout_gravity="center">
+                android:orientation="horizontal">
 
-                <include
-                    android:id="@+id/info_layout"
-                    layout="@layout/overview_info_layout" />
+                <TextView
+                    android:id="@+id/active_profile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="1"
+                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:hint="active profile"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:text="Profile"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    app:drawableStartCompat="@drawable/ic_ribbon_profile"
+                    tools:ignore="HardcodedText" />
 
-            </com.google.android.material.card.MaterialCardView>
+                <TextView
+                    android:id="@+id/temp_target"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_weight="1"
+                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:hint="temp target"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:text="@string/notavailable"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    app:drawableStartCompat="@drawable/ic_crosstarget"
+                    tools:ignore="HardcodedText" />
+
+            </LinearLayout>
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/statusCard"
                 style="@style/Widget.MaterialComponents.CardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
                 android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
                 app:cardCornerRadius="4dp"
-                app:contentPadding="2dp"
                 app:cardElevation="2dp"
                 app:cardUseCompatPadding="false"
-                android:layout_gravity="center">
+                app:contentPadding="2dp">
 
                 <include
                     android:id="@+id/status_lights_layout"
@@ -106,18 +86,38 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/infoCard"
+                style="@style/Widget.MaterialComponents.CardView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="2dp"
+                app:cardUseCompatPadding="false"
+                app:contentPadding="2dp">
+
+                <include
+                    android:id="@+id/info_layout"
+                    layout="@layout/overview_info_layout" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/nsclientCard"
                 style="@style/Widget.MaterialComponents.CardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
                 android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
                 app:cardCornerRadius="4dp"
-                app:contentPadding="2dp"
                 app:cardElevation="2dp"
                 app:cardUseCompatPadding="false"
-                android:layout_gravity="center">
+                app:contentPadding="2dp">
 
                 <com.google.android.flexbox.FlexboxLayout
                     android:id="@+id/nsclient"
@@ -170,15 +170,15 @@
                 style="@style/Widget.MaterialComponents.CardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
                 android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
                 android:layout_marginBottom="4dp"
                 app:cardCornerRadius="4dp"
-                app:contentPadding="2dp"
                 app:cardElevation="2dp"
                 app:cardUseCompatPadding="false"
-                android:layout_gravity="center">
+                app:contentPadding="2dp">
 
                 <include
                     android:id="@+id/graphs_layout"

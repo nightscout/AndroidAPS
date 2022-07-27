@@ -5,12 +5,8 @@
     android:id="@+id/status_lights"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="3dp"
-    android:layout_marginBottom="3dp"
-    android:orientation="horizontal"
-    android:paddingTop="4dp"
-    android:paddingBottom="4dp"
-    android:baselineAligned="false">
+    android:baselineAligned="false"
+    android:orientation="horizontal">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -18,12 +14,13 @@
         android:layout_weight="1"
         android:focusable="true"
         android:gravity="center_horizontal"
+        android:orientation="vertical"
         tools:ignore="UseCompoundDrawables">
 
         <ImageView
             android:id="@+id/cannula_or_patch"
-            android:layout_width="38dp"
-            android:layout_height="fill_parent"
+            android:layout_width="24dp"
+            android:layout_height="wrap_content"
             android:contentDescription="@string/statuslights_cannula_age"
             android:scaleX="2"
             android:scaleY="2"
@@ -33,6 +30,7 @@
             android:id="@+id/cannula_age"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:letterSpacing="0"
             android:lines="1"
             tools:text="1d12h" />
 
@@ -43,11 +41,12 @@
         android:layout_height="fill_parent"
         android:layout_weight="1"
         android:focusable="true"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
         <ImageView
-            android:layout_width="26dp"
-            android:layout_height="fill_parent"
+            android:layout_width="24dp"
+            android:layout_height="wrap_content"
             android:contentDescription="@string/a11y_insulin_label"
             android:scaleX="1.7"
             android:scaleY="1.7"
@@ -56,7 +55,8 @@
         <TextView
             android:id="@+id/insulin_age"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
+            android:letterSpacing="0"
             android:lines="1"
             tools:text="12h" />
 
@@ -64,8 +64,9 @@
             android:id="@+id/reservoir_level"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:letterSpacing="0"
             android:lines="1"
-            android:paddingStart="2dp"
+            android:paddingStart="1dp"
             android:paddingEnd="0dp"
             tools:text="50+U" />
 
@@ -77,11 +78,12 @@
         android:layout_weight="1"
         android:focusable="true"
         android:gravity="center_horizontal"
+        android:orientation="vertical"
         tools:ignore="UseCompoundDrawables">
 
         <ImageView
-            android:layout_width="28dp"
-            android:layout_height="fill_parent"
+            android:layout_width="24dp"
+            android:layout_height="wrap_content"
             android:contentDescription="@string/careportal_sensor_label"
             android:scaleX="1.6"
             android:scaleY="1.6"
@@ -91,6 +93,7 @@
             android:id="@+id/sensor_age"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:letterSpacing="0"
             android:lines="1"
             tools:text="1d12h" />
 
@@ -99,13 +102,14 @@
     <LinearLayout
         android:id="@+id/battery_layout"
         android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
         android:focusable="true"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
         <ImageView
-            android:layout_width="32dp"
+            android:layout_width="24dp"
             android:layout_height="wrap_content"
             android:contentDescription="@string/battery_label"
             android:scaleX="1.8"
@@ -115,7 +119,8 @@
         <TextView
             android:id="@+id/pb_age"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
+            android:letterSpacing="0"
             android:lines="1"
             android:text="-"
             tools:ignore="HardcodedText" />
@@ -123,7 +128,8 @@
         <TextView
             android:id="@+id/battery_level"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
+            android:letterSpacing="0"
             android:lines="1"
             android:paddingStart="2dp"
             android:paddingEnd="0dp"
