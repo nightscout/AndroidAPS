@@ -134,7 +134,7 @@ class AutotuneFragment : DaggerFragment() {
                     profile = ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(it) } ?: currentProfile, LocalInsulin(""), injector)
                 }
                 autotunePlugin.selectedProfile = profileName
-                resetParam()
+                resetParam(true)
                 binding.tuneDays.value = autotunePlugin.lastNbDays.toDouble()
             }
             updateGui()
