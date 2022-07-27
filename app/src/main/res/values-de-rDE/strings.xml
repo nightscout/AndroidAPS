@@ -6,6 +6,7 @@
     <string name="treatmentssafety_title">Sicherheitseinstellungen der Behandlungen</string>
     <string name="treatmentssafety_maxbolus_title">Max. erlaubter Bolus [IE]</string>
     <string name="treatmentssafety_maxcarbs_title">Max. erlaubte Kohlenhydrate [g]</string>
+    <string name="treatmentssafety_lgsThreshold_title">BG-Pegel, unterhalb dessen die Aussetzung wegen niedriger Glukoseaussetzung eintritt</string>
     <string name="nav_preferences_plugin">%1$s-Einstellungen</string>
     <string name="nav_preferences">Einstellungen</string>
     <string name="nav_refreshtreatments">Behandlungen von NS aktualisieren</string>
@@ -25,6 +26,7 @@
     <string name="description_ns_client">Synchronisiert deine Daten mit Nightscout</string>
     <string name="description_ama">Stand des Algorithmus in 2017</string>
     <string name="description_smb">Der aktuellste Algorithmus für erfahrene Nutzer</string>
+    <string name="description_smb_dynamic_isf">Neuester Algorithmus für fortgeschrittene Benutzer mit dynamischer/automatischer ISF</string>
     <string name="description_overview">Zeigt den aktuellen Status deines Loops und Schaltflächen für die geläufigsten Aktionen an</string>
     <string name="description_persistent_notification">Zeigt eine fortlaufende Benachrichtigung mit einer kurzen Übersicht darüber, was dein Loop derzeit tut</string>
     <string name="description_profile_local">Definiere ein Profil, was auch offline verfügbar ist.</string>
@@ -430,12 +432,14 @@
     <string name="ns_localbroadcasts_title">Aktiviere lokale Broadcasts</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dynamischer ISF</string>
+    <string name="DynISFAdjust_summary" formatted="false">Anpassungsfaktor für DynamicISF. Stelle mehr als 100 % für aggressivere Korrekturdosen ein, und weniger als 100 % für weniger aggressive Korrekturen.</string>
     <string name="enableuam">Aktiviere UAM</string>
     <string name="enablesmb">Aktiviere SMB</string>
     <string name="enablesmb_summary">Benutze Super-Mikro-Boli anstelle von temporären Basalraten, um eine schnellere Wirkung zu erreichen.</string>
     <string name="enableuam_summary">Erkennung von unangekündigten Mahlzeiten</string>
     <string name="insulin_oref_peak">Wirkungshoch der IOB-Kurve</string>
     <string name="insulin_peak_time">Wirkungshoch [min]</string>
+    <string name="insulin_peak">Gipfel</string>
     <string name="free_peak_oref">Free-Peak Oref</string>
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
     <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
@@ -497,6 +501,7 @@
     <string name="negativeonly">Nur negative</string>
     <string name="overview_editquickwizard_usecob">COB Berechnung</string>
     <string name="overview_editquickwizard_usetemptarget">Temporäres Ziel Berechnung</string>
+    <string name="overview_editquickwizard_usepercentage">Prozentuale Berechnung</string>
     <string name="loopenabled">Loop aktiviert</string>
     <string name="apsselected">APS ausgewählt</string>
     <string name="nsclienthaswritepermission">Nightscout-Client hat Schreibrechte</string>
@@ -586,6 +591,7 @@
     <string name="openapssmb_maxiob_summary">Diesen Wert nennt OpenAPS MaxIOB.\nSolange dieser Wert überschritten wird, wird AndroidAPS kein Insulin abgeben.</string>
     <string name="absorption_cutoff_title">Maximale Dauer der Essens-Resorption [h]</string>
     <string name="absorption_cutoff_summary">Zeit, nach der jede Mahlzeit mit Sicherheit absorbiert ist. Verbleibende Kohlenhydrate werden danach nicht mehr berücksichtigt.</string>
+    <string name="treatmentssafety_lgsThreshold_summary">Der BG-Wert, unter dem die Insulinzuführung ausgesetzt wird. Der Standardwert verwendet das Standard-Zielmodell. Der Benutzer kann einen Wert zwischen 60mg/dl (3.3 mmol/l) und 100mg/dl (5.5mmol/l) setzen. Werte unterhalb 65/3.6 führen zur Verwendung des Standardmodells</string>
     <string name="overview_show_notes_field_in_dialogs_title">Zeige Feld für Notizen in den Behandlungsdialogen</string>
     <string name="next_button">Weiter</string>
     <string name="previous_button">Zurück</string>
@@ -598,7 +604,11 @@
     <string name="secondcarbsincrement">Zweite KH-Erhöhung</string>
     <string name="thirdcarbsincrement">Dritte KH-Erhöhung</string>
     <string name="cgm">CGM</string>
+    <string name="ns_cellular">Mobilfunkverbindung verwenden</string>
+    <string name="ns_wifi">WLAN Verbindung verwenden</string>
     <string name="ns_wifi_ssids">WLAN SSID</string>
+    <string name="ns_charging">Während des Ladevorgangs</string>
+    <string name="ns_battery">Bei Batteriebetrieb</string>
     <string name="connectionsettings_title">Verbindungs-Einstellungen</string>
     <string name="ns_wifi_allowedssids">Erlaubte SSIDs (durch Semikolon getrennt)</string>
     <string name="ns_allowroaming">Erlaube Verbindung bei Roaming</string>
@@ -654,7 +664,9 @@
     <string name="sensitivity_raises_target_title">Empfindlichkeit erhöht den Zielwert</string>
     <string name="sensitivity_raises_target_summary">Wenn eine höhere Empfindlichkeit festgestellt wird, wird der Glukose-Zielwert erhöht.</string>
     <string name="careportal_removestartedevents">\"AndroidAPS gestartet\" Ereignisse löschen</string>
+    <string name="hide_invalidated">Verstecke Ungültige</string>
     <string name="remove_items">Objekte entfernen</string>
+    <string name="sort_items">Einträge sortieren</string>
     <string name="storedsettingsfound">Gespeicherte Einstellungen gefunden</string>
     <string name="allow_hardware_pump_text">WARNUNG: Wenn Du eine echte Pumpe aktivierst und anschließt, kopiert AndroidAPS die Basaleinstellungen vom aktiven Profil zur Pumpe (und behält sie bei). Die Einstellungen in der Pumpe werden hierbei überschrieben. Wenn Du Dir nicht sicher bist oder die Basaleinstellungen in der Pumpe nicht überschreiben möchten, drücke \"Abbrechen\" und vollziehe den Wechsel zur Pumpe später.</string>
     <string name="error_adding_treatment_title">Behandlungsdaten unvollständig</string>
@@ -669,6 +681,7 @@
     <string name="error_adding_treatment_message">Der Eintrag (Insulin: %1$.2f, Kohlenhydrate: %2$d, um: %3$s) konnte nicht als Behandlung gespeichert werden. Bitte überprüfe die aktuelle Liste und füge, falls notwendig, den Datensatz manuell hinzu.</string>
     <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), Verzögerung: %3$d m</string>
     <string name="openaps_noasdata">Keine Autosens-Daten verfügbar</string>
+    <string name="miscellaneous">Verschiedenes</string>
     <string name="nav_logsettings">Log-Einstellungen</string>
     <string name="resettodefaults">Auf Standardwerte zurücksetzen</string>
     <string name="nsmalfunction">NSClient Störung. Ziehe einen Neustart von NS und NSClient in Betracht.</string>
@@ -762,6 +775,8 @@ Unerwartetes Verhalten.</string>
     <string name="invalidpct">Ungültige % Eingabe</string>
     <string name="average">Durchschnitt</string>
     <string name="tir">TIR</string>
+    <string name="night_tir">Nacht TIR</string>
+    <string name="hba1c">HbA1c: </string>
     <string name="activitymonitor">Aktivitätsmonitor</string>
     <string name="doyouwantresetstats">Willst Du die Aktivitätsstatistik zurücksetzen?</string>
     <string name="statistics">Statistiken</string>
@@ -930,6 +945,9 @@ Unerwartetes Verhalten.</string>
     <string name="a11y_add_new_to_list">neu zur Liste hinzufügen</string>
     <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
+    <string name="wear_action_tempt_preset_error">Temp-Target unbekannte Voreinstellung: %1$s</string>
+    <string name="wizard_explain_calc">Calc (IC: %1$.1f, ISF: %2$.1f)</string>
+    <string name="wizard_explain_carbs">Kohlenhydrate: %1$.2fU</string>
     <string name="select_profile">Profil zum Bearbeiten auswählen</string>
     <string name="refresh_from_nightscout">Aktualisiere von Nightscout</string>
     <string name="remove_selected_items">Ausgewähltes Objekt löschen</string>
