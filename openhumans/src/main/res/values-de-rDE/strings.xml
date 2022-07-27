@@ -17,6 +17,7 @@
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Klicke hier, um Dich erneut anzumelden, falls dies versehentlich passiert ist.</string>
     <string name="upload_now">Jetzt hochladen</string>
     <string name="terms_of_use">Nutzungsbedingungen</string>
+    <string name="please_read__information">Bitte lesen Sie die folgenden Informationen sorgfältig und akzeptieren Sie die Nutzungsbedingungen, um fortzufahren.</string>
     <string name="cancel">Abbrechen</string>
     <string name="close">Schließen</string>
 </resources>
