@@ -646,7 +646,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="needsystemwindowpermission">Uygulama, bildirimler için sistem iznine ihtiyaç duyuyor</string>
     <string name="needlocationpermission">Uygulamanın BT taraması ve WiFi tanımlaması için konum iznine ihtiyacı var</string>
     <string name="needstoragepermission">Uygulamanın, günlük dosyalarını saklayabilmesi ve ayarları dışa aktarabilmesi için depolama iznine ihtiyacı var</string>
-    <string name="needconnectpermission">Uygulama bluetooth iznine ihtiyac duyuyor</string>
     <string name="request">İstek</string>
     <string name="open_navigation">Navigasyonu aç</string>
     <string name="close_navigation">Navigasyonu kapat</string>

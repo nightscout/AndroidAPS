@@ -229,6 +229,7 @@
     <string name="autotune_tune_insulin_curve_summary">Habilitar apenas se você usar pico livre. Esta opção irá ajustar a duração do pico e da DAI</string>
     <string name="autotune_default_tune_days_summary">Número padrão de dias de dados a serem processados por Autotune (até 30)</string>
     <string name="autotune_error">Erro nos dados de entrada, tente executar novamente autotune ou reduza o número de dias</string>
+    <string name="needconnectpermission">O aplicativo precisa de permissão bluetooth</string>
     <plurals name="days">
         <item quantity="one">%1$d dia</item>
         <item quantity="other">%1$d dias</item>

@@ -247,7 +247,15 @@
         <!---Icons in Loop area -->
         <item name="profileColor">@color/black</item>
         <item name="crossTargetColor">@color/white</item>
+        <!---Spinner style from pump common-->
+        <item name="android:spinnerItemStyle">@style/CommonSpinnerItemStyle</item>
     </style>
+
+    <style name="CommonSpinnerItemStyle" parent="Widget.AppCompat.TextView.SpinnerItem">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
 
     <style name="Aaps_ActionBarStyle" parent="@style/Widget.AppCompat.ActionBar">
         <item name="android:titleTextStyle">@style/Theme.Aaps.ActionBar.TitleTextStyle</item>

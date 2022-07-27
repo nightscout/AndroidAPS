@@ -134,7 +134,8 @@ class AutotuneFragment : DaggerFragment() {
                     profile = ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(it) } ?: currentProfile, LocalInsulin(""), injector)
                 }
                 autotunePlugin.selectedProfile = profileName
-                resetParam(true)
+                resetParam()
+                binding.tuneDays.value = autotunePlugin.lastNbDays.toDouble()
             }
             updateGui()
         }
@@ -295,6 +296,7 @@ class AutotuneFragment : DaggerFragment() {
             .observeOn(aapsSchedulers.main)
             .subscribe({ updateGui() }, fabricPrivacy::logException)
         checkNewDay()
+        binding.tuneDays.value = autotunePlugin.lastNbDays.toDouble()
         binding.selectWeekDays.visibility = binding.showWeekDaysCheckbox.isChecked.toVisibility()
         updateGui()
     }
@@ -308,7 +310,6 @@ class AutotuneFragment : DaggerFragment() {
     @Synchronized
     private fun updateGui() {
         _binding ?: return
-        binding.tuneDays.value = autotunePlugin.lastNbDays.toDouble()
         profileStore = activePlugin.activeProfileSource.profile ?: ProfileStore(injector, JSONObject(), dateUtil)
         profileName = if (binding.profileList.text.toString() == rh.gs(R.string.active)) "" else binding.profileList.text.toString()
         profileFunction.getProfile()?.let { currentProfile ->
@@ -413,7 +414,7 @@ class AutotuneFragment : DaggerFragment() {
                 try {
                     if (autotunePlugin.calculationRunning)
                         binding.tuneDays.value = autotunePlugin.lastNbDays.toDouble()
-                    if (binding.tuneDays.value != autotunePlugin.lastNbDays.toDouble()) {
+                    if (binding.tuneDays.text != autotunePlugin.lastNbDays) {
                         autotunePlugin.lastNbDays = binding.tuneDays.text
                         resetParam(false)
                     }
