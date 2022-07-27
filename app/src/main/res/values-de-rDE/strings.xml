@@ -266,6 +266,7 @@
     <string name="configbuilder_shortname">KONF</string>
     <string name="loop_shortname">LOOP</string>
     <string name="oaps_shortname">OAPS</string>
+    <string name="dynisf_shortname">DYNISF</string>
     <string name="localprofile_shortname">LP</string>
     <string name="overview_shortname">HOME</string>
     <string name="virtualpump_shortname">VP</string>
@@ -432,6 +433,7 @@
     <string name="ns_localbroadcasts_title">Aktiviere lokale Broadcasts</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dynamischer ISF</string>
+    <string name="DynISFAdjust_title" formatted="false">DynamicISF Anpassungsfaktor %</string>
     <string name="DynISFAdjust_summary" formatted="false">Anpassungsfaktor für DynamicISF. Stelle mehr als 100 % für aggressivere Korrekturdosen ein, und weniger als 100 % für weniger aggressive Korrekturen.</string>
     <string name="enableuam">Aktiviere UAM</string>
     <string name="enablesmb">Aktiviere SMB</string>
@@ -664,6 +666,7 @@
     <string name="sensitivity_raises_target_title">Empfindlichkeit erhöht den Zielwert</string>
     <string name="sensitivity_raises_target_summary">Wenn eine höhere Empfindlichkeit festgestellt wird, wird der Glukose-Zielwert erhöht.</string>
     <string name="careportal_removestartedevents">\"AndroidAPS gestartet\" Ereignisse löschen</string>
+    <string name="show_invalidated">Zeige Ungültige</string>
     <string name="hide_invalidated">Verstecke Ungültige</string>
     <string name="remove_items">Objekte entfernen</string>
     <string name="sort_items">Einträge sortieren</string>
@@ -681,6 +684,7 @@
     <string name="error_adding_treatment_message">Der Eintrag (Insulin: %1$.2f, Kohlenhydrate: %2$d, um: %3$s) konnte nicht als Behandlung gespeichert werden. Bitte überprüfe die aktuelle Liste und füge, falls notwendig, den Datensatz manuell hinzu.</string>
     <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), Verzögerung: %3$d m</string>
     <string name="openaps_noasdata">Keine Autosens-Daten verfügbar</string>
+    <string name="log_files">Log Dateien</string>
     <string name="miscellaneous">Verschiedenes</string>
     <string name="nav_logsettings">Log-Einstellungen</string>
     <string name="resettodefaults">Auf Standardwerte zurücksetzen</string>
@@ -775,7 +779,10 @@ Unerwartetes Verhalten.</string>
     <string name="invalidpct">Ungültige % Eingabe</string>
     <string name="average">Durchschnitt</string>
     <string name="tir">TIR</string>
+    <string name="day_tir">Tages TIR</string>
     <string name="night_tir">Nacht TIR</string>
+    <string name="detailed_14_days">Detaillierte 14 Tage</string>
+    <string name="std_deviation">SD: %1$s</string>
     <string name="hba1c">HbA1c: </string>
     <string name="activitymonitor">Aktivitätsmonitor</string>
     <string name="doyouwantresetstats">Willst Du die Aktivitätsstatistik zurücksetzen?</string>
@@ -817,6 +824,7 @@ Unerwartetes Verhalten.</string>
     <string name="smscommunicator_otp_install_info">Installiere auf jedem Follower-Phone eine Authenticator-App, die RFC 6238 TOTP-Token unterstützt. Beliebte kostenlose Apps sind:\n Authy\n Google Authenticator\n LastPass Authenticator\n FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">Wenn Du den Authentifikator zurücksetzt werden alle bestehenden Authentifikatoren ungültig. Du musst sie dann neu einrichten!</string>
     <string name="overview_show_predictions">Predictions (Vorhersagen)</string>
+    <string name="overview_show_treatments">Behandlungen</string>
     <string name="overview_show_deviationslope">Steigung der Abweichung</string>
     <string name="authorizationfailed">Autorisierung fehlgeschlagen</string>
     <string name="overview_show_absinsulin">Gesamtinsulin</string>
@@ -886,6 +894,8 @@ Unerwartetes Verhalten.</string>
     <string name="ns_receive_profile_switch_summary">Profilwechsel akzeptieren, die in NS oder NSClient eingegeben wurden</string>
     <string name="ns_receive_offline_event">APS Offline-Ereignisse empfangen</string>
     <string name="ns_receive_offline_event_summary">APS Offline-Ereignisse akzeptieren, die über NS oder NSClient eingegeben wurden</string>
+    <string name="ns_receive_tbr_eb">TBR und EB empfangen</string>
+    <string name="ns_receive_tbr_eb_summary">Akzeptiere TBR und EB, die von einer anderen Instanz eingegeben wurden</string>
     <string name="ns_receive_insulin">Insulin abrufen</string>
     <string name="ns_receive_insulin_summary">Insulin akzeptieren, das in NS oder NSClient eingegeben wurden</string>
     <string name="ns_receive_carbs">Kohlenhydrate abrufen</string>
@@ -904,9 +914,11 @@ Unerwartetes Verhalten.</string>
     <string name="error_in_isf_values">Fehler in ISF-Werten</string>
     <string name="run_question">%s ausführen?</string>
     <string name="invalid_profile_not_accepted">Ungültiges Profil %1$s wurde von NS nicht akzeptiert</string>
+    <string name="view">Ansicht</string>
     <string name="errors">Fehler</string>
     <string name="ns_sync_slow">Hochladen verlangsamen</string>
     <string name="data_status">Status BZ-Daten</string>
+    <string name="remove_bg_readings">BG-Werte entfernen</string>
     <string name="statuslights_cannula_age">Kanülenalter</string>
     <string name="statuslights_patch_pump_age">Alter Patchpumpe</string>
     <string name="patch_pump">Patch-Pumpe</string>
@@ -944,8 +956,19 @@ Unerwartetes Verhalten.</string>
     <string name="a11y_delete_current_profile">aktuelles Profil löschen</string>
     <string name="a11y_add_new_to_list">neu zur Liste hinzufügen</string>
     <!-- Theme switcher dark and light mode-->
+    <string name="theme_switcher_summary">Wähle das dunkle, helle oder das Systemdesign</string>
+    <string name="app_color_scheme">App Farbschema</string>
+    <string name="dark_theme">Dunkles Design</string>
+    <string name="light_theme">Helles Design</string>
+    <string name="follow_system_theme">Systemdesign verwenden</string>
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">Temp-Target unbekannte Voreinstellung: %1$s</string>
+    <string name="wear_action_tempt_cancel_message">Ausführung des Temp-Targets abbrechen?</string>
+    <string name="wear_action_tempt_unit_error">Verschiedene Einheiten werden auf Uhr und Telefon verwendet!</string>
+    <string name="wear_action_tempt_zero_message">Zero-Temp-Target - abbrechen des laufenden Temp-Targets?</string>
+    <string name="wear_action_tempt_manual_range_message">Temptarget:\nMin: %1$s\nMax: %2$s\nDauer: %3$s</string>
+    <string name="wear_action_tempt_manual_message">Temptarget:\nTarget: %1$s\nDauer: %2$s</string>
+    <string name="quick_wizard_message">QuickWizard: %1$s\nInsulin: %2$.2fU\nCarbs: %3$dg</string>
     <string name="wizard_explain_calc">Calc (IC: %1$.1f, ISF: %2$.1f)</string>
     <string name="wizard_explain_carbs">Kohlenhydrate: %1$.2fU</string>
     <string name="select_profile">Profil zum Bearbeiten auswählen</string>
@@ -959,5 +982,9 @@ Unerwartetes Verhalten.</string>
     <string name="count_selected">%1$d ausgewählt</string>
     <string name="sort_label">Sortieren</string>
     <string name="login">Login</string>
+    <string name="device_phone">Smartphone</string>
+    <string name="device_watch">Smartwatch</string>
+    <string name="a11y_only_on_watch">nur auf Uhr</string>
     <!-- Aidex Cgms -->
+    <string name="description_source_aidex">Erhalte BG-Werte von GlucoRx Aidex CGMS.</string>
 </resources>
