@@ -23,7 +23,15 @@
     <string name="history_group_prime">Füllen</string>
     <string name="history_group_alarm">Alarme</string>
     <string name="history_group_glucose">Glukose</string>
+    <string name="history_group_other">Anderes</string>
+    <string name="history_group_events">Alle Events</string>
+    <string name="history_group_events_no_stat">Events (keine Statistik)</string>
     <!-- Time -->
+    <string name="time_today">Heute</string>
+    <string name="time_last_hour">Letzte Stunde</string>
+    <string name="time_last_3_hours">Letzte 3 Stunden</string>
+    <string name="time_last_6_hours">Letzte 6 Stunden</string>
+    <string name="time_last_12_hours">Letzte 12 Stunden</string>
     <!-- BLE Config -->
     <!-- BLE Errors -->
     <!-- Pump Error -->
