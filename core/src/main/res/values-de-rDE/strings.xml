@@ -433,6 +433,8 @@
     <string name="count_selected">%1$d ausgewählt</string>
     <string name="sort_label">Sortieren</string>
     <!-- Autotune -->
+    <string name="autotune_isf_warning">Ausgewähltes Profil hat %1$d ISF-Werte. Autotune wird %2$.1f %3$s/U verwenden</string>
+    <string name="autotune_error">Fehler in den Eingabedaten, versuche erneut Autotune auszuführen oder reduziere die Anzahl der Tage</string>
     <string name="needconnectpermission">App benötigt Bluetooth-Berechtigung</string>
     <plurals name="days">
         <item quantity="one">%1$d Tag</item>
