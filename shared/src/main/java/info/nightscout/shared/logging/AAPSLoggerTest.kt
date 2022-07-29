@@ -18,6 +18,10 @@ class AAPSLoggerTest : AAPSLogger {
         println("DEBUG: : " + tag.tag + " " + message)
     }
 
+    override fun debug(tag: LTag, accessor: () -> String) {
+        println("DEBUG: : " + tag.tag + " " + accessor.invoke())
+    }
+
     override fun debug(tag: LTag, format: String, vararg arguments: Any?) {
         println("DEBUG: : " + tag.tag + " " + String.format(format, arguments))
     }

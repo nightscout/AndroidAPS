@@ -57,7 +57,7 @@ class AutosensDataStore {
         synchronized(autosensDataTable) {
             for (index in autosensDataTable.size() - 1 downTo 0) {
                 if (autosensDataTable.keyAt(index) > time) {
-                    aapsLogger.debug(LTag.AUTOSENS, "Removing from autosensDataTable: " + dateUtil.dateAndTimeAndSecondsString(autosensDataTable.keyAt(index)))
+                    aapsLogger.debug(LTag.AUTOSENS, {"Removing from autosensDataTable: " + dateUtil.dateAndTimeAndSecondsString(autosensDataTable.keyAt(index))})
                     autosensDataTable.removeAt(index)
                 } else {
                     break
@@ -135,10 +135,10 @@ class AutosensDataStore {
                 return null
             }
             return if (data.time < System.currentTimeMillis() - 11 * 60 * 1000) {
-                aapsLogger.debug(LTag.AUTOSENS, "AUTOSENSDATA null: data is old (" + reason + ") size()=" + autosensDataTable.size() + " lastData=" + dateUtil.dateAndTimeAndSecondsString(data.time))
+                aapsLogger.debug(LTag.AUTOSENS, {"AUTOSENSDATA null: data is old (" + reason + ") size()=" + autosensDataTable.size() + " lastData=" + dateUtil.dateAndTimeAndSecondsString(data.time)})
                 null
             } else {
-                aapsLogger.debug(LTag.AUTOSENS, "AUTOSENSDATA ($reason) $data")
+                aapsLogger.debug(LTag.AUTOSENS, {"AUTOSENSDATA ($reason) $data"})
                 data
             }
         }
@@ -164,7 +164,7 @@ class AutosensDataStore {
                 .compatGetBgReadingsDataFromTime(start, to + T.mins(2).msecs(), false)
                 .blockingGet()
                 .filter { it.value >= 39 }
-            aapsLogger.debug(LTag.AUTOSENS, "BG data loaded. Size: " + bgReadings.size + " Start date: " + dateUtil.dateAndTimeString(start) + " End date: " + dateUtil.dateAndTimeString(to))
+            aapsLogger.debug(LTag.AUTOSENS, {"BG data loaded. Size: " + bgReadings.size + " Start date: " + dateUtil.dateAndTimeString(start) + " End date: " + dateUtil.dateAndTimeString(to)})
             createBucketedData(aapsLogger, dateUtil)
             rxBus.send(EventBucketedDataCreated())
         }
@@ -270,7 +270,7 @@ class AutosensDataStore {
         }
         val bData: MutableList<InMemoryGlucoseValue> = ArrayList()
         bData.add(InMemoryGlucoseValue(bgReadings[0]))
-        aapsLogger.debug(LTag.AUTOSENS, "Adding. bgTime: " + dateUtil.toISOString(bgReadings[0].timestamp) + " lastBgTime: " + "none-first-value" + " " + bgReadings[0].toString())
+        aapsLogger.debug(LTag.AUTOSENS, {"Adding. bgTime: " + dateUtil.toISOString(bgReadings[0].timestamp) + " lastBgTime: " + "none-first-value" + " " + bgReadings[0].toString()})
         var j = 0
         for (i in 1 until bgReadings.size) {
             val bgTime = bgReadings[i].timestamp
@@ -293,7 +293,7 @@ class AutosensDataStore {
                         val newBgReading = InMemoryGlucoseValue(nextBgTime, nextBg.roundToLong().toDouble(), true)
                         //console.error("Interpolated", bData[j]);
                         bData.add(newBgReading)
-                        aapsLogger.debug(LTag.AUTOSENS, "Adding. bgTime: " + dateUtil.toISOString(bgTime) + " lastBgTime: " + dateUtil.toISOString(lastBgTime) + " " + newBgReading.toString())
+                        aapsLogger.debug(LTag.AUTOSENS, {"Adding. bgTime: " + dateUtil.toISOString(bgTime) + " lastBgTime: " + dateUtil.toISOString(lastBgTime) + " " + newBgReading.toString()})
                         elapsedMinutes -= 5
                         lastBg = nextBg
                         lastBgTime = nextBgTime
@@ -301,14 +301,14 @@ class AutosensDataStore {
                     j++
                     val newBgReading = InMemoryGlucoseValue(bgTime, bgReadings[i].value)
                     bData.add(newBgReading)
-                    aapsLogger.debug(LTag.AUTOSENS, "Adding. bgTime: " + dateUtil.toISOString(bgTime) + " lastBgTime: " + dateUtil.toISOString(lastBgTime) + " " + newBgReading.toString())
+                    aapsLogger.debug(LTag.AUTOSENS, {"Adding. bgTime: " + dateUtil.toISOString(bgTime) + " lastBgTime: " + dateUtil.toISOString(lastBgTime) + " " + newBgReading.toString()})
                 }
 
                 abs(elapsedMinutes) > 2 -> {
                     j++
                     val newBgReading = InMemoryGlucoseValue(bgTime, bgReadings[i].value)
                     bData.add(newBgReading)
-                    aapsLogger.debug(LTag.AUTOSENS, "Adding. bgTime: " + dateUtil.toISOString(bgTime) + " lastBgTime: " + dateUtil.toISOString(lastBgTime) + " " + newBgReading.toString())
+                    aapsLogger.debug(LTag.AUTOSENS, {"Adding. bgTime: " + dateUtil.toISOString(bgTime) + " lastBgTime: " + dateUtil.toISOString(lastBgTime) + " " + newBgReading.toString()})
                 }
 
                 else                    -> {
@@ -327,7 +327,7 @@ class AutosensDataStore {
             val previous = bData[i + 1]
             val mSecDiff = current.timestamp - previous.timestamp
             val adjusted = (mSecDiff - T.mins(5).msecs()) / 1000
-            aapsLogger.debug(LTag.AUTOSENS, "Adjusting bucketed data time. Current: " + dateUtil.dateAndTimeAndSecondsString(current.timestamp) + " to: " + dateUtil.dateAndTimeAndSecondsString(previous.timestamp + T.mins(5).msecs()) + " by " + adjusted + " sec")
+            aapsLogger.debug(LTag.AUTOSENS, {"Adjusting bucketed data time. Current: " + dateUtil.dateAndTimeAndSecondsString(current.timestamp) + " to: " + dateUtil.dateAndTimeAndSecondsString(previous.timestamp + T.mins(5).msecs()) + " by " + adjusted + " sec"})
             if (abs(adjusted) > 90) {
                 // too big adjustment, fallback to non 5 min data
                 aapsLogger.debug(LTag.AUTOSENS, "Fallback to non 5 min data")
