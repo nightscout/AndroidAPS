@@ -16,4 +16,8 @@
         <item quantity="one">%1$d time</item>
         <item quantity="other">%1$d timer</item>
     </plurals>
+    <plurals name="daysago">
+        <item quantity="one">%1$d dag siden</item>
+        <item quantity="other">%1$d dage siden</item>
+    </plurals>
 </resources>
