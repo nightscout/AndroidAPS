@@ -582,7 +582,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 for (event in events)
                     if (event.isEnabled && event.trigger.shouldRun())
                         context?.let { context ->
-                            SingleClickButton(context).also {
+                            SingleClickButton(context, null, R.attr.customBtnStyle).also {
                                 it.setTextColor(rh.gac(context, R.attr.treatmentButton))
                                 it.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10f)
                                 it.layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 0.5f).also { l ->
