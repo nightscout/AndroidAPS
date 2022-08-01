@@ -55,9 +55,23 @@
     <string name="ble_config_scan_finished">Scannen abgeschlossen</string>
     <string name="ble_config_scan_error">Scanfehler: %1$d</string>
     <string name="ble_config_connected_never">Nie</string>
+    <string name="ble_config_remove">Löschen</string>
     <!-- BLE Errors -->
+    <string name="ble_error_bt_disabled">Bluetooth ist deaktiviert</string>
+    <string name="ble_error_no_bt_adapter">Kein Bluetooth-Adapter</string>
+    <string name="ble_error_configured_pump_not_found">Konfigurierte Pumpe nicht gefunden</string>
+    <string name="ble_error_pump_unreachable">Pumpe nicht erreichbar</string>
+    <string name="ble_error_failed_to_conn_to_ble_device">Verbindung zum BLE-Gerät fehlgeschlagen</string>
+    <string name="ble_error_encryption_failed">Verschlüsselung fehlgeschlagen</string>
+    <string name="ble_error_pump_found_unbonded">Nicht gebundene Pumpe gefunden</string>
     <!-- Pump Error -->
+    <string name="pump_settings_error_basal_profiles_not_enabled">Einstellung für Basalprofile/-muster ist auf der Pumpe nicht aktiviert. Aktiviere es auf der Pumpe.</string>
+    <string name="pump_settings_error_incorrect_basal_profile_selected">Basalprofil auf Pumpe ist falsch (muss %s sein).</string>
+    <string name="pump_settings_error_wrong_tbr_type_set">Falscher TBR-Typ auf der Pumpe (muss %s sein).</string>
+    <string name="pump_settings_error_wrong_max_bolus_set">Falscher Max-Bolus auf Pumpe eingestellt (muss %1$.2f sein).</string>
+    <string name="pump_settings_error_wrong_max_basal_set">Falsche Max-Basal auf Pumpe eingestellt (muss %1$.2f sein).</string>
     <!-- Pump History -->
+    <string name="pump_history_type">Typ:</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d Tag</item>
         <item quantity="other">%1$d Tage</item>
@@ -65,5 +79,13 @@
     <plurals name="duration_hours">
         <item quantity="one">%1$d Stunde</item>
         <item quantity="other">%1$d Stunden</item>
+    </plurals>
+    <plurals name="hoursago">
+        <item quantity="one">Vor %1$d Stunde(n)</item>
+        <item quantity="other">Vor %1$d Stunden</item>
+    </plurals>
+    <plurals name="daysago">
+        <item quantity="one">Vor %1$d Tage</item>
+        <item quantity="other">Vor %1$d Tagen</item>
     </plurals>
 </resources>
