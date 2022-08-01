@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.wear.wearintegration
 
+import android.os.Binder
 import android.os.Handler
 import android.os.HandlerThread
 import com.google.android.gms.tasks.Tasks
@@ -43,6 +44,11 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var aapsSchedulers: AapsSchedulers
+
+    inner class LocalBinder : Binder() {
+
+        fun getService(): DataLayerListenerServiceMobile = this@DataLayerListenerServiceMobile
+    }
 
     private val dataClient by lazy { Wearable.getDataClient(this) }
     private val messageClient by lazy { Wearable.getMessageClient(this) }
