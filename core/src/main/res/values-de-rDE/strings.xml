@@ -435,6 +435,18 @@
     <!-- Autotune -->
     <string name="autotune_isf_warning">Ausgewähltes Profil hat %1$d ISF-Werte. Autotune wird %2$.1f %3$s/U verwenden</string>
     <string name="autotune_error">Fehler in den Eingabedaten, versuche erneut Autotune auszuführen oder reduziere die Anzahl der Tage</string>
+    <string name="autotune_compare_profile">Profile vergleichen</string>
+    <string name="autotune_copy_localprofile_button">In lokales Profil kopieren</string>
+    <string name="autotune_update_input_profile_button">Eingabeprofil anpassen</string>
+    <string name="autotune_revert_input_profile_button">Eingabeprofil zurücksetzen</string>
+    <string name="autotune_copy_local_profile_message">Neues lokales Profil aus diesem Autotune Profil erstellen?</string>
+    <string name="autotune_update_local_profile_message">Anpassen %1$s Profile mit dem Autotune Profile?</string>
+    <string name="autotune_revert_local_profile_message">%1$s Profil mit Eingabeprofil zurücksetzen?</string>
+    <string name="autotune_profile_invalid">Profil ungültig</string>
+    <string name="autotune_run_without_autoswitch">Autotune ohne Profilwechsel ausgeführt</string>
+    <string name="autotune_run_with_autoswitch">Autotune ausgeführt und Profil automatisch gewechselt</string>
+    <string name="autotune_run_with_error">Fehler beim letzten Autotune Lauf</string>
+    <string name="autotune_run_cancelled">Ein weiterer Lauf von Autotune wurde erkannt, Lauf abgebrochen</string>
     <string name="needconnectpermission">App benötigt Bluetooth-Berechtigung</string>
     <plurals name="days">
         <item quantity="one">%1$d Tag</item>
