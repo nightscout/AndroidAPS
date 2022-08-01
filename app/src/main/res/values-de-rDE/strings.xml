@@ -966,11 +966,36 @@ Unerwartetes Verhalten.</string>
     <string name="wear_action_tempt_cancel_message">Ausführung des Temp-Targets abbrechen?</string>
     <string name="wear_action_tempt_unit_error">Verschiedene Einheiten werden auf Uhr und Telefon verwendet!</string>
     <string name="wear_action_tempt_zero_message">Zero-Temp-Target - abbrechen des laufenden Temp-Targets?</string>
+    <string name="wear_action_tempt_min_bg_error">Min-BG ist außerhalb des Bereichs!</string>
+    <string name="wear_action_tempt_max_bg_error">Max-BG ist außerhalb des Bereichs!</string>
     <string name="wear_action_tempt_manual_range_message">Temptarget:\nMin: %1$s\nMax: %2$s\nDauer: %3$s</string>
     <string name="wear_action_tempt_manual_message">Temptarget:\nTarget: %1$s\nDauer: %2$s</string>
+    <string name="wear_action_tempt_preset_message">Temp-Target:\nGrund: %1$s\nTarget: %2$s\nDauer: %3$s</string>
     <string name="quick_wizard_message">QuickWizard: %1$s\nInsulin: %2$.2fU\nCarbs: %3$dg</string>
+    <string name="wizard_result">Calc. Wizard:\nInsulin: %1$.2fU\nCarbs: %2$dg</string>
+    <string name="overview_editquickwizard_show_on_device">Zeige Eintrag auf dem Gerät:</string>
+    <string name="quick_wizard_not_available">Ausgewählter Quickwizard nicht mehr verfügbar, bitte aktualisiere die Kachel</string>
+    <string name="wizard_no_actual_bg">Kein aktueller BG liegt als Basis zur Berechnung vor!</string>
+    <string name="wizard_no_active_profile">Kein aktives Profil gesetzt!</string>
+    <string name="wizard_no_cob">Unbekannter COB! BG-Wert fehlt oder wurde App vor kurzem neu gestartet?</string>
+    <string name="wizard_carbs_constraint">Die Kohlenhydrateinschränkung wurde überschritten!</string>
     <string name="wizard_explain_calc">Calc (IC: %1$.1f, ISF: %2$.1f)</string>
     <string name="wizard_explain_carbs">Kohlenhydrate: %1$.2fU</string>
+    <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fU</string>
+    <string name="wizard_explain_bg">BZ: %1$.2fU</string>
+    <string name="wizard_explain_iob">IOB: %1$.2fU</string>
+    <string name="wizard_explain_superbolus">Superbolus: %1$.2fU</string>
+    <string name="wizard_explain_trend">15\' Trend: %1$.2fU</string>
+    <string name="wizard_explain_percent">Prozent: %1$.2fU x %2$d%% ≈ %3$.2fU</string>
+    <string name="wizard_constraint_bolus_size">Verletzung der Bolusbeschränkung!\nKann %1$.2fU nicht abgeben</string>
+    <string name="wizard_explain_tt">TempT: %1$s</string>
+    <string name="wizard_explain_tt_to">%1$s zu %2$s</string>
+    <string name="wizard_pump_not_available">Keine Pumpe verfügbar!</string>
+    <string name="wear_unknown_action_string">Unbekannter Actionbefehl:</string>
+    <string name="overview_editquickwizard_percentage">Prozentsatz</string>
+    <string name="app_default">Standardwert der Anwendung</string>
+    <string name="show_invalidated_records">Zeige ungültige / gelöschte Einträge</string>
+    <string name="hide_invalidated_records">Verberge ungültige / gelöschte Einträge</string>
     <string name="select_profile">Profil zum Bearbeiten auswählen</string>
     <string name="refresh_from_nightscout">Aktualisiere von Nightscout</string>
     <string name="remove_selected_items">Ausgewähltes Objekt löschen</string>
@@ -979,12 +1004,46 @@ Unerwartetes Verhalten.</string>
     <string name="tempt_targets">Temporäre Ziele</string>
     <string name="carbs_and_bolus">Kohlenhydrate &amp; Bolus</string>
     <string name="confirm_remove_multiple_items">Sind Sie sicher, dass Sie diese(s) %1$d Element(e) löschen möchten?</string>
+    <string name="no_records_available">Keine Datensätze verfügbar</string>
+    <string name="hide_loop">Verberge Loop</string>
+    <string name="show_loop">Zeige Loop an</string>
     <string name="count_selected">%1$d ausgewählt</string>
     <string name="sort_label">Sortieren</string>
+    <string name="dialog_canceled">Dialog abgebrochen</string>
+    <string name="veryLow" comment="below 3.1">Sehr niedrig</string>
+    <string name="low" comment="3.1-3.9">Niedrig</string>
+    <string name="high" comment="10.0-13.9">Hoch</string>
+    <string name="veryHigh" comment="above 13.9">Sehr hoch</string>
+    <string name="below" comment="below &quot;in range&quot;">Unter</string>
+    <string name="in_range">Im Zielbereich</string>
+    <string name="above" comment="above &quot;in range&quot;">Über</string>
+    <string name="show_loop_records">Zeige Loop Datensätze</string>
+    <string name="show_hide_records">Verberge Loop Datensätze</string>
+    <string name="widget_description">AndroidAPS Widget</string>
+    <string name="configure">Deckkraft konfigurieren</string>
+    <string name="loop_status">Loop Status</string>
+    <string name="graph_scale">Diagrammskala</string>
+    <string name="profile1">Profil 1</string>
+    <string name="profile2">Profil 2</string>
     <string name="login">Login</string>
+    <string name="remove_all">Alle entfernen</string>
+    <string name="reset_start">Start zurücksetzen</string>
+    <string name="a11y_otp_qr_code">QR Code für einmaliges Passwort einrichten</string>
+    <string name="a11y_open_settings">Einstellungen öffnen</string>
+    <string name="a11y_set_carb_timer">setze Alarm für KH Timer</string>
+    <string name="device_all">Alle</string>
     <string name="device_phone">Smartphone</string>
     <string name="device_watch">Smartwatch</string>
     <string name="a11y_only_on_watch">nur auf Uhr</string>
+    <string name="a11y_only_on_phone">nur auf Telefon</string>
+    <string name="a11y_drag_and_drop_handle">Drag and Drop Handle</string>
+    <string name="search">Suche</string>
     <!-- Aidex Cgms -->
+    <string name="aidex">GlucoRx Aidex</string>
+    <string name="aidex_short">Aidex</string>
     <string name="description_source_aidex">Erhalte BG-Werte von GlucoRx Aidex CGMS.</string>
+    <string name="blocked_by_charging">Blockiert durch Ladeoptionen</string>
+    <string name="blocked_by_connectivity">Blockiert durch Verbindungsoptionen</string>
+    <string name="no_watch_connected">(keine Uhr verbunden)</string>
+    <string name="error_asking_for_permissions">Fehler beim Anfordern der Erlaubnis</string>
 </resources>
