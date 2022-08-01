@@ -10,14 +10,12 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.events.EventMobileToWear
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus
 import info.nightscout.androidaps.plugins.general.wear.WearPlugin
 import info.nightscout.androidaps.plugins.general.wear.events.EventWearUpdateGui
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.androidaps.utils.wizard.QuickWizard
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
@@ -38,9 +36,7 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
     @Inject lateinit var loop: Loop
     @Inject lateinit var wearPlugin: WearPlugin
     @Inject lateinit var sp: SP
-    @Inject lateinit var quickWizard: QuickWizard
     @Inject lateinit var config: Config
-    @Inject lateinit var nsDeviceStatus: NSDeviceStatus
     @Inject lateinit var receiverStatusStore: ReceiverStatusStore
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
