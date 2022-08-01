@@ -51,4 +51,10 @@
     <string name="combo_tbr_count">Anzahl TBR</string>
     <string name="bolusstopped">Bolus gestoppt</string>
     <string name="bolusstopping">Bolus wird gestoppt</string>
+    <string name="pump_commerror_label">Komm. Fehleranzahl</string>
+    <string name="show_comm_error_count_title">Zeige Komm.-Fehleranzahl</string>
+    <string name="show_comm_error_count_summary">Zeigt die Fehleranzahl bei der Kommunikation mit Ruffy an. In den meisten Fällen zeigt eine Zahl höher als 0 an, dass Ruffy Kommunikationsprobleme vorliegen (ein Neustart kann erforderlich sein).</string>
+    <string name="combo_error_display_never">Nie</string>
+    <string name="combo_error_display_error">Bei Fehler</string>
+    <string name="combo_error_display_always">Immer</string>
 </resources>
