@@ -552,7 +552,7 @@
     <string name="smbnotallowedinopenloopmode">SMB não permitido no modo open loop</string>
     <string name="food_short">Alimentos</string>
     <string name="reset">repor</string>
-    <string name="openapssmb_maxiob_title">Máximo total IOS OpenAPS não pode superar [U]</string>
+    <string name="openapssmb_maxiob_title">Máximo total de IOB OpenAPS não pode superar [U]</string>
     <string name="openapssmb_maxiob_summary">Este valor é chamado de Max IOB em contexto de OpenAPS\nOpenAPS não adicionará mais insulina se o IOB atual for maior que este valor</string>
     <string name="absorption_cutoff_title">Tempo máx. absorção refeição [h]</string>
     <string name="absorption_cutoff_summary">Hora em que qualquer refeição é considerada absorvida. Restantes hidratos de carbono serão cortados.</string>
