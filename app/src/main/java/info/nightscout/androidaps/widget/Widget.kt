@@ -256,7 +256,7 @@ class Widget : AppWidgetProvider() {
 
 internal fun updateWidget(context: Context) {
     context.sendBroadcast(Intent().also {
-        it.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, AppWidgetManager.getInstance(context).getAppWidgetIds(ComponentName(context, Widget::class.java)))
+        it.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, AppWidgetManager.getInstance(context)?.getAppWidgetIds(ComponentName(context, Widget::class.java)))
         it.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
     })
 }
