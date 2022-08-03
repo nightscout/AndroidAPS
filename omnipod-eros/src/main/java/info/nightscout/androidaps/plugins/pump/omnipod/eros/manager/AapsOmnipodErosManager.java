@@ -294,7 +294,7 @@ public class AapsOmnipodErosManager {
         // #1963 return synthetic success if pre-activation
         // to allow profile switch prior to pod activation
         // otherwise a catch-22
-        if (podStateManager.getActivationProgress().isBefore(ActivationProgress.BASAL_INITIALIZED)) {
+        if (!podStateManager.getActivationProgress().isCompleted()) {
             // TODO: i18n string
             return new PumpEnactResult(injector).success(true).enacted(false).comment("pre" +
                     "-activation basal change moot");
