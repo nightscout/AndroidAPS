@@ -291,6 +291,15 @@ public class AapsOmnipodErosManager {
             return new PumpEnactResult(injector).success(false).enacted(false).comment(note);
         }
 
+        // #1963 return synthetic success if pre-activation
+        // to allow profile switch prior to pod activation
+        // otherwise a catch-22
+        if (!podStateManager.getActivationProgress().isCompleted()) {
+            // TODO: i18n string
+            return new PumpEnactResult(injector).success(true).enacted(false).comment("pre" +
+                    "-activation basal change moot");
+        }
+
         PodHistoryEntryType historyEntryType = podStateManager.isSuspended() ? PodHistoryEntryType.RESUME_DELIVERY : PodHistoryEntryType.SET_BASAL_SCHEDULE;
 
         try {
