@@ -27,7 +27,6 @@
     <string name="code_compare">Ar kodas, kurį matote įrenginyje, sutampa su pompos kodu?</string>
     <string name="insight_pairing">Insight sujungimas</string>
     <string name="insight_local">Accu-Chek Insight</string>
-    <string name="insight_delivered">%1$.2f vv iš %2$.2f vv suleista</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Kateteris pakeistas</string>
     <string name="insightpump_shortname">Sight</string>

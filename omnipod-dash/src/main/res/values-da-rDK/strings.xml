@@ -34,7 +34,6 @@
     <string name="omnipod_dash_unknown">Ukendt tilstand for kommandoen</string>
     <string name="omnipod_common_history_tbr_value">Rate: %1$.2f IE, varighed: %2$d minutter</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f IE</string>
-    <string name="dash_bolusdelivering">Afgiver %1$.2f IE</string>
     <string name="omnipod_common_alert_delivery_suspended">Insulintilførslen suspenderet</string>
     <string name="omnipod_dash_connection_lost">Mistede forbindelse til pod</string>
     <string name="omnipod_dash_bolus_already_in_progress">En anden bolus er ved at blive afgivet</string>

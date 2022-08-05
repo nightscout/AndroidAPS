@@ -2,6 +2,18 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
+    <string name="label_watchface">AAPS</string>
+    <string name="label_watchface_large">AAPS(groß)</string>
+    <string name="label_watchface_big_chart">AAPS(GroßerGraph)</string>
+    <string name="label_watchface_no_chart">AAPS(KeinGraph)</string>
+    <string name="label_watchface_circle">AAPS(Kreis)</string>
+    <string name="label_watchface_v2">AAPS(v2)</string>
+    <string name="label_watchface_cockpit">AAPS(Cockpit)</string>
+    <string name="label_watchface_steampunk">AAPS(Steampunk)</string>
+    <string name="label_watchface_digital_style">AAPS(DigitalStyle)</string>
+    <string name="label_actions_tile">AAPS(Aktionen)</string>
+    <string name="label_temp_target_tile">AAPS(Temp Target)</string>
+    <string name="label_quick_wizard_tile">AAPS(Quick Wizard)</string>
     <string name="label_warning_sync">Keine Daten!</string>
     <string name="label_warning_old">Veraltete Daten!</string>
     <string name="label_warning_since">Seit %1$s</string>
@@ -45,14 +57,23 @@
     <string name="pref_ring_history">Ring BZ-Historie</string>
     <string name="pref_light_ring_history">Ring BZ-Historie light</string>
     <string name="pref_animations">Animationen</string>
+    <string name="pref_wizard_in_menu">Rechner im Menü</string>
     <string name="pref_prime_in_menu">Befüllung im Menü</string>
     <string name="pref_single_target">Einzelzielwert</string>
+    <string name="pref_wizard_percentage">Rechner Prozentsatz</string>
     <string name="pref_complication_tap_action">Tipp Komplikation</string>
     <string name="pref_unicode_in_complications">Unicode in Komplikationen</string>
     <string name="pref_version">Version:</string>
+    <string name="pref_moreWatchfaceSettings">Weitere Watchface Einstellungen</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Schaue Dir bitte die Watchface-Konfiguration an.</string>
     <string name="menu_tempt">Temp. Ziel</string>
+    <string name="menu_wizard">Rechner</string>
+    <string name="menu_wizard_short">Rechner</string>
+    <string name="menu_treatment">Bolus</string>
+    <string name="menu_treatment_short">Behandl</string>
     <string name="menu_bolus">Bolus</string>
+    <string name="menu_carb">Kohlenhydrate</string>
+    <string name="menu_ecarb">eCarbs</string>
     <string name="menu_settings">Einstellung</string>
     <string name="menu_status">Status</string>
     <string name="menu_resync">Erneut synchronisieren</string>
@@ -60,17 +81,38 @@
     <string name="menu_none">Kein(e)</string>
     <string name="menu_default">Standard</string>
     <string name="menu_menu">Menü</string>
+    <string name="quick_wizard_short">XL</string>
+    <string name="action_duration">Dauer</string>
+    <string name="action_tempt_confirmation">Temp Target angefordert</string>
+    <string name="action_quick_wizard_confirmation">Quick Wizard angefordert</string>
+    <string name="action_treatment_confirmation">Behandlung angefordert</string>
+    <string name="action_bolus_confirmation">Bolus angefordert</string>
+    <string name="action_wizard_confirmation">Berechnung angefordert</string>
+    <string name="action_fill_confirmation">Füllen angefordert</string>
+    <string name="action_ecarb_confirmation">KH angefordert</string>
+    <string name="action_profile_switch_confirmation">Profilwechsel angefordert</string>
+    <string name="action_target" comment="In temp target menu, single target value">Ziel</string>
+    <string name="action_low" comment="In temp target menu, lower value from range">Niedrig</string>
+    <string name="action_high" comment="In temp target menu, higher value from range">Hoch</string>
+    <string name="action_carbs">Kohlenhydrate</string>
+    <string name="action_ecarbs">eCarbs</string>
+    <string name="action_percentage">Prozentsatz</string>
+    <string name="action_start_min">Start [min]</string>
+    <string name="action_duration_h">Dauer [h]</string>
+    <string name="action_insulin">Insulin</string>
     <string name="action_preset_1">Voreinstellung 1</string>
     <string name="action_preset_2">Voreinstellung 2</string>
     <string name="action_preset_3">Voreinstellung 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Freie Menge</string>
     <string name="action_confirm">BESTÄTIGEN</string>
     <string name="action_timeshift">Zeitverschiebung</string>
+    <string name="action_bolus">Bolus</string>
     <string name="bolus_progress">Bolusabgabe läuft </string>
     <string name="press_to_cancel">Zum Abbrechen drücken</string>
     <string name="cancel_bolus">Bolus löschen </string>
     <string name="status_pump">Pumpe</string>
     <string name="status_loop">Loop</string>
+    <string name="status_profile_switch">Profilwechsel</string>
     <string name="status_tdd">TDD</string>
     <string name="activity_carb">KH</string>
     <string name="activity_IOB">IOB</string>
@@ -117,4 +159,31 @@
     <string name="simple_ui_charging">Während des Ladevorgangs</string>
     <string name="simple_ui_always_on">Immer im Modus</string>
     <string name="simple_ui_always_on_charging">Immer ein und Aufladen</string>
+    <string name="temp_target_eating_soon">Essen</string>
+    <string name="temp_target_hypo">Hypo</string>
+    <string name="temp_target_activity">Aktivität</string>
+    <string name="temp_target_manual">Manuell</string>
+    <string name="temp_target_cancel">Abbrechen</string>
+    <string name="tile_none">Kein(e)</string>
+    <string name="tile_no_config">Keine Konfiguration verfügbar</string>
+    <string name="wear_control_not_enabled">Uhren Steuerung ausgeschaltet</string>
+    <string name="wear_control_no_data">Keine Daten vorhanden</string>
+    <string name="increment">erhöhen</string>
+    <string name="decrement">verringern</string>
+    <string name="first_char_high">H</string>
+    <string name="first_char_low">L</string>
+    <string name="abbreviation_average">Ø</string>
+    <string name="no_iob_u">--IE</string>
+    <string name="no_cob_g">--g</string>
+    <string name="no_tmp_basal_u_h">-.--IE/h</string>
+    <string name="uploader_na">Uploader: ---%</string>
+    <string name="no_status">S: kein Status</string>
+    <string name="time_stamp_na_min_ago">-- Minuten vorher</string>
+    <string name="delta_na">--- mg/dl</string>
+    <string name="no_loop_status">Kein Loop Status</string>
+    <string name="cob_000g">000g</string>
+    <string name="svg_00_0" comment="use , or . only">00,0</string>
+    <string name="iob_0_00u">0,00U</string>
+    <string name="snooze_alert">AAPS Schlummeralarm</string>
+    <string name="sending_snooze">Sende Schlummern an AAPS</string>
 </resources>

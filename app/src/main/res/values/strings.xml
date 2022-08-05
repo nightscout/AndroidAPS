@@ -1250,6 +1250,7 @@
     <string name="blocked_by_charging">Blocked by charging options</string>
     <string name="blocked_by_connectivity">Blocked by connectivity options</string>
     <string name="no_watch_connected">(No Watch Connected)</string>
+    <string name="error_asking_for_permissions">Error asking for permissions</string>
 
 
 </resources>
