@@ -27,7 +27,6 @@
     <string name="code_compare">此设备和您的泵上显示的代码是否匹配？</string>
     <string name="insight_pairing">Insight 正在配对</string>
     <string name="insight_local">Accu-Chek Insight</string>
-    <string name="insight_delivered">%1$.2f U / %2$.2f U 已输注</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">管路已经更换</string>
     <string name="insightpump_shortname">Sight</string>

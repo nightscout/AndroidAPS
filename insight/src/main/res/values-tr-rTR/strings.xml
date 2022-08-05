@@ -27,7 +27,6 @@
     <string name="code_compare">Bu cihazda ve pompanızda görüntülenen kodlar uyuşuyor mu?</string>
     <string name="insight_pairing">Insight eşleştirme</string>
     <string name="insight_local">Accu-Chek Insight</string>
-    <string name="insight_delivered">%1$.2f Ü / %2$.2f Ü gönderildi</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Hortum değişti</string>
     <string name="insightpump_shortname">Sight</string>

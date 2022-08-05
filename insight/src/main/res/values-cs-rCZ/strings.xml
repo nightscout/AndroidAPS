@@ -27,7 +27,6 @@
     <string name="code_compare">Souhlasí kódy zobrazené na tomto zařízení a na pumpě?</string>
     <string name="insight_pairing">Insight párování</string>
     <string name="insight_local">Accu-Chek Insight</string>
-    <string name="insight_delivered">Podáno %1$.2f U / %2$.2f U</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Vyměněna hadičky</string>
     <string name="insightpump_shortname">Insight</string>
