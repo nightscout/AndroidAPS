@@ -21,10 +21,10 @@ import info.nightscout.androidaps.events.EventScale
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.extensions.toVisibilityKeepSpace
 import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus
 import info.nightscout.androidaps.plugins.general.overview.OverviewData
 import info.nightscout.androidaps.plugins.general.overview.OverviewMenus
 import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewGraph
@@ -37,7 +37,6 @@ import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.Translator
-import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.workflow.CalculationWorkflow
 import info.nightscout.shared.logging.LTag
@@ -63,7 +62,6 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var config: Config
     @Inject lateinit var loop: Loop
-    @Inject lateinit var nsDeviceStatus: NSDeviceStatus
     @Inject lateinit var translator: Translator
     @Inject lateinit var context: Context
     @Inject lateinit var dataWorker: DataWorker
