@@ -51,8 +51,8 @@
 
         <SwitchPreference
             android:defaultValue="false"
-            android:key="openapsama_useautosens"
-            android:title="@string/openapsama_useautosens" />
+            android:key="@string/key_adjust_sensitivity"
+            android:title="@string/dynisf_adjust_sensitivity" />
 
         <SwitchPreference
             android:defaultValue="false"
