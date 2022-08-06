@@ -30,7 +30,7 @@
 
         <SwitchPreference
             android:defaultValue="false"
-            android:key="openapsama_useautosens"
+            android:key="@string/key_openapsama_useautosens"
             android:title="@string/openapsama_useautosens" />
 
         <SwitchPreference

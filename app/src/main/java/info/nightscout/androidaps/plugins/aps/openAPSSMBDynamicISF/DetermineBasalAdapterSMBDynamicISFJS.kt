@@ -22,6 +22,7 @@ import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.stats.TddCalculator
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.logging.AAPSLogger
@@ -36,6 +37,7 @@ import java.io.IOException
 import java.lang.reflect.InvocationTargetException
 import java.nio.charset.StandardCharsets
 import javax.inject.Inject
+import kotlin.math.ln
 
 class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scriptReader: ScriptReader, private val injector: HasAndroidInjector) : DetermineBasalAdapterInterface {
 
@@ -194,10 +196,6 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scri
         this.profile.put("current_basal_safety_multiplier", sp.getDouble(R.string.key_openapsama_current_basal_safety_multiplier, 4.0))
         this.profile.put("lgsThreshold", Profile.toMgdl(sp.getDouble(R.string.key_lgs_threshold, 65.0)))
 
-        val insulin = activePlugin.activeInsulin
-        val insulinType = insulin.friendlyName
-        val insulinPeak = insulin.peak
-
         //mProfile.put("high_temptarget_raises_sensitivity", SP.getBoolean(R.string.key_high_temptarget_raises_sensitivity, SMBDefaults.high_temptarget_raises_sensitivity));
         this.profile.put("high_temptarget_raises_sensitivity", sp.getBoolean(R.string.key_high_temptarget_raises_sensitivity, SMBDefaults.high_temptarget_raises_sensitivity))
         //mProfile.put("low_temptarget_lowers_sensitivity", SP.getBoolean(R.string.key_low_temptarget_lowers_sensitivity, SMBDefaults.low_temptarget_lowers_sensitivity));
@@ -227,9 +225,6 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scri
         this.profile.put("enableSMB_after_carbs", smbEnabled && sp.getBoolean(R.string.key_enableSMB_after_carbs, false) && advancedFiltering)
         this.profile.put("maxSMBBasalMinutes", sp.getInt(R.string.key_smbmaxminutes, SMBDefaults.maxSMBBasalMinutes))
         this.profile.put("maxUAMSMBBasalMinutes", sp.getInt(R.string.key_uamsmbmaxminutes, SMBDefaults.maxUAMSMBBasalMinutes))
-        this.profile.put("DynISFAdjust", SafeParse.stringToDouble(sp.getString(R.string.key_DynISFAdjust, "100")))
-        this.profile.put("insulinType", insulinType)
-        this.profile.put("insulinPeak", insulinPeak)
         this.profile.put("maxUAMSMBBasalMinutes", sp.getInt(R.string.key_uamsmbmaxminutes, SMBDefaults.maxUAMSMBBasalMinutes))
         //set the min SMB amount to be the amount set by the pump.
         this.profile.put("bolus_increment", pumpBolusStep)
@@ -237,8 +232,7 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scri
         this.profile.put("current_basal", basalRate)
         this.profile.put("temptargetSet", tempTargetSet)
         this.profile.put("autosens_max", SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_autosens_max, "1.2")))
-        this.profile.put("autosens_min", SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_autosens_min, "0.8")))
-        this.profile.put("openapsama_useautosens", sp.getBoolean(R.string.key_openapsama_useautosens, false))
+        this.profile.put("autosens_min", SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_autosens_min, "0.7")))
         //set the min SMB amount to be the amount set by the pump.
         if (profileFunction.getUnits() == GlucoseUnit.MMOL) {
             this.profile.put("out_units", "mmol/L")
@@ -270,19 +264,53 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scri
         this.mealData.put("lastBolusTime", mealData.lastBolusTime)
         this.mealData.put("lastCarbTime", mealData.lastCarbTime)
 
-        this.mealData.put("TDDAIMI1", tddCalculator.averageTDD(tddCalculator.calculate(1))?.totalAmount)
-        this.mealData.put("TDDAIMI7", tddCalculator.averageTDD(tddCalculator.calculate(7))?.totalAmount)
-        this.mealData.put("TDDLast4", tddCalculator.calculateDaily(-4, 0).totalAmount)
-        this.mealData.put("TDD4to8", tddCalculator.calculateDaily(-8, -4).totalAmount)
-        this.mealData.put("TDD24", tddCalculator.calculateDaily(-24, 0).totalAmount)
+        val tdd1D = tddCalculator.averageTDD(tddCalculator.calculate(1))?.totalAmount
+        val tdd7D = tddCalculator.averageTDD(tddCalculator.calculate(7))?.totalAmount
+        val tddLast24H = tddCalculator.calculateDaily(-24, 0).totalAmount
+        val tddLast4H = tddCalculator.calculateDaily(-4, 0).totalAmount
+        val tddLast8to4H = tddCalculator.calculateDaily(-8, -4).totalAmount
 
+        val tddWeightedFromLast8H = ((1.4 * tddLast4H) + (0.6 * tddLast8to4H)) * 3
+//        console.error("Rolling 8 hours weight average: " + tdd_last8_wt + "; ");
+//        console.error("1-day average TDD is: " + tdd1 + "; ");
+//        console.error("7-day average TDD is: " + tdd7 + "; ");
 
+        var tdd =
+            if (tdd1D != null && tdd7D != null) (tddWeightedFromLast8H * 0.33) + (tdd7D * 0.34) + (tdd1D * 0.33)
+            else tddWeightedFromLast8H
+//        console.log("TDD = " + TDD + " using average of 7-day, 1-day and weighted 8hr average");
 
-        if (constraintChecker.isAutosensModeEnabled().value()) {
-            autosensData.put("ratio", autosensDataRatio)
-        } else {
-            autosensData.put("ratio", 1.0)
+//        console.log("Insulin Peak = " + insulin.peak + "; ");
+
+        val insulin = activePlugin.activeInsulin
+        val insulinDivisor = when {
+            insulin.peak > 65 -> 55 // lyumjev peak: 45
+            insulin.peak > 50 -> 65 // ultra rapid peak: 55
+            else              -> 75 // rapid peak: 75
         }
+//        console.log("For " + insulin.friendlyName + " (insulin peak: " + insulin.peak + ") insulin divisor is: " + ins_val + "; ");
+
+        val dynISFadjust = SafeParse.stringToDouble(sp.getString(R.string.key_DynISFAdjust, "100")) / 100.0
+        tdd *= dynISFadjust
+
+        var variableSensitivity = 1800 / (tdd * (ln((glucoseStatus.glucose / insulinDivisor) + 1)))
+        variableSensitivity = Round.roundTo(variableSensitivity, 0.1)
+
+        if (dynISFadjust != 1.0) {
+//            console.log("TDD adjusted to " + TDD + " using adjustment factor of " + dynISFadjust + "; ");
+        }
+//        console.log("Current sensitivity for predictions is " + variable_sens + " based on current bg");
+
+        this.profile.put("variable_sens", variableSensitivity)
+        this.profile.put("insulinDivisor", insulinDivisor)
+        this.profile.put("TDD", tdd)
+
+
+        if (sp.getBoolean(R.string.key_adjust_sensitivity, false) && tdd7D != null)
+            autosensData.put("ratio", tddLast24H / tdd7D)
+        else
+            autosensData.put("ratio", 1.0)
+
         this.microBolusAllowed = microBolusAllowed
         smbAlwaysAllowed = advancedFiltering
         currentTime = now
