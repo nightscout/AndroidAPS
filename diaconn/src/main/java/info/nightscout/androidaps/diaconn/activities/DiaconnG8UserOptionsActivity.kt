@@ -152,12 +152,7 @@ class DiaconnG8UserOptionsActivity : NoSplashAppCompatActivity() {
         commandQueue.setUserOptions(object : Callback() {
             override fun run() {
                 if (!result.success) {
-                    val i = Intent(context, ErrorHelperActivity::class.java)
-                    i.putExtra("soundid", R.raw.boluserror)
-                    i.putExtra("status", result.comment)
-                    i.putExtra("title", rh.gs(R.string.pumperror))
-                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    context.startActivity(i)
+                    ErrorHelperActivity.runAlarm(context, result.comment, rh.gs(R.string.pumperror), R.raw.boluserror)
                 }
             }
         })

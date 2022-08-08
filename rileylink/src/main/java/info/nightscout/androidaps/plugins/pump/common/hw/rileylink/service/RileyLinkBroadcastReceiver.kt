@@ -110,7 +110,7 @@ class RileyLinkBroadcastReceiver : DaggerBroadcastReceiver() {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "RfSpy version (BLE113): $bleVersion")
                 rileyLinkService?.rileyLinkServiceData?.versionBLE113 = bleVersion
 
-                aapsLogger.debug(LTag.PUMPBTCOMM, "RfSpy Radio version (CC110): " + rlVersion.name)
+                aapsLogger.debug(LTag.PUMPBTCOMM, "RfSpy Radio version (CC110): ${rlVersion?.name}")
                 rileyLinkServiceData.firmwareVersion = rlVersion
                 val task: ServiceTask = InitializePumpManagerTask(injector, context)
                 serviceTaskExecutor.startTask(task)
@@ -120,9 +120,8 @@ class RileyLinkBroadcastReceiver : DaggerBroadcastReceiver() {
 
             RileyLinkConst.Intents.RileyLinkNewAddressSet -> {
                 val rileylinkBLEAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "")
-                if (rileylinkBLEAddress == "") {
-                    aapsLogger.error("No Rileylink BLE Address saved in app")
-                } else rileyLinkService?.reconfigureRileyLink(rileylinkBLEAddress)
+                if (rileylinkBLEAddress == "") aapsLogger.error("No Rileylink BLE Address saved in app")
+                else rileyLinkService?.reconfigureRileyLink(rileylinkBLEAddress)
                 true
             }
 
@@ -154,7 +153,7 @@ class RileyLinkBroadcastReceiver : DaggerBroadcastReceiver() {
 
     private fun processTuneUpBroadcasts(action: String): Boolean =
         if (broadcastIdentifiers["TuneUp"]?.contains(action) == true) {
-            if (rileyLinkService?.rileyLinkTargetDevice?.isTuneUpEnabled == true) serviceTaskExecutor.startTask(WakeAndTuneTask(injector))
+            if (rileyLinkServiceData.targetDevice?.isTuneUpEnabled == true) serviceTaskExecutor.startTask(WakeAndTuneTask(injector))
             true
         } else false
 }

@@ -73,19 +73,6 @@ open class ViewSelectorActivity : DaggerActivity() {
         }
     }
 
-    fun getInflatedPlusMinusView(container: ViewGroup?): View =
-        when (sp.getInt(R.string.key_input_design, 1)) {
-            2    -> LayoutInflater.from(applicationContext).inflate(R.layout.action_editplusminus_item_quickrighty, container, false)
-            3    -> LayoutInflater.from(applicationContext).inflate(R.layout.action_editplusminus_item_quicklefty, container, false)
-            4    -> LayoutInflater.from(applicationContext).inflate(R.layout.action_editplusminus_item_viktoria, container, false)
-            else -> LayoutInflater.from(applicationContext).inflate(R.layout.action_editplusminus_item, container, false)
-        }
-
-    fun setLabelToPlusMinusView(view: View, labelText: String?) {
-        val textView = view.findViewById<TextView>(R.id.label)
-        textView.text = labelText
-    }
-
     fun showToast(context: Context?, text: Int) {
         Toast.makeText(context, getString(text), Toast.LENGTH_LONG).show()
     }

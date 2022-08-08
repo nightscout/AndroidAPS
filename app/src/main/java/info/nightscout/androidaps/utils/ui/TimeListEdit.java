@@ -182,7 +182,7 @@ public class TimeListEdit {
         numberPickers1[position].setTextWatcher(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                Double value1 = SafeParse.INSTANCE.stringToDouble(numberPickers1[position].getText());
+                Double value1 = SafeParse.INSTANCE.stringToDouble(numberPickers1[position].getText(), 0.0);
                 Double value2 = value2(position);
                 if (data2 != null && value1 > value2) {
                     value2 = value1;
@@ -209,7 +209,7 @@ public class TimeListEdit {
             @Override
             public void afterTextChanged(Editable s) {
                 Double value1 = value1(position);
-                Double value2 = SafeParse.INSTANCE.stringToDouble(numberPickers2[position].getText());
+                Double value2 = SafeParse.INSTANCE.stringToDouble(numberPickers2[position].getText(), 0.0);
                 if (data2 != null && value2 < value1) {
                     value1 = value2;
                     numberPickers1[position].setValue(value1);

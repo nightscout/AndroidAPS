@@ -42,13 +42,19 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
         val profileName = if (inputProfileName.value == rh.gs(R.string.active)) "" else inputProfileName.value
         var message = if (autoSwitch) R.string.autotune_run_with_autoswitch else R.string.autotune_run_without_autoswitch
         Thread {
-            autotunePlugin.atLog("[Automation] Run Autotune $profileName, ${daysBack.value} days, Autoswitch $autoSwitch")
-            autotunePlugin.aapsAutotune(daysBack.value, autoSwitch, profileName)
-            if (!autotunePlugin.lastRunSuccess) {
-                message = R.string.autotune_run_with_error
-                aapsLogger.error(LTag.AUTOMATION, "Error during Autotune Run")
+            if (!autotunePlugin.calculationRunning) {
+                autotunePlugin.atLog("[Automation] Run Autotune $profileName, ${daysBack.value} days, Autoswitch $autoSwitch")
+                autotunePlugin.aapsAutotune(daysBack.value, autoSwitch, profileName)
+                if (!autotunePlugin.lastRunSuccess) {
+                    message = R.string.autotune_run_with_error
+                    aapsLogger.error(LTag.AUTOMATION, "Error during Autotune Run")
+                }
+                callback.result(PumpEnactResult(injector).success(autotunePlugin.lastRunSuccess).comment(message)).run()
+            } else {
+                message = R.string.autotune_run_cancelled
+                aapsLogger.debug(LTag.AUTOMATION, "Autotune run detected, Autotune Run Cancelled")
+                callback.result(PumpEnactResult(injector).success(false).comment(message)).run()
             }
-            callback.result(PumpEnactResult(injector).success(autotunePlugin.lastRunSuccess).comment(message)).run()
         }.start()
         return
     }

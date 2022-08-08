@@ -27,7 +27,7 @@ class AapsErosPodStateManagerTest : TestBase() {
         val now = DateTime(2020, 1, 1, 1, 2, 3, timeZone)
         DateTimeUtils.setCurrentMillisFixed(now.millis)
         val podStateManager = AapsErosPodStateManager(aapsLogger, sp, rxBus)
-        podStateManager.initState(0x0)
+        podStateManager.initState(0x01)
         podStateManager.setInitializationParameters(
             0, 0, FirmwareVersion(1, 1, 1),
             FirmwareVersion(2, 2, 2), timeZone, PodProgressStatus.ABOVE_FIFTY_UNITS
@@ -46,7 +46,7 @@ class AapsErosPodStateManagerTest : TestBase() {
         val now = DateTime(2020, 1, 1, 1, 2, 3, timeZone)
         DateTimeUtils.setCurrentMillisFixed(now.millis)
         val podStateManager = AapsErosPodStateManager(aapsLogger, sp, rxBus)
-        podStateManager.initState(0x0)
+        podStateManager.initState(0x01)
         podStateManager.setInitializationParameters(
             0, 0, FirmwareVersion(1, 1, 1),
             FirmwareVersion(2, 2, 2), timeZone, PodProgressStatus.ABOVE_FIFTY_UNITS
@@ -70,7 +70,7 @@ class AapsErosPodStateManagerTest : TestBase() {
         val now = DateTime(2020, 1, 1, 1, 2, 3, timeZone)
         DateTimeUtils.setCurrentMillisFixed(now.millis)
         val podStateManager = AapsErosPodStateManager(aapsLogger, sp, rxBus)
-        podStateManager.initState(0x0)
+        podStateManager.initState(0x01)
         podStateManager.setInitializationParameters(
             0, 0, FirmwareVersion(1, 1, 1),
             FirmwareVersion(2, 2, 2), timeZone, PodProgressStatus.ABOVE_FIFTY_UNITS

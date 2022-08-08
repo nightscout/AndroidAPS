@@ -2,6 +2,7 @@ package info.nightscout.androidaps.di
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
+import info.nightscout.androidaps.interaction.actions.QuickSnoozeActivity
 import info.nightscout.androidaps.interaction.ConfigurationActivity
 import info.nightscout.androidaps.interaction.TileConfigurationActivity
 import info.nightscout.androidaps.interaction.actions.*
@@ -34,4 +35,5 @@ abstract class WearActivitiesModule {
     @ContributesAndroidInjector abstract fun contributesFillMenuActivity(): FillMenuActivity
     @ContributesAndroidInjector abstract fun contributesMainMenuActivity(): MainMenuActivity
     @ContributesAndroidInjector abstract fun contributesStatusMenuActivity(): StatusMenuActivity
+    @ContributesAndroidInjector abstract fun contributesQuickSnoozeActivity(): QuickSnoozeActivity
 }

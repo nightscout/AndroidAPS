@@ -354,8 +354,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         insulin = constraintChecker.applyExtendedBolusConstraints(new Constraint<>(insulin)).value();
         // needs to be rounded
         int durationInHalfHours = Math.max(durationInMinutes / 30, 1);
-        insulin = Round.INSTANCE.roundTo(insulin, getPumpDescription().getExtendedBolusStep(),
-                null);
+        insulin = Round.INSTANCE.roundTo(insulin, getPumpDescription().getExtendedBolusStep());
 
         PumpEnactResult result = new PumpEnactResult(getInjector());
         if (danaPump.isExtendedInProgress() && Math.abs(danaPump.getExtendedBolusAmount() - insulin) < pumpDescription.getExtendedBolusStep()) {

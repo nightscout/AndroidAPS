@@ -631,7 +631,6 @@
     <string name="needsystemwindowpermission">Norint gauti pranešimus, programai reikalingas sisteminio lango leidimas</string>
     <string name="needlocationpermission">Programai reikia vietos nustatymo leidimo, kad būtų galima naudoti Bluetooth ir WiFi</string>
     <string name="needstoragepermission">Aplikacijai reikia leidimo prieigai prie saugyklos, kad galėtų išsaugoti žurnalo įrašus ir eksportavimo nustatymus</string>
-    <string name="needconnectpermission">Programai reikalinga Bluetooth prieigos teisė</string>
     <string name="request">Užklausa</string>
     <string name="open_navigation">Atidaryti meniu</string>
     <string name="close_navigation">Uždaryti meniu</string>
@@ -894,6 +893,7 @@
     <string name="not_available_full">Negalimas</string>
     <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
+    <string name="sort_label">Rūšiuoti</string>
     <string name="login">Prisijungti</string>
     <!-- Aidex Cgms -->
 </resources>

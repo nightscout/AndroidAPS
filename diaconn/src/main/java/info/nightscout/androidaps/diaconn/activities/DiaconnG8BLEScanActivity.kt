@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.diaconn.activities
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
@@ -11,6 +12,8 @@ import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
 import android.content.Context
 import android.content.pm.ActivityInfo
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -19,12 +22,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
+import androidx.core.app.ActivityCompat
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
-import info.nightscout.androidaps.diaconn.events.EventDiaconnG8DeviceChange
 import info.nightscout.androidaps.diaconn.R
 import info.nightscout.androidaps.diaconn.databinding.DiaconnG8BlescannerActivityBinding
-import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.diaconn.events.EventDiaconnG8DeviceChange
 import info.nightscout.androidaps.plugins.pump.common.ble.BlePreCheck
+import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.shared.sharedPreferences.SP
 import java.util.*
 import javax.inject.Inject
@@ -61,18 +65,25 @@ class DiaconnG8BLEScanActivity : NoSplashAppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-       bluetoothAdapter?.let { bluetoothAdapter ->
-            if (!bluetoothAdapter.isEnabled) bluetoothAdapter.enable()
-            bluetoothLeScanner = bluetoothAdapter.bluetoothLeScanner
-            startScan()
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
+            bluetoothAdapter?.let { bluetoothAdapter ->
+                if (!bluetoothAdapter.isEnabled) bluetoothAdapter.enable()
+                bluetoothLeScanner = bluetoothAdapter.bluetoothLeScanner
+                startScan()
+            }
+        } else {
+            ToastUtils.errorToast(context, context.getString(info.nightscout.androidaps.core.R.string.needconnectpermission))
         }
     }
 
     override fun onPause() {
         super.onPause()
-        stopScan()
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
+            stopScan()
+        }
     }
 
+    @SuppressLint("MissingPermission")
     private fun startScan() =
         try {
             val filters: MutableList<ScanFilter> = ArrayList()
@@ -86,16 +97,23 @@ class DiaconnG8BLEScanActivity : NoSplashAppCompatActivity() {
                 .build()
 
             bluetoothLeScanner?.startScan(filters, settings, mBleScanCallback)
-        } catch (e: IllegalStateException) {
+        } catch (ignored: IllegalStateException) {
         } // ignore BT not on
 
+    @SuppressLint("MissingPermission")
     private fun stopScan() =
         try {
             bluetoothLeScanner?.stopScan(mBleScanCallback)
-        } catch (e: IllegalStateException) {
+        } catch (ignored: IllegalStateException) {
         } // ignore BT not on
 
     private fun addBleDevice(device: BluetoothDevice?) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ToastUtils.errorToast(context, context.getString(info.nightscout.androidaps.core.R.string.needconnectpermission))
+            return
+        }
         if (device == null || device.name == null || device.name == "") {
             return
         }
@@ -145,6 +163,7 @@ class DiaconnG8BLEScanActivity : NoSplashAppCompatActivity() {
                 v.setOnClickListener(this@ViewHolder)
             }
 
+            @SuppressLint("MissingPermission")
             override fun onClick(v: View) {
                 sp.putString(R.string.key_diaconn_g8_address, item.device.address)
                 sp.putString(R.string.key_diaconn_g8_name, name.text.toString())
@@ -153,6 +172,7 @@ class DiaconnG8BLEScanActivity : NoSplashAppCompatActivity() {
                 finish()
             }
 
+            @SuppressLint("MissingPermission")
             fun setData(data: BluetoothDeviceItem) {
                 var tTitle = data.device.name
                 if (tTitle == null || tTitle == "") {
@@ -168,6 +188,7 @@ class DiaconnG8BLEScanActivity : NoSplashAppCompatActivity() {
 
     //
     inner class BluetoothDeviceItem internal constructor(val device: BluetoothDevice) {
+
         override fun equals(other: Any?): Boolean {
             if (other !is BluetoothDeviceItem) {
                 return false

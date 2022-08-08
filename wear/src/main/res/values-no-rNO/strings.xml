@@ -61,11 +61,11 @@
     <string name="pref_prime_in_menu">Prime i menyen</string>
     <string name="pref_single_target">Enkel måleverdi</string>
     <string name="pref_wizard_percentage">Kalkulator prosent</string>
-    <string name="pref_complication_tap_action">Komplikasjon trykk handling</string>
-    <string name="pref_unicode_in_complications">Unicode ikomplikasjoner</string>
+    <string name="pref_complication_tap_action">Handling ved trykk på komplikasjon</string>
+    <string name="pref_unicode_in_complications">Unicode i komplikasjoner</string>
     <string name="pref_version">Versjon:</string>
-    <string name="pref_moreWatchfaceSettings">Fler urskive innstillinger</string>
-    <string name="pref_lookInYourWatchfaceConfiguration">Vennligst sjekk urskive innstillinger.</string>
+    <string name="pref_moreWatchfaceSettings">Flere innstillinger for urskive</string>
+    <string name="pref_lookInYourWatchfaceConfiguration">Vennligst sjekk urskiveinnstillinger.</string>
     <string name="menu_tempt">TempT</string>
     <string name="menu_wizard">Kalkulator</string>
     <string name="menu_wizard_short">Kalk</string>
@@ -128,7 +128,7 @@
     <string name="color_name_teal">blågrønn</string>
     <string name="color_name_green">grønn</string>
     <string name="color_name_lightgreen">lysegrønn</string>
-    <string name="color_name_lime">gulgrønn</string>
+    <string name="color_name_lime">limegrønn</string>
     <string name="color_name_yellow">gul</string>
     <string name="color_name_amber">rødbrun</string>
     <string name="color_name_orange">oransje</string>
@@ -139,20 +139,20 @@
     <string name="color_name_white">hvit</string>
     <string name="color_name_black">svart</string>
     <string name="color_name_multicolor">flerfarget</string>
-    <string name="pref_simplify_ui">Forenklet brukergrensesnittet</string>
+    <string name="pref_simplify_ui">Forenklet brukergrensesnitt</string>
     <string name="pref_simplify_ui_sum">Vis kun tid og BS</string>
     <string name="pref_vibrate_hourly">Vibrer hver time</string>
     <string name="pref_show_weeknumber">Vis ukenummer</string>
     <string name="digitalstyle_pref_your_style">Din stil:</string>
     <string name="digitalstyle_style_none">ingen stil</string>
-    <string name="digitalstyle_style_minimal">minimal palette</string>
-    <string name="digitalstyle_style_shape">definert palette</string>
-    <string name="digitalstyle_style_full">full palette</string>
-    <string name="digitalstyle_pref_your_color">Dine farger:</string>
+    <string name="digitalstyle_style_minimal">minimalistisk stil</string>
+    <string name="digitalstyle_style_shape">form-stil</string>
+    <string name="digitalstyle_style_full">full stil</string>
+    <string name="digitalstyle_pref_your_color">Din farge:</string>
     <string name="digitalstyle_pref_your_color_saturation">Din fargemetning:</string>
-    <string name="digitalstyle_pref_your_color_opacity">Din farge gjennomsiktighet:</string>
-    <string name="bolus_progress_channel_name">AAPS bolus framdrift</string>
-    <string name="bolus_progress_silent_channel_name">AAPS stille bolus framdrift</string>
+    <string name="digitalstyle_pref_your_color_opacity">Din gjennomsiktighet:</string>
+    <string name="bolus_progress_channel_name">AAPS bolus-framdrift</string>
+    <string name="bolus_progress_silent_channel_name">AAPS stille bolus-framdrift</string>
     <string name="bolus_progress_channel_description">Bolus framdrift og avbryt</string>
     <string name="bolus_progress_silent_channel_description">Bolus framdrift og avbryt med mindre vibrasjoner</string>
     <string name="simple_ui_off">Av</string>
@@ -182,6 +182,8 @@
     <string name="delta_na">--- mg/dl</string>
     <string name="no_loop_status">Ingen loop status</string>
     <string name="cob_000g">000g</string>
-    <string name="svg_00_0">00,0</string>
+    <string name="svg_00_0" comment="use , or . only">00,0</string>
     <string name="iob_0_00u">0,00E</string>
+    <string name="snooze_alert">AAPS slumre-varsel</string>
+    <string name="sending_snooze">Sender slumring til AAPS</string>
 </resources>

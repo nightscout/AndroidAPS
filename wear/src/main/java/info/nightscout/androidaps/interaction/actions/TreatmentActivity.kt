@@ -10,11 +10,13 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventWearToMobile
+import info.nightscout.androidaps.interaction.utils.EditPlusMinusViewAdapter
 import info.nightscout.androidaps.interaction.utils.PlusMinusEditText
 import info.nightscout.shared.SafeParse.stringToDouble
 import info.nightscout.shared.SafeParse.stringToInt
 import info.nightscout.shared.weardata.EventData.ActionBolusPreCheck
 import java.text.DecimalFormat
+import kotlin.math.roundToInt
 
 class TreatmentActivity : ViewSelectorActivity() {
 
@@ -35,31 +37,40 @@ class TreatmentActivity : ViewSelectorActivity() {
         override fun getColumnCount(arg0: Int): Int = 3
         override fun getRowCount(): Int = 1
 
-        override fun instantiateItem(container: ViewGroup, row: Int, col: Int): Any {
-            return if (col == 0) {
-                val view = getInflatedPlusMinusView(container)
-                var def = 0.0
-                if (editInsulin != null) def = stringToDouble(editInsulin?.editText?.text.toString())
+        val incrementInsulin1 = (sp.getDouble(R.string.key_insulin_button_increment_1, 0.5) * 10).roundToInt() / 10.0
+        val incrementInsulin2 = (sp.getDouble(R.string.key_insulin_button_increment_2, 1.0) * 10).roundToInt() / 10.0
+        val stepValuesInsulin = listOf(0.1, incrementInsulin1, incrementInsulin2)
+        val incrementCarbs1 = sp.getInt(R.string.key_carbs_button_increment_1, 5).toDouble()
+        val incrementCarbs2 = sp.getInt(R.string.key_carbs_button_increment_2, 10).toDouble()
+        val stepValuesCarbs = listOf(1.0, incrementCarbs1, incrementCarbs2)
+
+        override fun instantiateItem(container: ViewGroup, row: Int, col: Int): View = when (col) {
+            0    -> {
+                val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, container, true)
+                val view = viewAdapter.root
+                var initValue =  stringToDouble(editInsulin?.editText?.text.toString(), 0.0)
                 val maxBolus = sp.getDouble(getString(R.string.key_treatments_safety_max_bolus), 3.0)
-                editInsulin = PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0.0, maxBolus, 0.1, DecimalFormat("#0.0"), false)
-                setLabelToPlusMinusView(view, getString(R.string.action_insulin))
+                editInsulin = PlusMinusEditText(viewAdapter, initValue, 0.0, maxBolus, stepValuesInsulin, DecimalFormat("#0.0"), false, getString(R.string.action_insulin))
                 container.addView(view)
                 view.requestFocus()
                 view
-            } else if (col == 1) {
-                val view = getInflatedPlusMinusView(container)
-                var def = 0.0
-                val maxCarbs = sp.getInt(getString(R.string.key_treatments_safety_max_carbs), 48)
-                if (editCarbs != null) def = stringToDouble(editCarbs?.editText?.text.toString())
-                editCarbs = PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0.0, maxCarbs.toDouble(), 1.0, DecimalFormat("0"), false)
-                setLabelToPlusMinusView(view, getString(R.string.action_carbs))
+            }
+
+            1    -> {
+                val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, container, true)
+                val view = viewAdapter.root
+                val maxCarbs = sp.getInt(getString(R.string.key_treatments_safety_max_carbs), 48).toDouble()
+                var initValue = stringToDouble(editCarbs?.editText?.text.toString(), 0.0)
+                editCarbs = PlusMinusEditText(viewAdapter, initValue, 0.0, maxCarbs, stepValuesCarbs, DecimalFormat("0"), false, getString(R.string.action_carbs))
                 container.addView(view)
                 view
-            } else {
+            }
+
+            else -> {
                 val view = LayoutInflater.from(applicationContext).inflate(R.layout.action_confirm_ok, container, false)
                 val confirmButton = view.findViewById<ImageView>(R.id.confirmbutton)
                 confirmButton.setOnClickListener {
-                    //check if it can happen that the fragment is never created that hold data?
+                    // check if it can happen that the fragment is never created that hold data?
                     // (you have to swipe past them anyways - but still)
                     val bolus = ActionBolusPreCheck(stringToDouble(editInsulin?.editText?.text.toString()), stringToInt(editCarbs?.editText?.text.toString()))
                     rxBus.send(EventWearToMobile(bolus))

@@ -22,6 +22,11 @@ class AAPSLoggerProduction constructor(val l: L) : AAPSLogger {
             LoggerFactory.getLogger(tag.tag).debug(stackLogMarker() + message)
     }
 
+    override fun debug(tag: LTag, accessor: () -> String) {
+        if (l.findByName(tag.tag).enabled)
+            LoggerFactory.getLogger(tag.tag).debug(stackLogMarker() + accessor.invoke())
+    }
+
     override fun debug(tag: LTag, format: String, vararg arguments: Any?) {
         if (l.findByName(tag.tag).enabled)
             LoggerFactory.getLogger(tag.tag).debug(stackLogMarker() + format, arguments)

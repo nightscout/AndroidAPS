@@ -11,7 +11,7 @@
     <string name="objectives_openloop_gate">Birkaç gün boyunca Açık Döngü modunda çalıştırın ve birçok geçici bazalı el yordamı ile girin. Geçici ve varsayılan geçici hedefleri düzenleyin ve kullanın (örn. egzersiz ve hipo-tedaviyi desteklemek için)</string>
     <string name="objectives_maxbasal_objective">Geçici bazal tavsiyeleri de dahil olmak üzere Açık Döngüyü anlamak</string>
     <string name="objectives_maxbasal_gate">Bu deneyime dayanarak, max bazalın ne olması gerektiğine karar vermeli ve bunu pompa ve tercihlere koymalısınız</string>
-    <string name="objectives_maxiobzero_objective">Kapalı Döngü, (LGS) Düşük Glikoz Süspansiyonu modunda başlatılıyor</string>
+    <string name="objectives_maxiobzero_objective">Kapalı Döngü, (LGS) Düşük Glikoz Duraklatma modunda başlatılıyor</string>
     <string name="objectives_maxiobzero_gate">Kapalı Döngüyü, maks IOB = 0 olacak şekilde çok sayıda LGS (düşük KŞ) olmadan birkaç gün boyunca deneyin</string>
     <string name="objectives_maxiob_objective">Kapalı Döngü\'de ince ayarlar, maks (IOB) Aktif İnsülini 0\'ın üzerine yükseltme ve yavaş yavaş KŞ hedeflerini aşağıya çekme</string>
     <string name="objectives_maxiob_gate">KŞ hedefini azaltmadan önce birkaç gün ve en az bir gece düşük KŞ (Hipo) alarmı olmadan deneyin</string>

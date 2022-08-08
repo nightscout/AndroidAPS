@@ -9,6 +9,7 @@
     <!--    <string name="fi_lang" translatable="false">Finnish</string> -->
     <string name="fr_lang" translatable="false">French</string>
     <string name="de_lang" translatable="false">German</string>
+    <string name="dk_lang" translatable="false">Danish</string>
     <string name="el_lang" translatable="false">Greek</string>
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <string name="zh_lang" translatable="false">Chinese</string>
@@ -520,8 +521,8 @@
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dynamic ISF</string>
     <string name="key_DynISFAdjust" translatable="false">DynISFAdjust</string>
-    <string name="DynISFAdjust_title">DynamicISF Adjustment Factor %%</string>
-    <string name="DynISFAdjust_summary">Adjustment factor for DynamicISF. Set more than 100%% for more aggressive correction doses, and less than 100%% for less aggressive corrections.</string>
+    <string name="DynISFAdjust_title" formatted="false">DynamicISF Adjustment Factor %</string>
+    <string name="DynISFAdjust_summary" formatted="false">Adjustment factor for DynamicISF. Set more than 100% for more aggressive correction doses, and less than 100% for less aggressive corrections.</string>
     <string name="key_use_smb" translatable="false">use_smb</string>
     <string name="key_use_uam" translatable="false">use_uam</string>
     <string name="key_smb_enable_carbs_suggestions_threshold" translatable="false">smb_enable_carbs_suggestions_threshold</string>
@@ -789,7 +790,6 @@
     <string name="needsystemwindowpermission">Application needs system window permission for notifications</string>
     <string name="needlocationpermission">Application needs location permission for BT scan and WiFi identification</string>
     <string name="needstoragepermission">Application needs storage permission to be able store log files and export settings</string>
-    <string name="needconnectpermission">Application needs bluetooth permission</string>
     <string name="request">Request</string>
     <string name="open_navigation">Open navigation</string>
     <string name="close_navigation">Close navigation</string>
@@ -1175,7 +1175,7 @@
     <string name="wear_action_tempt_max_bg_error">Max-BG out of range!</string>
     <string name="wear_action_tempt_manual_range_message">Temptarget:\nMin: %1$s\nMax: %2$s\nDuration: %3$s</string>
     <string name="wear_action_tempt_manual_message">Temptarget:\nTarget: %1$s\nDuration: %2$s</string>
-    <string name="wear_action_tempt_preset_message">Temptarget:\Reason: %1$s\nTarget: %2$s\nDuration: %3$s</string>
+    <string name="wear_action_tempt_preset_message">Temptarget:\nReason: %1$s\nTarget: %2$s\nDuration: %3$s</string>
     <string name="quick_wizard_message">QuickWizard: %1$s\nInsulin: %2$.2fU\nCarbs: %3$dg</string>
     <string name="wizard_result">Calc. Wizard:\nInsulin: %1$.2fU\nCarbs: %2$dg</string>
     <string name="overview_editquickwizard_show_on_device">Show entry on device:</string>
@@ -1242,13 +1242,17 @@
     <string name="a11y_only_on_watch">only on watch</string>
     <string name="a11y_only_on_phone">only on phone</string>
     <string name="a11y_drag_and_drop_handle">drag and drop handle</string>
+    <string name="search">Search</string>
 
-  <!-- Aidex Cgms -->
+    <!-- Aidex Cgms -->
     <string name="aidex">GlucoRx Aidex</string>
     <string name="aidex_short">Aidex</string>
     <string name="description_source_aidex">Receive BG values from GlucoRx Aidex CGMS.</string>
     <string name="blocked_by_charging">Blocked by charging options</string>
     <string name="blocked_by_connectivity">Blocked by connectivity options</string>
-
+    <string name="no_watch_connected">(No Watch Connected)</string>
+    <string name="error_asking_for_permissions">Error asking for permissions</string>
+    <string name="key_adjust_sensitivity" translatable="false">dynisf_adjust_sensitivity</string>
+    <string name="dynisf_adjust_sensitivity">Adjust sensitivity and BG</string>
 
 </resources>

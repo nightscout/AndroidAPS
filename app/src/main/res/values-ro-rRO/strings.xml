@@ -631,7 +631,6 @@
     <string name="needsystemwindowpermission">Aplicația are nevoie de permisiune la fereastra sistemului pentru a afișa notificări</string>
     <string name="needlocationpermission">Aplicația are nevoie sa acceseze locația pentru scanare Bluetooth și identificare WiFi</string>
     <string name="needstoragepermission">Aplicația are nevoie de permisiunea de a accesa unitatea de stocare pentru a scrie fișierele registru și pentru a exporta setările</string>
-    <string name="needconnectpermission">Aplicația are nevoie de permisiune Bluetooth</string>
     <string name="request">Cerință</string>
     <string name="open_navigation">Afișare navigație</string>
     <string name="close_navigation">Închidere navigație</string>

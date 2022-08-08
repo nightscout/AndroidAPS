@@ -63,7 +63,7 @@
                     android:weightSum="5">
 
                     <TextView
-                        android:id="@+id/cob_text"
+                        android:id="@+id/cob1"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="2"
@@ -75,7 +75,7 @@
                         tools:ignore="SmallSp" />
 
                     <TextView
-                        android:id="@+id/cobView"
+                        android:id="@+id/cob2"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="3"
@@ -237,7 +237,7 @@
                     android:weightSum="5">
 
                     <TextView
-                        android:id="@+id/iob_text"
+                        android:id="@+id/iob1"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="2"
@@ -249,7 +249,7 @@
                         tools:ignore="SmallSp" />
 
                     <TextView
-                        android:id="@+id/iobView"
+                        android:id="@+id/iob2"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="3"
@@ -320,7 +320,7 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/dayname"
+                            android:id="@+id/day_name"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="5"
@@ -332,7 +332,7 @@
                             tools:text="DDD" />
 
                         <TextView
-                            android:id="@+id/weeknumber"
+                            android:id="@+id/week_number"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="4"
@@ -502,7 +502,7 @@
                         tools:ignore="HardcodedText,SmallSp" />
 
                     <TextView
-                        android:id="@+id/avgdelta"
+                        android:id="@+id/avg_delta"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -539,7 +539,7 @@
                         tools:ignore="HardcodedText,SmallSp" />
 
                     <TextView
-                        android:id="@+id/tmpBasal"
+                        android:id="@+id/basalRate"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1.7"
@@ -551,7 +551,7 @@
                         tools:ignore="SmallSp" />
 
                     <TextView
-                        android:id="@+id/bgiView"
+                        android:id="@+id/bgi"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"

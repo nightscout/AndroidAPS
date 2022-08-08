@@ -6,11 +6,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.extensions.*
-import info.nightscout.androidaps.interfaces.Config
-import info.nightscout.androidaps.interfaces.Overview
-import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PluginDescription
-import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
@@ -21,7 +17,6 @@ import info.nightscout.androidaps.plugins.general.overview.graphExtensions.Scale
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationStore
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP
@@ -175,46 +170,4 @@ class OverviewPlugin @Inject constructor(
             .storeDouble(R.string.key_statuslights_bat_critical, sp, rh)
             .storeInt(R.string.key_boluswizard_percentage, sp, rh)
     }
-/*
-    @Volatile
-    var runningRefresh = false
-    override fun refreshLoop(from: String) {
-        if (runningRefresh) return
-        runningRefresh = true
-        overviewBus.send(EventUpdateOverviewNotification(from))
-        loadIobCobResults(from)
-        overviewBus.send(EventUpdateOverviewProfile(from))
-        overviewBus.send(EventUpdateOverviewBg(from))
-        overviewBus.send(EventUpdateOverviewTime(from))
-        overviewBus.send(EventUpdateOverviewTemporaryBasal(from))
-        overviewBus.send(EventUpdateOverviewExtendedBolus(from))
-        overviewBus.send(EventUpdateOverviewTemporaryTarget(from))
-        loadAsData(from)
-        overviewData.preparePredictions(from)
-        overviewData.prepareBasalData(from)
-        overviewData.prepareTemporaryTargetData(from)
-        overviewData.prepareTreatmentsData(from)
-        overviewData.prepareIobAutosensData(from)
-        overviewBus.send(EventUpdateOverviewGraph(from))
-        overviewBus.send(EventUpdateOverviewIobCob(from))
-        aapsLogger.debug(LTag.UI, "refreshLoop finished")
-        runningRefresh = false
-    }
-
-    @Suppress("SameParameterValue")
-    private fun loadAll(from: String) {
-        loadBg(from)
-        loadProfile(from)
-        loadTemporaryTarget(from)
-        loadIobCobResults(from)
-        loadAsData(from)
-        overviewData.prepareBasalData(from)
-        overviewData.prepareTemporaryTargetData(from)
-        overviewData.prepareTreatmentsData(from)
-//        prepareIobAutosensData(from)
-//        preparePredictions(from)
-        overviewBus.send(EventUpdateOverviewGraph(from))
-        aapsLogger.debug(LTag.UI, "loadAll finished")
-    }
-*/
 }

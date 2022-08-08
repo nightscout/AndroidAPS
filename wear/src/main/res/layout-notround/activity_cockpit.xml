@@ -209,7 +209,7 @@
                     android:layout_weight="0.020" />
 
                 <TextView
-                    android:id="@+id/watch_time"
+                    android:id="@+id/time"
                     android:layout_width="wrap_content"
                     android:layout_height="0px"
                     android:layout_gravity="center"
@@ -222,7 +222,7 @@
                     tools:text="12:00" />
 
                 <TextView
-                    android:id="@+id/tmpBasal"
+                    android:id="@+id/basalRate"
                     android:layout_width="wrap_content"
                     android:layout_height="0px"
                     android:layout_gravity="bottom|center_horizontal"
@@ -235,7 +235,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/iobView"
+                    android:id="@+id/iob2"
                     android:layout_width="wrap_content"
                     android:layout_height="0px"
                     android:layout_gravity="bottom|center_horizontal"
@@ -248,7 +248,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/cobView"
+                    android:id="@+id/cob2"
                     android:layout_width="wrap_content"
                     android:layout_height="0px"
                     android:layout_gravity="bottom|center_horizontal"
@@ -370,7 +370,7 @@
                             tools:ignore="HardcodedText" />
 
                         <TextView
-                            android:id="@+id/avgdelta"
+                            android:id="@+id/avg_delta"
                             android:layout_width="0px"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"

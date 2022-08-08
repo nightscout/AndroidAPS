@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventWearToMobile
+import info.nightscout.androidaps.interaction.utils.EditPlusMinusViewAdapter
 import info.nightscout.androidaps.interaction.utils.PlusMinusEditText
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.weardata.EventData.ActionTempTargetPreCheck
@@ -45,53 +46,51 @@ class TempTargetActivity : ViewSelectorActivity() {
             return 1
         }
 
-        override fun instantiateItem(container: ViewGroup, row: Int, col: Int): Any {
-            return if (col == 0) {
-                val view = getInflatedPlusMinusView(container)
-                time = if (time == null) {
-                    PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, 60.0, 0.0, 24 * 60.0, 5.0, DecimalFormat("0"), false)
-                } else {
-                    val def = SafeParse.stringToDouble(time?.editText?.text.toString())
-                    PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0.0, 24 * 60.0, 5.0, DecimalFormat("0"), false)
-                }
-                setLabelToPlusMinusView(view, getString(R.string.action_duration))
+        override fun instantiateItem(container: ViewGroup, row: Int, col: Int): View = when {
+            col == 0                    -> {
+                val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, container, false)
+                val view = viewAdapter.root
+                val initValue = SafeParse.stringToDouble(time?.editText?.text.toString(), 60.0)
+                time = PlusMinusEditText(viewAdapter, initValue, 0.0, 24 * 60.0, 5.0, DecimalFormat("0"), false, getString(R.string.action_duration))
                 container.addView(view)
                 view.requestFocus()
                 view
-            } else if (col == 1) {
-                val view = getInflatedPlusMinusView(container)
+            }
+
+            col == 1                    -> {
+                val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, container, false)
+                val view = viewAdapter.root
+                val title = if (isSingleTarget) getString(R.string.action_target) else getString(R.string.action_low)
                 if (isMGDL) {
-                    var def = 100.0
-                    if (lowRange != null) def = SafeParse.stringToDouble(lowRange?.editText?.text.toString())
-                    lowRange = PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 72.0, 180.0, 1.0, DecimalFormat("0"), false)
+                    var initValue = SafeParse.stringToDouble(lowRange?.editText?.text.toString(), 100.0)
+                    lowRange = PlusMinusEditText(viewAdapter, initValue, 72.0, 180.0, 1.0, DecimalFormat("0"), false, title)
                 } else {
-                    var def = 5.5
-                    if (lowRange != null) def = SafeParse.stringToDouble(lowRange?.editText?.text.toString())
-                    lowRange = PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 4.0, 10.0, 0.1, DecimalFormat("#0.0"), false)
+                    var initValue = SafeParse.stringToDouble(lowRange?.editText?.text.toString(), 5.5)
+                    lowRange = PlusMinusEditText(viewAdapter, initValue, 4.0, 10.0, 0.1, DecimalFormat("#0.0"), false, title)
                 }
-                if (isSingleTarget) setLabelToPlusMinusView(view, getString(R.string.action_target))
-                else setLabelToPlusMinusView(view, getString(R.string.action_low))
                 container.addView(view)
                 view
-            } else if (col == 2 && !isSingleTarget) {
-                val view = getInflatedPlusMinusView(container)
+            }
+
+            col == 2 && !isSingleTarget -> {
+                val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, container, false)
+                val view = viewAdapter.root
                 if (isMGDL) {
-                    var def = 100.0
-                    if (highRange != null) def = SafeParse.stringToDouble(highRange?.editText?.text.toString())
-                    highRange = PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 72.0, 180.0, 1.0, DecimalFormat("0"), false)
+                    var initValue = SafeParse.stringToDouble(highRange?.editText?.text.toString(), 100.0)
+                    highRange = PlusMinusEditText(viewAdapter, initValue, 72.0, 180.0, 1.0, DecimalFormat("0"), false, getString(R.string.action_high))
                 } else {
-                    var def = 5.5
-                    if (highRange != null) def = SafeParse.stringToDouble(highRange?.editText?.text.toString())
-                    highRange = PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 4.0, 10.0, 0.1, DecimalFormat("#0.0"), false)
+                    var initValue = SafeParse.stringToDouble(highRange?.editText?.text.toString(), 5.5)
+                    highRange = PlusMinusEditText(viewAdapter, initValue, 4.0, 10.0, 0.1, DecimalFormat("#0.0"), false, getString(R.string.action_high))
                 }
-                setLabelToPlusMinusView(view, getString(R.string.action_high))
                 container.addView(view)
                 view
-            } else {
+            }
+
+            else                        -> {
                 val view = LayoutInflater.from(applicationContext).inflate(R.layout.action_confirm_ok, container, false)
                 val confirmButton = view.findViewById<ImageView>(R.id.confirmbutton)
                 confirmButton.setOnClickListener {
-                    //check if it can happen that the fragment is never created that hold data?
+                    // check if it can happen that the fragment is never created that hold data?
                     // (you have to swipe past them anyways - but still)
                     val action = ActionTempTargetPreCheck(
                         ActionTempTargetPreCheck.TempTargetCommand.MANUAL,

@@ -287,9 +287,9 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
             podInfoBinding.timeOnPod.setTextColor(
                 rh.gac(context,
                 if (podStateManager.timeDeviatesMoreThan(OmnipodConstants.TIME_DEVIATION_THRESHOLD)) {
-                    R.attr.defaultTextColor
-                } else {
                     R.attr.warningColor
+                } else {
+                    R.attr.defaultTextColor
                 })
             )
             val expiresAt = podStateManager.expiresAt

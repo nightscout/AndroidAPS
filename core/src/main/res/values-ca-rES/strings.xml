@@ -70,4 +70,5 @@
     <!-- Command Queue + readStatus reasons -->
     <string name="basal">Basal</string>
     <!-- Autotune -->
+    <string name="needconnectpermission">L\'aplicació necessita el permís del bluethoot</string>
 </resources>

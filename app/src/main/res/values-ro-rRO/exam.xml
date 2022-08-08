@@ -134,7 +134,6 @@
     <string name="wronginsulin_prime">Bolusati o cantitate parțiala de insulina din insulina calculata ca fiind lipsa utilizând seringa/penul sau amorsarea.</string>
     <string name="wronginsulin_donothing">Nu faceți nimic și permiteți AndroidAPS să corecteze valorile mari ale glicemiei.</string>
     <string name="iob_label">Insulină activă (IOB)</string>
-    <string name="iob_which">Bifați toate răspunsurile corecte.</string>
     <string name="iob_value">Valoarea IOB este afectată de bazalele temporare emise.</string>
     <string name="iob_hightemp">Rata bazala ridicata temporara nu va fi livrata atunci când glicemia este sub nivelul țintă.</string>
     <string name="iob_negiob">Un IOB negativ pentru o perioadă substanțială în absența exercițiilor fizice sugerează că profilul tău este prea puternic și este nevoie de mai puţină insulină în setările inițiale.</string>

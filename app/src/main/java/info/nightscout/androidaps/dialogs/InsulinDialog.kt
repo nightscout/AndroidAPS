@@ -58,9 +58,9 @@ class InsulinDialog : DialogFragmentWithDate() {
 
     companion object {
 
-        private const val PLUS1_DEFAULT = 0.5
-        private const val PLUS2_DEFAULT = 1.0
-        private const val PLUS3_DEFAULT = 2.0
+        const val PLUS1_DEFAULT = 0.5
+        const val PLUS2_DEFAULT = 1.0
+        const val PLUS3_DEFAULT = 2.0
     }
 
     private var queryingProtection = false

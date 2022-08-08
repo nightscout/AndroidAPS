@@ -4,6 +4,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.general.automation.actions.Action
 import info.nightscout.androidaps.plugins.general.automation.actions.ActionDummy
+import info.nightscout.androidaps.plugins.general.automation.actions.ActionStopProcessing
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerDummy
 import info.nightscout.androidaps.utils.DateUtil
@@ -50,6 +51,11 @@ class AutomationEvent(private val injector: HasAndroidInjector) {
         for (action in actions) result = result && action.isValid()
         if (!result) isEnabled = false
         return result
+    }
+
+    fun hasStopProcessing(): Boolean {
+        for (action in actions) if (action is ActionStopProcessing) return true
+        return false
     }
 
     fun toJSON(): String {

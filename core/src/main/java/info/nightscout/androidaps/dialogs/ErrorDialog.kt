@@ -70,6 +70,7 @@ class ErrorDialog : DaggerDialogFragment() {
         binding.title.text = title
         binding.ok.setOnClickListener {
             uel.log(Action.ERROR_DIALOG_OK, Sources.Unknown)
+            stopAlarm("Dismiss")
             dismiss()
         }
         binding.mute.setOnClickListener {
@@ -110,7 +111,6 @@ class ErrorDialog : DaggerDialogFragment() {
         super.dismissAllowingStateLoss()
         helperActivity?.finish()
         handler.removeCallbacksAndMessages(null)
-        stopAlarm("Dismiss")
     }
 
     private fun startAlarm() {

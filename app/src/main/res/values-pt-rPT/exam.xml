@@ -134,7 +134,6 @@
     <string name="wronginsulin_prime">Bólus uma proporção de insulina calculada \'não administrada\' ou com seringa/caneta ou purgando.</string>
     <string name="wronginsulin_donothing">Faça nada e permita que o AndroidAPS corrija qualquer nível de glicose elevado que daí resulte.</string>
     <string name="iob_label">Insulina ativa (IA )</string>
-    <string name="iob_which">Marque todas as respostas corretas.</string>
     <string name="iob_value">O valor do IA é afectado por basais temporárias emitidas.</string>
     <string name="iob_hightemp">Basal temporária alta não será dada quando a sua glicose estiver abaixo do alvo.</string>
     <string name="iob_negiob">IA negativa por um período substancial na ausência de exercício, sugere que o seu perfil é muito alto e é necessária menos insulina nas suas configurações.</string>

@@ -134,7 +134,6 @@
     <string name="wronginsulin_prime">\"주입되지 않은\" 인슐린양을 계산하여 시린지/펜 또는 prime 기능을 사용하여 인슐린을 주입합니다.</string>
     <string name="wronginsulin_donothing">특별한 조치를 취하지 않고, AndroidAPS가 결과적으로 높은 혈당 정도를 조정할 수 있도록 합니다.</string>
     <string name="iob_label">활성 인슐린 (IOB)</string>
-    <string name="iob_which">올바른 답변을 모두 체크하세요.</string>
     <string name="iob_value">IOB 값은 실행된 임시 basal의 영향을 받습니다.</string>
     <string name="iob_hightemp">혈당이 목표보다 낮을 경우 높은 임시 basal은 실행되지 않습니다.</string>
     <string name="iob_negiob">운동 없이도 음수의 IOB (마이너스 IOB) 구간이 많을 경우, 프로파일이 너무 강한 것이며 인슐린 양을 적게 설정해야 합니다.</string>

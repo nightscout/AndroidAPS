@@ -49,24 +49,38 @@ public abstract class ErosPodStateManager {
         this.gsonInstance = createGson();
     }
 
+    /**
+     * Discard Pod state
+     */
     public final void discardState() {
-        this.podState = new PodState(this.podState.address);
+        // Change on commit 4cea57acf6d74baffef83e1f04376b10bb5c1978 Nov 2021
+        // As by commit, keep podState object but wipe address to 0x0 to signal hasPodState()
+        // there is no state ( = no Pod address).
+        this.podState = new PodState(0x0);
         storePodState();
     }
 
+    /**
+     * Init Pod state but only if it has valid state.
+     * @param address New Pod address
+     */
     public final void initState(int address) {
         if (hasPodState()) {
-            throw new IllegalStateException("Can not init a new pod state: podState <> null");
+            throw new IllegalStateException("Can not init a new pod state: State is " +
+                    "null or discarded?");
         }
         podState = new PodState(address);
         storePodState();
     }
 
     /**
-     * @return true if we have a Pod state (which at least contains an address), indicating it is legal to call getters on PodStateManager
+     * @return true if we have a Pod state (which at least contains an valid address), indicating
+     * it is legal to call getters on PodStateManager
      */
     public final boolean hasPodState() {
-        return podState != null;
+
+        return this.podState != null
+                && this.podState.getAddress() != 0x0; // 0x0=discarded
     }
 
     /**

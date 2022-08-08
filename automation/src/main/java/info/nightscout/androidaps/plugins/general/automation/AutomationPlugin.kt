@@ -212,8 +212,12 @@ class AutomationPlugin @Inject constructor(
         while (iterator.hasNext()) {
             val event = iterator.next()
             if (event.isEnabled && !event.userAction && event.shouldRun())
-                if (event.systemAction || commonEventsEnabled) processEvent(event)
+                if (event.systemAction || commonEventsEnabled) {
+                    processEvent(event)
+                    if (event.hasStopProcessing()) break
+                }
         }
+
         // we cannot detect connected BT devices
         // so let's collect all connection/disconnections between 2 runs of processActions()
         // TriggerBTDevice can pick up and process these events
@@ -329,6 +333,7 @@ class AutomationPlugin @Inject constructor(
             //ActionLoopEnable(injector),
             //ActionLoopResume(injector),
             //ActionLoopSuspend(injector),
+            ActionStopProcessing(injector),
             ActionStartTempTarget(injector),
             ActionStopTempTarget(injector),
             ActionNotification(injector),

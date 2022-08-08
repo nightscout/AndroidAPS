@@ -2,9 +2,9 @@ package info.nightscout.androidaps.activities
 
 import android.content.Context
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
+import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.widget.SearchView
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceScreen
 import info.nightscout.androidaps.R
@@ -15,6 +15,7 @@ class PreferencesActivity : NoSplashAppCompatActivity(), PreferenceFragmentCompa
 
     private var preferenceId = 0
     private var myPreferenceFragment: MyPreferenceFragment? = null
+    private var searchView: SearchView? = null
 
     private lateinit var binding: ActivityPreferencesBinding
 
@@ -24,15 +25,6 @@ class PreferencesActivity : NoSplashAppCompatActivity(), PreferenceFragmentCompa
         binding = ActivityPreferencesBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.prefFilter.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                filterPreferences()
-            }
-
-            override fun afterTextChanged(s: Editable) {}
-        })
-
         title = rh.gs(R.string.nav_preferences)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
@@ -40,10 +32,27 @@ class PreferencesActivity : NoSplashAppCompatActivity(), PreferenceFragmentCompa
         preferenceId = intent.getIntExtra("id", -1)
         myPreferenceFragment?.arguments = Bundle().also {
             it.putInt("id", preferenceId)
-            it.putString("filter", binding.prefFilter.text.toString())
         }
         if (savedInstanceState == null)
             supportFragmentManager.beginTransaction().replace(R.id.frame_layout, myPreferenceFragment!!).commit()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_preferences, menu)
+        val searchItem = menu.findItem(R.id.menu_search)
+        searchView = searchItem.actionView as SearchView
+        searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                myPreferenceFragment?.setFilter(newText)
+                return false
+            }
+
+            override fun onQueryTextSubmit(query: String): Boolean {
+                return false
+            }
+        })
+        return super.onCreateOptionsMenu(menu)
     }
 
     override fun onPreferenceStartScreen(caller: PreferenceFragmentCompat, pref: PreferenceScreen): Boolean {
@@ -58,10 +67,6 @@ class PreferencesActivity : NoSplashAppCompatActivity(), PreferenceFragmentCompa
 
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.wrap(newBase))
-    }
-
-    private fun filterPreferences() {
-        myPreferenceFragment?.setFilter(binding.prefFilter.text.toString())
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

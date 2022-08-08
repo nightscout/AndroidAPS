@@ -1,16 +1,20 @@
 package info.nightscout.androidaps.plugins.pump.insight.connection_service;
 
+import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 
 import org.spongycastle.crypto.InvalidCipherTextException;
 
@@ -23,8 +27,6 @@ import javax.inject.Inject;
 
 import dagger.android.DaggerService;
 import info.nightscout.androidaps.insight.R;
-import info.nightscout.shared.logging.AAPSLogger;
-import info.nightscout.shared.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.ReadParameterBlockMessage;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.configuration.CloseConfigurationWriteSessionMessage;
@@ -87,6 +89,8 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.PairingDataStorage;
 import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.Cryptograph;
 import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.DerivedKeys;
 import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.KeyPair;
+import info.nightscout.shared.logging.AAPSLogger;
+import info.nightscout.shared.logging.LTag;
 import info.nightscout.shared.sharedPreferences.SP;
 
 public class InsightConnectionService extends DaggerService implements ConnectionEstablisher.Callback, InputStreamReader.Callback, OutputStreamWriter.Callback {
@@ -108,7 +112,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
     private DelayedActionThread disconnectTimer;
     private DelayedActionThread recoveryTimer;
     private DelayedActionThread timeoutTimer;
-    private BluetoothAdapter bluetoothAdapter;
+    @Nullable private BluetoothAdapter bluetoothAdapter;
     private BluetoothDevice bluetoothDevice;
     private BluetoothSocket bluetoothSocket;
     private ConnectionEstablisher connectionEstablisher;
@@ -205,7 +209,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
     }
 
     public synchronized boolean isPaired() {
-        return pairingDataStorage.isPaired();
+        return pairingDataStorage != null && pairingDataStorage.isPaired();
     }
 
     public synchronized <T extends AppLayerMessage> MessageRequest<T> requestMessage(T message) {
@@ -258,7 +262,9 @@ public class InsightConnectionService extends DaggerService implements Connectio
     @Override
     public synchronized void onCreate() {
         super.onCreate();
-        bluetoothAdapter = ((BluetoothManager)getApplicationContext().getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
+            bluetoothAdapter = ((BluetoothManager) getApplicationContext().getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
+        }
         pairingDataStorage = new PairingDataStorage(this);
         state = pairingDataStorage.isPaired() ? InsightState.DISCONNECTED : InsightState.NOT_PAIRED;
         wakeLock = ((PowerManager) getSystemService(POWER_SERVICE)).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS:InsightConnectionService");
@@ -426,6 +432,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
     }
 
     private synchronized void connect() {
+        if (bluetoothAdapter == null) return;
         if (bluetoothDevice == null)
             bluetoothDevice = bluetoothAdapter.getRemoteDevice(pairingDataStorage.getMacAddress());
         setState(InsightState.CONNECTING);

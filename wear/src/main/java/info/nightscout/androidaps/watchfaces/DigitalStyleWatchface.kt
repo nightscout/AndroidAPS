@@ -4,18 +4,26 @@ package info.nightscout.androidaps.watchfaces
 
 import android.annotation.SuppressLint
 import android.support.wearable.watchface.WatchFaceStyle
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat
+import androidx.viewbinding.ViewBinding
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.databinding.ActivityDigitalstyleBinding
 import info.nightscout.androidaps.extensions.toVisibility
+import info.nightscout.androidaps.watchfaces.utils.BaseWatchFace
 import info.nightscout.shared.logging.LTag
 
 class DigitalStyleWatchface : BaseWatchFace() {
 
-    @LayoutRes override fun layoutResource(): Int = R.layout.activity_digitalstyle
+    private lateinit var binding: ActivityDigitalstyleBinding
+
+    override fun inflateLayout(inflater: LayoutInflater): ViewBinding {
+        binding = ActivityDigitalstyleBinding.inflate(inflater)
+        return binding
+    }
 
     override fun getWatchFaceStyle(): WatchFaceStyle {
         return WatchFaceStyle.Builder(this)
@@ -26,39 +34,31 @@ class DigitalStyleWatchface : BaseWatchFace() {
     }
 
     override fun setColorDark() {
-        when (singleBg.sgvLevel) {
-            1L  -> {
-                mSgv?.setTextColor(ContextCompat.getColor(this, R.color.dark_highColor))
-                mDirection?.setTextColor(ContextCompat.getColor(this, R.color.dark_highColor))
-            }
-
-            0L  -> {
-                mSgv?.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor))
-                mDirection?.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor))
-            }
-
-            -1L -> {
-                mSgv?.setTextColor(ContextCompat.getColor(this, R.color.dark_lowColor))
-                mDirection?.setTextColor(ContextCompat.getColor(this, R.color.dark_lowColor))
-            }
+        val color = when (singleBg.sgvLevel) {
+            1L   -> R.color.dark_highColor
+            0L   -> R.color.dark_midColor
+            -1L  -> R.color.dark_lowColor
+            else -> R.color.dark_midColor
         }
-        if (ageLevel == 1) mTimestamp?.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor))
-        else mTimestamp?.setTextColor(ContextCompat.getColor(this, R.color.dark_TimestampOld))
+        binding.sgv.setTextColor(ContextCompat.getColor(this, color))
+        binding.direction.setTextColor(ContextCompat.getColor(this, color))
 
-        if (status.batteryLevel == 1) mUploaderBattery?.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor))
-        else mUploaderBattery?.setTextColor(ContextCompat.getColor(this, R.color.dark_uploaderBatteryEmpty))
+        val colorTime = if (ageLevel == 1) R.color.dark_midColor else R.color.dark_TimestampOld
+        binding.timestamp.setTextColor(ContextCompat.getColor(this, colorTime))
 
-        if (chart != null) {
-            highColor = ContextCompat.getColor(this, R.color.dark_highColor)
-            lowColor = ContextCompat.getColor(this, R.color.dark_lowColor)
-            midColor = ContextCompat.getColor(this, R.color.dark_midColor)
-            gridColor = ContextCompat.getColor(this, R.color.dark_gridColor)
-            basalBackgroundColor = ContextCompat.getColor(this, R.color.basal_dark)
-            basalCenterColor = ContextCompat.getColor(this, R.color.basal_light)
-            pointSize = 1
-            setupCharts()
-            setWatchfaceStyle()
-        }
+        val colorBat = if (status.batteryLevel == 1) R.color.dark_midColor else R.color.dark_uploaderBatteryEmpty
+        binding.uploaderBattery.setTextColor(ContextCompat.getColor(this, colorBat))
+
+        highColor = ContextCompat.getColor(this, R.color.dark_highColor)
+        lowColor = ContextCompat.getColor(this, R.color.dark_lowColor)
+        midColor = ContextCompat.getColor(this, R.color.dark_midColor)
+        gridColor = ContextCompat.getColor(this, R.color.dark_gridColor)
+        basalBackgroundColor = ContextCompat.getColor(this, R.color.basal_dark)
+        basalCenterColor = ContextCompat.getColor(this, R.color.basal_light)
+        pointSize = 1
+        setupCharts()
+        setWatchfaceStyle()
+
     }
 
     @SuppressLint("SetTextI18n")
@@ -103,19 +103,19 @@ class DigitalStyleWatchface : BaseWatchFace() {
         val isShowDate = sp.getBoolean(R.string.key_show_date, false)
         if (!isShowDate) {
             layoutView?.findViewById<View>(R.id.date_time)?.visibility = View.GONE
-            mHour?.textSize = 62f
-            mMinute?.textSize = 40f
-            mHour?.letterSpacing = (-0.066).toFloat()
-            mMinute?.letterSpacing = (-0.066).toFloat()
+            binding.hour.textSize = 62f
+            binding.minute.textSize = 40f
+            binding.hour.letterSpacing = (-0.066).toFloat()
+            binding.minute.letterSpacing = (-0.066).toFloat()
         } else {
             layoutView?.findViewById<View>(R.id.date_time)?.visibility = View.VISIBLE
-            mHour?.textSize = 40f
-            mMinute?.textSize = 26f
-            mHour?.letterSpacing = 0.toFloat()
-            mMinute?.letterSpacing = 0.toFloat()
+            binding.hour.textSize = 40f
+            binding.minute.textSize = 26f
+            binding.hour.letterSpacing = 0.toFloat()
+            binding.minute.letterSpacing = 0.toFloat()
 
             /* display week number */
-            val mWeekNumber = layoutView?.findViewById<TextView>(R.id.weeknumber)
+            val mWeekNumber = layoutView?.findViewById<TextView>(R.id.week_number)
             mWeekNumber?.visibility = sp.getBoolean(R.string.key_show_week_number, false).toVisibility()
             mWeekNumber?.text = "(" + dateUtil.weekString() + ")"
         }

@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventWearToMobile
+import info.nightscout.androidaps.interaction.utils.EditPlusMinusViewAdapter
 import info.nightscout.androidaps.interaction.utils.PlusMinusEditText
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.weardata.EventData.ActionProfileSwitchPreCheck
@@ -43,33 +44,31 @@ class ProfileSwitchActivity : ViewSelectorActivity() {
         override fun getColumnCount(arg0: Int): Int = 3
         override fun getRowCount(): Int = 1
 
-        override fun instantiateItem(container: ViewGroup, row: Int, col: Int): Any {
-            return if (col == 0) {
-                val view = getInflatedPlusMinusView(container)
-                var def = timeshift.toDouble()
-                if (editTimeshift != null) {
-                    def = SafeParse.stringToDouble(editTimeshift?.editText?.text.toString())
-                }
-                editTimeshift = PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0.0, 23.0, 1.0, DecimalFormat("0"), true, true)
-                setLabelToPlusMinusView(view, getString(R.string.action_timeshift))
+        override fun instantiateItem(container: ViewGroup, row: Int, col: Int): View = when (col) {
+            0    -> {
+                val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, container, false)
+                val view = viewAdapter.root
+                var initValue = SafeParse.stringToDouble(editTimeshift?.editText?.text.toString(), timeshift.toDouble())
+                editTimeshift = PlusMinusEditText(viewAdapter, initValue, 0.0, 23.0, 1.0, DecimalFormat("0"), true, getString(R.string.action_timeshift), true)
                 container.addView(view)
                 view.requestFocus()
                 view
-            } else if (col == 1) {
-                val view = getInflatedPlusMinusView(container)
-                var def = percentage.toDouble()
-                if (editPercentage != null) {
-                    def = SafeParse.stringToDouble(editPercentage?.editText?.text.toString())
-                }
-                editPercentage = PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 30.0, 250.0, 1.0, DecimalFormat("0"), false)
-                setLabelToPlusMinusView(view, getString(R.string.action_percentage))
+            }
+
+            1    -> {
+                val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, container, false)
+                val view = viewAdapter.root
+                var initValue = SafeParse.stringToDouble(editPercentage?.editText?.text.toString(), percentage.toDouble())
+                editPercentage = PlusMinusEditText(viewAdapter, initValue, 30.0, 250.0, 1.0, DecimalFormat("0"), false, getString(R.string.action_percentage))
                 container.addView(view)
                 view
-            } else {
+            }
+
+            else -> {
                 val view = LayoutInflater.from(applicationContext).inflate(R.layout.action_confirm_ok, container, false)
                 val confirmButton = view.findViewById<ImageView>(R.id.confirmbutton)
                 confirmButton.setOnClickListener {
-                    //check if it can happen that the fragment is never created that hold data?
+                    // check if it can happen that the fragment is never created that hold data?
                     // (you have to swipe past them anyways - but still)
                     val ps = ActionProfileSwitchPreCheck(SafeParse.stringToInt(editTimeshift?.editText?.text.toString()), SafeParse.stringToInt(editPercentage?.editText?.text.toString()))
                     rxBus.send(EventWearToMobile(ps))

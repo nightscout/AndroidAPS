@@ -345,6 +345,7 @@ class WizardDialog : DaggerDialogFragment() {
         val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
 
         runOnUiThread {
+            _binding ?: return@runOnUiThread
             if (carbsPassedIntoWizard != 0.0) {
                 binding.carbsInput.value = carbsPassedIntoWizard
             }

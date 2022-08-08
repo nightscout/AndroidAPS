@@ -144,6 +144,9 @@ ActionsTestBase : TestBaseWithProfile() {
                 it.profileFunction = profileFunction
                 it.uel = uel
             }
+            if (it is ActionStopProcessing) {
+                it.rh = rh
+            }
             if (it is PumpEnactResult) {
                 it.rh = rh
             }

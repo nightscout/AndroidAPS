@@ -413,8 +413,6 @@
     <string name="ns_localbroadcasts_title">Ativar partilha local.</string>
     <string name="openapssmb">SMB OpenAPS</string>
     <string name="openaps_smb_dynamic_isf">FSI Dinâmico</string>
-    <string name="DynISFAdjust_title">Fator de Ajuste FSI dinâmico %%</string>
-    <string name="DynISFAdjust_summary">Fator de ajuste para FSI dinâmico. Defina mais de 100%% para doses de correção mais agressivas e menos de 100%% para correções menos agressivas.</string>
     <string name="enableuam">Ativar UAM</string>
     <string name="enablesmb">Ativar SMB</string>
     <string name="enablesmb_summary">Use Super Micro Boluses em vez de basal temp para uma ação mais rápida</string>
@@ -554,7 +552,7 @@
     <string name="smbnotallowedinopenloopmode">SMB não permitido no modo open loop</string>
     <string name="food_short">Alimentos</string>
     <string name="reset">repor</string>
-    <string name="openapssmb_maxiob_title">Máximo total IOS OpenAPS não pode superar [U]</string>
+    <string name="openapssmb_maxiob_title">Máximo total de IOB OpenAPS não pode superar [U]</string>
     <string name="openapssmb_maxiob_summary">Este valor é chamado de Max IOB em contexto de OpenAPS\nOpenAPS não adicionará mais insulina se o IOB atual for maior que este valor</string>
     <string name="absorption_cutoff_title">Tempo máx. absorção refeição [h]</string>
     <string name="absorption_cutoff_summary">Hora em que qualquer refeição é considerada absorvida. Restantes hidratos de carbono serão cortados.</string>
@@ -865,7 +863,6 @@
     <string name="wear_action_tempt_max_bg_error">Glicemia maxima fora da meta!</string>
     <string name="wear_action_tempt_manual_range_message">Alvo temporário:\nMin: %1$s\nMax: %2$s\nDuração: %3$s</string>
     <string name="wear_action_tempt_manual_message">Alvo temporário:\nTarget: %1$s\nDuration: %2$s</string>
-    <string name="wear_action_tempt_preset_message">Alvo temporário:\Reason: %1$s\nTarget: %2$s\nDuration: %3$s</string>
     <string name="quick_wizard_message">Assistente rápido: %1$s\nInsulin: %2$.2fU\nCarbs: %3$dg</string>
     <string name="wizard_result">Calculadora:\nInsulin: %1$.2fU\nCarbs: %2$dg</string>
     <string name="overview_editquickwizard_show_on_device">Mostrar entrada no dispositivo:</string>

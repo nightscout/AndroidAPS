@@ -10,6 +10,7 @@ import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONObject
 import javax.inject.Inject
@@ -26,8 +27,9 @@ class InsulinOrefFreePeakPlugin @Inject constructor(
     profileFunction: ProfileFunction,
     rxBus: RxBus,
     aapsLogger: AAPSLogger,
-    config: Config
-) : InsulinOrefBasePlugin(injector, rh, profileFunction, rxBus, aapsLogger, config) {
+    config: Config,
+    hardLimits: HardLimits
+) : InsulinOrefBasePlugin(injector, rh, profileFunction, rxBus, aapsLogger, config, hardLimits) {
 
     override val id get(): Insulin.InsulinType = Insulin.InsulinType.OREF_FREE_PEAK
 

@@ -288,8 +288,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
             double extendedRateToSet = absoluteRate - getBaseBasalRate();
             extendedRateToSet = constraintChecker.applyBasalConstraints(new Constraint<>(extendedRateToSet), profile).value();
             // needs to be rounded to 0.1
-            extendedRateToSet = Round.INSTANCE.roundTo(extendedRateToSet,
-                    pumpDescription.getExtendedBolusStep() * 2, null); // *2 because of half hours
+            extendedRateToSet = Round.INSTANCE.roundTo(extendedRateToSet, pumpDescription.getExtendedBolusStep() * 2); // *2 because of half hours
 
             // What is current rate of extended bolusing in u/h?
             aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Extended bolus in progress: " + (danaPump.isExtendedInProgress()) + " rate: " + danaPump.getExtendedBolusAbsoluteRate() + "U/h duration remaining: " + danaPump.getExtendedBolusRemainingMinutes() + "min");
