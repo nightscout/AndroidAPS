@@ -35,6 +35,7 @@ open class DatabaseModule {
                 }
             })
             .fallbackToDestructiveMigration()
+            .fallbackToDestructiveMigrationOnDowngrade()
             .build()
 
     @Qualifier
