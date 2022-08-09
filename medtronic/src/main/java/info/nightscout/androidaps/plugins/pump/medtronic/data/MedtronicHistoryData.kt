@@ -29,6 +29,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpSta
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
 import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryCarbs
 import info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncStorage
 import info.nightscout.shared.sharedPreferences.SP
 import org.apache.commons.lang3.StringUtils
@@ -536,6 +537,7 @@ class MedtronicHistoryData @Inject constructor(
                 val result = pumpSync.syncBolusWithPumpId(
                     timestamp = tryToGetByLocalTime(bolus.atechDateTime),
                     amount = deliveredAmount,
+                    notes = null,
                     type = null,
                     pumpId = bolus.pumpId,
                     pumpType = medtronicPumpStatus.pumpType,
@@ -573,13 +575,15 @@ class MedtronicHistoryData @Inject constructor(
         if (bolus.containsDecodedData("Estimate")) {
             val bolusWizard = bolus.decodedData["Estimate"] as BolusWizardDTO
 
-            pumpSyncStorage.addCarbs(info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryCarbs(
+            pumpSyncStorage.addCarbs(PumpDbEntryCarbs(
                 tryToGetByLocalTime(bolus.atechDateTime),
                 bolusWizard.carbs.toDouble(),
+                null,
                 medtronicPumpStatus.pumpType,
                 medtronicPumpStatus.serialNumber,
                 bolus.pumpId
-            ))
+            )
+            )
         }
     }
 
