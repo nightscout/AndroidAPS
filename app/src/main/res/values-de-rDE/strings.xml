@@ -1046,4 +1046,5 @@ Unerwartetes Verhalten.</string>
     <string name="blocked_by_connectivity">Blockiert durch Verbindungsoptionen</string>
     <string name="no_watch_connected">(keine Uhr verbunden)</string>
     <string name="error_asking_for_permissions">Fehler beim Anfordern der Erlaubnis</string>
+    <string name="dynisf_adjust_sensitivity">Empfindlichkeit und BZ anpassen</string>
 </resources>
