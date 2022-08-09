@@ -636,7 +636,6 @@ Eversense-appen.</string>
     <string name="needsystemwindowpermission">Applikationen behöver förhöjd behörighet för aviseringar</string>
     <string name="needlocationpermission">Appen behöver platsåtkomst för bluetooth- och WiFi-identifiering</string>
     <string name="needstoragepermission">Applikationen behöver lagringsbehörighet för att kunna lagra loggfiler och exportinställningar</string>
-    <string name="needconnectpermission">Applikationen behöver bluetooth-behörighet</string>
     <string name="request">Begäran</string>
     <string name="open_navigation">Öppna menyn</string>
     <string name="close_navigation">Stäng menyn</string>

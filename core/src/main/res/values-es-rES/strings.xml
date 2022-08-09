@@ -489,6 +489,7 @@
     <string name="autotune_run_with_autoswitch">Autotune ejecutado y perfil cambiado automáticamente</string>
     <string name="autotune_run_with_error">Error durante la última ejecución de Autotune</string>
     <string name="autotune_run_cancelled">Se ha detectado otra ejecución de Autotune, ejecución cancelada</string>
+    <string name="needconnectpermission">La aplicación necesita permiso de bluetooth</string>
     <plurals name="days">
         <item quantity="one">%1$d día</item>
         <item quantity="other">%1$d días</item>

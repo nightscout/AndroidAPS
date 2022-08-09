@@ -590,7 +590,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 EventOverviewBolusProgress.Treatment t = new EventOverviewBolusProgress.Treatment(0, 0, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.getId());
                 final EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.INSTANCE;
                 bolusingEvent.setT(t);
-                bolusingEvent.setStatus(rh.gs(R.string.insight_delivered, 0d, insulin));
+                bolusingEvent.setStatus(rh.gs(R.string.bolus_delivered, 0d, insulin));
                 bolusingEvent.setPercent(0);
                 rxBus.send(bolusingEvent);
                 int trials = 0;
@@ -607,6 +607,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 pumpSync.syncBolusWithPumpId(
                         insightBolusID.getTimestamp(),
                         detailedBolusInfo.insulin,
+                        detailedBolusInfo.getNotes(),
                         detailedBolusInfo.getBolusType(),
                         insightBolusID.getId(),
                         PumpType.ACCU_CHEK_INSIGHT,
@@ -629,14 +630,14 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                         trials = -1;
                         int percentBefore = bolusingEvent.getPercent();
                         bolusingEvent.setPercent((int) (100D / activeBolus.getInitialAmount() * (activeBolus.getInitialAmount() - activeBolus.getRemainingAmount())));
-                        bolusingEvent.setStatus(rh.gs(R.string.insight_delivered, activeBolus.getInitialAmount() - activeBolus.getRemainingAmount(), activeBolus.getInitialAmount()));
+                        bolusingEvent.setStatus(rh.gs(R.string.bolus_delivered, activeBolus.getInitialAmount() - activeBolus.getRemainingAmount(), activeBolus.getInitialAmount()));
                         if (percentBefore != bolusingEvent.getPercent())
                             rxBus.send(bolusingEvent);
                     } else {
                         synchronized ($bolusLock) {
                             if (bolusCancelled || trials == -1 || trials++ >= 5) {
                                 if (!bolusCancelled) {
-                                    bolusingEvent.setStatus(rh.gs(R.string.insight_delivered, insulin, insulin));
+                                    bolusingEvent.setStatus(rh.gs(R.string.bolus_delivered, insulin, insulin));
                                     bolusingEvent.setPercent(100);
                                     rxBus.send(bolusingEvent);
                                 }
@@ -1401,6 +1402,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     bolusID.getTimestamp(),
                     event.getImmediateAmount(),
                     null,
+                    null,
                     bolusID.getId(),
                     PumpType.ACCU_CHEK_INSIGHT,
                     serial);
@@ -1439,6 +1441,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
             pumpSync.syncBolusWithPumpId(
                     bolusID.getTimestamp(),
                     event.getImmediateAmount(),
+                    null,
                     null,
                     bolusID.getId(),
                     PumpType.ACCU_CHEK_INSIGHT,

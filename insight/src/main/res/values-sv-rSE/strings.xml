@@ -27,7 +27,6 @@
     <string name="code_compare">Stämmer koderna överens mellan denna enhet och din pump?</string>
     <string name="insight_pairing">Parkoppling av Insight</string>
     <string name="insight_local">Accu-Chek Insight</string>
-    <string name="insight_delivered">%1$.2fU / %2$.2fU levererat</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Slang bytt</string>
     <string name="insightpump_shortname">Sight</string>

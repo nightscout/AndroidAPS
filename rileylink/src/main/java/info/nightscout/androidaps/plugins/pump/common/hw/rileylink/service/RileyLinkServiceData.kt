@@ -27,6 +27,7 @@ class RileyLinkServiceData @Inject constructor() {
     var tuneUpDone = false
     var rileyLinkError: RileyLinkError? = null
     var rileyLinkServiceState: RileyLinkServiceState = RileyLinkServiceState.NotStarted
+        private set
     var lastServiceStateChange = 0L
         private set
 
@@ -62,11 +63,11 @@ class RileyLinkServiceData @Inject constructor() {
     }
 
     @Synchronized
-    fun setServiceState(newState: RileyLinkServiceState, errorCode: RileyLinkError) {
+    fun setServiceState(newState: RileyLinkServiceState, errorCode: RileyLinkError? = null) {
         rileyLinkServiceState = newState
         lastServiceStateChange = System.currentTimeMillis()
         rileyLinkError = errorCode
-        aapsLogger.info(LTag.PUMP, String.format(Locale.ENGLISH, "RileyLink State Changed: $newState - Error State: ${errorCode.name}"))
+        aapsLogger.info(LTag.PUMP, String.format(Locale.ENGLISH, "RileyLink State Changed: $newState - Error State: ${errorCode?.name}"))
         rileyLinkUtil.rileyLinkHistory.add(RLHistoryItem(rileyLinkServiceState, errorCode, targetDevice))
         rxBus.send(EventRileyLinkDeviceStatusChange(targetDevice!!, newState, errorCode))
     }

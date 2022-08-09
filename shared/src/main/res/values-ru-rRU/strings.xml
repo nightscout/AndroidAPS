@@ -21,8 +21,8 @@
     <string name="unit_hours">час</string>
     <string name="unit_days">дн</string>
     <string name="unit_weeks">нед</string>
-    <string name="shortminute">мин</string>
-    <string name="shortday">дн</string>
+    <string name="shortminute">м</string>
+    <string name="shortday">д</string>
     <string name="later_today">Позднее сегодня</string>
     <string name="tomorrow">Завтра</string>
     <string name="today">Cегодня</string>

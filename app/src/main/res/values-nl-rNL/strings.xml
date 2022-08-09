@@ -645,7 +645,6 @@
     <string name="needsystemwindowpermission">Toepassing vereist systeemvenstermachtiging voor meldingen</string>
     <string name="needlocationpermission">App heeft locatie toestemming nodig voor Bluetooth scan en WiFi identificatie</string>
     <string name="needstoragepermission">Applicatie heeft toestemming nodig om log bestanden op te slaan en instellingen te exporteren</string>
-    <string name="needconnectpermission">Applicatie heeft Bluetooth toestemming nodig</string>
     <string name="request">Verzoek</string>
     <string name="open_navigation">Open navigatie</string>
     <string name="close_navigation">Sluit navigatie</string>

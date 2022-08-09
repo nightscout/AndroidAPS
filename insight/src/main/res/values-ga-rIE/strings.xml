@@ -7,7 +7,6 @@
     <string name="tdd_total">TDD Lomlán</string>
     <string name="eb_formatter">%1$.2f / %2$.2f A do %3$d nom</string>
     <string name="insight_local">Accu-Chek Insight</string>
-    <string name="insight_delivered">%1$.2f A / %2$.2f A seachadta</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="pump_stopped">Caidéil stopadh</string>
     <string name="pump_started">Caidéil tosú</string>

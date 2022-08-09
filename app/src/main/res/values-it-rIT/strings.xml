@@ -645,7 +645,6 @@
     <string name="needsystemwindowpermission">L\'applicazione richiede l\'autorizzazione \"finestra di sistema\" per le notifiche</string>
     <string name="needlocationpermission">L\'applicazione richiede l\'accesso alla posizione per la scansione bluetooth e l\'identificazione WiFi</string>
     <string name="needstoragepermission">L\'applicazione richiede l\'accesso alla memoria per memorizzare i file di log ed esportare le impostazioni</string>
-    <string name="needconnectpermission">L\'applicazione richiede l\'autorizzazione bluetooth</string>
     <string name="request">Richiesta</string>
     <string name="open_navigation">Apri navigazione</string>
     <string name="close_navigation">Chiudi navigazione</string>

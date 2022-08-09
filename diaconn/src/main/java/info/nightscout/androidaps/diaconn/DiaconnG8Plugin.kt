@@ -258,7 +258,7 @@ class DiaconnG8Plugin @Inject constructor(
             detailedBolusInfoStorage.add(detailedBolusInfo) // will be picked up on reading history
             val t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.id)
             var connectionOK = false
-            if (detailedBolusInfo.insulin > 0 || carbs > 0) connectionOK = diaconnG8Service?.bolus(detailedBolusInfo.insulin, carbs.toInt(), carbTimeStamp, t)
+            if (detailedBolusInfo.insulin > 0 || carbs > 0) connectionOK = diaconnG8Service?.bolus(detailedBolusInfo.insulin, carbs.toInt(), carbTimeStamp, detailedBolusInfo.notes, t)
                 ?: false
             val result = PumpEnactResult(injector)
             result.success = connectionOK

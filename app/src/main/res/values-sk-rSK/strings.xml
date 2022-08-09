@@ -645,7 +645,6 @@
     <string name="needsystemwindowpermission">Aplikácia vyžaduje pre oznámenia systémové oprávnenie</string>
     <string name="needlocationpermission">Aplikácia vyžaduje oprávnenie polohy, pre vyhľadávanie BT a identifikáciu WiFi</string>
     <string name="needstoragepermission">Aby bolo možné nahrávať logy a exportovať nastavenia, je nutné pre aplikáciu povoliť oprávnenie prístupu k úložisku</string>
-    <string name="needconnectpermission">Aplikácia vyžaduje povolenie bluetooth</string>
     <string name="request">Požiadavka</string>
     <string name="open_navigation">Otvoriť Menu</string>
     <string name="close_navigation">Zavrieť Menu</string>

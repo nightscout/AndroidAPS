@@ -645,7 +645,6 @@
     <string name="needsystemwindowpermission">Pro oznámení vyžaduje aplikace oprávnění systémového okna</string>
     <string name="needlocationpermission">Aplikace potřebuje oprávnění k přístupu k poloze kvůli skenování BT a WiFi identifikaci</string>
     <string name="needstoragepermission">Aby bylo možné nahrávat logy a exportovat nastavení, je nutné pro aplikaci povolit oprávnění přístupu k úložišti</string>
-    <string name="needconnectpermission">Aplikace potřebuje oprávnění bluetooth</string>
     <string name="request">Požadavek</string>
     <string name="open_navigation">Otevřít menu</string>
     <string name="close_navigation">Zavřít menu</string>
@@ -1045,4 +1044,6 @@
     <string name="blocked_by_charging">Zablokováno možností nabíjení</string>
     <string name="blocked_by_connectivity">Zablokováno možností připojení</string>
     <string name="no_watch_connected">(Žádné hodinky nejsou připojeny)</string>
+    <string name="error_asking_for_permissions">Chyba žádosti o oprávnění</string>
+    <string name="dynisf_adjust_sensitivity">Upravit citlivost a glykémii</string>
 </resources>
