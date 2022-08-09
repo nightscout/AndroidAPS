@@ -112,6 +112,7 @@ class PumpSyncStorage @Inject constructor(
         val result = pumpSync.addBolusWithTempId(
             detailedBolusInfo.timestamp,
             detailedBolusInfo.insulin,
+            detailedBolusInfo.notes,
             temporaryId,
             detailedBolusInfo.bolusType,
             creator.model(),
@@ -145,6 +146,7 @@ class PumpSyncStorage @Inject constructor(
         val result = pumpSync.syncCarbsWithTimestamp(
             carbsDto.date,
             carbsDto.carbs,
+            carbsDto.notes,
             null,
             carbsDto.pumpType,
             carbsDto.serialNumber)

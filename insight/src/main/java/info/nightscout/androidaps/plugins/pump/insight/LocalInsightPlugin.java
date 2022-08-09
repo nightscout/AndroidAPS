@@ -607,6 +607,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 pumpSync.syncBolusWithPumpId(
                         insightBolusID.getTimestamp(),
                         detailedBolusInfo.insulin,
+                        detailedBolusInfo.getNotes(),
                         detailedBolusInfo.getBolusType(),
                         insightBolusID.getId(),
                         PumpType.ACCU_CHEK_INSIGHT,
@@ -1401,6 +1402,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     bolusID.getTimestamp(),
                     event.getImmediateAmount(),
                     null,
+                    null,
                     bolusID.getId(),
                     PumpType.ACCU_CHEK_INSIGHT,
                     serial);
@@ -1439,6 +1441,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
             pumpSync.syncBolusWithPumpId(
                     bolusID.getTimestamp(),
                     event.getImmediateAmount(),
+                    null,
                     null,
                     bolusID.getId(),
                     PumpType.ACCU_CHEK_INSIGHT,
