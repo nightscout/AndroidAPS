@@ -3,7 +3,7 @@
     <!--    DateUtil-->
     <string name="minago">prieš %1$d min</string>
     <string name="hoursago">Prieš %1$.1f val.</string>
-    <string name="shorthour">val</string>
+    <string name="shorthour">v</string>
     <string name="days">d.</string>
     <string name="hours">val.</string>
     <string name="unit_second">sek.</string>
@@ -16,6 +16,6 @@
     <string name="unit_hours">val.</string>
     <string name="unit_days">d.</string>
     <string name="unit_weeks">savaičių</string>
-    <string name="shortminute">min.</string>
+    <string name="shortminute">m</string>
     <string name="shortday">d</string>
 </resources>
