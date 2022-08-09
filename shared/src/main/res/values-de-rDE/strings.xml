@@ -8,7 +8,7 @@
     <string name="days_ago_round">vor %1$.0f Tagen</string>
     <string name="in_days">in %1$.0f Tagen</string>
     <string name="in_days_round">in %1$.0f Tagen</string>
-    <string name="shorthour">Std</string>
+    <string name="shorthour">s</string>
     <string name="days">Tage</string>
     <string name="hours">Stunden</string>
     <string name="unit_second">Sekunde</string>
@@ -21,7 +21,7 @@
     <string name="unit_hours">Stunden</string>
     <string name="unit_days">Tage</string>
     <string name="unit_weeks">Wochen</string>
-    <string name="shortminute">min</string>
+    <string name="shortminute">m</string>
     <string name="shortday">d</string>
     <string name="later_today">Später heute</string>
     <string name="tomorrow">Morgen</string>

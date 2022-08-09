@@ -21,7 +21,7 @@
     <string name="unit_hours">saat</string>
     <string name="unit_days">gün</string>
     <string name="unit_weeks">hafta</string>
-    <string name="shortminute">dk</string>
+    <string name="shortminute">d</string>
     <string name="shortday">g</string>
     <string name="later_today">Bugünden sonra</string>
     <string name="tomorrow">Yarın</string>
