@@ -450,6 +450,7 @@ class LocalInsightPlugin @Inject constructor(
                 pumpSync.syncBolusWithPumpId(
                     insightBolusID!!.timestamp,
                     detailedBolusInfo.insulin,
+                    detailedBolusInfo.notes,
                     detailedBolusInfo.bolusType,
                     insightBolusID.id,
                     PumpType.ACCU_CHEK_INSIGHT,
@@ -1198,6 +1199,7 @@ class LocalInsightPlugin @Inject constructor(
             pumpSync.syncBolusWithPumpId(
                 timestamp = timestamp,
                 amount = event.immediateAmount,
+                notes = null,
                 type = null,
                 pumpId = bolusID.id,
                 pumpType = PumpType.ACCU_CHEK_INSIGHT,
@@ -1236,6 +1238,7 @@ class LocalInsightPlugin @Inject constructor(
             pumpSync.syncBolusWithPumpId(
                 timestamp = bolusID!!.timestamp,
                 amount = event.immediateAmount,
+                notes = null,
                 type = null,
                 pumpId = bolusID.id,
                 pumpType = PumpType.ACCU_CHEK_INSIGHT,
