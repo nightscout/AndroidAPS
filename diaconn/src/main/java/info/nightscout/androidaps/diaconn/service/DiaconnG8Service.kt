@@ -395,7 +395,7 @@ class DiaconnG8Service : DaggerService() {
         return result.success(true)
     }
 
-    fun bolus(insulin: Double, carbs: Int, carbTime: Long, t: EventOverviewBolusProgress.Treatment): Boolean {
+    fun bolus(insulin: Double, carbs: Int, carbTime: Long, notes: String?, t: EventOverviewBolusProgress.Treatment): Boolean {
         if (!isConnected) return false
         if (BolusProgressDialog.stopPressed) return false
         rxBus.send(EventPumpStatusChanged(rh.gs(R.string.startingbolus)))
@@ -422,7 +422,7 @@ class DiaconnG8Service : DaggerService() {
         diaconnG8Pump.bolusProgressLastTimeStamp = dateUtil.now()
         val start = InjectionSnackSettingPacket(injector, (insulin * 100).toInt())
         if (carbs > 0) {
-            pumpSync.syncCarbsWithTimestamp(carbTime, carbs.toDouble(), null, PumpType.DIACONN_G8, diaconnG8Pump.serialNo.toString())
+            pumpSync.syncCarbsWithTimestamp(carbTime, carbs.toDouble(), notes, null, PumpType.DIACONN_G8, diaconnG8Pump.serialNo.toString())
         }
         val bolusStart = System.currentTimeMillis()
         if (insulin > 0) {

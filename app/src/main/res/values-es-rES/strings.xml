@@ -1044,4 +1044,6 @@
     <string name="blocked_by_charging">Bloqueado por opciones de carga</string>
     <string name="blocked_by_connectivity">Bloqueado por opciones de conectividad</string>
     <string name="no_watch_connected">(Ningún reloj conectado)</string>
+    <string name="error_asking_for_permissions">Error al solicitar permisos</string>
+    <string name="dynisf_adjust_sensitivity">Ajustar sensibilidad y glucosa</string>
 </resources>

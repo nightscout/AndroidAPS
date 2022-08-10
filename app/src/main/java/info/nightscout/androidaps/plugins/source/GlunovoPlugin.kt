@@ -166,7 +166,7 @@ class GlunovoPlugin @Inject constructor(
                         }
             }
         } catch (e: SecurityException) {
-            aapsLogger.error(e.localizedMessage)
+            aapsLogger.error(LTag.CORE, "Exception", e)
         }
     }
 

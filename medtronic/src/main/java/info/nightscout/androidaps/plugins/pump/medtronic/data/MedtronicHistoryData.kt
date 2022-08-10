@@ -29,6 +29,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpSta
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
 import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryCarbs
 import info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncStorage
 import info.nightscout.shared.sharedPreferences.SP
 import org.apache.commons.lang3.StringUtils
@@ -358,7 +359,7 @@ class MedtronicHistoryData @Inject constructor(
         aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "ProcessHistoryData: TBRs Processed [count=%d, items=%s]", tbrs.size, gson.toJson(tbrs)))
         if (tbrs.isNotEmpty()) {
             try {
-                processTBREntries(tbrs, rewindRecords)
+                processTBREntries(tbrs)
             } catch (ex: Exception) {
                 aapsLogger.error(LTag.PUMP, "ProcessHistoryData: Error processing TBR entries: " + ex.message, ex)
                 throw ex
@@ -536,6 +537,7 @@ class MedtronicHistoryData @Inject constructor(
                 val result = pumpSync.syncBolusWithPumpId(
                     timestamp = tryToGetByLocalTime(bolus.atechDateTime),
                     amount = deliveredAmount,
+                    notes = null,
                     type = null,
                     pumpId = bolus.pumpId,
                     pumpType = medtronicPumpStatus.pumpType,
@@ -573,17 +575,19 @@ class MedtronicHistoryData @Inject constructor(
         if (bolus.containsDecodedData("Estimate")) {
             val bolusWizard = bolus.decodedData["Estimate"] as BolusWizardDTO
 
-            pumpSyncStorage.addCarbs(info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryCarbs(
+            pumpSyncStorage.addCarbs(PumpDbEntryCarbs(
                 tryToGetByLocalTime(bolus.atechDateTime),
                 bolusWizard.carbs.toDouble(),
+                null,
                 medtronicPumpStatus.pumpType,
                 medtronicPumpStatus.serialNumber,
                 bolus.pumpId
-            ))
+            )
+            )
         }
     }
 
-    private fun processTBREntries(entryList: MutableList<PumpHistoryEntry>, rewindList: MutableList<PumpHistoryEntry>) {
+    private fun processTBREntries(entryList: MutableList<PumpHistoryEntry>) {
         entryList.reverse()
         val tbr = entryList[0].getDecodedDataEntry("Object") as TempBasalPair
 //        var readOldItem = false
@@ -607,7 +611,7 @@ class MedtronicHistoryData @Inject constructor(
 
         val tbrRecords = pumpSyncStorage.getTBRs()
 
-        val processList: MutableList<TempBasalProcessDTO> = createTBRProcessList(entryList, rewindList)
+        val processList: MutableList<TempBasalProcessDTO> = createTBRProcessList(entryList)
 
         if (processList.isNotEmpty()) {
             for (tempBasalProcessDTO in processList) {
@@ -731,7 +735,7 @@ class MedtronicHistoryData @Inject constructor(
     }
 
 
-    fun createTBRProcessList(entryList: MutableList<PumpHistoryEntry>, rewindList: MutableList<PumpHistoryEntry>) : MutableList<TempBasalProcessDTO> {
+    fun createTBRProcessList(entryList: MutableList<PumpHistoryEntry>) : MutableList<TempBasalProcessDTO> {
 
         aapsLogger.debug(LTag.PUMP, "${ProcessHistoryRecord.TBR.description}  List (before filter): ${gson.toJson(entryList)}")
 

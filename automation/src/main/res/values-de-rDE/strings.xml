@@ -113,5 +113,15 @@
     <string name="automation_event">Automatisierungs-Ereignis</string>
     <string name="reorder_label">Umsortieren</string>
     <string name="user_action">Benutzeraktion</string>
+    <string name="remove_automation">Automatisierung entfernen</string>
+    <string name="sort_automation">Automation-Regeln sortieren</string>
+    <string name="remove_selected_items">Ausgewähltes Objekt löschen</string>
+    <string name="count_selected">%1$d ausgewählt</string>
     <string name="confirm_remove_multiple_items">Sind Sie sicher, dass Sie diese(s) %1$d Element(e) löschen möchten?</string>
+    <string name="sort_label">Sortieren</string>
+    <string name="system_automation">System-Automatisierung</string>
+    <string name="run_automations">Automatisierungen ausführen</string>
+    <string name="add_automation">Regel hinzufügen</string>
+    <string name="remove_sort">Entfernen/sortieren</string>
+    <string name="stop_processing">Verarbeitung beenden</string>
 </resources>

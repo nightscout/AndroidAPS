@@ -323,10 +323,11 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         get() = podState.activeCommand
 
     @Synchronized
-    override fun createLastBolus(requestedUnits: Double, historyId: Long, bolusType: DetailedBolusInfo.BolusType) {
+    override fun createLastBolus(requestedUnits: Double, historyId: Long, bolusType: DetailedBolusInfo.BolusType, notes: String?) {
         podState.lastBolus = OmnipodDashPodStateManager.LastBolus(
             startTime = System.currentTimeMillis(),
             requestedUnits = requestedUnits,
+            notes = notes,
             bolusUnitsRemaining = requestedUnits,
             deliveryComplete = false, // cancelled, delivered 100% or pod failure
             historyId = historyId,

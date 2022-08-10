@@ -1043,4 +1043,5 @@
     <string name="blocked_by_charging">Заблокировано опциями зарядки</string>
     <string name="blocked_by_connectivity">Заблокировано настройками подключения</string>
     <string name="no_watch_connected">(Часы не подключены)</string>
+    <string name="error_asking_for_permissions">Ошибка при запросе разрешения</string>
 </resources>

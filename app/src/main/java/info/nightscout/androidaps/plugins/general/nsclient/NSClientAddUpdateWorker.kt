@@ -88,7 +88,7 @@ class NSClientAddUpdateWorker(
                             .also { result ->
                                 result.inserted.forEach {
                                     uel.log(
-                                        Action.BOLUS, Sources.NSClient,
+                                        Action.BOLUS, Sources.NSClient, it.notes,
                                         ValueWithUnit.Timestamp(it.timestamp),
                                         ValueWithUnit.Insulin(it.amount)
                                     )
@@ -124,7 +124,7 @@ class NSClientAddUpdateWorker(
                             .also { result ->
                                 result.inserted.forEach {
                                     uel.log(
-                                        Action.CARBS, Sources.NSClient,
+                                        Action.CARBS, Sources.NSClient, it.notes,
                                         ValueWithUnit.Timestamp(it.timestamp),
                                         ValueWithUnit.Gram(it.amount.toInt())
                                     )
@@ -140,7 +140,7 @@ class NSClientAddUpdateWorker(
                                 }
                                 result.updated.forEach {
                                     uel.log(
-                                        Action.CARBS, Sources.NSClient,
+                                        Action.CARBS, Sources.NSClient, it.notes,
                                         ValueWithUnit.Timestamp(it.timestamp),
                                         ValueWithUnit.Gram(it.amount.toInt())
                                     )

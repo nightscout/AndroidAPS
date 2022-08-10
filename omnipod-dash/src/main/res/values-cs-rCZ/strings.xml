@@ -33,7 +33,6 @@
     <string name="omnipod_dash_unknown">Neznámý stav příkazu</string>
     <string name="omnipod_common_history_tbr_value">Rychlost: %1$.2f U, doba trvání: %2$d minut</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
-    <string name="dash_bolusdelivering">Podávání %1$.2f U</string>
     <string name="omnipod_common_alert_delivery_suspended">Výdej inzulínu je pozastaven</string>
     <string name="omnipod_dash_connection_lost">Ztraceno připojení k podu</string>
     <string name="omnipod_dash_bolus_already_in_progress">Vydává se další bolus</string>

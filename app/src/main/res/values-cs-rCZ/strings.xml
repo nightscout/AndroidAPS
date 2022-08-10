@@ -1044,4 +1044,6 @@
     <string name="blocked_by_charging">Zablokováno možností nabíjení</string>
     <string name="blocked_by_connectivity">Zablokováno možností připojení</string>
     <string name="no_watch_connected">(Žádné hodinky nejsou připojeny)</string>
+    <string name="error_asking_for_permissions">Chyba žádosti o oprávnění</string>
+    <string name="dynisf_adjust_sensitivity">Upravit citlivost a glykémii</string>
 </resources>

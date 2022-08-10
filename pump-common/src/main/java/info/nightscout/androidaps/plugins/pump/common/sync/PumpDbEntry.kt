@@ -41,6 +41,7 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 // }
 
 interface PumpDbEntry {
+
     var temporaryId: Long
     var date: Long
     var pumpType: PumpType
@@ -48,63 +49,85 @@ interface PumpDbEntry {
     var pumpId: Long?
 }
 
+data class PumpDbEntryBolus(
+    override var temporaryId: Long,
+    override var date: Long,
+    override var pumpType: PumpType,
+    override var serialNumber: String,
+    override var pumpId: Long? = null,
+    var insulin: Double,
+    var carbs: Double,
+    var bolusType: DetailedBolusInfo.BolusType
+) : PumpDbEntry {
 
-data class PumpDbEntryBolus(override var temporaryId: Long,
-                            override var date: Long,
-                            override var pumpType: PumpType,
-                            override var serialNumber: String,
-                            override var pumpId: Long? = null,
-                            var insulin: Double,
-                            var carbs: Double,
-                            var bolusType: DetailedBolusInfo.BolusType) : PumpDbEntry {
-
-        constructor(temporaryId: Long,
-                date: Long,
-                pumpType: PumpType,
-                serialNumber: String,
-                detailedBolusInfo: DetailedBolusInfo) : this(temporaryId, date, pumpType, serialNumber, null,
-                                                             detailedBolusInfo.insulin,
-                                                             detailedBolusInfo.carbs,
-                                                             detailedBolusInfo.bolusType)
-
-}
-
-data class PumpDbEntryCarbs(var date: Long,
-                            var carbs: Double,
-                            var pumpType: PumpType,
-                            var serialNumber: String,
-                            var pumpId: Long? = null) {
-
-    constructor(detailedBolusInfo: DetailedBolusInfo,
-                creator: PumpSyncEntriesCreator) : this(detailedBolusInfo.timestamp,
+    constructor(
+        temporaryId: Long,
+        date: Long,
+        pumpType: PumpType,
+        serialNumber: String,
+        detailedBolusInfo: DetailedBolusInfo
+    ) : this(
+        temporaryId, date, pumpType, serialNumber, null,
+        detailedBolusInfo.insulin,
         detailedBolusInfo.carbs,
-        creator.model(),
-        creator.serialNumber())
+        detailedBolusInfo.bolusType
+    )
+
 }
 
-data class PumpDbEntryTBR(override var temporaryId: Long,
-                          override var date: Long,
-                          override var pumpType: PumpType,
-                          override var serialNumber: String,
-                          override var pumpId: Long? = null,
-                          var rate: Double,
-                          var isAbsolute: Boolean,
-                          var durationInSeconds: Int,
-                          var tbrType: PumpSync.TemporaryBasalType) : PumpDbEntry {
+data class PumpDbEntryCarbs(
+    var date: Long,
+    var carbs: Double,
+    var notes: String?,
+    var pumpType: PumpType,
+    var serialNumber: String,
+    var pumpId: Long? = null
+) {
 
-    constructor(rate: Double,
-                isAbsolute: Boolean,
-                durationInSeconds: Int,
-                tbrType: PumpSync.TemporaryBasalType) : this(0, 0, PumpType.GENERIC_AAPS, "", null,
-                                                             rate, isAbsolute, durationInSeconds, tbrType)
+    constructor(
+        detailedBolusInfo: DetailedBolusInfo,
+        creator: PumpSyncEntriesCreator
+    ) : this(
+        detailedBolusInfo.timestamp,
+        detailedBolusInfo.carbs,
+        detailedBolusInfo.notes,
+        creator.model(),
+        creator.serialNumber()
+    )
+}
 
-    constructor(temporaryId: Long,
-                date: Long,
-                pumpType: PumpType,
-                serialNumber: String,
-                entry: PumpDbEntryTBR,
-                pumpId: Long?
-               ) : this(temporaryId, date, pumpType, serialNumber, pumpId,
-                        entry.rate, entry.isAbsolute, entry.durationInSeconds, entry.tbrType)
+data class PumpDbEntryTBR(
+    override var temporaryId: Long,
+    override var date: Long,
+    override var pumpType: PumpType,
+    override var serialNumber: String,
+    override var pumpId: Long? = null,
+    var rate: Double,
+    var isAbsolute: Boolean,
+    var durationInSeconds: Int,
+    var tbrType: PumpSync.TemporaryBasalType
+) : PumpDbEntry {
+
+    constructor(
+        rate: Double,
+        isAbsolute: Boolean,
+        durationInSeconds: Int,
+        tbrType: PumpSync.TemporaryBasalType
+    ) : this(
+        0, 0, PumpType.GENERIC_AAPS, "", null,
+        rate, isAbsolute, durationInSeconds, tbrType
+    )
+
+    constructor(
+        temporaryId: Long,
+        date: Long,
+        pumpType: PumpType,
+        serialNumber: String,
+        entry: PumpDbEntryTBR,
+        pumpId: Long?
+    ) : this(
+        temporaryId, date, pumpType, serialNumber, pumpId,
+        entry.rate, entry.isAbsolute, entry.durationInSeconds, entry.tbrType
+    )
 
 }
