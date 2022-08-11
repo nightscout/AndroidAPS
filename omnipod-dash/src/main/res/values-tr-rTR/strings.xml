@@ -33,7 +33,6 @@
     <string name="omnipod_dash_unknown">Bilinmeyen komut durumu</string>
     <string name="omnipod_common_history_tbr_value">Oran: %1$.2f Ü, süre: %2$d dakika</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f Ü</string>
-    <string name="dash_bolusdelivering">%1$.2f Ü gönderiliyor</string>
     <string name="omnipod_common_alert_delivery_suspended">İnsülin iletimi askıya alındı</string>
     <string name="omnipod_dash_connection_lost">Pod ile bağlantı koptu</string>
     <string name="omnipod_dash_bolus_already_in_progress">Diğer bolus iletiliyor</string>

@@ -27,7 +27,6 @@
     <string name="code_compare">I codici mostrati su questo dispositivo e sul micro combaciano?</string>
     <string name="insight_pairing">Associazione Insight</string>
     <string name="insight_local">Accu-Chek Insight</string>
-    <string name="insight_delivered">%1$.2f U / %2$.2f U erogato</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Catetere sostituito</string>
     <string name="insightpump_shortname">Sight</string>

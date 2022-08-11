@@ -50,12 +50,20 @@ class AndroidPermission @Inject constructor(
         }
         if (test) {
             if (activity is DaggerAppCompatActivityWithResult)
-                activity.requestMultiplePermissions.launch(permissions)
+                try {
+                    activity.requestMultiplePermissions.launch(permissions)
+                } catch (ignored: IllegalStateException) {
+                    ToastUtils.errorToast(activity, rh.gs(R.string.error_asking_for_permissions))
+                }
         }
         if (testBattery) {
             try {
                 if (activity is DaggerAppCompatActivityWithResult)
-                    activity.callForBatteryOptimization.launch(null)
+                    try {
+                        activity.callForBatteryOptimization.launch(null)
+                    } catch (ignored: IllegalStateException) {
+                        ToastUtils.errorToast(activity, rh.gs(R.string.error_asking_for_permissions))
+                    }
             } catch (e: ActivityNotFoundException) {
                 permissionBatteryOptimizationFailed = true
                 OKDialog.show(activity, rh.gs(R.string.permission), rh.gs(R.string.alert_dialog_permission_battery_optimization_failed)) { activity.recreate() }
@@ -145,8 +153,10 @@ class AndroidPermission @Inject constructor(
                     if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
                         // Show alert dialog to the user saying a separate permission is needed
                         // Launch the settings activity if the user prefers
-                        val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                            Uri.parse("package:" + activity.packageName))
+                        val intent = Intent(
+                            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                            Uri.parse("package:" + activity.packageName)
+                        )
                         activity.startActivity(intent)
                     }
                 }

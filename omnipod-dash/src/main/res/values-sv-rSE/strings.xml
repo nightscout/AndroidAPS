@@ -33,7 +33,6 @@
     <string name="omnipod_dash_unknown">Okänt tillstånd för kommandot</string>
     <string name="omnipod_common_history_tbr_value">Dos: %1$.2f U, Duration: %2$d min</string>
     <string name="omnipod_common_history_bolus_value">%1$.2fU</string>
-    <string name="dash_bolusdelivering">Levererar %1$.2f enheter</string>
     <string name="omnipod_common_alert_delivery_suspended">Insulinleverans är pausad</string>
     <string name="omnipod_dash_connection_lost">Tappade anslutningen till pod</string>
     <string name="omnipod_dash_bolus_already_in_progress">En annan bolus håller på att levereras</string>

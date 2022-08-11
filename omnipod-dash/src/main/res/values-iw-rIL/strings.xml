@@ -33,7 +33,6 @@
     <string name="omnipod_dash_unknown">מצב הפקודה לא ידוע</string>
     <string name="omnipod_common_history_tbr_value">מינון: %1$.2f יח\', משך: %2$d דק\'</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f יח\'</string>
-    <string name="dash_bolusdelivering">מזריק %1$.2f יח\'</string>
     <string name="omnipod_common_alert_delivery_suspended">הזרקת האינסולין מופסקת</string>
     <string name="omnipod_dash_connection_lost">אבד החיבור לפוד</string>
     <string name="omnipod_dash_bolus_already_in_progress">בולוס אחר מוזרק כרגע</string>

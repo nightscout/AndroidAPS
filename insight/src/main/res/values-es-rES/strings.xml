@@ -27,7 +27,6 @@
     <string name="code_compare">¿Coinciden los códigos mostrados en este dispositivo con los de la bomba?</string>
     <string name="insight_pairing">Insight emparejada</string>
     <string name="insight_local">Accu-Chek Insight</string>
-    <string name="insight_delivered">%1$.2f U / %2$.2f U entregado</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Tubo cambiado</string>
     <string name="insightpump_shortname">Sight</string>

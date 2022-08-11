@@ -209,7 +209,7 @@ public class InsightConnectionService extends DaggerService implements Connectio
     }
 
     public synchronized boolean isPaired() {
-        return pairingDataStorage.isPaired();
+        return pairingDataStorage != null && pairingDataStorage.isPaired();
     }
 
     public synchronized <T extends AppLayerMessage> MessageRequest<T> requestMessage(T message) {
