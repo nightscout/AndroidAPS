@@ -35,6 +35,11 @@
     <!-- To receive data from Aidex -->
     <uses-permission android:name="com.microtechmd.cgms.aidex.permissions.RECEIVE_BG_ESTIMATE" />
 
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/>
+    <queries>
+        <package android:name="alexpr.co.uk.infinivocgm.cgm_db.CgmExternalProvider" />
+        <provider android:authorities="alexpr.co.uk.infinivocgm.intelligo.cgm_db.CgmExternalProvider" />
+    </queries>
 
     <application
         android:name=".MainApp"

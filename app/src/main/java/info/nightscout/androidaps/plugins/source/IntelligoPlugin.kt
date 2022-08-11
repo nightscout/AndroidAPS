@@ -1,9 +1,11 @@
 package info.nightscout.androidaps.plugins.source
 
 import android.content.Context
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Handler
 import android.os.HandlerThread
+import android.util.Log
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
@@ -17,14 +19,14 @@ import info.nightscout.androidaps.interfaces.BgSource
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.XDripBroadcast
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
@@ -46,7 +48,7 @@ class IntelligoPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
         .fragmentClass(BGSourceFragment::class.java.name)
-        .pluginIcon(R.drawable.ic_glunovo)
+        .pluginIcon(R.drawable.ic_intelligo)
         .pluginName(R.string.intelligo)
         .preferencesId(R.xml.pref_bgsource)
         .shortName(R.string.intelligo)
@@ -88,6 +90,15 @@ class IntelligoPlugin @Inject constructor(
 
     private fun handleNewData() {
         if (!isEnabled()) return
+
+        for (pack in context.packageManager.getInstalledPackages(PackageManager.GET_PROVIDERS)) {
+            val providers = pack.providers
+            if (providers != null) {
+                for (provider in providers) {
+                    Log.d("Example", "provider: " + provider.authority)
+                }
+            }
+        }
 
         context.contentResolver.query(contentUri, null, null, null, null)?.let { cr ->
             val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
@@ -170,9 +181,9 @@ class IntelligoPlugin @Inject constructor(
         glucoseValue.sourceSensor == GlucoseValue.SourceSensor.INTELLIGO_NATIVE && sp.getBoolean(R.string.key_dexcomg5_nsupload, false)
 
     companion object {
-
         @Suppress("SpellCheckingInspection")
-        const val AUTHORITY = "alexpr.co.uk.infinivocgm.intelligo.provider/"
+        const val AUTHORITY = "alexpr.co.uk.infinivocgm.intelligo.cgm_db.CgmExternalProvider"
+        //const val AUTHORITY = "alexpr.co.uk.infinivocgm.cgm_db.CgmExternalProvider/"
         const val TABLE_NAME = "CgmReading"
         const val INTERVAL = 180000L // 3 min
     }
