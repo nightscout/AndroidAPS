@@ -55,7 +55,7 @@ class MedtronicHistoryDataUTest : TestBase() {
 
         println("TBR Pre-Process List: " + gson.toJson(yourClassList))
 
-        val createTBRProcessList = unitToTest.createTBRProcessList(yourClassList, mutableListOf())
+        val createTBRProcessList = unitToTest.createTBRProcessList(yourClassList)
 
         println("TBR Process List: " + createTBRProcessList.size)
 
@@ -98,7 +98,7 @@ class MedtronicHistoryDataUTest : TestBase() {
 
         println("TBR Pre-Process List (Special): " + gson.toJson(yourClassList))
 
-        val createTBRProcessList = unitToTest.createTBRProcessList(yourClassList, mutableListOf())
+        val createTBRProcessList = unitToTest.createTBRProcessList(yourClassList)
 
         println("TBR Process List (Special): " + createTBRProcessList.size)
 

@@ -9,6 +9,7 @@
     <!--    <string name="fi_lang" translatable="false">Finnish</string> -->
     <string name="fr_lang" translatable="false">French</string>
     <string name="de_lang" translatable="false">German</string>
+    <string name="dk_lang" translatable="false">Danish</string>
     <string name="el_lang" translatable="false">Greek</string>
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <string name="zh_lang" translatable="false">Chinese</string>
@@ -1250,6 +1251,8 @@
     <string name="blocked_by_charging">Blocked by charging options</string>
     <string name="blocked_by_connectivity">Blocked by connectivity options</string>
     <string name="no_watch_connected">(No Watch Connected)</string>
-
+    <string name="error_asking_for_permissions">Error asking for permissions</string>
+    <string name="key_adjust_sensitivity" translatable="false">dynisf_adjust_sensitivity</string>
+    <string name="dynisf_adjust_sensitivity">Adjust sensitivity and BG</string>
 
 </resources>

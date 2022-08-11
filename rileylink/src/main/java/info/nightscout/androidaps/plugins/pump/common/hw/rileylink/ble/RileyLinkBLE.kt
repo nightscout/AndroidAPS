@@ -217,15 +217,17 @@ class RileyLinkBLE @Inject constructor(
                 // Tell Android that we want the notifications
                 bluetoothConnectionGatt?.setCharacteristicNotification(chara, true)
                 val list = chara.descriptors
-                if (gattDebugEnabled) for (i in list.indices) aapsLogger.debug(LTag.PUMPBTCOMM, "Found descriptor: " + list[i].toString())
-                // Tell the remote device to send the notifications
-                mCurrentOperation = DescriptorWriteOperation(aapsLogger, bluetoothConnectionGatt, list[0], BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE)
-                mCurrentOperation?.execute(this)
-                when {
-                    mCurrentOperation?.timedOut == true    -> retValue.resultCode = BLECommOperationResult.RESULT_TIMEOUT
-                    mCurrentOperation?.interrupted == true -> retValue.resultCode = BLECommOperationResult.RESULT_INTERRUPTED
-                    else                                   -> retValue.resultCode = BLECommOperationResult.RESULT_SUCCESS
-                }
+                if (list.size > 0) {
+                    if (gattDebugEnabled) for (i in list.indices) aapsLogger.debug(LTag.PUMPBTCOMM, "Found descriptor: " + list[i].toString())
+                    // Tell the remote device to send the notifications
+                    mCurrentOperation = DescriptorWriteOperation(aapsLogger, bluetoothConnectionGatt, list[0], BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE)
+                    mCurrentOperation?.execute(this)
+                    when {
+                        mCurrentOperation?.timedOut == true    -> retValue.resultCode = BLECommOperationResult.RESULT_TIMEOUT
+                        mCurrentOperation?.interrupted == true -> retValue.resultCode = BLECommOperationResult.RESULT_INTERRUPTED
+                        else                                   -> retValue.resultCode = BLECommOperationResult.RESULT_SUCCESS
+                    }
+                } else return retValue.apply { resultCode = BLECommOperationResult.RESULT_NONE }
             }
             mCurrentOperation = null
             gattOperationSema.release()

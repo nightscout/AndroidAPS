@@ -381,9 +381,11 @@ open class AutotuneIob @Inject constructor(
                         }
                     }
                 TherapyEvent.Type.COMBO_BOLUS      ->
-                    extendedBolus?.let {
-                        val profile = profileFunction.getProfile(it.timestamp)
-                        it.toJson(true, profile!!, dateUtil)
+                    extendedBolus?.let { ebr ->
+                        val profile = profileFunction.getProfile(ebr.timestamp)
+                        profile?.let {
+                            ebr.toJson(true, it, dateUtil)
+                        }
                     }
                 TherapyEvent.Type.CORRECTION_BOLUS -> bolusTreatment?.toJson(true, dateUtil)
                 TherapyEvent.Type.CARBS_CORRECTION -> carbsTreatment?.toJson(true, dateUtil)

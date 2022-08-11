@@ -90,7 +90,7 @@
     <string name="latitude_short">Широта:</string>
     <string name="longitude_short">Долгота:</string>
     <string name="glucose_u">Гк %1$s]:</string>
-    <string name="target_u">Цель %1$d м</string>
+    <string name="target_u">Цель [%1$s]:</string>
     <string name="lastboluslabel">Предыдущий болюс</string>
     <string name="lastboluscompared">Время болюса %1$s %2$s мин назад</string>
     <string name="triggercoblabel">Активн углеводы</string>

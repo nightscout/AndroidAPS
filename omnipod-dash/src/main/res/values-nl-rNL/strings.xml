@@ -33,7 +33,6 @@
     <string name="omnipod_dash_unknown">Onbekende status voor de opdracht</string>
     <string name="omnipod_common_history_tbr_value">Basaal: %1$.2f E, Duur: %2$d min</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f E</string>
-    <string name="dash_bolusdelivering">%1$.2f eh worden toegediend</string>
     <string name="omnipod_common_alert_delivery_suspended">Insuline levering is opgeschort</string>
     <string name="omnipod_dash_connection_lost">Verbinding met pod verbroken</string>
     <string name="omnipod_dash_bolus_already_in_progress">Een andere bolus wordt op dit moment toegediend</string>

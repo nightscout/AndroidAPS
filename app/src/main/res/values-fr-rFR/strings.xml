@@ -1044,4 +1044,5 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="blocked_by_charging">Bloqué par les options de recharge</string>
     <string name="blocked_by_connectivity">Bloqué par les options de connectivité</string>
     <string name="no_watch_connected">(Pas de montre connectée)</string>
+    <string name="error_asking_for_permissions">Erreur lors de la demande des autorisations</string>
 </resources>

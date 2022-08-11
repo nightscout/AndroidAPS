@@ -1045,4 +1045,5 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="blocked_by_charging">Şarj seçenekleri tarafından engellendi</string>
     <string name="blocked_by_connectivity">Bağlantı seçenekleri tarafından engellendi</string>
     <string name="no_watch_connected">(Saat Bağlı Değil)</string>
+    <string name="error_asking_for_permissions">İzin istenirken hata</string>
 </resources>

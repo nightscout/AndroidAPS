@@ -34,7 +34,6 @@
     <string name="omnipod_dash_unknown">Stare necunoscută pentru comandă</string>
     <string name="omnipod_common_history_tbr_value">Rata: %1$.2f U, durata: %2$d minute</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
-    <string name="dash_bolusdelivering">Se livrează %1$.2f U</string>
     <string name="omnipod_common_alert_delivery_suspended">Administrarea insulinei este suspendată</string>
     <string name="omnipod_dash_connection_lost">S-a pierdut conexiunea la pod</string>
     <string name="omnipod_dash_bolus_already_in_progress">Un alt bolus este în curs de livrare</string>
