@@ -666,6 +666,8 @@
     <string name="sensitivity_raises_target_title">רגישות מעלה את ערך המטרה</string>
     <string name="sensitivity_raises_target_summary">כשמזוהה רגישות, הגדל את ערך המטרה של הגלוקוז</string>
     <string name="careportal_removestartedevents">מחק אירועי \"AndroidAPS Started\"</string>
+    <string name="show_invalidated">הצג פסולים</string>
+    <string name="hide_invalidated">הסתר פסולים</string>
     <string name="remove_items">הסר פריטים</string>
     <string name="sort_items">מיין פריטים</string>
     <string name="storedsettingsfound">נמצאו הגדרות שמורות</string>
@@ -1040,4 +1042,6 @@
     <string name="blocked_by_charging">חסום ע\"י הגדרות טעינה</string>
     <string name="blocked_by_connectivity">חסום ע\"י הגדרות חיבור</string>
     <string name="no_watch_connected">(השעון לא מחובר)</string>
+    <string name="error_asking_for_permissions">שגיאה בעת בקשת הרשאות</string>
+    <string name="dynisf_adjust_sensitivity">כיוונון הרגישות והסוכר בדם</string>
 </resources>
