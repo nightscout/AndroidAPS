@@ -152,4 +152,6 @@
     <string name="diaconn_g8_errorcode_34">LGS inaktiv, Befehl zum Ausschalten zurückgewiesen.</string>
     <string name="diaconn_g8_errorcode_35">TBR Start ist während einer laufenden TBR nicht möglich.</string>
     <string name="diaconn_g8_errorcode_36">TBR kann nicht gestoppt werden, da keine TBR läuft.</string>
+    <string name="diaconn_g8_cloudsend_summary">Sende Pumpenprotokolle zur Diaconn Cloud.</string>
+    <string name="diaconn_g8_cloudsend_title">Diaconn Cloud-Sync</string>
 </resources>

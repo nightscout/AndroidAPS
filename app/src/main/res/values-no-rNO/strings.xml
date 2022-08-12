@@ -1044,4 +1044,5 @@
     <string name="blocked_by_charging">Blokkert på grunn av ladealternativer</string>
     <string name="blocked_by_connectivity">Blokkert på grunn av tilkoblingsalternativer</string>
     <string name="no_watch_connected">(Ingen klokke tilkoblet)</string>
+    <string name="error_asking_for_permissions">Feil under spørring etter tillatelser</string>
 </resources>

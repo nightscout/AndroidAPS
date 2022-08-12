@@ -34,7 +34,6 @@
     <string name="omnipod_dash_unknown">Estado desconhecido para o comando</string>
     <string name="omnipod_common_history_tbr_value">Rácio: %1$.2f U, duração: %2$d minutes</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
-    <string name="dash_bolusdelivering">A administrar %1$.2f U</string>
     <string name="omnipod_common_alert_delivery_suspended">A entrega de insulina está suspensa</string>
     <string name="omnipod_dash_connection_lost">Perda de ligação ao pod</string>
     <string name="omnipod_dash_bolus_already_in_progress">Outro bólus está a ser administrado</string>

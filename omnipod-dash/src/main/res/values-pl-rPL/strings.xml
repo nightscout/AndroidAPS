@@ -33,7 +33,6 @@
     <string name="omnipod_dash_unknown">Nieznany stan polecenia</string>
     <string name="omnipod_common_history_tbr_value">Dawka: %1$.2f U, Czas trwania: %2$d min</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
-    <string name="dash_bolusdelivering">Dostarczanie %1$.2f U</string>
     <string name="omnipod_common_alert_delivery_suspended">Podawanie insuliny zawieszone</string>
     <string name="omnipod_dash_connection_lost">Utracono połączenie z Podem</string>
     <string name="omnipod_dash_bolus_already_in_progress">Inny bolus jest dostarczany</string>
