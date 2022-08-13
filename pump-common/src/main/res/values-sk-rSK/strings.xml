@@ -5,6 +5,7 @@
     <string name="pump_operation_not_yet_supported_by_pump">Operácia zatiaľ nepodporovaná pumpou.</string>
     <string name="common_resultok">OK</string>
     <string name="pump_serial_number">Sériové číslo pumpy</string>
+    <string name="bolus_delivered">Podané %1$.2f JI / %2$.2f JI</string>
     <!-- PumpCommon - Pump Status -->
     <string name="pump_status_never_contacted">Nikdy nepripojené</string>
     <string name="pump_status_waking_up">Prebúdzanie</string>
