@@ -815,7 +815,7 @@
     <string name="sensitivity_raises_target_title">Sensitivity raises target</string>
     <string name="sensitivity_raises_target_summary">When sensitivity is detected, raise the target glucose</string>
     <string name="key_keep_screen_on" translatable="false">keep_screen_on</string>
-    <string name="careportal_removestartedevents">Clean AndroidAPS started</string>
+    <string name="careportal_removestartedevents">Remove AAPS started entries</string>
     <string name="show_invalidated">Show invalidated</string>
     <string name="hide_invalidated">Hide invalidated</string>
     <string name="remove_items">Remove items</string>
