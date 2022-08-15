@@ -20,7 +20,7 @@ android {
 
 dependencies {
     api "androidx.preference:preference-ktx:$preferencektx_version"
-    api "net.danlew:android.joda:$joga_version"
+    api "net.danlew:android.joda:$joda_version"
 
     // for old fashioned support-app version (wear)
     api "com.google.dagger:dagger:$dagger_version"
