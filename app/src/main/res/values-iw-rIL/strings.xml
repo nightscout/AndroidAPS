@@ -665,7 +665,6 @@
     <string name="resistance_lowers_target_summary">כשמזוהה תנגודת, הורד את ערך המטרה של הגלוקוז</string>
     <string name="sensitivity_raises_target_title">רגישות מעלה את ערך המטרה</string>
     <string name="sensitivity_raises_target_summary">כשמזוהה רגישות, הגדל את ערך המטרה של הגלוקוז</string>
-    <string name="careportal_removestartedevents">מחק אירועי \"AndroidAPS Started\"</string>
     <string name="show_invalidated">הצג פסולים</string>
     <string name="hide_invalidated">הסתר פסולים</string>
     <string name="remove_items">הסר פריטים</string>
