@@ -665,7 +665,6 @@
     <string name="resistance_lowers_target_summary">Ak je zistená rezistancia, znížiť cieľovú hladinu glykémie</string>
     <string name="sensitivity_raises_target_title">Citlivosť zvyšuje cieľ</string>
     <string name="sensitivity_raises_target_summary">Ak je zistená vyššia citlivosť, zvýši cieľovú hladinu glykémie</string>
-    <string name="careportal_removestartedevents">Vymazať udalosti \"AndroidAPS reštartovaný\"</string>
     <string name="show_invalidated">Zobraziť neplatné</string>
     <string name="hide_invalidated">Skryť zneplatnené</string>
     <string name="remove_items">Odstrániť položky</string>
