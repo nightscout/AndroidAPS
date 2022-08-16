@@ -138,23 +138,17 @@ open class AutotuneIob @Inject constructor(
     //nsTreatment is used only for export data
     private fun initializeExtendedBolusData(from: Long, to: Long, tunedProfile: ATProfile) {
         val extendedBoluses = repository.getExtendedBolusDataFromTimeToTime(from, to, false).blockingGet()
-        val pumpInterface = activePlugin.activePump
-        if (pumpInterface.isFakingTempsByExtendedBoluses) {
-            for (i in extendedBoluses.indices) {
-                val eb = extendedBoluses[i]
-                if (eb.isValid)
+        for (i in extendedBoluses.indices) {
+            val eb = extendedBoluses[i]
+            if (eb.isValid)
+                if (eb.isEmulatingTempBasal) {
                     profileFunction.getProfile(eb.timestamp)?.let {
                         toSplittedTimestampTB(eb.toTemporaryBasal(it), tunedProfile)
                     }
-            }
-        } else {
-            for (i in extendedBoluses.indices) {
-                val eb = extendedBoluses[i]
-                if (eb.isValid) {
+                } else {
                     nsTreatments.add(NsTreatment(eb))
                     boluses.addAll(convertToBoluses(eb))
                 }
-            }
         }
     }
 
