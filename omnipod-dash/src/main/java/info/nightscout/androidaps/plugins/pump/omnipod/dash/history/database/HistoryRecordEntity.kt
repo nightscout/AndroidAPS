@@ -12,7 +12,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.Resolve
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.TempBasalRecord
 
 @Entity(
-    tableName = "historyrecords",
+    tableName = DASH_TABLE_NAME,
     indices = [
         Index("createdAt"),
     ]
@@ -24,9 +24,9 @@ data class HistoryRecordEntity(
     val date: Long, // when event actually happened
     val commandType: OmnipodCommandType,
     val initialResult: InitialResult,
-    @Embedded(prefix = "tempBasalRecord_") val tempBasalRecord: TempBasalRecord?,
-    @Embedded(prefix = "bolusRecord_") val bolusRecord: BolusRecord?,
-    @Embedded(prefix = "basalprofile_") val basalProfileRecord: BasalValuesRecord?,
+    @Embedded(prefix = DASH_TBS_COLUMN_PREFIX) val tempBasalRecord: TempBasalRecord?,
+    @Embedded(prefix = DASH_BOLUS_COLUMN_PREFIX) val bolusRecord: BolusRecord?,
+    @Embedded(prefix = DASH_BASAL_COLUMN_PREFIX) val basalProfileRecord: BasalValuesRecord?,
     val resolvedResult: ResolvedResult?,
-    val resolvedAt: Long?
+    val resolvedAt: Long?,
 )
