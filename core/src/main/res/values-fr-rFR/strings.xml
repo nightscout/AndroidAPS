@@ -20,7 +20,7 @@
     <string name="disconnected">Déconnectée</string>
     <string name="disconnecting">Déconnexion en cours</string>
     <string name="waiting_for_disconnection">Attente de déconnexion</string>
-    <string name="androidaps_start">AndroidAPS est lancé</string>
+    <string name="androidaps_start">Démarrage AndroidAPS</string>
     <string name="formatinsulinunits1">%1$.1f U</string>
     <string name="formatinsulinunits">%1$.2f U</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
