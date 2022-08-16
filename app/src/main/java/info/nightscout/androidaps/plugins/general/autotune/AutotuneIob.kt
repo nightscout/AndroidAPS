@@ -35,10 +35,8 @@ open class AutotuneIob @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val sp: SP,
     private val dateUtil: DateUtil,
-    private val activePlugin: ActivePlugin,
     private val autotuneFS: AutotuneFS
 ) {
-
     private var nsTreatments = ArrayList<NsTreatment>()
     private var dia: Double = Constants.defaultDIA
     var boluses: ArrayList<Bolus> = ArrayList()
@@ -54,7 +52,11 @@ open class AutotuneIob @Inject constructor(
         startBG = from
         endBG = to
         nsTreatments.clear()
+        meals.clear()
+        boluses.clear()
         tempBasals = ArrayList<TemporaryBasal>()
+        if (profileFunction.getProfile(from - range()) == null)
+            return
         initializeBgreadings(from, to)
         initializeTreatmentData(from - range(), to)
         initializeTempBasalData(from - range(), to, tunedProfile)
@@ -91,8 +93,6 @@ open class AutotuneIob @Inject constructor(
         aapsLogger.debug(LTag.AUTOTUNE, "Check BG date: BG Size: " + glucose.size + " OldestBG: " + dateUtil.dateAndTimeAndSecondsString(oldestBgDate) + " to: " + dateUtil.dateAndTimeAndSecondsString(to))
         val tmpCarbs = repository.getCarbsDataFromTimeToTimeExpanded(from, to, false).blockingGet()
         aapsLogger.debug(LTag.AUTOTUNE, "Nb treatments after query: " + tmpCarbs.size)
-        meals.clear()
-        boluses.clear()
         var nbCarbs = 0
         for (i in tmpCarbs.indices) {
             val tp = tmpCarbs[i]
