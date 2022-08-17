@@ -180,7 +180,6 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
                 pumpSync.syncBolusWithPumpId(
                         detailedBolusInfo.timestamp,
                         detailedBolusInfo.insulin,
-                        detailedBolusInfo.getNotes(),
                         detailedBolusInfo.getBolusType(),
                         dateUtil.now(),
                         PumpType.DANA_R,
@@ -189,7 +188,6 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
                 pumpSync.syncCarbsWithTimestamp(
                         detailedBolusInfo.getCarbsTimestamp() != null ? detailedBolusInfo.getCarbsTimestamp() : detailedBolusInfo.timestamp,
                         detailedBolusInfo.carbs,
-                        detailedBolusInfo.getNotes(),
                         null,
                         PumpType.DANA_R,
                         serialNumber());

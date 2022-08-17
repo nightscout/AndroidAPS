@@ -108,14 +108,13 @@ interface PumpSync {
      *
      * @param timestamp     timestamp of event from pump history
      * @param amount        amount of insulin
-     * @param notes         bolus notes
      * @param temporaryId   temporary id generated when pump id in not know yet
      * @param type          type of bolus (NORMAL, SMB, PRIME)
      * @param pumpType      pump type like PumpType.ACCU_CHEK_COMBO
      * @param pumpSerial    pump serial number
      * @return true if new record is created
      **/
-    fun addBolusWithTempId(timestamp: Long, amount: Double, notes: String?, temporaryId: Long, type: DetailedBolusInfo.BolusType, pumpType: PumpType, pumpSerial: String): Boolean
+    fun addBolusWithTempId(timestamp: Long, amount: Double, temporaryId: Long, type: DetailedBolusInfo.BolusType, pumpType: PumpType, pumpSerial: String): Boolean
 
     /**
      * Synchronization of boluses with temporary id
@@ -152,14 +151,13 @@ interface PumpSync {
      *
      * @param timestamp     timestamp of event from pump history
      * @param amount        amount of insulin
-     * @param notes         bolus notes
      * @param type          type of bolus (NORMAL, SMB, PRIME)
      * @param pumpId        pump id from history
      * @param pumpType      pump type like PumpType.ACCU_CHEK_COMBO
      * @param pumpSerial    pump serial number
      * @return true if new record is created
      **/
-    fun syncBolusWithPumpId(timestamp: Long, amount: Double, notes: String?, type: DetailedBolusInfo.BolusType?, pumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean
+    fun syncBolusWithPumpId(timestamp: Long, amount: Double, type: DetailedBolusInfo.BolusType?, pumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean
 
     /**
      * Synchronization of carbs
@@ -172,13 +170,12 @@ interface PumpSync {
      *
      * @param timestamp     timestamp of event from pump history
      * @param amount        amount of carbs
-     * @param notes         bolus notes
      * @param pumpId        pump id from history if coming form pump history
      * @param pumpType      pump type like PumpType.ACCU_CHEK_COMBO
      * @param pumpSerial    pump serial number
      * @return true if new record is created
      **/
-    fun syncCarbsWithTimestamp(timestamp: Long, amount: Double, notes: String?, pumpId: Long?, pumpType: PumpType, pumpSerial: String): Boolean
+    fun syncCarbsWithTimestamp(timestamp: Long, amount: Double, pumpId: Long?, pumpType: PumpType, pumpSerial: String): Boolean
 
     /*
      *   THERAPY EVENTS

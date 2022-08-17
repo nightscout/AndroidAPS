@@ -190,7 +190,6 @@ open class VirtualPumpPlugin @Inject constructor(
             pumpSync.syncBolusWithPumpId(
                 timestamp = detailedBolusInfo.timestamp,
                 amount = detailedBolusInfo.insulin,
-                notes = detailedBolusInfo.notes,
                 type = detailedBolusInfo.bolusType,
                 pumpId = dateUtil.now(),
                 pumpType = pumpType ?: PumpType.GENERIC_AAPS,
@@ -200,7 +199,6 @@ open class VirtualPumpPlugin @Inject constructor(
             pumpSync.syncCarbsWithTimestamp(
                 timestamp = detailedBolusInfo.carbsTimestamp ?: detailedBolusInfo.timestamp,
                 amount = detailedBolusInfo.carbs,
-                notes = detailedBolusInfo.notes,
                 pumpId = null,
                 pumpType = pumpType ?: PumpType.GENERIC_AAPS,
                 pumpSerial = serialNumber()

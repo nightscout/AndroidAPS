@@ -5,7 +5,7 @@ import info.nightscout.androidaps.interfaces.Profile
 
 sealed class Record
 
-data class BolusRecord(val amount: Double, val bolusType: BolusType, val notes: String?) : Record()
+data class BolusRecord(val amout: Double, val bolusType: BolusType) : Record()
 
 data class TempBasalRecord(val duration: Int, val rate: Double) : Record()
 

@@ -129,12 +129,11 @@ class PumpSyncImplementation @Inject constructor(
         )
     }
 
-    override fun addBolusWithTempId(timestamp: Long, amount: Double, notes: String?, temporaryId: Long, type: DetailedBolusInfo.BolusType, pumpType: PumpType, pumpSerial: String): Boolean {
+    override fun addBolusWithTempId(timestamp: Long, amount: Double, temporaryId: Long, type: DetailedBolusInfo.BolusType, pumpType: PumpType, pumpSerial: String): Boolean {
         if (!confirmActivePump(timestamp, pumpType, pumpSerial)) return false
         val bolus = Bolus(
             timestamp = timestamp,
             amount = amount,
-            notes = notes,
             type = type.toDBbBolusType(),
             interfaceIDs_backing = InterfaceIDs(
                 temporaryId = temporaryId,
@@ -151,8 +150,7 @@ class PumpSyncImplementation @Inject constructor(
             }
     }
 
-    override fun syncBolusWithTempId(timestamp: Long, amount: Double, temporaryId: Long, type: DetailedBolusInfo.BolusType?, pumpId: Long?, pumpType: PumpType, pumpSerial: String):
-        Boolean {
+    override fun syncBolusWithTempId(timestamp: Long, amount: Double, temporaryId: Long, type: DetailedBolusInfo.BolusType?, pumpId: Long?, pumpType: PumpType, pumpSerial: String): Boolean {
         if (!confirmActivePump(timestamp, pumpType, pumpSerial)) return false
         val bolus = Bolus(
             timestamp = timestamp,
@@ -174,12 +172,11 @@ class PumpSyncImplementation @Inject constructor(
             }
     }
 
-    override fun syncBolusWithPumpId(timestamp: Long, amount: Double, notes: String?, type: DetailedBolusInfo.BolusType?, pumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean {
+    override fun syncBolusWithPumpId(timestamp: Long, amount: Double, type: DetailedBolusInfo.BolusType?, pumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean {
         if (!confirmActivePump(timestamp, pumpType, pumpSerial)) return false
         val bolus = Bolus(
             timestamp = timestamp,
             amount = amount,
-            notes = notes,
             type = type?.toDBbBolusType() ?: Bolus.Type.NORMAL,
             interfaceIDs_backing = InterfaceIDs(
                 pumpId = pumpId,
@@ -197,12 +194,11 @@ class PumpSyncImplementation @Inject constructor(
             }
     }
 
-    override fun syncCarbsWithTimestamp(timestamp: Long, amount: Double, notes: String?, pumpId: Long?, pumpType: PumpType, pumpSerial: String): Boolean {
+    override fun syncCarbsWithTimestamp(timestamp: Long, amount: Double, pumpId: Long?, pumpType: PumpType, pumpSerial: String): Boolean {
         if (!confirmActivePump(timestamp, pumpType, pumpSerial)) return false
         val carbs = Carbs(
             timestamp = timestamp,
             amount = amount,
-            notes = notes,
             duration = 0,
             interfaceIDs_backing = InterfaceIDs(
                 pumpId = pumpId,

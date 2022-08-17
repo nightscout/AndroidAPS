@@ -15,7 +15,6 @@ class InsertOrUpdateBolusTransaction(
         timestamp: Long,
         amount: Double,
         type: Bolus.Type,
-        notes: String? = null,
         isBasalInsulin: Boolean = false,
         insulinConfiguration: InsulinConfiguration? = null,
         interfaceIDs_backing: InterfaceIDs? = null
@@ -23,7 +22,6 @@ class InsertOrUpdateBolusTransaction(
         timestamp = timestamp,
         amount = amount,
         type = type,
-        notes = notes,
         isBasalInsulin = isBasalInsulin,
         insulinConfiguration = insulinConfiguration,
         interfaceIDs_backing = interfaceIDs_backing

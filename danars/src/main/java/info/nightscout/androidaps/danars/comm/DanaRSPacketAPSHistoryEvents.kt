@@ -202,7 +202,6 @@ open class DanaRSPacketAPSHistoryEvents(
                 val newRecord = pumpSync.syncBolusWithPumpId(
                     timestamp = datetime,
                     amount = param1 / 100.0,
-                    notes = detailedBolusInfo?.notes,
                     type = detailedBolusInfo?.bolusType,
                     pumpId = pumpId,
                     pumpType = danaPump.pumpType(),
@@ -224,7 +223,6 @@ open class DanaRSPacketAPSHistoryEvents(
                 val newRecord = pumpSync.syncBolusWithPumpId(
                     timestamp = datetime,
                     amount = param1 / 100.0,
-                    notes = detailedBolusInfo?.notes,
                     type = detailedBolusInfo?.bolusType,
                     pumpId = pumpId,
                     pumpType = danaPump.pumpType(),
@@ -325,7 +323,6 @@ open class DanaRSPacketAPSHistoryEvents(
                 val newRecord = pumpSync.syncCarbsWithTimestamp(
                     timestamp = datetime,
                     amount = param1.toDouble(),
-                    notes = null,
                     pumpId = pumpId,
                     pumpType = danaPump.pumpType(),
                     pumpSerial = danaPump.serialNumber

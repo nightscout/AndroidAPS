@@ -268,7 +268,7 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
                 OmnipodCommandType.SET_BOLUS -> {
                     val bolus = historyEntry.record as BolusRecord
                     bolus.let {
-                        rh.gs(R.string.omnipod_common_history_bolus_value, it.amount)
+                        rh.gs(R.string.omnipod_common_history_bolus_value, it.amout)
                     }
                 }
 

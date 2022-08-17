@@ -132,7 +132,6 @@ class BigLogInquireResponsePacket(
                         val newRecord = pumpSync.syncBolusWithPumpId(
                             timestamp = logDateTime,
                             amount = logItem.injectAmount / 100.0,
-                            notes = detailedBolusInfo?.notes,
                             type = detailedBolusInfo?.bolusType,
                             pumpId = logDateTime,
                             pumpType = PumpType.DIACONN_G8,
@@ -164,7 +163,6 @@ class BigLogInquireResponsePacket(
                         val newRecord = pumpSync.syncBolusWithPumpId(
                             timestamp = logDateTime,
                             amount = logItem.injectAmount / 100.0,
-                            notes = detailedBolusInfo?.notes,
                             type = detailedBolusInfo?.bolusType,
                             pumpId = logDateTime,
                             pumpType = PumpType.DIACONN_G8,
@@ -197,7 +195,6 @@ class BigLogInquireResponsePacket(
                         val newRecord = pumpSync.syncBolusWithPumpId(
                             timestamp = logDateTime,
                             amount = logItem.injectAmount / 100.0,
-                            notes = detailedBolusInfo?.notes,
                             type = detailedBolusInfo?.bolusType,
                             pumpId = logDateTime,
                             pumpType = PumpType.DIACONN_G8,
@@ -231,7 +228,6 @@ class BigLogInquireResponsePacket(
                         val newRecord = pumpSync.syncBolusWithPumpId(
                             timestamp = logDateTime,
                             amount = logItem.injectAmount / 100.0,
-                            notes = detailedBolusInfo?.notes,
                             type = detailedBolusInfo?.bolusType,
                             pumpId = logDateTime,
                             pumpType = PumpType.DIACONN_G8,
@@ -362,7 +358,6 @@ class BigLogInquireResponsePacket(
                         val newRecord = pumpSync.syncBolusWithPumpId(
                             timestamp = logDateTime,
                             amount = logItem.injectAmount / 100.0,
-                            notes = detailedBolusInfo?.notes,
                             type = detailedBolusInfo?.bolusType,
                             pumpId = logDateTime,
                             pumpType = PumpType.DIACONN_G8,

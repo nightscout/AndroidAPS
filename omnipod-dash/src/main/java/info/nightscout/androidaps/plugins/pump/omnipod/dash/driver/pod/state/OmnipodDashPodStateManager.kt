@@ -103,7 +103,7 @@ interface OmnipodDashPodStateManager {
     fun observeNoActiveCommand(): Completable
     fun getCommandConfirmationFromState(): CommandConfirmationFromState
 
-    fun createLastBolus(requestedUnits: Double, historyId: Long, bolusType: DetailedBolusInfo.BolusType, notes: String?)
+    fun createLastBolus(requestedUnits: Double, historyId: Long, bolusType: DetailedBolusInfo.BolusType)
     fun markLastBolusComplete(): LastBolus?
     fun onStart()
     /*
@@ -136,8 +136,7 @@ interface OmnipodDashPodStateManager {
         var bolusUnitsRemaining: Double,
         var deliveryComplete: Boolean,
         val historyId: Long,
-        val bolusType: DetailedBolusInfo.BolusType,
-        val notes: String?
+        val bolusType: DetailedBolusInfo.BolusType
     ) {
 
         fun deliveredUnits(): Double? {

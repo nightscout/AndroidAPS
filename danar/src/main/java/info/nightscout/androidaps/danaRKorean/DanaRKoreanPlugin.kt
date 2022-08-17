@@ -137,7 +137,6 @@ class DanaRKoreanPlugin @Inject constructor(
             if (detailedBolusInfo.insulin > 0) pumpSync.syncBolusWithPumpId(
                 detailedBolusInfo.timestamp,
                 detailedBolusInfo.insulin,
-                detailedBolusInfo.notes,
                 detailedBolusInfo.bolusType,
                 dateUtil.now(),
                 PumpType.DANA_R_KOREAN,

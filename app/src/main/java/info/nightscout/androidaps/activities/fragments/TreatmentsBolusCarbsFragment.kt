@@ -268,10 +268,6 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
             }
 
             holder.binding.calculation.tag = ml
-
-            var notes = ml.carbs?.notes ?: ml.bolus?.notes ?: ""
-            holder.binding.notes.text = notes
-            holder.binding.notes.visibility = if (notes != "") View.VISIBLE else View.GONE
         }
 
         override fun getItemCount() = mealLinks.size

@@ -141,7 +141,6 @@ class MsgHistoryEventsV2 constructor(
                 val newRecord = pumpSync.syncBolusWithPumpId(
                     timestamp = datetime,
                     amount = param1 / 100.0,
-                    notes = detailedBolusInfo?.notes,
                     type = detailedBolusInfo?.bolusType,
                     pumpId = datetime,
                     pumpType = PumpType.DANA_RV2,
@@ -164,7 +163,6 @@ class MsgHistoryEventsV2 constructor(
                 val newRecord = pumpSync.syncBolusWithPumpId(
                     timestamp = datetime,
                     amount = param1 / 100.0,
-                    notes = detailedBolusInfo?.notes,
                     type = detailedBolusInfo?.bolusType,
                     pumpId = datetime,
                     pumpType = PumpType.DANA_RV2,
@@ -259,7 +257,6 @@ class MsgHistoryEventsV2 constructor(
                 val newRecord = pumpSync.syncCarbsWithTimestamp(
                     timestamp = datetime,
                     amount = param1.toDouble(),
-                    notes = null,
                     pumpId = datetime,
                     pumpType = PumpType.DANA_RV2,
                     pumpSerial = danaPump.serialNumber

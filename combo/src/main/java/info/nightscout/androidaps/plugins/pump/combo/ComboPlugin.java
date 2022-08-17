@@ -671,7 +671,6 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
             pumpSync.syncBolusWithPumpId(
                     lastPumpBolus.timestamp,
                     lastPumpBolus.amount,
-                    detailedBolusInfo.getNotes(),
                     detailedBolusInfo.getBolusType(),
                     generatePumpBolusId(lastPumpBolus),
                     PumpType.ACCU_CHEK_COMBO,
@@ -1181,7 +1180,6 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
             if (pumpSync.syncBolusWithPumpId(
                     pumpBolus.timestamp,
                     pumpBolus.amount,
-                    null,
                     null,
                     generatePumpBolusId(pumpBolus),
                     PumpType.ACCU_CHEK_COMBO,
