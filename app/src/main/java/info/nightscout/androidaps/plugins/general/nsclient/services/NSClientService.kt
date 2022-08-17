@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.general.nsclient.services
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.net.SSLCertificateSocketFactory
 import android.os.*
 import androidx.work.OneTimeWorkRequest
 import com.google.common.base.Charsets
@@ -57,12 +58,19 @@ import io.reactivex.rxjava3.kotlin.plusAssign
 import io.socket.client.IO
 import io.socket.client.Socket
 import io.socket.emitter.Emitter
+import okhttp3.OkHttpClient
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.net.URISyntaxException
+import java.security.cert.CertificateException
+import java.security.cert.X509Certificate
 import java.util.*
 import javax.inject.Inject
+import javax.net.ssl.HostnameVerifier
+import javax.net.ssl.SSLEngine
+import javax.net.ssl.SSLSession
+import javax.net.ssl.X509ExtendedTrustManager
 
 class NSClientService : DaggerService() {
 
@@ -223,6 +231,23 @@ class NSClientService : DaggerService() {
             get() = this@NSClientService
     }
 
+    inner class DummyHostnameVerifier : HostnameVerifier {
+        @SuppressLint("BadHostnameVerifier")
+        override fun verify(host: String, session: SSLSession): Boolean {
+            return true
+        }
+    }
+
+    private val dummyTrustManager = object : X509ExtendedTrustManager() {
+        override fun checkClientTrusted(chain: Array<out X509Certificate>?, authType: String?) {}
+        override fun checkClientTrusted(chain: Array<out X509Certificate>?, authType: String?, socket: java.net.Socket?) {}
+        override fun checkClientTrusted(chain: Array<out X509Certificate>?, authType: String?, engine: SSLEngine?) {}
+        override fun checkServerTrusted(chain: Array<X509Certificate?>?, authType: String?) {}
+        override fun checkServerTrusted(chain: Array<X509Certificate?>?, authType: String?, socket: java.net.Socket?) {}
+        override fun checkServerTrusted(chain: Array<X509Certificate?>?, authType: String?, engine: SSLEngine?) {}
+        override fun getAcceptedIssuers(): Array<X509Certificate> { return arrayOf<X509Certificate>() }
+    }
+
     override fun onBind(intent: Intent): IBinder = binder
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int = START_STICKY
@@ -248,6 +273,14 @@ class NSClientService : DaggerService() {
                 val opt = IO.Options()
                 opt.forceNew = true
                 opt.reconnection = true
+                if (buildHelper.isEngineeringMode()) {
+                    val okHttpClient = OkHttpClient.Builder()
+                        .sslSocketFactory(SSLCertificateSocketFactory.getInsecure(1000, null), dummyTrustManager)
+                        .hostnameVerifier(DummyHostnameVerifier())
+                        .build()
+                    opt.callFactory = okHttpClient
+                    opt.webSocketFactory = okHttpClient
+                }
                 socket = IO.socket(nsURL, opt).also { socket ->
                     socket.on(Socket.EVENT_CONNECT, onConnect)
                     socket.on(Socket.EVENT_DISCONNECT, onDisconnect)
