@@ -33,7 +33,7 @@ dependencies {
         exclude group: "com.google.android", module: "android"
     }
 
-    api "org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3"
+    api "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0"
     api "org.apache.commons:commons-lang3:$commonslang3_version"
 
     //RxBus
