@@ -30,7 +30,6 @@
     <string name="format_mins">%1$d mins</string>
     <string name="pumpbusy">A bomba está ocupada</string>
     <string name="connectionerror">Erro de ligação da bomba</string>
-    <string name="youareonallowedlimit">Atingiu o limite autorizado</string>
     <string name="objectives">Objectivos</string>
     <string name="close">Fechar</string>
     <string name="please_wait">Por favor aguarde…</string>
@@ -39,7 +38,6 @@
     <string name="stoppressed">PARAR PRESSIONADO</string>
     <string name="stop">Parar</string>
     <string name="carbs">Hidratos</string>
-    <string name="invalidprofile">Perfil inválido !!!</string>
     <string name="noprofileset">SEM PERFIL DEFINIDO</string>
     <string name="active"><![CDATA[<Activo>]]></string>
     <string name="date">Data</string>
@@ -130,7 +128,6 @@
     <string name="passwords_dont_match">Palavras-passe não correspondem</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Valores das basais não definidos por horas: %1$s</string>
-    <string name="minimalbasalvaluereplaced">Valor da basal alterado para o valor mínimo suportado: %1$s</string>
     <string name="maximumbasalvaluereplaced">Valor da basal alterado para o valor máximo suportado: %1$s</string>
     <string name="profile_per_unit">/U</string>
     <string name="profile_ins_units_per_hour">U/h</string>
@@ -199,7 +196,6 @@
     <string name="waitingforpumpresult">À espera de resultado</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
-    <string name="carbsreq">%1$d g Hidratos Adicionais Necessários Dentro de %2$d Minutos</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Estatísticas</string>
     <string name="cumulative_tdd">Cumulativo TDI</string>
@@ -211,7 +207,6 @@
     <string name="amount_days"># Dias</string>
     <string name="weight">Peso</string>
     <string name="warning_Message">Possivelmente impreciso se foram usados bólus para purgar/preencher!</string>
-    <string name="olddata_Message">Dados antigos, pressione \"Recarregar\"</string>
     <string name="tbb">Basal Diária Total</string>
     <string name="tbb2">Basal diária * 2</string>
     <!--    Ntp-->
