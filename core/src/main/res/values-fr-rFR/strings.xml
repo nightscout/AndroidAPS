@@ -31,7 +31,6 @@
     <string name="format_mins">%1$d min</string>
     <string name="pumpbusy">Pompe occupée</string>
     <string name="connectionerror">Erreur connection pompe</string>
-    <string name="youareonallowedlimit">Vous avez atteint la limite maximale</string>
     <string name="objectives">Objectifs</string>
     <string name="close">Fermer</string>
     <string name="please_wait">Merci de patienter...</string>
@@ -40,7 +39,6 @@
     <string name="stoppressed">ARRÊT APPUYÉ</string>
     <string name="stop">Arrêt</string>
     <string name="carbs">Glucides</string>
-    <string name="invalidprofile">Profil incorrect !!!</string>
     <string name="noprofileset">PAS DE PROFIL SELECTIONNÉ</string>
     <string name="active"><![CDATA[<Actif>]]></string>
     <string name="date"> Date</string>
@@ -53,7 +51,6 @@
     <string name="dia_long_label">Durée d\'Action de l\'Insuline</string>
     <string name="ic_long_label">Rapport Glucides / Insuline</string>
     <string name="isf_long_label">Facteur de sensibilité à l\'insuline (SI)</string>
-    <string name="basal_long_label">Débit de Basal</string>
     <string name="target_long_label">Glycémie cible</string>
     <string name="initializing">En cours d\'initialisation...</string>
     <string name="serialnumber">Numéro de série</string>
@@ -140,7 +137,6 @@
     <string name="pin_dont_match">Les codes PIN ne correspondent pas</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Valeurs des débits de basal non alignées sur des heures: %1$s</string>
-    <string name="minimalbasalvaluereplaced">Valeur de basal remplacée par la valeur minimale autorisée : %1$s</string>
     <string name="maximumbasalvaluereplaced">Valeur de basal remplacée par la valeur maximale autorisée : %1$s</string>
     <string name="profile_per_unit">/U</string>
     <string name="profile_ins_units_per_hour">U/h</string>
@@ -221,7 +217,6 @@
     <string name="waitingforpumpresult">Attente de résultat</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
-    <string name="carbsreq">%1$dg de glucides requis dans %2$d min.</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Stats</string>
     <string name="cumulative_tdd">DTI cumulé</string>
@@ -233,7 +228,6 @@
     <string name="amount_days">Nb Jours</string>
     <string name="weight">Pondération</string>
     <string name="warning_Message">Peut être inexact si des bolus sont utilisés pour l’amorçage et le remplissage !</string>
-    <string name="olddata_Message">Données anciennes, appuyez sur \"Actualiser\"</string>
     <string name="tbb">Basal Totale (TBB)</string>
     <string name="tbb2">DTB*2</string>
     <!--    Ntp-->
@@ -397,7 +391,6 @@
     <string name="valueoutofrange">\"%1$s\" est en dehors des limites</string>
     <string name="value_out_of_hard_limits">\"%1$s\" %2$.2f est en dehors des limites</string>
     <string name="basal_value">Valeur de Basal</string>
-    <string name="nsclient_version_does_not_match">La version NSClient ne correspond pas à AndroidAPS. Faites une mise à jour.</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f U</string>
     <string name="carbs_g">GLUCIDES %1$d g</string>
