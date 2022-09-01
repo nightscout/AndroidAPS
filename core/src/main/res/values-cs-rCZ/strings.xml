@@ -51,6 +51,7 @@
     <string name="dia_long_label">Doba působnosti inzulínu</string>
     <string name="ic_long_label">Inzulíno-sacharidový poměr</string>
     <string name="isf_long_label">Citlivost na inzulín</string>
+    <string name="basal_long_label">Bazál</string>
     <string name="target_long_label">Cílová glykémie</string>
     <string name="initializing">Inicializuji ...</string>
     <string name="serialnumber">Sériové číslo</string>
