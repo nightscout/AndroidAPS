@@ -31,7 +31,6 @@
     <string name="format_mins">%1$d min</string>
     <string name="pumpbusy">Il micro è occupato</string>
     <string name="connectionerror">Errore connessione micro</string>
-    <string name="youareonallowedlimit">Hai raggiunto il limite consentito</string>
     <string name="objectives">Obiettivi</string>
     <string name="close">Chiudi</string>
     <string name="please_wait">Attendi…</string>
@@ -40,7 +39,6 @@
     <string name="stoppressed">STOP PREMUTO</string>
     <string name="stop">Stop</string>
     <string name="carbs">CHO</string>
-    <string name="invalidprofile">Profilo non valido !!!</string>
     <string name="noprofileset">NESSUN PROFILO IMPOSTATO</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">Data</string>
@@ -53,7 +51,6 @@
     <string name="dia_long_label">Durata dell’azione dell’insulina</string>
     <string name="ic_long_label">Rapporto Insulina-Carboidrati (I:C)</string>
     <string name="isf_long_label">Fattore di sensibilità insulinica (ISF)</string>
-    <string name="basal_long_label">Velocità basale</string>
     <string name="target_long_label">Target glicemia</string>
     <string name="initializing">Inizializzazione...</string>
     <string name="serialnumber">Numero seriale</string>
@@ -140,7 +137,6 @@
     <string name="pin_dont_match">I PIN non coincidono</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Valori basali non allineati alle ore: %1$s</string>
-    <string name="minimalbasalvaluereplaced">Valore basale sostituito dal minimo valore supportato: %1$s</string>
     <string name="maximumbasalvaluereplaced">Valore basale sostituito dal massimo valore supportato: %1$s</string>
     <string name="profile_per_unit">/U</string>
     <string name="profile_ins_units_per_hour">U/h</string>
@@ -221,7 +217,6 @@
     <string name="waitingforpumpresult">In attesa del risultato</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
-    <string name="carbsreq">%1$d g di CHO aggiuntivi richiesti entro %2$d minuti</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Statistiche</string>
     <string name="cumulative_tdd">TDD cumulativo</string>
@@ -233,7 +228,6 @@
     <string name="amount_days"># Giorni</string>
     <string name="weight">Peso</string>
     <string name="warning_Message">Probabilmente inaccurato se per il caricamento/riempimento si usano i boli al posto dell\'apposita funzione!</string>
-    <string name="olddata_Message">Dati vecchi, premi \"RICARICA\"</string>
     <string name="tbb">Basale originale totale</string>
     <string name="tbb2">TBB * 2</string>
     <!--    Ntp-->
@@ -397,7 +391,6 @@
     <string name="valueoutofrange">»%1$s« è fuori dai limiti consentiti</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f è fuori dai limiti consentiti</string>
     <string name="basal_value">Valore basale</string>
-    <string name="nsclient_version_does_not_match">La versione di NSClient non corrisponde ad AndroidAPS. Aggiorna.</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLO %1$.2f U</string>
     <string name="carbs_g">CHO %1$d g</string>
