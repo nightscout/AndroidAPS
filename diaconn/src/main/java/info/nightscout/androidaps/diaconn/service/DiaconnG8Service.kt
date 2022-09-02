@@ -330,6 +330,9 @@ class DiaconnG8Service : DaggerService() {
                     if(platformLoopSize > 0) {
                         diaconnG8Pump.isPlatformUploadStarted = true
                         for (i in 0 until platformLoopSize) {
+                            if(diaconnG8Pump.isPumplogUploadFailed) {
+                                break
+                            }
                             rxBus.send(EventPumpStatusChanged("클라우드동기화 진행 중 : $i / $platformLoopSize"))
                             val startLogNo: Int = platformStart + i * pumpLogPageSize
                             val endLogNo: Int = startLogNo + min(platformEnd - startLogNo, pumpLogPageSize)
@@ -338,6 +341,7 @@ class DiaconnG8Service : DaggerService() {
                         }
                         SystemClock.sleep(1000)
                         diaconnG8Pump.isPlatformUploadStarted = false
+                        diaconnG8Pump.isPumplogUploadFailed = false
                     }
                 }
             } catch (e:Exception) {
