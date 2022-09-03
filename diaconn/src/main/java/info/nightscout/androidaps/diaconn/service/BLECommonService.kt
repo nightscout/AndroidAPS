@@ -270,6 +270,11 @@ class BLECommonService @Inject internal constructor(
         val bytes = message.encode(sequence)
         processedMessageByte = bytes
 
+        if (bluetoothGatt == null) {
+            aapsLogger.debug(LTag.PUMPBTCOMM, ">>>>> IGNORING (NOT CONNECTED) " + message.friendlyName )
+            return
+        }
+
         aapsLogger.debug(LTag.PUMPBTCOMM, "sendMessage() before mSendQueue.size :: ${mSendQueue.size}")
         // 펌프에 요청 보내기.
         writeCharacteristicNoResponse(uartWriteBTGattChar, bytes)
