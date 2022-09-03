@@ -847,7 +847,7 @@ class BigLogInquireResponsePacket(
                         }
                         override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
                             aapsLogger.error(LTag.PUMPCOMM, "api uploadPumplogs failed")
-                            diaconnG8Pump.isPumplogUploadFailed = true
+                            diaconnG8Pump.isPumpLogUploadFailed = true
                             t.printStackTrace()
                         }
                     }

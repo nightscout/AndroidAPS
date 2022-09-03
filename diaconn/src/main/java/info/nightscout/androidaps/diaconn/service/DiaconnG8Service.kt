@@ -18,7 +18,6 @@ import info.nightscout.androidaps.diaconn.api.DiaconnApiService
 import info.nightscout.androidaps.diaconn.api.DiaconnLogUploader
 import info.nightscout.androidaps.diaconn.database.DiaconnHistoryRecordDao
 import info.nightscout.androidaps.diaconn.events.EventDiaconnG8NewStatus
-import info.nightscout.androidaps.diaconn.events.EventDiaconnG8PumpLogReset
 import info.nightscout.androidaps.diaconn.packet.*
 import info.nightscout.androidaps.diaconn.pumplog.PumplogUtil
 import info.nightscout.androidaps.dialogs.BolusProgressDialog
@@ -330,7 +329,7 @@ class DiaconnG8Service : DaggerService() {
                     if(platformLoopSize > 0) {
                         diaconnG8Pump.isPlatformUploadStarted = true
                         for (i in 0 until platformLoopSize) {
-                            if(diaconnG8Pump.isPumplogUploadFailed) {
+                            if(diaconnG8Pump.isPumpLogUploadFailed) {
                                 break
                             }
                             rxBus.send(EventPumpStatusChanged("클라우드동기화 진행 중 : $i / $platformLoopSize"))
@@ -341,7 +340,7 @@ class DiaconnG8Service : DaggerService() {
                         }
                         SystemClock.sleep(1000)
                         diaconnG8Pump.isPlatformUploadStarted = false
-                        diaconnG8Pump.isPumplogUploadFailed = false
+                        diaconnG8Pump.isPumpLogUploadFailed = false
                     }
                 }
             } catch (e:Exception) {
@@ -368,22 +367,22 @@ class DiaconnG8Service : DaggerService() {
         return Triple(start, end, size)
     }
 
-    private fun getCloudLogLoopCount(platformLastNo:Int, PlatformPumpLogNum: Int, wrappingCount: Int, pumpLastNum: Int, pumpWrappingCount: Int): Triple<Int, Int, Int> {
+    private fun getCloudLogLoopCount(platformLastNo:Int, platformPumpLogNum: Int, wrappingCount: Int, pumpLastNum: Int, pumpWrappingCount: Int): Triple<Int, Int, Int> {
         val start: Int// log sync start number
         val end: Int // log sync end number1311
-        aapsLogger.debug(LTag.PUMPCOMM, "platformLastNo: $platformLastNo, PlatformPumpLogNum : $PlatformPumpLogNum, wrappingCount : $wrappingCount , pumpLastNum: $pumpLastNum, pumpWrappingCount :$pumpWrappingCount")
+        aapsLogger.debug(LTag.PUMPCOMM, "platformLastNo: $platformLastNo, PlatformPumpLogNum : $platformPumpLogNum, wrappingCount : $wrappingCount , pumpLastNum: $pumpLastNum, pumpWrappingCount :$pumpWrappingCount")
 
         if ((pumpWrappingCount * 10000 + pumpLastNum - platformLastNo > 10000 )) {
             start = pumpLastNum
             end = 10000
-        } else if (pumpWrappingCount > wrappingCount && PlatformPumpLogNum < 9999) {
-            start = (PlatformPumpLogNum + 1)
+        } else if (pumpWrappingCount > wrappingCount && platformPumpLogNum < 9999) {
+            start = (platformPumpLogNum + 1)
             end = 10000
-        } else if (pumpWrappingCount > wrappingCount && PlatformPumpLogNum >= 9999 ) {
+        } else if (pumpWrappingCount > wrappingCount && platformPumpLogNum >= 9999 ) {
             start = 0 // 처음부터 시작
             end = pumpLastNum
         } else {
-            start = (PlatformPumpLogNum + 1)
+            start = (platformPumpLogNum + 1)
             end = pumpLastNum
         }
         val size = ceil((end - start) / 11.0).toInt()
