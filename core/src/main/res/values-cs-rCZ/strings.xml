@@ -31,7 +31,7 @@
     <string name="format_mins">%1$d min</string>
     <string name="pumpbusy">Pumpa je zaneprázdněna</string>
     <string name="connectionerror">Chyba připojování pumpy</string>
-    <string name="youareonallowedlimit">Dosaženo limitu</string>
+    <string name="youareonallowedlimit">Byl dosažen povolený limit</string>
     <string name="objectives">Cíle</string>
     <string name="close">Zavřít</string>
     <string name="please_wait">Počkejte prosím…</string>
@@ -40,7 +40,7 @@
     <string name="stoppressed">STISKNUTO STOP</string>
     <string name="stop">Stop</string>
     <string name="carbs">Sacharidy</string>
-    <string name="invalidprofile">Chybný profil !!!</string>
+    <string name="invalidprofile">Neplatný profil!</string>
     <string name="noprofileset">ŽÁDNÝ PROFIL NENASTAVEN</string>
     <string name="active"><![CDATA[<Aktivní>]]></string>
     <string name="date">Datum</string>
@@ -140,7 +140,7 @@
     <string name="pin_dont_match">PIN kódy se neshodují</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Hodnoty bazálů nejsou zarovnané na celé hodiny: %1$s</string>
-    <string name="minimalbasalvaluereplaced">Hodnota bazálu nahrazena minimální možnou: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Hodnota bazálu byla nahrazena minimální možnou: %1$s</string>
     <string name="maximumbasalvaluereplaced">Hodnota bazálu nahrazena maximální možnou: %1$s</string>
     <string name="profile_per_unit">/U</string>
     <string name="profile_ins_units_per_hour">U/h</string>
@@ -233,7 +233,7 @@
     <string name="amount_days">Dní</string>
     <string name="weight">Váha</string>
     <string name="warning_Message">Pravděpodobně nepřesné při používání bolusů k doplňování</string>
-    <string name="olddata_Message">Zastaralá data. Prosím načtěte je znovu</string>
+    <string name="olddata_Message">Zastaralá data. Klepněte na tlačítko „OBNOVIT“.</string>
     <string name="tbb">Celk. denní bazál</string>
     <string name="tbb2">CZB * 2</string>
     <!--    Ntp-->
@@ -397,7 +397,7 @@
     <string name="valueoutofrange">»%1$s« je mimo pevně nastavené limity</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f je mimo pevně nastavené limity</string>
     <string name="basal_value">Hodnota bazálu</string>
-    <string name="nsclient_version_does_not_match">Verze NSClient se neshoduje s AndroidAPS. Aktualizujte prosím.</string>
+    <string name="nsclient_version_does_not_match">Verze NSClientu se neshoduje s verzí AndroidAPS. Aktualizujte prosím.</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f U</string>
     <string name="carbs_g">SACHARIDY %1$d g</string>
