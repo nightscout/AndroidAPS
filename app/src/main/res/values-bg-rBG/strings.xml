@@ -644,7 +644,6 @@
     <string name="resistance_lowers_target_summary">Когато се установи резистентност, намалява целевата глюкоза.</string>
     <string name="sensitivity_raises_target_title">Чувствителността увеличава целта</string>
     <string name="sensitivity_raises_target_summary">Когато се установи чувствителност, повишаване на целевата глюкоза</string>
-    <string name="careportal_removestartedevents"> AndroidAPS стартира</string>
     <string name="storedsettingsfound">Открити са предишни настройки</string>
     <string name="allow_hardware_pump_text">Внимание: Ако активирате и свържете с хардуерна помпа, AndroidAPS ще копира основните настройки от профила в помпата, като презапише съществуващата базова скорост, съхранявана на помпата. Уверете се, че имате правилните основни настройки в AndroidAPS. Ако не сте сигурни или не искате да презапишете основните настройки на помпата, натиснете Cancel и повторете превключването към помпата по-късно.</string>
     <string name="error_adding_treatment_title">Данните за лечението не са пълни</string>
