@@ -665,7 +665,7 @@
     <string name="resistance_lowers_target_summary">Cuando se detecta resistencia a la insulina, disminuye el objetivo de glucosa</string>
     <string name="sensitivity_raises_target_title">Sensibilidad aumenta el objetivo</string>
     <string name="sensitivity_raises_target_summary">Cuando se detecta sensibilidad a la insulina, aumenta el objetivo de glucosa</string>
-    <string name="careportal_removestartedevents">Comenzar la limpieza de AndroidAPS</string>
+    <string name="careportal_removestartedevents">Eliminar registros de inicio de AAPS</string>
     <string name="show_invalidated">Mostrar invalidados</string>
     <string name="hide_invalidated">Ocultar invalidados</string>
     <string name="remove_items">Eliminar elementos</string>

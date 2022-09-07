@@ -20,7 +20,7 @@
     <string name="disconnected">Déconnectée</string>
     <string name="disconnecting">Déconnexion en cours</string>
     <string name="waiting_for_disconnection">Attente de déconnexion</string>
-    <string name="androidaps_start">AndroidAPS est lancé</string>
+    <string name="androidaps_start">Démarrage AndroidAPS</string>
     <string name="formatinsulinunits1">%1$.1f U</string>
     <string name="formatinsulinunits">%1$.2f U</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
@@ -31,7 +31,7 @@
     <string name="format_mins">%1$d min</string>
     <string name="pumpbusy">Pompe occupée</string>
     <string name="connectionerror">Erreur connection pompe</string>
-    <string name="youareonallowedlimit">Vous avez atteint la limite maximale</string>
+    <string name="youareonallowedlimit">Limite autorisée atteinte</string>
     <string name="objectives">Objectifs</string>
     <string name="close">Fermer</string>
     <string name="please_wait">Merci de patienter...</string>
@@ -40,7 +40,7 @@
     <string name="stoppressed">ARRÊT APPUYÉ</string>
     <string name="stop">Arrêt</string>
     <string name="carbs">Glucides</string>
-    <string name="invalidprofile">Profil incorrect !!!</string>
+    <string name="invalidprofile">Profil incorrect!</string>
     <string name="noprofileset">PAS DE PROFIL SELECTIONNÉ</string>
     <string name="active"><![CDATA[<Actif>]]></string>
     <string name="date"> Date</string>

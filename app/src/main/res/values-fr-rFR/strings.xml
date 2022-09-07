@@ -666,7 +666,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="resistance_lowers_target_summary">Quand une résistance est détectée, baisse de la glycémie cible</string>
     <string name="sensitivity_raises_target_title">Sensibilité augmente la cible</string>
     <string name="sensitivity_raises_target_summary">Quand une sensibilité est détectée, augmentation de la glycémie cible</string>
-    <string name="careportal_removestartedevents">Réinitialiser AndroidAPS</string>
+    <string name="careportal_removestartedevents">Suppr. entrées \"Démarrage AAPS\"</string>
     <string name="show_invalidated">Montrer les entrées invalides</string>
     <string name="hide_invalidated">Masquer les entrées invalides</string>
     <string name="remove_items">Supprimer des entrées</string>

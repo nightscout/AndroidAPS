@@ -666,7 +666,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="resistance_lowers_target_summary">Direnç tespit edildiğinde KŞ hedefini düşürün</string>
     <string name="sensitivity_raises_target_title">Duyarlılık hedefi yükseltir</string>
     <string name="sensitivity_raises_target_summary">Hassasiyet tespit edildiğinde, KŞ hedefini yükseltin</string>
-    <string name="careportal_removestartedevents">Temiz AndroidAPS başladı</string>
+    <string name="careportal_removestartedevents">AAPS tarafından başlatılmış girdileri kaldırın</string>
     <string name="show_invalidated">Geçersiz olanları göster</string>
     <string name="hide_invalidated">Geçersiz olanları gizle</string>
     <string name="remove_items">Öğeleri kaldır</string>

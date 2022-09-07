@@ -500,7 +500,6 @@
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Verhoog sensitiwiteit vir tydelike doelwitte > = 100]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">Lae tydelike doelwitte verlaag sensitiwiteit</string>
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Laer sensitiwiteit vir tydelike doelwitte < 100]]></string>
-    <string name="careportal_removestartedevents">Skoon AndroidAPS begin</string>
     <string name="storedsettingsfound">Gestoorde instellings gevind</string>
     <string name="allow_hardware_pump_text">Aandag: As jy aktiveer en koppel aan \'n hardeware pomp, AndroidAPS sal die basale instellings uit die profiel aan die pomp kopieer, die bestaande basale koers gestoor op die pomp sal oorskryf word. Maak seker jy het die korrekte basale instelling in AndroidAPS. As jy nie seker is of nie die basale instellings wil oorskryf op jou pomp, druk Kanselleer en herhaal oorskakel na die pomp op \'n later tyd.</string>
     <string name="error_adding_treatment_title">Behandeling data onvolledig</string>

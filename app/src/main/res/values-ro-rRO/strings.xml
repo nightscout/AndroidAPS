@@ -651,7 +651,6 @@
     <string name="resistance_lowers_target_summary">Când e detectata rezistență la insulină, coboară targetul</string>
     <string name="sensitivity_raises_target_title">Sensibilitatea la insulină crește targetul</string>
     <string name="sensitivity_raises_target_summary">Când este detectată sensibilitate la insulină, crește targetul</string>
-    <string name="careportal_removestartedevents">AndroidAPS pornit curat</string>
     <string name="storedsettingsfound">Au fost găsite setări stocate</string>
     <string name="allow_hardware_pump_text">Atenție: Dacă activați și conectați o pompă fizică, AndroidAPS va copia setările bazalelor din profilurile din aplicație în pompă, suprascriindu-le pe cele existente deja în pompă. Asigurați-vă că aveți setările corecte ale bazalelor în AndroidAPS. Dacă aveți dubii sau nu doriți suprascrierea setărilor bazalelor existente în pompă, apăsați butonul de anulare și repetați acțiunea mai târziu.</string>
     <string name="error_adding_treatment_title">Date incomplete despre tratament</string>
