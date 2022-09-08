@@ -16,7 +16,7 @@ buildscript {
         ormLite_version = '4.46'
         gson_version = '2.9.1'
         nav_version = '2.4.2'
-        appcompat_version = '1.4.2'
+        appcompat_version = '1.5.1'
         material_version = '1.6.1'
         constraintlayout_version = '2.1.4'
         preferencektx_version = '1.2.0'
