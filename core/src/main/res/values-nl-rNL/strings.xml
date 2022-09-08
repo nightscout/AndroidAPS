@@ -31,7 +31,6 @@
     <string name="format_mins">%1$d minuten</string>
     <string name="pumpbusy">Pomp is bezig</string>
     <string name="connectionerror">Pomp verbindingsstoring</string>
-    <string name="youareonallowedlimit">Limiet bereikt</string>
     <string name="objectives">Doelen</string>
     <string name="close">Sluiten</string>
     <string name="please_wait">Even geduld a.u.b.…</string>
@@ -40,7 +39,6 @@
     <string name="stoppressed">STOP INGEDRUKT</string>
     <string name="stop">Stop</string>
     <string name="carbs">Koolhydraten</string>
-    <string name="invalidprofile">Ongeldig profiel !!!</string>
     <string name="noprofileset">Geen profiel ingesteld</string>
     <string name="active"><![CDATA[<Huidig>]]></string>
     <string name="date">Datum</string>
@@ -53,7 +51,6 @@
     <string name="dia_long_label">Duur van insuline activiteit</string>
     <string name="ic_long_label">Insuline - Koolhydraat ratio</string>
     <string name="isf_long_label">Insuline gevoeligheidsfactor</string>
-    <string name="basal_long_label">Basaalstand</string>
     <string name="target_long_label">Bloedglucose doelwaarde</string>
     <string name="initializing">Initialiseren...</string>
     <string name="serialnumber">Serie nummer</string>
@@ -140,7 +137,6 @@
     <string name="pin_dont_match">PIN-codes komen niet overeen</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Basaalstanden niet ingesteld in hele uren: %1$s</string>
-    <string name="minimalbasalvaluereplaced">Basale waarde vervangen door minimaal ondersteunde waarde; %1$s</string>
     <string name="maximumbasalvaluereplaced">Basale waarde vervangen door maximale ondersteunde waarde: %1$s</string>
     <string name="profile_per_unit">/E</string>
     <string name="profile_ins_units_per_hour">E/u</string>
@@ -221,7 +217,6 @@
     <string name="waitingforpumpresult">Wachtend op resultaat</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
-    <string name="carbsreq">%1$d g extra koolhydraten nodig binnen %2$d minuten</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Statistieken</string>
     <string name="cumulative_tdd">Cumulatieve TDD</string>
@@ -233,7 +228,6 @@
     <string name="amount_days"># Dagen</string>
     <string name="weight">Gewicht</string>
     <string name="warning_Message">Mogelijks inaccuraat bij gebruik van bolussen om infusieset te vullen!</string>
-    <string name="olddata_Message">Oude gegevens, druk op \"VERNIEUW\"</string>
     <string name="tbb">Totaal basaal</string>
     <string name="tbb2">TBB * 2</string>
     <!--    Ntp-->
@@ -397,7 +391,6 @@
     <string name="valueoutofrange">»%1$s« is buiten de harde limiet</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f is buiten de harde limiet</string>
     <string name="basal_value">Basaal waarde</string>
-    <string name="nsclient_version_does_not_match">NSClient versie werkt niet samen met AndroidAPS. Update gewenst.</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f E</string>
     <string name="carbs_g">KOOLHYDRATEN %1$d gr</string>

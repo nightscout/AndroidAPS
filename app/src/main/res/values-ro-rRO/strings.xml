@@ -631,7 +631,6 @@
     <string name="needsystemwindowpermission">Aplicația are nevoie de permisiune la fereastra sistemului pentru a afișa notificări</string>
     <string name="needlocationpermission">Aplicația are nevoie sa acceseze locația pentru scanare Bluetooth și identificare WiFi</string>
     <string name="needstoragepermission">Aplicația are nevoie de permisiunea de a accesa unitatea de stocare pentru a scrie fișierele registru și pentru a exporta setările</string>
-    <string name="needconnectpermission">Aplicația are nevoie de permisiune Bluetooth</string>
     <string name="request">Cerință</string>
     <string name="open_navigation">Afișare navigație</string>
     <string name="close_navigation">Închidere navigație</string>
@@ -652,7 +651,6 @@
     <string name="resistance_lowers_target_summary">Când e detectata rezistență la insulină, coboară targetul</string>
     <string name="sensitivity_raises_target_title">Sensibilitatea la insulină crește targetul</string>
     <string name="sensitivity_raises_target_summary">Când este detectată sensibilitate la insulină, crește targetul</string>
-    <string name="careportal_removestartedevents">AndroidAPS pornit curat</string>
     <string name="storedsettingsfound">Au fost găsite setări stocate</string>
     <string name="allow_hardware_pump_text">Atenție: Dacă activați și conectați o pompă fizică, AndroidAPS va copia setările bazalelor din profilurile din aplicație în pompă, suprascriindu-le pe cele existente deja în pompă. Asigurați-vă că aveți setările corecte ale bazalelor în AndroidAPS. Dacă aveți dubii sau nu doriți suprascrierea setărilor bazalelor existente în pompă, apăsați butonul de anulare și repetați acțiunea mai târziu.</string>
     <string name="error_adding_treatment_title">Date incomplete despre tratament</string>

@@ -31,17 +31,18 @@ fun ProfileSwitch.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
     JSONObject()
         .put("timeshift", timeshift)
         .put("percentage", percentage)
+        .put("duration", T.msecs(duration).mins())
         .put("profile", getCustomizedName())
         .put("originalProfileName", profileName)
-        .also { // remove customization to store original profileJson in toPureNsJson call
-            timeshift = 0
-            percentage = 100
-        }
+        .put("originalDuration", duration)
         .put("created_at", dateUtil.toISOString(timestamp))
         .put("enteredBy", "openaps://" + "AndroidAPS")
         .put("isValid", isValid)
         .put("eventType", TherapyEvent.Type.PROFILE_SWITCH.text)
-        .put("duration", T.msecs(duration).mins())
+        .also { // remove customization to store original profileJson in toPureNsJson call
+            timeshift = 0
+            percentage = 100
+        }
         .put("profileJson", ProfileSealed.PS(this).toPureNsJson(dateUtil).toString())
         .also {
             if (interfaceIDs.pumpId != null) it.put("pumpId", interfaceIDs.pumpId)
@@ -66,6 +67,7 @@ fun ProfileSwitch.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
 fun profileSwitchFromJson(jsonObject: JSONObject, dateUtil: DateUtil, activePlugin: ActivePlugin): ProfileSwitch? {
     val timestamp = JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null) ?: return null
     val duration = JsonHelper.safeGetLong(jsonObject, "duration")
+    val originalDuration = JsonHelper.safeGetLongAllowNull(jsonObject, "originalDuration")
     val timeshift = JsonHelper.safeGetLong(jsonObject, "timeshift")
     val percentage = JsonHelper.safeGetInt(jsonObject, "percentage", 100)
     val isValid = JsonHelper.safeGetBoolean(jsonObject, "isValid", true)
@@ -93,10 +95,10 @@ fun profileSwitchFromJson(jsonObject: JSONObject, dateUtil: DateUtil, activePlug
         icBlocks = profileSealed.icBlocks,
         targetBlocks = profileSealed.targetBlocks,
         glucoseUnit = ProfileSwitch.GlucoseUnit.fromConstant(profileSealed.units),
-        profileName = originalProfileName?: profileName,
-        timeshift = T.hours(timeshift).msecs(),
+        profileName = originalProfileName ?: profileName,
+        timeshift = timeshift,
         percentage = percentage,
-        duration = T.mins(duration).msecs(),
+        duration = originalDuration ?: T.mins(duration).msecs(),
         insulinConfiguration = profileSealed.insulinConfiguration,
         isValid = isValid
     ).also {

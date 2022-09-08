@@ -104,9 +104,11 @@
     <string name="troubleshooting_wheretoask">Wo kannst Du nach Hilfe für AndroidAPS suchen?</string>
     <string name="troubleshooting_fb">Du kannst in der AndroidAPS-Facebook-Gruppe um Rat bitten.</string>
     <string name="troubleshooting_wiki">Du solltest die AndroidAPS-Dokumentation lesen (und wiederholt lesen).</string>
+    <string name="troubleshooting_gitter">Im Discord Channel AndroidAPS kannst Du bei technischen Problemen oder Fragestellungen um Hilfe bitten.</string>
     <string name="troubleshooting_yourendo">Du solltest Deine Diabetesklinik / Deinen Diabetologen fragen.</string>
     <string name="troubleshooting_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/de/Installing-AndroidAPS/Update-to-new-version.html#problembehandlung</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/loopedDE/</string>
+    <string name="troubleshooting_hint3">https://discord.gg/4fQUWHZ4Mw</string>
     <string name="insulin_label">Insulin-Plugins</string>
     <string name="insulin_ultrarapid">Welches Insulin kann mit dem Ultra-Rapid-Oref-Plugin verwendet werden?</string>
     <string name="insulin_fiasp">Fiasp®</string>
@@ -121,6 +123,7 @@
     <string name="sensitivity_cannula">Das Protokollieren eines Kanülenwechsels setzt das Autosens Verhältnis wieder auf 100% zurück.</string>
     <string name="sensitivity_time">Einige der Plugin-Optionen haben konfigurierbare Zeiträume, die vom Benutzer eingestellt werden können.</string>
     <string name="sensitivity_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/de/Configuration/Sensitivity-detection-and-COB.html</string>
+    <string name="sensitivity_hint2">https://androidaps.readthedocs.io/de/latest/Usage/Open-APS-features.html?highlight=Autosens#autosens</string>
     <string name="wrongcarbs_label">Fehler bei der KH-Eingabe</string>
     <string name="wrongcarbs_whattodo">Was sollst Du tun, wenn Du einen falschen KH-Eintrag gemacht hast?</string>
     <string name="wrongcarbs_treatmentstab">Lösche die falsche Eingabe in der Behandlung und gib den richtigen neuen Kohlehydratwert ein.</string>
@@ -133,6 +136,19 @@
     <string name="wronginsulin_compare">Vergleiche die Werte der Historie in AAPS und Deiner Pumpe (wenn die Pumpe diese Funktion bietet).</string>
     <string name="wronginsulin_prime">Gib einen Teil-Bolus des \'nicht erhaltenen\' Insulins mit Spritze / Pen oder durch Befüllen der Kanüle.</string>
     <string name="wronginsulin_donothing">Unternimm nichts und lass AndroidAPS die entstehenden hohen Glukosewerte korrigieren.</string>
+    <string name="cob_label">KH an Board (COB)</string>
+    <string name="cob_question">Wie beeinflusst das Ändern des ISF-Wertes die COB-Berechnung?</string>
+    <string name="cob_longer">Steigende ISF absorbiert Kohlenhydrate länger</string>
+    <string name="cob_shorter">Steigende ISF absorbiert Kohlenhydrate kürzer</string>
+    <string name="cob_no_effect">Steigende ISF verändert die Dauer für die Kohlenhydrataufnahme nicht</string>
+    <string name="cob2_question">Wie beeinflusst das Ändern des ISF-Wertes die COB-Berechnung?</string>
+    <string name="cob2_longer">Steigende IC absorbiert Kohlenhydrate länger</string>
+    <string name="cob2_shorter">Steigende IC absorbiert Kohlenhydrate kürzer</string>
+    <string name="cob2_no_effect">Steigende IC verändert die Zeit für die Kohlenhydrataufnahme nicht</string>
+    <string name="cob3_question">Wie beeinflusst die Änderung des Profil-Prozentsatzes die COB-Berechnung?</string>
+    <string name="cob3_longer">Die Einstellung des Profils auf 150% verlängert die Zeit für Kohlenhydrataufnahme</string>
+    <string name="cob3_shorter">Die Einstellung des Profils auf 150% verkürzt die Zeit für Kohlenhydrataufnahme</string>
+    <string name="cob3_no_effect">Die Einstellung des Profils auf 150% verändert die Zeit für die Kohlenhydrataufnahme nicht</string>
     <string name="iob_label">Aktives Insulin (IOB)</string>
     <string name="iob_value">IOB wird von den abgegebenen temporären Basalraten beeinflusst.</string>
     <string name="iob_hightemp">Eine hohe temporäre Basalrate wird nicht abgegeben, wenn der BZ unterhalb des Zielwerts liegt.</string>

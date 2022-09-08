@@ -46,6 +46,7 @@ import info.nightscout.androidaps.interfaces.Pump;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
 import info.nightscout.androidaps.interfaces.PumpSync;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.schedule.BasalSchedule;
 import info.nightscout.shared.logging.AAPSLogger;
 import info.nightscout.shared.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBus;
@@ -628,8 +629,9 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         if (!podStateManager.isPodRunning()) {
             return 0.0d;
         }
-
-        return podStateManager.getBasalSchedule().rateAt(TimeUtil.toDuration(DateTime.now()));
+        BasalSchedule schedule = podStateManager.getBasalSchedule();
+        if (schedule != null) return schedule.rateAt(TimeUtil.toDuration(DateTime.now()));
+        else return 0;
     }
 
     @Override

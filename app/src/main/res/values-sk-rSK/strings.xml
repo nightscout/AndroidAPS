@@ -645,7 +645,6 @@
     <string name="needsystemwindowpermission">Aplikácia vyžaduje pre oznámenia systémové oprávnenie</string>
     <string name="needlocationpermission">Aplikácia vyžaduje oprávnenie polohy, pre vyhľadávanie BT a identifikáciu WiFi</string>
     <string name="needstoragepermission">Aby bolo možné nahrávať logy a exportovať nastavenia, je nutné pre aplikáciu povoliť oprávnenie prístupu k úložisku</string>
-    <string name="needconnectpermission">Aplikácia vyžaduje povolenie bluetooth</string>
     <string name="request">Požiadavka</string>
     <string name="open_navigation">Otvoriť Menu</string>
     <string name="close_navigation">Zavrieť Menu</string>
@@ -666,7 +665,7 @@
     <string name="resistance_lowers_target_summary">Ak je zistená rezistancia, znížiť cieľovú hladinu glykémie</string>
     <string name="sensitivity_raises_target_title">Citlivosť zvyšuje cieľ</string>
     <string name="sensitivity_raises_target_summary">Ak je zistená vyššia citlivosť, zvýši cieľovú hladinu glykémie</string>
-    <string name="careportal_removestartedevents">Vymazať udalosti \"AndroidAPS reštartovaný\"</string>
+    <string name="careportal_removestartedevents">Odstrániť všetky záznamy AAPS spustený</string>
     <string name="show_invalidated">Zobraziť neplatné</string>
     <string name="hide_invalidated">Skryť zneplatnené</string>
     <string name="remove_items">Odstrániť položky</string>
@@ -1045,4 +1044,6 @@
     <string name="blocked_by_charging">Zablokované možnosti nabíjania</string>
     <string name="blocked_by_connectivity">Zablokované možnosti pripojenia</string>
     <string name="no_watch_connected">(Žiadne hodinky nie sú pripojené)</string>
+    <string name="error_asking_for_permissions">Chyba pri žiadosti o oprávnenie</string>
+    <string name="dynisf_adjust_sensitivity">Upraviť citlivosť a glykémiu</string>
 </resources>

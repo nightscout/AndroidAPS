@@ -27,7 +27,6 @@
     <string name="code_compare">Sunt identice codurile afișate aici și cele de pe pompă?</string>
     <string name="insight_pairing">Asociere Insight</string>
     <string name="insight_local">Accu-Chek Insight</string>
-    <string name="insight_delivered">%1$.2f U din %2$.2f U livrate</string>
     <string name="insight_alert_formatter">%1$s:%2$s</string>
     <string name="tube_changed">Canulă schimbată</string>
     <string name="insightpump_shortname">Obiectiv</string>

@@ -33,7 +33,6 @@
     <string name="omnipod_dash_unknown">Nežinoma komandos būklė</string>
     <string name="omnipod_common_history_tbr_value">Kiekis: %1$.2f vv, trukmė: %2$d min</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f vv</string>
-    <string name="dash_bolusdelivering">Leidžiama %1$.2f vv</string>
     <string name="omnipod_common_alert_delivery_suspended">Insulino leidimas sustabdytas</string>
     <string name="omnipod_dash_connection_lost">Ryšys su Pod prarastas</string>
     <string name="omnipod_dash_bolus_already_in_progress">Kitas bolusas yra jau leidžiamas</string>

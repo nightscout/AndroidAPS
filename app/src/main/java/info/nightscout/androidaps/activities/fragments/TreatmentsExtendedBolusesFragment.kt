@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.util.SparseArray
 import android.view.*
 import androidx.core.util.forEach
+import androidx.core.view.MenuProvider
+import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
@@ -42,7 +44,7 @@ import io.reactivex.rxjava3.kotlin.plusAssign
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class TreatmentsExtendedBolusesFragment : DaggerFragment() {
+class TreatmentsExtendedBolusesFragment : DaggerFragment(), MenuProvider {
 
     private val disposable = CompositeDisposable()
 
@@ -76,11 +78,11 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
         actionHelper = ActionModeHelper(rh, activity, this)
         actionHelper.setUpdateListHandler { binding.recyclerview.adapter?.notifyDataSetChanged() }
         actionHelper.setOnRemoveHandler { removeSelected(it) }
-        setHasOptionsMenu(true)
         binding.recyclerview.setHasFixedSize(true)
         binding.recyclerview.layoutManager = LinearLayoutManager(view.context)
         binding.recyclerview.emptyView = binding.noRecordsText
         binding.recyclerview.loadingView = binding.progressBar
+        requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     fun swapAdapter() {
@@ -174,10 +176,10 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
 
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
         this.menu = menu
         inflater.inflate(R.menu.menu_treatments_extended_bolus, menu)
-        super.onCreateOptionsMenu(menu, inflater)
+        updateMenuVisibility()
     }
 
     private fun updateMenuVisibility() {
@@ -185,12 +187,7 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
         menu?.findItem(R.id.nav_show_invalidated)?.isVisible = !showInvalidated
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        updateMenuVisibility()
-        return super.onPrepareOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    override fun onMenuItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.nav_remove_items -> actionHelper.startRemove()
 
@@ -243,5 +240,4 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
             })
         }
     }
-
 }

@@ -16,5 +16,4 @@
     <!-- Exceptions -->
     <string name="omnipod_common_history_tbr_value">Количество: %1$.2f U, Продължителност: %2$d мин</string>
     <string name="omnipod_common_history_bolus_value">%1$.2fЕ</string>
-    <string name="dash_bolusdelivering">Доставяне %1$.2f U</string>
 </resources>

@@ -168,4 +168,22 @@
     <string name="tile_no_config">Ingen konfiguration tilgængelig</string>
     <string name="wear_control_not_enabled">Wear kontrol deaktiveret</string>
     <string name="wear_control_no_data">Ingen data tilgængelig</string>
+    <string name="increment">forøgelse</string>
+    <string name="decrement">formindskelse</string>
+    <string name="first_char_high">H</string>
+    <string name="first_char_low">L</string>
+    <string name="abbreviation_average">gns.</string>
+    <string name="no_iob_u">--IE</string>
+    <string name="no_cob_g">--g</string>
+    <string name="no_tmp_basal_u_h">-.--E/t</string>
+    <string name="uploader_na">Uploader: ---%</string>
+    <string name="no_status">S: ingen status</string>
+    <string name="time_stamp_na_min_ago">-- Minutter siden</string>
+    <string name="delta_na">--- mg/dl</string>
+    <string name="no_loop_status">Ingen Loop Status</string>
+    <string name="cob_000g">000g</string>
+    <string name="svg_00_0" comment="use , or . only">00,0</string>
+    <string name="iob_0_00u">0,00E</string>
+    <string name="snooze_alert">AAPS Snooze Alarm</string>
+    <string name="sending_snooze">Sender snooze til AAPS</string>
 </resources>

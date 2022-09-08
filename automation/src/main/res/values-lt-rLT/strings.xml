@@ -112,4 +112,5 @@
     <string name="automation_event">Automatizuotas įvykis</string>
     <string name="reorder_label">Pertvarkyti</string>
     <string name="user_action">Vartotojo veiksmas</string>
+    <string name="sort_label">Rūšiuoti</string>
 </resources>

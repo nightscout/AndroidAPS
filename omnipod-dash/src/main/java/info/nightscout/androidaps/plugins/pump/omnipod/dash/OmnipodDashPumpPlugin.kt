@@ -44,8 +44,10 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.mapProfileToBas
 import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.androidaps.queue.commands.CustomCommand
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.DecimalFormatter.to0Decimal
 import info.nightscout.androidaps.utils.DecimalFormatter.to2Decimal
 import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.TimeChangeType
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
@@ -698,7 +700,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             }
             val percent = (waited.toFloat() / estimatedDeliveryTimeSeconds) * 100
             updateBolusProgressDialog(
-                rh.gs(R.string.dash_bolusdelivering, requestedBolusAmount),
+                rh.gs(R.string.bolus_delivered, Round.roundTo(percent*requestedBolusAmount/100, PodConstants.POD_PULSE_BOLUS_UNITS), requestedBolusAmount),
                 percent.toInt()
             )
         }
@@ -729,7 +731,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 val remainingUnits = podStateManager.lastBolus!!.bolusUnitsRemaining
                 val percent = ((requestedBolusAmount - remainingUnits) / requestedBolusAmount) * 100
                 updateBolusProgressDialog(
-                    rh.gs(R.string.bolusdelivering, requestedBolusAmount),
+                    rh.gs(R.string.bolus_delivered, Round.roundTo(requestedBolusAmount - remainingUnits, PodConstants.POD_PULSE_BOLUS_UNITS), requestedBolusAmount),
                     percent.toInt()
                 )
 
@@ -1062,7 +1064,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         }
         ret += rh.gs(
             R.string.omnipod_common_short_status_reservoir,
-            podStateManager.pulsesRemaining?.let { reservoirLevel.toString() } ?: "50+"
+            podStateManager.pulsesRemaining?.let { to0Decimal(reservoirLevel) } ?: "50+"
         )
         return ret.trim()
     }

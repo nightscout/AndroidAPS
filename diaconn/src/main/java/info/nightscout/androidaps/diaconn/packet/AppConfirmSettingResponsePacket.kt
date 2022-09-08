@@ -35,6 +35,10 @@ class AppConfirmSettingResponsePacket(
             failed = true
             return
         }
+        //  The bolus progress diallog opens only when the confirm result is successfull
+        if(diaconnG8Pump.bolusConfirmMessage == 0x07.toByte()) {
+          diaconnG8Pump.isReadyToBolus = true
+        }
     }
 
     override fun getFriendlyName(): String {

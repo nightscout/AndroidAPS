@@ -3,6 +3,8 @@ package info.nightscout.androidaps.plugins.general.nsclient
 import android.os.Bundle
 import android.view.*
 import android.widget.ScrollView
+import androidx.core.view.MenuProvider
+import androidx.lifecycle.Lifecycle
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.entities.UserEntry.Action
@@ -22,7 +24,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
 
-class NSClientFragment : DaggerFragment() {
+class NSClientFragment : DaggerFragment(), MenuProvider {
 
     @Inject lateinit var nsClientPlugin: NSClientPlugin
     @Inject lateinit var sp: SP
@@ -35,10 +37,10 @@ class NSClientFragment : DaggerFragment() {
 
     companion object {
 
-        const val ID_MENU_CLEAR_LOG = 6
-        const val ID_MENU_RESTART = 7
-        const val ID_MENU_SEND_NOW = 8
-        const val ID_MENU_FULL_SYNC = 9
+        const val ID_MENU_CLEAR_LOG = 507
+        const val ID_MENU_RESTART = 508
+        const val ID_MENU_SEND_NOW = 509
+        const val ID_MENU_FULL_SYNC = 510
     }
 
     private val disposable = CompositeDisposable()
@@ -52,7 +54,7 @@ class NSClientFragment : DaggerFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         NsClientFragmentBinding.inflate(inflater, container, false).also {
             _binding = it
-            setHasOptionsMenu(true)
+            requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
         }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -73,18 +75,15 @@ class NSClientFragment : DaggerFragment() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        if (isResumed) {
-            menu.add(Menu.FIRST, ID_MENU_CLEAR_LOG, 0, rh.gs(R.string.clearlog)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
-            menu.add(Menu.FIRST, ID_MENU_RESTART, 0, rh.gs(R.string.restart)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
-            menu.add(Menu.FIRST, ID_MENU_SEND_NOW, 0, rh.gs(R.string.deliver_now)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
-            menu.add(Menu.FIRST, ID_MENU_FULL_SYNC, 0, rh.gs(R.string.full_sync)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
-            menu.setGroupDividerEnabled(true)
-        }
+    override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
+        menu.add(Menu.FIRST, ID_MENU_CLEAR_LOG, 0, rh.gs(R.string.clearlog)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+        menu.add(Menu.FIRST, ID_MENU_RESTART, 0, rh.gs(R.string.restart)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+        menu.add(Menu.FIRST, ID_MENU_SEND_NOW, 0, rh.gs(R.string.deliver_now)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+        menu.add(Menu.FIRST, ID_MENU_FULL_SYNC, 0, rh.gs(R.string.full_sync)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+        menu.setGroupDividerEnabled(true)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+    override fun onMenuItemSelected(item: MenuItem): Boolean =
         when (item.itemId) {
             ID_MENU_CLEAR_LOG -> {
                 nsClientPlugin.clearLog()

@@ -91,4 +91,6 @@
     <string name="set_neutral_temps_summary">Wenn diese Option aktiviert ist, wird die TBR vor Ende jeder Stunde abgebrochen. Dies kann dazu beitragen, einige Pumpen davon abzuhalten, zur vollen Stunde zu vibrieren / zu piepsen.</string>
     <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d Minuten verbleibend)</string>
     <string name="invalid_history_data">Ungültige Pumpenhistorie erkannt. Eröffne ein neues Ticket (issue) und füge Logs bei.</string>
+    <string name="riley_statistics">RL Statistik</string>
+    <string name="medtronic_history_type">Typ:</string>
 </resources>

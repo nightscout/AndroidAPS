@@ -18,20 +18,17 @@ object MedtronicConst {
         val BolusDelay = R.string.key_medtronic_bolus_delay
         val Encoding = R.string.key_medtronic_encoding
         val BatteryType = R.string.key_medtronic_battery_type
-        val BolusDebugEnabled = R.string.key_medtronic_bolus_debug
     }
 
     object Statistics {
-        const val StatsPrefix = "medtronic_"
+        private const val StatsPrefix = "medtronic_"
         const val FirstPumpStart = Prefix + "first_pump_use"
         const val LastGoodPumpCommunicationTime = Prefix + "lastGoodPumpCommunicationTime"
-        const val LastGoodPumpFrequency = Prefix + "LastGoodPumpFrequency"
         const val TBRsSet = StatsPrefix + "tbrs_set"
         const val StandardBoluses = StatsPrefix + "std_boluses_delivered"
         const val SMBBoluses = StatsPrefix + "smb_boluses_delivered"
         const val LastPumpHistoryEntry = StatsPrefix + "pump_history_entry"
         const val LastPrime = StatsPrefix + "last_sent_prime"
         const val LastRewind = StatsPrefix + "last_sent_rewind"
-        const val InternalTemporaryDatabase = StatsPrefix + "temporary_entries"
     }
 }

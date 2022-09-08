@@ -2,7 +2,6 @@ package info.nightscout.androidaps.utils
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.annotation.TargetApi
 import android.bluetooth.BluetoothAdapter
 import android.content.ActivityNotFoundException
 import android.content.Context
@@ -51,12 +50,20 @@ class AndroidPermission @Inject constructor(
         }
         if (test) {
             if (activity is DaggerAppCompatActivityWithResult)
-                activity.requestMultiplePermissions.launch(permissions)
+                try {
+                    activity.requestMultiplePermissions.launch(permissions)
+                } catch (ignored: IllegalStateException) {
+                    ToastUtils.errorToast(activity, rh.gs(R.string.error_asking_for_permissions))
+                }
         }
         if (testBattery) {
             try {
                 if (activity is DaggerAppCompatActivityWithResult)
-                    activity.callForBatteryOptimization.launch(null)
+                    try {
+                        activity.callForBatteryOptimization.launch(null)
+                    } catch (ignored: IllegalStateException) {
+                        ToastUtils.errorToast(activity, rh.gs(R.string.error_asking_for_permissions))
+                    }
             } catch (e: ActivityNotFoundException) {
                 permissionBatteryOptimizationFailed = true
                 OKDialog.show(activity, rh.gs(R.string.permission), rh.gs(R.string.alert_dialog_permission_battery_optimization_failed)) { activity.recreate() }
@@ -95,13 +102,14 @@ class AndroidPermission @Inject constructor(
         }
     }
 
+    @SuppressLint("MissingPermission")
     @Synchronized
     fun notifyForBtConnectPermission(activity: FragmentActivity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             //  Manifest.permission.BLUETOOTH_CONNECT
-            if (permissionNotGranted(activity, "android.permission.BLUETOOTH_CONNECT") || permissionNotGranted(activity, "android.permission.BLUETOOTH_SCAN")) {
+            if (permissionNotGranted(activity, Manifest.permission.BLUETOOTH_CONNECT) || permissionNotGranted(activity, Manifest.permission.BLUETOOTH_SCAN)) {
                 val notification = NotificationWithAction(injector, Notification.PERMISSION_BT, rh.gs(R.string.needconnectpermission), Notification.URGENT)
-                notification.action(R.string.request) { askForPermission(activity, arrayOf("android.permission.BLUETOOTH_SCAN", "android.permission.BLUETOOTH_CONNECT")) }
+                notification.action(R.string.request) { askForPermission(activity, arrayOf(Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT)) }
                 rxBus.send(EventNewNotification(notification))
             } else {
                 activity.startActivity(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
@@ -145,8 +153,10 @@ class AndroidPermission @Inject constructor(
                     if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
                         // Show alert dialog to the user saying a separate permission is needed
                         // Launch the settings activity if the user prefers
-                        val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                            Uri.parse("package:" + activity.packageName))
+                        val intent = Intent(
+                            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                            Uri.parse("package:" + activity.packageName)
+                        )
                         activity.startActivity(intent)
                     }
                 }

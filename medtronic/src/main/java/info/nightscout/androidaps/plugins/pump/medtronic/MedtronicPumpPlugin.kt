@@ -341,6 +341,7 @@ class MedtronicPumpPlugin @Inject constructor(
         val refreshTypesNeededToReschedule: MutableSet<MedtronicStatusRefreshType> = mutableSetOf()
         for ((key, value) in statusRefresh) {
             if (value > 0 && System.currentTimeMillis() > value) {
+                @Suppress("WHEN_ENUM_CAN_BE_NULL_IN_JAVA")
                 when (key) {
                     MedtronicStatusRefreshType.PumpHistory                                                -> {
                         readPumpHistory()

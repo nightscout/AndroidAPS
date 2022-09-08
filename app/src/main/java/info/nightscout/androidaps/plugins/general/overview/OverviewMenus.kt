@@ -69,14 +69,16 @@ class OverviewMenus @Inject constructor(
     private var _setting: MutableList<Array<Boolean>> = ArrayList()
 
     val setting: List<Array<Boolean>>
-        get() = _setting.toMutableList() // implicitly does a list copy
+        @Synchronized get() = _setting.toMutableList() // implicitly does a list copy
 
+    @Synchronized
     private fun storeGraphConfig() {
         val sts = Gson().toJson(_setting)
         sp.putString(R.string.key_graphconfig, sts)
         aapsLogger.debug(sts)
     }
 
+    @Synchronized
     fun loadGraphConfig() {
         val sts = sp.getString(R.string.key_graphconfig, "")
         if (sts.isNotEmpty()) {
@@ -115,7 +117,7 @@ class OverviewMenus @Inject constructor(
             val used = arrayListOf<Int>()
 
             for (g in 0 until numOfGraphs) {
-                if (g != 0 && g < numOfGraphs) {
+                if (g != 0) {
                     val dividerItem = popup.menu.add(Menu.NONE, g, Menu.NONE, "------- ${rh.gs(R.string.graph_menu_divider_header)} $g -------")
                     dividerItem.isCheckable = true
                     dividerItem.isChecked = true
@@ -134,8 +136,8 @@ class OverviewMenus @Inject constructor(
                         val item = popup.menu.add(Menu.NONE, m.ordinal + 100 * (g + 1), Menu.NONE, rh.gs(m.nameId))
                         val title = item.title
                         val s = SpannableString(" $title ")
-                        s.setSpan(ForegroundColorSpan(rh.gac(context, m.attrTextId)), 0, s.length, 0)
-                        s.setSpan(BackgroundColorSpan(rh.gac(context, m.attrId)), 0, s.length, 0)
+                        s.setSpan(ForegroundColorSpan(rh.gac(m.attrTextId)), 0, s.length, 0)
+                        s.setSpan(BackgroundColorSpan(rh.gac(m.attrId)), 0, s.length, 0)
                         item.title = s
                         item.isCheckable = true
                         item.isChecked = settingsCopy[g][m.ordinal]
@@ -150,36 +152,38 @@ class OverviewMenus @Inject constructor(
             }
 
             popup.setOnMenuItemClickListener {
-                try {
-                    // id < 100 graph header - divider 1, 2, 3 .....
-                    when {
-                        it.itemId == SCALE_ID                              -> {
-                            // do nothing, submenu
-                        }
+                synchronized(this) {
+                    try {
+                        // id < 100 graph header - divider 1, 2, 3 .....
+                        when {
+                            it.itemId == SCALE_ID                              -> {
+                                // do nothing, submenu
+                            }
 
-                        it.itemId > SCALE_ID && it.itemId < SCALE_ID + 100 -> {
-                            val hours = it.itemId - SCALE_ID // 6,12,....
-                            rxBus.send(EventScale(hours))
-                        }
+                            it.itemId > SCALE_ID && it.itemId < SCALE_ID + 100 -> {
+                                val hours = it.itemId - SCALE_ID // 6,12,....
+                                rxBus.send(EventScale(hours))
+                            }
 
-                        it.itemId == numOfGraphs                           -> {
-                            // add new empty
-                            _setting.add(Array(CharType.values().size) { false })
-                        }
+                            it.itemId == numOfGraphs                           -> {
+                                // add new empty
+                                _setting.add(Array(CharType.values().size) { false })
+                            }
 
-                        it.itemId < 100                                    -> {
-                            // remove graph
-                            _setting.removeAt(it.itemId)
-                        }
+                            it.itemId < 100                                    -> {
+                                // remove graph
+                                _setting.removeAt(it.itemId)
+                            }
 
-                        else                                               -> {
-                            val graphNumber = it.itemId / 100 - 1
-                            val item = it.itemId % 100
-                            _setting[graphNumber][item] = !it.isChecked
+                            else                                               -> {
+                                val graphNumber = it.itemId / 100 - 1
+                                val item = it.itemId % 100
+                                _setting[graphNumber][item] = !it.isChecked
+                            }
                         }
+                    } catch (exception: Exception) {
+                        fabricPrivacy.logException(exception)
                     }
-                } catch (exception: Exception) {
-                    fabricPrivacy.logException(exception)
                 }
                 storeGraphConfig()
                 setupChartMenu(context, chartButton)

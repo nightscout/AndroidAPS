@@ -27,14 +27,11 @@ class ActionModeHelper<T>(val rh: ResourceHelper, val activity: FragmentActivity
             return parentClass == "SingleFragmentActivity"
         }
 
-    val enableRemove: Boolean
+    private val enableRemove: Boolean
         get() = onRemove != null
 
     val isNoAction: Boolean
         get() = actionMode == null && removeActionMode == null && sortActionMode == null
-
-    val isAction: Boolean
-        get() = actionMode != null
 
     val isSorting: Boolean
         get() = sortActionMode != null
@@ -93,14 +90,6 @@ class ActionModeHelper<T>(val rh: ResourceHelper, val activity: FragmentActivity
     fun startRemove(): Boolean {
         if (removeActionMode == null) {
             removeActionMode = activity?.startActionMode(RemoveActionModeCallback())
-            return true
-        }
-        return false
-    }
-
-    fun startSort(): Boolean {
-        if (sortActionMode == null) {
-            sortActionMode = activity?.startActionMode(SortActionModeCallback())
             return true
         }
         return false

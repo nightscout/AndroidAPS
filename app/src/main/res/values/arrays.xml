@@ -28,6 +28,7 @@
         <item>@string/bg_lang</item>
         <item>@string/cs_lang</item>
         <item>@string/de_lang</item>
+        <item>@string/dk_lang</item>
         <item>@string/fr_lang</item>
         <item>@string/nl_lang</item>
         <item>@string/es_lang</item>
@@ -55,6 +56,7 @@
         <item>bg</item>
         <item>cs</item>
         <item>de</item>
+        <item>dk</item>
         <item>fr</item>
         <item>nl</item>
         <item>es</item>

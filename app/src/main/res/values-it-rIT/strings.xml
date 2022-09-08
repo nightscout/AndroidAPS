@@ -645,7 +645,6 @@
     <string name="needsystemwindowpermission">L\'applicazione richiede l\'autorizzazione \"finestra di sistema\" per le notifiche</string>
     <string name="needlocationpermission">L\'applicazione richiede l\'accesso alla posizione per la scansione bluetooth e l\'identificazione WiFi</string>
     <string name="needstoragepermission">L\'applicazione richiede l\'accesso alla memoria per memorizzare i file di log ed esportare le impostazioni</string>
-    <string name="needconnectpermission">L\'applicazione richiede l\'autorizzazione bluetooth</string>
     <string name="request">Richiesta</string>
     <string name="open_navigation">Apri navigazione</string>
     <string name="close_navigation">Chiudi navigazione</string>
@@ -666,7 +665,6 @@
     <string name="resistance_lowers_target_summary">Quando viene rilevata resistenza, ridurre la glicemia target</string>
     <string name="sensitivity_raises_target_title">La sensibilità aumenta il target</string>
     <string name="sensitivity_raises_target_summary">Quando viene rilevata sensibilità, aumentare la glicemia target</string>
-    <string name="careportal_removestartedevents">Rimuovi gli eventi \"AndroidAPS avviato\"</string>
     <string name="show_invalidated">Mostra invalidato</string>
     <string name="hide_invalidated">Nascondi invalidato</string>
     <string name="remove_items">Rimuovi elementi</string>
@@ -1045,4 +1043,6 @@
     <string name="blocked_by_charging">Bloccato dalle opzioni di ricarica</string>
     <string name="blocked_by_connectivity">Bloccato dalle opzioni di connettività</string>
     <string name="no_watch_connected">(Nessuno smartwatch connesso)</string>
+    <string name="error_asking_for_permissions">Errore nel richiedere le autorizzazioni</string>
+    <string name="dynisf_adjust_sensitivity">Regola sensibilità e BG</string>
 </resources>

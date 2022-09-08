@@ -317,7 +317,6 @@ class AutotunePrepTest : TestBaseWithProfile() {
         profileFunction,
         sp,
         dateUtil,
-        activePlugin,
         autotuneFS
     ) {
 
