@@ -397,6 +397,7 @@
     <string name="valueoutofrange">»%1$s« er utenfor lovlige grenseverdier</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f er utenfor lovlige grenseverdier</string>
     <string name="basal_value">Basal verdi</string>
+    <string name="nsclient_version_does_not_match">NSClient-versjonen samsvarer ikke med AndroidAPS-versjonen. Vennligst oppdater.</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f E</string>
     <string name="carbs_g">CARBS %1$d g</string>
