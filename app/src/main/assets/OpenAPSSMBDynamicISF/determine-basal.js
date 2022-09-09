@@ -208,7 +208,7 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
     //*********************************************************************************
 
     console.error("---------------------------------------------------------");
-    console.error( " Dynamic ISF version Beta 1.6.5 ");
+    console.error( " Dynamic ISF version Beta 2.0 ");
     console.error("---------------------------------------------------------");
 
     var variable_sens = profile.variable_sens;
