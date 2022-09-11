@@ -263,6 +263,7 @@ class AutotuneFragment : DaggerFragment() {
         binding.tuneLastrun.setOnClickListener {
             if (!autotunePlugin.calculationRunning) {
                 autotunePlugin.loadLastRun()
+                binding.tuneDays.value = autotunePlugin.lastNbDays.toDouble()
                 updateGui()
             }
         }
