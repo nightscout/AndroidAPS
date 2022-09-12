@@ -121,7 +121,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener, MenuProvider {
                 true
             }
 
-            else              -> false
+            else              -> super.onContextItemSelected(item)
         }
 
     @SuppressLint("NotifyDataSetChanged")
