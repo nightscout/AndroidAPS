@@ -4,7 +4,7 @@
     <string name="eopatch_pump_description">Pump integration for eopatch</string>
 
     <string name="category_alerts">알람</string>
-    <string name="low_reservior">인슐린 부족 위험주의</string>
+    <string name="low_reservoir">인슐린 부족 위험주의</string>
     <string name="patch_expiration_reminders">패치 사용 기간 만료 알림</string>
     <string name="patch_buzzer_reminders">패치 버저 알림</string>
 

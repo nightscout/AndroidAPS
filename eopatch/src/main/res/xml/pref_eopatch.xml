@@ -7,7 +7,7 @@
             android:entries="@array/lowReservoirArray"
             android:entryValues="@array/lowReservoirValues"
             android:key="@string/key_eopatch_low_reservoir_reminders"
-            android:title="@string/low_reservior" />
+            android:title="@string/low_reservoir" />
 
         <ListPreference
             android:defaultValue="4"

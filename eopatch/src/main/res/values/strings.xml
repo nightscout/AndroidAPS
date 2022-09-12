@@ -12,10 +12,10 @@
 
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_shortname">EOPatch2</string>
-    <string name="eopatch_pump_description">Pump integration for EOPatch2</string>
+    <string name="eopatch_pump_description">Pump integration for EOPatch2 and GlucoMen</string>
 
     <string name="category_alerts">Alerts</string>
-    <string name="low_reservior">Low reservoir Alerts</string>
+    <string name="low_reservoir">Low reservoir Alerts</string>
     <string name="patch_expiration_reminders">Patch expiration Reminder</string>
     <string name="patch_buzzer_reminders">Patch buzzer Reminders</string>
 
