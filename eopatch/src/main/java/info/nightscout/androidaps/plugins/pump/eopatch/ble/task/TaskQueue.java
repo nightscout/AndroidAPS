@@ -7,15 +7,16 @@ import java.util.Queue;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import info.nightscout.shared.logging.AAPSLogger;
 import info.nightscout.shared.logging.LTag;
-import io.reactivex.Observable;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.BehaviorSubject;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.subjects.BehaviorSubject;
 
 @Singleton
 public class TaskQueue {
     @Inject AAPSLogger aapsLogger;
+    @Inject AapsSchedulers aapsSchedulers;
 
     Queue<PatchTask> queue = new LinkedList<>();
 
@@ -37,7 +38,7 @@ public class TaskQueue {
                         .takeUntil(it -> it.number > v)
                         .filter(it -> it.number == v))
                 .doOnNext(v -> aapsLogger.debug(LTag.PUMPCOMM, String.format("Task #:%s started     func:%s", v.number, v.func.name())))
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .map(it -> it.func)
                 .doFinally(this::done);
     }

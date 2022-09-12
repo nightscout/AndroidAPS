@@ -10,9 +10,30 @@ import android.content.IntentFilter;
 
 import androidx.annotation.Nullable;
 
+import java.math.BigInteger;
+import java.security.AlgorithmParameters;
+import java.security.InvalidKeyException;
+import java.security.KeyFactory;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.interfaces.ECPublicKey;
+import java.security.spec.ECGenParameterSpec;
+import java.security.spec.ECParameterSpec;
+import java.security.spec.ECPoint;
+import java.security.spec.ECPublicKeySpec;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.InvalidParameterSpecException;
+import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
+
+import javax.crypto.KeyAgreement;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import info.nightscout.androidaps.data.DetailedBolusInfo;
-import info.nightscout.shared.logging.AAPSLogger;
-import info.nightscout.shared.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.eopatch.EoPatchRxBus;
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode;
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.task.ActivateTask;
@@ -38,10 +59,10 @@ import info.nightscout.androidaps.plugins.pump.eopatch.ble.task.SyncBasalHistory
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.task.TaskBase;
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.task.TaskFunc;
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.task.UpdateConnectionTask;
-import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.BleConnectionState;
-import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.IBleDevice;
+import info.nightscout.androidaps.plugins.pump.eopatch.code.BolusExDuration;
+import info.nightscout.androidaps.plugins.pump.eopatch.code.DeactivationStatus;
+import info.nightscout.androidaps.plugins.pump.eopatch.code.SettingKeys;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.Patch;
-import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.PatchSelfTestResult;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.BuzzerStop;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.GetTemperature;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.PublicKeySend;
@@ -51,35 +72,18 @@ import info.nightscout.androidaps.plugins.pump.eopatch.core.code.BolusType;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.noti.AlarmNotification;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.noti.BaseNotification;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.noti.InfoNotification;
-import info.nightscout.androidaps.plugins.pump.eopatch.core.response.*;
-
-import info.nightscout.androidaps.plugins.pump.eopatch.code.BolusExDuration;
-import info.nightscout.androidaps.plugins.pump.eopatch.code.DeactivationStatus;
-
-import java.math.BigInteger;
-import java.security.AlgorithmParameters;
-import java.security.InvalidKeyException;
-import java.security.KeyFactory;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.interfaces.ECPublicKey;
-import java.security.spec.ECGenParameterSpec;
-import java.security.spec.ECParameterSpec;
-import java.security.spec.ECPoint;
-import java.security.spec.ECPublicKeySpec;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.InvalidParameterSpecException;
-import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
-
-import javax.crypto.KeyAgreement;
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
-import info.nightscout.androidaps.plugins.pump.eopatch.code.SettingKeys;
+import info.nightscout.androidaps.plugins.pump.eopatch.core.response.BasalScheduleSetResponse;
+import info.nightscout.androidaps.plugins.pump.eopatch.core.response.BaseResponse;
+import info.nightscout.androidaps.plugins.pump.eopatch.core.response.BolusResponse;
+import info.nightscout.androidaps.plugins.pump.eopatch.core.response.BolusStopResponse;
+import info.nightscout.androidaps.plugins.pump.eopatch.core.response.ComboBolusStopResponse;
+import info.nightscout.androidaps.plugins.pump.eopatch.core.response.KeyResponse;
+import info.nightscout.androidaps.plugins.pump.eopatch.core.response.PatchBooleanResponse;
+import info.nightscout.androidaps.plugins.pump.eopatch.core.response.TempBasalScheduleSetResponse;
+import info.nightscout.androidaps.plugins.pump.eopatch.core.response.TemperatureResponse;
+import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.BleConnectionState;
+import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.IBleDevice;
+import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.PatchSelfTestResult;
 import info.nightscout.androidaps.plugins.pump.eopatch.event.EventEoPatchAlarm;
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.receiver.RxBroadcastReceiver;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.BolusCurrent;
@@ -87,13 +91,16 @@ import info.nightscout.androidaps.plugins.pump.eopatch.vo.NormalBasal;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchConfig;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchState;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.TempBasal;
+import info.nightscout.androidaps.utils.rx.AapsSchedulers;
+import info.nightscout.shared.logging.AAPSLogger;
+import info.nightscout.shared.logging.LTag;
 import info.nightscout.shared.sharedPreferences.SP;
-import io.reactivex.Observable;
-import io.reactivex.Scheduler;
-import io.reactivex.Single;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Scheduler;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.functions.Consumer;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 @Singleton
 public class PatchManagerImpl{
@@ -101,6 +108,7 @@ public class PatchManagerImpl{
     @Inject Context context;
     @Inject SP sp;
     @Inject AAPSLogger aapsLogger;
+    @Inject AapsSchedulers aapsSchedulers;
 
     @Inject StartBondTask START_BOND;
     @Inject GetPatchInfoTask GET_PATCH_INFO;
@@ -146,17 +154,19 @@ public class PatchManagerImpl{
         compositeDisposable.add(
             Observable.combineLatest(patch.observeConnected(), pm.observePatchLifeCycle(),
                 (connected, lifeCycle) -> (connected && lifeCycle.isActivated()))
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(aapsSchedulers.getIo())
                 .filter(ok -> ok)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .doOnNext(v -> TaskBase.enqueue(TaskFunc.UPDATE_CONNECTION))
                 .retry()
                 .subscribe());
 
         compositeDisposable.add(
-            Observable.combineLatest(patch.observeConnected(), pm.observePatchLifeCycle().distinctUntilChanged(), dateTimeChanged.startWith(new Intent()),
+            Observable.combineLatest(patch.observeConnected(),
+                            pm.observePatchLifeCycle().distinctUntilChanged(),
+                            dateTimeChanged.startWith(Observable.just(new Intent())),
                 (connected, lifeCycle, value) -> (connected && lifeCycle.isActivated()))
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(aapsSchedulers.getIo())
                 .doOnNext(v -> aapsLogger.debug(LTag.PUMP,"Has the date or time changed? "+v))
                 .filter(ok -> ok)
                 .doOnNext(v -> TaskBase.enqueue(TaskFunc.SET_GLOBAL_TIME))
@@ -279,7 +289,7 @@ public class PatchManagerImpl{
     // synchronized lock
     private final Object lock = new Object();
 
-    private void updatePatchConfig(Consumer<PatchConfig> consumer, boolean needSave) throws Exception {
+    private void updatePatchConfig(Consumer<PatchConfig> consumer, boolean needSave) throws Throwable {
         synchronized (lock) {
             consumer.accept(pm.getPatchConfig());
             if (needSave) {
@@ -549,7 +559,7 @@ public class PatchManagerImpl{
     @Inject
     SyncBasalHistoryTask syncBasalHistoryTask;
 
-    void onAlarmNotification(AlarmNotification notification) throws Exception {
+    void onAlarmNotification(AlarmNotification notification) throws Throwable {
         patchStateManager.updatePatchState(PatchState.create(notification.patchState, System.currentTimeMillis()));
 
         if (pm.getPatchConfig().isActivated()) {
@@ -562,7 +572,7 @@ public class PatchManagerImpl{
         }
     }
 
-    private void onInfoNotification(InfoNotification notification) throws Exception {
+    private void onInfoNotification(InfoNotification notification) throws Throwable {
         readBolusStatusFromNotification(notification);
         updateInjected(notification, false);
         if (notification.isBolusDone()) {
@@ -570,7 +580,7 @@ public class PatchManagerImpl{
         }
     }
 
-    void updateInjected(BaseNotification notification, boolean needSave) throws Exception {
+    void updateInjected(BaseNotification notification, boolean needSave) throws Throwable {
         updatePatchConfig(patchConfig -> {
             patchConfig.setInjectCount(notification.getTotalInjected());
             patchConfig.setStandardBolusInjectCount(notification.getSB_CNT());

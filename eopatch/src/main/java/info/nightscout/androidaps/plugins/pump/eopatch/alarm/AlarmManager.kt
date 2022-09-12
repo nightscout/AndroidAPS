@@ -4,15 +4,14 @@ import android.content.Context
 import android.content.Intent
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
-import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode.*
 import info.nightscout.androidaps.plugins.pump.eopatch.EONotification
 import info.nightscout.androidaps.plugins.pump.eopatch.EoPatchRxBus
 import info.nightscout.androidaps.plugins.pump.eopatch.R
+import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode.*
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPatchManager
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager
 import info.nightscout.androidaps.plugins.pump.eopatch.code.AlarmCategory
@@ -20,14 +19,14 @@ import info.nightscout.androidaps.plugins.pump.eopatch.event.EventEoPatchAlarm
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.AlarmHelperActivity
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.Alarms
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
-import io.reactivex.Observable
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.Disposable
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -49,6 +48,7 @@ class AlarmManager @Inject constructor() : IAlarmManager {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var sp: SP
     @Inject lateinit var context: Context
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
 
     @Inject lateinit var pm: IPreferenceManager
     @Inject lateinit var mAlarmRegistry: IAlarmRegistry
@@ -69,8 +69,8 @@ class AlarmManager @Inject constructor() : IAlarmManager {
             .doOnNext { aapsLogger.info(LTag.PUMP,"EventEoPatchAlarm Received") }
             .concatMap {
                 Observable.fromArray(it)
-                    .observeOn(Schedulers.io())
-                    .subscribeOn(AndroidSchedulers.mainThread())
+                    .observeOn(aapsSchedulers.io)
+                    .subscribeOn(aapsSchedulers.main)
                     .doOnNext { alarmCodes ->
                         alarmCodes.forEach { alarmCode ->
                             aapsLogger.info(LTag.PUMP,"alarmCode: ${alarmCode.name}")

@@ -10,7 +10,7 @@ import info.nightscout.shared.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.StartPriming;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.UpdateConnection;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchState;
-import io.reactivex.Observable;
+import io.reactivex.rxjava3.core.Observable;
 
 @Singleton
 public class PrimingTask extends TaskBase {

@@ -11,7 +11,7 @@ import info.nightscout.androidaps.plugins.pump.eopatch.core.response.BolusFinish
 import info.nightscout.androidaps.plugins.pump.eopatch.core.code.BolusType;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.BolusCurrent;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchState;
-import io.reactivex.Single;
+import io.reactivex.rxjava3.core.Single;
 
 @Singleton
 public class ReadBolusFinishTimeTask extends BolusTask {

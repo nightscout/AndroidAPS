@@ -2,9 +2,8 @@ package info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.EoBaseNavigator
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
-import io.reactivex.rxkotlin.addTo
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.Disposable
 import java.lang.ref.WeakReference
 
 abstract class EoBaseViewModel<N : EoBaseNavigator> : ViewModel() {
@@ -27,6 +26,6 @@ abstract class EoBaseViewModel<N : EoBaseNavigator> : ViewModel() {
 
     fun finish() = navigator?.finish()
 
-    fun Disposable.addTo() = addTo(compositeDisposable)
+    fun Disposable.addTo() = apply { compositeDisposable.add(this) }
 
 }

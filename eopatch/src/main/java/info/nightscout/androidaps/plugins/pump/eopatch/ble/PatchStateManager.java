@@ -6,6 +6,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import info.nightscout.androidaps.interfaces.CommandQueue;
+import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import info.nightscout.shared.logging.AAPSLogger;
 import info.nightscout.shared.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.code.BolusType;
@@ -17,9 +18,8 @@ import info.nightscout.androidaps.plugins.pump.eopatch.vo.BolusCurrent;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.NormalBasal;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchState;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.TempBasal;
-import io.reactivex.Maybe;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.rxjava3.core.Maybe;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 
 @Singleton
@@ -32,6 +32,7 @@ public class PatchStateManager {
     @Inject FetchAlarmTask FETCH_ALARM;
     @Inject CommandQueue commandQueue;
     @Inject AAPSLogger aapsLogger;
+    @Inject AapsSchedulers aapsSchedulers;
 
     @Inject
     public PatchStateManager() {
@@ -41,7 +42,7 @@ public class PatchStateManager {
     public synchronized void updatePatchState(PatchState newState) {
         Maybe.fromCallable(() -> newState).observeOn(Schedulers.single())
                 .doOnSuccess(patchState -> updatePatchStateInner(patchState))
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(aapsSchedulers.getMain())
                 .doOnSuccess(patchState -> aapsLogger.debug(LTag.PUMP, patchState.toString()))
                 .subscribe();
     }

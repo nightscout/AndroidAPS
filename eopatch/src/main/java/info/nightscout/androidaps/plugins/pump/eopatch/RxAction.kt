@@ -5,7 +5,8 @@ package info.nightscout.androidaps.plugins.pump.eopatch
 import android.os.SystemClock
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
-import io.reactivex.*
+import io.reactivex.rxjava3.core.Scheduler
+import io.reactivex.rxjava3.core.Single
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton

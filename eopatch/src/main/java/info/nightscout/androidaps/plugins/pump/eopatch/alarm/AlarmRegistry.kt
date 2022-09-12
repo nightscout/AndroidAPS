@@ -1,27 +1,26 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.alarm
 
 import android.app.AlarmManager
-import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode.Companion.getUri
-import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.pump.eopatch.event.EventEoPatchAlarm
-import android.app.PendingIntent
 import android.app.AlarmManager.AlarmClockInfo
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.pump.eopatch.EoPatchRxBus
 import info.nightscout.androidaps.plugins.pump.eopatch.OsAlarmReceiver
+import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode.Companion.getUri
+import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager
 import info.nightscout.androidaps.plugins.pump.eopatch.code.PatchLifecycle
 import info.nightscout.androidaps.plugins.pump.eopatch.core.code.PatchAeCode
+import info.nightscout.androidaps.plugins.pump.eopatch.event.EventEoPatchAlarm
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import io.reactivex.Maybe
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
+import info.nightscout.shared.logging.AAPSLogger
+import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.Disposable
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -109,10 +108,10 @@ class AlarmRegistry @Inject constructor() : IAlarmRegistry {
     override fun add(patchAeCodes: Set<PatchAeCode>) {
         compositeDisposable.add(
             Observable.fromIterable(patchAeCodes)
-               .filter{patchAeCodeItem ->  AlarmCode.findByPatchAeCode(patchAeCodeItem.getAeValue()) != null}
-               .observeOn(AndroidSchedulers.mainThread())
-               .filter { aeCodes -> AlarmCode.findByPatchAeCode(aeCodes.getAeValue()) != null }
-               .flatMapMaybe{aeCodeResponse -> add(AlarmCode.findByPatchAeCode(aeCodeResponse.getAeValue())!!,0L, true)}
+               .filter{patchAeCodeItem ->  AlarmCode.findByPatchAeCode(patchAeCodeItem.aeValue) != null}
+               .observeOn(aapsSchedulers.main)
+               .filter { aeCodes -> AlarmCode.findByPatchAeCode(aeCodes.aeValue) != null }
+               .flatMapMaybe{aeCodeResponse -> add(AlarmCode.findByPatchAeCode(aeCodeResponse.aeValue)!!, 0L, true)}
                .subscribe()
         )
     }

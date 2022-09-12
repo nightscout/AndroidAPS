@@ -1,17 +1,20 @@
 package info.nightscout.androidaps.plugins.pump.eopatch
 
 import android.os.SystemClock
-import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.events.EventAppInitialized
 import info.nightscout.androidaps.events.EventPreferenceChange
-import info.nightscout.androidaps.interfaces.*
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.androidaps.interfaces.CommandQueue
+import info.nightscout.androidaps.interfaces.PluginDescription
+import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.interfaces.Profile
+import info.nightscout.androidaps.interfaces.Pump
+import info.nightscout.androidaps.interfaces.PumpDescription
+import info.nightscout.androidaps.interfaces.PumpPluginBase
+import info.nightscout.androidaps.interfaces.PumpSync
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.common.ManufacturerType
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
@@ -31,13 +34,12 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.TimeChangeType
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.functions.Consumer
-import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.BehaviorSubject
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.functions.Consumer
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -78,7 +80,7 @@ class EopatchPumpPlugin @Inject constructor(
         super.onStart()
         mDisposables.add(rxBus
             .toObservable(EventPreferenceChange::class.java)
-            .observeOn(Schedulers.io())
+            .observeOn(aapsSchedulers.io)
             .subscribe({ event: EventPreferenceChange ->
                 if (event.isChanged(rh, SettingKeys.LOW_RESERVOIR_REMINDERS) || event.isChanged(rh, SettingKeys.EXPIRATION_REMINDERS)) {
                     patchManager.changeReminderSetting()
@@ -90,7 +92,7 @@ class EopatchPumpPlugin @Inject constructor(
 
         mDisposables.add(rxBus
             .toObservable(EventAppInitialized::class.java)
-            .observeOn(Schedulers.io())
+            .observeOn(aapsSchedulers.io)
             .subscribe({
                 aapsLogger.debug(LTag.PUMP,"EventAppInitialized")
                 preferenceManager.init()
@@ -109,33 +111,9 @@ class EopatchPumpPlugin @Inject constructor(
         return super.specialEnableCondition()
     }
 
-    override fun specialShowInListCondition(): Boolean {
-        return super.specialShowInListCondition()
-    }
-
     override fun onStop() {
         super.onStop()
         aapsLogger.debug(LTag.PUMP, "EOPatchPumpPlugin onStop()")
-    }
-
-    override fun onStateChange(type: PluginType?, oldState: State?, newState: State?) {
-        super.onStateChange(type, oldState, newState)
-    }
-
-    override fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {
-        super.preprocessPreferences(preferenceFragment)
-    }
-
-    override fun updatePreferenceSummary(pref: Preference) {
-        super.updatePreferenceSummary(pref)
-    }
-
-    override fun isUnreachableAlertTimeoutExceeded(alertTimeoutMilliseconds: Long): Boolean {
-        return super.isUnreachableAlertTimeoutExceeded(alertTimeoutMilliseconds)
-    }
-
-    override fun setNeutralTempAtFullHour(): Boolean {
-        return super.setNeutralTempAtFullHour()
     }
 
     override fun isInitialized(): Boolean {
@@ -207,7 +185,7 @@ class EopatchPumpPlugin @Inject constructor(
 
                 val nb = preferenceManager.getNormalBasalManager().convertProfileToNormalBasal(profile)
                 mDisposables.add(patchManager.startBasal(nb)
-                    .observeOn(AndroidSchedulers.mainThread())
+                    .observeOn(aapsSchedulers.main)
                     .subscribe({ response ->
                         result.onNext(response.isSuccess)
                     }, {

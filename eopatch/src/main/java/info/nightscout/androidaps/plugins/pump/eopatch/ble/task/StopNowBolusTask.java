@@ -1,21 +1,22 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.ble.task;
 
-import info.nightscout.shared.logging.LTag;
-import info.nightscout.androidaps.plugins.pump.eopatch.core.define.IPatchConstant;
-import info.nightscout.androidaps.plugins.pump.eopatch.core.api.BolusStop;
-import info.nightscout.androidaps.plugins.pump.eopatch.core.response.BolusStopResponse;
-
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
+import info.nightscout.androidaps.plugins.pump.eopatch.core.api.BolusStop;
+import info.nightscout.androidaps.plugins.pump.eopatch.core.define.IPatchConstant;
+import info.nightscout.androidaps.plugins.pump.eopatch.core.response.BolusStopResponse;
+import info.nightscout.androidaps.utils.rx.AapsSchedulers;
+import info.nightscout.shared.logging.LTag;
+import io.reactivex.rxjava3.core.Single;
 
 @Singleton
 public class StopNowBolusTask extends BolusTask {
     private final BolusStop BOLUS_STOP;
+
+    @Inject AapsSchedulers aapsSchedulers;
 
     @Inject
     public StopNowBolusTask() {
@@ -25,7 +26,7 @@ public class StopNowBolusTask extends BolusTask {
 
     public Single<BolusStopResponse> stop() {
         return isReady()
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(aapsSchedulers.getMain())
                 .concatMapSingle(v -> stopJob()).firstOrError()
                 .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, (e.getMessage() != null) ? e.getMessage() : "StopNowBolusTask error"));
     }

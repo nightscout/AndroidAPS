@@ -23,9 +23,9 @@ import info.nightscout.androidaps.plugins.pump.eopatch.core.api.BasalPause;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.PatchBooleanResponse;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.commands.Command;
-import io.reactivex.Observable;
-import io.reactivex.Single;
-import io.reactivex.subjects.BehaviorSubject;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.subjects.BehaviorSubject;
 
 @Singleton
 public class PauseBasalTask extends BolusTask {
@@ -71,7 +71,7 @@ public class PauseBasalTask extends BolusTask {
 
         if (commandQueue.isRunning(Command.CommandType.BOLUS)) {
             uel.log(UserEntryMapper.Action.CANCEL_BOLUS, UserEntryMapper.Sources.EOPatch2);
-            commandQueue.cancelAllBoluses();
+            commandQueue.cancelAllBoluses(null);
             SystemClock.sleep(650);
         }
         bolusCheckSubject.onNext(true);

@@ -9,7 +9,7 @@ import javax.inject.Singleton;
 import info.nightscout.shared.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.TempBasalFinishTimeGet;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.TempBasalFinishTimeResponse;
-import io.reactivex.Single;
+import io.reactivex.rxjava3.core.Single;
 
 @Singleton
 public class ReadTempBasalFinishTimeTask extends TaskBase {

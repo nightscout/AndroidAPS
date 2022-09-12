@@ -1,27 +1,27 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.ble.task;
 
-import info.nightscout.shared.logging.LTag;
-import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager;
-import info.nightscout.androidaps.plugins.pump.eopatch.core.code.BolusType;
-import info.nightscout.androidaps.plugins.pump.eopatch.code.DeactivationStatus;
-
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager;
+import info.nightscout.androidaps.plugins.pump.eopatch.code.DeactivationStatus;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.DeActivation;
+import info.nightscout.androidaps.plugins.pump.eopatch.core.code.BolusType;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.BolusCurrent;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchLifecycleEvent;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.TempBasal;
-import io.reactivex.Observable;
-import io.reactivex.Single;
-import io.reactivex.schedulers.Schedulers;
+import info.nightscout.androidaps.utils.rx.AapsSchedulers;
+import info.nightscout.shared.logging.LTag;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
 
 @Singleton
 public class DeactivateTask extends TaskBase {
     @Inject StopBasalTask stopBasalTask;
     @Inject IPreferenceManager pm;
+    @Inject AapsSchedulers aapsSchedulers;
 
     private final DeActivation DEACTIVATION;
 
@@ -37,7 +37,7 @@ public class DeactivateTask extends TaskBase {
                 .concatMapSingle(v ->
                         DEACTIVATION.start()
                                 .doOnSuccess(this::checkResponse)
-                                .observeOn(Schedulers.io())
+                                .observeOn(aapsSchedulers.getIo())
                                 .doOnSuccess(response -> onDeactivated()))
                 .map(response -> DeactivationStatus.of(response.isSuccess(), forced))
                 .firstOrError()

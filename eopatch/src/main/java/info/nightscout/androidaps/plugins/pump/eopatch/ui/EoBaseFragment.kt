@@ -12,10 +12,8 @@ import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.plugins.pump.eopatch.dagger.EopatchPluginQualifier
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
-import io.reactivex.rxkotlin.addTo
 
 abstract class EoBaseFragment<B : ViewDataBinding> : DaggerFragment(), EoBaseNavigator {
     @Inject
@@ -73,7 +71,4 @@ abstract class EoBaseFragment<B : ViewDataBinding> : DaggerFragment(), EoBaseNav
     override fun finish(finishAffinity: Boolean) {
         baseActivity?.finish(finishAffinity)
     }
-
-    fun Disposable.addTo() = addTo(compositeDisposable)
-
 }

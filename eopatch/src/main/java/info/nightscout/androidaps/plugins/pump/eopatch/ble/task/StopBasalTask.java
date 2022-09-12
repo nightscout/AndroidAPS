@@ -19,9 +19,9 @@ import info.nightscout.androidaps.interfaces.CommandQueue;
 import info.nightscout.shared.logging.AAPSLogger;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.commands.Command;
-import io.reactivex.Observable;
-import io.reactivex.Single;
-import io.reactivex.subjects.BehaviorSubject;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.subjects.BehaviorSubject;
 
 @Singleton
 public class StopBasalTask extends TaskBase {
@@ -59,7 +59,7 @@ public class StopBasalTask extends TaskBase {
 
         if (commandQueue.isRunning(Command.CommandType.BOLUS)) {
             uel.log(UserEntryMapper.Action.CANCEL_BOLUS, UserEntryMapper.Sources.EOPatch2);
-            commandQueue.cancelAllBoluses();
+            commandQueue.cancelAllBoluses(null);
             SystemClock.sleep(650);
         }
         bolusCheckSubject.onNext(true);

@@ -10,28 +10,20 @@ apply from: "${project.rootDir}/core/test_dependencies.gradle"
 apply from: "${project.rootDir}/core/jacoco_global.gradle"
 
 android {
+    namespace 'info.nightscout.androidaps.plugins.pump.eopatch'
     dataBinding {
         enabled = true
     }
 }
 
-allprojects {
-    repositories {
-        flatDir {
-            dirs 'libs'
-        }
-    }
-}
-
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation (name: 'eopatch_core', ext: 'aar')
-//    implementation (files("libs/eopatch_core.aar"))
+    implementation (files("libs/eopatch_core.aar"))
     implementation project(':core')
     implementation project(':shared')
     implementation project(':database')
 
     //RxAndroidBle
-    implementation "com.polidea.rxandroidble2:rxandroidble:1.12.1"
-    implementation "com.jakewharton.rx2:replaying-share:2.2.0"
+    implementation "com.polidea.rxandroidble3:rxandroidble:1.16.0"
+    implementation "com.jakewharton.rx3:replaying-share:3.0.0"
 }

@@ -9,7 +9,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.BolusResponse;
-import io.reactivex.Single;
+import io.reactivex.rxjava3.core.Single;
 
 @Singleton
 public class StartCalcBolusTask extends BolusTask {

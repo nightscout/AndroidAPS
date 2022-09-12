@@ -10,14 +10,15 @@ import info.nightscout.androidaps.plugins.pump.eopatch.event.EventDialog
 import info.nightscout.androidaps.plugins.pump.eopatch.event.EventProgressDialog
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.dialogs.AlarmDialog
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.dialogs.ProgressDialogHelper
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.sharedPreferences.SP
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 
 class AlarmHelperActivity : DialogAppCompatActivity() {
     @Inject lateinit var sp : SP
     @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
 
     private var disposable: CompositeDisposable = CompositeDisposable()
     private var mProgressDialog: AlertDialog? = null
@@ -42,7 +43,7 @@ class AlarmHelperActivity : DialogAppCompatActivity() {
 
         disposable.add(rxBus
             .toObservable(EventProgressDialog::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({
                 if(it.show){
                     showProgressDialog(it.resId)
@@ -54,7 +55,7 @@ class AlarmHelperActivity : DialogAppCompatActivity() {
 
         disposable.add(rxBus
             .toObservable(EventDialog::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({
                 if(it.show) it.dialog.show(supportFragmentManager, "")
             }, {  })

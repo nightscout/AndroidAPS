@@ -323,7 +323,7 @@ class CommandQueueImplementation @Inject constructor(
     }
 
     @Synchronized
-    override fun cancelAllBoluses(id: Long) {
+    override fun cancelAllBoluses(id: Long?) {
         if (!isRunning(CommandType.BOLUS)) {
             rxBus.send(EventDismissBolusProgressIfRunning(PumpEnactResult(injector).success(true).enacted(false), id))
         }

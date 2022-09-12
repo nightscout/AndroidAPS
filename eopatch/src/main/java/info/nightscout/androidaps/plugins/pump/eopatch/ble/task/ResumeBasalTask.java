@@ -14,7 +14,7 @@ import javax.inject.Singleton;
 
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.PatchBooleanResponse;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.NormalBasal;
-import io.reactivex.Single;
+import io.reactivex.rxjava3.core.Single;
 
 @Singleton
 public class ResumeBasalTask extends TaskBase {

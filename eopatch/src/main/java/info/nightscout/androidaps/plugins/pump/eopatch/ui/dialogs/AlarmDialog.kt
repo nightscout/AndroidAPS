@@ -4,13 +4,16 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.Window
+import android.view.WindowManager
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.core.R
-import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmProcess
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode
+import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmProcess
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.IAlarmProcess
 import info.nightscout.androidaps.plugins.pump.eopatch.bindingadapters.setOnSafeClickListener
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPatchManager
@@ -19,8 +22,8 @@ import info.nightscout.androidaps.plugins.pump.eopatch.ui.AlarmHelperActivity
 import info.nightscout.androidaps.services.AlarmSoundServiceHelper
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
+import info.nightscout.shared.logging.AAPSLogger
+import io.reactivex.rxjava3.disposables.Disposable
 import javax.inject.Inject
 
 class AlarmDialog : DaggerDialogFragment() {
@@ -79,7 +82,7 @@ class AlarmDialog : DaggerDialogFragment() {
             aapsLogger.debug("USER ENTRY: Alarm dialog ok button pressed")
             alarmCode?.let { ac ->
                 mAlarmProcess.doAction(requireContext(), ac)
-                    .subscribeOn(Schedulers.io())
+                    .subscribeOn(aapsSchedulers.io)
                     .subscribe ({ ret ->
                         aapsLogger.debug("Alarm processing result :${ret}")
                         if (ret == IAlarmProcess.ALARM_HANDLED) {
@@ -92,25 +95,25 @@ class AlarmDialog : DaggerDialogFragment() {
                             isHolding = true
                         }else if (ret == IAlarmProcess.ALARM_UNHANDLED) {
                             if(!isMute){
-                                startAlarm()
+                                startAlarm("ALARM_UNHANDLED")
                             }
                         }
                     }, { t -> aapsLogger.error("${t.printStackTrace()}") })
             }
-            stopAlarm()
+            stopAlarm("OK clicked")
         }
         binding.mute.setOnSafeClickListener {
             aapsLogger.debug("USER ENTRY: Error dialog mute button pressed")
             isMute = true
-            stopAlarm()
+            stopAlarm("Mute clicked")
         }
         binding.mute5min.setOnSafeClickListener {
             aapsLogger.debug("USER ENTRY: Error dialog mute 5 min button pressed")
-            stopAlarm()
+            stopAlarm("Mute5m clicked")
             isMute = true
-            handler.postDelayed(this::startAlarm, T.mins(5).msecs())
+            handler.postDelayed({ startAlarm("post") }, T.mins(5).msecs())
         }
-        startAlarm()
+        startAlarm("onViewCreated")
 
         disposable = patchManager.observePatchLifeCycle()
             .observeOn(aapsSchedulers.main)
@@ -137,7 +140,7 @@ class AlarmDialog : DaggerDialogFragment() {
     override fun onResume() {
         super.onResume()
         if(isHolding && !isMute){
-            startAlarm()
+            startAlarm("onResume")
         }
         binding.status.text = status
     }
@@ -155,17 +158,17 @@ class AlarmDialog : DaggerDialogFragment() {
         helperActivity?.finish()
     }
 
-    private fun startAlarm() {
+    private fun startAlarm(reason: String) {
         if (sound != 0) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                context?.let { context -> alarmSoundServiceHelper.startAlarm(context, sound) }
+                context?.let { context -> alarmSoundServiceHelper.startAlarm(context, sound, reason) }
             }
         }
     }
 
-    private fun stopAlarm() {
+    private fun stopAlarm(reason: String) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            context?.let { context -> alarmSoundServiceHelper.stopService(context) }
+            context?.let { context -> alarmSoundServiceHelper.stopService(context, reason) }
         }
     }
 }

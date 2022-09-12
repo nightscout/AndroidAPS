@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.eopatch
 
-import io.reactivex.Observable
-import io.reactivex.subjects.PublishSubject
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.PublishSubject
 
 object EoPatchRxBus {
     private val publishSubject: PublishSubject<Any> = PublishSubject.create()

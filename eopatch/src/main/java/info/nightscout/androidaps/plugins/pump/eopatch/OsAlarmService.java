@@ -8,7 +8,7 @@ import android.os.IBinder;
 
 import java.util.Objects;
 
-import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 public class OsAlarmService extends Service {
 

@@ -14,8 +14,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import info.nightscout.shared.logging.AAPSLogger;
-import io.reactivex.Observable;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.disposables.Disposable;
 
 @Singleton
 public class TaskBase {

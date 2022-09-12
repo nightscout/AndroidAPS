@@ -13,10 +13,8 @@ import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.plugins.pump.eopatch.dagger.EopatchPluginQualifier
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
-import io.reactivex.rxkotlin.addTo
 
 abstract class EoBaseActivity<B : ViewDataBinding> : NoSplashAppCompatActivity(), EoBaseNavigator {
     @Inject
@@ -66,6 +64,4 @@ abstract class EoBaseActivity<B : ViewDataBinding> : NoSplashAppCompatActivity()
             finish()
         }
     }
-
-    fun Disposable.addTo() = addTo(compositeDisposable)
 }

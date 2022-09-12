@@ -17,7 +17,7 @@ import info.nightscout.androidaps.plugins.pump.eopatch.event.EventDialog
 import info.nightscout.androidaps.plugins.pump.eopatch.event.EventProgressDialog
 import info.nightscout.androidaps.plugins.pump.eopatch.extension.takeOne
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.dialogs.CommonDialog
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Single
 import java.lang.Exception
 import java.util.concurrent.Callable
 
@@ -119,7 +119,6 @@ class AlarmProcess(val patchManager: IPatchManager, val rxBus: RxBus) : IAlarmPr
                 .filter{ok -> ok}
                 .flatMap { patchManager.resumeBasal().map { it.isSuccess.takeOne(IAlarmProcess.ALARM_HANDLED, IAlarmProcess.ALARM_UNHANDLED) }.toMaybe() }
                 .defaultIfEmpty(IAlarmProcess.ALARM_UNHANDLED)
-                .toSingle()
         }
     }
 }

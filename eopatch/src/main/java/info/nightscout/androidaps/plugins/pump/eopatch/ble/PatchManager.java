@@ -16,6 +16,7 @@ import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.CommandQueue;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.PumpSync;
+import info.nightscout.androidaps.interfaces.ResourceHelper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.eopatch.R;
@@ -47,15 +48,13 @@ import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchLifecycleEvent;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchState;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.TempBasal;
 import info.nightscout.androidaps.utils.DateUtil;
-import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import info.nightscout.shared.logging.AAPSLogger;
 import info.nightscout.shared.sharedPreferences.SP;
-import io.reactivex.Observable;
-import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.Disposable;
 
 @Singleton
 public class PatchManager implements IPatchManager {
@@ -73,6 +72,7 @@ public class PatchManager implements IPatchManager {
     @Inject PumpSync pumpSync;
     @Inject DateUtil dateUtil;
     @Inject RxAction rxAction;
+    @Inject AapsSchedulers aapsSchedulers;
 
     private IPatchScanner patchScanner;
     private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
@@ -104,7 +104,7 @@ public class PatchManager implements IPatchManager {
 
                      case CONNECTING:
                          mConnectingDisposable = Observable.interval(0, 1, TimeUnit.SECONDS)
-                             .observeOn(AndroidSchedulers.mainThread())
+                             .observeOn(aapsSchedulers.getMain())
                              .takeUntil(n -> getPatchConnectionState().isConnected() || n > 10 * 60)
                              .subscribe(n -> rxBus.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTING, n.intValue())));
                      break;
@@ -116,8 +116,8 @@ public class PatchManager implements IPatchManager {
         );
         mCompositeDisposable.add(rxBus
                 .toObservable(EventPatchActivationNotComplete.class)
-                .observeOn(Schedulers.io())
-                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(aapsSchedulers.getIo())
+                .subscribeOn(aapsSchedulers.getMain())
                 .subscribe(eventPatchActivationNotComplete -> {
                     Intent i = new Intent(context, DialogHelperActivity.class);
                     i.putExtra("title", resourceHelper.gs(R.string.patch_activate_reminder_title));
@@ -383,7 +383,7 @@ public class PatchManager implements IPatchManager {
         if(pm.getPatchConfig().getInfoReminder() != buzzer) {
             if (isActivated()) {
                 mCompositeDisposable.add(infoReminderSet(buzzer)
-                        .observeOn(AndroidSchedulers.mainThread())
+                        .observeOn(aapsSchedulers.getMain())
                         .subscribe(patchBooleanResponse -> {
                             pm.getPatchConfig().setInfoReminder(buzzer);
                             pm.flushPatchConfig();
@@ -403,7 +403,7 @@ public class PatchManager implements IPatchManager {
         if(pc.getLowReservoirAlertAmount() != doseUnit || pc.getPatchExpireAlertTime() != hours) {
             if (isActivated()) {
                 mCompositeDisposable.add(setLowReservoir(doseUnit, hours)
-                    .observeOn(AndroidSchedulers.mainThread())
+                    .observeOn(aapsSchedulers.getMain())
                     .subscribe(patchBooleanResponse -> {
                         pc.setLowReservoirAlertAmount(doseUnit);
                         pc.setPatchExpireAlertTime(hours);

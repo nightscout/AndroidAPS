@@ -5,9 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import androidx.annotation.CheckResult
-import io.reactivex.android.MainThreadDisposable
-import io.reactivex.Observable
-import io.reactivex.Observer
+import io.reactivex.rxjava3.android.MainThreadDisposable
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Observer
 
 class RxBroadcastReceiver private constructor() {
     internal class BroadcastReceiverObservable : Observable<Intent> {
