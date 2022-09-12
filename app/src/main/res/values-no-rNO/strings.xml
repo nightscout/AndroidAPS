@@ -665,7 +665,6 @@
     <string name="resistance_lowers_target_summary">Hvis resistens oppdages vil det redusere BS målverdi</string>
     <string name="sensitivity_raises_target_title">Sensitivitet øker BS målverdi</string>
     <string name="sensitivity_raises_target_summary">Når systemet oppdager økt insulinsensitivitet, vil BS målverdi økes</string>
-    <string name="careportal_removestartedevents">Basis AndroidAPS startet</string>
     <string name="show_invalidated">Vis ugyldige oppføringer</string>
     <string name="hide_invalidated">Skjul ugyldige oppføringer</string>
     <string name="remove_items">Fjern oppføringer</string>

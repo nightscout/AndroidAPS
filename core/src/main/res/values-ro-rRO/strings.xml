@@ -31,7 +31,6 @@
     <string name="format_mins">%1$d min</string>
     <string name="pumpbusy">Pompa face altă acțiune</string>
     <string name="connectionerror">Eroare de conexiune cu pompa</string>
-    <string name="youareonallowedlimit">Ați atins limita permisă</string>
     <string name="objectives">Obiective</string>
     <string name="close">Închide</string>
     <string name="please_wait">Așteptați…</string>
@@ -40,7 +39,6 @@
     <string name="stoppressed">STOP APĂSAT</string>
     <string name="stop">Stop</string>
     <string name="carbs">Carbohidrați</string>
-    <string name="invalidprofile">Profil invalid!!!</string>
     <string name="noprofileset">NICIUN PROFIL SETAT</string>
     <string name="active"><![CDATA[<Activ>]]></string>
     <string name="date">Data</string>
@@ -132,7 +130,6 @@
     <string name="passwords_dont_match">Parolele nu corespund</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Valori bazale nesincronizate cu ora: %1$s</string>
-    <string name="minimalbasalvaluereplaced">Valoarea bazalei a fost înlocuită cu valoarea minimă posibilă: %1$s</string>
     <string name="maximumbasalvaluereplaced">Valoarea bazalei a fost înlocuită cu valoarea maximă posibilă: %1$s</string>
     <string name="profile_per_unit">/U</string>
     <string name="profile_ins_units_per_hour">U/h</string>
@@ -214,7 +211,6 @@
     <string name="waitingforpumpresult">Se așteaptă rezultatul</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
-    <string name="carbsreq">%1$d g carbohidrați suplimentari necesari în %2$d minute</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Statistici</string>
     <string name="cumulative_tdd">TDD cumulat</string>
@@ -226,7 +222,6 @@
     <string name="amount_days"># Zile</string>
     <string name="weight">Greutate</string>
     <string name="warning_Message">Posibil fără acuratețe bună dacă folosiți bolus de insulină pentru amorsare/umplere!</string>
-    <string name="olddata_Message">Date vechi, apăsați \"REÎNCĂRCARE\"</string>
     <string name="tbb">Total bazală implicită</string>
     <string name="tbb2">TBB * 2</string>
     <!--    Ntp-->
@@ -389,7 +384,6 @@
     <string name="valueoutofrange">»%1$s« este in afara limitelor stabilite</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f este in afara limitelor stabilite</string>
     <string name="basal_value">Valoare rata bazală</string>
-    <string name="nsclient_version_does_not_match">Versiunea NSClient nu se potrivește cu versiunea AndroidAPS. Vă rugăm să o actualizați.</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f U</string>
     <string name="carbs_g">CARB %1$d g</string>

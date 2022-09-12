@@ -31,7 +31,6 @@
     <string name="format_mins">%1$d min</string>
     <string name="pumpbusy">Bomba ocupada</string>
     <string name="connectionerror">Error de conexión de la bomba</string>
-    <string name="youareonallowedlimit">Límite permitido alcanzado</string>
     <string name="objectives">Objetivos</string>
     <string name="close">Cerrar</string>
     <string name="please_wait">Por favor, espere…</string>
@@ -40,7 +39,6 @@
     <string name="stoppressed">STOP pulsado</string>
     <string name="stop">Detener</string>
     <string name="carbs">Carbohidratos [g]</string>
-    <string name="invalidprofile">Perfil inválido !!!</string>
     <string name="noprofileset">NINGÚN PERFIL ACTIVO</string>
     <string name="active"><![CDATA[<Activo>]]></string>
     <string name="date">Fecha</string>
@@ -53,7 +51,6 @@
     <string name="dia_long_label">Duración de la insulina activa</string>
     <string name="ic_long_label">Ratio de insulina/carbohidratos</string>
     <string name="isf_long_label">Factor de sensibilidad a la insulina</string>
-    <string name="basal_long_label">Tasa Basal</string>
     <string name="target_long_label">Objetivo de glucosa en sangre</string>
     <string name="initializing">Iniciando...</string>
     <string name="serialnumber">Número de serie</string>
@@ -140,7 +137,6 @@
     <string name="pin_dont_match">Los códigos PIN no coinciden</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Valores basales no alineados a las horas: %1$s</string>
-    <string name="minimalbasalvaluereplaced">Valor basal reemplazado por el valor mínimo soportado: %1$s</string>
     <string name="maximumbasalvaluereplaced">Valor basal reemplazado por el valor máximo soportado: %1$s</string>
     <string name="profile_per_unit">/U</string>
     <string name="profile_ins_units_per_hour">U/h</string>
@@ -221,7 +217,6 @@
     <string name="waitingforpumpresult">Esperando resultado</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
-    <string name="carbsreq">%1$dg Carbohidratos adicionales necesarios dentro de %2$d minutos</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Estadísticas</string>
     <string name="cumulative_tdd">TDD acumulada</string>
@@ -233,7 +228,6 @@
     <string name="amount_days"># Días</string>
     <string name="weight">Peso</string>
     <string name="warning_Message">Probablemente impreciso si se usan bolos para llenar/rellenar!</string>
-    <string name="olddata_Message">Datos caducados por favor pulsa RELOAD</string>
     <string name="tbb">Basal total</string>
     <string name="tbb2">Basal diaria *2</string>
     <!--    Ntp-->
@@ -397,7 +391,6 @@
     <string name="valueoutofrange">»%1$s« está fuera del límite estricto</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f está fuera de los límites estrictos</string>
     <string name="basal_value">Valor basal</string>
-    <string name="nsclient_version_does_not_match">La versión de NSClient no coincide con AndroidAPS. Actualízala.</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLO %1$.2f U</string>
     <string name="carbs_g">CARBOHIDRATOS %1$d g</string>

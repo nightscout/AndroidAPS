@@ -665,7 +665,7 @@
     <string name="resistance_lowers_target_summary">При обнаружении сопротивляемости целевой уровень гликемии понижается</string>
     <string name="sensitivity_raises_target_title">Чувствительность поднимает цель</string>
     <string name="sensitivity_raises_target_summary">При обнаружении чувствительности целевой уровень глюкозы повышается</string>
-    <string name="careportal_removestartedevents">AndroidAPS перезапущен</string>
+    <string name="careportal_removestartedevents">Удалить начатые записи AAPS</string>
     <string name="show_invalidated">Показать недействительные</string>
     <string name="hide_invalidated">Скрыть недействительные</string>
     <string name="remove_items">Удалить элементы</string>
@@ -1044,4 +1044,5 @@
     <string name="blocked_by_connectivity">Заблокировано настройками подключения</string>
     <string name="no_watch_connected">(Часы не подключены)</string>
     <string name="error_asking_for_permissions">Ошибка при запросе разрешения</string>
+    <string name="dynisf_adjust_sensitivity">Настроить чувствительность относительно ГК</string>
 </resources>

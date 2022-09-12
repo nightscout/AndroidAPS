@@ -651,7 +651,6 @@
     <string name="resistance_lowers_target_summary">Quando a resistência for detectada, diminui o alvo de glicose</string>
     <string name="sensitivity_raises_target_title">Sensibilidade aumenta o alvo</string>
     <string name="sensitivity_raises_target_summary">Quando a sensibilidade é detectada, aumenta o alvo glicose</string>
-    <string name="careportal_removestartedevents">Limpar AndroidAPS iniciado</string>
     <string name="storedsettingsfound">Definições armazenadas encontradas</string>
     <string name="allow_hardware_pump_text">Atenção: Se conectar à sua bomba física e activar o perfil, a AndroidAPS irá copiar as definições desse perfil para as definições da bomba, apagando o perfil memorizado na bomba. Por favor verifique se o que preencheu no perfil da app tem os mesmos valores que estão na bomba. Caso contrário pressione imediatamente cancelar e corrija antes de voltar a ligar à bomba.</string>
     <string name="error_adding_treatment_title">Dados tratamento incompletos</string>
