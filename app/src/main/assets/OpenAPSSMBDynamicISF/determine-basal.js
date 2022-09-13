@@ -581,7 +581,7 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
             var predDev = ci * ( 1 - Math.min(1,IOBpredBGs.length/(60/5)) );
             //IOBpredBG = IOBpredBGs[IOBpredBGs.length-1] + predBGI + predDev;
              IOBpredBG = IOBpredBGs[IOBpredBGs.length-1] + (round(( -iobTick.activity * (1800 / ( TDD * (Math.log((Math.max( IOBpredBGs[IOBpredBGs.length-1],39) / insulinDivisor ) + 1 ) ) ))
-             * 5 ),2));
+             * 5 ),2)) + predDev;
 
             // calculate predBGs with long zero temp without deviations
             //var ZTpredBG = ZTpredBGs[ZTpredBGs.length-1] + predZTBGI;
