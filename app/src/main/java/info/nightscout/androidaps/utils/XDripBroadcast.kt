@@ -43,11 +43,11 @@ class XDripBroadcast @Inject constructor(
         context.sendBroadcast(intent)
         val q = context.packageManager.queryBroadcastReceivers(intent, 0)
         return if (q.size < 1) {
-            ToastUtils.showToastInUiThread(context, rh.gs(R.string.xdripnotinstalled))
+            ToastUtils.errorToast(context, R.string.xdripnotinstalled)
             aapsLogger.debug(rh.gs(R.string.xdripnotinstalled))
             false
         } else {
-            ToastUtils.showToastInUiThread(context, rh.gs(R.string.calibrationsent))
+            ToastUtils.errorToast(context, R.string.calibrationsent)
             aapsLogger.debug(rh.gs(R.string.calibrationsent))
             true
         }

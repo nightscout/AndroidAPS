@@ -379,7 +379,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                         dexcomMediator.findDexcomPackageName()?.let {
                             openCgmApp(it)
                         }
-                            ?: ToastUtils.showToastInUiThread(activity, rh.gs(R.string.dexcom_app_not_installed))
+                            ?: ToastUtils.infoToast(activity, rh.gs(R.string.dexcom_app_not_installed))
                     }
                 }
 
@@ -395,9 +395,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                                         .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                                 )
                             }
-                                ?: ToastUtils.showToastInUiThread(activity, rh.gs(R.string.dexcom_app_not_installed))
+                                ?: ToastUtils.infoToast(activity, rh.gs(R.string.dexcom_app_not_installed))
                         } catch (e: ActivityNotFoundException) {
-                            ToastUtils.showToastInUiThread(activity, rh.gs(R.string.g5appnotdetected))
+                            ToastUtils.infoToast(activity, rh.gs(R.string.g5appnotdetected))
                         }
                     }
                 }

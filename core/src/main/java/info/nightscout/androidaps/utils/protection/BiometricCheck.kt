@@ -23,7 +23,7 @@ object BiometricCheck {
                     ERROR_VENDOR,
                     ERROR_LOCKOUT_PERMANENT,
                     ERROR_USER_CANCELED        -> {
-                        ToastUtils.showToastInUiThread(activity.baseContext, errString.toString())
+                        ToastUtils.errorToast(activity.baseContext, errString.toString())
                         // fallback to master password
                         runOnUiThread {
                             passwordCheck.queryPassword(activity, R.string.master_password, R.string.key_master_password, { ok?.run() }, { cancel?.run() }, { fail?.run() })
@@ -34,7 +34,7 @@ object BiometricCheck {
                         cancel?.run()
 
                     ERROR_NO_DEVICE_CREDENTIAL -> {
-                        ToastUtils.showToastInUiThread(activity.baseContext, errString.toString())
+                        ToastUtils.errorToast(activity.baseContext, errString.toString())
                         // no pin set
                         // fallback to master password
                         runOnUiThread {

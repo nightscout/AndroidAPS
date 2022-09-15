@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.appcompat.view.ContextThemeWrapper
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.plugins.bus.RxBus
@@ -27,8 +28,16 @@ object ToastUtils {
         graphicalToast(ctx, string, R.drawable.ic_toast_warn, true)
     }
 
+    fun warnToast(ctx: Context?, @StringRes id: Int) {
+        graphicalToast(ctx, ctx?.getString(id), R.drawable.ic_toast_warn, true)
+    }
+
     fun infoToast(ctx: Context?, string: String?) {
         graphicalToast(ctx, string, R.drawable.ic_toast_info, true)
+    }
+
+    fun infoToast(ctx: Context?, @StringRes id: Int) {
+        graphicalToast(ctx, ctx?.getString(id), R.drawable.ic_toast_info, true)
     }
 
     fun okToast(ctx: Context?, string: String?) {
@@ -37,6 +46,10 @@ object ToastUtils {
 
     fun errorToast(ctx: Context?, string: String?) {
         graphicalToast(ctx, string, R.drawable.ic_toast_error, true)
+    }
+
+    fun errorToast(ctx: Context?, @StringRes id: Int) {
+        graphicalToast(ctx, ctx?.getString(id), R.drawable.ic_toast_error, true)
     }
 
     fun graphicalToast(ctx: Context?, string: String?, @DrawableRes iconId: Int) {

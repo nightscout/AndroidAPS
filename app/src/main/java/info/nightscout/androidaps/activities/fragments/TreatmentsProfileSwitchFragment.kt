@@ -294,7 +294,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment(), MenuProvider {
             R.id.nav_show_invalidated -> {
                 showInvalidated = true
                 updateMenuVisibility()
-                ToastUtils.showToastInUiThread(context, rh.gs(R.string.show_invalidated_records))
+                ToastUtils.infoToast(context, R.string.show_invalidated_records)
                 swapAdapter()
                 true
             }
@@ -302,7 +302,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment(), MenuProvider {
             R.id.nav_hide_invalidated -> {
                 showInvalidated = false
                 updateMenuVisibility()
-                ToastUtils.showToastInUiThread(context, rh.gs(R.string.hide_invalidated_records))
+                ToastUtils.infoToast(context, R.string.hide_invalidated_records)
                 swapAdapter()
                 true
             }

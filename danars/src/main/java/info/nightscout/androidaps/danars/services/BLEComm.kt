@@ -158,7 +158,7 @@ class BLEComm @Inject internal constructor(
             // assume pairing keys are invalid
             val lastClearRequest = sp.getLong(R.string.key_rs_last_clear_key_request, 0)
             if (lastClearRequest != 0L && dateUtil.isOlderThan(lastClearRequest, 5)) {
-                ToastUtils.showToastInUiThread(context, R.string.invalidpairing)
+                ToastUtils.errorToast(context, R.string.invalidpairing)
                 danaRSPlugin.changePump()
                 removeBond()
             } else if (lastClearRequest == 0L) {
@@ -175,7 +175,7 @@ class BLEComm @Inject internal constructor(
                 sp.remove(rh.gs(R.string.key_danars_v3_randompairingkey) + danaRSPlugin.mDeviceName)
                 sp.remove(rh.gs(R.string.key_danars_v3_pairingkey) + danaRSPlugin.mDeviceName)
                 sp.remove(rh.gs(R.string.key_danars_v3_randomsynckey) + danaRSPlugin.mDeviceName)
-                ToastUtils.showToastInUiThread(context, R.string.invalidpairing)
+                ToastUtils.errorToast(context, R.string.invalidpairing)
                 danaRSPlugin.changePump()
             } else if (lastClearRequest == 0L) {
                 aapsLogger.error("Clearing pairing keys postponed")

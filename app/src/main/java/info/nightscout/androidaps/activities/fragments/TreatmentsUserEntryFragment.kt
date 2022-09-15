@@ -162,7 +162,7 @@ class TreatmentsUserEntryFragment : DaggerFragment(), MenuProvider {
             R.id.nav_show_loop -> {
                 showLoop = true
                 updateMenuVisibility()
-                ToastUtils.showToastInUiThread(context, rh.gs(R.string.show_loop_records))
+                ToastUtils.infoToast(context, R.string.show_loop_records)
                 swapAdapter()
                 true
             }
@@ -170,7 +170,7 @@ class TreatmentsUserEntryFragment : DaggerFragment(), MenuProvider {
             R.id.nav_hide_loop -> {
                 showLoop = false
                 updateMenuVisibility()
-                ToastUtils.showToastInUiThread(context, rh.gs(R.string.show_hide_records))
+                ToastUtils.infoToast(context, R.string.show_hide_records)
                 swapAdapter()
                 true
             }
