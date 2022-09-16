@@ -2,19 +2,26 @@ package info.nightscout.androidaps.interfaces
 
 import androidx.collection.ArrayMap
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.data.PureProfile
 import info.nightscout.androidaps.extensions.pureProfileFromJson
-import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.JsonHelper
+import info.nightscout.shared.logging.AAPSLogger
 import org.json.JSONException
 import org.json.JSONObject
-import java.util.*
 import javax.inject.Inject
 
 class ProfileStore(val injector: HasAndroidInjector, val data: JSONObject, val dateUtil: DateUtil) {
 
     @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var activePlugin: ActivePlugin
+    @Inject lateinit var config: Config
+    @Inject lateinit var rh: ResourceHelper
+    @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var hardLimits: HardLimits
 
     init {
         injector.androidInjector().inject(this)
@@ -22,7 +29,7 @@ class ProfileStore(val injector: HasAndroidInjector, val data: JSONObject, val d
 
     private val cachedObjects = ArrayMap<String, PureProfile>()
 
-    private fun storeUnits() : String? = JsonHelper.safeGetStringAllowNull(data, "units", null)
+    private fun storeUnits(): String? = JsonHelper.safeGetStringAllowNull(data, "units", null)
 
     private fun getStore(): JSONObject? {
         try {
@@ -86,4 +93,11 @@ class ProfileStore(val injector: HasAndroidInjector, val data: JSONObject, val d
         }
         return null
     }
+
+    val allProfilesValid: Boolean
+        get() = getProfileList()
+            .asSequence()
+            .map { profileName -> getSpecificProfile(profileName.toString()) }
+            .map { pureProfile -> pureProfile?.let { ProfileSealed.Pure(pureProfile).isValid("allProfilesValid", activePlugin.activePump, config, rh, rxBus, hardLimits, false) } }
+            .all { it?.isValid == true}
 }
