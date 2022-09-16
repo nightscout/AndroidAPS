@@ -140,6 +140,7 @@
     <string name="pin_dont_match">I PIN non coincidono</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Valori basali non allineati alle ore: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Valore basale sostituito dal minimo valore supportato: %1$s</string>
     <string name="maximumbasalvaluereplaced">Valore basale sostituito dal massimo valore supportato: %1$s</string>
     <string name="profile_per_unit">/U</string>
     <string name="profile_ins_units_per_hour">U/h</string>
