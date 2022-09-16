@@ -35,8 +35,6 @@
     <!-- To receive data from Aidex -->
     <uses-permission android:name="com.microtechmd.cgms.aidex.permissions.RECEIVE_BG_ESTIMATE" />
 
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/>
-
     <application
         android:name=".MainApp"
         android:allowBackup="true"

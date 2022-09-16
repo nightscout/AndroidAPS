@@ -368,35 +368,36 @@ abstract class PluginsModule {
     @AllConfigs
     @IntoMap
     @IntKey(470)
-    abstract fun bindGlunovoPlugin(plugin: GlunovoPlugin): PluginBase@Binds
+    abstract fun bindGlunovoPlugin(plugin: GlunovoPlugin): PluginBase
 
+    @Binds
     @AllConfigs
     @IntoMap
-    @IntKey(475)
+    @IntKey(473)
     abstract fun bindIntelligoPlugin(plugin: IntelligoPlugin): PluginBase
 
     @Binds
     @AllConfigs
     @IntoMap
-    @IntKey(480)
+    @IntKey(475)
     abstract fun bindRandomBgPlugin(plugin: RandomBgPlugin): PluginBase
 
     // @Binds
     // @NotNSClient
     // @IntoMap
-    // @IntKey(485)
+    // @IntKey(480)
     // abstract fun bindOpenHumansPlugin(plugin: OpenHumansUploader): PluginBase
 
     @Binds
     @NotNSClient
     @IntoMap
-    @IntKey(490)
+    @IntKey(480)
     abstract fun bindsOpenHumansPlugin(plugin: OpenHumansUploader): PluginBase
 
     @Binds
     @AllConfigs
     @IntoMap
-    @IntKey(495)
+    @IntKey(490)
     abstract fun bindConfigBuilderPlugin(plugin: ConfigBuilderPlugin): PluginBase
 
     @Binds
