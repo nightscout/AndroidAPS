@@ -196,6 +196,7 @@ class BGSourceFragment : DaggerFragment(), MenuProvider {
                         R.string.poctech            -> Sources.PocTech
                         R.string.tomato             -> Sources.Tomato
                         R.string.glunovo            -> Sources.Glunovo
+                        R.string.intelligo            -> Sources.Intelligo
                         R.string.xdrip              -> Sources.Xdrip
                         R.string.aidex              -> Sources.Aidex
                         else                        -> Sources.Unknown
