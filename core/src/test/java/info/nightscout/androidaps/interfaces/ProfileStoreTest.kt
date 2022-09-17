@@ -2,6 +2,7 @@ package info.nightscout.androidaps.interfaces
 
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.data.PureProfile
+import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Test
 
@@ -20,6 +21,7 @@ internal class ProfileStoreTest : TestBaseWithProfile() {
     @Test
     fun getDefaultProfileJsonTest() {
         Assert.assertTrue(getValidProfileStore().getDefaultProfileJson()?.has("dia") ?: false)
+        Assert.assertEquals(null, getInvalidProfileStore2().getDefaultProfileJson())
     }
 
     @Test
