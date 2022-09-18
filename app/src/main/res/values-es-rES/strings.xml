@@ -656,6 +656,8 @@
     <string name="description_source_poctech">Recibir los valores de glucosa de Poctech</string>
     <string name="glunovo">Glunovo</string>
     <string name="description_source_glunovo">Recibir los valores de glucosa de la aplicación Glunovo</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Recibir los valores de glucosa de Intelligo</string>
     <string name="description_source_tomato">Recibir los valores de glucosa de Tomato App (MiaoMiao) </string>
     <string name="high_temptarget_raises_sensitivity_title">Objetivo temporal elevado aumenta sensibilidad</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Aumentar la sensibilidad para objetivos temporales >= 100]]></string>
