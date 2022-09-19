@@ -232,10 +232,10 @@ class CommandQueueImplementation @Inject constructor(
 
         var carbsRunnable = Runnable { }
         val originalCarbs = detailedBolusInfo.carbs
-        if ((detailedBolusInfo.carbs > 0) &&
+        if ((detailedBolusInfo.carbs > 0) /*&&
             (!activePlugin.activePump.pumpDescription.storesCarbInfo ||
                 detailedBolusInfo.carbsDuration != 0L ||
-                (detailedBolusInfo.carbsTimestamp ?: detailedBolusInfo.timestamp) > dateUtil.now())
+                (detailedBolusInfo.carbsTimestamp ?: detailedBolusInfo.timestamp) > dateUtil.now())*/
         ) {
             carbsRunnable = Runnable {
                 aapsLogger.debug(LTag.PUMPQUEUE, "Going to store carbs")

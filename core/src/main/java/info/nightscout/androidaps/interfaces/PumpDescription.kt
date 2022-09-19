@@ -33,7 +33,7 @@ class PumpDescription() {
     var basalMaximumRate = 0.0
     var isRefillingCapable = false
     var isBatteryReplaceable = false
-    var storesCarbInfo = false
+    //var storesCarbInfo = false
     var is30minBasalRatesCapable = false
     var supportsTDDs = false
     var needsManualTDDLoad = false
@@ -41,7 +41,7 @@ class PumpDescription() {
     var isPatchPump = false
     var useHardwareLink = false
 
-    fun resetSettings() {
+    private fun resetSettings() {
         isBolusCapable = true
         bolusStep = 0.1
         isExtendedBolusCapable = true
@@ -65,7 +65,7 @@ class PumpDescription() {
         is30minBasalRatesCapable = false
         isRefillingCapable = true
         isBatteryReplaceable = true
-        storesCarbInfo = false
+        //storesCarbInfo = false
         supportsTDDs = false
         needsManualTDDLoad = true
         hasCustomUnreachableAlertCheck = false
@@ -101,7 +101,7 @@ class PumpDescription() {
         basalMinimumRate = pumpType.baseBasalMinValue
         isRefillingCapable = pumpCapability.hasCapability(PumpCapability.Refill)
         isBatteryReplaceable = pumpCapability.hasCapability(PumpCapability.ReplaceBattery)
-        storesCarbInfo = pumpCapability.hasCapability(PumpCapability.StoreCarbInfo)
+        //storesCarbInfo = pumpCapability.hasCapability(PumpCapability.StoreCarbInfo)
         supportsTDDs = pumpCapability.hasCapability(PumpCapability.TDD)
         needsManualTDDLoad = pumpCapability.hasCapability(PumpCapability.ManualTDDLoad)
         is30minBasalRatesCapable = pumpCapability.hasCapability(PumpCapability.BasalRate30min)
