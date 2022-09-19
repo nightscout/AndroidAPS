@@ -654,8 +654,6 @@
     <string name="time_elapsed">Verstrichene Zeit</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Empfange Blutzucker-Werte von der Poctech-App.</string>
-    <string name="intelligo">Intelligo</string>
-    <string name="description_source_intelligo">Werte von der Intelligo App erhalten</string>
     <string name="glunovo">Glunovo</string>
     <string name="description_source_glunovo">Werte von der Glunovo App erhalten</string>
     <string name="description_source_tomato">Empfange Blutzucker-Werte von der Tomato-App (MiaoMiao-Geräte)</string>
