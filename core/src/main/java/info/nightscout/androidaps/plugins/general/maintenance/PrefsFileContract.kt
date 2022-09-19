@@ -15,7 +15,7 @@ class PrefsFileContract : ActivityResultContract<Void?, PrefsFile?>() {
 
     override fun parseResult(resultCode: Int, intent: Intent?): PrefsFile? {
         return when (resultCode) {
-            FragmentActivity.RESULT_OK -> intent?.getParcelableExtra(OUTPUT_PARAM)
+            FragmentActivity.RESULT_OK -> intent?.getParcelableExtra(OUTPUT_PARAM, PrefsFile::class.java)
             else                       -> null
         }
     }

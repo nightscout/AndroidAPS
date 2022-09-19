@@ -26,7 +26,7 @@ abstract class PodActivationWizardActivity : OmnipodWizardActivityBase() {
         setContentView(R.layout.omnipod_common_pod_activation_wizard_activity)
 
         startDestination = savedInstanceState?.getInt(KEY_START_DESTINATION, R.id.startPodActivationFragment)
-            ?: if (intent.getSerializableExtra(KEY_TYPE) as Type == Type.LONG) {
+            ?: if (intent.getSerializableExtra(KEY_TYPE, Type::class.java) == Type.LONG) {
                 R.id.startPodActivationFragment
             } else {
                 R.id.attachPodFragment

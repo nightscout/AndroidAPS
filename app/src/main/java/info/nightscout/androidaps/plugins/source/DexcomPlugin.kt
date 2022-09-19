@@ -244,7 +244,7 @@ class DexcomPlugin @Inject constructor(
 
         fun findDexcomPackageName(): String? {
             val packageManager = context.packageManager
-            for (packageInfo in packageManager.getInstalledPackages(0)) {
+            for (packageInfo in packageManager.getInstalledPackages(PackageManager.PackageInfoFlags.of(0))) {
                 if (PACKAGE_NAMES.contains(packageInfo.packageName)) return packageInfo.packageName
             }
             return null

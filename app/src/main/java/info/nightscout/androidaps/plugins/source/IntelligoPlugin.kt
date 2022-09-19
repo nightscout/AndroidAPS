@@ -91,7 +91,7 @@ class IntelligoPlugin @Inject constructor(
     private fun handleNewData() {
         if (!isEnabled()) return
 
-        for (pack in context.packageManager.getInstalledPackages(PackageManager.GET_PROVIDERS)) {
+        for (pack in context.packageManager.getInstalledPackages(PackageManager.PackageInfoFlags.of(PackageManager.GET_PROVIDERS.toLong()))) {
             val providers = pack.providers
             if (providers != null) {
                 for (provider in providers) {
@@ -162,13 +162,13 @@ class IntelligoPlugin @Inject constructor(
                             aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
                         }
                         savedValues.calibrationsInserted.forEach {  calibration ->
-                            calibration.glucose?.let { glucosevalue ->
+                            calibration.glucose?.let { glucoseValue ->
                                 uel.log(
                                     UserEntry.Action.CALIBRATION,
                                     UserEntry.Sources.Dexcom,
                                     ValueWithUnit.Timestamp(calibration.timestamp),
                                     ValueWithUnit.TherapyEventType(calibration.type),
-                                    ValueWithUnit.fromGlucoseUnit(glucosevalue, calibration.glucoseUnit.toString)
+                                    ValueWithUnit.fromGlucoseUnit(glucoseValue, calibration.glucoseUnit.toString)
                                 )
                             }
                             aapsLogger.debug(LTag.DATABASE, "Inserted calibration $calibration")
