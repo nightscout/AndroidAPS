@@ -97,7 +97,7 @@ class StatusLinePlugin @Inject constructor(
     private fun sendStatus() {
         var status = "" // sent once on disable
         val profile = profileFunction.getProfile()
-        if (isEnabled(PluginType.GENERAL) && profile != null) {
+        if (isEnabled() && profile != null) {
             status = buildStatusString(profile)
         }
         //sendData

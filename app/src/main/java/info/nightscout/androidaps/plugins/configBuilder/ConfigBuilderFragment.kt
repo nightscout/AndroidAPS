@@ -109,6 +109,7 @@ class ConfigBuilderFragment : DaggerFragment() {
             createViewsForPlugins(R.string.configbuilder_loop, R.string.configbuilder_loop_description, PluginType.LOOP, activePlugin.getSpecificPluginsVisibleInList(PluginType.LOOP))
             createViewsForPlugins(R.string.constraints, R.string.configbuilder_constraints_description, PluginType.CONSTRAINTS, activePlugin.getSpecificPluginsVisibleInList(PluginType.CONSTRAINTS))
         }
+        createViewsForPlugins(R.string.configbuilder_sync, R.string.configbuilder_sync_description, PluginType.SYNC, activePlugin.getSpecificPluginsVisibleInList(PluginType.SYNC))
         createViewsForPlugins(R.string.configbuilder_general, R.string.configbuilder_general_description, PluginType.GENERAL, activePlugin.getSpecificPluginsVisibleInList(PluginType.GENERAL))
     }
 
@@ -203,7 +204,7 @@ class ConfigBuilderFragment : DaggerFragment() {
         }
 
         private fun areMultipleSelectionsAllowed(type: PluginType): Boolean {
-            return type == PluginType.GENERAL || type == PluginType.CONSTRAINTS || type == PluginType.LOOP
+            return type == PluginType.GENERAL || type == PluginType.CONSTRAINTS || type == PluginType.LOOP || type == PluginType.SYNC
         }
     }
 

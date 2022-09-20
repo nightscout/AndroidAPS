@@ -90,7 +90,7 @@ class OpenAPSAMAPlugin @Inject constructor(
             aapsLogger.debug(LTag.APS, rh.gs(R.string.noprofileset))
             return
         }
-        if (!isEnabled(PluginType.APS)) {
+        if (!isEnabled()) {
             rxBus.send(EventOpenAPSUpdateResultGui(rh.gs(R.string.openapsma_disabled)))
             aapsLogger.debug(LTag.APS, rh.gs(R.string.openapsma_disabled))
             return

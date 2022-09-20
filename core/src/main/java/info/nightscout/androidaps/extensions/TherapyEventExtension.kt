@@ -5,7 +5,6 @@ import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.plugins.general.nsclient.data.NSMbg
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.T
@@ -38,17 +37,6 @@ fun TherapyEvent.GlucoseUnit.toMainUnit(): GlucoseUnit =
 fun TherapyEvent.GlucoseUnit.Companion.fromConstant(units: GlucoseUnit): TherapyEvent.GlucoseUnit =
     if (units == GlucoseUnit.MGDL) TherapyEvent.GlucoseUnit.MGDL
     else TherapyEvent.GlucoseUnit.MMOL
-
-fun therapyEventFromNsMbg(mbg: NSMbg) =
-    TherapyEvent(
-        type = TherapyEvent.Type.FINGER_STICK_BG_VALUE, //convert Mbg to finger stick because is coming from "entries" collection
-        timestamp = mbg.date,
-        glucose = mbg.mbg,
-        glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
-    )
-//.also {
-// it.interfaceIDs.nightscoutId = mbg.id() // id will be different in treatments collection
-//}
 
 /*
         create fake object with nsID and isValid == false

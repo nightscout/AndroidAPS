@@ -17,8 +17,8 @@ import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesFragment
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin
-import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin
-import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientStatus
+import info.nightscout.androidaps.plugins.sync.nsclient.NSClientPlugin
+import info.nightscout.androidaps.plugins.sync.nsclient.events.EventNSClientStatus
 import info.nightscout.androidaps.plugins.profile.local.LocalProfileFragment
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
@@ -159,36 +159,21 @@ class SWDefinition @Inject constructor(
             .text(R.string.nav_import)
             .action { importExportPrefs.importSharedPreferences(activity) })
         .visibility { importExportPrefs.prefsFileExists() && !androidPermission.permissionNotGranted(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) }
-    private val screenNsClient = SWScreen(injector, R.string.nsclientinternal_title)
+    private val screenNsClient = SWScreen(injector, R.string.configbuilder_sync)
         .skippable(true)
-        .add(SWInfoText(injector)
-            .label(R.string.nsclientinfotext))
+        .add(SWPlugin(injector, this)
+                 .option(PluginType.SYNC, R.string.configbuilder_sync_description)
+                 .makeVisible(false)
+                 .label(R.string.configbuilder_insulin))
         .add(SWBreak(injector))
-        .add(SWButton(injector)
-            .text(R.string.enable_nsclient)
-            .action {
-                configBuilder.performPluginSwitch(nsClientPlugin, true, PluginType.GENERAL)
-                rxBus.send(EventSWUpdate(true))
-            }
-            .visibility { !nsClientPlugin.isEnabled() })
-        .add(SWEditUrl(injector)
-            .preferenceId(R.string.key_nsclientinternal_url)
-            .updateDelay(5)
-            .label(R.string.nsclientinternal_url_title)
-            .comment(R.string.nsclientinternal_url_dialogmessage))
-        .add(SWEditString(injector)
-            .validator { text: String -> text.length >= 12 }
-            .preferenceId(R.string.key_nsclientinternal_api_secret)
-            .updateDelay(5)
-            .label(R.string.nsclientinternal_secret_dialogtitle)
-            .comment(R.string.nsclientinternal_secret_dialogmessage))
+        .add(SWInfoText(injector)
+            .label(R.string.syncinfotext))
         .add(SWBreak(injector))
         .add(SWEventListener(injector, EventNSClientStatus::class.java)
             .label(R.string.status)
-            .initialStatus(nsClientPlugin.status)
+            .initialStatus(activePlugin.firstActiveSync?.status ?: "")
         )
-        .validator { nsClientPlugin.nsClientService?.isConnected == true && nsClientPlugin.nsClientService?.hasWriteAuth == true }
-        .visibility { !(nsClientPlugin.nsClientService?.isConnected == true && nsClientPlugin.nsClientService?.hasWriteAuth == true) }
+        .validator { activePlugin.firstActiveSync?.connected == true && activePlugin.firstActiveSync?.hasWritePermission == true }
     private val screenPatientName = SWScreen(injector, R.string.patient_name)
         .skippable(true)
         .add(SWInfoText(injector)

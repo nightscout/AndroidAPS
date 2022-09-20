@@ -9,23 +9,17 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
-import info.nightscout.androidaps.interfaces.BgSource
-import info.nightscout.androidaps.interfaces.Config
-import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PluginDescription
-import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin
-import info.nightscout.androidaps.plugins.general.nsclient.data.NSSgv
+import info.nightscout.androidaps.plugins.sync.nsclient.data.NSSgv
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.XDripBroadcast
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONObject
 import javax.inject.Inject
@@ -38,13 +32,13 @@ class NSClientSourcePlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     config: Config
 ) : PluginBase(PluginDescription()
-    .mainType(PluginType.BGSOURCE)
-    .fragmentClass(BGSourceFragment::class.java.name)
-    .pluginIcon(R.drawable.ic_nsclient_bg)
-    .pluginName(R.string.nsclientbg)
-    .shortName(R.string.nsclientbgshort)
-    .description(R.string.description_source_ns_client),
-    aapsLogger, rh, injector
+                   .mainType(PluginType.BGSOURCE)
+                   .fragmentClass(BGSourceFragment::class.java.name)
+                   .pluginIcon(R.drawable.ic_nsclient_bg)
+                   .pluginName(R.string.nsclientbg)
+                   .shortName(R.string.nsclientbgshort)
+                   .description(R.string.description_source_ns_client),
+               aapsLogger, rh, injector
 ), BgSource {
 
     private var lastBGTimeStamp: Long = 0
@@ -93,7 +87,7 @@ class NSClientSourcePlugin @Inject constructor(
         @Inject lateinit var repository: AppRepository
         @Inject lateinit var xDripBroadcast: XDripBroadcast
         @Inject lateinit var dexcomPlugin: DexcomPlugin
-        @Inject lateinit var nsClientPlugin: NSClientPlugin
+        @Inject lateinit var activePlugin: ActivePlugin
 
         init {
             (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
@@ -138,7 +132,7 @@ class NSClientSourcePlugin @Inject constructor(
                     rxBus.send(EventDismissNotification(Notification.NS_URGENT_ALARM))
                 }
 
-                nsClientPlugin.updateLatestDateReceivedIfNewer(latestDateInReceivedData)
+                activePlugin.activeNsClient?.updateLatestDateReceivedIfNewer(latestDateInReceivedData)
 
                 repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null, !nsClientSourcePlugin.isEnabled()))
                     .doOnError {

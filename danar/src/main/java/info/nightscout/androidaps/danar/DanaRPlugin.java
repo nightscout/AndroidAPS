@@ -84,7 +84,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> {
-                    if (isEnabled(PluginType.PUMP)) {
+                    if (isEnabled()) {
                         boolean previousValue = useExtendedBoluses;
                         useExtendedBoluses = sp.getBoolean(R.string.key_danar_useextended, false);
 

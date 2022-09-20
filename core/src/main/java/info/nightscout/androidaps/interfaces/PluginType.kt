@@ -6,5 +6,5 @@ package info.nightscout.androidaps.interfaces
  * set by [info.nightscout.androidaps.interfaces.PluginDescription.mainType]
  */
 enum class PluginType {
-    GENERAL, SENSITIVITY, PROFILE, APS, PUMP, CONSTRAINTS, LOOP, BGSOURCE, INSULIN
+    GENERAL, SENSITIVITY, PROFILE, APS, PUMP, CONSTRAINTS, LOOP, BGSOURCE, INSULIN, SYNC
 }

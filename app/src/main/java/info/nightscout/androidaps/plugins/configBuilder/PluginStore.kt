@@ -121,8 +121,10 @@ class PluginStore @Inject constructor(
         setFragmentVisibilities((activePumpStore as PluginBase).name, pluginsInCategory, PluginType.PUMP)
     }
 
-    private fun setFragmentVisibilities(activePluginName: String, pluginsInCategory: ArrayList<PluginBase>,
-                                        pluginType: PluginType) {
+    private fun setFragmentVisibilities(
+        activePluginName: String, pluginsInCategory: ArrayList<PluginBase>,
+        pluginType: PluginType
+    ) {
         aapsLogger.debug(LTag.CONFIGBUILDER, "Selected interface: $activePluginName")
         for (p in pluginsInCategory)
             if (p.name != activePluginName)
@@ -171,6 +173,17 @@ class PluginStore @Inject constructor(
 
     override val activeIobCobCalculator: IobCobCalculator
         get() = getSpecificPluginsListByInterface(IobCobCalculator::class.java).first() as IobCobCalculator
+
+    override val activeNsClient: NsClient?
+        get() = getTheOneEnabledInArray(getSpecificPluginsListByInterface(NsClient::class.java), PluginType.SYNC) as NsClient?
+
+    @Suppress("UNCHECKED_CAST")
+    override val firstActiveSync: Sync
+        get() = (getSpecificPluginsList(PluginType.SYNC) as ArrayList<Sync>).first { it.connected }
+
+    @Suppress("UNCHECKED_CAST")
+    override val activeSyncs: ArrayList<Sync>
+        get() = getSpecificPluginsList(PluginType.SYNC) as ArrayList<Sync>
 
     override fun getPluginsList(): ArrayList<PluginBase> = ArrayList(plugins)
 

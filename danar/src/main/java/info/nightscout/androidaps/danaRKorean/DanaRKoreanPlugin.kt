@@ -64,7 +64,7 @@ class DanaRKoreanPlugin @Inject constructor(
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({
-                if (isEnabled(PluginType.PUMP)) {
+                if (isEnabled()) {
                     val previousValue = useExtendedBoluses
                     useExtendedBoluses = sp.getBoolean(R.string.key_danar_useextended, false)
                     if (useExtendedBoluses != previousValue && pumpSync.expectedPumpState().extendedBolus != null) {

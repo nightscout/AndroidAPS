@@ -19,10 +19,6 @@ android {
         debug {
             testCoverageEnabled(project.hasProperty('coverage'))
         }
-//        firebaseDisable {
-//            System.setProperty("disableFirebase", "true")
-//            ext.enableCrashlytics = false
-//        }
     }
 
     sourceSets {

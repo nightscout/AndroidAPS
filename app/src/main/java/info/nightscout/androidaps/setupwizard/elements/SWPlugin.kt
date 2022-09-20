@@ -60,7 +60,7 @@ class SWPlugin(injector: HasAndroidInjector, private val definition: SWDefinitio
             val p = pluginsInCategory[i]
             rdBtn.id = View.generateViewId()
             rdBtn.text = p.name
-            if (p.isEnabled(pType!!)) {
+            if (p.isEnabled()) {
                 rdBtn.isChecked = true
                 selectedPlugin = p
             }

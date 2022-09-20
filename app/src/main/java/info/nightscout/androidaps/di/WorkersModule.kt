@@ -4,10 +4,10 @@ import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import info.nightscout.androidaps.plugins.general.food.FoodPlugin
 import info.nightscout.androidaps.plugins.general.maintenance.ImportExportPrefsImpl
-import info.nightscout.androidaps.plugins.general.nsclient.NSClientAddAckWorker
-import info.nightscout.androidaps.plugins.general.nsclient.NSClientAddUpdateWorker
-import info.nightscout.androidaps.plugins.general.nsclient.NSClientMbgWorker
-import info.nightscout.androidaps.plugins.general.nsclient.NSClientUpdateRemoveAckWorker
+import info.nightscout.androidaps.plugins.sync.nsclient.NSClientAddAckWorker
+import info.nightscout.androidaps.plugins.sync.nsclient.NSClientAddUpdateWorker
+import info.nightscout.androidaps.plugins.sync.nsclient.NSClientMbgWorker
+import info.nightscout.androidaps.plugins.sync.nsclient.NSClientUpdateRemoveAckWorker
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.source.*
