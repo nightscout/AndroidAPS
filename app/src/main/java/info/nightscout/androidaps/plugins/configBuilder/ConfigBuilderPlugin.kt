@@ -32,16 +32,17 @@ class ConfigBuilderPlugin @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val uel: UserEntryLogger,
     private val pumpSync: PumpSync
-) : PluginBase(PluginDescription()
-    .mainType(PluginType.GENERAL)
-    .fragmentClass(ConfigBuilderFragment::class.java.name)
-    .showInList(true)
-    .alwaysEnabled(true)
-    .alwaysVisible(false)
-    .pluginIcon(R.drawable.ic_cogs)
-    .pluginName(R.string.configbuilder)
-    .shortName(R.string.configbuilder_shortname)
-    .description(R.string.description_config_builder),
+) : PluginBase(
+    PluginDescription()
+        .mainType(PluginType.GENERAL)
+        .fragmentClass(ConfigBuilderFragment::class.java.name)
+        .showInList(true)
+        .alwaysEnabled(true)
+        .alwaysVisible(false)
+        .pluginIcon(R.drawable.ic_cogs)
+        .pluginName(R.string.configbuilder)
+        .shortName(R.string.configbuilder_shortname)
+        .description(R.string.description_config_builder),
     aapsLogger, rh, injector
 ), ConfigBuilder {
 
@@ -66,43 +67,39 @@ class ConfigBuilderPlugin @Inject constructor(
             val type = p.getType()
             if (p.pluginDescription.alwaysEnabled && p.pluginDescription.alwaysVisible) continue
             if (p.pluginDescription.alwaysEnabled && p.pluginDescription.neverVisible) continue
-            savePref(p, type, true)
+            savePref(p, type)
         }
     }
 
-    private fun savePref(p: PluginBase, type: PluginType, storeVisible: Boolean) {
+    private fun savePref(p: PluginBase, type: PluginType) {
         val settingEnabled = "ConfigBuilder_" + type.name + "_" + p.javaClass.simpleName + "_Enabled"
         sp.putBoolean(settingEnabled, p.isEnabled())
         aapsLogger.debug(LTag.CONFIGBUILDER, "Storing: " + settingEnabled + ":" + p.isEnabled())
-        if (storeVisible) {
-            val settingVisible = "ConfigBuilder_" + type.name + "_" + p.javaClass.simpleName + "_Visible"
-            sp.putBoolean(settingVisible, p.isFragmentVisible())
-            aapsLogger.debug(LTag.CONFIGBUILDER, "Storing: " + settingVisible + ":" + p.isFragmentVisible())
-        }
+        val settingVisible = "ConfigBuilder_" + type.name + "_" + p.javaClass.simpleName + "_Visible"
+        sp.putBoolean(settingVisible, p.isFragmentVisible())
+        aapsLogger.debug(LTag.CONFIGBUILDER, "Storing: " + settingVisible + ":" + p.isFragmentVisible())
     }
 
     private fun loadSettings() {
         aapsLogger.debug(LTag.CONFIGBUILDER, "Loading stored settings")
         for (p in activePlugin.getPluginsList()) {
             val type = p.getType()
-            loadPref(p, type, true)
+            loadPref(p, type)
         }
         activePlugin.verifySelectionInCategories()
     }
 
-    private fun loadPref(p: PluginBase, type: PluginType, loadVisible: Boolean) {
+    private fun loadPref(p: PluginBase, type: PluginType) {
         val settingEnabled = "ConfigBuilder_" + type.name + "_" + p.javaClass.simpleName + "_Enabled"
         if (sp.contains(settingEnabled)) p.setPluginEnabled(type, sp.getBoolean(settingEnabled, false)) else if (p.getType() == type && (p.pluginDescription.enableByDefault || p.pluginDescription.alwaysEnabled)) {
             p.setPluginEnabled(type, true)
         }
         aapsLogger.debug(LTag.CONFIGBUILDER, "Loaded: " + settingEnabled + ":" + p.isEnabled(type))
-        if (loadVisible) {
-            val settingVisible = "ConfigBuilder_" + type.name + "_" + p.javaClass.simpleName + "_Visible"
-            if (sp.contains(settingVisible)) p.setFragmentVisible(type, sp.getBoolean(settingVisible, false) && sp.getBoolean(settingEnabled, false)) else if (p.getType() == type && p.pluginDescription.visibleByDefault) {
-                p.setFragmentVisible(type, true)
-            }
-            aapsLogger.debug(LTag.CONFIGBUILDER, "Loaded: " + settingVisible + ":" + p.isFragmentVisible())
+        val settingVisible = "ConfigBuilder_" + type.name + "_" + p.javaClass.simpleName + "_Visible"
+        if (sp.contains(settingVisible)) p.setFragmentVisible(type, sp.getBoolean(settingVisible, false) && sp.getBoolean(settingEnabled, false)) else if (p.getType() == type && p.pluginDescription.visibleByDefault) {
+            p.setFragmentVisible(type, true)
         }
+        aapsLogger.debug(LTag.CONFIGBUILDER, "Loaded: " + settingVisible + ":" + p.isFragmentVisible())
     }
 
     fun logPluginStatus() {
@@ -171,7 +168,7 @@ class ConfigBuilderPlugin @Inject constructor(
         logPluginStatus()
     }
 
-    fun processOnEnabledCategoryChanged(changedPlugin: PluginBase, type: PluginType?) {
+    fun processOnEnabledCategoryChanged(changedPlugin: PluginBase, type: PluginType) {
         var pluginsInCategory: ArrayList<PluginBase>? = null
         when (type) {
             PluginType.INSULIN     -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Insulin::class.java)
@@ -180,12 +177,14 @@ class ConfigBuilderPlugin @Inject constructor(
             PluginType.PROFILE     -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(ProfileSource::class.java)
             PluginType.BGSOURCE    -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(BgSource::class.java)
             PluginType.PUMP        -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Pump::class.java)
+            // Process only NSClients
+            PluginType.SYNC        -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(NsClient::class.java)
 
             else                   -> {
             }
         }
         if (pluginsInCategory != null) {
-            val newSelection = changedPlugin.isEnabled(type!!)
+            val newSelection = changedPlugin.isEnabled(type)
             if (newSelection) { // new plugin selected -> disable others
                 for (p in pluginsInCategory) {
                     if (p.name == changedPlugin.name) {
@@ -195,7 +194,9 @@ class ConfigBuilderPlugin @Inject constructor(
                         p.setFragmentVisible(type, false)
                     }
                 }
-            } else { // enable first plugin in list
+            } else if (type != PluginType.SYNC) {
+                // enable first plugin in list
+                // NSC must not be selected
                 pluginsInCategory[0].setPluginEnabled(type, true)
             }
         }

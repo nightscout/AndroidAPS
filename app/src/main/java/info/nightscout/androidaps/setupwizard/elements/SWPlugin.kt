@@ -78,7 +78,7 @@ class SWPlugin(injector: HasAndroidInjector, private val definition: SWDefinitio
             val plugin = rb.tag as PluginBase
             plugin.setPluginEnabled(pType!!, rb.isChecked)
             plugin.setFragmentVisible(pType!!, rb.isChecked && makeVisible)
-            configBuilderPlugin.processOnEnabledCategoryChanged(plugin, pType)
+            configBuilderPlugin.processOnEnabledCategoryChanged(plugin, pType!!)
             configBuilderPlugin.storeSettings("SetupWizard")
             rxBus.send(EventConfigBuilderChange())
             rxBus.send(EventSWUpdate(false))
