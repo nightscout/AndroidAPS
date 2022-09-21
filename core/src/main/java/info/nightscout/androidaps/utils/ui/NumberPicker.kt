@@ -146,7 +146,7 @@ open class NumberPicker(context: Context, attrs: AttributeSet? = null) : LinearL
             .getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
         if (manager.isEnabled) {
             val valueDescription = formatter?.format(currentValue)
-            AccessibilityEvent.obtain().apply {
+            AccessibilityEvent().apply {
                 eventType = AccessibilityEvent.TYPE_ANNOUNCEMENT
                 className = javaClass.name
                 packageName = context.packageName
