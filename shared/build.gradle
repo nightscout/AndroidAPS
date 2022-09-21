@@ -28,7 +28,7 @@ dependencies {
     api "com.google.dagger:dagger-android-support:$dagger_version"
 
     //Logger
-    api 'org.slf4j:slf4j-api:1.7.36' // 2.0.x breaks logging. Code change needed
+    api 'org.slf4j:slf4j-api:2.0.2' // 2.0.x breaks logging. Code change needed
     api 'com.github.tony19:logback-android:2.0.0'
 
     api "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0"
