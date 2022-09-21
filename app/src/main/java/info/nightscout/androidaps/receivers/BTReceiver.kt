@@ -9,6 +9,7 @@ import info.nightscout.androidaps.plugins.bus.RxBus
 import javax.inject.Inject
 
 class BTReceiver : DaggerBroadcastReceiver() {
+
     @Inject lateinit var rxBus: RxBus
 
     override fun onReceive(context: Context, intent: Intent) {
