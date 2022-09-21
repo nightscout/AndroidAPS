@@ -67,6 +67,7 @@ import info.nightscout.androidaps.skins.SkinProvider
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.TrendCalculator
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
@@ -602,7 +603,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
     private fun processAps() {
         val pump = activePlugin.activePump
-        val profile = profileFunction.getProfile()
 
         // aps mode
         val closedLoopEnabled = constraintChecker.isClosedLoopAllowed()
@@ -681,21 +681,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                         binding.infoLayout.apsModeText.visibility = View.GONE
                     }
                 }
-                // Show variable sensitivity
-                val request = loop.lastRun?.request
-                if (request is DetermineBasalResultSMB) {
-                    val isfMgdl = profile?.getIsfMgdl()
-                    val variableSens = request.variableSens
-                    if (variableSens != isfMgdl && variableSens != null && isfMgdl != null) {
-                        binding.infoLayout.variableSensitivity.text =
-                            String.format(
-                                Locale.getDefault(), "%1$.1f→%2$.1f",
-                                Profile.toUnits(isfMgdl, isfMgdl * Constants.MGDL_TO_MMOLL, profileFunction.getUnits()),
-                                Profile.toUnits(variableSens, variableSens * Constants.MGDL_TO_MMOLL, profileFunction.getUnits())
-                            )
-                        binding.infoLayout.variableSensitivity.visibility = View.VISIBLE
-                    } else binding.infoLayout.variableSensitivity.visibility = View.GONE
-                } else binding.infoLayout.variableSensitivity.visibility = View.GONE
             } else {
                 //nsclient
                 binding.infoLayout.apsMode.visibility = View.GONE
@@ -1094,6 +1079,24 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             overviewData.lastAutosensData(iobCobCalculator)?.let { autosensData ->
                 String.format(Locale.ENGLISH, "%.0f%%", autosensData.autosensResult.ratio * 100)
             } ?: ""
+        // Show variable sensitivity
+        val profile = profileFunction.getProfile()
+        val request = loop.lastRun?.request
+        val isfMgdl = profile?.getIsfMgdl()
+        val variableSens =
+            if (config.APS && request is DetermineBasalResultSMB) request.variableSens ?: 0.0
+            else if (config.NSCLIENT) JsonHelper.safeGetDouble(nsDeviceStatus.getAPSResult(injector).json, "variable_sens")
+            else 0.0
+
+        if (variableSens != isfMgdl && variableSens != 0.0 && isfMgdl != null) {
+            binding.infoLayout.variableSensitivity.text =
+                String.format(
+                    Locale.getDefault(), "%1$.1f→%2$.1f",
+                    Profile.toUnits(isfMgdl, isfMgdl * Constants.MGDL_TO_MMOLL, profileFunction.getUnits()),
+                    Profile.toUnits(variableSens, variableSens * Constants.MGDL_TO_MMOLL, profileFunction.getUnits())
+                )
+            binding.infoLayout.variableSensitivity.visibility = View.VISIBLE
+        } else binding.infoLayout.variableSensitivity.visibility = View.GONE
     }
 
     private fun updatePumpStatus() {
