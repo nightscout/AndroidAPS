@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.general.dataBroadcaster
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.os.Bundle
 import dagger.android.HasAndroidInjector
@@ -186,7 +187,7 @@ class DataBroadcastPlugin @Inject constructor(
     }
 
     private fun sendBroadcast(intent: Intent) {
-        val receivers: List<ResolveInfo> = context.packageManager.queryBroadcastReceivers(intent, 0)
+        val receivers: List<ResolveInfo> = context.packageManager.queryBroadcastReceivers(intent, PackageManager.ResolveInfoFlags.of(0))
         for (resolveInfo in receivers)
             resolveInfo.activityInfo.packageName?.let {
                 intent.setPackage(it)

@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.util.SparseArray
 import android.view.*
 import androidx.core.util.forEach
+import androidx.core.view.MenuProvider
+import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
@@ -20,13 +22,13 @@ import info.nightscout.androidaps.databinding.TreatmentsCareportalFragmentBindin
 import info.nightscout.androidaps.databinding.TreatmentsCareportalItemBinding
 import info.nightscout.androidaps.events.EventTherapyEventChange
 import info.nightscout.androidaps.extensions.toVisibility
+import info.nightscout.androidaps.interfaces.BuildHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.interfaces.BuildHelper
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
@@ -38,7 +40,7 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class TreatmentsCareportalFragment : DaggerFragment() {
+class TreatmentsCareportalFragment : DaggerFragment(), MenuProvider {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBus
@@ -70,11 +72,11 @@ class TreatmentsCareportalFragment : DaggerFragment() {
         actionHelper = ActionModeHelper(rh, activity, this)
         actionHelper.setUpdateListHandler { binding.recyclerview.adapter?.notifyDataSetChanged() }
         actionHelper.setOnRemoveHandler { removeSelected(it) }
-        setHasOptionsMenu(true)
         binding.recyclerview.setHasFixedSize(true)
         binding.recyclerview.layoutManager = LinearLayoutManager(view.context)
         binding.recyclerview.emptyView = binding.noRecordsText
         binding.recyclerview.loadingView = binding.progressBar
+        requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     private fun refreshFromNightscout() {
@@ -184,18 +186,12 @@ class TreatmentsCareportalFragment : DaggerFragment() {
 
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
         this.menu = menu
         inflater.inflate(R.menu.menu_treatments_careportal, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onPrepareOptionsMenu(menu: Menu) {
         updateMenuVisibility()
         val nsUploadOnly = !sp.getBoolean(R.string.key_ns_receive_therapy_events, false) || !buildHelper.isEngineeringMode()
         menu.findItem(R.id.nav_refresh_ns)?.isVisible = !nsUploadOnly
-
-        return super.onPrepareOptionsMenu(menu)
     }
 
     private fun updateMenuVisibility() {
@@ -203,14 +199,14 @@ class TreatmentsCareportalFragment : DaggerFragment() {
         menu?.findItem(R.id.nav_show_invalidated)?.isVisible = !showInvalidated
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+    override fun onMenuItemSelected(item: MenuItem): Boolean =
         when (item.itemId) {
             R.id.nav_remove_items          -> actionHelper.startRemove()
 
             R.id.nav_show_invalidated      -> {
                 showInvalidated = true
                 updateMenuVisibility()
-                ToastUtils.showToastInUiThread(context, rh.gs(R.string.show_invalidated_records))
+                ToastUtils.infoToast(context, R.string.show_invalidated_records)
                 swapAdapter()
                 true
             }
@@ -218,7 +214,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
             R.id.nav_hide_invalidated      -> {
                 showInvalidated = false
                 updateMenuVisibility()
-                ToastUtils.showToastInUiThread(context, rh.gs(R.string.hide_invalidated_records))
+                ToastUtils.infoToast(context, R.string.hide_invalidated_records)
                 swapAdapter()
                 true
             }
@@ -265,5 +261,4 @@ class TreatmentsCareportalFragment : DaggerFragment() {
             })
         }
     }
-
 }

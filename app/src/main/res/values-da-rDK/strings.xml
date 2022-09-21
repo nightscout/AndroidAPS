@@ -665,7 +665,6 @@
     <string name="resistance_lowers_target_summary">Når der påvises resistens, sænkes målglukosen</string>
     <string name="sensitivity_raises_target_title">Følsomhed hæver midlertidige mål</string>
     <string name="sensitivity_raises_target_summary">Når der påvises følsomhed, skal målglukosen hæves</string>
-    <string name="careportal_removestartedevents">Ren AndroidAPS startet</string>
     <string name="show_invalidated">Vis ugyldige</string>
     <string name="hide_invalidated">Skjul ugyldige</string>
     <string name="remove_items">Fjern elementer</string>

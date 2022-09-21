@@ -382,7 +382,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                         dexcomMediator.findDexcomPackageName()?.let {
                             openCgmApp(it)
                         }
-                            ?: ToastUtils.showToastInUiThread(activity, rh.gs(R.string.dexcom_app_not_installed))
+                            ?: ToastUtils.infoToast(activity, rh.gs(R.string.dexcom_app_not_installed))
                     }
                 }
 
@@ -398,9 +398,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                                         .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                                 )
                             }
-                                ?: ToastUtils.showToastInUiThread(activity, rh.gs(R.string.dexcom_app_not_installed))
+                                ?: ToastUtils.infoToast(activity, rh.gs(R.string.dexcom_app_not_installed))
                         } catch (e: ActivityNotFoundException) {
-                            ToastUtils.showToastInUiThread(activity, rh.gs(R.string.g5appnotdetected))
+                            ToastUtils.infoToast(activity, rh.gs(R.string.g5appnotdetected))
                         }
                     }
                 }
@@ -547,7 +547,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
             // **** Various treatment buttons ****
             binding.buttonsLayout.carbsButton.visibility =
-                ((!activePlugin.activePump.pumpDescription.storesCarbInfo || pump.isInitialized() && !pump.isSuspended()) && profile != null
+                (/*(!activePlugin.activePump.pumpDescription.storesCarbInfo || pump.isInitialized() && !pump.isSuspended()) &&*/ profile != null
                     && sp.getBoolean(R.string.key_show_carbs_button, true)).toVisibility()
             binding.buttonsLayout.treatmentButton.visibility = (!loop.isDisconnected && pump.isInitialized() && !pump.isSuspended() && profile != null
                 && sp.getBoolean(R.string.key_show_treatment_button, false)).toVisibility()

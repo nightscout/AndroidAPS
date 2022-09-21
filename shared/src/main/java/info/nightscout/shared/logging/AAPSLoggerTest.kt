@@ -65,4 +65,20 @@ class AAPSLoggerTest : AAPSLogger {
     override fun error(tag: LTag, format: String, vararg arguments: Any?) {
         println("ERROR: : " + tag.tag + " " + String.format(format, arguments))
     }
+
+    override fun debug(className: String, methodName: String, lineNumber: Int, tag: LTag, message: String) {
+        println("DEBUG: : ${tag.tag} $className.$methodName():$lineNumber $message")
+    }
+
+    override fun info(className: String, methodName: String, lineNumber: Int, tag: LTag, message: String) {
+        println("INFO: : ${tag.tag} $className.$methodName():$lineNumber $message")
+    }
+
+    override fun warn(className: String, methodName: String, lineNumber: Int, tag: LTag, message: String) {
+        println("WARN: : ${tag.tag} $className.$methodName():$lineNumber $message")
+    }
+
+    override fun error(className: String, methodName: String, lineNumber: Int, tag: LTag, message: String) {
+        println("ERROR: : ${tag.tag} $className.$methodName():$lineNumber $message")
+    }
 }

@@ -2,6 +2,7 @@ package info.nightscout.androidaps.interaction.actions
 
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.pm.PackageManager.PackageInfoFlags
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -41,9 +42,10 @@ class QuickSnoozeActivity : DaggerActivity() {
         finish()
     }
 
+    @Suppress("SameParameterValue")
     private fun isPackageExisted(targetPackage: String): Boolean {
         try {
-            packageManager.getPackageInfo(targetPackage, PackageManager.GET_META_DATA)
+            packageManager.getPackageInfo(targetPackage, PackageInfoFlags.of(0))
         } catch (e: PackageManager.NameNotFoundException) {
             return false
         }

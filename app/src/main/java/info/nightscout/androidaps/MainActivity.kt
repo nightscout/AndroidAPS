@@ -295,6 +295,7 @@ class MainActivity : NoSplashAppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        super.onCreateOptionsMenu(menu)
         menu.setGroupDividerEnabled(true)
         this.menu = menu
         menuInflater.inflate(R.menu.menu_main, menu)
@@ -306,6 +307,7 @@ class MainActivity : NoSplashAppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        super.onOptionsItemSelected(item)
         when (item.itemId) {
             R.id.nav_preferences        -> {
                 protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, {

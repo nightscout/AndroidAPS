@@ -158,7 +158,7 @@ class BLEComm @Inject internal constructor(
             // assume pairing keys are invalid
             val lastClearRequest = sp.getLong(R.string.key_rs_last_clear_key_request, 0)
             if (lastClearRequest != 0L && dateUtil.isOlderThan(lastClearRequest, 5)) {
-                ToastUtils.showToastInUiThread(context, R.string.invalidpairing)
+                ToastUtils.errorToast(context, R.string.invalidpairing)
                 danaRSPlugin.changePump()
                 removeBond()
             } else if (lastClearRequest == 0L) {
@@ -175,7 +175,7 @@ class BLEComm @Inject internal constructor(
                 sp.remove(rh.gs(R.string.key_danars_v3_randompairingkey) + danaRSPlugin.mDeviceName)
                 sp.remove(rh.gs(R.string.key_danars_v3_pairingkey) + danaRSPlugin.mDeviceName)
                 sp.remove(rh.gs(R.string.key_danars_v3_randomsynckey) + danaRSPlugin.mDeviceName)
-                ToastUtils.showToastInUiThread(context, R.string.invalidpairing)
+                ToastUtils.errorToast(context, R.string.invalidpairing)
                 danaRSPlugin.changePump()
             } else if (lastClearRequest == 0L) {
                 aapsLogger.error("Clearing pairing keys postponed")
@@ -213,35 +213,12 @@ class BLEComm @Inject internal constructor(
 
     @SuppressLint("MissingPermission")
     @Synchronized fun close() {
-        /*
-        if (!encryptedDataRead && !encryptedCommandSent) {
-            // there was no response from pump before started encryption
-            // assume pairing is invalid
-            val lastClearRequest = sp.getLong(R.string.key_rs_last_clear_key_request, 0)
-            if (lastClearRequest != 0L && dateUtil.isOlderThan(lastClearRequest, 5)) {
-                ToastUtils.showToastInUiThread(context, R.string.invalidpairing)
-                danaRSPlugin.changePump()
-                sp.getStringOrNull(R.string.key_danars_address, null)?.let { address ->
-                    bluetoothAdapter?.getRemoteDevice(address)?.let { device ->
-                        try {
-                            aapsLogger.debug(LTag.PUMPBTCOMM, "Removing bond")
-                            device::class.java.getMethod("removeBond").invoke(device)
-                        } catch (e: Exception) {
-                            aapsLogger.error("Removing bond has been failed. ${e.message}")
-                        }
-                    }
-                }
-            } else if (lastClearRequest == 0L) {
-                aapsLogger.error("Clearing pairing keys postponed")
-                sp.putLong(R.string.key_rs_last_clear_key_request, dateUtil.now())
-            }
-        }
-        */
         aapsLogger.debug(LTag.PUMPBTCOMM, "BluetoothAdapter close")
         bluetoothGatt?.close()
         bluetoothGatt = null
     }
 
+    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
     private val mGattCallback: BluetoothGattCallback = object : BluetoothGattCallback() {
         override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
             onConnectionStateChangeSynchronized(gatt, newState) // call it synchronized
@@ -289,6 +266,7 @@ class BLEComm @Inject internal constructor(
         }
     }
 
+    @Suppress("DEPRECATION")
     @SuppressLint("MissingPermission")
     @Synchronized
     private fun setCharacteristicNotification(characteristic: BluetoothGattCharacteristic?, enabled: Boolean) {
@@ -309,6 +287,7 @@ class BLEComm @Inject internal constructor(
         }
     }
 
+    @Suppress("DEPRECATION")
     @SuppressLint("MissingPermission")
     @Synchronized
     private fun writeCharacteristicNoResponse(characteristic: BluetoothGattCharacteristic, data: ByteArray) {

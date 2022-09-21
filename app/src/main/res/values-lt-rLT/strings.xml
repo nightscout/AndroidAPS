@@ -651,7 +651,6 @@
     <string name="resistance_lowers_target_summary">Kai nustatoma rezistencija, tikslinė gliukozės vertė sumažinama</string>
     <string name="sensitivity_raises_target_title">Jautrumas didina tikslą</string>
     <string name="sensitivity_raises_target_summary">Kai aptinkamas padidėjęs jautrumas insulinui, tikslinis gliukozės lygis padidinamas</string>
-    <string name="careportal_removestartedevents">Ištrinti \"AndroidAPS paleista\" įrašus</string>
     <string name="storedsettingsfound">Rasti išsaugoti nustatymai</string>
     <string name="allow_hardware_pump_text">Dėmesio: jei aktyvuosite ir prijungsite prie aparatinės pompos, AndroidAPS nukopijuos bazės nustatymus iš profilio į pompą, pakeisdamas esančius nustatymus pompoje. Įsitikinkite, kad turimi bazės nustatymai AndroidAPS yra teisingi. Jei nesate tikri arba nenorite iš naujo keisti bazės nustatymų jūsų pompoje, paspauskite atšaukti ir pakartokite prijungimą prie pompos kitą kartą.</string>
     <string name="error_adding_treatment_title">Terapijos duomenys nepilni</string>

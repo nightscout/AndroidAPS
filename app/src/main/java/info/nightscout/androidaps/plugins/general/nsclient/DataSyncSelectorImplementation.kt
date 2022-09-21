@@ -940,6 +940,7 @@ class DataSyncSelectorImplementation @Inject constructor(
         val lastChange = sp.getLong(R.string.key_local_profile_last_change, 0)
         if (lastChange == 0L) return
         if (lastChange > lastSync) {
+            if (localProfilePlugin.profile?.allProfilesValid != true) return
             val profileJson = localProfilePlugin.profile?.data ?: return
             nsClientPlugin.nsClientService?.dbAdd("profile", profileJson, DataSyncSelector.PairProfileStore(profileJson, dateUtil.now()), "")
         }

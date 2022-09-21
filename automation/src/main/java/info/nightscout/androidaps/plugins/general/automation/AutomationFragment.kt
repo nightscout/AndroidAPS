@@ -5,11 +5,19 @@ import android.content.Context
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.util.SparseArray
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import androidx.core.util.forEach
+import androidx.core.view.MenuProvider
+import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -40,7 +48,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
 
-class AutomationFragment : DaggerFragment(), OnStartDragListener {
+class AutomationFragment : DaggerFragment(), OnStartDragListener, MenuProvider {
 
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var rh: ResourceHelper
@@ -52,9 +60,9 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
 
     companion object {
 
-        const val ID_MENU_ADD = 3
-        const val ID_MENU_RUN = 4
-        const val ID_MENU_EDIT_MOVE = 5
+        const val ID_MENU_ADD = 504
+        const val ID_MENU_RUN = 505
+        const val ID_MENU_EDIT_MOVE = 506
     }
 
     private var disposable: CompositeDisposable = CompositeDisposable()
@@ -73,7 +81,6 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
         actionHelper.setUpdateListHandler { binding.eventListView.adapter?.notifyDataSetChanged() }
         actionHelper.setOnRemoveHandler { removeSelected(it) }
         actionHelper.enableSort = true
-        setHasOptionsMenu(true)
         return binding.root
     }
 
@@ -85,42 +92,37 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
         binding.logView.movementMethod = ScrollingMovementMethod()
 
         itemTouchHelper.attachToRecyclerView(binding.eventListView)
+        requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        if (isResumed) {
-            actionHelper.onCreateOptionsMenu(menu, inflater)
-            menu.removeItem(ID_MENU_ADD)
-            menu.removeItem(ID_MENU_RUN)
-            menu.add(Menu.FIRST, ID_MENU_ADD, 0, rh.gs(R.string.add_automation)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
-            menu.add(Menu.FIRST, ID_MENU_RUN, 0, rh.gs(R.string.run_automations)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
-            menu.add(Menu.FIRST, ID_MENU_EDIT_MOVE, 0, rh.gs(R.string.remove_sort)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
-            menu.setGroupDividerEnabled(true)
-        }
+    override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
+        actionHelper.onCreateOptionsMenu(menu, inflater)
+        menu.add(Menu.FIRST, ID_MENU_ADD, 0, rh.gs(R.string.add_automation)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+        menu.add(Menu.FIRST, ID_MENU_RUN, 0, rh.gs(R.string.run_automations)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+        menu.add(Menu.FIRST, ID_MENU_EDIT_MOVE, 0, rh.gs(R.string.remove_sort)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+        menu.setGroupDividerEnabled(true)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+    override fun onMenuItemSelected(item: MenuItem): Boolean =
         if (actionHelper.onOptionsItemSelected(item)) true
-        else
-            when (item.itemId) {
-                ID_MENU_RUN -> {
-                    Thread { automationPlugin.processActions() }.start()
-                    true
-                }
-
-                ID_MENU_ADD -> {
-                    add()
-                    true
-                }
-
-               ID_MENU_EDIT_MOVE -> {
-                    actionHelper.startAction()
-                    true
-                }
-
-                else        -> false
+        else when (item.itemId) {
+            ID_MENU_RUN       -> {
+                Thread { automationPlugin.processActions() }.start()
+                true
             }
+
+            ID_MENU_ADD       -> {
+                add()
+                true
+            }
+
+            ID_MENU_EDIT_MOVE -> {
+                actionHelper.startAction()
+                true
+            }
+
+            else              -> super.onContextItemSelected(item)
+        }
 
     @SuppressLint("NotifyDataSetChanged")
     @Synchronized
@@ -129,15 +131,11 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
         disposable += rxBus
             .toObservable(EventAutomationUpdateGui::class.java)
             .observeOn(aapsSchedulers.main)
-            .subscribe({
-                           updateGui()
-                       }, fabricPrivacy::logException)
+            .subscribe({ updateGui() }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventAutomationDataChanged::class.java)
             .observeOn(aapsSchedulers.main)
-            .subscribe({
-                           eventListAdapter.notifyDataSetChanged()
-                       }, fabricPrivacy::logException)
+            .subscribe({ eventListAdapter.notifyDataSetChanged() }, fabricPrivacy::logException)
         updateGui()
     }
 

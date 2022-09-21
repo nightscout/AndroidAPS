@@ -114,7 +114,7 @@ class PrefImportListActivity : DaggerAppCompatActivity() {
             finish()
             return true
         }
-        return false
+        return super.onOptionsItemSelected(item)
     }
 
     override fun attachBaseContext(newBase: Context) {

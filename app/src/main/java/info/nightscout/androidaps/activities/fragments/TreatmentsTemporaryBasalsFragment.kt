@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.util.SparseArray
 import android.view.*
 import androidx.core.util.forEach
+import androidx.core.view.MenuProvider
+import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
@@ -48,7 +50,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.math.abs
 
-class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
+class TreatmentsTemporaryBasalsFragment : DaggerFragment(), MenuProvider {
 
     private val disposable = CompositeDisposable()
 
@@ -81,11 +83,11 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
         actionHelper = ActionModeHelper(rh, activity, this)
         actionHelper.setUpdateListHandler { binding.recyclerview.adapter?.notifyDataSetChanged() }
         actionHelper.setOnRemoveHandler { removeSelected(it) }
-        setHasOptionsMenu(true)
         binding.recyclerview.setHasFixedSize(true)
         binding.recyclerview.layoutManager = LinearLayoutManager(view.context)
         binding.recyclerview.emptyView = binding.noRecordsText
         binding.recyclerview.loadingView = binding.progressBar
+        requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     private fun tempBasalsWithInvalid(now: Long) = repository
@@ -216,10 +218,10 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
 
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
         this.menu = menu
         inflater.inflate(R.menu.menu_treatments_temp_basal, menu)
-        super.onCreateOptionsMenu(menu, inflater)
+        updateMenuVisibility()
     }
 
     private fun updateMenuVisibility() {
@@ -227,20 +229,14 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
         menu?.findItem(R.id.nav_show_invalidated)?.isVisible = !showInvalidated
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        updateMenuVisibility()
-
-        return super.onPrepareOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+    override fun onMenuItemSelected(item: MenuItem): Boolean =
         when (item.itemId) {
             R.id.nav_remove_items -> actionHelper.startRemove()
 
             R.id.nav_show_invalidated -> {
                 showInvalidated = true
                 updateMenuVisibility()
-                ToastUtils.showToastInUiThread(context, rh.gs(R.string.show_invalidated_records))
+                ToastUtils.infoToast(context, R.string.show_invalidated_records)
                 swapAdapter()
                 true
             }
@@ -248,7 +244,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
             R.id.nav_hide_invalidated -> {
                 showInvalidated = false
                 updateMenuVisibility()
-                ToastUtils.showToastInUiThread(context, rh.gs(R.string.hide_invalidated_records))
+                ToastUtils.infoToast(context, R.string.hide_invalidated_records)
                 swapAdapter()
                 true
             }

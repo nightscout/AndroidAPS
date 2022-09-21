@@ -105,6 +105,7 @@ class LoopPlugin @Inject constructor(
     private var carbsSuggestionsSuspendedUntil: Long = 0
     private var prevCarbsreq = 0
     override var lastRun: LastRun? = null
+    override var closedLoopEnabled: Constraint<Boolean>? = null
 
     override fun onStart() {
         createNotificationChannel()
@@ -294,8 +295,8 @@ class LoopPlugin @Inject constructor(
                     rxBus.send(EventLoopSetLastRunGui(rh.gs(R.string.pumpsuspended)))
                     return
                 }
-                val closedLoopEnabled = constraintChecker.isClosedLoopAllowed()
-                if (closedLoopEnabled.value()) {
+                closedLoopEnabled = constraintChecker.isClosedLoopAllowed()
+                if (closedLoopEnabled?.value() == true) {
                     if (allowNotification) {
                         if (resultAfterConstraints.isCarbsRequired
                             && resultAfterConstraints.carbsReq >= sp.getInt(

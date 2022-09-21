@@ -24,7 +24,7 @@ data class BleSendErrorConfirming(val msg: String, val cause: Throwable? = null)
 
 open class BleIO(
     private val aapsLogger: AAPSLogger,
-    var characteristic: BluetoothGattCharacteristic,
+    private var characteristic: BluetoothGattCharacteristic,
     private val incomingPackets: BlockingQueue<ByteArray>,
     private val gatt: BluetoothGatt,
     private val bleCommCallbacks: BleCommCallbacks,
@@ -33,7 +33,6 @@ open class BleIO(
 
     /***
      *
-     * @param characteristic where to read from(CMD or DATA)
      * @return a byte array with the received data or error
      */
     fun receivePacket(timeoutMs: Long = DEFAULT_IO_TIMEOUT_MS): ByteArray? {
@@ -51,10 +50,9 @@ open class BleIO(
 
     /***
      *
-     * @param characteristic where to write to(CMD or DATA)
      * @param payload the data to send
      */
-    @Suppress("ReturnCount")
+    @Suppress("ReturnCount", "DEPRECATION")
     fun sendAndConfirmPacket(payload: ByteArray): BleSendResult {
         aapsLogger.debug(LTag.PUMPBTCOMM, "BleIO: Sending on $type: ${payload.toHex()}")
         val set = characteristic.setValue(payload)
@@ -103,7 +101,7 @@ open class BleIO(
      * This will signal the pod it can start sending back data
      * @return
      */
-    fun readyToRead(): BleSendResult {
+    @Suppress("DEPRECATION") fun readyToRead(): BleSendResult {
         gatt.setCharacteristicNotification(characteristic, true)
             .assertTrue("enable notifications")
 
