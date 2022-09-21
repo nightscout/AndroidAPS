@@ -6,6 +6,7 @@ import android.content.Intent
 import androidx.annotation.StringRes
 import com.google.gson.Gson
 import dagger.android.DaggerBroadcastReceiver
+import info.nightscout.androidaps.extensions.safeGetParcelableExtra
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.common.events.EventPumpConnectionParametersChanged
@@ -17,8 +18,8 @@ import javax.inject.Inject
 class BondStateReceiver(
     @StringRes var deviceAddress: Int,
     @StringRes var bondedFlag: Int,
-    var targetDevice: String,
-    var targetState: Int
+    private var targetDevice: String,
+    private var targetState: Int
 ) : DaggerBroadcastReceiver() {
 
     @Inject lateinit var sp: SP
@@ -33,7 +34,7 @@ class BondStateReceiver(
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
         val action = intent.action
-        val device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE, BluetoothDevice::class.java)
+        val device = intent.safeGetParcelableExtra(BluetoothDevice.EXTRA_DEVICE, BluetoothDevice::class.java)
         aapsLogger.info(LTag.PUMPBTCOMM, "in onReceive:  INTENT" + gson.toJson(intent))
         if (device == null) {
             aapsLogger.error(LTag.PUMPBTCOMM, "onReceive. Device is null. Exiting.")

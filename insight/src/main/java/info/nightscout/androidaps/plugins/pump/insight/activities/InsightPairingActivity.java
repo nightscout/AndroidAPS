@@ -39,6 +39,7 @@ import info.nightscout.androidaps.plugins.pump.common.ble.BlePreCheck;
 import info.nightscout.androidaps.plugins.pump.insight.connection_service.InsightConnectionService;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.InsightState;
 import info.nightscout.androidaps.plugins.pump.insight.utils.ExceptionTranslator;
+import info.nightscout.androidaps.extensions.IntentExtensionKt;
 
 public class InsightPairingActivity extends NoSplashAppCompatActivity implements InsightConnectionService.StateCallback, View.OnClickListener, InsightConnectionService.ExceptionCallback {
 
@@ -234,7 +235,8 @@ public class InsightPairingActivity extends NoSplashAppCompatActivity implements
             if (action.equals(BluetoothAdapter.ACTION_DISCOVERY_FINISHED))
                 ((BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter().startDiscovery();
             else if (action.equals(BluetoothDevice.ACTION_FOUND)) {
-                BluetoothDevice bluetoothDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                BluetoothDevice bluetoothDevice =
+                        IntentExtensionKt.safeGetParcelableExtra(intent, BluetoothDevice.EXTRA_DEVICE, BluetoothDevice.class);
                 deviceAdapter.addDevice(bluetoothDevice);
             }
         }
