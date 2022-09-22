@@ -41,6 +41,7 @@ import info.nightscout.androidaps.diaconn.pumplog.LOG_TB_START_V3
 import info.nightscout.androidaps.diaconn.pumplog.LOG_TB_STOP_V3
 import info.nightscout.androidaps.diaconn.pumplog.PumplogUtil
 import info.nightscout.androidaps.events.EventPumpStatusChanged
+import info.nightscout.androidaps.extensions.safeGetPackageInfo
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.interfaces.PumpSync
@@ -911,7 +912,8 @@ class BigLogInquireResponsePacket(
             val api = retrofit?.create(DiaconnApiService::class.java)
             val pumpLogDto = PumpLogDto(
                 app_uid = appUid,
-                app_version = context.packageManager.getPackageInfo(context.packageName, PackageManager.PackageInfoFlags.of(0)).versionName,
+                app_version = context.packageManager.safeGetPackageInfo(context.packageName, 0)
+                    .versionName,
                 pump_uid = diaconnG8Pump.pumpUid,
                 pump_version = diaconnG8Pump.pumpVersion,
                 incarnation_num = diaconnG8Pump.pumpIncarnationNum,

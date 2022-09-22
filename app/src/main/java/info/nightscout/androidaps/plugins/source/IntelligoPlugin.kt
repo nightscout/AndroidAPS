@@ -15,6 +15,7 @@ import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
+import info.nightscout.androidaps.extensions.safeGetInstalledPackages
 import info.nightscout.androidaps.interfaces.BgSource
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
@@ -91,7 +92,7 @@ class IntelligoPlugin @Inject constructor(
     private fun handleNewData() {
         if (!isEnabled()) return
 
-        for (pack in context.packageManager.getInstalledPackages(PackageManager.PackageInfoFlags.of(PackageManager.GET_PROVIDERS.toLong()))) {
+        for (pack in context.packageManager.safeGetInstalledPackages(PackageManager.GET_PROVIDERS)) {
             val providers = pack.providers
             if (providers != null) {
                 for (provider in providers) {
@@ -161,7 +162,7 @@ class IntelligoPlugin @Inject constructor(
                             xDripBroadcast.send(it)
                             aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
                         }
-                        savedValues.calibrationsInserted.forEach {  calibration ->
+                        savedValues.calibrationsInserted.forEach { calibration ->
                             calibration.glucose?.let { glucoseValue ->
                                 uel.log(
                                     UserEntry.Action.CALIBRATION,
@@ -181,8 +182,10 @@ class IntelligoPlugin @Inject constructor(
         glucoseValue.sourceSensor == GlucoseValue.SourceSensor.INTELLIGO_NATIVE && sp.getBoolean(R.string.key_dexcomg5_nsupload, false)
 
     companion object {
+
         @Suppress("SpellCheckingInspection")
         const val AUTHORITY = "alexpr.co.uk.infinivocgm.intelligo.cgm_db.CgmExternalProvider"
+
         //const val AUTHORITY = "alexpr.co.uk.infinivocgm.cgm_db.CgmExternalProvider/"
         const val TABLE_NAME = "CgmReading"
         const val INTERVAL = 180000L // 3 min

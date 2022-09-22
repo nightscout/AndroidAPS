@@ -2,11 +2,11 @@ package info.nightscout.androidaps.utils
 
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.database.entities.GlucoseValue
+import info.nightscout.androidaps.extensions.safeQueryBroadcastReceivers
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.ResourceHelper
@@ -42,8 +42,8 @@ class XDripBroadcast @Inject constructor(
         intent.putExtras(bundle)
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
         context.sendBroadcast(intent)
-        val q = context.packageManager.queryBroadcastReceivers(intent, PackageManager.ResolveInfoFlags.of(0))
-        return if (q.size < 1) {
+        val q = context.packageManager.safeQueryBroadcastReceivers(intent, 0)
+        return if (q.isEmpty()) {
             ToastUtils.errorToast(context, R.string.xdripnotinstalled)
             aapsLogger.debug(rh.gs(R.string.xdripnotinstalled))
             false
@@ -75,8 +75,8 @@ class XDripBroadcast @Inject constructor(
                 val intent = Intent(Intents.XDRIP_PLUS_NS_EMULATOR)
                 intent.putExtras(bundle).addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
                 context.sendBroadcast(intent)
-                val receivers = context.packageManager.queryBroadcastReceivers(intent, PackageManager.ResolveInfoFlags.of(0))
-                if (receivers.size < 1) {
+                val receivers = context.packageManager.safeQueryBroadcastReceivers(intent, 0)
+                if (receivers.isEmpty()) {
                     //NSUpload.log.debug("No xDrip receivers found. ")
                     aapsLogger.debug(LTag.BGSOURCE, "No xDrip receivers found.")
                 } else {
@@ -151,7 +151,7 @@ class XDripBroadcast @Inject constructor(
     }
 
     private fun broadcast(intent: Intent) {
-        context.packageManager.queryBroadcastReceivers(intent, PackageManager.ResolveInfoFlags.of(0)).forEach { resolveInfo ->
+        context.packageManager.safeQueryBroadcastReceivers(intent, 0).forEach { resolveInfo ->
             resolveInfo.activityInfo.packageName?.let {
                 intent.setPackage(it)
                 context.sendBroadcast(intent)

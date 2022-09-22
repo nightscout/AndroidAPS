@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.general.dataBroadcaster
 
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.os.Bundle
 import dagger.android.HasAndroidInjector
@@ -10,6 +9,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.Event
 import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.extensions.durationInMinutes
+import info.nightscout.androidaps.extensions.safeQueryBroadcastReceivers
 import info.nightscout.androidaps.extensions.toStringFull
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.plugins.aps.events.EventOpenAPSUpdateGui
@@ -18,16 +18,16 @@ import info.nightscout.androidaps.plugins.general.nsclient.data.DeviceStatusData
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.receivers.Intents
+import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -65,21 +65,18 @@ class DataBroadcastPlugin @Inject constructor(
     private val disposable = CompositeDisposable()
     override fun onStart() {
         super.onStart()
-        disposable.add(rxBus
-                           .toObservable(EventOpenAPSUpdateGui::class.java)
-                           .observeOn(aapsSchedulers.io)
-                           .subscribe({ sendData(it) }, fabricPrivacy::logException)
-        )
-        disposable.add(rxBus
-                           .toObservable(EventAutosensCalculationFinished::class.java)
-                           .observeOn(aapsSchedulers.io)
-                           .subscribe({ sendData(it) }, fabricPrivacy::logException)
-        )
-        disposable.add(rxBus
-                           .toObservable(EventOverviewBolusProgress::class.java)
-                           .observeOn(aapsSchedulers.io)
-                           .subscribe({ sendData(it) }, fabricPrivacy::logException)
-        )
+        disposable += rxBus
+            .toObservable(EventOpenAPSUpdateGui::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ sendData(it) }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventAutosensCalculationFinished::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ sendData(it) }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventOverviewBolusProgress::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ sendData(it) }, fabricPrivacy::logException)
     }
 
     override fun onStop() {
@@ -187,7 +184,7 @@ class DataBroadcastPlugin @Inject constructor(
     }
 
     private fun sendBroadcast(intent: Intent) {
-        val receivers: List<ResolveInfo> = context.packageManager.queryBroadcastReceivers(intent, PackageManager.ResolveInfoFlags.of(0))
+        val receivers: List<ResolveInfo> = context.packageManager.safeQueryBroadcastReceivers(intent, 0)
         for (resolveInfo in receivers)
             resolveInfo.activityInfo.packageName?.let {
                 intent.setPackage(it)
