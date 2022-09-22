@@ -712,6 +712,7 @@ public class AapsOmnipodErosManager {
             pumpSync.syncCarbsWithTimestamp(
                     detailedBolusInfo.getCarbsTimestamp(),
                     detailedBolusInfo.carbs,
+                    detailedBolusInfo.getNotes(),
                     null,
                     PumpType.USER,
                     serialNumber());
@@ -723,6 +724,7 @@ public class AapsOmnipodErosManager {
         pumpSync.syncBolusWithPumpId(
                 detailedBolusInfo.timestamp,
                 detailedBolusInfo.insulin,
+                detailedBolusInfo.getNotes(),
                 detailedBolusInfo.getBolusType(),
                 detailedBolusInfo.getBolusPumpId(),
                 detailedBolusInfo.getPumpType(),

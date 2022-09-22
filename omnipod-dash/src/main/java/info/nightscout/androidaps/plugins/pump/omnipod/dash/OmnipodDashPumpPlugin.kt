@@ -338,6 +338,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     val sync = pumpSync.syncBolusWithPumpId(
                         timestamp = bolusHistoryEntry.createdAt,
                         amount = deliveredUnits,
+                        notes = notes,
                         pumpId = bolusHistoryEntry.pumpId(),
                         pumpType = PumpType.OMNIPOD_DASH,
                         pumpSerial = serialNumber(),
@@ -585,7 +586,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     commandType = OmnipodCommandType.SET_BOLUS,
                     bolusRecord = BolusRecord(
                         requestedBolusAmount,
-                        BolusType.fromBolusInfoBolusType(detailedBolusInfo.bolusType)
+                        BolusType.fromBolusInfoBolusType(detailedBolusInfo.bolusType),
+                        detailedBolusInfo.notes
                     )
                 ),
                 activeCommandEntry = { historyId ->
@@ -599,7 +601,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     bolusBeeps,
                     bolusBeeps
                 ).filter { podEvent -> podEvent.isCommandSent() }
-                    .map { pumpSyncBolusStart(requestedBolusAmount, detailedBolusInfo.bolusType) }
+                    .map { pumpSyncBolusStart(requestedBolusAmount, detailedBolusInfo.bolusType, detailedBolusInfo.notes) }
                     .ignoreElements(),
                 post = waitForBolusDeliveryToComplete(requestedBolusAmount, detailedBolusInfo.bolusType)
                     .map {
@@ -762,7 +764,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     private fun pumpSyncBolusStart(
         requestedBolusAmount: Double,
-        bolusType: DetailedBolusInfo.BolusType
+        bolusType: DetailedBolusInfo.BolusType,
+        notes: String?
     ): Boolean {
         require(requestedBolusAmount > 0) { "requestedBolusAmount has to be positive" }
 
@@ -777,6 +780,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         val ret = pumpSync.syncBolusWithPumpId(
             timestamp = historyEntry.createdAt,
             amount = requestedBolusAmount,
+            notes = notes,
             type = bolusType,
             pumpId = historyEntry.pumpId(),
             pumpType = PumpType.OMNIPOD_DASH,
@@ -1428,14 +1432,16 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     record as BolusRecord
 
                     podStateManager.createLastBolus(
-                        record.amout,
+                        record.amount,
                         command.historyId,
-                        record.bolusType.toBolusInfoBolusType()
+                        record.bolusType.toBolusInfoBolusType(),
+                        record.notes
                     )
                 } else {
                     pumpSync.syncBolusWithPumpId(
                         timestamp = historyEntry.createdAt,
                         amount = 0.0,
+                        notes = null,
                         pumpId = historyEntry.pumpId(),
                         pumpType = PumpType.OMNIPOD_DASH,
                         pumpSerial = serialNumber(),
@@ -1457,6 +1463,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                         val sync = pumpSync.syncBolusWithPumpId(
                             timestamp = bolusHistoryEntry.createdAt,
                             amount = deliveredUnits,
+                            notes = notes,
                             pumpId = bolusHistoryEntry.pumpId(),
                             pumpType = PumpType.OMNIPOD_DASH,
                             pumpSerial = serialNumber(),

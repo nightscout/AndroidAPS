@@ -669,6 +669,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
             boolean result = pumpSync.syncCarbsWithTimestamp(
                     detailedBolusInfo.timestamp,
                     detailedBolusInfo.carbs,
+                    detailedBolusInfo.getNotes(),
                     null,
                     model(),
                     serialNumber());
