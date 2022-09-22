@@ -100,6 +100,7 @@
         <item name="defaultBackground">@color/white</item>
         <!---Toast  -->
         <item name="toastBaseTextColor">@color/toastBase</item>
+        <item name="toastBackgroundColor">@color/colorLightGray</item>
         <!---Dialog Helper  -->
         <item name="materialAlertDialogTheme">@style/DialogTheme</item>
         <item name="android:alertDialogTheme">@style/DialogTheme</item>

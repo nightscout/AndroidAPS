@@ -665,7 +665,6 @@
     <string name="resistance_lowers_target_summary">Wanneer insulineresistentie wordt gedetecteerd, wordt het BG streefdoel verlaagd</string>
     <string name="sensitivity_raises_target_title">Gevoeligheid verhoogt het doel</string>
     <string name="sensitivity_raises_target_summary">Wanneer insulinegevoeligheid wordt gedetecteerd, wordt het BG streefdoel verhoogd</string>
-    <string name="careportal_removestartedevents">Verwijder AndroidAPS start-meldingen</string>
     <string name="show_invalidated">Toon ongeldig</string>
     <string name="hide_invalidated">Verberg ongeldig</string>
     <string name="remove_items">Items verwijderen</string>

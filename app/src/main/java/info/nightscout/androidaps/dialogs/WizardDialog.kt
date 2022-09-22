@@ -335,7 +335,7 @@ class WizardDialog : DaggerDialogFragment() {
         val tempTarget = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
 
         if (profile == null || profileStore == null) {
-            ToastUtils.showToastInUiThread(ctx, rh.gs(R.string.noprofile))
+            ToastUtils.errorToast(ctx, R.string.noprofile)
             dismiss()
             return
         }
@@ -409,7 +409,7 @@ class WizardDialog : DaggerDialogFragment() {
         val carbsAfterConstraint = constraintChecker.applyCarbsConstraints(Constraint(carbs)).value()
         if (abs(carbs - carbsAfterConstraint) > 0.01) {
             binding.carbsInput.value = 0.0
-            ToastUtils.showToastInUiThread(ctx, rh.gs(R.string.carbsconstraintapplied))
+            ToastUtils.warnToast(ctx, R.string.carbsconstraintapplied)
             return
         }
 
@@ -511,7 +511,7 @@ class WizardDialog : DaggerDialogFragment() {
                 val cancelFail = {
                     queryingProtection = false
                     aapsLogger.debug(LTag.APS, "Dialog canceled on resume protection: ${this.javaClass.name}")
-                    ToastUtils.showToastInUiThread(ctx, R.string.dialog_canceled)
+                    ToastUtils.warnToast(ctx, R.string.dialog_canceled)
                     dismiss()
                 }
                 protectionCheck.queryProtection(activity, BOLUS, { queryingProtection = false }, cancelFail, cancelFail)

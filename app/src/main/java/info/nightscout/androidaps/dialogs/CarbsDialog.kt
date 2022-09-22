@@ -78,15 +78,15 @@ class CarbsDialog : DialogFragmentWithDate() {
         val time = binding.time.value.toInt()
         if (time > 12 * 60 || time < -7 * 24 * 60) {
             binding.time.value = 0.0
-            ToastUtils.showToastInUiThread(ctx, rh.gs(R.string.constraintapllied))
+            ToastUtils.warnToast(ctx, R.string.constraintapllied)
         }
         if (binding.duration.value > 10) {
             binding.duration.value = 0.0
-            ToastUtils.showToastInUiThread(ctx, rh.gs(R.string.constraintapllied))
+            ToastUtils.warnToast(ctx, R.string.constraintapllied)
         }
         if (binding.carbs.value.toInt() > maxCarbs) {
             binding.carbs.value = 0.0
-            ToastUtils.showToastInUiThread(ctx, rh.gs(R.string.carbsconstraintapplied))
+            ToastUtils.warnToast(ctx, R.string.carbsconstraintapplied)
         }
     }
 
@@ -392,7 +392,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                 val cancelFail = {
                     queryingProtection = false
                     aapsLogger.debug(LTag.APS, "Dialog canceled on resume protection: ${this.javaClass.name}")
-                    ToastUtils.showToastInUiThread(ctx, R.string.dialog_canceled)
+                    ToastUtils.warnToast(ctx, R.string.dialog_canceled)
                     dismiss()
                 }
                 protectionCheck.queryProtection(activity, BOLUS, { queryingProtection = false }, cancelFail, cancelFail)

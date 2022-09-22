@@ -22,7 +22,6 @@
     <string name="format_hours">%1$.2f h</string>
     <string name="pumpbusy">A bomba está ocupada</string>
     <string name="connectionerror">Erro de conexão com a bomba</string>
-    <string name="youareonallowedlimit">Atingiu o limite autorizado</string>
     <string name="objectives">Objetivos</string>
     <string name="close">Fechar</string>
     <string name="please_wait">Por favor aguarde…</string>
@@ -31,7 +30,6 @@
     <string name="stoppressed">STOP PRESSIONADO</string>
     <string name="stop">Parar</string>
     <string name="carbs">Carbos</string>
-    <string name="invalidprofile">Perfil inválido !!!</string>
     <string name="noprofileset">SEM PERFIL DEFINIDO</string>
     <string name="date">Data</string>
     <string name="units_label">Unidades</string>
@@ -106,7 +104,6 @@
     <string name="passwords_dont_match">As passwords não coincidem</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Valores das basais não definidos por horas: %1$s</string>
-    <string name="minimalbasalvaluereplaced">Valor da basal alterado para o valor mínimo suportado: %1$s</string>
     <string name="maximumbasalvaluereplaced">Valor da basal alterado para o valor máximo suportado: %1$s</string>
     <string name="profile_per_unit">/U</string>
     <string name="profile_ins_units_per_hour">U/h</string>
@@ -180,7 +177,6 @@
     <string name="amount_days"># Dias</string>
     <string name="weight">Peso</string>
     <string name="warning_Message">Possivelmente impreciso se o bolus for usado para purgar!</string>
-    <string name="olddata_Message">Dados antigos, pressione \"Recarregar\"</string>
     <string name="tbb">Basal Diária Total</string>
     <string name="tbb2">Basal diária * 2</string>
     <!--    Ntp-->

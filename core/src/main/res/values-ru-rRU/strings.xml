@@ -31,7 +31,7 @@
     <string name="format_mins">%1$d мин</string>
     <string name="pumpbusy">помпа занята</string>
     <string name="connectionerror">ошибка соединения</string>
-    <string name="youareonallowedlimit">разрешенный предел достигнут</string>
+    <string name="youareonallowedlimit">Разрешенный предел достигнут</string>
     <string name="objectives">Цели</string>
     <string name="close">Закрыть</string>
     <string name="please_wait">Подождите…</string>
@@ -40,7 +40,7 @@
     <string name="stoppressed">нажат стоп</string>
     <string name="stop">стоп</string>
     <string name="carbs">Углеводы</string>
-    <string name="invalidprofile">Неверный профиль !!!</string>
+    <string name="invalidprofile">Недопустимый профиль!</string>
     <string name="noprofileset">ПРОФИЛЬ НЕ ЗАДАН</string>
     <string name="active"><![CDATA[Активен]]></string>
     <string name="date">дата</string>
@@ -53,7 +53,7 @@
     <string name="dia_long_label">Продолжительность действия инсулина</string>
     <string name="ic_long_label">Соотношение инсулин/углеводы I: C</string>
     <string name="isf_long_label">Фактор Чувствительности к Инсулину (ISF)</string>
-    <string name="basal_long_label">Скорость базала</string>
+    <string name="basal_long_label">Базальная скорость</string>
     <string name="target_long_label">Целевая ГК</string>
     <string name="initializing">инициализация...</string>
     <string name="serialnumber">Серийный номер</string>
@@ -233,7 +233,7 @@
     <string name="amount_days">количество дней</string>
     <string name="weight">вес</string>
     <string name="warning_Message">возможны неточности если болюсы использовались для заполнения</string>
-    <string name="olddata_Message">старые данные. нажмите \"перезагрузка\"</string>
+    <string name="olddata_Message">Старые данные. Нажмите \"перезагрузка\"</string>
     <string name="tbb">общий базал</string>
     <string name="tbb2">общий базал*2</string>
     <!--    Ntp-->
@@ -397,7 +397,7 @@
     <string name="valueoutofrange">»%1$s« за пределами жестких ограничений</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f за пределами жестких ограничений</string>
     <string name="basal_value">Величина базала</string>
-    <string name="nsclient_version_does_not_match">Версия NSClient не совпадает с версией AndroidAPS. Пожалуйста, обновите.</string>
+    <string name="nsclient_version_does_not_match">Версия NSClient не совпадает с версией AndroidAPS. Обновите версию.</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">БОЛЮС %1$.2f ЕД</string>
     <string name="carbs_g">УГЛ %1$d г</string>

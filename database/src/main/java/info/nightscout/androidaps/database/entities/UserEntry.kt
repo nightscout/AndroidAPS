@@ -149,6 +149,7 @@ data class UserEntry(
         PocTech,
         Tomato,
         Glunovo,
+        Intelligo,
         Xdrip,
         LocalProfile,       //From LocalProfile plugin
         Loop,               //From Loop plugin

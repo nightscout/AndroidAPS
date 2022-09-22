@@ -91,7 +91,7 @@ open class VirtualPumpPlugin @Inject constructor(
         it.basalStep = 0.01
         it.basalMinimumRate = 0.01
         it.isRefillingCapable = true
-        it.storesCarbInfo = false
+        //it.storesCarbInfo = false
         it.is30minBasalRatesCapable = true
     }
 

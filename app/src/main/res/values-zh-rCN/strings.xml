@@ -657,7 +657,6 @@
     <string name="resistance_lowers_target_summary">当检测到胰岛素抵抗时，降低血糖的目标值。</string>
     <string name="sensitivity_raises_target_title">敏感时提高目标</string>
     <string name="sensitivity_raises_target_summary">当检测到胰岛素敏感时，提高血糖的目标值。</string>
-    <string name="careportal_removestartedevents">Clean AndroidAPS 启动了</string>
     <string name="show_invalidated">显示无效项</string>
     <string name="hide_invalidated">隐藏失效项</string>
     <string name="remove_items">删除项目</string>

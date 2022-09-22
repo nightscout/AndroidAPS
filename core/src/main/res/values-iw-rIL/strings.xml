@@ -31,7 +31,6 @@
     <string name="format_mins">%1$d דק\'</string>
     <string name="pumpbusy">המשאבה אינה פנויה</string>
     <string name="connectionerror">שגיאה בחיבור המשאבה</string>
-    <string name="youareonallowedlimit">הגעתם למגבלה המותרת</string>
     <string name="objectives">משימות</string>
     <string name="close">סגור</string>
     <string name="please_wait">נא להמתין…</string>
@@ -40,7 +39,6 @@
     <string name="stoppressed">עצור נלחץ!</string>
     <string name="stop">עצור</string>
     <string name="carbs">פחמימות</string>
-    <string name="invalidprofile">פרופיל לא חוקי !!!</string>
     <string name="noprofileset">לא הוגדר פרופיל</string>
     <string name="active"><![CDATA[<פועל>]]></string>
     <string name="date">תאריך</string>
@@ -53,7 +51,6 @@
     <string name="dia_long_label">משך פעילות האינסולין</string>
     <string name="ic_long_label">יחס אינסולין-פחמימות </string>
     <string name="isf_long_label">יחס התיקון (ISF)</string>
-    <string name="basal_long_label">מינון בזאלי</string>
     <string name="target_long_label">ערך מטרה</string>
     <string name="initializing">מאתחל...</string>
     <string name="serialnumber">מספר סידורי</string>
@@ -140,7 +137,6 @@
     <string name="pin_dont_match">קודי PIN אינם תואמים</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">ערכי הבזאלי לא מותאמים לשעות: %1$s</string>
-    <string name="minimalbasalvaluereplaced">ערכי הבזאלי הוחלפו בהערכים המינימליים שנתמכים: %1$s</string>
     <string name="maximumbasalvaluereplaced">ערכי הבזאלי הוחלפו בערכים הנתמכים המינימליים: %1$s</string>
     <string name="profile_per_unit">/יח\'</string>
     <string name="profile_ins_units_per_hour">יח\'\\שעה</string>
@@ -221,7 +217,6 @@
     <string name="waitingforpumpresult">ממתין לתוצאות</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
-    <string name="carbsreq">%1$d גר\' פחמימות דרושות ב-%2$d הדקות הקרובות</string>
     <!--    TDDStatsActivity-->
     <string name="stats">סטטיסטיקה</string>
     <string name="cumulative_tdd">מינון יומי מצטבר (TDD)</string>
@@ -233,7 +228,6 @@
     <string name="amount_days"># ימים</string>
     <string name="weight">משקל</string>
     <string name="warning_Message">שימוש בבולוס למילוי \\ תיחול עשוי לגרום לחוסר דיוק!</string>
-    <string name="olddata_Message">הנתונים ישנים. לרענון לחצו \"טען מחדש\"</string>
     <string name="tbb">סה\"כ בזאלי בסיסי</string>
     <string name="tbb2">סה\"כ בזאלי בסיסי * 2</string>
     <!--    Ntp-->
@@ -397,7 +391,6 @@
     <string name="valueoutofrange">»הערך %1$s« מחוץ לתחום הקשיח</string>
     <string name="value_out_of_hard_limits">»הערך %1$s« %2$.2f מחוץ לתחום הקשיח</string>
     <string name="basal_value">ערך בזאלי</string>
-    <string name="nsclient_version_does_not_match">גרסת NSClient לא תואמת את גרסת AndroidAPS. נא לעדכן.</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">בולוס %1$.2f יח\'</string>
     <string name="carbs_g">פחמימות %1$d גרם</string>

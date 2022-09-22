@@ -639,7 +639,6 @@
     <string name="resistance_lowers_target_summary">저항성이 감지되면, 목표 혈당을 낮춥니다.</string>
     <string name="sensitivity_raises_target_title">민감성이 목표 올리기</string>
     <string name="sensitivity_raises_target_summary">민감성이 감지되면, 목표 혈당을 높입니다.</string>
-    <string name="careportal_removestartedevents">\"AndroidAPS 시작\" 기록 삭제하기</string>
     <string name="storedsettingsfound">저장된 설정이 있습니다.</string>
     <string name="allow_hardware_pump_text">주의: 활성화하고 펌프에 연결하게되면, AndroidAPS는 프로파일의 Basal설정을 복사해서 기존에 펌프에 저장되어 있던 Basal설정을 덮어쓰게 될것입니다. AndroidAPS의 Basal설정이 올바른지 반드시 확인하세요. 만약 확실치 않거나 Basal설정을 덮어씌우길 원치않는다면, 취소버튼을 누르고 나중에 다시 연결하세요.</string>
     <string name="error_adding_treatment_title">관리 데이터가 불완전합니다</string>

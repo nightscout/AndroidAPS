@@ -52,15 +52,15 @@ class SurveyActivity : NoSplashAppCompatActivity() {
             val weight = SafeParse.stringToDouble(binding.weight.text.toString())
             val tdd = SafeParse.stringToDouble(binding.tdd.text.toString())
             if (age < 1 || age > 120) {
-                ToastUtils.showToastInUiThread(this, R.string.invalidage)
+                ToastUtils.warnToast(this, R.string.invalidage)
                 return@setOnClickListener
             }
             if ((weight < 5 || weight > 150) && tdd == 0.0) {
-                ToastUtils.showToastInUiThread(this, R.string.invalidweight)
+                ToastUtils.warnToast(this, R.string.invalidweight)
                 return@setOnClickListener
             }
             if ((tdd < 5 || tdd > 150) && weight == 0.0) {
-                ToastUtils.showToastInUiThread(this, R.string.invalidweight)
+                ToastUtils.warnToast(this, R.string.invalidweight)
                 return@setOnClickListener
             }
             profileFunction.getProfile()?.let { runningProfile ->
@@ -84,11 +84,11 @@ class SurveyActivity : NoSplashAppCompatActivity() {
             r.age = SafeParse.stringToInt(binding.age.text.toString())
             r.weight = SafeParse.stringToInt(binding.weight.text.toString())
             if (r.age < 1 || r.age > 120) {
-                ToastUtils.showToastInUiThread(this, R.string.invalidage)
+                ToastUtils.warnToast(this, R.string.invalidage)
                 return@setOnClickListener
             }
             if (r.weight < 5 || r.weight > 150) {
-                ToastUtils.showToastInUiThread(this, R.string.invalidweight)
+                ToastUtils.warnToast(this, R.string.invalidweight)
                 return@setOnClickListener
             }
 
@@ -110,7 +110,7 @@ class SurveyActivity : NoSplashAppCompatActivity() {
                         database.child("survey").child(r.id).setValue(r)
                     } else {
                         aapsLogger.error("signInAnonymously:failure", task.exception!!)
-                        ToastUtils.showToastInUiThread(this, "Authentication failed.")
+                        ToastUtils.warnToast(this, "Authentication failed.")
                         //updateUI(null)
                     }
 

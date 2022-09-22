@@ -652,7 +652,6 @@
     <string name="resistance_lowers_target_summary">Po wykryciu oporności obniża się docelowy poziom cukru</string>
     <string name="sensitivity_raises_target_title">Wrażliwość podnosi docelowy poziom glukozy</string>
     <string name="sensitivity_raises_target_summary">Po zwiększeniu wrażliwości zwiększ docelowy poziom glukozy</string>
-    <string name="careportal_removestartedevents">Wyczyść zdarzenia \"Start AndroidAPS\"</string>
     <string name="storedsettingsfound">Znaleziono zapisane ustawienia</string>
     <string name="allow_hardware_pump_text">Uwaga: Jeśli aktywujesz połączenie z pompą inną niż wirtualna, AndroidAPS skopiuje ustawienia bazy do profilu pompy, zastępując istniejące ustawienia w niej zapisane. Upewnij się, że ustawienia bazy w AndroidAPS są poprawne. Jeśli nie jesteś pewien lub nie chcesz nadpisywać podstawowych ustawień pompy, naciśnij przycisk anuluj i połącz ponownie w innym czasie.</string>
     <string name="error_adding_treatment_title">Niekompletne dane leczenie</string>
