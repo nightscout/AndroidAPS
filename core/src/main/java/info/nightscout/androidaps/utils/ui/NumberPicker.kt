@@ -3,6 +3,7 @@ package info.nightscout.androidaps.utils.ui
 import android.annotation.SuppressLint
 import android.app.Service
 import android.content.Context
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
@@ -146,14 +147,17 @@ open class NumberPicker(context: Context, attrs: AttributeSet? = null) : LinearL
             .getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
         if (manager.isEnabled) {
             val valueDescription = formatter?.format(currentValue)
-            AccessibilityEvent().apply {
-                eventType = AccessibilityEvent.TYPE_ANNOUNCEMENT
-                className = javaClass.name
-                packageName = context.packageName
-                text.add(valueDescription)
-            }.also {
-                manager.sendAccessibilityEvent(it)
-            }
+            @Suppress("DEPRECATION")
+            (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) AccessibilityEvent()
+            else AccessibilityEvent.obtain())
+                .apply {
+                    eventType = AccessibilityEvent.TYPE_ANNOUNCEMENT
+                    className = javaClass.name
+                    packageName = context.packageName
+                    text.add(valueDescription)
+                }.also {
+                    manager.sendAccessibilityEvent(it)
+                }
         }
     }
 
