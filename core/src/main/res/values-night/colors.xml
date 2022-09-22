@@ -109,7 +109,7 @@
 
     <!--    Toasts-->
     <color name="toastBorder">#666666</color>
-    <color name="toastBase">#ffffff</color>
+    <color name="toastBase">#000000</color>
     <color name="toastOk">#77dd77</color>
     <color name="toastError">#ff0400</color>
     <color name="toastWarn">#FF8C00</color>

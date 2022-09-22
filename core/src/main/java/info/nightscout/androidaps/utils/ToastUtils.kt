@@ -16,6 +16,7 @@ import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
+import info.nightscout.androidaps.utils.resources.getThemeColor
 
 object ToastUtils {
 
@@ -76,7 +77,15 @@ object ToastUtils {
 
     fun showToastInUiThread(ctx: Context?, string: String?) {
         val mainThread = Handler(Looper.getMainLooper())
-        mainThread.post { Toast.makeText(ctx, string, Toast.LENGTH_SHORT).show() }
+        mainThread.post {
+            val toast: Toast =
+                Toast.makeText(
+                    ctx,
+                    HtmlHelper.fromHtml("<font color='" + ContextThemeWrapper(ctx, R.style.AppTheme).getThemeColor(R.attr.toastBaseTextColor) + "'>" + string + "</font>"),
+                    Toast.LENGTH_SHORT
+                )
+            toast.show()
+        }
     }
 
     fun showToastInUiThread(
