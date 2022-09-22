@@ -30,6 +30,7 @@ public class CharacteristicWriteOperation extends BLECommOperation {
     }
 
 
+    @SuppressWarnings({"deprecation"})
     @Override
     public void execute(RileyLinkBLE comm) {
 

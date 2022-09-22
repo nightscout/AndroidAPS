@@ -14,11 +14,13 @@ class InsertOrUpdateCarbsTransaction(
         timestamp: Long,
         amount: Double,
         duration: Long,
+        notes: String,
         interfaceIDs_backing: InterfaceIDs? = null
     ) : this(Carbs(
         timestamp = timestamp,
         amount = amount,
         duration = duration,
+        notes = notes,
         interfaceIDs_backing = interfaceIDs_backing
     ))
 

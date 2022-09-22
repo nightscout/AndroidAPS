@@ -20,7 +20,7 @@ android {
 
 dependencies {
     api "androidx.preference:preference-ktx:$preferencektx_version"
-    api "net.danlew:android.joda:$joga_version"
+    api "net.danlew:android.joda:$joda_version"
 
     // for old fashioned support-app version (wear)
     api "com.google.dagger:dagger:$dagger_version"
@@ -28,12 +28,10 @@ dependencies {
     api "com.google.dagger:dagger-android-support:$dagger_version"
 
     //Logger
-    api 'org.slf4j:slf4j-api:1.7.36'
-    api("com.github.tony19:logback-android-classic:1.1.1-6") {
-        exclude group: "com.google.android", module: "android"
-    }
+    api 'org.slf4j:slf4j-api:1.7.36' // 2.0.x breaks logging. Code change needed
+    api 'com.github.tony19:logback-android:2.0.0'
 
-    api "org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3"
+    api "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0"
     api "org.apache.commons:commons-lang3:$commonslang3_version"
 
     //RxBus

@@ -801,6 +801,8 @@
     <string name="description_source_poctech">Receive BG values from Poctech app</string>
     <string name="glunovo">Glunovo</string>
     <string name="description_source_glunovo">Receive values from Glunovo app</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Receive values from Intelligo app</string>
     <string name="description_source_tomato">Receive BG values from Tomato app (MiaoMiao device)</string>
     <string name="key_high_temptarget_raises_sensitivity" translatable="false">high_temptarget_raises_sensitivity</string>
     <string name="key_low_temptarget_lowers_sensitivity" translatable="false">low_temptarget_lowers_sensitivity</string>
@@ -815,7 +817,7 @@
     <string name="sensitivity_raises_target_title">Sensitivity raises target</string>
     <string name="sensitivity_raises_target_summary">When sensitivity is detected, raise the target glucose</string>
     <string name="key_keep_screen_on" translatable="false">keep_screen_on</string>
-    <string name="careportal_removestartedevents">Clean AndroidAPS started</string>
+    <string name="careportal_removestartedevents">Remove AAPS started entries</string>
     <string name="show_invalidated">Show invalidated</string>
     <string name="hide_invalidated">Hide invalidated</string>
     <string name="remove_items">Remove items</string>
@@ -1126,6 +1128,8 @@
     <string name="recalculated_data_used">Recalculated data used</string>
     <string name="bg_too_close">BG too close:\n%1$s\n%2$s</string>
     <string name="key_last_processed_glunovo_timestamp" translatable="false">last_processed_glunovo_timestamp</string>
+    <string name="key_last_processed_intelligo_timestamp" translatable="false">
+        last_processed_intelligo_timestamp</string>
     <string name="identification">Identification (email, FB or Discord nick etc)</string>
     <string name="identification_not_set">Identification not set in dev mode</string>
     <string name="a11y_dialog">dialog</string>

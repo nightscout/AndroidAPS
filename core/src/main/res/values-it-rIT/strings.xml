@@ -31,7 +31,7 @@
     <string name="format_mins">%1$d min</string>
     <string name="pumpbusy">Il micro è occupato</string>
     <string name="connectionerror">Errore connessione micro</string>
-    <string name="youareonallowedlimit">Hai raggiunto il limite consentito</string>
+    <string name="youareonallowedlimit">Limite consentito raggiunto</string>
     <string name="objectives">Obiettivi</string>
     <string name="close">Chiudi</string>
     <string name="please_wait">Attendi…</string>
@@ -40,7 +40,7 @@
     <string name="stoppressed">STOP PREMUTO</string>
     <string name="stop">Stop</string>
     <string name="carbs">CHO</string>
-    <string name="invalidprofile">Profilo non valido !!!</string>
+    <string name="invalidprofile">Profilo non valido!</string>
     <string name="noprofileset">NESSUN PROFILO IMPOSTATO</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">Data</string>
@@ -397,7 +397,7 @@
     <string name="valueoutofrange">»%1$s« è fuori dai limiti consentiti</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f è fuori dai limiti consentiti</string>
     <string name="basal_value">Valore basale</string>
-    <string name="nsclient_version_does_not_match">La versione di NSClient non corrisponde ad AndroidAPS. Aggiorna.</string>
+    <string name="nsclient_version_does_not_match">La versione di NSClient non corrisponde alla versione di AndroidAPS. Aggiorna.</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLO %1$.2f U</string>
     <string name="carbs_g">CHO %1$d g</string>

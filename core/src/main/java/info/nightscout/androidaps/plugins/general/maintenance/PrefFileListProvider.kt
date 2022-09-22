@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.maintenance
 
+import android.content.Context
 import android.os.Environment
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.core.R
@@ -26,7 +27,8 @@ class PrefFileListProvider @Inject constructor(
     private val config: Config,
     private val encryptedPrefsFormat: EncryptedPrefsFormat,
     private val storage: Storage,
-    private val versionCheckerUtils: VersionCheckerUtils
+    private val versionCheckerUtils: VersionCheckerUtils,
+    context: Context
 ) {
     @Suppress("DEPRECATION")
     private val path = File(Environment.getExternalStorageDirectory().toString())
@@ -34,6 +36,7 @@ class PrefFileListProvider @Inject constructor(
     private val exportsPath = File(path, "AAPS" + File.separator + "exports")
     private val tempPath = File(path, "AAPS" + File.separator + "temp")
     private val extraPath = File(path, "AAPS" + File.separator + "extra")
+    val logsPath: String = File(path, "AAPS" + File.separator + "logs" + File.separator + context.packageName).absolutePath
 
     companion object {
 
@@ -85,7 +88,7 @@ class PrefFileListProvider @Inject constructor(
         return checkMetadata(encryptedPrefsFormat.loadMetadata(contents))
     }
 
-    fun legacyFile(): File {
+    @Suppress("unused") fun legacyFile(): File {
         return File(path, rh.gs(R.string.app_name) + "Preferences")
     }
 

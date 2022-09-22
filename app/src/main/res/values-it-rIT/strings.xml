@@ -656,6 +656,8 @@
     <string name="description_source_poctech">Ricevi valori glicemia da app Poctech</string>
     <string name="glunovo">Glunovo</string>
     <string name="description_source_glunovo">Ricevi valori glicemia da app Glunovo</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Ricevi valori da app Intelligo</string>
     <string name="description_source_tomato">Ricevi valori glicemia da app Tomato (dispositivo MiaoMiao)</string>
     <string name="high_temptarget_raises_sensitivity_title">Temp-Target \"alto\" aumenta la sensibilità</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Aumenta la sensibilità per temp-target >= 100]]></string>
@@ -665,7 +667,7 @@
     <string name="resistance_lowers_target_summary">Quando viene rilevata resistenza, ridurre la glicemia target</string>
     <string name="sensitivity_raises_target_title">La sensibilità aumenta il target</string>
     <string name="sensitivity_raises_target_summary">Quando viene rilevata sensibilità, aumentare la glicemia target</string>
-    <string name="careportal_removestartedevents">Rimuovi gli eventi \"AndroidAPS avviato\"</string>
+    <string name="careportal_removestartedevents">Rimuovi le voci \"AAPS avviato\"</string>
     <string name="show_invalidated">Mostra invalidato</string>
     <string name="hide_invalidated">Nascondi invalidato</string>
     <string name="remove_items">Rimuovi elementi</string>
@@ -1044,4 +1046,6 @@
     <string name="blocked_by_charging">Bloccato dalle opzioni di ricarica</string>
     <string name="blocked_by_connectivity">Bloccato dalle opzioni di connettività</string>
     <string name="no_watch_connected">(Nessuno smartwatch connesso)</string>
+    <string name="error_asking_for_permissions">Errore nel richiedere le autorizzazioni</string>
+    <string name="dynisf_adjust_sensitivity">Regola sensibilità e BG</string>
 </resources>

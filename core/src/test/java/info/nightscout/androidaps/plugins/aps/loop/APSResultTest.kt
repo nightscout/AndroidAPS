@@ -3,14 +3,12 @@ package info.nightscout.androidaps.plugins.aps.loop
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBaseWithProfile
-import info.nightscout.androidaps.TestPumpPlugin
 import info.nightscout.androidaps.database.entities.TemporaryBasal
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.utils.JsonHelper.safeGetDouble
-import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -21,10 +19,8 @@ import org.mockito.Mockito.`when`
 class APSResultTest : TestBaseWithProfile() {
 
     @Mock lateinit var constraintChecker: ConstraintChecker
-    @Mock lateinit var sp: SP
     @Mock lateinit var iobCobCalculator: IobCobCalculator
 
-    private lateinit var testPumpPlugin: TestPumpPlugin
     private val injector = HasAndroidInjector { AndroidInjector { } }
 
     private var closedLoopEnabled = Constraint(false)
@@ -188,7 +184,6 @@ class APSResultTest : TestBaseWithProfile() {
 
     @Before
     fun prepare() {
-        testPumpPlugin = TestPumpPlugin(profileInjector)
         `when`(constraintChecker.isClosedLoopAllowed()).thenReturn(closedLoopEnabled)
         `when`(activePluginProvider.activePump).thenReturn(testPumpPlugin)
         `when`(sp.getDouble(ArgumentMatchers.anyInt(), ArgumentMatchers.anyDouble())).thenReturn(30.0)

@@ -3,20 +3,20 @@
 buildscript {
     ext {
         kotlin_version = '1.7.10'
-        core_version = '1.8.0'
+        core_version = '1.9.0'
         rxjava_version = '3.1.5'
         rxandroid_version = '3.0.0'
         rxkotlin_version = '3.0.1'
         room_version = '2.4.3'
-        lifecycle_version = '2.5.0'
-        dagger_version = '2.42'
+        lifecycle_version = '2.5.1'
+        dagger_version = '2.44'
         coroutines_version = '1.6.4'
         activity_version = '1.4.0'
         fragmentktx_version = '1.4.1'
         ormLite_version = '4.46'
         gson_version = '2.9.1'
         nav_version = '2.4.2'
-        appcompat_version = '1.4.2'
+        appcompat_version = '1.5.1'
         material_version = '1.6.1'
         constraintlayout_version = '2.1.4'
         preferencektx_version = '1.2.0'
@@ -26,7 +26,7 @@ buildscript {
         work_version = '2.7.1'
         tink_version = '1.5.0'
         json_version = '20220320'
-        joga_version = '2.10.14'
+        joda_version = '2.11.0.1'
 
         junit_version = '4.13.2'
         mockito_version = '4.4.0'
@@ -48,9 +48,9 @@ buildscript {
         maven { url "https://plugins.gradle.org/m2/" } // jacoco 0.2
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.2.2'
+        classpath 'com.android.tools.build:gradle:7.3.0'
         classpath 'com.google.gms:google-services:4.3.13'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.1'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.2'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -64,7 +64,7 @@ buildscript {
 
 plugins {
     id "io.gitlab.arturbosch.detekt" version "1.21.0"
-    id "org.jlleitschuh.gradle.ktlint" version "10.3.0"
+    id "org.jlleitschuh.gradle.ktlint" version "11.0.0"
     id 'org.barfuin.gradle.jacocolog' version '2.0.0'
     id 'org.jetbrains.kotlin.android' version '1.7.10' apply false
 }

@@ -24,6 +24,7 @@ import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.danars.R
 import info.nightscout.androidaps.danars.databinding.DanarsBlescannerActivityBinding
 import info.nightscout.androidaps.danars.events.EventDanaRSDeviceChange
+import info.nightscout.androidaps.extensions.safeEnable
 import info.nightscout.androidaps.plugins.pump.common.ble.BlePreCheck
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.shared.sharedPreferences.SP
@@ -62,7 +63,7 @@ class BLEScanActivity : NoSplashAppCompatActivity() {
         super.onResume()
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
-            if (bluetoothAdapter?.isEnabled != true) bluetoothAdapter?.enable()
+            bluetoothAdapter?.safeEnable()
             startScan()
         } else {
             ToastUtils.errorToast(context, context.getString(info.nightscout.androidaps.core.R.string.needconnectpermission))
@@ -180,20 +181,13 @@ class BLEScanActivity : NoSplashAppCompatActivity() {
             if (other !is BluetoothDeviceItem) {
                 return false
             }
-            return stringEquals(device.address, other.device.address)
-        }
-
-        private fun stringEquals(arg1: String, arg2: String): Boolean {
-            return try {
-                arg1 == arg2
-            } catch (e: Exception) {
-                false
-            }
+            return device.address == other.device.address
         }
 
         override fun hashCode(): Int = device.hashCode()
     }
 
+    @Suppress("RegExpSimplifiable")
     private fun isSNCheck(sn: String): Boolean {
         val regex = "^([a-zA-Z]{3})([0-9]{5})([a-zA-Z]{2})$"
         val p = Pattern.compile(regex)

@@ -10,6 +10,7 @@ object BundleLogger {
         }
         var string = "Bundle{"
         for (key in bundle.keySet()) {
+            @Suppress("DEPRECATION")
             string += " " + key + " => " + bundle[key] + ";"
         }
         string += " }Bundle"

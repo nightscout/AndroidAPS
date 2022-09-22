@@ -165,7 +165,7 @@ class PumpBLEConfigActivity : DaggerAppCompatActivity() {
                 true
             }
 
-            else              -> false
+            else              -> super.onOptionsItemSelected(item)
         }
 
     override fun onResume() {

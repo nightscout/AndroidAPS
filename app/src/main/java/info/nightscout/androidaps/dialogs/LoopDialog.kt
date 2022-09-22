@@ -153,7 +153,7 @@ class LoopDialog : DaggerDialogFragment() {
         aapsLogger.debug("UpdateGUI from $from")
         val pumpDescription: PumpDescription = activePlugin.activePump.pumpDescription
         val closedLoopAllowed = constraintChecker.isClosedLoopAllowed(Constraint(true))
-        val closedLoopAllowed2 = objectivePlugin.objectives[ObjectivesPlugin.MAXIOB_OBJECTIVE].isCompleted
+        val closedLoopAllowed2 = objectivePlugin.objectives[ObjectivesPlugin.MAXIOB_OBJECTIVE].isAccomplished
         val lgsEnabled = constraintChecker.isLgsAllowed(Constraint(true))
         val apsMode = sp.getString(R.string.key_aps_mode, "open")
         val pump = activePlugin.activePump
@@ -304,7 +304,7 @@ class LoopDialog : DaggerDialogFragment() {
                 commandQueue.cancelTempBasal(true, object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            ToastUtils.showToastInUiThread(ctx, rh.gs(R.string.tempbasaldeliveryerror))
+                            ToastUtils.errorToast(ctx, rh.gs(R.string.tempbasaldeliveryerror))
                         }
                     }
                 })
@@ -449,7 +449,7 @@ class LoopDialog : DaggerDialogFragment() {
                 val cancelFail = {
                     queryingProtection = false
                     aapsLogger.debug(LTag.APS, "Dialog canceled on resume protection: ${this.javaClass.name}")
-                    ToastUtils.showToastInUiThread(ctx, R.string.dialog_canceled)
+                    ToastUtils.warnToast(ctx, R.string.dialog_canceled)
                     dismiss()
                 }
                 protectionCheck.queryProtection(activity, BOLUS, { queryingProtection = false }, cancelFail, cancelFail)

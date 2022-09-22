@@ -665,7 +665,6 @@
     <string name="resistance_lowers_target_summary">Wenn Resistenz festgestellt wird, senke den Glukose-Zielwert</string>
     <string name="sensitivity_raises_target_title">Empfindlichkeit erhöht den Zielwert</string>
     <string name="sensitivity_raises_target_summary">Wenn eine höhere Empfindlichkeit festgestellt wird, wird der Glukose-Zielwert erhöht.</string>
-    <string name="careportal_removestartedevents">\"AndroidAPS gestartet\" Ereignisse löschen</string>
     <string name="show_invalidated">Zeige Ungültige</string>
     <string name="hide_invalidated">Verstecke Ungültige</string>
     <string name="remove_items">Objekte entfernen</string>
@@ -1046,4 +1045,5 @@ Unerwartetes Verhalten.</string>
     <string name="blocked_by_connectivity">Blockiert durch Verbindungsoptionen</string>
     <string name="no_watch_connected">(keine Uhr verbunden)</string>
     <string name="error_asking_for_permissions">Fehler beim Anfordern der Erlaubnis</string>
+    <string name="dynisf_adjust_sensitivity">Empfindlichkeit und BZ anpassen</string>
 </resources>

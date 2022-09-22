@@ -134,6 +134,15 @@ class AutotunePlugin @Inject constructor(
             log("Tune day " + (i + 1) + " of " + daysBack)
             tunedProfile?.let { it ->
                 autotuneIob.initializeData(from, to, it)  //autotuneIob contains BG and Treatments data from history (<=> query for ns-treatments and ns-entries)
+                if (autotuneIob.boluses.size == 0) {
+                    result = rh.gs(R.string.autotune_error)
+                    log("No basal data on day ${i + 1}")
+                    autotuneFS.exportResult(result)
+                    autotuneFS.exportLogAndZip(lastRun)
+                    rxBus.send(EventAutotuneUpdateGui())
+                    calculationRunning = false
+                    return
+                }
                 autotuneFS.exportEntries(autotuneIob)               //<=> ns-entries.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
                 autotuneFS.exportTreatments(autotuneIob)            //<=> ns-treatments.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine (include treatments ,tempBasal and extended
                 preppedGlucose = autotunePrep.categorize(it) //<=> autotune.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine

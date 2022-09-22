@@ -96,12 +96,15 @@ interface Pump {
     fun isThisProfileSet(profile: Profile): Boolean
 
     /**
-     * @return timestamp of last connection to the pump
+     * @return timestamp of last connection to the pump in milliseconds
      */
     fun lastDataTime(): Long
 
     /**
      * Currently running base basal rate [U/h]
+     *
+     * This _must not_ be affected by current pump states
+     * (TBRs, pump suspended/running etc.)
      */
     val baseBasalRate: Double
 
