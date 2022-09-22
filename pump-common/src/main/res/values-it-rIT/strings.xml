@@ -5,6 +5,7 @@
     <string name="pump_operation_not_yet_supported_by_pump">Operazione NON ANCORA supportata dal micro.</string>
     <string name="common_resultok">OK</string>
     <string name="pump_serial_number">Numero seriale micro</string>
+    <string name="bolus_delivered">%1$.2f U / %2$.2f U erogate</string>
     <!-- PumpCommon - Pump Status -->
     <string name="pump_status_never_contacted">Mai connesso</string>
     <string name="pump_status_waking_up">Risveglio</string>

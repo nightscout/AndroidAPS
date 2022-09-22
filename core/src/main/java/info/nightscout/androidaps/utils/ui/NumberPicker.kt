@@ -3,6 +3,7 @@ package info.nightscout.androidaps.utils.ui
 import android.annotation.SuppressLint
 import android.app.Service
 import android.content.Context
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
@@ -146,14 +147,17 @@ open class NumberPicker(context: Context, attrs: AttributeSet? = null) : LinearL
             .getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
         if (manager.isEnabled) {
             val valueDescription = formatter?.format(currentValue)
-            AccessibilityEvent.obtain().apply {
-                eventType = AccessibilityEvent.TYPE_ANNOUNCEMENT
-                className = javaClass.name
-                packageName = context.packageName
-                text.add(valueDescription)
-            }.also {
-                manager.sendAccessibilityEvent(it)
-            }
+            @Suppress("DEPRECATION")
+            (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) AccessibilityEvent()
+            else AccessibilityEvent.obtain())
+                .apply {
+                    eventType = AccessibilityEvent.TYPE_ANNOUNCEMENT
+                    className = javaClass.name
+                    packageName = context.packageName
+                    text.add(valueDescription)
+                }.also {
+                    manager.sendAccessibilityEvent(it)
+                }
         }
     }
 
@@ -173,13 +177,13 @@ open class NumberPicker(context: Context, attrs: AttributeSet? = null) : LinearL
                 currentValue = SafeParse.stringToDouble(binding.editText.text.toString())
                 if (currentValue > maxValue) {
                     currentValue = maxValue
-                    ToastUtils.showToastInUiThread(context, context.getString(R.string.youareonallowedlimit))
+                    ToastUtils.warnToast(context, R.string.youareonallowedlimit)
                     updateEditText()
                     okButton?.visibility = VISIBLE
                 }
                 if (currentValue < minValue) {
                     currentValue = minValue
-                    ToastUtils.showToastInUiThread(context, context.getString(R.string.youareonallowedlimit))
+                    ToastUtils.warnToast(context, R.string.youareonallowedlimit)
                     updateEditText()
                     okButton?.visibility = VISIBLE
                 }
@@ -216,11 +220,11 @@ open class NumberPicker(context: Context, attrs: AttributeSet? = null) : LinearL
         get() {
             if (currentValue > maxValue) {
                 currentValue = maxValue
-                ToastUtils.showToastInUiThread(context, context.getString(R.string.youareonallowedlimit))
+                ToastUtils.warnToast(context, R.string.youareonallowedlimit)
             }
             if (currentValue < minValue) {
                 currentValue = minValue
-                ToastUtils.showToastInUiThread(context, context.getString(R.string.youareonallowedlimit))
+                ToastUtils.warnToast(context, R.string.youareonallowedlimit)
             }
             return currentValue
         }
@@ -229,11 +233,11 @@ open class NumberPicker(context: Context, attrs: AttributeSet? = null) : LinearL
             currentValue = value
             if (currentValue > maxValue) {
                 currentValue = maxValue
-                ToastUtils.showToastInUiThread(context, context.getString(R.string.youareonallowedlimit))
+                ToastUtils.warnToast(context, R.string.youareonallowedlimit)
             }
             if (currentValue < minValue) {
                 currentValue = minValue
-                ToastUtils.showToastInUiThread(context, context.getString(R.string.youareonallowedlimit))
+                ToastUtils.warnToast(context, R.string.youareonallowedlimit)
             }
             callValueChangedListener()
             updateEditText()
@@ -248,7 +252,7 @@ open class NumberPicker(context: Context, attrs: AttributeSet? = null) : LinearL
         if (currentValue > maxValue) {
             currentValue = maxValue
             callValueChangedListener()
-            ToastUtils.showToastInUiThread(context, context.getString(R.string.youareonallowedlimit))
+            ToastUtils.warnToast(context, R.string.youareonallowedlimit)
             stopUpdating()
         }
         updateEditText()
@@ -259,7 +263,7 @@ open class NumberPicker(context: Context, attrs: AttributeSet? = null) : LinearL
         if (currentValue < minValue) {
             currentValue = minValue
             callValueChangedListener()
-            ToastUtils.showToastInUiThread(context, context.getString(R.string.youareonallowedlimit))
+            ToastUtils.warnToast(context, R.string.youareonallowedlimit)
             stopUpdating()
         }
         updateEditText()

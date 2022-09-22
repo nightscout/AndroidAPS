@@ -32,11 +32,10 @@ class OrangeLinkImpl @Inject constructor(
 
     lateinit var rileyLinkBLE: RileyLinkBLE
 
-    fun onCharacteristicChanged(characteristic: BluetoothGattCharacteristic) {
+    fun onCharacteristicChanged(characteristic: BluetoothGattCharacteristic, data: ByteArray) {
         if (characteristic.uuid.toString() == GattAttributes.CHARA_NOTIFICATION_ORANGE) {
-            val data = characteristic.value
             val first = 0xff and data[0].toInt()
-            aapsLogger.info(LTag.PUMPBTCOMM, "OrangeLinkImpl: onCharacteristicChanged ${ByteUtil.shortHexString(characteristic.value)}=====$first")
+            aapsLogger.info(LTag.PUMPBTCOMM, "OrangeLinkImpl: onCharacteristicChanged ${ByteUtil.shortHexString(data)}=====$first")
             val fv = data[3].toString() + "." + data[4]
             val hv = data[5].toString() + "." + data[6]
             rileyLinkServiceData.versionOrangeFirmware = fv

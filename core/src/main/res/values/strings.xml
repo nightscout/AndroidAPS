@@ -105,7 +105,7 @@
     <string name="format_mins">%1$d mins</string>
     <string name="pumpbusy">Pump is busy</string>
     <string name="connectionerror">Pump connection error</string>
-    <string name="youareonallowedlimit">You reached allowed limit</string>
+    <string name="youareonallowedlimit">Allowed limit reached</string>
     <string name="objectives">Objectives</string>
     <string name="close">Close</string>
     <string name="please_wait">Please wait…</string>
@@ -114,7 +114,7 @@
     <string name="stoppressed">STOP PRESSED</string>
     <string name="stop">Stop</string>
     <string name="carbs">Carbs</string>
-    <string name="invalidprofile">Invalid profile !!!</string>
+    <string name="invalidprofile">Invalid profile!</string>
     <string name="noprofileset">NO PROFILE SET</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">Date</string>
@@ -127,7 +127,7 @@
     <string name="dia_long_label">Duration of Insulin Action</string>
     <string name="ic_long_label">Insulin to Carb ratio</string>
     <string name="isf_long_label">Insulin Sensitivity Factor</string>
-    <string name="basal_long_label">Basel rate</string>
+    <string name="basal_long_label">Basal rate</string>
     <string name="target_long_label">Blood Glucose Target</string>
     <string name="initializing">Initializing ...</string>
     <string name="serialnumber">Serial number</string>
@@ -219,7 +219,7 @@
 
     <!--    Profile-->
     <string name="basalprofilenotaligned">Basal values not aligned to hours: %1$s</string>
-    <string name="minimalbasalvaluereplaced">Basal value replaced by minimal supported value: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Basal value replaced by minimum supported value: %1$s</string>
     <string name="maximumbasalvaluereplaced">Basal value replaced by maximum supported value: %1$s</string>
     <string name="profile_per_unit">/U</string>
     <string name="profile_ins_units_per_hour">U/h</string>
@@ -309,7 +309,7 @@
     <string name="smb_shortname">SMB</string>
 
     <!--    CarbsReq-->
-    <string name="carbsreq">%1$d g Additional Carbs Required Within %2$d Minutes</string>
+    <string name="carbsreq">%1$d g additional carbs required within %2$d minutes</string>
 
     <!--    TDDStatsActivity-->
     <string name="stats">Stats</string>
@@ -322,7 +322,7 @@
     <string name="amount_days"># Days</string>
     <string name="weight">Weight</string>
     <string name="warning_Message">Possibly inaccurate if using boluses for priming/filling!</string>
-    <string name="olddata_Message">Old Data Please Press "RELOAD"</string>
+    <string name="olddata_Message">Old data, please press "RELOAD"</string>
     <string name="tbb">Total Base Basal</string>
     <string name="tbb2">TBB * 2</string>
 
@@ -500,7 +500,7 @@
     <string name="valueoutofrange">»%1$s« is out of hard limits</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f is out of hard limits</string>
     <string name="basal_value">Basal value</string>
-    <string name="nsclient_version_does_not_match">NSClient version doesn\'t match to AndroidAPS. Please update.</string>
+    <string name="nsclient_version_does_not_match">NSClient version doesn\'t match AndroidAPS version. Please update.</string>
 
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f U</string>

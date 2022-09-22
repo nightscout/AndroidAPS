@@ -31,31 +31,31 @@ class CompatDBHelper @Inject constructor(
              *
              */
             var newestGlucoseValue: GlucoseValue? = null
-            it.filterIsInstance<GlucoseValue>().lastOrNull()?.let { gv ->
+            it.filterIsInstance<GlucoseValue>().maxByOrNull { gv -> gv.timestamp }?.let { gv ->
                 aapsLogger.debug(LTag.DATABASE, "Firing EventNewBg $gv")
                 rxBus.send(EventNewBG(gv))
                 newestGlucoseValue = gv
             }
-            it.filterIsInstance<GlucoseValue>().map { gv -> gv.timestamp }.minOrNull()?.let { timestamp ->
-                aapsLogger.debug(LTag.DATABASE, "Firing EventNewHistoryData $newestGlucoseValue")
+            it.filterIsInstance<GlucoseValue>().minOfOrNull { gv -> gv.timestamp }?.let { timestamp ->
+                aapsLogger.debug(LTag.DATABASE, "Firing EventNewHistoryData $timestamp $newestGlucoseValue")
                 rxBus.send(EventNewHistoryData(timestamp, true, newestGlucoseValue))
             }
-            it.filterIsInstance<Carbs>().map { t -> t.timestamp }.minOrNull()?.let { timestamp ->
+            it.filterIsInstance<Carbs>().minOfOrNull { t -> t.timestamp }?.let { timestamp ->
                 aapsLogger.debug(LTag.DATABASE, "Firing EventTreatmentChange $timestamp")
                 rxBus.send(EventTreatmentChange())
                 rxBus.send(EventNewHistoryData(timestamp, false))
             }
-            it.filterIsInstance<Bolus>().map { t -> t.timestamp }.minOrNull()?.let { timestamp ->
+            it.filterIsInstance<Bolus>().minOfOrNull { t -> t.timestamp }?.let { timestamp ->
                 aapsLogger.debug(LTag.DATABASE, "Firing EventTreatmentChange $timestamp")
                 rxBus.send(EventTreatmentChange())
                 rxBus.send(EventNewHistoryData(timestamp, false))
             }
-            it.filterIsInstance<TemporaryBasal>().map { t -> t.timestamp }.minOrNull()?.let { timestamp ->
+            it.filterIsInstance<TemporaryBasal>().minOfOrNull { t -> t.timestamp }?.let { timestamp ->
                 aapsLogger.debug(LTag.DATABASE, "Firing EventTempBasalChange $timestamp")
                 rxBus.send(EventTempBasalChange())
                 rxBus.send(EventNewHistoryData(timestamp, false))
             }
-            it.filterIsInstance<ExtendedBolus>().map { t -> t.timestamp }.minOrNull()?.let { timestamp ->
+            it.filterIsInstance<ExtendedBolus>().minOfOrNull { t -> t.timestamp }?.let { timestamp ->
                 aapsLogger.debug(LTag.DATABASE, "Firing EventExtendedBolusChange $timestamp")
                 rxBus.send(EventExtendedBolusChange())
                 rxBus.send(EventNewHistoryData(timestamp, false))

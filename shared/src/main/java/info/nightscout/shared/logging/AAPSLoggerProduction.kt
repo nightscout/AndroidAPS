@@ -74,9 +74,29 @@ class AAPSLoggerProduction constructor(val l: L) : AAPSLogger {
     override fun error(tag: LTag, format: String, vararg arguments: Any?) {
         LoggerFactory.getLogger(tag.tag).error(stackLogMarker() + format, arguments)
     }
+
+    override fun debug(className: String, methodName: String, lineNumber: Int, tag: LTag, message: String) {
+        LoggerFactory.getLogger(tag.tag).debug(logLocationPrefix(className, methodName, lineNumber) + message)
+    }
+
+    override fun info(className: String, methodName: String, lineNumber: Int, tag: LTag, message: String) {
+        LoggerFactory.getLogger(tag.tag).info(logLocationPrefix(className, methodName, lineNumber) + message)
+    }
+
+    override fun warn(className: String, methodName: String, lineNumber: Int, tag: LTag, message: String) {
+        LoggerFactory.getLogger(tag.tag).warn(logLocationPrefix(className, methodName, lineNumber) + message)
+    }
+
+    override fun error(className: String, methodName: String, lineNumber: Int, tag: LTag, message: String) {
+        LoggerFactory.getLogger(tag.tag).error(logLocationPrefix(className, methodName, lineNumber) + message)
+    }
 }
 
-fun StackTraceElement.toLogString(): String = "[${this.className.substringAfterLast(".")}.${this.methodName}():${this.lineNumber}]: "
+private fun logLocationPrefix(className: String, methodName: String, lineNumber: Int) =
+    "[$className.$methodName():$lineNumber]: "
+
+fun StackTraceElement.toLogString(): String =
+    logLocationPrefix(this.className.substringAfterLast("."), this.methodName, this.lineNumber)
 
 /* Needs to be inline. Don't remove even if IDE suggests it. */
 @Suppress("NOTHING_TO_INLINE")

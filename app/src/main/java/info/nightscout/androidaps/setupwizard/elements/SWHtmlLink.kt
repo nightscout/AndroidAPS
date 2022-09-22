@@ -33,7 +33,7 @@ class SWHtmlLink(injector: HasAndroidInjector) : SWItem(injector, Type.HTML_LINK
         val context = layout.context
         l = TextView(context)
         l?.id = View.generateViewId()
-        l?.autoLinkMask = Linkify.ALL
+        l?.autoLinkMask = Linkify.WEB_URLS
         if (textLabel != null) l?.text = textLabel else l?.setText(label!!)
         layout.addView(l)
     }

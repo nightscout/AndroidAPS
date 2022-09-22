@@ -141,7 +141,7 @@ class MedtronicHistoryDataUTest : TestBase() {
 
         println("PumpHistoryEntries: getRewindItems: $rewindRecords.size : " + gson.toJson(rewindRecords))
 
-        val processList: MutableList<TempBasalProcessDTO> = medtronicHistoryData.createTBRProcessList(tbrs, rewindRecords)
+        val processList: MutableList<TempBasalProcessDTO> = medtronicHistoryData.createTBRProcessList(tbrs)
 
         println("PumpHistoryEntries: processList: " + processList.size)
 

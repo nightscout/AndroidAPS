@@ -6,6 +6,7 @@
     <string name="treatmentssafety_title">Behandlings sikkerhed</string>
     <string name="treatmentssafety_maxbolus_title">Maks tilladt bolus [IE]</string>
     <string name="treatmentssafety_maxcarbs_title">Maks tilladte kulhydrater [g]</string>
+    <string name="treatmentssafety_lgsThreshold_title">BS under værdi for LGS grænse</string>
     <string name="nav_preferences_plugin">%1$s indstillinger</string>
     <string name="nav_preferences">Indstillinger</string>
     <string name="nav_refreshtreatments">Opdater behandlinger fra NS</string>
@@ -432,12 +433,15 @@
     <string name="ns_localbroadcasts_title">Aktiver lokale udsendelser.</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dynamisk ISF</string>
+    <string name="DynISFAdjust_title" formatted="false">DynamiskISF-justeringsfaktor %</string>
+    <string name="DynISFAdjust_summary" formatted="false">Justeringsfaktor for DynamiskISF. Indstil mere end 100% for mere aggressive korrektionsdoser og mindre end 100% for mindre aggressive korrektioner.</string>
     <string name="enableuam">Aktiver UAM</string>
     <string name="enablesmb">Aktiver SMB</string>
     <string name="enablesmb_summary">Brug Super Mikro Boluser i stedet for midlertidig basal for hurtigere handling</string>
     <string name="enableuam_summary">Detektering af uanmeldte måltider</string>
     <string name="insulin_oref_peak">IOB Kurve Peak-Tid</string>
     <string name="insulin_peak_time">Spidstidspunkt [min]</string>
+    <string name="insulin_peak">Top</string>
     <string name="free_peak_oref">Free-Peak Oref</string>
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
     <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
@@ -589,6 +593,7 @@
     <string name="openapssmb_maxiob_summary">Denne værdi kaldes Max IOB i OpenAPS kontekst\nOpenAPS vil ikke tilføje mere insulin, hvis den aktuelle IOB er større end denne værdi</string>
     <string name="absorption_cutoff_title">Måltid max absorptionstid [h]</string>
     <string name="absorption_cutoff_summary">Tid hvor ethvert måltid betragtes som absorberet. Resterende kulhydrater vil blive afskåret.</string>
+    <string name="treatmentssafety_lgsThreshold_summary">BS værdi under hvilken insulin er suspenderet. Standard værdi bruger standard målmodel. Bruger kan indstille værdi mellem 60 mg/dl (3,3 mmol/l) og 100 mg/dl (5,5 mmol/l). Værdier under 65/3,6 resulterer i brug af standardmodel</string>
     <string name="overview_show_notes_field_in_dialogs_title">Vis notefelt i behandlingsdialoger</string>
     <string name="next_button">Næste</string>
     <string name="previous_button">Forrige</string>
@@ -601,7 +606,11 @@
     <string name="secondcarbsincrement">Anden kulhydratstigning</string>
     <string name="thirdcarbsincrement">Tredje kulhydratstigning</string>
     <string name="cgm">CGM</string>
+    <string name="ns_cellular">Brug mobilforbindelse</string>
+    <string name="ns_wifi">Brug Wi-Fi-forbindelse</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="ns_charging">Under opladning</string>
+    <string name="ns_battery">På batteri</string>
     <string name="connectionsettings_title">Indstillinger for forbindelse</string>
     <string name="ns_wifi_allowedssids">Tilladte SSID\'er (semikolon separeret)</string>
     <string name="ns_allowroaming">Tillad forbindelse i roaming</string>
@@ -656,7 +665,6 @@
     <string name="resistance_lowers_target_summary">Når der påvises resistens, sænkes målglukosen</string>
     <string name="sensitivity_raises_target_title">Følsomhed hæver midlertidige mål</string>
     <string name="sensitivity_raises_target_summary">Når der påvises følsomhed, skal målglukosen hæves</string>
-    <string name="careportal_removestartedevents">Ren AndroidAPS startet</string>
     <string name="show_invalidated">Vis ugyldige</string>
     <string name="hide_invalidated">Skjul ugyldige</string>
     <string name="remove_items">Fjern elementer</string>
@@ -675,6 +683,8 @@
     <string name="error_adding_treatment_message">En behandling (insulin: %1$.2f, kulhydrater: %2$d, kl: %3$s) kunne ikke tilføjes til behandlinger. Tjek og tilføj venligst en note manuelt efter behov.</string>
     <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), forsinkelse: %3$d m</string>
     <string name="openaps_noasdata">Ingen tilgængelige autosens data</string>
+    <string name="log_files">Logfiler</string>
+    <string name="miscellaneous">Diverse</string>
     <string name="nav_logsettings">Log indstillinger</string>
     <string name="resettodefaults">Nulstil til standardindstillinger</string>
     <string name="nsmalfunction">NSClient funktionsfejl. Overvej NS og NSClient genstart.</string>
@@ -767,6 +777,11 @@
     <string name="invalidpct">Ugyldig angivelse af %</string>
     <string name="average">Gennemsnit</string>
     <string name="tir">Tid i målområde</string>
+    <string name="day_tir">Dags TIR</string>
+    <string name="night_tir">Nat TIR</string>
+    <string name="detailed_14_days">Detaljerede 14 dage</string>
+    <string name="std_deviation">SD: %1$s</string>
+    <string name="hba1c">HbA1c: </string>
     <string name="activitymonitor">Aktivitetsovervågning</string>
     <string name="doyouwantresetstats">Ønsker du at nulstille aktivitetsstatistik?</string>
     <string name="statistics">Statistikker</string>
@@ -953,6 +968,7 @@
     <string name="wear_action_tempt_max_bg_error">Max-BS udenfor området!</string>
     <string name="wear_action_tempt_manual_range_message">Midlertidigt mål:\nMin: %1$s\nMax: %2$s\nVarighed: %3$s</string>
     <string name="wear_action_tempt_manual_message">Midlertigt mål:\nMål: %1$s\nVarighed: %2$s</string>
+    <string name="wear_action_tempt_preset_message">Midlertigt mål:\nGrund: %1$s\nMål: %2$s\nVarighed: %3$s</string>
     <string name="quick_wizard_message">Hurtigguide: %1$s\nInsulin: %2$.2fE\nKH: %3$dg</string>
     <string name="wizard_result">Guide:\nInsulin: %1$.2fE\nKH: %2$dg</string>
     <string name="overview_editquickwizard_show_on_device">Vis post på enhed:</string>
@@ -961,9 +977,11 @@
     <string name="wizard_no_active_profile">Ingen aktiv profil angivet!</string>
     <string name="wizard_no_cob">Ukendt COB! BG læsning mangler eller nylig app genstart?</string>
     <string name="wizard_carbs_constraint">KH begrænsninger overtrådt!</string>
+    <string name="wizard_explain_calc">Beregner (IC: %1$.1f, ISF: %2$.1f)</string>
     <string name="wizard_explain_carbs">Kulhydrater: %1$.2fE</string>
     <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fE</string>
     <string name="wizard_explain_bg">BS: %1$.2fE</string>
+    <string name="wizard_explain_iob">IOB: %1$.2fE</string>
     <string name="wizard_explain_superbolus">Superbolus: %1$.2fE</string>
     <string name="wizard_explain_trend">15\' trend: %1$.2fE</string>
     <string name="wizard_explain_percent">Procent: %1$.2fE x %2$d%% ≈ %3$.2fE</string>
@@ -990,6 +1008,10 @@
     <string name="count_selected">%1$d valgt</string>
     <string name="sort_label">Sortér</string>
     <string name="dialog_canceled">Dialog annulleret</string>
+    <string name="veryLow" comment="below 3.1">Meget lav</string>
+    <string name="low" comment="3.1-3.9">Lav</string>
+    <string name="high" comment="10.0-13.9">Høj</string>
+    <string name="veryHigh" comment="above 13.9">Meget høj</string>
     <string name="below" comment="below &quot;in range&quot;">Under</string>
     <string name="in_range">Inden for området</string>
     <string name="above" comment="above &quot;in range&quot;">Over</string>
@@ -998,6 +1020,12 @@
     <string name="widget_description">AndroidAPS widget</string>
     <string name="configure">Indstil gennemsigtighed</string>
     <string name="loop_status">Loop status</string>
+    <string name="graph_scale">Graf skala</string>
+    <string name="profile1">Profil 1</string>
+    <string name="profile2">Profil 2</string>
+    <string name="login">Log ind</string>
+    <string name="remove_all">Fjern alle</string>
+    <string name="reset_start">Nulstil start</string>
     <string name="a11y_otp_qr_code">QR-kode til opsætning af engangs kodeord</string>
     <string name="a11y_open_settings">Åbn indstillinger</string>
     <string name="a11y_set_carb_timer">indstil KH alarm</string>
@@ -1007,8 +1035,12 @@
     <string name="a11y_only_on_watch">kun på ur</string>
     <string name="a11y_only_on_phone">kun på telefon</string>
     <string name="a11y_drag_and_drop_handle">træk og slip håndtering</string>
+    <string name="search">Søg</string>
     <!-- Aidex Cgms -->
     <string name="aidex">GlucoRx Aidex</string>
     <string name="aidex_short">Aidex</string>
     <string name="description_source_aidex">Modtag BG-værdier fra GlucoRx Aidex CGMS.</string>
+    <string name="blocked_by_charging">Blokeret af opladningsmuligheder</string>
+    <string name="blocked_by_connectivity">Blokeret af forbindelsesmuligheder</string>
+    <string name="no_watch_connected">(Intet ur forbundet)</string>
 </resources>

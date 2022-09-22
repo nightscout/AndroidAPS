@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.util.SparseArray
 import android.view.*
 import androidx.core.util.forEach
+import androidx.core.view.MenuProvider
+import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
@@ -28,6 +30,7 @@ import info.nightscout.androidaps.events.EventTreatmentChange
 import info.nightscout.androidaps.extensions.iobCalc
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -40,7 +43,6 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
@@ -52,7 +54,7 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class TreatmentsBolusCarbsFragment : DaggerFragment() {
+class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
 
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var sp: SP
@@ -93,11 +95,11 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
         actionHelper = ActionModeHelper(rh, activity, this)
         actionHelper.setUpdateListHandler { binding.recyclerview.adapter?.notifyDataSetChanged() }
         actionHelper.setOnRemoveHandler { removeSelected(it) }
-        setHasOptionsMenu(true)
         binding.recyclerview.setHasFixedSize(true)
         binding.recyclerview.layoutManager = LinearLayoutManager(view.context)
         binding.recyclerview.emptyView = binding.noRecordsText
         binding.recyclerview.loadingView = binding.progressBar
+        requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     private fun bolusMealLinksWithInvalid(now: Long) = repository
@@ -215,7 +217,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                 holder.binding.bolusInvalid.visibility = bolus.isValid.not().toVisibility()
                 val iob = bolus.iobCalc(activePlugin, System.currentTimeMillis(), profile.dia)
                 if (iob.iobContrib > 0.01) {
-                    holder.binding.iob.setTextColor(rh.gac(context , R.attr.activeColor))
+                    holder.binding.iob.setTextColor(rh.gac(context, R.attr.activeColor))
                     holder.binding.iob.text = rh.gs(R.string.formatinsulinunits, iob.iobContrib)
                     holder.binding.iobLabel.visibility = View.VISIBLE
                     holder.binding.iob.visibility = View.VISIBLE
@@ -225,8 +227,8 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                     holder.binding.iobLabel.visibility = View.GONE
                     holder.binding.iob.visibility = View.GONE
                 }
-                if (bolus.timestamp > dateUtil.now()) holder.binding.date.setTextColor(rh.gac(context, R.attr.scheduledColor)) else holder.binding.date.setTextColor(holder.binding.carbs
-                                                                                                                                                                       .currentTextColor)
+                if (bolus.timestamp > dateUtil.now())
+                    holder.binding.date.setTextColor(rh.gac(context, R.attr.scheduledColor)) else holder.binding.date.setTextColor(holder.binding.carbs.currentTextColor)
                 holder.binding.mealOrCorrection.text =
                     when (ml.bolus.type) {
                         Bolus.Type.SMB     -> "SMB"
@@ -268,6 +270,10 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
             }
 
             holder.binding.calculation.tag = ml
+
+            var notes = ml.carbs?.notes ?: ml.bolus?.notes ?: ""
+            holder.binding.notes.text = notes
+            holder.binding.notes.visibility = if (notes != "") View.VISIBLE else View.GONE
         }
 
         override fun getItemCount() = mealLinks.size
@@ -291,10 +297,14 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
         this.menu = menu
         inflater.inflate(R.menu.menu_treatments_carbs_bolus, menu)
-        super.onCreateOptionsMenu(menu, inflater)
+        updateMenuVisibility()
+        val nsUploadOnly = !sp.getBoolean(R.string.key_ns_receive_insulin, false) || !sp.getBoolean(R.string.key_ns_receive_carbs, false) || !buildHelper.isEngineeringMode()
+        menu.findItem(R.id.nav_refresh_ns)?.isVisible = !nsUploadOnly
+        val hasItems = (binding.recyclerview.adapter?.itemCount ?: 0) > 0
+        menu.findItem(R.id.nav_delete_future)?.isVisible = hasItems
     }
 
     private fun updateMenuVisibility() {
@@ -302,24 +312,14 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
         menu?.findItem(R.id.nav_show_invalidated)?.isVisible = !showInvalidated
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        updateMenuVisibility()
-        val nsUploadOnly = !sp.getBoolean(R.string.key_ns_receive_insulin, false) || !sp.getBoolean(R.string.key_ns_receive_carbs, false) || !buildHelper.isEngineeringMode()
-        menu.findItem(R.id.nav_refresh_ns)?.isVisible = !nsUploadOnly
-        val hasItems = (binding.recyclerview.adapter?.itemCount ?: 0) > 0
-        menu.findItem(R.id.nav_delete_future)?.isVisible = hasItems
-
-        return super.onPrepareOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+    override fun onMenuItemSelected(item: MenuItem): Boolean =
         when (item.itemId) {
             R.id.nav_remove_items     -> actionHelper.startRemove()
 
             R.id.nav_show_invalidated -> {
                 showInvalidated = true
                 updateMenuVisibility()
-                ToastUtils.showToastInUiThread(context, rh.gs(R.string.show_invalidated_records))
+                ToastUtils.infoToast(context, R.string.show_invalidated_records)
                 swapAdapter()
                 true
             }
@@ -327,7 +327,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
             R.id.nav_hide_invalidated -> {
                 showInvalidated = false
                 updateMenuVisibility()
-                ToastUtils.showToastInUiThread(context, rh.gs(R.string.hide_invalidated_records))
+                ToastUtils.infoToast(context, R.string.hide_invalidated_records)
                 swapAdapter()
                 true
             }
@@ -369,7 +369,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
         }
     }
 
-    fun deleteFutureTreatments() {
+    private fun deleteFutureTreatments() {
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, rh.gs(R.string.overview_treatment_label), rh.gs(R.string.deletefuturetreatments) + "?", Runnable {
                 uel.log(Action.DELETE_FUTURE_TREATMENTS, Sources.Treatments)

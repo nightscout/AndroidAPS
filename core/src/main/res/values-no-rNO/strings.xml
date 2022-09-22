@@ -31,7 +31,7 @@
     <string name="format_mins">%1$d min</string>
     <string name="pumpbusy">Pumpen er opptatt</string>
     <string name="connectionerror">Tilkoblingsfeil til pumpe</string>
-    <string name="youareonallowedlimit">Du har nådd din tillatte grense</string>
+    <string name="youareonallowedlimit">Tillatt grense nådd</string>
     <string name="objectives">Opplæringsmål</string>
     <string name="close">Lukk</string>
     <string name="please_wait">Vennligst vent…</string>
@@ -40,7 +40,7 @@
     <string name="stoppressed">STOPP trykket</string>
     <string name="stop">Stopp</string>
     <string name="carbs">Karbohydrater</string>
-    <string name="invalidprofile">Ugyldig profil!!!</string>
+    <string name="invalidprofile">Ugyldig profil!</string>
     <string name="noprofileset">INGEN PROFIL VALGT</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">Dato</string>
@@ -53,7 +53,7 @@
     <string name="dia_long_label">Insulinets virkningstid (DIA)</string>
     <string name="ic_long_label">Insulin- til karbohydratfaktor</string>
     <string name="isf_long_label">Insulin sensitivitetsfaktor (ISF)</string>
-    <string name="basal_long_label">Basal rate</string>
+    <string name="basal_long_label">Basalrate</string>
     <string name="target_long_label">Blodsukkermål</string>
     <string name="initializing">Starter opp...</string>
     <string name="serialnumber">Serienummer</string>
@@ -140,7 +140,7 @@
     <string name="pin_dont_match">PIN-kodene samsvarer ikke</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Basal verdier er ikke angitt på hele timer: %1$s</string>
-    <string name="minimalbasalvaluereplaced">Basal verdi erstattet med laveste tillate verdi: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Basalverdi erstattet med minste tillate verdi: %1$s</string>
     <string name="maximumbasalvaluereplaced">Basal verdi erstattet med høyeste tillate verdi: %1$s</string>
     <string name="profile_per_unit">/E</string>
     <string name="profile_ins_units_per_hour">E/t</string>
@@ -397,7 +397,7 @@
     <string name="valueoutofrange">»%1$s« er utenfor lovlige grenseverdier</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f er utenfor lovlige grenseverdier</string>
     <string name="basal_value">Basal verdi</string>
-    <string name="nsclient_version_does_not_match">NSKlient versjonen samsvarer ikke med AndroidAPS. Vennligst oppdater.</string>
+    <string name="nsclient_version_does_not_match">NSClient-versjonen samsvarer ikke med AndroidAPS-versjonen. Vennligst oppdater.</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f E</string>
     <string name="carbs_g">CARBS %1$d g</string>

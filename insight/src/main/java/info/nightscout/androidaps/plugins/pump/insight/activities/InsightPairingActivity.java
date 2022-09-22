@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.insight.activities;
 
+import info.nightscout.androidaps.extensions.BluetoothAdapterExtensionKt;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
@@ -33,6 +34,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
+import info.nightscout.androidaps.extensions.IntentExtensionKt;
 import info.nightscout.androidaps.insight.R;
 import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.plugins.pump.common.ble.BlePreCheck;
@@ -189,7 +191,7 @@ public class InsightPairingActivity extends NoSplashAppCompatActivity implements
         if (!scanning) {
             BluetoothAdapter bluetoothAdapter = ((BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
             if (bluetoothAdapter != null) {
-                if (!bluetoothAdapter.isEnabled()) bluetoothAdapter.enable();
+                BluetoothAdapterExtensionKt.safeEnable(bluetoothAdapter, 0, null);
                 IntentFilter intentFilter = new IntentFilter();
                 intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
                 intentFilter.addAction(BluetoothDevice.ACTION_FOUND);
@@ -234,7 +236,8 @@ public class InsightPairingActivity extends NoSplashAppCompatActivity implements
             if (action.equals(BluetoothAdapter.ACTION_DISCOVERY_FINISHED))
                 ((BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter().startDiscovery();
             else if (action.equals(BluetoothDevice.ACTION_FOUND)) {
-                BluetoothDevice bluetoothDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                BluetoothDevice bluetoothDevice =
+                        IntentExtensionKt.safeGetParcelableExtra(intent, BluetoothDevice.EXTRA_DEVICE, BluetoothDevice.class);
                 deviceAdapter.addDevice(bluetoothDevice);
             }
         }

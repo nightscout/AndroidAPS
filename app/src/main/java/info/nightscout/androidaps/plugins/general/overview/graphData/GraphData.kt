@@ -56,7 +56,7 @@ class GraphData(
         addSeries(overviewData.bgReadingGraphSeries)
         if (addPredictions) addSeries(overviewData.predictionsGraphSeries)
         overviewData.bgReadingGraphSeries.setOnDataPointTapListener { _, dataPoint ->
-            if (dataPoint is GlucoseValueDataPoint) ToastUtils.showToastInUiThread(context, dataPoint.label)
+            if (dataPoint is GlucoseValueDataPoint) ToastUtils.infoToast(context, dataPoint.label)
         }
     }
 
@@ -93,14 +93,14 @@ class GraphData(
         maxY = maxOf(maxY, overviewData.maxTreatmentsValue)
         addSeries(overviewData.treatmentsSeries)
         overviewData.treatmentsSeries.setOnDataPointTapListener { _, dataPoint ->
-            if (dataPoint is BolusDataPoint) ToastUtils.showToastInUiThread(context, dataPoint.label)
+            if (dataPoint is BolusDataPoint) ToastUtils.infoToast(context, dataPoint.label)
         }
     }
 
     fun addEps(context: Context?, scale: Double) {
         addSeries(overviewData.epsSeries)
         overviewData.epsSeries.setOnDataPointTapListener { _, dataPoint ->
-            if (dataPoint is EffectiveProfileSwitchDataPoint) ToastUtils.showToastInUiThread(context, dataPoint.data.originalCustomizedName)
+            if (dataPoint is EffectiveProfileSwitchDataPoint) ToastUtils.infoToast(context, dataPoint.data.originalCustomizedName)
         }
         overviewData.epsScale.multiplier = maxY * scale / overviewData.maxEpsValue
     }

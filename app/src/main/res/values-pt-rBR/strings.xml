@@ -552,7 +552,7 @@
     <string name="smbnotallowedinopenloopmode">SMB não permitido no modo open loop</string>
     <string name="food_short">Alimentos</string>
     <string name="reset">repor</string>
-    <string name="openapssmb_maxiob_title">Máximo total IOS OpenAPS não pode superar [U]</string>
+    <string name="openapssmb_maxiob_title">Máximo total de IOB OpenAPS não pode superar [U]</string>
     <string name="openapssmb_maxiob_summary">Este valor é chamado de Max IOB em contexto de OpenAPS\nOpenAPS não adicionará mais insulina se o IOB atual for maior que este valor</string>
     <string name="absorption_cutoff_title">Tempo máx. absorção refeição [h]</string>
     <string name="absorption_cutoff_summary">Hora em que qualquer refeição é considerada absorvida. Restantes hidratos de carbono serão cortados.</string>
@@ -616,7 +616,6 @@
     <string name="resistance_lowers_target_summary">Quando a resistência for detectada, diminui o alvo de glicose</string>
     <string name="sensitivity_raises_target_title">Sensibilidade aumenta o alvo</string>
     <string name="sensitivity_raises_target_summary">Quando a sensibilidade é detectada, aumenta o alvo glicose</string>
-    <string name="careportal_removestartedevents">Limpar AndroidAPS iniciado</string>
     <string name="sort_items">Ordenar itens</string>
     <string name="storedsettingsfound">Configurações encontradas</string>
     <string name="allow_hardware_pump_text">Atenção: Se conectar à sua bomba física e ativar o perfil, o AndroidAPS irá copiar as definições desse perfil para as definições da bomba, apagando o memorizado na bomba. Por favor verifique que o que preencheu no perfil do app tem os mesmos valores que estão na bomba. Em caso contrário pressione imediatamente cancelar e corrija antes de voltar a ligar à bomba.</string>

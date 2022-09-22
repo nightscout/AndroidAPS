@@ -31,7 +31,6 @@
     <string name="format_mins">%1$d мин</string>
     <string name="pumpbusy">Помпата е заета</string>
     <string name="connectionerror">Грешка при връзка с помпата</string>
-    <string name="youareonallowedlimit">Достигнахте лимита</string>
     <string name="objectives">Цели</string>
     <string name="close">Затвори</string>
     <string name="please_wait">Моля изчакайте...</string>
@@ -40,7 +39,6 @@
     <string name="stoppressed">Натиснат е СТОП!</string>
     <string name="stop">Стоп</string>
     <string name="carbs">въглехидрати</string>
-    <string name="invalidprofile">Грешен профил !!!</string>
     <string name="noprofileset">НЕ Е АКТИВИРАН ПРОФИЛ</string>
     <string name="active"><![CDATA[<Активно>]]></string>
     <string name="date">Дата</string>
@@ -132,7 +130,6 @@
     <string name="passwords_dont_match">Паролите не съвпадат</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Базалните стойности не са за кръгли часове: %1$s</string>
-    <string name="minimalbasalvaluereplaced">Базалната стойност е заместена от минимално поддържаната стойност %1$s</string>
     <string name="maximumbasalvaluereplaced">Базалната стойност е заместена от максимално поддържаната стойност %1$s</string>
     <string name="profile_per_unit">/Е</string>
     <string name="profile_ins_units_per_hour">Е/ч</string>
@@ -210,7 +207,6 @@
     <string name="waitingforpumpresult">Изчаква резултат от помпата</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
-    <string name="carbsreq">%1$dгр допълнителни въглехидрати ще са необходими до %2$d минути</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Статистика</string>
     <string name="cumulative_tdd">Комулативна TDD</string>
@@ -222,7 +218,6 @@
     <string name="amount_days"># дни</string>
     <string name="weight">Тегло</string>
     <string name="warning_Message">Възможна неточност, ако сте използвали болус за презареждане!</string>
-    <string name="olddata_Message">Стари данни - натиснете \"ПРЕЗАРЕДИ\"</string>
     <string name="tbb">Общо базален инсулин</string>
     <string name="tbb2">ОБИ * 2</string>
     <!--    Ntp-->

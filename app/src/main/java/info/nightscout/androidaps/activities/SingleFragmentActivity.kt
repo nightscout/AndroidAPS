@@ -27,25 +27,31 @@ class SingleFragmentActivity : DaggerAppCompatActivityWithResult() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction().replace(R.id.frame_layout,
-                supportFragmentManager.fragmentFactory.instantiate(ClassLoader.getSystemClassLoader(), plugin?.pluginDescription?.fragmentClass!!)).commit()
+            supportFragmentManager.beginTransaction().replace(
+                R.id.frame_layout,
+                supportFragmentManager.fragmentFactory.instantiate(ClassLoader.getSystemClassLoader(), plugin?.pluginDescription?.fragmentClass!!)
+            ).commit()
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            finish()
-            return true
-        } else if (item.itemId == R.id.nav_plugin_preferences) {
-            protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, Runnable {
-                val i = Intent(this, PreferencesActivity::class.java)
-                i.putExtra("id", plugin?.preferencesId)
-                startActivity(i)
-            }, null)
-            return true
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
+            android.R.id.home           -> {
+                finish()
+                true
+            }
+
+            R.id.nav_plugin_preferences -> {
+                protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, {
+                    val i = Intent(this, PreferencesActivity::class.java)
+                    i.putExtra("id", plugin?.preferencesId)
+                    startActivity(i)
+                }, null)
+                true
+            }
+
+            else                        -> super.onOptionsItemSelected(item)
         }
-        return false
-    }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         if (plugin?.preferencesId != -1) menuInflater.inflate(R.menu.menu_single_fragment, menu)

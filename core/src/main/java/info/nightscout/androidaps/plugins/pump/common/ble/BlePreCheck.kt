@@ -7,14 +7,14 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.Build
-import android.os.SystemClock
 import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.androidaps.extensions.safeEnable
 import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -54,10 +54,7 @@ class BlePreCheck @Inject constructor(
             val bluetoothAdapter = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
             // Ensures Bluetooth is available on the device and it is enabled. If not,
             // displays a dialog requesting user permission to enable Bluetooth.
-            if (bluetoothAdapter?.isEnabled != true) {
-                bluetoothAdapter?.enable()
-                SystemClock.sleep(3000)
-            }
+            bluetoothAdapter?.safeEnable(3000)
             if (bluetoothAdapter?.isEnabled != true) {
                 OKDialog.show(activity, rh.gs(R.string.message), rh.gs(R.string.ble_not_enabled))
                 return false

@@ -16,6 +16,6 @@
     <string name="unit_hours">ore</string>
     <string name="unit_days">zile</string>
     <string name="unit_weeks">săptămâni</string>
-    <string name="shortminute">min</string>
+    <string name="shortminute">m</string>
     <string name="shortday">z</string>
 </resources>

@@ -27,7 +27,6 @@
     <string name="code_compare">Worden dezelfde codes weergegeven op dit apparaat als op je pomp?</string>
     <string name="insight_pairing">Insight koppelen</string>
     <string name="insight_local">Accu-Chek Insight</string>
-    <string name="insight_delivered">%1$.2f E / %2$.2f E toegediend</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Slang vervangen</string>
     <string name="insightpump_shortname">Insight</string>

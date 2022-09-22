@@ -27,10 +27,11 @@ import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.diaconn.R
 import info.nightscout.androidaps.diaconn.databinding.DiaconnG8BlescannerActivityBinding
 import info.nightscout.androidaps.diaconn.events.EventDiaconnG8DeviceChange
+import info.nightscout.androidaps.extensions.safeEnable
 import info.nightscout.androidaps.plugins.pump.common.ble.BlePreCheck
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.shared.sharedPreferences.SP
-import java.util.*
+import java.util.UUID
 import javax.inject.Inject
 
 class DiaconnG8BLEScanActivity : NoSplashAppCompatActivity() {
@@ -67,7 +68,7 @@ class DiaconnG8BLEScanActivity : NoSplashAppCompatActivity() {
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
             bluetoothAdapter?.let { bluetoothAdapter ->
-                if (!bluetoothAdapter.isEnabled) bluetoothAdapter.enable()
+                bluetoothAdapter.safeEnable()
                 bluetoothLeScanner = bluetoothAdapter.bluetoothLeScanner
                 startScan()
             }

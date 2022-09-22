@@ -4,6 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import org.monkey.d.ruffy.ruffy.driver.display.menu.BolusType;
 import org.monkey.d.ruffy.ruffy.driver.display.menu.MenuBlink;
 import org.monkey.d.ruffy.ruffy.driver.display.menu.MenuDate;
@@ -39,11 +41,11 @@ public class Menu implements Parcelable{
                     MenuAttribute a = MenuAttribute.valueOf(attr);
                     Object o = null;
                     if (Integer.class.toString().equals(clas)) {
-                        o = new Integer(value);
+                        o = Integer.valueOf(value);
                     } else if (Double.class.toString().equals(clas)) {
-                        o = new Double(value);
+                        o = Double.valueOf(value);
                     } else if (Boolean.class.toString().equals(clas)) {
-                        o = new Boolean(value);
+                        o = Boolean.valueOf(value);
                     } else if (MenuDate.class.toString().equals(clas)) {
                         o = new MenuDate(value);
                     } else if (MenuTime.class.toString().equals(clas)) {
@@ -70,14 +72,9 @@ public class Menu implements Parcelable{
         }
     }
 
-    public void setAttribute(MenuAttribute key, Object value)
-    {
-        attributes.put(key,value);
-    }
-
     public List<MenuAttribute> attributes()
     {
-        return new LinkedList<MenuAttribute>(attributes.keySet());
+        return new LinkedList<>(attributes.keySet());
     }
 
     public Object getAttribute(MenuAttribute key)
@@ -104,17 +101,11 @@ public class Menu implements Parcelable{
 
                 String atr = a.toString();
                 Object o = attributes.get(a);
-                String clas = o.getClass().toString();
-                String v = o.toString();
-                if(atr != null && o != null && v != null) {
-                    dest.writeString(atr);
-                    dest.writeString(clas);
-                    dest.writeString(v);
-                }
-                else
-                {
-                    Log.e("Menu","null in write :/");
-                }
+                String clas = o != null ? o.getClass().toString() : "null";
+                String v = o != null ? o.toString() : " null";
+                dest.writeString(atr);
+                dest.writeString(clas);
+                dest.writeString(v);
             }catch(Exception e)
             {
                 Log.v("MenuOut","error in write",e);
@@ -122,7 +113,7 @@ public class Menu implements Parcelable{
         }
     }
     public static final Parcelable.Creator<Menu> CREATOR = new
-            Parcelable.Creator<Menu>() {
+            Parcelable.Creator<>() {
                 public Menu createFromParcel(Parcel in) {
                     return new Menu(in);
                 }
@@ -132,7 +123,7 @@ public class Menu implements Parcelable{
                 }
             };
 
-    @Override
+    @NonNull @Override
     public String toString() {
         return "Menu{" +
                 "type=" + type +

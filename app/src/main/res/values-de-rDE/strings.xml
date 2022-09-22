@@ -6,6 +6,7 @@
     <string name="treatmentssafety_title">Sicherheitseinstellungen der Behandlungen</string>
     <string name="treatmentssafety_maxbolus_title">Max. erlaubter Bolus [IE]</string>
     <string name="treatmentssafety_maxcarbs_title">Max. erlaubte Kohlenhydrate [g]</string>
+    <string name="treatmentssafety_lgsThreshold_title">BG-Pegel, unterhalb dessen die Aussetzung wegen niedriger Glukoseaussetzung eintritt</string>
     <string name="nav_preferences_plugin">%1$s-Einstellungen</string>
     <string name="nav_preferences">Einstellungen</string>
     <string name="nav_refreshtreatments">Behandlungen von NS aktualisieren</string>
@@ -25,6 +26,7 @@
     <string name="description_ns_client">Synchronisiert deine Daten mit Nightscout</string>
     <string name="description_ama">Stand des Algorithmus in 2017</string>
     <string name="description_smb">Der aktuellste Algorithmus für erfahrene Nutzer</string>
+    <string name="description_smb_dynamic_isf">Neuester Algorithmus für fortgeschrittene Benutzer mit dynamischer/automatischer ISF</string>
     <string name="description_overview">Zeigt den aktuellen Status deines Loops und Schaltflächen für die geläufigsten Aktionen an</string>
     <string name="description_persistent_notification">Zeigt eine fortlaufende Benachrichtigung mit einer kurzen Übersicht darüber, was dein Loop derzeit tut</string>
     <string name="description_profile_local">Definiere ein Profil, was auch offline verfügbar ist.</string>
@@ -264,6 +266,7 @@
     <string name="configbuilder_shortname">KONF</string>
     <string name="loop_shortname">LOOP</string>
     <string name="oaps_shortname">OAPS</string>
+    <string name="dynisf_shortname">DYNISF</string>
     <string name="localprofile_shortname">LP</string>
     <string name="overview_shortname">HOME</string>
     <string name="virtualpump_shortname">VP</string>
@@ -430,12 +433,15 @@
     <string name="ns_localbroadcasts_title">Aktiviere lokale Broadcasts</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dynamischer ISF</string>
+    <string name="DynISFAdjust_title" formatted="false">DynamicISF Anpassungsfaktor %</string>
+    <string name="DynISFAdjust_summary" formatted="false">Anpassungsfaktor für DynamicISF. Stelle mehr als 100 % für aggressivere Korrekturdosen ein, und weniger als 100 % für weniger aggressive Korrekturen.</string>
     <string name="enableuam">Aktiviere UAM</string>
     <string name="enablesmb">Aktiviere SMB</string>
     <string name="enablesmb_summary">Benutze Super-Mikro-Boli anstelle von temporären Basalraten, um eine schnellere Wirkung zu erreichen.</string>
     <string name="enableuam_summary">Erkennung von unangekündigten Mahlzeiten</string>
     <string name="insulin_oref_peak">Wirkungshoch der IOB-Kurve</string>
     <string name="insulin_peak_time">Wirkungshoch [min]</string>
+    <string name="insulin_peak">Gipfel</string>
     <string name="free_peak_oref">Free-Peak Oref</string>
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
     <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
@@ -497,6 +503,7 @@
     <string name="negativeonly">Nur negative</string>
     <string name="overview_editquickwizard_usecob">COB Berechnung</string>
     <string name="overview_editquickwizard_usetemptarget">Temporäres Ziel Berechnung</string>
+    <string name="overview_editquickwizard_usepercentage">Prozentuale Berechnung</string>
     <string name="loopenabled">Loop aktiviert</string>
     <string name="apsselected">APS ausgewählt</string>
     <string name="nsclienthaswritepermission">Nightscout-Client hat Schreibrechte</string>
@@ -586,6 +593,7 @@
     <string name="openapssmb_maxiob_summary">Diesen Wert nennt OpenAPS MaxIOB.\nSolange dieser Wert überschritten wird, wird AndroidAPS kein Insulin abgeben.</string>
     <string name="absorption_cutoff_title">Maximale Dauer der Essens-Resorption [h]</string>
     <string name="absorption_cutoff_summary">Zeit, nach der jede Mahlzeit mit Sicherheit absorbiert ist. Verbleibende Kohlenhydrate werden danach nicht mehr berücksichtigt.</string>
+    <string name="treatmentssafety_lgsThreshold_summary">Der BG-Wert, unter dem die Insulinzuführung ausgesetzt wird. Der Standardwert verwendet das Standard-Zielmodell. Der Benutzer kann einen Wert zwischen 60mg/dl (3.3 mmol/l) und 100mg/dl (5.5mmol/l) setzen. Werte unterhalb 65/3.6 führen zur Verwendung des Standardmodells</string>
     <string name="overview_show_notes_field_in_dialogs_title">Zeige Feld für Notizen in den Behandlungsdialogen</string>
     <string name="next_button">Weiter</string>
     <string name="previous_button">Zurück</string>
@@ -598,7 +606,11 @@
     <string name="secondcarbsincrement">Zweite KH-Erhöhung</string>
     <string name="thirdcarbsincrement">Dritte KH-Erhöhung</string>
     <string name="cgm">CGM</string>
+    <string name="ns_cellular">Mobilfunkverbindung verwenden</string>
+    <string name="ns_wifi">WLAN Verbindung verwenden</string>
     <string name="ns_wifi_ssids">WLAN SSID</string>
+    <string name="ns_charging">Während des Ladevorgangs</string>
+    <string name="ns_battery">Bei Batteriebetrieb</string>
     <string name="connectionsettings_title">Verbindungs-Einstellungen</string>
     <string name="ns_wifi_allowedssids">Erlaubte SSIDs (durch Semikolon getrennt)</string>
     <string name="ns_allowroaming">Erlaube Verbindung bei Roaming</string>
@@ -653,8 +665,10 @@
     <string name="resistance_lowers_target_summary">Wenn Resistenz festgestellt wird, senke den Glukose-Zielwert</string>
     <string name="sensitivity_raises_target_title">Empfindlichkeit erhöht den Zielwert</string>
     <string name="sensitivity_raises_target_summary">Wenn eine höhere Empfindlichkeit festgestellt wird, wird der Glukose-Zielwert erhöht.</string>
-    <string name="careportal_removestartedevents">\"AndroidAPS gestartet\" Ereignisse löschen</string>
+    <string name="show_invalidated">Zeige Ungültige</string>
+    <string name="hide_invalidated">Verstecke Ungültige</string>
     <string name="remove_items">Objekte entfernen</string>
+    <string name="sort_items">Einträge sortieren</string>
     <string name="storedsettingsfound">Gespeicherte Einstellungen gefunden</string>
     <string name="allow_hardware_pump_text">WARNUNG: Wenn Du eine echte Pumpe aktivierst und anschließt, kopiert AndroidAPS die Basaleinstellungen vom aktiven Profil zur Pumpe (und behält sie bei). Die Einstellungen in der Pumpe werden hierbei überschrieben. Wenn Du Dir nicht sicher bist oder die Basaleinstellungen in der Pumpe nicht überschreiben möchten, drücke \"Abbrechen\" und vollziehe den Wechsel zur Pumpe später.</string>
     <string name="error_adding_treatment_title">Behandlungsdaten unvollständig</string>
@@ -669,6 +683,8 @@
     <string name="error_adding_treatment_message">Der Eintrag (Insulin: %1$.2f, Kohlenhydrate: %2$d, um: %3$s) konnte nicht als Behandlung gespeichert werden. Bitte überprüfe die aktuelle Liste und füge, falls notwendig, den Datensatz manuell hinzu.</string>
     <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), Verzögerung: %3$d m</string>
     <string name="openaps_noasdata">Keine Autosens-Daten verfügbar</string>
+    <string name="log_files">Log Dateien</string>
+    <string name="miscellaneous">Verschiedenes</string>
     <string name="nav_logsettings">Log-Einstellungen</string>
     <string name="resettodefaults">Auf Standardwerte zurücksetzen</string>
     <string name="nsmalfunction">NSClient Störung. Ziehe einen Neustart von NS und NSClient in Betracht.</string>
@@ -762,6 +778,11 @@ Unerwartetes Verhalten.</string>
     <string name="invalidpct">Ungültige % Eingabe</string>
     <string name="average">Durchschnitt</string>
     <string name="tir">TIR</string>
+    <string name="day_tir">Tages TIR</string>
+    <string name="night_tir">Nacht TIR</string>
+    <string name="detailed_14_days">Detaillierte 14 Tage</string>
+    <string name="std_deviation">SD: %1$s</string>
+    <string name="hba1c">HbA1c: </string>
     <string name="activitymonitor">Aktivitätsmonitor</string>
     <string name="doyouwantresetstats">Willst Du die Aktivitätsstatistik zurücksetzen?</string>
     <string name="statistics">Statistiken</string>
@@ -802,6 +823,7 @@ Unerwartetes Verhalten.</string>
     <string name="smscommunicator_otp_install_info">Installiere auf jedem Follower-Phone eine Authenticator-App, die RFC 6238 TOTP-Token unterstützt. Beliebte kostenlose Apps sind:\n Authy\n Google Authenticator\n LastPass Authenticator\n FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">Wenn Du den Authentifikator zurücksetzt werden alle bestehenden Authentifikatoren ungültig. Du musst sie dann neu einrichten!</string>
     <string name="overview_show_predictions">Predictions (Vorhersagen)</string>
+    <string name="overview_show_treatments">Behandlungen</string>
     <string name="overview_show_deviationslope">Steigung der Abweichung</string>
     <string name="authorizationfailed">Autorisierung fehlgeschlagen</string>
     <string name="overview_show_absinsulin">Gesamtinsulin</string>
@@ -871,6 +893,8 @@ Unerwartetes Verhalten.</string>
     <string name="ns_receive_profile_switch_summary">Profilwechsel akzeptieren, die in NS oder NSClient eingegeben wurden</string>
     <string name="ns_receive_offline_event">APS Offline-Ereignisse empfangen</string>
     <string name="ns_receive_offline_event_summary">APS Offline-Ereignisse akzeptieren, die über NS oder NSClient eingegeben wurden</string>
+    <string name="ns_receive_tbr_eb">TBR und EB empfangen</string>
+    <string name="ns_receive_tbr_eb_summary">Akzeptiere TBR und EB, die von einer anderen Instanz eingegeben wurden</string>
     <string name="ns_receive_insulin">Insulin abrufen</string>
     <string name="ns_receive_insulin_summary">Insulin akzeptieren, das in NS oder NSClient eingegeben wurden</string>
     <string name="ns_receive_carbs">Kohlenhydrate abrufen</string>
@@ -889,9 +913,11 @@ Unerwartetes Verhalten.</string>
     <string name="error_in_isf_values">Fehler in ISF-Werten</string>
     <string name="run_question">%s ausführen?</string>
     <string name="invalid_profile_not_accepted">Ungültiges Profil %1$s wurde von NS nicht akzeptiert</string>
+    <string name="view">Ansicht</string>
     <string name="errors">Fehler</string>
     <string name="ns_sync_slow">Hochladen verlangsamen</string>
     <string name="data_status">Status BZ-Daten</string>
+    <string name="remove_bg_readings">BG-Werte entfernen</string>
     <string name="statuslights_cannula_age">Kanülenalter</string>
     <string name="statuslights_patch_pump_age">Alter Patchpumpe</string>
     <string name="patch_pump">Patch-Pumpe</string>
@@ -929,7 +955,46 @@ Unerwartetes Verhalten.</string>
     <string name="a11y_delete_current_profile">aktuelles Profil löschen</string>
     <string name="a11y_add_new_to_list">neu zur Liste hinzufügen</string>
     <!-- Theme switcher dark and light mode-->
+    <string name="theme_switcher_summary">Wähle das dunkle, helle oder das Systemdesign</string>
+    <string name="app_color_scheme">App Farbschema</string>
+    <string name="dark_theme">Dunkles Design</string>
+    <string name="light_theme">Helles Design</string>
+    <string name="follow_system_theme">Systemdesign verwenden</string>
     <!-- WEAR OS-->
+    <string name="wear_action_tempt_preset_error">Temp-Target unbekannte Voreinstellung: %1$s</string>
+    <string name="wear_action_tempt_cancel_message">Ausführung des Temp-Targets abbrechen?</string>
+    <string name="wear_action_tempt_unit_error">Verschiedene Einheiten werden auf Uhr und Telefon verwendet!</string>
+    <string name="wear_action_tempt_zero_message">Zero-Temp-Target - abbrechen des laufenden Temp-Targets?</string>
+    <string name="wear_action_tempt_min_bg_error">Min-BG ist außerhalb des Bereichs!</string>
+    <string name="wear_action_tempt_max_bg_error">Max-BG ist außerhalb des Bereichs!</string>
+    <string name="wear_action_tempt_manual_range_message">Temptarget:\nMin: %1$s\nMax: %2$s\nDauer: %3$s</string>
+    <string name="wear_action_tempt_manual_message">Temptarget:\nTarget: %1$s\nDauer: %2$s</string>
+    <string name="wear_action_tempt_preset_message">Temp-Target:\nGrund: %1$s\nTarget: %2$s\nDauer: %3$s</string>
+    <string name="quick_wizard_message">QuickWizard: %1$s\nInsulin: %2$.2fU\nCarbs: %3$dg</string>
+    <string name="wizard_result">Calc. Wizard:\nInsulin: %1$.2fU\nCarbs: %2$dg</string>
+    <string name="overview_editquickwizard_show_on_device">Zeige Eintrag auf dem Gerät:</string>
+    <string name="quick_wizard_not_available">Ausgewählter Quickwizard nicht mehr verfügbar, bitte aktualisiere die Kachel</string>
+    <string name="wizard_no_actual_bg">Kein aktueller BG liegt als Basis zur Berechnung vor!</string>
+    <string name="wizard_no_active_profile">Kein aktives Profil gesetzt!</string>
+    <string name="wizard_no_cob">Unbekannter COB! BG-Wert fehlt oder wurde App vor kurzem neu gestartet?</string>
+    <string name="wizard_carbs_constraint">Die Kohlenhydrateinschränkung wurde überschritten!</string>
+    <string name="wizard_explain_calc">Calc (IC: %1$.1f, ISF: %2$.1f)</string>
+    <string name="wizard_explain_carbs">Kohlenhydrate: %1$.2fU</string>
+    <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fU</string>
+    <string name="wizard_explain_bg">BZ: %1$.2fU</string>
+    <string name="wizard_explain_iob">IOB: %1$.2fU</string>
+    <string name="wizard_explain_superbolus">Superbolus: %1$.2fU</string>
+    <string name="wizard_explain_trend">15\' Trend: %1$.2fU</string>
+    <string name="wizard_explain_percent">Prozent: %1$.2fU x %2$d%% ≈ %3$.2fU</string>
+    <string name="wizard_constraint_bolus_size">Verletzung der Bolusbeschränkung!\nKann %1$.2fU nicht abgeben</string>
+    <string name="wizard_explain_tt">TempT: %1$s</string>
+    <string name="wizard_explain_tt_to">%1$s zu %2$s</string>
+    <string name="wizard_pump_not_available">Keine Pumpe verfügbar!</string>
+    <string name="wear_unknown_action_string">Unbekannter Actionbefehl:</string>
+    <string name="overview_editquickwizard_percentage">Prozentsatz</string>
+    <string name="app_default">Standardwert der Anwendung</string>
+    <string name="show_invalidated_records">Zeige ungültige / gelöschte Einträge</string>
+    <string name="hide_invalidated_records">Verberge ungültige / gelöschte Einträge</string>
     <string name="select_profile">Profil zum Bearbeiten auswählen</string>
     <string name="refresh_from_nightscout">Aktualisiere von Nightscout</string>
     <string name="remove_selected_items">Ausgewähltes Objekt löschen</string>
@@ -938,8 +1003,47 @@ Unerwartetes Verhalten.</string>
     <string name="tempt_targets">Temporäre Ziele</string>
     <string name="carbs_and_bolus">Kohlenhydrate &amp; Bolus</string>
     <string name="confirm_remove_multiple_items">Sind Sie sicher, dass Sie diese(s) %1$d Element(e) löschen möchten?</string>
+    <string name="no_records_available">Keine Datensätze verfügbar</string>
+    <string name="hide_loop">Verberge Loop</string>
+    <string name="show_loop">Zeige Loop an</string>
     <string name="count_selected">%1$d ausgewählt</string>
     <string name="sort_label">Sortieren</string>
+    <string name="dialog_canceled">Dialog abgebrochen</string>
+    <string name="veryLow" comment="below 3.1">Sehr niedrig</string>
+    <string name="low" comment="3.1-3.9">Niedrig</string>
+    <string name="high" comment="10.0-13.9">Hoch</string>
+    <string name="veryHigh" comment="above 13.9">Sehr hoch</string>
+    <string name="below" comment="below &quot;in range&quot;">Unter</string>
+    <string name="in_range">Im Zielbereich</string>
+    <string name="above" comment="above &quot;in range&quot;">Über</string>
+    <string name="show_loop_records">Zeige Loop Datensätze</string>
+    <string name="show_hide_records">Verberge Loop Datensätze</string>
+    <string name="widget_description">AndroidAPS Widget</string>
+    <string name="configure">Deckkraft konfigurieren</string>
+    <string name="loop_status">Loop Status</string>
+    <string name="graph_scale">Diagrammskala</string>
+    <string name="profile1">Profil 1</string>
+    <string name="profile2">Profil 2</string>
     <string name="login">Login</string>
+    <string name="remove_all">Alle entfernen</string>
+    <string name="reset_start">Start zurücksetzen</string>
+    <string name="a11y_otp_qr_code">QR Code für einmaliges Passwort einrichten</string>
+    <string name="a11y_open_settings">Einstellungen öffnen</string>
+    <string name="a11y_set_carb_timer">setze Alarm für KH Timer</string>
+    <string name="device_all">Alle</string>
+    <string name="device_phone">Smartphone</string>
+    <string name="device_watch">Smartwatch</string>
+    <string name="a11y_only_on_watch">nur auf Uhr</string>
+    <string name="a11y_only_on_phone">nur auf Telefon</string>
+    <string name="a11y_drag_and_drop_handle">Drag and Drop Handle</string>
+    <string name="search">Suche</string>
     <!-- Aidex Cgms -->
+    <string name="aidex">GlucoRx Aidex</string>
+    <string name="aidex_short">Aidex</string>
+    <string name="description_source_aidex">Erhalte BG-Werte von GlucoRx Aidex CGMS.</string>
+    <string name="blocked_by_charging">Blockiert durch Ladeoptionen</string>
+    <string name="blocked_by_connectivity">Blockiert durch Verbindungsoptionen</string>
+    <string name="no_watch_connected">(keine Uhr verbunden)</string>
+    <string name="error_asking_for_permissions">Fehler beim Anfordern der Erlaubnis</string>
+    <string name="dynisf_adjust_sensitivity">Empfindlichkeit und BZ anpassen</string>
 </resources>

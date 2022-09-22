@@ -656,7 +656,6 @@ Eversense-appen.</string>
     <string name="resistance_lowers_target_summary">Om systemet upptäcker tillfällig insulinresistens, sänk mål-BG för att på så sätt tillåta mer insulin</string>
     <string name="sensitivity_raises_target_title">Insulinkänslighet höjer mål-BG</string>
     <string name="sensitivity_raises_target_summary">Om systemet upptäcker tillfällig insulinkänslighet, höj mål-BG för att på så sätt minska insulindoseringen</string>
-    <string name="careportal_removestartedevents">Rensa alla \"AndroidAPS startad\"</string>
     <string name="storedsettingsfound">Tidigare sparade inställningar hittade</string>
     <string name="allow_hardware_pump_text">Varning: Om du aktiverar och ansluter en pump, kommer AndroidAPS skriva över pumpens basalprofil med den aktiva profilen i AndroidAPS. Se till att ha rätt inställningar i appen innan du ansluter. Om du är osäker, tryck på Avbryt och anslut pumpen på nytt vid ett senare tillfälle.</string>
     <string name="error_adding_treatment_title">Behandlingsdata ofullständigt</string>

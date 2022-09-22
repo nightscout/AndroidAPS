@@ -27,7 +27,6 @@
     <string name="code_compare">האם הקודים המוצגים בהתקן זה ובמשאבה זהים?</string>
     <string name="insight_pairing">צימוד Insight</string>
     <string name="insight_local">Accu-Chek Insight</string>
-    <string name="insight_delivered">%1$.2f יח\' מתוך %2$.2f יח\' הוזרקו</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">הצינורית הוחלפה</string>
     <string name="insightpump_shortname">Insight</string>

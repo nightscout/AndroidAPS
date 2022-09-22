@@ -217,15 +217,17 @@ class RileyLinkBLE @Inject constructor(
                 // Tell Android that we want the notifications
                 bluetoothConnectionGatt?.setCharacteristicNotification(chara, true)
                 val list = chara.descriptors
-                if (gattDebugEnabled) for (i in list.indices) aapsLogger.debug(LTag.PUMPBTCOMM, "Found descriptor: " + list[i].toString())
-                // Tell the remote device to send the notifications
-                mCurrentOperation = DescriptorWriteOperation(aapsLogger, bluetoothConnectionGatt, list[0], BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE)
-                mCurrentOperation?.execute(this)
-                when {
-                    mCurrentOperation?.timedOut == true    -> retValue.resultCode = BLECommOperationResult.RESULT_TIMEOUT
-                    mCurrentOperation?.interrupted == true -> retValue.resultCode = BLECommOperationResult.RESULT_INTERRUPTED
-                    else                                   -> retValue.resultCode = BLECommOperationResult.RESULT_SUCCESS
-                }
+                if (list.size > 0) {
+                    if (gattDebugEnabled) for (i in list.indices) aapsLogger.debug(LTag.PUMPBTCOMM, "Found descriptor: " + list[i].toString())
+                    // Tell the remote device to send the notifications
+                    mCurrentOperation = DescriptorWriteOperation(aapsLogger, bluetoothConnectionGatt, list[0], BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE)
+                    mCurrentOperation?.execute(this)
+                    when {
+                        mCurrentOperation?.timedOut == true    -> retValue.resultCode = BLECommOperationResult.RESULT_TIMEOUT
+                        mCurrentOperation?.interrupted == true -> retValue.resultCode = BLECommOperationResult.RESULT_INTERRUPTED
+                        else                                   -> retValue.resultCode = BLECommOperationResult.RESULT_SUCCESS
+                    }
+                } else return retValue.apply { resultCode = BLECommOperationResult.RESULT_NONE }
             }
             mCurrentOperation = null
             gattOperationSema.release()
@@ -322,6 +324,7 @@ class RileyLinkBLE @Inject constructor(
     init {
         //orangeLink.rileyLinkBLE = this;
         bluetoothGattCallback = object : BluetoothGattCallback() {
+            @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
             override fun onCharacteristicChanged(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic) {
                 super.onCharacteristicChanged(gatt, characteristic)
                 if (gattDebugEnabled) {
@@ -331,9 +334,10 @@ class RileyLinkBLE @Inject constructor(
                 }
                 if (characteristic.uuid == UUID.fromString(GattAttributes.CHARA_RADIO_RESPONSE_COUNT))
                     radioResponseCountNotified?.run()
-                orangeLink.onCharacteristicChanged(characteristic)
+                orangeLink.onCharacteristicChanged(characteristic, characteristic.value)
             }
 
+            @Suppress("OVERRIDE_DEPRECATION", "DEPRECATION")
             override fun onCharacteristicRead(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, status: Int) {
                 super.onCharacteristicRead(gatt, characteristic, status)
                 val statusMessage = getGattStatusMessage(status)
@@ -342,6 +346,7 @@ class RileyLinkBLE @Inject constructor(
                 mCurrentOperation?.gattOperationCompletionCallback(characteristic.uuid, characteristic.value)
             }
 
+            @Suppress("DEPRECATION")
             override fun onCharacteristicWrite(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, status: Int) {
                 super.onCharacteristicWrite(gatt, characteristic, status)
                 val uuidString = GattAttributes.lookup(characteristic.uuid)
@@ -385,6 +390,7 @@ class RileyLinkBLE @Inject constructor(
                 }
             }
 
+            @Suppress("DEPRECATION")
             override fun onDescriptorWrite(gatt: BluetoothGatt, descriptor: BluetoothGattDescriptor, status: Int) {
                 super.onDescriptorWrite(gatt, descriptor, status)
                 if (gattDebugEnabled)
@@ -392,6 +398,7 @@ class RileyLinkBLE @Inject constructor(
                 mCurrentOperation?.gattOperationCompletionCallback(descriptor.uuid, descriptor.value)
             }
 
+            @Suppress("OVERRIDE_DEPRECATION", "DEPRECATION")
             override fun onDescriptorRead(gatt: BluetoothGatt, descriptor: BluetoothGattDescriptor, status: Int) {
                 super.onDescriptorRead(gatt, descriptor, status)
                 mCurrentOperation?.gattOperationCompletionCallback(descriptor.uuid, descriptor.value)

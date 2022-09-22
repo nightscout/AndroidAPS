@@ -3,16 +3,18 @@ package info.nightscout.androidaps.plugins.aps.openAPSAMA
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.*
+import androidx.core.view.MenuProvider
+import androidx.lifecycle.Lifecycle
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.OpenapsamaFragmentBinding
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.aps.events.EventOpenAPSUpdateGui
 import info.nightscout.androidaps.plugins.aps.events.EventOpenAPSUpdateResultGui
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.JSONFormatter
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
@@ -22,7 +24,7 @@ import org.json.JSONArray
 import org.json.JSONException
 import javax.inject.Inject
 
-class OpenAPSAMAFragment : DaggerFragment() {
+class OpenAPSAMAFragment : DaggerFragment(), MenuProvider {
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -35,7 +37,8 @@ class OpenAPSAMAFragment : DaggerFragment() {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var jsonFormatter: JSONFormatter
 
-    private val ID_MENU_RUN = 1
+    @Suppress("PrivatePropertyName")
+    private val ID_MENU_RUN = 502
 
     private var _binding: OpenapsamaFragmentBinding? = null
 
@@ -46,7 +49,7 @@ class OpenAPSAMAFragment : DaggerFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         OpenapsamaFragmentBinding.inflate(inflater, container, false).also {
             _binding = it
-            setHasOptionsMenu(true)
+            requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
         }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -55,23 +58,19 @@ class OpenAPSAMAFragment : DaggerFragment() {
         with(binding.swipeRefresh) {
             setColorSchemeColors(rh.gac(context, R.attr.colorPrimaryDark), rh.gac(context, R.attr.colorPrimary), rh.gac(context, R.attr.colorSecondary))
             setOnRefreshListener {
-                binding.lastrun.text = rh.gs(info.nightscout.androidaps.R.string.executing)
-                Thread { openAPSAMAPlugin.invoke("OpenAPSAMA swiperefresh", false) }.start()
+                binding.lastrun.text = rh.gs(R.string.executing)
+                Thread { openAPSAMAPlugin.invoke("OpenAPSAMA swipe refresh", false) }.start()
             }
         }
 
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        if (isResumed) {
-            menu.removeItem(ID_MENU_RUN)
-            menu.add(Menu.FIRST, ID_MENU_RUN, 0, rh.gs(R.string.openapsma_run)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
-            menu.setGroupDividerEnabled(true)
-        }
+    override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
+        menu.add(Menu.FIRST, ID_MENU_RUN, 0, rh.gs(R.string.openapsma_run)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+        menu.setGroupDividerEnabled(true)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+    override fun onMenuItemSelected(item: MenuItem): Boolean =
         when (item.itemId) {
             ID_MENU_RUN -> {
                 binding.lastrun.text = rh.gs(R.string.executing)

@@ -31,6 +31,7 @@ ActionsTestBase : TestBaseWithProfile() {
 
         private var suspended = false
         override var lastRun: Loop.LastRun? = Loop.LastRun()
+        override var closedLoopEnabled: Constraint<Boolean>? = Constraint(true)
         override val isSuspended: Boolean = suspended
         override val isLGS: Boolean = false
         override val isSuperBolus: Boolean = false

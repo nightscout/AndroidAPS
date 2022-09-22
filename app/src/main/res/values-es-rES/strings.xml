@@ -656,6 +656,8 @@
     <string name="description_source_poctech">Recibir los valores de glucosa de Poctech</string>
     <string name="glunovo">Glunovo</string>
     <string name="description_source_glunovo">Recibir los valores de glucosa de la aplicación Glunovo</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Recibir los valores de glucosa de Intelligo</string>
     <string name="description_source_tomato">Recibir los valores de glucosa de Tomato App (MiaoMiao) </string>
     <string name="high_temptarget_raises_sensitivity_title">Objetivo temporal elevado aumenta sensibilidad</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Aumentar la sensibilidad para objetivos temporales >= 100]]></string>
@@ -665,7 +667,7 @@
     <string name="resistance_lowers_target_summary">Cuando se detecta resistencia a la insulina, disminuye el objetivo de glucosa</string>
     <string name="sensitivity_raises_target_title">Sensibilidad aumenta el objetivo</string>
     <string name="sensitivity_raises_target_summary">Cuando se detecta sensibilidad a la insulina, aumenta el objetivo de glucosa</string>
-    <string name="careportal_removestartedevents">Comenzar la limpieza de AndroidAPS</string>
+    <string name="careportal_removestartedevents">Eliminar registros de inicio de AAPS</string>
     <string name="show_invalidated">Mostrar invalidados</string>
     <string name="hide_invalidated">Ocultar invalidados</string>
     <string name="remove_items">Eliminar elementos</string>
@@ -1044,4 +1046,6 @@
     <string name="blocked_by_charging">Bloqueado por opciones de carga</string>
     <string name="blocked_by_connectivity">Bloqueado por opciones de conectividad</string>
     <string name="no_watch_connected">(Ningún reloj conectado)</string>
+    <string name="error_asking_for_permissions">Error al solicitar permisos</string>
+    <string name="dynisf_adjust_sensitivity">Ajustar sensibilidad y glucosa</string>
 </resources>

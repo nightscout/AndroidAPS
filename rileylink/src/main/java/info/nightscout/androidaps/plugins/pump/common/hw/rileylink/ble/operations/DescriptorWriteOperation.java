@@ -36,6 +36,7 @@ public class DescriptorWriteOperation extends BLECommOperation {
     }
 
 
+    @SuppressWarnings({"deprecation"})
     @Override
     public void execute(RileyLinkBLE comm) {
         descr.setValue(value);

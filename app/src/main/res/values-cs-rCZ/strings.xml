@@ -656,6 +656,8 @@
     <string name="description_source_poctech">Získávat glykémie z aplikace Poctech</string>
     <string name="glunovo">Glunovo</string>
     <string name="description_source_glunovo">Získávat glykémie z aplikace Glunovo</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Přijímat hodnoty z aplikace Intelligo</string>
     <string name="description_source_tomato">Přijímat hodnoty glykémií z Tomato aplikace (MiaoMiao zařízení)</string>
     <string name="high_temptarget_raises_sensitivity_title">Vysoký dočasný cíl zvýší senzitivitu</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Zvýšení senzitivity pro dočasné cíle >= 5.5]]></string>
@@ -665,7 +667,7 @@
     <string name="resistance_lowers_target_summary">Je-li zjištěna rezistence, sníží nastavenou cílovou glykémii</string>
     <string name="sensitivity_raises_target_title">Citlivost zvyšuje cíl</string>
     <string name="sensitivity_raises_target_summary">Je-li zjištěna vyšší citlivost, zvýší nastavenou cílovou glykémii</string>
-    <string name="careportal_removestartedevents">Vyčistit události \"AndroidAPS restartován\"</string>
+    <string name="careportal_removestartedevents">Odebrat záznamy spuštěné AAPS</string>
     <string name="show_invalidated">Zobrazit neplatné</string>
     <string name="hide_invalidated">Skrýt zneplatněné</string>
     <string name="remove_items">Odstranit položky</string>
@@ -1044,4 +1046,6 @@
     <string name="blocked_by_charging">Zablokováno možností nabíjení</string>
     <string name="blocked_by_connectivity">Zablokováno možností připojení</string>
     <string name="no_watch_connected">(Žádné hodinky nejsou připojeny)</string>
+    <string name="error_asking_for_permissions">Chyba žádosti o oprávnění</string>
+    <string name="dynisf_adjust_sensitivity">Upravit citlivost a glykémii</string>
 </resources>

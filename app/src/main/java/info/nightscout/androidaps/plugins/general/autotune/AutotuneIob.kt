@@ -35,10 +35,8 @@ open class AutotuneIob @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val sp: SP,
     private val dateUtil: DateUtil,
-    private val activePlugin: ActivePlugin,
     private val autotuneFS: AutotuneFS
 ) {
-
     private var nsTreatments = ArrayList<NsTreatment>()
     private var dia: Double = Constants.defaultDIA
     var boluses: ArrayList<Bolus> = ArrayList()
@@ -54,7 +52,11 @@ open class AutotuneIob @Inject constructor(
         startBG = from
         endBG = to
         nsTreatments.clear()
+        meals.clear()
+        boluses.clear()
         tempBasals = ArrayList<TemporaryBasal>()
+        if (profileFunction.getProfile(from - range()) == null)
+            return
         initializeBgreadings(from, to)
         initializeTreatmentData(from - range(), to)
         initializeTempBasalData(from - range(), to, tunedProfile)
@@ -91,8 +93,6 @@ open class AutotuneIob @Inject constructor(
         aapsLogger.debug(LTag.AUTOTUNE, "Check BG date: BG Size: " + glucose.size + " OldestBG: " + dateUtil.dateAndTimeAndSecondsString(oldestBgDate) + " to: " + dateUtil.dateAndTimeAndSecondsString(to))
         val tmpCarbs = repository.getCarbsDataFromTimeToTimeExpanded(from, to, false).blockingGet()
         aapsLogger.debug(LTag.AUTOTUNE, "Nb treatments after query: " + tmpCarbs.size)
-        meals.clear()
-        boluses.clear()
         var nbCarbs = 0
         for (i in tmpCarbs.indices) {
             val tp = tmpCarbs[i]
@@ -138,23 +138,17 @@ open class AutotuneIob @Inject constructor(
     //nsTreatment is used only for export data
     private fun initializeExtendedBolusData(from: Long, to: Long, tunedProfile: ATProfile) {
         val extendedBoluses = repository.getExtendedBolusDataFromTimeToTime(from, to, false).blockingGet()
-        val pumpInterface = activePlugin.activePump
-        if (pumpInterface.isFakingTempsByExtendedBoluses) {
-            for (i in extendedBoluses.indices) {
-                val eb = extendedBoluses[i]
-                if (eb.isValid)
+        for (i in extendedBoluses.indices) {
+            val eb = extendedBoluses[i]
+            if (eb.isValid)
+                if (eb.isEmulatingTempBasal) {
                     profileFunction.getProfile(eb.timestamp)?.let {
                         toSplittedTimestampTB(eb.toTemporaryBasal(it), tunedProfile)
                     }
-            }
-        } else {
-            for (i in extendedBoluses.indices) {
-                val eb = extendedBoluses[i]
-                if (eb.isValid) {
+                } else {
                     nsTreatments.add(NsTreatment(eb))
                     boluses.addAll(convertToBoluses(eb))
                 }
-            }
         }
     }
 
@@ -381,9 +375,11 @@ open class AutotuneIob @Inject constructor(
                         }
                     }
                 TherapyEvent.Type.COMBO_BOLUS      ->
-                    extendedBolus?.let {
-                        val profile = profileFunction.getProfile(it.timestamp)
-                        it.toJson(true, profile!!, dateUtil)
+                    extendedBolus?.let { ebr ->
+                        val profile = profileFunction.getProfile(ebr.timestamp)
+                        profile?.let {
+                            ebr.toJson(true, it, dateUtil)
+                        }
                     }
                 TherapyEvent.Type.CORRECTION_BOLUS -> bolusTreatment?.toJson(true, dateUtil)
                 TherapyEvent.Type.CARBS_CORRECTION -> carbsTreatment?.toJson(true, dateUtil)

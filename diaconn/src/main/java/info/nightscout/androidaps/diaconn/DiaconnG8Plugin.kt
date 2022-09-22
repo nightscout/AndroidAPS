@@ -131,7 +131,7 @@ class DiaconnG8Plugin @Inject constructor(
         aapsLogger.debug(LTag.PUMP, "Diaconn G8 connect from: $reason")
         if(diaconnG8Service != null && mDeviceAddress != "" && mDeviceName != "") {
             val success = diaconnG8Service?.connect(reason, mDeviceAddress) ?: false
-            if(!success) ToastUtils.showToastInUiThread(context, rh.gs(R.string.ble_not_supported))
+            if(!success) ToastUtils.errorToast(context, R.string.ble_not_supported)
         }
     }
 

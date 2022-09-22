@@ -19,6 +19,9 @@ class DiaconnG8Pump @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val dateUtil: DateUtil
 ) {
+
+    var isPumpLogUploadFailed: Boolean = false
+
     //var bleResultInfo: Pair<Int?, Boolean> = Pair(null, false)
     var bolusConfirmMessage: Byte = 0
     var isReadyToBolus: Boolean = false

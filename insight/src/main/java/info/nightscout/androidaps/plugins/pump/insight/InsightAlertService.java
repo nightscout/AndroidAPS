@@ -333,7 +333,7 @@ public class InsightAlertService extends DaggerService implements InsightConnect
 
     private void dismissNotification() {
         NotificationManagerCompat.from(this).cancel(NOTIFICATION_ID);
-        stopForeground(true);
+        stopForeground(STOP_FOREGROUND_REMOVE);
     }
 
     public class LocalBinder extends Binder {

@@ -72,11 +72,11 @@ class TreatmentDialog : DialogFragmentWithDate() {
         val maxInsulin = constraintChecker.getMaxBolusAllowed().value()
         if (SafeParse.stringToInt(binding.carbs.text) > maxCarbs) {
             binding.carbs.value = 0.0
-            ToastUtils.showToastInUiThread(context, rh.gs(R.string.carbsconstraintapplied))
+            ToastUtils.warnToast(context, R.string.carbsconstraintapplied)
         }
         if (SafeParse.stringToDouble(binding.insulin.text) > maxInsulin) {
             binding.insulin.value = 0.0
-            ToastUtils.showToastInUiThread(context, rh.gs(R.string.bolusconstraintapplied))
+            ToastUtils.warnToast(context, R.string.bolusconstraintapplied)
         }
     }
 
@@ -212,7 +212,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
                 val cancelFail = {
                     queryingProtection = false
                     aapsLogger.debug(LTag.APS, "Dialog canceled on resume protection: ${this.javaClass.name}")
-                    ToastUtils.showToastInUiThread(ctx, R.string.dialog_canceled)
+                    ToastUtils.warnToast(ctx, R.string.dialog_canceled)
                     dismiss()
                 }
                 protectionCheck.queryProtection(activity, BOLUS, { queryingProtection = false }, cancelFail, cancelFail)

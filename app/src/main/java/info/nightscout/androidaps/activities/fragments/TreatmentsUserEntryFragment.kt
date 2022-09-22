@@ -2,6 +2,8 @@ package info.nightscout.androidaps.activities.fragments
 
 import android.os.Bundle
 import android.view.*
+import androidx.core.view.MenuProvider
+import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
@@ -16,6 +18,7 @@ import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ImportExportPrefs
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.DateUtil
@@ -24,14 +27,13 @@ import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.Translator
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.userEntry.UserEntryPresentationHelper
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
 
-class TreatmentsUserEntryFragment : DaggerFragment() {
+class TreatmentsUserEntryFragment : DaggerFragment(), MenuProvider {
 
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var aapsSchedulers: AapsSchedulers
@@ -60,11 +62,11 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setHasOptionsMenu(true)
         binding.recyclerview.setHasFixedSize(true)
         binding.recyclerview.layoutManager = LinearLayoutManager(view.context)
         binding.recyclerview.emptyView = binding.noRecordsText
         binding.recyclerview.loadingView = binding.progressBar
+        requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     private fun exportUserEntries() {
@@ -144,10 +146,10 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
         override fun getItemCount() = entries.size
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
         this.menu = menu
         inflater.inflate(R.menu.menu_treatments_user_entry, menu)
-        super.onCreateOptionsMenu(menu, inflater)
+        updateMenuVisibility()
     }
 
     private fun updateMenuVisibility() {
@@ -155,17 +157,12 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
         menu?.findItem(R.id.nav_show_loop)?.isVisible = !showLoop
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        updateMenuVisibility()
-        return super.onPrepareOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+    override fun onMenuItemSelected(item: MenuItem): Boolean =
         when (item.itemId) {
             R.id.nav_show_loop -> {
                 showLoop = true
                 updateMenuVisibility()
-                ToastUtils.showToastInUiThread(context, rh.gs(R.string.show_loop_records))
+                ToastUtils.infoToast(context, R.string.show_loop_records)
                 swapAdapter()
                 true
             }
@@ -173,7 +170,7 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
             R.id.nav_hide_loop -> {
                 showLoop = false
                 updateMenuVisibility()
-                ToastUtils.showToastInUiThread(context, rh.gs(R.string.show_hide_records))
+                ToastUtils.infoToast(context, R.string.show_hide_records)
                 swapAdapter()
                 true
             }
@@ -185,5 +182,4 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
 
             else               -> false
         }
-
 }

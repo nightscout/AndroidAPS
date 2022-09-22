@@ -31,7 +31,6 @@
     <string name="format_mins">%1$d min</string>
     <string name="pumpbusy">Pumpe er optaget</string>
     <string name="connectionerror">Forbindelsesfejl til pumpe</string>
-    <string name="youareonallowedlimit">Du har nået den tilladte grænse</string>
     <string name="objectives">Mål</string>
     <string name="close">Luk</string>
     <string name="please_wait">Vent venligst…</string>
@@ -40,7 +39,6 @@
     <string name="stoppressed">STOP TRYKKET</string>
     <string name="stop">Stop</string>
     <string name="carbs">Kulhydrater</string>
-    <string name="invalidprofile">Ugyldig profil !!!</string>
     <string name="noprofileset">INGEN PROFIL SAT</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">Dato</string>
@@ -53,7 +51,6 @@
     <string name="dia_long_label">Varighed af insulin aktivitet</string>
     <string name="ic_long_label">Insulin til kulhydrat forhold</string>
     <string name="isf_long_label">Insulinfølsomhedsfaktor</string>
-    <string name="basal_long_label">Basal rate</string>
     <string name="target_long_label">Blodsukker mål</string>
     <string name="initializing">Initialiserer ...</string>
     <string name="serialnumber">Serienummer</string>
@@ -140,7 +137,6 @@
     <string name="pin_dont_match">PIN-koder ikke identiske</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Basalværdier ikke angivet i hele timer: %1$s</string>
-    <string name="minimalbasalvaluereplaced">Basal dosis erstattet af minimal understøttet dosis: %1$s</string>
     <string name="maximumbasalvaluereplaced">Basal dosis erstattet af maximal understøttet dosis: %1$s</string>
     <string name="profile_per_unit">/IE</string>
     <string name="profile_ins_units_per_hour">E/t</string>
@@ -221,7 +217,6 @@
     <string name="waitingforpumpresult">Venter på resultat</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
-    <string name="carbsreq">%1$d g ekstra kulhydrater krævet inden for %2$d minutter</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Statistik</string>
     <string name="cumulative_tdd">Akkumuleret TDD</string>
@@ -233,7 +228,6 @@
     <string name="amount_days"># Dage</string>
     <string name="weight">Vægt</string>
     <string name="warning_Message">Muligvis unøjagtig, hvis du bruger bolusser til priming/fyldning!</string>
-    <string name="olddata_Message">Gammel data. Tryk venligst På \"GENINDLÆS\"</string>
     <string name="tbb">Basis Basal I Alt</string>
     <string name="tbb2">TBB * 2</string>
     <!--    Ntp-->
@@ -397,7 +391,6 @@
     <string name="valueoutofrange">»%1$s« er uden for absolutte grænser</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f er uden for absolutte grænser</string>
     <string name="basal_value">Basalværdi</string>
-    <string name="nsclient_version_does_not_match">NSClient version matcher ikke AndroidAPS. Opdater venligst.</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f IE</string>
     <string name="carbs_g">KH %1$d g</string>
@@ -450,17 +443,23 @@
     <string name="autotune_auto_summary">Hvis aktiveret, vil Autotune automatisk opdatere og skifte til input-profil efter beregning ud fra en automatiseringsregel.</string>
     <string name="autotune_categorize_uam_as_basal_title">Kategoriser UAM som basal</string>
     <string name="autotune_categorize_uam_as_basal_summary">Aktiver kun hvis du har indtastet alle kulhydrater på pålidelig vis. Med denne indstilling vil pludselige stigninger set af Autotune, blive brugt til at anbefale ændringer af basal rate.</string>
+    <string name="autotune_tune_insulin_curve_title">Tilpas insulinkurven</string>
+    <string name="autotune_tune_insulin_curve_summary">Aktiver kun hvis du bruger egen peak værdi. Dette alternativ vil justere peak og DIA-varigheden</string>
     <string name="autotune_default_tune_days_title">Antal dage med data</string>
     <string name="autotune_circadian_ic_isf_title">Anvend gennemsnitligt resultat i døgnbaseret IC/ISF</string>
     <string name="autotune_circadian_ic_isf_summary">Autotune vil ikke justere døgnrytme variationer, denne indstilling benytter gennemsnitlige værdier til justering af IC og ISF til din døgnrytme input profil</string>
     <string name="autotune_additional_log_title">Inkludér flere logoplysninger for fejlfinding</string>
     <string name="autotune_additional_log_summary">Aktivér kun hvis udviklerne beder dig om det, for at sende flere logoplysninger til at hjælpe med at fejlfinde Autotune plugin</string>
+    <string name="autotune_default_tune_days_summary">Standard antal dage data der skal behandles af Autotune (op til 30)</string>
     <string name="autotune_tunedprofile_name">Justeret</string>
     <string name="autotune_profile">Profil :</string>
     <string name="autotune_tune_days">Justerings dage :</string>
     <string name="autotune_last_run">Sidst kørt :</string>
     <string name="autotune_warning">Advarsel :</string>
     <string name="autotune_select_profile">Vælg profil, der skal justeres</string>
+    <string name="autotune_ic_warning">Autotune fungerer med kun én IC-værdi, din profil har %1$d værdier. Gennemsnitsværdi er %2$.2fg/E</string>
+    <string name="autotune_isf_warning">Autotune virker med kun én ISF-værdi, din profil har %1$d værdier. Gennemsnitlig værdi er %2$.1f%3$s/E</string>
+    <string name="autotune_error">Fejl i inputdata, prøv at køre autotune igen eller reducer antallet af dage</string>
     <string name="autotune_warning_during_run">Automatisk beregning startet, vær venligst tålmodig</string>
     <string name="autotune_warning_after_run">Kontrollér resultaterne omhyggeligt, før du bruger dem!</string>
     <string name="autotune_partial_result">Delvis resultat dag %1$d / %2$d justeret</string>
@@ -482,6 +481,7 @@
     <string name="autotune_run_without_autoswitch">Autotune kørt uden profilskift</string>
     <string name="autotune_run_with_autoswitch">Autotune kørt, profilen er automatisk skiftet</string>
     <string name="autotune_run_with_error">Fejl under sidste Autotune kørsel</string>
+    <string name="autotune_run_cancelled">Autotune kører allerede, annulleret</string>
     <string name="needconnectpermission">Applikationen kræver tilladelse til bluetooth</string>
     <plurals name="days">
         <item quantity="one">%1$d dag</item>

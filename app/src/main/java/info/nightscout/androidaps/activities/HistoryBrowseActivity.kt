@@ -12,7 +12,7 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.jjoe64.graphview.GraphView
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.activities.fragments.HistoryBrowserData
 import info.nightscout.androidaps.databinding.ActivityHistorybrowseBinding
 import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.events.EventCustomCalculationFinished
@@ -21,27 +21,18 @@ import info.nightscout.androidaps.events.EventScale
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.extensions.toVisibilityKeepSpace
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.Config
-import info.nightscout.androidaps.interfaces.Loop
-import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus
-import info.nightscout.androidaps.plugins.general.overview.OverviewData
+import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.plugins.general.overview.OverviewMenus
 import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewGraph
 import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
-import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.Translator
-import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.workflow.CalculationWorkflow
 import info.nightscout.shared.logging.LTag
-import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.util.*
@@ -50,23 +41,16 @@ import kotlin.math.min
 
 class HistoryBrowseActivity : NoSplashAppCompatActivity() {
 
+    @Inject lateinit var historyBrowserData: HistoryBrowserData
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var sp: SP
-    @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var buildHelper: BuildHelper
-    @Inject lateinit var repository: AppRepository
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var overviewMenus: OverviewMenus
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var config: Config
-    @Inject lateinit var loop: Loop
-    @Inject lateinit var nsDeviceStatus: NSDeviceStatus
-    @Inject lateinit var translator: Translator
     @Inject lateinit var context: Context
-    @Inject lateinit var dataWorker: DataWorker
     @Inject lateinit var calculationWorkflow: CalculationWorkflow
 
     private val disposable = CompositeDisposable()
@@ -78,9 +62,6 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
     private var rangeToDisplay = 24 // for graph
 //    private var start: Long = 0
 
-    private lateinit var iobCobCalculator: IobCobCalculatorPlugin
-    private lateinit var overviewData: OverviewData
-
     private lateinit var binding: ActivityHistorybrowseBinding
     private var destroyed = false
 
@@ -89,42 +70,12 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         binding = ActivityHistorybrowseBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // We don't want to use injected singletons but own instance working on top of different data
-        overviewData =
-            OverviewData(
-                aapsLogger,
-                rh,
-                dateUtil,
-                sp,
-                activePlugin,
-                defaultValueHelper,
-                profileFunction,
-                repository,
-                fabricPrivacy
-            )
-        iobCobCalculator =
-            IobCobCalculatorPlugin(
-                injector,
-                aapsLogger,
-                aapsSchedulers,
-                rxBus,
-                sp,
-                rh,
-                profileFunction,
-                activePlugin,
-                fabricPrivacy,
-                dateUtil,
-                repository,
-                overviewData,
-                calculationWorkflow
-            )
-
         binding.left.setOnClickListener {
-            adjustTimeRange(overviewData.fromTime - T.hours(rangeToDisplay.toLong()).msecs())
+            adjustTimeRange(historyBrowserData.overviewData.fromTime - T.hours(rangeToDisplay.toLong()).msecs())
             loadAll("onClickLeft")
         }
         binding.right.setOnClickListener {
-            adjustTimeRange(overviewData.fromTime + T.hours(rangeToDisplay.toLong()).msecs())
+            adjustTimeRange(historyBrowserData.overviewData.fromTime + T.hours(rangeToDisplay.toLong()).msecs())
             loadAll("onClickRight")
         }
         binding.end.setOnClickListener {
@@ -138,7 +89,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         }
         binding.zoom.setOnLongClickListener {
             Calendar.getInstance().also { calendar ->
-                calendar.timeInMillis = overviewData.fromTime
+                calendar.timeInMillis = historyBrowserData.overviewData.fromTime
                 calendar[Calendar.MILLISECOND] = 0
                 calendar[Calendar.SECOND] = 0
                 calendar[Calendar.MINUTE] = 0
@@ -151,13 +102,13 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
 
         binding.date.setOnClickListener {
             MaterialDatePicker.Builder.datePicker()
-                .setSelection(dateUtil.timeStampToUtcDateMillis(overviewData.fromTime))
+                .setSelection(dateUtil.timeStampToUtcDateMillis(historyBrowserData.overviewData.fromTime))
                 .setTheme(R.style.DatePicker)
                 .build()
                 .apply {
                     addOnPositiveButtonClickListener { selection ->
-                        setTime(dateUtil.mergeUtcDateToTimestamp(overviewData.fromTime, selection))
-                        binding.date.text = dateUtil.dateAndTimeString(overviewData.fromTime)
+                        setTime(dateUtil.mergeUtcDateToTimestamp(historyBrowserData.overviewData.fromTime, selection))
+                        binding.date.text = dateUtil.dateAndTimeString(historyBrowserData.overviewData.fromTime)
                         loadAll("onClickDate")
                     }
                 }
@@ -180,8 +131,8 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         prepareGraphsIfNeeded(overviewMenus.setting.size)
         savedInstanceState?.let { bundle ->
             rangeToDisplay = bundle.getInt("rangeToDisplay", 0)
-            overviewData.fromTime = bundle.getLong("start", 0)
-            overviewData.toTime = bundle.getLong("end", 0)
+            historyBrowserData.overviewData.fromTime = bundle.getLong("start", 0)
+            historyBrowserData.overviewData.toTime = bundle.getLong("end", 0)
         }
     }
 
@@ -220,11 +171,11 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
             .observeOn(aapsSchedulers.main)
             .subscribe({
                            rangeToDisplay = it.hours
-                           setTime(overviewData.fromTime)
+                           setTime(historyBrowserData.overviewData.fromTime)
                            loadAll("rangeChange")
                        }, fabricPrivacy::logException)
-
-        if (overviewData.fromTime == 0L) {
+        updateCalcProgress(100)
+        if (historyBrowserData.overviewData.fromTime == 0L) {
             // set start of current day
             setTime(dateUtil.now())
             loadAll("onResume")
@@ -236,8 +187,8 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt("rangeToDisplay", rangeToDisplay)
-        outState.putLong("start", overviewData.fromTime)
-        outState.putLong("end", overviewData.toTime)
+        outState.putLong("start", historyBrowserData.overviewData.fromTime)
+        outState.putLong("end", historyBrowserData.overviewData.toTime)
     }
 
     private fun prepareGraphsIfNeeded(numOfGraphs: Int) {
@@ -293,18 +244,18 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
     }
 
     private fun adjustTimeRange(start: Long) {
-        overviewData.fromTime = start
-        overviewData.toTime = overviewData.fromTime + T.hours(rangeToDisplay.toLong()).msecs()
-        overviewData.endTime = overviewData.toTime
+        historyBrowserData.overviewData.fromTime = start
+        historyBrowserData.overviewData.toTime = historyBrowserData.overviewData.fromTime + T.hours(rangeToDisplay.toLong()).msecs()
+        historyBrowserData.overviewData.endTime = historyBrowserData.overviewData.toTime
     }
 
     private fun runCalculation(from: String) {
         calculationWorkflow.runCalculation(
             CalculationWorkflow.HISTORY_CALCULATION,
-            iobCobCalculator,
-            overviewData,
+            historyBrowserData.iobCobCalculator,
+            historyBrowserData.overviewData,
             from,
-            overviewData.toTime,
+            historyBrowserData.overviewData.toTime,
             bgDataReload = true,
             limitDataToOldestAvailable = false,
             cause = EventCustomCalculationFinished(),
@@ -325,7 +276,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
     }
 
     private fun updateDate() {
-        binding.date.text = dateUtil.dateAndTimeString(overviewData.fromTime)
+        binding.date.text = dateUtil.dateAndTimeString(historyBrowserData.overviewData.fromTime)
         binding.zoom.text = rangeToDisplay.toString()
     }
 
@@ -337,9 +288,9 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         updateDate()
 
         val pump = activePlugin.activePump
-        val graphData = GraphData(injector, binding.bgGraph, overviewData)
+        val graphData = GraphData(injector, binding.bgGraph, historyBrowserData.overviewData)
         val menuChartSettings = overviewMenus.setting
-        graphData.addInRangeArea(overviewData.fromTime, overviewData.endTime, defaultValueHelper.determineLowLine(), defaultValueHelper.determineHighLine())
+        graphData.addInRangeArea(historyBrowserData.overviewData.fromTime, historyBrowserData.overviewData.endTime, defaultValueHelper.determineLowLine(), defaultValueHelper.determineHighLine())
         graphData.addBgReadings(menuChartSettings[0][OverviewMenus.CharType.PRE.ordinal], context)
         if (buildHelper.isDev()) graphData.addBucketedData()
         graphData.addTreatments(context)
@@ -355,7 +306,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
 
         // set manual x bounds to have nice steps
         graphData.setNumVerticalLabels()
-        graphData.formatAxis(overviewData.fromTime, overviewData.endTime)
+        graphData.formatAxis(historyBrowserData.overviewData.fromTime, historyBrowserData.overviewData.endTime)
 
         graphData.performUpdate()
 
@@ -365,7 +316,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
 
         val now = System.currentTimeMillis()
         for (g in 0 until min(secondaryGraphs.size, menuChartSettings.size + 1)) {
-            val secondGraphData = GraphData(injector, secondaryGraphs[g], overviewData)
+            val secondGraphData = GraphData(injector, secondaryGraphs[g], historyBrowserData.overviewData)
             var useABSForScale = false
             var useIobForScale = false
             var useCobForScale = false
@@ -393,7 +344,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
             if (menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] && buildHelper.isDev()) secondGraphData.addDeviationSlope(useDSForScale, 1.0)
 
             // set manual x bounds to have nice steps
-            secondGraphData.formatAxis(overviewData.fromTime, overviewData.endTime)
+            secondGraphData.formatAxis(historyBrowserData.overviewData.fromTime, historyBrowserData.overviewData.endTime)
             secondGraphData.addNowLine(now)
             secondaryGraphsData.add(secondGraphData)
         }
