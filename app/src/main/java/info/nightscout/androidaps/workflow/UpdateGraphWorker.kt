@@ -7,6 +7,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin
 import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewGraph
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
 import javax.inject.Inject
 
 class UpdateGraphWorker(
@@ -26,6 +27,7 @@ class UpdateGraphWorker(
             overviewPlugin.overviewBus.send(EventUpdateOverviewGraph("UpdateGraphWorker"))
         else
             rxBus.send(EventUpdateOverviewGraph("UpdateGraphWorker"))
+        rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.DRAW, 100, null))
         return Result.success()
     }
 }
