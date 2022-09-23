@@ -370,32 +370,33 @@ class LoopPlugin @Inject constructor(
                         if (resultAfterConstraints.bolusRequested()) lastRun.smbSetByPump = waiting
                         rxBus.send(EventLoopUpdateGui())
                         fabricPrivacy.logCustom("APSRequest")
-                        applyTBRRequest(resultAfterConstraints, profile, object : Callback() {
+                        applySMBRequest(resultAfterConstraints, object : Callback() {
                             override fun run() {
+                                // Callback is only called if a bolus was actually requested
                                 if (result.enacted || result.success) {
-                                    lastRun.tbrSetByPump = result
-                                    lastRun.lastTBRRequest = lastRun.lastAPSRun
-                                    lastRun.lastTBREnact = dateUtil.now()
-                                    rxBus.send(EventLoopUpdateGui())
-                                    applySMBRequest(resultAfterConstraints, object : Callback() {
+                                    lastRun.smbSetByPump = result
+                                    lastRun.lastSMBRequest = lastRun.lastAPSRun
+                                    lastRun.lastSMBEnact = dateUtil.now()
+                                    applyTBRRequest(resultAfterConstraints, profile, object : Callback() {
                                         override fun run() {
-                                            // Callback is only called if a bolus was actually requested
                                             if (result.enacted || result.success) {
-                                                lastRun.smbSetByPump = result
-                                                lastRun.lastSMBRequest = lastRun.lastAPSRun
-                                                lastRun.lastSMBEnact = dateUtil.now()
+                                                lastRun.tbrSetByPump = result
+                                                lastRun.lastTBRRequest = lastRun.lastAPSRun
+                                                lastRun.lastTBREnact = dateUtil.now()
+                                                rxBus.send(EventLoopUpdateGui())
+
                                             } else {
-                                                Thread {
-                                                    SystemClock.sleep(1000)
-                                                    invoke("tempBasalFallback", allowNotification, true)
-                                                }.start()
+                                                lastRun.tbrSetByPump = result
+                                                lastRun.lastTBRRequest = lastRun.lastAPSRun
                                             }
                                             rxBus.send(EventLoopUpdateGui())
                                         }
                                     })
                                 } else {
-                                    lastRun.tbrSetByPump = result
-                                    lastRun.lastTBRRequest = lastRun.lastAPSRun
+                                    Thread {
+                                        SystemClock.sleep(1000)
+                                        invoke("tempBasalFallback", allowNotification, true)
+                                    }.start()
                                 }
                                 rxBus.send(EventLoopUpdateGui())
                             }
@@ -604,6 +605,7 @@ class LoopPlugin @Inject constructor(
     private fun applySMBRequest(request: APSResult, callback: Callback?) {
         if (!request.bolusRequested()) {
             aapsLogger.debug(LTag.APS, "No SMB requested")
+            callback?.result(PumpEnactResult(injector).enacted(false).success(true).comment(R.string.nochangerequested))?.run()
             return
         }
         val pump = activePlugin.activePump
