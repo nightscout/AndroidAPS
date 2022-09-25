@@ -40,6 +40,17 @@
             validate:testType="floatNumericRange" />
 
         <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+            android:defaultValue="100"
+            android:inputType="numberDecimal"
+            android:key="@string/key_DynISFVelocity"
+            android:title="@string/DynISFVelocity_title"
+            android:summary="@string/DynISFVelocity_summary"
+            android:dialogMessage="@string/DynISFVelocity_dialogMessage"
+            validate:floatmaxNumber="200"
+            validate:floatminNumber="0"
+            validate:testType="floatNumericRange"/>
+
+        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
             android:defaultValue="65"
             android:inputType="numberDecimal"
             android:dialogMessage="@string/treatmentssafety_lgsThreshold_summary"

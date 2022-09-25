@@ -293,7 +293,17 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scri
         val dynISFadjust = SafeParse.stringToDouble(sp.getString(R.string.key_DynISFAdjust, "100")) / 100.0
         tdd *= dynISFadjust
 
-        var variableSensitivity = 1800 / (tdd * (ln((glucoseStatus.glucose / insulinDivisor) + 1)))
+        val dynISFvelocity = SafeParse.stringToDouble(sp.getString(R.string.key_DynISFVelocity, "100")) / 100.0
+
+        var variableSensitivity =
+            if (dynISFvelocity == 1.0) 1800 / (tdd * (ln((glucoseStatus.glucose / insulinDivisor) + 1)))
+            else {
+                val sensNormalTarget = 1800 / (tdd * (ln((profile.getTargetMgdl() / insulinDivisor) + 1)))
+                val sbg = ln((glucoseStatus.glucose / insulinDivisor) + 1)
+                val scaler = ln((profile.getTargetMgdl() / insulinDivisor) + 1) / sbg
+                sensNormalTarget * (1 - (1 - scaler) * dynISFvelocity)
+            }
+
         variableSensitivity = Round.roundTo(variableSensitivity, 0.1)
 
         if (dynISFadjust != 1.0) {
