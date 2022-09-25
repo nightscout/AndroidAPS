@@ -26,7 +26,8 @@ class CgmSourceTransaction(
                 value = it.value,
                 noise = it.noise,
                 trendArrow = it.trendArrow,
-                sourceSensor = it.sourceSensor
+                sourceSensor = it.sourceSensor,
+                isValid = it.isValid
             ).also { gv ->
                 gv.interfaceIDs.nightscoutId = it.nightscoutId
             }
@@ -88,7 +89,8 @@ class CgmSourceTransaction(
         val noise: Double?,
         val trendArrow: GlucoseValue.TrendArrow,
         val nightscoutId: String? = null,
-        val sourceSensor: GlucoseValue.SourceSensor
+        val sourceSensor: GlucoseValue.SourceSensor,
+        val isValid: Boolean = true
     )
 
     data class Calibration(

@@ -6,6 +6,7 @@ import info.nightscout.sdk.remotemodel.RemoteEntry
 import info.nightscout.sdk.remotemodel.RemoteStatusResponse
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Path
 
 /**
  * Created by adrian on 2019-12-23.
@@ -25,4 +26,7 @@ internal interface NightscoutRemoteService {
 
     @GET("v3/entries?sort\$desc=date&type=sgv")
     suspend fun getSgvs(): Response<NSResponse<List<RemoteEntry>>>
+
+    @GET("v3/entries/history/{from}")
+    suspend fun getSgvsModifiedSince(@Path("from") from: Long): Response<NSResponse<List<RemoteEntry>>>
 }

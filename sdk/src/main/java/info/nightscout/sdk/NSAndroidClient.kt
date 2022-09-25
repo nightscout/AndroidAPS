@@ -22,6 +22,7 @@ interface NSAndroidClient {
     suspend fun getStatus(): Status
     suspend fun getEntries(): String
     suspend fun getSgvs(): List<Sgv>
+    suspend fun getSgvsModifiedSince(from: Long): List<Sgv>
 }
 
 /**
@@ -114,6 +115,16 @@ private class NSAndroidClientImpl(
     override suspend fun getSgvs(): List<Sgv> = callWrapper(dispatcher) {
 
         val response = api.getSgvs()
+        if (response.isSuccessful) {
+            return@callWrapper response.body()?.result?.map(RemoteEntry::toSgv).toNotNull()
+        } else {
+            throw TodoNightscoutException() // TODO: react to response errors (offline, ...)
+        }
+    }
+
+    override suspend fun getSgvsModifiedSince(from: Long): List<Sgv> = callWrapper(dispatcher) {
+
+        val response = api.getSgvsModifiedSince(from)
         if (response.isSuccessful) {
             return@callWrapper response.body()?.result?.map(RemoteEntry::toSgv).toNotNull()
         } else {

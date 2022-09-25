@@ -13,17 +13,24 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventChargingState
 import info.nightscout.androidaps.events.EventNetworkChange
 import info.nightscout.androidaps.events.EventPreferenceChange
-import info.nightscout.androidaps.interfaces.*
+import info.nightscout.androidaps.interfaces.BuildHelper
+import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.androidaps.interfaces.NsClient
+import info.nightscout.androidaps.interfaces.PluginBase
+import info.nightscout.androidaps.interfaces.PluginDescription
+import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.interfaces.Sync
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.sync.nsclient.NSClientFragment
 import info.nightscout.androidaps.plugins.sync.nsclient.NsClientReceiverDelegate
 import info.nightscout.androidaps.plugins.sync.nsclient.data.AlarmAck
 import info.nightscout.androidaps.plugins.sync.nsclient.data.NSAlarm
 import info.nightscout.androidaps.plugins.sync.nsclient.events.EventNSClientNewLog
+import info.nightscout.androidaps.plugins.sync.nsclient.events.EventNSClientUpdateGUI
 import info.nightscout.androidaps.plugins.sync.nsclient.services.NSClientService
 import info.nightscout.androidaps.plugins.sync.nsclientV3.events.EventNSClientV3Resend
 import info.nightscout.androidaps.plugins.sync.nsclientV3.events.EventNSClientV3Status
-import info.nightscout.androidaps.plugins.sync.nsclientV3.events.EventNSClientV3UpdateGUI
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HtmlHelper.fromHtml
 import info.nightscout.androidaps.utils.ToastUtils
@@ -80,7 +87,7 @@ class NSClientV3Plugin @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe({ event: EventNSClientV3Status ->
                            status = event.getStatus(rh)
-                           rxBus.send(EventNSClientV3UpdateGUI())
+                           rxBus.send(EventNSClientUpdateGUI())
                        }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventNetworkChange::class.java)
@@ -135,7 +142,7 @@ class NSClientV3Plugin @Inject constructor(
     override fun clearLog() {
         handler.post {
             synchronized(listLog) { listLog.clear() }
-            rxBus.send(EventNSClientV3UpdateGUI())
+            rxBus.send(EventNSClientUpdateGUI())
         }
     }
 
@@ -148,7 +155,7 @@ class NSClientV3Plugin @Inject constructor(
                     listLog.removeAt(0)
                 }
             }
-            rxBus.send(EventNSClientV3UpdateGUI())
+            rxBus.send(EventNSClientUpdateGUI())
         }
     }
 

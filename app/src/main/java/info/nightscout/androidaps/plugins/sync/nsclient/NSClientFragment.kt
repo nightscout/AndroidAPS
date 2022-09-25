@@ -5,6 +5,7 @@ import android.view.*
 import android.widget.ScrollView
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
+import androidx.work.OneTimeWorkRequest
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.entities.UserEntry.Action
@@ -13,8 +14,11 @@ import info.nightscout.androidaps.databinding.NsClientFragmentBinding
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.source.NSClientSourcePlugin
+import info.nightscout.androidaps.plugins.sync.nsclient.events.EventNSClientNewLog
 import info.nightscout.androidaps.plugins.sync.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.plugins.sync.nsclient.events.EventNSClientUpdateGUI
+import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
@@ -39,6 +43,7 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
     @Inject lateinit var dataSyncSelector: DataSyncSelector
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var dataWorker: DataWorker
 
     companion object {
 
@@ -46,7 +51,7 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
         const val ID_MENU_RESTART = 508
         const val ID_MENU_SEND_NOW = 509
         const val ID_MENU_FULL_SYNC = 510
-        const val ID_MENU_STATUS = 601
+        const val ID_MENU_TEST = 601
     }
 
     override var plugin: PluginBase? = null
@@ -84,6 +89,7 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
     }
 
     override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
+        menu.add(Menu.FIRST, ID_MENU_TEST, 0, "Test").setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
         menu.add(Menu.FIRST, ID_MENU_CLEAR_LOG, 0, rh.gs(R.string.clearlog)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
         menu.add(Menu.FIRST, ID_MENU_RESTART, 0, rh.gs(R.string.restart)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
         menu.add(Menu.FIRST, ID_MENU_SEND_NOW, 0, rh.gs(R.string.deliver_now)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
@@ -118,7 +124,7 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
                 true
             }
 
-            ID_MENU_STATUS    -> {
+            ID_MENU_TEST      -> {
                 context?.let { context ->
                     val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
                     scope.launch {
@@ -129,9 +135,19 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
                             logging = true
                         )
                         val status = client.getStatus()
-                        aapsLogger.debug(status.toString())
-                        val svgs = client.getSgvs()
-                        aapsLogger.debug(svgs.toString())
+                        aapsLogger.debug("STATUS: $status")
+                        val sgvs = client.getSgvsModifiedSince(1663686093000)
+                        aapsLogger.debug("SGVS: $sgvs")
+                        if (sgvs.isNotEmpty()) {
+                            rxBus.send(EventNSClientNewLog("DATA", "received " + sgvs.size + " sgvs", NsClient.Version.V3))
+                            // Objective0
+                            sp.putBoolean(R.string.key_ObjectivesbgIsAvailableInNS, true)
+                            dataWorker.enqueue(
+                                OneTimeWorkRequest.Builder(NSClientSourcePlugin.NSClientSourceWorker::class.java)
+                                    .setInputData(dataWorker.storeInputData(sgvs))
+                                    .build()
+                            )
+                        }
                     }
                 }
                 true

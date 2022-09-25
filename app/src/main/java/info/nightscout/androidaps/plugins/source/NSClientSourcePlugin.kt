@@ -18,9 +18,11 @@ import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.XDripBroadcast
+import info.nightscout.sdk.localmodel.entry.Sgv
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
+import org.json.JSONArray
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -31,14 +33,15 @@ class NSClientSourcePlugin @Inject constructor(
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
     config: Config
-) : PluginBase(PluginDescription()
-                   .mainType(PluginType.BGSOURCE)
-                   .fragmentClass(BGSourceFragment::class.java.name)
-                   .pluginIcon(R.drawable.ic_nsclient_bg)
-                   .pluginName(R.string.nsclientbg)
-                   .shortName(R.string.nsclientbgshort)
-                   .description(R.string.description_source_ns_client),
-               aapsLogger, rh, injector
+) : PluginBase(
+    PluginDescription()
+        .mainType(PluginType.BGSOURCE)
+        .fragmentClass(BGSourceFragment::class.java.name)
+        .pluginIcon(R.drawable.ic_nsclient_bg)
+        .pluginName(R.string.nsclientbg)
+        .shortName(R.string.nsclientbgshort)
+        .description(R.string.description_source_ns_client),
+    aapsLogger, rh, injector
 ), BgSource {
 
     private var lastBGTimeStamp: Long = 0
@@ -106,33 +109,59 @@ class NSClientSourcePlugin @Inject constructor(
             )
         }
 
+        private fun toGv(sgv: Sgv): CgmSourceTransaction.TransactionGlucoseValue {
+            return CgmSourceTransaction.TransactionGlucoseValue(
+                timestamp = sgv.date,
+                value = sgv.sgv,
+                noise = sgv.noise?.toDouble(),
+                raw = sgv.filtered ?: sgv.sgv,
+                trendArrow = GlucoseValue.TrendArrow.fromString(sgv.direction.nsName),
+                nightscoutId = sgv.identifier,
+                sourceSensor = GlucoseValue.SourceSensor.fromString(sgv.device),
+                isValid = sgv.isValid
+            )
+        }
+
         @Suppress("SpellCheckingInspection")
         override fun doWork(): Result {
             var ret = Result.success()
-            val sgvs = dataWorker.pickupJSONArray(inputData.getLong(DataWorker.STORE_KEY, -1))
+            val sgvs = dataWorker.pickupObject(inputData.getLong(DataWorker.STORE_KEY, -1))
                 ?: return Result.failure(workDataOf("Error" to "missing input data"))
-            xDripBroadcast.sendSgvs(sgvs)
+
             if (!nsClientSourcePlugin.isEnabled() && !sp.getBoolean(R.string.key_ns_receive_cgm, false))
                 return Result.success(workDataOf("Result" to "Sync not enabled"))
 
+            var latestDateInReceivedData: Long = 0
+            aapsLogger.debug(LTag.BGSOURCE, "Received NS Data: $sgvs")
+            val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
+
             try {
-                var latestDateInReceivedData: Long = 0
+                if (sgvs is JSONArray) { // V1 client
+                    xDripBroadcast.sendSgvs(sgvs)
 
-                aapsLogger.debug(LTag.BGSOURCE, "Received NS Data: $sgvs")
-                val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
-                for (i in 0 until sgvs.length()) {
-                    val sgv = toGv(sgvs.getJSONObject(i)) ?: continue
-                    if (sgv.timestamp < dateUtil.now() && sgv.timestamp > latestDateInReceivedData) latestDateInReceivedData = sgv.timestamp
-                    glucoseValues += sgv
+                    for (i in 0 until sgvs.length()) {
+                        val sgv = toGv(sgvs.getJSONObject(i)) ?: continue
+                        if (sgv.timestamp < dateUtil.now() && sgv.timestamp > latestDateInReceivedData) latestDateInReceivedData = sgv.timestamp
+                        glucoseValues += sgv
+                    }
 
+                    activePlugin.activeNsClient?.updateLatestDateReceivedIfNewer(latestDateInReceivedData)
+                } else if (sgvs is List<*>) { // V3 client
+//                xDripBroadcast.sendSgvs(sgvs)
+
+                    for (i in 0 until sgvs.size) {
+                        val sgv = toGv(sgvs[i] as Sgv)
+                        if (sgv.timestamp < dateUtil.now() && sgv.timestamp > latestDateInReceivedData) latestDateInReceivedData = sgv.timestamp
+                        glucoseValues += sgv
+                    }
+
+//                    activePlugin.activeNsClient?.updateLatestDateReceivedIfNewer(latestDateInReceivedData)
                 }
                 // Was that sgv more less 5 mins ago ?
                 if (T.msecs(dateUtil.now() - latestDateInReceivedData).mins() < 5L) {
                     rxBus.send(EventDismissNotification(Notification.NS_ALARM))
                     rxBus.send(EventDismissNotification(Notification.NS_URGENT_ALARM))
                 }
-
-                activePlugin.activeNsClient?.updateLatestDateReceivedIfNewer(latestDateInReceivedData)
 
                 repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null, !nsClientSourcePlugin.isEnabled()))
                     .doOnError {
@@ -151,6 +180,7 @@ class NSClientSourcePlugin @Inject constructor(
                             nsClientSourcePlugin.detectSource(it)
                             aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
                         }
+                        ret = Result.success(workDataOf("latestDateInReceivedData" to latestDateInReceivedData))
                     }
             } catch (e: Exception) {
                 aapsLogger.error("Unhandled exception", e)
