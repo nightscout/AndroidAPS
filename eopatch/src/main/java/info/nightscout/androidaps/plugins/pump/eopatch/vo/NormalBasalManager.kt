@@ -37,7 +37,8 @@ class NormalBasalManager : IPreference<NormalBasalManager> {
                 if(TimeUnit.SECONDS.toMinutes(it.getBasalValues()[i].timeAsSeconds.toLong()) != normalBasal.list.get(i).start){
                     return false
                 }
-                if(CommonUtils.nearlyNotEqual(it.getBasalValues()[i].value.toFloat(), normalBasal.list.get(i).doseUnitPerHour, 0.0000001f)){
+                if(!CommonUtils.nearlyEqual(it.getBasalValues()[i].value.toFloat(), normalBasal
+                        .list.get(i).doseUnitPerHour, 0.0000001f)){
                     return false
                 }
             }

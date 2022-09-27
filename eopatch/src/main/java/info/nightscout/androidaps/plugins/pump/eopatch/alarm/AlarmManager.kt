@@ -27,6 +27,8 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
+import java.text.SimpleDateFormat
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -138,7 +140,13 @@ class AlarmManager @Inject constructor() : IAlarmManager {
     }
 
     private fun showNotification(alarmCode: AlarmCode, timeOffset: Long = 0L){
-        val notification = EONotification(Notification.EOELOW_PATCH_ALERTS + (alarmCode.aeCode + 10000), resourceHelper.gs(alarmCode.resId), Notification.URGENT)
+        var alarmMsg = resourceHelper.gs(alarmCode.resId)
+        if(alarmCode == B000){
+            val expireTimeValue = pm.getPatchWakeupTimestamp() + TimeUnit.HOURS.toMillis(84)
+            val expireTimeString = SimpleDateFormat(resourceHelper.gs(R.string.date_format_yyyy_m_d_e_a_hh_mm_comma), Locale.US).format(expireTimeValue)
+            alarmMsg = resourceHelper.gs(alarmCode.resId, expireTimeString)
+        }
+        val notification = EONotification(Notification.EOELOW_PATCH_ALERTS + (alarmCode.aeCode + 10000), alarmMsg, Notification.URGENT)
 
         notification.action(R.string.confirm) {
             compositeDisposable.add(

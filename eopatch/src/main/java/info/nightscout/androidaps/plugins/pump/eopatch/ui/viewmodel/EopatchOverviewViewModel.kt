@@ -16,6 +16,7 @@ import info.nightscout.androidaps.plugins.pump.eopatch.vo.Alarms
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchConfig
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchState
 import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.plugins.pump.eopatch.extension.nearlyEqual
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
@@ -168,16 +169,31 @@ class EopatchOverviewViewModel @Inject constructor(
 
     fun onClickActivation(){
         val profile = profileFunction.getProfile()
-
-        if(profile != null && profile.getBasal() >= 0.05) {
-            patchManager.preferenceManager.getNormalBasalManager().setNormalBasal(profile)
-            patchManager.preferenceManager.flushNormalBasalManager()
-
-            _eventHandler.postValue(UIEvent(EventType.ACTIVATION_CLICKED))
-        }else if(profile != null && profile.getBasal() < 0.05){
-            _eventHandler.postValue(UIEvent(EventType.INVALID_BASAL_RATE))
-        }else{
+        if(profile == null){
             _eventHandler.postValue(UIEvent(EventType.PROFILE_NOT_SET))
+        }else{
+            val basalValues = profile.getBasalValues()
+            var isValid = true
+            for(basalRate in basalValues){
+                if(basalRate.value < 0.049999){
+                    _eventHandler.postValue(UIEvent(EventType.INVALID_BASAL_RATE))
+                    isValid = false
+                    break
+                }
+                val mod = (basalRate.value * 1000) % (0.05 * 1000)
+                if(!mod.nearlyEqual(0.0, 0.00000001)){
+                    _eventHandler.postValue(UIEvent(EventType.UNSUPPORTED_BASAL_RATE).apply { value = basalRate.value })
+                    isValid = false
+                    break
+                }
+            }
+
+            if(isValid) {
+                patchManager.preferenceManager.getNormalBasalManager().setNormalBasal(profile)
+                patchManager.preferenceManager.flushNormalBasalManager()
+
+                _eventHandler.postValue(UIEvent(EventType.ACTIVATION_CLICKED))
+            }
         }
     }
 

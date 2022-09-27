@@ -241,6 +241,7 @@
 
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">Invalid profile: %1$s</string>
+    <string name="unsupportedBasalRate">Unsupported basal rate: %1$s</string>
 
     <!--    Temptarget-->
     <string name="mins">%1$d min</string>

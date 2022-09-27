@@ -47,6 +47,8 @@ class StatusLightHandler @Inject constructor(
             val insulinUnit = rh.gs(R.string.insulin_unit_shortname)
             if (pump.model() == PumpType.OMNIPOD_EROS || pump.model() == PumpType.OMNIPOD_DASH) {
                 handleOmnipodReservoirLevel(careportal_reservoir_level, R.string.key_statuslights_res_critical, 10.0, R.string.key_statuslights_res_warning, 80.0, pump.reservoirLevel, insulinUnit)
+            } else if (pump.model() == PumpType.EOFLOW_EOPATCH2) {
+                handleEopatchReservoirLevel(careportal_reservoir_level, R.string.key_statuslights_res_critical, 10.0, R.string.key_statuslights_res_warning, 80.0, pump.reservoirLevel, insulinUnit)
             } else {
                 handleLevel(careportal_reservoir_level, R.string.key_statuslights_res_critical, 10.0, R.string.key_statuslights_res_warning, 80.0, pump.reservoirLevel, insulinUnit)
             }
@@ -103,4 +105,14 @@ class StatusLightHandler @Inject constructor(
         }
     }
 
+    @Suppress("SameParameterValue")
+    private fun handleEopatchReservoirLevel(view: TextView?, criticalSetting: Int, criticalDefaultValue: Double, warnSetting: Int, warnDefaultValue: Double, level: Double, units: String) {
+        if (level > 50.0) {
+            @Suppress("SetTextI18n")
+            view?.text = " 50+$units"
+            view?.setTextColor(rh.gac(view.context, R.attr.defaultTextColor))
+        } else {
+            handleLevel(view, criticalSetting, criticalDefaultValue, warnSetting, warnDefaultValue, level, units)
+        }
+    }
 }

@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.ui
 
-import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -18,6 +17,7 @@ import info.nightscout.androidaps.plugins.pump.eopatch.code.EventType
 import info.nightscout.androidaps.plugins.pump.eopatch.databinding.FragmentEopatchOverviewBinding
 import info.nightscout.androidaps.plugins.pump.eopatch.extension.takeOne
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchOverviewViewModel
+import info.nightscout.androidaps.utils.alertDialogs.AlertDialogHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -52,8 +52,9 @@ class EopatchOverviewFragment: EoBaseFragment<FragmentEopatchOverviewBinding>() 
                         EventType.DEACTIVATION_CLICKED -> requireContext().apply { startActivity(EopatchActivity.createIntentForChangePatch(this)) }
                         EventType.SUSPEND_CLICKED      -> suspend()
                         EventType.RESUME_CLICKED      -> resume()
-                        EventType.INVALID_BASAL_RATE  -> showToast(R.string.unsupported_basal_rate)
-                        EventType.PROFILE_NOT_SET     -> showToast(R.string.no_profile_selected)
+                        EventType.INVALID_BASAL_RATE     -> showToast(R.string.invalid_basal_rate)
+                        EventType.UNSUPPORTED_BASAL_RATE -> showToast(R.string.unsupported_basal_rate, evt.value)
+                        EventType.PROFILE_NOT_SET        -> showToast(R.string.no_profile_selected)
                         EventType.PAUSE_BASAL_FAILED  -> showToast(R.string.string_pause_failed)
                         EventType.RESUME_BASAL_FAILED -> showToast(R.string.string_resume_failed)
                         else                          -> Unit
@@ -90,14 +91,17 @@ class EopatchOverviewFragment: EoBaseFragment<FragmentEopatchOverviewBinding>() 
         binding.viewmodel?.startBasalRateUpdate()
     }
 
-    private fun showToast(@StringRes strId: Int){
-        Toast.makeText(requireContext(), strId, Toast.LENGTH_SHORT).show()
+    private fun showToast(@StringRes strId: Int, value: Any? = null){
+        if(value == null)
+            Toast.makeText(requireContext(), strId, Toast.LENGTH_SHORT).show()
+        else
+            Toast.makeText(requireContext(), getString(strId, value.toString()), Toast.LENGTH_SHORT).show()
     }
 
     private fun suspend() {
         binding.viewmodel?.apply {
             activity?.let {
-                val builder = AlertDialog.Builder(it)
+                val builder = AlertDialogHelper.Builder(it)
                 val msg = getSuspendDialogText()
 
                 val dialog = builder.setTitle(R.string.string_suspend)
@@ -116,7 +120,7 @@ class EopatchOverviewFragment: EoBaseFragment<FragmentEopatchOverviewBinding>() 
     private fun resume() {
         binding.viewmodel?.apply {
             activity?.let {
-                val builder = AlertDialog.Builder(it)
+                val builder = AlertDialogHelper.Builder(it)
                 val dialog = builder.setTitle(R.string.string_resume_insulin_delivery_title)
                     .setMessage(R.string.string_resume_insulin_delivery_message)
                     .setPositiveButton(R.string.confirm) { _, _ ->
@@ -137,7 +141,7 @@ class EopatchOverviewFragment: EoBaseFragment<FragmentEopatchOverviewBinding>() 
     private fun openPauseTimePicker() {
         binding.viewmodel?.apply {
             activity?.let{
-                val builder = AlertDialog.Builder(it)
+                val builder = AlertDialogHelper.Builder(it)
                 val listArr = requireContext().resources.getStringArray(R.array.suspend_duration_array)
                 var select = 0
                 val dialog = builder.setTitle(R.string.string_suspend_time_insulin_delivery_title)

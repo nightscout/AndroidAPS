@@ -22,6 +22,7 @@
     <string name="string_a116">Patch Error\nPatch has been deactivated and insulin delivery stopped. Change Patch now.</string>
     <string name="string_a117">Patch Error\nPatch has been deactivated and insulin delivery stopped. Change Patch now.</string>
     <string name="string_a118">Patch Error\nPatch has been deactivated and insulin delivery stopped. Change Patch now.</string>
+    <string name="string_b000">Patch operating life will expire %s. Be ready to change Patch.</string>
     <string name="string_b001">End of insulin suspend\nTap \'Resume\' to restart the insulin delivery.</string>
     <string name="string_b003">Low reservoir\nReplace Patch soon.</string>
     <string name="string_b005">Patch operating life expired\nChange Patch now.</string>

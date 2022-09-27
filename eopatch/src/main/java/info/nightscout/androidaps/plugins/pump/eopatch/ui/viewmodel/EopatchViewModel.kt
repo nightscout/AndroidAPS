@@ -5,6 +5,7 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.pump.eopatch.CommonUtils
 import info.nightscout.androidaps.plugins.pump.eopatch.R
 import info.nightscout.androidaps.plugins.pump.eopatch.RxAction
@@ -14,6 +15,7 @@ import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPatchManager
 import info.nightscout.androidaps.plugins.pump.eopatch.code.EventType
 import info.nightscout.androidaps.plugins.pump.eopatch.code.PatchLifecycle
 import info.nightscout.androidaps.plugins.pump.eopatch.code.PatchStep
+import info.nightscout.androidaps.plugins.pump.eopatch.code.SettingKeys.Companion.EXPIRATION_REMINDERS
 import info.nightscout.androidaps.plugins.pump.eopatch.core.define.IPatchConstant
 import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.BleConnectionState
 import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.PatchSelfTestResult.TEST_SUCCESS
@@ -28,10 +30,10 @@ import info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchViewM
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchConfig
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchLifecycleEvent
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchState
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
+import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
@@ -49,7 +51,8 @@ class EopatchViewModel @Inject constructor(
     private val alarmRegistry: IAlarmRegistry,
     private val aapsLogger: AAPSLogger,
     private val aapsSchedulers: AapsSchedulers,
-    private val rxAction: RxAction
+    private val rxAction: RxAction,
+    private val sp: SP
 ) : EoBaseViewModel<EoBaseNavigator>() {
     companion object {
         private const val MAX_ELAPSED_MILLIS_AFTER_EXPIRATION = -12L * 60 * 60 * 1000
@@ -491,9 +494,12 @@ class EopatchViewModel @Inject constructor(
                     PatchStep.COMPLETE, PatchStep.BASAL_SCHEDULE -> {
                         val now = System.currentTimeMillis()
                         val expireTimeStamp = patchConfig.expireTimestamp
+                        val milllisBeforeExpiration = TimeUnit.HOURS.toMillis(sp.getInt(EXPIRATION_REMINDERS, 0).toLong())
+
                         Maybe.just(AlarmCode.B012)
                             .flatMap { alarmRegistry.remove(it) }
                             .flatMap { alarmRegistry.remove(AlarmCode.A020) }
+                            .flatMap { alarmRegistry.add(AlarmCode.B000, expireTimeStamp - now - milllisBeforeExpiration) }
                             .flatMap { alarmRegistry.add(AlarmCode.B005, expireTimeStamp - now) }
                             .flatMap { alarmRegistry.add(AlarmCode.B006, expireTimeStamp - now + IPatchConstant.SERVICE_TIME_MILLI - TimeUnit.HOURS.toMillis(1)) }
                             .flatMap { alarmRegistry.add(AlarmCode.A003, expireTimeStamp - now + IPatchConstant.SERVICE_TIME_MILLI) }

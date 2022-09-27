@@ -32,8 +32,9 @@
     <string name="eopatch_temp_basal_rate">Temp Basal Rate</string>
     <string name="eopatch_total_delivered">Total Delivered</string>
 
-    <string name="unsupported_basal_rate">The basal of the profile is less than 0.05 U/hr. EOPatch has a minimum injection unit of 0.05U. Please try again after setting the profile to more than the minimum injection unit.</string>
+    <string name="invalid_basal_rate">The basal of the profile is less than 0.05 U/hr. EOPatch has a minimum injection unit of 0.05U. Please try again after setting the profile to more than the minimum injection unit.</string>
     <string name="no_profile_selected">No profile selected. Please select a profile and try again.</string>
+    <string name="unsupported_basal_rate">Basal rate %1$s U/hr is not supported by EOPatch.</string>
 
     <string name="symbol_day">day</string>
     <string name="symbol_plus">+</string>
@@ -110,9 +111,9 @@
     <string name="patch_cancel_pairing">Cancel pairing</string>
     <string name="symbol_days">days</string>
     <string name="all_dose_unit">&#160;U</string>
-    <string name="insulin_suspend_msg1">Upon the suspend, the currently deliverying Bolus &amp; Temp basal will be canceled. \n\nRate : %1$s U/hr\nRemaining time  : %2$s\n&amp; Insulin to go : %3$.2f U</string>
-    <string name="insulin_suspend_msg2">Upon the suspend, the currently deliverying Bolus will be canceled. \n\nInsulin to go : %1$.2f U</string>
-    <string name="insulin_suspend_msg3">Upon the suspend, the currently deliverying Temp Basal will be canceled. \n\nRate : %1$s U/hr\nRemaining time  : %2$s</string>
+    <string name="insulin_suspend_msg1">Upon the suspend, the currently delivering Bolus &amp; Temp basal will be canceled. \n\nRate : %1$s U/hr\nRemaining time  : %2$s\n&amp; Insulin to go : %3$.2f U</string>
+    <string name="insulin_suspend_msg2">Upon the suspend, the currently delivering Bolus will be canceled. \n\nInsulin to go : %1$.2f U</string>
+    <string name="insulin_suspend_msg3">Upon the suspend, the currently delivering Temp Basal will be canceled. \n\nRate : %1$s U/hr\nRemaining time  : %2$s</string>
     <string name="insulin_suspend_msg4">Insulin delivery will be suspended.</string>
     <string name="string_change_patch">Discard/Change Patch</string>
     <string name="string_activate_patch">Activate Patch</string>
@@ -131,7 +132,7 @@
     <string name="string_in_progress">Processing</string>
     <string name="retry">Retry</string>
     <string name="string_caution_not_remove_needle_cap">[Caution] DO NOT remove the needle cap and the adhesive backing until further instruction.</string>
-    <string name="string_are_you_sure_to_discard_current_patch">Are you sure to deiscard the current Patch?</string>
+    <string name="string_are_you_sure_to_discard_current_patch">Are you sure to discard the current Patch?</string>
     <string name="string_unconfirmed_bolus_info_discard_confirm_message">Due to an unconfirmed bolus information, Bolus calc cannot be used until %s.\n\nAre you sure to discard the current Patch?</string>
     <string name="needle_insertion_error_1">Needle insertion Error.</string>
     <string name="needle_insertion_error_2">Check the direction of the hole left after turning the lever is straight and then Tap \'Retry\'.</string>
@@ -147,4 +148,5 @@
     <string name="patch_connection_fail">Retry after Patch communication check.</string>
     <string name="string_pause_failed">Suspension failed.</string>
     <string name="string_resume_failed">Resume failed.</string>
+    <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">EEE, d MMM, yyyy hh:mm a</string>
 </resources>

@@ -35,6 +35,8 @@ public interface IPatchManager {
 
     boolean isActivated();
 
+    boolean isDeactivated();
+
     Single<? extends BaseResponse> resumeBasal();
 
     Observable<PatchLifecycle> observePatchLifeCycle();

@@ -19,14 +19,15 @@ import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.common.ManufacturerType
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType
+import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
+import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.IAlarmManager
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPatchManager
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager
 import info.nightscout.androidaps.plugins.pump.eopatch.code.BolusExDuration
 import info.nightscout.androidaps.plugins.pump.eopatch.code.SettingKeys
-import info.nightscout.androidaps.plugins.pump.eopatch.extension.takeOne
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.EopatchOverviewFragment
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.TempBasal
 import info.nightscout.androidaps.queue.commands.CustomCommand
@@ -94,7 +95,6 @@ class EopatchPumpPlugin @Inject constructor(
             .toObservable(EventAppInitialized::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({
-                aapsLogger.debug(LTag.PUMP,"EventAppInitialized")
                 preferenceManager.init()
                 patchManager.init()
                 alarmManager.init()
@@ -103,7 +103,7 @@ class EopatchPumpPlugin @Inject constructor(
     }
 
     override fun specialEnableCondition(): Boolean {
-        //BG -> FG 시 패치 활성화 재진행 및 미처리 알람 발생
+        //BG -> FG, restart patch activation and trigger unhandled alarm
         if(preferenceManager.isInitDone()) {
             patchManager.checkActivationProcess()
             alarmManager.restartAll()
@@ -129,7 +129,7 @@ class EopatchPumpPlugin @Inject constructor(
     }
 
     override fun isConnected(): Boolean {
-        return patchManager.patchConnectionState.isConnected
+        return if(patchManager.isDeactivated) true else patchManager.patchConnectionState.isConnected
     }
 
     override fun isConnecting(): Boolean {
@@ -199,19 +199,25 @@ class EopatchPumpPlugin @Inject constructor(
 
                 disposable.dispose()
                 aapsLogger.info(LTag.PUMP, "Basal Profile was set: ${isSuccess?:false}")
-                return PumpEnactResult(injector).apply{ success = isSuccess?:false }
+                if(isSuccess?:false) {
+                    rxBus.send(EventNewNotification(Notification(Notification.PROFILE_SET_OK, rh.gs(R.string.profile_set_ok), Notification.INFO, 60)))
+                    return PumpEnactResult(injector).success(true).enacted(true)
+                }else{
+                    return PumpEnactResult(injector)
+                }
             }
         }else{
             preferenceManager.getNormalBasalManager().setNormalBasal(profile)
             preferenceManager.flushNormalBasalManager()
-            return PumpEnactResult(injector)
+            rxBus.send(EventNewNotification(Notification(Notification.PROFILE_SET_OK, rh.gs(R.string.profile_set_ok), Notification.INFO, 60)))
+            return PumpEnactResult(injector).success(true).enacted(true)
         }
     }
 
     override fun isThisProfileSet(profile: Profile): Boolean {
-        if (!patchManager.isActivated) {
-            return true
-        }
+        // if (!patchManager.isActivated) {
+        //     return true
+        // }
 
         val ret = preferenceManager.getNormalBasalManager().isEqual(profile)
         aapsLogger.info(LTag.PUMP, "Is this profile set? $ret")
@@ -236,9 +242,8 @@ class EopatchPumpPlugin @Inject constructor(
         if (!patchManager.isActivated) {
             return 0.0
         }
-        val reservoirLevel = patchManager.patchState.remainedInsulin.toDouble()
 
-        return (reservoirLevel > 50.0).takeOne(50.0, reservoirLevel)
+        return patchManager.patchState.remainedInsulin.toDouble()
     }
 
     override val batteryLevel: Int
@@ -275,6 +280,10 @@ class EopatchPumpPlugin @Inject constructor(
                 })
             )
 
+            val tr = detailedBolusInfo.let {
+                EventOverviewBolusProgress.Treatment(it.insulin, it.carbs.toInt(), it.bolusType === DetailedBolusInfo.BolusType.SMB, it.id)
+            }
+
             do{
                 SystemClock.sleep(100)
                 if(patchManager.patchConnectionState.isConnected) {
@@ -282,6 +291,7 @@ class EopatchPumpPlugin @Inject constructor(
                     rxBus.send(EventOverviewBolusProgress.apply {
                         status = rh.gs(R.string.bolusdelivering, delivering)
                         percent = min((delivering / detailedBolusInfo.insulin * 100).toInt(), 100)
+                        t = tr
                     })
                 }
             }while(!patchManager.bolusCurrent.nowBolus.endTimeSynced && isSuccess)

@@ -87,10 +87,6 @@ object CommonUtils {
         }
     }
 
-    fun nearlyNotEqual(a: Float, b: Float, epsilon: Float): Boolean {
-        return !nearlyEqual(a, b, epsilon)
-    }
-
     fun <T : Any> clone(src: T): T {
         return GsonHelper.sharedGson().fromJson(GsonHelper.sharedGson().toJson(src), src.javaClass)
     }
