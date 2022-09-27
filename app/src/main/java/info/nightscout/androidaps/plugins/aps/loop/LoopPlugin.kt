@@ -370,12 +370,17 @@ class LoopPlugin @Inject constructor(
                         if (resultAfterConstraints.bolusRequested()) lastRun.smbSetByPump = waiting
                         rxBus.send(EventLoopUpdateGui())
                         fabricPrivacy.logCustom("APSRequest")
+                        // TBR request must be applied first to prevent situation where
+                        // SMB was executed and zero TBR afterwards failed
                         applyTBRRequest(resultAfterConstraints, profile, object : Callback() {
                             override fun run() {
                                 if (result.enacted || result.success) {
                                     lastRun.tbrSetByPump = result
                                     lastRun.lastTBRRequest = lastRun.lastAPSRun
                                     lastRun.lastTBREnact = dateUtil.now()
+                                    // deliverAt is used to prevent executing too old SMB request (older than 1 min)
+                                    // executing TBR may take some time thus give more time to SMB
+                                    resultAfterConstraints.deliverAt = lastRun.lastTBREnact
                                     rxBus.send(EventLoopUpdateGui())
                                     applySMBRequest(resultAfterConstraints, object : Callback() {
                                         override fun run() {
