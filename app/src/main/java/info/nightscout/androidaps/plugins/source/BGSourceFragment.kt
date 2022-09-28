@@ -119,7 +119,8 @@ class BGSourceFragment : DaggerFragment(), MenuProvider {
     }
 
     override fun onMenuItemSelected(item: MenuItem) =
-        actionHelper.onOptionsItemSelected(item)
+        if (actionHelper.onOptionsItemSelected(item)) true
+        else super.onContextItemSelected(item)
 
     inner class RecyclerViewAdapter internal constructor(private var glucoseValues: List<GlucoseValue>) : RecyclerView.Adapter<RecyclerViewAdapter.GlucoseValuesViewHolder>() {
 
@@ -195,6 +196,7 @@ class BGSourceFragment : DaggerFragment(), MenuProvider {
                         R.string.poctech            -> Sources.PocTech
                         R.string.tomato             -> Sources.Tomato
                         R.string.glunovo            -> Sources.Glunovo
+                        R.string.intelligo            -> Sources.Intelligo
                         R.string.xdrip              -> Sources.Xdrip
                         R.string.aidex              -> Sources.Aidex
                         else                        -> Sources.Unknown

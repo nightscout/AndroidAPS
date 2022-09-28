@@ -190,7 +190,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 ?: return Result.failure(workDataOf("Error" to "missing input data"))
             val format = bundle.getString("format")
                 ?: return Result.failure(workDataOf("Error" to "missing format in input data"))
-            val pdus = bundle["pdus"] as Array<*>
+            @Suppress("DEPRECATION") val pdus = bundle["pdus"] as Array<*>
             for (pdu in pdus) {
                 val message = SmsMessage.createFromPdu(pdu as ByteArray, format)
                 smsCommunicatorPlugin.processSms(Sms(message))

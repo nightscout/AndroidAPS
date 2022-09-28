@@ -304,7 +304,7 @@ class LoopDialog : DaggerDialogFragment() {
                 commandQueue.cancelTempBasal(true, object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            ToastUtils.showToastInUiThread(ctx, rh.gs(R.string.tempbasaldeliveryerror))
+                            ToastUtils.errorToast(ctx, rh.gs(R.string.tempbasaldeliveryerror))
                         }
                     }
                 })
@@ -449,7 +449,7 @@ class LoopDialog : DaggerDialogFragment() {
                 val cancelFail = {
                     queryingProtection = false
                     aapsLogger.debug(LTag.APS, "Dialog canceled on resume protection: ${this.javaClass.name}")
-                    ToastUtils.showToastInUiThread(ctx, R.string.dialog_canceled)
+                    ToastUtils.warnToast(ctx, R.string.dialog_canceled)
                     dismiss()
                 }
                 protectionCheck.queryProtection(activity, BOLUS, { queryingProtection = false }, cancelFail, cancelFail)

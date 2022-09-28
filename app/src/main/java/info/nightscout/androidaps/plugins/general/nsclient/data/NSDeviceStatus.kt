@@ -54,6 +54,8 @@ import javax.inject.Singleton
             "predBGs": {
                 "IOB": [116, 114, 112, 110, 109, 107, 106, 105, 105, 104, 104, 104, 104, 104, 104, 104, 104, 105, 105, 105, 105, 105, 106, 106, 106, 106, 106, 107]
             },
+            "sensitivityRatio": 0.81,
+            "variable_sens": 137.3,
             "COB": 0,
             "IOB": -0.035,
             "reason": "COB: 0, Dev: -18, BGI: 0.43, ISF: 216, Target: 99; Eventual BG 105 > 99 but Min. Delta -2.60 < Exp. Delta 0.1; setting current basal of 0.4 as temp. Suggested rate is same as profile rate, no temp basal is active, doing nothing",

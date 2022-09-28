@@ -8,6 +8,8 @@ import android.os.SystemClock
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventPumpStatusChanged
+import info.nightscout.androidaps.extensions.safeDisable
+import info.nightscout.androidaps.extensions.safeEnable
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Config
@@ -77,10 +79,8 @@ class QueueThread internal constructor(
                         pump.disconnect("watchdog")
                         SystemClock.sleep(1000)
                         (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter?.let { bluetoothAdapter ->
-                            bluetoothAdapter.disable()
-                            SystemClock.sleep(1000)
-                            bluetoothAdapter.enable()
-                            SystemClock.sleep(1000)
+                            bluetoothAdapter.safeDisable(1000)
+                            bluetoothAdapter.safeEnable(1000)
                         }
                         //start over again once after watchdog barked
                         //Notification notification = new Notification(Notification.OLD_NSCLIENT, "Watchdog", Notification.URGENT);

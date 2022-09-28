@@ -130,13 +130,14 @@ class LoopFragment : DaggerFragment(), MenuProvider {
             binding.smbsetbypump.text = it.smbSetByPump?.let { smbSetByPump -> HtmlHelper.fromHtml(smbSetByPump.toHtml()) }
                 ?: ""
 
-            val constraints =
+            var constraints =
                 it.constraintsProcessed?.let { constraintsProcessed ->
                     val allConstraints = Constraint(0.0)
                     constraintsProcessed.rateConstraint?.let { rateConstraint -> allConstraints.copyReasons(rateConstraint) }
                     constraintsProcessed.smbConstraint?.let { smbConstraint -> allConstraints.copyReasons(smbConstraint) }
                     allConstraints.getMostLimitedReasons(aapsLogger)
                 } ?: ""
+            constraints += loop.closedLoopEnabled?.getReasons(aapsLogger) ?: ""
             binding.constraints.text = constraints
             binding.swipeRefresh.isRefreshing = false
         }

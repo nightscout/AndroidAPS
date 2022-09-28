@@ -215,13 +215,13 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
                         }
                     }
             } else {
-                ToastUtils.INSTANCE.showToastInUiThread(context.getApplicationContext(), rh.gs(R.string.nobtadapter));
+                ToastUtils.INSTANCE.errorToast(context.getApplicationContext(), R.string.nobtadapter);
             }
             if (mBTDevice == null) {
-                ToastUtils.INSTANCE.showToastInUiThread(context.getApplicationContext(), rh.gs(R.string.devicenotfound));
+                ToastUtils.INSTANCE.errorToast(context.getApplicationContext(), R.string.devicenotfound);
             }
         } else {
-            ToastUtils.INSTANCE.errorToast(context, context.getString(R.string.needconnectpermission));
+            ToastUtils.INSTANCE.errorToast(context, R.string.needconnectpermission);
         }
     }
 

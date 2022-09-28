@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.autotune
 
+import android.content.Context
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.os.Bundle
@@ -262,6 +263,7 @@ class AutotuneFragment : DaggerFragment() {
         binding.tuneLastrun.setOnClickListener {
             if (!autotunePlugin.calculationRunning) {
                 autotunePlugin.loadLastRun()
+                binding.tuneDays.value = autotunePlugin.lastNbDays.toDouble()
                 updateGui()
             }
         }
@@ -418,11 +420,12 @@ class AutotuneFragment : DaggerFragment() {
                                         setTextAppearance(android.R.style.TextAppearance_Material_Medium)
                                     })
                                 autotunePlugin.tunedProfile?.let { tuned ->
-                                    layout.addView(toTableRowHeader())
+                                    layout.addView(toTableRowHeader(context))
                                     val tuneInsulin = sp.getBoolean(R.string.key_autotune_tune_insulin_curve, false)
                                     if (tuneInsulin) {
                                         layout.addView(
                                             toTableRowValue(
+                                                context,
                                                 rh.gs(R.string.insulin_peak),
                                                 autotunePlugin.pumpProfile.localInsulin.peak.toDouble(),
                                                 tuned.localInsulin.peak.toDouble(),
@@ -431,6 +434,7 @@ class AutotuneFragment : DaggerFragment() {
                                         )
                                         layout.addView(
                                             toTableRowValue(
+                                                context,
                                                 rh.gs(R.string.dia),
                                                 Round.roundTo(autotunePlugin.pumpProfile.localInsulin.dia, 0.1),
                                                 Round.roundTo(tuned.localInsulin.dia, 0.1),
@@ -440,13 +444,14 @@ class AutotuneFragment : DaggerFragment() {
                                     }
                                     layout.addView(
                                         toTableRowValue(
+                                            context,
                                             rh.gs(R.string.isf_short),
                                             Round.roundTo(autotunePlugin.pumpProfile.isf / toMgDl, 0.001),
                                             Round.roundTo(tuned.isf / toMgDl, 0.001),
                                             isfFormat
                                         )
                                     )
-                                    layout.addView(toTableRowValue(rh.gs(R.string.ic_short), Round.roundTo(autotunePlugin.pumpProfile.ic, 0.001), Round.roundTo(tuned.ic, 0.001), "%.2f"))
+                                    layout.addView(toTableRowValue(context, rh.gs(R.string.ic_short), Round.roundTo(autotunePlugin.pumpProfile.ic, 0.001), Round.roundTo(tuned.ic, 0.001), "%.2f"))
                                     layout.addView(
                                         TextView(context).apply {
                                             text = rh.gs(R.string.basal)
@@ -455,7 +460,7 @@ class AutotuneFragment : DaggerFragment() {
                                             setTextAppearance(android.R.style.TextAppearance_Material_Medium)
                                         }
                                     )
-                                    layout.addView(toTableRowHeader(true))
+                                    layout.addView(toTableRowHeader(context,true))
                                     var totalPump = 0.0
                                     var totalTuned = 0.0
                                     for (h in 0 until tuned.basal.size) {
@@ -463,9 +468,9 @@ class AutotuneFragment : DaggerFragment() {
                                         val time = df.format(h.toLong()) + ":00"
                                         totalPump += autotunePlugin.pumpProfile.basal[h]
                                         totalTuned += tuned.basal[h]
-                                        layout.addView(toTableRowValue(time, autotunePlugin.pumpProfile.basal[h], tuned.basal[h], "%.3f", tuned.basalUntuned[h].toString()))
+                                        layout.addView(toTableRowValue(context, time, autotunePlugin.pumpProfile.basal[h], tuned.basal[h], "%.3f", tuned.basalUntuned[h].toString()))
                                     }
-                                    layout.addView(toTableRowValue("∑", totalPump, totalTuned, "%.3f", " "))
+                                    layout.addView(toTableRowValue(context, "∑", totalPump, totalTuned, "%.3f", " "))
                                 }
                             }
                         )
@@ -476,7 +481,7 @@ class AutotuneFragment : DaggerFragment() {
         }
     }
 
-    private fun toTableRowHeader(basal: Boolean = false): TableRow =
+    private fun toTableRowHeader(context: Context, basal: Boolean = false): TableRow =
         TableRow(context).also { header ->
             val lp = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT).apply { weight = 1f }
             header.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT).apply { gravity = Gravity.CENTER_HORIZONTAL }
@@ -507,7 +512,7 @@ class AutotuneFragment : DaggerFragment() {
             })
         }
 
-    private fun toTableRowValue(hour: String, inputValue: Double, tunedValue: Double, format: String = "%.3f", missing: String = ""): TableRow =
+    private fun toTableRowValue(context: Context, hour: String, inputValue: Double, tunedValue: Double, format: String = "%.3f", missing: String = ""): TableRow =
         TableRow(context).also { row ->
             val percentValue = Round.roundTo(tunedValue / inputValue * 100 - 100, 1.0).toInt().toString() + "%"
             val lp = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT).apply { weight = 1f }

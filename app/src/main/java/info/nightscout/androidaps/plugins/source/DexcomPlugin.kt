@@ -19,13 +19,19 @@ import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
 import info.nightscout.androidaps.database.transactions.InvalidateGlucoseValueTransaction
 import info.nightscout.androidaps.extensions.fromConstant
-import info.nightscout.androidaps.interfaces.*
+import info.nightscout.androidaps.extensions.safeGetInstalledPackages
+import info.nightscout.androidaps.interfaces.BgSource
+import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.androidaps.interfaces.PluginBase
+import info.nightscout.androidaps.interfaces.PluginDescription
+import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.interfaces.Profile
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.XDripBroadcast
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
@@ -244,7 +250,7 @@ class DexcomPlugin @Inject constructor(
 
         fun findDexcomPackageName(): String? {
             val packageManager = context.packageManager
-            for (packageInfo in packageManager.getInstalledPackages(0)) {
+            for (packageInfo in packageManager.safeGetInstalledPackages(0)) {
                 if (PACKAGE_NAMES.contains(packageInfo.packageName)) return packageInfo.packageName
             }
             return null

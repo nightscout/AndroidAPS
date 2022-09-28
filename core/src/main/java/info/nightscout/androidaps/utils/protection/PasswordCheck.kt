@@ -148,7 +148,7 @@ class PasswordCheck @Inject constructor(
             .setNegativeButton(context.getString(R.string.cancel)
             ) { dialog, _ ->
                 val msg = if (pinInput) R.string.pin_not_changed else R.string.password_not_changed
-                ToastUtils.infoToast(context, context.getString(msg))
+                ToastUtils.infoToast(context, msg)
                 cancel?.invoke()
                 dialog.cancel()
             }

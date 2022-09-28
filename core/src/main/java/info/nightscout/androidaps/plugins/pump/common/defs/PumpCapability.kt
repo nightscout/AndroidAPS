@@ -8,7 +8,7 @@ enum class PumpCapability {
     BasalProfileSet,  // isSetBasalProfileCapable
     Refill,  // isRefillingCapable
     ReplaceBattery,  // isBatteryReplaceable
-    StoreCarbInfo,  // storesCarbInfo
+    // StoreCarbInfo,  // removed. incompatible with storing notes with carbs
     TDD,  // supportsTDDs
     ManualTDDLoad,  // needsManualTDDLoad
     BasalRate30min,  // is30minBasalRatesCapable
@@ -18,7 +18,8 @@ enum class PumpCapability {
     VirtualPumpCapabilities(arrayOf(Bolus, ExtendedBolus, TempBasal, BasalProfileSet, Refill, ReplaceBattery)),
     ComboCapabilities(arrayOf(Bolus, TempBasal, BasalProfileSet, Refill, ReplaceBattery, TDD, ManualTDDLoad)),
     DanaCapabilities(arrayOf(Bolus, ExtendedBolus, TempBasal, BasalProfileSet, Refill, ReplaceBattery, TDD, ManualTDDLoad)),
-    DanaWithHistoryCapabilities(arrayOf(Bolus, ExtendedBolus, TempBasal, BasalProfileSet, Refill, ReplaceBattery, StoreCarbInfo, TDD, ManualTDDLoad)),
+    //DanaWithHistoryCapabilities(arrayOf(Bolus, ExtendedBolus, TempBasal, BasalProfileSet, Refill, ReplaceBattery, StoreCarbInfo, TDD, ManualTDDLoad)),
+    DanaWithHistoryCapabilities(arrayOf(Bolus, ExtendedBolus, TempBasal, BasalProfileSet, Refill, ReplaceBattery, TDD, ManualTDDLoad)),
     InsightCapabilities(arrayOf(Bolus, ExtendedBolus, TempBasal, BasalProfileSet, Refill, ReplaceBattery, TDD, BasalRate30min)),
     MedtronicCapabilities(arrayOf(Bolus, TempBasal, BasalProfileSet, Refill, ReplaceBattery, TDD)),
     OmnipodCapabilities(arrayOf(Bolus, TempBasal, BasalProfileSet, BasalRate30min)),

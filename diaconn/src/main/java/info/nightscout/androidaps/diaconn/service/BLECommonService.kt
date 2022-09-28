@@ -144,6 +144,7 @@ class BLECommonService @Inject internal constructor(
         bluetoothGatt = null
     }
 
+    @Suppress("OVERRIDE_DEPRECATION", "DEPRECATION")
     private val mGattCallback: BluetoothGattCallback = object : BluetoothGattCallback() {
         override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
             onConnectionStateChangeSynchronized(gatt, newState) // call it synchronized
@@ -179,6 +180,7 @@ class BLECommonService @Inject internal constructor(
         }
     }
 
+    @Suppress("DEPRECATION")
     @SuppressLint("MissingPermission")
     @Synchronized
     private fun writeCharacteristicNoResponse(characteristic: BluetoothGattCharacteristic, data: ByteArray) {
@@ -218,6 +220,7 @@ class BLECommonService @Inject internal constructor(
         return bluetoothGatt?.services
     }
 
+    @Suppress("DEPRECATION")
     @SuppressLint("MissingPermission")
     @Synchronized
     private fun findCharacteristic() {

@@ -380,6 +380,12 @@ abstract class PluginsModule {
     @Binds
     @AllConfigs
     @IntoMap
+    @IntKey(473)
+    abstract fun bindIntelligoPlugin(plugin: IntelligoPlugin): PluginBase
+
+    @Binds
+    @AllConfigs
+    @IntoMap
     @IntKey(475)
     abstract fun bindRandomBgPlugin(plugin: RandomBgPlugin): PluginBase
 

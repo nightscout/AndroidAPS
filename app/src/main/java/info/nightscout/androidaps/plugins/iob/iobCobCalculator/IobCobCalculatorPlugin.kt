@@ -369,7 +369,7 @@ class IobCobCalculatorPlugin @Inject constructor(
     @Synchronized
     private fun scheduleHistoryDataChange(event: EventNewHistoryData) {
         // if there is nothing scheduled or asking reload deeper to the past
-        if (scheduledEvent == null || event.oldDataTimestamp < (scheduledEvent?.oldDataTimestamp) ?: 0L) {
+        if (scheduledEvent == null || event.oldDataTimestamp < (scheduledEvent?.oldDataTimestamp ?: 0L)) {
             // cancel waiting task to prevent sending multiple posts
             scheduledHistoryPost?.cancel(false)
             // prepare task for execution in 1 sec

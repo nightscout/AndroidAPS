@@ -29,6 +29,7 @@ public class CharacteristicReadOperation extends BLECommOperation {
     }
 
 
+    @SuppressWarnings({"deprecation"})
     @Override
     public void execute(RileyLinkBLE comm) {
         gatt.readCharacteristic(characteristic);

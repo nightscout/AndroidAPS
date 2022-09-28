@@ -7,7 +7,13 @@ import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.activities.fragments.*
+import info.nightscout.androidaps.activities.fragments.TreatmentsBolusCarbsFragment
+import info.nightscout.androidaps.activities.fragments.TreatmentsCareportalFragment
+import info.nightscout.androidaps.activities.fragments.TreatmentsExtendedBolusesFragment
+import info.nightscout.androidaps.activities.fragments.TreatmentsProfileSwitchFragment
+import info.nightscout.androidaps.activities.fragments.TreatmentsTempTargetFragment
+import info.nightscout.androidaps.activities.fragments.TreatmentsTemporaryBasalsFragment
+import info.nightscout.androidaps.activities.fragments.TreatmentsUserEntryFragment
 import info.nightscout.androidaps.databinding.TreatmentsFragmentBinding
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ActivePlugin
@@ -25,7 +31,7 @@ class TreatmentsActivity : NoSplashAppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = TreatmentsFragmentBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        
+
         // Use index, TabItems crashes with an id
         val useFakeTempBasal = activePlugin.activePump.isFakingTempsByExtendedBoluses
         binding.treatmentsTabs.getTabAt(1)?.view?.visibility = useFakeTempBasal.toVisibility()
@@ -55,16 +61,15 @@ class TreatmentsActivity : NoSplashAppCompatActivity() {
         })
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
             android.R.id.home -> {
                 finish()
                 true
             }
 
-            else              -> false
+            else              -> super.onOptionsItemSelected(item)
         }
-    }
 
     private fun setFragment(selectedFragment: Fragment) {
         supportFragmentManager.beginTransaction()

@@ -270,6 +270,10 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
             }
 
             holder.binding.calculation.tag = ml
+
+            var notes = ml.carbs?.notes ?: ml.bolus?.notes ?: ""
+            holder.binding.notes.text = notes
+            holder.binding.notes.visibility = if (notes != "") View.VISIBLE else View.GONE
         }
 
         override fun getItemCount() = mealLinks.size
@@ -315,7 +319,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
             R.id.nav_show_invalidated -> {
                 showInvalidated = true
                 updateMenuVisibility()
-                ToastUtils.showToastInUiThread(context, rh.gs(R.string.show_invalidated_records))
+                ToastUtils.infoToast(context, R.string.show_invalidated_records)
                 swapAdapter()
                 true
             }
@@ -323,7 +327,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
             R.id.nav_hide_invalidated -> {
                 showInvalidated = false
                 updateMenuVisibility()
-                ToastUtils.showToastInUiThread(context, rh.gs(R.string.hide_invalidated_records))
+                ToastUtils.infoToast(context, R.string.hide_invalidated_records)
                 swapAdapter()
                 true
             }

@@ -175,29 +175,29 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
             for (i in 0..1) {
                 if (typeSelected[i] == ProfileType.MOTOL_DEFAULT) {
                     if (ageUsed[i] < 1 || ageUsed[i] > 18) {
-                        ToastUtils.showToastInUiThread(this, R.string.invalidage)
+                        ToastUtils.warnToast(this, R.string.invalidage)
                         return@setOnClickListener
                     }
                     if ((weightUsed[i] < 5 || weightUsed[i] > 150) && tddUsed[i] == 0.0) {
-                        ToastUtils.showToastInUiThread(this, R.string.invalidweight)
+                        ToastUtils.warnToast(this, R.string.invalidweight)
                         return@setOnClickListener
                     }
                     if ((tddUsed[i] < 5 || tddUsed[i] > 150) && weightUsed[i] == 0.0) {
-                        ToastUtils.showToastInUiThread(this, R.string.invalidweight)
+                        ToastUtils.warnToast(this, R.string.invalidweight)
                         return@setOnClickListener
                     }
                 }
                 if (typeSelected[i] == ProfileType.DPV_DEFAULT) {
                     if (ageUsed[i] < 1 || ageUsed[i] > 18) {
-                        ToastUtils.showToastInUiThread(this, R.string.invalidage)
+                        ToastUtils.warnToast(this, R.string.invalidage)
                         return@setOnClickListener
                     }
                     if (tddUsed[i] < 5 || tddUsed[i] > 150) {
-                        ToastUtils.showToastInUiThread(this, R.string.invalidweight)
+                        ToastUtils.warnToast(this, R.string.invalidweight)
                         return@setOnClickListener
                     }
                     if ((pctUsed[i] < 32 || pctUsed[i] > 37)) {
-                        ToastUtils.showToastInUiThread(this, R.string.invalidpct)
+                        ToastUtils.warnToast(this, R.string.invalidpct)
                         return@setOnClickListener
                     }
                 }
@@ -226,7 +226,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
                     return@setOnClickListener
                 }
             }
-            ToastUtils.showToastInUiThread(this, R.string.invalidinput)
+            ToastUtils.warnToast(this, R.string.invalidinput)
         }
         binding.ageLabel.labelFor = binding.age.editTextId
         binding.tddLabel.labelFor = binding.tdd.editTextId

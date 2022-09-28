@@ -22,6 +22,7 @@ interface Loop {
     }
 
     var lastRun: LastRun?
+    var closedLoopEnabled: Constraint<Boolean>?
     val isSuspended: Boolean
     val isLGS: Boolean
     val isSuperBolus: Boolean
