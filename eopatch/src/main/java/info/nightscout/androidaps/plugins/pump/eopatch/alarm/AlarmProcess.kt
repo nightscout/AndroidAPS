@@ -41,7 +41,7 @@ class AlarmProcess(val patchManager: IPatchManager, val rxBus: RxBus) : IAlarmPr
             A117, A118 -> patchDeactivationAction(context)
             A007 -> inappropriateTemperatureAction(context)
             A016 -> needleInsertionErrorAction(context)
-            B003, B018 -> Single.just(IAlarmProcess.ALARM_HANDLED)
+            B000, B003, B018 -> Single.just(IAlarmProcess.ALARM_HANDLED)
             B005, B006 ->  Single.just(IAlarmProcess.ALARM_HANDLED)
             B012 -> Single.just(IAlarmProcess.ALARM_HANDLED)
         }

@@ -21,8 +21,9 @@
     <string name="eopatch_temp_basal_rate">일시기초주입 속도</string>
     <string name="eopatch_total_delivered">총 주입량</string>
 
-    <string name="unsupported_basal_rate">프로파일에 설정된 베이젤 속도가 0.05 U/hr 보다 작습니다. 이오패치는 최소 주입 단위가 0.05U 입니다. 최소 주입 단위 이상으로 프로파일 설정 후 다시 시도해 주세요.</string>
+    <string name="invalid_basal_rate">프로파일에 설정된 베이젤 속도가 0.05 U/hr 보다 작습니다. 이오패치는 최소 주입 단위가 0.05U 입니다. 최소 주입 단위 이상으로 프로파일 설정 후 다시 시도해 주세요.</string>
     <string name="no_profile_selected">프로파일이 선택되지 않았습니다. 프로파일 선택 후 다시 시도해 주세요.</string>
+    <string name="unsupported_basal_rate">베이젤 속도 %1$s U/hr는 이오패치에서 지원되지 않습니다.</string>
 
     <string name="symbol_day">day</string>
     <string name="symbol_plus">+</string>
@@ -136,4 +137,5 @@
     <string name="patch_connection_fail">패치 통신 점검 후 다시 시도하세요.</string>
     <string name="string_pause_failed">주입 정지가 실패하였습니다.</string>
     <string name="string_resume_failed">주입 재개가 실패하였습니다.</string>
+    <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">yyyy. M. d (E) a hh:mm</string>
 </resources>

@@ -22,6 +22,7 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.eopatch.R;
 import info.nightscout.androidaps.plugins.pump.eopatch.RxAction;
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode;
+import info.nightscout.androidaps.plugins.pump.eopatch.alarm.IAlarmRegistry;
 import info.nightscout.androidaps.plugins.pump.eopatch.code.BolusExDuration;
 import info.nightscout.androidaps.plugins.pump.eopatch.code.DeactivationStatus;
 import info.nightscout.androidaps.plugins.pump.eopatch.code.PatchLifecycle;
@@ -51,6 +52,7 @@ import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import info.nightscout.shared.logging.AAPSLogger;
 import info.nightscout.shared.sharedPreferences.SP;
+import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -73,6 +75,7 @@ public class PatchManager implements IPatchManager {
     @Inject DateUtil dateUtil;
     @Inject RxAction rxAction;
     @Inject AapsSchedulers aapsSchedulers;
+    @Inject IAlarmRegistry alarmRegistry;
 
     private IPatchScanner patchScanner;
     private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
@@ -222,6 +225,10 @@ public class PatchManager implements IPatchManager {
         return pm.getPatchConfig().isActivated();
     }
 
+    public boolean isDeactivated() {
+        return pm.getPatchConfig().isDeactivated();
+    }
+
     public Single<Boolean> startBond(String mac) {
         return patchManager.startBond(mac);
     }
@@ -249,24 +256,24 @@ public class PatchManager implements IPatchManager {
     public Single<Boolean> patchActivation(long timeout) {
         return patchManager.patchActivation(timeout)
                 .doOnSuccess(success -> {
-                    if (success) {
-                        pumpSync.insertTherapyEventIfNewWithTimestamp(
-                                getPatchConfig().getPatchWakeupTimestamp(),
-                                DetailedBolusInfo.EventType.CANNULA_CHANGE,
-                                null,
-                                null,
-                                PumpType.EOFLOW_EOPATCH2,
-                                getPatchConfig().getPatchSerialNumber()
-                        );
-                        pumpSync.insertTherapyEventIfNewWithTimestamp(
-                                getPatchConfig().getPatchWakeupTimestamp(),
-                                DetailedBolusInfo.EventType.INSULIN_CHANGE,
-                                null,
-                                null,
-                                PumpType.EOFLOW_EOPATCH2,
-                                getPatchConfig().getPatchSerialNumber()
-                        );
-                    }
+//                    if (success) {
+//                        pumpSync.insertTherapyEventIfNewWithTimestamp(
+//                                getPatchConfig().getPatchWakeupTimestamp(),
+//                                DetailedBolusInfo.EventType.CANNULA_CHANGE,
+//                                null,
+//                                null,
+//                                PumpType.EOFLOW_EOPATCH2,
+//                                getPatchConfig().getPatchSerialNumber()
+//                        );
+//                        pumpSync.insertTherapyEventIfNewWithTimestamp(
+//                                getPatchConfig().getPatchWakeupTimestamp(),
+//                                DetailedBolusInfo.EventType.INSULIN_CHANGE,
+//                                null,
+//                                null,
+//                                PumpType.EOFLOW_EOPATCH2,
+//                                getPatchConfig().getPatchSerialNumber()
+//                        );
+//                    }
                 });
     }
 
@@ -404,6 +411,14 @@ public class PatchManager implements IPatchManager {
             if (isActivated()) {
                 mCompositeDisposable.add(setLowReservoir(doseUnit, hours)
                     .observeOn(aapsSchedulers.getMain())
+                    .doOnSubscribe(disposable -> {
+                        if(pc.getPatchExpireAlertTime() != hours){
+                            Maybe.just(AlarmCode.B000)
+                                .flatMap(alarmCode -> alarmRegistry.remove(alarmCode))
+                                .flatMap(alarmCode -> alarmRegistry.add(alarmCode, (pc.getExpireTimestamp() - System.currentTimeMillis() - TimeUnit.HOURS.toMillis(hours)), false))
+                                .subscribe();
+                        }
+                    })
                     .subscribe(patchBooleanResponse -> {
                         pc.setLowReservoirAlertAmount(doseUnit);
                         pc.setPatchExpireAlertTime(hours);

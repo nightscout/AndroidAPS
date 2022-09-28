@@ -32,6 +32,7 @@ enum class AlarmCode(messageResId: Int) {
     A116(R.string.string_a116),  //"Patch Error"
     A117(R.string.string_a117),  //"Patch Error"
     A118(R.string.string_a118),  //"Patch Error"
+    B000(R.string.string_b000),
     B001(R.string.string_b001),  //"End of insulin suspend"
     B003(R.string.string_b003),  //"Low reservoir"
     B005(R.string.string_b005),  //"Patch operating life expired"

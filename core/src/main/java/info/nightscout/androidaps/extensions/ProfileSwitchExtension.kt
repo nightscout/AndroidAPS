@@ -14,6 +14,7 @@ import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.T
 import org.json.JSONObject
 import java.util.*
+import kotlin.math.abs
 
 fun List<ProfileSwitch>.isPSEvent5minBack(time: Long): Boolean {
     for (event in this) {
@@ -158,3 +159,16 @@ fun ProfileSwitch.getCustomizedName(): String {
 fun ProfileSwitch.GlucoseUnit.Companion.fromConstant(units: GlucoseUnit): ProfileSwitch.GlucoseUnit =
     if (units == GlucoseUnit.MGDL) ProfileSwitch.GlucoseUnit.MGDL
     else ProfileSwitch.GlucoseUnit.MMOL
+
+fun Double.nearlyEqual(b: Double, epsilon: Double): Boolean {
+    val absA = abs(this)
+    val absB = abs(b)
+    val diff = abs(this - b)
+    return if (this == b) {
+        true
+    } else if (this == 0.0 || b == 0.0 || absA + absB < java.lang.Float.MIN_NORMAL) {
+        diff < epsilon * java.lang.Double.MIN_NORMAL
+    } else {
+        diff / (absA + absB).coerceAtMost(Double.MAX_VALUE) < epsilon
+    }
+}

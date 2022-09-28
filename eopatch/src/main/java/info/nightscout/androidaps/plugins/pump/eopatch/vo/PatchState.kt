@@ -14,7 +14,6 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import java.util.function.Consumer
 import java.util.stream.IntStream
-import kotlin.math.roundToInt
 
 class PatchState: IPreference<PatchState> {
     @Transient
@@ -129,9 +128,23 @@ class PatchState: IPreference<PatchState> {
     }
 
     fun batteryLevel(): Int {
-        if((get(D7) + 145) > 300) return 100
+        val volt = (get(D7) + 145) * 10
+        val batteryLevel: Int
+        if (volt >= 3000) {
+            batteryLevel = 100
+        } else if (volt > 2900) {
+            batteryLevel = 100 - ((3000 - volt) * 10) / 100
+        } else if (volt > 2740) {
+            batteryLevel = 90 - ((2900 - volt) * 20) / 160
+        } else if (volt > 2440) {
+            batteryLevel = 70 - ((2740 - volt) * 50) / 300
+        } else if (volt > 2100) {
+            batteryLevel = 20 - ((2440 - volt) * 20) / 340
+        } else {
+            batteryLevel = 0
+        }
 
-        return ((get(D7) + 145 - 210) * 100.0 / 90).roundToInt()
+        return batteryLevel
     }
 
     //==============================================================================================
