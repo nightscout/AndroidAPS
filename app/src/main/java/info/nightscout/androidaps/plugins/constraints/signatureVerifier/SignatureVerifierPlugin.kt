@@ -2,6 +2,8 @@ package info.nightscout.androidaps.plugins.constraints.signatureVerifier
 
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Handler
+import android.os.HandlerThread
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.Constraint
@@ -9,19 +11,25 @@ import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP
 import org.spongycastle.util.encoders.Hex
-import java.io.*
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.InputStream
+import java.io.OutputStream
 import java.net.URL
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
-import java.util.*
+import java.util.Arrays
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -39,14 +47,17 @@ class SignatureVerifierPlugin @Inject constructor(
     private val sp: SP,
     private val rxBus: RxBus,
     private val context: Context
-) : PluginBase(PluginDescription()
-    .mainType(PluginType.CONSTRAINTS)
-    .neverVisible(true)
-    .alwaysEnabled(true)
-    .showInList(false)
-    .pluginName(R.string.signature_verifier),
+) : PluginBase(
+    PluginDescription()
+        .mainType(PluginType.CONSTRAINTS)
+        .neverVisible(true)
+        .alwaysEnabled(true)
+        .showInList(false)
+        .pluginName(R.string.signature_verifier),
     aapsLogger, rh, injector
 ), Constraints {
+
+    private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
     private val REVOKED_CERTS_URL = "https://raw.githubusercontent.com/nightscout/AndroidAPS/master/app/src/main/assets/revoked_certs.txt"
     private val UPDATE_INTERVAL = TimeUnit.DAYS.toMillis(1)
@@ -57,7 +68,7 @@ class SignatureVerifierPlugin @Inject constructor(
     override fun onStart() {
         super.onStart()
         revokedCertsFile = File(context.filesDir, "revoked_certs.txt")
-        Thread(Runnable {
+        handler.post {
             loadLocalRevokedCerts()
             if (shouldDownloadCerts()) {
                 try {
@@ -67,7 +78,12 @@ class SignatureVerifierPlugin @Inject constructor(
                 }
             }
             if (hasIllegalSignature()) showNotification()
-        }).start()
+        }
+    }
+
+    override fun onStop() {
+        handler.removeCallbacksAndMessages(null)
+        super.onStop()
     }
 
     override fun isLoopInvocationAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
@@ -76,13 +92,13 @@ class SignatureVerifierPlugin @Inject constructor(
             value.set(aapsLogger, false)
         }
         if (shouldDownloadCerts()) {
-            Thread(Runnable {
+            handler.post {
                 try {
                     downloadAndSaveRevokedCerts()
                 } catch (e: IOException) {
                     aapsLogger.error("Could not download revoked certs", e)
                 }
-            }).start()
+            }
         }
         return value
     }
@@ -143,7 +159,9 @@ class SignatureVerifierPlugin @Inject constructor(
         return hashes
     }
 
-    var map = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!\"§$%&/()=?,.-;:_<>|°^`´\\@€*'#+~{}[]¿¡áéíóúàèìòùöäü`ÁÉÍÓÚÀÈÌÒÙÖÄÜßÆÇÊËÎÏÔŒÛŸæçêëîïôœûÿĆČĐŠŽćđšžñΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡ\u03A2ΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρςστυφχψωϨϩϪϫϬϭϮϯϰϱϲϳϴϵ϶ϷϸϹϺϻϼϽϾϿЀЁЂЃЄЅІЇЈЉЊЋЌЍЎЏАБВГДЕЖЗ"
+    var map =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!\"§$%&/()=?,.-;:_<>|°^`´\\@€*'#+~{}[]¿¡áéíóúàèìòùöäü`ÁÉÍÓÚÀÈÌÒÙÖÄÜßÆÇÊËÎÏÔŒÛŸæçêëîïôœûÿĆČĐŠŽćđšžñΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡ\u03A2ΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρςστυφχψωϨϩϪϫϬϭϮϯϰϱϲϳϴϵ϶ϷϸϹϺϻϼϽϾϿЀЁЂЃЄЅІЇЈЉЊЋЌЍЎЏАБВГДЕЖЗ"
+
     private fun singleCharMap(array: ByteArray): String {
         val sb = StringBuilder()
         for (b in array) {

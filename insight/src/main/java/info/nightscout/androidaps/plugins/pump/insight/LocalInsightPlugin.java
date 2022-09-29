@@ -1173,7 +1173,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         } catch (Exception e) {
             aapsLogger.error("Exception while reading history", e);
         }
-        new Handler(Looper.getMainLooper()).post(() -> rxBus.send(new EventRefreshOverview("LocalInsightPlugin::readHistory", false)));
+        rxBus.send(new EventRefreshOverview("LocalInsightPlugin::readHistory", false));
     }
 
     private void processHistoryEvents(String serial, List<HistoryEvent> historyEvents) {
@@ -1612,7 +1612,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     public void onStateChanged(InsightState state) {
         if (state == InsightState.CONNECTED) {
             statusLoaded = false;
-            new Handler(Looper.getMainLooper()).post(() -> rxBus.send(new EventDismissNotification(Notification.INSIGHT_TIMEOUT_DURING_HANDSHAKE)));
+            rxBus.send(new EventDismissNotification(Notification.INSIGHT_TIMEOUT_DURING_HANDSHAKE));
         } else if (state == InsightState.NOT_PAIRED) {
             connectionService.withdrawConnectionRequest(this);
             statusLoaded = false;
@@ -1625,9 +1625,9 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
             activeTBR = null;
             activeBoluses = null;
             tbrOverNotificationBlock = null;
-            new Handler(Looper.getMainLooper()).post(() -> rxBus.send(new EventRefreshOverview("LocalInsightPlugin::onStateChanged", false)));
+            rxBus.send(new EventRefreshOverview("LocalInsightPlugin::onStateChanged", false));
         }
-        new Handler(Looper.getMainLooper()).post(() -> rxBus.send(new EventLocalInsightUpdateGUI()));
+        rxBus.send(new EventLocalInsightUpdateGUI());
     }
 
     @Override
@@ -1638,7 +1638,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     @Override
     public void onTimeoutDuringHandshake() {
         Notification notification = new Notification(Notification.INSIGHT_TIMEOUT_DURING_HANDSHAKE, rh.gs(R.string.timeout_during_handshake), Notification.URGENT);
-        new Handler(Looper.getMainLooper()).post(() -> rxBus.send(new EventNewNotification(notification)));
+        rxBus.send(new EventNewNotification(notification));
     }
 
     @Override

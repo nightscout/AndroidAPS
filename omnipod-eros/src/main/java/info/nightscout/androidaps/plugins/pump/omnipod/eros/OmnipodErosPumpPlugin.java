@@ -282,7 +282,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         super.onStart();
 
         if (handlerThread == null) {
-            handlerThread = new HandlerThread(OmnipodErosPumpPlugin.class.getSimpleName());
+            handlerThread = new HandlerThread(OmnipodErosPumpPlugin.class.getSimpleName() + "Handler");
             handlerThread.start();
             loopHandler = new Handler(handlerThread.getLooper());
         }
