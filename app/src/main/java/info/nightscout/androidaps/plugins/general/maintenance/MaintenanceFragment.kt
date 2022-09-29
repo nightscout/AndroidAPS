@@ -21,20 +21,22 @@ import info.nightscout.androidaps.interfaces.DataSyncSelector
 import info.nightscout.androidaps.interfaces.ImportExportPrefs
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.maintenance.activities.LogSettingActivity
 import info.nightscout.androidaps.plugins.general.overview.OverviewData
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.database.DashHistoryDatabase
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.database.ErosHistoryDatabase
+import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.protection.ProtectionCheck.Protection.PREFERENCES
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import io.reactivex.rxjava3.core.Completable.fromAction
+import info.nightscout.shared.logging.AAPSLogger
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
@@ -58,8 +60,9 @@ class MaintenanceFragment : DaggerFragment() {
     @Inject lateinit var pumpSync: PumpSync
     @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var overviewData: OverviewData
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
 
-    private val compositeDisposable = CompositeDisposable()
+    private val disposable = CompositeDisposable()
     private var inMenu = false
     private var queryingProtection = false
     private var _binding: MaintenanceFragmentBinding? = null
@@ -79,16 +82,16 @@ class MaintenanceFragment : DaggerFragment() {
         updateProtectedUi()
         binding.logSend.setOnClickListener { maintenancePlugin.sendLogs() }
         binding.logDelete.setOnClickListener {
-            uel.log(Action.DELETE_LOGS, Sources.Maintenance)
-            Thread {
-                maintenancePlugin.deleteLogs(5)
-            }.start()
+            disposable +=
+                Completable.fromAction { maintenancePlugin.deleteLogs(5) }
+                    .subscribeOn(aapsSchedulers.io)
+                    .subscribe({ uel.log(Action.DELETE_LOGS, Sources.Maintenance) }, fabricPrivacy::logException)
         }
         binding.navResetdb.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, rh.gs(R.string.maintenance), rh.gs(R.string.reset_db_confirm), Runnable {
-                    compositeDisposable.add(
-                        fromAction {
+                    disposable +=
+                        Completable.fromAction {
                             repository.clearDatabases()
                             danaHistoryDatabase.clearAllTables()
                             insightDatabase.clearAllTables()
@@ -104,11 +107,8 @@ class MaintenanceFragment : DaggerFragment() {
                             .subscribeOn(aapsSchedulers.io)
                             .subscribeBy(
                                 onError = { aapsLogger.error("Error clearing databases", it) },
-                                onComplete = {
-                                    rxBus.send(EventPreferenceChange(rh, R.string.key_units))
-                                }
+                                onComplete = { rxBus.send(EventPreferenceChange(rh, R.string.key_units)) }
                             )
-                    )
                     uel.log(Action.RESET_DATABASES, Sources.Maintenance)
                 })
             }
@@ -148,7 +148,7 @@ class MaintenanceFragment : DaggerFragment() {
     @Synchronized
     override fun onDestroyView() {
         super.onDestroyView()
-        compositeDisposable.clear()
+        disposable.clear()
         _binding = null
     }
 

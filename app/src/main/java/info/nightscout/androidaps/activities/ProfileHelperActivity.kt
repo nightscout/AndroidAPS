@@ -21,12 +21,17 @@ import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.defaultProfile.DefaultProfile
 import info.nightscout.androidaps.utils.defaultProfile.DefaultProfileDPV
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.stats.TddCalculator
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
 import java.text.DecimalFormat
 import javax.inject.Inject
 
@@ -40,6 +45,8 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var repository: AppRepository
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
 
     enum class ProfileType {
         MOTOL_DEFAULT,
@@ -64,6 +71,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
     private val profileSwitchUsed = arrayOf(0, 0)
 
     private lateinit var binding: ActivityProfilehelperBinding
+    private val disposable = CompositeDisposable()
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -158,13 +166,13 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
         binding.basalPctFromTdd.setParams(32.0, 32.0, 37.0, 1.0, DecimalFormat("0"), false, null)
 
         binding.tdds.addView(TextView(this).apply { text = rh.gs(R.string.tdd) + ": " + rh.gs(R.string.calculation_in_progress) })
-        Thread {
-            val tdds = tddCalculator.stats(this)
-            runOnUiThread {
-                binding.tdds.removeAllViews()
-                binding.tdds.addView(tdds)
-            }
-        }.start()
+        disposable += Single.fromCallable { tddCalculator.stats(this) }
+            .subscribeOn(aapsSchedulers.io)
+            .observeOn(aapsSchedulers.main)
+            .subscribe({
+                           binding.tdds.removeAllViews()
+                           binding.tdds.addView(it)
+                       }, fabricPrivacy::logException)
 
         // Current profile
         binding.currentProfileText.text = profileFunction.getProfileName()
@@ -303,4 +311,8 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        disposable.clear()
+    }
 }

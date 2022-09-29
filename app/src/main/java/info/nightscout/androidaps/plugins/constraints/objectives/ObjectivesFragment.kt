@@ -245,7 +245,7 @@ class ObjectivesFragment : DaggerFragment() {
                     rxBus.send(EventSWUpdate(false))
                 } else {
                     // move out of UI thread
-                    Thread {
+                    handler.post {
                         NtpProgressDialog().show((context as AppCompatActivity).supportFragmentManager, "NtpCheck")
                         rxBus.send(EventNtpStatus(rh.gs(R.string.timedetection), 0))
                         sntpClient.ntpTime(object : SntpClient.Callback() {
@@ -271,7 +271,7 @@ class ObjectivesFragment : DaggerFragment() {
                                 }
                             }
                         }, receiverStatusStore.isConnected)
-                    }.start()
+                    }
                 }
             }
             holder.binding.start.setOnClickListener {
@@ -284,7 +284,7 @@ class ObjectivesFragment : DaggerFragment() {
                     rxBus.send(EventSWUpdate(false))
                 } else
                 // move out of UI thread
-                    Thread {
+                    handler.post {
                         NtpProgressDialog().show((context as AppCompatActivity).supportFragmentManager, "NtpCheck")
                         rxBus.send(EventNtpStatus(rh.gs(R.string.timedetection), 0))
                         sntpClient.ntpTime(object : SntpClient.Callback() {
@@ -306,7 +306,7 @@ class ObjectivesFragment : DaggerFragment() {
                                 }
                             }
                         }, receiverStatusStore.isConnected)
-                    }.start()
+                    }
             }
             holder.binding.unstart.setOnClickListener {
                 activity?.let { activity ->
