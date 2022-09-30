@@ -8,6 +8,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.shared.SafeParse
 import javax.inject.Inject
 
 class ValidatingEditTextPreference(ctx: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : EditTextPreference(ctx, attrs, defStyleAttr, defStyleRes) {
@@ -67,14 +68,15 @@ class ValidatingEditTextPreference(ctx: Context, attrs: AttributeSet, defStyleAt
     override fun onSetInitialValue(defaultValue: Any?) {
         text =
             if (validatorParameters.testType == EditTextValidator.TEST_BG_RANGE)
-                Profile.fromMgdlToUnits(getPersistedString(defaultValue as String?).toDouble(), profileFunction.getUnits()).toString()
+                Profile.fromMgdlToUnits(SafeParse.stringToDouble(getPersistedString(defaultValue as String?)), profileFunction.getUnits()).toString()
             else
                 getPersistedString(defaultValue as String?)
     }
 
     override fun persistString(value: String?): Boolean =
-        if (validatorParameters.testType == EditTextValidator.TEST_BG_RANGE)
-            super.persistString(Profile.toMgdl(value?.toDouble() ?: 0.0, profileFunction.getUnits()).toString())
-        else
-            super.persistString(value)
+        when (validatorParameters.testType) {
+            EditTextValidator.TEST_BG_RANGE            -> super.persistString(Profile.toMgdl(SafeParse.stringToDouble(value, 0.0), profileFunction.getUnits()).toString())
+            EditTextValidator.TEST_FLOAT_NUMERIC_RANGE -> super.persistString(SafeParse.stringToDouble(value, 0.0).toString())
+            else                                       -> super.persistString(value)
+        }
 }
