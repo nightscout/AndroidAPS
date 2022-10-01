@@ -309,10 +309,8 @@ class LocalInsightPlugin @Inject constructor(
             }
             statusLoaded = true
         }
-        Handler(Looper.getMainLooper()).post {
-            rxBus.send(EventLocalInsightUpdateGUI())
-            rxBus.send(EventRefreshOverview("LocalInsightPlugin::fetchStatus", false))
-        }
+        rxBus.send(EventLocalInsightUpdateGUI())
+        rxBus.send(EventRefreshOverview("LocalInsightPlugin::fetchStatus", false))
     }
 
     @Throws(Exception::class) private fun fetchLimitations() {
@@ -986,7 +984,7 @@ class LocalInsightPlugin @Inject constructor(
         } catch (e: Exception) {
             aapsLogger.error("Exception while reading history", e)
         }
-        Handler(Looper.getMainLooper()).post { rxBus.send(EventRefreshOverview("LocalInsightPlugin::readHistory", false)) }
+        rxBus.send(EventRefreshOverview("LocalInsightPlugin::readHistory", false))
     }
 
     private fun processHistoryEvents(serial: String, historyEvents: List<HistoryEvent?>) {
@@ -1421,7 +1419,7 @@ class LocalInsightPlugin @Inject constructor(
     override fun onStateChanged(state: InsightState?) {
         if (state == InsightState.CONNECTED) {
             statusLoaded = false
-            Handler(Looper.getMainLooper()).post { rxBus.send(EventDismissNotification(Notification.INSIGHT_TIMEOUT_DURING_HANDSHAKE)) }
+            rxBus.send(EventDismissNotification(Notification.INSIGHT_TIMEOUT_DURING_HANDSHAKE))
         } else if (state == InsightState.NOT_PAIRED) {
             connectionService?.withdrawConnectionRequest(this)
             statusLoaded = false
@@ -1434,9 +1432,9 @@ class LocalInsightPlugin @Inject constructor(
             activeTBR = null
             activeBoluses = null
             tBROverNotificationBlock = null
-            Handler(Looper.getMainLooper()).post { rxBus.send(EventRefreshOverview("LocalInsightPlugin::onStateChanged", false)) }
+            rxBus.send(EventRefreshOverview("LocalInsightPlugin::onStateChanged", false))
         }
-        Handler(Looper.getMainLooper()).post { rxBus.send(EventLocalInsightUpdateGUI()) }
+        rxBus.send(EventLocalInsightUpdateGUI())
     }
 
     override fun onPumpPaired() {
@@ -1445,7 +1443,7 @@ class LocalInsightPlugin @Inject constructor(
 
     override fun onTimeoutDuringHandshake() {
         val notification = Notification(Notification.INSIGHT_TIMEOUT_DURING_HANDSHAKE, rh.gs(R.string.timeout_during_handshake), Notification.URGENT)
-        Handler(Looper.getMainLooper()).post { rxBus.send(EventNewNotification(notification)) }
+        rxBus.send(EventNewNotification(notification))
     }
 
     override fun canHandleDST(): Boolean {
