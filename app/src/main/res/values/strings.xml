@@ -520,6 +520,7 @@
     <string name="ns_localbroadcasts_title">Enable local Broadcasts.</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dynamic ISF</string>
+    <string name="DynISF_variant" formatted="false">Variant</string>
     <string name="key_DynISFAdjust" translatable="false">DynISFAdjust</string>
     <string name="DynISFAdjust_title" formatted="false">DynamicISF Adjustment Factor %</string>
     <string name="DynISFAdjust_summary" formatted="false">Adjustment factor for DynamicISF. Set more than 100% for more aggressive correction doses, and less than 100% for less aggressive corrections.</string>

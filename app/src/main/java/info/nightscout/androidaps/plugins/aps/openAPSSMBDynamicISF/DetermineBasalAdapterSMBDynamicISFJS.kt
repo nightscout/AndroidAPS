@@ -22,6 +22,7 @@ import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.plugins.aps.loop.LoopVariantPreference
 import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.stats.TddCalculator
 import info.nightscout.shared.SafeParse
@@ -103,7 +104,7 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scri
             rhino.evaluateString(scope, "require = function() {return round_basal;};", "JavaScript", 0, null)
 
             //generate functions "determine_basal" and "setTempBasal"
-            rhino.evaluateString(scope, readFile("OpenAPSSMBDynamicISF/determine-basal.js"), "JavaScript", 0, null)
+            rhino.evaluateString(scope, readFile(LoopVariantPreference.getVariantFileName(sp, "OpenAPSSMBDynamicISF")), "JavaScript", 0, null)
             rhino.evaluateString(scope, readFile("OpenAPSSMB/basal-set-temp.js"), "setTempBasal.js", 0, null)
             val determineBasalObj = scope["determine_basal", scope]
             val setTempBasalFunctionsObj = scope["tempBasalFunctions", scope]

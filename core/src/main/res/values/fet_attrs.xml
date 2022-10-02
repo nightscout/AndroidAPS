@@ -41,4 +41,7 @@
         <attr name="maxMgdl" format="integer" />
     </declare-styleable>
 
+    <declare-styleable name="LoopVariantPreference">
+        <attr name="pluginFolder" format="string" />
+    </declare-styleable>
 </resources>
