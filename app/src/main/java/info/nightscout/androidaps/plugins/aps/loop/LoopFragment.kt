@@ -66,7 +66,7 @@ class LoopFragment : DaggerFragment(), MenuProvider {
             setColorSchemeColors(rh.gac(context, R.attr.colorPrimaryDark), rh.gac(context, R.attr.colorPrimary), rh.gac(context, R.attr.colorSecondary))
             setOnRefreshListener {
                 binding.lastrun.text = rh.gs(R.string.executing)
-                handler.post { loop.invoke("Loop swiperefresh", true) }
+                handler.post { loop.invoke("Loop swipe refresh", true) }
             }
         }
     }

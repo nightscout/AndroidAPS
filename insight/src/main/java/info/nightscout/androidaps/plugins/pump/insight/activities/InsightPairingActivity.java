@@ -74,7 +74,7 @@ public class InsightPairingActivity extends NoSplashAppCompatActivity implements
                 service.registerStateCallback(InsightPairingActivity.this);
                 service.registerExceptionCallback(InsightPairingActivity.this);
                 onStateChanged(service.getState());
-                pumpSync.connectNewPump();
+                pumpSync.connectNewPump(true);
             }
         }
 
