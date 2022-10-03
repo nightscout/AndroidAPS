@@ -26,5 +26,20 @@ class SmsTest : TestBase() {
         Assert.assertEquals(sms.text, "U")
         Assert.assertTrue(sms.sent)
         Assert.assertEquals(sms.toString(), "SMS from aNumber: U")
+
+        // copy constructor #1
+        val sms2 = Sms(sms)
+        Assert.assertEquals(sms2.phoneNumber, "aNumber")
+        Assert.assertEquals(sms2.text, "U")
+        Assert.assertTrue(sms2.sent)
+        Assert.assertEquals(sms2.toString(), "SMS from aNumber: U")
+
+        // copy constructor #2
+        val sms3 = Sms(sms, "different")
+        Assert.assertEquals(sms3.phoneNumber, "different")
+        Assert.assertEquals(sms3.text, "U")
+        Assert.assertTrue(sms3.sent)
+        Assert.assertEquals(sms3.toString(), "SMS from different: U")
+
     }
 }

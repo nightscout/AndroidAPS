@@ -1095,8 +1095,7 @@ class SmsCommunicatorPlugin @Inject constructor(
 
     private fun sendSMSToAllNumbers(sms: Sms) {
         for (number in allowedNumbers) {
-            sms.phoneNumber = number
-            sendSMS(sms)
+            sendSMS(Sms(sms, number))
         }
     }
 
