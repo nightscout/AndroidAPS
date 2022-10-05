@@ -38,6 +38,7 @@ import info.nightscout.androidaps.interfaces.Pump;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
 import info.nightscout.androidaps.interfaces.PumpSync;
+import info.nightscout.androidaps.interfaces.ResourceHelper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
@@ -61,17 +62,16 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.InstanceId;
 import info.nightscout.androidaps.utils.T;
-import info.nightscout.androidaps.interfaces.ResourceHelper;
 import info.nightscout.shared.logging.AAPSLogger;
 import info.nightscout.shared.logging.LTag;
 import info.nightscout.shared.sharedPreferences.SP;
 
 /**
  * Driver for the Roche Accu-Chek Combo pump, using the ruffy app for BT communication.
- *
+ * <p>
  * For boluses, the logic is to request a bolus and then read it back from the history to see what was
  * actually delivered.
- *
+ * <p>
  * TBR-handling doesn't read the pump history. On the pump, TBR records are only created after a TBR has finished.
  * So when a TBR is started on the pump, it can't be known when it started until the TBR ends or is cancelled.
  * Cancelling would assume a user works against the loop, and creating a temporary TBR (AAPS-side) and updating it
@@ -85,7 +85,7 @@ import info.nightscout.shared.sharedPreferences.SP;
  * This approach skipped implementing edge-cases that pose no real risk, in part due to limited resources to
  * implement every edge-case scenario. Insulin amount given via boluses are significantly higher, so the
  * priority was there to make that as safe as possible.
- *
+ * <p>
  * Created by mike on 05.08.2016.
  */
 @Singleton
@@ -424,11 +424,12 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
             String lastKnownSN = serialNumber();
             if (!lastKnownSN.equals(fakeSerialNumber()) && !lastKnownSN.equals(macAddress)) {
                 getAapsLogger().info(LTag.PUMP, "Pump serial number changed " + lastKnownSN + " -> " + macAddress);
-                pumpSync.connectNewPump();
+                pumpSync.connectNewPump(true);
             }
             sp.putString(R.string.combo_pump_serial, macAddress);
         }
-
+        if (!pumpSync.verifyPumpIdentification(pumpDescription.getPumpType(), serialNumber()))
+            pumpSync.connectNewPump(true);
         // ComboFragment updates state fully only after the pump has initialized,
         // so force an update after initialization completed
         rxBus.send(new EventComboPumpUpdateGUI());
@@ -566,7 +567,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
                 return new PumpEnactResult(getInjector()).success(true).enacted(false);
             }
 
-            EventOverviewBolusProgress.Treatment treatment = new EventOverviewBolusProgress.Treatment(0.0, 0,detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.getId());
+            EventOverviewBolusProgress.Treatment treatment = new EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.getId());
             EventOverviewBolusProgress.INSTANCE.setT(treatment);
 
             // start bolus delivery
