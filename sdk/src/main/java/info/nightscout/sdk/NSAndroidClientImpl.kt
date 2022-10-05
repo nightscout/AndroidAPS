@@ -4,10 +4,13 @@ import android.content.Context
 import info.nightscout.sdk.exceptions.DateHeaderOutOfToleranceException
 import info.nightscout.sdk.exceptions.InvalidAccessTokenException
 import info.nightscout.sdk.exceptions.TodoNightscoutException
+import info.nightscout.sdk.interfaces.NSAndroidClient
 import info.nightscout.sdk.localmodel.Status
 import info.nightscout.sdk.localmodel.entry.Sgv
+import info.nightscout.sdk.localmodel.treatment.Treatment
 import info.nightscout.sdk.mapper.toLocal
 import info.nightscout.sdk.mapper.toSgv
+import info.nightscout.sdk.mapper.toTreatment
 import info.nightscout.sdk.networking.NetworkStackBuilder
 import info.nightscout.sdk.remotemodel.RemoteEntry
 import info.nightscout.sdk.utils.retry
@@ -16,19 +19,10 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-interface NSAndroidClient {
-
-    suspend fun getVersion(): String
-    suspend fun getStatus(): Status
-    suspend fun getEntries(): String
-    suspend fun getSgvs(): List<Sgv>
-    suspend fun getSgvsModifiedSince(from: Long): List<Sgv>
-}
-
 /**
  *
  * This client uses suspend functions and therefore is only visible in Kotlin (@JvmSynthetic).
- * An RxJava version can be found here [NSAndroidRxClient]
+ * An RxJava version can be found here [NSAndroidRxClientImpl]
  *
  * @param baseUrl the baseURL of the NightScout Instance
  * @param accessToken the access token of a role found in the admin panel of the NightScout instance
@@ -47,32 +41,15 @@ interface NSAndroidClient {
  * TODO: add message to Exceptions? wrap them?
  * */
 
-@JvmSynthetic
-@Suppress("FunctionNaming")
-fun NSAndroidClient(
-    baseUrl: String,
-    accessToken: String,
-    context: Context,
-    logging: Boolean = false,
-    dispatcher: CoroutineDispatcher = Dispatchers.IO
-): NSAndroidClient =
-    NSAndroidClientImpl(
-        baseUrl = baseUrl,
-        accessToken = accessToken,
-        context = context.applicationContext, // applicationContext to leak activity context e.g.
-        logging = logging,
-        dispatcher = dispatcher
-    )
-
-private class NSAndroidClientImpl(
+class NSAndroidClientImpl(
     baseUrl: String,
     accessToken: String,
     context: Context,
     logging: Boolean,
-    private val dispatcher: CoroutineDispatcher
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : NSAndroidClient {
 
-    val api = NetworkStackBuilder.getApi(
+    internal val api = NetworkStackBuilder.getApi(
         baseUrl = baseUrl,
         context = context,
         accessToken = accessToken,
@@ -131,22 +108,35 @@ private class NSAndroidClientImpl(
             throw TodoNightscoutException() // TODO: react to response errors (offline, ...)
         }
     }
-}
 
-internal suspend fun <T> callWrapper(dispatcher: CoroutineDispatcher, block: suspend () -> T): T =
-    withContext(dispatcher) {
-        retry(
-            numberOfRetries = RETRIES,
-            delayBetweenRetries = RETRY_DELAY,
-            excludedExceptions = listOf(
-                InvalidAccessTokenException::class,
-                DateHeaderOutOfToleranceException::class
-            )
-        ) {
-            block.invoke()
+    override suspend fun getTreatmentsModifiedSince(from: Long): List<Treatment> = callWrapper(dispatcher) {
+
+        val response = api.getTreatmentsModifiedSince(from)
+        if (response.isSuccessful) {
+            return@callWrapper response.body()?.result?.map(RemoteEntry::toTreatment).toNotNull()
+        } else {
+            throw TodoNightscoutException() // TODO: react to response errors (offline, ...)
         }
     }
 
-// TODO: Parameters?
-private const val RETRIES = 3
-private const val RETRY_DELAY = 100L
+    private suspend fun <T> callWrapper(dispatcher: CoroutineDispatcher, block: suspend () -> T): T =
+        withContext(dispatcher) {
+            retry(
+                numberOfRetries = RETRIES,
+                delayBetweenRetries = RETRY_DELAY,
+                excludedExceptions = listOf(
+                    InvalidAccessTokenException::class,
+                    DateHeaderOutOfToleranceException::class
+                )
+            ) {
+                block.invoke()
+            }
+        }
+
+    companion object {
+
+        // TODO: Parameters?
+        private const val RETRIES = 3
+        private const val RETRY_DELAY = 100L
+    }
+}

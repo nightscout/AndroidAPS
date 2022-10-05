@@ -1,6 +1,7 @@
 package info.nightscout.sdk.remotemodel
 
 import com.google.gson.annotations.SerializedName
+import info.nightscout.sdk.localmodel.treatment.EventType
 
 /*
 * Depending on the type, different other fields are present.
@@ -12,7 +13,7 @@ import com.google.gson.annotations.SerializedName
 *
 * */
 internal data class RemoteEntry(
-    @SerializedName("type") val type: String, // sgv, mbg, cal, etc
+    @SerializedName("type") val type: String, // sgv, mbg, cal, etc;  Bolus type NORMAL, SMB, PRIMING
     @SerializedName("sgv") val sgv: Double?, // number The glucose reading. (only available for sgv types)
     @SerializedName("dateString") val dateString: String,
     @SerializedName("date") val date: Long, // required ? TODO: date and dateString are redundant - are both needed? how to handle inconsistency then? Only expose one to clients?
@@ -23,7 +24,8 @@ internal data class RemoteEntry(
     @SerializedName("srvCreated") val srvCreated: Long,
     // Philoul Others fields below found in API v3 doc
     // @SerializedName("app") val app : String,                      // TODO required ? Application or system in which the record was entered by human or device for the first time.
-    @SerializedName("utcOffset") val utcOffset: Int?, // Local UTC offset (timezone) of the event in minutes. This field can be set either directly by the client (in the incoming document) or it is automatically parsed from the date field.
+    @SerializedName("utcOffset") val utcOffset: Long?, // Local UTC offset (timezone) of the event in minutes. This field can be set either directly by the client (in the incoming document) or it is
+    // automatically parsed from the date field.
     @SerializedName("subject") val subject: String?, // Name of the security subject (within Nightscout scope) which has created the document. This field is automatically set by the server from the passed token or JWT.
     @SerializedName("modifiedBy") val modifiedBy: String?, // Name of the security subject (within Nightscout scope) which has patched or deleted the document for the last time. This field is automatically set by the server.
     @SerializedName("isValid") val isValid: Boolean?, // A flag set by the server only for deleted documents. This field appears only within history operation and for documents which were deleted by API v3 (and they always have a false value)
@@ -31,9 +33,20 @@ internal data class RemoteEntry(
     @SerializedName("noise") val noise: Int?, // 0 or 1 found in the export, I don't know if other values possible ?
     @SerializedName("filtered") val filtered: Double?, // The raw filtered value directly from CGM transmitter. (only available for sgv types)
     @SerializedName("unfiltered") val unfiltered: Double?, // The raw unfiltered value directly from CGM transmitter. (only available for sgv types)
-    @SerializedName("units") val units: String? // The units for the glucose value, mg/dl or mmol/l. It is strongly recommended to fill in this field.
+    @SerializedName("units") val units: String?, // The units for the glucose value, mg/dl or mmol/l. It is strongly recommended to fill in this field.
+    @SerializedName("duration") val duration: Long?, // Duration of event
 
     // TODO: add fields for other types (currently only basic "sgv" is covered)
-    // @SerializedName("_id") val _id : String?,                   // Internally assigned database id. This field is for internal server purposes only, clients communicate with API by using identifier field.
-    //
+
+    // General Treatment fields
+    @SerializedName("eventType") val eventType : EventType?, // Treatment eventType ie "Bolus" .....
+    @SerializedName("pumpId") val pumpId : Long?, // pump ID if uploaded by AAPS
+    @SerializedName("pumpType") val pumpType : String?, // pump type if uploaded by AAPS
+    @SerializedName("pumpSerial") val pumpSerial : String?, // pump serial if uploaded by AAPS
+    @SerializedName("notes") val notes : String?, // Treatment notes
+
+    // Bolus
+    @SerializedName("insulin") val insulin : Double?, // Insulin amount
+    // Carbs
+    @SerializedName("carbs") val carbs : Double?, // Carbs amount
 )

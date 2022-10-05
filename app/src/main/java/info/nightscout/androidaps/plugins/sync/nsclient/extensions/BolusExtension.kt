@@ -1,46 +1,34 @@
-package info.nightscout.androidaps.extensions
+package info.nightscout.androidaps.plugins.sync.nsclient.extensions
 
 import info.nightscout.androidaps.database.embedments.InterfaceIDs
-import info.nightscout.androidaps.database.entities.Carbs
+import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
 import org.json.JSONObject
 
-fun Carbs.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
+fun Bolus.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
     JSONObject()
-        .put("eventType", if (amount < 12) TherapyEvent.Type.CARBS_CORRECTION.text else TherapyEvent.Type.MEAL_BOLUS.text)
-        .put("carbs", amount)
-        .put("notes", notes)
+        .put("eventType", if (type == Bolus.Type.SMB) TherapyEvent.Type.CORRECTION_BOLUS.text else TherapyEvent.Type.MEAL_BOLUS.text)
+        .put("insulin", amount)
         .put("created_at", dateUtil.toISOString(timestamp))
+        .put("date", timestamp)
+        .put("type", type.name)
+        .put("notes", notes)
         .put("isValid", isValid)
-        .put("date", timestamp).also {
-            if (duration != 0L) it.put("duration", duration)
+        .put("isSMB", type == Bolus.Type.SMB).also {
             if (interfaceIDs.pumpId != null) it.put("pumpId", interfaceIDs.pumpId)
             if (interfaceIDs.pumpType != null) it.put("pumpType", interfaceIDs.pumpType!!.name)
             if (interfaceIDs.pumpSerial != null) it.put("pumpSerial", interfaceIDs.pumpSerial)
             if (isAdd && interfaceIDs.nightscoutId != null) it.put("_id", interfaceIDs.nightscoutId)
         }
 
-/*
-        create fake object with nsID and isValid == false
- */
-fun carbsFromNsIdForInvalidating(nsId: String): Carbs =
-    carbsFromJson(
-        JSONObject()
-            .put("mills", 1)
-            .put("carbs", -1.0)
-            .put("notes", null)
-            .put("_id", nsId)
-            .put("isValid", false)
-    )!!
-
-fun carbsFromJson(jsonObject: JSONObject): Carbs? {
+fun bolusFromJson(jsonObject: JSONObject): Bolus? {
     val timestamp = JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null) ?: return null
-    val duration = JsonHelper.safeGetLong(jsonObject, "duration")
-    val amount = JsonHelper.safeGetDoubleAllowNull(jsonObject, "carbs") ?: return null
-    val notes = JsonHelper.safeGetStringAllowNull(jsonObject, "notes", null)
+    val amount = JsonHelper.safeGetDoubleAllowNull(jsonObject, "insulin") ?: return null
+    val type = Bolus.Type.fromString(JsonHelper.safeGetString(jsonObject, "type"))
     val isValid = JsonHelper.safeGetBoolean(jsonObject, "isValid", true)
+    val notes = JsonHelper.safeGetStringAllowNull(jsonObject, "notes", null)
     val id = JsonHelper.safeGetStringAllowNull(jsonObject, "_id", null) ?: return null
     val pumpId = JsonHelper.safeGetLongAllowNull(jsonObject, "pumpId", null)
     val pumpType = InterfaceIDs.PumpType.fromString(JsonHelper.safeGetStringAllowNull(jsonObject, "pumpType", null))
@@ -49,12 +37,12 @@ fun carbsFromJson(jsonObject: JSONObject): Carbs? {
     if (timestamp == 0L) return null
     if (amount == 0.0) return null
 
-    return Carbs(
+    return Bolus(
         timestamp = timestamp,
-        duration = duration,
         amount = amount,
+        type = type,
         notes = notes,
-        isValid = isValid
+        isValid = isValid,
     ).also {
         it.interfaceIDs.nightscoutId = id
         it.interfaceIDs.pumpId = pumpId
@@ -62,4 +50,3 @@ fun carbsFromJson(jsonObject: JSONObject): Carbs? {
         it.interfaceIDs.pumpSerial = pumpSerial
     }
 }
-

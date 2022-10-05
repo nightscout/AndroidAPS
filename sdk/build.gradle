@@ -14,7 +14,7 @@ android {
 
 dependencies {
     api "com.squareup.retrofit2:retrofit:$retrofit2_version"
-    api "com.squareup.retrofit2:adapter-rxjava2:$retrofit2_version"
+    api "com.squareup.retrofit2:adapter-rxjava3:$retrofit2_version"
     api "com.squareup.retrofit2:converter-gson:$retrofit2_version"
     api "com.squareup.okhttp3:okhttp:$okhttp3_version"
     api "com.squareup.okhttp3:logging-interceptor:$okhttp3_version"
@@ -29,5 +29,5 @@ dependencies {
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
     api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-rx2:$coroutines_version"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-rx3:$coroutines_version"
 }

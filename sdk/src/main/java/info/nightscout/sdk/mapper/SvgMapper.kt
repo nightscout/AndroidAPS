@@ -44,7 +44,5 @@ internal fun RemoteEntry.toSgv(): Sgv? {
     )
 }
 
-private fun String?.toDirection(): Direction {
-    // Todo: check for other writings?
-    return Direction.values().firstOrNull { it.nsName == this } ?: Direction.INVALID
-}
+private fun String?.toDirection(): Direction =
+     Direction.values().firstOrNull { it.nsName == this } ?: Direction.INVALID

@@ -1,36 +1,37 @@
 package info.nightscout.androidaps.plugins.sync.nsclient
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ScrollView
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
-import androidx.work.OneTimeWorkRequest
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.databinding.NsClientFragmentBinding
-import info.nightscout.androidaps.interfaces.*
+import info.nightscout.androidaps.interfaces.DataSyncSelector
+import info.nightscout.androidaps.interfaces.NsClient
+import info.nightscout.androidaps.interfaces.PluginBase
+import info.nightscout.androidaps.interfaces.PluginFragment
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.source.NSClientSourcePlugin
-import info.nightscout.androidaps.plugins.sync.nsclient.events.EventNSClientNewLog
 import info.nightscout.androidaps.plugins.sync.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.plugins.sync.nsclient.events.EventNSClientUpdateGUI
-import info.nightscout.androidaps.receivers.DataWorker
+import info.nightscout.androidaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.sdk.NSAndroidClient
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
@@ -43,7 +44,6 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
     @Inject lateinit var dataSyncSelector: DataSyncSelector
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var dataWorker: DataWorker
 
     companion object {
 
@@ -125,31 +125,7 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
             }
 
             ID_MENU_TEST      -> {
-                context?.let { context ->
-                    val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-                    scope.launch {
-                        val client = NSAndroidClient(
-                            baseUrl = sp.getString(R.string.key_nsclientinternal_url, "").lowercase().replace("https://", ""),
-                            accessToken = sp.getString(R.string.key_nsclient_token, ""),
-                            context = context,
-                            logging = true
-                        )
-                        val status = client.getStatus()
-                        aapsLogger.debug("STATUS: $status")
-                        val sgvs = client.getSgvsModifiedSince(1663686093000)
-                        aapsLogger.debug("SGVS: $sgvs")
-                        if (sgvs.isNotEmpty()) {
-                            rxBus.send(EventNSClientNewLog("DATA", "received " + sgvs.size + " sgvs", NsClient.Version.V3))
-                            // Objective0
-                            sp.putBoolean(R.string.key_ObjectivesbgIsAvailableInNS, true)
-                            dataWorker.enqueue(
-                                OneTimeWorkRequest.Builder(NSClientSourcePlugin.NSClientSourceWorker::class.java)
-                                    .setInputData(dataWorker.storeInputData(sgvs))
-                                    .build()
-                            )
-                        }
-                    }
-                }
+                plugin?.let { plugin -> if (plugin is NSClientV3Plugin) plugin.test() }
                 true
             }
 

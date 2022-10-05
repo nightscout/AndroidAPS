@@ -4,13 +4,22 @@ import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import info.nightscout.androidaps.plugins.general.food.FoodPlugin
 import info.nightscout.androidaps.plugins.general.maintenance.ImportExportPrefsImpl
+import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
+import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
+import info.nightscout.androidaps.plugins.source.AidexPlugin
+import info.nightscout.androidaps.plugins.source.DexcomPlugin
+import info.nightscout.androidaps.plugins.source.EversensePlugin
+import info.nightscout.androidaps.plugins.source.GlimpPlugin
+import info.nightscout.androidaps.plugins.source.MM640gPlugin
+import info.nightscout.androidaps.plugins.source.NSClientSourcePlugin
+import info.nightscout.androidaps.plugins.source.PoctechPlugin
+import info.nightscout.androidaps.plugins.source.TomatoPlugin
+import info.nightscout.androidaps.plugins.source.XdripPlugin
 import info.nightscout.androidaps.plugins.sync.nsclient.NSClientAddAckWorker
 import info.nightscout.androidaps.plugins.sync.nsclient.NSClientAddUpdateWorker
 import info.nightscout.androidaps.plugins.sync.nsclient.NSClientMbgWorker
 import info.nightscout.androidaps.plugins.sync.nsclient.NSClientUpdateRemoveAckWorker
-import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
-import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
-import info.nightscout.androidaps.plugins.source.*
+import info.nightscout.androidaps.plugins.sync.nsclientV3.TreatmentWorker
 
 @Module
 @Suppress("unused")
@@ -33,4 +42,5 @@ abstract class WorkersModule {
     @ContributesAndroidInjector abstract fun contributesFoodWorker(): FoodPlugin.FoodWorker
     @ContributesAndroidInjector abstract fun contributesCsvExportWorker(): ImportExportPrefsImpl.CsvExportWorker
     @ContributesAndroidInjector abstract fun contributesAidexWorker(): AidexPlugin.AidexWorker
+    @ContributesAndroidInjector abstract fun contributesTreatmentWorker(): TreatmentWorker
 }

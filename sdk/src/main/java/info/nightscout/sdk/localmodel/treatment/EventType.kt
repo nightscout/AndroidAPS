@@ -1,35 +1,43 @@
 package info.nightscout.sdk.localmodel.treatment
 
-enum class EventType {
-    FINGER_STICK_BG_VALUE,      // BG Check
-    SNACK_BOLUS,
-    MEAL_BOLUS,
-    CORRECTION_BOLUS,
-    CARBS_CORRECTION,
-    COMBO_BOLUS,
-    ANNOUNCEMENT,
-    NOTE,
-    QUESTION,
-    EXERCISE,
-    CANNULA_CHANGE,             // Site Change
-    SENSOR_STARTED,             // Sensor Start
-    SENSOR_CHANGE,
-    PUMP_BATTERY_CHANGE,
-    INSULIN_CHANGE,
-    TEMPORARY_BASAL,            // Temp Basal
-    PROFILE_SWITCH,
-    DAD_ALERT,
-    TEMPORARY_TARGET,
-    APS_OFFLINE,                // OpenAPS Offline
-    BOLUS_WIZARD,
-    // below other EventType found in AAPS that should be "compatible" with NS...
-    SENSOR_STOPPED,
-    NS_MBG,
-    TEMPORARY_TARGET_CANCEL,
-    TEMPORARY_BASAL_START,      // Temp Basal Start
-    TEMPORARY_BASAL_END,        // Temp Basal Stop
-    // not in NS (nsNative false in AAPS)
-    NONE
-}
+import com.google.gson.annotations.SerializedName
 
-//example: "BG Check", "Snack Bolus", "Meal Bolus", "Correction Bolus", "Carb Correction", "Combo Bolus", "Announcement", "Note", "Question", "Exercise", "Site Change", "Sensor Start", "Sensor Change", "Pump Battery Change", "Insulin Change", "Temp Basal", "Profile Switch", "D.A.D. Alert", "Temporary Target", "OpenAPS Offline", "Bolus Wizard"
+@Suppress("unused")
+enum class EventType(val text: String) {
+
+    @SerializedName("Site Change") CANNULA_CHANGE("Site Change"),
+    @SerializedName("Insulin Change") INSULIN_CHANGE("Insulin Change"),
+    @SerializedName("Pump Battery Change") PUMP_BATTERY_CHANGE("Pump Battery Change"),
+    @SerializedName("Sensor Change") SENSOR_CHANGE("Sensor Change"),
+    @SerializedName("Sensor Start") SENSOR_STARTED("Sensor Start"),
+    @SerializedName("Sensor Stop") SENSOR_STOPPED("Sensor Stop"),
+    @SerializedName("BG Check") FINGER_STICK_BG_VALUE("BG Check"),
+    @SerializedName("Exercise") EXERCISE("Exercise"),
+    @SerializedName("Announcement") ANNOUNCEMENT("Announcement"),
+    @SerializedName("Question") QUESTION("Question"),
+    @SerializedName("Note") NOTE("Note"),
+    @SerializedName("OpenAPS Offline") APS_OFFLINE("OpenAPS Offline"),
+    @SerializedName("D.A.D. Alert") DAD_ALERT("D.A.D. Alert"),
+    @SerializedName("Mbg") NS_MBG("Mbg"),
+
+    // Used but not as a Therapy Event (use constants only)
+    @SerializedName("Carb Correction") CARBS_CORRECTION("Carb Correction"),
+    @SerializedName("Bolus Wizard") BOLUS_WIZARD("Bolus Wizard"),
+    @SerializedName("Correction Bolus") CORRECTION_BOLUS("Correction Bolus"),
+    @SerializedName("Meal Bolus") MEAL_BOLUS("Meal Bolus"),
+    @SerializedName("Combo Bolus") COMBO_BOLUS("Combo Bolus"),
+    @SerializedName("Temporary Target") TEMPORARY_TARGET("Temporary Target"),
+    @SerializedName("Temporary Target Cancel") TEMPORARY_TARGET_CANCEL("Temporary Target Cancel"),
+    @SerializedName("Profile Switch") PROFILE_SWITCH("Profile Switch"),
+    @SerializedName("Snack Bolus") SNACK_BOLUS("Snack Bolus"),
+    @SerializedName("Temp Basal") TEMPORARY_BASAL("Temp Basal"),
+    @SerializedName("Temp Basal Start") TEMPORARY_BASAL_START("Temp Basal Start"),
+    @SerializedName("Temp Basal End") TEMPORARY_BASAL_END("Temp Basal End"),
+
+    @SerializedName("<none>") NONE("<none>");
+
+    companion object {
+
+        fun fromString(text: String?) = values().firstOrNull { it.text == text } ?: NONE
+    }
+}

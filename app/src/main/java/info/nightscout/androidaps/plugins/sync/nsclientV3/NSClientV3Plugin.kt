@@ -7,6 +7,7 @@ import android.text.Spanned
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceScreen
 import androidx.preference.SwitchPreference
+import androidx.work.OneTimeWorkRequest
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
@@ -22,6 +23,7 @@ import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.interfaces.Sync
 import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.source.NSClientSourcePlugin
 import info.nightscout.androidaps.plugins.sync.nsclient.NSClientFragment
 import info.nightscout.androidaps.plugins.sync.nsclient.NsClientReceiverDelegate
 import info.nightscout.androidaps.plugins.sync.nsclient.data.AlarmAck
@@ -31,15 +33,25 @@ import info.nightscout.androidaps.plugins.sync.nsclient.events.EventNSClientUpda
 import info.nightscout.androidaps.plugins.sync.nsclient.services.NSClientService
 import info.nightscout.androidaps.plugins.sync.nsclientV3.events.EventNSClientV3Resend
 import info.nightscout.androidaps.plugins.sync.nsclientV3.events.EventNSClientV3Status
+import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HtmlHelper.fromHtml
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.sdk.NSAndroidClientImpl
+import info.nightscout.sdk.NSAndroidRxClientImpl
+import info.nightscout.sdk.interfaces.NSAndroidRxClient
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import io.reactivex.rxjava3.kotlin.subscribeBy
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
+import org.spongycastle.crypto.tls.ConnectionEnd.client
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -55,7 +67,8 @@ class NSClientV3Plugin @Inject constructor(
     private val sp: SP,
     private val nsClientReceiverDelegate: NsClientReceiverDelegate,
     private val config: Config,
-    private val buildHelper: BuildHelper
+    private val buildHelper: BuildHelper,
+    private val dataWorker: DataWorker
 ) : NsClient, Sync, PluginBase(
     PluginDescription()
         .mainType(PluginType.SYNC)
@@ -73,6 +86,9 @@ class NSClientV3Plugin @Inject constructor(
     private val listLog: MutableList<EventNSClientNewLog> = ArrayList()
     override var status = ""
     override var nsClientService: NSClientService? = null
+
+    private lateinit var nsAndroidRxClient: NSAndroidRxClient
+
     val isAllowed: Boolean
         get() = nsClientReceiverDelegate.allowed
     val blockingReason: String
@@ -81,6 +97,14 @@ class NSClientV3Plugin @Inject constructor(
     override fun onStart() {
 //        context.bindService(Intent(context, NSClientService::class.java), mConnection, Context.BIND_AUTO_CREATE)
         super.onStart()
+        nsAndroidRxClient = NSAndroidRxClientImpl(
+            NSAndroidClientImpl(
+                baseUrl = sp.getString(R.string.key_nsclientinternal_url, "").lowercase().replace("https://", ""),
+                accessToken = sp.getString(R.string.key_nsclient_token, ""),
+                context = context,
+                logging = true
+            )
+        )
         nsClientReceiverDelegate.grabReceiversState()
         disposable += rxBus
             .toObservable(EventNSClientV3Status::class.java)
@@ -202,5 +226,45 @@ class NSClientV3Plugin @Inject constructor(
 
     override fun updateLatestDateReceivedIfNewer(latestReceived: Long) {
         nsClientService?.let { if (latestReceived > it.latestDateInReceivedData) it.latestDateInReceivedData = latestReceived }
+    }
+
+    fun test() {
+        disposable += nsAndroidRxClient.getStatus()
+            .subscribeBy(
+                onSuccess = { status -> aapsLogger.debug("STATUS: $status") },
+                onError = { error -> aapsLogger.error("Error: ", error) }
+            )
+        disposable += nsAndroidRxClient.getSgvsModifiedSince(1665000000000)
+            .subscribeBy(
+                onSuccess = { sgvs ->
+                    aapsLogger.debug("SGVS: $sgvs")
+                    if (sgvs.isNotEmpty()) {
+                        rxBus.send(EventNSClientNewLog("DATA", "received " + sgvs.size + " sgvs", NsClient.Version.V3))
+                        // Objective0
+                        sp.putBoolean(R.string.key_ObjectivesbgIsAvailableInNS, true)
+                        dataWorker.enqueue(
+                            OneTimeWorkRequest.Builder(NSClientSourcePlugin.NSClientSourceWorker::class.java)
+                                .setInputData(dataWorker.storeInputData(sgvs))
+                                .build()
+                        )
+                    }
+                },
+                onError = { error -> aapsLogger.error("Error: ", error) }
+            )
+        disposable += nsAndroidRxClient.getTreatmentsModifiedSince(1665000000000)
+            .subscribeBy(
+                onSuccess = { treatments ->
+                    aapsLogger.debug("TREATMENTS: $treatments")
+                    if (treatments.isNotEmpty()) {
+                        rxBus.send(EventNSClientNewLog("DATA", "received " + treatments.size + " treatments", NsClient.Version.V3))
+                        dataWorker.enqueue(
+                            OneTimeWorkRequest.Builder(TreatmentWorker::class.java)
+                                .setInputData(dataWorker.storeInputData(treatments))
+                                .build()
+                        )
+                    }
+                },
+                onError = { error -> aapsLogger.error("Error: ", error) }
+            )
     }
 }

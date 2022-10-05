@@ -10,6 +10,9 @@ import retrofit2.http.Path
 
 /**
  * Created by adrian on 2019-12-23.
+ *
+ * https://github.com/nightscout/cgm-remote-monitor/blob/master/lib/api3/doc/tutorial.md
+ *
  */
 
 internal interface NightscoutRemoteService {
@@ -29,4 +32,7 @@ internal interface NightscoutRemoteService {
 
     @GET("v3/entries/history/{from}")
     suspend fun getSgvsModifiedSince(@Path("from") from: Long): Response<NSResponse<List<RemoteEntry>>>
+
+    @GET("v3/treatments/history/{from}")
+    suspend fun getTreatmentsModifiedSince(@Path("from") from: Long): Response<NSResponse<List<RemoteEntry>>>
 }

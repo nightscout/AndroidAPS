@@ -6,7 +6,7 @@ data class Sgv(
     override val identifier: String,
     override val srvModified: Long,
     override val srvCreated: Long,
-    override val utcOffset: Int,
+    override val utcOffset: Long?,
     override val subject: String?,
     override var isReadOnly: Boolean,
     override val isValid: Boolean,

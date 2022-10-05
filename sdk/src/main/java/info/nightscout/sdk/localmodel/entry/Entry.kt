@@ -6,9 +6,8 @@ interface Entry {
     val identifier: String
     val srvModified: Long
     val srvCreated: Long
-    val utcOffset: Int
+    val utcOffset: Long?
     val subject: String?
     var isReadOnly: Boolean // TODO: nullability?
     val isValid: Boolean
 }
-// TODO: add date string?

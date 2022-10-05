@@ -1,9 +1,9 @@
 package info.nightscout.sdk.localmodel.treatment
 
-enum class GlucoseType {
-    Sensor,
-    Finger,
-    Manual
-}
+import com.google.gson.annotations.SerializedName
 
-//example: "Sensor", "Finger", "Manual"
+enum class GlucoseType {
+    @SerializedName("Sensor") Sensor,
+    @SerializedName("Finger") Finger,
+    @SerializedName("Manual") Manual
+}

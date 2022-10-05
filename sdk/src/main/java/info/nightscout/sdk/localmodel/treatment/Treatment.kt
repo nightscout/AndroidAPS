@@ -7,9 +7,12 @@ interface Treatment {
     val eventType: EventType
     val srvModified: Long
     val srvCreated: Long
-    val utcOffset: Int
+    val utcOffset: Long
     val subject: String?
-    var isReadOnly: Boolean // TODO: nullability?
+    var isReadOnly: Boolean
     val isValid: Boolean
+    val notes: String?
+    val pumpId: Long?
+    val pumpType: String?
+    val pumpSerial: String?
 }
-// TODO: add date string?
