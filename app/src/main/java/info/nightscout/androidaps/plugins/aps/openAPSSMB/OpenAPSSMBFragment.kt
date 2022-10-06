@@ -2,8 +2,15 @@ package info.nightscout.androidaps.plugins.aps.openAPSSMB
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.Handler
+import android.os.HandlerThread
 import android.text.TextUtils
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import dagger.android.support.DaggerFragment
@@ -43,6 +50,7 @@ class OpenAPSSMBFragment : DaggerFragment(), MenuProvider {
     private val ID_MENU_RUN = 503
 
     private var _binding: OpenapsamaFragmentBinding? = null
+    private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -61,7 +69,7 @@ class OpenAPSSMBFragment : DaggerFragment(), MenuProvider {
             setColorSchemeColors(rh.gac(context, R.attr.colorPrimaryDark), rh.gac(context, R.attr.colorPrimary), rh.gac(context, R.attr.colorSecondary))
             setOnRefreshListener {
                 binding.lastrun.text = rh.gs(R.string.executing)
-                Thread { activePlugin.activeAPS.invoke("OpenAPSSMB swipe refresh", false) }.start()
+                handler.post { activePlugin.activeAPS.invoke("OpenAPSSMB swipe refresh", false) }
             }
         }
     }
@@ -75,7 +83,7 @@ class OpenAPSSMBFragment : DaggerFragment(), MenuProvider {
         when (item.itemId) {
             ID_MENU_RUN -> {
                 binding.lastrun.text = rh.gs(R.string.executing)
-                Thread { activePlugin.activeAPS.invoke("OpenAPSSMB menu", false) }.start()
+                handler.post { activePlugin.activeAPS.invoke("OpenAPSSMB menu", false) }
                 true
             }
 
@@ -105,6 +113,7 @@ class OpenAPSSMBFragment : DaggerFragment(), MenuProvider {
     override fun onPause() {
         super.onPause()
         disposable.clear()
+        handler.removeCallbacksAndMessages(null)
     }
 
     @Synchronized

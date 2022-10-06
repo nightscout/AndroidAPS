@@ -1,8 +1,15 @@
 package info.nightscout.androidaps.plugins.aps.openAPSAMA
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.HandlerThread
 import android.text.TextUtils
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import dagger.android.support.DaggerFragment
@@ -40,6 +47,7 @@ class OpenAPSAMAFragment : DaggerFragment(), MenuProvider {
     @Suppress("PrivatePropertyName")
     private val ID_MENU_RUN = 502
 
+    private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private var _binding: OpenapsamaFragmentBinding? = null
 
     // This property is only valid between onCreateView and
@@ -59,7 +67,7 @@ class OpenAPSAMAFragment : DaggerFragment(), MenuProvider {
             setColorSchemeColors(rh.gac(context, R.attr.colorPrimaryDark), rh.gac(context, R.attr.colorPrimary), rh.gac(context, R.attr.colorSecondary))
             setOnRefreshListener {
                 binding.lastrun.text = rh.gs(R.string.executing)
-                Thread { openAPSAMAPlugin.invoke("OpenAPSAMA swipe refresh", false) }.start()
+                handler.post { openAPSAMAPlugin.invoke("OpenAPSAMA swipe refresh", false) }
             }
         }
 
@@ -74,7 +82,7 @@ class OpenAPSAMAFragment : DaggerFragment(), MenuProvider {
         when (item.itemId) {
             ID_MENU_RUN -> {
                 binding.lastrun.text = rh.gs(R.string.executing)
-                Thread { openAPSAMAPlugin.invoke("OpenAPSAMA menu", false) }.start()
+                handler.post { openAPSAMAPlugin.invoke("OpenAPSAMA menu", false) }
                 true
             }
 
@@ -105,6 +113,7 @@ class OpenAPSAMAFragment : DaggerFragment(), MenuProvider {
     override fun onPause() {
         super.onPause()
         disposable.clear()
+        handler.removeCallbacksAndMessages(null)
     }
 
     @Synchronized

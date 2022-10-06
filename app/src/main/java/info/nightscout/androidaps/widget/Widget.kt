@@ -54,7 +54,11 @@ class Widget : AppWidgetProvider() {
     @Inject lateinit var sp: SP
     @Inject lateinit var constraintChecker: ConstraintChecker
 
-    private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
+    companion object {
+        // This object doesn't behave like singleton,
+        // many threads were created. Making handler static resolve this issue
+        private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
+    }
     private val intentAction = "OpenApp"
 
     override fun onReceive(context: Context, intent: Intent?) {

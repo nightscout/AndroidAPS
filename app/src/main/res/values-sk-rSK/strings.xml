@@ -656,6 +656,8 @@
     <string name="description_source_poctech">Získavať glykémie z aplikácie Poctech</string>
     <string name="glunovo">Glunovo</string>
     <string name="description_source_glunovo">Získavať glykémie z aplikácie Glunovo</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Prijímať hodnoty z aplikácie Intelligo</string>
     <string name="description_source_tomato">Prijímať glykémie z aplikácie Tomato (zariadenie MiaoMiao)</string>
     <string name="high_temptarget_raises_sensitivity_title">Vysoký dočasný cieľ zvýši citlivosť</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Zvýšenie citlivosti pre dočasné ciele >= 5.5]]></string>

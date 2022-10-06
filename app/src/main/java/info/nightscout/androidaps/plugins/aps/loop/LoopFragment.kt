@@ -1,7 +1,14 @@
 package info.nightscout.androidaps.plugins.aps.loop
 
 import android.os.Bundle
-import android.view.*
+import android.os.Handler
+import android.os.HandlerThread
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import dagger.android.support.DaggerFragment
@@ -34,8 +41,10 @@ class LoopFragment : DaggerFragment(), MenuProvider {
     @Inject lateinit var loop: Loop
     @Inject lateinit var dateUtil: DateUtil
 
+    @Suppress("PrivatePropertyName")
     private val ID_MENU_RUN = 501
 
+    private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private var disposable: CompositeDisposable = CompositeDisposable()
 
     private var _binding: LoopFragmentBinding? = null
@@ -53,11 +62,11 @@ class LoopFragment : DaggerFragment(), MenuProvider {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        with(binding.swipeRefresh) {
-            setColorSchemeColors(rh.gac(context, R.attr.colorPrimaryDark), rh.gac(context, R.attr.colorPrimary), rh.gac(context, R.attr.colorSecondary))
-            setOnRefreshListener {
-                binding.lastrun.text = rh.gs(R.string.executing)
-                Thread { loop.invoke("Loop swiperefresh", true) }.start()
+        binding.swipeRefresh.setColorSchemeColors(rh.gac(context, R.attr.colorPrimaryDark), rh.gac(context, R.attr.colorPrimary), rh.gac(context, R.attr.colorSecondary))
+        binding.swipeRefresh.setOnRefreshListener {
+            binding.lastrun.text = rh.gs(R.string.executing)
+            handler.post {
+                loop.invoke("Loop swipe refresh", true)
             }
         }
     }
@@ -71,7 +80,7 @@ class LoopFragment : DaggerFragment(), MenuProvider {
         when (item.itemId) {
             ID_MENU_RUN -> {
                 binding.lastrun.text = rh.gs(R.string.executing)
-                Thread { loop.invoke("Loop menu", true) }.start()
+                handler.post { loop.invoke("Loop menu", true) }
                 true
             }
 
@@ -104,6 +113,7 @@ class LoopFragment : DaggerFragment(), MenuProvider {
     override fun onPause() {
         super.onPause()
         disposable.clear()
+        handler.removeCallbacksAndMessages(null)
     }
 
     @Synchronized
