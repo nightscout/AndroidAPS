@@ -1,6 +1,5 @@
-package info.nightscout.androidaps.plugins.aps.openAPSSMB
+package info.nightscout.androidaps.plugins.aps
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
@@ -15,7 +14,7 @@ import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.databinding.OpenapsamaFragmentBinding
+import info.nightscout.androidaps.databinding.OpenapsFragmentBinding
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.aps.events.EventOpenAPSUpdateGui
@@ -33,7 +32,7 @@ import org.json.JSONArray
 import org.json.JSONException
 import javax.inject.Inject
 
-class OpenAPSSMBFragment : DaggerFragment(), MenuProvider {
+class OpenAPSFragment : DaggerFragment(), MenuProvider {
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -49,7 +48,7 @@ class OpenAPSSMBFragment : DaggerFragment(), MenuProvider {
     @Suppress("PrivatePropertyName")
     private val ID_MENU_RUN = 503
 
-    private var _binding: OpenapsamaFragmentBinding? = null
+    private var _binding: OpenapsFragmentBinding? = null
     private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
     // This property is only valid between onCreateView and
@@ -57,7 +56,7 @@ class OpenAPSSMBFragment : DaggerFragment(), MenuProvider {
     private val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-        OpenapsamaFragmentBinding.inflate(inflater, container, false).also {
+        OpenapsFragmentBinding.inflate(inflater, container, false).also {
             _binding = it
             requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
         }.root
@@ -65,12 +64,10 @@ class OpenAPSSMBFragment : DaggerFragment(), MenuProvider {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        with(binding.swipeRefresh) {
-            setColorSchemeColors(rh.gac(context, R.attr.colorPrimaryDark), rh.gac(context, R.attr.colorPrimary), rh.gac(context, R.attr.colorSecondary))
-            setOnRefreshListener {
-                binding.lastrun.text = rh.gs(R.string.executing)
-                handler.post { activePlugin.activeAPS.invoke("OpenAPSSMB swipe refresh", false) }
-            }
+        binding.swipeRefresh.setColorSchemeColors(rh.gac(context, R.attr.colorPrimaryDark), rh.gac(context, R.attr.colorPrimary), rh.gac(context, R.attr.colorSecondary))
+        binding.swipeRefresh.setOnRefreshListener {
+            binding.lastrun.text = rh.gs(R.string.executing)
+            handler.post { activePlugin.activeAPS.invoke("OpenAPS swipe refresh", false) }
         }
     }
 
@@ -83,7 +80,7 @@ class OpenAPSSMBFragment : DaggerFragment(), MenuProvider {
         when (item.itemId) {
             ID_MENU_RUN -> {
                 binding.lastrun.text = rh.gs(R.string.executing)
-                handler.post { activePlugin.activeAPS.invoke("OpenAPSSMB menu", false) }
+                handler.post { activePlugin.activeAPS.invoke("OpenAPS menu", false) }
                 true
             }
 
@@ -93,6 +90,7 @@ class OpenAPSSMBFragment : DaggerFragment(), MenuProvider {
     @Synchronized
     override fun onResume() {
         super.onResume()
+
         disposable += rxBus
             .toObservable(EventOpenAPSUpdateGui::class.java)
             .observeOn(aapsSchedulers.main)
@@ -123,36 +121,36 @@ class OpenAPSSMBFragment : DaggerFragment(), MenuProvider {
     }
 
     @Synchronized
-    fun updateGUI() {
+    private fun updateGUI() {
         if (_binding == null) return
-        val openAPSSMBPlugin = activePlugin.activeAPS
-        openAPSSMBPlugin.lastAPSResult?.let { lastAPSResult ->
+        val openAPSPlugin = activePlugin.activeAPS
+        openAPSPlugin.lastAPSResult?.let { lastAPSResult ->
             binding.result.text = jsonFormatter.format(lastAPSResult.json)
             binding.request.text = lastAPSResult.toSpanned()
         }
-        openAPSSMBPlugin.lastDetermineBasalAdapter?.let { determineBasalAdapterSMBJS ->
-            binding.glucosestatus.text = jsonFormatter.format(determineBasalAdapterSMBJS.glucoseStatusParam)
-            binding.currenttemp.text = jsonFormatter.format(determineBasalAdapterSMBJS.currentTempParam)
+        openAPSPlugin.lastDetermineBasalAdapter?.let { determineBasalAdapter ->
+            binding.glucosestatus.text = jsonFormatter.format(determineBasalAdapter.glucoseStatusParam)
+            binding.currenttemp.text = jsonFormatter.format(determineBasalAdapter.currentTempParam)
             try {
-                val iobArray = JSONArray(determineBasalAdapterSMBJS.iobDataParam)
+                val iobArray = JSONArray(determineBasalAdapter.iobDataParam)
                 binding.iobdata.text = TextUtils.concat(rh.gs(R.string.array_of_elements, iobArray.length()) + "\n", jsonFormatter.format(iobArray.getString(0)))
             } catch (e: JSONException) {
                 aapsLogger.error(LTag.APS, "Unhandled exception", e)
-                @SuppressLint("SetTextI18n")
+                @Suppress("SetTextI18n")
                 binding.iobdata.text = "JSONException see log for details"
             }
 
-            binding.profile.text = jsonFormatter.format(determineBasalAdapterSMBJS.profileParam)
-            binding.mealdata.text = jsonFormatter.format(determineBasalAdapterSMBJS.mealDataParam)
-            binding.scriptdebugdata.text = determineBasalAdapterSMBJS.scriptDebug.replace("\\s+".toRegex(), " ")
-            openAPSSMBPlugin.lastAPSResult?.inputConstraints?.let {
+            binding.profile.text = jsonFormatter.format(determineBasalAdapter.profileParam)
+            binding.mealdata.text = jsonFormatter.format(determineBasalAdapter.mealDataParam)
+            binding.scriptdebugdata.text = determineBasalAdapter.scriptDebug.replace("\\s+".toRegex(), " ")
+            openAPSPlugin.lastAPSResult?.inputConstraints?.let {
                 binding.constraints.text = it.getReasons(aapsLogger)
             }
         }
-        if (openAPSSMBPlugin.lastAPSRun != 0L) {
-            binding.lastrun.text = dateUtil.dateAndTimeString(openAPSSMBPlugin.lastAPSRun)
+        if (openAPSPlugin.lastAPSRun != 0L) {
+            binding.lastrun.text = dateUtil.dateAndTimeString(openAPSPlugin.lastAPSRun)
         }
-        openAPSSMBPlugin.lastAutosensResult.let {
+        openAPSPlugin.lastAutosensResult.let {
             binding.autosensdata.text = jsonFormatter.format(it.json())
         }
         binding.swipeRefresh.isRefreshing = false
