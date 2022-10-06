@@ -62,11 +62,11 @@ class LoopFragment : DaggerFragment(), MenuProvider {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        with(binding.swipeRefresh) {
-            setColorSchemeColors(rh.gac(context, R.attr.colorPrimaryDark), rh.gac(context, R.attr.colorPrimary), rh.gac(context, R.attr.colorSecondary))
-            setOnRefreshListener {
-                binding.lastrun.text = rh.gs(R.string.executing)
-                handler.post { loop.invoke("Loop swipe refresh", true) }
+        binding.swipeRefresh.setColorSchemeColors(rh.gac(context, R.attr.colorPrimaryDark), rh.gac(context, R.attr.colorPrimary), rh.gac(context, R.attr.colorSecondary))
+        binding.swipeRefresh.setOnRefreshListener {
+            binding.lastrun.text = rh.gs(R.string.executing)
+            handler.post {
+                loop.invoke("Loop swipe refresh", true)
             }
         }
     }
