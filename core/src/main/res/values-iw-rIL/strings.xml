@@ -157,7 +157,7 @@
     <!--    Temptarget-->
     <string name="mins">%1$d דק\'</string>
     <!--    Translator-->
-    <string name="careportal">פורטל טיפולים</string>
+    <string name="careportal">פורטל הטיפולים</string>
     <string name="careportal_bgcheck">בדיקת רמת סוכר בדם</string>
     <string name="careportal_mbg">רמת סוכר ידנית או כיול</string>
     <string name="careportal_announcement">הכרזה</string>
