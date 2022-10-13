@@ -25,8 +25,6 @@
     <string name="objectives_pumpstatusavailableinns">Статус помпы доступен в NS</string>
     <string name="objectives_manualenacts">Ввод вручную</string>
     <string name="accomplished">Выполнено: %1$s</string>
-    <string name="objectives_usage_objective">Научитесь контролировать AndroidAPS</string>
-    <string name="objectives_usage_gate">Выполняйте различные действия в AndroidAPS</string>
     <string name="objectives_useprofileswitch">Установите профиль 90% на 10 мин (Долгое нажатие на имя профиля на главном экране)</string>
     <string name="objectives_usedisconnectpump">Имитация душа. Отключите помпу на 1ч (Долгое нажатие на Открытый цикл Open Loop)</string>
     <string name="objectives_usereconnectpump">... и обратное подключение таким же способом</string>
