@@ -43,7 +43,7 @@ class ProfileFunctionImplementation @Inject constructor(
     private val deviceStatusData: DeviceStatusData
 ) : ProfileFunction {
 
-    val cache = LongSparseArray<Profile>()
+    val cache = HashMap<Long,Profile?>()
 
     private val disposable = CompositeDisposable()
 
@@ -54,10 +54,10 @@ class ProfileFunctionImplementation @Inject constructor(
             .subscribe(
                 {
                     synchronized(cache) {
-                        for (index in cache.size() - 1 downTo 0) {
-                            if (cache.keyAt(index) > it.startDate) {
-                                aapsLogger.debug(LTag.AUTOSENS, "Removing from profileCache: " + dateUtil.dateAndTimeAndSecondsString(cache.keyAt(index)))
-                                cache.removeAt(index)
+                        for (key in cache.keys) {
+                            if (key > it.startDate) {
+                                aapsLogger.debug(LTag.AUTOSENS, "Removing from profileCache: " + dateUtil.dateAndTimeAndSecondsString(key))
+                                cache.remove(key)
                             } else {
                                 break
                             }
@@ -98,14 +98,17 @@ class ProfileFunctionImplementation @Inject constructor(
         val rounded = time - time % 1000
         // Clear cache after longer use
         synchronized(cache) {
-            if (cache.size() > 30000) {
+            if (cache.keys.size > 30000) {
                 cache.clear()
                 aapsLogger.debug("Profile cache cleared")
             }
-            val cached = cache[rounded]
-            if (cached != null) return cached
+            if (cache.containsKey(rounded)) {
+                //aapsLogger.debug(LTag.PROFILE, "Profile cache HIT for $rounded")
+                return cache[rounded]
+            }
         }
 //        aapsLogger.debug("getProfile called for $time")
+        //aapsLogger.debug(LTag.PROFILE, "Profile cache MISS for $rounded")
         val ps = repository.getEffectiveProfileSwitchActiveAt(time).blockingGet()
         if (ps is ValueWrapper.Existing) {
             val sealed = ProfileSealed.EPS(ps.value)
@@ -130,6 +133,9 @@ class ProfileFunctionImplementation @Inject constructor(
             }
         }
 
+        synchronized(cache) {
+            cache.put(rounded, null)
+        }
         return null
     }
 

@@ -37,8 +37,8 @@
     <string name="objectives_pumpstatusavailableinns">Pump status available in NS</string>
     <string name="objectives_manualenacts">Manual enacts</string>
     <string name="accomplished">Accomplished: %1$s</string>
-    <string name="objectives_usage_objective">Learn how to control AndroidAPS</string>
-    <string name="objectives_usage_gate">Perform different actions in AndroidAPS</string>
+    <string name="objectives_usage_objective">Learn how to control AAPS</string>
+    <string name="objectives_usage_gate">Perform different actions in AAPS</string>
     <string name="objectives_useprofileswitch">Set profile 90% for 10 min (Long-press profile name on Overview)</string>
     <string name="objectives_usedisconnectpump">Simulate shower. Disconnect pump for 1h (Long-press on Open Loop)</string>
     <string name="objectives_usereconnectpump">... and reconnect back the same way</string>

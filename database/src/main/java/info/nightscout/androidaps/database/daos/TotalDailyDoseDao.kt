@@ -33,7 +33,7 @@ internal interface TotalDailyDoseDao : TraceableDao<TotalDailyDose> {
     @Query("SELECT * FROM $TABLE_TOTAL_DAILY_DOSES WHERE dateCreated > :since AND dateCreated <= :until LIMIT :limit OFFSET :offset")
     suspend fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<TotalDailyDose>
 
-    @Query("DELETE FROM $TABLE_TOTAL_DAILY_DOSES WHERE dateCreated >= :since AND pumpType = :pumpType")
+    @Query("DELETE FROM $TABLE_TOTAL_DAILY_DOSES WHERE timestamp >= :since AND pumpType = :pumpType")
     fun deleteNewerThan(since: Long, pumpType: InterfaceIDs.PumpType)
 
 }

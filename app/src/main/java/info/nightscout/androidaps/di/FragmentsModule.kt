@@ -3,15 +3,39 @@ package info.nightscout.androidaps.di
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import info.nightscout.androidaps.activities.MyPreferenceFragment
-import info.nightscout.androidaps.dialogs.*
+import info.nightscout.androidaps.activities.fragments.TreatmentsBolusCarbsFragment
+import info.nightscout.androidaps.activities.fragments.TreatmentsCareportalFragment
+import info.nightscout.androidaps.activities.fragments.TreatmentsExtendedBolusesFragment
+import info.nightscout.androidaps.activities.fragments.TreatmentsProfileSwitchFragment
+import info.nightscout.androidaps.activities.fragments.TreatmentsTempTargetFragment
+import info.nightscout.androidaps.activities.fragments.TreatmentsTemporaryBasalsFragment
+import info.nightscout.androidaps.activities.fragments.TreatmentsUserEntryFragment
+import info.nightscout.androidaps.dialogs.CalibrationDialog
+import info.nightscout.androidaps.dialogs.CarbsDialog
+import info.nightscout.androidaps.dialogs.CareDialog
+import info.nightscout.androidaps.dialogs.ExtendedBolusDialog
+import info.nightscout.androidaps.dialogs.FillDialog
+import info.nightscout.androidaps.dialogs.InsulinDialog
+import info.nightscout.androidaps.dialogs.LoopDialog
+import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
+import info.nightscout.androidaps.dialogs.TempBasalDialog
+import info.nightscout.androidaps.dialogs.TempTargetDialog
+import info.nightscout.androidaps.dialogs.TreatmentDialog
+import info.nightscout.androidaps.dialogs.WizardDialog
+import info.nightscout.androidaps.dialogs.WizardInfoDialog
+import info.nightscout.androidaps.plugins.aps.OpenAPSFragment
 import info.nightscout.androidaps.plugins.aps.loop.LoopFragment
-import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAFragment
-import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBFragment
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderFragment
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesFragment
 import info.nightscout.androidaps.plugins.constraints.objectives.activities.ObjectivesExamDialog
 import info.nightscout.androidaps.plugins.general.actions.ActionsFragment
 import info.nightscout.androidaps.plugins.general.automation.AutomationFragment
+import info.nightscout.androidaps.plugins.general.automation.dialogs.ChooseActionDialog
+import info.nightscout.androidaps.plugins.general.automation.dialogs.ChooseOperationDialog
+import info.nightscout.androidaps.plugins.general.automation.dialogs.ChooseTriggerDialog
+import info.nightscout.androidaps.plugins.general.automation.dialogs.EditActionDialog
+import info.nightscout.androidaps.plugins.general.automation.dialogs.EditEventDialog
+import info.nightscout.androidaps.plugins.general.automation.dialogs.EditTriggerDialog
 import info.nightscout.androidaps.plugins.general.autotune.AutotuneFragment
 import info.nightscout.androidaps.plugins.general.food.FoodFragment
 import info.nightscout.androidaps.plugins.general.maintenance.MaintenanceFragment
@@ -25,8 +49,6 @@ import info.nightscout.androidaps.plugins.insulin.InsulinFragment
 import info.nightscout.androidaps.plugins.profile.local.LocalProfileFragment
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpFragment
 import info.nightscout.androidaps.plugins.source.BGSourceFragment
-import info.nightscout.androidaps.activities.fragments.*
-import info.nightscout.androidaps.plugins.general.automation.dialogs.*
 import info.nightscout.androidaps.utils.protection.PasswordCheck
 
 @Module
@@ -46,8 +68,7 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesInsulinFragment(): InsulinFragment
     @ContributesAndroidInjector abstract fun contributesLocalProfileFragment(): LocalProfileFragment
     @ContributesAndroidInjector abstract fun contributesObjectivesFragment(): ObjectivesFragment
-    @ContributesAndroidInjector abstract fun contributesOpenAPSAMAFragment(): OpenAPSAMAFragment
-    @ContributesAndroidInjector abstract fun contributesOpenAPSSMBFragment(): OpenAPSSMBFragment
+    @ContributesAndroidInjector abstract fun contributesOpenAPSFragment(): OpenAPSFragment
     @ContributesAndroidInjector abstract fun contributesOverviewFragment(): OverviewFragment
     @ContributesAndroidInjector abstract fun contributesLoopFragment(): LoopFragment
     @ContributesAndroidInjector abstract fun contributesMaintenanceFragment(): MaintenanceFragment

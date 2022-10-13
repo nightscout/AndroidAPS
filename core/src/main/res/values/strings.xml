@@ -94,7 +94,7 @@
     <string name="disconnected">Disconnected</string>
     <string name="disconnecting">Disconnecting</string>
     <string name="waiting_for_disconnection">Waiting for disconnection</string>
-    <string name="androidaps_start">AndroidAPS started</string>
+    <string name="androidaps_start">AAPS started</string>
     <string name="formatinsulinunits1">%1$.1f U</string>
     <string name="formatinsulinunits">%1$.2f U</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
@@ -379,7 +379,7 @@
     <string name="version_expire">Version %1$s expire on %2$s</string>
 
     <!-- Permissions -->
-    <string name="alert_dialog_storage_permission_text">Please reboot your phone or restart AndroidAPS from the System Settings \notherwise Android APS will not have logging (important to track and verify that the algorithms are working correctly)!</string>
+    <string name="alert_dialog_storage_permission_text">Please reboot your phone or restart AAPS from the System Settings \notherwise Android APS will not have logging (important to track and verify that the algorithms are working correctly)!</string>
 
     <!-- WeekdayPicker -->
     <string name="monday_short">M</string>
@@ -500,7 +500,7 @@
     <string name="valueoutofrange">»%1$s« is out of hard limits</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f is out of hard limits</string>
     <string name="basal_value">Basal value</string>
-    <string name="nsclient_version_does_not_match">NSClient version doesn\'t match AndroidAPS version. Please update.</string>
+    <string name="nsclient_version_does_not_match">AAPSClient version doesn\'t match AAPS version. Please update.</string>
 
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f U</string>

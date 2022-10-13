@@ -8,6 +8,64 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:477603612366:android:56b8fa16651fb8dbfcb29f",
+        "android_client_info": {
+          "package_name": "info.nightscout.aapsclient"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "477603612366-a925drvlvs7qn7gt73r585erbqto8c79.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9HRtJJsnk_SbAMAuvudSua2vEm3j3430"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "477603612366-a925drvlvs7qn7gt73r585erbqto8c79.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:477603612366:android:8e749a9253635bcafcb29f",
+        "android_client_info": {
+          "package_name": "info.nightscout.aapsclient2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "477603612366-a925drvlvs7qn7gt73r585erbqto8c79.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9HRtJJsnk_SbAMAuvudSua2vEm3j3430"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "477603612366-a925drvlvs7qn7gt73r585erbqto8c79.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:477603612366:android:aef229914e3e5448",
         "android_client_info": {
           "package_name": "info.nightscout.aapspumpcontrol"
@@ -21,7 +79,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDcZpDRMaGjdhihXp531cVYM6LkEL8KbgM"
+          "current_key": "AIzaSyD9HRtJJsnk_SbAMAuvudSua2vEm3j3430"
         }
       ],
       "services": {
@@ -50,7 +108,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDcZpDRMaGjdhihXp531cVYM6LkEL8KbgM"
+          "current_key": "AIzaSyD9HRtJJsnk_SbAMAuvudSua2vEm3j3430"
         }
       ],
       "services": {
@@ -79,7 +137,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDcZpDRMaGjdhihXp531cVYM6LkEL8KbgM"
+          "current_key": "AIzaSyD9HRtJJsnk_SbAMAuvudSua2vEm3j3430"
         }
       ],
       "services": {
@@ -108,7 +166,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDcZpDRMaGjdhihXp531cVYM6LkEL8KbgM"
+          "current_key": "AIzaSyD9HRtJJsnk_SbAMAuvudSua2vEm3j3430"
         }
       ],
       "services": {

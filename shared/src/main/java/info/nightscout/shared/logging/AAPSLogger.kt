@@ -23,7 +23,7 @@ interface AAPSLogger {
 
     // These are variants of the calls above that allow for explicitly
     // specifying the exact logging location. They are primarily meant
-    // as a way to integrate other logging infrastructures into AndroidAPS,
+    // as a way to integrate other logging infrastructures into AAPS,
     // and typically aren't practical to use directly for logging in code.
     fun debug(className: String, methodName: String, lineNumber: Int, tag: LTag, message: String)
     fun info(className: String, methodName: String, lineNumber: Int, tag: LTag, message: String)

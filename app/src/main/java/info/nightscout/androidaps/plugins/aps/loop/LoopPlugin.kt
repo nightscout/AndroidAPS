@@ -721,6 +721,6 @@ class LoopPlugin @Inject constructor(
 
     companion object {
 
-        private const val CHANNEL_ID = "AndroidAPS-OpenLoop"
+        private const val CHANNEL_ID = "AAPS-OpenLoop"
     }
 }
