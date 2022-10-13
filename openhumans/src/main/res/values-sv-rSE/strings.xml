@@ -12,7 +12,6 @@
     <string name="only_upload_if_charging">Ladda bara upp vid laddning</string>
     <string name="open_humans_uploading">Laddar upp till Open Humans…</string>
     <string name="open_humans_notifications">Aviseringar från Open Humans</string>
-    <string name="uploading_to_open_humans">AndroidAPS laddar upp till Open Humans. Det kan ta ett tag.</string>
     <string name="you_have_been_signed_out_of_open_humans">Du har loggats ut från Open Humans</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Klicka här om du vill logga in igen.</string>
     <string name="upload_now">Ladda upp nu</string>
