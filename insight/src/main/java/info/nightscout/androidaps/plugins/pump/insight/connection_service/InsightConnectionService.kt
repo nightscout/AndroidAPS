@@ -191,7 +191,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
         }
         pairingDataStorage = PairingDataStorage(this)
         state = if (pairingDataStorage.paired) InsightState.DISCONNECTED else InsightState.NOT_PAIRED
-        wakeLock = (getSystemService(POWER_SERVICE) as PowerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS:InsightConnectionService")
+        wakeLock = (getSystemService(POWER_SERVICE) as PowerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AAPS:InsightConnectionService")
     }
 
     private fun setState(state: InsightState) {

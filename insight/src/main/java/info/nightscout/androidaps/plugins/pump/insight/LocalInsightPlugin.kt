@@ -1452,7 +1452,7 @@ class LocalInsightPlugin @Inject constructor(
 
     companion object {
 
-        const val ALERT_CHANNEL_ID = "AndroidAPS-InsightAlert"
+        const val ALERT_CHANNEL_ID = "AAPS-InsightAlert"
     }
 
 }
