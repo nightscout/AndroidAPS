@@ -2,13 +2,13 @@ package info.nightscout.androidaps.plugins.pump.eopatch.ui
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchViewModel.SetupStep.*
 import info.nightscout.androidaps.plugins.pump.eopatch.R
 import info.nightscout.androidaps.plugins.pump.eopatch.code.PatchStep
 import info.nightscout.androidaps.plugins.pump.eopatch.databinding.FragmentEopatchConnectNewBinding
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchViewModel
+import info.nightscout.androidaps.utils.ToastUtils
 
 class EopatchConnectNewFragment : EoBaseFragment<FragmentEopatchConnectNewBinding>() {
 
@@ -29,7 +29,7 @@ class EopatchConnectNewFragment : EoBaseFragment<FragmentEopatchConnectNewBindin
                         BONDING_FAILED        -> checkCommunication({ retryScan() }, { moveStep(PatchStep.WAKE_UP) })
                         GET_PATCH_INFO_FAILED -> checkCommunication({ getPatchInfo() }, { moveStep(PatchStep.WAKE_UP) })
                         SELF_TEST_FAILED      -> checkCommunication({ selfTest() }, { moveStep(PatchStep.WAKE_UP) })
-                        ACTIVATION_FAILED     -> Toast.makeText(requireContext(), "Activation failed!", Toast.LENGTH_LONG).show()
+                        ACTIVATION_FAILED     -> ToastUtils.errorToast(requireContext(), "Activation failed!")
                         else                  -> Unit
                     }
                 }

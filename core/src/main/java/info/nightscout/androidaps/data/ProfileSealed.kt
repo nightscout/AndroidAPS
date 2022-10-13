@@ -22,7 +22,6 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import org.json.JSONArray
 import org.json.JSONObject
 import java.text.DecimalFormat
@@ -99,7 +98,6 @@ sealed class ProfileSealed(
     override fun isValid(from: String, pump: Pump, config: Config, rh: ResourceHelper, rxBus: RxBus, hardLimits: HardLimits, sendNotifications: Boolean): Profile.ValidityCheck {
         val validityCheck = Profile.ValidityCheck()
         val description = pump.pumpDescription
-        val notSupportedBasalRate = StringBuffer()
 
         for (basal in basalBlocks) {
             val basalAmount = basal.amount * percentage / 100.0
@@ -144,20 +142,6 @@ sealed class ProfileSealed(
                 validityCheck.reasons.add(rh.gs(R.string.maximumbasalvaluereplaced, from))
                 break
             }
-
-            if(pump.model() == PumpType.EOFLOW_EOPATCH2 && pct == 100){
-                val mod = (basalAmount * 1000) % (PumpType.EOFLOW_EOPATCH2.baseBasalStep * 1000)
-                if(!mod.nearlyEqual(0.0, 0.00000001)){
-                    notSupportedBasalRate.append(
-                        if(notSupportedBasalRate.isEmpty()) String.format("%.2f", basalAmount) else String.format(", %.2f", basalAmount)
-                    )
-                }
-            }
-        }
-
-        if(notSupportedBasalRate.isNotEmpty()){
-            validityCheck.isValid = false
-            validityCheck.reasons.add(rh.gs(R.string.unsupportedBasalRate, "$notSupportedBasalRate U/h"))
         }
 
         if (!hardLimits.isInRange(dia, hardLimits.minDia(), hardLimits.maxDia())) {

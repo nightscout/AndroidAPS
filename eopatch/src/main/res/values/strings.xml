@@ -34,7 +34,6 @@
 
     <string name="invalid_basal_rate">The basal of the profile is less than 0.05 U/hr. EOPatch has a minimum injection unit of 0.05U. Please try again after setting the profile to more than the minimum injection unit.</string>
     <string name="no_profile_selected">No profile selected. Please select a profile and try again.</string>
-    <string name="unsupported_basal_rate">Basal rate %1$s U/hr is not supported by EOPatch.</string>
 
     <string name="symbol_day">day</string>
     <string name="symbol_plus">+</string>

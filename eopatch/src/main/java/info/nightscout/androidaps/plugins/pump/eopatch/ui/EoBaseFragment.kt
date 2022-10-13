@@ -56,14 +56,6 @@ abstract class EoBaseFragment<B : ViewDataBinding> : DaggerFragment(), EoBaseNav
         baseActivity = null
     }
 
-    override fun toast(message: String) {
-        baseActivity?.toast(message)
-    }
-
-    override fun toast(message: Int) {
-        baseActivity?.toast(message)
-    }
-
     override fun back() {
         baseActivity?.back()
     }
