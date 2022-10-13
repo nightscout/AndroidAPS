@@ -1,6 +1,6 @@
 This document speciffy hints and good practices for source code contributions.
 
-AndroidAPS is community effort and all contributions are welcome! If you wish help us improving AndroidAPS - please read and try to adhere to 
+AndroidAPS is community effort and all contributions are welcome! If you wish help us improving AAPS - please read and try to adhere to 
 this guidelines, to make the development and process of change aproval as smooth as possible :) 
 
 General rules

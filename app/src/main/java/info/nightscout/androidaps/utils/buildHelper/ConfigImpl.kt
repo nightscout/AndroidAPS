@@ -11,7 +11,7 @@ class ConfigImpl @Inject constructor() : Config {
 
     override val SUPPORTEDNSVERSION = 1002 // 0.10.00
     override val APS = BuildConfig.FLAVOR == "full"
-    override val NSCLIENT = BuildConfig.FLAVOR == "nsclient" || BuildConfig.FLAVOR == "nsclient2"
+    override val NSCLIENT = BuildConfig.FLAVOR == "aapsclient" || BuildConfig.FLAVOR == "aapsclient2"
     override val PUMPCONTROL = BuildConfig.FLAVOR == "pumpcontrol"
     override val PUMPDRIVERS = BuildConfig.FLAVOR == "full" || BuildConfig.FLAVOR == "pumpcontrol"
     override val FLAVOR = BuildConfig.FLAVOR

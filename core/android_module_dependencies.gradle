@@ -8,10 +8,10 @@ android {
         pumpcontrol {
             dimension "standard"
         }
-        nsclient {
+        aapsclient {
             dimension "standard"
         }
-        nsclient2 {
+        aapsclient2 {
             dimension "standard"
         }
     }

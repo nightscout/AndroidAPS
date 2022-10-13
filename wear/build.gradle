@@ -70,14 +70,14 @@ android {
             versionName version + "-pumpcontrol"
         }
         nsclient {
-            applicationId "info.nightscout.nsclient"
+            applicationId "info.nightscout.aapsclient"
             dimension "standard"
-            versionName version + "-nsclient"
+            versionName version + "-aapsclient"
         }
         nsclient2 {
-            applicationId "info.nightscout.nsclient2"
+            applicationId "info.nightscout.aapsclient2"
             dimension "standard"
-            versionName version + "-nsclient"
+            versionName version + "-aapsclient"
         }
     }
     namespace 'info.nightscout.androidaps'

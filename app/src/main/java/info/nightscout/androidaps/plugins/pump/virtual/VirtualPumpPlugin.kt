@@ -378,7 +378,7 @@ open class VirtualPumpPlugin @Inject constructor(
         return pump
     }
 
-    override fun manufacturer(): ManufacturerType = pumpDescription.pumpType.manufacturer ?: ManufacturerType.AndroidAPS
+    override fun manufacturer(): ManufacturerType = pumpDescription.pumpType.manufacturer ?: ManufacturerType.AAPS
 
     override fun model(): PumpType = pumpDescription.pumpType
 

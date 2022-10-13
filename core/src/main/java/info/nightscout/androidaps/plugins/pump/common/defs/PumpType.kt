@@ -13,7 +13,7 @@ enum class PumpType {
 
     GENERIC_AAPS(
         description = "Generic AAPS",
-        manufacturer = ManufacturerType.AndroidAPS,
+        manufacturer = ManufacturerType.AAPS,
         model = "VirtualPump",
         bolusSize = 0.1,
         specialBolusSize = null,
@@ -328,7 +328,7 @@ enum class PumpType {
     ),
     MDI(
         description = "MDI",
-        manufacturer = ManufacturerType.AndroidAPS,
+        manufacturer = ManufacturerType.AAPS,
         bolusSize = 0.5,
         model = "MDI",
         tbrSettings = DoseSettings(1.0, 15, 24 * 60, 0.0, 500.0),
@@ -339,7 +339,7 @@ enum class PumpType {
     // Not real pump. Used for User as a source
     USER(
         description = "USER",
-        manufacturer = ManufacturerType.AndroidAPS,
+        manufacturer = ManufacturerType.AAPS,
         model = "USER",
         tbrSettings = DoseSettings(1.0, 15, 24 * 60, 0.0, 500.0),
         extendedBolusSettings = DoseSettings(0.1, 15, 12 * 60, 0.1),
