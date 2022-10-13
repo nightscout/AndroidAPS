@@ -20,7 +20,6 @@
     <string name="disconnected">Forbindelse afbrudt</string>
     <string name="disconnecting">Afbryder</string>
     <string name="waiting_for_disconnection">Venter på afbrydelse</string>
-    <string name="androidaps_start">AndroidAPS startet</string>
     <string name="formatinsulinunits1">%1$.1f IE</string>
     <string name="formatinsulinunits">%1$.2f IE</string>
     <string name="formatsignedinsulinunits">%1$+.2f IE</string>
@@ -274,7 +273,6 @@
     <string name="versionavailable">Version %1$s tilgængelig</string>
     <string name="version_expire">Version %1$s udløber den %2$s</string>
     <!-- Permissions -->
-    <string name="alert_dialog_storage_permission_text">Genstart venligst din telefon eller genstart AndroidAPS fra Systemindstillinger \nellers vil Android APS ikke have logning (vigtigt at spore og kontrollere, at algoritmerne fungerer korrekt)!</string>
     <!-- WeekdayPicker -->
     <string name="monday_short">Ma</string>
     <string name="tuesday_short">Ti</string>
