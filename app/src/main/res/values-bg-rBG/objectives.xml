@@ -25,8 +25,6 @@
     <string name="objectives_pumpstatusavailableinns">Статуса на помпата да е достъпен в NS</string>
     <string name="objectives_manualenacts">Ръчно приложени</string>
     <string name="accomplished">Изпълнено: %1$s</string>
-    <string name="objectives_usage_objective">Научете се да управлявате AndroidAPS</string>
-    <string name="objectives_usage_gate">Извършете различни действия в AndroidAPS</string>
     <string name="objectives_useprofileswitch">Настройте профила на 90% за 10 минути (задръжте върху името на профила в таб Общ)</string>
     <string name="objectives_usedisconnectpump">Симулирайте душ. Изключете помпата за 1 час (задръжте върху Отворен кръг)</string>
     <string name="objectives_usereconnectpump">... и отново я свържете по същия начин</string>
