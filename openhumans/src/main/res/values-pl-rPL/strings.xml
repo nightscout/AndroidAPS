@@ -12,7 +12,6 @@
     <string name="only_upload_if_charging">Prześlij tylko gdy telefon jest ładowany</string>
     <string name="open_humans_uploading">Przesyłanie do Open Humans…</string>
     <string name="open_humans_notifications">Powiadomienia Open Humans</string>
-    <string name="uploading_to_open_humans">AndroidAPS wysyła dane do Open Humans. To może chwilę potrwać.</string>
     <string name="you_have_been_signed_out_of_open_humans">Zostałeś wylogowany z Open Humans</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Kliknij tutaj, aby zalogować się ponownie, jeśli wylogowanie nie było celowe.</string>
     <string name="upload_now">Prześlij teraz</string>
