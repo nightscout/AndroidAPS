@@ -12,7 +12,6 @@
     <string name="only_upload_if_charging">Upload kun ved opladning</string>
     <string name="open_humans_uploading">Uploader til Open Humans…</string>
     <string name="open_humans_notifications">Open Humans Notifikationer</string>
-    <string name="uploading_to_open_humans">AndroidAPS uploader til Open Humans. Dette kan tage et stykke tid.</string>
     <string name="you_have_been_signed_out_of_open_humans">Du er blevet logget ud af Open Humans</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Klik her for at logge ind igen, hvis dette ikke var meningen.</string>
     <string name="upload_now">Upload nu</string>
