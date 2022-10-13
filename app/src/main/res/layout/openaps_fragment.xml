@@ -3,7 +3,7 @@
     android:id="@+id/swipeRefresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".plugins.aps.openAPSAMA.OpenAPSAMAFragment">
+    tools:context=".plugins.aps.OpenAPSFragment">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"

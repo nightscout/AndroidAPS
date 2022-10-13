@@ -50,7 +50,7 @@ class MaintenancePlugin @Inject constructor(
 ) {
 
     fun sendLogs() {
-        val recipient = sp.getString(R.string.key_maintenance_logs_email, "logs@androidaps.org")
+        val recipient = sp.getString(R.string.key_maintenance_logs_email, "logs@aaps.app")
         val amount = sp.getInt(R.string.key_maintenance_logs_amount, 2)
         val logs = getLogFiles(amount)
         val zipDir = fileListProvider.ensureTempDirExists()

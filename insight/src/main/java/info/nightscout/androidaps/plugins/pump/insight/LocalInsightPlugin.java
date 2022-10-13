@@ -147,7 +147,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     private final InsightDbHelper insightDbHelper;
     private final PumpSync pumpSync;
 
-    public static final String ALERT_CHANNEL_ID = "AndroidAPS-InsightAlert";
+    public static final String ALERT_CHANNEL_ID = "AAPS-InsightAlert";
 
     private final PumpDescription pumpDescription;
     private InsightAlertService alertService;

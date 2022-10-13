@@ -55,7 +55,7 @@ class ActionCarePortalEvent(injector: HasAndroidInjector) : Action(injector) {
     @DrawableRes override fun icon(): Int = cpEvent.value.drawableRes
 
     override fun doAction(callback: Callback) {
-        val enteredBy = sp.getString("careportal_enteredby", "AndroidAPS")
+        val enteredBy = sp.getString("careportal_enteredby", "AAPS")
         val eventTime = dateUtil.now()
         val therapyEvent = TherapyEvent(
             timestamp = eventTime,

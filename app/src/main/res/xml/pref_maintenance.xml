@@ -9,7 +9,7 @@
         app:initialExpandedChildrenCount="0">
 
         <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
-            android:defaultValue="logs@androidaps.org"
+            android:defaultValue="logs@aaps.app"
             android:dialogMessage="@string/maintenance_email"
             android:inputType="textEmailAddress"
             android:key="@string/key_maintenance_logs_email"
