@@ -3,10 +3,8 @@ package info.nightscout.androidaps.plugins.pump.eopatch.ui
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModelProvider
 import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.androidaps.plugins.bus.RxBus
@@ -17,6 +15,7 @@ import info.nightscout.androidaps.plugins.pump.eopatch.code.EventType
 import info.nightscout.androidaps.plugins.pump.eopatch.databinding.FragmentEopatchOverviewBinding
 import info.nightscout.androidaps.plugins.pump.eopatch.extension.takeOne
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchOverviewViewModel
+import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.AlertDialogHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
@@ -52,11 +51,12 @@ class EopatchOverviewFragment: EoBaseFragment<FragmentEopatchOverviewBinding>() 
                         EventType.DEACTIVATION_CLICKED -> requireContext().apply { startActivity(EopatchActivity.createIntentForChangePatch(this)) }
                         EventType.SUSPEND_CLICKED      -> suspend()
                         EventType.RESUME_CLICKED      -> resume()
-                        EventType.INVALID_BASAL_RATE     -> showToast(R.string.invalid_basal_rate)
-                        EventType.UNSUPPORTED_BASAL_RATE -> showToast(R.string.unsupported_basal_rate, evt.value)
-                        EventType.PROFILE_NOT_SET        -> showToast(R.string.no_profile_selected)
-                        EventType.PAUSE_BASAL_FAILED  -> showToast(R.string.string_pause_failed)
-                        EventType.RESUME_BASAL_FAILED -> showToast(R.string.string_resume_failed)
+                        EventType.INVALID_BASAL_RATE     -> ToastUtils.infoToast(requireContext(), R.string.invalid_basal_rate)
+                        EventType.PROFILE_NOT_SET        -> ToastUtils.infoToast(requireContext(), R.string.no_profile_selected)
+                        EventType.PAUSE_BASAL_SUCCESS  -> ToastUtils.infoToast(requireContext(), R.string.string_suspended_insulin_delivery_message)
+                        EventType.PAUSE_BASAL_FAILED  -> ToastUtils.errorToast(requireContext(), R.string.string_pause_failed)
+                        EventType.RESUME_BASAL_SUCCESS -> ToastUtils.infoToast(requireContext(), R.string.string_resumed_insulin_delivery_message)
+                        EventType.RESUME_BASAL_FAILED -> ToastUtils.errorToast(requireContext(), R.string.string_resume_failed)
                         else                          -> Unit
                     }
                 }
@@ -64,7 +64,7 @@ class EopatchOverviewFragment: EoBaseFragment<FragmentEopatchOverviewBinding>() 
                 resultLauncherForResume = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
                     when (it.resultCode) {
                         DaggerAppCompatActivity.RESULT_OK       -> resumeBasal()
-                        DaggerAppCompatActivity.RESULT_CANCELED -> showToast(R.string.string_resume_failed)
+                        DaggerAppCompatActivity.RESULT_CANCELED -> ToastUtils.errorToast(requireContext(), R.string.string_resume_failed)
                     }
                 }
 
@@ -74,7 +74,7 @@ class EopatchOverviewFragment: EoBaseFragment<FragmentEopatchOverviewBinding>() 
                             pauseBasal(pauseDuration)
                             pauseDuration = 0.5f
                         }
-                        DaggerAppCompatActivity.RESULT_CANCELED -> showToast(R.string.string_pause_failed)
+                        DaggerAppCompatActivity.RESULT_CANCELED -> ToastUtils.errorToast(requireContext(), R.string.string_pause_failed)
                     }
                 }
             }
@@ -89,13 +89,6 @@ class EopatchOverviewFragment: EoBaseFragment<FragmentEopatchOverviewBinding>() 
     override fun onResume() {
         super.onResume()
         binding.viewmodel?.startBasalRateUpdate()
-    }
-
-    private fun showToast(@StringRes strId: Int, value: Any? = null){
-        if(value == null)
-            Toast.makeText(requireContext(), strId, Toast.LENGTH_SHORT).show()
-        else
-            Toast.makeText(requireContext(), getString(strId, value.toString()), Toast.LENGTH_SHORT).show()
     }
 
     private fun suspend() {

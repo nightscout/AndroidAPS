@@ -16,7 +16,6 @@ import info.nightscout.androidaps.plugins.pump.eopatch.vo.Alarms
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchConfig
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchState
 import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.plugins.pump.eopatch.extension.nearlyEqual
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
@@ -180,12 +179,6 @@ class EopatchOverviewViewModel @Inject constructor(
                     isValid = false
                     break
                 }
-                val mod = (basalRate.value * 1000) % (0.05 * 1000)
-                if(!mod.nearlyEqual(0.0, 0.00000001)){
-                    _eventHandler.postValue(UIEvent(EventType.UNSUPPORTED_BASAL_RATE).apply { value = basalRate.value })
-                    isValid = false
-                    break
-                }
             }
 
             if(isValid) {
@@ -215,7 +208,7 @@ class EopatchOverviewViewModel @Inject constructor(
             .observeOn(aapsSchedulers.main)
             .subscribe({ response ->
                 if (response.isSuccess) {
-                    navigator?.toast(R.string.string_suspended_insulin_delivery_message)
+                    UIEvent(EventType.PAUSE_BASAL_SUCCESS).let { _eventHandler.postValue(it) }
                     startPauseTimeUpdate()
                 } else {
                     UIEvent(EventType.PAUSE_BASAL_FAILED).apply { value = pauseDurationHour }.let { _eventHandler.postValue(it) }
@@ -231,7 +224,7 @@ class EopatchOverviewViewModel @Inject constructor(
             .observeOn(aapsSchedulers.main)
             .subscribe({
                 if (it.isSuccess) {
-                    navigator?.toast(R.string.string_resumed_insulin_delivery_message)
+                    UIEvent(EventType.RESUME_BASAL_SUCCESS).let { _eventHandler.postValue(it) }
                     stopPauseTimeUpdate()
                 } else {
                     _eventHandler.postValue(UIEvent(EventType.RESUME_BASAL_FAILED))

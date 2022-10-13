@@ -29,8 +29,9 @@ public class ActivateTask extends TaskBase {
                 .concatMapSingle(v -> SET_KEY.setKey())
                 .doOnNext(this::checkResponse)
                 .firstOrError()
-                .observeOn(Schedulers.io()).doOnSuccess(this::onActivated)
+                .observeOn(Schedulers.io())
                 .flatMap(v -> startBasalTask.start(enabled))
+                .doOnSuccess(this::onActivated)
                 .map(BaseResponse::isSuccess)
                 .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, (e.getMessage() != null) ? e.getMessage() : "ActivateTask error"));
     }

@@ -2,10 +2,8 @@ package info.nightscout.androidaps.plugins.pump.eopatch.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.LayoutRes
-import androidx.annotation.StringRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
@@ -39,14 +37,6 @@ abstract class EoBaseActivity<B : ViewDataBinding> : NoSplashAppCompatActivity()
         binding = DataBindingUtil.setContentView(this, getLayoutId())
         binding.lifecycleOwner = this
 
-    }
-
-    override fun toast(message: String) {
-        Toast.makeText(this@EoBaseActivity, message, Toast.LENGTH_SHORT).show()
-    }
-
-    override fun toast(@StringRes message: Int) {
-        Toast.makeText(this@EoBaseActivity, message, Toast.LENGTH_SHORT).show()
     }
 
     override fun back() {
