@@ -20,6 +20,8 @@
     <string name="pumpdisconnect_unnecessary">Esto es innecesario, ya que no se entregará insulina si la bomba está físicamente desconectada.</string>
     <string name="pumpdisconnect_notstop">Si la bomba permanece conectada, no se detendrá la entrega de insulina.</string>
     <string name="pumpdisconnect_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#other-settings</string>
+    <string name="objectives_label">Ajustes de AAPS</string>
+    <string name="objectives2_label">Ajustes de AAPS</string>
     <string name="objectives_howtosave">¿Cuáles son las mejores prácticas para hacer copias de seguridad de su configuración?</string>
     <string name="objectives_notesettings">No necesita exportar sus ajustes siempre que haga una nota de ellos.</string>
     <string name="objectives_afterobjective">Exporta tu configuración después de completar un objetivo.</string>
@@ -81,6 +83,7 @@
     <string name="prerequisites2_device">Un dispositivo Android compatible (e.j. un móvil, un smartwatch Android compatible o una tablet).</string>
     <string name="prerequisites2_supportedcgm">Un medidor continuo de glucosa (MCG) y una aplicación capaz de recibir los valores proporcionados por el medidor en el móvil o tablet.</string>
     <string name="prerequisites2_hint1">https://androidaps.readthedocs.io/en/latest/EN/Module/module.html</string>
+    <string name="update_label">Actualizando AAPS</string>
     <string name="whatistrue">Compruebe todas las respuestas correctas.</string>
     <string name="update_git">Es necesario tener Git instalado y configurado en el ordenador.</string>
     <string name="update_keys">Se debe guardar en un lugar seguro la \"keystore\" que se ha empleado y usar la misma\"key\" para futuras actulizaciones.</string>
@@ -88,6 +91,7 @@
     <string name="update_askfriend">Si tienes problemas construyendo la aplicación (. apk), puedes instalar el mismo archivo. apk compilado por un amigo.</string>
     <string name="update_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#update-to-a-new-version-or-branch</string>
     <string name="troubleshooting_label">Solución de problemas</string>
+    <string name="troubleshooting_wheretoask">¿Dónde puedes buscar ayuda con AAPS?</string>
     <string name="troubleshooting_yourendo">Debes preguntar a tu endocrino o educador diabetológico.</string>
     <string name="troubleshooting_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
