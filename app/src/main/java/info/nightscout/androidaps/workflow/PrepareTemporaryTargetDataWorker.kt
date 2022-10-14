@@ -50,7 +50,7 @@ class PrepareTemporaryTargetDataWorker(
             ?: return Result.failure(workDataOf("Error" to "missing input data"))
 
         rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TEMPORARY_TARGET_DATA, 0, null))
-        val profile = profileFunction.getProfile() ?: return Result.failure(workDataOf("Error" to "missing profile"))
+        val profile = profileFunction.getProfile() ?: return Result.success(workDataOf("Error" to "missing profile"))
         val units = profileFunction.getUnits()
         var toTime = data.overviewData.toTime
         val targetsSeriesArray: MutableList<DataPoint> = ArrayList()
