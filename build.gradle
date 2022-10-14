@@ -26,7 +26,7 @@ buildscript {
         work_version = '2.7.1'
         tink_version = '1.5.0'
         json_version = '20220320'
-        joda_version = '2.11.2'
+        joda_version = '2.12.0'
 
         junit_version = '4.13.2'
         mockito_version = '4.4.0'
