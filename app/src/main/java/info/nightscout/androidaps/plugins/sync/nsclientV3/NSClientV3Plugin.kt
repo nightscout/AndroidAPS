@@ -34,26 +34,27 @@ import info.nightscout.androidaps.plugins.sync.nsclient.services.NSClientService
 import info.nightscout.androidaps.plugins.sync.nsclientV3.events.EventNSClientV3Resend
 import info.nightscout.androidaps.plugins.sync.nsclientV3.events.EventNSClientV3Status
 import info.nightscout.androidaps.receivers.DataWorker
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HtmlHelper.fromHtml
+import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.sdk.NSAndroidClientImpl
 import info.nightscout.sdk.NSAndroidRxClientImpl
 import info.nightscout.sdk.interfaces.NSAndroidRxClient
+import info.nightscout.sdk.remotemodel.LastModified
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import io.reactivex.rxjava3.kotlin.subscribeBy
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
-import org.spongycastle.crypto.tls.ConnectionEnd.client
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.max
 
 @Singleton
 class NSClientV3Plugin @Inject constructor(
@@ -68,7 +69,8 @@ class NSClientV3Plugin @Inject constructor(
     private val nsClientReceiverDelegate: NsClientReceiverDelegate,
     private val config: Config,
     private val buildHelper: BuildHelper,
-    private val dataWorker: DataWorker
+    private val dataWorker: DataWorker,
+    private val dateUtil: DateUtil
 ) : NsClient, Sync, PluginBase(
     PluginDescription()
         .mainType(PluginType.SYNC)
@@ -94,9 +96,35 @@ class NSClientV3Plugin @Inject constructor(
     val blockingReason: String
         get() = nsClientReceiverDelegate.blockingReason
 
+    private val maxAge = T.days(7).msecs()
+    private var lastModified: LastModified? = null // timestamp of last modification for every collection
+    private var lastFetched =
+        LastModified(
+            LastModified.Collections(
+                dateUtil.now() - maxAge,
+                dateUtil.now() - maxAge,
+                dateUtil.now() - maxAge,
+                dateUtil.now() - maxAge
+            )
+        ) // timestamp of last fetched data for every collection
+
     override fun onStart() {
 //        context.bindService(Intent(context, NSClientService::class.java), mConnection, Context.BIND_AUTO_CREATE)
         super.onStart()
+        lastFetched = Json.decodeFromString(
+            sp.getString(
+                R.string.key_nsclientv2_lastmodified,
+                Json.encodeToString(
+                    LastModified.serializer(),
+                    LastModified(LastModified.Collections(dateUtil.now() - maxAge, dateUtil.now() - maxAge, dateUtil.now() - maxAge, dateUtil.now() - maxAge))
+                )
+            )
+        )
+        lastFetched.collections.entries = max(dateUtil.now() - maxAge, lastFetched.collections.entries)
+        lastFetched.collections.treatments = max(dateUtil.now() - maxAge, lastFetched.collections.treatments)
+        lastFetched.collections.profile = max(dateUtil.now() - maxAge, lastFetched.collections.profile)
+        lastFetched.collections.devicestatus = max(dateUtil.now() - maxAge, lastFetched.collections.devicestatus)
+
         nsAndroidRxClient = NSAndroidRxClientImpl(
             NSAndroidClientImpl(
                 baseUrl = sp.getString(R.string.key_nsclientinternal_url, "").lowercase().replace("https://", ""),
@@ -224,47 +252,104 @@ class NSClientV3Plugin @Inject constructor(
             })
     }
 
-    override fun updateLatestDateReceivedIfNewer(latestReceived: Long) {
-        nsClientService?.let { if (latestReceived > it.latestDateInReceivedData) it.latestDateInReceivedData = latestReceived }
+    override fun updateLatestBgReceivedIfNewer(latestReceived: Long) {
+        lastFetched.collections.entries = latestReceived
+        storeLastFetched()
+    }
+
+    override fun updateLatestTreatmentReceivedIfNewer(latestReceived: Long) {
+        lastFetched.collections.treatments = latestReceived
+        storeLastFetched()
+    }
+
+    override fun resetToFullSync() {
+        lastFetched = LastModified(
+            LastModified.Collections(
+                dateUtil.now() - maxAge,
+                dateUtil.now() - maxAge,
+                dateUtil.now() - maxAge,
+                dateUtil.now() - maxAge
+            )
+        )
+    }
+
+    private fun storeLastFetched() {
+        sp.putString(R.string.key_nsclientv2_lastmodified, Json.encodeToString(LastModified.serializer(), lastFetched))
     }
 
     fun test() {
+        fetchStatus()
+    }
+
+    private fun fetchStatus() {
         disposable += nsAndroidRxClient.getStatus()
             .subscribeBy(
-                onSuccess = { status -> aapsLogger.debug("STATUS: $status") },
-                onError = { error -> aapsLogger.error("Error: ", error) }
-            )
-        disposable += nsAndroidRxClient.getSgvsModifiedSince(1665000000000)
-            .subscribeBy(
-                onSuccess = { sgvs ->
-                    aapsLogger.debug("SGVS: $sgvs")
-                    if (sgvs.isNotEmpty()) {
-                        rxBus.send(EventNSClientNewLog("DATA", "received " + sgvs.size + " sgvs", NsClient.Version.V3))
-                        // Objective0
-                        sp.putBoolean(R.string.key_ObjectivesbgIsAvailableInNS, true)
-                        dataWorker.enqueue(
-                            OneTimeWorkRequest.Builder(NSClientSourcePlugin.NSClientSourceWorker::class.java)
-                                .setInputData(dataWorker.storeInputData(sgvs))
-                                .build()
-                        )
-                    }
+                onSuccess = { status ->
+                    aapsLogger.debug("STATUS: $status")
+                    fetchLastModification()
                 },
                 onError = { error -> aapsLogger.error("Error: ", error) }
             )
-        disposable += nsAndroidRxClient.getTreatmentsModifiedSince(1665000000000)
+    }
+
+    private fun fetchLastModification() {
+        disposable += nsAndroidRxClient.getLastModified()
             .subscribeBy(
-                onSuccess = { treatments ->
-                    aapsLogger.debug("TREATMENTS: $treatments")
-                    if (treatments.isNotEmpty()) {
-                        rxBus.send(EventNSClientNewLog("DATA", "received " + treatments.size + " treatments", NsClient.Version.V3))
-                        dataWorker.enqueue(
-                            OneTimeWorkRequest.Builder(TreatmentWorker::class.java)
-                                .setInputData(dataWorker.storeInputData(treatments))
-                                .build()
-                        )
-                    }
+                onSuccess = { lm ->
+                    lastModified = lm
+                    aapsLogger.debug("LAST MODIFIED: $lastModified")
+                    fetchBg()
                 },
                 onError = { error -> aapsLogger.error("Error: ", error) }
             )
+    }
+
+    private fun fetchBg() {
+        if ((lastModified?.collections?.entries ?: Long.MAX_VALUE) > lastFetched.collections.entries)
+            disposable += nsAndroidRxClient.getSgvsModifiedSince(lastFetched.collections.entries)
+                .subscribeBy(
+                    onSuccess = { sgvs ->
+                        aapsLogger.debug("SGVS: $sgvs")
+                        if (sgvs.isNotEmpty()) {
+                            rxBus.send(EventNSClientNewLog("DATA", "received ${sgvs.size} sgvs starting ${lastFetched.collections.entries}", NsClient.Version.V3))
+                            // Objective0
+                            sp.putBoolean(R.string.key_ObjectivesbgIsAvailableInNS, true)
+                            dataWorker.enqueue(
+                                OneTimeWorkRequest.Builder(NSClientSourcePlugin.NSClientSourceWorker::class.java)
+                                    .setInputData(dataWorker.storeInputData(sgvs))
+                                    .build()
+                            )
+                        } else
+                            rxBus.send(EventNSClientNewLog("DATA", "No sgvs starting ${lastFetched.collections.entries}", NsClient.Version.V3))
+                        fetchTreatments()
+                    },
+                    onError = { error -> aapsLogger.error("Error: ", error) }
+                )
+        else {
+            rxBus.send(EventNSClientNewLog("DATA", "No new sgvs starting ${lastFetched.collections.entries}", NsClient.Version.V3))
+            fetchTreatments()
+        }
+    }
+
+    private fun fetchTreatments() {
+        if ((lastModified?.collections?.treatments ?: Long.MAX_VALUE) > lastFetched.collections.treatments)
+            disposable += nsAndroidRxClient.getTreatmentsModifiedSince(lastFetched.collections.treatments)
+                .subscribeBy(
+                    onSuccess = { treatments ->
+                        aapsLogger.debug("TREATMENTS: $treatments")
+                        if (treatments.isNotEmpty()) {
+                            rxBus.send(EventNSClientNewLog("DATA", "received ${treatments.size} treatments starting ${lastFetched.collections.treatments}", NsClient.Version.V3))
+                            dataWorker.enqueue(
+                                OneTimeWorkRequest.Builder(TreatmentWorker::class.java)
+                                    .setInputData(dataWorker.storeInputData(treatments))
+                                    .build()
+                            )
+                        } else
+                            rxBus.send(EventNSClientNewLog("DATA", "No treatments starting ${lastFetched.collections.treatments}", NsClient.Version.V3))
+                    },
+                    onError = { error -> aapsLogger.error("Error: ", error) }
+                )
+        else
+            rxBus.send(EventNSClientNewLog("DATA", "No new treatments starting ${lastFetched.collections.treatments}", NsClient.Version.V3))
     }
 }

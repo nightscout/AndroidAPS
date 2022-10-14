@@ -9,11 +9,17 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
-import info.nightscout.androidaps.interfaces.*
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.BgSource
+import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.androidaps.interfaces.PluginBase
+import info.nightscout.androidaps.interfaces.PluginDescription
+import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.sync.nsclient.data.NSSgv
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
+import info.nightscout.androidaps.plugins.sync.nsclient.data.NSSgv
 import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
@@ -89,7 +95,6 @@ class NSClientSourcePlugin @Inject constructor(
         @Inject lateinit var dataWorker: DataWorker
         @Inject lateinit var repository: AppRepository
         @Inject lateinit var xDripBroadcast: XDripBroadcast
-        @Inject lateinit var dexcomPlugin: DexcomPlugin
         @Inject lateinit var activePlugin: ActivePlugin
 
         init {
@@ -145,7 +150,6 @@ class NSClientSourcePlugin @Inject constructor(
                         glucoseValues += sgv
                     }
 
-                    activePlugin.activeNsClient?.updateLatestDateReceivedIfNewer(latestDateInReceivedData)
                 } else if (sgvs is List<*>) { // V3 client
 //                xDripBroadcast.sendSgvs(sgvs)
 
@@ -155,8 +159,8 @@ class NSClientSourcePlugin @Inject constructor(
                         glucoseValues += sgv
                     }
 
-//                    activePlugin.activeNsClient?.updateLatestDateReceivedIfNewer(latestDateInReceivedData)
                 }
+                activePlugin.activeNsClient?.updateLatestBgReceivedIfNewer(latestDateInReceivedData)
                 // Was that sgv more less 5 mins ago ?
                 if (T.msecs(dateUtil.now() - latestDateInReceivedData).mins() < 5L) {
                     rxBus.send(EventDismissNotification(Notification.NS_ALARM))

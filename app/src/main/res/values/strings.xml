@@ -57,6 +57,7 @@
     <string name="key_local_profile_last_change" translatable="false">local_profile_last_change</string>
     <string name="key_ns_sync_slow" translatable="false">ns_sync_slow</string>
     <string name="key_nsclient_token" translatable="false">nsclient_token</string>
+    <string name="key_nsclientv2_lastmodified" translatable="false">nsclientv2_lastmodified</string>
     <string name="treatmentssafety_title">Treatments safety</string>
     <string name="treatmentssafety_maxbolus_title">Max allowed bolus [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Max allowed carbs [g]</string>

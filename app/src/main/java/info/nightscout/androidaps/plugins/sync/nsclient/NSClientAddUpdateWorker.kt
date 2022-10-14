@@ -527,7 +527,7 @@ class NSClientAddUpdateWorker(
                     }
                 }
         }
-        activePlugin.activeNsClient?.updateLatestDateReceivedIfNewer(latestDateInReceivedData)
+        activePlugin.activeNsClient?.updateLatestTreatmentReceivedIfNewer(latestDateInReceivedData)
         xDripBroadcast.sendTreatments(treatments)
         return ret
     }

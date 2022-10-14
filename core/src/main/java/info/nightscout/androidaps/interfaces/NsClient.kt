@@ -17,7 +17,10 @@ interface NsClient : Sync {
     fun textLog(): Spanned
     fun clearLog()
 
-    fun updateLatestDateReceivedIfNewer(latestReceived: Long)
+    fun updateLatestBgReceivedIfNewer(latestReceived: Long)
+    fun updateLatestTreatmentReceivedIfNewer(latestReceived: Long)
+
+    fun resetToFullSync()
 
     interface NSClientService {
 

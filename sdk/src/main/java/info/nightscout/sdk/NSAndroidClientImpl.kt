@@ -12,6 +12,7 @@ import info.nightscout.sdk.mapper.toLocal
 import info.nightscout.sdk.mapper.toSgv
 import info.nightscout.sdk.mapper.toTreatment
 import info.nightscout.sdk.networking.NetworkStackBuilder
+import info.nightscout.sdk.remotemodel.LastModified
 import info.nightscout.sdk.remotemodel.RemoteEntry
 import info.nightscout.sdk.utils.retry
 import info.nightscout.sdk.utils.toNotNull
@@ -86,6 +87,16 @@ class NSAndroidClientImpl(
     // TODO: updated after timestamp
     override suspend fun getEntries(): String = callWrapper(dispatcher) {
         api.getEntries().toString()
+    }
+
+    override suspend fun getLastModified(): LastModified = callWrapper(dispatcher) {
+
+        val response = api.lastModified()
+        if (response.isSuccessful) {
+            return@callWrapper response.body()?.result ?: throw TodoNightscoutException()
+        } else {
+            throw TodoNightscoutException() // TODO: react to response errors (offline, ...)
+        }
     }
 
     // TODO: parameters like count?

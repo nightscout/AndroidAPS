@@ -1,6 +1,7 @@
 package info.nightscout.sdk.networking
 
 import com.google.gson.JsonElement
+import info.nightscout.sdk.remotemodel.LastModified
 import info.nightscout.sdk.remotemodel.NSResponse
 import info.nightscout.sdk.remotemodel.RemoteEntry
 import info.nightscout.sdk.remotemodel.RemoteStatusResponse
@@ -26,6 +27,9 @@ internal interface NightscoutRemoteService {
 
     @GET("v3/entries")
     suspend fun getEntries(): List<JsonElement>
+
+    @GET("v3/lastModified")
+    suspend fun lastModified(): Response<NSResponse<LastModified>>
 
     @GET("v3/entries?sort\$desc=date&type=sgv")
     suspend fun getSgvs(): Response<NSResponse<List<RemoteEntry>>>

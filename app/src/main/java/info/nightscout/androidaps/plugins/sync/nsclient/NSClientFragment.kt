@@ -1,6 +1,8 @@
 package info.nightscout.androidaps.plugins.sync.nsclient
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.HandlerThread
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -59,6 +61,7 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
 
     private val disposable = CompositeDisposable()
 
+    private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private var _binding: NsClientFragmentBinding? = null
 
     // This property is only valid between onCreateView and
@@ -118,14 +121,17 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
                 context?.let { context ->
                     OKDialog.showConfirmation(
                         context, rh.gs(R.string.nsclientinternal), rh.gs(R.string.full_sync_comment),
-                        Runnable { dataSyncSelector.resetToNextFullSync() }
+                        Runnable {
+                            dataSyncSelector.resetToNextFullSync()
+                            (plugin as NsClient?)?.resetToFullSync()
+                        }
                     )
                 }
                 true
             }
 
             ID_MENU_TEST      -> {
-                plugin?.let { plugin -> if (plugin is NSClientV3Plugin) plugin.test() }
+                plugin?.let { plugin -> if (plugin is NSClientV3Plugin) handler.post { plugin.test() } }
                 true
             }
 

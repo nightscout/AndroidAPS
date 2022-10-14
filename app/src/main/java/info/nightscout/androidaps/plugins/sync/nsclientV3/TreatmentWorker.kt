@@ -76,7 +76,8 @@ class TreatmentWorker(
     @Inject lateinit var xDripBroadcast: XDripBroadcast
 
     override fun doWork(): Result {
-        val treatments = dataWorker.pickupObject(inputData.getLong(DataWorker.STORE_KEY, -1)) as List<Treatment>
+        @Suppress("UNCHECKED_CAST")
+        val treatments = dataWorker.pickupObject(inputData.getLong(DataWorker.STORE_KEY, -1)) as List<Treatment>?
             ?: return Result.failure(workDataOf("Error" to "missing input data"))
 
         var ret = Result.success()
@@ -532,7 +533,7 @@ class TreatmentWorker(
 
              */
         }
-        activePlugin.activeNsClient?.updateLatestDateReceivedIfNewer(latestDateInReceivedData)
+        activePlugin.activeNsClient?.updateLatestTreatmentReceivedIfNewer(latestDateInReceivedData)
 //        xDripBroadcast.sendTreatments(treatments)
         return ret
     }

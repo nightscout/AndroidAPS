@@ -208,7 +208,13 @@ class NSClientPlugin @Inject constructor(
             })
     }
 
-    override fun updateLatestDateReceivedIfNewer(latestReceived: Long) {
+    override fun updateLatestBgReceivedIfNewer(latestReceived: Long) {
         nsClientService?.let { if (latestReceived > it.latestDateInReceivedData) it.latestDateInReceivedData = latestReceived }
     }
+
+    override fun updateLatestTreatmentReceivedIfNewer(latestReceived: Long) {
+        nsClientService?.let { if (latestReceived > it.latestDateInReceivedData) it.latestDateInReceivedData = latestReceived }
+    }
+
+    override fun resetToFullSync() { }
 }
