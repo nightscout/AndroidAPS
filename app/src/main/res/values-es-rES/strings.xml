@@ -40,6 +40,7 @@
     <string name="description_source_ns_client">Recibir los datos de glucosa de Nightscout</string>
     <string name="description_source_xdrip">Recibir los valores de glucosa de xDrip+</string>
     <string name="description_treatments">Guarda todos los tratamientos que se realizaron</string>
+    <string name="description_wear">Supervisar y controlar AAPS usando un reloj WearOS</string>
     <string name="description_xdrip_status_line">Mostrar información sobre tu lazo en tu esfera xDrip+</string>
     <string name="treatments_insulin_label_string">Insulina:</string>
     <string name="treatments_carbs_label_string">Carbohidratos:</string>
@@ -77,6 +78,7 @@
     <string name="treatments">Tratamientos</string>
     <string name="virtualpump">Bomba virtual</string>
     <string name="configbuilder_pump">Bomba</string>
+    <string name="configbuilder_pump_description">¿Qué bomba quieres utilizar con AAPS?</string>
     <string name="configbuilder_profile">Perfil</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">¿Qué algoritmo APS quieres usar para ajustar tu tratamiento?</string>
@@ -85,6 +87,7 @@
     <string name="configbuilder_constraints_description">¿Qué restricciones se aplican?</string>
     <string name="constraints">Restricciones</string>
     <string name="configbuilder_loop">Lazo</string>
+    <string name="configbuilder_loop_description">Usa esto para habilitar la integración de lazo de AAPS</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">Tras procesar las restricciones</string>
     <string name="loop_tbrsetbypump_label">Basal temporal establecida por la bomba</string>
@@ -101,6 +104,7 @@
     <string name="sms_basal">Dosis Basal:</string>
     <string name="changeyourinput">¡Cambiar datos!</string>
     <string name="configbuilder_bgsource">Origen de Glucosa</string>
+    <string name="configbuilder_bgsource_description">¿Desde dónde debería obtener AAPS los datos?</string>
     <string name="xdrip">xDrip+</string>
     <string name="apsmode_title">Modo APS</string>
     <string name="closedloop">Lazo cerrado</string>
