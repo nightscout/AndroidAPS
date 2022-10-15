@@ -18,6 +18,8 @@ import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.InsertOrUpdateBolusCalculatorResultTransaction
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.extensions.formatColor
+import info.nightscout.androidaps.extensions.highValueToUnitsToString
+import info.nightscout.androidaps.extensions.lowValueToUnitsToString
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
@@ -29,10 +31,10 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProv
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
 import java.util.*
 import javax.inject.Inject
 import kotlin.math.abs
@@ -63,9 +65,13 @@ class BolusWizard @Inject constructor(
 
     private val disposable = CompositeDisposable()
 
+    var timeStamp : Long
+
     init {
         injector.androidInjector().inject(this)
+        timeStamp = dateUtil.now()
     }
+
 
     // Intermediate
     var sens = 0.0
@@ -135,27 +141,28 @@ class BolusWizard @Inject constructor(
     private var quickWizard: Boolean = true
     var usePercentage: Boolean = false
 
-    fun doCalc(profile: Profile,
-               profileName: String,
-               tempTarget: TemporaryTarget?,
-               carbs: Int,
-               cob: Double,
-               bg: Double,
-               correction: Double,
-               percentageCorrection: Int = 100,
-               useBg: Boolean,
-               useCob: Boolean,
-               includeBolusIOB: Boolean,
-               includeBasalIOB: Boolean,
-               useSuperBolus: Boolean,
-               useTT: Boolean,
-               useTrend: Boolean,
-               useAlarm: Boolean,
-               notes: String = "",
-               carbTime: Int = 0,
-               usePercentage: Boolean = false,
-               totalPercentage: Double = 100.0,
-               quickWizard: Boolean = false
+    fun doCalc(
+        profile: Profile,
+        profileName: String,
+        tempTarget: TemporaryTarget?,
+        carbs: Int,
+        cob: Double,
+        bg: Double,
+        correction: Double,
+        percentageCorrection: Int = 100,
+        useBg: Boolean,
+        useCob: Boolean,
+        includeBolusIOB: Boolean,
+        includeBasalIOB: Boolean,
+        useSuperBolus: Boolean,
+        useTT: Boolean,
+        useTrend: Boolean,
+        useAlarm: Boolean,
+        notes: String = "",
+        carbTime: Int = 0,
+        usePercentage: Boolean = false,
+        totalPercentage: Double = 100.0,
+        quickWizard: Boolean = false
     ): BolusWizard {
 
         this.profile = profile
@@ -233,7 +240,7 @@ class BolusWizard @Inject constructor(
         // Total
         calculatedTotalInsulin = insulinFromBG + insulinFromTrend + insulinFromCarbs + insulinFromBolusIOB + insulinFromBasalIOB + insulinFromCorrection + insulinFromSuperBolus + insulinFromCOB
 
-        var percentage = if (usePercentage) totalPercentage else percentageCorrection.toDouble()
+        val percentage = if (usePercentage) totalPercentage else percentageCorrection.toDouble()
 
         // Percentage adjustment
         totalBeforePercentageAdjustment = calculatedTotalInsulin
@@ -261,22 +268,23 @@ class BolusWizard @Inject constructor(
         return this
     }
 
-    private fun createBolusCalculatorResult(): BolusCalculatorResult =
-        BolusCalculatorResult(
+    private fun createBolusCalculatorResult(): BolusCalculatorResult {
+        val unit = profileFunction.getUnits()
+        return BolusCalculatorResult(
             timestamp = dateUtil.now(),
-            targetBGLow = targetBGLow,
-            targetBGHigh = targetBGHigh,
-            isf = sens,
+            targetBGLow = Profile.toMgdl(targetBGLow, unit),
+            targetBGHigh = Profile.toMgdl(targetBGHigh, unit),
+            isf = Profile.toMgdl(sens, unit),
             ic = ic,
             bolusIOB = insulinFromBolusIOB,
             wasBolusIOBUsed = includeBolusIOB,
             basalIOB = insulinFromBasalIOB,
             wasBasalIOBUsed = includeBasalIOB,
-            glucoseValue = bg,
+            glucoseValue = Profile.toMgdl(bg, unit),
             wasGlucoseUsed = useBg && bg > 0,
             glucoseDifference = bgDiff,
             glucoseInsulin = insulinFromBG,
-            glucoseTrend = trend,
+            glucoseTrend = Profile.fromMgdlToUnits(trend, unit),
             wasTrendUsed = useTrend,
             trendInsulin = insulinFromTrend,
             cob = cob,
@@ -294,13 +302,14 @@ class BolusWizard @Inject constructor(
             profileName = profileName,
             note = notes
         )
+    }
 
-    private fun confirmMessageAfterConstraints(advisor: Boolean): Spanned {
+    private fun confirmMessageAfterConstraints(context: Context, advisor: Boolean): Spanned {
 
         val actions: LinkedList<String> = LinkedList()
         if (insulinAfterConstraints > 0) {
             val pct = if (percentageCorrection != 100) " ($percentageCorrection%)" else ""
-            actions.add(rh.gs(R.string.bolus) + ": " + rh.gs(R.string.formatinsulinunits, insulinAfterConstraints).formatColor(rh, R.color.bolus) + pct)
+            actions.add(rh.gs(R.string.bolus) + ": " + rh.gs(R.string.formatinsulinunits, insulinAfterConstraints).formatColor(context, rh, R.attr.bolusColor) + pct)
         }
         if (carbs > 0 && !advisor) {
             var timeShift = ""
@@ -309,22 +318,25 @@ class BolusWizard @Inject constructor(
             } else if (carbTime < 0) {
                 timeShift += " (" + rh.gs(R.string.mins, carbTime) + ")"
             }
-            actions.add(rh.gs(R.string.carbs) + ": " + rh.gs(R.string.format_carbs, carbs).formatColor(rh, R.color.carbs) + timeShift)
+            actions.add(rh.gs(R.string.carbs) + ": " + rh.gs(R.string.format_carbs, carbs).formatColor(context, rh, R.attr.carbsColor) + timeShift)
         }
         if (insulinFromCOB > 0) {
-            actions.add(rh.gs(R.string.cobvsiob) + ": " + rh.gs(R.string.formatsignedinsulinunits, insulinFromBolusIOB + insulinFromBasalIOB + insulinFromCOB + insulinFromBG).formatColor(rh, R.color.cobAlert))
+            actions.add(
+                rh.gs(R.string.cobvsiob) + ": " + rh.gs(R.string.formatsignedinsulinunits, insulinFromBolusIOB + insulinFromBasalIOB + insulinFromCOB + insulinFromBG).formatColor(context, rh, R.attr
+                    .cobAlertColor)
+            )
             val absorptionRate = iobCobCalculator.ads.slowAbsorptionPercentage(60)
             if (absorptionRate > .25)
-                actions.add(rh.gs(R.string.slowabsorptiondetected, rh.gc(R.color.cobAlert), (absorptionRate * 100).toInt()))
+                actions.add(rh.gs(R.string.slowabsorptiondetected, rh.gac(context, R.attr.cobAlertColor), (absorptionRate * 100).toInt()))
         }
         if (abs(insulinAfterConstraints - calculatedTotalInsulin) > activePlugin.activePump.pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))
-            actions.add(rh.gs(R.string.bolusconstraintappliedwarn, calculatedTotalInsulin, insulinAfterConstraints).formatColor(rh, R.color.warning))
+            actions.add(rh.gs(R.string.bolusconstraintappliedwarn, calculatedTotalInsulin, insulinAfterConstraints).formatColor(context, rh, R.attr.warningColor))
         if (config.NSCLIENT && insulinAfterConstraints > 0)
-            actions.add(rh.gs(R.string.bolusrecordedonly).formatColor(rh, R.color.warning))
+            actions.add(rh.gs(R.string.bolusrecordedonly).formatColor(context, rh, R.attr.warningColor))
         if (useAlarm && !advisor && carbs > 0 && carbTime > 0)
-            actions.add(rh.gs(R.string.alarminxmin, carbTime).formatColor(rh, R.color.info))
+            actions.add(rh.gs(R.string.alarminxmin, carbTime).formatColor(context, rh, R.attr.infoColor))
         if (advisor)
-            actions.add(rh.gs(R.string.advisoralarm).formatColor(rh, R.color.info))
+            actions.add(rh.gs(R.string.advisoralarm).formatColor(context, rh, R.attr.infoColor))
 
         return HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions))
     }
@@ -342,16 +354,18 @@ class BolusWizard @Inject constructor(
                 carbTimer.removeEatReminder()
             if (sp.getBoolean(R.string.key_usebolusadvisor, false) && Profile.toMgdl(bg, profile.units) > 180 && carbs > 0 && carbTime >= 0)
                 OKDialog.showYesNoCancel(ctx, rh.gs(R.string.bolusadvisor), rh.gs(R.string.bolusadvisormessage),
-                    { bolusAdvisorProcessing(ctx) },
-                    { commonProcessing(ctx) }
+                                         { bolusAdvisorProcessing(ctx) },
+                                         { commonProcessing(ctx) }
                 )
             else
                 commonProcessing(ctx)
+        } else {
+            OKDialog.show(ctx, rh.gs(R.string.boluswizard), rh.gs(R.string.no_action_selected))
         }
     }
 
     private fun bolusAdvisorProcessing(ctx: Context) {
-        val confirmMessage = confirmMessageAfterConstraints(advisor = true)
+        val confirmMessage = confirmMessageAfterConstraints(ctx, advisor = true)
         OKDialog.showConfirmation(ctx, rh.gs(R.string.boluswizard), confirmMessage, {
             DetailedBolusInfo().apply {
                 eventType = DetailedBolusInfo.EventType.CORRECTION_BOLUS
@@ -363,10 +377,13 @@ class BolusWizard @Inject constructor(
                 carbTime = 0
                 bolusCalculatorResult = createBolusCalculatorResult()
                 notes = this@BolusWizard.notes
-                uel.log(Action.BOLUS_ADVISOR, if (quickWizard) Sources.QuickWizard else Sources.WizardDialog,
+                uel.log(
+                    Action.BOLUS_ADVISOR,
+                    if (quickWizard) Sources.QuickWizard else Sources.WizardDialog,
                     notes,
                     ValueWithUnit.TherapyEventType(eventType.toDBbEventType()),
-                    ValueWithUnit.Insulin(insulinAfterConstraints))
+                    ValueWithUnit.Insulin(insulinAfterConstraints)
+                )
                 if (insulin > 0) {
                     commandQueue.bolus(this, object : Callback() {
                         override fun run() {
@@ -381,11 +398,30 @@ class BolusWizard @Inject constructor(
         })
     }
 
+    fun explainShort(): String {
+        var message = rh.gs(R.string.wizard_explain_calc, ic, sens)
+        message += "\n" + rh.gs(R.string.wizard_explain_carbs, insulinFromCarbs)
+        if (useTT && tempTarget != null) {
+            val tt = if (tempTarget?.lowTarget == tempTarget?.highTarget) tempTarget?.lowValueToUnitsToString(profile.units)
+            else rh.gs(R.string.wizard_explain_tt_to, tempTarget?.lowValueToUnitsToString(profile.units), tempTarget?.highValueToUnitsToString(profile.units))
+            message += "\n" + rh.gs(R.string.wizard_explain_tt, tt)
+        }
+        if (useCob) message += "\n" + rh.gs(R.string.wizard_explain_cob, cob, insulinFromCOB)
+        if (useBg) message += "\n" + rh.gs(R.string.wizard_explain_bg, insulinFromBG)
+        if (includeBolusIOB) message += "\n" + rh.gs(R.string.wizard_explain_iob, insulinFromBolusIOB + insulinFromBasalIOB)
+        if (useTrend) message += "\n" + rh.gs(R.string.wizard_explain_trend, insulinFromTrend)
+        if (useSuperBolus) message += "\n" + rh.gs(R.string.wizard_explain_superbolus, insulinFromSuperBolus)
+        if (percentageCorrection != 100) {
+            message += "\n" + rh.gs(R.string.wizard_explain_percent, totalBeforePercentageAdjustment, percentageCorrection, calculatedTotalInsulin)
+        }
+        return message
+    }
+
     private fun commonProcessing(ctx: Context) {
         val profile = profileFunction.getProfile() ?: return
         val pump = activePlugin.activePump
 
-        val confirmMessage = confirmMessageAfterConstraints(advisor = false)
+        val confirmMessage = confirmMessageAfterConstraints(ctx, advisor = false)
         OKDialog.showConfirmation(ctx, rh.gs(R.string.boluswizard), confirmMessage, {
             if (insulinAfterConstraints > 0 || carbs > 0) {
                 if (useSuperBolus) {
@@ -407,12 +443,7 @@ class BolusWizard @Inject constructor(
                         commandQueue.tempBasalPercent(0, 120, true, profile, PumpSync.TemporaryBasalType.NORMAL, object : Callback() {
                             override fun run() {
                                 if (!result.success) {
-                                    val i = Intent(ctx, ErrorHelperActivity::class.java)
-                                    i.putExtra(ErrorHelperActivity.SOUND_ID, R.raw.boluserror)
-                                    i.putExtra(ErrorHelperActivity.STATUS, result.comment)
-                                    i.putExtra(ErrorHelperActivity.TITLE, rh.gs(R.string.tempbasaldeliveryerror))
-                                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                    ctx.startActivity(i)
+                                    ErrorHelperActivity.runAlarm(ctx, result.comment, rh.gs(R.string.tempbasaldeliveryerror), R.raw.boluserror)
                                 }
                             }
                         })
@@ -429,17 +460,17 @@ class BolusWizard @Inject constructor(
                     bolusCalculatorResult = createBolusCalculatorResult()
                     notes = this@BolusWizard.notes
                     if (insulin > 0 || carbs > 0) {
-                       val action = when {
+                        val action = when {
                             insulinAfterConstraints.equals(0.0) -> Action.CARBS
                             carbs.equals(0.0)                   -> Action.BOLUS
                             else                                -> Action.TREATMENT
                         }
                         uel.log(action, if (quickWizard) Sources.QuickWizard else Sources.WizardDialog,
-                            notes,
-                            ValueWithUnit.TherapyEventType(eventType.toDBbEventType()),
-                            ValueWithUnit.Insulin(insulinAfterConstraints).takeIf { insulinAfterConstraints != 0.0 },
-                            ValueWithUnit.Gram(this@BolusWizard.carbs).takeIf { this@BolusWizard.carbs != 0 },
-                            ValueWithUnit.Minute(carbTime).takeIf { carbTime != 0 })
+                                notes,
+                                ValueWithUnit.TherapyEventType(eventType.toDBbEventType()),
+                                ValueWithUnit.Insulin(insulinAfterConstraints).takeIf { insulinAfterConstraints != 0.0 },
+                                ValueWithUnit.Gram(this@BolusWizard.carbs).takeIf { this@BolusWizard.carbs != 0 },
+                                ValueWithUnit.Minute(carbTime).takeIf { carbTime != 0 })
                         commandQueue.bolus(this, object : Callback() {
                             override fun run() {
                                 if (!result.success) {
@@ -465,9 +496,9 @@ class BolusWizard @Inject constructor(
     private fun calcPercentageWithConstraints() {
         calculatedPercentage = 100.0
         if (totalBeforePercentageAdjustment != insulinFromCorrection)
-            calculatedPercentage = calculatedTotalInsulin/(totalBeforePercentageAdjustment-insulinFromCorrection) * 100
+            calculatedPercentage = calculatedTotalInsulin / (totalBeforePercentageAdjustment - insulinFromCorrection) * 100
         calculatedPercentage = max(calculatedPercentage, 10.0)
-        calculatedPercentage = min(calculatedPercentage,250.0)
+        calculatedPercentage = min(calculatedPercentage, 250.0)
     }
 
     private fun calcCorrectionWithConstraints() {

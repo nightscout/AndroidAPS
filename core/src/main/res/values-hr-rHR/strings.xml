@@ -2,10 +2,11 @@
 <resources>
     <!--    Keys-->
     <!--    General-->
+    <string name="close">Zatvori</string>
     <!--    Constraints-->
     <!--    Dialogs-->
+    <string name="cancel">Otkaži</string>
     <!--    BlePreCheck-->
-    <!--    DateUtil-->
     <!--    Protection-->
     <!--    Profile-->
     <!--    ProfileFunction-->
@@ -13,7 +14,6 @@
     <!--    APSResult-->
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
-    <!--    TDD-->
     <!--    Translator-->
     <!--    Command-->
     <!--    PumpEnactResult-->
@@ -27,4 +27,5 @@
     <!-- User Entry -->
     <!-- HardLimits -->
     <!-- Command Queue + readStatus reasons -->
+    <!-- Autotune -->
 </resources>

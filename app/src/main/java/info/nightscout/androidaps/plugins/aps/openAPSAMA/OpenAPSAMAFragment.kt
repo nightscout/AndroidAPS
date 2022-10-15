@@ -2,24 +2,22 @@ package info.nightscout.androidaps.plugins.aps.openAPSAMA
 
 import android.os.Bundle
 import android.text.TextUtils
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.OpenapsamaFragmentBinding
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.aps.events.EventOpenAPSUpdateGui
 import info.nightscout.androidaps.plugins.aps.events.EventOpenAPSUpdateResultGui
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.JSONFormatter
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
 import org.json.JSONArray
 import org.json.JSONException
 import javax.inject.Inject
@@ -37,25 +35,52 @@ class OpenAPSAMAFragment : DaggerFragment() {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var jsonFormatter: JSONFormatter
 
+    private val ID_MENU_RUN = 1
+
     private var _binding: OpenapsamaFragmentBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
-        _binding = OpenapsamaFragmentBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
+        OpenapsamaFragmentBinding.inflate(inflater, container, false).also {
+            _binding = it
+            setHasOptionsMenu(true)
+        }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.run.setOnClickListener {
-            openAPSAMAPlugin.invoke("OpenAPSAMA button", false)
+        with(binding.swipeRefresh) {
+            setColorSchemeColors(rh.gac(context, R.attr.colorPrimaryDark), rh.gac(context, R.attr.colorPrimary), rh.gac(context, R.attr.colorSecondary))
+            setOnRefreshListener {
+                binding.lastrun.text = rh.gs(info.nightscout.androidaps.R.string.executing)
+                Thread { openAPSAMAPlugin.invoke("OpenAPSAMA swiperefresh", false) }.start()
+            }
+        }
+
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        if (isResumed) {
+            menu.removeItem(ID_MENU_RUN)
+            menu.add(Menu.FIRST, ID_MENU_RUN, 0, rh.gs(R.string.openapsma_run)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+            menu.setGroupDividerEnabled(true)
         }
     }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
+            ID_MENU_RUN -> {
+                binding.lastrun.text = rh.gs(R.string.executing)
+                Thread { openAPSAMAPlugin.invoke("OpenAPSAMA menu", false) }.start()
+                true
+            }
+
+            else        -> false
+        }
 
     @Synchronized
     override fun onResume() {
@@ -65,14 +90,14 @@ class OpenAPSAMAFragment : DaggerFragment() {
             .toObservable(EventOpenAPSUpdateGui::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({
-                updateGUI()
-            }, fabricPrivacy::logException)
+                           updateGUI()
+                       }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventOpenAPSUpdateResultGui::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({
-                updateResultGUI(it.text)
-            }, fabricPrivacy::logException)
+                           updateResultGUI(it.text)
+                       }, fabricPrivacy::logException)
 
         updateGUI()
     }
@@ -96,7 +121,7 @@ class OpenAPSAMAFragment : DaggerFragment() {
             binding.result.text = jsonFormatter.format(lastAPSResult.json)
             binding.request.text = lastAPSResult.toSpanned()
         }
-        openAPSAMAPlugin.lastDetermineBasalAdapterAMAJS?.let { determineBasalAdapterAMAJS ->
+        openAPSAMAPlugin.lastDetermineBasalAdapter?.let { determineBasalAdapterAMAJS ->
             binding.glucosestatus.text = jsonFormatter.format(determineBasalAdapterAMAJS.glucoseStatusParam)
             binding.currenttemp.text = jsonFormatter.format(determineBasalAdapterAMAJS.currentTempParam)
             try {
@@ -110,7 +135,7 @@ class OpenAPSAMAFragment : DaggerFragment() {
 
             binding.profile.text = jsonFormatter.format(determineBasalAdapterAMAJS.profileParam)
             binding.mealdata.text = jsonFormatter.format(determineBasalAdapterAMAJS.mealDataParam)
-            binding.scriptdebugdata.text = determineBasalAdapterAMAJS.scriptDebug
+            binding.scriptdebugdata.text = determineBasalAdapterAMAJS.scriptDebug.replace("\\s+".toRegex(), " ")
         }
         if (openAPSAMAPlugin.lastAPSRun != 0L) {
             binding.lastrun.text = dateUtil.dateAndTimeString(openAPSAMAPlugin.lastAPSRun)
@@ -118,6 +143,7 @@ class OpenAPSAMAFragment : DaggerFragment() {
         openAPSAMAPlugin.lastAutosensResult.let {
             binding.autosensdata.text = jsonFormatter.format(it.json())
         }
+        binding.swipeRefresh.isRefreshing = false
     }
 
     private fun updateResultGUI(text: String) {
@@ -131,5 +157,6 @@ class OpenAPSAMAFragment : DaggerFragment() {
         binding.scriptdebugdata.text = ""
         binding.request.text = ""
         binding.lastrun.text = ""
+        binding.swipeRefresh.isRefreshing = false
     }
 }

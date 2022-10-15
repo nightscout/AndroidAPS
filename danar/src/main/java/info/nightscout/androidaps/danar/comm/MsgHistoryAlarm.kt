@@ -8,7 +8,7 @@ class MsgHistoryAlarm(
 ) : MsgHistoryAll(injector) {
 
     init {
-        SetCommand(0x3105)
+        setCommand(0x3105)
         aapsLogger.debug(LTag.PUMPCOMM, "New message")
     }
     // Handle message taken from MsgHistoryAll

@@ -11,7 +11,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.deactiva
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodErosManager
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
 class ErosDeactivatePodViewModel @Inject constructor(

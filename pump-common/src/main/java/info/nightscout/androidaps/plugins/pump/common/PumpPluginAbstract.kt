@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.text.format.DateFormat
+import com.google.gson.GsonBuilder
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.PumpEnactResult
@@ -25,12 +26,13 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter.to0Decimal
 import info.nightscout.androidaps.utils.DecimalFormatter.to2Decimal
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncStorage
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
-import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -39,9 +41,9 @@ import org.json.JSONObject
  */
 // When using this class, make sure that your first step is to create mConnection (see MedtronicPumpPlugin)
 abstract class PumpPluginAbstract protected constructor(
-    pluginDescription: PluginDescription?,
+    pluginDescription: PluginDescription,
     pumpType: PumpType,
-    injector: HasAndroidInjector?,
+    injector: HasAndroidInjector,
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
     commandQueue: CommandQueue,
@@ -53,8 +55,8 @@ abstract class PumpPluginAbstract protected constructor(
     var dateUtil: DateUtil,
     var aapsSchedulers: AapsSchedulers,
     var pumpSync: PumpSync,
-    var pumpSyncStorage: info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncStorage
-) : PumpPluginBase(pluginDescription!!, injector!!, aapsLogger, rh, commandQueue), Pump, Constraints, info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncEntriesCreator {
+    var pumpSyncStorage: PumpSyncStorage
+) : PumpPluginBase(pluginDescription, injector, aapsLogger, rh, commandQueue), Pump, Constraints, info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncEntriesCreator {
 
     private val disposable = CompositeDisposable()
 
@@ -68,30 +70,41 @@ abstract class PumpPluginAbstract protected constructor(
     protected var displayConnectionMessages = false
 
     var pumpType: PumpType = PumpType.GENERIC_AAPS
+        get() = field
         set(value) {
             field = value
             pumpDescription.fillFor(value)
         }
 
+    protected var gson = GsonBuilder().excludeFieldsWithoutExposeAnnotation().create()
+
     abstract fun initPumpStatusData()
+
+    open fun hasService(): Boolean {
+        return true
+    }
 
     override fun onStart() {
         super.onStart()
         initPumpStatusData()
-        val intent = Intent(context, serviceClass)
-        context.bindService(intent, serviceConnection!!, Context.BIND_AUTO_CREATE)
+        if (hasService()) {
+            val intent = Intent(context, serviceClass)
+            context.bindService(intent, serviceConnection!!, Context.BIND_AUTO_CREATE)
+            disposable.add(rxBus
+                               .toObservable(EventAppExit::class.java)
+                               .observeOn(aapsSchedulers.io)
+                               .subscribe({ _ -> context.unbindService(serviceConnection!!) }) { throwable: Throwable? -> fabricPrivacy.logException(throwable!!) }
+            )
+        }
         serviceRunning = true
-        disposable.add(rxBus
-                           .toObservable(EventAppExit::class.java)
-                           .observeOn(aapsSchedulers.io)
-                           .subscribe({ _ -> context.unbindService(serviceConnection!!) }) { throwable: Throwable? -> fabricPrivacy.logException(throwable!!) }
-        )
-        onStartCustomActions()
+        onStartScheduledPumpActions()
     }
 
     override fun onStop() {
-        aapsLogger.debug(LTag.PUMP, deviceID() + " onStop()")
-        context.unbindService(serviceConnection!!)
+        aapsLogger.debug(LTag.PUMP, model().model + " onStop()")
+        if (hasService()) {
+            context.unbindService(serviceConnection!!)
+        }
         serviceRunning = false
         disposable.clear()
         super.onStop()
@@ -100,7 +113,7 @@ abstract class PumpPluginAbstract protected constructor(
     /**
      * If we need to run any custom actions in onStart (triggering events, etc)
      */
-    abstract fun onStartCustomActions()
+    abstract fun onStartScheduledPumpActions()
 
     /**
      * Service class (same one you did serviceConnection for)
@@ -231,7 +244,7 @@ abstract class PumpPluginAbstract protected constructor(
         val extended = JSONObject()
         try {
             battery.put("percent", pumpStatusData.batteryRemaining)
-            status.put("status", pumpStatusData.pumpStatusType.status)
+            status.put("status", pumpStatusData.pumpRunningState.status)
             extended.put("Version", version)
             try {
                 extended.put("ActiveProfile", profileName)
@@ -265,50 +278,23 @@ abstract class PumpPluginAbstract protected constructor(
     override fun shortStatus(veryShort: Boolean): String {
         var ret = ""
 
-        if (pumpStatusData.lastConnection == 0L) {
-            ret += "LastConn: never\n"
+        ret += if (pumpStatusData.lastConnection == 0L) {
+            "LastConn: never\n"
         } else {
-            val agoMsec = System.currentTimeMillis() - pumpStatusData.lastConnection
-            val agoMin = (agoMsec / 60.0 / 1000.0).toInt()
-            ret += "LastConn: $agoMin min ago\n"
+            val agoMin = ((System.currentTimeMillis() - pumpStatusData.lastConnection) / 60.0 / 1000.0).toInt()
+            "LastConn: $agoMin min ago\n"
         }
 
-        if (pumpStatusData.lastBolusTime != null && pumpStatusData.lastBolusTime!!.time != 0L) {
-            ret += """
-                LastBolus: ${to2Decimal(pumpStatusData.lastBolusAmount!!)}U @${DateFormat.format("HH:mm", pumpStatusData.lastBolusTime)}
-                
-                """.trimIndent()
+        pumpStatusData.lastBolusTime?.let {
+            if (it.time != 0L) {
+                ret += "LastBolus: ${to2Decimal(pumpStatusData.lastBolusAmount!!)}U @${DateFormat.format("HH:mm", it)}\n"
+            }
         }
-        val activeTemp = pumpSync.expectedPumpState().temporaryBasal
-        if (activeTemp != null) {
-            ret += """
-                Temp: ${activeTemp.toStringFull(dateUtil)}
-                
-                """.trimIndent()
-        }
-        val activeExtendedBolus = pumpSync.expectedPumpState().extendedBolus
-        if (activeExtendedBolus != null) {
-            ret += """
-                Extended: ${activeExtendedBolus.toStringFull(dateUtil)}
-                
-                """.trimIndent()
-        }
-        // if (!veryShort) {
-        // ret += "TDD: " + DecimalFormatter.to0Decimal(pumpStatus.dailyTotalUnits) + " / "
-        // + pumpStatus.maxDailyTotalUnits + " U\n";
-        // }
-        ret += """
-            IOB: ${pumpStatusData.iob}U
-            
-            """.trimIndent()
-        ret += """
-            Reserv: ${to0Decimal(pumpStatusData.reservoirRemainingUnits)}U
-            
-            """.trimIndent()
-        ret += """
-            Batt: ${pumpStatusData.batteryRemaining}
-            
-            """.trimIndent()
+        pumpSync.expectedPumpState().temporaryBasal?.let { ret += "Temp: ${it.toStringFull(dateUtil)}\n" }
+        pumpSync.expectedPumpState().extendedBolus?.let { ret += "Extended: ${it.toStringFull(dateUtil)}\n" }
+        ret += "IOB: ${pumpStatusData.iob}U\n"
+        ret += "Reserv: ${to0Decimal(pumpStatusData.reservoirRemainingUnits)}U\n"
+        ret += "Batt: ${pumpStatusData.batteryRemaining}\n"
         return ret
     }
 
@@ -324,12 +310,13 @@ abstract class PumpPluginAbstract protected constructor(
                 // bolus needed, ask pump to deliver it
                 deliverBolus(detailedBolusInfo)
             } else {
+                detailedBolusInfo.timestamp = System.currentTimeMillis()
 
                 // no bolus required, carb only treatment
                 pumpSyncStorage.addCarbs(PumpDbEntryCarbs(detailedBolusInfo, this))
 
                 val bolusingEvent = EventOverviewBolusProgress
-                bolusingEvent.t = EventOverviewBolusProgress.Treatment(0.0, detailedBolusInfo.carbs.toInt(), detailedBolusInfo.bolusType === DetailedBolusInfo.BolusType.SMB)
+                bolusingEvent.t = EventOverviewBolusProgress.Treatment(0.0, detailedBolusInfo.carbs.toInt(), detailedBolusInfo.bolusType === DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.id)
                 bolusingEvent.percent = 100
                 rxBus.send(bolusingEvent)
                 aapsLogger.debug(LTag.PUMP, "deliverTreatment: Carb only treatment.")

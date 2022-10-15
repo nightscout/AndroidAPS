@@ -2,7 +2,9 @@
 <resources>
     <!--    Keys-->
     <!--    General-->
+    <string name="save">Αποθήκευση</string>
     <string name="pump_basebasalrate">%1$.2f U/h</string>
+    <string name="active"><![CDATA[<Ενεργή>]]></string>
     <string name="yes">Ναι</string>
     <string name="no">Όχι</string>
     <string name="loopdisabled">ΤΟ ΚΥΚΛΩΜΑ ΑΠΕΝΕΡΓΟΠΟΙΗΘΗΚΕ ΑΠΟ ΠΕΡΙΟΡΙΣΜΟΥΣ</string>
@@ -28,7 +30,6 @@
     <!--    Constraints-->
     <!--    Dialogs-->
     <!--    BlePreCheck-->
-    <!--    DateUtil-->
     <!--    Protection-->
     <!--    Profile-->
     <!--    ProfileFunction-->
@@ -37,7 +38,6 @@
     <!--    APSResult-->
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
-    <!--    TDD-->
     <!--    Translator-->
     <string name="boluswizard">Οδηγός Bolus</string>
     <string name="eatingsoon">Γεύμα Σύντομα</string>
@@ -62,4 +62,6 @@
     <!-- HardLimits -->
     <string name="valuelimitedto">Το %1$.2f περιορίζεται σε %2$.2f</string>
     <!-- Command Queue + readStatus reasons -->
+    <string name="basal">Βασικός Ρυθμός</string>
+    <!-- Autotune -->
 </resources>

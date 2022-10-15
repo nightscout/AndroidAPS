@@ -4,8 +4,8 @@ import androidx.room.Dao
 import androidx.room.Query
 import info.nightscout.androidaps.database.TABLE_BOLUS_CALCULATOR_RESULTS
 import info.nightscout.androidaps.database.entities.BolusCalculatorResult
-import io.reactivex.Maybe
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Single
 
 @Suppress("FunctionName")
 @Dao

@@ -51,4 +51,10 @@
     <string name="combo_tbr_count">Antall temp basaler</string>
     <string name="bolusstopped">Bolus stoppet</string>
     <string name="bolusstopping">Stopper bolus</string>
+    <string name="pump_commerror_label">Komm. Feiltelling</string>
+    <string name="show_comm_error_count_title">Vis komm. feiltelling</string>
+    <string name="show_comm_error_count_summary">Viser antall feil i kommunikasjonen med Ruffy. Hvis høyere tall enn 0 vises innebærer det problemer med Ruffy kommunikasjonen og en omstart kan være nødvendig.</string>
+    <string name="combo_error_display_never">Aldri</string>
+    <string name="combo_error_display_error">Ved feil</string>
+    <string name="combo_error_display_always">Alltid</string>
 </resources>

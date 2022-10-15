@@ -36,8 +36,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="4dp"
-            app:tint="?android:attr/colorAccent"
-            app:srcCompat="@drawable/ic_visibility" />
+            android:importantForAccessibility="no"
+            app:srcCompat="@drawable/ic_visibility"
+            app:tint="?android:attr/colorAccent" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -45,4 +47,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" />
+
 </LinearLayout>

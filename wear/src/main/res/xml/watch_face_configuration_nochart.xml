@@ -4,16 +4,14 @@
 
     <CheckBoxPreference
         android:defaultValue="true"
-        android:key="dark"
-        android:summary="Dark theme"
+        android:key="@string/key_dark"
         android:title="@string/pref_dark"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
 
-
     <CheckBoxPreference
         android:defaultValue="false"
-        android:key="vibrate_Hourly"
+        android:key="@string/key_vibrate_hourly"
         android:title="@string/pref_vibrate_hourly"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />

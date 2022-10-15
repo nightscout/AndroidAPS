@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="24px"
+	 height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+<g id="LogDelete">
+	<g>
+		
+			<rect x="5.401" y="4.061" fill="none" stroke="#FFFFFF" stroke-width="0.4819" stroke-linejoin="round" stroke-miterlimit="10" width="13.198" height="16.65"/>
+		<g>
+			
+				<line fill="none" stroke="#FFFFFF" stroke-width="0.4819" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="7.014" y1="5.692" x2="16.986" y2="5.692"/>
+			
+				<line fill="none" stroke="#FFFFFF" stroke-width="0.4819" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="7.014" y1="7.604" x2="16.986" y2="7.604"/>
+			
+				<line fill="none" stroke="#FFFFFF" stroke-width="0.4819" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="7.014" y1="11.428" x2="16.986" y2="11.428"/>
+			
+				<line fill="none" stroke="#FFFFFF" stroke-width="0.4819" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="7.014" y1="9.516" x2="16.986" y2="9.516"/>
+			
+				<line fill="none" stroke="#FFFFFF" stroke-width="0.4819" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="7.014" y1="13.341" x2="16.986" y2="13.341"/>
+			
+				<line fill="none" stroke="#FFFFFF" stroke-width="0.4819" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="7.014" y1="15.253" x2="16.986" y2="15.253"/>
+			
+				<line fill="none" stroke="#FFFFFF" stroke-width="0.4819" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="7.014" y1="19.077" x2="16.986" y2="19.077"/>
+			
+				<line fill="none" stroke="#FFFFFF" stroke-width="0.4819" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="7.014" y1="17.165" x2="16.986" y2="17.165"/>
+		</g>
+	</g>
+	<path fill="#FF1313" d="M13.665,12.385l1.886-1.886c0.081-0.081,0.081-0.213,0-0.294L14.18,8.833c-0.078-0.078-0.216-0.078-0.294,0
+		L12,10.719l-1.886-1.886c-0.078-0.078-0.216-0.078-0.294,0l-1.372,1.372c-0.039,0.039-0.061,0.092-0.061,0.147
+		c0,0.055,0.022,0.108,0.061,0.147l1.886,1.886l-1.886,1.886c-0.039,0.039-0.061,0.092-0.061,0.147c0,0.055,0.022,0.108,0.061,0.147
+		l1.372,1.372c0.041,0.04,0.094,0.061,0.147,0.061s0.106-0.02,0.147-0.061L12,14.05l1.886,1.886c0.04,0.04,0.093,0.061,0.147,0.061
+		s0.106-0.02,0.147-0.061l1.371-1.371c0.081-0.081,0.081-0.213,0-0.294L13.665,12.385z"/>
+</g>
+</svg>

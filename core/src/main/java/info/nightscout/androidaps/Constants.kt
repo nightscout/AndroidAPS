@@ -77,8 +77,11 @@ object Constants {
     // STATISTICS
     const val STATS_TARGET_LOW_MMOL = 3.9
     const val STATS_TARGET_HIGH_MMOL = 7.8
+    const val STATS_RANGE_VERY_LOW_MMOL = 3.1
     const val STATS_RANGE_LOW_MMOL = 3.9
+    const val STATS_RANGE_HIGH_NIGHT_MMOL = 8.3
     const val STATS_RANGE_HIGH_MMOL = 10.0
+    const val STATS_RANGE_VERY_HIGH_MMOL = 13.9
 
     // Local profile
     const val LOCAL_PROFILE = "LocalProfile"

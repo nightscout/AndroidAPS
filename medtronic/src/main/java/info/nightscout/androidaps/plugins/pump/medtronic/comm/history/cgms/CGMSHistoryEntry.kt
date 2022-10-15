@@ -60,4 +60,9 @@ class CGMSHistoryEntry : MedtronicHistoryEntry() {
     fun setDateTime(timeStamp: LocalDateTime, getIndex: Int) {
         atechDateTime = (DateTimeUtil.toATechDate(timeStamp.plusMinutes(getIndex * 5)))
     }
+
+    override fun toEntryString(): String {
+        // TODO fixme if needed
+        return toString()
+    }
 }

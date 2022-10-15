@@ -8,7 +8,7 @@ class MsgHistoryDailyInsulin(
 ) : MsgHistoryAll(injector) {
 
     init {
-        SetCommand(0x3102)
+        setCommand(0x3102)
         aapsLogger.debug(LTag.PUMPCOMM, "New message")
     }
     // Handle message taken from MsgHistoryAll

@@ -57,4 +57,19 @@
     <string name="combo_pump_serial" translatable="false">combo_pump_serial</string>
     <string name="combo_tbrs_set" translatable="false">combo_tbrs_set</string>
     <string name="combo_boluses_delivered" translatable="false">combo_boluses_delivered</string>
+    <string name="pump_commerror_label">Comm. Error count</string>
+    <string name="key_combo_error_count" translatable="false">combo_error_count</string>
+    <string name="key_combo_name_settings" translatable="false">combo_name_settings</string>
+    <string name="key_show_comm_error_count" translatable="false">show_error_count</string>
+    <string name="show_comm_error_count_title">Show comm. error count</string>
+    <string name="show_comm_error_count_summary">Shows count of errors, when communicating with Ruffy. In most cases number higher than 0 denotes, Ruffy communication problems (restart might be needed).</string>
+
+    <string name="combo_error_display_never">Never</string>
+    <string name="combo_error_display_error">When Error</string>
+    <string name="combo_error_display_always">Always</string>
+
+    <string name="key_combo_error_display_never" translatable="false">NEVER</string>
+    <string name="key_combo_error_display_error" translatable="false">ON_ERROR</string>
+    <string name="key_combo_error_display_always" translatable="false">ALWAYS</string>
+
 </resources>

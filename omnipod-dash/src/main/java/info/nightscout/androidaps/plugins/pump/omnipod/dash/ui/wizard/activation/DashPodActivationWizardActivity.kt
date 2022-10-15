@@ -13,5 +13,5 @@ class DashPodActivationWizardActivity : PodActivationWizardActivity() {
         super.onCreate(savedInstanceState)
 
         blePreCheck.prerequisitesCheck(this)
-   }
+    }
 }

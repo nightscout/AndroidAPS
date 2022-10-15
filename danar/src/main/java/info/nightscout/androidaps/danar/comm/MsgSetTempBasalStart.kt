@@ -10,15 +10,15 @@ class MsgSetTempBasalStart(
 ) : MessageBase(injector) {
 
     init {
-        SetCommand(0x0401)
+        setCommand(0x0401)
 
         //HARDCODED LIMITS
         if (percent < 0) percent = 0
         if (percent > 200) percent = 200
         if (durationInHours < 1) durationInHours = 1
         if (durationInHours > 24) durationInHours = 24
-        AddParamByte((percent and 255).toByte())
-        AddParamByte((durationInHours and 255).toByte())
+        addParamByte((percent and 255).toByte())
+        addParamByte((durationInHours and 255).toByte())
         aapsLogger.debug(LTag.PUMPCOMM, "Temp basal start percent: $percent duration hours: $durationInHours")
     }
 

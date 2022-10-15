@@ -34,11 +34,11 @@ import info.nightscout.androidaps.plugins.pump.common.bolusInfo.TemporaryBasalSt
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.sharedPreferences.SP
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
 import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject
@@ -242,8 +242,8 @@ class DanaRSPlugin @Inject constructor(
     }
 
     override fun isThisProfileSet(profile: Profile): Boolean {
-        if (!isInitialized()) return true // TODO: not sure what's better. so far TRUE to prevent too many SMS
-        if (danaPump.pumpProfiles == null) return true // TODO: not sure what's better. so far TRUE to prevent too many SMS
+        if (!isInitialized()) return true
+        if (danaPump.pumpProfiles == null) return true
         val basalValues = if (danaPump.basal48Enable) 48 else 24
         val basalIncrement = if (danaPump.basal48Enable) 30 * 60 else 60 * 60
         for (h in 0 until basalValues) {
@@ -286,7 +286,7 @@ class DanaRSPlugin @Inject constructor(
             var carbTimeStamp = detailedBolusInfo.carbsTimestamp ?: detailedBolusInfo.timestamp
             if (carbTimeStamp == detailedBolusInfo.timestamp) carbTimeStamp -= T.mins(1).msecs() // better set 1 min back to prevents clash with insulin
             detailedBolusInfoStorage.add(detailedBolusInfo) // will be picked up on reading history
-            val t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB)
+            val t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.id)
             var connectionOK = false
             if (detailedBolusInfo.insulin > 0 || carbs > 0) connectionOK = danaRSService?.bolus(detailedBolusInfo.insulin, carbs.toInt(), carbTimeStamp, t)
                 ?: false
@@ -302,7 +302,7 @@ class DanaRSPlugin @Inject constructor(
                     0x40 -> error = rh.gs(R.string.speederror)
                     0x80 -> error = rh.gs(R.string.insulinlimitviolation)
                 }
-                result.comment = String.format(rh.gs(R.string.boluserrorcode), detailedBolusInfo.insulin, t.insulin, error)
+                result.comment = rh.gs(R.string.boluserrorcode, detailedBolusInfo.insulin, t.insulin, error)
             } else result.comment = rh.gs(R.string.ok)
             aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)
             result

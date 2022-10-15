@@ -49,7 +49,7 @@
         <item>@string/menu_default</item>
         <item>@string/menu_menu</item>
         <item>@string/menu_wizard</item>
-        <item>@string/menu_bolus</item>
+        <item>@string/menu_treatment</item>
         <item>@string/menu_ecarb</item>
         <item>@string/menu_status</item>
         <item>@string/menu_none</item>
@@ -77,6 +77,44 @@
         <item>charging</item>
         <item>ambient</item>
         <item>ambient_charging</item>
+    </string-array>
+
+    <string-array name="tile_action_names">
+        <item>@string/menu_wizard</item>
+        <item>@string/menu_treatment</item>
+        <item>@string/menu_bolus</item>
+        <item>@string/menu_carb</item>
+        <item>@string/menu_ecarb</item>
+        <item>@string/menu_tempt</item>
+        <item>@string/tile_none</item>
+    </string-array>
+
+    <string-array name="tile_action_values">
+        <item>wizard</item>
+        <item>treatment</item>
+        <item>bolus</item>
+        <item>carbs</item>
+        <item>ecarbs</item>
+        <item>temp_target</item>
+        <item>none</item>
+    </string-array>
+
+    <string-array name="tile_tempt_names">
+        <item>@string/temp_target_activity</item>
+        <item>@string/temp_target_eating_soon</item>
+        <item>@string/temp_target_hypo</item>
+        <item>@string/temp_target_manual</item>
+        <item>@string/temp_target_cancel</item>
+        <item>@string/tile_none</item>
+    </string-array>
+
+    <string-array name="tile_tempt_values">
+        <item>activity</item>
+        <item>eating_soon</item>
+        <item>hypo</item>
+        <item>manual</item>
+        <item>cancel</item>
+        <item>none</item>
     </string-array>
 
 </resources>

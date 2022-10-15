@@ -19,7 +19,7 @@ import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONException
 import org.json.JSONObject
@@ -156,6 +156,8 @@ class SensitivityWeightedAveragePlugin @Inject constructor(
             + " mealCOB: " + current.cob)
         return output
     }
+
+    override fun maxAbsorptionHours(): Double = sp.getDouble(R.string.key_absorption_maxtime, Constants.DEFAULT_MAX_ABSORPTION_TIME)
 
     override val id: SensitivityType
         get() = SensitivityType.SENSITIVITY_WEIGHTED

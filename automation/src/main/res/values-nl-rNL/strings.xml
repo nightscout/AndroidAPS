@@ -81,6 +81,7 @@
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Gevoeligheid %1$s %2$s %%</string>
     <string name="autosenslabel">Gevoeligheid %</string>
+    <string name="a11y_autosenslabel">Autosens</string>
     <string name="deltacompared">%3$s %1$s %2$s</string>
     <string name="deltalabel">BG verschil</string>
     <string name="deltalabel_u">BG verschil [%1$s]</string>
@@ -112,4 +113,14 @@
     <string name="automation_event">Automation gebeurtenis</string>
     <string name="reorder_label">Sorteren</string>
     <string name="user_action">Gebruikersactie</string>
+    <string name="remove_automation">Verwijder automatisering</string>
+    <string name="sort_automation">Sorteer automatisering</string>
+    <string name="remove_selected_items">Geselecteerde items verwijderen</string>
+    <string name="count_selected">%1$d geselecteerd</string>
+    <string name="confirm_remove_multiple_items">Weet je zeker dat je %1$d items wilt verwijderen</string>
+    <string name="sort_label">Sorteren</string>
+    <string name="system_automation">Systeem automatisering</string>
+    <string name="run_automations">Automatisering uitvoeren</string>
+    <string name="add_automation">Regel toevoegen</string>
+    <string name="remove_sort">Verwijderen/sorteren</string>
 </resources>

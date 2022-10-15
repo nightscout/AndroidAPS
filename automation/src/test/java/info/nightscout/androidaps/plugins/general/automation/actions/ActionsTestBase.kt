@@ -11,7 +11,7 @@ import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.automation.TestBaseWithProfile
 import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Before
 import org.mockito.Mock
@@ -38,6 +38,7 @@ ActionsTestBase : TestBaseWithProfile() {
         override var enabled: Boolean
             get() = true
             set(_) {}
+        override var lastBgTriggeredRun: Long = 0
 
         override fun invoke(initiator: String, allowNotification: Boolean, tempBasalFallback: Boolean) {}
         override fun acceptChangeRequest() {}
@@ -142,6 +143,9 @@ ActionsTestBase : TestBaseWithProfile() {
                 it.dateUtil = dateUtil
                 it.profileFunction = profileFunction
                 it.uel = uel
+            }
+            if (it is ActionStopProcessing) {
+                it.rh = rh
             }
             if (it is PumpEnactResult) {
                 it.rh = rh

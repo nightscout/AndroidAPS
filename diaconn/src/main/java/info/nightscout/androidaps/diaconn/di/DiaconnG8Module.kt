@@ -6,7 +6,8 @@ import dagger.Module
     DiaconnG8ActivitiesModule::class,
     DiaconnG8ServiceModule::class,
     DiaconnG8PacketModule::class,
-    DiaconnHistoryModule::class
+    DiaconnHistoryModule::class,
+    DiaconnLogUploaderModule::class
 ])
 
 open class DiaconnG8Module

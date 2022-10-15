@@ -16,15 +16,10 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-allopen'
 apply plugin: 'com.hiya.jacoco-android'
 
-apply from: "${project.rootDir}/gradle/android_dependencies.gradle"
-apply from: "${project.rootDir}/gradle/jacoco_global.gradle"
+apply from: "${project.rootDir}/core/test_dependencies.gradle"
+apply from: "${project.rootDir}/core/android_dependencies.gradle"
+apply from: "${project.rootDir}/core/jacoco_global.gradle"
 
-
-ext {
-    wearableVersion = "2.8.1"
-    // playServicesWearable 17.1.0 breaks test
-    playServicesWearable = "17.0.0"
-}
 
 def generateGitBuild = { ->
 
@@ -51,29 +46,15 @@ android {
     compileSdkVersion 31
 
     defaultConfig {
-        applicationId "info.nightscout.androidaps"
         minSdkVersion 23
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 2
         versionName "1.0.3"
         buildConfigField "String", "BUILDVERSION", generateGitBuild()
     }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-        firebaseDisable {
-        }
-    }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
-    }
-
-    lintOptions {
-        abortOnError false
+    buildFeatures {
+        viewBinding true
     }
 
     flavorDimensions "standard"
@@ -99,15 +80,13 @@ android {
             versionName version + "-nsclient"
         }
     }
+    namespace 'info.nightscout.androidaps'
 }
 
 allprojects {
     repositories {
         google()
         mavenCentral()
-        flatDir {
-            dirs 'libs'
-        }
     }
 }
 
@@ -117,41 +96,26 @@ dependencies {
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-    implementation "androidx.core:core-ktx:$coreVersion"
     implementation "androidx.appcompat:appcompat:$appcompat_version"
-    implementation "androidx.preference:preference-ktx:$preferencektx_version"
+    implementation "androidx.core:core-ktx:$core_version"
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation "androidx.preference:preference-ktx:$preferencektx_version"
     implementation 'androidx.wear:wear:1.2.0'
+    implementation "androidx.wear.tiles:tiles:1.0.1"
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
-
-    compileOnly "com.google.android.wearable:wearable:${wearableVersion}"
-    implementation "com.google.android.support:wearable:${wearableVersion}"
-    implementation "com.google.android.gms:play-services-wearable:${playServicesWearable}"
-    implementation(name: 'ustwo-clockwise-debug', ext: 'aar')
-    implementation(name: 'wearpreferenceactivity-0.5.0', ext: 'aar')
+    compileOnly "com.google.android.wearable:wearable:$wearable_version"
+    implementation "com.google.android.support:wearable:$wearable_version"
+    implementation "com.google.android.gms:play-services-wearable:$play_services_wearable_version"
+    implementation(files('libs/ustwo-clockwise-debug.aar'))
+    implementation(files('libs/wearpreferenceactivity-0.5.0.aar'))
     implementation('com.github.lecho:hellocharts-library:1.5.8@aar')
 
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-guava:$coroutines_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$coroutines_version"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-
-    testImplementation "junit:junit:$junit_version"
-    testImplementation 'org.json:json:20211205'
-    testImplementation("org.mockito:mockito-core:${mockitoVersion}") {
-        exclude group: 'net.bytebuddy', module: 'byte-buddy'
-        exclude group: 'net.bytebuddy', module: 'byte-buddy-android'
-        exclude group: 'net.bytebuddy', module: 'byte-buddy-agent'
-    }
-    // to fix org.mockito:mockito-core dependency issues, fixed in mockito 3+
-    testImplementation "net.bytebuddy:byte-buddy:$byteBuddyVersion"
-    testImplementation "net.bytebuddy:byte-buddy-android:$byteBuddyVersion"
-    testImplementation "net.bytebuddy:byte-buddy-agent:$byteBuddyVersion"
-
-    testImplementation "joda-time:joda-time:$jodatime_version"
-    testImplementation('com.google.truth:truth:1.1.3') {
-        exclude group: "com.google.guava", module: "guava"
-    }
-    testImplementation "org.skyscreamer:jsonassert:1.5.0"
-    testImplementation "org.hamcrest:hamcrest-all:1.3"
 
     // for old fashioned support-app version
     implementation "com.google.dagger:dagger:$dagger_version"

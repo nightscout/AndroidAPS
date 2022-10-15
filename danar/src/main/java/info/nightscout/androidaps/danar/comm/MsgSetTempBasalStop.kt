@@ -8,7 +8,7 @@ class MsgSetTempBasalStop(
 ) : MessageBase(injector) {
 
     init {
-        SetCommand(0x0403)
+        setCommand(0x0403)
         aapsLogger.debug(LTag.PUMPBTCOMM, "Temp basal stop")
     }
 

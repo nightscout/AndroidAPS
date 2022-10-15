@@ -51,4 +51,10 @@
     <string name="combo_tbr_count">Aantal TBR</string>
     <string name="bolusstopped">Bolus gestopt</string>
     <string name="bolusstopping">Stoppen van bolus</string>
+    <string name="pump_commerror_label">Aantal communicatie fouten</string>
+    <string name="show_comm_error_count_title">Toon aantal communicatie fouten</string>
+    <string name="show_comm_error_count_summary">Toont het aantal fouten tijdens de communicatie met Ruffy. In de meeste gevallen betekent een getal groter dan 0 - Ruffy communicatieproblemen (een herstart kan nodig zijn).</string>
+    <string name="combo_error_display_never">Nooit</string>
+    <string name="combo_error_display_error">Bij een fout</string>
+    <string name="combo_error_display_always">Altijd</string>
 </resources>

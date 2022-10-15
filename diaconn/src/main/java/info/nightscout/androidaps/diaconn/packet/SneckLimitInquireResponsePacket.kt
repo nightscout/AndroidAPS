@@ -35,7 +35,6 @@ class SneckLimitInquireResponsePacket(injector: HasAndroidInjector) : DiaconnG8P
         diaconnG8Pump.maxBolus =  getShortToInt(bufferData).toDouble() / 100
         diaconnG8Pump.maxBolusePerDay =  getShortToInt(bufferData).toDouble() / 100
 
-
         aapsLogger.debug(LTag.PUMPCOMM, "Result --> ${diaconnG8Pump.result}")
         aapsLogger.debug(LTag.PUMPCOMM, "maxBolusePerDay --> ${diaconnG8Pump.maxBolusePerDay}")
         aapsLogger.debug(LTag.PUMPCOMM, "maxBolus --> ${diaconnG8Pump.maxBolus}")

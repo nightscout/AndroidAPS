@@ -37,10 +37,10 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.Round;
-import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.interfaces.ResourceHelper;
 import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import info.nightscout.shared.sharedPreferences.SP;
-import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 /**
  * Created by mike on 28.01.2018.
@@ -169,9 +169,9 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     @Override
     public boolean isThisProfileSet(@NonNull Profile profile) {
         if (!isInitialized())
-            return true; // TODO: not sure what's better. so far TRUE to prevent too many SMS
+            return true;
         if (danaPump.getPumpProfiles() == null)
-            return true; // TODO: not sure what's better. so far TRUE to prevent too many SMS
+            return true;
         int basalValues = danaPump.getBasal48Enable() ? 48 : 24;
         int basalIncrement = danaPump.getBasal48Enable() ? 30 * 60 : 60 * 60;
         for (int h = 0; h < basalValues; h++) {
@@ -267,7 +267,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
         insulin = constraintChecker.applyExtendedBolusConstraints(new Constraint<>(insulin)).value();
         // needs to be rounded
         int durationInHalfHours = Math.max(durationInMinutes / 30, 1);
-        insulin = Round.roundTo(insulin, getPumpDescription().getExtendedBolusStep());
+        insulin = Round.INSTANCE.roundTo(insulin, getPumpDescription().getExtendedBolusStep());
 
         PumpEnactResult result = new PumpEnactResult(getInjector());
         if (danaPump.isExtendedInProgress() && Math.abs(danaPump.getExtendedBolusAmount() - insulin) < getPumpDescription().getExtendedBolusStep()) {
@@ -456,21 +456,21 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
 
     @NonNull @Override
     public Constraint<Double> applyBasalConstraints(Constraint<Double> absoluteRate, @NonNull Profile profile) {
-        absoluteRate.setIfSmaller(getAapsLogger(), danaPump.getMaxBasal(), String.format(getRh().gs(R.string.limitingbasalratio), danaPump.getMaxBasal(), getRh().gs(R.string.pumplimit)), this);
+        absoluteRate.setIfSmaller(getAapsLogger(), danaPump.getMaxBasal(), getRh().gs(R.string.limitingbasalratio, danaPump.getMaxBasal(), getRh().gs(R.string.pumplimit)), this);
         return absoluteRate;
     }
 
     @NonNull @Override
     public Constraint<Integer> applyBasalPercentConstraints(Constraint<Integer> percentRate, @NonNull Profile profile) {
-        percentRate.setIfGreater(getAapsLogger(), 0, String.format(getRh().gs(R.string.limitingpercentrate), 0, getRh().gs(R.string.itmustbepositivevalue)), this);
-        percentRate.setIfSmaller(getAapsLogger(), getPumpDescription().getMaxTempPercent(), String.format(getRh().gs(R.string.limitingpercentrate), getPumpDescription().getMaxTempPercent(), getRh().gs(R.string.pumplimit)), this);
+        percentRate.setIfGreater(getAapsLogger(), 0, getRh().gs(R.string.limitingpercentrate, 0, getRh().gs(R.string.itmustbepositivevalue)), this);
+        percentRate.setIfSmaller(getAapsLogger(), getPumpDescription().getMaxTempPercent(), getRh().gs(R.string.limitingpercentrate, getPumpDescription().getMaxTempPercent(), getRh().gs(R.string.pumplimit)), this);
 
         return percentRate;
     }
 
     @NonNull @Override
     public Constraint<Double> applyBolusConstraints(Constraint<Double> insulin) {
-        insulin.setIfSmaller(getAapsLogger(), danaPump.getMaxBolus(), String.format(getRh().gs(R.string.limitingbolus), danaPump.getMaxBolus(), getRh().gs(R.string.pumplimit)), this);
+        insulin.setIfSmaller(getAapsLogger(), danaPump.getMaxBolus(), getRh().gs(R.string.limitingbolus, danaPump.getMaxBolus(), getRh().gs(R.string.pumplimit)), this);
         return insulin;
     }
 

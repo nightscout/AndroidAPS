@@ -2,10 +2,10 @@ package info.nightscout.androidaps.plugin.general.openhumans
 
 import android.annotation.SuppressLint
 import android.util.Base64
-import info.nightscout.androidaps.plugin.general.openhumans.dagger.BaseUrl
-import info.nightscout.androidaps.plugin.general.openhumans.dagger.ClientId
-import info.nightscout.androidaps.plugin.general.openhumans.dagger.ClientSecret
-import info.nightscout.androidaps.plugin.general.openhumans.dagger.RedirectUrl
+import info.nightscout.androidaps.plugin.general.openhumans.di.BaseUrl
+import info.nightscout.androidaps.plugin.general.openhumans.di.ClientId
+import info.nightscout.androidaps.plugin.general.openhumans.di.ClientSecret
+import info.nightscout.androidaps.plugin.general.openhumans.di.RedirectUrl
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.*
@@ -116,6 +116,7 @@ internal class OpenHumansAPI @Inject constructor(
         if (!response.isSuccessful) throw OHHttpException(response.code, response.message, null)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     private suspend fun Request.await(): Response {
         val call = client.newCall(this)
         return suspendCancellableCoroutine {

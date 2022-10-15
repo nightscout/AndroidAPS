@@ -20,7 +20,7 @@ class MessageHashTableRv2Test : DanaRTestBase() {
         Assert.assertEquals(0xE001, testPacket.command.toLong())
         // try putting another command
         val testMessage = MessageBase(injector)
-        testMessage.SetCommand(0xE005)
+        testMessage.setCommand(0xE005)
         messageHashTableRv2.put(testMessage)
         Assert.assertEquals(0xE005, messageHashTableRv2.findMessage(0xE005).command.toLong())
     }

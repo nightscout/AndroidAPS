@@ -60,14 +60,12 @@
         <item>multicolor</item>
     </string-array>
 
-
     <string-array name="digitalstyle_color_saturation">
         <item>100</item>
         <item>500</item>
         <item>700</item>
         <item>900</item>
     </string-array>
-
 
     <string-array name="digitalstyle_color_opacity_name">
         <item>10%</item>
@@ -93,6 +91,5 @@
         <item>0.9</item>
         <item>1</item>
     </string-array>
-
 
 </resources>

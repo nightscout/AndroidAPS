@@ -79,10 +79,10 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.manager.Om
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.OmnipodAlertUtil;
 import info.nightscout.androidaps.utils.T;
-import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.interfaces.ResourceHelper;
 import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import info.nightscout.shared.sharedPreferences.SP;
-import io.reactivex.subjects.SingleSubject;
+import io.reactivex.rxjava3.subjects.SingleSubject;
 
 @Singleton
 public class AapsOmnipodErosManager {
@@ -291,6 +291,15 @@ public class AapsOmnipodErosManager {
             return new PumpEnactResult(injector).success(false).enacted(false).comment(note);
         }
 
+        // #1963 return synthetic success if pre-activation
+        // to allow profile switch prior to pod activation
+        // otherwise a catch-22
+        if (!podStateManager.getActivationProgress().isCompleted()) {
+            // TODO: i18n string
+            return new PumpEnactResult(injector).success(true).enacted(false).comment("pre" +
+                    "-activation basal change moot");
+        }
+
         PodHistoryEntryType historyEntryType = podStateManager.isSuspended() ? PodHistoryEntryType.RESUME_DELIVERY : PodHistoryEntryType.SET_BASAL_SCHEDULE;
 
         try {
@@ -363,12 +372,14 @@ public class AapsOmnipodErosManager {
 
         boolean beepsEnabled = detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB ? isSmbBeepsEnabled() : isBolusBeepsEnabled();
 
+        EventOverviewBolusProgress.INSTANCE.setT(new EventOverviewBolusProgress.Treatment(detailedBolusInfo.insulin, 0,detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.getId()));
+
         Date bolusStarted;
         try {
             bolusCommandResult = executeCommand(() -> delegate.bolus(PumpType.OMNIPOD_EROS.determineCorrectBolusSize(detailedBolusInfo.insulin), beepsEnabled, beepsEnabled, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB ? null :
                     (estimatedUnitsDelivered, percentage) -> {
                         EventOverviewBolusProgress progressUpdateEvent = EventOverviewBolusProgress.INSTANCE;
-                        progressUpdateEvent.setStatus(getStringResource(R.string.goingtodeliver, detailedBolusInfo.insulin));
+                        progressUpdateEvent.setStatus(getStringResource(R.string.bolus_delivered, estimatedUnitsDelivered, detailedBolusInfo.insulin));
                         progressUpdateEvent.setPercent(percentage);
                         sendEvent(progressUpdateEvent);
                     }));

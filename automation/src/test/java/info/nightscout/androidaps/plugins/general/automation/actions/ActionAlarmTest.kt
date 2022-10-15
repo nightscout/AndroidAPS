@@ -11,7 +11,7 @@ import info.nightscout.androidaps.plugins.general.automation.elements.InputStrin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.TimerUtil
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

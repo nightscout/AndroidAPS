@@ -1,9 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.encoding;
 
-import org.slf4j.Logger;
-
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkCommunicationException;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
+import info.nightscout.shared.logging.AAPSLogger;
 
 
 /**
@@ -51,9 +50,10 @@ public abstract class Encoding4b6bAbstract implements Encoding4b6b {
     }
 
 
-    public void writeError(Logger LOG, byte[] raw, String errorData) {
+    public void writeError(AAPSLogger aapsLogger, byte[] raw, String errorData) {
 
-        LOG.error(String.format("\n=============================================================================\n" + //
+        aapsLogger.error(String.format("\n" +
+                        "=============================================================================\n" + //
                         " Decoded payload length is zero.\n" +
                         " encodedPayload: %s\n" +
                         " errors: %s\n" +
@@ -61,8 +61,6 @@ public abstract class Encoding4b6bAbstract implements Encoding4b6b {
                 ByteUtil.getHex(raw), errorData));
 
         //FabricUtil.createEvent("MedtronicDecode4b6bError", null);
-
-        return;
 
     }
 

@@ -16,7 +16,6 @@ class Session(val authHeader: String?,
     @Volatile
     internal var iterations: Int = 0
 
-
     fun populateHeaders(headers: Headers) {
         if (this.token == null) {
             this.token = headers.get(sessionTokenHeader)

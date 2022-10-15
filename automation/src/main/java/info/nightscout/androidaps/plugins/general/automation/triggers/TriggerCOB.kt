@@ -73,7 +73,7 @@ class TriggerCOB(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyDescription(): String =
         rh.gs(R.string.cobcompared, rh.gs(comparator.value.stringRes), cob.value)
 
-    override fun icon(): Optional<Int?> = Optional.of(R.drawable.ic_cp_bolus_carbs)
+    override fun icon(): Optional<Int> = Optional.of(R.drawable.ic_cp_bolus_carbs)
 
     override fun duplicate(): Trigger = TriggerCOB(injector, this)
 

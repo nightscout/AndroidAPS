@@ -16,10 +16,10 @@ class InputButton() : Element() {
 
     override fun addToLayout(root: LinearLayout) {
         root.addView(
-            Button(root.context).apply {
-                text = text
-                setOnClickListener { runnable?.run() }
-                gravity = Gravity.CENTER_HORIZONTAL
+            Button(root.context).also {
+                it.text = text
+                it.setOnClickListener { runnable?.run() }
+                it.gravity = Gravity.CENTER_HORIZONTAL
             })
     }
 }

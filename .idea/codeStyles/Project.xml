@@ -9,11 +9,15 @@
       <option name="BLANK_LINES_AROUND_BLOCK_WHEN_BRANCHES" value="1" />
       <option name="CODE_STYLE_DEFAULTS" value="KOTLIN_OFFICIAL" />
     </JetCodeStyleSettings>
+    <XML>
+      <option name="XML_TEXT_WRAP" value="0" />
+    </XML>
     <codeStyleSettings language="JAVA">
       <option name="METHOD_ANNOTATION_WRAP" value="0" />
       <option name="FIELD_ANNOTATION_WRAP" value="0" />
     </codeStyleSettings>
     <codeStyleSettings language="XML">
+      <option name="WRAP_ON_TYPING" value="0" />
       <indentOptions>
         <option name="CONTINUATION_INDENT_SIZE" value="4" />
       </indentOptions>

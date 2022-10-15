@@ -53,6 +53,12 @@ interface ActivePlugin {
     val activeSafety: Safety
 
     /**
+     *  Currently selected Safety plugin
+     *  Always IobCobCalculatorPlugin
+     */
+    val activeIobCobCalculator: IobCobCalculator
+
+    /**
      *  List of all registered plugins
      */
     fun getPluginsList(): ArrayList<PluginBase>

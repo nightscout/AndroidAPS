@@ -28,7 +28,6 @@
     <string name="description_overview">현재 Loop 상태와 기본 기능 버튼을 표시합니다.</string>
     <string name="description_persistent_notification">Loop가 어떤 작동하는지에 대한 간략한 개요를 연속 알림으로 보여줍니다.</string>
     <string name="description_profile_local">오프라인에서 사용 가능한 프로파일을 정의하십시오.</string>
-    <string name="description_pump_mdi">다회요법으로 관리하는 사용자를 위한 설정</string>
     <string name="description_pump_virtual">가상용 펌프를 위한 설정(Open Loop)</string>
     <string name="description_sensitivity_aaps">Oref0와 동일한 방법으로 민감도가 계산되지만, 과거 시간을 지정할 수 있습니다. 최소 탄수화물 흡수는 설정에서 최대 탄수화물 흡수 시간으로 부터 계산됩니다.</string>
     <string name="description_sensitivity_oref1">민감도가 과거 8시간의 데이터로 부터 계산됩니다. (흡수되지 않은 경우) 탄수화물은 설정에서 설정된 시간이 지나면 없어집니다. UAM(알리지 않은 음식)도 계산합니다.</string>
@@ -100,7 +99,6 @@
     <string name="overview_calculator_label">계산기</string>
     <string name="constraintapllied">제한 적용!</string>
     <string name="sms_bolus">Bolus:</string>
-    <string name="basal">Basal</string>
     <string name="sms_basal">Basal:</string>
     <string name="changeyourinput">입력값을 변경하세요!</string>
     <string name="configbuilder_bgsource">혈당 출처</string>
@@ -242,11 +240,9 @@
     <string name="wear">워치</string>
     <string name="resend_all_data">모든 데이터 다시 보내기</string>
     <string name="open_settings_on_wear">워치에서 설정 열기</string>
-    <string name="basal_rate">Basal양:</string>
     <string name="basalvaluebelowminimum">Basal값이 최소값 이하입니다. 프로파일이 설정되지 않습니다!</string>
     <string name="sms_actualbg">BG:</string>
     <string name="sms_lastbg">Last BG:</string>
-    <string name="mdi">MDI</string>
     <string name="MM640g">미니메드640g</string>
     <string name="ongoingnotificaction">연속 알림</string>
     <string name="old_data">오래된 데이터</string>
@@ -421,8 +417,6 @@
     <string name="keep_screen_on_summary">안드로이드의 화면이 꺼지는 것을 방지합니다. 전원이 공급되어 있지 않으면 전력소모가 큽니다.</string>
     <string name="sensitivity_warning">Autosense 기능을 켜면 모든 섭취된 탄수화물양을 입력하십시오. 그렇지 않으면 탄수화물 편차(deviations)가 민감도 변화로 잘못 인식될것입니다!!</string>
     <string name="sensitivityweightedaverage">민감도 가중평균</string>
-    <string name="mdtp_ok">네</string>
-    <string name="mdtp_cancel">취소</string>
     <string name="notloadedplugins">모든 프로파일이 로드되지 않았습니다.</string>
     <string name="valuesnotstored">값이 저장되지 않았습니다!</string>
     <string name="ns_localbroadcasts">다른 앱 (예: xDrip)으로 데이터 전송을 활성화합니다. AAPS 또는 NSClient를 두 개 이상 설치 한 경우 활성화하지 마세요!</string>
@@ -460,7 +454,6 @@
     <string name="shortenergy">En</string>
     <string name="shortprotein">단백질</string>
     <string name="shortfat">지방</string>
-    <string name="active"><![CDATA[<Active>]]></string>
     <string name="executingrightnow">명령을 지금 실행합니다.</string>
     <string name="missed_bg_readings">혈당 읽기가 누락되었습니다.</string>
     <string name="raise_notifications_as_android_notifications">경고와 알림시 시스템 알림 사용하기</string>
@@ -594,9 +587,7 @@
     <string name="secondcarbsincrement">2차 탄수화물 증분</string>
     <string name="thirdcarbsincrement">3차 탄수화물 증분</string>
     <string name="cgm">CGM</string>
-    <string name="ns_wifionly">와이파이 연결만 사용하기</string>
     <string name="ns_wifi_ssids">와이파이 SSID</string>
-    <string name="ns_chargingonly">충전중일때만</string>
     <string name="connectionsettings_title">연결 설정</string>
     <string name="ns_wifi_allowedssids">허가된 SSIDs(세미콜론으로 구분)</string>
     <string name="ns_allowroaming">로밍에서 연결 허용</string>
@@ -738,8 +729,6 @@
     <string name="profilenamecontainsdot">프로파일명에 점을 포함하고 있습니다.\n이는 NS에서 지원하지 않습니다.\n프로파일이 NS에 업로드되지 않습니다.</string>
     <string name="low_mark_comment">혈당 정상범위의 하한값(표시 전용)</string>
     <string name="high_mark_comment">혈당 정상범위의 상한값(표시 전용)</string>
-    <string name="age">나이:</string>
-    <string name="weight_label">몸무게:</string>
     <string name="id">ID:</string>
     <string name="submit">확인</string>
     <string name="mostcommonprofile">가장 많이 사용된 프로파일:</string>
@@ -747,7 +736,6 @@
     <string name="invalidage">유효하지 않은 나이입니다</string>
     <string name="invalidweight">유효하지 않은 몸무게입니다</string>
     <string name="invalidpct">유효하지 않은 % 입력</string>
-    <string name="tirformat"><![CDATA[<b>%1$s:</b> Low: <b>%2$02d%%</b> In: <b>%3$02d%%</b> High: <b>%4$02d%%</b>]]></string>
     <string name="average">평균</string>
     <string name="tir">TIR</string>
     <string name="activitymonitor">활동 모니터</string>
@@ -860,4 +848,8 @@
     <string name="sms_timeout_while_wating">직전의 펌프 통신 종료를 기다리는 동안 타임 아웃</string>
     <string name="smscommunicator_another_bolus_in_queue">대기열에 또다른 bolus가 있습니다. 이후에 다시 시도하세요.</string>
     <string name="calculation_in_progress">계산 진행 중</string>
+    <!-- Theme switcher dark and light mode-->
+    <!-- WEAR OS-->
+    <string name="login">로그인</string>
+    <!-- Aidex Cgms -->
 </resources>

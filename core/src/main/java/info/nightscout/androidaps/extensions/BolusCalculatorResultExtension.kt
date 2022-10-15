@@ -2,22 +2,23 @@ package info.nightscout.androidaps.extensions
 
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
-import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.database.entities.BolusCalculatorResult
 import info.nightscout.androidaps.database.entities.TherapyEvent
+import info.nightscout.androidaps.interfaces.Profile
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
 import org.json.JSONObject
 
-fun BolusCalculatorResult.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
+fun BolusCalculatorResult.toJson(isAdd: Boolean, dateUtil: DateUtil, profileFunction: ProfileFunction): JSONObject =
     JSONObject()
         .put("eventType", TherapyEvent.Type.BOLUS_WIZARD.text)
         .put("created_at", dateUtil.toISOString(timestamp))
         .put("isValid", isValid)
         .put("bolusCalculatorResult", Gson().toJson(this))
         .put("date", timestamp)
-        .put("glucose", glucoseValue)
-        .put("units", Constants.MGDL)
+        .put("glucose", Profile.fromMgdlToUnits(glucoseValue, profileFunction.getUnits()))
+        .put("units", profileFunction.getUnits().asText)
         .put("notes", note)
         .also { if (isAdd && interfaceIDs.nightscoutId != null) it.put("_id", interfaceIDs.nightscoutId) }
 
@@ -35,6 +36,7 @@ fun bolusCalculatorResultFromJson(jsonObject: JSONObject): BolusCalculatorResult
                 it.id = 0
                 it.isValid = isValid
                 it.interfaceIDs.nightscoutId = id
+                it.version = 0
             }
     } catch (e: JsonSyntaxException) {
         null

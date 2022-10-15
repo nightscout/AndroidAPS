@@ -12,7 +12,7 @@ class MsgSettingGlucose(
 ) : MessageBase(injector) {
 
     init {
-        SetCommand(0x3209)
+        setCommand(0x3209)
         aapsLogger.debug(LTag.PUMPCOMM, "New message")
     }
 

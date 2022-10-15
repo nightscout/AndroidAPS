@@ -8,12 +8,12 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventBucke
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs
@@ -101,5 +101,12 @@ class BgQualityCheckPlugin @Inject constructor(
             State.FIVE_MIN_DATA -> 0
             State.RECALCULATED  -> R.drawable.ic_baseline_warning_24_yellow
             State.DOUBLED       -> R.drawable.ic_baseline_warning_24_red
+        }
+
+    fun stateDescription(): String =
+        when (state) {
+            State.RECALCULATED -> rh.gs(R.string.a11y_bg_quality_recalculated)
+            State.DOUBLED      -> rh.gs(R.string.a11y_bg_quality_doubles)
+            else               -> ""
         }
 }

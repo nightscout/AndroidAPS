@@ -8,7 +8,7 @@ class MsgPCCommStart constructor(
 ) : MessageBase(injector) {
 
     init {
-        SetCommand(0x3001)
+        setCommand(0x3001)
         aapsLogger.debug(LTag.PUMPCOMM, "New message")
     }
 

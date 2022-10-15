@@ -6,8 +6,8 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.hiya.jacoco-android'
 apply plugin: 'com.google.firebase.crashlytics'
 
-apply from: "${project.rootDir}/gradle/android_dependencies.gradle"
-apply from: "${project.rootDir}/gradle/jacoco_global.gradle"
+apply from: "${project.rootDir}/core/android_dependencies.gradle"
+apply from: "${project.rootDir}/core/jacoco_global.gradle"
 
 repositories {
     mavenCentral()
@@ -97,19 +97,15 @@ def allCommitted = { ->
     return stringBuilder.toString().isEmpty()
 }
 
-tasks.matching { it instanceof Test }.all {
-    testLogging.events = ["failed", "skipped", "started"]
-    // testLogging.events = ["failed", "skipped", "started", "standard_out"] use to display stdout in travis
-    testLogging.exceptionFormat = "full"
-}
-
 android {
+
+    namespace 'info.nightscout.androidaps'
     ndkVersion "21.1.6352462"
 
     defaultConfig {
         multiDexEnabled true
         versionCode 1500
-        version "3.0.0.1"
+        version "3.1.0.3"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "REMOTE", '"' + generateGitRemote() + '"'
@@ -167,9 +163,6 @@ android {
 
 allprojects {
     repositories {
-        flatDir {
-            dirs 'libs'
-        }
     }
 }
 
@@ -207,7 +200,7 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
 }
 
-apply from: "${project.rootDir}/gradle/test_dependencies.gradle"
+apply from: "${project.rootDir}/core/test_dependencies.gradle"
 
 
 /*

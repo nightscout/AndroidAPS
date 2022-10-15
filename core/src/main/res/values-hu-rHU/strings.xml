@@ -6,7 +6,6 @@
     <!--    Constraints-->
     <!--    Dialogs-->
     <!--    BlePreCheck-->
-    <!--    DateUtil-->
     <!--    Protection-->
     <!--    Profile-->
     <!--    ProfileFunction-->
@@ -14,7 +13,6 @@
     <!--    APSResult-->
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
-    <!--    TDD-->
     <!--    Translator-->
     <!--    Command-->
     <!--    PumpEnactResult-->
@@ -28,4 +26,6 @@
     <!-- User Entry -->
     <!-- HardLimits -->
     <!-- Command Queue + readStatus reasons -->
+    <string name="basal">Bázis</string>
+    <!-- Autotune -->
 </resources>

@@ -28,7 +28,6 @@
     <string name="code_compare">Do the codes displayed on this device and on your pump match?</string>
     <string name="insight_pairing">Insight pairing</string>
     <string name="insight_local">Accu-Chek Insight</string>
-    <string name="insight_delivered">%1$.2f U / %2$.2f U delivered</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Tube changed</string>
     <string name="insightpump_shortname">Sight</string>
@@ -47,8 +46,8 @@
     <string name="key_insight_min_recovery_duration" translatable="false">insight_min_recovery_duration</string>
     <string name="key_insight_max_recovery_duration" translatable="false">insight_max_recovery_duration</string>
     <string name="key_insight_disconnect_delay" translatable="false">insight_disconnect_delay</string>
-    <string name="key_insight_lastbolusamount" translatable="false">insight_lastbolusamount</string>
-    <string name="key_insight_lastbolustimestamp" translatable="false">insight_lastbolustimestamp</string>
+    <string name="key_insight_last_bolus_amount" translatable="false">insight_last_bolus_amount</string>
+    <string name="key_insight_last_bolus_timestamp" translatable="false">insight_last_bolus_timestamp</string>
     <string name="disable_vibration_auto">Disable vibrations on automated bolus delivery</string>
     <string name="disable_vibration_auto_summary">For SMB and Temp Basal with TBR emulation (only available with Insight firmware 3.x)</string>
     <string name="timeout_during_handshake">Timeout during handshake - reset bluetooth</string>

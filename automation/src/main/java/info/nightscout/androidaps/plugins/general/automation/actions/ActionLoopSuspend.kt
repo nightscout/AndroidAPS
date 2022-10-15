@@ -40,9 +40,9 @@ class ActionLoopSuspend(injector: HasAndroidInjector) : Action(injector) {
                 UserEntry.Action.SUSPEND, Sources.Automation, title + ": " + rh.gs(R.string.suspendloopforXmin, minutes.getMinutes()),
                 ValueWithUnit.Minute(minutes.getMinutes())
             )
-            callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok))?.run()
+            callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok)).run()
         } else {
-            callback.result(PumpEnactResult(injector).success(true).comment(R.string.alreadysuspended))?.run()
+            callback.result(PumpEnactResult(injector).success(true).comment(R.string.alreadysuspended)).run()
         }
     }
 

@@ -11,7 +11,6 @@ class MsgStatusAPSRv2Test : DanaRTestBase() {
     fun runTest() {
         val packet = MsgStatusAPS_v2(injector)
         // test iob
-        //TODO Find a way to mock treatments plugin
         val testArray = createArray(34, 7.toByte())
         val iob = packet.intFromBuff(testArray, 0, 2) / 100.0
         packet.handleMessage(testArray)

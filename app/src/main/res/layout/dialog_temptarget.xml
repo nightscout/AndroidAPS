@@ -2,11 +2,10 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/StyleDialog"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusableInTouchMode="true"
-    android:minWidth="300dp"
-    android:orientation="vertical"
     tools:context=".dialogs.TempTargetDialog">
 
     <LinearLayout
@@ -15,17 +14,15 @@
         android:orientation="vertical">
 
         <RelativeLayout
+            style="@style/StyleDialogHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@color/dialog_title_background"
-            android:orientation="horizontal"
-            android:padding="5dp">
+            android:layout_gravity="center">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/careportal_temporarytarget"
+                android:importantForAccessibility="no"
                 app:srcCompat="@drawable/ic_temptarget_high" />
 
             <TextView
@@ -33,8 +30,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:text="@string/careportal_temporarytarget"
                 android:textAlignment="center"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -54,6 +51,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/temptarget_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -67,7 +65,8 @@
                 android:id="@+id/temptarget"
                 android:layout_width="130dp"
                 android:layout_height="40dp"
-                android:layout_gravity="center_vertical" />
+                android:layout_marginBottom="2dp"
+                app:customContentDescription="@string/target_label" />
 
             <TextView
                 android:id="@+id/units"
@@ -89,6 +88,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/duration_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -101,7 +101,8 @@
             <info.nightscout.androidaps.utils.ui.MinutesNumberPicker
                 android:id="@+id/duration"
                 android:layout_width="130dp"
-                android:layout_height="40dp" />
+                android:layout_height="40dp"
+                app:customContentDescription="@string/careportal_newnstreatment_duration_label" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -116,30 +117,21 @@
 
         </LinearLayout>
 
-        <LinearLayout
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:hint="@string/reason">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/reasonList"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:width="120dp"
-                android:padding="10dp"
-                android:text="@string/reason"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textStyle="bold" />
+                android:inputType="none" />
 
-            <Spinner
-                android:id="@+id/reason"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp" />
-
-        </LinearLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -148,62 +140,54 @@
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/target_cancel"
-                style="?android:attr/buttonStyle"
+                style="@style/ButtonSmallFontStyle"
                 android:layout_width="0px"
                 android:layout_height="fill_parent"
-                android:layout_marginEnd="-4dp"
+                android:layout_marginEnd="-2dp"
                 android:layout_weight="0.5"
                 android:drawableTop="@drawable/ic_target_cancel"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
                 android:text="@string/cancel"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@color/tempTargetConfirmation"
-                android:textSize="11sp" />
+                android:textColor="?attr/tempTargetConfirmation" />
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/eating_soon"
-                style="?android:attr/buttonStyle"
+                style="@style/ButtonSmallFontStyle"
                 android:layout_width="0px"
                 android:layout_height="fill_parent"
-                android:layout_marginEnd="-4dp"
+                android:layout_marginEnd="-2dp"
                 android:layout_weight="0.5"
                 android:drawableTop="@drawable/ic_target_eatingsoon"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
                 android:text="@string/eatingsoon"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@color/carbs"
-                android:textSize="11sp" />
+                android:textColor="?attr/carbsColor" />
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/activity"
-                style="?android:attr/buttonStyle"
+                style="@style/ButtonSmallFontStyle"
                 android:layout_width="0px"
                 android:layout_height="fill_parent"
-                android:layout_marginEnd="-4dp"
+                android:layout_marginEnd="-2dp"
                 android:layout_weight="0.5"
                 android:drawableTop="@drawable/ic_target_activity"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
                 android:text="@string/activity"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@color/exercise"
-                android:textSize="11sp" />
+                android:textColor="?attr/exerciseColor" />
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/hypo"
-                style="?android:attr/buttonStyle"
+                style="@style/ButtonSmallFontStyle"
                 android:layout_width="0px"
                 android:layout_height="fill_parent"
                 android:layout_weight="0.5"
                 android:drawableTop="@drawable/ic_target_hypo"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
                 android:text="@string/hypo"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@color/low"
-                android:textSize="11sp" />
+                android:textColor="?attr/lowColor" />
 
         </LinearLayout>
         

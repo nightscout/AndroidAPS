@@ -25,7 +25,6 @@
     <string name="description_overview">Wys die huidige staat van jou lus en knoppies vir mees algemene optrede</string>
     <string name="description_persistent_notification">Toon \'n voortgesette kennisgewing met \'n kort oorsig van wat jou lus besig is om te doen</string>
     <string name="description_profile_local">Definieer\'n profiel wat beskikbaar is aflyn.</string>
-    <string name="description_pump_mdi">Pomp integrasie vir mense wat veelvoudige daaglikse inspuitings doen vir hul diabetes terapie/regime</string>
     <string name="description_pump_virtual">Pomp integrasie vir pompe wat nog nie enige drywer het nie (oop lus)</string>
     <string name="description_sensitivity_aaps">Sensitiwiteit word bereken op dieselfde manier as Oref0, maar jy kan die tydsraamwerk spesifiseer in die verlede. Minimale karb absorpsie is bereken uit maks karb absorpsie tyd vanaf voorkeure.</string>
     <string name="description_sensitivity_weighted_average">Sensitiwiteit word bereken as \'n geweegde gemiddelde van dwalinge. Nuwer dwalinge het hoër gewig. Minimale karb absorpsie is bereken uit max karb absorpsie tyd vanaf voorkeure. Hierdie algoritme is die vinnigste om sensitiwiteit veranderinge te volg.</string>
@@ -94,7 +93,6 @@
     <string name="overview_calculator_label">Rekenaar</string>
     <string name="constraintapllied">Beperking toegepas!</string>
     <string name="sms_bolus">Bolus:</string>
-    <string name="basal">Basale</string>
     <string name="sms_basal">Basale:</string>
     <string name="changeyourinput">Verander jou insette!</string>
     <string name="configbuilder_bgsource">BG bron</string>
@@ -181,11 +179,9 @@
     <string name="wear">Wear</string>
     <string name="resend_all_data">Stuur alle Data weer</string>
     <string name="open_settings_on_wear">Oop instellings op Wear</string>
-    <string name="basal_rate">Basale waarde:</string>
     <string name="basalvaluebelowminimum">Basale waarde onder minimum. Profiel nie gestel nie!</string>
     <string name="sms_actualbg">BG:</string>
     <string name="sms_lastbg">Laaste BG:</string>
-    <string name="mdi">MDI</string>
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Voortgesette kennisgewing</string>
     <string name="old_data">OU DATA</string>
@@ -311,8 +307,6 @@
     <string name="keep_screen_on_summary">Verhoed dat Android skerm afskakel. Dit sal baie meer energie vereis wanneer nie in krag prop is nie.</string>
     <string name="sensitivity_warning">Deur Autosense aan te skakel onthou om alle koolhidrate in te voer Andersins sal koolhidrate dwalinge verkeerdelik geïdentifiseer word as sensitiwiteit veranderinge!!</string>
     <string name="sensitivityweightedaverage">Sensitiwiteit GeweegdeGemiddelde</string>
-    <string name="mdtp_ok">OK</string>
-    <string name="mdtp_cancel">Kanselleer</string>
     <string name="notloadedplugins">Nie alle profiele gelaai!</string>
     <string name="valuesnotstored">Waardes nie gestoor!</string>
     <string name="ns_localbroadcasts_title">Aktiveer plaaslike Uitsaai.</string>
@@ -347,7 +341,6 @@
     <string name="shortenergy">En</string>
     <string name="shortprotein">Pr</string>
     <string name="shortfat">Vet</string>
-    <string name="active"><![CDATA[<Active>]]></string>
     <string name="executingrightnow">Opdrag word nou uitgevoer</string>
     <string name="missed_bg_readings">Gemiste BG lesings</string>
     <string name="raise_notifications_as_android_notifications">Gebruik stelsel kennisgewings vir waarskuwings en kennisgewings</string>
@@ -465,9 +458,7 @@
     <string name="secondcarbsincrement">Tweede koolhidrate inkrement</string>
     <string name="thirdcarbsincrement">Derde koolhidrate inkrement</string>
     <string name="cgm">CGM</string>
-    <string name="ns_wifionly">Gebruik slegs WiFi verbinding</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="ns_chargingonly">Slegs wanneer laai</string>
     <string name="connectionsettings_title">Verbindinginstellings</string>
     <string name="ns_wifi_allowedssids">Toegelate SSID\'s (kommapunt geskei)</string>
     <string name="ns_allowroaming">Laat verbindings toe terwyl swerf</string>
@@ -573,4 +564,7 @@
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="overview_show_predictions">Projeksies</string>
     <string name="prime">Prima</string>
+    <!-- Theme switcher dark and light mode-->
+    <!-- WEAR OS-->
+    <!-- Aidex Cgms -->
 </resources>

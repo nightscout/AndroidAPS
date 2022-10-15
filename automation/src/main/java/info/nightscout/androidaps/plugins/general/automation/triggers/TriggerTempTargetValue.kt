@@ -84,7 +84,7 @@ class TriggerTempTargetValue(injector: HasAndroidInjector) : Trigger(injector) {
             rh.gs(if (ttValue.units == GlucoseUnit.MGDL) R.string.temptargetcomparedmgdl else R.string.temptargetcomparedmmol, rh.gs(comparator.value.stringRes), ttValue.value, ttValue.units)
     }
 
-    override fun icon(): Optional<Int?> = Optional.of(R.drawable.ic_keyboard_tab)
+    override fun icon(): Optional<Int> = Optional.of(R.drawable.ic_keyboard_tab)
 
     override fun duplicate(): Trigger = TriggerTempTargetValue(injector, this)
 

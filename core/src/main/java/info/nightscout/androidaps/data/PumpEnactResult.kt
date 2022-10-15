@@ -5,7 +5,7 @@ import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.Round
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import org.json.JSONObject
 import javax.inject.Inject
 

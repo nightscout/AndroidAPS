@@ -5,7 +5,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.event.PodEvent
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.Command
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.Response
-import io.reactivex.Observable
+import io.reactivex.rxjava3.core.Observable
 import java.util.concurrent.CountDownLatch
 import kotlin.reflect.KClass
 

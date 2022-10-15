@@ -5,7 +5,6 @@
     <!-- Omnipod Eros - Keys -->
     <!-- Omnipod Eros - Overview -->
     <!-- Omnipod Eros - Preferences -->
-    <string name="omnipod_eros_preferences_riley_link_configuration">RileyLink konfigūravimas</string>
     <string name="omnipod_eros_preferences_category_notifications">Pranešimai</string>
     <string name="omnipod_eros_preferences_pulse_log_button_enabled">Pod valdymo meniu rodyti mygtuką Pulse log</string>
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Pod valdymo meniu rodyti mygtuką RileyLink Stats</string>

@@ -11,7 +11,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.Ac
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsErosPodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodErosManager
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
 class ErosInsertCannulaViewModel @Inject constructor(

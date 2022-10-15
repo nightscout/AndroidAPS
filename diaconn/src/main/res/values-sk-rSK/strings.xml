@@ -152,4 +152,6 @@
     <string name="diaconn_g8_errorcode_34">Stav LGS je VYP, príkaz VYP je zamietnutý.</string>
     <string name="diaconn_g8_errorcode_35">Začiatok dočasného bazálu nie je možný, ak už beží dočasný bazál</string>
     <string name="diaconn_g8_errorcode_36">Koniec dočasného bazálu nie je možný, ak nebeží dočasný bazál</string>
+    <string name="diaconn_g8_cloudsend_summary">Odoslať protokoly pumpy do Diaconn Cloudu.</string>
+    <string name="diaconn_g8_cloudsend_title">Synchronizácia do Diaconn cloudu</string>
 </resources>

@@ -9,7 +9,6 @@ import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator
 import info.nightscout.androidaps.plugins.general.automation.elements.InputDuration
@@ -19,6 +18,7 @@ import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuil
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerProfilePercent
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.JsonHelper
+import info.nightscout.shared.logging.LTag
 import org.json.JSONObject
 import javax.inject.Inject
 
@@ -50,10 +50,10 @@ class ActionProfileSwitchPercent(injector: HasAndroidInjector) : Action(injector
                 ValueWithUnit.Percent(pct.value.toInt()),
                 ValueWithUnit.Minute(duration.value)
             )
-            callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok))?.run()
+            callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok)).run()
         } else {
             aapsLogger.error(LTag.AUTOMATION, "Final profile not valid")
-            callback.result(PumpEnactResult(injector).success(false).comment(R.string.ok))?.run()
+            callback.result(PumpEnactResult(injector).success(false).comment(R.string.ok)).run()
         }
     }
 

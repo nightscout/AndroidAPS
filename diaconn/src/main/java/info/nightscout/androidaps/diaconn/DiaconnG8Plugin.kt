@@ -18,8 +18,6 @@ import info.nightscout.androidaps.events.EventConfigBuilderChange
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.plannedRemainingMinutes
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.common.ManufacturerType
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
@@ -33,10 +31,12 @@ import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInf
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.TemporaryBasalStorage
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.utils.*
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject
@@ -60,7 +60,8 @@ class DiaconnG8Plugin @Inject constructor(
     private val detailedBolusInfoStorage: DetailedBolusInfoStorage,
     private val temporaryBasalStorage: TemporaryBasalStorage,
     private val fabricPrivacy: FabricPrivacy,
-    private val dateUtil: DateUtil
+    private val dateUtil: DateUtil,
+    private val aapsSchedulers: AapsSchedulers
 ) : PumpPluginBase(PluginDescription()
     .mainType(PluginType.PUMP)
     .fragmentClass(DiaconnG8Fragment::class.java.name)
@@ -84,17 +85,17 @@ class DiaconnG8Plugin @Inject constructor(
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
         disposable.add(rxBus
             .toObservable(EventAppExit::class.java)
-            .observeOn(Schedulers.io())
+            .observeOn(aapsSchedulers.io)
             .subscribe({ context.unbindService(mConnection) }) { fabricPrivacy.logException(it) }
         )
         disposable.add(rxBus
             .toObservable(EventConfigBuilderChange::class.java)
-            .observeOn(Schedulers.io())
+            .observeOn(aapsSchedulers.io)
             .subscribe { diaconnG8Pump.reset() }
         )
         disposable.add(rxBus
             .toObservable(EventDiaconnG8DeviceChange::class.java)
-            .observeOn(Schedulers.io())
+            .observeOn(aapsSchedulers.io)
             .subscribe({ changePump() }) { fabricPrivacy.logException(it) }
         )
         changePump() // load device name
@@ -137,7 +138,6 @@ class DiaconnG8Plugin @Inject constructor(
     override fun isConnected(): Boolean = diaconnG8Service?.isConnected ?: false
     override fun isConnecting(): Boolean = diaconnG8Service?.isConnecting ?: false
     override fun isHandshakeInProgress(): Boolean = false
-
 
     override fun disconnect(reason: String) {
         aapsLogger.debug(LTag.PUMP, "Diaconn G8 disconnect from: $reason")
@@ -223,8 +223,8 @@ class DiaconnG8Plugin @Inject constructor(
     }
 
     override fun isThisProfileSet(profile: Profile): Boolean {
-        if (!isInitialized()) return true // TODO: not sure what's better. so far TRUE to prevent too many SMS
-        if (diaconnG8Pump.pumpProfiles == null) return true // TODO: not sure what's better. so far TRUE to prevent too many SMS
+        if (!isInitialized()) return true
+        if (diaconnG8Pump.pumpProfiles == null) return true
         val basalValues = 24
         val basalIncrement =  60 * 60
         for (h in 0 until basalValues) {
@@ -247,7 +247,6 @@ class DiaconnG8Plugin @Inject constructor(
     override val batteryLevel: Int
         get() = diaconnG8Pump.systemRemainBattery
 
-
     @Synchronized
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(Constraint(detailedBolusInfo.insulin)).value()
@@ -257,7 +256,7 @@ class DiaconnG8Plugin @Inject constructor(
             var carbTimeStamp = detailedBolusInfo.carbsTimestamp ?: detailedBolusInfo.timestamp
             if (carbTimeStamp == detailedBolusInfo.timestamp) carbTimeStamp -= T.mins(1).msecs() // better set 1 min back to prevents clash with insulin
             detailedBolusInfoStorage.add(detailedBolusInfo) // will be picked up on reading history
-            val t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB)
+            val t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.id)
             var connectionOK = false
             if (detailedBolusInfo.insulin > 0 || carbs > 0) connectionOK = diaconnG8Service?.bolus(detailedBolusInfo.insulin, carbs.toInt(), carbTimeStamp, t)
                 ?: false
@@ -541,7 +540,7 @@ class DiaconnG8Plugin @Inject constructor(
     override fun executeCustomAction(customActionType: CustomActionType) {}
     override fun canHandleDST(): Boolean = false
 
-    fun isBatteryChangeLoggingEnabled():Boolean {
+    override fun isBatteryChangeLoggingEnabled():Boolean {
         return sp.getBoolean(R.string.key_diaconn_g8_logbatterychange, false)
     }
 

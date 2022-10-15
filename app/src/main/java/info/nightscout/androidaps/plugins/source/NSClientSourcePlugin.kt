@@ -25,7 +25,7 @@ import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.XDripBroadcast
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONObject
 import javax.inject.Inject
@@ -115,11 +115,11 @@ class NSClientSourcePlugin @Inject constructor(
         @Suppress("SpellCheckingInspection")
         override fun doWork(): Result {
             var ret = Result.success()
-
-            if (!nsClientSourcePlugin.isEnabled() && !sp.getBoolean(R.string.key_ns_receive_cgm, false)) return Result.success(workDataOf("Result" to "Sync not enabled"))
-
             val sgvs = dataWorker.pickupJSONArray(inputData.getLong(DataWorker.STORE_KEY, -1))
                 ?: return Result.failure(workDataOf("Error" to "missing input data"))
+            xDripBroadcast.sendSgvs(sgvs)
+            if (!nsClientSourcePlugin.isEnabled() && !sp.getBoolean(R.string.key_ns_receive_cgm, false))
+                return Result.success(workDataOf("Result" to "Sync not enabled"))
 
             try {
                 var latestDateInReceivedData: Long = 0

@@ -12,8 +12,8 @@ fun ColorGroup.colorId(): Int {
         ColorGroup.Loop             -> R.color.loopClosed
         ColorGroup.Careportal       -> R.color.high
         ColorGroup.Pump             -> R.color.iob
-        ColorGroup.Aaps             -> R.color.defaulttext
-        else                        -> R.color.defaulttext
+        ColorGroup.Aaps             -> R.color.defaultText
+        else                        -> R.color.defaultText
     }
 }
 

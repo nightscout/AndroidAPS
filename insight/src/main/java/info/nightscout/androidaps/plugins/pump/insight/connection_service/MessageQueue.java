@@ -6,6 +6,7 @@ import java.util.List;
 
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage;
 
+@SuppressWarnings({"unchecked"})
 public class MessageQueue {
 
     MessageRequest activeRequest;

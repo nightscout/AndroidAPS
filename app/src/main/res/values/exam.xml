@@ -104,11 +104,11 @@
     <string name="troubleshooting_wheretoask">Where can you look for help with AndroidAPS?</string>
     <string name="troubleshooting_fb">You can ask for advice in the AndroidAPS Users Facebook group.</string>
     <string name="troubleshooting_wiki">You should read (and re-read) the AndroidAPS documentation.</string>
-    <string name="troubleshooting_gitter">You can ask for advice and log technical problems or issues in the AndroidAPS Gitter room.</string>
+    <string name="troubleshooting_gitter">You can ask for advice and log technical problems or issues in the AndroidAPS Discord.</string>
     <string name="troubleshooting_yourendo">You should ask your diabetes clinic/endocrinologist.</string>
     <string name="troubleshooting_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
-    <string name="troubleshooting_hint3">https://gitter.im/MilosKozak/AndroidAPS</string>
+    <string name="troubleshooting_hint3">https://discord.gg/4fQUWHZ4Mw</string>
     <string name="insulin_label">Insulin Plugins</string>
     <string name="insulin_ultrarapid">Which insulin should you use with the Ultra-Rapid Oref plugin?</string>
     <string name="insulin_fiasp">Fiasp®</string>
@@ -123,6 +123,7 @@
     <string name="sensitivity_cannula">Logging a cannula change will reset Autosens ratio back to 100%.</string>
     <string name="sensitivity_time">Some of the plugin options have configurable time ranges that can be set by the user.</string>
     <string name="sensitivity_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Sensitivity-detection-and-COB.html</string>
+    <string name="sensitivity_hint2">https://androidaps.readthedocs.io/en/latest/Usage/Open-APS-features.html?highlight=Autosens#autosens</string>
     <string name="wrongcarbs_label">Carb Entry Errors</string>
     <string name="wrongcarbs_whattodo">What should you do if you’ve made an incorrect carb entry?</string>
     <string name="wrongcarbs_treatmentstab">Delete the incorrect entry in Treatments and enter the correct new carb value.</string>
@@ -135,8 +136,20 @@
     <string name="wronginsulin_compare">Compare values in AndroidAPS and pump history (if pump supports this).</string>
     <string name="wronginsulin_prime">Bolus a proportion of your calculated ‘missed’ insulin by either syringe/pen or using a prime.</string>
     <string name="wronginsulin_donothing">Do nothing and allow AndroidAPS to correct any resulting high blood glucose level.</string>
+    <string name="cob_label">Carbs on Board (COB)</string>
+    <string name="cob_question">How changing ISF value affects COB calculation?</string>
+    <string name="cob_longer">Increasing ISF will take absorbing carbs a longer time</string>
+    <string name="cob_shorter">Increasing ISF will take absorbing carbs a shorter time</string>
+    <string name="cob_no_effect">Increasing ISF will not affect calculated carbs absorption</string>
+    <string name="cob2_question">How changing IC value affects COB calculation?</string>
+    <string name="cob2_longer">Increasing IC will take absorbing carbs a longer time</string>
+    <string name="cob2_shorter">Increasing IC will take absorbing carbs a shorter time</string>
+    <string name="cob2_no_effect">Increasing IC will not affect calculated carbs absorption</string>
+    <string name="cob3_question">How changing profile percentage affects COB calculation?</string>
+    <string name="cob3_longer">Setting profile to 150% will take absorbing carbs a longer time</string>
+    <string name="cob3_shorter">Setting profile to 150% will take absorbing carbs a shorter time</string>
+    <string name="cob3_no_effect">Setting profile to 150% will not affect calculated carbs absorption</string>
     <string name="iob_label">Insulin on Board (IOB)</string>
-    <string name="iob_which">Check all the correct answers.</string>
     <string name="iob_value">IOB value is affected by issued temporary basals.</string>
     <string name="iob_hightemp">High temp basal will not be given when your blood sugar is below target.</string>
     <string name="iob_negiob">Negative IOB for a substantial period in the absence of exercise suggests your profile is too strong and less insulin is needed in your settings.</string>

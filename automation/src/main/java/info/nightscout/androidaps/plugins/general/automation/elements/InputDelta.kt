@@ -8,7 +8,7 @@ import android.widget.LinearLayout
 import android.widget.Spinner
 import androidx.annotation.StringRes
 import info.nightscout.androidaps.automation.R
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.ui.NumberPicker
 import java.text.DecimalFormat
 

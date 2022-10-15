@@ -12,7 +12,7 @@ class MsgInitConnStatusBolus(
 ) : MessageBase(injector) {
 
     init {
-        SetCommand(0x0302)
+        setCommand(0x0302)
         aapsLogger.debug(LTag.PUMPCOMM, "New message")
     }
 

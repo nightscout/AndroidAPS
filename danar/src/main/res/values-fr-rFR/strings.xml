@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="unsupported_action_in_pump">Action non prise en charge par la pompe. Utilisez uniquement l’interface AndroidAPS!</string>
+</resources>

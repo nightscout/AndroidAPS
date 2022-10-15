@@ -14,6 +14,6 @@
         android:paddingEnd="5dp"
         android:text="@string/password_preferences_decrypt_prompt"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/colorAccent" />
+        android:textColor="?android:colorAccent" />
 
 </LinearLayout>

@@ -28,7 +28,6 @@
     <string name="description_overview">Afişează starea curentă a buclei şi butoanele pentru cele mai folosite acţiuni</string>
     <string name="description_persistent_notification">Afişează o notificare activă cu o scurtă descriere referitoare la starea buclei</string>
     <string name="description_profile_local">Definire profil care să fie valabil offline.</string>
-    <string name="description_pump_mdi">Integrare cu pompă virtuală, pentru persoanele ce folosesc terapia cu pen</string>
     <string name="description_pump_virtual">Integrare cu pompele ce nu au încă un driver software disponibil (Buclă Deschisă)</string>
     <string name="description_sensitivity_aaps">Sensibilitatea este calculată la fel ca în algoritmul Oref0, dar se poate specifica un interval de timp în trecut. Absorbția minimă de carbohidrați este calculată din parametrul echivalent, stabilit în preferințe.</string>
     <string name="description_sensitivity_oref1">Sensibilitatea este calculată folosind datele din ultimele 8 sau 24 ore (se alege cea mai mare din ele), iar carbohidrații (când nu sunt absorbiți) sunt ignorați după timpul specificat în preferințe. Plugin-ul calculează și UAM.</string>
@@ -102,7 +101,6 @@
     <string name="overview_calculator_label">Calculator</string>
     <string name="constraintapllied">Limitare aplicată!</string>
     <string name="sms_bolus">Bolus:</string>
-    <string name="basal">Rate bazale</string>
     <string name="sms_basal">Bazală:</string>
     <string name="changeyourinput">Schimbați ceea ce ați introdus!</string>
     <string name="configbuilder_bgsource">Sursă glicemie</string>
@@ -246,11 +244,9 @@
     <string name="wear">Ceas</string>
     <string name="resend_all_data">Retrimite toate datele</string>
     <string name="open_settings_on_wear">Deschide setările pe Wear</string>
-    <string name="basal_rate">Rată bazală:</string>
     <string name="basalvaluebelowminimum">Valoarea bazalei este sub minimul permis. Profilul nu este setat!</string>
     <string name="sms_actualbg">Glicemie:</string>
     <string name="sms_lastbg">Ultima glicemie:</string>
-    <string name="mdi">MDI</string>
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Notificare activă</string>
     <string name="old_data">DATE VECHI</string>
@@ -427,8 +423,6 @@
     <string name="keep_screen_on_summary">Nu permite telefonului să stingă ecranul. Când este activă, această opțiune consumă foarte multă baterie atunci când telefonul nu este la încărcat.</string>
     <string name="sensitivity_warning">Trebuie introduși toți carbo la pornirea Autosens. În caz contrar, acțiunea carbo va fi percepută ca schimbare a sensibilității!</string>
     <string name="sensitivityweightedaverage">Sensibilitate estimată prin mediere</string>
-    <string name="mdtp_ok">OK</string>
-    <string name="mdtp_cancel">Renunță</string>
     <string name="notloadedplugins">Nu s-au încărcat toate profilurile!</string>
     <string name="valuesnotstored">Nu s-au salvat valorile!</string>
     <string name="ns_localbroadcasts">Activați transmisiunile către alte aplicații (cum ar fi xDrip+). Nu activați dacă aveți mai mult de o instanță de AAPS sau NSClient instalat!</string>
@@ -466,7 +460,6 @@
     <string name="shortenergy">En</string>
     <string name="shortprotein">Pr</string>
     <string name="shortfat">Grăsime</string>
-    <string name="active"><![CDATA[<Activ>]]></string>
     <string name="executingrightnow">Se execută comanda chiar acum</string>
     <string name="missed_bg_readings">Lipsesc date glicemie</string>
     <string name="raise_notifications_as_android_notifications">Se folosesc notificările sistemului pentru alerte și notificări</string>
@@ -603,9 +596,7 @@
     <string name="secondcarbsincrement">Al doilea increment de carbohidrați</string>
     <string name="thirdcarbsincrement">Al treilea increment de carbohidrați</string>
     <string name="cgm">CGM</string>
-    <string name="ns_wifionly">Folosește doar conexiune WiFi</string>
     <string name="ns_wifi_ssids">SSID WiFi</string>
-    <string name="ns_chargingonly">Doar când se încarcă</string>
     <string name="connectionsettings_title">Setări conexiune</string>
     <string name="ns_wifi_allowedssids">SSIDuri permise (separare prin punct și virgulă)</string>
     <string name="ns_allowroaming">Permite conexiuni în roaming</string>
@@ -640,7 +631,6 @@
     <string name="needsystemwindowpermission">Aplicația are nevoie de permisiune la fereastra sistemului pentru a afișa notificări</string>
     <string name="needlocationpermission">Aplicația are nevoie sa acceseze locația pentru scanare Bluetooth și identificare WiFi</string>
     <string name="needstoragepermission">Aplicația are nevoie de permisiunea de a accesa unitatea de stocare pentru a scrie fișierele registru și pentru a exporta setările</string>
-    <string name="needconnectpermission">Aplicația are nevoie de permisiune Bluetooth</string>
     <string name="request">Cerință</string>
     <string name="open_navigation">Afișare navigație</string>
     <string name="close_navigation">Închidere navigație</string>
@@ -757,8 +747,6 @@
     <string name="profilenamecontainsdot">Numele profilului conține puncte.\nAcest lucru nu este permis de NS.\nProfilul nu a fost înregistrat în NS.</string>
     <string name="low_mark_comment">Valoarea inferioară a intervalului țintă (doar afișare)</string>
     <string name="high_mark_comment">Valoarea superioară a intervalului țintă (doar afișare)</string>
-    <string name="age">Vârstă:</string>
-    <string name="weight_label">Greutate:</string>
     <string name="id">ID:</string>
     <string name="submit">Trimiteți</string>
     <string name="mostcommonprofile">Cel mai frecvent profil:</string>
@@ -766,7 +754,6 @@
     <string name="invalidage">Valoare vârstă invalidă</string>
     <string name="invalidweight">Valoare greutate invalidă</string>
     <string name="invalidpct">Intrare % invalidă</string>
-    <string name="tirformat"><![CDATA[<b>%1$s:</b> Hipo: <b>%2$02d%%</b> Normal: <b>%3$02d%%</b> Hiper: <b>%4$02d%%</b>]]></string>
     <string name="average">Medie</string>
     <string name="tir">Timp în țintă</string>
     <string name="activitymonitor">Monitorizare activitate</string>
@@ -905,4 +892,10 @@
     <string name="identification">Identificare (email, FB sau Discord etc)</string>
     <string name="identification_not_set">Identificarea nu este setată în modul dezvoltator</string>
     <string name="not_available_full">Nu este disponibil</string>
+    <!-- Theme switcher dark and light mode-->
+    <!-- WEAR OS-->
+    <string name="confirm_remove_multiple_items">Sigur vrei să elimini %1$d element(e)</string>
+    <string name="sort_label">Sortează</string>
+    <string name="login">Autentificare</string>
+    <!-- Aidex Cgms -->
 </resources>

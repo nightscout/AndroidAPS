@@ -25,7 +25,7 @@ import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.XDripBroadcast
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
@@ -149,10 +149,14 @@ class DexcomPlugin @Inject constructor(
                             sourceSensor = sourceSensor
                         )
                 }
-                val sensorStartTime = if (sp.getBoolean(R.string.key_dexcom_lognssensorchange, false) && bundle.containsKey("sensorInsertionTime")) {
+                var sensorStartTime = if (sp.getBoolean(R.string.key_dexcom_lognssensorchange, false) && bundle.containsKey("sensorInsertionTime")) {
                     bundle.getLong("sensorInsertionTime", 0) * 1000
                 } else {
                     null
+                }
+                // check start time validity
+                sensorStartTime?.let {
+                    if (abs(it - now) > T.months(1).msecs() || it > now) sensorStartTime = null
                 }
                 repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, calibrations, sensorStartTime))
                     .doOnError {

@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.pump.common.utils;
 
-import android.util.Log;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -19,7 +17,7 @@ public class DateTimeUtilUTest {
 
         Assert.assertEquals(65, aTechDateDifferenceAsMinutes);
 
-        Log.d("DateTimeUtilUTest", "Time difference: " + aTechDateDifferenceAsMinutes);
+        //Log.d("DateTimeUtilUTest", "Time difference: " + aTechDateDifferenceAsMinutes);
 
     }
 }

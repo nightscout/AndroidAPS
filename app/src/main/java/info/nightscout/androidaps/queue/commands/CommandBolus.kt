@@ -26,7 +26,7 @@ class CommandBolus(
         val r = activePlugin.activePump.deliverTreatment(detailedBolusInfo)
         if (r.success) carbsRunnable.run()
         BolusProgressDialog.bolusEnded = true
-        rxBus.send(EventDismissBolusProgressIfRunning(r, detailedBolusInfo.timestamp))
+        rxBus.send(EventDismissBolusProgressIfRunning(r, detailedBolusInfo.id))
         aapsLogger.debug(LTag.PUMPQUEUE, "Result success: ${r.success} enacted: ${r.enacted}")
         callback?.result(r)?.run()
     }

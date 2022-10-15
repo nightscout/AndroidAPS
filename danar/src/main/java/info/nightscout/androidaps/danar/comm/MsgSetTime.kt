@@ -9,8 +9,8 @@ class MsgSetTime(
 ) : MessageBase(injector) {
 
     init {
-        SetCommand(0x330a)
-        AddParamDateTimeReversed(time)
+        setCommand(0x330a)
+        addParamDateTimeReversed(time)
         aapsLogger.debug(LTag.PUMPCOMM, "New message: time:" + dateUtil.dateAndTimeString(time))
     }
 

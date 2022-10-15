@@ -14,7 +14,7 @@ class MsgInitConnStatusTime_k(
 ) : MessageBase(injector) {
 
     init {
-        SetCommand(0x0301)
+        setCommand(0x0301)
         aapsLogger.debug(LTag.PUMPCOMM, "New message")
     }
 

@@ -104,11 +104,9 @@
     <string name="troubleshooting_wheretoask">Var kan du leta efter hjälp med AndroidAPS?</string>
     <string name="troubleshooting_fb">Du kan be om råd i Facebookgruppen AndroidAPS Users.</string>
     <string name="troubleshooting_wiki">Du bör läsa (och läsa om) AndroidAPS dokumentation.</string>
-    <string name="troubleshooting_gitter">Du kan be om råd och logga tekniska problem eller problem i AndroidAPS Gitter-rum.</string>
     <string name="troubleshooting_yourendo">Du bör fråga din diabetesklinik/endokrinolog.</string>
     <string name="troubleshooting_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
-    <string name="troubleshooting_hint3">https://gitter.im/MilosKozak/AndroidAPS</string>
     <string name="insulin_label">Insulininställningar</string>
     <string name="insulin_ultrarapid">Vilket insulin ska du använda med insticksprogrammet Ultra-Rapid Oref?</string>
     <string name="insulin_fiasp">Fiasp®</string>
@@ -136,7 +134,6 @@
     <string name="wronginsulin_prime">Ge en bolus med en del av det insulin du saknar antingen med penna eller genom att använda förfyllningsfunktionen.</string>
     <string name="wronginsulin_donothing">Gör ingenting och låt AndroidAPS korrigera eventuella höga blodglukosnivåer.</string>
     <string name="iob_label">Aktivt Insulin (IOB)</string>
-    <string name="iob_which">Markera ett eller flera alternativ.</string>
     <string name="iob_value">IOB-värdet påverkas av temp basaler.</string>
     <string name="iob_hightemp">Hög temp basal kommer inte att ges när ditt BG-värde är under målet.</string>
     <string name="iob_negiob">Negativ IOB under en längre period även om du inte motionerat, tyder på att din profil ger för mycket insulin.</string>

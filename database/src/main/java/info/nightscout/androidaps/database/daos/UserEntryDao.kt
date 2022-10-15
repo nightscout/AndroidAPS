@@ -6,7 +6,7 @@ import androidx.room.Query
 import info.nightscout.androidaps.database.TABLE_USER_ENTRY
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Single
 
 @Dao
 interface UserEntryDao {

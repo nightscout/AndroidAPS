@@ -104,11 +104,11 @@
     <string name="troubleshooting_wheretoask">Où pouvez-vous chercher de l\'aide avec AndroidAPS ?</string>
     <string name="troubleshooting_fb">Vous pouvez demander des conseils dans le groupe Facebook des utilisateurs AndroidAPS.</string>
     <string name="troubleshooting_wiki">Vous devez lire (et relire) la documentation AndroidAPS.</string>
-    <string name="troubleshooting_gitter">Vous pouvez demander des conseils et signaler des problèmes techniques ou des défauts dans forum Gitter AndroidAPS.</string>
+    <string name="troubleshooting_gitter">Vous pouvez demander des conseils et signaler des problèmes techniques ou des défauts dans le Discord d\'AndroidAPS.</string>
     <string name="troubleshooting_yourendo">Vous devez demander à votre diabétologue/professionnels de santés.</string>
     <string name="troubleshooting_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/fr/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
-    <string name="troubleshooting_hint3">https://gitter.im/MilosKozak/AndroidAPS</string>
+    <string name="troubleshooting_hint3">https://discord.gg/4fQUWHZ4Mw</string>
     <string name="insulin_label">Plugins Insuline</string>
     <string name="insulin_ultrarapid">Quelle insuline devez-vous utiliser avec le plugin Ultra-Rapid-Oref?</string>
     <string name="insulin_fiasp">Fiasp®</string>
@@ -123,6 +123,7 @@
     <string name="sensitivity_cannula">Le changement de canule réinitialisera le ratio Autosens à 100%.</string>
     <string name="sensitivity_time">Certaines des options du plugin ont des plages de temps configurables qui peuvent être définies par l\'utilisateur.</string>
     <string name="sensitivity_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Sensitivity-detection-and-COB.html</string>
+    <string name="sensitivity_hint2">https://androidaps.readthedocs.io/fr/latest/Usage/Open-APS-features.html?highlight=Autosens#autosens</string>
     <string name="wrongcarbs_label">Entrées de glucides erronées</string>
     <string name="wrongcarbs_whattodo">Que devez-vous faire si vous avez renseigné une valeur erronée de glucides ?</string>
     <string name="wrongcarbs_treatmentstab">Supprimez l\'entrée incorrecte dans les Traitements et entrez la nouvelle valeur correcte de glucides.</string>
@@ -135,8 +136,20 @@
     <string name="wronginsulin_compare">Comparer les valeurs dans l\'historique d\'AndroidAPS et de la pompe (si la pompe le permet).</string>
     <string name="wronginsulin_prime">Faites un bolus du montant de votre insuline calculée « manquante » soit par seringue / stylo ou en utilisant un amorçage.</string>
     <string name="wronginsulin_donothing">Ne faites rien et laissez AndroidAPS corriger tout taux élevé de glycémie qui en résulte.</string>
+    <string name="cob_label">Glucides Actifs (GA)</string>
+    <string name="cob_question">Comment le changement de la SI impacte le calcul des GA ?</string>
+    <string name="cob_longer">Augmenter la SI rendra l\'absorption des glucides plus longue</string>
+    <string name="cob_shorter">L\'augmentation de la SI réduira le temps d\'absorption des glucides</string>
+    <string name="cob_no_effect">L\'augmentation de la SI n\'affectera pas les calculs de l\'absorption des glucides</string>
+    <string name="cob2_question">Comment le changement de G/I impacte le calcul des GA ?</string>
+    <string name="cob2_longer">L\'augmentation de G/I rendra l\'absorption des glucides plus longue</string>
+    <string name="cob2_shorter">L\'augmentation de G/I réduira le temps d\'absorption des glucides</string>
+    <string name="cob2_no_effect">L\'augmentation de G/I n\'impactera pas l\'absorption des glucides calculés</string>
+    <string name="cob3_question">Comment le changement du pourcentage de profil impacte le calcul des GA ?</string>
+    <string name="cob3_longer">Définir le profil à 150% rendra l\'absorption des glucides plus longue</string>
+    <string name="cob3_shorter">Définir le profil à 150% réduira le temps d\'absorption des glucides</string>
+    <string name="cob3_no_effect">Définir le profil à 150% n\'impactera pas le calcul de l\'absorption des glucides</string>
     <string name="iob_label">Insuline Active (IA)</string>
-    <string name="iob_which">Sélectionnez toutes les bonnes réponses.</string>
     <string name="iob_value">La valeur de l\'IA est impactée par les débits de basal temporaires émis.</string>
     <string name="iob_hightemp">Une basale temp haute ne sera pas donnée quand votre glycémie est en dessous de la cible.</string>
     <string name="iob_negiob">Une IA négative pendant une période significative en l\'absence d\'exercice indique que votre profil est trop fort et qu\'il faut moins d\'insuline dans vos paramètres.</string>

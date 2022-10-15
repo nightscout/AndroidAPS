@@ -53,44 +53,44 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
 
     private fun groupForCommandType(type: OmnipodCommandType): PumpHistoryEntryGroup {
         return when (type) {
-            OmnipodCommandType.INITIALIZE_POD         ->
+            OmnipodCommandType.INITIALIZE_POD ->
                 PumpHistoryEntryGroup.Prime
-            OmnipodCommandType.INSERT_CANNULA         ->
+            OmnipodCommandType.INSERT_CANNULA ->
                 PumpHistoryEntryGroup.Prime
-            OmnipodCommandType.DEACTIVATE_POD         ->
+            OmnipodCommandType.DEACTIVATE_POD ->
                 PumpHistoryEntryGroup.Prime
-            OmnipodCommandType.DISCARD_POD            ->
+            OmnipodCommandType.DISCARD_POD ->
                 PumpHistoryEntryGroup.Prime
 
             OmnipodCommandType.CANCEL_TEMPORARY_BASAL ->
                 PumpHistoryEntryGroup.Basal
-            OmnipodCommandType.SET_BASAL_PROFILE      ->
+            OmnipodCommandType.SET_BASAL_PROFILE ->
                 PumpHistoryEntryGroup.Basal
-            OmnipodCommandType.SET_TEMPORARY_BASAL    ->
+            OmnipodCommandType.SET_TEMPORARY_BASAL ->
                 PumpHistoryEntryGroup.Basal
-            OmnipodCommandType.RESUME_DELIVERY        ->
+            OmnipodCommandType.RESUME_DELIVERY ->
                 PumpHistoryEntryGroup.Basal
-            OmnipodCommandType.SUSPEND_DELIVERY       ->
+            OmnipodCommandType.SUSPEND_DELIVERY ->
                 PumpHistoryEntryGroup.Basal
 
-            OmnipodCommandType.SET_BOLUS              ->
+            OmnipodCommandType.SET_BOLUS ->
                 PumpHistoryEntryGroup.Bolus
-            OmnipodCommandType.CANCEL_BOLUS           ->
+            OmnipodCommandType.CANCEL_BOLUS ->
                 PumpHistoryEntryGroup.Bolus
 
-            OmnipodCommandType.ACKNOWLEDGE_ALERTS     ->
+            OmnipodCommandType.ACKNOWLEDGE_ALERTS ->
                 PumpHistoryEntryGroup.Alarm
-            OmnipodCommandType.CONFIGURE_ALERTS       ->
+            OmnipodCommandType.CONFIGURE_ALERTS ->
                 PumpHistoryEntryGroup.Alarm
-            OmnipodCommandType.PLAY_TEST_BEEP         ->
+            OmnipodCommandType.PLAY_TEST_BEEP ->
                 PumpHistoryEntryGroup.Alarm
 
-            OmnipodCommandType.GET_POD_STATUS         ->
+            OmnipodCommandType.GET_POD_STATUS ->
                 PumpHistoryEntryGroup.Configuration
-            OmnipodCommandType.SET_TIME               ->
+            OmnipodCommandType.SET_TIME ->
                 PumpHistoryEntryGroup.Configuration
 
-            OmnipodCommandType.READ_POD_PULSE_LOG     ->
+            OmnipodCommandType.READ_POD_PULSE_LOG ->
                 PumpHistoryEntryGroup.Unknown
         }
     }
@@ -209,11 +209,11 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
         private fun setTextViewColor(check_result: Boolean, textview: TextView, record: HistoryRecord) {
             if (check_result && !record.isSuccess()) {
                 // Record says not success
-                textview.setTextColor(android.graphics.Color.YELLOW)
+                textview.setTextColor(rh.gac(textview.context, R.attr.omniYellowColor))
                 return
             }
             // On success set color
-            val textColor = when (record.commandType) {
+            val textColorAttr = when (record.commandType) {
                 // Operational
                 OmnipodCommandType.INITIALIZE_POD,
                 OmnipodCommandType.CONFIGURE_ALERTS,
@@ -222,26 +222,26 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
                 OmnipodCommandType.DISCARD_POD,
                 OmnipodCommandType.SUSPEND_DELIVERY,
                 OmnipodCommandType.RESUME_DELIVERY,
-                OmnipodCommandType.SET_BASAL_PROFILE   -> {
-                    android.graphics.Color.CYAN
+                OmnipodCommandType.SET_BASAL_PROFILE -> {
+                    R.attr.omniCyanColor
                 }
                 // User action
                 OmnipodCommandType.PLAY_TEST_BEEP,
                 OmnipodCommandType.ACKNOWLEDGE_ALERTS,
-                OmnipodCommandType.CANCEL_BOLUS        -> {
-                    android.graphics.Color.GREEN
+                OmnipodCommandType.CANCEL_BOLUS -> {
+                    R.attr.omniCyanColor
                 }
                 // Insulin treatment
                 OmnipodCommandType.SET_BOLUS,
                 OmnipodCommandType.SET_TEMPORARY_BASAL -> {
-                    android.graphics.Color.WHITE
+                    R.attr.defaultTextColor
                 }
 
-                else                                   ->
+                else ->
                     // Other
-                    android.graphics.Color.LTGRAY
+                    R.attr.omniGrayColor
             }
-            textview.setTextColor(textColor)
+            textview.setTextColor(rh.gac(textview.context, textColorAttr))
         }
 
         private fun setType(record: HistoryRecord, typeView: TextView) {
@@ -265,7 +265,7 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
                     }
                 }
 
-                OmnipodCommandType.SET_BOLUS           -> {
+                OmnipodCommandType.SET_BOLUS -> {
                     val bolus = historyEntry.record as BolusRecord
                     bolus.let {
                         rh.gs(R.string.omnipod_common_history_bolus_value, it.amout)
@@ -275,12 +275,12 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
                 OmnipodCommandType.SET_BASAL_PROFILE,
                 OmnipodCommandType.SET_TIME,
                 OmnipodCommandType.INSERT_CANNULA,
-                OmnipodCommandType.RESUME_DELIVERY     -> {
+                OmnipodCommandType.RESUME_DELIVERY -> {
                     val basal = historyEntry.record as BasalValuesRecord
                     ProfileUtil.getBasalProfilesDisplayable(basal.segments.toTypedArray(), PumpType.OMNIPOD_DASH)
                 }
 
-                else                                   ->
+                else ->
                     ""
             }
             // Set some color
@@ -303,12 +303,12 @@ class DashPodHistoryActivity : NoSplashAppCompatActivity() {
         return when {
             historyEntry.initialResult == InitialResult.FAILURE_SENDING ->
                 R.string.omnipod_dash_failed_to_send
-            historyEntry.initialResult == InitialResult.NOT_SENT        ->
+            historyEntry.initialResult == InitialResult.NOT_SENT ->
                 R.string.omnipod_dash_command_not_sent
             historyEntry.initialResult == InitialResult.SENT &&
-                historyEntry.resolvedResult == ResolvedResult.FAILURE   ->
+                historyEntry.resolvedResult == ResolvedResult.FAILURE ->
                 R.string.omnipod_dash_command_not_received_by_the_pod
-            else                                                        ->
+            else ->
                 R.string.omnipod_dash_unknown
         }
     }

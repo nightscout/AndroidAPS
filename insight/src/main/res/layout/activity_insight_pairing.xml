@@ -65,13 +65,15 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <Button
+            <com.google.android.material.button.MaterialButton
+                style="@style/OkCancelButton.Text"
                 android:id="@+id/no"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/no" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
+                style="@style/OkCancelButton.Text"
                 android:id="@+id/yes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -94,12 +96,12 @@
             android:textSize="20sp"
             android:text="@string/pairing_completed" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
+            style="@style/OkCancelButton.Text"
             android:id="@+id/exit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/exit" />
     </LinearLayout>
-
 
 </FrameLayout>

@@ -2,11 +2,10 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/StyleDialog"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusableInTouchMode="true"
-    android:minWidth="300dp"
-    android:orientation="vertical"
     tools:context=".dialogs.FillDialog">
 
     <LinearLayout
@@ -15,17 +14,15 @@
         android:orientation="vertical">
 
         <RelativeLayout
+            style="@style/StyleDialogHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@color/dialog_title_background"
-            android:orientation="horizontal"
-            android:padding="5dp">
+            android:layout_gravity="center">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/primefill"
+                android:importantForAccessibility="no"
                 app:srcCompat="@drawable/ic_cp_pump_canula" />
 
             <TextView
@@ -33,8 +30,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:text="@string/primefill"
                 android:textAlignment="center"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -75,6 +72,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/fill_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -88,8 +86,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_gravity="end"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp" />
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                app:customContentDescription="@string/overview_insulin_label" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -103,26 +102,29 @@
             android:layout_height="wrap_content"
             android:padding="5dp">
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/fill_preset_button1"
+                style="@style/GrayButton"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="0.3U" />
+                tools:text="0.3U" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/fill_preset_button2"
+                style="@style/GrayButton"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="0.7U" />
+                tools:text="0.7U" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/fill_preset_button3"
+                style="@style/GrayButton"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="1.2U" />
+                tools:text="1.2U" />
 
         </LinearLayout>
 

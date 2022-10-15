@@ -1,16 +1,15 @@
 package info.nightscout.androidaps.plugins.general.overview.graphExtensions
 
-import android.graphics.Color
+import android.content.Context
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.Translator
-import info.nightscout.androidaps.utils.resources.ResourceHelper
-import javax.inject.Inject
 
-class TherapyEventDataPoint @Inject constructor(
+class TherapyEventDataPoint(
     val data: TherapyEvent,
     private val rh: ResourceHelper,
     private val profileFunction: ProfileFunction,
@@ -44,7 +43,7 @@ class TherapyEventDataPoint @Inject constructor(
         yValue = y
     }
 
-    override val label get() = if (data.note.isNullOrBlank().not()) data.note else translator.translate(data.type)
+    override val label get() = if (data.note.isNullOrBlank().not()) data.note!! else translator.translate(data.type)
     override val duration get() = data.duration
     override val shape
         get() =
@@ -52,21 +51,21 @@ class TherapyEventDataPoint @Inject constructor(
                 data.type == TherapyEvent.Type.NS_MBG                -> PointsWithLabelGraphSeries.Shape.MBG
                 data.type == TherapyEvent.Type.FINGER_STICK_BG_VALUE -> PointsWithLabelGraphSeries.Shape.BGCHECK
                 data.type == TherapyEvent.Type.ANNOUNCEMENT          -> PointsWithLabelGraphSeries.Shape.ANNOUNCEMENT
-                data.type == TherapyEvent.Type.APS_OFFLINE           -> PointsWithLabelGraphSeries.Shape.OPENAPSOFFLINE
+                data.type == TherapyEvent.Type.APS_OFFLINE           -> PointsWithLabelGraphSeries.Shape.OPENAPS_OFFLINE
                 data.type == TherapyEvent.Type.EXERCISE              -> PointsWithLabelGraphSeries.Shape.EXERCISE
-                duration > 0                                         -> PointsWithLabelGraphSeries.Shape.GENERALWITHDURATION
+                duration > 0                                         -> PointsWithLabelGraphSeries.Shape.GENERAL_WITH_DURATION
                 else                                                 -> PointsWithLabelGraphSeries.Shape.GENERAL
             }
 
     override val size get() = if (rh.gb(R.bool.isTablet)) 12.0f else 10.0f
-    override val color
-        get() =
-            when (data.type) {
-                TherapyEvent.Type.ANNOUNCEMENT          -> rh.gc(R.color.notificationAnnouncement)
-                TherapyEvent.Type.NS_MBG                -> Color.RED
-                TherapyEvent.Type.FINGER_STICK_BG_VALUE -> Color.RED
-                TherapyEvent.Type.EXERCISE              -> Color.BLUE
-                TherapyEvent.Type.APS_OFFLINE           -> Color.GRAY and -0x7f000001
-                else                                    -> Color.GRAY
-            }
+    override fun color(context: Context?): Int {
+        return when (data.type) {
+            TherapyEvent.Type.ANNOUNCEMENT          -> rh.gac(context, R.attr.notificationAnnouncement)
+            TherapyEvent.Type.NS_MBG                -> rh.gac(context, R.attr.therapyEvent_NS_MBG)
+            TherapyEvent.Type.FINGER_STICK_BG_VALUE -> rh.gac(context, R.attr.therapyEvent_FINGER_STICK_BG_VALUE)
+            TherapyEvent.Type.EXERCISE              -> rh.gac(context, R.attr.therapyEvent_EXERCISE)
+            TherapyEvent.Type.APS_OFFLINE           -> rh.gac(context, R.attr.therapyEvent_APS_OFFLINE) and -0x7f000001
+            else                                    -> rh.gac(context, R.attr.therapyEvent_Default)
+        }
+    }
 }

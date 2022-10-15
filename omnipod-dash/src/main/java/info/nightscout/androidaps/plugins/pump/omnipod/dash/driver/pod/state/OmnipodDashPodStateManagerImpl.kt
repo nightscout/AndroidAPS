@@ -3,8 +3,6 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state
 import android.os.SystemClock
 import com.google.gson.Gson
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.EventOmnipodDashPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
@@ -17,10 +15,12 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.SetUniqueIdResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.VersionResponse
 import info.nightscout.androidaps.utils.Round
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
-import io.reactivex.Completable
-import io.reactivex.Maybe
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Single
 import java.io.Serializable
 import java.time.Duration
 import java.time.Instant
@@ -323,7 +323,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         get() = podState.activeCommand
 
     @Synchronized
-    override fun createLastBolus(requestedUnits: Double, historyId: String, bolusType: DetailedBolusInfo.BolusType) {
+    override fun createLastBolus(requestedUnits: Double, historyId: Long, bolusType: DetailedBolusInfo.BolusType) {
         podState.lastBolus = OmnipodDashPodStateManager.LastBolus(
             startTime = System.currentTimeMillis(),
             requestedUnits = requestedUnits,
@@ -358,7 +358,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
 
     @Synchronized
     override fun createActiveCommand(
-        historyId: String,
+        historyId: Long,
         basalProgram: BasalProgram?,
         tempBasal: OmnipodDashPodStateManager.TempBasal?,
         requestedBolus: Double?

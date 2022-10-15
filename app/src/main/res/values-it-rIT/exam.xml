@@ -104,11 +104,11 @@
     <string name="troubleshooting_wheretoask">Dove puoi cercare aiuto con AndroidAPS?</string>
     <string name="troubleshooting_fb">Puoi chiedere consiglio nel gruppo Facebook degli utenti AndroidAPS.</string>
     <string name="troubleshooting_wiki">Dovresti leggere (e rileggere) la documentazione di AndroidAPS.</string>
-    <string name="troubleshooting_gitter">Puoi chiedere consigli e segnalare problemi tecnici nella stanza Gitter di AndroidAPS.</string>
+    <string name="troubleshooting_gitter">Puoi chiedere consigli e segnalare problemi tecnici nel Discord di AndroidAPS.</string>
     <string name="troubleshooting_yourendo">Dovresti chiedere al tuo endocrinologo/centro diabetologico.</string>
     <string name="troubleshooting_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/aapsitalia/</string>
-    <string name="troubleshooting_hint3">https://gitter.im/MilosKozak/AndroidAPS</string>
+    <string name="troubleshooting_hint3">https://discord.gg/4fQUWHZ4Mw</string>
     <string name="insulin_label">Plugin insulina</string>
     <string name="insulin_ultrarapid">Quale insulina dovresti usare con il plugin Ultra-Rapid Oref?</string>
     <string name="insulin_fiasp">Fiasp®</string>
@@ -123,6 +123,7 @@
     <string name="sensitivity_cannula">La registrazione di un cambio cannula ripristinerà il rapporto Autosens al 100%.</string>
     <string name="sensitivity_time">Alcune opzioni del plugin hanno intervalli di tempo configurabili che possono essere impostati dall\'utente.</string>
     <string name="sensitivity_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Sensitivity-detection-and-COB.html</string>
+    <string name="sensitivity_hint2">https://androidaps.readthedocs.io/en/latest/Usage/Open-APS-features.html?highlight=Autosens#autosens</string>
     <string name="wrongcarbs_label">Errori inserimento CHO</string>
     <string name="wrongcarbs_whattodo">Cosa dovresti fare se hai fatto un inserimento non corretto di carboidrati?</string>
     <string name="wrongcarbs_treatmentstab">Eliminare nei Trattamenti l\'inserimento non corretto e immettere il nuovo valore CHO.</string>
@@ -135,8 +136,20 @@
     <string name="wronginsulin_compare">Compara i valori in AndroidAPS con lo storico micro (se supportato).</string>
     <string name="wronginsulin_prime">Erogare un bolo con parte della tua insulina calcolata \"mancante\" usando una siringa/penna o la funzione caricamento.</string>
     <string name="wronginsulin_donothing">Non fare nulla e permettere ad AndroidAPS di correggere eventuali glicemie alte.</string>
+    <string name="cob_label">CHO attivi (COB)</string>
+    <string name="cob_question">In che modo la modifica del valore ISF influisce sul calcolo dei COB?</string>
+    <string name="cob_longer">L\'aumento di ISF richiederà un tempo maggiore per l\'assorbimento dei CHO</string>
+    <string name="cob_shorter">L\'aumento di ISF richiederà un tempo minore per l\'assorbimento dei CHO</string>
+    <string name="cob_no_effect">L\'aumento di ISF non influirà sull\'assorbimento calcolato dei CHO</string>
+    <string name="cob2_question">In che modo la modifica del valore IC influisce sul calcolo dei COB?</string>
+    <string name="cob2_longer">L\'aumento di IC richiederà un tempo maggiore per l\'assorbimento dei CHO</string>
+    <string name="cob2_shorter">L\'aumento di IC richiederà un tempo minore per l\'assorbimento dei CHO</string>
+    <string name="cob2_no_effect">L\'aumento di IC non influirà sull\'assorbimento calcolato dei CHO</string>
+    <string name="cob3_question">In che modo la modifica della percentuale profilo influisce sul calcolo dei COB?</string>
+    <string name="cob3_longer">Impostare il profilo al 150% richiederà un tempo maggiore per l\'assorbimento dei CHO</string>
+    <string name="cob3_shorter">Impostare il profilo al 150% richiederà un tempo minore per l\'assorbimento dei CHO</string>
+    <string name="cob3_no_effect">Impostare il profilo al 150% non influirà sull\'assorbimento calcolato dei CHO</string>
     <string name="iob_label">Insulina attiva (IOB)</string>
-    <string name="iob_which">Seleziona tutte le risposte corrette.</string>
     <string name="iob_value">Il valore IOB è influenzato dalle basali temporanee emesse.</string>
     <string name="iob_hightemp">Non verrà emessa una basale temporanea alta quando la tua glicemia è al di sotto del target.</string>
     <string name="iob_negiob">IOB negativo per un periodo considerevole in assenza di esercizio fisico suggerisce che il tuo profilo è troppo incisivo e che è necessaria meno insulina nelle tue impostazioni.</string>

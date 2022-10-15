@@ -7,7 +7,8 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf;
 import org.slf4j.Logger;
 
 public class HistoryEvent implements Comparable<HistoryEvent> {
-    private static final Logger log = StacktraceLoggerWrapper.getLogger(HistoryEvent.class);
+    @SuppressWarnings("deprecation")
+    private static final Logger log = StacktraceLoggerWrapper.Companion.getLogger(HistoryEvent.class);
 
     private int eventYear;
     private int eventMonth;

@@ -3,9 +3,9 @@ package info.nightscout.androidaps.activities.fragments
 import android.annotation.SuppressLint
 import android.graphics.Paint
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.SparseArray
+import android.view.*
+import androidx.core.util.forEach
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
@@ -24,31 +24,31 @@ import info.nightscout.androidaps.database.transactions.InvalidateCarbsTransacti
 import info.nightscout.androidaps.databinding.TreatmentsBolusCarbsFragmentBinding
 import info.nightscout.androidaps.databinding.TreatmentsBolusCarbsItemBinding
 import info.nightscout.androidaps.dialogs.WizardInfoDialog
-import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.events.EventTreatmentChange
-import info.nightscout.androidaps.events.EventTreatmentUpdateGui
 import info.nightscout.androidaps.extensions.iobCalc
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData
+import info.nightscout.androidaps.utils.ActionModeHelper
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.buildHelper.BuildHelper
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
-import io.reactivex.Completable
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
-import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
+import io.reactivex.rxjava3.kotlin.subscribeBy
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -67,6 +67,12 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var activePlugin: ActivePlugin
 
+    private var _binding: TreatmentsBolusCarbsFragmentBinding? = null
+
+    // This property is only valid between onCreateView and onDestroyView.
+    private val binding get() = _binding!!
+    private var menu: Menu? = null
+
     class MealLink(
         val bolus: Bolus? = null,
         val carbs: Carbs? = null,
@@ -74,107 +80,24 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
     )
 
     private val disposable = CompositeDisposable()
-
+    private lateinit var actionHelper: ActionModeHelper<MealLink>
     private val millsToThePast = T.days(30).msecs()
-
-    private var _binding: TreatmentsBolusCarbsFragmentBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
+    private var showInvalidated = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         TreatmentsBolusCarbsFragmentBinding.inflate(inflater, container, false).also { _binding = it }.root
 
-    @SuppressLint("CheckResult")
+    @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        actionHelper = ActionModeHelper(rh, activity, this)
+        actionHelper.setUpdateListHandler { binding.recyclerview.adapter?.notifyDataSetChanged() }
+        actionHelper.setOnRemoveHandler { removeSelected(it) }
+        setHasOptionsMenu(true)
         binding.recyclerview.setHasFixedSize(true)
         binding.recyclerview.layoutManager = LinearLayoutManager(view.context)
-
-        binding.refreshFromNightscout.setOnClickListener {
-            activity?.let { activity ->
-                OKDialog.showConfirmation(activity, rh.gs(R.string.refresheventsfromnightscout) + "?") {
-                    uel.log(Action.TREATMENTS_NS_REFRESH, Sources.Treatments)
-                    disposable +=
-                        Completable.fromAction {
-                            repository.deleteAllBolusCalculatorResults()
-                            repository.deleteAllBoluses()
-                            repository.deleteAllCarbs()
-                        }
-                            .subscribeOn(aapsSchedulers.io)
-                            .observeOn(aapsSchedulers.main)
-                            .subscribeBy(
-                                onError = { aapsLogger.error("Error removing entries", it) },
-                                onComplete = {
-                                    rxBus.send(EventTreatmentChange())
-                                    rxBus.send(EventNewHistoryData(0, false))
-                                }
-                            )
-                    rxBus.send(EventNSClientRestart())
-                }
-            }
-        }
-        binding.deleteFutureTreatments.setOnClickListener {
-            activity?.let { activity ->
-                OKDialog.showConfirmation(activity, rh.gs(R.string.overview_treatment_label), rh.gs(R.string.deletefuturetreatments) + "?", Runnable {
-                    uel.log(Action.DELETE_FUTURE_TREATMENTS, Sources.Treatments)
-                    repository
-                        .getBolusesDataFromTime(dateUtil.now(), false)
-                        .observeOn(aapsSchedulers.main)
-                        .subscribe { list ->
-                            list.forEach { bolus ->
-                                disposable += repository.runTransactionForResult(InvalidateBolusTransaction(bolus.id))
-                                    .subscribe(
-                                        { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated bolus $it") } },
-                                        { aapsLogger.error(LTag.DATABASE, "Error while invalidating bolus", it) }
-                                    )
-                            }
-                        }
-                    repository
-                        .getCarbsDataFromTimeNotExpanded(dateUtil.now(), false)
-                        .observeOn(aapsSchedulers.main)
-                        .subscribe { list ->
-                            list.forEach { carb ->
-                                if (carb.duration == 0L)
-                                    disposable += repository.runTransactionForResult(InvalidateCarbsTransaction(carb.id))
-                                        .subscribe(
-                                            { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated carbs $it") } },
-                                            { aapsLogger.error(LTag.DATABASE, "Error while invalidating carbs", it) }
-                                        )
-                                else {
-                                    disposable += repository.runTransactionForResult(CutCarbsTransaction(carb.id, dateUtil.now()))
-                                        .subscribe(
-                                            { result ->
-                                                result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated carbs $it") }
-                                                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated (cut end) carbs $it") }
-                                            },
-                                            { aapsLogger.error(LTag.DATABASE, "Error while invalidating carbs", it) }
-                                        )
-                                }
-                            }
-                        }
-                    repository
-                        .getBolusCalculatorResultsDataFromTime(dateUtil.now(), false)
-                        .observeOn(aapsSchedulers.main)
-                        .subscribe { list ->
-                            list.forEach { bolusCalc ->
-                                disposable += repository.runTransactionForResult(InvalidateBolusCalculatorResultTransaction(bolusCalc.id))
-                                    .subscribe(
-                                        { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated bolusCalculatorResult $it") } },
-                                        { aapsLogger.error(LTag.DATABASE, "Error while invalidating bolusCalculatorResult", it) }
-                                    )
-                            }
-                        }
-                    binding.deleteFutureTreatments.visibility = View.GONE
-                })
-            }
-        }
-        val nsUploadOnly = !sp.getBoolean(R.string.key_ns_receive_insulin, false) || !sp.getBoolean(R.string.key_ns_receive_carbs, false) || !buildHelper.isEngineeringMode()
-        if (nsUploadOnly) binding.refreshFromNightscout.visibility = View.GONE
-        binding.showInvalidated.setOnCheckedChangeListener { _, _ ->
-            rxBus.send(EventTreatmentUpdateGui())
-        }
+        binding.recyclerview.emptyView = binding.noRecordsText
+        binding.recyclerview.loadingView = binding.progressBar
     }
 
     private fun bolusMealLinksWithInvalid(now: Long) = repository
@@ -203,37 +126,36 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
 
     fun swapAdapter() {
         val now = System.currentTimeMillis()
-
-        if (binding.showInvalidated.isChecked)
-            disposable += carbsMealLinksWithInvalid(now)
-                .zipWith(bolusMealLinksWithInvalid(now)) { first, second -> first + second }
-                .zipWith(calcResultMealLinksWithInvalid(now)) { first, second -> first + second }
-                .map { ml ->
-                    ml.sortedByDescending {
-                        it.carbs?.timestamp ?: it.bolus?.timestamp
-                        ?: it.bolusCalculatorResult?.timestamp
+        binding.recyclerview.isLoading = true
+        disposable +=
+            if (showInvalidated)
+                carbsMealLinksWithInvalid(now)
+                    .zipWith(bolusMealLinksWithInvalid(now)) { first, second -> first + second }
+                    .zipWith(calcResultMealLinksWithInvalid(now)) { first, second -> first + second }
+                    .map { ml ->
+                        ml.sortedByDescending {
+                            it.carbs?.timestamp ?: it.bolus?.timestamp
+                            ?: it.bolusCalculatorResult?.timestamp
+                        }
                     }
-                }
-                .observeOn(aapsSchedulers.main)
-                .subscribe { list ->
-                    binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true)
-                    binding.deleteFutureTreatments.visibility = list.isNotEmpty().toVisibility()
-                }
-        else
-            disposable += carbsMealLinks(now)
-                .zipWith(bolusMealLinks(now)) { first, second -> first + second }
-                .zipWith(calcResultMealLinks(now)) { first, second -> first + second }
-                .map { ml ->
-                    ml.sortedByDescending {
-                        it.carbs?.timestamp ?: it.bolus?.timestamp
-                        ?: it.bolusCalculatorResult?.timestamp
+                    .observeOn(aapsSchedulers.main)
+                    .subscribe { list ->
+                        binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true)
                     }
-                }
-                .observeOn(aapsSchedulers.main)
-                .subscribe { list ->
-                    binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true)
-                    binding.deleteFutureTreatments.visibility = list.isNotEmpty().toVisibility()
-                }
+            else
+                carbsMealLinks(now)
+                    .zipWith(bolusMealLinks(now)) { first, second -> first + second }
+                    .zipWith(calcResultMealLinks(now)) { first, second -> first + second }
+                    .map { ml ->
+                        ml.sortedByDescending {
+                            it.carbs?.timestamp ?: it.bolus?.timestamp
+                            ?: it.bolusCalculatorResult?.timestamp
+                        }
+                    }
+                    .observeOn(aapsSchedulers.main)
+                    .subscribe { list ->
+                        binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true)
+                    }
 
     }
 
@@ -246,21 +168,12 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
             .observeOn(aapsSchedulers.main)
             .debounce(1L, TimeUnit.SECONDS)
             .subscribe({ swapAdapter() }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventTreatmentUpdateGui::class.java) // TODO join with above
-            .observeOn(aapsSchedulers.io)
-            .debounce(1L, TimeUnit.SECONDS)
-            .subscribe({ swapAdapter() }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventAutosensCalculationFinished::class.java)
-            .observeOn(aapsSchedulers.main)
-            .debounce(1L, TimeUnit.SECONDS)
-            .subscribe({ swapAdapter() }, fabricPrivacy::logException)
     }
 
     @Synchronized
     override fun onPause() {
         super.onPause()
+        actionHelper.finish()
         disposable.clear()
     }
 
@@ -271,7 +184,9 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
         _binding = null
     }
 
-    inner class RecyclerViewAdapter internal constructor(var mealLinks: List<MealLink>) : RecyclerView.Adapter<RecyclerViewAdapter.MealLinkLoadedViewHolder>() {
+    private fun timestamp(ml: MealLink): Long = ml.bolusCalculatorResult?.timestamp ?: ml.bolus?.timestamp ?: ml.carbs?.timestamp ?: 0L
+
+    inner class RecyclerViewAdapter internal constructor(private var mealLinks: List<MealLink>) : RecyclerView.Adapter<RecyclerViewAdapter.MealLinkLoadedViewHolder>() {
 
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): MealLinkLoadedViewHolder =
             MealLinkLoadedViewHolder(LayoutInflater.from(viewGroup.context).inflate(R.layout.treatments_bolus_carbs_item, viewGroup, false))
@@ -280,23 +195,27 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
             val profile = profileFunction.getProfile() ?: return
             val ml = mealLinks[position]
 
+            val newDay = position == 0 || !dateUtil.isSameDayGroup(timestamp(ml), timestamp(mealLinks[position - 1]))
+            holder.binding.date.visibility = newDay.toVisibility()
+            holder.binding.date.text = if (newDay) dateUtil.dateStringRelative(timestamp(ml), rh) else ""
+
             // Metadata
-            holder.binding.metadataLayout.visibility = (ml.bolusCalculatorResult != null && (ml.bolusCalculatorResult.isValid || binding.showInvalidated.isChecked)).toVisibility()
+            holder.binding.metadataLayout.visibility = (ml.bolusCalculatorResult != null && (ml.bolusCalculatorResult.isValid || showInvalidated)).toVisibility()
             ml.bolusCalculatorResult?.let { bolusCalculatorResult ->
-                holder.binding.date.text = dateUtil.dateAndTimeString(bolusCalculatorResult.timestamp)
+                holder.binding.calcTime.text = dateUtil.timeString(bolusCalculatorResult.timestamp)
             }
 
             // Bolus
-            holder.binding.bolusLayout.visibility = (ml.bolus != null && (ml.bolus.isValid || binding.showInvalidated.isChecked)).toVisibility()
+            holder.binding.bolusLayout.visibility = (ml.bolus != null && (ml.bolus.isValid || showInvalidated)).toVisibility()
             ml.bolus?.let { bolus ->
-                holder.binding.bolusDate.text = dateUtil.timeString(bolus.timestamp)
+                holder.binding.bolusTime.text = dateUtil.timeString(bolus.timestamp)
                 holder.binding.insulin.text = rh.gs(R.string.formatinsulinunits, bolus.amount)
                 holder.binding.bolusNs.visibility = (bolus.interfaceIDs.nightscoutId != null).toVisibility()
                 holder.binding.bolusPump.visibility = (bolus.interfaceIDs.pumpId != null).toVisibility()
                 holder.binding.bolusInvalid.visibility = bolus.isValid.not().toVisibility()
                 val iob = bolus.iobCalc(activePlugin, System.currentTimeMillis(), profile.dia)
                 if (iob.iobContrib > 0.01) {
-                    holder.binding.iob.setTextColor(rh.gc(R.color.colorActive))
+                    holder.binding.iob.setTextColor(rh.gac(context , R.attr.activeColor))
                     holder.binding.iob.text = rh.gs(R.string.formatinsulinunits, iob.iobContrib)
                     holder.binding.iobLabel.visibility = View.VISIBLE
                     holder.binding.iob.visibility = View.VISIBLE
@@ -306,35 +225,52 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                     holder.binding.iobLabel.visibility = View.GONE
                     holder.binding.iob.visibility = View.GONE
                 }
-                if (bolus.timestamp > dateUtil.now()) holder.binding.date.setTextColor(rh.gc(R.color.colorScheduled)) else holder.binding.date.setTextColor(holder.binding.carbs.currentTextColor)
+                if (bolus.timestamp > dateUtil.now()) holder.binding.date.setTextColor(rh.gac(context, R.attr.scheduledColor)) else holder.binding.date.setTextColor(holder.binding.carbs
+                                                                                                                                                                       .currentTextColor)
                 holder.binding.mealOrCorrection.text =
                     when (ml.bolus.type) {
                         Bolus.Type.SMB     -> "SMB"
                         Bolus.Type.NORMAL  -> rh.gs(R.string.mealbolus)
                         Bolus.Type.PRIMING -> rh.gs(R.string.prime)
                     }
+                holder.binding.cbBolusRemove.visibility = (ml.bolus.isValid && actionHelper.isRemoving).toVisibility()
+                if (actionHelper.isRemoving) {
+                    holder.binding.cbBolusRemove.setOnCheckedChangeListener { _, value ->
+                        actionHelper.updateSelection(position, ml, value)
+                    }
+                    holder.binding.root.setOnClickListener {
+                        holder.binding.cbBolusRemove.toggle()
+                        actionHelper.updateSelection(position, ml, holder.binding.cbBolusRemove.isChecked)
+                    }
+                    holder.binding.cbBolusRemove.isChecked = actionHelper.isSelected(position)
+                }
             }
             // Carbs
-            holder.binding.carbsLayout.visibility = (ml.carbs != null && (ml.carbs.isValid || binding.showInvalidated.isChecked)).toVisibility()
+            holder.binding.carbsLayout.visibility = (ml.carbs != null && (ml.carbs.isValid || showInvalidated)).toVisibility()
             ml.carbs?.let { carbs ->
-                holder.binding.carbsDate.text = dateUtil.timeString(carbs.timestamp)
+                holder.binding.carbsTime.text = dateUtil.timeString(carbs.timestamp)
                 holder.binding.carbs.text = rh.gs(R.string.format_carbs, carbs.amount.toInt())
                 holder.binding.carbsDuration.text = if (carbs.duration > 0) rh.gs(R.string.format_mins, T.msecs(carbs.duration).mins().toInt()) else ""
                 holder.binding.carbsNs.visibility = (carbs.interfaceIDs.nightscoutId != null).toVisibility()
                 holder.binding.carbsPump.visibility = (carbs.interfaceIDs.pumpId != null).toVisibility()
                 holder.binding.carbsInvalid.visibility = carbs.isValid.not().toVisibility()
+                holder.binding.cbCarbsRemove.visibility = (ml.carbs.isValid && actionHelper.isRemoving).toVisibility()
+                if (actionHelper.isRemoving) {
+                    holder.binding.cbCarbsRemove.setOnCheckedChangeListener { _, value ->
+                        actionHelper.updateSelection(position, ml, value)
+                    }
+                    holder.binding.root.setOnClickListener {
+                        holder.binding.cbBolusRemove.toggle()
+                        actionHelper.updateSelection(position, ml, holder.binding.cbBolusRemove.isChecked)
+                    }
+                    holder.binding.cbCarbsRemove.isChecked = actionHelper.isSelected(position)
+                }
             }
 
-            holder.binding.bolusRemove.visibility = (ml.bolus?.isValid == true).toVisibility()
-            holder.binding.carbsRemove.visibility = (ml.carbs?.isValid == true).toVisibility()
-            holder.binding.bolusRemove.tag = ml
-            holder.binding.carbsRemove.tag = ml
             holder.binding.calculation.tag = ml
         }
 
-        override fun getItemCount(): Int {
-            return mealLinks.size
-        }
+        override fun getItemCount() = mealLinks.size
 
         inner class MealLinkLoadedViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {
 
@@ -351,50 +287,190 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                     }
                 }
                 binding.calculation.paintFlags = binding.calculation.paintFlags or Paint.UNDERLINE_TEXT_FLAG
-                binding.bolusRemove.setOnClickListener { ml ->
-                    val bolus = (ml.tag as MealLink?)?.bolus ?: return@setOnClickListener
-                    activity?.let { activity ->
-                        val text = rh.gs(R.string.configbuilder_insulin) + ": " +
-                            rh.gs(R.string.formatinsulinunits, bolus.amount) + "\n" +
-                            rh.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(bolus.timestamp)
-                        OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord), text, Runnable {
-                            uel.log(
-                                Action.BOLUS_REMOVED, Sources.Treatments,
-                                ValueWithUnit.Timestamp(bolus.timestamp),
-                                ValueWithUnit.Insulin(bolus.amount)
-                                //ValueWithUnit.Gram(mealLinkLoaded.carbs.toInt())
-                            )
+            }
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        this.menu = menu
+        inflater.inflate(R.menu.menu_treatments_carbs_bolus, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    private fun updateMenuVisibility() {
+        menu?.findItem(R.id.nav_hide_invalidated)?.isVisible = showInvalidated
+        menu?.findItem(R.id.nav_show_invalidated)?.isVisible = !showInvalidated
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        updateMenuVisibility()
+        val nsUploadOnly = !sp.getBoolean(R.string.key_ns_receive_insulin, false) || !sp.getBoolean(R.string.key_ns_receive_carbs, false) || !buildHelper.isEngineeringMode()
+        menu.findItem(R.id.nav_refresh_ns)?.isVisible = !nsUploadOnly
+        val hasItems = (binding.recyclerview.adapter?.itemCount ?: 0) > 0
+        menu.findItem(R.id.nav_delete_future)?.isVisible = hasItems
+
+        return super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
+            R.id.nav_remove_items     -> actionHelper.startRemove()
+
+            R.id.nav_show_invalidated -> {
+                showInvalidated = true
+                updateMenuVisibility()
+                ToastUtils.showToastInUiThread(context, rh.gs(R.string.show_invalidated_records))
+                swapAdapter()
+                true
+            }
+
+            R.id.nav_hide_invalidated -> {
+                showInvalidated = false
+                updateMenuVisibility()
+                ToastUtils.showToastInUiThread(context, rh.gs(R.string.hide_invalidated_records))
+                swapAdapter()
+                true
+            }
+
+            R.id.nav_delete_future    -> {
+                deleteFutureTreatments()
+                true
+            }
+
+            R.id.nav_refresh_ns       -> {
+                refreshFromNightscout()
+                true
+            }
+
+            else                      -> false
+        }
+
+    private fun refreshFromNightscout() {
+        activity?.let { activity ->
+            OKDialog.showConfirmation(activity, rh.gs(R.string.refresheventsfromnightscout) + "?") {
+                uel.log(Action.TREATMENTS_NS_REFRESH, Sources.Treatments)
+                disposable +=
+                    Completable.fromAction {
+                        repository.deleteAllBolusCalculatorResults()
+                        repository.deleteAllBoluses()
+                        repository.deleteAllCarbs()
+                    }
+                        .subscribeOn(aapsSchedulers.io)
+                        .observeOn(aapsSchedulers.main)
+                        .subscribeBy(
+                            onError = { aapsLogger.error("Error removing entries", it) },
+                            onComplete = {
+                                rxBus.send(EventTreatmentChange())
+                                rxBus.send(EventNewHistoryData(0, false))
+                            }
+                        )
+                rxBus.send(EventNSClientRestart())
+            }
+        }
+    }
+
+    fun deleteFutureTreatments() {
+        activity?.let { activity ->
+            OKDialog.showConfirmation(activity, rh.gs(R.string.overview_treatment_label), rh.gs(R.string.deletefuturetreatments) + "?", Runnable {
+                uel.log(Action.DELETE_FUTURE_TREATMENTS, Sources.Treatments)
+                disposable += repository
+                    .getBolusesDataFromTime(dateUtil.now(), false)
+                    .observeOn(aapsSchedulers.main)
+                    .subscribe { list ->
+                        list.forEach { bolus ->
                             disposable += repository.runTransactionForResult(InvalidateBolusTransaction(bolus.id))
                                 .subscribe(
                                     { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated bolus $it") } },
                                     { aapsLogger.error(LTag.DATABASE, "Error while invalidating bolus", it) }
                                 )
-                        })
+                        }
                     }
-                }
-                binding.bolusRemove.paintFlags = binding.bolusRemove.paintFlags or Paint.UNDERLINE_TEXT_FLAG
-                binding.carbsRemove.setOnClickListener { ml ->
-                    val carb = (ml.tag as MealLink?)?.carbs ?: return@setOnClickListener
-                    activity?.let { activity ->
-                        val text = rh.gs(R.string.carbs) + ": " +
-                            rh.gs(R.string.carbs) + ": " + rh.gs(R.string.format_carbs, carb.amount.toInt()) + "\n" +
-                            rh.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(carb.timestamp)
-                        OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord), text, Runnable {
-                            uel.log(
-                                Action.CARBS_REMOVED, Sources.Treatments,
-                                ValueWithUnit.Timestamp(carb.timestamp),
-                                ValueWithUnit.Gram(carb.amount.toInt())
-                            )
-                            disposable += repository.runTransactionForResult(InvalidateCarbsTransaction(carb.id))
+                disposable += repository
+                    .getCarbsDataFromTimeNotExpanded(dateUtil.now(), false)
+                    .observeOn(aapsSchedulers.main)
+                    .subscribe { list ->
+                        list.forEach { carb ->
+                            if (carb.duration == 0L)
+                                disposable += repository.runTransactionForResult(InvalidateCarbsTransaction(carb.id))
+                                    .subscribe(
+                                        { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated carbs $it") } },
+                                        { aapsLogger.error(LTag.DATABASE, "Error while invalidating carbs", it) }
+                                    )
+                            else {
+                                disposable += repository.runTransactionForResult(CutCarbsTransaction(carb.id, dateUtil.now()))
+                                    .subscribe(
+                                        { result ->
+                                            result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated carbs $it") }
+                                            result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated (cut end) carbs $it") }
+                                        },
+                                        { aapsLogger.error(LTag.DATABASE, "Error while invalidating carbs", it) }
+                                    )
+                            }
+                        }
+                    }
+                disposable += repository
+                    .getBolusCalculatorResultsDataFromTime(dateUtil.now(), false)
+                    .observeOn(aapsSchedulers.main)
+                    .subscribe { list ->
+                        list.forEach { bolusCalc ->
+                            disposable += repository.runTransactionForResult(InvalidateBolusCalculatorResultTransaction(bolusCalc.id))
                                 .subscribe(
-                                    { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated carbs $it") } },
-                                    { aapsLogger.error(LTag.DATABASE, "Error while invalidating carbs", it) }
+                                    { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated bolusCalculatorResult $it") } },
+                                    { aapsLogger.error(LTag.DATABASE, "Error while invalidating bolusCalculatorResult", it) }
                                 )
-                        })
+                        }
                     }
-                }
-                binding.carbsRemove.paintFlags = binding.carbsRemove.paintFlags or Paint.UNDERLINE_TEXT_FLAG
-            }
+            })
         }
     }
+
+    private fun getConfirmationText(selectedItems: SparseArray<MealLink>): String {
+        if (selectedItems.size() == 1) {
+            val mealLink = selectedItems.valueAt(0)
+            val bolus = mealLink.bolus
+            if (bolus != null)
+                return rh.gs(R.string.configbuilder_insulin) + ": " + rh.gs(R.string.formatinsulinunits, bolus.amount) + "\n" +
+                    rh.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(bolus.timestamp)
+            val carbs = mealLink.carbs
+            if (carbs != null)
+                return rh.gs(R.string.carbs) + ": " + rh.gs(R.string.format_carbs, carbs.amount.toInt()) + "\n" +
+                    rh.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(carbs.timestamp)
+        }
+        return rh.gs(R.string.confirm_remove_multiple_items, selectedItems.size())
+    }
+
+    private fun removeSelected(selectedItems: SparseArray<MealLink>) {
+        activity?.let { activity ->
+            OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord), getConfirmationText(selectedItems), Runnable {
+                selectedItems.forEach { _, ml ->
+                    ml.bolus?.let { bolus ->
+                        uel.log(
+                            Action.BOLUS_REMOVED, Sources.Treatments,
+                            ValueWithUnit.Timestamp(bolus.timestamp),
+                            ValueWithUnit.Insulin(bolus.amount)
+                        )
+                        disposable += repository.runTransactionForResult(InvalidateBolusTransaction(bolus.id))
+                            .subscribe(
+                                { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated bolus $it") } },
+                                { aapsLogger.error(LTag.DATABASE, "Error while invalidating bolus", it) }
+                            )
+                    }
+                    ml.carbs?.let { carb ->
+                        uel.log(
+                            Action.CARBS_REMOVED, Sources.Treatments,
+                            ValueWithUnit.Timestamp(carb.timestamp),
+                            ValueWithUnit.Gram(carb.amount.toInt())
+                        )
+                        disposable += repository.runTransactionForResult(InvalidateCarbsTransaction(carb.id))
+                            .subscribe(
+                                { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated carbs $it") } },
+                                { aapsLogger.error(LTag.DATABASE, "Error while invalidating carbs", it) }
+                            )
+                    }
+                }
+                actionHelper.finish()
+            })
+        }
+    }
+
 }

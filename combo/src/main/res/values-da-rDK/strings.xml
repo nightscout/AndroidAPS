@@ -51,4 +51,10 @@
     <string name="combo_tbr_count">TBR antal</string>
     <string name="bolusstopped">Bolus stoppet</string>
     <string name="bolusstopping">Stopper bolus</string>
+    <string name="pump_commerror_label">Komm. Fejlantal</string>
+    <string name="show_comm_error_count_title">Vis komm. fejltælling</string>
+    <string name="show_comm_error_count_summary">Viser antal fejl, når du kommunikerer med Ruffy. I de fleste tilfælde betyder tal højere end 0 at Ruffy oplever kommunikationsproblemer (genstart kan være nødvendigt).</string>
+    <string name="combo_error_display_never">Aldrig</string>
+    <string name="combo_error_display_error">Ved Fejl</string>
+    <string name="combo_error_display_always">Altid</string>
 </resources>

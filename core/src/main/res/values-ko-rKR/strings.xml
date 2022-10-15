@@ -4,6 +4,7 @@
     <!--    General-->
     <string name="refresh">새로고침</string>
     <string name="error">에러</string>
+    <string name="save">저장</string>
     <string name="not_set_short">설정되지 않음</string>
     <string name="failedupdatebasalprofile">Basal 프로파일 갱신 실패</string>
     <string name="profile_set_ok">Basal 프로파일이 펌프에 업데이트 되었습니다</string>
@@ -40,6 +41,7 @@
     <string name="carbs">탄수화물</string>
     <string name="invalidprofile">프로파일이 유효하지 않습니다!!!</string>
     <string name="noprofileset">프로파일이 설정되지 않았습니다.</string>
+    <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">날짜</string>
     <string name="units_label">단위</string>
     <string name="dia_label">인슐린활동시간(DIA):</string>
@@ -124,24 +126,6 @@
     <string name="ble_not_enabled">블루투스가 활성화되지 않았습니다.</string>
     <string name="location_not_found_title">위치가 활성화되지 않았습니다.</string>
     <string name="location_not_found_message">최신 스마트폰에서 블루투스 검색이 작동하려면 위치가 활성화되어 있어야합니다. AAPS는 당신의 위치를 추적하지 않으며 페어링에 성공한 후 비활성화 할 수 있습니다.</string>
-    <!--    DateUtil-->
-    <string name="minago">%1$d 분 전</string>
-    <string name="hoursago">%1$.1f 시간 전</string>
-    <string name="shorthour">시간</string>
-    <string name="days">일</string>
-    <string name="hours">시간</string>
-    <string name="unit_second">초</string>
-    <string name="unit_minute">분</string>
-    <string name="unit_hour">시</string>
-    <string name="unit_day">일</string>
-    <string name="unit_week">주</string>
-    <string name="unit_seconds">초</string>
-    <string name="unit_minutes">분</string>
-    <string name="unit_hours">시</string>
-    <string name="unit_days">일</string>
-    <string name="unit_weeks">주</string>
-    <string name="shortminute">분</string>
-    <string name="shortday">일</string>
     <!--    Protection-->
     <string name="wrongpassword">잘못된 비밀번호</string>
     <string name="passwords_dont_match">비밀번호가 일치하지 않습니다.</string>
@@ -167,10 +151,6 @@
     <string name="zerovalueinprofile">유효하지 않은 프로파일: %1$s</string>
     <!--    Temptarget-->
     <string name="mins">%1$d 분</string>
-    <!--    TDD-->
-    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f U</b> Bol: <b>%3$.2f U</b> Bas: <b>%4$.2f U(%5$.0f%%)</b>]]></string>
-    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f U</b> Bol: <b>%3$.2f U</b> Bas: <b>%4$.2f U(%5$.0f%%)</b> Carbs: <b>%6$.0f g</b>]]></string>
-    <string name="activitymonitorformat"><![CDATA[<b>%3$d</b> 일<br>에 <b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b>]]></string>
     <!--    Translator-->
     <string name="careportal_bgcheck">혈당 체크</string>
     <string name="careportal_mbg">수동 BG 값 입력 또는 보정</string>
@@ -398,6 +378,8 @@
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f이 \'고정된 한계값\'을 벗어났습니다.</string>
     <string name="basal_value">Basal 값</string>
     <!-- Command Queue + readStatus reasons -->
+    <string name="basal">Basal</string>
+    <!-- Autotune -->
     <plurals name="days">
         <item quantity="other">%1$d 일</item>
     </plurals>

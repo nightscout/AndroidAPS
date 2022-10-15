@@ -13,21 +13,21 @@ class SyncPumpExtendedBolusTransaction(private val extendedBolus: ExtendedBolus)
         ?: extendedBolus.interfaceIDs.pumpSerial
         ?: throw IllegalStateException("Some pump ID is null")
         val result = TransactionResult()
-        val current = database.extendedBolusDao.findByPumpIds(extendedBolus.interfaceIDs.pumpId!!, extendedBolus.interfaceIDs.pumpType!!, extendedBolus.interfaceIDs.pumpSerial!!)
-        if (current != null) {
-            if (current.interfaceIDs.endId == null &&
-                (current.timestamp != extendedBolus.timestamp ||
-                    current.amount != extendedBolus.amount ||
-                    current.duration != extendedBolus.duration)
+        val existing = database.extendedBolusDao.findByPumpIds(extendedBolus.interfaceIDs.pumpId!!, extendedBolus.interfaceIDs.pumpType!!, extendedBolus.interfaceIDs.pumpSerial!!)
+        if (existing != null) {
+            if (existing.interfaceIDs.endId == null &&
+                (existing.timestamp != extendedBolus.timestamp ||
+                    existing.amount != extendedBolus.amount ||
+                    existing.duration != extendedBolus.duration)
             ) {
-                current.timestamp = extendedBolus.timestamp
-                current.amount = extendedBolus.amount
-                current.duration = extendedBolus.duration
-                database.extendedBolusDao.updateExistingEntry(current)
-                result.updated.add(current)
+                existing.timestamp = extendedBolus.timestamp
+                existing.amount = extendedBolus.amount
+                existing.duration = extendedBolus.duration
+                database.extendedBolusDao.updateExistingEntry(existing)
+                result.updated.add(existing)
             }
         } else {
-            val running = database.extendedBolusDao.getExtendedBolusActiveAt(extendedBolus.timestamp, extendedBolus.interfaceIDs.pumpType!!, extendedBolus.interfaceIDs.pumpSerial!!).blockingGet()
+            val running = database.extendedBolusDao.getExtendedBolusActiveAt(extendedBolus.timestamp).blockingGet()
             if (running != null) {
                 val pctRun = (extendedBolus.timestamp - running.timestamp) / running.duration.toDouble()
                 running.amount *= pctRun

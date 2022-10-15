@@ -20,7 +20,10 @@ jobs:
 
       # The next step will run the unit tests
       - android/run-tests:
-          test-command: ./gradlew -Pcoverage -PfirebaseDisable testFullDebugUnitTest jacocoTestFullDebugUnitTestReport
+          test-command: ./gradlew testFullDebugUnitTest
+
+      - android/run-tests:
+          test-command: ./gradlew jacocoAllDebugReport
 
       # Then start the emulator and run the Instrumentation tests!
       #      - android/start-emulator-and-run-tests:
@@ -33,35 +36,7 @@ jobs:
       #          command: |
       #            ./gradlew assembleRelease
       - codecov/upload:
-          file: './app/build/jacoco/jacoco.xml'
-      - codecov/upload:
-          file: './automation/build/jacoco/jacoco.xml'
-      - codecov/upload:
-          file: './combo/build/jacoco/jacoco.xml'
-      - codecov/upload:
-          file: './core/build/jacoco/jacoco.xml'
-      - codecov/upload:
-          file: './dana/build/jacoco/jacoco.xml'
-      - codecov/upload:
-          file: './danar/build/jacoco/jacoco.xml'
-      - codecov/upload:
-          file: './danars/build/jacoco/jacoco.xml'
-      - codecov/upload:
-          file: './database/build/jacoco/jacoco.xml'
-      - codecov/upload:
-          file: './insight/build/jacoco/jacoco.xml'
-      - codecov/upload:
-          file: './medtronic/build/jacoco/jacoco.xml'
-      - codecov/upload:
-          file: './omnipod-common/build/jacoco/jacoco.xml'
-      - codecov/upload:
-          file: './omnipod-dash/build/jacoco/jacoco.xml'
-      - codecov/upload:
-          file: './omnipod-eros/build/jacoco/jacoco.xml'
-      - codecov/upload:
-          file: './rileylink/build/jacoco/jacoco.xml'
-      - codecov/upload:
-          file: './wear/build/jacoco/jacoco.xml'
+          file: './build/reports/jacoco/jacocoAllDebugReport/jacocoAllDebugReport.xml'
 
 workflows:
   # Below is the definition of your workflow.

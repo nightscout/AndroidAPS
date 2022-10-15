@@ -8,9 +8,9 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.DefaultStatusResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.SetUniqueIdResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.VersionResponse
-import io.reactivex.Completable
-import io.reactivex.Maybe
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Single
 import java.io.Serializable
 import java.time.ZonedDateTime
 import java.util.*
@@ -94,7 +94,7 @@ interface OmnipodDashPodStateManager {
     fun updateTimeZone()
 
     fun createActiveCommand(
-        historyId: String,
+        historyId: Long,
         basalProgram: BasalProgram? = null,
         tempBasal: TempBasal? = null,
         requestedBolus: Double? = null
@@ -103,7 +103,7 @@ interface OmnipodDashPodStateManager {
     fun observeNoActiveCommand(): Completable
     fun getCommandConfirmationFromState(): CommandConfirmationFromState
 
-    fun createLastBolus(requestedUnits: Double, historyId: String, bolusType: DetailedBolusInfo.BolusType)
+    fun createLastBolus(requestedUnits: Double, historyId: Long, bolusType: DetailedBolusInfo.BolusType)
     fun markLastBolusComplete(): LastBolus?
     fun onStart()
     /*
@@ -120,7 +120,7 @@ interface OmnipodDashPodStateManager {
         val sequence: Short,
         val createdRealtime: Long,
         var sentRealtime: Long = 0,
-        val historyId: String,
+        val historyId: Long,
         var sendError: Throwable?,
         var basalProgram: BasalProgram?,
         val tempBasal: TempBasal?,
@@ -135,7 +135,7 @@ interface OmnipodDashPodStateManager {
         val requestedUnits: Double,
         var bolusUnitsRemaining: Double,
         var deliveryComplete: Boolean,
-        val historyId: String,
+        val historyId: Long,
         val bolusType: DetailedBolusInfo.BolusType
     ) {
 

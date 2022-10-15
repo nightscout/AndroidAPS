@@ -2,26 +2,29 @@ package info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.commands;
 
 import android.os.SystemClock;
 
+import androidx.annotation.NonNull;
+
 import org.monkey.d.ruffy.ruffy.driver.display.Menu;
 import org.monkey.d.ruffy.ruffy.driver.display.MenuAttribute;
 import org.monkey.d.ruffy.ruffy.driver.display.MenuType;
 import org.monkey.d.ruffy.ruffy.driver.display.menu.MenuTime;
-import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import info.nightscout.shared.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.BasalProfile;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.PumpState;
+import info.nightscout.shared.logging.AAPSLogger;
+import info.nightscout.shared.logging.LTag;
 
 public class SetBasalProfileCommand extends BaseCommand {
-    private static final Logger log = StacktraceLoggerWrapper.getLogger(SetBasalProfileCommand.class);
+    private final AAPSLogger aapsLogger;
 
     private final BasalProfile basalProfile;
 
-    public SetBasalProfileCommand(BasalProfile basalProfile) {
+    public SetBasalProfileCommand(BasalProfile basalProfile, AAPSLogger aapsLogger) {
         this.basalProfile = basalProfile;
+        this.aapsLogger = aapsLogger;
     }
 
     @Override
@@ -52,7 +55,7 @@ public class SetBasalProfileCommand extends BaseCommand {
                 verifyDisplayedRate(requestedRate, change);
             }
 
-            log.debug("Set basal profile, hour " + i + ": " + requestedRate);
+            aapsLogger.debug(LTag.PUMP, "Set basal profile, hour " + i + ": " + requestedRate);
         }
 
         // move from hourly values to basal total
@@ -78,9 +81,9 @@ public class SetBasalProfileCommand extends BaseCommand {
 
     private long inputBasalRate(double requestedRate) {
         double currentRate = scripter.readBlinkingValue(Double.class, MenuAttribute.BASAL_RATE);
-        log.debug("Current rate: " + currentRate + ", requested: " + requestedRate);
+        aapsLogger.debug(LTag.PUMP, "Current rate: " + currentRate + ", requested: " + requestedRate);
         // the pump changes steps size from 0.01 to 0.05 when crossing 1.00 U
-        long steps = 0;
+        long steps;
         if (currentRate == 0) {
             // edge case of starting from 0.00;
             steps = stepsToOne(0.05) - stepsToOne(requestedRate) + 1;
@@ -90,10 +93,10 @@ public class SetBasalProfileCommand extends BaseCommand {
         if (steps == 0) {
             return 0;
         }
-        log.debug("Pressing " + (steps > 0 ? "up" : "down") + " " + Math.abs(steps) + " times");
+        aapsLogger.debug(LTag.PUMP, "Pressing " + (steps > 0 ? "up" : "down") + " " + Math.abs(steps) + " times");
         for (int i = 0; i < Math.abs(steps); i++) {
             scripter.verifyMenuIsDisplayed(MenuType.BASAL_SET);
-            log.debug("Push #" + (i + 1) + "/" + Math.abs(steps));
+            aapsLogger.debug(LTag.PUMP, "Push #" + (i + 1) + "/" + Math.abs(steps));
             if (steps > 0) scripter.pressUpKey();
             else scripter.pressDownKey();
             SystemClock.sleep(50);
@@ -119,13 +122,13 @@ public class SetBasalProfileCommand extends BaseCommand {
         while (timeout > System.currentTimeMillis()
                 && ((change > 0 && requestedRate - displayedRate > 0.001) // displayedRate < requestedRate)
                 || (change < 0 && displayedRate - requestedRate > 0.001))) { //displayedRate > requestedRate))) {
-            log.debug("Waiting for pump to process scrolling input for rate, current: "
+            aapsLogger.debug(LTag.PUMP, "Waiting for pump to process scrolling input for rate, current: "
                     + displayedRate + ", desired: " + requestedRate + ", scrolling "
                     + (change > 0 ? "up" : "down"));
             scripter.waitForScreenUpdate();
             displayedRate = scripter.readBlinkingValue(Double.class, MenuAttribute.BASAL_RATE);
         }
-        log.debug("Final displayed basal rate: " + displayedRate);
+        aapsLogger.debug(LTag.PUMP, "Final displayed basal rate: " + displayedRate);
         if (Math.abs(displayedRate - requestedRate) > 0.001) {
             throw new CommandException("Failed to set basal rate, requested: "
                     + requestedRate + ", actual: " + displayedRate);
@@ -153,7 +156,7 @@ public class SetBasalProfileCommand extends BaseCommand {
         return violations;
     }
 
-    @Override
+    @NonNull @Override
     public String toString() {
         return "SetBasalProfileCommand{" +
                 "basalProfile=" + basalProfile +

@@ -5,7 +5,6 @@
     <!-- Omnipod Eros - Keys -->
     <!-- Omnipod Eros - Overview -->
     <!-- Omnipod Eros - Preferences -->
-    <string name="omnipod_eros_preferences_riley_link_configuration">RileyLink 의 구성</string>
     <string name="omnipod_eros_preferences_category_notifications">알림</string>
     <string name="omnipod_eros_preferences_pulse_log_button_enabled">Pod 관리 메뉴에 Pulse 로그 버튼 표시</string>
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Pod 관리 메뉴에 RileyLink 통계 버튼 표시</string>

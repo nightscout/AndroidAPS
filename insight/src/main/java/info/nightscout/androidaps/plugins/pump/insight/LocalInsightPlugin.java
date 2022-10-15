@@ -130,7 +130,7 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.ExceptionTranslator
 import info.nightscout.androidaps.plugins.pump.insight.utils.ParameterBlockUtil;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.T;
-import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.interfaces.ResourceHelper;
 import info.nightscout.shared.sharedPreferences.SP;
 
 @Singleton
@@ -232,8 +232,8 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
 
         pumpDescription = new PumpDescription();
         pumpDescription.fillFor(PumpType.ACCU_CHEK_INSIGHT);
-        lastBolusTimestamp = sp.getLong(R.string.key_insight_lastbolustimestamp,0L);
-        lastBolusAmount = sp.getDouble(R.string.key_insight_lastbolusamount, 0.0);
+        lastBolusTimestamp = sp.getLong(R.string.key_insight_last_bolus_timestamp,0L);
+        lastBolusAmount = sp.getDouble(R.string.key_insight_last_bolus_amount, 0.0);
     }
 
     public TBROverNotificationBlock getTBROverNotificationBlock() {
@@ -587,10 +587,10 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     bolusCancelled = false;
                 }
                 result.success(true).enacted(true);
-                EventOverviewBolusProgress.Treatment t = new EventOverviewBolusProgress.Treatment(0, 0, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB);
+                EventOverviewBolusProgress.Treatment t = new EventOverviewBolusProgress.Treatment(0, 0, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.getId());
                 final EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.INSTANCE;
                 bolusingEvent.setT(t);
-                bolusingEvent.setStatus(rh.gs(R.string.insight_delivered, 0d, insulin));
+                bolusingEvent.setStatus(rh.gs(R.string.bolus_delivered, 0d, insulin));
                 bolusingEvent.setPercent(0);
                 rxBus.send(bolusingEvent);
                 int trials = 0;
@@ -629,14 +629,14 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                         trials = -1;
                         int percentBefore = bolusingEvent.getPercent();
                         bolusingEvent.setPercent((int) (100D / activeBolus.getInitialAmount() * (activeBolus.getInitialAmount() - activeBolus.getRemainingAmount())));
-                        bolusingEvent.setStatus(rh.gs(R.string.insight_delivered, activeBolus.getInitialAmount() - activeBolus.getRemainingAmount(), activeBolus.getInitialAmount()));
+                        bolusingEvent.setStatus(rh.gs(R.string.bolus_delivered, activeBolus.getInitialAmount() - activeBolus.getRemainingAmount(), activeBolus.getInitialAmount()));
                         if (percentBefore != bolusingEvent.getPercent())
                             rxBus.send(bolusingEvent);
                     } else {
                         synchronized ($bolusLock) {
                             if (bolusCancelled || trials == -1 || trials++ >= 5) {
                                 if (!bolusCancelled) {
-                                    bolusingEvent.setStatus(rh.gs(R.string.insight_delivered, insulin, insulin));
+                                    bolusingEvent.setStatus(rh.gs(R.string.bolus_delivered, insulin, insulin));
                                     bolusingEvent.setPercent(100);
                                     rxBus.send(bolusingEvent);
                                 }
@@ -1444,9 +1444,9 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     PumpType.ACCU_CHEK_INSIGHT,
                     serial);
             lastBolusTimestamp = bolusID.getTimestamp();
-            sp.putLong(R.string.key_insight_lastbolustimestamp,lastBolusTimestamp);
+            sp.putLong(R.string.key_insight_last_bolus_timestamp,lastBolusTimestamp);
             lastBolusAmount = event.getImmediateAmount();
-            sp.putDouble(R.string.key_insight_lastbolusamount, lastBolusAmount);
+            sp.putDouble(R.string.key_insight_last_bolus_amount, lastBolusAmount);
         }
         if (event.getBolusType() == BolusType.EXTENDED || event.getBolusType() == BolusType.MULTIWAVE) {
             if (event.getDuration() > 0 && profileFunction.getProfile(bolusID.getTimestamp()) != null)
@@ -1583,22 +1583,22 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
 
     @NonNull @Override
     public Constraint<Integer> applyBasalPercentConstraints(Constraint<Integer> percentRate, @NonNull Profile profile) {
-        percentRate.setIfGreater(getAapsLogger(), 0, String.format(rh.gs(R.string.limitingpercentrate), 0, rh.gs(R.string.itmustbepositivevalue)), this);
-        percentRate.setIfSmaller(getAapsLogger(), getPumpDescription().getMaxTempPercent(), String.format(rh.gs(R.string.limitingpercentrate), getPumpDescription().getMaxTempPercent(), rh.gs(R.string.pumplimit)), this);
+        percentRate.setIfGreater(getAapsLogger(), 0, rh.gs(R.string.limitingpercentrate, 0, rh.gs(R.string.itmustbepositivevalue)), this);
+        percentRate.setIfSmaller(getAapsLogger(), getPumpDescription().getMaxTempPercent(), rh.gs(R.string.limitingpercentrate, getPumpDescription().getMaxTempPercent(), rh.gs(R.string.pumplimit)), this);
         return percentRate;
     }
 
     @NonNull @Override
     public Constraint<Double> applyBolusConstraints(@NonNull Constraint<Double> insulin) {
         if (!limitsFetched) return insulin;
-        insulin.setIfSmaller(getAapsLogger(), maximumBolusAmount, String.format(rh.gs(R.string.limitingbolus), maximumBolusAmount, rh.gs(R.string.pumplimit)), this);
+        insulin.setIfSmaller(getAapsLogger(), maximumBolusAmount, rh.gs(R.string.limitingbolus, maximumBolusAmount, rh.gs(R.string.pumplimit)), this);
         if (insulin.value() < minimumBolusAmount) {
 
             //TODO: Add function to Constraints or use different approach
             // This only works if the interface of the InsightPlugin is called last.
             // If not, another constraint could theoretically set the value between 0 and minimumBolusAmount
 
-            insulin.set(getAapsLogger(), 0d, String.format(rh.gs(R.string.limitingbolus), minimumBolusAmount, rh.gs(R.string.pumplimit)), this);
+            insulin.set(getAapsLogger(), 0d, rh.gs(R.string.limitingbolus, minimumBolusAmount, rh.gs(R.string.pumplimit)), this);
         }
         return insulin;
     }

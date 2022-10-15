@@ -8,7 +8,7 @@ class MsgSetExtendedBolusStop(
 ) : MessageBase(injector) {
 
     init {
-        SetCommand(0x0406)
+        setCommand(0x0406)
         aapsLogger.debug(LTag.PUMPBTCOMM, "New message")
     }
 

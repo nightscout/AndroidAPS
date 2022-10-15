@@ -7,7 +7,7 @@ import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.Spinner
 import info.nightscout.androidaps.automation.R
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import java.util.*
 
 class InputDropdownMenu(private val rh: ResourceHelper) : Element() {

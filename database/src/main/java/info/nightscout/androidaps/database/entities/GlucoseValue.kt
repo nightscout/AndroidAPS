@@ -111,6 +111,7 @@ data class GlucoseValue(
         GLUNOVO_NATIVE("Glunovo"),
         MM_600_SERIES("MM600Series"),
         EVERSENSE("Eversense"),
+        AIDEX("GlucoRx Aidex"),
         RANDOM("Random"),
         UNKNOWN("Unknown"),
 

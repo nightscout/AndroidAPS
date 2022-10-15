@@ -164,7 +164,6 @@
                 validate:floatminNumber="4.0"
                 validate:testType="floatNumericRange" />
 
-
             <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
                 android:defaultValue="0"
                 android:inputType="number"
@@ -173,7 +172,6 @@
                 validate:maxNumber="600"
                 validate:minNumber="15"
                 validate:testType="numericRange" />
-
 
             <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
                 android:defaultValue="0"
@@ -201,7 +199,6 @@
                 validate:floatmaxNumber="180.0"
                 validate:floatminNumber="6.0"
                 validate:testType="floatNumericRange" />
-
 
         </androidx.preference.PreferenceScreen>
 
@@ -235,7 +232,6 @@
                 validate:floatmaxNumber="20.0"
                 validate:floatminNumber="0.05"
                 validate:testType="floatNumericRange" />
-
 
         </androidx.preference.PreferenceScreen>
 

@@ -116,4 +116,5 @@
     <string name="num1pin">1: (12 cyfr)</string>
     <string name="num2pin">2: (8 cyfr)</string>
     <string name="basal_bolus_step">Rozmiar kroku Bazy/Bolusa</string>
+    <string name="carbs_store_error">Prawdopodobnie węglowodany nie zostały poprawnie zapisane. Sprawdź ręcznie i w razie potrzeby zapisz ponownie.</string>
 </resources>

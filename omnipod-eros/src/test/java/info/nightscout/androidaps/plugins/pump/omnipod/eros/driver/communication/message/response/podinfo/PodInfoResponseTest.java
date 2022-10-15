@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.response.podinfo;
 
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -12,9 +13,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 public class PodInfoResponseTest {
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
     @Test
     public void testRawData() {
         byte[] encodedData = ByteUtil.fromHexString("0216020d0000000000ab6a038403ff03860000285708030d");
@@ -51,7 +49,8 @@ public class PodInfoResponseTest {
 
         assertEquals(PodInfoType.DETAILED_STATUS, podInfoResponse.getSubType());
 
-        thrown.expect(ClassCastException.class);
-        PodInfoActiveAlerts podInfo = (PodInfoActiveAlerts) podInfoResponse.getPodInfo();
+        Assert.assertThrows("Expect throw", ClassCastException.class, () -> {
+            PodInfoActiveAlerts podInfo = (PodInfoActiveAlerts) podInfoResponse.getPodInfo();
+        });
     }
 }

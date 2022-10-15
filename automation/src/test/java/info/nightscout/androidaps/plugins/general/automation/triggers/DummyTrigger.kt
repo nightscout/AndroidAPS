@@ -12,6 +12,6 @@ class DummyTrigger(var result: Boolean) : Trigger(HasAndroidInjector { AndroidIn
     override fun fromJSON(data: String): Trigger = DummyTrigger(result)
     override fun friendlyName(): Int = 0
     override fun friendlyDescription(): String = " "
-    override fun icon(): Optional<Int?> = Optional.absent()
+    override fun icon(): Optional<Int> = Optional.absent()
     override fun duplicate(): Trigger = DummyTrigger(result)
 }

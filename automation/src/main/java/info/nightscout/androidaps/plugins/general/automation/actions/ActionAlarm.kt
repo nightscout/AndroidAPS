@@ -13,7 +13,6 @@ import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuil
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
-import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.TimerUtil
 import org.json.JSONObject
 import javax.inject.Inject
@@ -40,7 +39,7 @@ class ActionAlarm(injector: HasAndroidInjector) : Action(injector) {
     override fun doAction(callback: Callback) {
         timerUtil.scheduleReminder(10, text.value.takeIf { it.isNotBlank() }
             ?: rh.gs(R.string.app_name))
-        callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok))?.run()
+        callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok)).run()
     }
 
     override fun toJSON(): String {

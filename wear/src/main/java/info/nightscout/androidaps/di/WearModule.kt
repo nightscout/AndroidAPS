@@ -7,6 +7,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Aaps
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.androidaps.utils.rx.DefaultAapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.AAPSLoggerProduction
 import info.nightscout.shared.logging.L
@@ -16,7 +18,8 @@ import javax.inject.Singleton
 
 @Suppress("unused")
 @Module(includes = [
-    WearModule.AppBindings::class
+    WearModule.AppBindings::class,
+    WearActivitiesModule::class
 ])
 open class WearModule {
 
@@ -27,6 +30,10 @@ open class WearModule {
     @Provides
     @Singleton
     fun provideAAPSLogger(l: L): AAPSLogger = AAPSLoggerProduction(l)
+
+    @Provides
+    @Singleton
+    internal fun provideSchedulers(): AapsSchedulers = DefaultAapsSchedulers()
 
     @Module
     interface AppBindings {

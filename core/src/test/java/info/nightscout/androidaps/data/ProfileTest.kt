@@ -14,7 +14,7 @@ import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HardLimits
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.TestAapsSchedulers
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONObject
@@ -78,7 +78,7 @@ class ProfileTest : TestBase() {
 //        JSONAssert.assertEquals(JSONObject(okProfile), p.toPureNsJson(dateUtil), false)
         Assert.assertEquals(5.0, p.dia, 0.01)
 //        Assert.assertEquals(TimeZone.getTimeZone("UTC"), p.timeZone)
-        Assert.assertEquals("00:30", dateUtil.format_HH_MM(30 * 60))
+        Assert.assertEquals("00:30", dateUtil.formatHHMM(30 * 60))
         val c = Calendar.getInstance()
         c[Calendar.HOUR_OF_DAY] = 1
         c[Calendar.MINUTE] = 0

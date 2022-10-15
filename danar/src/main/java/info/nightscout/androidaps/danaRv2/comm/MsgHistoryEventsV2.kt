@@ -21,29 +21,29 @@ class MsgHistoryEventsV2 constructor(
     }
 
     init {
-        SetCommand(0xE003)
+        setCommand(0xE003)
         if (from > dateUtil.now()) {
             aapsLogger.error("Asked to load from the future")
             from = 0
         }
         if (from == 0L) {
-            AddParamByte(0.toByte())
-            AddParamByte(1.toByte())
-            AddParamByte(1.toByte())
-            AddParamByte(0.toByte())
-            AddParamByte(0.toByte())
+            addParamByte(0.toByte())
+            addParamByte(1.toByte())
+            addParamByte(1.toByte())
+            addParamByte(0.toByte())
+            addParamByte(0.toByte())
         } else {
             val gFrom = GregorianCalendar()
             gFrom.timeInMillis = from
-            AddParamDate(gFrom)
+            addParamDate(gFrom)
         }
         aapsLogger.debug(LTag.PUMPCOMM, "Loading event history from: " + dateUtil.dateAndTimeString(from))
         danaPump.historyDoneReceived = false
         messageBuffer = arrayListOf()
     }
 
-    override fun handleMessage(data: ByteArray) {
-        val recordCode = intFromBuff(data, 0, 1).toByte()
+    override fun handleMessage(bytes: ByteArray) {
+        val recordCode = intFromBuff(bytes, 0, 1).toByte()
         // Last record
         if (recordCode == 0xFF.toByte()) {
             aapsLogger.debug(LTag.PUMPCOMM, "Last record received")
@@ -52,7 +52,7 @@ class MsgHistoryEventsV2 constructor(
             val sorted = array.sortedArrayWith { s1: ByteArray, s2: ByteArray -> (dateTime(s1) - dateTime(s2)).toInt() }
             for (message in sorted) processMessage(message)
             danaPump.historyDoneReceived = true
-        } else messageBuffer.add(data)
+        } else messageBuffer.add(bytes)
     }
 
     fun dateTime(data: ByteArray): Long =

@@ -14,10 +14,10 @@ import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolD
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolResetData
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolUpdateGUI
 import info.nightscout.androidaps.utils.FabricPrivacy
-import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxjava3.kotlin.plusAssign
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.sharedPreferences.SP
-import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 
 class TidepoolFragment : DaggerFragment() {

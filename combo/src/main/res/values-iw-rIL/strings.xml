@@ -51,4 +51,10 @@
     <string name="combo_tbr_count">ספירת TBR</string>
     <string name="bolusstopped">בולוס עצר</string>
     <string name="bolusstopping">עצירת בולוס</string>
+    <string name="pump_commerror_label">מספר השגיאות בתקשורת</string>
+    <string name="show_comm_error_count_title">הצג מונה שגיאות בתקשורת</string>
+    <string name="show_comm_error_count_summary">מציג את מספר השגיאות בתקשורת עם Ruffy. במרבית המקרים, מספר הגבוה מ-0 מציג בעיות תקשורת עם Ruffy וייתכן שיהיה צורך באתחול מחדש.</string>
+    <string name="combo_error_display_never">אף פעם</string>
+    <string name="combo_error_display_error">כשחלה שגיאה</string>
+    <string name="combo_error_display_always">תמיד</string>
 </resources>

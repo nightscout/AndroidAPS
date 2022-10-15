@@ -1,12 +1,12 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.pair
 
 import info.nightscout.androidaps.extensions.toHex
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.BuildConfig
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.MessageIOException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.RandomByteGenerator
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.X25519KeyGenerator
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import org.spongycastle.crypto.engines.AESEngine
 import org.spongycastle.crypto.macs.CMac
 import org.spongycastle.crypto.params.KeyParameter

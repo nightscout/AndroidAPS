@@ -31,7 +31,6 @@
     <string name="update_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#update-to-a-new-version-or-branch</string>
     <string name="troubleshooting_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
-    <string name="troubleshooting_hint3">https://gitter.im/MilosKozak/AndroidAPS</string>
     <string name="insulin_fiasp">Fiasp®</string>
     <string name="insulin_humalog">Humalog®</string>
     <string name="insulin_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html#insulin</string>

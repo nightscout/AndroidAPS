@@ -1,10 +1,15 @@
 package info.nightscout.androidaps.danars.services
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.bluetooth.*
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.SystemClock
 import android.util.Base64
+import androidx.core.app.ActivityCompat
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danars.DanaRSPlugin
@@ -21,6 +26,7 @@ import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.extensions.notify
 import info.nightscout.androidaps.extensions.waitMillis
 import info.nightscout.androidaps.interfaces.PumpSync
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
@@ -28,7 +34,6 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.ToastUtils
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
@@ -90,6 +95,13 @@ class BLEComm @Inject internal constructor(
 
     @Synchronized
     fun connect(from: String, address: String?): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+            ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ToastUtils.errorToast(context, context.getString(info.nightscout.androidaps.core.R.string.needconnectpermission))
+            aapsLogger.error(LTag.PUMPBTCOMM, "missing permission: $from")
+            return false
+        }
         aapsLogger.debug(LTag.PUMPBTCOMM, "Initializing BLEComm.")
         if (bluetoothAdapter == null) {
             aapsLogger.error("Unable to obtain a BluetoothAdapter.")
@@ -107,8 +119,10 @@ class BLEComm @Inject internal constructor(
             return false
         }
         if (device.bondState == BluetoothDevice.BOND_NONE) {
-            device.createBond()
-            SystemClock.sleep(10000)
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
+                device.createBond()
+                SystemClock.sleep(10000)
+            }
             return false
         }
         isConnected = false
@@ -131,6 +145,12 @@ class BLEComm @Inject internal constructor(
 
     @Synchronized
     fun disconnect(from: String) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+            ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED
+        ) {
+            aapsLogger.error(LTag.PUMPBTCOMM, "missing permission: $from")
+            return
+        }
         aapsLogger.debug(LTag.PUMPBTCOMM, "disconnect from: $from")
 
         if (!encryptedDataRead && encryptedCommandSent && encryption == EncryptionType.ENCRYPTION_BLE5) {
@@ -191,6 +211,7 @@ class BLEComm @Inject internal constructor(
         }
     }
 
+    @SuppressLint("MissingPermission")
     @Synchronized fun close() {
         /*
         if (!encryptedDataRead && !encryptedCommandSent) {
@@ -268,6 +289,7 @@ class BLEComm @Inject internal constructor(
         }
     }
 
+    @SuppressLint("MissingPermission")
     @Synchronized
     private fun setCharacteristicNotification(characteristic: BluetoothGattCharacteristic?, enabled: Boolean) {
         aapsLogger.debug(LTag.PUMPBTCOMM, "setCharacteristicNotification")
@@ -287,6 +309,7 @@ class BLEComm @Inject internal constructor(
         }
     }
 
+    @SuppressLint("MissingPermission")
     @Synchronized
     private fun writeCharacteristicNoResponse(characteristic: BluetoothGattCharacteristic, data: ByteArray) {
         Thread(Runnable {
@@ -346,6 +369,7 @@ class BLEComm @Inject internal constructor(
         }
     }
 
+    @SuppressLint("MissingPermission")
     @Synchronized
     private fun onConnectionStateChangeSynchronized(gatt: BluetoothGatt, newState: Int) {
         aapsLogger.debug(LTag.PUMPBTCOMM, "onConnectionStateChange")
@@ -559,7 +583,7 @@ class BLEComm @Inject internal constructor(
                 sp.putString(rh.gs(R.string.key_dana_ble5_pairingkey) + danaRSPlugin.mDeviceName, pairingKey)
 
             val storedPairingKey = sp.getString(rh.gs(R.string.key_dana_ble5_pairingkey) + danaRSPlugin.mDeviceName, "")
-            if (storedPairingKey.isNullOrBlank()) {
+            if (storedPairingKey.isBlank()) {
                 removeBond()
                 disconnect("Non existing pairing key")
             }

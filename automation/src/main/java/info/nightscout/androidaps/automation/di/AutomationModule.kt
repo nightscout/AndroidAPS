@@ -33,6 +33,7 @@ abstract class AutomationModule {
     @ContributesAndroidInjector abstract fun triggerWifiSsidInjector(): TriggerWifiSsid
 
     @ContributesAndroidInjector abstract fun actionInjector(): Action
+    @ContributesAndroidInjector abstract fun actionStopProcessingInjector(): ActionStopProcessing
     @ContributesAndroidInjector abstract fun actionLoopDisableInjector(): ActionLoopDisable
     @ContributesAndroidInjector abstract fun actionLoopEnableInjector(): ActionLoopEnable
     @ContributesAndroidInjector abstract fun actionLoopResumeInjector(): ActionLoopResume
@@ -42,6 +43,7 @@ abstract class AutomationModule {
     @ContributesAndroidInjector abstract fun actionCarePortalEventInjector(): ActionCarePortalEvent
     @ContributesAndroidInjector abstract fun actionProfileSwitchInjector(): ActionProfileSwitch
     @ContributesAndroidInjector abstract fun actionProfileSwitchPercentInjector(): ActionProfileSwitchPercent
+    @ContributesAndroidInjector abstract fun actionRunAutotuneInjector(): ActionRunAutotune
     @ContributesAndroidInjector abstract fun actionSendSMSInjector(): ActionSendSMS
     @ContributesAndroidInjector abstract fun actionStartTempTargetInjector(): ActionStartTempTarget
     @ContributesAndroidInjector abstract fun actionStopTempTargetInjector(): ActionStopTempTarget

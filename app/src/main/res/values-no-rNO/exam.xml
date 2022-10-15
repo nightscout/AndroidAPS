@@ -104,11 +104,11 @@
     <string name="troubleshooting_wheretoask">Hvor kan du søke etter hjelp for AndroidAPS?</string>
     <string name="troubleshooting_fb">Du kan be om råd i Facebookgruppen AndroidAPS Users.</string>
     <string name="troubleshooting_wiki">Du bør lese (og lese om igjen) AndroidAPS dokumentasjonen.</string>
-    <string name="troubleshooting_gitter">Du kan be om råd og logge tekniske problemer eller hendelser i AndroidAPS Gitter.</string>
+    <string name="troubleshooting_gitter">Du kan be om råd og logge tekniske problemer eller spørsmål på AndroidAPS Discord.</string>
     <string name="troubleshooting_yourendo">Du bør spørre din diabetesklinikk/endokrinolog.</string>
     <string name="troubleshooting_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
-    <string name="troubleshooting_hint3">https://gitter.im/MilosKozak/AndroidAPS</string>
+    <string name="troubleshooting_hint3">https://discord.gg/4fQUWHZ4Mw</string>
     <string name="insulin_label">Insulin plugin modul</string>
     <string name="insulin_ultrarapid">Hvilken insulin skal du bruke sammens med Ultra-Rapid Oref modulen?</string>
     <string name="insulin_fiasp">Fiasp®</string>
@@ -123,6 +123,7 @@
     <string name="sensitivity_cannula">Hvis du logger bytte av kanyle vil Autosens verdien tilbakestilles til 100%.</string>
     <string name="sensitivity_time">Noen plugins har konfigurerbare tidsintervall som kan settes av brukeren.</string>
     <string name="sensitivity_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Sensitivity-detection-and-COB.html</string>
+    <string name="sensitivity_hint2">https://androidaps.readthedocs.io/en/latest/Usage/Open-APS-features.html?highlight=Autosens#autosens</string>
     <string name="wrongcarbs_label">Feil i KH angivelse</string>
     <string name="wrongcarbs_whattodo">Hva skal du gjøre hvis du har gjort en feilaktig registrering av karbohydrater?</string>
     <string name="wrongcarbs_treatmentstab">Fjern den feilaktige registreringen i Behandlinger og legg inn riktig verdi for karbohydrater.</string>
@@ -135,8 +136,20 @@
     <string name="wronginsulin_compare">Sammenlign verdiene i AndroidAPS og pumpehistorikken (hvis pumpen støtter dette).</string>
     <string name="wronginsulin_prime">Gi en bolus med en del av det insulinet du mangler enten med penn eller ved å bruke prime funksjonen.</string>
     <string name="wronginsulin_donothing">Ikke gjør noe og la AndroidAPS korrigere eventuelle høye blodsukkerverdier.</string>
+    <string name="cob_label">Karbohydrater ombord (COB)</string>
+    <string name="cob_question">Hvordan vil endring av ISF-verdi påvirke COB-beregning?</string>
+    <string name="cob_longer">Økning av ISF gjør at karbohydrater absorberes over lengre tid</string>
+    <string name="cob_shorter">Økning av ISF gjør at karbohydrater absorberes over kortere tid</string>
+    <string name="cob_no_effect">Økning av ISF påvirker ikke beregningen av absorbering av karbohydrater</string>
+    <string name="cob2_question">Hvordan vil endring av IC-verdi påvirke COB-beregning?</string>
+    <string name="cob2_longer">Økning av IC gjør at karbohydrater absorberes over lengre tid</string>
+    <string name="cob2_shorter">Økning av IC gjør at karbohydrater absorberes over kortere tid</string>
+    <string name="cob2_no_effect">Økning av IC påvirker ikke beregningen av absorbering av karbohydrater</string>
+    <string name="cob3_question">Hvordan vil endring av profil-prosent påvirke COB-beregning?</string>
+    <string name="cob3_longer">Ved å sette profilen til 150% vil karbohydrater absorberes over lengre tid</string>
+    <string name="cob3_shorter">Ved å sette profilen til 150% vil karbohydrater absorberes over kortere tid</string>
+    <string name="cob3_no_effect">Ved å sette profilen til 150% påvirkes ikke beregningen av absorbering av karbohydrater</string>
     <string name="iob_label">Aktivt insulin (IOB)</string>
-    <string name="iob_which">Marker alle riktige svar.</string>
     <string name="iob_value">IOB verdi påvirkes av midlertidige temp basaler.</string>
     <string name="iob_hightemp">Høy temp basal vil ikke bli gitt når ditt blodsukker er under målverdi.</string>
     <string name="iob_negiob">Negativ IOB i en lengre periode selv om du ikke trener tyder på at profilen din gir for mye insulin og kanskje bør reduseres i innstillingene.</string>

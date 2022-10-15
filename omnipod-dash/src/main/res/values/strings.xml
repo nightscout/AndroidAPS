@@ -46,7 +46,6 @@
     <string name="omnipod_dash_unknown">Unknown state for the command</string>
     <string name="omnipod_common_history_tbr_value">Rate: %1$.2f U, duration: %2$d minutes</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
-    <string name="dash_bolusdelivering">Delivering %1$.2f U</string>
     <string name="omnipod_common_alert_delivery_suspended">Insulin delivery is suspended</string>
     <string name="omnipod_dash_connection_lost">Lost connection to pod</string>
     <string name="omnipod_dash_bolus_already_in_progress">Another bolus is being delivered</string>

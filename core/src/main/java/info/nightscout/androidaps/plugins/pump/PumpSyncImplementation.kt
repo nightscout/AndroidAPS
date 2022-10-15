@@ -18,10 +18,10 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
 
 class PumpSyncImplementation @Inject constructor(
@@ -271,7 +271,7 @@ class PumpSyncImplementation @Inject constructor(
             .blockingGet()
             .also { result ->
                 result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted TemporaryBasal $it") }
-                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated TemporaryBasal $it") }
+                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated TemporaryBasal ${it.first} New: ${it.second}") }
                 return result.inserted.size > 0
             }
     }
@@ -283,7 +283,7 @@ class PumpSyncImplementation @Inject constructor(
             .blockingGet()
             .also { result ->
                 result.updated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated TemporaryBasal $it")
+                    aapsLogger.debug(LTag.DATABASE, "Updated TemporaryBasal ${it.first} New: ${it.second}")
                 }
                 return result.updated.size > 0
             }
@@ -331,7 +331,7 @@ class PumpSyncImplementation @Inject constructor(
             .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving TemporaryBasal", it) }
             .blockingGet()
             .also { result ->
-                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated TemporaryBasal $it") }
+                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated TemporaryBasal ${it.first} New: ${it.second}") }
                 return result.updated.size > 0
             }
     }

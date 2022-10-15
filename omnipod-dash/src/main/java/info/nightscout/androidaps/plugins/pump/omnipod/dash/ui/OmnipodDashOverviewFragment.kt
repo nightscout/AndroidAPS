@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.ui
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
@@ -14,8 +13,10 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.events.EventPumpStatusChanged
+import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.PumpSync
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
@@ -39,20 +40,18 @@ import info.nightscout.androidaps.queue.events.EventQueueChanged
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.buildHelper.BuildHelper
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.androidaps.utils.ui.UIRunnable
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
+import info.nightscout.shared.sharedPreferences.SP
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
 import org.apache.commons.lang3.StringUtils
 import java.time.Duration
 import java.time.ZonedDateTime
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
 // TODO generify; see OmnipodErosOverviewFragment
 class OmnipodDashOverviewFragment : DaggerFragment() {
@@ -64,6 +63,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     @Inject lateinit var omnipodDashPumpPlugin: OmnipodDashPumpPlugin
     @Inject lateinit var podStateManager: OmnipodDashPodStateManager
     @Inject lateinit var sp: SP
+    @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var pumpSync: PumpSync
@@ -93,8 +93,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     private var _podInfoBinding: OmnipodCommonOverviewPodInfoBinding? = null
     private var _buttonBinding: OmnipodCommonOverviewButtonsBinding? = null
 
-    // These properties are only valid between onCreateView and
-    // onDestroyView.
+    // These properties are only valid between onCreateView and onDestroyView.
     val binding get() = _binding!!
     private val bluetoothStatusBinding get() = _bluetoothStatusBinding!!
     private val podInfoBinding get() = _podInfoBinding!!
@@ -112,8 +111,13 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         buttonBinding.buttonPodManagement.setOnClickListener {
-            // TODO add protection
-            startActivity(Intent(context, DashPodManagementActivity::class.java))
+            activity?.let { activity ->
+                protectionCheck.queryProtection(
+                    activity,
+                    ProtectionCheck.Protection.PREFERENCES,
+                    UIRunnable { startActivity(Intent(context, DashPodManagementActivity::class.java)) }
+                )
+            }
         }
 
         buttonBinding.buttonResumeDelivery.setOnClickListener {
@@ -262,14 +266,17 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
         val quality =
             "${podStateManager.successfulConnectionAttemptsAfterRetries}/$connectionAttempts :: $successPercentageString"
         bluetoothStatusBinding.omnipodDashBluetoothConnectionQuality.text = quality
-        val connectionStatsColor = when {
-            connectionSuccessPercentage < 70 && podStateManager.successfulConnectionAttemptsAfterRetries > 50 ->
-                Color.RED
-            connectionSuccessPercentage < 90 && podStateManager.successfulConnectionAttemptsAfterRetries > 50 ->
-                Color.YELLOW
-            else ->
-                Color.WHITE
-        }
+        val connectionStatsColor = rh.gac(
+            context,
+            when {
+                connectionSuccessPercentage < 70 && podStateManager.successfulConnectionAttemptsAfterRetries > 50 ->
+                    R.attr.warningColor
+                connectionSuccessPercentage < 90 && podStateManager.successfulConnectionAttemptsAfterRetries > 50 ->
+                    R.attr.omniYellowColor
+                else                                                                                              ->
+                    R.attr.defaultTextColor
+            }
+        )
         bluetoothStatusBinding.omnipodDashBluetoothConnectionQuality.setTextColor(connectionStatsColor)
         bluetoothStatusBinding.omnipodDashDeliveryStatus.text = podStateManager.deliveryStatus?.let {
             podStateManager.deliveryStatus.toString()
@@ -291,11 +298,11 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             podInfoBinding.firmwareVersion.text = PLACEHOLDER
             podInfoBinding.timeOnPod.text = PLACEHOLDER
             podInfoBinding.podExpiryDate.text = PLACEHOLDER
-            podInfoBinding.podExpiryDate.setTextColor(Color.WHITE)
+            podInfoBinding.podExpiryDate.setTextColor(rh.gac(context, R.attr.defaultTextColor))
             podInfoBinding.baseBasalRate.text = PLACEHOLDER
             podInfoBinding.totalDelivered.text = PLACEHOLDER
             podInfoBinding.reservoir.text = PLACEHOLDER
-            podInfoBinding.reservoir.setTextColor(Color.WHITE)
+            podInfoBinding.reservoir.setTextColor(rh.gac(context, R.attr.defaultTextColor))
             podInfoBinding.podActiveAlerts.text = PLACEHOLDER
         } else {
             podInfoBinding.uniqueId.text = podStateManager.uniqueId.toString()
@@ -330,14 +337,17 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                 ).isNegative
             } ?: false
             podInfoBinding.timeOnPod.setTextColor(
-                when {
-                    !podStateManager.sameTimeZone ->
-                        Color.MAGENTA
-                    timeDeviationTooBig ->
-                        Color.YELLOW
-                    else ->
-                        Color.WHITE
-                }
+                rh.gac(
+                    context,
+                    when {
+                        !podStateManager.sameTimeZone ->
+                            R.attr.omniMagentaColor
+                        timeDeviationTooBig           ->
+                            R.attr.omniYellowColor
+                        else                          ->
+                            R.attr.defaultTextColor
+                    }
+                )
             )
 
             // Update Pod expiry time
@@ -347,14 +357,17 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             }
                 ?: PLACEHOLDER
             podInfoBinding.podExpiryDate.setTextColor(
-                when {
-                    expiresAt != null && ZonedDateTime.now().isAfter(expiresAt) ->
-                        Color.RED
-                    expiresAt != null && ZonedDateTime.now().isAfter(expiresAt.minusHours(4)) ->
-                        Color.YELLOW
-                    else ->
-                        Color.WHITE
-                }
+                rh.gac(
+                    context,
+                    when {
+                        expiresAt != null && ZonedDateTime.now().isAfter(expiresAt)               ->
+                            R.attr.warningColor
+                        expiresAt != null && ZonedDateTime.now().isAfter(expiresAt.minusHours(4)) ->
+                            R.attr.omniYellowColor
+                        else                                                                      ->
+                            R.attr.defaultTextColor
+                    }
+                )
             )
 
             podStateManager.alarmType?.let {
@@ -373,7 +386,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                     rh.gs(
                         R.string.pump_basebasalrate,
                         omnipodDashPumpPlugin.model()
-                            .determineCorrectBasalSize(podStateManager.basalProgram!!.rateAt(Date()))
+                            .determineCorrectBasalSize(podStateManager.basalProgram!!.rateAt(System.currentTimeMillis()))
                     )
                 } else {
                     PLACEHOLDER
@@ -394,7 +407,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             if (podStateManager.pulsesRemaining == null) {
                 podInfoBinding.reservoir.text =
                     rh.gs(R.string.omnipod_common_overview_reservoir_value_over50)
-                podInfoBinding.reservoir.setTextColor(Color.WHITE)
+                podInfoBinding.reservoir.setTextColor(rh.gac(context, R.attr.defaultTextColor))
             } else {
                 // TODO
                 // val lowReservoirThreshold = (omnipodAlertUtil.lowReservoirAlertUnits
@@ -406,11 +419,14 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                     (podStateManager.pulsesRemaining!! * PodConstants.POD_PULSE_BOLUS_UNITS)
                 )
                 podInfoBinding.reservoir.setTextColor(
-                    if (podStateManager.pulsesRemaining!! < lowReservoirThreshold) {
-                        Color.RED
-                    } else {
-                        Color.WHITE
-                    }
+                    rh.gac(
+                        context,
+                        if (podStateManager.pulsesRemaining!! < lowReservoirThreshold) {
+                            R.attr.warningColor
+                        } else {
+                            R.attr.defaultTextColor
+                        }
+                    )
                 )
             }
 
@@ -421,30 +437,30 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
         if (errors.size == 0) {
             podInfoBinding.errors.text = PLACEHOLDER
-            podInfoBinding.errors.setTextColor(Color.WHITE)
+            podInfoBinding.errors.setTextColor(rh.gac(context, R.attr.defaultTextColor))
         } else {
             podInfoBinding.errors.text = StringUtils.join(errors, System.lineSeparator())
-            podInfoBinding.errors.setTextColor(Color.RED)
+            podInfoBinding.errors.setTextColor(rh.gac(context, R.attr.warningColor))
         }
     }
 
     private fun translatedActiveAlert(alert: AlertType): String {
         val id = when (alert) {
-            AlertType.LOW_RESERVOIR ->
+            AlertType.LOW_RESERVOIR       ->
                 R.string.omnipod_common_alert_low_reservoir
-            AlertType.EXPIRATION ->
+            AlertType.EXPIRATION          ->
                 R.string.omnipod_common_alert_expiration_advisory
             AlertType.EXPIRATION_IMMINENT ->
                 R.string.omnipod_common_alert_expiration
             AlertType.USER_SET_EXPIRATION ->
                 R.string.omnipod_common_alert_expiration_advisory
-            AlertType.AUTO_OFF ->
+            AlertType.AUTO_OFF            ->
                 R.string.omnipod_common_alert_shutdown_imminent
             AlertType.SUSPEND_IN_PROGRESS ->
                 R.string.omnipod_common_alert_delivery_suspended
-            AlertType.SUSPEND_ENDED ->
+            AlertType.SUSPEND_ENDED       ->
                 R.string.omnipod_common_alert_delivery_suspended
-            else ->
+            else                          ->
                 R.string.omnipod_common_alert_unknown_alert
         }
         return rh.gs(id)
@@ -457,17 +473,20 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                     System.currentTimeMillis() -
                         podStateManager.lastUpdatedSystem,
 
-                )
+                    )
             )
             val lastConnectionColor =
-                if (omnipodDashPumpPlugin.isUnreachableAlertTimeoutExceeded(getPumpUnreachableTimeout().toMillis())) {
-                    Color.RED
-                } else {
-                    Color.WHITE
-                }
+                rh.gac(
+                    context,
+                    if (omnipodDashPumpPlugin.isUnreachableAlertTimeoutExceeded(getPumpUnreachableTimeout().toMillis())) {
+                        R.attr.warningColor
+                    } else {
+                        R.attr.defaultTextColor
+                    }
+                )
             podInfoBinding.lastConnection.setTextColor(lastConnectionColor)
         } else {
-            podInfoBinding.lastConnection.setTextColor(Color.WHITE)
+            podInfoBinding.lastConnection.setTextColor(rh.gac(context, R.attr.defaultTextColor))
             podInfoBinding.lastConnection.text = PLACEHOLDER
         }
     }
@@ -503,20 +522,23 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             }
         }
 
-        val podStatusColor = when {
-            !podStateManager.isActivationCompleted || podStateManager.isPodKaput || podStateManager.isSuspended ->
-                Color.RED
-            podStateManager.activeCommand != null ->
-                Color.YELLOW
-            else ->
-                Color.WHITE
-        }
+        val podStatusColor = rh.gac(
+            context,
+            when {
+                !podStateManager.isActivationCompleted || podStateManager.isPodKaput || podStateManager.isSuspended ->
+                    R.attr.warningColor
+                podStateManager.activeCommand != null                                                               ->
+                    R.attr.omniYellowColor
+                else                                                                                                ->
+                    R.attr.defaultTextColor
+            }
+        )
         podInfoBinding.podStatus.setTextColor(podStatusColor)
     }
 
     private fun updateLastBolus() {
 
-        var textColor = Color.WHITE
+        var textColorAttr = R.attr.defaultTextColor
         podStateManager.activeCommand?.let {
             val requestedBolus = it.requestedBolus
             if (requestedBolus != null) {
@@ -527,14 +549,14 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                     readableDuration(Duration.ofMillis(SystemClock.elapsedRealtime() - it.createdRealtime))
                 )
                 text += " (uncertain) "
-                textColor = Color.RED
+                textColorAttr = R.attr.warningColor
                 podInfoBinding.lastBolus.text = text
-                podInfoBinding.lastBolus.setTextColor(textColor)
+                podInfoBinding.lastBolus.setTextColor(rh.gac(context, textColorAttr))
                 return
             }
         }
 
-        podInfoBinding.lastBolus.setTextColor(textColor)
+        podInfoBinding.lastBolus.setTextColor(rh.gac(context, textColorAttr))
         podStateManager.lastBolus?.let {
             // display requested units if delivery is in progress
             val bolusSize = it.deliveredUnits()
@@ -547,10 +569,10 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                 readableDuration(Duration.ofMillis(System.currentTimeMillis() - it.startTime))
             )
             if (!it.deliveryComplete) {
-                textColor = Color.YELLOW
+                textColorAttr = R.attr.omniYellowColor
             }
             podInfoBinding.lastBolus.text = text
-            podInfoBinding.lastBolus.setTextColor(textColor)
+            podInfoBinding.lastBolus.setTextColor(rh.gac(context, textColorAttr))
             return
         }
         podInfoBinding.lastBolus.text = PLACEHOLDER
@@ -605,7 +627,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     private fun updateRefreshStatusButton() {
         buttonBinding.buttonRefreshStatus.isEnabled =
             podStateManager.isUniqueIdSet &&
-            isQueueEmpty()
+                isQueueEmpty()
     }
 
     private fun updateResumeDeliveryButton() {
@@ -672,15 +694,15 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
         val minutes = duration.toMinutes().toInt()
         val seconds = duration.seconds
         when {
-            seconds < 10 -> {
+            seconds < 10           -> {
                 return rh.gs(R.string.omnipod_common_moments_ago)
             }
 
-            seconds < 60 -> {
+            seconds < 60           -> {
                 return rh.gs(R.string.omnipod_common_less_than_a_minute_ago)
             }
 
-            seconds < 60 * 60 -> { // < 1 hour
+            seconds < 60 * 60      -> { // < 1 hour
                 return rh.gs(
                     R.string.omnipod_common_time_ago,
                     rh.gq(R.plurals.omnipod_common_minutes, minutes, minutes)
@@ -704,7 +726,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                 )
             }
 
-            else -> {
+            else                   -> {
                 val days = hours / 24
                 val hoursLeft = hours % 24
                 if (hoursLeft > 0)

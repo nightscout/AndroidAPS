@@ -28,10 +28,12 @@ import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.toSignedString
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.protection.ProtectionCheck
+import info.nightscout.androidaps.utils.protection.ProtectionCheck.Protection.BOLUS
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.SafeParse
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
 import java.text.DecimalFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -52,15 +54,21 @@ class InsulinDialog : DialogFragmentWithDate() {
     @Inject lateinit var config: Config
     @Inject lateinit var bolusTimer: BolusTimer
     @Inject lateinit var uel: UserEntryLogger
+    @Inject lateinit var protectionCheck: ProtectionCheck
 
     companion object {
 
-        private const val PLUS1_DEFAULT = 0.5
-        private const val PLUS2_DEFAULT = 1.0
-        private const val PLUS3_DEFAULT = 2.0
+        const val PLUS1_DEFAULT = 0.5
+        const val PLUS2_DEFAULT = 1.0
+        const val PLUS3_DEFAULT = 2.0
     }
 
+    private var queryingProtection = false
     private val disposable = CompositeDisposable()
+    private var _binding: DialogInsulinBinding? = null
+
+    // This property is only valid between onCreateView and onDestroyView.
+    private val binding get() = _binding!!
 
     private val textWatcher: TextWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable) {
@@ -70,12 +78,6 @@ class InsulinDialog : DialogFragmentWithDate() {
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
     }
-
-    private var _binding: DialogInsulinBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
 
     private fun validateInputs() {
         val maxInsulin = constraintChecker.getMaxBolusAllowed().value()
@@ -116,29 +118,40 @@ class InsulinDialog : DialogFragmentWithDate() {
         binding.amount.setParams(savedInstanceState?.getDouble("amount")
             ?: 0.0, 0.0, maxInsulin, activePlugin.activePump.pumpDescription.bolusStep, DecimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump), false, binding.okcancel.ok, textWatcher)
 
-        binding.plus05.text = sp.getDouble(rh.gs(R.string.key_insulin_button_increment_1), PLUS1_DEFAULT).toSignedString(activePlugin.activePump)
+        val plus05Text = sp.getDouble(rh.gs(R.string.key_insulin_button_increment_1), PLUS1_DEFAULT).toSignedString(activePlugin.activePump)
+        binding.plus05.text = plus05Text
+        binding.plus05.contentDescription = rh.gs(R.string.overview_insulin_label) + " " + plus05Text
         binding.plus05.setOnClickListener {
             binding.amount.value = max(0.0, binding.amount.value
                 + sp.getDouble(rh.gs(R.string.key_insulin_button_increment_1), PLUS1_DEFAULT))
             validateInputs()
+            binding.amount.announceValue()
         }
-        binding.plus10.text = sp.getDouble(rh.gs(R.string.key_insulin_button_increment_2), PLUS2_DEFAULT).toSignedString(activePlugin.activePump)
+        val plus10Text = sp.getDouble(rh.gs(R.string.key_insulin_button_increment_2), PLUS2_DEFAULT).toSignedString(activePlugin.activePump)
+        binding.plus10.text = plus10Text
+        binding.plus10.contentDescription = rh.gs(R.string.overview_insulin_label) + " " + plus10Text
         binding.plus10.setOnClickListener {
             binding.amount.value = max(0.0, binding.amount.value
                 + sp.getDouble(rh.gs(R.string.key_insulin_button_increment_2), PLUS2_DEFAULT))
             validateInputs()
+            binding.amount.announceValue()
         }
-        binding.plus20.text = sp.getDouble(rh.gs(R.string.key_insulin_button_increment_3), PLUS3_DEFAULT).toSignedString(activePlugin.activePump)
+        val plus20Text = sp.getDouble(rh.gs(R.string.key_insulin_button_increment_3), PLUS3_DEFAULT).toSignedString(activePlugin.activePump)
+        binding.plus20.text = plus20Text
+        binding.plus20.contentDescription = rh.gs(R.string.overview_insulin_label) + " " + plus20Text
         binding.plus20.setOnClickListener {
             binding.amount.value = max(0.0, binding.amount.value
                 + sp.getDouble(rh.gs(R.string.key_insulin_button_increment_3), PLUS3_DEFAULT))
             validateInputs()
+            binding.amount.announceValue()
         }
 
         binding.timeLayout.visibility = View.GONE
         binding.recordOnly.setOnCheckedChangeListener { _, isChecked: Boolean ->
             binding.timeLayout.visibility = isChecked.toVisibility()
         }
+        binding.insulinLabel.labelFor = binding.amount.editTextId
+        binding.timeLabel.labelFor = binding.time.editTextId
     }
 
     override fun onDestroyView() {
@@ -159,16 +172,17 @@ class InsulinDialog : DialogFragmentWithDate() {
         val eatingSoonChecked = binding.startEatingSoonTt.isChecked
 
         if (insulinAfterConstraints > 0) {
-            actions.add(rh.gs(R.string.bolus) + ": " + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump, rh).formatColor(rh, R.color.bolus))
+            actions.add(rh.gs(R.string.bolus) + ": " + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump, rh).formatColor(context, rh, R.attr.bolusColor))
             if (recordOnlyChecked)
-                actions.add(rh.gs(R.string.bolusrecordedonly).formatColor(rh, R.color.warning))
+                actions.add(rh.gs(R.string.bolusrecordedonly).formatColor(context, rh, R.attr.warningColor))
             if (abs(insulinAfterConstraints - insulin) > pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))
-                actions.add(rh.gs(R.string.bolusconstraintappliedwarn, insulin, insulinAfterConstraints).formatColor(rh, R.color.warning))
+                actions.add(rh.gs(R.string.bolusconstraintappliedwarn, insulin, insulinAfterConstraints).formatColor(context, rh, R.attr.warningColor))
         }
         val eatingSoonTTDuration = defaultValueHelper.determineEatingSoonTTDuration()
         val eatingSoonTT = defaultValueHelper.determineEatingSoonTT()
         if (eatingSoonChecked)
-            actions.add(rh.gs(R.string.temptargetshort) + ": " + (DecimalFormatter.to1Decimal(eatingSoonTT) + " " + unitLabel + " (" + rh.gs(R.string.format_mins, eatingSoonTTDuration) + ")").formatColor(rh, R.color.tempTargetConfirmation))
+            actions.add(rh.gs(R.string.temptargetshort) + ": " + (DecimalFormatter.to1Decimal(eatingSoonTT) + " " + unitLabel + " (" + rh.gs(R.string.format_mins, eatingSoonTTDuration) + ")")
+                .formatColor(context, rh, R.attr.tempTargetConfirmation))
 
         val timeOffset = binding.time.value.toInt()
         val time = dateUtil.now() + T.mins(timeOffset.toLong()).msecs()
@@ -243,5 +257,21 @@ class InsulinDialog : DialogFragmentWithDate() {
                 OKDialog.show(activity, rh.gs(R.string.bolus), rh.gs(R.string.no_action_selected))
             }
         return true
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(!queryingProtection) {
+            queryingProtection = true
+            activity?.let { activity ->
+                val cancelFail = {
+                    queryingProtection = false
+                    aapsLogger.debug(LTag.APS, "Dialog canceled on resume protection: ${this.javaClass.name}")
+                    ToastUtils.showToastInUiThread(ctx, R.string.dialog_canceled)
+                    dismiss()
+                }
+                protectionCheck.queryProtection(activity, BOLUS, { queryingProtection = false }, cancelFail, cancelFail)
+            }
+        }
     }
 }

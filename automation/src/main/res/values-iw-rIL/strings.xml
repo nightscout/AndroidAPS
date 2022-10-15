@@ -81,6 +81,7 @@
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>
+    <string name="a11y_autosenslabel">חישוב רגישות אוטומטי (Autosens)</string>
     <string name="deltacompared">%3$s %1$s %2$s</string>
     <string name="deltalabel">הפרש רמת סוכר</string>
     <string name="deltalabel_u">הפרש רמת סוכר [%1$s]</string>
@@ -112,4 +113,14 @@
     <string name="automation_event">אירוע אוטומציה</string>
     <string name="reorder_label">סדר מחדש</string>
     <string name="user_action">פעולות משתמש</string>
+    <string name="remove_automation">הסר אוטומציה</string>
+    <string name="sort_automation">מיין אוטומציות</string>
+    <string name="remove_selected_items">הסר פריטים נבחרים</string>
+    <string name="count_selected">%1$d נבחרו</string>
+    <string name="confirm_remove_multiple_items">האם אתם בטוחים שברצונכם להסיר %1$d פריטים? </string>
+    <string name="sort_label">מיין</string>
+    <string name="system_automation">אוטומציית מערכת</string>
+    <string name="run_automations">הפעל אוטומציות</string>
+    <string name="add_automation">הוספת כלל</string>
+    <string name="remove_sort">הסרה\\סידור</string>
 </resources>

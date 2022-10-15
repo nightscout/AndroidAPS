@@ -8,7 +8,7 @@ import android.widget.RadioButton
 import info.nightscout.androidaps.automation.databinding.AutomationDialogChooseOperationBinding
 import info.nightscout.androidaps.dialogs.DialogFragmentWithDate
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import javax.inject.Inject
 
 class ChooseOperationDialog : DialogFragmentWithDate() {

@@ -8,6 +8,7 @@ import org.junit.Assert
 import org.junit.Test
 import java.util.*
 
+@Suppress("DEPRECATION")
 class ProgramBasalCommandTest {
 
     @Test @Throws(DecoderException::class) fun testProgramBasalCommand() {

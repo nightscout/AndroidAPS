@@ -1,74 +1,57 @@
 package info.nightscout.androidaps.activities
 
 import android.annotation.SuppressLint
-import android.app.DatePickerDialog
-import android.graphics.Color
+import android.content.Context
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.jjoe64.graphview.GraphView
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.activities.fragments.HistoryBrowserData
 import info.nightscout.androidaps.databinding.ActivityHistorybrowseBinding
 import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.events.EventCustomCalculationFinished
 import info.nightscout.androidaps.events.EventRefreshOverview
+import info.nightscout.androidaps.events.EventScale
 import info.nightscout.androidaps.extensions.toVisibility
+import info.nightscout.androidaps.extensions.toVisibilityKeepSpace
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.Config
-import info.nightscout.androidaps.interfaces.Loop
-import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus
-import info.nightscout.androidaps.plugins.general.overview.OverviewData
+import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.plugins.general.overview.OverviewMenus
+import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewGraph
 import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventBucketedDataCreated
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
-import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin
-import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
-import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.Translator
-import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.androidaps.workflow.CalculationWorkflow
 import info.nightscout.shared.logging.LTag
-import info.nightscout.shared.sharedPreferences.SP
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
 import java.util.*
 import javax.inject.Inject
 import kotlin.math.min
 
 class HistoryBrowseActivity : NoSplashAppCompatActivity() {
 
+    @Inject lateinit var historyBrowserData: HistoryBrowserData
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var sp: SP
-    @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var buildHelper: BuildHelper
-    @Inject lateinit var sensitivityOref1Plugin: SensitivityOref1Plugin
-    @Inject lateinit var sensitivityAAPSPlugin: SensitivityAAPSPlugin
-    @Inject lateinit var sensitivityWeightedAveragePlugin: SensitivityWeightedAveragePlugin
-    @Inject lateinit var repository: AppRepository
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var overviewMenus: OverviewMenus
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var config: Config
-    @Inject lateinit var loop: Loop
-    @Inject lateinit var nsDeviceStatus: NSDeviceStatus
-    @Inject lateinit var translator: Translator
+    @Inject lateinit var context: Context
+    @Inject lateinit var calculationWorkflow: CalculationWorkflow
 
     private val disposable = CompositeDisposable()
 
@@ -79,9 +62,6 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
     private var rangeToDisplay = 24 // for graph
 //    private var start: Long = 0
 
-    private lateinit var iobCobCalculator: IobCobCalculatorPlugin
-    private lateinit var overviewData: OverviewData
-
     private lateinit var binding: ActivityHistorybrowseBinding
     private var destroyed = false
 
@@ -90,49 +70,12 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         binding = ActivityHistorybrowseBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // We don't want to use injected singletons but own instance working on top of different data
-        iobCobCalculator =
-            IobCobCalculatorPlugin(
-                injector,
-                aapsLogger,
-                aapsSchedulers,
-                rxBus,
-                sp,
-                rh,
-                profileFunction,
-                activePlugin,
-                sensitivityOref1Plugin,
-                sensitivityAAPSPlugin,
-                sensitivityWeightedAveragePlugin,
-                fabricPrivacy,
-                dateUtil,
-                repository
-            )
-        overviewData =
-            OverviewData(
-                injector,
-                aapsLogger,
-                rh,
-                dateUtil,
-                sp,
-                activePlugin,
-                defaultValueHelper,
-                profileFunction,
-                config,
-                loop,
-                nsDeviceStatus,
-                repository,
-                overviewMenus,
-                iobCobCalculator,
-                translator
-            )
-
         binding.left.setOnClickListener {
-            adjustTimeRange(overviewData.fromTime - T.hours(rangeToDisplay.toLong()).msecs())
+            adjustTimeRange(historyBrowserData.overviewData.fromTime - T.hours(rangeToDisplay.toLong()).msecs())
             loadAll("onClickLeft")
         }
         binding.right.setOnClickListener {
-            adjustTimeRange(overviewData.fromTime + T.hours(rangeToDisplay.toLong()).msecs())
+            adjustTimeRange(historyBrowserData.overviewData.fromTime + T.hours(rangeToDisplay.toLong()).msecs())
             loadAll("onClickRight")
         }
         binding.end.setOnClickListener {
@@ -140,14 +83,13 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
             loadAll("onClickEnd")
         }
         binding.zoom.setOnClickListener {
-            rangeToDisplay += 6
-            rangeToDisplay = if (rangeToDisplay > 24) 6 else rangeToDisplay
-            setTime(overviewData.fromTime)
-            loadAll("rangeChange")
+            var hours = rangeToDisplay + 6
+            hours = if (hours > 24) 6 else hours
+            rxBus.send(EventScale(hours))
         }
         binding.zoom.setOnLongClickListener {
             Calendar.getInstance().also { calendar ->
-                calendar.timeInMillis = overviewData.fromTime
+                calendar.timeInMillis = historyBrowserData.overviewData.fromTime
                 calendar[Calendar.MILLISECOND] = 0
                 calendar[Calendar.SECOND] = 0
                 calendar[Calendar.MINUTE] = 0
@@ -158,59 +100,46 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
             true
         }
 
-        // create an OnDateSetListener
-        val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
-            Calendar.getInstance().also { calendar ->
-                calendar.timeInMillis = overviewData.fromTime
-                calendar[Calendar.YEAR] = year
-                calendar[Calendar.MONTH] = monthOfYear
-                calendar[Calendar.DAY_OF_MONTH] = dayOfMonth
-                calendar[Calendar.MILLISECOND] = 0
-                calendar[Calendar.SECOND] = 0
-                calendar[Calendar.MINUTE] = 0
-                calendar[Calendar.HOUR_OF_DAY] = 0
-                setTime(calendar.timeInMillis)
-                binding.date.text = dateUtil.dateAndTimeString(overviewData.fromTime)
-            }
-            loadAll("onClickDate")
-        }
-
         binding.date.setOnClickListener {
-            val cal = Calendar.getInstance()
-            cal.timeInMillis = overviewData.fromTime
-            DatePickerDialog(
-                this, dateSetListener,
-                cal.get(Calendar.YEAR),
-                cal.get(Calendar.MONTH),
-                cal.get(Calendar.DAY_OF_MONTH)
-            ).show()
+            MaterialDatePicker.Builder.datePicker()
+                .setSelection(dateUtil.timeStampToUtcDateMillis(historyBrowserData.overviewData.fromTime))
+                .setTheme(R.style.DatePicker)
+                .build()
+                .apply {
+                    addOnPositiveButtonClickListener { selection ->
+                        setTime(dateUtil.mergeUtcDateToTimestamp(historyBrowserData.overviewData.fromTime, selection))
+                        binding.date.text = dateUtil.dateAndTimeString(historyBrowserData.overviewData.fromTime)
+                        loadAll("onClickDate")
+                    }
+                }
+                .show(supportFragmentManager, "history_date_picker")
         }
 
         val dm = DisplayMetrics()
+        @Suppress("DEPRECATION")
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R)
             display?.getRealMetrics(dm)
         else
-            @Suppress("DEPRECATION") windowManager.defaultDisplay.getMetrics(dm)
-
+            windowManager.defaultDisplay.getMetrics(dm)
 
         axisWidth = if (dm.densityDpi <= 120) 3 else if (dm.densityDpi <= 160) 10 else if (dm.densityDpi <= 320) 35 else if (dm.densityDpi <= 420) 50 else if (dm.densityDpi <= 560) 70 else 80
-        binding.bgGraph.gridLabelRenderer?.gridColor = rh.gc(R.color.graphgrid)
+        binding.bgGraph.gridLabelRenderer?.gridColor = rh.gac(this, R.attr.graphGrid)
         binding.bgGraph.gridLabelRenderer?.reloadStyles()
         binding.bgGraph.gridLabelRenderer?.labelVerticalWidth = axisWidth
 
-        overviewMenus.setupChartMenu(binding.chartMenuButton)
+        overviewMenus.setupChartMenu(context, binding.chartMenuButton)
         prepareGraphsIfNeeded(overviewMenus.setting.size)
         savedInstanceState?.let { bundle ->
             rangeToDisplay = bundle.getInt("rangeToDisplay", 0)
-            overviewData.fromTime = bundle.getLong("start", 0)
-            overviewData.toTime = bundle.getLong("end", 0)
+            historyBrowserData.overviewData.fromTime = bundle.getLong("start", 0)
+            historyBrowserData.overviewData.toTime = bundle.getLong("end", 0)
         }
     }
 
     override fun onPause() {
         super.onPause()
         disposable.clear()
-        iobCobCalculator.stopCalculation("onPause")
+        calculationWorkflow.stopCalculation(CalculationWorkflow.HISTORY_CALCULATION, "onPause")
     }
 
     @Synchronized
@@ -232,24 +161,21 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         disposable += rxBus
             .toObservable(EventIobCalculationProgress::class.java)
             .observeOn(aapsSchedulers.main)
-            .subscribe({
-                           if (it.cause is EventCustomCalculationFinished)
-                               binding.overviewIobcalculationprogess.text = it.progress
-                       }, fabricPrivacy::logException)
+            .subscribe({ updateCalcProgress(it.pass.finalPercent(it.progressPct)) }, fabricPrivacy::logException)
         disposable += rxBus
-            .toObservable(EventRefreshOverview::class.java)
+            .toObservable(EventUpdateOverviewGraph::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ updateGUI("EventRefreshOverview") }, fabricPrivacy::logException)
         disposable += rxBus
-            .toObservable(EventBucketedDataCreated::class.java)
-            .observeOn(aapsSchedulers.io)
+            .toObservable(EventScale::class.java)
+            .observeOn(aapsSchedulers.main)
             .subscribe({
-                           overviewData.prepareBucketedData("EventBucketedDataCreated")
-                           overviewData.prepareBgData("EventBucketedDataCreated")
-                           rxBus.send(EventRefreshOverview("EventBucketedDataCreated"))
+                           rangeToDisplay = it.hours
+                           setTime(historyBrowserData.overviewData.fromTime)
+                           loadAll("rangeChange")
                        }, fabricPrivacy::logException)
-
-        if (overviewData.fromTime == 0L) {
+        updateCalcProgress(100)
+        if (historyBrowserData.overviewData.fromTime == 0L) {
             // set start of current day
             setTime(dateUtil.now())
             loadAll("onResume")
@@ -261,8 +187,8 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt("rangeToDisplay", rangeToDisplay)
-        outState.putLong("start", overviewData.fromTime)
-        outState.putLong("end", overviewData.toTime)
+        outState.putLong("start", historyBrowserData.overviewData.fromTime)
+        outState.putLong("end", historyBrowserData.overviewData.toTime)
     }
 
     private fun prepareGraphsIfNeeded(numOfGraphs: Int) {
@@ -278,12 +204,12 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
 
                 val graph = GraphView(this)
                 graph.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, rh.dpToPx(100)).also { it.setMargins(0, rh.dpToPx(15), 0, rh.dpToPx(10)) }
-                graph.gridLabelRenderer?.gridColor = rh.gc(R.color.graphgrid)
+                graph.gridLabelRenderer?.gridColor = rh.gac(R.attr.graphGrid)
                 graph.gridLabelRenderer?.reloadStyles()
                 graph.gridLabelRenderer?.isHorizontalLabelsVisible = false
                 graph.gridLabelRenderer?.labelVerticalWidth = axisWidth
                 graph.gridLabelRenderer?.numVerticalLabels = 3
-                graph.viewport.backgroundColor = Color.argb(20, 255, 255, 255) // 8% of gray
+                graph.viewport.backgroundColor = rh.gac(this, R.attr.viewPortBackgroundColor)
                 relativeLayout.addView(graph)
 
                 val label = TextView(this)
@@ -303,17 +229,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
     @Suppress("SameParameterValue")
     private fun loadAll(from: String) {
         updateDate()
-        Thread {
-            overviewData.prepareBgData("$from")
-            overviewData.prepareTreatmentsData(from)
-            rxBus.send(EventRefreshOverview("loadAll_$from"))
-            overviewData.prepareTemporaryTargetData(from)
-            rxBus.send(EventRefreshOverview("loadAll_$from"))
-            overviewData.prepareBasalData(from)
-            rxBus.send(EventRefreshOverview(from))
-            aapsLogger.debug(LTag.UI, "loadAll $from finished")
-            runCalculation(from)
-        }.start()
+        runCalculation(from)
     }
 
     private fun setTime(start: Long) {
@@ -328,32 +244,39 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
     }
 
     private fun adjustTimeRange(start: Long) {
-        overviewData.fromTime = start
-        overviewData.toTime = overviewData.fromTime + T.hours(rangeToDisplay.toLong()).msecs()
-        overviewData.endTime = overviewData.toTime
+        historyBrowserData.overviewData.fromTime = start
+        historyBrowserData.overviewData.toTime = historyBrowserData.overviewData.fromTime + T.hours(rangeToDisplay.toLong()).msecs()
+        historyBrowserData.overviewData.endTime = historyBrowserData.overviewData.toTime
     }
 
     private fun runCalculation(from: String) {
-        Thread {
-            iobCobCalculator.stopCalculation(from)
-            iobCobCalculator.stopCalculationTrigger = false
-            iobCobCalculator.runCalculation(from, overviewData.toTime, bgDataReload = true, limitDataToOldestAvailable = false, cause = EventCustomCalculationFinished())
-        }.start()
+        calculationWorkflow.runCalculation(
+            CalculationWorkflow.HISTORY_CALCULATION,
+            historyBrowserData.iobCobCalculator,
+            historyBrowserData.overviewData,
+            from,
+            historyBrowserData.overviewData.toTime,
+            bgDataReload = true,
+            limitDataToOldestAvailable = false,
+            cause = EventCustomCalculationFinished(),
+            runLoop = false
+        )
     }
 
     @Volatile
     var runningRefresh = false
+
+    @Suppress("SameParameterValue")
     private fun refreshLoop(from: String) {
         if (runningRefresh) return
         runningRefresh = true
-        overviewData.prepareIobAutosensData(from)
         rxBus.send(EventRefreshOverview(from))
         aapsLogger.debug(LTag.UI, "refreshLoop finished")
         runningRefresh = false
     }
 
-    fun updateDate() {
-        binding.date.text = dateUtil.dateAndTimeString(overviewData.fromTime)
+    private fun updateDate() {
+        binding.date.text = dateUtil.dateAndTimeString(historyBrowserData.overviewData.fromTime)
         binding.zoom.text = rangeToDisplay.toString()
     }
 
@@ -365,12 +288,15 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         updateDate()
 
         val pump = activePlugin.activePump
-        val graphData = GraphData(injector, binding.bgGraph, overviewData)
+        val graphData = GraphData(injector, binding.bgGraph, historyBrowserData.overviewData)
         val menuChartSettings = overviewMenus.setting
-        graphData.addInRangeArea(overviewData.fromTime, overviewData.endTime, defaultValueHelper.determineLowLine(), defaultValueHelper.determineHighLine())
-        graphData.addBgReadings(menuChartSettings[0][OverviewMenus.CharType.PRE.ordinal])
+        graphData.addInRangeArea(historyBrowserData.overviewData.fromTime, historyBrowserData.overviewData.endTime, defaultValueHelper.determineLowLine(), defaultValueHelper.determineHighLine())
+        graphData.addBgReadings(menuChartSettings[0][OverviewMenus.CharType.PRE.ordinal], context)
         if (buildHelper.isDev()) graphData.addBucketedData()
-        graphData.addTreatments()
+        graphData.addTreatments(context)
+        graphData.addEps(context, 0.95)
+        if (menuChartSettings[0][OverviewMenus.CharType.TREAT.ordinal])
+            graphData.addTherapyEvents()
         if (menuChartSettings[0][OverviewMenus.CharType.ACT.ordinal])
             graphData.addActivity(0.8)
         if (pump.pumpDescription.isTempBasalCapable && menuChartSettings[0][OverviewMenus.CharType.BAS.ordinal])
@@ -380,7 +306,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
 
         // set manual x bounds to have nice steps
         graphData.setNumVerticalLabels()
-        graphData.formatAxis(overviewData.fromTime, overviewData.endTime)
+        graphData.formatAxis(historyBrowserData.overviewData.fromTime, historyBrowserData.overviewData.endTime)
 
         graphData.performUpdate()
 
@@ -390,7 +316,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
 
         val now = System.currentTimeMillis()
         for (g in 0 until min(secondaryGraphs.size, menuChartSettings.size + 1)) {
-            val secondGraphData = GraphData(injector, secondaryGraphs[g], overviewData)
+            val secondGraphData = GraphData(injector, secondaryGraphs[g], historyBrowserData.overviewData)
             var useABSForScale = false
             var useIobForScale = false
             var useCobForScale = false
@@ -399,12 +325,12 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
             var useDSForScale = false
             var useBGIForScale = false
             when {
-                menuChartSettings[g + 1][OverviewMenus.CharType.ABS.ordinal] -> useABSForScale = true
-                menuChartSettings[g + 1][OverviewMenus.CharType.IOB.ordinal] -> useIobForScale = true
-                menuChartSettings[g + 1][OverviewMenus.CharType.COB.ordinal] -> useCobForScale = true
-                menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal] -> useDevForScale = true
-                menuChartSettings[g + 1][OverviewMenus.CharType.BGI.ordinal] -> useBGIForScale = true
-                menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal] -> useRatioForScale = true
+                menuChartSettings[g + 1][OverviewMenus.CharType.ABS.ordinal]      -> useABSForScale = true
+                menuChartSettings[g + 1][OverviewMenus.CharType.IOB.ordinal]      -> useIobForScale = true
+                menuChartSettings[g + 1][OverviewMenus.CharType.COB.ordinal]      -> useCobForScale = true
+                menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal]      -> useDevForScale = true
+                menuChartSettings[g + 1][OverviewMenus.CharType.BGI.ordinal]      -> useBGIForScale = true
+                menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal]      -> useRatioForScale = true
                 menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] -> useDSForScale = true
             }
             val alignDevBgiScale = menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal] && menuChartSettings[g + 1][OverviewMenus.CharType.BGI.ordinal]
@@ -418,7 +344,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
             if (menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] && buildHelper.isDev()) secondGraphData.addDeviationSlope(useDSForScale, 1.0)
 
             // set manual x bounds to have nice steps
-            secondGraphData.formatAxis(overviewData.fromTime, overviewData.endTime)
+            secondGraphData.formatAxis(historyBrowserData.overviewData.fromTime, historyBrowserData.overviewData.endTime)
             secondGraphData.addNowLine(now)
             secondaryGraphsData.add(secondGraphData)
         }
@@ -435,5 +361,10 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
                 ).toVisibility()
             secondaryGraphsData[g].performUpdate()
         }
+    }
+
+    private fun updateCalcProgress(percent: Int) {
+        binding.progressBar.progress = percent
+        binding.progressBar.visibility = (percent != 100).toVisibilityKeepSpace()
     }
 }

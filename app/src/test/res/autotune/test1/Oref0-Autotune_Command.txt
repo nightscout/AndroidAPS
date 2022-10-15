@@ -1,0 +1,16 @@
+aaps-autotune -d=~/aaps -s=2022-05-21 -e=2022-05-21 -c=false
+(note oref0-autotune was modified and rename aaps-autotune to run autotune without NS queries with input files exported from aaps plugin)
+
+Input files:
+- Input profile: profile.pump.json
+- aaps-entries.2022-05-21.json (BG values)
+- aaps-treatments.2022-05-21.json (all treatments)
+
+Output files:
+- Output profile: aapsorefprofile.json and aapsorefautotune_recommendations.log
+- log file: autotune.2022-06-17-212315.log
+
+Intermediate daily files (also used for unit test)
+- categorization: autotune.2022-05-21.json
+- aapsorefprofile.2022-05-21.json (intermediate input profile, for run with one day equals input profile)
+- newaapsorefprofile.2022-05-21.json (intermediate output profile, for run with one day equals output profile)

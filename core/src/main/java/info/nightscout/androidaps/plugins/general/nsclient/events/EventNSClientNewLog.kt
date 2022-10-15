@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class EventNSClientNewLog(var action: String, var logText: String) : Event() {
-    var date = Date()
+    var date = System.currentTimeMillis()
 
     private var timeFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
 

@@ -6,7 +6,7 @@ import android.net.Uri
 import android.provider.Settings
 import androidx.activity.result.contract.ActivityResultContract
 
-class OptimizationPermissionContract : ActivityResultContract<Void, Unit>() {
+class OptimizationPermissionContract : ActivityResultContract<Void?, Unit?>() {
 
     override fun parseResult(resultCode: Int, intent: Intent?): Unit? = null
 

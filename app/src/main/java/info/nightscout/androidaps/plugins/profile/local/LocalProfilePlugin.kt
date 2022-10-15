@@ -25,7 +25,7 @@ import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfile
 import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONArray
 import org.json.JSONException
@@ -170,7 +170,7 @@ class LocalProfilePlugin @Inject constructor(
     }
 
     @Synchronized
-    fun getEditProfile(): PureProfile? {
+    fun getEditedProfile(): PureProfile? {
         val profile = JSONObject()
         with(profiles[currentProfileIndex]) {
             profile.put("dia", dia)
@@ -461,6 +461,7 @@ class LocalProfilePlugin @Inject constructor(
         @Inject lateinit var sp: SP
         @Inject lateinit var config: Config
         @Inject lateinit var localProfilePlugin: LocalProfilePlugin
+        @Inject lateinit var xDripBroadcast: XDripBroadcast
 
         init {
             (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
@@ -469,6 +470,7 @@ class LocalProfilePlugin @Inject constructor(
         override fun doWork(): Result {
             val profileJson = dataWorker.pickupJSONObject(inputData.getLong(DataWorker.STORE_KEY, -1))
                 ?: return Result.failure(workDataOf("Error" to "missing input data"))
+            xDripBroadcast.sendProfile(profileJson)
             if (sp.getBoolean(R.string.key_ns_receive_profile_store, true) || config.NSCLIENT) {
                 val store = ProfileStore(injector, profileJson, dateUtil)
                 val createdAt = store.getStartDate()

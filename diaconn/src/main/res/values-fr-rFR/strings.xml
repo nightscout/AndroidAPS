@@ -152,4 +152,6 @@
     <string name="diaconn_g8_errorcode_34">Mode AGB désactivé, la commande d\'arrêt est refusée.</string>
     <string name="diaconn_g8_errorcode_35">Début de basal temp. rejeté quand une basal temp. est en cours d\'exécution</string>
     <string name="diaconn_g8_errorcode_36">Arrêt de basal temp. rejeté quand une basal temp. n\'est pas en cours d\'exécution</string>
+    <string name="diaconn_g8_cloudsend_summary">Envoyer les logs sur le Cloud Diaconn.</string>
+    <string name="diaconn_g8_cloudsend_title">Synchro Diaconn Cloud</string>
 </resources>

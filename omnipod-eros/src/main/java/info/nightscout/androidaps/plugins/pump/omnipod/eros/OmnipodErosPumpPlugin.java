@@ -46,6 +46,7 @@ import info.nightscout.androidaps.interfaces.Pump;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
 import info.nightscout.androidaps.interfaces.PumpSync;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.schedule.BasalSchedule;
 import info.nightscout.shared.logging.AAPSLogger;
 import info.nightscout.shared.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBus;
@@ -103,10 +104,10 @@ import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.TimeChangeType;
-import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.interfaces.ResourceHelper;
 import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import info.nightscout.shared.sharedPreferences.SP;
-import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 import static info.nightscout.androidaps.extensions.PumpStateExtensionKt.convertedToAbsolute;
 import static info.nightscout.androidaps.extensions.PumpStateExtensionKt.getPlannedRemainingMinutes;
@@ -375,7 +376,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
     }
 
     public boolean isRileyLinkReady() {
-        return rileyLinkServiceData.rileyLinkServiceState.isReady();
+        return rileyLinkServiceData.getRileyLinkServiceState().isReady();
     }
 
     private void handleCancelledTbr() {
@@ -599,6 +600,8 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
     @NonNull
     @Override
     public PumpEnactResult setNewBasalProfile(@NonNull Profile profile) {
+        if (!podStateManager.hasPodState())
+            return new PumpEnactResult(getInjector()).enacted(false).success(false).comment("Null pod state");
         PumpEnactResult result = executeCommand(OmnipodCommandType.SET_BASAL_PROFILE, () -> aapsOmnipodErosManager.setBasalProfile(profile, true));
 
         aapsLogger.info(LTag.PUMP, "Basal Profile was set: " + result.getSuccess());
@@ -626,8 +629,9 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         if (!podStateManager.isPodRunning()) {
             return 0.0d;
         }
-
-        return podStateManager.getBasalSchedule().rateAt(TimeUtil.toDuration(DateTime.now()));
+        BasalSchedule schedule = podStateManager.getBasalSchedule();
+        if (schedule != null) return schedule.rateAt(TimeUtil.toDuration(DateTime.now()));
+        else return 0;
     }
 
     @Override
@@ -703,7 +707,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         }
 
         if (tbrCurrent != null && !enforceNew) {
-            if (Round.isSame(tbrCurrent.getRate(), absoluteRate)) {
+            if (Round.INSTANCE.isSame(tbrCurrent.getRate(), absoluteRate)) {
                 aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute - No enforceNew and same rate. Exiting.");
                 return new PumpEnactResult(getInjector()).success(true).enacted(false);
             }
@@ -850,6 +854,8 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
 
     @Override
     public PumpEnactResult executeCustomCommand(@NonNull CustomCommand command) {
+        if (!podStateManager.hasPodState())
+            return new PumpEnactResult(getInjector()).enacted(false).success(false).comment("Null pod state");
         if (command instanceof CommandSilenceAlerts) {
             return executeCommand(OmnipodCommandType.ACKNOWLEDGE_ALERTS, aapsOmnipodErosManager::acknowledgeAlerts);
         }
@@ -980,7 +986,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         aapsLogger.info(LTag.PUMP, "Time, Date and/or TimeZone changed. [changeType=" + timeChangeType.name() + ", eventHandlingEnabled=" + aapsOmnipodErosManager.isTimeChangeEventEnabled() + "]");
 
         Instant now = Instant.now();
-        if (timeChangeType == TimeChangeType.TimeChanged && now.isBefore(lastTimeDateOrTimeZoneUpdate.plus(Duration.standardDays(1L)))){
+        if (timeChangeType == TimeChangeType.TimeChanged && now.isBefore(lastTimeDateOrTimeZoneUpdate.plus(Duration.standardDays(1L)))) {
             aapsLogger.info(LTag.PUMP, "Ignoring time change because not a TZ or DST time change and the last one happened less than 24 hours ago.");
             return;
         }
@@ -1010,7 +1016,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
                 // - RileyLink has been connecting for over RILEY_LINK_CONNECT_TIMEOUT
                 return (podStateManager.getLastFailedCommunication() != null && podStateManager.getLastSuccessfulCommunication().isBefore(podStateManager.getLastFailedCommunication())) ||
                         podStateManager.isSuspended() ||
-                        rileyLinkServiceData.rileyLinkServiceState.isError() ||
+                        rileyLinkServiceData.getRileyLinkServiceState().isError() ||
                         // The below clause is a hack for working around the RL service state forever staying in connecting state on startup if the RL is switched off / unreachable
                         (rileyLinkServiceData.getRileyLinkServiceState().isConnecting() && rileyLinkServiceData.getLastServiceStateChange() + RILEY_LINK_CONNECT_TIMEOUT_MILLIS < currentTimeMillis);
             }
@@ -1083,7 +1089,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         return aapsOmnipodErosManager.isShowRileyLinkBatteryLevel();
     }
 
-    public boolean isBatteryChangeLoggingEnabled() {
+    @Override public boolean isBatteryChangeLoggingEnabled() {
         return aapsOmnipodErosManager.isBatteryChangeLoggingEnabled();
     }
 

@@ -116,4 +116,5 @@
     <string name="num1pin">1: (12 Zeichen)</string>
     <string name="num2pin">2: (8 Zeichen)</string>
     <string name="basal_bolus_step">Basal/Bolus Schrittgröße</string>
+    <string name="carbs_store_error">Kohlenhydrate wurden wahrscheinlich nicht korrekt gespeichert. Manuell prüfen und speichern, falls nötig.</string>
 </resources>

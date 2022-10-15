@@ -140,6 +140,8 @@ abstract class MedtronicHistoryEntry : MedtronicHistoryEntryInterface {
     val bodyLength: Int
         get() = sizes[2]
 
+    abstract fun toEntryString(): String
+
     override fun toString(): String {
         val sb = StringBuilder()
         // if (DT == null) {
@@ -156,6 +158,7 @@ abstract class MedtronicHistoryEntry : MedtronicHistoryEntryInterface {
         sb.append("(")
         sb.append(headLength + dateTimeLength + bodyLength)
         sb.append(")")
+
         val hasData = hasData()
         if (hasData) {
             sb.append(", data=$decodedDataAsString")

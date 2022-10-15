@@ -77,7 +77,8 @@ abstract class DiaconnG8PacketModule {
     @ContributesAndroidInjector abstract fun contributesLanguageInquireResponsePacket(): LanguageInquireResponsePacket
     @ContributesAndroidInjector abstract fun contributesBigAPSMainInfoInquirePacket(): BigAPSMainInfoInquirePacket
     @ContributesAndroidInjector abstract fun contributesBigAPSMainInfoInquireResponsePacket(): BigAPSMainInfoInquireResponsePacket
-
+    @ContributesAndroidInjector abstract fun contributesSerialNumInquirePacket(): SerialNumInquirePacket
+    @ContributesAndroidInjector abstract fun contributesSerialNumInquireResponsePacket(): SerialNumInquireResponsePacket
 
 
 }

@@ -51,4 +51,10 @@
     <string name="combo_tbr_count">Contador TBR</string>
     <string name="bolusstopped">Bolo interrumpido</string>
     <string name="bolusstopping">Deteniendo bolo</string>
+    <string name="pump_commerror_label">Comm. Error contador</string>
+    <string name="show_comm_error_count_title">Mostrar contador de errores comm</string>
+    <string name="show_comm_error_count_summary">Muestra el recuento de errores, cuando se comunica con Ruffy. En la mayoría de los casos un número mayor que 0 indica problemas de comunicación con Ruffy (puede que sea necesario reiniciar).</string>
+    <string name="combo_error_display_never">Nunca</string>
+    <string name="combo_error_display_error">Cuando Error</string>
+    <string name="combo_error_display_always">Siempre</string>
 </resources>

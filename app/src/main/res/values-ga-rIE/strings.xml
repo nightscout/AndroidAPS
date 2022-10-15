@@ -42,7 +42,6 @@
     <string name="loop_aps_label">APS</string>
     <string name="overview_calculator_label">Áireamhán</string>
     <string name="sms_bolus">Bólas:</string>
-    <string name="basal">Bunaidh</string>
     <string name="sms_basal">Bunaidh:</string>
     <string name="configbuilder_bgsource">Foinse BG</string>
     <string name="xdrip">xDrip+</string>
@@ -78,10 +77,8 @@
     <string name="units_colon">Aonaid:</string>
     <string name="units">Aonaid</string>
     <string name="dia">DIA</string>
-    <string name="basal_rate">Bunaidh ráta:</string>
     <string name="sms_actualbg">BG:</string>
     <string name="sms_lastbg">GF deiridh:</string>
-    <string name="mdi">MDI</string>
     <string name="MM640g">MM640g</string>
     <string name="sms_minago">%1$dnóim ó shin</string>
     <string name="openapsama">OpenAPS AMA</string>
@@ -141,8 +138,6 @@
     <string name="openaps">OpenAPS</string>
     <string name="openaps_short">OAPS</string>
     <string name="basal_short">BUN</string>
-    <string name="mdtp_ok">Ceart go leor</string>
-    <string name="mdtp_cancel">Cuir ar ceal</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
     <string name="lyumjev">Lyumjev</string>
@@ -165,7 +160,6 @@
     <string name="next_button">Ar Aghaidh</string>
     <string name="previous_button">Roimhe seo</string>
     <string name="cgm">CGM</string>
-    <string name="ns_wifionly">Úsáid WiFi nasc amháin</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
     <string name="wear_general_settings">Socruithe Ginearálta</string>
     <string name="poctech">Poctech</string>
@@ -186,7 +180,9 @@
     <string name="dia_short">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
-    <string name="age">Aois:</string>
     <string name="randombg_short">BG</string>
     <!-- SMS Communicator & OTP Authenticator -->
+    <!-- Theme switcher dark and light mode-->
+    <!-- WEAR OS-->
+    <!-- Aidex Cgms -->
 </resources>

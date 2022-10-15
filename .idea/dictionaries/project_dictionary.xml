@@ -3,13 +3,17 @@
     <words>
       <w>aaps</w>
       <w>abcdef</w>
+      <w>accu</w>
       <w>acked</w>
       <w>actionstring</w>
+      <w>aidex</w>
+      <w>alarmack</w>
       <w>allowednumbers</w>
       <w>androidaps</w>
       <w>autosens</w>
       <w>autosensdata</w>
       <w>autosense</w>
+      <w>autotune</w>
       <w>bage</w>
       <w>basaliob</w>
       <w>basals</w>
@@ -17,37 +21,51 @@
       <w>bgsource</w>
       <w>boluscalc</w>
       <w>bolusing</w>
+      <w>boluswizard</w>
       <w>carb</w>
       <w>carbratio</w>
       <w>carbs</w>
       <w>carbsreq</w>
       <w>careportal</w>
       <w>cellnovo</w>
+      <w>chek</w>
+      <w>clearalarm</w>
       <w>crashlytics</w>
       <w>danar</w>
       <w>danars</w>
       <w>dataset</w>
       <w>datasets</w>
+      <w>dbadd</w>
+      <w>dbupdate</w>
+      <w>devicestatus</w>
+      <w>devicestatuses</w>
+      <w>devslope</w>
       <w>dexcom</w>
       <w>dexdrip</w>
+      <w>diaconn</w>
       <w>enteredby</w>
       <w>enteredinsulin</w>
+      <w>eopatch</w>
       <w>eveningoutpost</w>
       <w>eversense</w>
       <w>extendedbolus</w>
       <w>fileprovider</w>
       <w>firebase</w>
       <w>glimp</w>
+      <w>glunovo</w>
       <w>gson</w>
       <w>hmac</w>
       <w>iage</w>
       <w>insulet</w>
       <w>iobtotal</w>
+      <w>joda</w>
       <w>libre</w>
       <w>listdelimiter</w>
       <w>localprofile</w>
+      <w>mdtp</w>
       <w>medtronic</w>
       <w>mgdl</w>
+      <w>misformatted</w>
       <w>mmol</w>
       <w>motol</w>
       <w>multiwave</w>
@@ -69,13 +87,16 @@
       <w>pred</w>
       <w>profileswitch</w>
       <w>pumpbtcomm</w>
+      <w>pumpcontrol</w>
       <w>quickwizard</w>
       <w>readstatus</w>
       <w>realduration</w>
       <w>refresheventsfromnightscout</w>
       <w>rileylink</w>
       <w>roboelectric</w>
+      <w>rozman</w>
       <w>sgvs</w>
+      <w>shortgramm</w>
       <w>sitechange</w>
       <w>smscommunicator</w>
       <w>sntp</w>
@@ -96,7 +117,9 @@
       <w>timeshift</w>
       <w>tirs</w>
       <w>totp</w>
+      <w>tunedays</w>
       <w>uart</w>
+      <w>urgentalarm</w>
       <w>wizzardpage</w>
       <w>xdrip</w>
       <w>xstream</w>

@@ -14,7 +14,7 @@ import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.interfaces.NotificationHolder
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 import kotlin.math.ln
@@ -74,7 +74,7 @@ class AlarmSoundService : DaggerService() {
         if (intent?.hasExtra(ErrorHelperActivity.SOUND_ID) == true) resourceId = intent.getIntExtra(ErrorHelperActivity.SOUND_ID, R.raw.error)
         player = MediaPlayer()
         try {
-            val afd = rh.openRawResourceFd(resourceId) ?: return START_STICKY
+            val afd = rh.openRawResourceFd(resourceId) ?: return START_NOT_STICKY
             player?.setDataSource(afd.fileDescriptor, afd.startOffset, afd.length)
             afd.close()
             player?.isLooping = true
@@ -94,7 +94,7 @@ class AlarmSoundService : DaggerService() {
             aapsLogger.error("Unhandled exception", e)
         }
         aapsLogger.debug(LTag.CORE, "onStartCommand End")
-        return START_STICKY
+        return START_NOT_STICKY
     }
 
     override fun onDestroy() {

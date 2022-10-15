@@ -10,7 +10,7 @@ class MsgSettingPumpTime(
 ) : MessageBase(injector) {
 
     init {
-        SetCommand(0x320A)
+        setCommand(0x320A)
         aapsLogger.debug(LTag.PUMPCOMM, "New message")
     }
 

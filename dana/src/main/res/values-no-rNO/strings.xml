@@ -116,4 +116,5 @@
     <string name="num1pin">1: (12 tall)</string>
     <string name="num2pin">2: (8 tall)</string>
     <string name="basal_bolus_step">Basal/bolus trinn</string>
+    <string name="carbs_store_error">Karbohydrater ble antakelig ikke lagret riktig. Kontroller og lagre på nytt om nødvendig.</string>
 </resources>

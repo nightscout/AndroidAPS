@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.MaterialComponents.CardView"
+    android:id="@+id/obj_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:layout_marginLeft="16dp"
+    android:layout_marginStart="16dp"
     android:layout_marginTop="16dp"
-    android:layout_marginRight="16dp"
-    app:cardBackgroundColor="@color/colorPrimary"
-    app:cardCornerRadius="2dp"
+    android:layout_marginEnd="16dp"
+    app:cardCornerRadius="4dp"
+    app:cardElevation="2dp"
     app:cardUseCompatPadding="true"
-    app:contentPadding="16dp">
+    app:contentPadding="16dp"
+    android:layout_gravity="center">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,7 +26,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-medium"
-            android:textColor="#FFFFFF"
             android:textSize="20sp"
             tools:text="1. Title" />
 
@@ -32,7 +34,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:textColor="#FFFFFF"
             tools:text="Objective" />
 
         <TextView
@@ -40,7 +41,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:textColor="#FFFFFF"
             android:textStyle="bold"
             tools:text="Gate" />
 
@@ -53,32 +53,36 @@
 
         </LinearLayout>
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/verify"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            style="@style/OkCancelButton.Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="end"
             android:text="@string/objectives_button_verify" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/start"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            style="@style/OkCancelButton.Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="end"
             android:text="@string/objectives_button_start" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/unfinish"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            style="@style/OkCancelButton.Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="end"
             android:text="@string/objectives_button_unfinish" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/unstart"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            style="@style/OkCancelButton.Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="end"
             android:text="@string/objectives_button_unstart" />
 
         <TextView
@@ -91,7 +95,7 @@
             android:id="@+id/requestcode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Request code: XXXXX" />
+            tools:text="Request code: XXXXX" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -104,12 +108,13 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
-                android:hint="XXXXXXXXXX"
-                android:inputType="text" />
+                android:inputType="text"
+                tools:hint="XXXXXXXXXX"
+                android:importantForAutofill="no" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/enterbutton"
-                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                style="@style/OkCancelButton.Text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/objectives_button_enter" />
@@ -121,9 +126,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:textColor="#FFFFFF"
             tools:text="Accomplished" />
 
     </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

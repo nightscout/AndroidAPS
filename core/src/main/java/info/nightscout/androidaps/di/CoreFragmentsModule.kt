@@ -10,6 +10,7 @@ import info.nightscout.androidaps.dialogs.ErrorDialog
 import info.nightscout.androidaps.dialogs.NtpProgressDialog
 import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.plugins.general.maintenance.activities.PrefImportListActivity
+import info.nightscout.androidaps.utils.ui.SingleClickButton
 
 @Module
 @Suppress("unused")
@@ -24,5 +25,7 @@ abstract class CoreFragmentsModule {
     @ContributesAndroidInjector abstract fun contributesErrorDialog(): ErrorDialog
     @ContributesAndroidInjector abstract fun contributesNtpProgressDialog(): NtpProgressDialog
     @ContributesAndroidInjector abstract fun contributesProfileViewerDialog(): ProfileViewerDialog
+
+    @ContributesAndroidInjector abstract fun contributesSingleClickButton(): SingleClickButton
 
 }

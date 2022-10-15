@@ -25,6 +25,7 @@
     <string name="medtronic_pump_battery_nimh">NiMH (Visualização estendida)</string>
     <string name="medtronic_bolus_debugging">Depuração de Bólus/Tratamentos</string>
     <!-- MDT Fragment -->
+    <string name="rl_battery_label">Bateria RileyLink</string>
     <!-- MDT Errors -->
     <string name="medtronic_errors">Erros</string>
     <string name="medtronic_error_serial_not_set">Núm. Série não definido.</string>
@@ -64,13 +65,17 @@
     <string name="medtronic_cmd_desc_get_history">Obter Histórico - Página %1$d (%2$d/16)</string>
     <string name="medtronic_cmd_desc_get_history_request">Obter Histórico - Página %1$d</string>
     <string name="medtronic_cmd_desc_get_time">Obter Hora da Bomba</string>
+    <string name="medtronic_cmd_desc_set_time">Definir Hora da Bomba</string>
+    <string name="medtronic_cmd_desc_get_battery_status">Estado da bateria</string>
     <string name="medtronic_cmd_desc_get_settings">Obter Definições</string>
     <string name="medtronic_cmd_desc_get_model">Obter Modelo de Bomba</string>
     <string name="medtronic_cmd_desc_get_basal_profile">Obter Perfil de Basal</string>
     <string name="medtronic_cmd_desc_set_basal_profile">Definir Perfil de Basal</string>
     <string name="medtronic_cmd_desc_get_tbr">Obter Basal Temporária</string>
     <string name="medtronic_cmd_desc_set_tbr">Definir Basal Temporária</string>
+    <string name="medtronic_cmd_desc_cancel_tbr">Cancelar Basal Temporária</string>
     <string name="medtronic_cmd_desc_set_bolus">Definir Bólus</string>
+    <string name="medtronic_cmd_desc_get_remaining_insulin">Obter insulina restante</string>
     <string name="medtronic_pump_status_pump_unreachable">Bomba inacessível</string>
     <string name="medtronic_warning">Aviso</string>
     <!-- medtronic_warning -->

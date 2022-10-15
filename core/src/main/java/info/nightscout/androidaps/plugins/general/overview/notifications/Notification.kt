@@ -8,7 +8,7 @@ open class Notification {
 
     var id = 0
     var date: Long = 0
-    var text: String? = null
+    var text: String = ""
     var level = 0
     var validTo: Long = 0
     @RawRes var soundId: Int? = null

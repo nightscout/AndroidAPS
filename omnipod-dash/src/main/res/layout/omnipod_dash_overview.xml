@@ -18,11 +18,11 @@
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="2dip"
-                android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"
                 android:layout_marginTop="5dp"
-                android:layout_marginRight="20dp"
+                android:layout_marginEnd="20dp"
                 android:layout_marginBottom="5dp"
-                android:background="@color/list_delimiter" />
+                android:background="?android:attr/dividerHorizontal" />
 
             <include layout="@layout/omnipod_dash_overview_bluetooth_status" />
 

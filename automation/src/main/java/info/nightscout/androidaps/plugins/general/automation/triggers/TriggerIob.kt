@@ -60,7 +60,7 @@ class TriggerIob(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyDescription(): String =
         rh.gs(R.string.iobcompared, rh.gs(comparator.value.stringRes), insulin.value)
 
-    override fun icon(): Optional<Int?> = Optional.of(R.drawable.ic_keyboard_capslock)
+    override fun icon(): Optional<Int> = Optional.of(R.drawable.ic_keyboard_capslock)
 
     override fun duplicate(): Trigger = TriggerIob(injector, this)
 

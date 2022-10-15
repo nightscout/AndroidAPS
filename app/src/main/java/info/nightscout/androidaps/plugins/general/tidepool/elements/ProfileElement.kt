@@ -95,5 +95,3 @@ class ProfileElement(ps: EffectiveProfileSwitch, serialNumber: String, dateUtil:
             internal var amount: Double
     )
 }
-
-

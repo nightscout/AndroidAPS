@@ -152,4 +152,6 @@
     <string name="diaconn_g8_errorcode_34">LGS status je vypnutý, OFF příkaz je odmítnut.</string>
     <string name="diaconn_g8_errorcode_35">Spuštění dočasného bazálu je odmítnuto, pokud je již spuštěn jiný</string>
     <string name="diaconn_g8_errorcode_36">Zastavení dočasného bazálu je odmítnuto, pokud žádný není spuštěn</string>
+    <string name="diaconn_g8_cloudsend_summary">Odeslat protokoly pumpy do Diaconn Cloudu.</string>
+    <string name="diaconn_g8_cloudsend_title">Synchronizace do Diaconn cloudu</string>
 </resources>

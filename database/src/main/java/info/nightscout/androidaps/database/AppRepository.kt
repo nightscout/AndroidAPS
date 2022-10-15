@@ -2,15 +2,16 @@ package info.nightscout.androidaps.database
 
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.database.data.NewEntries
+import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.entities.*
 import info.nightscout.androidaps.database.interfaces.DBEntry
 import info.nightscout.androidaps.database.transactions.Transaction
-import io.reactivex.Completable
-import io.reactivex.Maybe
-import io.reactivex.Observable
-import io.reactivex.Single
-import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.PublishSubject
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.subjects.PublishSubject
 import java.util.concurrent.Callable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -45,7 +46,7 @@ import kotlin.math.roundToInt
      * Executes a transaction and returns its result
      * Runs on IO scheduler
      */
-    fun <T> runTransactionForResult(transaction: Transaction<T>): Single<T> {
+    fun <T: Any> runTransactionForResult(transaction: Transaction<T>): Single<T> {
         val changes = mutableListOf<DBEntry>()
         return Single.fromCallable {
             database.runInTransaction(Callable<T> {
@@ -58,6 +59,10 @@ import kotlin.math.roundToInt
     }
 
     fun clearDatabases() = database.clearAllTables()
+
+    fun clearCachedData(from: Long) {
+        database.totalDailyDoseDao.deleteNewerThan(from, InterfaceIDs.PumpType.CACHE)
+    }
 
     //BG READINGS -- only valid records
     fun compatGetBgReadingsDataFromTime(timestamp: Long, ascending: Boolean): Single<List<GlucoseValue>> =
@@ -775,21 +780,25 @@ import kotlin.math.roundToInt
     fun getOldestExtendedBolusRecord(): ExtendedBolus? =
         database.extendedBolusDao.getOldestRecord()
 
-    // TotalDailyDose
-    fun getAllTotalDailyDoses(ascending: Boolean): Single<List<TotalDailyDose>> =
-        database.totalDailyDoseDao.getAllTotalDailyDoses()
-            .map { if (!ascending) it.reversed() else it }
+    fun getLastExtendedBolusIdWrapped(): Single<ValueWrapper<Long>> =
+        database.extendedBolusDao.getLastId()
             .subscribeOn(Schedulers.io())
+            .toWrappedSingle()
 
+    // TotalDailyDose
     fun getLastTotalDailyDoses(count: Int, ascending: Boolean): Single<List<TotalDailyDose>> =
         database.totalDailyDoseDao.getLastTotalDailyDoses(count)
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
 
-    fun getLastExtendedBolusIdWrapped(): Single<ValueWrapper<Long>> =
-        database.extendedBolusDao.getLastId()
+    fun getCalculatedTotalDailyDose(timestamp: Long): Single<ValueWrapper<TotalDailyDose>> =
+        database.totalDailyDoseDao.findByTimestamp(timestamp, InterfaceIDs.PumpType.CACHE)
             .subscribeOn(Schedulers.io())
             .toWrappedSingle()
+
+    fun createTotalDailyDose(tdd: TotalDailyDose) {
+        database.totalDailyDoseDao.insert(tdd)
+    }
 
     // OFFLINE EVENT
     /*

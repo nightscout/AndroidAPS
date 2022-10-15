@@ -11,12 +11,13 @@ import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
+import info.nightscout.androidaps.plugins.aps.openAPSSMBDynamicISF.OpenAPSSMBDynamicISFPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
 import info.nightscout.androidaps.plugins.source.GlimpPlugin
 import info.nightscout.androidaps.utils.HardLimits
-import info.nightscout.androidaps.utils.buildHelper.BuildHelper
+import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before
@@ -30,6 +31,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
     @Mock lateinit var constraintChecker: ConstraintChecker
     @Mock lateinit var openAPSAMAPlugin: OpenAPSAMAPlugin
     @Mock lateinit var openAPSSMBPlugin: OpenAPSSMBPlugin
+    @Mock lateinit var openAPSSMBDynamicISFPlugin: OpenAPSSMBDynamicISFPlugin
     @Mock lateinit var sensitivityOref1Plugin: SensitivityOref1Plugin
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var buildHelper: BuildHelper
@@ -45,6 +47,12 @@ class SafetyPluginTest : TestBaseWithProfile() {
 
     @Before
     fun prepare() {
+        `when`(rh.gs(R.string.hardlimit)).thenReturn("hard limit")
+        `when`(rh.gs(R.string.itmustbepositivevalue)).thenReturn("it must be positive value")
+        `when`(rh.gs(R.string.pumplimit)).thenReturn("pump limit")
+        `when`(rh.gs(R.string.maxvalueinpreferences)).thenReturn("max value in preferences")
+        `when`(rh.gs(R.string.maxbasalmultiplier)).thenReturn("max basal multiplier")
+        `when`(rh.gs(R.string.maxdailybasalmultiplier)).thenReturn("max daily basal multiplier")
         `when`(rh.gs(R.string.limitingbolus)).thenReturn("Limiting bolus to %1\$.1f U because of %2\$s")
         `when`(rh.gs(R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
         `when`(rh.gs(R.string.limitingiob)).thenReturn("Limiting IOB to %1\$.1f U because of %2\$s")
@@ -55,21 +63,16 @@ class SafetyPluginTest : TestBaseWithProfile() {
         `when`(rh.gs(R.string.smbdisabledinpreferences)).thenReturn("SMB disabled in preferences")
         `when`(rh.gs(R.string.closedmodedisabledinpreferences)).thenReturn("Closed loop mode disabled in preferences")
         `when`(rh.gs(R.string.closed_loop_disabled_on_dev_branch)).thenReturn("Running dev version. Closed loop is disabled.")
-        `when`(rh.gs(R.string.itmustbepositivevalue)).thenReturn("it must be positive value")
-        `when`(rh.gs(R.string.pumplimit)).thenReturn("pump limit")
         `when`(rh.gs(R.string.smbalwaysdisabled)).thenReturn("SMB always and after carbs disabled because active BG source doesn\\'t support advanced filtering")
         `when`(rh.gs(R.string.smbnotallowedinopenloopmode)).thenReturn("SMB not allowed in open loop mode")
-        `when`(rh.gs(R.string.maxvalueinpreferences)).thenReturn("max value in preferences")
-        `when`(rh.gs(R.string.maxbasalmultiplier)).thenReturn("max basal multiplier")
-        `when`(rh.gs(R.string.maxdailybasalmultiplier)).thenReturn("max daily basal multiplier")
-        `when`(rh.gs(R.string.hardlimit)).thenReturn("hard limit")
         `when`(rh.gs(R.string.key_child)).thenReturn("child")
 
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         `when`(virtualPumpPlugin.pumpDescription).thenReturn(pumpDescription)
         hardLimits = HardLimits(aapsLogger, rxBus, sp, rh, context, repository)
         `when`(config.APS).thenReturn(true)
-        safetyPlugin = SafetyPlugin(injector, aapsLogger, rh, sp, rxBus, constraintChecker, openAPSAMAPlugin, openAPSSMBPlugin, sensitivityOref1Plugin, activePlugin, hardLimits, buildHelper,
+        safetyPlugin = SafetyPlugin(injector, aapsLogger, rh, sp, rxBus, constraintChecker, openAPSAMAPlugin, openAPSSMBPlugin, openAPSSMBDynamicISFPlugin, sensitivityOref1Plugin, activePlugin,
+                                    hardLimits, buildHelper,
                                     iobCobCalculator, config, dateUtil)
     }
 

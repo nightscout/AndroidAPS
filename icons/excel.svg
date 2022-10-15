@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="24px"
+	 height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+<g id="Excel">
+	<g>
+		<rect x="12.375" y="4.563" fill="#FFFFFF" width="8.688" height="14.188"/>
+		<g>
+			<path fill-rule="evenodd" clip-rule="evenodd" fill="#20744A" d="M20.634,4.168h-6.852V2.553L2.52,4.292v15.237l11.263,1.94
+				v-2.393h6.852c0.456,0,0.825-0.332,0.825-0.741V4.909C21.459,4.5,21.09,4.168,20.634,4.168z M20.743,18.458H13.76l-0.011-1.278
+				h1.682v-1.488h-1.695l-0.008-0.88h1.703v-1.488h-1.716l-0.008-0.88h1.724v-1.488h-1.73v-0.88h1.73V8.588h-1.73v-0.88h1.73V6.22
+				h-1.73V4.868h7.042V18.458z"/>
+			<rect x="16.377" y="6.22" fill-rule="evenodd" clip-rule="evenodd" fill="#20744A" width="2.924" height="1.488"/>
+			<rect x="16.377" y="8.588" fill-rule="evenodd" clip-rule="evenodd" fill="#20744A" width="2.924" height="1.488"/>
+			<rect x="16.377" y="10.956" fill-rule="evenodd" clip-rule="evenodd" fill="#20744A" width="2.924" height="1.488"/>
+			<rect x="16.377" y="13.324" fill-rule="evenodd" clip-rule="evenodd" fill="#20744A" width="2.924" height="1.488"/>
+			<rect x="16.377" y="15.692" fill-rule="evenodd" clip-rule="evenodd" fill="#20744A" width="2.924" height="1.488"/>
+		</g>
+		<polygon fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" points="5.46,8.407 6.912,8.324 7.824,10.833 8.902,8.221 
+			10.354,8.138 8.591,11.7 10.354,15.271 8.819,15.167 7.783,12.445 6.746,15.063 5.336,14.939 6.974,11.785 		"/>
+	</g>
+</g>
+</svg>

@@ -77,4 +77,5 @@
     </plurals>
     <string name="orange_use_scanning_level">Taramayı Kullan</string>
     <string name="orange_use_scanning_level_summary">OrangeLink\'e bağlanmadan önce tarayın, bağlantıları iyileştirebilir (gerekirse diğer RileyLink klonlarıyla da kullanılabilir)</string>
+    <string name="rileylink_configuration">RileyLink Yapılandırması</string>
 </resources>

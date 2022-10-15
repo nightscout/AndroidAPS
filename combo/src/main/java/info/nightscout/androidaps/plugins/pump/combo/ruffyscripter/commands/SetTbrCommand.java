@@ -2,29 +2,32 @@ package info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.commands;
 
 import android.os.SystemClock;
 
+import androidx.annotation.NonNull;
+
 import org.monkey.d.ruffy.ruffy.driver.display.MenuAttribute;
 import org.monkey.d.ruffy.ruffy.driver.display.MenuType;
 import org.monkey.d.ruffy.ruffy.driver.display.menu.MenuTime;
-import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import info.nightscout.shared.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.PumpState;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.PumpWarningCodes;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.WarningOrErrorCode;
+import info.nightscout.shared.logging.AAPSLogger;
+import info.nightscout.shared.logging.LTag;
 
 public class SetTbrCommand extends BaseCommand {
-    private static final Logger log = StacktraceLoggerWrapper.getLogger(SetTbrCommand.class);
+    private final AAPSLogger aapsLogger;
 
     private final long percentage;
     private final long duration;
 
-    public SetTbrCommand(long percentage, long duration) {
+    public SetTbrCommand(long percentage, long duration, AAPSLogger aapsLogger) {
         this.percentage = percentage;
         this.duration = duration;
+        this.aapsLogger = aapsLogger;
     }
 
     @Override
@@ -116,7 +119,7 @@ public class SetTbrCommand extends BaseCommand {
         PumpState state = scripter.readPumpStateInternal();
         if (state.tbrRemainingDuration == 1) {
             while (state.tbrActive && System.currentTimeMillis() < timeout) {
-                log.debug("Waiting for existing TBR to run out to avoid alert while setting TBR");
+                aapsLogger.debug(LTag.PUMP, "Waiting for existing TBR to run out to avoid alert while setting TBR");
                 scripter.waitForScreenUpdate();
                 state = scripter.readPumpStateInternal();
             }
@@ -140,14 +143,14 @@ public class SetTbrCommand extends BaseCommand {
     private boolean inputTbrPercentage() {
         scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
         long currentPercent = readDisplayedPercentage();
-        log.debug("Current TBR %: " + currentPercent);
+        aapsLogger.debug(LTag.PUMP, "Current TBR %: " + currentPercent);
         long percentageChange = percentage - currentPercent;
         long percentageSteps = percentageChange / 10;
         boolean increasePercentage = percentageSteps > 0;
-        log.debug("Pressing " + (increasePercentage ? "up" : "down") + " " + percentageSteps + " times");
+        aapsLogger.debug(LTag.PUMP, "Pressing " + (increasePercentage ? "up" : "down") + " " + percentageSteps + " times");
         for (int i = 0; i < Math.abs(percentageSteps); i++) {
             scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
-            log.debug("Push #" + (i + 1) + "/" + Math.abs(percentageSteps));
+            aapsLogger.debug(LTag.PUMP, "Push #" + (i + 1) + "/" + Math.abs(percentageSteps));
             if (increasePercentage) scripter.pressUpKey();
             else scripter.pressDownKey();
             SystemClock.sleep(50);
@@ -163,13 +166,13 @@ public class SetTbrCommand extends BaseCommand {
         while (timeout > System.currentTimeMillis()
                 && ((increasingPercentage && displayedPercentage < percentage)
                 || (!increasingPercentage && displayedPercentage > percentage))) {
-            log.debug("Waiting for pump to process scrolling input for percentage, current: "
+            aapsLogger.debug(LTag.PUMP, "Waiting for pump to process scrolling input for percentage, current: "
                     + displayedPercentage + ", desired: " + percentage + ", scrolling "
                     + (increasingPercentage ? "up" : "down"));
             SystemClock.sleep(50);
             displayedPercentage = readDisplayedPercentage();
         }
-        log.debug("Final displayed TBR percentage: " + displayedPercentage);
+        aapsLogger.debug(LTag.PUMP, "Final displayed TBR percentage: " + displayedPercentage);
         if (displayedPercentage != percentage) {
             throw new CommandException("Failed to set TBR percentage, requested: "
                     + percentage + ", actual: " + displayedPercentage);
@@ -179,11 +182,11 @@ public class SetTbrCommand extends BaseCommand {
         // value due to due scrolling taking extremely long
         SystemClock.sleep(1000);
         scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
-        long refreshedDisplayedTbrPecentage = readDisplayedPercentage();
-        if (displayedPercentage != refreshedDisplayedTbrPecentage) {
+        long refreshedDisplayedTbrPercentage = readDisplayedPercentage();
+        if (displayedPercentage != refreshedDisplayedTbrPercentage) {
             throw new CommandException("Failed to set TBR percentage: " +
                     "percentage changed after input stopped from "
-                    + displayedPercentage + " -> " + refreshedDisplayedTbrPecentage);
+                    + displayedPercentage + " -> " + refreshedDisplayedTbrPercentage);
         }
     }
 
@@ -191,10 +194,10 @@ public class SetTbrCommand extends BaseCommand {
         scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
         long durationSteps = calculateDurationSteps();
         boolean increaseDuration = durationSteps > 0;
-        log.debug("Pressing " + (increaseDuration ? "up" : "down") + " " + durationSteps + " times");
+        aapsLogger.debug(LTag.PUMP, "Pressing " + (increaseDuration ? "up" : "down") + " " + durationSteps + " times");
         for (int i = 0; i < Math.abs(durationSteps); i++) {
             scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
-            log.debug("Push #" + (i + 1) + "/" + Math.abs(durationSteps));
+            aapsLogger.debug(LTag.PUMP, "Push #" + (i + 1) + "/" + Math.abs(durationSteps));
             if (increaseDuration) scripter.pressUpKey();
             else scripter.pressDownKey();
             SystemClock.sleep(50);
@@ -204,7 +207,7 @@ public class SetTbrCommand extends BaseCommand {
 
     private long calculateDurationSteps() {
         long currentDuration = readDisplayedDuration();
-        log.debug("Initial TBR duration: " + currentDuration);
+        aapsLogger.debug(LTag.PUMP, "Initial TBR duration: " + currentDuration);
 
         long difference = duration - currentDuration;
         long durationSteps = difference / 15;
@@ -224,14 +227,14 @@ public class SetTbrCommand extends BaseCommand {
         while (timeout > System.currentTimeMillis()
                 && ((increasingPercentage && displayedDuration < duration)
                 || (!increasingPercentage && displayedDuration > duration))) {
-            log.debug("Waiting for pump to process scrolling input for duration, current: "
+            aapsLogger.debug(LTag.PUMP, "Waiting for pump to process scrolling input for duration, current: "
                     + displayedDuration + ", desired: " + duration
                     + ", scrolling " + (increasingPercentage ? "up" : "down"));
             SystemClock.sleep(50);
             displayedDuration = readDisplayedDuration();
         }
 
-        log.debug("Final displayed TBR duration: " + displayedDuration);
+        aapsLogger.debug(LTag.PUMP, "Final displayed TBR duration: " + displayedDuration);
         if (displayedDuration != duration) {
             throw new CommandException("Failed to set TBR duration, requested: "
                     + duration + ", actual: " + displayedDuration);
@@ -264,7 +267,7 @@ public class SetTbrCommand extends BaseCommand {
 
     private long readDisplayedDuration() {
         MenuTime duration = scripter.readBlinkingValue(MenuTime.class, MenuAttribute.RUNTIME);
-        return duration.getHour() * 60 + duration.getMinute();
+        return duration.getHour() * 60L + duration.getMinute();
     }
 
     private long readDisplayedPercentage() {
@@ -276,7 +279,7 @@ public class SetTbrCommand extends BaseCommand {
         return true;
     }
 
-    @Override
+    @NonNull @Override
     public String toString() {
         return "SetTbrCommand{" +
                 "percentage=" + percentage +

@@ -116,4 +116,5 @@
     <string name="num1pin">1: (12 skaitmenų)</string>
     <string name="num2pin">2: (8 skaitmenys)</string>
     <string name="basal_bolus_step">Bazės / boluso žingsnis</string>
+    <string name="carbs_store_error">AV nebuvo įrašyti tinkamai. Patikrinkite rankiniu būdu ir, jei reikia, išsaugokite.</string>
 </resources>

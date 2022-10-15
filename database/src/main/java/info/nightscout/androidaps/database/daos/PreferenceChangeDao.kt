@@ -7,7 +7,7 @@ import info.nightscout.androidaps.database.TABLE_GLUCOSE_VALUES
 import info.nightscout.androidaps.database.TABLE_PREFERENCE_CHANGES
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.entities.PreferenceChange
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Single
 
 @Dao
 interface PreferenceChangeDao {

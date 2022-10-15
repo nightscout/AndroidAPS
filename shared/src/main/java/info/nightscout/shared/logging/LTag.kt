@@ -5,6 +5,7 @@ enum class LTag(val tag: String, val defaultValue : Boolean = true, val requires
     APS("APS"),
     AUTOSENS("AUTOSENS", defaultValue = false),
     AUTOMATION("AUTOMATION"),
+    AUTOTUNE("AUTOTUNE", defaultValue = false),
     BGSOURCE("BGSOURCE"),
     CONFIGBUILDER("CONFIGBUILDER"),
     CONSTRAINTS("CONSTRAINTS"),
@@ -24,5 +25,6 @@ enum class LTag(val tag: String, val defaultValue : Boolean = true, val requires
     SMS("SMS"),
     TIDEPOOL("TIDEPOOL"),
     UI("UI", defaultValue = false),
-    WEAR("WEAR")
+    WEAR("WEAR"),
+    WIDGET("WIDGET")
 }

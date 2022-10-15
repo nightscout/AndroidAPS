@@ -20,7 +20,11 @@ import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.shared.SafeParse
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.extensions.formatColor
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.androidaps.utils.protection.ProtectionCheck
+import info.nightscout.androidaps.utils.protection.ProtectionCheck.Protection.BOLUS
+import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.logging.LTag
 import java.text.DecimalFormat
 import java.util.*
 import javax.inject.Inject
@@ -35,13 +39,13 @@ class TempBasalDialog : DialogFragmentWithDate() {
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var ctx: Context
     @Inject lateinit var uel: UserEntryLogger
+    @Inject lateinit var protectionCheck: ProtectionCheck
 
+    private var queryingProtection = false
     private var isPercentPump = true
-
     private var _binding: DialogTempbasalBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
+    // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
@@ -51,8 +55,7 @@ class TempBasalDialog : DialogFragmentWithDate() {
         savedInstanceState.putDouble("basalAbsoluteInput", binding.basalAbsoluteInput.value)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         onCreateViewGeneral()
         _binding = DialogTempbasalBinding.inflate(inflater, container, false)
         return binding.root
@@ -86,6 +89,9 @@ class TempBasalDialog : DialogFragmentWithDate() {
             binding.percentLayout.visibility = View.GONE
             binding.absoluteLayout.visibility = View.VISIBLE
         }
+        binding.basalPercentLabel.labelFor = binding.basalPercentInput.editTextId
+        binding.basalAbsoluteLabel.labelFor = binding.basalAbsoluteInput.editTextId
+        binding.durationLabel.labelFor = binding.duration.editTextId
     }
 
     override fun onDestroyView() {
@@ -112,7 +118,7 @@ class TempBasalDialog : DialogFragmentWithDate() {
             actions.add(rh.gs(R.string.tempbasal_label) + ": " + rh.gs(R.string.pump_basebasalrate, absolute))
             actions.add(rh.gs(R.string.duration) + ": " + rh.gs(R.string.format_mins, durationInMinutes))
             if (abs(absolute - basalAbsoluteInput) > 0.01)
-                actions.add(rh.gs(R.string.constraintapllied).formatColor(rh, R.color.warning))
+                actions.add(rh.gs(R.string.constraintapllied).formatColor(context, rh, R.attr.warningColor))
         }
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, rh.gs(R.string.tempbasal_label), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
@@ -137,5 +143,21 @@ class TempBasalDialog : DialogFragmentWithDate() {
             })
         }
         return true
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(!queryingProtection) {
+            queryingProtection = true
+            activity?.let { activity ->
+                val cancelFail = {
+                    queryingProtection = false
+                    aapsLogger.debug(LTag.APS, "Dialog canceled on resume protection: ${this.javaClass.name}")
+                    ToastUtils.showToastInUiThread(ctx, R.string.dialog_canceled)
+                    dismiss()
+                }
+                protectionCheck.queryProtection(activity, BOLUS, { queryingProtection = false }, cancelFail, cancelFail)
+            }
+        }
     }
 }

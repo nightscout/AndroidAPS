@@ -15,9 +15,10 @@ class CommandCustomCommand(
     @Inject lateinit var activePlugin: ActivePlugin
 
     override fun execute() {
-        val result = activePlugin.activePump.executeCustomCommand(customCommand)
-        aapsLogger.debug(LTag.PUMPQUEUE, "Result success: ${result?.success} enacted: ${result?.enacted}")
-        callback?.result(result)?.run()
+        activePlugin.activePump.executeCustomCommand(customCommand)?.let {
+            aapsLogger.debug(LTag.PUMPQUEUE, "Result success: ${it.success} enacted: ${it.enacted}")
+            callback?.result(it)?.run()
+        }
     }
 
     override fun status(): String = customCommand.statusDescription

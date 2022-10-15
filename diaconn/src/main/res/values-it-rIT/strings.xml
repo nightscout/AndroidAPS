@@ -152,4 +152,6 @@
     <string name="diaconn_g8_errorcode_34">Stato LGS già su OFF. Comando di disattivazione rifiutato.</string>
     <string name="diaconn_g8_errorcode_35">L\'avvio della basale temporanea viene rifiutato quando è già in esecuzione una basale temporanea</string>
     <string name="diaconn_g8_errorcode_36">Lo stop della basale temporanea viene rifiutato quando non è in esecuzione alcuna basale temporanea</string>
+    <string name="diaconn_g8_cloudsend_summary">Invia i log del micro a Diaconn Cloud.</string>
+    <string name="diaconn_g8_cloudsend_title">Sincronizzazione Diaconn Cloud</string>
 </resources>

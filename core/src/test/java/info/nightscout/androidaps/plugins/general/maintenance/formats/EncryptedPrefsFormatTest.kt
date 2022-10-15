@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.general.maintenance.formats
 
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.utils.CryptoUtil
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import org.hamcrest.CoreMatchers
 import org.junit.Assert

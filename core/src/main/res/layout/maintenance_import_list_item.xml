@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/careportal_cardview"
+    style="@style/Widget.MaterialComponents.CardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    card_view:cardBackgroundColor="?android:colorBackground">
+    android:layout_marginStart="4dp"
+    android:layout_marginEnd="4dp"
+    android:layout_marginTop="4dp"
+    app:cardCornerRadius="4dp"
+    app:contentPadding="2dp"
+    app:cardElevation="2dp"
+    app:cardUseCompatPadding="false"
+    android:layout_gravity="center">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,7 +27,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:baselineAligned="true"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            tools:ignore="UseCompoundDrawables">
 
             <ImageView
                 android:layout_width="18dp"
@@ -29,8 +37,9 @@
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="6dp"
                 android:layout_marginBottom="1dp"
-                card_view:srcCompat="@drawable/ic_meta_format"
-                app:tint="@color/importListFileName" />
+                android:contentDescription="@string/a11y_file"
+                app:srcCompat="@drawable/ic_meta_format"
+                app:tint="?attr/importListFileNameColor" />
 
             <TextView
                 android:id="@+id/filelist_name"
@@ -39,13 +48,13 @@
                 android:layout_weight="1"
                 android:ellipsize="none"
                 android:maxLines="2"
+                android:paddingStart="0dp"
                 android:paddingEnd="10dp"
                 android:scrollHorizontally="false"
                 android:text="File name here"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/importListFileName"
+                android:textColor="?attr/importListFileNameColor"
                 tools:ignore="HardcodedText" />
-
 
         </LinearLayout>
 
@@ -63,15 +72,14 @@
                 android:layout_weight="1"
                 android:ellipsize="none"
                 android:maxLines="2"
-
+                android:paddingStart="0dp"
                 android:paddingEnd="10dp"
                 android:scrollHorizontally="false"
                 android:text="File dir here"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/importListFileName"
+                android:textColor="?attr/importListFileNameColor"
                 android:textSize="11sp"
                 tools:ignore="HardcodedText" />
-
 
         </LinearLayout>
 
@@ -80,18 +88,19 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="6dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            tools:ignore="UseCompoundDrawables">
 
             <ImageView
-
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="1dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="1dp"
-                card_view:srcCompat="@drawable/ic_meta_name"
-                app:tint="@color/importListAdditionalInfo" />
+                android:contentDescription="@string/a11y_user"
+                app:srcCompat="@drawable/ic_meta_name"
+                app:tint="?attr/importListAdditionalInfoColor" />
 
             <TextView
                 android:id="@+id/meta_device_name"
@@ -100,19 +109,16 @@
                 android:layout_weight="1"
                 android:text="exported on this Patient phone"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/importListAdditionalInfo"
+                android:textColor="?attr/importListAdditionalInfoColor"
                 tools:ignore="HardcodedText" />
 
-
         </LinearLayout>
-
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="3dp"
             android:orientation="horizontal">
-
 
             <ImageView
                 android:id="@+id/meta_date_time_icon"
@@ -122,8 +128,9 @@
                 android:layout_marginTop="1dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="1dp"
-                card_view:srcCompat="@drawable/ic_meta_date"
-                app:tint="@color/importListAdditionalInfo" />
+                android:importantForAccessibility="no"
+                app:srcCompat="@drawable/ic_meta_date"
+                app:tint="?attr/importListAdditionalInfoColor" />
 
             <TextView
                 android:id="@+id/meta_date_time"
@@ -132,7 +139,7 @@
                 android:layout_weight="1"
                 android:text="exported how long ago"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/importListAdditionalInfo"
+                android:textColor="?attr/importListAdditionalInfoColor"
                 tools:ignore="HardcodedText" />
 
             <TextView
@@ -141,7 +148,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
                 android:text="v10.10.10.10"
-                android:textColor="@color/metadataTextWarning"
+                android:textColor="?attr/metadataTextWarningColor"
                 tools:ignore="HardcodedText" />
 
             <TextView
@@ -150,21 +157,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
                 android:text="FLAVOUR"
-                android:textColor="@color/metadataOk"
+                android:textColor="?attr/metadataTextOkColor"
                 tools:ignore="HardcodedText" />
 
         </LinearLayout>
 
-
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="2dip"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="7dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginBottom="3dp"
-            android:background="@color/list_delimiter" />
-
     </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

@@ -61,6 +61,6 @@ class DanaRsPacketNotifyDeliveryRateDisplayTest : DanaRSTestBase() {
     @Before
     fun mock() {
         danaRSPlugin = DanaRSPlugin(packetInjector, aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, profileFunction, sp, commandQueue, danaPump, pumpSync, detailedBolusInfoStorage, temporaryBasalStorage, fabricPrivacy, dateUtil)
-        danaPump.bolusingTreatment = EventOverviewBolusProgress.Treatment(0.0, 0, true)
+        danaPump.bolusingTreatment = EventOverviewBolusProgress.Treatment(0.0, 0, true, 0)
     }
 }

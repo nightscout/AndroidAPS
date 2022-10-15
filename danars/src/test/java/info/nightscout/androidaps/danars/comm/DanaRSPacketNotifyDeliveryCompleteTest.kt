@@ -30,7 +30,7 @@ class DanaRSPacketNotifyDeliveryCompleteTest : DanaRSTestBase() {
     @Test fun runTest() {
         `when`(rh.gs(anyInt(), anyDouble())).thenReturn("SomeString")
 
-        danaPump.bolusingTreatment = EventOverviewBolusProgress.Treatment(0.0, 0, true)
+        danaPump.bolusingTreatment = EventOverviewBolusProgress.Treatment(0.0, 0, true, 0)
         val packet = DanaRSPacketNotifyDeliveryComplete(packetInjector)
         // test params
         Assert.assertEquals(0, packet.getRequestParams().size)

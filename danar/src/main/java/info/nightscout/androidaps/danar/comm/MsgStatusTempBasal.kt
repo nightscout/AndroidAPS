@@ -11,7 +11,7 @@ class MsgStatusTempBasal(
 ) : MessageBase(injector) {
 
     init {
-        SetCommand(0x0205)
+        setCommand(0x0205)
         aapsLogger.debug(LTag.PUMPCOMM, "New message")
     }
 

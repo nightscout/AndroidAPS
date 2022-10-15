@@ -21,12 +21,12 @@
     <string name="tbr_formatter">%1$d%% para %2$d / %3$d min</string>
     <string name="multiwave_bolus">Bólus Multi-Onda</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U por %3$d min</string>
+    <string name="insight_last_bolus">Último Bólus</string>
     <string name="searching_for_devices">A pesquisar dispositivos…</string>
     <string name="pairing_completed">Emparelhamento concluído</string>
     <string name="code_compare">Os códigos exibidos neste dispositivo e na sua bomba correspondem?</string>
     <string name="insight_pairing">Emparelhamento Insight</string>
     <string name="insight_local">Accu-Chek Insight</string>
-    <string name="insight_delivered">%1$.2f U / %2$.2f U administrado</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Tubo mudado</string>
     <string name="insightpump_shortname">Visão</string>

@@ -30,9 +30,11 @@ import info.nightscout.shared.SafeParse
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.extensions.formatColor
-import info.nightscout.androidaps.utils.resources.ResourceHelper
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
+import info.nightscout.androidaps.utils.protection.ProtectionCheck
+import info.nightscout.androidaps.utils.protection.ProtectionCheck.Protection.BOLUS
+import info.nightscout.androidaps.interfaces.ResourceHelper
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
 import java.text.DecimalFormat
 import java.util.*
 import javax.inject.Inject
@@ -48,8 +50,14 @@ class TreatmentDialog : DialogFragmentWithDate() {
     @Inject lateinit var config: Config
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var repository: AppRepository
+    @Inject lateinit var protectionCheck: ProtectionCheck
 
+    private var queryingProtection = false
     private val disposable = CompositeDisposable()
+    private var _binding: DialogTreatmentBinding? = null
+
+    // This property is only valid between onCreateView and onDestroyView.
+    private val binding get() = _binding!!
 
     private val textWatcher: TextWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable) {}
@@ -71,12 +79,6 @@ class TreatmentDialog : DialogFragmentWithDate() {
             ToastUtils.showToastInUiThread(context, rh.gs(R.string.bolusconstraintapplied))
         }
     }
-
-    private var _binding: DialogTreatmentBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
         super.onSaveInstanceState(savedInstanceState)
@@ -106,6 +108,8 @@ class TreatmentDialog : DialogFragmentWithDate() {
         binding.insulin.setParams(savedInstanceState?.getDouble("insulin")
             ?: 0.0, 0.0, maxInsulin, pumpDescription.bolusStep, DecimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump), false, binding.okcancel.ok, textWatcher)
         binding.recordOnlyLayout.visibility = View.GONE
+        binding.insulinLabel.labelFor = binding.insulin.editTextId
+        binding.carbsLabel.labelFor = binding.carbs.editTextId
     }
 
     override fun onDestroyView() {
@@ -124,16 +128,16 @@ class TreatmentDialog : DialogFragmentWithDate() {
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(carbs)).value()
 
         if (insulinAfterConstraints > 0) {
-            actions.add(rh.gs(R.string.bolus) + ": " + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump, rh).formatColor(rh, R.color.bolus))
+            actions.add(rh.gs(R.string.bolus) + ": " + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump, rh).formatColor(context, rh, R.attr.bolusColor))
             if (recordOnlyChecked)
-                actions.add(rh.gs(R.string.bolusrecordedonly).formatColor(rh, R.color.warning))
+                actions.add(rh.gs(R.string.bolusrecordedonly).formatColor(context, rh, R.attr.warningColor))
             if (abs(insulinAfterConstraints - insulin) > pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))
-                actions.add(rh.gs(R.string.bolusconstraintappliedwarn, insulin, insulinAfterConstraints).formatColor(rh, R.color.warning))
+                actions.add(rh.gs(R.string.bolusconstraintappliedwarn, insulin, insulinAfterConstraints).formatColor(context, rh, R.attr.warningColor))
         }
         if (carbsAfterConstraints > 0) {
-            actions.add(rh.gs(R.string.carbs) + ": " + rh.gs(R.string.format_carbs, carbsAfterConstraints).formatColor(rh, R.color.carbs))
+            actions.add(rh.gs(R.string.carbs) + ": " + rh.gs(R.string.format_carbs, carbsAfterConstraints).formatColor(context, rh, R.attr.carbsColor))
             if (carbsAfterConstraints != carbs)
-                actions.add(rh.gs(R.string.carbsconstraintapplied).formatColor(rh, R.color.warning))
+                actions.add(rh.gs(R.string.carbsconstraintapplied).formatColor(context, rh, R.attr.warningColor))
         }
         if (insulinAfterConstraints > 0 || carbsAfterConstraints > 0) {
             activity?.let { activity ->
@@ -179,9 +183,17 @@ class TreatmentDialog : DialogFragmentWithDate() {
                                     }
                                 }
                             })
-                        } else
+                        } else {
                             uel.log(action, Sources.TreatmentDialog,
-                                ValueWithUnit.Gram(carbsAfterConstraints).takeIf { carbs != 0 })
+                                    ValueWithUnit.Gram(carbsAfterConstraints).takeIf { carbsAfterConstraints != 0 })
+                            if (detailedBolusInfo.carbs > 0) {
+                                disposable += repository.runTransactionForResult(detailedBolusInfo.insertCarbsTransaction())
+                                    .subscribe(
+                                        { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted carbs $it") } },
+                                        { aapsLogger.error(LTag.DATABASE, "Error while saving carbs", it) }
+                                    )
+                            }
+                        }
                     }
                 })
             }
@@ -190,5 +202,21 @@ class TreatmentDialog : DialogFragmentWithDate() {
                 OKDialog.show(activity, rh.gs(R.string.overview_treatment_label), rh.gs(R.string.no_action_selected))
             }
         return true
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(!queryingProtection) {
+            queryingProtection = true
+            activity?.let { activity ->
+                val cancelFail = {
+                    queryingProtection = false
+                    aapsLogger.debug(LTag.APS, "Dialog canceled on resume protection: ${this.javaClass.name}")
+                    ToastUtils.showToastInUiThread(ctx, R.string.dialog_canceled)
+                    dismiss()
+                }
+                protectionCheck.queryProtection(activity, BOLUS, { queryingProtection = false }, cancelFail, cancelFail)
+            }
+        }
     }
 }

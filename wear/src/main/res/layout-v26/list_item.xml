@@ -12,9 +12,9 @@
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_marginStart="10dp"
+        android:importantForAccessibility="no"
         android:src="@drawable/circle" />
 
     <TextView
@@ -24,14 +24,13 @@
         android:layout_centerVertical="true"
         android:layout_marginStart="10dp"
         android:layout_toEndOf="@+id/menuItemIcon"
-        android:layout_toRightOf="@+id/menuItemIcon"
         android:autoSizeMaxTextSize="32sp"
         android:autoSizeMinTextSize="12sp"
         android:autoSizeStepGranularity="2sp"
         android:autoSizeTextType="uniform"
-        android:text="action item"
         android:textColor="@color/dark_statusView"
         android:textSize="20sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        tools:text="action item" />
 
 </RelativeLayout>

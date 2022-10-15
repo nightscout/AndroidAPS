@@ -14,7 +14,7 @@ abstract class OmnipodWizardActivityBase : NoSplashAppCompatActivity() {
         if (getNavController().previousBackStackEntry == null) {
             finish()
         } else {
-            AlertDialog.Builder(this)
+            AlertDialog.Builder(this, R.style.DialogTheme)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setTitle(getString(R.string.omnipod_common_wizard_exit_confirmation_title))
                 .setMessage(getString(R.string.omnipod_common_wizard_exit_confirmation_text))

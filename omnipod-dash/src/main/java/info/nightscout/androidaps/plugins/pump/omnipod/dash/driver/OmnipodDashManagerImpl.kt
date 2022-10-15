@@ -1,8 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver
 
 import android.os.SystemClock
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.OmnipodDashBleManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.event.PodEvent
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.*
@@ -17,9 +15,11 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
 import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import io.reactivex.Observable
-import io.reactivex.functions.Action
-import io.reactivex.functions.Consumer
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.functions.Action
+import io.reactivex.rxjava3.functions.Consumer
 import java.time.Duration
 import java.time.ZonedDateTime
 import java.util.*

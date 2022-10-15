@@ -1,9 +1,13 @@
 package info.nightscout.androidaps.diaconn.service
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.bluetooth.*
 import android.content.Context
-import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.SystemClock
+import androidx.core.app.ActivityCompat
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.diaconn.DiaconnG8Pump
@@ -12,10 +16,11 @@ import info.nightscout.androidaps.diaconn.packet.*
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.extensions.notify
 import info.nightscout.androidaps.extensions.waitMillis
+import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import java.util.*
 import java.util.concurrent.ScheduledFuture
 import javax.inject.Inject
@@ -31,9 +36,10 @@ class BLECommonService @Inject internal constructor(
     private val diaconnG8ResponseMessageHashTable: DiaconnG8ResponseMessageHashTable,
     private val diaconnG8SettingResponseMessageHashTable: DiaconnG8SettingResponseMessageHashTable,
     private val diaconnG8Pump: DiaconnG8Pump,
-){
+) {
 
     companion object {
+
         private const val WRITE_DELAY_MILLIS: Long = 50
         private const val INDICATION_UUID = "6e400003-b5a3-f393-e0a9-e50e24dcca9e"
         private const val WRITE_UUID = "6e400002-b5a3-f393-e0a9-e50e24dcca9e"
@@ -48,13 +54,12 @@ class BLECommonService @Inject internal constructor(
     private var connectDeviceName: String? = null
     private var bluetoothGatt: BluetoothGatt? = null
 
-
     var isConnected = false
     var isConnecting = false
     private var uartIndicate: BluetoothGattCharacteristic? = null
     private var uartWrite: BluetoothGattCharacteristic? = null
 
-    private var mSequence : Int = 0
+    private var mSequence: Int = 0
 
     private fun getMsgSequence(): Int {
         val seq = mSequence % 255
@@ -67,6 +72,13 @@ class BLECommonService @Inject internal constructor(
 
     @Synchronized
     fun connect(from: String, address: String?): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+            ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ToastUtils.errorToast(context, context.getString(info.nightscout.androidaps.core.R.string.needconnectpermission))
+            aapsLogger.error(LTag.PUMPBTCOMM, "missing permission: $from")
+            return false
+        }
         aapsLogger.debug(LTag.PUMPBTCOMM, "Initializing Bluetooth ")
         if (bluetoothAdapter == null) {
             aapsLogger.error("Unable to obtain a BluetoothAdapter.")
@@ -99,6 +111,12 @@ class BLECommonService @Inject internal constructor(
 
     @Synchronized
     fun disconnect(from: String) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+            ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED
+        ) {
+            aapsLogger.error(LTag.PUMPBTCOMM, "missing permission: $from")
+            return
+        }
         aapsLogger.debug(LTag.PUMPBTCOMM, "disconnect from: $from")
 
         // cancel previous scheduled disconnection to prevent closing upcoming connection
@@ -118,6 +136,7 @@ class BLECommonService @Inject internal constructor(
         SystemClock.sleep(2000)
     }
 
+    @SuppressLint("MissingPermission")
     @Synchronized
     fun close() {
         aapsLogger.debug(LTag.PUMPBTCOMM, "BluetoothAdapter close")
@@ -134,13 +153,16 @@ class BLECommonService @Inject internal constructor(
             aapsLogger.debug(LTag.PUMPBTCOMM, "onServicesDiscovered")
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 findCharacteristic()
+                SystemClock.sleep(1600)
+                isConnected = true
+                isConnecting = false
             }
         }
 
         override fun onCharacteristicChanged(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "(응답) onCharacteristicChanged: " + DiaconnG8Packet.toHex(characteristic.value))
             // 대량로그응답 처리.
-            if(characteristic.value[1] == 0xb2.toByte()) {
+            if (characteristic.value[1] == 0xb2.toByte()) {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "(대량 로그 처리 응답) onCharacteristicChanged: " + DiaconnG8Packet.toHex(characteristic.value))
                 val message = BigLogInquireResponsePacket(injector)
                 message.handleMessage(characteristic.value)
@@ -157,6 +179,7 @@ class BLECommonService @Inject internal constructor(
         }
     }
 
+    @SuppressLint("MissingPermission")
     @Synchronized
     private fun writeCharacteristicNoResponse(characteristic: BluetoothGattCharacteristic, data: ByteArray) {
         Thread(Runnable {
@@ -195,6 +218,7 @@ class BLECommonService @Inject internal constructor(
         return bluetoothGatt?.services
     }
 
+    @SuppressLint("MissingPermission")
     @Synchronized
     private fun findCharacteristic() {
         val gattServices = getSupportedGattServices() ?: return
@@ -207,6 +231,7 @@ class BLECommonService @Inject internal constructor(
                     uartIndicate = gattCharacteristic
                     //setCharacteristicNotification(uartIndicate, true)
                     bluetoothGatt?.setCharacteristicNotification(uartIndicate, true)
+
                     // nRF Connect 참고하여 추가함
                     val descriptor: BluetoothGattDescriptor = uartIndicate!!.getDescriptor(UUID.fromString(CHARACTERISTIC_CONFIG_UUID))
                     descriptor.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
@@ -219,13 +244,12 @@ class BLECommonService @Inject internal constructor(
         }
     }
 
+    @SuppressLint("MissingPermission")
     @Synchronized
     private fun onConnectionStateChangeSynchronized(gatt: BluetoothGatt, newState: Int) {
         aapsLogger.debug(LTag.PUMPBTCOMM, "onConnectionStateChange newState : $newState")
         if (newState == BluetoothProfile.STATE_CONNECTED) {
             gatt.discoverServices()
-            isConnected = true
-            isConnecting = false
             rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTED))
         } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
             close()
@@ -251,7 +275,7 @@ class BLECommonService @Inject internal constructor(
         writeCharacteristicNoResponse(uartWriteBTGattChar, bytes)
         // 요청 큐에 요청할 바이트 정보 담기.
         synchronized(mSendQueue) {
-            if(mSendQueue.size > 10) mSendQueue.clear()
+            if (mSendQueue.size > 10) mSendQueue.clear()
             mSendQueue.add(bytes)
         }
         aapsLogger.debug(LTag.PUMPBTCOMM, "sendMessage() after mSendQueue.size :: ${mSendQueue.size}")
@@ -269,6 +293,7 @@ class BLECommonService @Inject internal constructor(
     // process common packet response
     private fun processResponseMessage(data: ByteArray) {
         isConnected = true
+        isConnecting = false
 
         //요청정보
         val originalMessageSeq = processedMessage?.getSeq(processedMessageByte)
@@ -282,44 +307,29 @@ class BLECommonService @Inject internal constructor(
         aapsLogger.debug(LTag.PUMPBTCOMM, "receivedCommand :: $receivedCommand")
 
         // 응답메시지가 조회응답인지. 설정응답인지 구분해야됨.
-        var message:DiaconnG8Packet? = null
+        var message: DiaconnG8Packet? = null
         // 요청시퀀스와 응답의 시퀀스가 동일한 경우에만 처리.
         // 펌프로부터 받은 보고응답의 경우 처리
-        if(receivedType == 3) {
+        if (receivedType == 3) {
             message = diaconnG8ResponseMessageHashTable.findMessage(receivedCommand)
             // injection Blocked Report
-            if(message is InjectionBlockReportPacket ) {
+            if (message is InjectionBlockReportPacket) {
                 message.handleMessage(data)
                 diaconnG8Pump.bolusBlocked = true
-                val i = Intent(context, ErrorHelperActivity::class.java)
-                i.putExtra("soundid", R.raw.boluserror)
-                i.putExtra("status", rh.gs(R.string.injectionblocked))
-                i.putExtra("title", rh.gs(R.string.injectionblocked))
-                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                context.startActivity(i)
+                ErrorHelperActivity.runAlarm(context, rh.gs(R.string.injectionblocked), rh.gs(R.string.injectionblocked), R.raw.boluserror)
                 return
             }
             // battery warning report
-            if(message is BatteryWarningReportPacket ) {
+            if (message is BatteryWarningReportPacket) {
                 message.handleMessage(data)
-                val i = Intent(context, ErrorHelperActivity::class.java)
-                i.putExtra("soundid", R.raw.boluserror)
-                i.putExtra("status", rh.gs(R.string.needbatteryreplace))
-                i.putExtra("title", rh.gs(R.string.batterywarning))
-                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                context.startActivity(i)
+                ErrorHelperActivity.runAlarm(context, rh.gs(R.string.needbatteryreplace), rh.gs(R.string.batterywarning), R.raw.boluserror)
                 return
             }
 
             // insulin lack warning report
-            if(message is InsulinLackReportPacket ) {
+            if (message is InsulinLackReportPacket) {
                 message.handleMessage(data)
-                val i = Intent(context, ErrorHelperActivity::class.java)
-                i.putExtra("soundid", R.raw.boluserror)
-                i.putExtra("status", rh.gs(R.string.needinsullinreplace))
-                i.putExtra("title", rh.gs(R.string.insulinlackwarning))
-                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                context.startActivity(i)
+                ErrorHelperActivity.runAlarm(context, rh.gs(R.string.needinsullinreplace), rh.gs(R.string.insulinlackwarning), R.raw.boluserror)
                 return
             }
 
@@ -328,7 +338,7 @@ class BLECommonService @Inject internal constructor(
             synchronized(mSendQueue) {
                 val sendQueueSize = mSendQueue.size
                 if (sendQueueSize > 0) {
-                    for (i in sendQueueSize-1 downTo 0 ) {
+                    for (i in sendQueueSize - 1 downTo 0) {
                         val sendQueueSeq = DiaconnG8Packet(injector).getSeq(mSendQueue[i])
                         val sendQueueType = DiaconnG8Packet(injector).getType(mSendQueue[i])
                         if (sendQueueSeq == receivedSeq) {

@@ -298,11 +298,7 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
                     if (frameData.isEmpty()) {
                         aapsLogger.error(LTag.PUMPCOMM, "null frame data, retrying")
                     } else if (currentResponse.frameNumber != expectedFrameNum) {
-                        aapsLogger.warn(
-                            LTag.PUMPCOMM, String.format(Locale.ENGLISH, "Expected frame number %d, received %d (retrying)", expectedFrameNum,
-                                                         currentResponse.frameNumber))
-                    } else if (frameData.isEmpty()) {
-                        aapsLogger.warn(LTag.PUMPCOMM, "Frame has zero length, retrying")
+                        aapsLogger.warn(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "Expected frame number %d, received %d (retrying)", expectedFrameNum, currentResponse.frameNumber))
                     }
                     failures++
                     if (failures == 6) {
@@ -533,7 +529,6 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
                 } else {
                     errorResponse = check
                 }
-
 
                 aapsLogger.debug(LTag.PUMPCOMM, "End Response: {}", ByteUtil.getHex(data))
 

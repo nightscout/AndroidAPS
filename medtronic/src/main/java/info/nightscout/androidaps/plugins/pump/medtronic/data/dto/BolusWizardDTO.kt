@@ -21,7 +21,6 @@ class BolusWizardDTO : PumpTimeStampedRecord() {
     var foodEstimate = 0.0f
     var unabsorbedInsulin = 0.0f//
 
-
     val value: String
         get() = String.format(Locale.ENGLISH, "BG=%d;CH=%d;CH_UNIT=%s;CH_INS_RATIO=%5.3f;BG_INS_RATIO=%5.3f;"
             + "BG_TARGET_LOW=%d;BG_TARGET_HIGH=%d;BOLUS_TOTAL=%5.3f;"

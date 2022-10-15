@@ -33,10 +33,10 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.Round;
-import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.interfaces.ResourceHelper;
 import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import info.nightscout.shared.sharedPreferences.SP;
-import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 @Singleton
 public class DanaRPlugin extends AbstractDanaRPlugin {
@@ -161,20 +161,20 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
         detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(new Constraint<>(detailedBolusInfo.insulin)).value();
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
-            EventOverviewBolusProgress.Treatment t = new EventOverviewBolusProgress.Treatment(0, 0, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB);
+            EventOverviewBolusProgress.Treatment t = new EventOverviewBolusProgress.Treatment(0, 0, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.getId());
             boolean connectionOK = false;
             if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0)
                 connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) detailedBolusInfo.carbs, detailedBolusInfo.getCarbsTimestamp() != null ? detailedBolusInfo.getCarbsTimestamp() : detailedBolusInfo.timestamp, t);
             PumpEnactResult result = new PumpEnactResult(getInjector());
-            result.success(connectionOK && Math.abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.getBolusStep())
-                    .bolusDelivered(t.insulin)
+            result.success(connectionOK && Math.abs(detailedBolusInfo.insulin - t.getInsulin()) < pumpDescription.getBolusStep())
+                    .bolusDelivered(t.getInsulin())
                     .carbsDelivered(detailedBolusInfo.carbs);
             if (!result.getSuccess())
-                result.comment(rh.gs(R.string.boluserrorcode, detailedBolusInfo.insulin, t.insulin, danaPump.getBolusStartErrorCode()));
+                result.comment(rh.gs(R.string.boluserrorcode, detailedBolusInfo.insulin, t.getInsulin(), danaPump.getBolusStartErrorCode()));
             else
                 result.comment(R.string.ok);
             aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.getBolusDelivered());
-            detailedBolusInfo.insulin = t.insulin;
+            detailedBolusInfo.insulin = t.getInsulin();
             detailedBolusInfo.timestamp = System.currentTimeMillis();
             if (detailedBolusInfo.insulin > 0)
                 pumpSync.syncBolusWithPumpId(
@@ -217,8 +217,8 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
         int percentRate = Double.valueOf(absoluteRate / getBaseBasalRate() * 100).intValue();
         // Any basal less than 0.10u/h will be dumped once per hour, not every 4 minutes. So if it's less than .10u/h, set a zero temp.
         if (absoluteRate < 0.10d) percentRate = 0;
-        if (percentRate < 100) percentRate = (int) Round.ceilTo((double) percentRate, 10d);
-        else percentRate = (int) Round.floorTo((double) percentRate, 10d);
+        if (percentRate < 100) percentRate = (int) Round.INSTANCE.ceilTo((double) percentRate, 10d);
+        else percentRate = (int) Round.INSTANCE.floorTo((double) percentRate, 10d);
         if (percentRate > getPumpDescription().getMaxTempPercent()) {
             percentRate = getPumpDescription().getMaxTempPercent();
         }
@@ -288,7 +288,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
             double extendedRateToSet = absoluteRate - getBaseBasalRate();
             extendedRateToSet = constraintChecker.applyBasalConstraints(new Constraint<>(extendedRateToSet), profile).value();
             // needs to be rounded to 0.1
-            extendedRateToSet = Round.roundTo(extendedRateToSet, pumpDescription.getExtendedBolusStep() * 2); // *2 because of half hours
+            extendedRateToSet = Round.INSTANCE.roundTo(extendedRateToSet, pumpDescription.getExtendedBolusStep() * 2); // *2 because of half hours
 
             // What is current rate of extended bolusing in u/h?
             aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Extended bolus in progress: " + (danaPump.isExtendedInProgress()) + " rate: " + danaPump.getExtendedBolusAbsoluteRate() + "U/h duration remaining: " + danaPump.getExtendedBolusRemainingMinutes() + "min");

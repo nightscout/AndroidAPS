@@ -9,7 +9,7 @@ class MsgSettingBasal(
 ) : MessageBase(injector) {
 
     init {
-        SetCommand(0x3202)
+        setCommand(0x3202)
         aapsLogger.debug(LTag.PUMPCOMM, "New message")
     }
 

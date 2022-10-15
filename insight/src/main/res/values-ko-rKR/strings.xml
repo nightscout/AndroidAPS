@@ -26,7 +26,6 @@
     <string name="code_compare">이 장치에서 보여지는 코드와 펌프에서 보여지는 코드가 동일한가요?</string>
     <string name="insight_pairing">Insight와 동기화</string>
     <string name="insight_local">아큐-첵 Insight</string>
-    <string name="insight_delivered">%1$.2f U / %2$.2f U 주입됨</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">튜브 변경</string>
     <string name="insightpump_shortname">Sight</string>

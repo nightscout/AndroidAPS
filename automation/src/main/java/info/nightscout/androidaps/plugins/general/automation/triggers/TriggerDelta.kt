@@ -110,7 +110,7 @@ class TriggerDelta(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyDescription(): String =
         rh.gs(R.string.deltacompared, rh.gs(comparator.value.stringRes), delta.value, rh.gs(delta.deltaType.stringRes))
 
-    override fun icon(): Optional<Int?> = Optional.of(R.drawable.ic_auto_delta)
+    override fun icon(): Optional<Int> = Optional.of(R.drawable.ic_auto_delta)
 
     override fun duplicate(): Trigger = TriggerDelta(injector, this)
 

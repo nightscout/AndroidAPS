@@ -1,39 +1,41 @@
 package info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.commands;
 
-import android.os.SystemClock;
-
-import androidx.annotation.NonNull;
-
-import org.monkey.d.ruffy.ruffy.driver.display.MenuAttribute;
-import org.monkey.d.ruffy.ruffy.driver.display.MenuType;
-import org.slf4j.Logger;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
-import info.nightscout.shared.logging.StacktraceLoggerWrapper;
-import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.BolusProgressReporter;
-import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.PumpWarningCodes;
-import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.RuffyScripter;
-import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.WarningOrErrorCode;
-
 import static info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.BolusProgressReporter.State.DELIVERED;
 import static info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.BolusProgressReporter.State.DELIVERING;
 import static info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.BolusProgressReporter.State.PROGRAMMING;
 import static info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.BolusProgressReporter.State.STOPPED;
 import static info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.BolusProgressReporter.State.STOPPING;
 
+import android.os.SystemClock;
+
+import androidx.annotation.NonNull;
+
+import org.monkey.d.ruffy.ruffy.driver.display.MenuAttribute;
+import org.monkey.d.ruffy.ruffy.driver.display.MenuType;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.BolusProgressReporter;
+import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.PumpWarningCodes;
+import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.RuffyScripter;
+import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.WarningOrErrorCode;
+import info.nightscout.shared.logging.AAPSLogger;
+import info.nightscout.shared.logging.LTag;
+
 public class BolusCommand extends BaseCommand {
-    private static final Logger log = StacktraceLoggerWrapper.getLogger(BolusCommand.class);
+    
+    private final AAPSLogger aapsLogger;
 
     protected final double bolus;
     private final BolusProgressReporter bolusProgressReporter;
     private volatile boolean cancelRequested;
 
-    public BolusCommand(double bolus, BolusProgressReporter bolusProgressReporter) {
+    public BolusCommand(double bolus, BolusProgressReporter bolusProgressReporter, AAPSLogger aapsLogger) {
         this.bolus = bolus;
         this.bolusProgressReporter = bolusProgressReporter;
+        this.aapsLogger = aapsLogger;
     }
 
     @Override
@@ -57,7 +59,7 @@ public class BolusCommand extends BaseCommand {
         if (cancelRequested) {
             bolusProgressReporter.report(STOPPED, 0, 0);
             result.success = true;
-            log.debug("Stage 0: cancelled bolus before programming");
+            aapsLogger.debug(LTag.PUMP, "Stage 0: cancelled bolus before programming");
             return;
         }
 
@@ -72,26 +74,26 @@ public class BolusCommand extends BaseCommand {
             scripter.returnToRootMenu();
             bolusProgressReporter.report(STOPPED, 0, 0);
             result.success = true;
-            log.debug("Stage 1: cancelled bolus after programming");
+            aapsLogger.debug(LTag.PUMP, "Stage 1: cancelled bolus after programming");
             return;
         }
 
         // confirm bolus
         scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
         scripter.pressCheckKey();
-        log.debug("Stage 2: bolus confirmed");
+        aapsLogger.debug(LTag.PUMP, "Stage 2: bolus confirmed");
 
         // the pump displays the entered bolus and waits a few seconds to let user check and cancel
         while (scripter.getCurrentMenu().getType() == MenuType.BOLUS_ENTER) {
             if (cancelRequested) {
-                log.debug("Stage 2: cancelling during confirmation wait");
+                aapsLogger.debug(LTag.PUMP, "Stage 2: cancelling during confirmation wait");
                 bolusProgressReporter.report(STOPPING, 0, 0);
                 scripter.pressUpKey();
                 // wait up to 1s for a BOLUS_CANCELLED alert, if it doesn't happen we missed
                 // the window, simply continue and let the next cancel attempt try its luck
                 boolean alertWasCancelled = scripter.confirmAlert(PumpWarningCodes.BOLUS_CANCELLED, 1000);
                 if (alertWasCancelled) {
-                    log.debug("Stage 2: successfully cancelled during confirmation wait");
+                    aapsLogger.debug(LTag.PUMP, "Stage 2: successfully cancelled during confirmation wait");
                     bolusProgressReporter.report(STOPPED, 0, 0);
                     result.success = true;
                     return;
@@ -113,7 +115,7 @@ public class BolusCommand extends BaseCommand {
         Thread cancellationThread = null;
         while (bolusRemaining != null || scripter.getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR) {
             if (cancelRequested && !cancelInProgress) {
-                log.debug("Stage 3: cancellation while delivering bolus");
+                aapsLogger.debug(LTag.PUMP, "Stage 3: cancellation while delivering bolus");
                 bolusProgressReporter.report(STOPPING, 0, 0);
                 cancelInProgress = true;
                 cancellationThread = new Thread(() ->
@@ -139,15 +141,15 @@ public class BolusCommand extends BaseCommand {
                     }
                     scripter.confirmAlert(PumpWarningCodes.BOLUS_CANCELLED, 2000);
                     bolusProgressReporter.report(STOPPED, 0, 0);
-                    log.debug("Stage 3: confirmed BOLUS CANCELLED after cancelling bolus during delivery");
+                    aapsLogger.debug(LTag.PUMP, "Stage 3: confirmed BOLUS CANCELLED after cancelling bolus during delivery");
                 } else if (Objects.equals(warningCode, PumpWarningCodes.CARTRIDGE_LOW)) {
                     scripter.confirmAlert(PumpWarningCodes.CARTRIDGE_LOW, 2000);
                     result.forwardedWarnings.add(PumpWarningCodes.CARTRIDGE_LOW);
-                    log.debug("Stage 3: confirmed low cartridge alert and forwarding to AAPS");
+                    aapsLogger.debug(LTag.PUMP, "Stage 3: confirmed low cartridge alert and forwarding to AAPS");
                 } else if (Objects.equals(warningCode, PumpWarningCodes.BATTERY_LOW)) {
                     scripter.confirmAlert(PumpWarningCodes.BATTERY_LOW, 2000);
                     result.forwardedWarnings.add(PumpWarningCodes.BATTERY_LOW);
-                    log.debug("Stage 3: confirmed low battery alert and forwarding to AAPS");
+                    aapsLogger.debug(LTag.PUMP, "Stage 3: confirmed low battery alert and forwarding to AAPS");
                 } else {
                     // all other warnings or errors;
                     // An occlusion error can also occur during bolus. To read the partially delivered
@@ -165,7 +167,7 @@ public class BolusCommand extends BaseCommand {
                 }
             }
             if (bolusRemaining != null && !Objects.equals(bolusRemaining, lastBolusReported)) {
-                log.debug("Delivering bolus, remaining: " + bolusRemaining);
+                aapsLogger.debug(LTag.PUMP, "Delivering bolus, remaining: " + bolusRemaining);
                 int percentDelivered = (int) (100 - (bolusRemaining / bolus * 100));
                 bolusProgressReporter.report(DELIVERING, percentDelivered, bolus - bolusRemaining);
                 lastBolusReported = bolusRemaining;
@@ -185,9 +187,9 @@ public class BolusCommand extends BaseCommand {
         }
 
         if (cancelInProgress) {
-            log.debug("Stage 4: bolus was cancelled, with unknown amount delivered");
+            aapsLogger.debug(LTag.PUMP, "Stage 4: bolus was cancelled, with unknown amount delivered");
         } else {
-            log.debug("Stage 4: full bolus of " + bolus + " U was successfully delivered");
+            aapsLogger.debug(LTag.PUMP, "Stage 4: full bolus of " + bolus + " U was successfully delivered");
             bolusProgressReporter.report(DELIVERED, 100, bolus);
         }
         result.success = true;
@@ -219,12 +221,12 @@ public class BolusCommand extends BaseCommand {
         double displayedBolus = scripter.readBlinkingValue(Double.class, MenuAttribute.BOLUS);
         long timeout = System.currentTimeMillis() + 10 * 1000;
         while (timeout > System.currentTimeMillis() && bolus - displayedBolus > 0.05) {
-            log.debug("Waiting for pump to process scrolling input for amount, current: " + displayedBolus + ", desired: " + bolus);
+            aapsLogger.debug(LTag.PUMP, "Waiting for pump to process scrolling input for amount, current: " + displayedBolus + ", desired: " + bolus);
             SystemClock.sleep(50);
             displayedBolus = scripter.readBlinkingValue(Double.class, MenuAttribute.BOLUS);
         }
 
-        log.debug("Final bolus: " + displayedBolus);
+        aapsLogger.debug(LTag.PUMP, "Final bolus: " + displayedBolus);
         if (Math.abs(displayedBolus - bolus) > 0.01) {
             throw new CommandException("Failed to set correct bolus. Expected: " + bolus + ", actual: " + displayedBolus);
         }
@@ -240,7 +242,7 @@ public class BolusCommand extends BaseCommand {
     }
 
     public void requestCancellation() {
-        log.debug("Bolus cancellation requested");
+        aapsLogger.debug(LTag.PUMP, "Bolus cancellation requested");
         cancelRequested = true;
         bolusProgressReporter.report(STOPPING, 0, 0);
     }

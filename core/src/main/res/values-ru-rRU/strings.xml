@@ -4,6 +4,7 @@
     <!--    General-->
     <string name="refresh">Обновить</string>
     <string name="error">Ошибка</string>
+    <string name="save">Сохранить</string>
     <string name="not_set_short">Не выбрано</string>
     <string name="failedupdatebasalprofile">не удалось обновить базальный профиль</string>
     <string name="profile_set_ok">базальный профиль помпы обновлен</string>
@@ -41,6 +42,7 @@
     <string name="carbs">Углеводы</string>
     <string name="invalidprofile">Неверный профиль !!!</string>
     <string name="noprofileset">ПРОФИЛЬ НЕ ЗАДАН</string>
+    <string name="active"><![CDATA[Активен]]></string>
     <string name="date">дата</string>
     <string name="units_label">единицы</string>
     <string name="dia_label">DIA (время действия инсулина)</string>
@@ -48,6 +50,11 @@
     <string name="isf_label">ISF (чувствительность к инсулину)</string>
     <string name="basal_label">базал</string>
     <string name="target_label">Целевое значение СК:</string>
+    <string name="dia_long_label">Продолжительность действия инсулина</string>
+    <string name="ic_long_label">Соотношение инсулин/углеводы I: C</string>
+    <string name="isf_long_label">Фактор Чувствительности к Инсулину (ISF)</string>
+    <string name="basal_long_label">Скорость базала</string>
+    <string name="target_long_label">Целевая ГК</string>
     <string name="initializing">инициализация...</string>
     <string name="serialnumber">Серийный номер</string>
     <string name="battery_label">батарея</string>
@@ -105,6 +112,7 @@
     <string name="notes_label">Заметки</string>
     <string name="remove_button">Удалить</string>
     <string name="addnew">Добавить новый</string>
+    <string name="addnew_above">Добавить строку сверху</string>
     <string name="wrong_pump_data">Данные поступают с другой помпы. Измените драйвер помпы, чтобы сбросить ее состояние.</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Макс базальный уровень ограничен до %1$.2f ед/ч вследствие %2$s</string>
@@ -125,27 +133,11 @@
     <string name="ble_not_enabled">Bluetooth не включен.</string>
     <string name="location_not_found_title">Геолокация не включена</string>
     <string name="location_not_found_message">Для обнаружения Bluetooth на новых устройствах необходимо включить геолокацию. AAPS не отслеживает ваше местоположение и может быть отключен после успешного сопряжения.</string>
-    <!--    DateUtil-->
-    <string name="minago">%1$d мин. назад</string>
-    <string name="hoursago">%1$.1fч. назад</string>
-    <string name="shorthour">ч</string>
-    <string name="days">дн</string>
-    <string name="hours">час</string>
-    <string name="unit_second">сек</string>
-    <string name="unit_minute">мин</string>
-    <string name="unit_hour">час</string>
-    <string name="unit_day">дн</string>
-    <string name="unit_week">нед</string>
-    <string name="unit_seconds">сек</string>
-    <string name="unit_minutes">мин</string>
-    <string name="unit_hours">час</string>
-    <string name="unit_days">дн</string>
-    <string name="unit_weeks">нед</string>
-    <string name="shortminute">мин</string>
-    <string name="shortday">дн</string>
     <!--    Protection-->
     <string name="wrongpassword">Неверный пароль</string>
+    <string name="wrongpin">Неверный PIN-код</string>
     <string name="passwords_dont_match">Пароли не совпадают</string>
+    <string name="pin_dont_match">PIN-коды не совпадают</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Базальные значения не выровнены по часам: %1$s</string>
     <string name="minimalbasalvaluereplaced">Значение базала заменено минимальной поддерживаемой величиной: %1$s</string>
@@ -168,10 +160,6 @@
     <string name="zerovalueinprofile">Недопустимый профиль: %1$s</string>
     <!--    Temptarget-->
     <string name="mins">%1$d мин.</string>
-    <!--    TDD-->
-    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fед</b> Бол:<b>%3$.2fед</b> Баз: <b>%4$.2fед(%5$.0f%%)</b>]]></string>
-    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s</b>∑: <b>%2$.2fед</b> Бол: <b>%3$.2fед</b> Баз: <b>%4$.2fед(%5$.0f%%)</b> Угл: <b>%6$.0fг</b>]]></string>
-    <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s</span></b> <b>%2$s</b>через<b>%3$d</b> дней<br>]]></string>
     <!--    Translator-->
     <string name="careportal">Портал терапии</string>
     <string name="careportal_bgcheck">Проверка ГК</string>
@@ -369,6 +357,7 @@
     <string name="uel_stat_reset">СБРОС СТАТИСТИКИ</string>
     <string name="uel_delete_logs">УДАЛИТЬ ЖУРНАЛ</string>
     <string name="uel_delete_future_treatments">УДАЛИТЬ НАЗНАЧЕНИЯ ИЗ БУДУЩЕГО</string>
+    <string name="delete_future_treatments">Удалить назначения из будущего</string>
     <string name="uel_export_settings">ЭКСПОРТИРОВАТЬ НАСТРОЙКИ</string>
     <string name="uel_import_settings">ИМПОРТИРОВАТЬ НАСТРОЙКИ</string>
     <string name="uel_reset_databases">СБРОСИТЬ БАЗЫ ДАННЫХ</string>
@@ -440,6 +429,67 @@
     <string name="bolus_ok" comment="26 characters max for translation">болюс ОК</string>
     <string name="pump_paired" comment="26 characters max for translation">Помпа сопряжена</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Кнопка \"Обновить Insight\"</string>
+    <string name="a11y_min_button_description">снижение %1$s на %2$s</string>
+    <string name="a11y_plus_button_description">увеличение %1$s на %2$s</string>
+    <string name="formatPercent">%1$.0f%%</string>
+    <string name="basal">Базал</string>
+    <string name="basalpct">Базал %</string>
+    <string name="count_selected">%1$d выбрано</string>
+    <string name="sort_label">Сортировать</string>
+    <string name="remove_items">Удалить элементы</string>
+    <string name="sort_items">Сортировать элементы</string>
+    <string name="remove_selected_items">Удалить выбранные элементы</string>
+    <string name="a11y_file">файл</string>
+    <string name="a11y_user">пользователь</string>
+    <!-- Autotune -->
+    <string name="autotune">Автонастройка</string>
+    <string name="autotune_description">Помощь в возможной корректировке профиля (ISF, IC, базал)</string>
+    <string name="autotune_shortname">АвтТюн</string>
+    <string name="autotune_settings">Настройки Autotune</string>
+    <string name="autotune_auto_title">Профили Автонастройки </string>
+    <string name="autotune_auto_summary">При активации происходит обновление автонастройки и смена профиля на основе правила автоматизации  </string>
+    <string name="autotune_categorize_uam_as_basal_title">Классифицировать UAM как базал</string>
+    <string name="autotune_categorize_uam_as_basal_summary">Включите, если только вы точно ввели все съеденные углеводы. С этой опцией внезапные подъемы, зафиксированные Autotune, будут использованы для рекомендаций изменения базальной скорости.</string>
+    <string name="autotune_tune_insulin_curve_title">Настройка кривой инсулина</string>
+    <string name="autotune_tune_insulin_curve_summary">Включите, если используете беспиковый. Настроит пики и DIA</string>
+    <string name="autotune_default_tune_days_title">Количество дней с данными</string>
+    <string name="autotune_circadian_ic_isf_title">Применить усредненный суточный IC/ISF</string>
+    <string name="autotune_circadian_ic_isf_summary">Autotune не настраивает суточные вариации, эта опция только применяет усредненные коэффициенты IC и ISF к суточному профилю</string>
+    <string name="autotune_additional_log_title">Включить больше информации логов для отладки</string>
+    <string name="autotune_additional_log_summary">Включите только если разработчик просит отправить больше информации о логах для отладки плагина Autotune</string>
+    <string name="autotune_default_tune_days_summary">Количество дней обработки данных Autotune по умолчанию (до 30)</string>
+    <string name="autotune_tunedprofile_name">Настроено</string>
+    <string name="autotune_profile">Профиль:</string>
+    <string name="autotune_tune_days">Настроено дней:</string>
+    <string name="autotune_last_run">Последнее выполнение:</string>
+    <string name="autotune_warning">Внимание:</string>
+    <string name="autotune_select_profile">Выберите профиль для изменения</string>
+    <string name="autotune_ic_warning">Выбранный профиль имеет %1$d значений IC. Автоматически будет использоваться %2$.2f г/ед</string>
+    <string name="autotune_isf_warning">Выбранный профиль имеет %1$d значений ISF. Автоматически будет использоваться %2$.1f%3$s/ед</string>
+    <string name="autotune_error">Ошибка ввода данных, попробуйте запустить снова autotune или уменьшить количество дней</string>
+    <string name="autotune_warning_during_run">Идет настройка автоматизации, ждите</string>
+    <string name="autotune_warning_after_run">Перед использованием внимательно проверьте результаты!</string>
+    <string name="autotune_partial_result">Частичный результат дня %1$d / %2$d с отладкой</string>
+    <string name="autotune_result">Результат: %1$s</string>
+    <string name="autotune_param">Парам</string>
+    <string name="autotune_percent">%</string>
+    <string name="autotune_missing">Отсутствует</string>
+    <string name="autotune_profile_name">Профиль авто тюн</string>
+    <string name="autotune_run">Выполнить Autotune</string>
+    <string name="autotune_check_input_profile_button">Проверьте профиль ввода</string>
+    <string name="autotune_compare_profile">Сравнить профили</string>
+    <string name="autotune_copy_localprofile_button">Копировать в локальный профиль</string>
+    <string name="autotune_update_input_profile_button">Обновить профиль ввода</string>
+    <string name="autotune_revert_input_profile_button">Вернуть профиль ввода</string>
+    <string name="autotune_copy_local_profile_message">Создать новый локальный профиль из этого профиля Autotune?</string>
+    <string name="autotune_update_local_profile_message">Обновить профиль %1$s профилем Autotune?</string>
+    <string name="autotune_revert_local_profile_message">Восстановить профиль %1$s с помощью входного профиля?</string>
+    <string name="autotune_profile_invalid">Неверный профиль</string>
+    <string name="autotune_run_without_autoswitch">Autotune выполнен без переключения профиля</string>
+    <string name="autotune_run_with_autoswitch">Autotune выполнен и профиль переключён автоматически</string>
+    <string name="autotune_run_with_error">Ошибка во время последнего выполнения Autotune</string>
+    <string name="autotune_run_cancelled">Обнаружен другой запуск Autotune, выполнение отменено</string>
+    <string name="needconnectpermission">Приложению требуется разрешение Bluetooth</string>
     <plurals name="days">
         <item quantity="one">%1$d день</item>
         <item quantity="few">%1$d дня</item>

@@ -1,14 +1,16 @@
 package info.nightscout.androidaps.data
 
+import android.content.Context
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.Round
 import org.json.JSONException
 import org.json.JSONObject
 
 @Suppress("SpellCheckingInspection")
-class IobTotal(val time: Long) : DataPointWithLabelInterface {
+class   IobTotal(val time: Long) : DataPointWithLabelInterface {
 
     var iob = 0.0
     var activity = 0.0
@@ -104,14 +106,18 @@ class IobTotal(val time: Long) : DataPointWithLabelInterface {
     }
 
     // DataPoint interface
-    override var color = 0
+    private var color = 0
     override fun getX(): Double = time.toDouble()
     override fun getY(): Double = iob
     override fun setY(y: Double) {}
     override val label = ""
     override val duration = 0L
-    override val shape = PointsWithLabelGraphSeries.Shape.IOBPREDICTION
+    override val shape = PointsWithLabelGraphSeries.Shape.IOB_PREDICTION
     override val size = 0.5f
+
+    override fun color(context: Context?): Int {
+        return color
+    }
 
     fun setColor(color: Int): IobTotal {
         this.color = color

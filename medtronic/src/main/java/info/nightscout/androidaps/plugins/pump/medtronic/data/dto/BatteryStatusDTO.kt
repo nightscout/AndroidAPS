@@ -16,7 +16,6 @@ class BatteryStatusDTO {
 
     var extendedDataReceived = false
 
-
     fun getCalculatedPercent(batteryType: BatteryType): Int {
         if (voltage == null || batteryType === BatteryType.None) {
             return if (batteryStatusType == BatteryStatusType.Low || batteryStatusType == BatteryStatusType.Unknown) 18 else 70
@@ -27,7 +26,6 @@ class BatteryStatusDTO {
         if (percentInt > 100) percentInt = 100
         return percentInt
     }
-
 
     override fun toString(): String {
         return String.format(Locale.ENGLISH, "BatteryStatusDTO [voltage=%.2f, alkaline=%d, lithium=%d, niZn=%d, nimh=%d]",

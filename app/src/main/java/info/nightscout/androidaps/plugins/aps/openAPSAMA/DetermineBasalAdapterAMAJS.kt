@@ -7,6 +7,7 @@ import info.nightscout.androidaps.data.MealData
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.getPassedDurationToTimeInMinutes
 import info.nightscout.androidaps.extensions.plannedRemainingMinutes
+import info.nightscout.androidaps.interfaces.DetermineBasalAdapterInterface
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.Profile
@@ -14,6 +15,7 @@ import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.aps.logger.LoggerCallback
+import info.nightscout.androidaps.plugins.aps.loop.APSResult
 import info.nightscout.androidaps.plugins.aps.loop.ScriptReader
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.SMBDefaults
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
@@ -30,7 +32,7 @@ import java.nio.charset.StandardCharsets
 import javax.inject.Inject
 import kotlin.math.min
 
-class DetermineBasalAdapterAMAJS internal constructor(scriptReader: ScriptReader, injector: HasAndroidInjector) {
+class DetermineBasalAdapterAMAJS internal constructor(scriptReader: ScriptReader, injector: HasAndroidInjector) : DetermineBasalAdapterInterface {
 
     private val injector: HasAndroidInjector
 
@@ -48,21 +50,15 @@ class DetermineBasalAdapterAMAJS internal constructor(scriptReader: ScriptReader
     private var currentTemp = JSONObject()
     private var autosensData = JSONObject()
 
-    var currentTempParam: String? = null
-        private set
-    var iobDataParam: String? = null
-        private set
-    var glucoseStatusParam: String? = null
-        private set
-    var profileParam: String? = null
-        private set
-    var mealDataParam: String? = null
-        private set
-    var scriptDebug = ""
-        private set
+    override var currentTempParam: String? = null
+    override var iobDataParam: String? = null
+    override var glucoseStatusParam: String? = null
+    override var profileParam: String? = null
+    override var mealDataParam: String? = null
+    override var scriptDebug = ""
 
     @Suppress("SpellCheckingInspection")
-    operator fun invoke(): DetermineBasalResultAMA? {
+    override operator fun invoke(): APSResult? {
         aapsLogger.debug(LTag.APS, ">>> Invoking determine_basal <<<")
         aapsLogger.debug(LTag.APS, "Glucose status: " + glucoseStatus.toString().also { glucoseStatusParam = it })
         aapsLogger.debug(LTag.APS, "IOB data:       " + iobData.toString().also { iobDataParam = it })
@@ -143,18 +139,25 @@ class DetermineBasalAdapterAMAJS internal constructor(scriptReader: ScriptReader
     }
 
     @Suppress("SpellCheckingInspection")
-    @Throws(JSONException::class) fun setData(profile: Profile,
-                                              maxIob: Double,
-                                              maxBasal: Double,
-                                              minBg: Double,
-                                              maxBg: Double,
-                                              targetBg: Double,
-                                              basalRate: Double,
-                                              iobArray: Array<IobTotal>,
-                                              glucoseStatus: GlucoseStatus,
-                                              mealData: MealData,
-                                              autosensDataRatio: Double,
-                                              tempTargetSet: Boolean) {
+    @Throws(JSONException::class)
+    override fun setData(
+        profile: Profile,
+        maxIob: Double,
+        maxBasal: Double,
+        minBg: Double,
+        maxBg: Double,
+        targetBg: Double,
+        basalRate: Double,
+        iobArray: Array<IobTotal>,
+        glucoseStatus: GlucoseStatus,
+        mealData: MealData,
+        autosensDataRatio: Double,
+        tempTargetSet: Boolean,
+        microBolusAllowed: Boolean,
+        uamAllowed: Boolean,
+        advancedFiltering: Boolean,
+        isSaveCgmSource: Boolean
+    ) {
         this.profile = JSONObject()
         this.profile.put("max_iob", maxIob)
         this.profile.put("dia", min(profile.dia, 3.0))

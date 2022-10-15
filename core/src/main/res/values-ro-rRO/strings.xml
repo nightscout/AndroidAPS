@@ -4,6 +4,7 @@
     <!--    General-->
     <string name="refresh">Actualizează</string>
     <string name="error">Eroare</string>
+    <string name="save">Salvează</string>
     <string name="not_set_short">Nesetată</string>
     <string name="failedupdatebasalprofile">Actualizarea profilului bazalei a eșuat</string>
     <string name="profile_set_ok">Profilul bazalei a fost modificat în pompă</string>
@@ -41,6 +42,7 @@
     <string name="carbs">Carbohidrați</string>
     <string name="invalidprofile">Profil invalid!!!</string>
     <string name="noprofileset">NICIUN PROFIL SETAT</string>
+    <string name="active"><![CDATA[<Activ>]]></string>
     <string name="date">Data</string>
     <string name="units_label">Unități</string>
     <string name="dia_label">DIA</string>
@@ -125,24 +127,6 @@
     <string name="ble_not_enabled">Bluetooth-ul este dezactivat.</string>
     <string name="location_not_found_title">Localizarea este dezactivată</string>
     <string name="location_not_found_message">Pentru a putea căuta dispozitive Bluetooth noi, trebuie să activați localizarea. AAPS nu folosește datele dumneavoastră de localizare și acestea pot fi dezactivate după stabilirea conexiunii cu pompa.</string>
-    <!--    DateUtil-->
-    <string name="minago">%1$d min în urmă</string>
-    <string name="hoursago">%1$.1f ore în urmă</string>
-    <string name="shorthour">h</string>
-    <string name="days">zile</string>
-    <string name="hours">ore</string>
-    <string name="unit_second">secundă</string>
-    <string name="unit_minute">minut</string>
-    <string name="unit_hour">oră</string>
-    <string name="unit_day">zi</string>
-    <string name="unit_week">săptămână</string>
-    <string name="unit_seconds">secunde</string>
-    <string name="unit_minutes">minute</string>
-    <string name="unit_hours">ore</string>
-    <string name="unit_days">zile</string>
-    <string name="unit_weeks">săptămâni</string>
-    <string name="shortminute">min</string>
-    <string name="shortday">z</string>
     <!--    Protection-->
     <string name="wrongpassword">Parola greșită</string>
     <string name="passwords_dont_match">Parolele nu corespund</string>
@@ -169,10 +153,6 @@
     <string name="zerovalueinprofile">Profil invalid: %1$s</string>
     <!--    Temptarget-->
     <string name="mins">%1$d min</string>
-    <!--    TDD-->
-    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fU</b> Bolus: <b>%3$.2fU</b> Bazală: <b>%4$.2fU(%5$.0f%%)</b>]]></string>
-    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fU</b> Bolus: <b>%3$.2fU</b> Bazală: <b>%4$.2fU(%5$.0f%%)</b> CH: <b>%6$.0f g</b>]]></string>
-    <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> in <b>%3$d</b> zile<br>]]></string>
     <!--    Translator-->
     <string name="careportal">Careportal</string>
     <string name="careportal_bgcheck">Verificare glicemie</string>
@@ -441,6 +421,10 @@
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="pump_paired" comment="26 characters max for translation">Pompă împerecheată</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Buton Reîmprospătare Insight</string>
+    <string name="basal">Rate bazale</string>
+    <string name="sort_label">Sortează</string>
+    <!-- Autotune -->
+    <string name="needconnectpermission">Aplicația are nevoie de permisiune Bluetooth</string>
     <plurals name="days">
         <item quantity="one">%1$d zi</item>
         <item quantity="few">%1$d zile</item>

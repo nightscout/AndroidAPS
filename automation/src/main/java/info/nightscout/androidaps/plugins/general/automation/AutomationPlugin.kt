@@ -7,7 +7,11 @@ import android.os.SystemClock
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.automation.R
-import info.nightscout.androidaps.events.*
+import info.nightscout.androidaps.events.EventBTChange
+import info.nightscout.androidaps.events.EventChargingState
+import info.nightscout.androidaps.events.EventLocationChange
+import info.nightscout.androidaps.events.EventNetworkChange
+import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
@@ -20,20 +24,18 @@ import info.nightscout.androidaps.services.LocationServiceHelper
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.collections.ArrayList
 
 @OpenForTesting
 @Singleton
@@ -115,11 +117,9 @@ class AutomationPlugin @Inject constructor(
         disposable += rxBus
             .toObservable(EventLocationChange::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ e ->
-                           e?.let {
-                               aapsLogger.debug(LTag.AUTOMATION, "Grabbed location: $it.location.latitude $it.location.longitude Provider: $it.location.provider")
-                               processActions()
-                           }
+            .subscribe({
+                           aapsLogger.debug(LTag.AUTOMATION, "Grabbed location: ${it.location.latitude} ${it.location.longitude} Provider: ${it.location.provider}")
+                           processActions()
                        }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventChargingState::class.java)
@@ -127,10 +127,6 @@ class AutomationPlugin @Inject constructor(
             .subscribe({ processActions() }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventNetworkChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ processActions() }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventAutosensCalculationFinished::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ processActions() }, fabricPrivacy::logException)
         disposable += rxBus
@@ -152,8 +148,10 @@ class AutomationPlugin @Inject constructor(
 
     private fun storeToSP() {
         val array = JSONArray()
+        val iterator = synchronized(this) { automationEvents.toMutableList().iterator() }
         try {
-            for (event in automationEvents) {
+            while (iterator.hasNext()) {
+                val event = iterator.next()
                 array.put(JSONObject(event.toJSON()))
             }
         } catch (e: JSONException) {
@@ -163,6 +161,7 @@ class AutomationPlugin @Inject constructor(
         sp.putString(keyAutomationEvents, array.toString())
     }
 
+    @Synchronized
     private fun loadFromSP() {
         automationEvents.clear()
         val data = sp.getString(keyAutomationEvents, "")
@@ -171,18 +170,17 @@ class AutomationPlugin @Inject constructor(
                 val array = JSONArray(data)
                 for (i in 0 until array.length()) {
                     val o = array.getJSONObject(i)
-                    val event = AutomationEvent(injector).fromJSON(o.toString())
+                    val event = AutomationEvent(injector).fromJSON(o.toString(), i)
                     automationEvents.add(event)
                 }
             } catch (e: JSONException) {
                 e.printStackTrace()
             }
         else
-            automationEvents.add(AutomationEvent(injector).fromJSON(event))
+            automationEvents.add(AutomationEvent(injector).fromJSON(event, 0))
     }
 
-    @Synchronized
-    private fun processActions() {
+    internal fun processActions() {
         var commonEventsEnabled = true
         if (loop.isSuspended || !(loop as PluginBase).isEnabled()) {
             aapsLogger.debug(LTag.AUTOMATION, "Loop deactivated")
@@ -210,12 +208,16 @@ class AutomationPlugin @Inject constructor(
         }
 
         aapsLogger.debug(LTag.AUTOMATION, "processActions")
-        val iterator: MutableIterator<AutomationEvent> = automationEvents.iterator()
+        val iterator = synchronized(this) { automationEvents.toMutableList().iterator() }
         while (iterator.hasNext()) {
             val event = iterator.next()
             if (event.isEnabled && !event.userAction && event.shouldRun())
-                if (event.systemAction || commonEventsEnabled) processEvent(event)
+                if (event.systemAction || commonEventsEnabled) {
+                    processEvent(event)
+                    if (event.hasStopProcessing()) break
+                }
         }
+
         // we cannot detect connected BT devices
         // so let's collect all connection/disconnections between 2 runs of processActions()
         // TriggerBTDevice can pick up and process these events
@@ -257,13 +259,14 @@ class AutomationPlugin @Inject constructor(
             }
             SystemClock.sleep(1100)
             event.lastRun = dateUtil.now()
-            if (event.autoRemove) automationEvents.remove(event)
+            if (event.autoRemove) remove(event)
         }
     }
 
     @Synchronized
     fun add(event: AutomationEvent) {
         automationEvents.add(event)
+        event.position = automationEvents.size - 1
         rxBus.send(EventAutomationDataChanged())
     }
 
@@ -278,7 +281,7 @@ class AutomationPlugin @Inject constructor(
 
     @Synchronized
     fun removeIfExists(event: AutomationEvent) {
-        for (e in automationEvents) {
+        for (e in automationEvents.reversed()) {
             if (event.title == e.title) {
                 automationEvents.remove(e)
                 rxBus.send(EventAutomationDataChanged())
@@ -294,11 +297,17 @@ class AutomationPlugin @Inject constructor(
 
     @Synchronized
     fun removeAt(index: Int) {
-        automationEvents.removeAt(index)
-        rxBus.send(EventAutomationDataChanged())
+        if (index >= 0 && index < automationEvents.size) {
+            automationEvents.removeAt(index)
+            rxBus.send(EventAutomationDataChanged())
+        }
     }
 
     @Synchronized
+    fun remove(event: AutomationEvent) {
+        automationEvents.remove(event)
+    }
+
     fun at(index: Int) = automationEvents[index]
 
     fun size() = automationEvents.size
@@ -306,12 +315,11 @@ class AutomationPlugin @Inject constructor(
     @Synchronized
     fun swap(fromPosition: Int, toPosition: Int) {
         Collections.swap(automationEvents, fromPosition, toPosition)
-        rxBus.send(EventAutomationDataChanged())
     }
 
     fun userEvents(): List<AutomationEvent> {
         val list = mutableListOf<AutomationEvent>()
-        val iterator: MutableIterator<AutomationEvent> = automationEvents.iterator()
+        val iterator = synchronized(this) { automationEvents.toMutableList().iterator() }
         while (iterator.hasNext()) {
             val event = iterator.next()
             if (event.userAction && event.isEnabled) list.add(event)
@@ -325,6 +333,7 @@ class AutomationPlugin @Inject constructor(
             //ActionLoopEnable(injector),
             //ActionLoopResume(injector),
             //ActionLoopSuspend(injector),
+            ActionStopProcessing(injector),
             ActionStartTempTarget(injector),
             ActionStopTempTarget(injector),
             ActionNotification(injector),
@@ -332,6 +341,7 @@ class AutomationPlugin @Inject constructor(
             ActionCarePortalEvent(injector),
             ActionProfileSwitchPercent(injector),
             ActionProfileSwitch(injector),
+            ActionRunAutotune(injector),
             ActionSendSMS(injector)
         )
     }

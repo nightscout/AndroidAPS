@@ -85,10 +85,12 @@ private val allowedKeys = """
     nsalarm_staledatavalue
     nsalarm_urgent_staledata
     nsalarm_urgent_staledatavalue
-    ns_wifionly
     ns_wifi_ssids
-    ns_allowroaming
-    ns_chargingonly
+    ns_cellular
+    ns_wifi
+    ns_allow_roaming
+    ns_battery
+    ns_charging
     ns_autobackfill
     ns_create_announcements_from_errors
     nsclient_localbroadcasts

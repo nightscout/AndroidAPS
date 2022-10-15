@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.danaR
 
-import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
@@ -22,7 +21,6 @@ import org.mockito.Mockito.`when`
 
 class DanaRPluginTest : TestBaseWithProfile() {
 
-    @Mock lateinit var context: Context
     @Mock lateinit var constraintChecker: ConstraintChecker
     @Mock lateinit var sp: SP
     @Mock lateinit var commandQueue: CommandQueue
@@ -40,6 +38,7 @@ class DanaRPluginTest : TestBaseWithProfile() {
     fun prepareMocks() {
         `when`(sp.getString(R.string.key_danars_address, "")).thenReturn("")
         `when`(rh.gs(R.string.pumplimit)).thenReturn("pump limit")
+        `when`(rh.gs(R.string.itmustbepositivevalue)).thenReturn("it must be positive value")
         `when`(rh.gs(R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
         `when`(rh.gs(R.string.limitingpercentrate)).thenReturn("Limiting max percent rate to %1\$d%% because of %2\$s")
         danaPump = DanaPump(aapsLogger, sp, dateUtil, injector)

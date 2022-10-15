@@ -103,4 +103,6 @@
     <string name="preconditions">Precondições:</string>
     <string name="automation_event">Evento de automação</string>
     <string name="reorder_label">Reordenar</string>
+    <string name="add_automation">Adicionar regra</string>
+    <string name="remove_sort">Remover/ordenar</string>
 </resources>

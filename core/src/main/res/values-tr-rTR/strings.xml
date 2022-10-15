@@ -4,6 +4,7 @@
     <!--    General-->
     <string name="refresh">Yenile</string>
     <string name="error">Hata</string>
+    <string name="save">Kaydet</string>
     <string name="not_set_short">Ayarlanmadı</string>
     <string name="failedupdatebasalprofile">Bazal profiliniz güncellenemedi</string>
     <string name="profile_set_ok">Pompadaki Bazal profil güncellendi</string>
@@ -41,6 +42,7 @@
     <string name="carbs">Karbonhidrat</string>
     <string name="invalidprofile">Geçersiz profil!!!</string>
     <string name="noprofileset">PROFİL AYARLANMADI</string>
+    <string name="active"><![CDATA[<Aktif>]]></string>
     <string name="date">Tarih</string>
     <string name="units_label">Birim</string>
     <string name="dia_label">İES</string>
@@ -48,6 +50,11 @@
     <string name="isf_label">İDF</string>
     <string name="basal_label">Bazal</string>
     <string name="target_label">Hedef</string>
+    <string name="dia_long_label">İnsülin Etki Süresi</string>
+    <string name="ic_long_label">Karbonhidrat insülin Oranı (I:C oranı)</string>
+    <string name="isf_long_label">İnsülin Duyarlılık Faktörü</string>
+    <string name="basal_long_label">Bazal oranı</string>
+    <string name="target_long_label">Kan Şekeri Hedefi</string>
     <string name="initializing">Başlatılıyor ...</string>
     <string name="serialnumber">Seri numarası</string>
     <string name="battery_label">Pil</string>
@@ -96,7 +103,7 @@
     <string name="notexists">yok</string>
     <string name="glucose">Glikoz</string>
     <string name="iob">IOB</string>
-    <string name="cob">COB</string>
+    <string name="cob">AKRB</string>
     <string name="name_short">İsim:</string>
     <string name="time">Zaman</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
@@ -105,6 +112,7 @@
     <string name="notes_label">Notlar</string>
     <string name="remove_button">Kaldır</string>
     <string name="addnew">Yeni ekle</string>
+    <string name="addnew_above">Yukarı yeni ekle</string>
     <string name="wrong_pump_data">Veriler farklı pompadan geliyor. Pompa durumunu sıfırlamak için pompa sürücüsünü değiştirin.</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">%2$s nedeniyle max bazal oranı %1$.2f Ü/s ile sınırlı</string>
@@ -125,27 +133,11 @@
     <string name="ble_not_enabled">Bluetooth etkin değil.</string>
     <string name="location_not_found_title">Konum Etkin Değil</string>
     <string name="location_not_found_message">Bluetooth cihaz bulmanın daha yeni cihazlarda çalışması için konum etkinleştirilmelidir. AAPS konumunuzu izlemez ve eşleştirme başarılı olduktan sonra devre dışı bırakılabilir.</string>
-    <!--    DateUtil-->
-    <string name="minago">%1$d dak önce</string>
-    <string name="hoursago">%1$.1f s önce</string>
-    <string name="shorthour">s</string>
-    <string name="days">gün</string>
-    <string name="hours">saat</string>
-    <string name="unit_second">saniye</string>
-    <string name="unit_minute">dakika</string>
-    <string name="unit_hour">saat</string>
-    <string name="unit_day">gün</string>
-    <string name="unit_week">hafta</string>
-    <string name="unit_seconds">saniye</string>
-    <string name="unit_minutes">dakika</string>
-    <string name="unit_hours">saat</string>
-    <string name="unit_days">gün</string>
-    <string name="unit_weeks">hafta</string>
-    <string name="shortminute">dk</string>
-    <string name="shortday">g</string>
     <!--    Protection-->
     <string name="wrongpassword">Hatalı parola</string>
+    <string name="wrongpin">Yanlış PIN</string>
     <string name="passwords_dont_match">Şifreler eşleşmiyor</string>
+    <string name="pin_dont_match">PIN\'ler eşleşmiyor</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Bazal değerler saatlerle uyumlu değil: %1$s</string>
     <string name="minimalbasalvaluereplaced">Bazal değeri minimum desteklenen değerle değiştirilir: %1$s</string>
@@ -168,10 +160,6 @@
     <string name="zerovalueinprofile">Geçersiz profil: %1$s</string>
     <!--    Temptarget-->
     <string name="mins">%1$d dak</string>
-    <!--    TDD-->
-    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f Ü</b> Bol: <b>%3$.2f Ü</b> Baz: <b>%4$.2f Ü(%5$.0f%%)</b>]]></string>
-    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f Ü</b> Bol: <b>%3$.2f Ü</b> Baz: <b>%4$.2f Ü(%5$.0f%%)</b> Karbhr: <b>%6$.0f g</b>]]></string>
-    <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> içinde <b>%3$d</b> gün<br>]]></string>
     <!--    Translator-->
     <string name="careportal">Bakım Portalı</string>
     <string name="careportal_bgcheck">KŞ Kontrol</string>
@@ -369,6 +357,7 @@
     <string name="uel_stat_reset">İSTATİSK SIFIRLAMA</string>
     <string name="uel_delete_logs">GÜNLÜKLERİ SİL</string>
     <string name="uel_delete_future_treatments">GELECEK TEDAVİLERİ SİL</string>
+    <string name="delete_future_treatments">İleri tarihli tedavileri sil</string>
     <string name="uel_export_settings">AYARLARI DIŞA AKTAR</string>
     <string name="uel_import_settings">AYARLARI İÇE AKTAR</string>
     <string name="uel_reset_databases">VERİTABANLARINI SIFIRLA</string>
@@ -440,6 +429,67 @@
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="pump_paired" comment="26 characters max for translation">Pompa eşleştirildi</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight Yenileme Düğmesi</string>
+    <string name="a11y_min_button_description">%2$s\'dan %1$s\'a azalma</string>
+    <string name="a11y_plus_button_description">%2$s\'dan %1$s\'a artış</string>
+    <string name="formatPercent">%1$.0f%%</string>
+    <string name="basal">Bazal</string>
+    <string name="basalpct">Bazal %</string>
+    <string name="count_selected">%1$d seçildi</string>
+    <string name="sort_label">Sırala</string>
+    <string name="remove_items">Öğeleri kaldır</string>
+    <string name="sort_items">Öğeleri Sırala</string>
+    <string name="remove_selected_items">Seçilen öğeleri kaldır</string>
+    <string name="a11y_file">dosya</string>
+    <string name="a11y_user">kullanıcı</string>
+    <!-- Autotune -->
+    <string name="autotune">Otoayar</string>
+    <string name="autotune_description">Potansiyel profil ayarlamaları için yardım (İDF, karbonhidrat ve bazal oranları)</string>
+    <string name="autotune_shortname">AT</string>
+    <string name="autotune_settings">OtoAyar ayarları</string>
+    <string name="autotune_auto_title">Otomasyon Profil değişimi</string>
+    <string name="autotune_auto_summary">Etkinleştirildiğinde, OtoAyar otomatik olarak güncellenir ve bir otomasyon kuralından hesaplama yapıldıktan sonra profile işlenir.</string>
+    <string name="autotune_categorize_uam_as_basal_title">UAM\'yi bazal olarak sınıflandır</string>
+    <string name="autotune_categorize_uam_as_basal_summary">Yalnızca yenen tüm karbonhidratları güvenilir bir şekilde girdiyseniz etkinleştirin, bu seçenekle OtoAyar tarafından görülen ani artışlar bazal oranda değişiklik önermek için kullanılacaktır.</string>
+    <string name="autotune_tune_insulin_curve_title">İnsülin eğrisini ayarla</string>
+    <string name="autotune_tune_insulin_curve_summary">Yalnızca serbest tepe noktası kullanıyorsanız etkinleştirin. Bu seçenek, tepe ve İES sürelerini ayarlayacaktır</string>
+    <string name="autotune_default_tune_days_title">Veri gün sayısı</string>
+    <string name="autotune_circadian_ic_isf_title">Sirkadiyen IC/İDF ortalama sonucunu uygula</string>
+    <string name="autotune_circadian_ic_isf_summary">OtoAyar sirkadiyen varyasyonları ayarlamaz, bu seçenek sirkadiyen giriş profilinize yalnızca IC ve İDF\'nün ortalama ayarını uygular</string>
+    <string name="autotune_additional_log_title">Hata ayıklama için daha fazla günlük bilgisi ekleyin</string>
+    <string name="autotune_additional_log_summary">OtoAyar eklentisinde hata ayıklamaya yardımcı olmak için yalnızca geliştirici tarafından daha fazla günlük bilgisi göndermesi istenirse açın</string>
+    <string name="autotune_default_tune_days_summary">OtoAyar tarafından işlenecek varsayılan veri gün sayısı (30\'a kadar)</string>
+    <string name="autotune_tunedprofile_name">Ayarlandı</string>
+    <string name="autotune_profile">Profil :</string>
+    <string name="autotune_tune_days">Ayar günleri:</string>
+    <string name="autotune_last_run">Son Çalıştırma :</string>
+    <string name="autotune_warning">Uyarı :</string>
+    <string name="autotune_select_profile">Ayarlanacak profili seçin</string>
+    <string name="autotune_ic_warning">Seçilen profilde %1$d KİO değeri var. OtoAyar %2$.2f g/Ü kullanacak</string>
+    <string name="autotune_isf_warning">Seçilen profilde %1$d İDF değeri var. OtoAyar %2$.1f %3$s/Ü kullanacak</string>
+    <string name="autotune_error">Giriş verilerinde hata, otoayarı tekrar çalıştırmayı deneyin veya gün sayısını azaltın</string>
+    <string name="autotune_warning_during_run">OtoAyar hesaplaması başladı, lütfen sabırlı olun</string>
+    <string name="autotune_warning_after_run">Kullanmadan önce sonuçları dikkatlice kontrol edin!</string>
+    <string name="autotune_partial_result">Kısmi sonuç günü %1$d / %2$d ayarlandı</string>
+    <string name="autotune_result">Sonuç: %1$s</string>
+    <string name="autotune_param">Parametre</string>
+    <string name="autotune_percent">%</string>
+    <string name="autotune_missing">Eksik</string>
+    <string name="autotune_profile_name">OtoAyar profili %1$s</string>
+    <string name="autotune_run">Otoayar\'ı Çalıştır</string>
+    <string name="autotune_check_input_profile_button">Giriş profilini kontrol edin</string>
+    <string name="autotune_compare_profile">Profilleri karşılaştırın</string>
+    <string name="autotune_copy_localprofile_button">Yerel profile kopyala</string>
+    <string name="autotune_update_input_profile_button">Giriş profilini güncelle</string>
+    <string name="autotune_revert_input_profile_button">Giriş profilini geri al</string>
+    <string name="autotune_copy_local_profile_message">Bu OtoAyar Profilinden yeni bir yerel profil oluşturulsun mu?</string>
+    <string name="autotune_update_local_profile_message">OtoAyar Profili ile %1$s profili güncellensin mi?</string>
+    <string name="autotune_revert_local_profile_message">Giriş Profili ile %1$s profili geri alınsın mı?</string>
+    <string name="autotune_profile_invalid">Profil geçersiz</string>
+    <string name="autotune_run_without_autoswitch">OtoAyar profil değiştirme olmadan çalıştırıldı</string>
+    <string name="autotune_run_with_autoswitch">OtoAyar çalıştırıldı ve profil otomatik olarak değiştirildi</string>
+    <string name="autotune_run_with_error">Son OtoAyar çalışması sırasında hata oluştu</string>
+    <string name="autotune_run_cancelled">Başka bir OtoAyar çalıştırması tespit edildi, çalıştırma iptal edildi</string>
+    <string name="needconnectpermission">Uygulama bluetooth iznine ihtiyac duyuyor</string>
     <plurals name="days">
         <item quantity="one">%1$d gün</item>
         <item quantity="other">%1$d gün</item>

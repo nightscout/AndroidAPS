@@ -16,4 +16,7 @@
     <string name="you_have_been_signed_out_of_open_humans">Zostałeś wylogowany z Open Humans</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Kliknij tutaj, aby zalogować się ponownie, jeśli wylogowanie nie było celowe.</string>
     <string name="upload_now">Prześlij teraz</string>
+    <string name="terms_of_use">Warunki użytkowania</string>
+    <string name="cancel">Anuluj</string>
+    <string name="close">Zamknij</string>
 </resources>

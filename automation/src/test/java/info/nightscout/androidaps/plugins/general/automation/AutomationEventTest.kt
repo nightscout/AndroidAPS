@@ -5,13 +5,14 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.interfaces.ConfigBuilder
 import info.nightscout.androidaps.interfaces.Loop
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.automation.actions.Action
 import info.nightscout.androidaps.plugins.general.automation.actions.ActionLoopEnable
+import info.nightscout.androidaps.plugins.general.automation.actions.ActionStopProcessing
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnectorTest
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerDummy
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Test
@@ -54,7 +55,7 @@ class AutomationEventTest : TestBase() {
         Assert.assertEquals(eventJsonExpected, event.toJSON())
 
         // clone
-        val clone = AutomationEvent(injector).fromJSON(eventJsonExpected)
+        val clone = AutomationEvent(injector).fromJSON(eventJsonExpected, 1)
 
         // check title
         Assert.assertEquals(event.title, clone.title)
@@ -69,5 +70,15 @@ class AutomationEventTest : TestBase() {
         Assert.assertEquals(1, clone.actions.size)
         Assert.assertFalse(event.actions === clone.actions) // not the same object reference
         Assert.assertEquals(clone.toJSON(), clone.toJSON())
+    }
+
+    @Test
+    fun hasStopProcessing() {
+        val event = AutomationEvent(injector)
+        event.title = "Test"
+        event.trigger = TriggerDummy(injector).instantiate(JSONObject(TriggerConnectorTest.oneItem)) as TriggerConnector
+        Assert.assertFalse(event.hasStopProcessing())
+        event.addAction(ActionStopProcessing(injector))
+        Assert.assertTrue(event.hasStopProcessing())
     }
 }

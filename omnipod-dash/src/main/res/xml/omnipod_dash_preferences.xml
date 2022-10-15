@@ -99,16 +99,4 @@
             android:title="@string/omnipod_common_preferences_notification_delivery_suspended_sound_enabled" />
 
     </PreferenceCategory>
-
-    <PreferenceCategory
-        android:key="@string/key_common_preferences_category_other_settings"
-        android:title="@string/omnipod_common_preferences_category_other"
-        app:initialExpandedChildrenCount="0">
-        
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="@string/key_omnipod_common_time_change_event_enabled"
-            android:title="@string/omnipod_common_preferences_time_change_enabled" />
-    </PreferenceCategory>
-
 </androidx.preference.PreferenceScreen>

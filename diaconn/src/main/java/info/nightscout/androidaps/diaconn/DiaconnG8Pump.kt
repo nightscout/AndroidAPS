@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.diaconn
 
-
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.shared.logging.AAPSLogger
@@ -20,7 +19,9 @@ class DiaconnG8Pump @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val dateUtil: DateUtil
 ) {
-
+    //var bleResultInfo: Pair<Int?, Boolean> = Pair(null, false)
+    var bolusConfirmMessage: Byte = 0
+    var isReadyToBolus: Boolean = false
     var maxBolusePerDay: Double = 0.0
     var pumpIncarnationNum: Int = 65536
     var isPumpVersionGe2_63: Boolean = false // is pumpVersion higher then 2.63
@@ -54,11 +55,9 @@ class DiaconnG8Pump @Inject constructor(
     var basalStep = 0.01
     var iob = 0.0
 
-
     var bolusBlocked = false
     var lastBolusTime: Long = 0
     var lastBolusAmount = 0.0
-
 
     /*
      * TEMP BASALS
@@ -190,6 +189,13 @@ class DiaconnG8Pump @Inject constructor(
     var lgsTime:Int = 0        // LGS Setting time (0~255 min)
     var lgsElapsedTime:Int = 0 // LGS Passed Time (0~255 min)
 
+    val pumpUid: String
+        get() = "$country-$productType-$makeYear-${makeMonth.toString().padStart(2,'0')}-${makeDay.toString().padStart(2, '0')}-${lotNo.toString().padStart(3,'0')}-${serialNo.toString().padStart(5,'0')}"
+
+    val pumpVersion: String
+        get() = "$majorVersion.$minorVersion"
+
+
     fun buildDiaconnG8ProfileRecord(nsProfile: Profile): Array<Double> {
         val record = Array(24) { 0.0 }
         for (hour in 0..23) {
@@ -233,7 +239,6 @@ class DiaconnG8Pump @Inject constructor(
     var minute = 0 // 분 (0~59)
     var second = 0 // 초 (0~59)
 
-
     // 4. pump system info
     var country = 0 // 생산국(K, C), ASCII
     var productType = 0 // 제품종류(A ~ Z), ASCII
@@ -251,6 +256,7 @@ class DiaconnG8Pump @Inject constructor(
     var apslastLogNum = 0 // 앱에서 처리한 마지막 로그 번호.
     var apsWrappingCount = 0 // 앱에서 처리한 마지막 로그 번호.
     var isProgressPumpLogSync = false // 로그 동기화 진행 여부
+    var isPlatformUploadStarted = false // 플랫폼 로그 동기화 진행 여부
 
     // 6. bolus speed status.
     var speed = 0 // 주입 속도(1 ~ 8)
@@ -269,7 +275,6 @@ class DiaconnG8Pump @Inject constructor(
     var baseAmount = 0.0 // 주입설정량(량*100, 23.25->2325, 15.2->1520)
     var baseInjAmount = 0.0 // 현재주입량(량*100, 23.25->2325, 15.2->1520)
 
-
     // 9. meal bolus status
     var mealKind = 0 // 주입종류(1=아침,2=점심,3=저녁)
     var mealStartTime = 0 // 식사주입 시작시간(time_t)
@@ -278,13 +283,11 @@ class DiaconnG8Pump @Inject constructor(
     var mealInjAmount = 0.0 // 현재주입량(량*100, 23.25->2325, 15.2->1520)
     var mealSpeed = 0 // 주입속도(1~8)
 
-
     // 10. snack bolus status
     var snackStatus = 0 // 주입상태(1=주입중,2=주입상태아님)
     var snackAmount = 0.0 // 주입설정량(량*100, 23.25->2325, 15.2->1520)
     var snackInjAmount = 0.0 // 현재주입량(량*100, 23.25->2325, 15.2->1520)
     var snackSpeed = 0 // 주입속도(1~8)
-
 
     // 11. square(extended) bolus status
     var squareStatus = 0 // 주입상태
@@ -292,7 +295,6 @@ class DiaconnG8Pump @Inject constructor(
     var squareInjTime = 0 // 경과 주입시간(10~300분)
     var squareAmount = 0.0 // 주입 설정량
     var squareInjAmount = 0.0 // 현재 주입량
-
 
     // 12. daul bolus status
     var dualStatus = 0 // 주입상태
@@ -303,7 +305,6 @@ class DiaconnG8Pump @Inject constructor(
     var dualSquareAmount = 0.0 // 스퀘어주입 설정량
     var dualInjSquareAmount = 0.0 // 스퀘어주입량
 
-
     // 13. last injection  status
     var recentKind1 = 0 // 최근-1 주입 종류(1=식사, 2=일반간식, 3=스퀘어회식, 4=더블회식)
     var recentTime1 = 0 // 최근-1 주입 시간
@@ -312,12 +313,10 @@ class DiaconnG8Pump @Inject constructor(
     var recentTime2 = 0 // 최근-2 주입 시간
     var recentAmount2 = 0.0 // 최근-2 주입량
 
-
     // 14. daily injection status
     var todayBaseAmount = 0.0 // 기저주입 총량
     var todayMealAmount = 0.0 // 식사주입 총량
     var todaySnackAmount = 0.0 // 회식주입 총량
-
 
     // 15. meat setting status
     var morningHour = 0 // 아침 개시 시간(0~23)
@@ -327,13 +326,11 @@ class DiaconnG8Pump @Inject constructor(
     var dinnerHour = 0 // 저녁 개시 시간(0~23)
     var dinnerAmount = 0.0 // 저녁 식전량
 
-
     // 16. basal injection status at this hour
     var currentBasePattern = 0 // 패턴 종류 (1=기본, 2=생활1, 3=생활2, 4=생활3, 5=닥터1, 6=닥터2)
     var currentBaseHour = 0 // 현재주입시간(0~23)
     var currentBaseTbBeforeAmount = 0.0 // 해당시간의 임시기저 계산 전 기저주입량: 기저주입막힘 발생 시 기저주입 막힘량 제외, 기저정지로 인해 주입되지 않은 량 제외, 리셋으로 인해 주입되지 않은 량 제외(47.5=4750)
     var currentBaseTbAfterAmount = 0.0 // 해당시간의 임시기저 계산 후 기저주입량: 기저주입막힘 발생 시 기저주입 막힘량 제외, 기저정지로 인해 주입되지 않은 량 제외, 리셋으로 인해 주입되지 않은 량 제외(47.5=4750)
-
 
     // 17. saved basal pattern status
     var baseAmount1 = 0.00// 주입량 1(량*100, 23.25->2325, 15.2->1520)

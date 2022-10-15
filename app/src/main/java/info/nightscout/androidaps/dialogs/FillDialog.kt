@@ -28,9 +28,12 @@ import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.shared.SafeParse
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.extensions.formatColor
-import info.nightscout.androidaps.utils.resources.ResourceHelper
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
+import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.androidaps.utils.protection.ProtectionCheck
+import info.nightscout.androidaps.utils.protection.ProtectionCheck.Protection.BOLUS
+import info.nightscout.androidaps.interfaces.ResourceHelper
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
 import java.util.*
 import javax.inject.Inject
 import kotlin.math.abs
@@ -44,13 +47,13 @@ class FillDialog : DialogFragmentWithDate() {
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var repository: AppRepository
+    @Inject lateinit var protectionCheck: ProtectionCheck
 
+    private var queryingProtection = false
     private val disposable = CompositeDisposable()
-
     private var _binding: DialogFillBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
+    // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
@@ -96,7 +99,7 @@ class FillDialog : DialogFragmentWithDate() {
         } else {
             binding.fillPresetButton3.visibility = View.GONE
         }
-
+        binding.fillLabel.labelFor = binding.fillInsulinamount.editTextId
     }
 
     override fun onDestroyView() {
@@ -113,16 +116,16 @@ class FillDialog : DialogFragmentWithDate() {
         if (insulinAfterConstraints > 0) {
             actions.add(rh.gs(R.string.fillwarning))
             actions.add("")
-            actions.add(rh.gs(R.string.bolus) + ": " + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump, rh).formatColor(rh, R.color.colorInsulinButton))
+            actions.add(rh.gs(R.string.bolus) + ": " + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump, rh).formatColor(context, rh, R.attr.insulinButtonColor))
             if (abs(insulinAfterConstraints - insulin) > 0.01)
-                actions.add(rh.gs(R.string.bolusconstraintappliedwarn, insulin, insulinAfterConstraints).formatColor(rh, R.color.warning))
+                actions.add(rh.gs(R.string.bolusconstraintappliedwarn, insulin, insulinAfterConstraints).formatColor(context, rh, R.attr.warningColor))
         }
         val siteChange = binding.fillCatheterChange.isChecked
         if (siteChange)
-            actions.add(rh.gs(R.string.record_pump_site_change).formatColor(rh, R.color.actionsConfirm))
+            actions.add(rh.gs(R.string.record_pump_site_change).formatColor(context, rh, R.attr.actionsConfirmColor))
         val insulinChange = binding.fillCartridgeChange.isChecked
         if (insulinChange)
-            actions.add(rh.gs(R.string.record_insulin_cartridge_change).formatColor(rh, R.color.actionsConfirm))
+            actions.add(rh.gs(R.string.record_insulin_cartridge_change).formatColor(context, rh, R.attr.actionsConfirmColor))
         val notes: String = binding.notesLayout.notes.text.toString()
         if (notes.isNotEmpty())
             actions.add(rh.gs(R.string.notes_label) + ": " + notes)
@@ -195,5 +198,21 @@ class FillDialog : DialogFragmentWithDate() {
                 }
             }
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(!queryingProtection) {
+            queryingProtection = true
+            activity?.let { activity ->
+                val cancelFail = {
+                    queryingProtection = false
+                    aapsLogger.debug(LTag.APS, "Dialog canceled on resume protection: ${this.javaClass.name}")
+                    ToastUtils.showToastInUiThread(ctx, R.string.dialog_canceled)
+                    dismiss()
+                }
+                protectionCheck.queryProtection(activity, BOLUS, { queryingProtection = false }, cancelFail, cancelFail)
+            }
+        }
     }
 }

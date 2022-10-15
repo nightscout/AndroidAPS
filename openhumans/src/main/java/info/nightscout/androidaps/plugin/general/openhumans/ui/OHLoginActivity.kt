@@ -17,8 +17,8 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.androidaps.plugin.general.openhumans.R
-import info.nightscout.androidaps.plugin.general.openhumans.dagger.AuthUrl
-import info.nightscout.androidaps.plugin.general.openhumans.dagger.ViewModelFactory
+import info.nightscout.androidaps.plugin.general.openhumans.di.AuthUrl
+import info.nightscout.androidaps.plugin.general.openhumans.di.ViewModelFactory
 import javax.inject.Inject
 
 class OHLoginActivity : DaggerAppCompatActivity() {

@@ -26,8 +26,8 @@ import info.nightscout.androidaps.plugins.general.automation.events.EventAutomat
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
 
 class EditEventDialog : DialogFragmentWithDate() {
@@ -56,7 +56,7 @@ class EditEventDialog : DialogFragmentWithDate() {
         // load data from bundle
         (savedInstanceState ?: arguments)?.let { bundle ->
             position = bundle.getInt("position", -1)
-            bundle.getString("event")?.let { event = AutomationEvent(injector).fromJSON(it) }
+            bundle.getString("event")?.let { event = AutomationEvent(injector).fromJSON(it, position) }
         }
 
         onCreateViewGeneral()

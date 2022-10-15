@@ -66,7 +66,7 @@ class TriggerTimeRange(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyDescription(): String =
         rh.gs(R.string.timerange_value, dateUtil.timeString(toMills(range.start)), dateUtil.timeString(toMills(range.end)))
 
-    override fun icon(): Optional<Int?> = Optional.of(R.drawable.ic_access_alarm_24dp)
+    override fun icon(): Optional<Int> = Optional.of(R.drawable.ic_access_alarm_24dp)
 
     override fun duplicate(): Trigger = TriggerTimeRange(injector, range.start, range.end)
 

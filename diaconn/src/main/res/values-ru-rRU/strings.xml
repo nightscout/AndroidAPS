@@ -152,4 +152,6 @@
     <string name="diaconn_g8_errorcode_34">Приостановка на низких отключена, команда ВЫКЛ отклонена.</string>
     <string name="diaconn_g8_errorcode_35">Запуск временного базала отклоняется при работе tempbasal</string>
     <string name="diaconn_g8_errorcode_36">Остановка временного базала отклоняется при неработающем tempbasal</string>
+    <string name="diaconn_g8_cloudsend_summary">Отправить лог помпы в Diaconn Cloud.</string>
+    <string name="diaconn_g8_cloudsend_title">Синхронизация с Diaconn Cloud</string>
 </resources>

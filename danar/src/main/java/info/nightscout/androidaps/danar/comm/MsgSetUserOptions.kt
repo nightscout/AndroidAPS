@@ -8,7 +8,7 @@ class MsgSetUserOptions(
 ) : MessageBase(injector) {
 
     init {
-        SetCommand(0x330B)
+        setCommand(0x330B)
         if (danaPump.userOptionsFromPump == null) {
             // No options set -> Exiting
             aapsLogger.debug(LTag.PUMPCOMM, "NO USER OPTIONS LOADED EXITING!")
@@ -23,7 +23,7 @@ class MsgSetUserOptions(
             danaPump.userOptionsFromPump!![9] = danaPump.shutdownHour.toByte()
             danaPump.userOptionsFromPump!![27] = danaPump.lowReservoirRate.toByte()
             for (element in danaPump.userOptionsFromPump!!) {
-                AddParamByte(element)
+                addParamByte(element)
             }
             aapsLogger.debug(LTag.PUMPCOMM, "New message")
         }

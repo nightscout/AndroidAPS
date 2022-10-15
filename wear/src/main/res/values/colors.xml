@@ -4,7 +4,6 @@
     <color name="cardObjectiveText">#779ECB</color>
     <color name="titleHeader">#D9000000</color>
 
-
     <!-- light colors -->
     <color name="light_bigchart_time">@color/black</color>
     <color name="light_bigchart_status">@color/black</color>
@@ -45,6 +44,12 @@
     <color name="colorInsulinButton">#67dfe8</color>
     <color name="colorTemptButton">#CF8BFE</color>
     <color name="colorPrimeButton">#FBC02D</color>
+
+    <color name="inrange">#00FF00</color>
+    <color name="exercise">#67DFE8</color>
+    <color name="carbs">#FFFB8C00</color>
+    <color name="low">#FF0000</color>
+    <color name="tempTargetConfirmation">#77dd77</color>
 
     <!-- Material Design - Color Palette -->
     <!-- https://designguidelines.withgoogle.com/wearos/style/color.html#color-dark-color-palette-for-wear-os -->
@@ -157,13 +162,16 @@
     <color name="brown_900">#3E2723</color>
 
     <!-- Gray / Grey -->
-        <!-- @ToDo   Replace all usage from grey to gray, because that's the official color name in https://material.io/deign/color/  -->
+    <!-- @ToDo   Replace all usage from grey to gray, because that's the official color name in https://material.io/deign/color/  -->
     <color name="grey_50">#FAFAFA</color>
     <color name="gray_100">#F5F5F5</color>
     <color name="grey_300">#E0E0E0</color>
     <color name="grey_500">#9E9E9E</color>
-    <color name="gray_500">#9E9E9E</color> <!-- needed because rICTxWF01 generate color-names as grAy -->
+    <color name="gray_500">#9E9E9E
+    </color> <!-- needed because rICTxWF01 generate color-names as grAy -->
     <color name="gray_700">#616161</color>
+    <color name="gray_800">#424242</color>
+    <color name="gray_850">#313131</color>
     <color name="gray_900">#212121</color>
     <color name="grey_steampunk">#333333</color>
 
@@ -176,4 +184,5 @@
     <!-- Black / White-->
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
+
 </resources>

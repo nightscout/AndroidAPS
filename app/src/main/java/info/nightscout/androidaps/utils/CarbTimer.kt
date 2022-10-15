@@ -11,7 +11,7 @@ import info.nightscout.androidaps.plugins.general.automation.elements.InputDelta
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerBg
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerDelta
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import java.text.DecimalFormat
 import javax.inject.Inject
 import javax.inject.Singleton

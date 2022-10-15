@@ -69,10 +69,10 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
     if (bg < 39) {  //Dexcom is in ??? mode or calibrating
         rT.reason = "CGM is calibrating or in ??? state";
         if (basal <= currenttemp.rate * 1.2) { // high temp is running
-            rT.reason += "; setting current basal of " + basal + " as temp";
+            rT.reason += "; setting current basal of " + round(basal, 2) + " as temp";
             return tempBasalFunctions.setTempBasal(basal, 30, profile, rT, currenttemp);
         } else { //do nothing.
-            rT.reason += ", temp " + currenttemp.rate + " <~ current basal " + basal + "U/hr";
+            rT.reason += ", temp " + currenttemp.rate + " <~ current basal " + round(basal, 2) + "U/hr";
             return rT;
         }
     }
@@ -291,7 +291,7 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
 
     rT.COB=meal_data.mealCOB;
     rT.IOB=iob_data.iob;
-    rT.reason="COB: " + meal_data.mealCOB + ", Dev: " + deviation + ", BGI: " + bgi + ", ISF: " + convert_bg(sens, profile) + ", Target: " + convert_bg(target_bg, profile) + "; ";
+    rT.reason="COB: " + round(meal_data.mealCOB, 1) + ", Dev: " + deviation + ", BGI: " + bgi + ", ISF: " + convert_bg(sens, profile) + ", Target: " + convert_bg(target_bg, profile) + "; ";
     if (typeof autosens_data !== 'undefined' && profile.autosens_adjust_targets && autosens_data.ratio != 1)
         rT.reason += "Autosens: " + autosens_data.ratio + "; ";
     if (bg < threshold) { // low glucose suspend mode: BG is < ~80
@@ -306,10 +306,10 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
             rT.reason += ", min delta " + minDelta.toFixed(2) + ">0";
         }
         if (currenttemp.duration > 15 && (round_basal(basal, profile) === round_basal(currenttemp.rate, profile))) {
-            rT.reason += ", temp " + currenttemp.rate + " ~ req " + basal + "U/hr";
+            rT.reason += ", temp " + currenttemp.rate + " ~ req " + round(basal, 2) + "U/hr";
             return rT;
         } else {
-            rT.reason += "; setting current basal of " + basal + " as temp";
+            rT.reason += "; setting current basal of " + round(basal, 2) + " as temp";
             return tempBasalFunctions.setTempBasal(basal, 30, profile, rT, currenttemp);
         }
     }
@@ -324,10 +324,10 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
                 rT.reason += ", but Min. Delta " + minDelta.toFixed(2) + " > Exp. Delta " + expectedDelta;
             }
             if (currenttemp.duration > 15 && (round_basal(basal, profile) === round_basal(currenttemp.rate, profile))) {
-                rT.reason += ", temp " + currenttemp.rate + " ~ req " + basal + "U/hr";
+                rT.reason += ", temp " + currenttemp.rate + " ~ req " + round(basal, 2) + "U/hr";
                 return rT;
             } else {
-                rT.reason += "; setting current basal of " + basal + " as temp";
+                rT.reason += "; setting current basal of " + round(basal, 2) + " as temp";
                 return tempBasalFunctions.setTempBasal(basal, 30, profile, rT, currenttemp);
             }
         }
@@ -338,10 +338,10 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
                 rT.reason += ", bolus snooze: eventual BG range " + convert_bg(eventualBG, profile) + "-" + convert_bg(snoozeBG, profile);
                 //console.error(currenttemp, basal );
                 if (currenttemp.duration > 15 && (round_basal(basal, profile) === round_basal(currenttemp.rate, profile))) {
-                    rT.reason += ", temp " + currenttemp.rate + " ~ req " + basal + "U/hr";
+                    rT.reason += ", temp " + currenttemp.rate + " ~ req " + round(basal, 2) + "U/hr";
                     return rT;
                 } else {
-                    rT.reason += "; setting current basal of " + basal + " as temp";
+                    rT.reason += "; setting current basal of " + round(basal, 2) + " as temp";
                     return tempBasalFunctions.setTempBasal(basal, 30, profile, rT, currenttemp);
                 }
             } else {
@@ -363,14 +363,14 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
                 // if required temp < existing temp basal
                 var insulinScheduled = currenttemp.duration * (currenttemp.rate - basal) / 60;
                 if (insulinScheduled < insulinReq - basal*0.3) { // if current temp would deliver a lot (30% of basal) less than the required insulin, raise the rate
-                    rT.reason += ", "+currenttemp.duration + "m@" + (currenttemp.rate - basal).toFixed(3) + " = " + insulinScheduled.toFixed(3) + " < req " + insulinReq + "-" + basal*0.3;
+                    rT.reason += ", "+currenttemp.duration + "m@" + (currenttemp.rate - basal).toFixed(3) + " = " + insulinScheduled.toFixed(3) + " < req " + insulinReq + "-" + (basal*0.3).toFixed(2);
                     return tempBasalFunctions.setTempBasal(rate, 30, profile, rT, currenttemp);
                 }
                 if (typeof currenttemp.rate !== 'undefined' && (currenttemp.duration > 5 && rate >= currenttemp.rate * 0.8)) {
-                    rT.reason += ", temp " + currenttemp.rate + " ~< req " + rate + "U/hr";
+                    rT.reason += ", temp " + (currenttemp.rate).toFixed(3) + " ~< req " + round(rate, 2) + "U/hr";
                     return rT;
                 } else {
-                    rT.reason += ", setting " + rate + "U/hr";
+                    rT.reason += ", setting " + round(rate, 2) + "U/hr";
                     return tempBasalFunctions.setTempBasal(rate, 30, profile, rT, currenttemp);
                 }
             }
@@ -405,10 +405,10 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
             rT.reason += "Eventual BG " + convert_bg(eventualBG, profile) + " > " + convert_bg(min_bg, profile) + " but Min. Delta " + minDelta.toFixed(2) + " < Exp. Delta " + expectedDelta;
         }
         if (currenttemp.duration > 15 && (round_basal(basal, profile) === round_basal(currenttemp.rate, profile))) {
-            rT.reason += ", temp " + currenttemp.rate + " ~ req " + basal + "U/hr";
+            rT.reason += ", temp " + currenttemp.rate + " ~ req " + round(basal, 2) + "U/hr";
             return rT;
         } else {
-            rT.reason += "; setting current basal of " + basal + " as temp";
+            rT.reason += "; setting current basal of " + round(basal, 2) + " as temp";
             return tempBasalFunctions.setTempBasal(basal, 30, profile, rT, currenttemp);
         }
     }
@@ -422,10 +422,10 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
 
         rT.reason += convert_bg(eventualBG, profile)+"-"+convert_bg(snoozeBG, profile)+" in range: no temp required";
         if (currenttemp.duration > 15 && (round_basal(basal, profile) === round_basal(currenttemp.rate, profile))) {
-            rT.reason += ", temp " + currenttemp.rate + " ~ req " + basal + "U/hr";
+            rT.reason += ", temp " + currenttemp.rate + " ~ req " + round(basal, 2) + "U/hr";
             return rT;
         } else {
-            rT.reason += "; setting current basal of " + basal + " as temp";
+            rT.reason += "; setting current basal of " + round(basal, 2) + " as temp";
             return tempBasalFunctions.setTempBasal(basal, 30, profile, rT, currenttemp);
         }
     }
@@ -439,10 +439,10 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
     if (basaliob > max_iob) {
         rT.reason += "basaliob " + round(basaliob,2) + " > max_iob " + max_iob;
         if (currenttemp.duration > 15 && (round_basal(basal, profile) === round_basal(currenttemp.rate, profile))) {
-            rT.reason += ", temp " + currenttemp.rate + " ~ req " + basal + "U/hr";
+            rT.reason += ", temp " + currenttemp.rate + " ~ req " + round(basal, 2) + "U/hr";
             return rT;
         } else {
-            rT.reason += "; setting current basal of " + basal + " as temp";
+            rT.reason += "; setting current basal of " + round(basal, 2) + " as temp";
             return tempBasalFunctions.setTempBasal(basal, 30, profile, rT, currenttemp);
         }
     } else { // otherwise, calculate 30m high-temp required to get projected BG down to target
@@ -476,22 +476,22 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
 
         var insulinScheduled = currenttemp.duration * (currenttemp.rate - basal) / 60;
         if (insulinScheduled >= insulinReq * 2) { // if current temp would deliver >2x more than the required insulin, lower the rate
-            rT.reason += currenttemp.duration + "m@" + (currenttemp.rate - basal).toFixed(3) + " = " + insulinScheduled.toFixed(3) + " > 2 * req " + insulinReq + ". Setting temp basal of " + rate + "U/hr";
+            rT.reason += currenttemp.duration + "m@" + (currenttemp.rate - basal).toFixed(3) + " = " + insulinScheduled.toFixed(3) + " > 2 * req " + insulinReq + ". Setting temp basal of " + round(rate, 2) + "U/hr";
             return tempBasalFunctions.setTempBasal(rate, 30, profile, rT, currenttemp);
         }
 
         if (typeof currenttemp.duration == 'undefined' || currenttemp.duration == 0) { // no temp is set
-            rT.reason += "no temp, setting " + rate + "U/hr";
+            rT.reason += "no temp, setting " + round(rate, 2) + "U/hr";
             return tempBasalFunctions.setTempBasal(rate, 30, profile, rT, currenttemp);
         }
 
         if (currenttemp.duration > 5 && (round_basal(rate, profile) <= round_basal(currenttemp.rate, profile))) { // if required temp <~ existing temp basal
-            rT.reason += "temp " + currenttemp.rate + " >~ req " + rate + "U/hr";
+            rT.reason += "temp " + (currenttemp.rate).toFixed(3) + " >~ req " + round(rate, 2) + "U/hr";
             return rT;
         }
 
         // required temp > existing temp basal
-        rT.reason += "temp " + currenttemp.rate + "<" + rate + "U/hr";
+        rT.reason += "temp " + (currenttemp.rate).toFixed(3) + " < " + round(rate, 2) + "U/hr";
         return tempBasalFunctions.setTempBasal(rate, 30, profile, rT, currenttemp);
     }
 

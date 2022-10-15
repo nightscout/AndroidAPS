@@ -87,7 +87,7 @@ class TriggerBg(injector: HasAndroidInjector) : Trigger(injector) {
             rh.gs(if (bg.units == GlucoseUnit.MGDL) R.string.glucosecomparedmgdl else R.string.glucosecomparedmmol, rh.gs(comparator.value.stringRes), bg.value, bg.units)
     }
 
-    override fun icon(): Optional<Int?> = Optional.of(R.drawable.ic_cp_bgcheck)
+    override fun icon(): Optional<Int> = Optional.of(R.drawable.ic_cp_bgcheck)
 
     override fun duplicate(): Trigger = TriggerBg(injector, this)
 

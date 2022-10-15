@@ -61,7 +61,7 @@
     <string name="omnipod_common_overview_reservoir">Rezervuar</string>
     <string name="omnipod_common_overview_pod_active_alerts">Etkin Pod Alarmları</string>
     <string name="omnipod_common_overview_firmware_version">Firmware versiyonu</string>
-    <string name="omnipod_common_overview_time_on_pod">Pod üzerindeki zaman</string>
+    <string name="omnipod_common_overview_time_on_pod">Pod saati</string>
     <string name="omnipod_common_overview_temp_basal_value">%1$.2fÜ/s @%2$s (%3$d/%4$d dakika)</string>
     <string name="omnipod_common_overview_reservoir_value">%1$.2f Ü kaldı</string>
     <string name="omnipod_common_overview_reservoir_value_over50">50 Ü üzeri</string>
@@ -138,7 +138,7 @@
     <string name="omnipod_common_cmd_get_pod_info">Pod Bilgisi</string>
     <string name="omnipod_common_cmd_set_time">Saati Ayarla</string>
     <string name="omnipod_common_cmd_configure_alerts">Alarmları Yapılandır</string>
-    <string name="omnipod_common_cmd_silence_alerts">Sessiz Alarmlar</string>
+    <string name="omnipod_common_cmd_silence_alerts">Alarmları Sustur</string>
     <string name="omnipod_common_cmd_suspend_delivery">İletimi Askıya Al</string>
     <string name="omnipod_common_cmd_resume_delivery">İletime devam et</string>
     <string name="omnipod_common_cmd_unknown_entry">Bilinmeyen Giriş</string>

@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.danars.activities
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
@@ -9,6 +10,8 @@ import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
 import android.content.Context
 import android.content.pm.ActivityInfo
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -16,21 +19,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
+import androidx.core.app.ActivityCompat
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.danars.R
 import info.nightscout.androidaps.danars.databinding.DanarsBlescannerActivityBinding
 import info.nightscout.androidaps.danars.events.EventDanaRSDeviceChange
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.common.ble.BlePreCheck
+import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.shared.sharedPreferences.SP
-import java.util.*
 import java.util.regex.Pattern
 import javax.inject.Inject
 
 class BLEScanActivity : NoSplashAppCompatActivity() {
 
     @Inject lateinit var sp: SP
-    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var blePreCheck: BlePreCheck
     @Inject lateinit var context: Context
 
@@ -59,8 +61,12 @@ class BLEScanActivity : NoSplashAppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        if (bluetoothAdapter?.isEnabled != true) bluetoothAdapter?.enable()
-        startScan()
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
+            if (bluetoothAdapter?.isEnabled != true) bluetoothAdapter?.enable()
+            startScan()
+        } else {
+            ToastUtils.errorToast(context, context.getString(info.nightscout.androidaps.core.R.string.needconnectpermission))
+        }
     }
 
     override fun onPause() {
@@ -69,17 +75,26 @@ class BLEScanActivity : NoSplashAppCompatActivity() {
     }
 
     private fun startScan() =
-        try {
-            bluetoothLeScanner?.startScan(mBleScanCallback)
-        } catch (e: IllegalStateException) {
-        } // ignore BT not on
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
+            try {
+                bluetoothLeScanner?.startScan(mBleScanCallback)
+            } catch (ignore: IllegalStateException) {
+            } // ignore BT not on
+        } else {
+            ToastUtils.errorToast(context, context.getString(info.nightscout.androidaps.core.R.string.needconnectpermission))
+        }
 
     private fun stopScan() =
-        try {
-            bluetoothLeScanner?.stopScan(mBleScanCallback)
-        } catch (e: IllegalStateException) {
-        } // ignore BT not on
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
+            try {
+                bluetoothLeScanner?.stopScan(mBleScanCallback)
+            } catch (ignore: IllegalStateException) {
+            } // ignore BT not on
+        } else {
+            ToastUtils.errorToast(context, context.getString(info.nightscout.androidaps.core.R.string.needconnectpermission))
+        }
 
+    @SuppressLint("MissingPermission")
     private fun addBleDevice(device: BluetoothDevice?) {
         if (device == null || device.name == null || device.name == "") {
             return
@@ -133,11 +148,16 @@ class BLEScanActivity : NoSplashAppCompatActivity() {
             override fun onClick(v: View) {
                 sp.putString(R.string.key_danars_address, item.device.address)
                 sp.putString(R.string.key_danars_name, name.text.toString())
-                item.device.createBond()
-                rxBus.send(EventDanaRSDeviceChange())
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
+                    item.device.createBond()
+                    rxBus.send(EventDanaRSDeviceChange())
+                } else {
+                    ToastUtils.errorToast(context, context.getString(info.nightscout.androidaps.core.R.string.needconnectpermission))
+                }
                 finish()
             }
 
+            @SuppressLint("MissingPermission")
             fun setData(data: BluetoothDeviceItem) {
                 var tTitle = data.device.name
                 if (tTitle == null || tTitle == "") {

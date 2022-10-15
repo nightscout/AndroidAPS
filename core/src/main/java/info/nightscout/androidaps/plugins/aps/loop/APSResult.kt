@@ -18,7 +18,7 @@ import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.HtmlHelper.fromHtml
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONException
 import org.json.JSONObject
@@ -97,7 +97,7 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
     }
 
     val carbsRequiredText: String
-        get() = String.format(rh.gs(R.string.carbsreq), carbsReq, carbsReqWithin)
+        get() = rh.gs(R.string.carbsreq, carbsReq, carbsReqWithin)
 
     override fun toString(): String {
         val pump = activePlugin.activePump

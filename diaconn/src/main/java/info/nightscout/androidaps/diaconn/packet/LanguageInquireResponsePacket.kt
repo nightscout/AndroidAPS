@@ -33,7 +33,6 @@ class LanguageInquireResponsePacket(injector: HasAndroidInjector) : DiaconnG8Pac
         }
         diaconnG8Pump.selectedLanguage =  getByteToInt(bufferData)
 
-
         aapsLogger.debug(LTag.PUMPCOMM, "Result --> ${diaconnG8Pump.result}")
         aapsLogger.debug(LTag.PUMPCOMM, "selectedLanguage --> ${diaconnG8Pump.selectedLanguage}")
     }

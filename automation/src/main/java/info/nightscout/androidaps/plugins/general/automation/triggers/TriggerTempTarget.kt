@@ -58,7 +58,7 @@ class TriggerTempTarget(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyDescription(): String =
         rh.gs(R.string.temptargetcompared, rh.gs(comparator.value.stringRes))
 
-    override fun icon(): Optional<Int?> = Optional.of(R.drawable.ic_keyboard_tab)
+    override fun icon(): Optional<Int> = Optional.of(R.drawable.ic_keyboard_tab)
 
     override fun duplicate(): Trigger = TriggerTempTarget(injector, this)
 

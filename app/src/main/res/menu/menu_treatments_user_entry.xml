@@ -1,0 +1,22 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/nav_show_loop"
+        android:icon="@drawable/ic_loop_closed_white"
+        android:iconTint="?attr/colorControlNormal"
+        android:title="@string/show_loop"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/nav_hide_loop"
+        android:icon="@drawable/ic_loop_closed_off"
+        android:title="@string/hide_loop"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/nav_export"
+        android:title="@string/ue_export_to_csv"
+        app:showAsAction="never" />
+
+</menu>

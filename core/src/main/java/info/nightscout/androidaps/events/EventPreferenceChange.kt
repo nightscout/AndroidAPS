@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.events
 
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 
 class EventPreferenceChange : Event {
 

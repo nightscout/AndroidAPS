@@ -152,4 +152,6 @@
     <string name="diaconn_g8_errorcode_34">LGS status UIT, UIT Commando is geweigerd.</string>
     <string name="diaconn_g8_errorcode_35">Tijdelijk basaal start geweigerd als tijdelijk basaal wordt uitgevoerd</string>
     <string name="diaconn_g8_errorcode_36">Tijdelijk basaal stop geweigerd als tijdelijk basaal niet wordt uitgevoerd</string>
+    <string name="diaconn_g8_cloudsend_summary">Stuur pomp logs naar de Diaconn Cloud.</string>
+    <string name="diaconn_g8_cloudsend_title">Diaconn Cloud Sync</string>
 </resources>

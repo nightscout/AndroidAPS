@@ -6,8 +6,8 @@ import info.nightscout.androidaps.database.TABLE_PROFILE_SWITCHES
 import info.nightscout.androidaps.database.daos.workaround.ProfileSwitchDaoWorkaround
 import info.nightscout.androidaps.database.data.checkSanity
 import info.nightscout.androidaps.database.entities.ProfileSwitch
-import io.reactivex.Maybe
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Single
 
 @Suppress("FunctionName")
 @Dao

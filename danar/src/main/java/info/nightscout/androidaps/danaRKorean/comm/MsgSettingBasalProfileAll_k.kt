@@ -18,7 +18,7 @@ class MsgSettingBasalProfileAll_k(
 ) : MessageBase(injector) {
 
     init {
-        SetCommand(0x3206)
+        setCommand(0x3206)
         aapsLogger.debug(LTag.PUMPCOMM, "New message")
     }
 

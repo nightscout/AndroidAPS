@@ -4,6 +4,7 @@
     <!--    General-->
     <string name="refresh">Obnoviť</string>
     <string name="error">Chyba</string>
+    <string name="save">Uložiť</string>
     <string name="not_set_short">Nenastavené</string>
     <string name="failedupdatebasalprofile">Chyba pri aktualizovaní bazálneho profilu</string>
     <string name="profile_set_ok">Bazálny profil v pumpe aktualizovaný</string>
@@ -41,6 +42,7 @@
     <string name="carbs">Sacharidy</string>
     <string name="invalidprofile">Chybný profil !!!</string>
     <string name="noprofileset">Nenastavený žiadny profil</string>
+    <string name="active"><![CDATA[<Aktívny>]]></string>
     <string name="date">Dátum</string>
     <string name="units_label">Jednotky</string>
     <string name="dia_label">Doba pôsobenia inzulínu</string>
@@ -48,6 +50,11 @@
     <string name="isf_label">Citlivosť</string>
     <string name="basal_label">Bazál</string>
     <string name="target_label">Cieľ</string>
+    <string name="dia_long_label">Doba pôsobenia inzulínu</string>
+    <string name="ic_long_label">Inzulíno-sacharidový pomer</string>
+    <string name="isf_long_label">Citlivosť na inzulín</string>
+    <string name="basal_long_label">Bazál</string>
+    <string name="target_long_label">Cieľová glykémia</string>
     <string name="initializing">Inicializácia ...</string>
     <string name="serialnumber">Sériové číslo</string>
     <string name="battery_label">Batéria</string>
@@ -105,6 +112,7 @@
     <string name="notes_label">Poznámky</string>
     <string name="remove_button">Vymazať</string>
     <string name="addnew">Pridať nový</string>
+    <string name="addnew_above">Pridať novú nad</string>
     <string name="wrong_pump_data">Dáta prichádzajú z inej pumpy. Zmeňte ovládač pre obnovenie stavu pumpy.</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Max bazál obmedzený na %1$.2f JI/h: %2$s</string>
@@ -125,27 +133,11 @@
     <string name="ble_not_enabled">Bluetooth nie je aktivovaný.</string>
     <string name="location_not_found_title">Poloha nie je aktivovaná</string>
     <string name="location_not_found_message">Pre vyhľadanie Bluetooth zariadení na novších telefónoch musí byť povolené zisťovanie polohy. AAPS vás nesleduje a po úspešnom spárovaní môžete túto voľbu opäť zakázať.</string>
-    <!--    DateUtil-->
-    <string name="minago">pred %1$d min</string>
-    <string name="hoursago">pred %1$.1f h</string>
-    <string name="shorthour">h</string>
-    <string name="days">dní</string>
-    <string name="hours">hodín</string>
-    <string name="unit_second">sekunda</string>
-    <string name="unit_minute">minúta</string>
-    <string name="unit_hour">hodina</string>
-    <string name="unit_day">deň</string>
-    <string name="unit_week">týždeň</string>
-    <string name="unit_seconds">sekúnd</string>
-    <string name="unit_minutes">minút</string>
-    <string name="unit_hours">hodín</string>
-    <string name="unit_days">dní</string>
-    <string name="unit_weeks">týždňov</string>
-    <string name="shortminute">m</string>
-    <string name="shortday">d</string>
     <!--    Protection-->
     <string name="wrongpassword">Nesprávne heslo</string>
+    <string name="wrongpin">Nesprávny PIN</string>
     <string name="passwords_dont_match">Heslá sa nezhodujú</string>
+    <string name="pin_dont_match">PIN kódy sa nezhodujú</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Bazálne hodnoty nie sú zarovnané na celé hodiny: %1$s</string>
     <string name="minimalbasalvaluereplaced">Hodnota bazálu nahradená minimálnou možnou: %1$s</string>
@@ -168,10 +160,6 @@
     <string name="zerovalueinprofile">Chybný profil: %1$s</string>
     <!--    Temptarget-->
     <string name="mins">%1$d min.</string>
-    <!--    TDD-->
-    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f JI</b> Bol: <b>%3$.2f JI</b> Baz: <b>%4$.2f JI(%5$.0f%%)</b>]]></string>
-    <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f JI</b> Bol: <b>%3$.2f JI</b> Baz: <b>%4$.2f JI(%5$.0f%%)</b> Sach.: <b>%6$.0f g</b>]]></string>
-    <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> v <b>%3$d</b> dňoch<br>]]></string>
     <!--    Translator-->
     <string name="careportal">Starostlivosť</string>
     <string name="careportal_bgcheck">Kontrola glykémie</string>
@@ -369,6 +357,7 @@
     <string name="uel_stat_reset">RESET ŠTATISTÍK</string>
     <string name="uel_delete_logs">VYMAZAŤ LOGY</string>
     <string name="uel_delete_future_treatments">VYMAZAŤ BUDÚCE OŠETRENIA</string>
+    <string name="delete_future_treatments">Odstrániť ošetrenia v budúcnosti</string>
     <string name="uel_export_settings">EXPORTOVAŤ NASTAVENIA</string>
     <string name="uel_import_settings">IMPORTOVAŤ NASTAVENIA</string>
     <string name="uel_reset_databases">RESETOVAŤ DATABÁZY</string>
@@ -440,6 +429,67 @@
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="pump_paired" comment="26 characters max for translation">Pumpa spárovaná</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight Tlačítko Obnoviť</string>
+    <string name="a11y_min_button_description">zníženie %1$s o %2$s</string>
+    <string name="a11y_plus_button_description">zvýšenie %1$s o %2$s</string>
+    <string name="formatPercent">%1$.0f%%</string>
+    <string name="basal">Bazál</string>
+    <string name="basalpct">Bazál %</string>
+    <string name="count_selected">%1$d vybraných</string>
+    <string name="sort_label">Zoradiť</string>
+    <string name="remove_items">Odstrániť položky</string>
+    <string name="sort_items">Zoradiť položky</string>
+    <string name="remove_selected_items">Odstrániť vybrané položky</string>
+    <string name="a11y_file">súbor</string>
+    <string name="a11y_user">používateľ</string>
+    <!-- Autotune -->
+    <string name="autotune">Autotune</string>
+    <string name="autotune_description">Pomoc s možnými úpravami profilu (citlivosť, inzulíno-sacharidový pomer a bazálny dávky)</string>
+    <string name="autotune_shortname">AT</string>
+    <string name="autotune_settings">Nastavenie Autotune</string>
+    <string name="autotune_auto_title">Prepnutie profilu z Automatizácie</string>
+    <string name="autotune_auto_summary">Pokiaľ je táto voľba povolená, Autotune po výpočte automaticky aktualizuje a prepne na vstupný profil zadaný v pravidle automatizácie.</string>
+    <string name="autotune_categorize_uam_as_basal_title">Započítavať UAM ako bazál</string>
+    <string name="autotune_categorize_uam_as_basal_summary">Povoľte iba v prípade, že ste dôsledne zadávali všetky prijaté sacharidy. S touto možnosťou bude náhly vzostup detekovaný funkciou Autotune, použitý pre doporučovanie zmien bazálu.</string>
+    <string name="autotune_tune_insulin_curve_title">Ladiť inzulínovú krivku</string>
+    <string name="autotune_tune_insulin_curve_summary">Aktivuj iba ak používaš voliteľný vrchol. Táto možnosť má vyladiť vrchol a trvanie DIA</string>
+    <string name="autotune_default_tune_days_title">Počet dní s dátami</string>
+    <string name="autotune_circadian_ic_isf_title">Použi priemerný výsledok v cirkadiánnom IC/ISF</string>
+    <string name="autotune_circadian_ic_isf_summary">Autotune nebude ladiť cirkadiánne rozloženie, táto možnosť použije iba priemerné ladenie IC a ISF na váš cirkadiánný vstupní profil</string>
+    <string name="autotune_additional_log_title">Zahrnúť ďalšie informácie o protokole pre ladenie</string>
+    <string name="autotune_additional_log_summary">Zapnite, iba pokiaľ je to požadované vývojárom, aby bolo možné odoslať dalšie logy pre ladenie modulu Autotune</string>
+    <string name="autotune_default_tune_days_summary">Štandardný počet dní, z ktorých majú byť dáta spracované Autotune (až do 30)</string>
+    <string name="autotune_tunedprofile_name">Vyladené</string>
+    <string name="autotune_profile">Profil :</string>
+    <string name="autotune_tune_days">Ladiť dni:</string>
+    <string name="autotune_last_run">Posledné spustenie :</string>
+    <string name="autotune_warning">Upozornenie :</string>
+    <string name="autotune_select_profile">Vyberte profil pre ladenie</string>
+    <string name="autotune_ic_warning">Vybraný profil má %1$d hodnôt IC. Autotune bude používať %2$.2f g/JI</string>
+    <string name="autotune_isf_warning">Vybraný profil má %1$d hodnôt ISF. Autotune bude používať %2$.1f %3$s/JI</string>
+    <string name="autotune_error">Chyba vstupných dát, skúste znova spustiť Autotune, alebo znížte počet dní</string>
+    <string name="autotune_warning_during_run">Autotune spustený, prosím buďte trpezliví</string>
+    <string name="autotune_warning_after_run">Pred použitím výsledky starostlivo skontrolujte!</string>
+    <string name="autotune_partial_result">Čiastočný výsledok - vyladený deň %1$d / %2$d</string>
+    <string name="autotune_result">Výsledok: %1$s</string>
+    <string name="autotune_param">Parameter</string>
+    <string name="autotune_percent">%</string>
+    <string name="autotune_missing">Chýba</string>
+    <string name="autotune_profile_name">Profil Autotune %1$s</string>
+    <string name="autotune_run">Spustiť Autotune</string>
+    <string name="autotune_check_input_profile_button">Skontrolovať vstupný profil</string>
+    <string name="autotune_compare_profile">Porovnať profily</string>
+    <string name="autotune_copy_localprofile_button">Kopírovať do miestneho profilu</string>
+    <string name="autotune_update_input_profile_button">Aktualizujte vstupný profil</string>
+    <string name="autotune_revert_input_profile_button">Vrátiť vstupný profil</string>
+    <string name="autotune_copy_local_profile_message">Vytvoriť z tohoto Autotune profilu nový miestny profil?</string>
+    <string name="autotune_update_local_profile_message">Aktualizovať profil %1$s pomocou profilu Autotune?</string>
+    <string name="autotune_revert_local_profile_message">Vrátiť profil %1$s na vstupný profil?</string>
+    <string name="autotune_profile_invalid">Neplatný profil</string>
+    <string name="autotune_run_without_autoswitch">Autotune spustený bez prepnutia profilu</string>
+    <string name="autotune_run_with_autoswitch">Autotune spustený a profil automaticky prepnutý</string>
+    <string name="autotune_run_with_error">Chyba pri poslednom spustení Autotune</string>
+    <string name="autotune_run_cancelled">Bola zistená iná spustená úloha Autotune, spustenie zrušené</string>
+    <string name="needconnectpermission">Aplikácia vyžaduje povolenie bluetooth</string>
     <plurals name="days">
         <item quantity="one">%1$d deň</item>
         <item quantity="few">%1$d dní</item>

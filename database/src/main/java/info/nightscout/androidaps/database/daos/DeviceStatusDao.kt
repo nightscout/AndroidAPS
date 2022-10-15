@@ -6,8 +6,8 @@ import androidx.room.Query
 import androidx.room.Update
 import info.nightscout.androidaps.database.entities.DeviceStatus
 import info.nightscout.androidaps.database.TABLE_DEVICE_STATUS
-import io.reactivex.Maybe
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Single
 
 @Suppress("FunctionName")
 @Dao

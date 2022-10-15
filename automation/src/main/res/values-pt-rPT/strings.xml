@@ -38,6 +38,9 @@
     <string name="glucoseisnotavailable">Glicose não está disponível</string>
     <string name="glucosecomparedmgdl">Glicose %1$s %2$.0f %3$s</string>
     <string name="glucosecomparedmmol">Glicose %1$s %2$.1f %3$s</string>
+    <string name="notemptarget">Alvo temporário inexistente</string>
+    <string name="temptargetcomparedmgdl">Alvo Temporário %1$s %2$.0f %3$s</string>
+    <string name="temptargetcomparedmmol">Alvo Temporário %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">Percentagem Perfil  %1$s %2$d</string>
     <string name="iobcompared">IA %1$s %2$.1f</string>
     <string name="and">E</string>
@@ -86,6 +89,7 @@
     <string name="latitude_short">Lat.:</string>
     <string name="longitude_short">Long.:</string>
     <string name="glucose_u">Glicose [%1$s]:</string>
+    <string name="target_u">Valor alvo [%1$s]:</string>
     <string name="lastboluslabel">Último bolus atrás</string>
     <string name="lastboluscompared">Última vez do bolus %1$s %2$s atrás</string>
     <string name="triggercoblabel">HCA</string>
@@ -101,9 +105,11 @@
     <string name="edit_short">EDITAR</string>
     <string name="please_choose_an_action_type">Escolha um tipo de acção</string>
     <string name="please_choose_a_trigger_type">Escolha um tipo de condição</string>
+    <string name="please_choose_a_operation_type">Escolha um tipo de operação</string>
     <string name="triggers">Condições:</string>
     <string name="remove_label">REMOVER</string>
     <string name="preconditions">Precondições:</string>
     <string name="automation_event">Evento de automatização</string>
     <string name="reorder_label">Reordenar</string>
+    <string name="user_action">Ação do utilizador</string>
 </resources>

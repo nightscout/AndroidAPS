@@ -8,7 +8,7 @@ class MsgSettingMaxValues(
 ) : MessageBase(injector) {
 
     init {
-        SetCommand(0x3205)
+        setCommand(0x3205)
         aapsLogger.debug(LTag.PUMPCOMM, "New message")
     }
 

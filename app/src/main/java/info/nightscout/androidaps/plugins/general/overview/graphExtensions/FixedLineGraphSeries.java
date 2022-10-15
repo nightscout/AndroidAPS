@@ -261,7 +261,7 @@ public class FixedLineGraphSeries<E extends DataPointInterface> extends BaseSeri
                 //fix: last value not drawn as datapoint. Draw first point here, and then on every step the end values (above)
                 // float first_X = (float) x + (graphLeft + 1);
                 // float first_Y = (float) (graphTop - y) + graphHeight;
-                //TODO canvas.drawCircle(first_X, first_Y, dataPointsRadius, mPaint);
+                // canvas.drawCircle(first_X, first_Y, dataPointsRadius, mPaint);
             }
             lastEndY = orgY;
             lastEndX = orgX;

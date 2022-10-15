@@ -91,4 +91,6 @@
     <string name="set_neutral_temps_summary">Je-li povoleno, zastaví dočasný bazál před koncem každé hodiny. To může u některých pump pomoci zastavit pípání/vibrace v celou hodinu.</string>
     <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d min zbývá)</string>
     <string name="invalid_history_data">Byla zjištěna neplatná data historie pumpy. Otevřete nový problém a poskytněte logy.</string>
+    <string name="riley_statistics">Statistiky RL</string>
+    <string name="medtronic_history_type">Typ:</string>
 </resources>

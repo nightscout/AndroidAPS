@@ -152,4 +152,6 @@
     <string name="diaconn_g8_errorcode_34">El estado de suspensión por glucosa baja está desactivado (LGS). Se rechaza el comando de desactivación.</string>
     <string name="diaconn_g8_errorcode_35">El inicio de una basal temporal es rechazado cuando se está ejecutando una basal temporal</string>
     <string name="diaconn_g8_errorcode_36">La parada de una basal tempora es rechazada cuando una basal temporal no está ejecutándose</string>
+    <string name="diaconn_g8_cloudsend_summary">Enviar los registros de la bomba a la nube de Diaconn.</string>
+    <string name="diaconn_g8_cloudsend_title">Sincronización con la nube de Diaconn</string>
 </resources>
