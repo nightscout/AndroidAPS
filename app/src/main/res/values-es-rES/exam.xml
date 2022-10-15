@@ -19,6 +19,7 @@
     <string name="pumpdisconnect_whattodo">¿Qué se debe hacer al desconectar la bomba?</string>
     <string name="pumpdisconnect_unnecessary">Esto es innecesario, ya que no se entregará insulina si la bomba está físicamente desconectada.</string>
     <string name="pumpdisconnect_notstop">Si la bomba permanece conectada, no se detendrá la entrega de insulina.</string>
+    <string name="pumpdisconnect_openloop">Pasará AAPS a modo de lazo abierto.</string>
     <string name="pumpdisconnect_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#other-settings</string>
     <string name="objectives_label">Ajustes de AAPS</string>
     <string name="objectives2_label">Ajustes de AAPS</string>
@@ -35,6 +36,7 @@
     <string name="objectives_hint2">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
     <string name="noisycgm_label">Lecturas CGM ruidosas</string>
     <string name="noisycgm_whattodo">¿Qué se debe hacer si los datos de CGM tienen ruido?</string>
+    <string name="noisycgm_nothing">No hacer nada: AAPS se ocupará de ello.</string>
     <string name="noisycgm_pause">Deshabilita el bucle cerrado para evitar posibles sobredosis o subdosis.</string>
     <string name="noisycgm_replacesensor">Sustituya los sensores constantemente ruidosos o inexactos.</string>
     <string name="noisycgm_checksmoothing">Comprueba que tu aplicación CGM proporciona datos suavizados.</string>
@@ -65,6 +67,7 @@
     <string name="basaltest_fixed">Una vez fijados y validados, estos valores no debrían cambiar a lo largo del tiempo.</string>
     <string name="basaltest_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#androidaps-settings</string>
     <string name="prerequisites_label">Requisitos previos</string>
+    <string name="prerequisites_what">¿Qué es esencial para configurar y utilizar AAPS?</string>
     <string name="prerequisites_determinedcorrectprofile">Información de perfil validada (Basal, IC, ISF, DIA).</string>
     <string name="prerequisites_computer">Un ordenador con Android Studio instalado y configurado.</string>
     <string name="prerequisites_phone">Un teléfono compatible.</string>
@@ -79,8 +82,10 @@
     <string name="prerequisites_smartwatch">Un Smartwatch.</string>
     <string name="prerequisites_supportedcgm">Un MCG soportado.</string>
     <string name="prerequisites2_label">Requisitos previos</string>
+    <string name="prerequisites2_what">¿Qué es esencial para configurar y utilizar AAPS?</string>
     <string name="prerequisites2_profile">Parámetros validados para poder configurar un perfil (ISF, I:C ratio, perfil basal, DIA etc.).</string>
     <string name="prerequisites2_device">Un dispositivo Android compatible (e.j. un móvil, un smartwatch Android compatible o una tablet).</string>
+    <string name="prerequisites2_internet">AAPS requiere una conexión a Internet para funcionar en modo lazo cerrado.</string>
     <string name="prerequisites2_supportedcgm">Un medidor continuo de glucosa (MCG) y una aplicación capaz de recibir los valores proporcionados por el medidor en el móvil o tablet.</string>
     <string name="prerequisites2_hint1">https://androidaps.readthedocs.io/en/latest/EN/Module/module.html</string>
     <string name="update_label">Actualizando AAPS</string>
@@ -92,6 +97,9 @@
     <string name="update_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#update-to-a-new-version-or-branch</string>
     <string name="troubleshooting_label">Solución de problemas</string>
     <string name="troubleshooting_wheretoask">¿Dónde puedes buscar ayuda con AAPS?</string>
+    <string name="troubleshooting_fb">Puede solicitar asesoramiento en el grupo de usuarios de AAPS en Facebook.</string>
+    <string name="troubleshooting_wiki">Deberías leer (y volver a leer) la documentación de AAPS.</string>
+    <string name="troubleshooting_gitter">Puedes solicitar asesoramiento y registrar problemas técnicos o indidencias en el grupo de Discord de AAPS.</string>
     <string name="troubleshooting_yourendo">Debes preguntar a tu endocrino o educador diabetológico.</string>
     <string name="troubleshooting_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
@@ -114,6 +122,7 @@
     <string name="wrongcarbs_whattodo">¿Qué deberías hacer si has hecho una entrada incorrecta de carbohidratos?</string>
     <string name="wrongcarbs_treatmentstab">Elimina la entrada incorrecta en los tratamientos e introduce el valor correcto de carbohidratos.</string>
     <string name="wrongcarbs_addinsulin">Bolo con insulina usando el menú de llenado de la infusión.</string>
+    <string name="wrongcarbs_donothing">No hacer nada - AAPS realizará los ajustes apropiados.</string>
     <string name="wrongcarbs_bolus">Bolo con insulina usando el botón de Insulina (bolus) en página general.</string>
     <string name="wronginsulin_label">Errores de entrega/entrada de insulina</string>
     <string name="wronginsulin_whattodo">¿Qué debes hacer si recibiste menos insulina de la que sugiere la historia de la bomba p.ej. debido a una oclusión, una cánula fallida o olvidarse de reponer la bomba después de una ducha?</string>
