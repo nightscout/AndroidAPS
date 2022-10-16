@@ -164,6 +164,7 @@
     <string name="extendedcarbs_handling">¿Para qué podría utilizar los e-carbs (carbohidratos extendidos)?</string>
     <string name="extendedcarbs_future">Para programar los carbohidratos en el futuro, posiblemente distribuidos a través de un período (similar a un bolo extendido que distribuye insulina sobre un período).</string>
     <string name="extendedcarbs_free">Para regristrar carbohidratos \'libres\' de ejercicios que quieres ocultar a AAPS.</string>
+    <string name="extendedcarbs_fat">Los eCarbs (distribuidos en el futuro) pueden ayudar a AAPS con el tratamiento de comidas con alto contenido de grasa/proteína (UGP).</string>
     <string name="extendedcarbs_rescue">Para registrar carbohidratos de rescate que se utilizan para tratar glucosa baja.</string>
     <string name="extendedcarbs_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Extended-Carbs.html</string>
     <string name="nsclient_label">Monitoreo remoto</string>
@@ -171,11 +172,13 @@
     <string name="nsclient_nightscout">La aplicación AAPSClient, la aplicación Nightscout y la página web de Nightscout permiten seguir de forma remota a AAPS.</string>
     <string name="nsclient_dexcomfollow">Otras aplicaciones (por ejemplo, Dexcom follow, xDrip running en el modo de seguimiento) le permiten seguir algunos parámetros (por ejemplo, los valores de glucosa/sensor) de forma remota, pero utilizan diferentes algoritmos por lo que puede tener valores de IOB o COB inexactos.</string>
     <string name="nsclient_data">Para seguir a AAPS de forma remota, ambos dispositivos deben disponer de acceso a Internet (por ejemplo, vía WiFi o red de datos móviles)</string>
+    <string name="nsclient_fullcontrol">AAPSClient se usa como seguidor remoto y permite supervisar y proporcionar control total de AAPS.</string>
     <string name="nsclient_hint1">https://androidaps.readthedocs.io/en/latest/EN/Children/Children.html</string>
     <string name="isf_label_exam">Factor Sensibilidad a la Insulina (ISF)</string>
     <string name="isf_increasingvalue">El aumento de los valores de ISF conducirá a un mayor suministro de insulina para cubrir una cantidad específica de carbonos.</string>
     <string name="isf_decreasingvalue">Reducir los valores de ISF conduce a una mayor cantidad de insulina para corregir una glucosa sanguínea a un objetivo superior.</string>
     <string name="isf_noeffect">Aumentar o reducir el ISF no tiene ningún efecto en la administración de insulina cuando los niveles de glucosa en la sangre están por debajo del objetivo.</string>
+    <string name="isf_preferences">El ISF debe añadirse en las preferencias de AAPS.</string>
     <string name="isf_profile">El cambio del valor de ISF en el perfil es suficiente para aplicar el cambio.</string>
     <string name="isf_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#insulin-sensitivity-factor-isf-mmol-l-u-or-mg-dl-u</string>
     <string name="isf_hint2">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html</string>
@@ -202,6 +205,7 @@
     <string name="profileswitch2_bgunchanged">El objetivo de la glucosa sanguínea no cambiará.</string>
     <string name="profileswitch2_isfhigher">El ISF será un 20% más alto.</string>
     <string name="profileswitchtime_label">Cambio de perfil</string>
+    <string name="profileswitchtime_iwant">Si te levantas 2 horas antes de lo habitual, ¿cómo debes notificar a AAPS sobre el cambio de horario?</string>
     <string name="profileswitchtime_2">Iniciar un cambio de perfil con un intervalo de tiempo de 2</string>
     <string name="profileswitchtime__2">Iniciar un cambio de perfil con un intervalo de tiempo de -2</string>
     <string name="profileswitchtime_tt">Establece un objetivo temporal comida pronta.</string>
@@ -209,6 +213,7 @@
     <string name="profileswitchtime_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#timeshift</string>
     <string name="profileswitch4_label">Cambios en perfiles</string>
     <string name="profileswitch4_rates">Las tasas basales, ISF, I:C, etc., deben establecerse en los perfiles.</string>
+    <string name="profileswitch4_internet">Activar cambios en el perfil de Nightscout requiere que el teléfono con AAPS disponga de conexión a Internet.</string>
     <string name="profileswitch4_sufficient">Editar perfiles para cambiar valores es suficiente para implementar cualquier cambio realizado.</string>
     <string name="profileswitch4_multi">Se pueden configurar múltiples perfiles y seleccionarlos para adaptarse a las circunstancias cambiantes (por ejemplo, cambios hormonales, turnos de trabajo, días de semana/fin de semana).</string>
     <string name="basalhelp_hint1">https://androidaps.readthedocs.io/en/latest/EN/Module/module.html#good-individual-dosage-algorithm-for-your-diabetes-therapy</string>
@@ -218,4 +223,6 @@
     <string name="basalhelp_google">Google</string>
     <string name="basalhelp_facebook">Facebook</string>
     <string name="other_medication_label">Otros Medicamentos. Por favor, lea la siguiente declaración y luego marque la casilla para aceptar la declaración.</string>
+    <string name="other_medication_text">AAPS reduce las tasas basales o suspende la administración de insulina para aumentar la glucosa en sangre. Los inhibidores de la famalia de las SGLT2 (gliflozinas) pueden prevenir el aumento esperado de la glucosa en sangre, por lo que pueden producir una deficiencia de insulina preligrosa (DKA)
+\nAlgunos nombres genéricos de marcas son: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\nI Prometo que no tomaré este tipo de medicamentos cuando utilice AAPS o desactivaré el lazo cerrado antes de usarlos.</string>
 </resources>
