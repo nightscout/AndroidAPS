@@ -167,7 +167,10 @@
     <string name="extendedcarbs_rescue">Para registrar carbohidratos de rescate que se utilizan para tratar glucosa baja.</string>
     <string name="extendedcarbs_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Extended-Carbs.html</string>
     <string name="nsclient_label">Monitoreo remoto</string>
+    <string name="nsclient_howcanyou">¿Cómo puedes monitorizar AAPS de forma remota (por ejemplo, para ver a tu hijo)?</string>
+    <string name="nsclient_nightscout">La aplicación AAPSClient, la aplicación Nightscout y la página web de Nightscout permiten seguir de forma remota a AAPS.</string>
     <string name="nsclient_dexcomfollow">Otras aplicaciones (por ejemplo, Dexcom follow, xDrip running en el modo de seguimiento) le permiten seguir algunos parámetros (por ejemplo, los valores de glucosa/sensor) de forma remota, pero utilizan diferentes algoritmos por lo que puede tener valores de IOB o COB inexactos.</string>
+    <string name="nsclient_data">Para seguir a AAPS de forma remota, ambos dispositivos deben disponer de acceso a Internet (por ejemplo, vía WiFi o red de datos móviles)</string>
     <string name="nsclient_hint1">https://androidaps.readthedocs.io/en/latest/EN/Children/Children.html</string>
     <string name="isf_label_exam">Factor Sensibilidad a la Insulina (ISF)</string>
     <string name="isf_increasingvalue">El aumento de los valores de ISF conducirá a un mayor suministro de insulina para cubrir una cantidad específica de carbonos.</string>
