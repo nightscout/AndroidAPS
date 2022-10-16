@@ -23,7 +23,7 @@
     <string name="pumpdisconnect_unnecessary">Esto es innecesario, ya que no se entregará insulina si la bomba está físicamente desconectada.</string>
     <string name="pumpdisconnect_missinginsulin">Evita que AAPS tenga en cuenta la insulina que no se entregó cuando la bomba estaba físicamente desconectada.</string>
     <string name="pumpdisconnect_notstop">Si la bomba permanece conectada, no se detendrá la entrega de insulina.</string>
-    <string name="pumpdisconnect_openloop">Pasará AAPS a modo de lazo abierto.</string>
+    <string name="pumpdisconnect_openloop">Pasará AAPS a modo de lazo abierto</string>
     <string name="pumpdisconnect_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#other-settings</string>
     <string name="objectives_label">Ajustes de AAPS</string>
     <string name="objectives2_label">Ajustes de AAPS</string>
@@ -41,7 +41,7 @@
     <string name="noisycgm_label">Lecturas CGM ruidosas</string>
     <string name="noisycgm_whattodo">¿Qué se debe hacer si los datos de CGM tienen ruido?</string>
     <string name="noisycgm_nothing">No hacer nada: AAPS se ocupará de ello.</string>
-    <string name="noisycgm_pause">Deshabilita el bucle cerrado para evitar posibles sobredosis o subdosis.</string>
+    <string name="noisycgm_pause">Deshabilita el lazo cerrado para evitar posibles sobredosis o subdosis.</string>
     <string name="noisycgm_replacesensor">Sustituya los sensores constantemente ruidosos o inexactos.</string>
     <string name="noisycgm_checksmoothing">Comprueba que tu aplicación CGM proporciona datos suavizados.</string>
     <string name="noisycgm_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Smoothing-Blood-Glucose-Data-in-xDrip.html#smoothing-blood-glucose-data</string>
@@ -50,7 +50,7 @@
     <string name="exerciseprofile_switchprofilebelow100">Haga un cambio de perfil a menos de 100%.</string>
     <string name="exerciseprofile_switchprofileabove100">Haga un cambio de perfil a más de 100%.</string>
     <string name="exerciseprofile_leaveat100">Dejar el perfil configurado al 100%.</string>
-    <string name="exerciseprofile_suspendloop">Suspender el bucle.</string>
+    <string name="exerciseprofile_suspendloop">Suspender el lazo</string>
     <string name="exerciseprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>
     <string name="exercise_label">Ejercicios y objetivos temporales</string>
     <string name="exercise_whattodo">¿Cómo se puede usar objetivos temporales para ayudar mejor al sistema a hacer frente al ejercicio aeróbico?</string>
@@ -59,13 +59,13 @@
     <string name="exercise_setunchanged">Deja tu objetivo de glucosa sanguíneo sin cambios.</string>
     <string name="exercise_15g">Espere hasta que la glucosa en sangre caiga por debajo de su objetivo de hipo temp y luego coma 15 g de hidratos de carbono de actividad rápida.</string>
     <string name="exercise_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>
-    <string name="suspendloop_label">Desactiva /suspende el bucle</string>
+    <string name="suspendloop_label">Desactiva/suspende el lazo</string>
     <string name="suspendloop_doigetinsulin">¿Recibo insulina cuando el lazo está desactivado/suspendido?</string>
     <string name="suspendloop_yes">Sí, la insulina basal sigue siendo entregada.</string>
     <string name="suspendloop_no">No, la administración de la insulina está detenida.</string>
     <string name="basaltest_label">Pruebas basales, ISF, e I:C</string>
     <string name="basaltest_when">¿Cuándo se deben validar estos valores?</string>
-    <string name="basaltest_beforeloop">Antes de empezar el bucle.</string>
+    <string name="basaltest_beforeloop">Antes de empezar el lazo</string>
     <string name="basaltest_havingregularhighlow">Cuando se tienen valores de glucosa altos o bajos frecuentemente.</string>
     <string name="basaltest_weekly">Al menos una vez a la semana.</string>
     <string name="basaltest_fixed">Una vez fijados y validados, estos valores no debrían cambiar a lo largo del tiempo.</string>
@@ -223,6 +223,6 @@
     <string name="basalhelp_google">Google</string>
     <string name="basalhelp_facebook">Facebook</string>
     <string name="other_medication_label">Otros Medicamentos. Por favor, lea la siguiente declaración y luego marque la casilla para aceptar la declaración.</string>
-    <string name="other_medication_text">AAPS reduce las tasas basales o suspende la administración de insulina para aumentar la glucosa en sangre. Los inhibidores de la famalia de las SGLT2 (gliflozinas) pueden prevenir el aumento esperado de la glucosa en sangre, por lo que pueden producir una deficiencia de insulina preligrosa (DKA)
+    <string name="other_medication_text">AAPS reduce las tasas basales o suspende la administración de insulina para aumentar la glucosa en sangre. Los inhibidores de la familia de las SGLT2 (gliflozinas) pueden prevenir el aumento esperado de la glucosa en sangre, por lo que pueden producir una deficiencia de insulina preligrosa (DKA)
 \nAlgunos nombres genéricos de marcas son: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\nI Prometo que no tomaré este tipo de medicamentos cuando utilice AAPS o desactivaré el lazo cerrado antes de usarlos.</string>
 </resources>
