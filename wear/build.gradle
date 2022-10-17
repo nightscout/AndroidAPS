@@ -69,12 +69,12 @@ android {
             dimension "standard"
             versionName version + "-pumpcontrol"
         }
-        nsclient {
+        aapsclient {
             applicationId "info.nightscout.aapsclient"
             dimension "standard"
             versionName version + "-aapsclient"
         }
-        nsclient2 {
+        aapsclient2 {
             applicationId "info.nightscout.aapsclient2"
             dimension "standard"
             versionName version + "-aapsclient"
