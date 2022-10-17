@@ -31,7 +31,7 @@ dependencies {
     api 'org.slf4j:slf4j-api:1.7.36' // 2.0.x breaks logging. Code change needed
     api 'com.github.tony19:logback-android:2.0.0'
 
-    api "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0"
+    api "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1"
     api "org.apache.commons:commons-lang3:$commonslang3_version"
 
     //RxBus
