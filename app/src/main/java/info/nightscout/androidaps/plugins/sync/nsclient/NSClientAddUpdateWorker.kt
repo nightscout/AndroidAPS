@@ -23,7 +23,6 @@ import info.nightscout.androidaps.database.transactions.SyncNsTemporaryBasalTran
 import info.nightscout.androidaps.database.transactions.SyncNsTemporaryTargetTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsTherapyEventTransaction
 import info.nightscout.androidaps.extensions.bolusCalculatorResultFromJson
-import info.nightscout.androidaps.plugins.sync.nsclient.extensions.carbsFromJson
 import info.nightscout.androidaps.extensions.effectiveProfileSwitchFromJson
 import info.nightscout.androidaps.extensions.extendedBolusFromJson
 import info.nightscout.androidaps.extensions.isEffectiveProfileSwitch
@@ -41,7 +40,8 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotifi
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.sync.nsclient.extensions.bolusFromJson
-import info.nightscout.androidaps.receivers.DataWorker
+import info.nightscout.androidaps.plugins.sync.nsclient.extensions.carbsFromJson
+import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.JsonHelper.safeGetLong
@@ -57,7 +57,7 @@ class NSClientAddUpdateWorker(
     params: WorkerParameters
 ) : Worker(context, params) {
 
-    @Inject lateinit var dataWorker: DataWorker
+    @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var buildHelper: BuildHelper
     @Inject lateinit var sp: SP
@@ -71,7 +71,7 @@ class NSClientAddUpdateWorker(
     @Inject lateinit var xDripBroadcast: XDripBroadcast
 
     override fun doWork(): Result {
-        val treatments = dataWorker.pickupJSONArray(inputData.getLong(DataWorker.STORE_KEY, -1))
+        val treatments = dataWorkerStorage.pickupJSONArray(inputData.getLong(DataWorkerStorage.STORE_KEY, -1))
             ?: return Result.failure(workDataOf("Error" to "missing input data"))
 
         var ret = Result.success()
@@ -232,6 +232,7 @@ class NSClientAddUpdateWorker(
                                 }
                         } ?: aapsLogger.error("Error parsing TT json $json")
                     }
+
                 eventType == TherapyEvent.Type.NOTE.text && json.isEffectiveProfileSwitch() -> // replace this by new Type when available in NS
                     if (sp.getBoolean(R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
                         effectiveProfileSwitchFromJson(json, dateUtil)?.let { effectiveProfileSwitch ->
@@ -262,6 +263,7 @@ class NSClientAddUpdateWorker(
                                 }
                         } ?: aapsLogger.error("Error parsing EffectiveProfileSwitch json $json")
                     }
+
                 eventType == TherapyEvent.Type.BOLUS_WIZARD.text                            ->
                     bolusCalculatorResultFromJson(json)?.let { bolusCalculatorResult ->
                         repository.runTransactionForResult(SyncNsBolusCalculatorResultTransaction(bolusCalculatorResult))
@@ -290,6 +292,7 @@ class NSClientAddUpdateWorker(
                                 }
                             }
                     } ?: aapsLogger.error("Error parsing BolusCalculatorResult json $json")
+
                 eventType == TherapyEvent.Type.CANNULA_CHANGE.text ||
                     eventType == TherapyEvent.Type.INSULIN_CHANGE.text ||
                     eventType == TherapyEvent.Type.SENSOR_CHANGE.text ||
@@ -341,6 +344,7 @@ class NSClientAddUpdateWorker(
                                 }
                         } ?: aapsLogger.error("Error parsing TherapyEvent json $json")
                     }
+
                 eventType == TherapyEvent.Type.COMBO_BOLUS.text                             ->
                     if (buildHelper.isEngineeringMode() && sp.getBoolean(R.string.key_ns_receive_tbr_eb, false) || config.NSCLIENT) {
                         extendedBolusFromJson(json)?.let { extendedBolus ->
@@ -390,6 +394,7 @@ class NSClientAddUpdateWorker(
                                 }
                         } ?: aapsLogger.error("Error parsing ExtendedBolus json $json")
                     }
+
                 eventType == TherapyEvent.Type.TEMPORARY_BASAL.text                         ->
                     if (buildHelper.isEngineeringMode() && sp.getBoolean(R.string.key_ns_receive_tbr_eb, false) || config.NSCLIENT) {
                         temporaryBasalFromJson(json)?.let { temporaryBasal ->
@@ -436,6 +441,7 @@ class NSClientAddUpdateWorker(
                                 }
                         } ?: aapsLogger.error("Error parsing TemporaryBasal json $json")
                     }
+
                 eventType == TherapyEvent.Type.PROFILE_SWITCH.text                          ->
                     if (sp.getBoolean(R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
                         profileSwitchFromJson(json, dateUtil, activePlugin)?.let { profileSwitch ->
@@ -466,6 +472,7 @@ class NSClientAddUpdateWorker(
                                 }
                         } ?: aapsLogger.error("Error parsing ProfileSwitch json $json")
                     }
+
                 eventType == TherapyEvent.Type.APS_OFFLINE.text                             ->
                     if (sp.getBoolean(R.string.key_ns_receive_offline_event, false) && buildHelper.isEngineeringMode() || config.NSCLIENT) {
                         offlineEventFromJson(json)?.let { offlineEvent ->

@@ -41,7 +41,7 @@ import info.nightscout.androidaps.plugins.general.smsCommunicator.events.EventSm
 import info.nightscout.androidaps.plugins.general.smsCommunicator.otp.OneTimePassword
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.queue.Callback
-import info.nightscout.androidaps.receivers.DataWorker
+import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
@@ -178,7 +178,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     ) : Worker(context, params) {
 
         @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
-        @Inject lateinit var dataWorker: DataWorker
+        @Inject lateinit var dataWorkerStorage: DataWorkerStorage
 
         init {
             (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
@@ -186,7 +186,7 @@ class SmsCommunicatorPlugin @Inject constructor(
 
         @Suppress("SpellCheckingInspection")
         override fun doWork(): Result {
-            val bundle = dataWorker.pickupBundle(inputData.getLong(DataWorker.STORE_KEY, -1))
+            val bundle = dataWorkerStorage.pickupBundle(inputData.getLong(DataWorkerStorage.STORE_KEY, -1))
                 ?: return Result.failure(workDataOf("Error" to "missing input data"))
             val format = bundle.getString("format")
                 ?: return Result.failure(workDataOf("Error" to "missing format in input data"))

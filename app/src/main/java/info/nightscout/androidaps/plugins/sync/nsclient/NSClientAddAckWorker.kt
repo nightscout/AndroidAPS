@@ -9,17 +9,41 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.DeviceStatus
-import info.nightscout.androidaps.database.transactions.*
+import info.nightscout.androidaps.database.transactions.UpdateNsIdBolusCalculatorResultTransaction
+import info.nightscout.androidaps.database.transactions.UpdateNsIdBolusTransaction
+import info.nightscout.androidaps.database.transactions.UpdateNsIdCarbsTransaction
+import info.nightscout.androidaps.database.transactions.UpdateNsIdDeviceStatusTransaction
+import info.nightscout.androidaps.database.transactions.UpdateNsIdEffectiveProfileSwitchTransaction
+import info.nightscout.androidaps.database.transactions.UpdateNsIdExtendedBolusTransaction
+import info.nightscout.androidaps.database.transactions.UpdateNsIdFoodTransaction
+import info.nightscout.androidaps.database.transactions.UpdateNsIdGlucoseValueTransaction
+import info.nightscout.androidaps.database.transactions.UpdateNsIdOfflineEventTransaction
+import info.nightscout.androidaps.database.transactions.UpdateNsIdProfileSwitchTransaction
+import info.nightscout.androidaps.database.transactions.UpdateNsIdTemporaryBasalTransaction
+import info.nightscout.androidaps.database.transactions.UpdateNsIdTemporaryTargetTransaction
+import info.nightscout.androidaps.database.transactions.UpdateNsIdTherapyEventTransaction
 import info.nightscout.androidaps.interfaces.DataSyncSelector
-import info.nightscout.androidaps.interfaces.DataSyncSelector.*
+import info.nightscout.androidaps.interfaces.DataSyncSelector.PairBolus
+import info.nightscout.androidaps.interfaces.DataSyncSelector.PairBolusCalculatorResult
+import info.nightscout.androidaps.interfaces.DataSyncSelector.PairCarbs
+import info.nightscout.androidaps.interfaces.DataSyncSelector.PairEffectiveProfileSwitch
+import info.nightscout.androidaps.interfaces.DataSyncSelector.PairExtendedBolus
+import info.nightscout.androidaps.interfaces.DataSyncSelector.PairFood
+import info.nightscout.androidaps.interfaces.DataSyncSelector.PairGlucoseValue
+import info.nightscout.androidaps.interfaces.DataSyncSelector.PairOfflineEvent
+import info.nightscout.androidaps.interfaces.DataSyncSelector.PairProfileStore
+import info.nightscout.androidaps.interfaces.DataSyncSelector.PairProfileSwitch
+import info.nightscout.androidaps.interfaces.DataSyncSelector.PairTemporaryBasal
+import info.nightscout.androidaps.interfaces.DataSyncSelector.PairTemporaryTarget
+import info.nightscout.androidaps.interfaces.DataSyncSelector.PairTherapyEvent
 import info.nightscout.androidaps.interfaces.NsClient
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.sync.nsclient.acks.NSAddAck
 import info.nightscout.androidaps.plugins.sync.nsclient.events.EventNSClientNewLog
-import info.nightscout.androidaps.receivers.DataWorker
+import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 
@@ -28,7 +52,7 @@ class NSClientAddAckWorker(
     params: WorkerParameters
 ) : Worker(context, params) {
 
-    @Inject lateinit var dataWorker: DataWorker
+    @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var rxBus: RxBus
@@ -39,13 +63,13 @@ class NSClientAddAckWorker(
     override fun doWork(): Result {
         var ret = Result.success()
 
-        val ack = dataWorker.pickupObject(inputData.getLong(DataWorker.STORE_KEY, -1)) as NSAddAck?
+        val ack = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as NSAddAck?
             ?: return Result.failure(workDataOf("Error" to "missing input data"))
 
         if (sp.getBoolean(R.string.key_ns_sync_slow, false)) SystemClock.sleep(1000)
 
         when (ack.originalObject) {
-            is PairTemporaryTarget       -> {
+            is PairTemporaryTarget        -> {
                 val pair = ack.originalObject
                 pair.value.interfaceIDs.nightscoutId = ack.id
                 repository.runTransactionForResult(UpdateNsIdTemporaryTargetTransaction(pair.value))
@@ -64,7 +88,7 @@ class NSClientAddAckWorker(
                 dataSyncSelector.processChangedTempTargetsCompat()
             }
 
-            is PairGlucoseValue          -> {
+            is PairGlucoseValue           -> {
                 val pair = ack.originalObject
                 pair.value.interfaceIDs.nightscoutId = ack.id
                 repository.runTransactionForResult(UpdateNsIdGlucoseValueTransaction(pair.value))
@@ -83,7 +107,7 @@ class NSClientAddAckWorker(
                 dataSyncSelector.processChangedGlucoseValuesCompat()
             }
 
-            is PairFood                  -> {
+            is PairFood                   -> {
                 val pair = ack.originalObject
                 pair.value.interfaceIDs.nightscoutId = ack.id
                 repository.runTransactionForResult(UpdateNsIdFoodTransaction(pair.value))
@@ -102,7 +126,7 @@ class NSClientAddAckWorker(
                 dataSyncSelector.processChangedFoodsCompat()
             }
 
-            is PairTherapyEvent          -> {
+            is PairTherapyEvent           -> {
                 val pair = ack.originalObject
                 pair.value.interfaceIDs.nightscoutId = ack.id
                 repository.runTransactionForResult(UpdateNsIdTherapyEventTransaction(pair.value))
@@ -121,7 +145,7 @@ class NSClientAddAckWorker(
                 dataSyncSelector.processChangedTherapyEventsCompat()
             }
 
-            is PairBolus                 -> {
+            is PairBolus                  -> {
                 val pair = ack.originalObject
                 pair.value.interfaceIDs.nightscoutId = ack.id
                 repository.runTransactionForResult(UpdateNsIdBolusTransaction(pair.value))
@@ -140,7 +164,7 @@ class NSClientAddAckWorker(
                 dataSyncSelector.processChangedBolusesCompat()
             }
 
-            is PairCarbs                 -> {
+            is PairCarbs                  -> {
                 val pair = ack.originalObject
                 pair.value.interfaceIDs.nightscoutId = ack.id
                 repository.runTransactionForResult(UpdateNsIdCarbsTransaction(pair.value))
@@ -159,7 +183,7 @@ class NSClientAddAckWorker(
                 dataSyncSelector.processChangedCarbsCompat()
             }
 
-            is PairBolusCalculatorResult -> {
+            is PairBolusCalculatorResult  -> {
                 val pair = ack.originalObject
                 pair.value.interfaceIDs.nightscoutId = ack.id
                 repository.runTransactionForResult(UpdateNsIdBolusCalculatorResultTransaction(pair.value))
@@ -178,7 +202,7 @@ class NSClientAddAckWorker(
                 dataSyncSelector.processChangedBolusCalculatorResultsCompat()
             }
 
-            is PairTemporaryBasal        -> {
+            is PairTemporaryBasal         -> {
                 val pair = ack.originalObject
                 pair.value.interfaceIDs.nightscoutId = ack.id
                 repository.runTransactionForResult(UpdateNsIdTemporaryBasalTransaction(pair.value))
@@ -197,7 +221,7 @@ class NSClientAddAckWorker(
                 dataSyncSelector.processChangedTemporaryBasalsCompat()
             }
 
-            is PairExtendedBolus         -> {
+            is PairExtendedBolus          -> {
                 val pair = ack.originalObject
                 pair.value.interfaceIDs.nightscoutId = ack.id
                 repository.runTransactionForResult(UpdateNsIdExtendedBolusTransaction(pair.value))
@@ -216,7 +240,7 @@ class NSClientAddAckWorker(
                 dataSyncSelector.processChangedExtendedBolusesCompat()
             }
 
-            is PairProfileSwitch         -> {
+            is PairProfileSwitch          -> {
                 val pair = ack.originalObject
                 pair.value.interfaceIDs.nightscoutId = ack.id
                 repository.runTransactionForResult(UpdateNsIdProfileSwitchTransaction(pair.value))
@@ -235,7 +259,7 @@ class NSClientAddAckWorker(
                 dataSyncSelector.processChangedProfileSwitchesCompat()
             }
 
-            is PairEffectiveProfileSwitch         -> {
+            is PairEffectiveProfileSwitch -> {
                 val pair = ack.originalObject
                 pair.value.interfaceIDs.nightscoutId = ack.id
                 repository.runTransactionForResult(UpdateNsIdEffectiveProfileSwitchTransaction(pair.value))
@@ -254,7 +278,7 @@ class NSClientAddAckWorker(
                 dataSyncSelector.processChangedEffectiveProfileSwitchesCompat()
             }
 
-            is DeviceStatus              -> {
+            is DeviceStatus               -> {
                 val deviceStatus = ack.originalObject
                 deviceStatus.interfaceIDs.nightscoutId = ack.id
                 repository.runTransactionForResult(UpdateNsIdDeviceStatusTransaction(deviceStatus))
@@ -273,12 +297,12 @@ class NSClientAddAckWorker(
                 dataSyncSelector.processChangedDeviceStatusesCompat()
             }
 
-            is PairProfileStore              -> {
+            is PairProfileStore           -> {
                 dataSyncSelector.confirmLastProfileStore(ack.originalObject.timestampSync)
                 rxBus.send(EventNSClientNewLog("DBADD", "Acked ProfileStore " + ack.id, NsClient.Version.V1))
             }
 
-            is PairOfflineEvent       -> {
+            is PairOfflineEvent           -> {
                 val pair = ack.originalObject
                 pair.value.interfaceIDs.nightscoutId = ack.id
                 repository.runTransactionForResult(UpdateNsIdOfflineEventTransaction(pair.value))

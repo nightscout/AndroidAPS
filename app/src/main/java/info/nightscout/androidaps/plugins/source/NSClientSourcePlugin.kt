@@ -20,7 +20,7 @@ import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.sync.nsclient.data.NSSgv
-import info.nightscout.androidaps.receivers.DataWorker
+import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.XDripBroadcast
@@ -92,7 +92,7 @@ class NSClientSourcePlugin @Inject constructor(
         @Inject lateinit var sp: SP
         @Inject lateinit var rxBus: RxBus
         @Inject lateinit var dateUtil: DateUtil
-        @Inject lateinit var dataWorker: DataWorker
+        @Inject lateinit var dataWorkerStorage: DataWorkerStorage
         @Inject lateinit var repository: AppRepository
         @Inject lateinit var xDripBroadcast: XDripBroadcast
         @Inject lateinit var activePlugin: ActivePlugin
@@ -130,7 +130,7 @@ class NSClientSourcePlugin @Inject constructor(
         @Suppress("SpellCheckingInspection")
         override fun doWork(): Result {
             var ret = Result.success()
-            val sgvs = dataWorker.pickupObject(inputData.getLong(DataWorker.STORE_KEY, -1))
+            val sgvs = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1))
                 ?: return Result.failure(workDataOf("Error" to "missing input data"))
 
             if (!nsClientSourcePlugin.isEnabled() && !sp.getBoolean(R.string.key_ns_receive_cgm, false))

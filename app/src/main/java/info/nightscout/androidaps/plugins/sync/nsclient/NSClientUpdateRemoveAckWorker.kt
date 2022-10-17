@@ -7,14 +7,25 @@ import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.interfaces.DataSyncSelector
-import info.nightscout.androidaps.interfaces.DataSyncSelector.*
+import info.nightscout.androidaps.interfaces.DataSyncSelector.PairBolus
+import info.nightscout.androidaps.interfaces.DataSyncSelector.PairBolusCalculatorResult
+import info.nightscout.androidaps.interfaces.DataSyncSelector.PairCarbs
+import info.nightscout.androidaps.interfaces.DataSyncSelector.PairEffectiveProfileSwitch
+import info.nightscout.androidaps.interfaces.DataSyncSelector.PairExtendedBolus
+import info.nightscout.androidaps.interfaces.DataSyncSelector.PairFood
+import info.nightscout.androidaps.interfaces.DataSyncSelector.PairGlucoseValue
+import info.nightscout.androidaps.interfaces.DataSyncSelector.PairOfflineEvent
+import info.nightscout.androidaps.interfaces.DataSyncSelector.PairProfileSwitch
+import info.nightscout.androidaps.interfaces.DataSyncSelector.PairTemporaryBasal
+import info.nightscout.androidaps.interfaces.DataSyncSelector.PairTemporaryTarget
+import info.nightscout.androidaps.interfaces.DataSyncSelector.PairTherapyEvent
 import info.nightscout.androidaps.interfaces.NsClient
-import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.sync.nsclient.acks.NSUpdateAck
 import info.nightscout.androidaps.plugins.sync.nsclient.events.EventNSClientNewLog
-import info.nightscout.androidaps.receivers.DataWorker
+import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.shared.logging.AAPSLogger
 import javax.inject.Inject
 
 class NSClientUpdateRemoveAckWorker(
@@ -22,7 +33,7 @@ class NSClientUpdateRemoveAckWorker(
     params: WorkerParameters
 ) : Worker(context, params) {
 
-    @Inject lateinit var dataWorker: DataWorker
+    @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var rxBus: RxBus
@@ -32,7 +43,7 @@ class NSClientUpdateRemoveAckWorker(
     override fun doWork(): Result {
         var ret = Result.success()
 
-        val ack = dataWorker.pickupObject(inputData.getLong(DataWorker.STORE_KEY, -1)) as NSUpdateAck?
+        val ack = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as NSUpdateAck?
             ?: return Result.failure(workDataOf("Error" to "missing input data"))
 
         // new room way

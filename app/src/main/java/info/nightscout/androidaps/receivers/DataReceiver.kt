@@ -19,7 +19,7 @@ import javax.inject.Inject
 open class DataReceiver : DaggerBroadcastReceiver() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var dataWorker: DataWorker
+    @Inject lateinit var dataWorkerStorage: DataWorkerStorage
 
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
@@ -29,7 +29,7 @@ open class DataReceiver : DaggerBroadcastReceiver() {
         when (intent.action) {
             Intents.ACTION_NEW_BG_ESTIMATE            ->
                 OneTimeWorkRequest.Builder(XdripPlugin.XdripWorker::class.java)
-                    .setInputData(dataWorker.storeInputData(bundle, intent.action)).build()
+                    .setInputData(dataWorkerStorage.storeInputData(bundle, intent.action)).build()
             Intents.POCTECH_BG                        ->
                 OneTimeWorkRequest.Builder(PoctechPlugin.PoctechWorker::class.java)
                     .setInputData(Data.Builder().also {
@@ -57,18 +57,18 @@ open class DataReceiver : DaggerBroadcastReceiver() {
                     }.build()).build()
             Telephony.Sms.Intents.SMS_RECEIVED_ACTION ->
                 OneTimeWorkRequest.Builder(SmsCommunicatorPlugin.SmsCommunicatorWorker::class.java)
-                    .setInputData(dataWorker.storeInputData(bundle, intent.action)).build()
+                    .setInputData(dataWorkerStorage.storeInputData(bundle, intent.action)).build()
             Intents.EVERSENSE_BG                      ->
                 OneTimeWorkRequest.Builder(EversensePlugin.EversenseWorker::class.java)
-                    .setInputData(dataWorker.storeInputData(bundle, intent.action)).build()
+                    .setInputData(dataWorkerStorage.storeInputData(bundle, intent.action)).build()
             Intents.DEXCOM_BG                         ->
                 OneTimeWorkRequest.Builder(DexcomPlugin.DexcomWorker::class.java)
-                    .setInputData(dataWorker.storeInputData(bundle, intent.action)).build()
+                    .setInputData(dataWorkerStorage.storeInputData(bundle, intent.action)).build()
             Intents.AIDEX_NEW_BG_ESTIMATE             ->
                 OneTimeWorkRequest.Builder(AidexPlugin.AidexWorker::class.java)
-                    .setInputData(dataWorker.storeInputData(bundle, intent.action)).build()
+                    .setInputData(dataWorkerStorage.storeInputData(bundle, intent.action)).build()
             else                                      -> null
-        }?.let { request -> dataWorker.enqueue(request) }
+        }?.let { request -> dataWorkerStorage.enqueue(request) }
     }
 
 }

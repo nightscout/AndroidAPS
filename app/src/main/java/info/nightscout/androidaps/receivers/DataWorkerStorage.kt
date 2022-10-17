@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.receivers
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
@@ -13,7 +12,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class DataWorker @Inject constructor(
+class DataWorkerStorage @Inject constructor(
     private val context: Context
 ) {
 
