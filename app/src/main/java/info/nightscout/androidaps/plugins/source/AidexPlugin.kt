@@ -11,7 +11,7 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.receivers.DataWorker
+import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.receivers.Intents
 import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.shared.logging.AAPSLogger
@@ -62,7 +62,7 @@ class AidexPlugin @Inject constructor(
         @Inject lateinit var aapsLogger: AAPSLogger
         @Inject lateinit var aidexPlugin: AidexPlugin
         @Inject lateinit var repository: AppRepository
-        @Inject lateinit var dataWorker: DataWorker
+        @Inject lateinit var dataWorkerStorage: DataWorkerStorage
 
         init {
             (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
@@ -72,7 +72,7 @@ class AidexPlugin @Inject constructor(
             var ret = Result.success()
 
             if (!aidexPlugin.isEnabled()) return Result.success(workDataOf("Result" to "Plugin not enabled"))
-            val bundle = dataWorker.pickupBundle(inputData.getLong(DataWorker.STORE_KEY, -1))
+            val bundle = dataWorkerStorage.pickupBundle(inputData.getLong(DataWorkerStorage.STORE_KEY, -1))
                 ?: return Result.failure(workDataOf("Error" to "missing input data"))
 
             aapsLogger.debug(LTag.BGSOURCE, "Received Aidex data: $bundle")
