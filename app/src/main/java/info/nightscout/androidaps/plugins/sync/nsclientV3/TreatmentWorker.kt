@@ -5,48 +5,23 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
-import info.nightscout.androidaps.database.transactions.SyncNsBolusCalculatorResultTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsBolusTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsCarbsTransaction
-import info.nightscout.androidaps.database.transactions.SyncNsEffectiveProfileSwitchTransaction
-import info.nightscout.androidaps.database.transactions.SyncNsExtendedBolusTransaction
-import info.nightscout.androidaps.database.transactions.SyncNsOfflineEventTransaction
-import info.nightscout.androidaps.database.transactions.SyncNsProfileSwitchTransaction
-import info.nightscout.androidaps.database.transactions.SyncNsTemporaryBasalTransaction
-import info.nightscout.androidaps.database.transactions.SyncNsTemporaryTargetTransaction
-import info.nightscout.androidaps.database.transactions.SyncNsTherapyEventTransaction
-import info.nightscout.androidaps.extensions.bolusCalculatorResultFromJson
-import info.nightscout.androidaps.plugins.sync.nsclient.extensions.carbsFromJson
-import info.nightscout.androidaps.extensions.effectiveProfileSwitchFromJson
-import info.nightscout.androidaps.extensions.extendedBolusFromJson
-import info.nightscout.androidaps.extensions.isEffectiveProfileSwitch
-import info.nightscout.androidaps.extensions.offlineEventFromJson
-import info.nightscout.androidaps.extensions.profileSwitchFromJson
-import info.nightscout.androidaps.extensions.temporaryBasalFromJson
-import info.nightscout.androidaps.extensions.temporaryTargetFromJson
-import info.nightscout.androidaps.extensions.therapyEventFromJson
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
-import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
-import info.nightscout.androidaps.plugins.sync.nsclient.extensions.bolusFromJson
 import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toBolus
 import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toCarbs
-import info.nightscout.androidaps.receivers.DataWorker
+import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.JsonHelper
-import info.nightscout.androidaps.utils.JsonHelper.safeGetLong
 import info.nightscout.androidaps.utils.XDripBroadcast
 import info.nightscout.sdk.localmodel.treatment.Bolus
 import info.nightscout.sdk.localmodel.treatment.Carbs
@@ -54,7 +29,6 @@ import info.nightscout.sdk.localmodel.treatment.Treatment
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class TreatmentWorker(
@@ -62,7 +36,7 @@ class TreatmentWorker(
     params: WorkerParameters
 ) : Worker(context, params) {
 
-    @Inject lateinit var dataWorker: DataWorker
+    @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var buildHelper: BuildHelper
     @Inject lateinit var sp: SP
@@ -77,7 +51,7 @@ class TreatmentWorker(
 
     override fun doWork(): Result {
         @Suppress("UNCHECKED_CAST")
-        val treatments = dataWorker.pickupObject(inputData.getLong(DataWorker.STORE_KEY, -1)) as List<Treatment>?
+        val treatments = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as List<Treatment>?
             ?: return Result.failure(workDataOf("Error" to "missing input data"))
 
         var ret = Result.success()

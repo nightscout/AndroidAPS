@@ -33,7 +33,7 @@ import info.nightscout.androidaps.plugins.sync.nsclient.events.EventNSClientUpda
 import info.nightscout.androidaps.plugins.sync.nsclient.services.NSClientService
 import info.nightscout.androidaps.plugins.sync.nsclientV3.events.EventNSClientV3Resend
 import info.nightscout.androidaps.plugins.sync.nsclientV3.events.EventNSClientV3Status
-import info.nightscout.androidaps.receivers.DataWorker
+import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HtmlHelper.fromHtml
@@ -69,7 +69,7 @@ class NSClientV3Plugin @Inject constructor(
     private val nsClientReceiverDelegate: NsClientReceiverDelegate,
     private val config: Config,
     private val buildHelper: BuildHelper,
-    private val dataWorker: DataWorker,
+    private val dataWorkerStorage: DataWorkerStorage,
     private val dateUtil: DateUtil
 ) : NsClient, Sync, PluginBase(
     PluginDescription()
@@ -314,9 +314,9 @@ class NSClientV3Plugin @Inject constructor(
                             rxBus.send(EventNSClientNewLog("DATA", "received ${sgvs.size} sgvs starting ${lastFetched.collections.entries}", NsClient.Version.V3))
                             // Objective0
                             sp.putBoolean(R.string.key_ObjectivesbgIsAvailableInNS, true)
-                            dataWorker.enqueue(
+                            dataWorkerStorage.enqueue(
                                 OneTimeWorkRequest.Builder(NSClientSourcePlugin.NSClientSourceWorker::class.java)
-                                    .setInputData(dataWorker.storeInputData(sgvs))
+                                    .setInputData(dataWorkerStorage.storeInputData(sgvs))
                                     .build()
                             )
                         } else
@@ -339,9 +339,9 @@ class NSClientV3Plugin @Inject constructor(
                         aapsLogger.debug("TREATMENTS: $treatments")
                         if (treatments.isNotEmpty()) {
                             rxBus.send(EventNSClientNewLog("DATA", "received ${treatments.size} treatments starting ${lastFetched.collections.treatments}", NsClient.Version.V3))
-                            dataWorker.enqueue(
+                            dataWorkerStorage.enqueue(
                                 OneTimeWorkRequest.Builder(TreatmentWorker::class.java)
-                                    .setInputData(dataWorker.storeInputData(treatments))
+                                    .setInputData(dataWorkerStorage.storeInputData(treatments))
                                     .build()
                             )
                         } else
