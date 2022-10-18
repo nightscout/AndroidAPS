@@ -325,7 +325,6 @@ Eversense-appen.</string>
     <string name="patient_name_summary">Vänligen ange patientens namn eller smeknamn för att kunna skilja mellan flera uppsättningar av inställningar</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Ditt namn</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%1$s behöver kunna kringgå batterisparfunktionerna för att fungera korrekt</string>
     <string name="loopsuspended">Loop pausad</string>
     <string name="loopsuspendedfor">Pausad (%1$d min)</string>
     <string name="suspendloopfor1h">Pausa loop i 1 timme</string>
@@ -674,7 +673,6 @@ Eversense-appen.</string>
     <string name="loop_openmode_min_change_summary" formatted="false">I Open Loop-läge kommer AAPS bara att be om ändring ifall förändringen är större än detta värde. Standardvärdet är 20%</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="dexcom_lognssensorchange_title">Logga sensorbyte till Nightscout</string>
-    <string name="dexcom_lognssensorchange_summary">Loggar automatiskt ett sensorbyte i NS när en sensor startas</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Ditt användarnamn på Tidepool. Normalt din e-postadress</string>
@@ -789,7 +787,6 @@ Eversense-appen.</string>
     <string name="smscommunicator_otp_step3_test_header">3. Testa engångslösenord</string>
     <string name="smscommunicator_otp_reset_header">Återställ autentiserare</string>
     <string name="smscommunicator_otp_install_info">På varje följartelefon behöver man installera en autentiseringsapp som stöder RFC 6238 TOTP tokens. Populära gratisappar är:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_reset_warning">Genom att återställa autentiseringsfunktionen kommer alla redan driftsatta autentiserare bli ogiltiga. Du kommer behöva sätta upp dem igen!</string>
     <string name="overview_show_predictions">BG-prognos</string>
     <string name="overview_show_deviationslope">Avvikelsekurva</string>
     <string name="authorizationfailed">Behörighetskontroll misslyckades</string>
