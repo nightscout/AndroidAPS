@@ -485,8 +485,6 @@
     <string name="autotune_update_local_profile_message">¿Actualizar el perfil %1$s con perfil de Autotune?</string>
     <string name="autotune_revert_local_profile_message">¿Revertir el perfil %1$s con perfil de entrada?</string>
     <string name="autotune_profile_invalid">Perfil inválido</string>
-    <string name="autotune_run_without_autoswitch">Autotune ejecutado sin cambio de perfil</string>
-    <string name="autotune_run_with_autoswitch">Autotune ejecutado y perfil cambiado automáticamente</string>
     <string name="autotune_run_with_error">Error durante la última ejecución de Autotune</string>
     <string name="autotune_run_cancelled">Se ha detectado otra ejecución de Autotune, ejecución cancelada</string>
     <string name="needconnectpermission">La aplicación necesita permiso de bluetooth</string>
