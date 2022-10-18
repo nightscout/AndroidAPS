@@ -430,6 +430,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="sensitivityweightedaverage">Sensibilité avec moyenne pondérée</string>
     <string name="notloadedplugins">Les profils ne sont pas tous téléchargés !</string>
     <string name="valuesnotstored">Valeurs non enregistrées !</string>
+    <string name="ns_localbroadcasts">Active les diffusions vers d\'autres applications (comme xDrip+). Ne pas activer si plusieurs instances d\'AAPS ou de AAPSClient sont installées !</string>
     <string name="ns_localbroadcasts_title">Activer les transmissions locales</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">SI dynamique</string>
