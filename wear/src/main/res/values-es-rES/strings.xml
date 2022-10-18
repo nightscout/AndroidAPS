@@ -103,7 +103,7 @@
     <string name="action_preset_1">Botón 1</string>
     <string name="action_preset_2">Botón 2</string>
     <string name="action_preset_3">Botón 3</string>
-    <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Cantidad libre</string>
+    <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Cantidad libre</string>
     <string name="action_confirm">CONFIRMAR</string>
     <string name="action_timeshift">Intervalo de tiempo</string>
     <string name="action_bolus">Bolo</string>
