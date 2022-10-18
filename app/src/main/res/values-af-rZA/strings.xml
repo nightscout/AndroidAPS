@@ -242,7 +242,6 @@
     <string name="adult">Volwassene</string>
     <string name="resistantadult">Insulien weerstandige volwasse</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%1$s benodig battery optimisering bemagtiging vir beter werksverrigting</string>
     <string name="loopsuspended">Lus opgeskort</string>
     <string name="loopsuspendedfor">Opgeskort (%1$d m)</string>
     <string name="suspendloopfor1h">Skort lus vir 1h</string>
@@ -517,7 +516,6 @@
     <string name="loop_openmode_min_change_summary" formatted="false">Oop lus sal nuwe verandering versoek as die %. Verstek waarde is 20%</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="dexcom_lognssensorchange_title">Log sensor verander na NS</string>
-    <string name="dexcom_lognssensorchange_summary">Skep geleentheid \"sensor verandering\" in NS automaties op sensor begin</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">JouTidepool login gebruiker, normaallweg \'n email adres</string>
