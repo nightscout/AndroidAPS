@@ -325,7 +325,6 @@
     <string name="patient_name_summary">Angiv venligst patientnavn eller kaldenavn for at skelne mellem flere opsætninger</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Bruger</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%1$s har brug for batterioptimering whitelisting for at opnå den rette ydeevne</string>
     <string name="loopsuspended">Loop suspenderet</string>
     <string name="loopsuspendedfor">Suspenderet (%1$d m)</string>
     <string name="suspendloopfor1h">Suspendér loop i 1t</string>
@@ -689,7 +688,6 @@
     <string name="loop_openmode_min_change_summary" formatted="false">Åben Loop vil kun foreslå ny ændringsanmodning, hvis ændringen er større end denne værdi i %. Standardværdien er 20%</string>
     <string name="profile_total">== ∑  %1$s IE</string>
     <string name="dexcom_lognssensorchange_title">Log sensor ændring til NS</string>
-    <string name="dexcom_lognssensorchange_summary">Opret begivenhed \"Sensor skift\" i NS automatisk ved start af sensor</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Dit brugernavn til Tidepool, normalt din e-mailadresse</string>
@@ -809,7 +807,6 @@
     <string name="smscommunicator_otp_step3_test_header">3. Test Engangsadgangskode</string>
     <string name="smscommunicator_otp_reset_header">Nulstil Autentificering</string>
     <string name="smscommunicator_otp_install_info">På hver follower telefon installeres Authenticator app, der understøtter RFC 6238 TOTP tokens. Populære gratis apps er:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_reset_warning">Ved at nulstille autentificering gør du alle allerede proviserede autentificatorer ugyldige. Du bliver nødt til at opsætte dem igen!</string>
     <string name="overview_show_predictions">Forudsigelser</string>
     <string name="overview_show_treatments">Behandlinger</string>
     <string name="overview_show_deviationslope">Afvigelses hældning</string>
