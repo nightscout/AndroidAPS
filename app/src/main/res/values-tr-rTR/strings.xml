@@ -324,7 +324,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="patient_name_summary">Lütfen çoklu kurulumlar arasında ayrım yapmak için hasta adı veya takma ad belirleyin</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Kullanıcı</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%1$s, düzgün bir şekilde çalışması için pil optimizasyonu yapılmalıdır</string>
     <string name="loopsuspended">Döngü duraklatıldı</string>
     <string name="loopsuspendedfor">(%1$d dk) Duraklatıldı</string>
     <string name="suspendloopfor1h">Döngüyü 1saat duraklat</string>
@@ -689,7 +688,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="loop_openmode_min_change_summary" formatted="false">Açık Döngü, yalnızca değişiklik % cinsinden bu değerden büyükse yeni değişiklik isteğini açar. Varsayılan değer %20\'dir</string>
     <string name="profile_total">== ∑  %1$s Ü</string>
     <string name="dexcom_lognssensorchange_title">Sensör değişimlerini NS\'a kaydet</string>
-    <string name="dexcom_lognssensorchange_summary">Sensör başlangıcında otomatik olarak NS\'de \"Sensör Değişimi\" etkinliği oluştur</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Tidepool oturum açma kullanıcı adınız, normalde e-posta adresiniz</string>
@@ -809,7 +807,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="smscommunicator_otp_step3_test_header">3. Tek Kullanımlık Parolayı (OTP) Test Edin</string>
     <string name="smscommunicator_otp_reset_header">Doğrulayıcıları (Authenticators) Sıfırla</string>
     <string name="smscommunicator_otp_install_info">Her takipçi telefonunda, RFC 6238 TOTP belirteçlerini destekleyen Kimlik Doğrulayıcı uygulamasını yükleyin. Popüler ücretsiz uygulamalar şunlardır:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_reset_warning">Doğrulayıcıyı (Authenticator) sıfırlayarak, önceden sağlanmış tüm doğrulayıcıları geçersiz kılarsınız. Onları tekrar kurmanız gerekecek!</string>
     <string name="overview_show_predictions">Tahminler</string>
     <string name="overview_show_treatments">Tedaviler</string>
     <string name="overview_show_deviationslope">Sapma eğimi</string>
