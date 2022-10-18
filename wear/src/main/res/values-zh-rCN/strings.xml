@@ -103,7 +103,7 @@
     <string name="action_preset_1">预设1</string>
     <string name="action_preset_2">预设2</string>
     <string name="action_preset_3">预设3</string>
-    <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">可用数值</string>
+    <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">可用数值</string>
     <string name="action_confirm">确认</string>
     <string name="action_timeshift">时间偏移</string>
     <string name="action_bolus">大剂量</string>
