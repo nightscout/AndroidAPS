@@ -485,8 +485,6 @@
     <string name="autotune_update_local_profile_message">Aktualizovať profil %1$s pomocou profilu Autotune?</string>
     <string name="autotune_revert_local_profile_message">Vrátiť profil %1$s na vstupný profil?</string>
     <string name="autotune_profile_invalid">Neplatný profil</string>
-    <string name="autotune_run_without_autoswitch">Autotune spustený bez prepnutia profilu</string>
-    <string name="autotune_run_with_autoswitch">Autotune spustený a profil automaticky prepnutý</string>
     <string name="autotune_run_with_error">Chyba pri poslednom spustení Autotune</string>
     <string name="autotune_run_cancelled">Bola zistená iná spustená úloha Autotune, spustenie zrušené</string>
     <string name="needconnectpermission">Aplikácia vyžaduje povolenie bluetooth</string>
