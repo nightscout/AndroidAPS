@@ -325,7 +325,6 @@
     <string name="patient_name_summary">Geef de naam of roepnaam van de patiënt op om onderscheid te maken tussen meerdere setups</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Gebruiker</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">Voor een goede werking van %1$s moeten de accubesparing-opties zijn uitgeschakeld in de telefooninstellingen</string>
     <string name="loopsuspended">Loop pauzeren</string>
     <string name="loopsuspendedfor">Gepauzeerd (%1$d m)</string>
     <string name="suspendloopfor1h">Onderbreek loop voor 1u</string>
@@ -689,7 +688,6 @@
     <string name="loop_openmode_min_change_summary" formatted="false">Open Loop zal alleen een wijzigingsverzoek tonen als de verandering groter is dan deze waarde in %. De standaard waarde is 20%</string>
     <string name="profile_total">== ∑  %1$s E</string>
     <string name="dexcom_lognssensorchange_title">Noteer sensor wissel in NS</string>
-    <string name="dexcom_lognssensorchange_summary">Noteer automatisch \"Sensor Wissel\" in NS bij starten van sensor</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Uw Tidepool login gebruikersnaam, normaliter uw e-mailadres</string>
@@ -809,7 +807,6 @@
     <string name="smscommunicator_otp_step3_test_header">3. Test eenmalig wachtwoord (One Time Password)</string>
     <string name="smscommunicator_otp_reset_header">Reset Authentificatie</string>
     <string name="smscommunicator_otp_install_info">Installeer de Authenticator-app op elke volger telefoon die RFC 6238 TOTP tokens ondersteunt. Populaire gratis apps zijn:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_reset_warning">Door de Authentificator te resetten, maak je alle Authentificatie-instellingen van reeds verbonden telefoons ongeldig! Je zult ze opnieuw moeten instellen!</string>
     <string name="overview_show_predictions">Voorspellingen</string>
     <string name="overview_show_treatments">Behandelingen</string>
     <string name="overview_show_deviationslope">Richtingscoëfficiënt afwijking</string>
