@@ -482,8 +482,6 @@
     <string name="autotune_update_local_profile_message">Обновить профиль %1$s профилем Autotune?</string>
     <string name="autotune_revert_local_profile_message">Восстановить профиль %1$s с помощью входного профиля?</string>
     <string name="autotune_profile_invalid">Неверный профиль</string>
-    <string name="autotune_run_without_autoswitch">Autotune выполнен без переключения профиля</string>
-    <string name="autotune_run_with_autoswitch">Autotune выполнен и профиль переключён автоматически</string>
     <string name="autotune_run_with_error">Ошибка во время последнего выполнения Autotune</string>
     <string name="autotune_run_cancelled">Обнаружен другой запуск Autotune, выполнение отменено</string>
     <string name="needconnectpermission">Приложению требуется разрешение Bluetooth</string>
