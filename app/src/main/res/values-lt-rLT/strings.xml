@@ -321,7 +321,6 @@
     <string name="patient_name_summary">Pateikite paciento vardą arba slapyvardį, kad galima būtų atskirti tarp skirtingų konfigūracijų.</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Vartotojas</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%1$s įtraukite į baterijos optimizavimo baltąjį sąrašą tinkamam veikimui užtikrinti</string>
     <string name="loopsuspended">Ciklas sustabdytas</string>
     <string name="loopsuspendedfor">Sustabdyta (%1$d m)</string>
     <string name="suspendloopfor1h">Sustabdyti ciklą 1 val</string>
@@ -669,7 +668,6 @@
     <string name="loop_openmode_min_change_summary" formatted="false">Atviras Ciklas parodys naujų pakeitimų užklausą tik tada, kai pokytis bus didesnis nei ši vertė %. Numatytoji vertė yra 20%</string>
     <string name="profile_total">== ∑  %1$s vv</string>
     <string name="dexcom_lognssensorchange_title">Registruoti sensoriaus keitimą NS</string>
-    <string name="dexcom_lognssensorchange_summary">Sukurti įvykį \"Sensoriaus keitimas\" NS automatiškai, startavus sensorių</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Jūsų Tidepool vartotojo vardas, įprastai jūsų el. pašto adresas</string>
@@ -782,7 +780,6 @@
     <string name="smscommunicator_otp_step3_test_header">3. Patikrinti vienkartinį slaptažodį</string>
     <string name="smscommunicator_otp_reset_header">Atstatyti tapatybės nustatymą</string>
     <string name="smscommunicator_otp_install_info">Kiekviename telefone, palaikančiame RFC 6238 TOTP prieigos raktus, įdiekite autentifikavimo programą. Populiariausios nemokamos programos yra:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_reset_warning">Jei iš naujo nustatysite autentifikavimo priemonę, visi esami autentifikatoriai taps negaliojantys. Tada turėsite juos vėl nustatyti!</string>
     <string name="overview_show_predictions">Prognozė</string>
     <string name="overview_show_deviationslope">Nukrypimo koeficientas</string>
     <string name="authorizationfailed">Autorizacija nepavyko</string>
