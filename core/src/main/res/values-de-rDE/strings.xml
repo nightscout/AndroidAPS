@@ -476,8 +476,6 @@
     <string name="autotune_update_local_profile_message">Anpassen %1$s Profile mit dem Autotune Profile?</string>
     <string name="autotune_revert_local_profile_message">%1$s Profil mit Eingabeprofil zurücksetzen?</string>
     <string name="autotune_profile_invalid">Profil ungültig</string>
-    <string name="autotune_run_without_autoswitch">Autotune ohne Profilwechsel ausgeführt</string>
-    <string name="autotune_run_with_autoswitch">Autotune ausgeführt und Profil automatisch gewechselt</string>
     <string name="autotune_run_with_error">Fehler beim letzten Autotune Lauf</string>
     <string name="autotune_run_cancelled">Ein weiterer Lauf von Autotune wurde erkannt, Lauf abgebrochen</string>
     <string name="needconnectpermission">App benötigt Bluetooth-Berechtigung</string>
