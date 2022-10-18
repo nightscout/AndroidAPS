@@ -316,7 +316,6 @@
     <string name="patient_name_summary">다양한 설정들을 구별하기 위하여 환자 이름 또는 별명을 입력합니다.</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">사용자</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">최적의 성능을 위해 %1$s에서 배터리 최적화를 해제해야합니다.</string>
     <string name="loopsuspended">Loop 일시중지</string>
     <string name="loopsuspendedfor">일시중지중 (%d분)</string>
     <string name="suspendloopfor1h">1시간동안 Loop 일시중지</string>
@@ -656,7 +655,6 @@
     <string name="loop_openmode_min_change_summary" formatted="false">Open Loop가 %단위로 이 값보다 변화가 더 클 경우에만 새 변경 요청을 팝업합니다. 기본값은 20 %입니다</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="dexcom_lognssensorchange_title">센서 교체 NS에 기록하기</string>
-    <string name="dexcom_lognssensorchange_summary">센서교체시 NS에 자동으로 \"센서 교체\" 이벤트를 생성합니다.</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Tidepool 사용자명, 보통 이메일 주소입니다.</string>
@@ -764,7 +762,6 @@
     <string name="smscommunicator_otp_step3_test_header">3. 일회성 비밀번호 테스트</string>
     <string name="smscommunicator_otp_reset_header">인증 초기화</string>
     <string name="smscommunicator_otp_install_info">각각의 팔로워 폰에 RFC 6238 TOTP 암호를 사용하는 인증 어플을 설치합니다. 대중적인 무료 어플은 다음과 같습니다:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator.</string>
-    <string name="smscommunicator_otp_reset_warning">인증을 초기화함으로써 준비된 인증을 모두 무효화합니다. 이들을 다시 설정해야 합니다.</string>
     <string name="overview_show_predictions">예측</string>
     <string name="overview_show_deviationslope">편차 기울기</string>
     <string name="authorizationfailed">인증 실패</string>
