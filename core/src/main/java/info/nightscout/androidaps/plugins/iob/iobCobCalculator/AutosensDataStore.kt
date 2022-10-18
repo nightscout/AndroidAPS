@@ -84,7 +84,7 @@ class AutosensDataStore {
         }
 
     /**
-     * Provide last GlucoseValue or null if none exists withing last 9 minutes
+     * Provide last GlucoseValue or null if none exists within the last 9 minutes
      *
      * @return GlucoseValue or null
      */

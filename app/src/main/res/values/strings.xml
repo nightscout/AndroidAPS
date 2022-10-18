@@ -395,7 +395,7 @@
     <string name="key_patient_name" translatable="false">patient_name</string>
     <string name="key_i_understand" translatable="false">I_understand</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%1$s needs battery optimalization whitelisting for proper performance</string>
+    <string name="needwhitelisting">%1$s needs battery optimization whitelisting for proper performance</string>
     <string name="loopsuspended">Loop suspended</string>
     <string name="loopsuspendedfor">Suspended (%1$d m)</string>
     <string name="suspendloopfor1h">Suspend loop for 1h</string>
@@ -857,7 +857,7 @@
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="key_dexcom_lognssensorchange" translatable="false">dexcom_lognssensorchange</string>
     <string name="dexcom_lognssensorchange_title">Log sensor change to NS</string>
-    <string name="dexcom_lognssensorchange_summary">Create event \"Sensor Change\" in NS automaticaly on sensor start</string>
+    <string name="dexcom_lognssensorchange_summary">Create event \"Sensor Change\" in NS automatically on sensor start</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="key_tidepool_username" translatable="false">tidepool_username</string>
@@ -1008,7 +1008,7 @@
     <string name="smscommunicator_otp_step3_test_header">3. Test One-Time-Password</string>
     <string name="smscommunicator_otp_reset_header">Reset Authenticators</string>
     <string name="smscommunicator_otp_install_info">On each follower phone install Authenticator app that support RFC 6238 TOTP tokens. Popular free apps are:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_reset_warning">By reseting authenticator you make all already provisioned authenticators invalid. You will need to set up them again!</string>
+    <string name="smscommunicator_otp_reset_warning">By resetting authenticator you make all already provisioned authenticators invalid. You will need to set up them again!</string>
     <string name="overview_show_predictions">Predictions</string>
     <string name="overview_show_treatments">Treatments</string>
     <string name="overview_show_deviationslope">Deviation slope</string>

@@ -85,7 +85,7 @@ interface IobCobCalculator {
     fun getExtendedBolus(timestamp: Long): ExtendedBolus?
 
     /**
-     *  Calculate IOB of base basal insulin (usualy not accounted towards IOB)
+     *  Calculate IOB of base basal insulin (usually not accounted towards IOB)
      *
      *  @param  toTime
      *  @return IobTotal
