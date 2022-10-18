@@ -5,10 +5,12 @@
     <string name="dia_profile">Vous devez définir la valeur de DAI dans votre profil.</string>
     <string name="dia_minimumis5h">La valeur minimale autorisée est de 5 heures.</string>
     <string name="dia_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/fr/Configuration/Config-Builder.html?#insulin</string>
+    <string name="dia_meaningisequaltodiapump">Si vous êtes convaincu que la valeur de DAI utilisée dans votre pompe avant AAPS marche bien, il n\'y a pas besoin de la changer lorsque vous commencez à utiliser la boucle.</string>
     <string name="dia_valuemustbedetermined">Vous devez déterminer par vous-même la valeur appropriée pour la DAI.</string>
     <string name="hypott_label">Cible temporaire Hypo</string>
     <string name="hypott_whenhypott">Quelle est la raison principale pour définir une cible temporaire hypo?</string>
     <string name="hypott_wrongbasal">Pour corriger les hypos causés par des paramètres de débit basal incorrects.</string>
+    <string name="hypott_preventoversmb">Pour empêcher AAPS de surcorriger une hausse de glycémie causée par les glucides à action rapide utilisés pour traiter une hypo.</string>
     <string name="hypott_exercise">Pour corriger une hypo due à un exercice.</string>
     <string name="hypott_0basal">Pour éviter que la glycémie ne baisse s\'il y a déjà un débit de basal temporaire de 0%.</string>
     <string name="hypott_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/fr/Usage/temptarget.html</string>
@@ -16,10 +18,15 @@
     <string name="offlineprofile_label">Rubrique : Profil Hors Ligne</string>
     <string name="offlineprofile_nsprofile">Le profil NS peut être utilisé, mais il n\'est pas configuré.</string>
     <string name="offlineprofile_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/fr/Configuration/Config-Builder.html#profile</string>
+    <string name="pumpdisconnect_label">Motifs pour l\'utilisation de la \"Déconnexion de pompe\" dans AAPS</string>
     <string name="pumpdisconnect_whattodo">Que faire lors de la déconnexion de la pompe?</string>
     <string name="pumpdisconnect_unnecessary">C\'est inutile car l\'insuline ne sera pas délivrée si la pompe est physiquement déconnectée.</string>
+    <string name="pumpdisconnect_missinginsulin">Cela empêche AAPS de comptabiliser l\'insuline qui n\'a pas été délivrée quand la pompe est physiquement déconnectée.</string>
     <string name="pumpdisconnect_notstop">Cela n\'arrêtera pas la distribution d\'insuline si la pompe reste connectée.</string>
+    <string name="pumpdisconnect_openloop">Cela passera AAPS en mode boucle ouverte.</string>
     <string name="pumpdisconnect_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/fr/Getting-Started/FAQ.html#other-settings</string>
+    <string name="objectives_label">Paramètres AAPS</string>
+    <string name="objectives2_label">Paramètres AAPS</string>
     <string name="objectives_howtosave">Quelles sont les meilleures pratiques pour sauvegarder vos paramètres ?</string>
     <string name="objectives_notesettings">Vous n\'avez pas besoin d\'exporter vos paramètres si vous les avez notés.</string>
     <string name="objectives_afterobjective">Exportez vos paramètres une fois que vous avez terminé un objectif.</string>
@@ -33,6 +40,7 @@
     <string name="objectives_hint2">https://androidaps.readthedocs.io/en/latest/CROWDIN/fr/Getting-Started/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
     <string name="noisycgm_label">Valeurs MGC bruitées</string>
     <string name="noisycgm_whattodo">Que faut-il faire si les données de MGC sont bruitées ?</string>
+    <string name="noisycgm_nothing">Ne faites rien - AAPS s\'en occupera.</string>
     <string name="noisycgm_pause">Désactivez la boucle fermée pour éviter tout sur-dosage ou sous-dosage possible.</string>
     <string name="noisycgm_replacesensor">Remplacez systématiquement les capteurs bruyants ou imprécis.</string>
     <string name="noisycgm_checksmoothing">Vérifiez que votre application MGC fournit des données lissées.</string>
@@ -63,6 +71,7 @@
     <string name="basaltest_fixed">Une fois définies et validées, ces valeurs ne doivent pas changer avec le temps.</string>
     <string name="basaltest_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/fr/Getting-Started/FAQ.html#androidaps-settings</string>
     <string name="prerequisites_label">Conditions préalables</string>
+    <string name="prerequisites_what">Qu\'est-ce qui est essentiel pour mettre en place et utiliser AAPS ?</string>
     <string name="prerequisites_determinedcorrectprofile">Informations de profil validées (Basal, G/I, SI, DAI).</string>
     <string name="prerequisites_computer">Un ordinateur avec Android Studio installé et configuré.</string>
     <string name="prerequisites_phone">Un téléphone compatible.</string>
@@ -77,8 +86,10 @@
     <string name="prerequisites_smartwatch">Une montre connectée.</string>
     <string name="prerequisites_supportedcgm">Un MGC pris en charge et compatible.</string>
     <string name="prerequisites2_label">Conditions préalables</string>
+    <string name="prerequisites2_what">Qu\'est-ce qui est essentiel pour mettre en place et utiliser AAPS ?</string>
     <string name="prerequisites2_profile">Informations validées pour configurer un profil (SI, ratio G/I, débits de basal, DAI, etc.).</string>
     <string name="prerequisites2_device">Un appareil Android compatible (par ex. téléphone mobile, montre Android version complète ou tablette).</string>
+    <string name="prerequisites2_internet">AAPS nécessite une connexion internet pour fonctionner en boucle fermée.</string>
     <string name="prerequisites2_supportedcgm">Une MGC prise en charge et une application appropriée pour recevoir des valeurs de glycémie sur le téléphone/appareil.</string>
     <string name="prerequisites2_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/fr/Module/module.html</string>
     <string name="whatistrue">Sélectionnez toutes les bonnes réponses.</string>
