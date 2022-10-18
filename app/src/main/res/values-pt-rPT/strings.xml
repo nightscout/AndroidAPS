@@ -321,7 +321,6 @@
     <string name="patient_name_summary">Por favor, forneça o nome do paciente ou alcunha para diferenciar entre várias configurações</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Utilizador</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%1$s necessita de autorizar a não optimização da bateria para assegurar a performance necessária</string>
     <string name="loopsuspended">Loop suspenso</string>
     <string name="loopsuspendedfor">Suspendido (%1$d m)</string>
     <string name="suspendloopfor1h">Suspender loop por 1h</string>
@@ -669,7 +668,6 @@
     <string name="loop_openmode_min_change_summary" formatted="false">A app mostrará um pedido de alteração apenas se a mudança para uma nova basal temporária for superior a este valor em %. O valor padrão é 20%</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="dexcom_lognssensorchange_title">Registar mudança de sensor para NS</string>
-    <string name="dexcom_lognssensorchange_summary">Criar evento \"Mudança de Sensor\" automaticamente no NS aquando do início do sensor</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Nome de utilizador no Tidepool, normalmente seu endereço de e-mail</string>
@@ -782,7 +780,6 @@
     <string name="smscommunicator_otp_step3_test_header">3. Testar Uma-Senha-Única (OTP)</string>
     <string name="smscommunicator_otp_reset_header">Repor Autenticadores</string>
     <string name="smscommunicator_otp_install_info">Instalar uma app Autenticador que suporte Tokens RFC 6238 TOTP em cada telefone seguidor. Populares aplicativos gratuitos são:\n • Authy\n • o Google Authenticator\n • LastPass Autenticador\n • FreeOTP Autenticador</string>
-    <string name="smscommunicator_otp_reset_warning">Ao repor o autenticador, torna inválidos todos os autenticadores já provisionados. Precisará de os configurar novamente!</string>
     <string name="overview_show_predictions">Previsões</string>
     <string name="overview_show_deviationslope">Desvio de inclinação</string>
     <string name="authorizationfailed">Falha na autorização</string>
