@@ -322,7 +322,6 @@
     <string name="patient_name_summary">Proszę podać nazwę pacjenta lub pseudonim w celu rozróżnienia pomiędzy różnymi konfiguracjami</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Użytkownik</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%1$s potrzebuję wyłączenia z optymalizacji baterii, w celu zapewnienia poprawnego działania</string>
     <string name="loopsuspended">Pętla wstrzymana</string>
     <string name="loopsuspendedfor">Wstrzymana (%1$d m)</string>
     <string name="suspendloopfor1h">Wstrzymaj pętlę na 1h</string>
@@ -671,7 +670,6 @@
     <string name="loop_openmode_min_change_summary" formatted="false">Otwarta pętla wprowadzi żądanie zmiany tylko w przypadku, gdy będzie ona większa niż ta wartość w %. Wartość domyślna to 20%</string>
     <string name="profile_total">== ∑ %1$s U</string>
     <string name="dexcom_lognssensorchange_title">Prześlij zmianę sensora do NS</string>
-    <string name="dexcom_lognssensorchange_summary">Podaj \"Zmiana Sensora\" do NS do NS automatycznie przy uruchomieniu sensora</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Twoja nazwa użytkownika Tidepool, zwykle Twój adres e-mail</string>
@@ -786,7 +784,6 @@
     <string name="smscommunicator_otp_step3_test_header">3. Sprawdź hasło jednorazowe</string>
     <string name="smscommunicator_otp_reset_header">Resetuj uwierzytelnianie</string>
     <string name="smscommunicator_otp_install_info">Na każdym telefonie śledzącym zainstalować aplikację uwierzytelniania obsługującą tokeny TOTP RFC 6238 Popularne darmowe aplikacje:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_reset_warning">Resetowanie uwierzytelniania powoduje, że wszystkie już ustawione uwierzytelnienia stają się niepoprawne (przestają działać). Trzeba będzie je jeszcze raz skonfigurować!</string>
     <string name="overview_show_predictions">Prognozy poziomu</string>
     <string name="overview_show_treatments">Zabiegi</string>
     <string name="overview_show_deviationslope">Krzywa odchylenie</string>
