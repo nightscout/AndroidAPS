@@ -325,7 +325,6 @@
     <string name="patient_name_summary">נא לציין את שם המטופל\\ת או כינוי, להבחנה בין מספר הגדרות</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">משתמש</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%1$s צריך ביטול אופטימיזציית סוללה בשביל תפקוד תקין</string>
     <string name="loopsuspended">לולאה מושהית</string>
     <string name="loopsuspendedfor">מושהה (%1$d דק\')</string>
     <string name="suspendloopfor1h">השהה לולאה לשעה אחת</string>
@@ -691,7 +690,6 @@
     <string name="loop_openmode_min_change_summary" formatted="false">\'לולאה פתוחה\' תציג בקשת שינוי חדשה רק אם השינוי גדול מערך זה ב-%. ערך ברירת המחדל הוא 20%</string>
     <string name="profile_total">== ∑  %1$s יח\'</string>
     <string name="dexcom_lognssensorchange_title">רישום החלפת סנסור ב-Nightscout</string>
-    <string name="dexcom_lognssensorchange_summary">רישום אירוע \"החלפת סנסור\" ב-Nightscout באופן אוטומטי בעת הפעלת החיישן</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">שם המשתמש שלכם להתחברות ל-Tidepool, בדרך כלל כתובת הדוא\"ל שלכם</string>
@@ -811,7 +809,6 @@
     <string name="smscommunicator_otp_step3_test_header">3. ניסוי סיסמה חד-פעמית</string>
     <string name="smscommunicator_otp_reset_header">איפוס מאמתים</string>
     <string name="smscommunicator_otp_install_info">בכל אחד מהטלפונים העוקבים, התקינו יישום מאמת התומך באסימוני RFC 6238 TOTP. יישומים פופולריים בחינם הם:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_reset_warning">אתחול המאמת גורם למאמתים שסופקו לכם להפסיק להיות חוקיים ויהיה צורך להגדירם שוב!</string>
     <string name="overview_show_predictions">חיזוי</string>
     <string name="overview_show_treatments">טיפולים</string>
     <string name="overview_show_deviationslope">שיפוע הסטייה</string>
