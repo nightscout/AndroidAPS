@@ -476,8 +476,6 @@
     <string name="autotune_update_local_profile_message">Opdater %1$s profil med Autotune profil?</string>
     <string name="autotune_revert_local_profile_message">Gendan %1$s profil med Input-profilen?</string>
     <string name="autotune_profile_invalid">Profil ugyldig</string>
-    <string name="autotune_run_without_autoswitch">Autotune kørt uden profilskift</string>
-    <string name="autotune_run_with_autoswitch">Autotune kørt, profilen er automatisk skiftet</string>
     <string name="autotune_run_with_error">Fejl under sidste Autotune kørsel</string>
     <string name="autotune_run_cancelled">Autotune kører allerede, annulleret</string>
     <string name="needconnectpermission">Applikationen kræver tilladelse til bluetooth</string>
