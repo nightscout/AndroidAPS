@@ -324,7 +324,6 @@
     <string name="patient_name_summary">请提供患者姓名或昵称来区分多个设置</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">用户</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%1$s 需要加入电池优化白名单才能正常运行</string>
     <string name="loopsuspended">闭环暂停了</string>
     <string name="loopsuspendedfor">暂停了 (%1$d m)</string>
     <string name="suspendloopfor1h">暂停闭环一个小时</string>
@@ -679,7 +678,6 @@
     <string name="loop_openmode_min_change_summary" formatted="false">开环状态下，算法建议的基础率调整百分比大于此数值时，才会弹出更改建议。默认值为20%</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="dexcom_lognssensorchange_title">记录传感器更换至NS服务器</string>
-    <string name="dexcom_lognssensorchange_summary">在传感器启动时在 NS服务器 自动创建事件 \"传感器更改\"</string>
     <string name="tomato">番茄（喵喵）</string>
     <string name="tomato_short">番茄</string>
     <string name="summary_tidepool_username">你的Tidepool登录用户名，通常是你的邮件地址</string>
@@ -795,7 +793,6 @@
     <string name="smscommunicator_otp_step3_test_header">3. 测试一次性验证码</string>
     <string name="smscommunicator_otp_reset_header">重置身份验证器</string>
     <string name="smscommunicator_otp_install_info">在其他遥控手机上安装支持RFC 6238 TOTP令牌协议的应用程序。常用的免费应用有:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_reset_warning">通过重置验证码核心密钥，可以使所有已设置的OTP随机验证码生成配置无效，您需要在遥控手机上重新设置!</string>
     <string name="overview_show_predictions">预测</string>
     <string name="overview_show_treatments">治疗</string>
     <string name="overview_show_deviationslope">斜度偏差</string>
