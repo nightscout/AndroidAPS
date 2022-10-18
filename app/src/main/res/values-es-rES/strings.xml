@@ -331,6 +331,7 @@
     <string name="patient_name_summary">Proporcione el nombre de paciente o el apodo para diferenciar entre varias configuraciones</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Usuario</string>
     <string name="Glimp">Glimp</string>
+    <string name="needwhitelisting">%1$s necesita añadir la optimización de la batería a la lista blanca, para obtener un rendimiento adecuado</string>
     <string name="loopsuspended">Lazo suspendido</string>
     <string name="loopsuspendedfor">Desactivado (%1$d m)</string>
     <string name="suspendloopfor1h">Suspender lazo durante 1 hora</string>
@@ -700,6 +701,7 @@
     <string name="loop_openmode_min_change_summary" formatted="false">Valor predeterminado 20%. El lazo abierto realizará una petición de cambio, sólo cuando se supere este valor</string>
     <string name="profile_total">== ∑%1$s U</string>
     <string name="dexcom_lognssensorchange_title">Registro de cambio de sensor en Nightscout</string>
+    <string name="dexcom_lognssensorchange_summary">Crear evento \"Cambio de sensor\" en Nightscout automáticamente al iniciar el sensor</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Tu nombre de usuario de Tidepool, normalmente tu dirección de correo electrónico</string>
@@ -821,6 +823,7 @@
     <string name="smscommunicator_otp_step3_test_header">3. Probar la contraseña de Uso único</string>
     <string name="smscommunicator_otp_reset_header">Restablecer autentificadores</string>
     <string name="smscommunicator_otp_install_info">En cada teléfono seguidor, instale la aplicación Authenticator que admita tokens RFC 6238 TOTP. Las aplicaciones gratuitas populares son:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
+    <string name="smscommunicator_otp_reset_warning">Al restablecer el autenticador, invalidas todos los autenticadores ya proporcionados. ¡Tendrás que configurarlos de nuevo!</string>
     <string name="overview_show_predictions">Predicciones</string>
     <string name="overview_show_treatments">Tratamientos</string>
     <string name="overview_show_deviationslope">Pendiente de desviación</string>
