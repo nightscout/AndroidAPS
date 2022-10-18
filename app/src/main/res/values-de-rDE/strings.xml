@@ -325,7 +325,6 @@
     <string name="patient_name_summary">Bitte gib den Namen des Patienten oder einen Spitznamen an, um mehrere Setups unterscheiden zu können.</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Nutzer</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%1$s benötigt eine deaktivierte Akku-Leistungsoptimierung, um korrekt arbeiten zu können.</string>
     <string name="loopsuspended">Loop pausiert</string>
     <string name="loopsuspendedfor">Pausiert (%1$d min)</string>
     <string name="suspendloopfor1h">Pausiere Loop für 1 h</string>
@@ -690,7 +689,6 @@ Unerwartetes Verhalten.</string>
     <string name="loop_openmode_min_change_summary" formatted="false">Open Loop schlägt neue Änderungen nur dann vor, wenn die Änderung größer als dieser Wert ist. Der Standard-Wert ist 20%.</string>
     <string name="profile_total">== ∑  %1$s IE</string>
     <string name="dexcom_lognssensorchange_title">Speichere Sensor Wechsel in Nightscout</string>
-    <string name="dexcom_lognssensorchange_summary">Ereignis \"Sensorwechsel\" bei Sensorstart automatisch in NS erstellen</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Dein Tidepool-Login-Benutzername, normalerweise deine E-Mail-Adresse</string>
@@ -810,7 +808,6 @@ Unerwartetes Verhalten.</string>
     <string name="smscommunicator_otp_step3_test_header">3. Teste das Einmal-Passwort</string>
     <string name="smscommunicator_otp_reset_header">Authentifikators zurücksetzen</string>
     <string name="smscommunicator_otp_install_info">Installiere auf jedem Follower-Phone eine Authenticator-App, die RFC 6238 TOTP-Token unterstützt. Beliebte kostenlose Apps sind:\n Authy\n Google Authenticator\n LastPass Authenticator\n FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_reset_warning">Wenn Du den Authentifikator zurücksetzt werden alle bestehenden Authentifikatoren ungültig. Du musst sie dann neu einrichten!</string>
     <string name="overview_show_predictions">Predictions (Vorhersagen)</string>
     <string name="overview_show_treatments">Behandlungen</string>
     <string name="overview_show_deviationslope">Steigung der Abweichung</string>
