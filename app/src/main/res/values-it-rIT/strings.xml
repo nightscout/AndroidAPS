@@ -325,7 +325,6 @@
     <string name="patient_name_summary">Fornisci il nome del paziente o il nickname per distinguere questa configurazione tra altre</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Utente</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">Per un buon funzionamento, %1$s ha bisogno di essere nella whitelist della funzione \"ottimizzazione batteria\" di Android</string>
     <string name="loopsuspended">Loop sospeso</string>
     <string name="loopsuspendedfor">Sospeso (%1$d m)</string>
     <string name="suspendloopfor1h">Sospendi loop per 1h</string>
@@ -692,7 +691,6 @@
     <string name="loop_openmode_min_change_summary" formatted="false">Il loop aperto mostrerà una nuova richiesta di modifica solo se la modifica è maggiore di questo valore in %. Il valore predefinito è 20%</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="dexcom_lognssensorchange_title">Registra cambio sensore in NS</string>
-    <string name="dexcom_lognssensorchange_summary">Crea evento \"Cambio Sensore\" in NS all\'avvio del sensore</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Il tuo nome utente per l\'accesso a Tidepool, generalmente il tuo indirizzo email</string>
@@ -812,7 +810,6 @@
     <string name="smscommunicator_otp_step3_test_header">3. Testa OTP</string>
     <string name="smscommunicator_otp_reset_header">Resetta autenticatori</string>
     <string name="smscommunicator_otp_install_info">Su ogni telefono follower installa una app autenticatore che supporta i token RFC 6238 TOTP. App gratuite popolari sono:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_reset_warning">Resettando l\'autenticatore rendi non validi tutti gli autenticatori già forniti. Dovrai configurarli di nuovo!</string>
     <string name="overview_show_predictions">Predizioni</string>
     <string name="overview_show_treatments">Trattamenti</string>
     <string name="overview_show_deviationslope">Pendenza deviazione</string>
