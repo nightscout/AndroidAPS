@@ -319,7 +319,6 @@
     <string name="patient_name_summary">Моля, посочете име на пациента или измислено име, за да се различават</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Потребител</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%1$s се нуждае от изключване от списъка за оптимизиране на батерията за пълна функционалност</string>
     <string name="loopsuspended">Loop изключен</string>
     <string name="loopsuspendedfor">Изключен (%1$d мин)</string>
     <string name="suspendloopfor1h">Изключи APS за 1ч</string>
@@ -662,7 +661,6 @@
     <string name="loop_openmode_min_change_summary" formatted="false">AndroidAPS ще покаже запитването за промяна на базала само ако е по-голямо от тази стойност.(Стандартно 20%)</string>
     <string name="profile_total">Общо  %1$s Е</string>
     <string name="dexcom_lognssensorchange_title">Записвай смяната на сензор в NS</string>
-    <string name="dexcom_lognssensorchange_summary">Създаване на събитие \"Смяна на сеснзор\" в NS автоматично при старт на сензор</string>
     <string name="tomato">Tomato(MяоМяо)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Потребителското Ви име за Tidepool, обикновено е Вашия имейл</string>
@@ -772,7 +770,6 @@
     <string name="smscommunicator_otp_step3_test_header">3. Тест на еднократна парола</string>
     <string name="smscommunicator_otp_reset_header">Нулиране на удостоверители</string>
     <string name="smscommunicator_otp_install_info">На всеки следящ телефона инсталирайте приложение Аутентификатор, който поддържа RFC 6238 ТОТР токени. Популярни безплатни приложения:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_reset_warning">При нулиране на на удостоверителя, всички вече използвани удостоверения са невалидни. Ще трябва да ги настроите отново!</string>
     <string name="overview_show_predictions">Прогнозни КЗ</string>
     <string name="overview_show_deviationslope">Наклон на отклонението</string>
     <string name="authorizationfailed">Удостоверяването неуспешно</string>
