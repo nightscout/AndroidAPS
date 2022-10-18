@@ -482,8 +482,6 @@
     <string name="autotune_update_local_profile_message">OtoAyar Profili ile %1$s profili güncellensin mi?</string>
     <string name="autotune_revert_local_profile_message">Giriş Profili ile %1$s profili geri alınsın mı?</string>
     <string name="autotune_profile_invalid">Profil geçersiz</string>
-    <string name="autotune_run_without_autoswitch">OtoAyar profil değiştirme olmadan çalıştırıldı</string>
-    <string name="autotune_run_with_autoswitch">OtoAyar çalıştırıldı ve profil otomatik olarak değiştirildi</string>
     <string name="autotune_run_with_error">Son OtoAyar çalışması sırasında hata oluştu</string>
     <string name="autotune_run_cancelled">Başka bir OtoAyar çalıştırması tespit edildi, çalıştırma iptal edildi</string>
     <string name="needconnectpermission">Uygulama bluetooth iznine ihtiyac duyuyor</string>
