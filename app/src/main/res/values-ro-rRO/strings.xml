@@ -321,7 +321,6 @@
     <string name="patient_name_summary">Vă rugăm să furnizați numele sau porecla pacientului pentru a diferenția între configurări</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Utilizator</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%1$s necesită excluderea din lista de optimizare a bateriei pentru o funcționare corespunzătoare</string>
     <string name="loopsuspended">Buclă suspendată</string>
     <string name="loopsuspendedfor">Suspendat (%1$d min)</string>
     <string name="suspendloopfor1h">Suspendă bucla pentru 1h</string>
@@ -669,7 +668,6 @@
     <string name="loop_openmode_min_change_summary" formatted="false">Bucla deschisă va afișa o nouă cerere de schimbare doar dacă nou valoare este mai mare cu %. Valoarea implicită este 20%</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="dexcom_lognssensorchange_title">Înregistrează schimbarea senzorului în NS</string>
-    <string name="dexcom_lognssensorchange_summary">Crează eveniment ”Schimbare Senzor” în NS la pornirea senzorului</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Utilizatorul Tidepool (de obicei adresa de email)</string>
@@ -782,7 +780,6 @@
     <string name="smscommunicator_otp_step3_test_header">3. Testați o parolă unică</string>
     <string name="smscommunicator_otp_reset_header">Resetați Authenticatori</string>
     <string name="smscommunicator_otp_install_info">Pe fiecare telefon urmăritor instalați o aplicație de tip Authenticator care suporta tokens RFC 6238 TOTP. Asemenea aplicații gratuite populare sunt:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_reset_warning">Prin resetarea autentificatorului invalidați toți autentificatorii existenți. Va trebui să îi configurați din nou!</string>
     <string name="overview_show_predictions">Predicții</string>
     <string name="overview_show_deviationslope">Panta deviaţiei</string>
     <string name="authorizationfailed">Autorizarea a eșuat</string>
