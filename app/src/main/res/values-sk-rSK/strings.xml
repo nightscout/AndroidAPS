@@ -331,7 +331,6 @@
     <string name="patient_name_summary">Zadajte meno pacienta, alebo prezývku pre rozlíšenie medzi viacerými nastaveniami</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Používateľ</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%1$s potrebuje vypnúť optimalizáciu batérie pre optimálny výkon</string>
     <string name="loopsuspended">Uzavretý okruh pozastavený</string>
     <string name="loopsuspendedfor">Pozastavený (%1$d min)</string>
     <string name="suspendloopfor1h">Pozastaviť uzavretý okruh na 1 h</string>
@@ -701,7 +700,6 @@
     <string name="loop_openmode_min_change_summary" formatted="false">Otvorený okruh vytvorí novú žiadosť o zmenu iba v prípade, že zmena je väčšia ako táto hodnota v %. Štandardná hodnota je 20%</string>
     <string name="profile_total">== ∑  %1$s JI</string>
     <string name="dexcom_lognssensorchange_title">Ulož výmenu senzora do NS</string>
-    <string name="dexcom_lognssensorchange_summary">Vytvoriť udalosť \"Výmena senzora\" v NS automaticky pri spustení senzora</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Vaše meno používateľa na Tidepoole, obvykle Vaša E-mailová adresa</string>
@@ -823,7 +821,6 @@
     <string name="smscommunicator_otp_step3_test_header">3. Odtestujte jednorázové heslo</string>
     <string name="smscommunicator_otp_reset_header">Resetovať autentifikátory</string>
     <string name="smscommunicator_otp_install_info">Na každom sledovacom telefóne nainštalujte Autentifikátor, ktorý podporuje tokeny TOTP RFC 6238. Najobľúbenejšie bezplatné aplikácie sú:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_reset_warning">Resetovaním autentifikátora budú všetky už poskytnuté autentifikátory neplatné. Budete ich musieť znovu nastaviť!</string>
     <string name="overview_show_predictions">Predikcie</string>
     <string name="overview_show_treatments">Ošetrenia</string>
     <string name="overview_show_deviationslope">Odchýlka sklonu</string>
