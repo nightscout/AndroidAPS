@@ -476,8 +476,6 @@
     <string name="autotune_update_local_profile_message">Profiel %1$s bijwerken met Autotune Profiel?</string>
     <string name="autotune_revert_local_profile_message">Profiel %1$s terugzetten met invoerprofiel?</string>
     <string name="autotune_profile_invalid">Profiel ongeldig</string>
-    <string name="autotune_run_without_autoswitch">Autotune uitgevoerd zonder profiel aanpassing</string>
-    <string name="autotune_run_with_autoswitch">Autotune uitgevoerd en profiel automatisch gewisseld</string>
     <string name="autotune_run_with_error">Fout tijdens laatste Autotune uitvoeren</string>
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
