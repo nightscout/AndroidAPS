@@ -326,7 +326,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="patient_name_summary">Veuillez indiquer un nom ou pseudo du patient pour différencier plusieurs configurations</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Patient</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%1$s a besoin d\'optimisation de la batterie (whitelisting) pour une performance correcte</string>
     <string name="loopsuspended">La Boucle est suspendue</string>
     <string name="loopsuspendedfor">Suspendu (%1$d m)</string>
     <string name="suspendloopfor1h">Suspendre la Boucle pour 1h</string>
@@ -693,7 +692,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="loop_openmode_min_change_summary" formatted="false">Le fonctionnement de la Boucle demandera une confirmation uniquement si le changement est supérieur à cette valeur en %. Par défaut, la valeur est 20%</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="dexcom_lognssensorchange_title">Enreg. du changement de capteur sur NS</string>
-    <string name="dexcom_lognssensorchange_summary">Créer automatiquement sur NS un événement \"Changement de capteur\" au démarrage du capteur</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Votre nom d\'utilisateur Tidepool, normalement votre adresse e-mail</string>
@@ -813,7 +811,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="smscommunicator_otp_step3_test_header">3. Test Mot-de-Passe-Unique (OTP)</string>
     <string name="smscommunicator_otp_reset_header">Réinitialiser les authentificateurs</string>
     <string name="smscommunicator_otp_install_info">Sur chaque téléphone suiveur, installez une appli. Authentificateur qui prend en charge les jetons RFC 6238 TOTP. Les applications libres populaires sont:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_reset_warning">En réinitialisant l\'Authentificateur, vous invalidez tous les authentificateurs déjà initialisés. Vous devrez les reconfigurer !</string>
     <string name="overview_show_predictions">Prédictions</string>
     <string name="overview_show_treatments">Traitements</string>
     <string name="overview_show_deviationslope">Pente de déviations</string>
