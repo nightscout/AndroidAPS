@@ -476,8 +476,6 @@
     <string name="autotune_update_local_profile_message">לעדכן את פרופיל %1$s עם הפרופיל המכוונן אוטומטית?</string>
     <string name="autotune_revert_local_profile_message">להחזיר את פרופיל %1$s אל פרופיל קלט?</string>
     <string name="autotune_profile_invalid">פרופיל לא חוקי</string>
-    <string name="autotune_run_without_autoswitch">כוונון אוטומטי מופעל ללא החלפת פרופיל</string>
-    <string name="autotune_run_with_autoswitch">כוונון אוטומטי הופעל והפרופיל הוחלף אוטומטית</string>
     <string name="autotune_run_with_error">שגיאה במהלך הכיוונון האוטומטי האחרון</string>
     <string name="autotune_run_cancelled">נמצאה הפעלה נוספת של הכוונון האוטומטי ברקע, ההפעלה מבוטלת</string>
     <string name="needconnectpermission">האפליקציה צריכה הרשאה לבלוטות\'</string>
