@@ -325,7 +325,6 @@
     <string name="patient_name_summary">Angi pasientnavn eller kallenavn for å kunne skille mellom flere oppsett</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Bruker</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%1$s behøver å omgå batterisparefunksjonene for å fungere tilfredsstillende</string>
     <string name="loopsuspended">Loop pauset</string>
     <string name="loopsuspendedfor">Pauset (%1$d m)</string>
     <string name="suspendloopfor1h">Pause loop i 1t</string>
@@ -692,7 +691,6 @@
     <string name="loop_openmode_min_change_summary" formatted="false">I åpen Loop modus vil AAPS be om en endring hvis forandringen er større enn denne verdien i %. Standard verdi er 20%</string>
     <string name="profile_total">== ∑  %1$s E</string>
     <string name="dexcom_lognssensorchange_title">Logg sensor endring til NS</string>
-    <string name="dexcom_lognssensorchange_summary">Opprett hendelse \"Sensor bytte\" i NS automatisk ved start av sensoren</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Ditt Tidepool brukernavn, normalt din e-postadresse</string>
@@ -812,7 +810,6 @@
     <string name="smscommunicator_otp_step3_test_header">3. Test engangspassord</string>
     <string name="smscommunicator_otp_reset_header">Tilbakestill Authenticators</string>
     <string name="smscommunicator_otp_install_info">I hver følger telefon installerer du en Authenticator-app som støtter RFC 6238 TOTP token. Populære gratis apper er:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_reset_warning">Ved å tilbakestille authenticator vil du gjøre alle lagrede autentiseringer ugyldige. Du må sette alle opp på nytt igjen!</string>
     <string name="overview_show_predictions">Prognoser</string>
     <string name="overview_show_treatments">Behandlinger</string>
     <string name="overview_show_deviationslope">Avvikskurve</string>
