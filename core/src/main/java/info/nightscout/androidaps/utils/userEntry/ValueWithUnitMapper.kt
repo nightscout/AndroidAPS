@@ -6,7 +6,7 @@ import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 
-sealed class ValueWithUnitMapper {          //I use a sealed class because of StringResource that containts a listOf as second parameter
+sealed class ValueWithUnitMapper {          //I use a sealed class because of StringResource that contains a listOf as second parameter
 
     object UNKNOWN : ValueWithUnitMapper() // formerly None used as fallback
 

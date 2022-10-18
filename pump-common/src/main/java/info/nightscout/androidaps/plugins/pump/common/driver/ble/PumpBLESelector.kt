@@ -13,7 +13,7 @@ interface PumpBLESelector {
     fun onResume()
 
     /**
-     * Called on destory
+     * Called on destroy
      */
     fun onDestroy()
 
@@ -44,7 +44,7 @@ interface PumpBLESelector {
     fun onStopLeDeviceScan(context: Context)
 
     /**
-     * operations when scan was stopped manualy (press on button)
+     * operations when scan was stopped manually (press on button)
      */
     fun onManualStopLeDeviceScan(context: Context)
 
