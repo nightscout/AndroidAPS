@@ -110,7 +110,7 @@
     <string name="bolus_progress">Progreso del bolo</string>
     <string name="press_to_cancel">Presiona para cancelar</string>
     <string name="cancel_bolus">CANCELAR BOLO</string>
-    <string name="status_pump">Bomba</string>
+    <string name="status_pump">Infusora</string>
     <string name="status_loop">Lazo</string>
     <string name="status_profile_switch">Cambio de perfil</string>
     <string name="status_tdd">TDD</string>
