@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.sync.nsclientV3
+package info.nightscout.androidaps.plugins.sync.nsclientV3.workers
 
 import android.content.Context
 import androidx.work.Worker
@@ -7,8 +7,7 @@ import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.UserEntry.Action
-import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.SyncNsBolusTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsCarbsTransaction
@@ -31,7 +30,7 @@ import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 
-class TreatmentWorker(
+class ProcessTreatmentsWorker(
     context: Context,
     params: WorkerParameters
 ) : Worker(context, params) {
@@ -77,7 +76,7 @@ class TreatmentWorker(
                             .also { result ->
                                 result.inserted.forEach {
                                     uel.log(
-                                        Action.BOLUS, Sources.NSClient, it.notes,
+                                        UserEntry.Action.BOLUS, UserEntry.Sources.NSClient, it.notes,
                                         ValueWithUnit.Timestamp(it.timestamp),
                                         ValueWithUnit.Insulin(it.amount)
                                     )
@@ -85,7 +84,7 @@ class TreatmentWorker(
                                 }
                                 result.invalidated.forEach {
                                     uel.log(
-                                        Action.BOLUS_REMOVED, Sources.NSClient,
+                                        UserEntry.Action.BOLUS_REMOVED, UserEntry.Sources.NSClient,
                                         ValueWithUnit.Timestamp(it.timestamp),
                                         ValueWithUnit.Insulin(it.amount)
                                     )
@@ -112,7 +111,7 @@ class TreatmentWorker(
                             .also { result ->
                                 result.inserted.forEach {
                                     uel.log(
-                                        Action.CARBS, Sources.NSClient, it.notes,
+                                        UserEntry.Action.CARBS, UserEntry.Sources.NSClient, it.notes,
                                         ValueWithUnit.Timestamp(it.timestamp),
                                         ValueWithUnit.Gram(it.amount.toInt())
                                     )
@@ -120,7 +119,7 @@ class TreatmentWorker(
                                 }
                                 result.invalidated.forEach {
                                     uel.log(
-                                        Action.CARBS_REMOVED, Sources.NSClient,
+                                        UserEntry.Action.CARBS_REMOVED, UserEntry.Sources.NSClient,
                                         ValueWithUnit.Timestamp(it.timestamp),
                                         ValueWithUnit.Gram(it.amount.toInt())
                                     )
@@ -128,7 +127,7 @@ class TreatmentWorker(
                                 }
                                 result.updated.forEach {
                                     uel.log(
-                                        Action.CARBS, Sources.NSClient, it.notes,
+                                        UserEntry.Action.CARBS, UserEntry.Sources.NSClient, it.notes,
                                         ValueWithUnit.Timestamp(it.timestamp),
                                         ValueWithUnit.Gram(it.amount.toInt())
                                     )

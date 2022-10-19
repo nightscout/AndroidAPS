@@ -7,7 +7,9 @@ import android.text.Spanned
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceScreen
 import androidx.preference.SwitchPreference
+import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkManager
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
@@ -33,6 +35,11 @@ import info.nightscout.androidaps.plugins.sync.nsclient.events.EventNSClientUpda
 import info.nightscout.androidaps.plugins.sync.nsclient.services.NSClientService
 import info.nightscout.androidaps.plugins.sync.nsclientV3.events.EventNSClientV3Resend
 import info.nightscout.androidaps.plugins.sync.nsclientV3.events.EventNSClientV3Status
+import info.nightscout.androidaps.plugins.sync.nsclientV3.workers.LoadBgWorker
+import info.nightscout.androidaps.plugins.sync.nsclientV3.workers.LoadLastModificationWorker
+import info.nightscout.androidaps.plugins.sync.nsclientV3.workers.LoadStatusWorker
+import info.nightscout.androidaps.plugins.sync.nsclientV3.workers.LoadTreatmentsWorker
+import info.nightscout.androidaps.plugins.sync.nsclientV3.workers.ProcessTreatmentsWorker
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -40,8 +47,10 @@ import info.nightscout.androidaps.utils.HtmlHelper.fromHtml
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.androidaps.workflow.LoadBgDataWorker
 import info.nightscout.sdk.NSAndroidClientImpl
 import info.nightscout.sdk.NSAndroidRxClientImpl
+import info.nightscout.sdk.interfaces.NSAndroidClient
 import info.nightscout.sdk.interfaces.NSAndroidRxClient
 import info.nightscout.sdk.remotemodel.LastModified
 import info.nightscout.shared.logging.AAPSLogger
@@ -89,16 +98,17 @@ class NSClientV3Plugin @Inject constructor(
     override var status = ""
     override var nsClientService: NSClientService? = null
 
-    private lateinit var nsAndroidRxClient: NSAndroidRxClient
+    internal lateinit var nsAndroidClient: NSAndroidClient
+//    private lateinit var nsAndroidRxClient: NSAndroidRxClient
 
     val isAllowed: Boolean
         get() = nsClientReceiverDelegate.allowed
     val blockingReason: String
         get() = nsClientReceiverDelegate.blockingReason
 
-    private val maxAge = T.days(7).msecs()
-    private var lastModified: LastModified? = null // timestamp of last modification for every collection
-    private var lastFetched =
+    private val maxAge = T.days(77).msecs()
+    internal var lastModified: LastModified? = null // timestamp of last modification for every collection
+    internal var lastFetched =
         LastModified(
             LastModified.Collections(
                 dateUtil.now() - maxAge,
@@ -111,6 +121,7 @@ class NSClientV3Plugin @Inject constructor(
     override fun onStart() {
 //        context.bindService(Intent(context, NSClientService::class.java), mConnection, Context.BIND_AUTO_CREATE)
         super.onStart()
+
         lastFetched = Json.decodeFromString(
             sp.getString(
                 R.string.key_nsclientv2_lastmodified,
@@ -125,14 +136,13 @@ class NSClientV3Plugin @Inject constructor(
         lastFetched.collections.profile = max(dateUtil.now() - maxAge, lastFetched.collections.profile)
         lastFetched.collections.devicestatus = max(dateUtil.now() - maxAge, lastFetched.collections.devicestatus)
 
-        nsAndroidRxClient = NSAndroidRxClientImpl(
-            NSAndroidClientImpl(
-                baseUrl = sp.getString(R.string.key_nsclientinternal_url, "").lowercase().replace("https://", ""),
-                accessToken = sp.getString(R.string.key_nsclient_token, ""),
-                context = context,
-                logging = true
-            )
+        nsAndroidClient = NSAndroidClientImpl(
+            baseUrl = sp.getString(R.string.key_nsclientinternal_url, "").lowercase().replace("https://", ""),
+            accessToken = sp.getString(R.string.key_nsclient_token, ""),
+            context = context,
+            logging = true
         )
+
         nsClientReceiverDelegate.grabReceiversState()
         disposable += rxBus
             .toObservable(EventNSClientV3Status::class.java)
@@ -253,8 +263,10 @@ class NSClientV3Plugin @Inject constructor(
     }
 
     override fun updateLatestBgReceivedIfNewer(latestReceived: Long) {
-        lastFetched.collections.entries = latestReceived
-        storeLastFetched()
+        if (latestReceived > lastFetched.collections.entries) {
+            lastFetched.collections.entries = latestReceived
+            storeLastFetched()
+        }
     }
 
     override fun updateLatestTreatmentReceivedIfNewer(latestReceived: Long) {
@@ -278,78 +290,16 @@ class NSClientV3Plugin @Inject constructor(
     }
 
     fun test() {
-        fetchStatus()
-    }
-
-    private fun fetchStatus() {
-        disposable += nsAndroidRxClient.getStatus()
-            .subscribeBy(
-                onSuccess = { status ->
-                    aapsLogger.debug("STATUS: $status")
-                    fetchLastModification()
-                },
-                onError = { error -> aapsLogger.error("Error: ", error) }
+        WorkManager.getInstance(context)
+            .beginUniqueWork(
+                "NSCv3Load",
+                ExistingWorkPolicy.REPLACE,
+                OneTimeWorkRequest.Builder(LoadStatusWorker::class.java).build()
             )
-    }
+            .then(OneTimeWorkRequest.Builder(LoadLastModificationWorker::class.java).build())
+            .then(OneTimeWorkRequest.Builder(LoadBgWorker::class.java).build())
+            .then(OneTimeWorkRequest.Builder(LoadTreatmentsWorker::class.java).build())
+            .enqueue()
 
-    private fun fetchLastModification() {
-        disposable += nsAndroidRxClient.getLastModified()
-            .subscribeBy(
-                onSuccess = { lm ->
-                    lastModified = lm
-                    aapsLogger.debug("LAST MODIFIED: $lastModified")
-                    fetchBg()
-                },
-                onError = { error -> aapsLogger.error("Error: ", error) }
-            )
-    }
-
-    private fun fetchBg() {
-        if ((lastModified?.collections?.entries ?: Long.MAX_VALUE) > lastFetched.collections.entries)
-            disposable += nsAndroidRxClient.getSgvsModifiedSince(lastFetched.collections.entries)
-                .subscribeBy(
-                    onSuccess = { sgvs ->
-                        aapsLogger.debug("SGVS: $sgvs")
-                        if (sgvs.isNotEmpty()) {
-                            rxBus.send(EventNSClientNewLog("DATA", "received ${sgvs.size} sgvs starting ${lastFetched.collections.entries}", NsClient.Version.V3))
-                            // Objective0
-                            sp.putBoolean(R.string.key_ObjectivesbgIsAvailableInNS, true)
-                            dataWorkerStorage.enqueue(
-                                OneTimeWorkRequest.Builder(NSClientSourcePlugin.NSClientSourceWorker::class.java)
-                                    .setInputData(dataWorkerStorage.storeInputData(sgvs))
-                                    .build()
-                            )
-                        } else
-                            rxBus.send(EventNSClientNewLog("DATA", "No sgvs starting ${lastFetched.collections.entries}", NsClient.Version.V3))
-                        fetchTreatments()
-                    },
-                    onError = { error -> aapsLogger.error("Error: ", error) }
-                )
-        else {
-            rxBus.send(EventNSClientNewLog("DATA", "No new sgvs starting ${lastFetched.collections.entries}", NsClient.Version.V3))
-            fetchTreatments()
-        }
-    }
-
-    private fun fetchTreatments() {
-        if ((lastModified?.collections?.treatments ?: Long.MAX_VALUE) > lastFetched.collections.treatments)
-            disposable += nsAndroidRxClient.getTreatmentsModifiedSince(lastFetched.collections.treatments)
-                .subscribeBy(
-                    onSuccess = { treatments ->
-                        aapsLogger.debug("TREATMENTS: $treatments")
-                        if (treatments.isNotEmpty()) {
-                            rxBus.send(EventNSClientNewLog("DATA", "received ${treatments.size} treatments starting ${lastFetched.collections.treatments}", NsClient.Version.V3))
-                            dataWorkerStorage.enqueue(
-                                OneTimeWorkRequest.Builder(TreatmentWorker::class.java)
-                                    .setInputData(dataWorkerStorage.storeInputData(treatments))
-                                    .build()
-                            )
-                        } else
-                            rxBus.send(EventNSClientNewLog("DATA", "No treatments starting ${lastFetched.collections.treatments}", NsClient.Version.V3))
-                    },
-                    onError = { error -> aapsLogger.error("Error: ", error) }
-                )
-        else
-            rxBus.send(EventNSClientNewLog("DATA", "No new treatments starting ${lastFetched.collections.treatments}", NsClient.Version.V3))
     }
 }

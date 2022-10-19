@@ -120,6 +120,16 @@ class NSAndroidClientImpl(
         }
     }
 
+    override suspend fun getSgvsNewerThan(from: Long, limit: Long): List<Sgv> = callWrapper(dispatcher) {
+
+        val response = api.getSgvsNewerThan(from, limit)
+        if (response.isSuccessful) {
+            return@callWrapper response.body()?.result?.map(RemoteEntry::toSgv).toNotNull()
+        } else {
+            throw TodoNightscoutException() // TODO: react to response errors (offline, ...)
+        }
+    }
+
     override suspend fun getTreatmentsModifiedSince(from: Long): List<Treatment> = callWrapper(dispatcher) {
 
         val response = api.getTreatmentsModifiedSince(from)

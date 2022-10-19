@@ -19,7 +19,11 @@ import info.nightscout.androidaps.plugins.sync.nsclient.NSClientAddAckWorker
 import info.nightscout.androidaps.plugins.sync.nsclient.NSClientAddUpdateWorker
 import info.nightscout.androidaps.plugins.sync.nsclient.NSClientMbgWorker
 import info.nightscout.androidaps.plugins.sync.nsclient.NSClientUpdateRemoveAckWorker
-import info.nightscout.androidaps.plugins.sync.nsclientV3.TreatmentWorker
+import info.nightscout.androidaps.plugins.sync.nsclientV3.workers.LoadBgWorker
+import info.nightscout.androidaps.plugins.sync.nsclientV3.workers.LoadLastModificationWorker
+import info.nightscout.androidaps.plugins.sync.nsclientV3.workers.LoadStatusWorker
+import info.nightscout.androidaps.plugins.sync.nsclientV3.workers.LoadTreatmentsWorker
+import info.nightscout.androidaps.plugins.sync.nsclientV3.workers.ProcessTreatmentsWorker
 
 @Module
 @Suppress("unused")
@@ -42,5 +46,9 @@ abstract class WorkersModule {
     @ContributesAndroidInjector abstract fun contributesFoodWorker(): FoodPlugin.FoodWorker
     @ContributesAndroidInjector abstract fun contributesCsvExportWorker(): ImportExportPrefsImpl.CsvExportWorker
     @ContributesAndroidInjector abstract fun contributesAidexWorker(): AidexPlugin.AidexWorker
-    @ContributesAndroidInjector abstract fun contributesTreatmentWorker(): TreatmentWorker
+    @ContributesAndroidInjector abstract fun contributesLoadStatusWorker(): LoadStatusWorker
+    @ContributesAndroidInjector abstract fun contributesLoadLastModificationWorker(): LoadLastModificationWorker
+    @ContributesAndroidInjector abstract fun contributesLoadBgWorker(): LoadBgWorker
+    @ContributesAndroidInjector abstract fun contributesTreatmentWorker(): LoadTreatmentsWorker
+    @ContributesAndroidInjector abstract fun contributesProcessTreatmentsWorker(): ProcessTreatmentsWorker
 }
