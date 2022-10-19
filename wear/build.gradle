@@ -1,7 +1,7 @@
 buildscript {
     repositories {
-        google()
-        mavenCentral()
+        maven { url 'https://maven.aliyun.com/nexus/content/repositories/google' }
+        maven { url 'https://maven.aliyun.com/nexus/content/groups/public' }
         maven { url "https://plugins.gradle.org/m2/" } // jacoco 0.2
     }
 
@@ -85,8 +85,8 @@ android {
 
 allprojects {
     repositories {
-        google()
-        mavenCentral()
+        maven { url 'https://maven.aliyun.com/nexus/content/repositories/google' }
+        maven { url 'https://maven.aliyun.com/nexus/content/groups/public' }
     }
 }
 
@@ -128,5 +128,5 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
 }
 repositories {
-    mavenCentral()
+    maven { url 'https://maven.aliyun.com/nexus/content/groups/public' }
 }
