@@ -631,7 +631,7 @@
     <string name="welcometosetupwizard">Bienvenido al asistente de instalación, que te guiará en el proceso de configuración\n</string>
     <string name="readstatus">Leer estado</string>
     <string name="exitwizard">Saltar asistente de configuración</string>
-    <string name="setupwizard_loop_description">Presionar el botón de abajo para permitir que AAPS pueda sugerir/realizar cambios en las basales</string>
+    <string name="setupwizard_loop_description">Presionar el botón de abajo para permitir que AAPS pueda sugerir/realizar cambios en la insulina basal</string>
     <string name="setupwizard_sensitivity_description">El complemento de sensibilidad es usado para detectar la sensibilidad y cálculo de COB. Para más info ver:</string>
     <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/es/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="nsclientinfotext">NSCliente controla la conexión con Nightscout. Puedes saltar este paso ahora pero no podrás completar los objetivos hasta que lo configures.</string>
@@ -673,7 +673,7 @@
     <string name="remove_items">Eliminar elementos</string>
     <string name="sort_items">Ordenar elementos</string>
     <string name="storedsettingsfound">Encontrados ajustes de configuración</string>
-    <string name="allow_hardware_pump_text">Atención: Si activas y conectas una bomba con AAPS, AAPS copiará la configuración basal del perfil a la bomba, sobreescribiendo las basales previas que tuviera almacenadas la bomba. Asegúrate de que la configuración del perfil basal en AAPS es correcto. Si no estás seguro o no quieres sobreescribir la configuración del perfil basal de tu bomba, presiona cancelar y vincula la bomba más adelante.</string>
+    <string name="allow_hardware_pump_text">Atención: Si activas y conectas una bomba con AAPS, AAPS copiará la configuración basal del perfil a la bomba, sobreescribiendo el perfil basal previo que tuviera almacenado la bomba. Asegúrate de que la configuración del perfil basal en AAPS es correcto. Si no estás seguro o no quieres sobreescribir la configuración del perfil basal de tu bomba, presiona cancelar y vincula la bomba más adelante.</string>
     <string name="error_adding_treatment_title">Datos de tratamiento incompletos</string>
     <string name="maintenance_settings">Ajustes de mantenimiento</string>
     <string name="maintenance_email">Correo electrónico</string>
