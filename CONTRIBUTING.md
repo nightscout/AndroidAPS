@@ -19,7 +19,7 @@ Coding convetions
 1. Use Android Studio with default indents (4 chars, use spaces)
 2. Use autoformat feature CTRL-ALT-L in every changed file before commit
 
-Commiting Changes / Pull Requests
+Committing Changes / Pull Requests
 ---------------------------------
 
 1. Make fork of repository on github

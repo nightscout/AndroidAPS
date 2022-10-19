@@ -36,7 +36,7 @@ interface ResourceHelper {
      */
     @ColorInt fun gac(context: Context?, @AttrRes attributeId: Int): Int
     /**
-     * Get themed context -->> context dependend on light or darkmode
+     * Get themed context -->> context dependent on light or darkmode
      */
     fun getThemedCtx(context: Context): Context
 }

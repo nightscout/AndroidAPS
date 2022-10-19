@@ -302,7 +302,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
                 return result;
             }
 
-            // Now set new extended, no need to to stop previous (if running) because it's replaced
+            // Now set new extended, no need to stop previous (if running) because it's replaced
             double extendedAmount = extendedRateToSet / 2 * durationInHalfHours;
             aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Setting extended: " + extendedAmount + "U  half hours: " + durationInHalfHours);
             result = setExtendedBolus(extendedAmount, durationInMinutes);
