@@ -361,6 +361,7 @@
     <string name="uel_export_settings">PARAMÈTRES EXPORTÉS</string>
     <string name="uel_import_settings">PARAMÈTRES IMPORTÉS</string>
     <string name="uel_reset_databases">BASE DE DONNÉES RÉINITIALISÉE</string>
+    <string name="uel_cleanup_databases">SUPPRIMER LES DONNÉES</string>
     <string name="uel_export_databases">BASE DE DONNÉES EXPORTÉE</string>
     <string name="uel_import_databases">BASE DE DONNÉES IMPORTÉE</string>
     <string name="uel_otp_export">OTP EXPORTÉ</string>
