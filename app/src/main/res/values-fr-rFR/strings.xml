@@ -1048,4 +1048,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="no_watch_connected">(Pas de montre connectée)</string>
     <string name="error_asking_for_permissions">Erreur lors de la demande des autorisations</string>
     <string name="dynisf_adjust_sensitivity">Ajuster la sensibilité et la glycémie</string>
+    <string name="cleanup_db_confirm">Voulez-vous nettoyer la base de données ?\nCela supprimera les modifications suivies et les données historiques de plus de 3 mois.</string>
+    <string name="cleared_entries">Entrées effacées</string>
 </resources>
