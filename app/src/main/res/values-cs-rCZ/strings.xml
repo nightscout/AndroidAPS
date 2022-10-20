@@ -1048,4 +1048,7 @@
     <string name="no_watch_connected">(Žádné hodinky nejsou připojeny)</string>
     <string name="error_asking_for_permissions">Chyba žádosti o oprávnění</string>
     <string name="dynisf_adjust_sensitivity">Upravit citlivost a glykémii</string>
+    <string name="database_cleanup">Vyčištění databáze</string>
+    <string name="cleanup_db_confirm">Chcete vyčistit databázi?\nOdstraní sledované změny a historická data starší než 3 měsíce.</string>
+    <string name="cleared_entries">Vymazané záznamy</string>
 </resources>
