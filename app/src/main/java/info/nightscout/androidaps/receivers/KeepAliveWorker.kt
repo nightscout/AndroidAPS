@@ -37,6 +37,7 @@ import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.widget.updateWidget
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
+import info.nightscout.shared.sharedPreferences.SP
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.math.abs
@@ -62,6 +63,7 @@ class KeepAliveWorker(
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var maintenancePlugin: MaintenancePlugin
     @Inject lateinit var rh: ResourceHelper
+    @Inject lateinit var sp: SP
 
     init {
         (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
@@ -122,8 +124,20 @@ class KeepAliveWorker(
         checkAPS()
         maintenancePlugin.deleteLogs(30)
         workerDbStatus()
+        databaseCleanup()
 
         return Result.success()
+    }
+
+    // Perform history data cleanup every day
+    // Keep 6 months
+    private fun databaseCleanup() {
+        val lastRun = sp.getLong(R.string.key_last_cleanup_run, 0L)
+        if (lastRun < dateUtil.now() - T.days(1).msecs()) {
+            val result = repository.cleanupDatabase(6 * 31, deleteTrackedChanges = false)
+            aapsLogger.debug(LTag.CORE, "Cleanup result: $result")
+            sp.putLong(R.string.key_last_cleanup_run, dateUtil.now())
+        }
     }
 
     // When Worker DB grows too much, work operations become slow

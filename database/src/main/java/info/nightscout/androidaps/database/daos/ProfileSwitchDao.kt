@@ -9,7 +9,6 @@ import info.nightscout.androidaps.database.entities.ProfileSwitch
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 
-@Suppress("FunctionName")
 @Dao
 internal interface ProfileSwitchDao : ProfileSwitchDaoWorkaround {
 
@@ -18,6 +17,12 @@ internal interface ProfileSwitchDao : ProfileSwitchDaoWorkaround {
 
     @Query("DELETE FROM $TABLE_PROFILE_SWITCHES")
     override fun deleteAllEntries()
+
+    @Query("DELETE FROM $TABLE_PROFILE_SWITCHES WHERE timestamp < :than")
+    override fun deleteOlderThan(than: Long): Int
+
+    @Query("DELETE FROM $TABLE_PROFILE_SWITCHES WHERE referenceId IS NOT NULL")
+    override fun deleteTrackedChanges(): Int
 
     @Query("SELECT id FROM $TABLE_PROFILE_SWITCHES ORDER BY id DESC limit 1")
     fun getLastId(): Maybe<Long>

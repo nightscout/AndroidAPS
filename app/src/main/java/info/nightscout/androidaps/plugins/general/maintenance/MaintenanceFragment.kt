@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.text.toSpanned
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.SingleFragmentActivity
@@ -29,11 +30,13 @@ import info.nightscout.androidaps.plugins.general.overview.OverviewData
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.database.DashHistoryDatabase
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.database.ErosHistoryDatabase
 import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.protection.ProtectionCheck.Protection.PREFERENCES
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -110,6 +113,25 @@ class MaintenanceFragment : DaggerFragment() {
                                 onComplete = { rxBus.send(EventPreferenceChange(rh, R.string.key_units)) }
                             )
                     uel.log(Action.RESET_DATABASES, Sources.Maintenance)
+                })
+            }
+        }
+        binding.cleanupDb.setOnClickListener {
+            activity?.let { activity ->
+                var result = ""
+                OKDialog.showConfirmation(activity, rh.gs(R.string.maintenance), rh.gs(R.string.cleanup_db_confirm), Runnable {
+                    disposable += Completable.fromAction { result = repository.cleanupDatabase(93, deleteTrackedChanges = true) }
+                        .subscribeOn(aapsSchedulers.io)
+                        .observeOn(aapsSchedulers.main)
+                        .subscribeBy(
+                            onError = { aapsLogger.error("Error cleaning up databases", it) },
+                            onComplete = {
+                                if (result.isNotEmpty())
+                                    OKDialog.show(activity, rh.gs(R.string.result), HtmlHelper.fromHtml("<b>" + rh.gs(R.string.cleared_entries) + "</b>\n" + result).toSpanned())
+                                aapsLogger.info(LTag.CORE, "Cleaned up databases with result: $result")
+                            }
+                        )
+                    uel.log(Action.CLEANUP_DATABASES, Sources.Maintenance)
                 })
             }
         }

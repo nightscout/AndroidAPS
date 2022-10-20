@@ -12,7 +12,9 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.PublishSubject
+import java.lang.StringBuilder
 import java.util.concurrent.Callable
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.roundToInt
@@ -46,7 +48,7 @@ import kotlin.math.roundToInt
      * Executes a transaction and returns its result
      * Runs on IO scheduler
      */
-    fun <T: Any> runTransactionForResult(transaction: Transaction<T>): Single<T> {
+    fun <T : Any> runTransactionForResult(transaction: Transaction<T>): Single<T> {
         val changes = mutableListOf<DBEntry>()
         return Single.fromCallable {
             database.runInTransaction(Callable<T> {
@@ -59,6 +61,57 @@ import kotlin.math.roundToInt
     }
 
     fun clearDatabases() = database.clearAllTables()
+
+    fun cleanupDatabase(keepDays: Long, deleteTrackedChanges: Boolean): String {
+        val than = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(keepDays)
+        val removed = mutableListOf<Pair<String, Int>>()
+        removed.add(Pair("GlucoseValue", database.glucoseValueDao.deleteOlderThan(than)))
+        removed.add(Pair("TherapyEvent", database.therapyEventDao.deleteOlderThan(than)))
+        removed.add(Pair("TemporaryBasal", database.temporaryBasalDao.deleteOlderThan(than)))
+        removed.add(Pair("ExtendedBolus", database.extendedBolusDao.deleteOlderThan(than)))
+        removed.add(Pair("Bolus", database.bolusDao.deleteOlderThan(than)))
+        removed.add(Pair("MultiWaveBolus", database.multiwaveBolusLinkDao.deleteOlderThan(than)))
+        //removed.add(Pair("TotalDailyDose", database.totalDailyDoseDao.deleteOlderThan(than)))
+        removed.add(Pair("Carbs", database.carbsDao.deleteOlderThan(than)))
+        removed.add(Pair("TemporaryTarget", database.temporaryTargetDao.deleteOlderThan(than)))
+        removed.add(Pair("ApsResultLink", database.apsResultLinkDao.deleteOlderThan(than)))
+        removed.add(Pair("BolusCalculatorResult", database.bolusCalculatorResultDao.deleteOlderThan(than)))
+        // keep at least one EPS
+        if (database.effectiveProfileSwitchDao.getEffectiveProfileSwitchDataFromTime(than + 1).blockingGet().isNotEmpty())
+            removed.add(Pair("EffectiveProfileSwitch", database.effectiveProfileSwitchDao.deleteOlderThan(than)))
+        removed.add(Pair("ProfileSwitch", database.profileSwitchDao.deleteOlderThan(than)))
+        removed.add(Pair("ApsResult", database.apsResultDao.deleteOlderThan(than)))
+        //database.versionChangeDao.deleteOlderThan(than)
+        removed.add(Pair("UserEntry", database.userEntryDao.deleteOlderThan(than)))
+        removed.add(Pair("PreferenceChange", database.preferenceChangeDao.deleteOlderThan(than)))
+        //database.foodDao.deleteOlderThan(than)
+        removed.add(Pair("DeviceStatus", database.deviceStatusDao.deleteOlderThan(than)))
+        removed.add(Pair("OfflineEvent", database.offlineEventDao.deleteOlderThan(than)))
+
+        if (deleteTrackedChanges) {
+            removed.add(Pair("GlucoseValue", database.glucoseValueDao.deleteTrackedChanges()))
+            removed.add(Pair("TherapyEvent", database.therapyEventDao.deleteTrackedChanges()))
+            removed.add(Pair("TemporaryBasal", database.temporaryBasalDao.deleteTrackedChanges()))
+            removed.add(Pair("Bolus", database.bolusDao.deleteTrackedChanges()))
+            removed.add(Pair("ExtendedBolus", database.extendedBolusDao.deleteTrackedChanges()))
+            removed.add(Pair("MultiWaveBolus", database.multiwaveBolusLinkDao.deleteTrackedChanges()))
+            //removed.add(Pair("TotalDailyDose", database.totalDailyDoseDao.deleteTrackedChanges()))
+            removed.add(Pair("Carbs", database.carbsDao.deleteTrackedChanges()))
+            removed.add(Pair("TemporaryTarget", database.temporaryTargetDao.deleteTrackedChanges()))
+            removed.add(Pair("ApsResultLink", database.apsResultLinkDao.deleteTrackedChanges()))
+            removed.add(Pair("BolusCalculatorResult", database.bolusCalculatorResultDao.deleteTrackedChanges()))
+            removed.add(Pair("EffectiveProfileSwitch", database.effectiveProfileSwitchDao.deleteTrackedChanges()))
+            removed.add(Pair("ProfileSwitch", database.profileSwitchDao.deleteTrackedChanges()))
+            removed.add(Pair("ApsResult", database.apsResultDao.deleteTrackedChanges()))
+            //database.foodDao.deleteHistory()
+            removed.add(Pair("OfflineEvent", database.offlineEventDao.deleteTrackedChanges()))
+        }
+        val ret = StringBuilder()
+        removed
+            .filter { it.second > 0 }
+            .map { ret.append(it.first + " " + it.second + "\n") }
+        return ret.toString()
+    }
 
     fun clearCachedData(from: Long) {
         database.totalDailyDoseDao.deleteNewerThan(from, InterfaceIDs.PumpType.CACHE)

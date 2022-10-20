@@ -15,6 +15,12 @@ internal interface APSResultDao : TraceableDao<APSResult> {
     @Query("DELETE FROM $TABLE_APS_RESULTS")
     override fun deleteAllEntries()
 
+    @Query("DELETE FROM $TABLE_APS_RESULTS WHERE timestamp < :than")
+    override fun deleteOlderThan(than: Long): Int
+
+    @Query("DELETE FROM $TABLE_APS_RESULTS WHERE referenceId IS NOT NULL")
+    override fun deleteTrackedChanges(): Int
+
     @Query("SELECT * FROM $TABLE_APS_RESULTS WHERE dateCreated > :since AND dateCreated <= :until LIMIT :limit OFFSET :offset")
     suspend fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<APSResult>
 }

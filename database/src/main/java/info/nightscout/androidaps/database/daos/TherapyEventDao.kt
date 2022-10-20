@@ -2,9 +2,7 @@ package info.nightscout.androidaps.database.daos
 
 import androidx.room.Dao
 import androidx.room.Query
-import info.nightscout.androidaps.database.TABLE_TEMPORARY_TARGETS
 import info.nightscout.androidaps.database.TABLE_THERAPY_EVENTS
-import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
@@ -17,6 +15,12 @@ internal interface TherapyEventDao : TraceableDao<TherapyEvent> {
 
     @Query("DELETE FROM $TABLE_THERAPY_EVENTS")
     override fun deleteAllEntries()
+
+    @Query("DELETE FROM $TABLE_THERAPY_EVENTS WHERE timestamp < :than")
+    override fun deleteOlderThan(than: Long): Int
+
+    @Query("DELETE FROM $TABLE_THERAPY_EVENTS WHERE referenceId IS NOT NULL")
+    override fun deleteTrackedChanges(): Int
 
     @Query("SELECT id FROM $TABLE_THERAPY_EVENTS ORDER BY id DESC limit 1")
     fun getLastId(): Maybe<Long>

@@ -7,7 +7,6 @@ import info.nightscout.androidaps.database.entities.EffectiveProfileSwitch
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 
-@Suppress("FunctionName")
 @Dao
 internal interface EffectiveProfileSwitchDao : TraceableDao<EffectiveProfileSwitch> {
 
@@ -16,6 +15,12 @@ internal interface EffectiveProfileSwitchDao : TraceableDao<EffectiveProfileSwit
 
     @Query("DELETE FROM $TABLE_EFFECTIVE_PROFILE_SWITCHES")
     override fun deleteAllEntries()
+
+    @Query("DELETE FROM $TABLE_EFFECTIVE_PROFILE_SWITCHES WHERE timestamp < :than")
+    override fun deleteOlderThan(than: Long): Int
+
+    @Query("DELETE FROM $TABLE_EFFECTIVE_PROFILE_SWITCHES WHERE referenceId IS NOT NULL")
+    override fun deleteTrackedChanges(): Int
 
     @Query("SELECT id FROM $TABLE_EFFECTIVE_PROFILE_SWITCHES ORDER BY id DESC limit 1")
     fun getLastId(): Maybe<Long>
