@@ -38,9 +38,7 @@
     <string name="description_source_ns_client">Nightscout에서 다운로드하여 혈당값 받기</string>
     <string name="description_source_xdrip">xDrip+에서 혈당값 받기</string>
     <string name="description_treatments">모든 관리를 저장합니다.</string>
-    <string name="description_wear">WearOS 워치를 이용하여 AndroidAPS를 모니터하고 제어합니다.</string>
     <string name="description_xdrip_status_line">xDrip+ 워치페이스에서 Loop정보 보여주기</string>
-    <string name="description_sms_communicator">SMS 전송을 이용하여 AndroidAPS를 원격 제어합니다.</string>
     <string name="treatments_insulin_label_string">인슐린:</string>
     <string name="treatments_carbs_label_string">탄수화물:</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -76,9 +74,7 @@
     <string name="treatments">관리</string>
     <string name="virtualpump">가상펌프</string>
     <string name="configbuilder_pump">펌프</string>
-    <string name="configbuilder_pump_description">어떤 펌프를 AndroidAPS에서 사용하시겠습니까?</string>
     <string name="configbuilder_profile">프로파일</string>
-    <string name="configbuilder_profile_description">어떤 프로파일을 AndroidAPS에서 사용합니까?</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">어떤 APS 알고리즘을 사용합니까?</string>
     <string name="configbuilder_general">일반</string>
@@ -86,7 +82,6 @@
     <string name="configbuilder_constraints_description">어떤 제약을 적용합니까?</string>
     <string name="constraints">제한</string>
     <string name="configbuilder_loop">Loop</string>
-    <string name="configbuilder_loop_description">AndroidAPS의 Loop를 활성하기 위해서 이것을 사용하세요.</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">제약 적용 후</string>
     <string name="loop_tbrsetbypump_label">펌프에 의한 임시Basal 설정</string>
@@ -102,7 +97,6 @@
     <string name="sms_basal">Basal:</string>
     <string name="changeyourinput">입력값을 변경하세요!</string>
     <string name="configbuilder_bgsource">혈당 출처</string>
-    <string name="configbuilder_bgsource_description">AndroidAPS가 어디에서 데이터를 가져옵니까?</string>
     <string name="xdrip">xDrip+</string>
     <string name="apsmode_title">APS 모드</string>
     <string name="closedloop">Closed Loop</string>
@@ -322,7 +316,6 @@
     <string name="patient_name_summary">다양한 설정들을 구별하기 위하여 환자 이름 또는 별명을 입력합니다.</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">사용자</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">최적의 성능을 위해 %1$s에서 배터리 최적화를 해제해야합니다.</string>
     <string name="loopsuspended">Loop 일시중지</string>
     <string name="loopsuspendedfor">일시중지중 (%d분)</string>
     <string name="suspendloopfor1h">1시간동안 Loop 일시중지</string>
@@ -419,7 +412,6 @@
     <string name="sensitivityweightedaverage">민감도 가중평균</string>
     <string name="notloadedplugins">모든 프로파일이 로드되지 않았습니다.</string>
     <string name="valuesnotstored">값이 저장되지 않았습니다!</string>
-    <string name="ns_localbroadcasts">다른 앱 (예: xDrip)으로 데이터 전송을 활성화합니다. AAPS 또는 NSClient를 두 개 이상 설치 한 경우 활성화하지 마세요!</string>
     <string name="ns_localbroadcasts_title">Local Broadcasts 활성화하기</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="enableuam">UAM 활성화하기</string>
@@ -608,7 +600,6 @@
     <string name="welcometosetupwizard">설정 마법사에 오신것을 환영합니다. 설정 마법사가 설정 과정을 안내하여 줄것입니다.</string>
     <string name="readstatus">상태 불러오기</string>
     <string name="exitwizard">설정 마법사 건너뛰기</string>
-    <string name="setupwizard_loop_description">AndroidAPS가 Basal 변화를 제안 혹은 실행하게 하려면 아래 버튼을 누르세요.</string>
     <string name="setupwizard_sensitivity_description">민감도 플러그인은 민감도감지와 COB 계산을 위해 사용됩니다. 더 많은 정보는 다름 링크를 방문하세요.</string>
     <string name="nsclientinfotext">NSClient는 Nightscout와의 연결을 처리합니다. 이 부분을 건너뛸 수 있지만 설정하기 전엔 목적을 수행할 수 없습니다.</string>
     <string name="diawarning">새로운 인슐린 프로파일은 최소 5시간의 DIA가 요구됩니다. 새로운 프로파일의 DIA 5-6시간은 구식 인슐린 프로파일의 DIA 3시간과 동일합니다.</string>
@@ -640,7 +631,6 @@
     <string name="sensitivity_raises_target_title">민감성이 목표 올리기</string>
     <string name="sensitivity_raises_target_summary">민감성이 감지되면, 목표 혈당을 높입니다.</string>
     <string name="storedsettingsfound">저장된 설정이 있습니다.</string>
-    <string name="allow_hardware_pump_text">주의: 활성화하고 펌프에 연결하게되면, AndroidAPS는 프로파일의 Basal설정을 복사해서 기존에 펌프에 저장되어 있던 Basal설정을 덮어쓰게 될것입니다. AndroidAPS의 Basal설정이 올바른지 반드시 확인하세요. 만약 확실치 않거나 Basal설정을 덮어씌우길 원치않는다면, 취소버튼을 누르고 나중에 다시 연결하세요.</string>
     <string name="error_adding_treatment_title">관리 데이터가 불완전합니다</string>
     <string name="maintenance_settings">정비 설정</string>
     <string name="maintenance_email">Email</string>
@@ -665,7 +655,6 @@
     <string name="loop_openmode_min_change_summary" formatted="false">Open Loop가 %단위로 이 값보다 변화가 더 클 경우에만 새 변경 요청을 팝업합니다. 기본값은 20 %입니다</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="dexcom_lognssensorchange_title">센서 교체 NS에 기록하기</string>
-    <string name="dexcom_lognssensorchange_summary">센서교체시 NS에 자동으로 \"센서 교체\" 이벤트를 생성합니다.</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Tidepool 사용자명, 보통 이메일 주소입니다.</string>
@@ -731,7 +720,6 @@
     <string name="id">ID:</string>
     <string name="submit">확인</string>
     <string name="mostcommonprofile">가장 많이 사용된 프로파일:</string>
-    <string name="survey_comment">참고: 이 화면에 보이는 데이터만 익명으로 업로드됩니다. ID는 AndroidAPS 설치에 할당됩니다. 기본 프로파일이 변경되면 데이터를 다시 제출할 수 있지만 어느정도 시간 범위의 결과가 보이도록 최소 1주일 이상 실행하여 주세요. 당신의 도움 감사하겠습니다.</string>
     <string name="invalidage">유효하지 않은 나이입니다</string>
     <string name="invalidweight">유효하지 않은 몸무게입니다</string>
     <string name="invalidpct">유효하지 않은 % 입력</string>
@@ -771,11 +759,9 @@
     <string name="smscommunicator_otp_export_prompt">OTP 비밀번호의 클립보드 복사를 원하는 것이 확실합니까?\n\n 이는 인증 어플이 QRCode를 스캐닝하는데 문제가 있을 때, 비밀번호 수동 입력을 원할 때, 또는 공용 어플 사용 시에 하드웨어 OTP 암호 설정을 원할 때에만 필요합니다.</string>
     <string name="smscommunicator_otp_export_successful">OTP 비밀번호 (Base32 포맷)가 클립보드에 내보내져서 복사되었습니다. 인증 어플 또는 하드웨어 OTP burner에 붙여넣기 하십시오!</string>
     <string name="smscommunicator_otp_step1_install_header">1. 인증어플 설치하기</string>
-    <string name="smscommunicator_otp_step2_provisioning_header">2. AndroidAPS OTP 코드 설정을 위해 code를 스캔하기</string>
     <string name="smscommunicator_otp_step3_test_header">3. 일회성 비밀번호 테스트</string>
     <string name="smscommunicator_otp_reset_header">인증 초기화</string>
     <string name="smscommunicator_otp_install_info">각각의 팔로워 폰에 RFC 6238 TOTP 암호를 사용하는 인증 어플을 설치합니다. 대중적인 무료 어플은 다음과 같습니다:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator.</string>
-    <string name="smscommunicator_otp_reset_warning">인증을 초기화함으로써 준비된 인증을 모두 무효화합니다. 이들을 다시 설정해야 합니다.</string>
     <string name="overview_show_predictions">예측</string>
     <string name="overview_show_deviationslope">편차 기울기</string>
     <string name="authorizationfailed">인증 실패</string>

@@ -12,7 +12,7 @@
     <string name="only_upload_if_charging">Sólo subir datos si se está cargando</string>
     <string name="open_humans_uploading">Subiendo a Open Humans…</string>
     <string name="open_humans_notifications">Notificaciones de Open Humans</string>
-    <string name="uploading_to_open_humans">AndroidAPS está subiendo los datos a Open Humans. Esto puede tardar un tiempo.</string>
+    <string name="uploading_to_open_humans">AAPS está subiendo datos a Open Humans. Esto puede llevar un tiempo.</string>
     <string name="you_have_been_signed_out_of_open_humans">Has cerrado la sesión de Open Humans</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Haga clic aquí para iniciar sesión de nuevo si no tenía esa intención.</string>
     <string name="upload_now">Subir ahora</string>

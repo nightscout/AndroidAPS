@@ -25,8 +25,6 @@
     <string name="objectives_pumpstatusavailableinns">Pumpe status tilgjengelig i NS</string>
     <string name="objectives_manualenacts">Manuell kommando</string>
     <string name="accomplished">Utført: %1$s</string>
-    <string name="objectives_usage_objective">Lær hvordan du kontrollerer AndroidAPS</string>
-    <string name="objectives_usage_gate">Utfør forskjellige handlinger i AndroidAPS</string>
     <string name="objectives_useprofileswitch">Angi profil 90% for 10 min (langt-trykk på profilnavn i Oversikt)</string>
     <string name="objectives_usedisconnectpump">Simuler dusjing. Frakoble pumpen i 1t (langt trykk på Åpen Loop)</string>
     <string name="objectives_usereconnectpump">... og koble til igjen på samme måte</string>

@@ -12,7 +12,7 @@
     <string name="only_upload_if_charging">Odoslať iba pri nabíjaní</string>
     <string name="open_humans_uploading">Nahrávanie na Open Humans…</string>
     <string name="open_humans_notifications">Notifikácie Open Humans</string>
-    <string name="uploading_to_open_humans">AndroidAPS nahráva na Open Humans. To môže chvíľu trvať.</string>
+    <string name="uploading_to_open_humans">AAPS nahráva do Open Humans. Može to chvíľu trvať.</string>
     <string name="you_have_been_signed_out_of_open_humans">Boli ste odhlásený z Open Humans</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Kliknite sem, ak sa chcete prihlásiť znova, v prípade, že sa to stalo nedopatrením.</string>
     <string name="upload_now">Nahrať teraz</string>

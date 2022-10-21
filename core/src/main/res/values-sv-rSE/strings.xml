@@ -20,7 +20,6 @@
     <string name="disconnected">Frånkopplad</string>
     <string name="disconnecting">Kopplar från</string>
     <string name="waiting_for_disconnection">Väntar på frånkoppling</string>
-    <string name="androidaps_start">AndroidAPS startad</string>
     <string name="formatinsulinunits1">%1$.1fU</string>
     <string name="formatinsulinunits">%1$.2fU</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
@@ -272,7 +271,6 @@
     <string name="versionavailable">Version %1$s tillgänglig</string>
     <string name="version_expire">Version %1$s upphör att gälla %2$s</string>
     <!-- Permissions -->
-    <string name="alert_dialog_storage_permission_text">Starta om telefonen eller AndroidAPS från systeminställningar,\nannars kommer AndroidAPS inte kunna logga fel (viktigt att kunna spåra och verifiera att algoritmerna fungerar korrekt)!</string>
     <!-- WeekdayPicker -->
     <string name="monday_short">M</string>
     <string name="tuesday_short">T</string>

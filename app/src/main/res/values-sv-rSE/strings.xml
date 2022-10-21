@@ -40,9 +40,7 @@ Eversense-appen.</string>
     <string name="description_source_ns_client">Ladda ner BG-data från Nightscout</string>
     <string name="description_source_xdrip">Ta emot BG-data från xDrip+.</string>
     <string name="description_treatments">Spara alla behandlingar som gjorts</string>
-    <string name="description_wear">Följ och kontrollera AndroidAPS med din Wear OS-klocka</string>
     <string name="description_xdrip_status_line">Visa AAPS-information på din xDrip+ urtavla.</string>
-    <string name="description_sms_communicator">Fjärrstyr AndroidAPS med SMS-kommandon.</string>
     <string name="treatments_insulin_label_string">Insulin:</string>
     <string name="treatments_carbs_label_string">KH:</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -79,9 +77,7 @@ Eversense-appen.</string>
     <string name="treatments">Behandlingar</string>
     <string name="virtualpump">Virtuell pump</string>
     <string name="configbuilder_pump">Pump</string>
-    <string name="configbuilder_pump_description">Vilken pump vill du använda med AndroidAPS?</string>
     <string name="configbuilder_profile">Profil</string>
-    <string name="configbuilder_profile_description">Vilken profil ska AndroidAPS använda?</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">Vilken algoritm ska användas för behandlingar?</string>
     <string name="configbuilder_general">Generella inställningar</string>
@@ -89,7 +85,6 @@ Eversense-appen.</string>
     <string name="configbuilder_constraints_description">Vilka begränsningar ska tillämpas?</string>
     <string name="constraints">Begränsningar</string>
     <string name="configbuilder_loop">Loop</string>
-    <string name="configbuilder_loop_description">Använd detta för att aktivera AndroidAPS loop-möjligheter.</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">Efter begränsningar</string>
     <string name="loop_tbrsetbypump_label">Temp basal satt i pump</string>
@@ -106,7 +101,6 @@ Eversense-appen.</string>
     <string name="sms_basal">Basal:</string>
     <string name="changeyourinput">Ändra inmatning</string>
     <string name="configbuilder_bgsource">BG-källa</string>
-    <string name="configbuilder_bgsource_description">Var ska AndroidAPS få sitt data ifrån?</string>
     <string name="xdrip">xDrip+</string>
     <string name="apsmode_title">APS-läge</string>
     <string name="closedloop">Closed Loop</string>
@@ -331,7 +325,6 @@ Eversense-appen.</string>
     <string name="patient_name_summary">Vänligen ange patientens namn eller smeknamn för att kunna skilja mellan flera uppsättningar av inställningar</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Ditt namn</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%1$s behöver kunna kringgå batterisparfunktionerna för att fungera korrekt</string>
     <string name="loopsuspended">Loop pausad</string>
     <string name="loopsuspendedfor">Pausad (%1$d min)</string>
     <string name="suspendloopfor1h">Pausa loop i 1 timme</string>
@@ -429,7 +422,6 @@ Eversense-appen.</string>
     <string name="sensitivityweightedaverage">WeightedAverage</string>
     <string name="notloadedplugins">Alla profiler laddades inte!</string>
     <string name="valuesnotstored">Alla värden sparades inte!</string>
-    <string name="ns_localbroadcasts">Aktivera sändning till andra appar (som xDrip+) på denna telefon. Aktivera inte detta om du har fler än en förekomst av AAPS eller NSClient installerad!</string>
     <string name="ns_localbroadcasts_title">Aktivera lokala broadcasts</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="enableuam">Aktivera UAM</string>
@@ -622,7 +614,6 @@ Eversense-appen.</string>
     <string name="welcometosetupwizard">Välkommen till installationsguiden! Den kommer att hjälpa dig genom installationsprocessen\n</string>
     <string name="readstatus">Läs status</string>
     <string name="exitwizard">Hoppa över installationsguiden</string>
-    <string name="setupwizard_loop_description">Tryck på knappen nedan för att låta AndroidAPS föreslå/göra basalförändringar</string>
     <string name="setupwizard_sensitivity_description">Insticksprogrammet för känslighet används för att detektera insulinkänslighet och för att beräkning av aktiva kolhydrater, COB. För mer information, besök:</string>
     <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="nsclientinfotext">NSClient hanterar anslutningen till Nightscout. Du kan hoppa över denna del nu, men du kommer inte att kunna passera vissa mål tills du har satt upp det.</string>
@@ -657,7 +648,6 @@ Eversense-appen.</string>
     <string name="sensitivity_raises_target_title">Insulinkänslighet höjer mål-BG</string>
     <string name="sensitivity_raises_target_summary">Om systemet upptäcker tillfällig insulinkänslighet, höj mål-BG för att på så sätt minska insulindoseringen</string>
     <string name="storedsettingsfound">Tidigare sparade inställningar hittade</string>
-    <string name="allow_hardware_pump_text">Varning: Om du aktiverar och ansluter en pump, kommer AndroidAPS skriva över pumpens basalprofil med den aktiva profilen i AndroidAPS. Se till att ha rätt inställningar i appen innan du ansluter. Om du är osäker, tryck på Avbryt och anslut pumpen på nytt vid ett senare tillfälle.</string>
     <string name="error_adding_treatment_title">Behandlingsdata ofullständigt</string>
     <string name="maintenance_settings">Underhållsinställningar</string>
     <string name="maintenance_email">e-postmottagare</string>
@@ -683,7 +673,6 @@ Eversense-appen.</string>
     <string name="loop_openmode_min_change_summary" formatted="false">I Open Loop-läge kommer AAPS bara att be om ändring ifall förändringen är större än detta värde. Standardvärdet är 20%</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="dexcom_lognssensorchange_title">Logga sensorbyte till Nightscout</string>
-    <string name="dexcom_lognssensorchange_summary">Loggar automatiskt ett sensorbyte i NS när en sensor startas</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Ditt användarnamn på Tidepool. Normalt din e-postadress</string>
@@ -756,7 +745,6 @@ Eversense-appen.</string>
     <string name="id">ID:</string>
     <string name="submit">Spara</string>
     <string name="mostcommonprofile">Den vanligaste profilen:</string>
-    <string name="survey_comment">Observera att endast data som visas på den här skärmen kommer att överföras anonymt. ID tilldelas till den här installationen av AndroidAPS. Du kan lämna in data igen om din huvudprofil ändras men låt den köra minst en vecka för att göra resultatet synligt i tid inom intervallet. Din hjälp är uppskattad.</string>
     <string name="invalidage">Ogiltig inmatning (ålder)</string>
     <string name="invalidweight">Ogiltig inmatning (vikt)</string>
     <string name="invalidpct">Ogiltig %-inmatning</string>
@@ -796,11 +784,9 @@ Eversense-appen.</string>
     <string name="smscommunicator_otp_export_prompt">Är du säker på att du vill kopiera OTP-hemligheten till Urklipp?\n\nDu behöver bara göra detta om din autentiseringsapp har problem QR-koder så du vill ange den manuellt eller om du vill konfigurera OTP-token med hjälp av en dedikerad app.</string>
     <string name="smscommunicator_otp_export_successful">OTP-hemligheten exporteras och kopieras till klippbordet i Base32-format. Klistra in den i autentiseringsfunktionen eller OTP-brännaren!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Installera autentiseringsapp</string>
-    <string name="smscommunicator_otp_step2_provisioning_header">2. Scanna koden för att ställa in engångslösenord för AndroidAPS</string>
     <string name="smscommunicator_otp_step3_test_header">3. Testa engångslösenord</string>
     <string name="smscommunicator_otp_reset_header">Återställ autentiserare</string>
     <string name="smscommunicator_otp_install_info">På varje följartelefon behöver man installera en autentiseringsapp som stöder RFC 6238 TOTP tokens. Populära gratisappar är:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_reset_warning">Genom att återställa autentiseringsfunktionen kommer alla redan driftsatta autentiserare bli ogiltiga. Du kommer behöva sätta upp dem igen!</string>
     <string name="overview_show_predictions">BG-prognos</string>
     <string name="overview_show_deviationslope">Avvikelsekurva</string>
     <string name="authorizationfailed">Behörighetskontroll misslyckades</string>

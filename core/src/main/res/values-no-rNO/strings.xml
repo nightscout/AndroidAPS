@@ -20,7 +20,7 @@
     <string name="disconnected">Frakoblet</string>
     <string name="disconnecting">Frakobler</string>
     <string name="waiting_for_disconnection">Venter på frakobling</string>
-    <string name="androidaps_start">AndroidAPS startet</string>
+    <string name="androidaps_start">AAPS startet</string>
     <string name="formatinsulinunits1">%1$.1f E</string>
     <string name="formatinsulinunits">%1$.2f E</string>
     <string name="formatsignedinsulinunits">%1$+.2f E</string>
@@ -280,7 +280,7 @@
     <string name="versionavailable">Versjon %1$s er tilgjengelig</string>
     <string name="version_expire">Versjon %1$s utløper den %2$s</string>
     <!-- Permissions -->
-    <string name="alert_dialog_storage_permission_text">Vennligst start mobilen på nytt eller restart AndroidAPS fra Innstillinger \nellers vil ikke AndroidAPS ha aktivert loggføring (viktig for å spore og kontrollere at algoritmene fungerer riktig!)</string>
+    <string name="alert_dialog_storage_permission_text">Vennligst start mobilen på nytt eller restart AAPS fra Innstillinger \nellers vil ikke AAPS ha aktivert loggføring (viktig for å spore og kontrollere at algoritmene fungerer riktig)!</string>
     <!-- WeekdayPicker -->
     <string name="monday_short">M</string>
     <string name="tuesday_short">T</string>
@@ -397,7 +397,7 @@
     <string name="valueoutofrange">»%1$s« er utenfor lovlige grenseverdier</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f er utenfor lovlige grenseverdier</string>
     <string name="basal_value">Basal verdi</string>
-    <string name="nsclient_version_does_not_match">NSClient-versjonen samsvarer ikke med AndroidAPS-versjonen. Vennligst oppdater.</string>
+    <string name="nsclient_version_does_not_match">NSClient-versjonen samsvarer ikke med AAPS-versjonen. Vennligst oppdater.</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f E</string>
     <string name="carbs_g">CARBS %1$d g</string>
@@ -485,8 +485,8 @@
     <string name="autotune_update_local_profile_message">Oppdater %1$s profil med Autotune profil?</string>
     <string name="autotune_revert_local_profile_message">Tilbakestill %1$s profil med inngangsprofil?</string>
     <string name="autotune_profile_invalid">Ugyldig profil</string>
-    <string name="autotune_run_without_autoswitch">Autotune utført uten profilbytte</string>
-    <string name="autotune_run_with_autoswitch">Autotune utført og profil automatisk skiftet ut</string>
+    <string name="autotune_run_without_autoswitch">Autotune ble kjørt uten profilbytte</string>
+    <string name="autotune_run_with_autoswitch">Autotune utført og profil ble automatisk skiftet ut</string>
     <string name="autotune_run_with_error">Feil oppdaget under siste Autotune kjøring</string>
     <string name="autotune_run_cancelled">Autotune kjører allerede. Kjøring avbrutt</string>
     <string name="needconnectpermission">Appen trenger bluetooth tillatelse</string>

@@ -40,9 +40,9 @@
     <string name="description_source_ns_client">Recibir los datos de glucosa de Nightscout</string>
     <string name="description_source_xdrip">Recibir los valores de glucosa de xDrip+</string>
     <string name="description_treatments">Guarda todos los tratamientos que se realizaron</string>
-    <string name="description_wear">Usar tu reloj WearOS para observar y controlar AndroidAPS</string>
+    <string name="description_wear">Supervisar y controlar AAPS usando un reloj WearOS</string>
     <string name="description_xdrip_status_line">Mostrar información sobre tu lazo en tu esfera xDrip+</string>
-    <string name="description_sms_communicator">Control remoto de AndroidAPS mediante comandos SMS</string>
+    <string name="description_sms_communicator">Control remoto de AAPS usando comandos SMS.</string>
     <string name="treatments_insulin_label_string">Insulina:</string>
     <string name="treatments_carbs_label_string">Carbohidratos:</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -79,9 +79,9 @@
     <string name="treatments">Tratamientos</string>
     <string name="virtualpump">Bomba virtual</string>
     <string name="configbuilder_pump">Bomba</string>
-    <string name="configbuilder_pump_description">¿Qué bomba quieres utilizar con AndroidAPS?</string>
+    <string name="configbuilder_pump_description">¿Qué bomba quieres utilizar con AAPS?</string>
     <string name="configbuilder_profile">Perfil</string>
-    <string name="configbuilder_profile_description">¿Qué perfil debe usar AndroidAPS?</string>
+    <string name="configbuilder_profile_description">¿Qué perfil debería usar AAPS?</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">¿Qué algoritmo APS quieres usar para ajustar tu tratamiento?</string>
     <string name="configbuilder_general">Ajustes generales</string>
@@ -89,7 +89,7 @@
     <string name="configbuilder_constraints_description">¿Qué restricciones se aplican?</string>
     <string name="constraints">Restricciones</string>
     <string name="configbuilder_loop">Lazo</string>
-    <string name="configbuilder_loop_description">Utiliza esta opción para activar la integración del lazo en AndroidAPS</string>
+    <string name="configbuilder_loop_description">Usa esto para habilitar la integración de lazo de AAPS</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">Tras procesar las restricciones</string>
     <string name="loop_tbrsetbypump_label">Basal temporal establecida por la bomba</string>
@@ -106,7 +106,7 @@
     <string name="sms_basal">Dosis Basal:</string>
     <string name="changeyourinput">¡Cambiar datos!</string>
     <string name="configbuilder_bgsource">Origen de Glucosa</string>
-    <string name="configbuilder_bgsource_description">¿De dónde debe AndroidAPS obtener sus datos?</string>
+    <string name="configbuilder_bgsource_description">¿Desde dónde debería obtener AAPS los datos?</string>
     <string name="xdrip">xDrip+</string>
     <string name="apsmode_title">Modo APS</string>
     <string name="closedloop">Lazo cerrado</string>
@@ -331,7 +331,7 @@
     <string name="patient_name_summary">Proporcione el nombre de paciente o el apodo para diferenciar entre varias configuraciones</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Usuario</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%1$s necesita una optimización de la batería para funcionar óptimamente</string>
+    <string name="needwhitelisting">%1$s necesita añadir la optimización de la batería a la lista blanca, para obtener un rendimiento adecuado</string>
     <string name="loopsuspended">Lazo suspendido</string>
     <string name="loopsuspendedfor">Desactivado (%1$d m)</string>
     <string name="suspendloopfor1h">Suspender lazo durante 1 hora</string>
@@ -429,7 +429,7 @@
     <string name="sensitivityweightedaverage">Sensibilidad promedio ponderada</string>
     <string name="notloadedplugins">Faltan perfiles por cargar!</string>
     <string name="valuesnotstored">Valores no guardados!</string>
-    <string name="ns_localbroadcasts">Habilita las transmisiones a otras aplicaciones (como xDrip+). ¡No lo habilites si tienes más de una instancia de AAPS o NSClient instaladas!</string>
+    <string name="ns_localbroadcasts">Activar transmisiones a otras aplicaciones (como xDrip+). ¡No activar si tiene más de una instancia de AAPS o AAPSClient instalado!</string>
     <string name="ns_localbroadcasts_title">Habilitar la emisión de mensajes localmente.</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">ISF Dinámico</string>
@@ -631,7 +631,7 @@
     <string name="welcometosetupwizard">Bienvenido al asistente de instalación, que te guiará en el proceso de configuración\n</string>
     <string name="readstatus">Leer estado</string>
     <string name="exitwizard">Saltar asistente de configuración</string>
-    <string name="setupwizard_loop_description">Presiona el botón de abajo para permitir que AndroidAPS pueda sugerir/realizar cambios en las basales</string>
+    <string name="setupwizard_loop_description">Presionar el botón de abajo para permitir que AAPS pueda sugerir/realizar cambios en la insulina basal</string>
     <string name="setupwizard_sensitivity_description">El complemento de sensibilidad es usado para detectar la sensibilidad y cálculo de COB. Para más info ver:</string>
     <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/es/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="nsclientinfotext">NSCliente controla la conexión con Nightscout. Puedes saltar este paso ahora pero no podrás completar los objetivos hasta que lo configures.</string>
@@ -673,7 +673,7 @@
     <string name="remove_items">Eliminar elementos</string>
     <string name="sort_items">Ordenar elementos</string>
     <string name="storedsettingsfound">Encontrados ajustes de configuración</string>
-    <string name="allow_hardware_pump_text">Atención: si activas y conectas la bomba con AndroidAPS, AndroidAPS sobrescribirá los ajustes de basales del perfil de la bomba, con los establecidos en el perfil de AndroidAPS. Comprueba que tengas el perfil basal correcto en AndroidAPS. Si no estás seguro, o no quieres sobrescribir los ajustes basales en la bomba, presiona cancelar y repite la vinculación más adelante.</string>
+    <string name="allow_hardware_pump_text">Atención: Si activas y conectas una bomba con AAPS, AAPS copiará la configuración basal del perfil a la bomba, sobreescribiendo el perfil basal previo que tuviera almacenado la bomba. Asegúrate de que la configuración del perfil basal en AAPS es correcto. Si no estás seguro o no quieres sobreescribir la configuración del perfil basal de tu bomba, presiona cancelar y vincula la bomba más adelante.</string>
     <string name="error_adding_treatment_title">Datos de tratamiento incompletos</string>
     <string name="maintenance_settings">Ajustes de mantenimiento</string>
     <string name="maintenance_email">Correo electrónico</string>
@@ -774,7 +774,7 @@
     <string name="id">ID:</string>
     <string name="submit">Enviar</string>
     <string name="mostcommonprofile">Perfil más común:</string>
-    <string name="survey_comment">Nota: Sólo los datos visibles en esta pantalla se cargarán de forma anónima. El ID se asigna a esta instalación de AndroidAPS. Puede volver a enviar datos si cambia su perfil principal, pero deja que se ejecute al menos una semana para que el resultado sea visible en el tiempo en rango. Agradecemos su ayuda.</string>
+    <string name="survey_comment">Nota: Sólo los datos visibles en esta pantalla se subirán de forma anónima. El ID es asignado a la instalación de AAPS. Puedes volver a enviar datos si cambias tu perfil principal, pero deja que se ejecute al menos durante una semana, para que el resultado del tiempo en rango sea visible. Agradecemos tu ayuda.</string>
     <string name="invalidage">Entrada de edad no válida</string>
     <string name="invalidweight">Peso no válido</string>
     <string name="invalidpct">Entrada % inválida</string>
@@ -819,11 +819,11 @@
     <string name="smscommunicator_otp_export_prompt">¿Estás seguro que deseas copiar el secreto OTP al portapapeles?\n\nSólo lo necesitas si tu aplicación de autentificación tiene problemas para escanear el código QR, quieres introducirlo manualmente o quieres configurar el token de hardware OTP usando una aplicación dedicada.</string>
     <string name="smscommunicator_otp_export_successful">OTP secreto (en formato Base32) exportado y copiado en portapapeles. Pegalo en el autenticador o grabador hardware OTP!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Instalar autenticador</string>
-    <string name="smscommunicator_otp_step2_provisioning_header">2. Escanea el código para instalar códigos AndroidAPS OTP</string>
+    <string name="smscommunicator_otp_step2_provisioning_header">2. Escanea el código para configurar los códigos AAPS OTP</string>
     <string name="smscommunicator_otp_step3_test_header">3. Probar la contraseña de Uso único</string>
     <string name="smscommunicator_otp_reset_header">Restablecer autentificadores</string>
     <string name="smscommunicator_otp_install_info">En cada teléfono seguidor, instale la aplicación Authenticator que admita tokens RFC 6238 TOTP. Las aplicaciones gratuitas populares son:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_reset_warning">Al resetear el autenticador haces que todos los autenticadores ya provistos no sean válidos. ¡Necesitarás configurarlos de nuevo!</string>
+    <string name="smscommunicator_otp_reset_warning">Al reiniciar el autenticador, haces que todos los autenticadores previos no sean válidos. ¡Necesitarás configurarlos de nuevo!</string>
     <string name="overview_show_predictions">Predicciones</string>
     <string name="overview_show_treatments">Tratamientos</string>
     <string name="overview_show_deviationslope">Pendiente de desviación</string>
@@ -1020,7 +1020,7 @@
     <string name="above" comment="above &quot;in range&quot;">Alto</string>
     <string name="show_loop_records">Mostrar registros del lazo</string>
     <string name="show_hide_records">Ocultar registros del lazo</string>
-    <string name="widget_description">Widget de AndroidAPS</string>
+    <string name="widget_description">Widget de AAPS</string>
     <string name="configure">Configurar opacidad</string>
     <string name="loop_status">Estado del lazo</string>
     <string name="graph_scale">Escala gráfica</string>
@@ -1048,4 +1048,7 @@
     <string name="no_watch_connected">(Ningún reloj conectado)</string>
     <string name="error_asking_for_permissions">Error al solicitar permisos</string>
     <string name="dynisf_adjust_sensitivity">Ajustar sensibilidad y glucosa</string>
+    <string name="database_cleanup">Limpiar base de dados</string>
+    <string name="cleanup_db_confirm">¿Desea limpiar la base de datos?\nSe eliminarán los cambios registrados y los datos históricos más de 3 meses de antiguedad.</string>
+    <string name="cleared_entries">Entradas eliminadas</string>
 </resources>

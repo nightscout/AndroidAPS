@@ -20,7 +20,6 @@
     <string name="disconnected">Разъединено</string>
     <string name="disconnecting">разъединение</string>
     <string name="waiting_for_disconnection">Ожидание разъединения</string>
-    <string name="androidaps_start">AndroidAPS запущен</string>
     <string name="formatinsulinunits1">%1$.1f ед</string>
     <string name="formatinsulinunits">%1$.2f ед</string>
     <string name="formatsignedinsulinunits">%1$+.2f ед</string>
@@ -280,7 +279,6 @@
     <string name="versionavailable">Доступна версия %1$s</string>
     <string name="version_expire">Версия: %1$s истекает %2$s</string>
     <!-- Permissions -->
-    <string name="alert_dialog_storage_permission_text">Перезагрузите телефон или перезапустите AndroidAPS из системных настроек \n иначе AndroidAPS не будет вести лог (важно для отслеживания и проверки алгоритмов)!</string>
     <!-- WeekdayPicker -->
     <string name="monday_short">Пн</string>
     <string name="tuesday_short">Вт</string>
@@ -397,7 +395,6 @@
     <string name="valueoutofrange">»%1$s« за пределами жестких ограничений</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f за пределами жестких ограничений</string>
     <string name="basal_value">Величина базала</string>
-    <string name="nsclient_version_does_not_match">Версия NSClient не совпадает с версией AndroidAPS. Обновите версию.</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">БОЛЮС %1$.2f ЕД</string>
     <string name="carbs_g">УГЛ %1$d г</string>
@@ -485,8 +482,6 @@
     <string name="autotune_update_local_profile_message">Обновить профиль %1$s профилем Autotune?</string>
     <string name="autotune_revert_local_profile_message">Восстановить профиль %1$s с помощью входного профиля?</string>
     <string name="autotune_profile_invalid">Неверный профиль</string>
-    <string name="autotune_run_without_autoswitch">Autotune выполнен без переключения профиля</string>
-    <string name="autotune_run_with_autoswitch">Autotune выполнен и профиль переключён автоматически</string>
     <string name="autotune_run_with_error">Ошибка во время последнего выполнения Autotune</string>
     <string name="autotune_run_cancelled">Обнаружен другой запуск Autotune, выполнение отменено</string>
     <string name="needconnectpermission">Приложению требуется разрешение Bluetooth</string>

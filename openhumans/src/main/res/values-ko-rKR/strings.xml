@@ -12,7 +12,6 @@
     <string name="only_upload_if_charging">충전 중에만 업로드함</string>
     <string name="open_humans_uploading">Open Humans에 업로드 중...</string>
     <string name="open_humans_notifications">Open Humans 알림</string>
-    <string name="uploading_to_open_humans">AndroidAPS가 Open Humans에 업로드 중입니다. 시간이 조금 걸립니다.</string>
     <string name="you_have_been_signed_out_of_open_humans">Open Humans에 접속 종료되었습니다.</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">의도한 것이 아닌 경우 \"여기\"를 클릭하여 다시 접속하십시오.</string>
     <string name="upload_now">지금 업로드하기</string>

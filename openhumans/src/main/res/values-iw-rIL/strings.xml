@@ -12,7 +12,6 @@
     <string name="only_upload_if_charging">אפשר העלאה רק בזמן טעינת הסוללה</string>
     <string name="open_humans_uploading">מעלה נתונים ל-Open Humans…</string>
     <string name="open_humans_notifications">התראות Open Humans</string>
-    <string name="uploading_to_open_humans"> AndroidAPS מעלה נתונים ל-Open Humans. פעולה זו תיקח זמן מה.</string>
     <string name="you_have_been_signed_out_of_open_humans">התנתקתם מ-Open Humans</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">לחצו כאן כדי להתחבר מחדש אם זה לא היה בכוונה.</string>
     <string name="upload_now">העלה עכשיו</string>

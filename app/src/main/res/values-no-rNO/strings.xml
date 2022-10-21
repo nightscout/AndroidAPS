@@ -40,9 +40,7 @@
     <string name="description_source_ns_client">Last ned BS-verdier fra Nightscout</string>
     <string name="description_source_xdrip">Motta BS-verdier fra xDrip+.</string>
     <string name="description_treatments">Lagre data om alle behandlinger som er utført</string>
-    <string name="description_wear">Overvåke og styre AndroidAPS med din WearOS-klokke.</string>
     <string name="description_xdrip_status_line">Vis informasjon om loop på din xDrip+ urskive.</string>
-    <string name="description_sms_communicator">Fjernstyre AndroidAPS med SMS-kommandoer.</string>
     <string name="treatments_insulin_label_string">Insulin:</string>
     <string name="treatments_carbs_label_string">Karbo:</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -79,9 +77,7 @@
     <string name="treatments">Behandlinger</string>
     <string name="virtualpump">Virtuell pumpe</string>
     <string name="configbuilder_pump">Pumpe</string>
-    <string name="configbuilder_pump_description">Hvilken pumpe ønsker du å bruke sammen med AndroidAPS?</string>
     <string name="configbuilder_profile">Profil</string>
-    <string name="configbuilder_profile_description">Hvilken profil bør AndroidAPS bruke?</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">Hvilken algoritme skal APS benytte for behandlinger?</string>
     <string name="configbuilder_general">Generelt</string>
@@ -89,7 +85,6 @@
     <string name="configbuilder_constraints_description">Hvilke begrensninger brukes?</string>
     <string name="constraints">Begrensninger</string>
     <string name="configbuilder_loop">Loop</string>
-    <string name="configbuilder_loop_description">Bruk dette for å aktivere AndroidAPS loop integrasjon.</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">Etter behandling av begrensninger</string>
     <string name="loop_tbrsetbypump_label">Temp basal satt av pumpen</string>
@@ -106,7 +101,6 @@
     <string name="sms_basal">Basal:</string>
     <string name="changeyourinput">Endre dine inndata!</string>
     <string name="configbuilder_bgsource">BS-kilde</string>
-    <string name="configbuilder_bgsource_description">Hvor skal AndroidAPS hente sine data fra?</string>
     <string name="xdrip">xDrip+</string>
     <string name="apsmode_title">APS modus</string>
     <string name="closedloop">Lukket Loop</string>
@@ -331,7 +325,6 @@
     <string name="patient_name_summary">Angi pasientnavn eller kallenavn for å kunne skille mellom flere oppsett</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Bruker</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%1$s behøver å omgå batterisparefunksjonene for å fungere tilfredsstillende</string>
     <string name="loopsuspended">Loop pauset</string>
     <string name="loopsuspendedfor">Pauset (%1$d m)</string>
     <string name="suspendloopfor1h">Pause loop i 1t</string>
@@ -429,7 +422,6 @@
     <string name="sensitivityweightedaverage">Sensitivitet vektet middelverdi</string>
     <string name="notloadedplugins">Ikke alle profiler ble lastet!</string>
     <string name="valuesnotstored">Verdier ikke lagret!</string>
-    <string name="ns_localbroadcasts">Aktiver kringkasting til andre apper (som xDrip+). Ikke aktiver dette hvis du har mer enn én AAPS eller NSClient installert!</string>
     <string name="ns_localbroadcasts_title">Aktiver deling av data mellom apper på telefonen.</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dynamisk ISF</string>
@@ -631,7 +623,6 @@
     <string name="welcometosetupwizard">Velkommen til oppsettveiviseren. Den vil lede deg gjennom installasjonsprosessen\n</string>
     <string name="readstatus">Les status</string>
     <string name="exitwizard">Hopp over oppsettsveiviser</string>
-    <string name="setupwizard_loop_description">Trykk på knappen under for å tillate at AndroidAPS foreslår/gjør basal endringer</string>
     <string name="setupwizard_sensitivity_description">Sensitivitets plugin brukes til å oppdage insulinsensitivitet og COB beregninger. For mer info, se:</string>
     <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="nsclientinfotext">NSClient håndterer tilkobling til Nightscout. Du kan hoppe over denne delen nå, men du vil ikke kunne bestå læringsmålene før den er satt opp.</string>
@@ -673,7 +664,6 @@
     <string name="remove_items">Fjern oppføringer</string>
     <string name="sort_items">Sorter elementer</string>
     <string name="storedsettingsfound">Lagrede innstillinger funnet</string>
-    <string name="allow_hardware_pump_text">Varsel: Hvis du aktiverer og kobler til en pumpe, så vil AndroidAPS kopiere basal innstillinger fra din profil over til pumpen og overskrive verdiene som er lagret der. Sjekk at du har riktige basal verdier i AndroidAPS. Hvis du ikke er sikker eller ikke ønsker å overskrive basal verdiene i pumpen, trykk avbryt og koble til pumpen senere.</string>
     <string name="error_adding_treatment_title">Behandlingsdata er ufullstendige</string>
     <string name="maintenance_settings">Vedlikeholds innstillinger</string>
     <string name="maintenance_email">E-post mottaker</string>
@@ -701,7 +691,6 @@
     <string name="loop_openmode_min_change_summary" formatted="false">I åpen Loop modus vil AAPS be om en endring hvis forandringen er større enn denne verdien i %. Standard verdi er 20%</string>
     <string name="profile_total">== ∑  %1$s E</string>
     <string name="dexcom_lognssensorchange_title">Logg sensor endring til NS</string>
-    <string name="dexcom_lognssensorchange_summary">Opprett hendelse \"Sensor bytte\" i NS automatisk ved start av sensoren</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Ditt Tidepool brukernavn, normalt din e-postadresse</string>
@@ -774,7 +763,6 @@
     <string name="id">ID:</string>
     <string name="submit">Lagre</string>
     <string name="mostcommonprofile">Mest vanlig profil:</string>
-    <string name="survey_comment">Merk: Kun data synlig på denne skjermen vil bli anonymt lastet opp. ID er tilordnet denne installasjonen av AndroidAPS. Du kan sende inn data igjen hvis hovedprofilen din blir endret, men la den kjøre i minst en uke for å se effekten av resultatet i tidsperioden. Din hjelp blir verdsatt.</string>
     <string name="invalidage">Ugyldig alder</string>
     <string name="invalidweight">Ugyldig vekt</string>
     <string name="invalidpct">Ugyldig % oppføring</string>
@@ -819,11 +807,9 @@
     <string name="smscommunicator_otp_export_prompt">Er du sikker på at du vil kopiere OTP hemmelig kode til utklippstavlen?\n\nDu trenger bare det hvis din Authenticator app har problemer med skanning av QRCode og du ønsker å legge den inn manuelt, eller du ønsker å konfigurere maskinvare OTP-kode ved hjelp av dedikert app.</string>
     <string name="smscommunicator_otp_export_successful">OTP hemmelig kode (i base32-format) er eksportert og kopiert til utklippstavlen. Lim den inn i Authenticator app eller hardware OTP system!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Installer Authenticator</string>
-    <string name="smscommunicator_otp_step2_provisioning_header">2. Skann kode for å sette opp AndroidAPS OTP koder</string>
     <string name="smscommunicator_otp_step3_test_header">3. Test engangspassord</string>
     <string name="smscommunicator_otp_reset_header">Tilbakestill Authenticators</string>
     <string name="smscommunicator_otp_install_info">I hver følger telefon installerer du en Authenticator-app som støtter RFC 6238 TOTP token. Populære gratis apper er:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_reset_warning">Ved å tilbakestille authenticator vil du gjøre alle lagrede autentiseringer ugyldige. Du må sette alle opp på nytt igjen!</string>
     <string name="overview_show_predictions">Prognoser</string>
     <string name="overview_show_treatments">Behandlinger</string>
     <string name="overview_show_deviationslope">Avvikskurve</string>
@@ -1020,7 +1006,6 @@
     <string name="above" comment="above &quot;in range&quot;">Over</string>
     <string name="show_loop_records">Vis loop registreringer</string>
     <string name="show_hide_records">Skjul loop registreringer</string>
-    <string name="widget_description">AndroidAPS widget</string>
     <string name="configure">Konfigurer gjennomsiktighet</string>
     <string name="loop_status">Loop status</string>
     <string name="graph_scale">Diagram skala</string>
