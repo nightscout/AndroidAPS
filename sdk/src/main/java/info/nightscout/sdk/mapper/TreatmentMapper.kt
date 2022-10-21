@@ -14,7 +14,7 @@ internal fun RemoteTreatment.toTreatment(): Treatment? {
     when {
         insulin != null && insulin > 0          ->
             return Bolus(
-                date = this.date,
+                date = timestamp(),
                 device = this.device,
                 identifier = this.identifier,
                 units = NsUnits.fromString(this.units),
@@ -30,12 +30,12 @@ internal fun RemoteTreatment.toTreatment(): Treatment? {
                 pumpType = this.pumpType,
                 pumpSerial = this.pumpSerial,
                 insulin = this.insulin,
-                type = Bolus.BolusType.fromString(this.type)
+                type = Bolus.BolusType.fromString(this.type),
             )
 
         carbs != null && carbs > 0              ->
             return Carbs(
-                date = this.date,
+                date = timestamp(),
                 device = this.device,
                 identifier = this.identifier,
                 units = NsUnits.fromString(this.units),
@@ -62,7 +62,7 @@ internal fun RemoteTreatment.toTreatment(): Treatment? {
             this.targetTop ?: return null
 
             return TemporaryTarget(
-                date = this.date,
+                date = timestamp(),
                 device = this.device,
                 identifier = this.identifier,
                 units = NsUnits.fromString(this.units),

@@ -50,8 +50,8 @@ class LoadBgWorker(
                     if (sgvs.isNotEmpty()) {
                         rxBus.send(
                             EventNSClientNewLog(
-                                "DATA",
-                                "received ${sgvs.size} sgvs starting ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.entries)}",
+                                "RCV",
+                                "${sgvs.size} SVGs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.entries)}",
                                 NsClient.Version.V3
                             )
                         )
@@ -60,15 +60,15 @@ class LoadBgWorker(
                         // Schedule processing of fetched data and continue of loading
                         WorkManager.getInstance(context).beginUniqueWork(
                             JOB_NAME,
-                            ExistingWorkPolicy.REPLACE,
+                            ExistingWorkPolicy.APPEND_OR_REPLACE,
                             OneTimeWorkRequest.Builder(NSClientSourcePlugin.NSClientSourceWorker::class.java).setInputData(dataWorkerStorage.storeInputData(sgvs)).build()
                         ).then(OneTimeWorkRequest.Builder(LoadBgWorker::class.java).build()).enqueue()
-                    } else rxBus.send(EventNSClientNewLog("DATA", "No sgvs starting ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.entries)}", NsClient.Version.V3))
+                    } else rxBus.send(EventNSClientNewLog("END", "No SGVs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.entries)}", NsClient.Version.V3))
                 } catch (error: Exception) {
                     aapsLogger.error("Error: ", error)
                     ret = Result.failure(workDataOf("Error" to error))
                 }
-            else rxBus.send(EventNSClientNewLog("DATA", "No new sgvs starting ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.entries)}", NsClient.Version.V3))
+            else rxBus.send(EventNSClientNewLog("END", "No new SGVs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.entries)}", NsClient.Version.V3))
         }
         return ret
     }

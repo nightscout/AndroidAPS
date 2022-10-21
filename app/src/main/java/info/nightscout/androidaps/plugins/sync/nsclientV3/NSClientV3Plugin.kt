@@ -9,6 +9,7 @@ import androidx.preference.PreferenceScreen
 import androidx.preference.SwitchPreference
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
@@ -25,7 +26,6 @@ import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.interfaces.Sync
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.source.NSClientSourcePlugin
 import info.nightscout.androidaps.plugins.sync.nsclient.NSClientFragment
 import info.nightscout.androidaps.plugins.sync.nsclient.NsClientReceiverDelegate
 import info.nightscout.androidaps.plugins.sync.nsclient.data.AlarmAck
@@ -39,26 +39,20 @@ import info.nightscout.androidaps.plugins.sync.nsclientV3.workers.LoadBgWorker
 import info.nightscout.androidaps.plugins.sync.nsclientV3.workers.LoadLastModificationWorker
 import info.nightscout.androidaps.plugins.sync.nsclientV3.workers.LoadStatusWorker
 import info.nightscout.androidaps.plugins.sync.nsclientV3.workers.LoadTreatmentsWorker
-import info.nightscout.androidaps.plugins.sync.nsclientV3.workers.ProcessTreatmentsWorker
-import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HtmlHelper.fromHtml
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.androidaps.workflow.LoadBgDataWorker
 import info.nightscout.sdk.NSAndroidClientImpl
-import info.nightscout.sdk.NSAndroidRxClientImpl
 import info.nightscout.sdk.interfaces.NSAndroidClient
-import info.nightscout.sdk.interfaces.NSAndroidRxClient
 import info.nightscout.sdk.remotemodel.LastModified
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
@@ -78,7 +72,6 @@ class NSClientV3Plugin @Inject constructor(
     private val nsClientReceiverDelegate: NsClientReceiverDelegate,
     private val config: Config,
     private val buildHelper: BuildHelper,
-    private val dataWorkerStorage: DataWorkerStorage,
     private val dateUtil: DateUtil
 ) : NsClient, Sync, PluginBase(
     PluginDescription()
@@ -290,16 +283,28 @@ class NSClientV3Plugin @Inject constructor(
     }
 
     fun test() {
-        WorkManager.getInstance(context)
-            .beginUniqueWork(
-                "NSCv3Load",
-                ExistingWorkPolicy.REPLACE,
-                OneTimeWorkRequest.Builder(LoadStatusWorker::class.java).build()
-            )
-            .then(OneTimeWorkRequest.Builder(LoadLastModificationWorker::class.java).build())
-            .then(OneTimeWorkRequest.Builder(LoadBgWorker::class.java).build())
-            .then(OneTimeWorkRequest.Builder(LoadTreatmentsWorker::class.java).build())
-            .enqueue()
+        if (workIsRunning(arrayOf(LoadBgWorker.JOB_NAME, LoadTreatmentsWorker.JOB_NAME)))
+            rxBus.send(EventNSClientNewLog("RUN", "Already running", NsClient.Version.V3))
+        else {
+            rxBus.send(EventNSClientNewLog("RUN", "Starting next round", NsClient.Version.V3))
+            WorkManager.getInstance(context)
+                .beginUniqueWork(
+                    "NSCv3Load",
+                    ExistingWorkPolicy.REPLACE,
+                    OneTimeWorkRequest.Builder(LoadStatusWorker::class.java).build()
+                )
+                .then(OneTimeWorkRequest.Builder(LoadLastModificationWorker::class.java).build())
+                .then(OneTimeWorkRequest.Builder(LoadBgWorker::class.java).build())
+                .then(OneTimeWorkRequest.Builder(LoadTreatmentsWorker::class.java).build())
+                .enqueue()
+        }
+    }
 
+    private fun workIsRunning(workNames: Array<String>): Boolean {
+        for (workName in workNames)
+            for (workInfo in WorkManager.getInstance(context).getWorkInfosForUniqueWork(workName).get())
+                if (workInfo.state == WorkInfo.State.BLOCKED || workInfo.state == WorkInfo.State.ENQUEUED || workInfo.state == WorkInfo.State.RUNNING)
+                    return true
+        return false
     }
 }

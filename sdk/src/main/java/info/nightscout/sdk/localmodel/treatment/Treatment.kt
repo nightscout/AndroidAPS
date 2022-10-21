@@ -18,4 +18,11 @@ interface Treatment {
     val pumpId: Long?
     val pumpType: String?
     val pumpSerial: String?
+
+    fun Double.asMgdl() =
+        when (units) {
+            NsUnits.MG_DL  -> this
+            NsUnits.MMOL_L -> this * 18
+            null           -> this
+        }
 }

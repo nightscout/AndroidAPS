@@ -12,6 +12,7 @@ import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.BgSource
 import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.androidaps.interfaces.NsClient
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
@@ -20,6 +21,7 @@ import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.sync.nsclient.data.NSSgv
+import info.nightscout.androidaps.plugins.sync.nsclient.events.EventNSClientNewLog
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
@@ -130,6 +132,7 @@ class NSClientSourcePlugin @Inject constructor(
         @Suppress("SpellCheckingInspection")
         override fun doWork(): Result {
             var ret = Result.success()
+            var processed = 0
             val sgvs = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1))
                 ?: return Result.failure(workDataOf("Error" to "missing input data"))
 
@@ -178,11 +181,13 @@ class NSClientSourcePlugin @Inject constructor(
                             xDripBroadcast.send(it)
                             nsClientSourcePlugin.detectSource(it)
                             aapsLogger.debug(LTag.DATABASE, "Updated bg $it")
+                            processed++
                         }
                         result.inserted.forEach {
                             xDripBroadcast.send(it)
                             nsClientSourcePlugin.detectSource(it)
                             aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
+                            processed++
                         }
                         ret = Result.success(workDataOf("latestDateInReceivedData" to latestDateInReceivedData))
                     }
@@ -190,6 +195,8 @@ class NSClientSourcePlugin @Inject constructor(
                 aapsLogger.error("Unhandled exception", e)
                 ret = Result.failure(workDataOf("Error" to e.toString()))
             }
+            if (processed > 0)
+                rxBus.send(EventNSClientNewLog("PROCESSED", "GlucoseValue $processed", if (sgvs is List<*>) NsClient.Version.V3 else NsClient.Version.V1))
             return ret
         }
     }

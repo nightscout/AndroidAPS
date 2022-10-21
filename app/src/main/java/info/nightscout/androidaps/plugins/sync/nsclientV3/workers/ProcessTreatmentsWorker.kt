@@ -5,20 +5,25 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.SyncNsBolusTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsCarbsTransaction
+import info.nightscout.androidaps.database.transactions.SyncNsTemporaryTargetTransaction
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.androidaps.interfaces.NsClient
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
+import info.nightscout.androidaps.plugins.sync.nsclient.events.EventNSClientNewLog
 import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toBolus
 import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toCarbs
+import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toTemporaryTarget
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.XDripBroadcast
@@ -29,6 +34,7 @@ import info.nightscout.sdk.localmodel.treatment.Treatment
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class ProcessTreatmentsWorker(
@@ -56,6 +62,7 @@ class ProcessTreatmentsWorker(
 
         var ret = Result.success()
         var latestDateInReceivedData = 0L
+        val processed = HashMap<String, Long>()
 
         for (treatment in treatments) {
             aapsLogger.debug(LTag.DATABASE, "Received NS treatment: $treatment")
@@ -66,7 +73,7 @@ class ProcessTreatmentsWorker(
                 if (mills > latestDateInReceivedData) latestDateInReceivedData = mills
 
             when (treatment) {
-                is Bolus -> {
+                is Bolus           -> {
                     if (sp.getBoolean(R.string.key_ns_receive_insulin, false) || config.NSCLIENT) {
                         repository.runTransactionForResult(SyncNsBolusTransaction(treatment.toBolus()))
                             .doOnError {
@@ -82,6 +89,7 @@ class ProcessTreatmentsWorker(
                                         ValueWithUnit.Insulin(it.amount)
                                     )
                                     aapsLogger.debug(LTag.DATABASE, "Inserted bolus $it")
+                                    processed[Bolus::class.java.simpleName] = (processed[Bolus::class.java.simpleName] ?: 0) + 1
                                 }
                                 result.invalidated.forEach {
                                     uel.log(
@@ -90,18 +98,21 @@ class ProcessTreatmentsWorker(
                                         ValueWithUnit.Insulin(it.amount)
                                     )
                                     aapsLogger.debug(LTag.DATABASE, "Invalidated bolus $it")
+                                    processed[Bolus::class.java.simpleName] = (processed[Bolus::class.java.simpleName] ?: 0) + 1
                                 }
                                 result.updatedNsId.forEach {
                                     aapsLogger.debug(LTag.DATABASE, "Updated nsId of bolus $it")
+                                    processed[Bolus::class.java.simpleName] = (processed[Bolus::class.java.simpleName] ?: 0) + 1
                                 }
                                 result.updated.forEach {
                                     aapsLogger.debug(LTag.DATABASE, "Updated amount of bolus $it")
+                                    processed[Bolus::class.java.simpleName] = (processed[Bolus::class.java.simpleName] ?: 0) + 1
                                 }
                             }
                     }
                 }
 
-                is Carbs -> {
+                is Carbs           -> {
                     if (sp.getBoolean(R.string.key_ns_receive_carbs, false) || config.NSCLIENT) {
                         repository.runTransactionForResult(SyncNsCarbsTransaction(treatment.toCarbs()))
                             .doOnError {
@@ -117,6 +128,7 @@ class ProcessTreatmentsWorker(
                                         ValueWithUnit.Gram(it.amount.toInt())
                                     )
                                     aapsLogger.debug(LTag.DATABASE, "Inserted carbs $it")
+                                    processed[Carbs::class.java.simpleName] = (processed[Carbs::class.java.simpleName] ?: 0) + 1
                                 }
                                 result.invalidated.forEach {
                                     uel.log(
@@ -125,6 +137,7 @@ class ProcessTreatmentsWorker(
                                         ValueWithUnit.Gram(it.amount.toInt())
                                     )
                                     aapsLogger.debug(LTag.DATABASE, "Invalidated carbs $it")
+                                    processed[Carbs::class.java.simpleName] = (processed[Carbs::class.java.simpleName] ?: 0) + 1
                                 }
                                 result.updated.forEach {
                                     uel.log(
@@ -133,23 +146,80 @@ class ProcessTreatmentsWorker(
                                         ValueWithUnit.Gram(it.amount.toInt())
                                     )
                                     aapsLogger.debug(LTag.DATABASE, "Updated carbs $it")
+                                    processed[Carbs::class.java.simpleName] = (processed[Carbs::class.java.simpleName] ?: 0) + 1
                                 }
                                 result.updatedNsId.forEach {
                                     aapsLogger.debug(LTag.DATABASE, "Updated nsId carbs $it")
+                                    processed[Carbs::class.java.simpleName] = (processed[Carbs::class.java.simpleName] ?: 0) + 1
                                 }
                             }
                     }
                 }
-                is TemporaryTarget -> {
-                    if (this.duration > 0L) {
-                        // not ending event
-                        if (low < Constants.MIN_TT_MGDL) return null
-                        if (low > Constants.MAX_TT_MGDL) return null
-                        if (high < Constants.MIN_TT_MGDL) return null
-                        if (high > Constants.MAX_TT_MGDL) return null
-                        if (low > high) return null
-                    }
 
+                is TemporaryTarget -> {
+                    if (sp.getBoolean(R.string.key_ns_receive_temp_target, false) || config.NSCLIENT) {
+                        if (treatment.duration > 0L) {
+                            // not ending event
+                            if (treatment.targetBottomAsMgdl() < Constants.MIN_TT_MGDL
+                                || treatment.targetBottomAsMgdl() > Constants.MAX_TT_MGDL
+                                || treatment.targetTopAsMgdl() < Constants.MIN_TT_MGDL
+                                || treatment.targetTopAsMgdl() > Constants.MAX_TT_MGDL
+                                || treatment.targetBottomAsMgdl() > treatment.targetTopAsMgdl()
+                            ) {
+                                aapsLogger.debug(LTag.DATABASE, "Ignored TemporaryTarget $treatment")
+                                continue
+                            }
+                        }
+                        repository.runTransactionForResult(SyncNsTemporaryTargetTransaction(treatment.toTemporaryTarget()))
+                            .doOnError {
+                                aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
+                                ret = Result.failure(workDataOf("Error" to it.toString()))
+                            }
+                            .blockingGet()
+                            .also { result ->
+                                result.inserted.forEach { tt ->
+                                    uel.log(
+                                        UserEntry.Action.TT, UserEntry.Sources.NSClient,
+                                        ValueWithUnit.TherapyEventTTReason(tt.reason),
+                                        ValueWithUnit.fromGlucoseUnit(tt.lowTarget, Constants.MGDL),
+                                        ValueWithUnit.fromGlucoseUnit(tt.highTarget, Constants.MGDL).takeIf { tt.lowTarget != tt.highTarget },
+                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt.duration).toInt())
+                                    )
+                                    aapsLogger.debug(LTag.DATABASE, "Inserted TemporaryTarget $tt")
+                                    processed[TemporaryTarget::class.java.simpleName] = (processed[TemporaryTarget::class.java.simpleName] ?: 0) + 1
+                                }
+                                result.invalidated.forEach { tt ->
+                                    uel.log(
+                                        UserEntry.Action.TT_REMOVED, UserEntry.Sources.NSClient,
+                                        ValueWithUnit.TherapyEventTTReason(tt.reason),
+                                        ValueWithUnit.Mgdl(tt.lowTarget),
+                                        ValueWithUnit.Mgdl(tt.highTarget).takeIf { tt.lowTarget != tt.highTarget },
+                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt.duration).toInt())
+                                    )
+                                    aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryTarget $tt")
+                                    processed[TemporaryTarget::class.java.simpleName] = (processed[TemporaryTarget::class.java.simpleName] ?: 0) + 1
+                                }
+                                result.ended.forEach { tt ->
+                                    uel.log(
+                                        UserEntry.Action.CANCEL_TT, UserEntry.Sources.NSClient,
+                                        ValueWithUnit.TherapyEventTTReason(tt.reason),
+                                        ValueWithUnit.Mgdl(tt.lowTarget),
+                                        ValueWithUnit.Mgdl(tt.highTarget).takeIf { tt.lowTarget != tt.highTarget },
+                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt.duration).toInt())
+                                    )
+                                    aapsLogger.debug(LTag.DATABASE, "Updated TemporaryTarget $tt")
+                                    processed[TemporaryTarget::class.java.simpleName] = (processed[TemporaryTarget::class.java.simpleName] ?: 0) + 1
+                                }
+                                result.updatedNsId.forEach {
+                                    aapsLogger.debug(LTag.DATABASE, "Updated nsId TemporaryTarget $it")
+                                    processed[TemporaryTarget::class.java.simpleName] = (processed[TemporaryTarget::class.java.simpleName] ?: 0) + 1
+                                }
+                                result.updatedDuration.forEach {
+                                    aapsLogger.debug(LTag.DATABASE, "Updated duration TemporaryTarget $it")
+                                    processed[TemporaryTarget::class.java.simpleName] = (processed[TemporaryTarget::class.java.simpleName] ?: 0) + 1
+                                }
+                            }
+                    }
                 }
             }
             /*
@@ -166,58 +236,6 @@ class ProcessTreatmentsWorker(
 
             when {
                 insulin > 0 || carbs > 0                                                    -> Any()
-                eventType == TherapyEvent.Type.TEMPORARY_TARGET.text                        ->
-                    if (sp.getBoolean(R.string.key_ns_receive_temp_target, false) || config.NSCLIENT) {
-
-
-
-                        temporaryTargetFromJson(json)?.let { temporaryTarget ->
-                            repository.runTransactionForResult(SyncNsTemporaryTargetTransaction(temporaryTarget))
-                                .doOnError {
-                                    aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
-                                    ret = Result.failure(workDataOf("Error" to it.toString()))
-                                }
-                                .blockingGet()
-                                .also { result ->
-                                    result.inserted.forEach { tt ->
-                                        uel.log(
-                                            Action.TT, Sources.NSClient,
-                                            ValueWithUnit.TherapyEventTTReason(tt.reason),
-                                            ValueWithUnit.fromGlucoseUnit(tt.lowTarget, Constants.MGDL),
-                                            ValueWithUnit.fromGlucoseUnit(tt.highTarget, Constants.MGDL).takeIf { tt.lowTarget != tt.highTarget },
-                                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt.duration).toInt())
-                                        )
-                                        aapsLogger.debug(LTag.DATABASE, "Inserted TemporaryTarget $tt")
-                                    }
-                                    result.invalidated.forEach { tt ->
-                                        uel.log(
-                                            Action.TT_REMOVED, Sources.NSClient,
-                                            ValueWithUnit.TherapyEventTTReason(tt.reason),
-                                            ValueWithUnit.Mgdl(tt.lowTarget),
-                                            ValueWithUnit.Mgdl(tt.highTarget).takeIf { tt.lowTarget != tt.highTarget },
-                                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt.duration).toInt())
-                                        )
-                                        aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryTarget $tt")
-                                    }
-                                    result.ended.forEach { tt ->
-                                        uel.log(
-                                            Action.CANCEL_TT, Sources.NSClient,
-                                            ValueWithUnit.TherapyEventTTReason(tt.reason),
-                                            ValueWithUnit.Mgdl(tt.lowTarget),
-                                            ValueWithUnit.Mgdl(tt.highTarget).takeIf { tt.lowTarget != tt.highTarget },
-                                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt.duration).toInt())
-                                        )
-                                        aapsLogger.debug(LTag.DATABASE, "Updated TemporaryTarget $tt")
-                                    }
-                                    result.updatedNsId.forEach {
-                                        aapsLogger.debug(LTag.DATABASE, "Updated nsId TemporaryTarget $it")
-                                    }
-                                    result.updatedDuration.forEach {
-                                        aapsLogger.debug(LTag.DATABASE, "Updated duration TemporaryTarget $it")
-                                    }
-                                }
-                        } ?: aapsLogger.error("Error parsing TT json $json")
-                    }
 
                 eventType == TherapyEvent.Type.NOTE.text && json.isEffectiveProfileSwitch() -> // replace this by new Type when available in NS
                     if (sp.getBoolean(R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
@@ -522,6 +540,7 @@ class ProcessTreatmentsWorker(
 
              */
         }
+        for (key in processed.keys) rxBus.send(EventNSClientNewLog("PROCESSED", "$key ${processed[key]}", NsClient.Version.V3))
         activePlugin.activeNsClient?.updateLatestTreatmentReceivedIfNewer(latestDateInReceivedData)
 //        xDripBroadcast.sendTreatments(treatments)
         return ret

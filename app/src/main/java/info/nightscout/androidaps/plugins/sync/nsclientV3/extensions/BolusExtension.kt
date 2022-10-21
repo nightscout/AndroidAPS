@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.sync.nsclientV3.extensions
 
+import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.entities.Bolus
 
 fun info.nightscout.sdk.localmodel.treatment.Bolus.toBolus() : Bolus =
@@ -10,6 +11,7 @@ fun info.nightscout.sdk.localmodel.treatment.Bolus.toBolus() : Bolus =
         amount = insulin,
         type = type.toBolusType(),
         notes = notes,
+        interfaceIDs_backing = InterfaceIDs(nightscoutId = identifier)
     )
 
 fun info.nightscout.sdk.localmodel.treatment.Bolus.BolusType?.toBolusType() : Bolus.Type =

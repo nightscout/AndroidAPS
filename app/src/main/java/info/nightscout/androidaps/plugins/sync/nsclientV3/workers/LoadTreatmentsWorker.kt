@@ -46,8 +46,8 @@ class LoadTreatmentsWorker(
                     if (treatments.isNotEmpty()) {
                         rxBus.send(
                             EventNSClientNewLog(
-                                "DATA",
-                                "received ${treatments.size} treatments starting ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.treatments)}",
+                                "RCV",
+                                "${treatments.size} TRs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.treatments)}",
                                 NsClient.Version.V3
                             )
                         )
@@ -55,7 +55,7 @@ class LoadTreatmentsWorker(
                         WorkManager.getInstance(context)
                             .beginUniqueWork(
                                 JOB_NAME,
-                                ExistingWorkPolicy.REPLACE,
+                                ExistingWorkPolicy.APPEND_OR_REPLACE,
                                 OneTimeWorkRequest.Builder(ProcessTreatmentsWorker::class.java)
                                     .setInputData(dataWorkerStorage.storeInputData(treatments))
                                     .build()
@@ -64,8 +64,8 @@ class LoadTreatmentsWorker(
                     } else
                         rxBus.send(
                             EventNSClientNewLog(
-                                "DATA", "No treatments starting ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.treatments)}", NsClient
-                                    .Version.V3
+                                "END", "No TRs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.treatments)}",
+                                NsClient.Version.V3
                             )
                         )
                 } catch (error: Exception) {
@@ -73,7 +73,7 @@ class LoadTreatmentsWorker(
                     ret = Result.failure(workDataOf("Error" to error))
                 }
             else
-                rxBus.send(EventNSClientNewLog("DATA", "No new treatments starting ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.treatments)}", NsClient.Version.V3))
+                rxBus.send(EventNSClientNewLog("END", "No new TRs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.treatments)}", NsClient.Version.V3))
         }
         return ret
     }
