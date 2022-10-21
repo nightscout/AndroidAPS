@@ -69,14 +69,14 @@ class MaintenancePlugin @Inject constructor(
         val files = logDir.listFiles { _: File?, name: String ->
             (name.startsWith("AndroidAPS") && name.endsWith(".zip"))
         }
-        val autotunefiles = logDir.listFiles { _: File?, name: String ->
+        val autotuneFiles = logDir.listFiles { _: File?, name: String ->
             (name.startsWith("autotune") && name.endsWith(".zip"))
         }
         val amount = sp.getInt(R.string.key_logshipper_amount, keep)
         val keepIndex = amount - 1
-        if (autotunefiles != null && autotunefiles.isNotEmpty()) {
-            Arrays.sort(autotunefiles) { f1: File, f2: File -> f2.name.compareTo(f1.name) }
-            var delAutotuneFiles = listOf(*autotunefiles)
+        if (autotuneFiles != null && autotuneFiles.isNotEmpty()) {
+            Arrays.sort(autotuneFiles) { f1: File, f2: File -> f2.name.compareTo(f1.name) }
+            var delAutotuneFiles = listOf(*autotuneFiles)
             if (keepIndex < delAutotuneFiles.size) {
                 delAutotuneFiles = delAutotuneFiles.subList(keepIndex, delAutotuneFiles.size)
                 for (file in delAutotuneFiles) {

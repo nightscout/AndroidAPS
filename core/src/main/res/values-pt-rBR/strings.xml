@@ -16,7 +16,6 @@
     <string name="connected">Conectado</string>
     <string name="disconnected">Desconectado</string>
     <string name="disconnecting">A desligar</string>
-    <string name="androidaps_start">AndroidAPS iniciado</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
     <string name="pump_basebasalrate">%1$.2f U/h</string>
     <string name="format_hours">%1$.2f h</string>

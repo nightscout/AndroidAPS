@@ -38,9 +38,7 @@
     <string name="description_source_ns_client">Descarrega dades de glucèmia des de Nightscout</string>
     <string name="description_source_xdrip">Rebre valors de glucèmia de xDrip+.</string>
     <string name="description_treatments">Desa tots els tractaments realitzats</string>
-    <string name="description_wear">Monitoritzar i controlar AndroidAPS des del vostre rellotge WearOS.</string>
     <string name="description_xdrip_status_line">Mostrar informació del llaç a la vostra esfera xDrip+.</string>
-    <string name="description_sms_communicator">Controlar remotament AndroidAPS amb ordres SMS.</string>
     <string name="treatments_insulin_label_string">Insulina:</string>
     <string name="treatments_carbs_label_string">Carbs:</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -77,9 +75,7 @@
     <string name="treatments">Tractaments</string>
     <string name="virtualpump">Bomba virtual</string>
     <string name="configbuilder_pump">Bomba</string>
-    <string name="configbuilder_pump_description">Quina bomba voleu utilitzar amb AndroidAPS?</string>
     <string name="configbuilder_profile">Perfil</string>
-    <string name="configbuilder_profile_description">Quin perfil ha d\'utilitzar AndroidAPS?</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">Quin algoritme APS ha d\'anar fent ajustos de teràpia?</string>
     <string name="configbuilder_general">General</string>
@@ -87,7 +83,6 @@
     <string name="configbuilder_constraints_description">Quines restriccions s\'estan aplicant?</string>
     <string name="constraints">Restriccions</string>
     <string name="configbuilder_loop">Llaços</string>
-    <string name="configbuilder_loop_description">Fes-ho servir per activar la integració del llaç d\'AndroidAPS.</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_tbrsetbypump_label">Basal temporal definida per la bomba</string>
     <string name="noapsselected">CAP APS SELECCIONAT O RESULTAT ENTREGAT</string>
@@ -102,7 +97,6 @@
     <string name="sms_basal">Basal:</string>
     <string name="changeyourinput">Modifiqueu les dades!</string>
     <string name="configbuilder_bgsource">Origen glucèmia</string>
-    <string name="configbuilder_bgsource_description">D\'on ha d\'obtenir AndroidAPS les seves dades?</string>
     <string name="xdrip">xDrip+</string>
     <string name="apsmode_title">Mode APS</string>
     <string name="closedloop">Llaç tancat</string>

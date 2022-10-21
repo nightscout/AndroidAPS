@@ -39,9 +39,7 @@
     <string name="description_source_ns_client">Downloads de dados de Glicose do Nightscout</string>
     <string name="description_source_xdrip">Receber valores de glicose do xDrip+.</string>
     <string name="description_treatments">Salva todos os tratamentos que foram feitos</string>
-    <string name="description_wear">Monitore e controle AndroidAPS usando seu relógio WearOS.</string>
     <string name="description_xdrip_status_line">Mostrar informações sobre o loop no watchface do xDrip+.</string>
-    <string name="description_sms_communicator">Controlar remotamente o AndroidAPS usando comandos SMS.</string>
     <string name="treatments_insulin_label_string">Insulina:</string>
     <string name="treatments_carbs_label_string">Carboidratos:</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -78,9 +76,7 @@
     <string name="treatments">Tratamentos</string>
     <string name="virtualpump">Bomba virtual</string>
     <string name="configbuilder_pump">Bomba</string>
-    <string name="configbuilder_pump_description">Qual a bomba que gostaria de usar com AndroidAPS?</string>
     <string name="configbuilder_profile">Perfil</string>
-    <string name="configbuilder_profile_description">Qual perfil o AndroidAPS deve usar?</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">Qual é o algoritmo do APS que deve fazer ajustes na terapia?</string>
     <string name="configbuilder_general">Geral</string>
@@ -88,7 +84,6 @@
     <string name="configbuilder_constraints_description">Que restrições são aplicadas?</string>
     <string name="constraints">Restrições</string>
     <string name="configbuilder_loop">Loop</string>
-    <string name="configbuilder_loop_description">Utilize isto para ativar a integração loop do AndroidAPS.</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">Depois das restrições processadas</string>
     <string name="loop_tbrsetbypump_label">Basal temporária definida pela bomba</string>
@@ -105,7 +100,6 @@
     <string name="sms_basal">Basal:</string>
     <string name="changeyourinput">Altere sua entrada!</string>
     <string name="configbuilder_bgsource">Fonte de BG</string>
-    <string name="configbuilder_bgsource_description">De onde o AndroidAPS deve obter os dados?</string>
     <string name="xdrip">xDrip+</string>
     <string name="apsmode_title">Modo APS</string>
     <string name="closedloop">Loop Fechado</string>
@@ -329,7 +323,6 @@
     <string name="patient_name_summary">Por favor, forneça nome do paciente ou apelido para diferenciar entre várias configurações</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Usuário</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%1$s necessita autorização de execução sem otimização da bateria para assegurar a performance necessária</string>
     <string name="loopsuspended">Loop suspenso</string>
     <string name="loopsuspendedfor">Suspenso (%1$d m)</string>
     <string name="suspendloopfor1h">Suspender loop por 1h</string>
@@ -589,7 +582,6 @@
     <string name="welcometosetupwizard">Bem-vindo ao assistente de configuração. Vai guiá-lo(a) através do processo de instalação\n</string>
     <string name="readstatus">Ler estado</string>
     <string name="exitwizard">Saltar assistente de configuração</string>
-    <string name="setupwizard_loop_description">Pressione o botão abaixo para ativar o AndroidAPS para sugerir/fazer alterações basais</string>
     <string name="setupwizard_sensitivity_description">Plugin de Sensibilidade é usado para detecção de sensibilidade e cálculos COB. Para mais info visite:</string>
     <string name="nsclientinfotext">NSCliente gere a ligação ao Nightscout. Pode saltar esta parte mas não será possível passar os objetivos até que o configure.</string>
     <string name="diawarning">Lembre-se: novos perfis de insulina requerem diâmetro de pelo menos 5h. DIA 5–6h no novo perfil é igual ao diâmetro 3h nos antigos perfis de insulina.</string>
@@ -618,7 +610,6 @@
     <string name="sensitivity_raises_target_summary">Quando a sensibilidade é detectada, aumenta o alvo glicose</string>
     <string name="sort_items">Ordenar itens</string>
     <string name="storedsettingsfound">Configurações encontradas</string>
-    <string name="allow_hardware_pump_text">Atenção: Se conectar à sua bomba física e ativar o perfil, o AndroidAPS irá copiar as definições desse perfil para as definições da bomba, apagando o memorizado na bomba. Por favor verifique que o que preencheu no perfil do app tem os mesmos valores que estão na bomba. Em caso contrário pressione imediatamente cancelar e corrija antes de voltar a ligar à bomba.</string>
     <string name="error_adding_treatment_title">Dados tratamento incompletos</string>
     <string name="maintenance_settings">Configurações de manutenção</string>
     <string name="maintenance_email">Email destinatário</string>
@@ -643,7 +634,6 @@
     <string name="loop_openmode_min_change_summary" formatted="false">A app mostrará um pedido de alteração apenas se a mudança for superior a este valor em %. O valor padrão é 20%</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="dexcom_lognssensorchange_title">Registar mudança de sensor para NS</string>
-    <string name="dexcom_lognssensorchange_summary">Criar evento \"Mudança de Sensor\" automaticamente no NS aquando do início do sensor</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Nome de utilizador no Tidepool, normalmente seu endereço de e-mail</string>
@@ -714,7 +704,6 @@
     <string name="id">ID:</string>
     <string name="submit">Enviar</string>
     <string name="mostcommonprofile">Perfil mais comum:</string>
-    <string name="survey_comment">Nota: Apenas os dados visíveis neste ecrã serão enviados anonimamente. O ID é atribuído a esta instalação do AndroidAPS. Você pode enviar dados novamente se o perfil principal for alterado, mas deixá-lo rodar pelo menos uma semana para tornar o resultado visível no intervalo de tempo. Sua ajuda é apreciada.</string>
     <string name="invalidage">Entrada de idade inválida</string>
     <string name="invalidweight">Entrada de peso inválida</string>
     <string name="invalidpct">Entrada % inválida</string>
@@ -754,11 +743,9 @@
     <string name="smscommunicator_otp_export_prompt">Tem certeza de que deseja copiar a senha OTP para a área de transferência?\n\nGeralmente, isso somente é necessário se o aplicativo autenticador apresenta problemas para escanear o QRCode, se você quer inserir a senha manualmente ou se você deseja configurar um token físico (hardware) de OTP usando um aplicativo dedicado.</string>
     <string name="smscommunicator_otp_export_successful">Senha OTP (no formato Base32) exportada e copiada para a área de transferência. Cole-a em um aplicativo autenticador ou gravador de dispositivo OTP físico!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Instalar Autenticador</string>
-    <string name="smscommunicator_otp_step2_provisioning_header">2. Pesquise o código para configurar os códigos OTP do AndroidAPS</string>
     <string name="smscommunicator_otp_step3_test_header">3. Teste Uma-Password-Única</string>
     <string name="smscommunicator_otp_reset_header">Repor Autenticadores</string>
     <string name="smscommunicator_otp_install_info">Instalar uma app Autenticador que suporte Tokens RFC 6238 TOTP em cada telefone seguidor. Populares aplicativos gratuitos são:\n • Authy\n • o Google Authenticator\n • LastPass Autenticador\n • FreeOTP Autenticador</string>
-    <string name="smscommunicator_otp_reset_warning">Ao repor o autenticador, torna inválidos todos os autenticadores já provisionados. Precisará de os configurar novamente!</string>
     <string name="overview_show_predictions">Previsões</string>
     <string name="overview_show_treatments">Tratamentos</string>
     <string name="overview_show_deviationslope">Desvio de inclinação</string>
@@ -882,7 +869,6 @@
     <string name="above" comment="above &quot;in range&quot;">Acima</string>
     <string name="show_loop_records">Exibir registros do loop</string>
     <string name="show_hide_records">Ocultar registros do loop</string>
-    <string name="widget_description">AndroidAPS widget</string>
     <string name="configure">Configurar opacidade</string>
     <string name="loop_status">Status do loop</string>
     <string name="a11y_otp_qr_code">Código QR para configuração de senha de uso único</string>

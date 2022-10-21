@@ -14,7 +14,6 @@
     <string name="reset_db_confirm">Veritabanlarını gerçekten sıfırlamak istiyor musunuz?</string>
     <string name="nav_exit">Çıkış</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Bu cihaz, program için pil optimizasyonunu desteklemiyor gibi görünüyor - performans sorunları yaşayabilirsiniz.</string>
-    <string name="description_actions">Ortak özelliklere hızlıca erişmek için bazı butonlar</string>
     <string name="description_config_builder">Aktif eklentileri yapılandırmak için kullanılır</string>
     <string name="description_objectives">Eğitim programı</string>
     <string name="description_food">Nightscout\'ta tanımlanan gıda ön ayarlarını gösterir</string>
@@ -40,9 +39,7 @@
     <string name="description_source_ns_client">Nightscout\'tan KŞ verilerini yükler</string>
     <string name="description_source_xdrip">XDrip+\'ten KŞ değerlerini alır.</string>
     <string name="description_treatments">Yapılan tüm tedavileri kaydeder</string>
-    <string name="description_wear">WearOS saatinizi kullanarak AndroidAPS\'yi izleyin ve kontrol edin.</string>
     <string name="description_xdrip_status_line">Döngü\'yle ilgili bilgileri xDrip+ saat arayüzünde gösterin.</string>
-    <string name="description_sms_communicator">SMS komutlarını kullanarak uzaktan AndroidAPS kontrolü.</string>
     <string name="treatments_insulin_label_string">İnsülin:</string>
     <string name="treatments_carbs_label_string">Karbonhidrat:</string>
     <string name="treatments_iob_label_string">AİNS:</string>
@@ -79,9 +76,7 @@
     <string name="treatments">Tedaviler</string>
     <string name="virtualpump">Sanal pompa</string>
     <string name="configbuilder_pump">Pompa</string>
-    <string name="configbuilder_pump_description">Hangi pompa ile AndroidAPS kullanmak istersiniz?</string>
     <string name="configbuilder_profile">Profil</string>
-    <string name="configbuilder_profile_description">AndroidAPS Hangi profili kullanmalı?</string>
     <string name="configbuilder_aps">APS (YPS)</string>
     <string name="configbuilder_aps_description">Hangi APS algoritması terapi ayarlamalarını yapsın?</string>
     <string name="configbuilder_general">Genel</string>
@@ -89,7 +84,6 @@
     <string name="configbuilder_constraints_description">Hangi kısıtlamaları uygula?</string>
     <string name="constraints">Kısıtlamalar</string>
     <string name="configbuilder_loop">Döngü</string>
-    <string name="configbuilder_loop_description">AndroidAPS döngü entegrasyonunu etkinleştirmek için bunu kullanın.</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">İşlenmiş kısıtlamalardan sonra</string>
     <string name="loop_tbrsetbypump_label">Pompa tarafından ayarlanan geçici bazal</string>
@@ -106,7 +100,6 @@
     <string name="sms_basal">Bazal:</string>
     <string name="changeyourinput">Girişinizi değiştirin!</string>
     <string name="configbuilder_bgsource">KŞ kaynağı</string>
-    <string name="configbuilder_bgsource_description">AndroidAPS verilerini nereden alsın?</string>
     <string name="xdrip">xDrip+</string>
     <string name="apsmode_title">APS modu</string>
     <string name="closedloop">Kapalı Döngü</string>
@@ -219,7 +212,6 @@
     <string name="smscommunicator_unknowncommand">Bilinmeyen komut veya yanlış cevap</string>
     <string name="quickwizard">Hızlı Asistan</string>
     <string name="quickwizardsettings">Hızlı asistan ayarları</string>
-    <string name="overview_editquickwizard_buttontext">Buton Metni:</string>
     <string name="overview_editquickwizard_carbs">Karbonhidrat:</string>
     <string name="overview_editquickwizard_valid">Geçerli:</string>
     <string name="overview_editquickwizardlistactivity_add">Ekle</string>
@@ -332,7 +324,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="patient_name_summary">Lütfen çoklu kurulumlar arasında ayrım yapmak için hasta adı veya takma ad belirleyin</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Kullanıcı</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%1$s, düzgün bir şekilde çalışması için pil optimizasyonu yapılmalıdır</string>
     <string name="loopsuspended">Döngü duraklatıldı</string>
     <string name="loopsuspendedfor">(%1$d dk) Duraklatıldı</string>
     <string name="suspendloopfor1h">Döngüyü 1saat duraklat</string>
@@ -430,7 +421,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="sensitivityweightedaverage">Ağırlıklı ortalama duyarlılık</string>
     <string name="notloadedplugins">Tüm profiller yüklenmedi!</string>
     <string name="valuesnotstored">Değerler kaydedilmedi!</string>
-    <string name="ns_localbroadcasts">Diğer uygulamalara (xDrip+ gibi) yayınları etkinleştirin. Yüklü birden fazla APPS veya NSClient örneğiniz varsa etkinleştirmeyin!</string>
     <string name="ns_localbroadcasts_title">Yerel yayınları etkinleştirin.</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dinamik İDF</string>
@@ -526,8 +516,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="overview_buttons_selection">Butonlar</string>
     <string name="show_calibration_button_summary">xDrip+\'a bir kalibrasyon gönderir veya BYODA kalibrasyon iletişim kutusunu açar</string>
     <string name="show_cgm_button_summary">xDrip+ veya BYODA\'yı açar, geri dönme düğmesi AAPS\'ye döndürür</string>
-    <string name="carb_increment_button_message">Butona basıldığında eklenecek karbonhidrat sayısı</string>
-    <string name="insulin_increment_button_message">Butona basıldığında eklenecek insülin miktarı</string>
     <string name="error_starting_cgm">CGM uygulaması başlatılamadı. Yüklendiğinden emin olun.</string>
     <string name="overview_cgm">CGM</string>
     <string name="ignore5m">5dk yoksay</string>
@@ -632,7 +620,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="welcometosetupwizard">Kurulum sihirbazına hoş geldiniz. Kurulum işleminde size rehberlik edecektir\n</string>
     <string name="readstatus">Durum oku</string>
     <string name="exitwizard">Kurulum sihirbazını atla</string>
-    <string name="setupwizard_loop_description">AndroidAPS\'ın bazal değişiklikleri önerme/yapmasını sağlamak için aşağıdaki düğmeye basın</string>
     <string name="setupwizard_sensitivity_description">Duyarlılık eklentisi, duyarlılık tespiti ve AKRB hesaplaması için kullanılır. Daha fazla bilgi için ziyaret edin:</string>
     <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="nsclientinfotext">NSClient, Nightscout\'a bağlantıyı sağlar. Şimdi bu kısmı atlayabilirsiniz, ancak ayarlamadan görevleri geçemezsiniz.</string>
@@ -674,7 +661,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="remove_items">Öğeleri kaldır</string>
     <string name="sort_items">Öğeleri sırala</string>
     <string name="storedsettingsfound">Saklanan ayarlar bulundu</string>
-    <string name="allow_hardware_pump_text">Dikkat: Eğer bir donanım pompasını etkinleştirir ve bağlarsanız, AndroidAPS, bazal ayarları profilden pompaya aktaracaktır ve pompada kayıtlı mevcut bazal oranlarının üzerine yazacaktır. AndroidAPS\'de doğru ayarların olduğundan emin olun. Emin değilseniz veya pompanızdaki bazal ayarların üzerine yazmak istemiyorsanız, iptal tuşuna basın ve daha sonra tekrar deneyin.</string>
     <string name="error_adding_treatment_title">Tedavi verileri eksik</string>
     <string name="maintenance_settings">Bakım ayarları</string>
     <string name="maintenance_email">E-Posta alıcısı</string>
@@ -702,7 +688,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="loop_openmode_min_change_summary" formatted="false">Açık Döngü, yalnızca değişiklik % cinsinden bu değerden büyükse yeni değişiklik isteğini açar. Varsayılan değer %20\'dir</string>
     <string name="profile_total">== ∑  %1$s Ü</string>
     <string name="dexcom_lognssensorchange_title">Sensör değişimlerini NS\'a kaydet</string>
-    <string name="dexcom_lognssensorchange_summary">Sensör başlangıcında otomatik olarak NS\'de \"Sensör Değişimi\" etkinliği oluştur</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Tidepool oturum açma kullanıcı adınız, normalde e-posta adresiniz</string>
@@ -775,7 +760,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="id">Kimlik:</string>
     <string name="submit">Sunum</string>
     <string name="mostcommonprofile">En yaygın profil:</string>
-    <string name="survey_comment">Not: Yalnızca bu ekranda görünen veriler anonim olarak yüklenecektir. Bu AndroidAPS kurulumunda kimlik atanır. Ana profiliniz değişirse verileri tekrar gönderebilir, ancak sonuçların zaman içinde görünür olması için en az bir hafta çalışmasına izin verebilirsiniz. Yardımın takdire değer.</string>
     <string name="invalidage">Geçersiz yaş girişi</string>
     <string name="invalidweight">Geçersiz ağırlık girişi</string>
     <string name="invalidpct">Geçersiz % giriş</string>
@@ -820,11 +804,9 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="smscommunicator_otp_export_prompt">OTP secret panoya kopyalamak istediğinizden emin misiniz?\n\nYalnızca kimlik doğrulama uygulamanızın QRCode\'u tarama sorunları varsa, bunu elle girmek veya uygulamayı kullanarak OTP donanımı yapılandırmak istiyorsanız buna ihtiyacınız olabilir.</string>
     <string name="smscommunicator_otp_export_successful">OTP secret (Base32 formatında) dışa aktarıldı ve panoya kopyalandı. Doğrulayıcıya veya OTP donanım yazıcısına yapıştırın!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Doğrulayıcıyı (Authenticator) yükleyin</string>
-    <string name="smscommunicator_otp_step2_provisioning_header">2. AndroidAPS OTP kod kurulumu için QR kodu tarayın</string>
     <string name="smscommunicator_otp_step3_test_header">3. Tek Kullanımlık Parolayı (OTP) Test Edin</string>
     <string name="smscommunicator_otp_reset_header">Doğrulayıcıları (Authenticators) Sıfırla</string>
     <string name="smscommunicator_otp_install_info">Her takipçi telefonunda, RFC 6238 TOTP belirteçlerini destekleyen Kimlik Doğrulayıcı uygulamasını yükleyin. Popüler ücretsiz uygulamalar şunlardır:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_reset_warning">Doğrulayıcıyı (Authenticator) sıfırlayarak, önceden sağlanmış tüm doğrulayıcıları geçersiz kılarsınız. Onları tekrar kurmanız gerekecek!</string>
     <string name="overview_show_predictions">Tahminler</string>
     <string name="overview_show_treatments">Tedaviler</string>
     <string name="overview_show_deviationslope">Sapma eğimi</string>
@@ -837,7 +819,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="copyexistingvalues">NS ayarları kopyalansın mı (varsa)?</string>
     <string name="classic_description">Orjinal görünüm</string>
     <string name="lowres_description">Düşük çözünürlüklü görünüm</string>
-    <string name="buttonson_description">Butonlar her zaman ekranın altında görüntülenir</string>
     <string name="largedisplay_description">Büyük ekran</string>
     <string name="skin">Görünüm</string>
     <string name="comapareprofile">Profilleri karşılaştırın</string>
@@ -1021,7 +1002,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="above" comment="above &quot;in range&quot;">Üstünde</string>
     <string name="show_loop_records">Döngü kayıtlarını göster</string>
     <string name="show_hide_records">Döngü kayıtlarını gizle</string>
-    <string name="widget_description">AndroidAPS widget</string>
     <string name="configure">Şeffaflığı yapılandır</string>
     <string name="loop_status">Döngü durumu</string>
     <string name="graph_scale">Grafik ölçeği</string>

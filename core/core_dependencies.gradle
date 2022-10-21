@@ -27,7 +27,7 @@ dependencies {
     api "com.google.dagger:dagger-android-support:$dagger_version"
 
     //Firebase
-    api platform('com.google.firebase:firebase-bom:30.0.2')
+    api platform('com.google.firebase:firebase-bom:30.5.0')
     api "com.google.firebase:firebase-analytics-ktx"
     api "com.google.firebase:firebase-crashlytics-ktx"
     api "com.google.firebase:firebase-messaging-ktx"

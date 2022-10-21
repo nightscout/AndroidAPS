@@ -40,9 +40,7 @@
     <string name="description_source_ns_client">הורדת ערכי סוכר בדם מ-Nightscout</string>
     <string name="description_source_xdrip">קבלת ערכי סוכר מ-xDrip.</string>
     <string name="description_treatments">שמירת כלל הטיפולים שנעשו</string>
-    <string name="description_wear">ניטור ושליטה ב-AndroidAPS באמצעות שעון WearOS.</string>
     <string name="description_xdrip_status_line">הצג מידע אודות הלולאה במסך xDrip בשעון החכם.</string>
-    <string name="description_sms_communicator">שליטה מרחוק על AndroidAPS באמצעות SMS.</string>
     <string name="treatments_insulin_label_string">אינסולין:</string>
     <string name="treatments_carbs_label_string">פחמימות:</string>
     <string name="treatments_iob_label_string">אינסולין פעיל:</string>
@@ -79,9 +77,7 @@
     <string name="treatments">טיפולים</string>
     <string name="virtualpump">משאבה וירטואלית</string>
     <string name="configbuilder_pump">משאבה</string>
-    <string name="configbuilder_pump_description">עם איזו משאבה אתם מעוניינים להשתמש ב-AndroidAPS?</string>
     <string name="configbuilder_profile">פרופיל</string>
-    <string name="configbuilder_profile_description">באיזה פרופיל על AndroidAPS להשתמש?</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">איזה אלגוריתם של APS יבצע התאמות טיפול?</string>
     <string name="configbuilder_general">כללי</string>
@@ -89,7 +85,6 @@
     <string name="configbuilder_constraints_description">אילו מגבלות פעילות?</string>
     <string name="constraints">מגבלות</string>
     <string name="configbuilder_loop">לולאה</string>
-    <string name="configbuilder_loop_description">השתמשו באפשרות זו כדי להפעיל את לולאת AndroidAPS.</string>
     <string name="loop_aps_label">אלגוריתם APS</string>
     <string name="loop_constraintsprocessed_label">מגבלות לאחר עיבוד</string>
     <string name="loop_tbrsetbypump_label">מינון בזאלי זמני שהוגדר במשאבה</string>
@@ -106,7 +101,6 @@
     <string name="sms_basal">אינסולין בזאלי:</string>
     <string name="changeyourinput">שנה קלט!</string>
     <string name="configbuilder_bgsource">מקור ערכי הסוכר</string>
-    <string name="configbuilder_bgsource_description">מהו מקור הנתונים של AndroidAPS?</string>
     <string name="xdrip">xDrip+</string>
     <string name="apsmode_title">מצב APS</string>
     <string name="closedloop">לולאה סגורה</string>
@@ -331,7 +325,6 @@
     <string name="patient_name_summary">נא לציין את שם המטופל\\ת או כינוי, להבחנה בין מספר הגדרות</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">משתמש</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%1$s צריך ביטול אופטימיזציית סוללה בשביל תפקוד תקין</string>
     <string name="loopsuspended">לולאה מושהית</string>
     <string name="loopsuspendedfor">מושהה (%1$d דק\')</string>
     <string name="suspendloopfor1h">השהה לולאה לשעה אחת</string>
@@ -400,9 +393,9 @@
     <string name="doprofileswitch">החלפת פרופיל</string>
     <string name="careportal_sensor_label">סנסור</string>
     <string name="careportal_insulin_label">אינסולין</string>
-    <string name="careportal_pb_label">סוללת משאבה</string>
+    <string name="careportal_pb_label">סוללת המשאבה</string>
     <string name="careportal_age_label">גיל:</string>
-    <string name="careportal_level_label">נותר:</string>
+    <string name="careportal_level_label">נותרו:</string>
     <string name="ns_alarmoptions">אפשרויות התראה</string>
     <string name="ns_alarms">ייצר התראות מאזעקות של Nightscout</string>
     <string name="ns_announcements">ייצר התראות מהכרזות של Nightscout</string>
@@ -429,7 +422,6 @@
     <string name="sensitivityweightedaverage">רגישות משוקללת ממוצעת</string>
     <string name="notloadedplugins">לא כל הפרופילים נטענו!</string>
     <string name="valuesnotstored">הערכים לא נשמרו</string>
-    <string name="ns_localbroadcasts">אפשר הפצה לאפליקציות אחרות (כגון xDrip). אין להפעיל אם מותקן לכם יותר ממופע אחד של AAPS או NSClient!</string>
     <string name="ns_localbroadcasts_title">אפשר שידורים מקומיים.</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">רגישות דינאמית</string>
@@ -631,7 +623,6 @@
     <string name="welcometosetupwizard">ברוכים הבאים לאשף ההתקנה. האשף ידריך אתכם בתהליך ההתקנה\n</string>
     <string name="readstatus">קרא סטטוס</string>
     <string name="exitwizard">דלג על אשף ההתקנה</string>
-    <string name="setupwizard_loop_description">לחצו על הלחצן למטה כדי לאפשר ל-AndroidAPS להציע\\לבצע שינויים במינון הבזאלי</string>
     <string name="setupwizard_sensitivity_description">תוסף רגישות משמש לזיהוי רגישות וחישוב הפחמ\' הפעילות. לקבלת מידע נוסף, בקרו בכתובת:</string>
     <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="nsclientinfotext">NSClient מטפל בחיבור ל-Nightscout. אפשר לדלג על החלק הזה עכשיו, אך לא תוכלו לעבור את המשימות מבלי להגדיר אותו.</string>
@@ -672,7 +663,6 @@
     <string name="remove_items">הסר פריטים</string>
     <string name="sort_items">מיין פריטים</string>
     <string name="storedsettingsfound">נמצאו הגדרות שמורות</string>
-    <string name="allow_hardware_pump_text">שימו לב: אם אתם מפעילים ומתחברים למשאבה פיזית, AndroidAPS יעתיק את הפרופיל הבזאלי אל המשאבה תוך דריסת הפרופיל שכבר שמור על המשאבה. יש שההגדרות הבזאליות שב-AndroidAPS נכונות. אם אינכם בטוחים או אינכם רוצים לשנות את הגדרות הבזאליות שעל המשאבה, לחצו על \'ביטול\' וחזרו על תהליך המעבר אל המשאבה במועד מאוחר יותר.</string>
     <string name="error_adding_treatment_title">נתוני טיפול לא שלמים</string>
     <string name="maintenance_settings">הגדרות תחזוקה</string>
     <string name="maintenance_email">נמען דוא\"ל</string>
@@ -700,7 +690,6 @@
     <string name="loop_openmode_min_change_summary" formatted="false">\'לולאה פתוחה\' תציג בקשת שינוי חדשה רק אם השינוי גדול מערך זה ב-%. ערך ברירת המחדל הוא 20%</string>
     <string name="profile_total">== ∑  %1$s יח\'</string>
     <string name="dexcom_lognssensorchange_title">רישום החלפת סנסור ב-Nightscout</string>
-    <string name="dexcom_lognssensorchange_summary">רישום אירוע \"החלפת סנסור\" ב-Nightscout באופן אוטומטי בעת הפעלת החיישן</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">שם המשתמש שלכם להתחברות ל-Tidepool, בדרך כלל כתובת הדוא\"ל שלכם</string>
@@ -773,7 +762,6 @@
     <string name="id">מס\' זיהוי:</string>
     <string name="submit">עדכן</string>
     <string name="mostcommonprofile">הפרופיל הנפוץ ביותר:</string>
-    <string name="survey_comment">הערה: רק נתונים הגלויים במסך זה יועלו באופן אנונימי. הזיהוי מוקצה להתקנה זו של AndroidAPS. תוכלו לשלוח שוב נתונים אם הפרופיל הראשי שלכם ישונה, אך תנו לו לרוץ במשך שבוע לפחות כדי להפוך את התוצאה לגלויה בזמן בטווח. עזרתכם מוערכת.</string>
     <string name="invalidage">רשומת גיל לא חוקית</string>
     <string name="invalidweight">רשומת משקל לא חוקית</string>
     <string name="invalidpct">רשומת אחוזים לא חוקית</string>
@@ -818,11 +806,9 @@
     <string name="smscommunicator_otp_export_prompt">אתם בטוחים שברצונכם להעתיק את סוד ה-OTP ללוח ההעתקה?\n\nייתכן שתצטרכו לעשות זאת רק אם יישום האימות נתקל בבעיות בסריקת קוד QR, או שברצונכם להכניס אותו ידנית או להגדיר אסימון OTP של חומרה באמצעות יישום ייעודי.</string>
     <string name="smscommunicator_otp_export_successful">סוד OTP (בפורמט Base32) יוצא והועתק אל לוח ההעתקה. הדביקו אותו לתוך תוכנת האימות או בחומרת צריבת OTP!</string>
     <string name="smscommunicator_otp_step1_install_header">1. התקנת מאמת</string>
-    <string name="smscommunicator_otp_step2_provisioning_header">2. קוד סריקה להגדרת קודי OTP של AndroidAPS</string>
     <string name="smscommunicator_otp_step3_test_header">3. ניסוי סיסמה חד-פעמית</string>
     <string name="smscommunicator_otp_reset_header">איפוס מאמתים</string>
     <string name="smscommunicator_otp_install_info">בכל אחד מהטלפונים העוקבים, התקינו יישום מאמת התומך באסימוני RFC 6238 TOTP. יישומים פופולריים בחינם הם:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_reset_warning">אתחול המאמת גורם למאמתים שסופקו לכם להפסיק להיות חוקיים ויהיה צורך להגדירם שוב!</string>
     <string name="overview_show_predictions">חיזוי</string>
     <string name="overview_show_treatments">טיפולים</string>
     <string name="overview_show_deviationslope">שיפוע הסטייה</string>
@@ -1017,7 +1003,6 @@
     <string name="above" comment="above &quot;in range&quot;">מעל</string>
     <string name="show_loop_records">הצג רשומות לולאה</string>
     <string name="show_hide_records">החבא רשומות לולאה</string>
-    <string name="widget_description">ווידג\'ט AndroidAPS</string>
     <string name="configure">הגדרת אטימות</string>
     <string name="loop_status">סטטוס הלולאה</string>
     <string name="graph_scale">קנה מידה של הגרף</string>

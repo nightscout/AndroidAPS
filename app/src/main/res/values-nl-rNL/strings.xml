@@ -40,9 +40,7 @@
     <string name="description_source_ns_client">Download BG waardes van Nightscout</string>
     <string name="description_source_xdrip">Ontvang BG waardes van xDrip+.</string>
     <string name="description_treatments">Sla alle behandelingen op</string>
-    <string name="description_wear">AndroidAPS controleren en bedienen met behulp van uw WearOS-horloge.</string>
     <string name="description_xdrip_status_line">Toon informatie over de Loop op jouw xDrip+ wijzerplaat.</string>
-    <string name="description_sms_communicator">Bedien AndroidAPS op afstand met SMS commando\'s.</string>
     <string name="treatments_insulin_label_string">Insuline:</string>
     <string name="treatments_carbs_label_string">Koolhydraten:</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -79,9 +77,7 @@
     <string name="treatments">Behandelingen</string>
     <string name="virtualpump">Virtuele Pomp</string>
     <string name="configbuilder_pump">Pomp</string>
-    <string name="configbuilder_pump_description">Welke pomp wil je gaan gebruiken met AndroidAPS?</string>
     <string name="configbuilder_profile">Profiel</string>
-    <string name="configbuilder_profile_description">Welk profiel moet AndroidAPS gebruiken?</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">Welk APS algoritme moet therapie aanpassingen maken?</string>
     <string name="configbuilder_general">Algemeen</string>
@@ -89,7 +85,6 @@
     <string name="configbuilder_constraints_description">Welke beperkingen worden toegepast?</string>
     <string name="constraints">Beperkingen</string>
     <string name="configbuilder_loop">Loop</string>
-    <string name="configbuilder_loop_description">Gebruik dit om AndroidAPS loop integratie te activeren.</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">Berekening met toepassing van limieten</string>
     <string name="loop_tbrsetbypump_label">Tijdelijk basaal gezet door pomp</string>
@@ -106,7 +101,6 @@
     <string name="sms_basal">Basaal:</string>
     <string name="changeyourinput">Wijzig het ingegevene!</string>
     <string name="configbuilder_bgsource">BG bron</string>
-    <string name="configbuilder_bgsource_description">Waar moet de AndroidAPS zijn gegevens vandaan halen?</string>
     <string name="xdrip">xDrip+</string>
     <string name="apsmode_title">APS Mode</string>
     <string name="closedloop">Closed loop</string>
@@ -331,7 +325,6 @@
     <string name="patient_name_summary">Geef de naam of roepnaam van de patiënt op om onderscheid te maken tussen meerdere setups</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Gebruiker</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">Voor een goede werking van %1$s moeten de accubesparing-opties zijn uitgeschakeld in de telefooninstellingen</string>
     <string name="loopsuspended">Loop pauzeren</string>
     <string name="loopsuspendedfor">Gepauzeerd (%1$d m)</string>
     <string name="suspendloopfor1h">Onderbreek loop voor 1u</string>
@@ -429,7 +422,6 @@
     <string name="sensitivityweightedaverage">Gemiddelde gevoeligheid</string>
     <string name="notloadedplugins">Niet alle profielen zijn geladen!</string>
     <string name="valuesnotstored">Waarden niet opgeslagen!</string>
-    <string name="ns_localbroadcasts">Schakel lokaal data delen met andere apps (zoals xDrip) in. Schakel dit niet in als er meer dan één installatie van AAPS of NSClient zijn geinstalleerd!</string>
     <string name="ns_localbroadcasts_title">Activeer locaal delen.</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dynamische ISF</string>
@@ -631,7 +623,6 @@
     <string name="welcometosetupwizard">Welkom bij de wizard setup. Het zal je begeleiden door het setup-process\n</string>
     <string name="readstatus">Lees status</string>
     <string name="exitwizard">De installatiewizard overslaan</string>
-    <string name="setupwizard_loop_description">Druk op de knop hieronder om AndroidAPS basaalwijzigingen te laten voorstellen/uitvoeren</string>
     <string name="setupwizard_sensitivity_description">Gevoeligheid plugin wordt gebruikt voor de detectie van de gevoeligheid en COB berekening. Voor meer info bezoek:</string>
     <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="nsclientinfotext">NSClient zorgt voor verbinding met Nightscout. Je kunt dit deel nu overslaan, maar pas de Doelen afronden als je het hebt ingesteld.</string>
@@ -670,7 +661,6 @@
     <string name="remove_items">Items verwijderen</string>
     <string name="sort_items">Sorteer items</string>
     <string name="storedsettingsfound">Opgeslagen instellingen gevonden</string>
-    <string name="allow_hardware_pump_text">Let op: als u activeert en verbinding maakt met een hardwarepomp, kopieert AndroidAPS de basale instellingen van het profiel naar de pomp en overschrijft de bestaande basaal snelheid die op de pomp is opgeslagen. Zorg ervoor dat u de juiste basaal instelling hebt in AndroidAPS. Als u niet zeker weet of niet wilt dat de basaal instellingen op uw pomp worden overschreven, drukt u op Annuleren en herhaalt u het overschakelen naar de pomp op een later tijdstip.</string>
     <string name="error_adding_treatment_title">Behandelingen data incompleet</string>
     <string name="maintenance_settings">Onderhoudsinstellingen</string>
     <string name="maintenance_email">E-mail</string>
@@ -698,7 +688,6 @@
     <string name="loop_openmode_min_change_summary" formatted="false">Open Loop zal alleen een wijzigingsverzoek tonen als de verandering groter is dan deze waarde in %. De standaard waarde is 20%</string>
     <string name="profile_total">== ∑  %1$s E</string>
     <string name="dexcom_lognssensorchange_title">Noteer sensor wissel in NS</string>
-    <string name="dexcom_lognssensorchange_summary">Noteer automatisch \"Sensor Wissel\" in NS bij starten van sensor</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Uw Tidepool login gebruikersnaam, normaliter uw e-mailadres</string>
@@ -771,7 +760,6 @@
     <string name="id">ID:</string>
     <string name="submit">Verzenden</string>
     <string name="mostcommonprofile">Meest voorkomende profiel:</string>
-    <string name="survey_comment">Opmerking: Alleen gegevens die zichtbaar zijn op dit scherm worden anoniem geüpload. ID is toegewezen aan deze installatie van AndroidAPS. U kunt gegevens opnieuw indienen als uw hoofdprofiel wordt gewijzigd, maar laat het ten minste een week draaien om resultaat zichtbaar te maken in de tijd in het bereik. Uw hulp wordt gewaardeerd.</string>
     <string name="invalidage">Ongeldige leeftijd invoer</string>
     <string name="invalidweight">Ongeldige gewicht invoer</string>
     <string name="invalidpct">Ongeldig % invoer</string>
@@ -816,11 +804,9 @@
     <string name="smscommunicator_otp_export_prompt">Weet je zeker dat je het OTP-secret naar het klembord wilt kopiëren?\n\nJe hebt dit alleen nodig als je Authenticator-app problemen heeft met het scannen van QR-codes, als je het handmatig wilt invullen of als je een hardware OTP-token met een speciale app wilt configureren.</string>
     <string name="smscommunicator_otp_export_successful">OTP-secret (in Base32-formaat) is geëxporteerd en gekopieerd naar het klembord. Plak het in de Authenticator-app of de app van de hardware OTP-token!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Installeer Authenticator app</string>
-    <string name="smscommunicator_otp_step2_provisioning_header">2. Scan code om AndroidAPS OTP codes in te stellen</string>
     <string name="smscommunicator_otp_step3_test_header">3. Test eenmalig wachtwoord (One Time Password)</string>
     <string name="smscommunicator_otp_reset_header">Reset Authentificatie</string>
     <string name="smscommunicator_otp_install_info">Installeer de Authenticator-app op elke volger telefoon die RFC 6238 TOTP tokens ondersteunt. Populaire gratis apps zijn:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_reset_warning">Door de Authentificator te resetten, maak je alle Authentificatie-instellingen van reeds verbonden telefoons ongeldig! Je zult ze opnieuw moeten instellen!</string>
     <string name="overview_show_predictions">Voorspellingen</string>
     <string name="overview_show_treatments">Behandelingen</string>
     <string name="overview_show_deviationslope">Richtingscoëfficiënt afwijking</string>
@@ -1017,7 +1003,6 @@
     <string name="above" comment="above &quot;in range&quot;">Boven</string>
     <string name="show_loop_records">Toon loop records</string>
     <string name="show_hide_records">Verberg loop records</string>
-    <string name="widget_description">AndroidAPS widget</string>
     <string name="configure">Configureer transparantie</string>
     <string name="loop_status">Loop status</string>
     <string name="graph_scale">Grafiek schaal</string>

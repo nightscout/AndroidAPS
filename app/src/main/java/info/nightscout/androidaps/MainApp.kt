@@ -184,7 +184,7 @@ class MainApp : DaggerApplication() {
                 Thread.currentThread().uncaughtExceptionHandler?.uncaughtException(Thread.currentThread(), e)
                 return@setErrorHandler
             }
-            aapsLogger.warn(LTag.CORE, "Undeliverable exception received, not sure what to do", e)
+            aapsLogger.warn(LTag.CORE, "Undeliverable exception received, not sure what to do", e.toString())
         }
     }
 

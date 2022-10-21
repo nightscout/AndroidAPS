@@ -25,8 +25,6 @@
     <string name="objectives_pumpstatusavailableinns">סטטוס המשאבה זמין ב-Nightscout</string>
     <string name="objectives_manualenacts">קביעות ידניות</string>
     <string name="accomplished">הושלמו: %1$s</string>
-    <string name="objectives_usage_objective">למדו כיצד לשלוט ב-AndoridAPS</string>
-    <string name="objectives_usage_gate">בצעו פעולות שונות ב-AndroidAPS</string>
     <string name="objectives_useprofileswitch">הגדירו פרופיל 90% למשך 10 דקות (לחיצה ארוכה על שם הפרופיל במסך הסקירה הכללית)</string>
     <string name="objectives_usedisconnectpump">דמו מקלחת. הגדירו ניתוק משאבה במשך שעה אחת (לחיצה ארוכה על לולאה פתוחה)</string>
     <string name="objectives_usereconnectpump">... והתחברו מחדש באותה הדרך</string>

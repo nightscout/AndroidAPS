@@ -40,9 +40,7 @@
     <string name="description_source_ns_client">Lade Blutzuckerdaten von Nightscout</string>
     <string name="description_source_xdrip">Empfange Blutzuckerwerte von xDrip+.</string>
     <string name="description_treatments">Speichert alle eingegebenen Behandlungen</string>
-    <string name="description_wear">Überwache und steuere AndroidAPS mit Deiner WearOS-Smartwatch.</string>
     <string name="description_xdrip_status_line">Zeige Loop-Informationen auf Deinem xDrip+-Watchface.</string>
-    <string name="description_sms_communicator">AndroidAPS mit SMS-Befehlen fernsteuern.</string>
     <string name="treatments_insulin_label_string">Insulin:</string>
     <string name="treatments_carbs_label_string">Kohlenhydrate:</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -79,9 +77,7 @@
     <string name="treatments">Behandlungen</string>
     <string name="virtualpump">Virtuelle Pumpe</string>
     <string name="configbuilder_pump">Pumpe</string>
-    <string name="configbuilder_pump_description">Welche Pumpe möchtest Du mit AndroidAPS nutzen?</string>
     <string name="configbuilder_profile">Profil</string>
-    <string name="configbuilder_profile_description">Welches Profil soll AndroidAPS nutzen?</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">Welcher APS-Algorithmus soll Therapieanpassungen vornehmen?</string>
     <string name="configbuilder_general">Allgemein</string>
@@ -89,7 +85,6 @@
     <string name="configbuilder_constraints_description">Welche Beschränkungen werden angewendet?</string>
     <string name="constraints">Beschränkungen</string>
     <string name="configbuilder_loop">Loop</string>
-    <string name="configbuilder_loop_description">Nutze dies, um die Loop-Integration von AndroidAPS zu aktivieren.</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">Beschränkungen angewendet</string>
     <string name="loop_tbrsetbypump_label">TBR der Pumpe</string>
@@ -106,7 +101,6 @@
     <string name="sms_basal">Basal:</string>
     <string name="changeyourinput">Ändere deine Eingabe!</string>
     <string name="configbuilder_bgsource">BZ-Quelle</string>
-    <string name="configbuilder_bgsource_description">Woher soll AndroidAPS seine Blutzuckerwerte beziehen?</string>
     <string name="xdrip">xDrip+</string>
     <string name="apsmode_title">APS-Modus</string>
     <string name="closedloop">Closed Loop</string>
@@ -331,7 +325,6 @@
     <string name="patient_name_summary">Bitte gib den Namen des Patienten oder einen Spitznamen an, um mehrere Setups unterscheiden zu können.</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Nutzer</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%1$s benötigt eine deaktivierte Akku-Leistungsoptimierung, um korrekt arbeiten zu können.</string>
     <string name="loopsuspended">Loop pausiert</string>
     <string name="loopsuspendedfor">Pausiert (%1$d min)</string>
     <string name="suspendloopfor1h">Pausiere Loop für 1 h</string>
@@ -429,7 +422,6 @@
     <string name="sensitivityweightedaverage">Durchschnittliche Sensitivität</string>
     <string name="notloadedplugins">Es sind nicht alle Profile geladen!</string>
     <string name="valuesnotstored">Werte nicht gespeichert!</string>
-    <string name="ns_localbroadcasts">Aktiviere die Datenübertragung zu anderen Apps (z.B. xDrip+). Nicht aktivieren, falls Du mehr als eine Instanz von AAPS oder NSClient installiert hast!</string>
     <string name="ns_localbroadcasts_title">Aktiviere lokale Broadcasts</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dynamischer ISF</string>
@@ -631,7 +623,6 @@
     <string name="welcometosetupwizard">Willkommen im Setup-Assistenten. Er führt Dich durch den Setup-Prozess\n</string>
     <string name="readstatus">Status lesen</string>
     <string name="exitwizard">Einrichtungsassistenten überspringen</string>
-    <string name="setupwizard_loop_description">Drücke die Schaltfläche unten, um AndroidAPS zu erlauben, Basal-Änderungen vorzuschlagen/vorzunehmen</string>
     <string name="setupwizard_sensitivity_description">Das Sensitivitäts-Plugin wird für die Sensitivitäts- und COB-Berechnung verwendet. Für weitere Informationen siehe:</string>
     <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/de/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="nsclientinfotext">Nightscout-Client ist für die Verbindung zu Nightscout zuständig. Du kannst diesen Teil jetzt überspringen, aber Du wirst nicht in der Lage sein, Zielsetzungen zu erfüllen, bis Du diesen eingerichtet hast.</string>
@@ -670,7 +661,6 @@
     <string name="remove_items">Objekte entfernen</string>
     <string name="sort_items">Einträge sortieren</string>
     <string name="storedsettingsfound">Gespeicherte Einstellungen gefunden</string>
-    <string name="allow_hardware_pump_text">WARNUNG: Wenn Du eine echte Pumpe aktivierst und anschließt, kopiert AndroidAPS die Basaleinstellungen vom aktiven Profil zur Pumpe (und behält sie bei). Die Einstellungen in der Pumpe werden hierbei überschrieben. Wenn Du Dir nicht sicher bist oder die Basaleinstellungen in der Pumpe nicht überschreiben möchten, drücke \"Abbrechen\" und vollziehe den Wechsel zur Pumpe später.</string>
     <string name="error_adding_treatment_title">Behandlungsdaten unvollständig</string>
     <string name="maintenance_settings">Wartungseinstellungen</string>
     <string name="maintenance_email">E-Mail</string>
@@ -699,7 +689,6 @@ Unerwartetes Verhalten.</string>
     <string name="loop_openmode_min_change_summary" formatted="false">Open Loop schlägt neue Änderungen nur dann vor, wenn die Änderung größer als dieser Wert ist. Der Standard-Wert ist 20%.</string>
     <string name="profile_total">== ∑  %1$s IE</string>
     <string name="dexcom_lognssensorchange_title">Speichere Sensor Wechsel in Nightscout</string>
-    <string name="dexcom_lognssensorchange_summary">Ereignis \"Sensorwechsel\" bei Sensorstart automatisch in NS erstellen</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Dein Tidepool-Login-Benutzername, normalerweise deine E-Mail-Adresse</string>
@@ -772,7 +761,6 @@ Unerwartetes Verhalten.</string>
     <string name="id">ID:</string>
     <string name="submit">Senden</string>
     <string name="mostcommonprofile">Meistgenutztes Profil:</string>
-    <string name="survey_comment">Hinweis: Nur Daten, die auf diesem Bildschirm sichtbar sind, werden anonym hochgeladen. Die ID wird dieser Installation von AndroidAPS zugeordnet. Du kannst erneut Daten senden, wenn sich Dein Hauptprofil geändert hat. Lasse es aber es mindestens eine Woche lang laufen, damit dessen Ergebnis in der Time in Range sichtbar wird. Danke für Deine Unterstützung.</string>
     <string name="invalidage">Ungültige Altersangabe</string>
     <string name="invalidweight">Ungültige Gewichtsangabe</string>
     <string name="invalidpct">Ungültige % Eingabe</string>
@@ -817,11 +805,9 @@ Unerwartetes Verhalten.</string>
     <string name="smscommunicator_otp_export_prompt">Willst Du wirklich das OTP Secret in die Zwischenablage kopieren?\n\nDas ist nur erforderlich, wenn Deine Authentifizierungs-App Probleme mit dem Scannen des QR-Codes hat. Du kannst es auch manuell eingeben oder einen Hardware-OTP-Token mit einer bestimmten App verwenden.</string>
     <string name="smscommunicator_otp_export_successful">OTP Secret (im Base32 Format) exportiert und in die Zwischenablage kopiert. Setze es von dort in Deine Authentifizierungs-App ein.</string>
     <string name="smscommunicator_otp_step1_install_header">1. Authentifikator installieren</string>
-    <string name="smscommunicator_otp_step2_provisioning_header">2. Scanne den Code zum Einrichten von AndroidAPS OTP-Codes</string>
     <string name="smscommunicator_otp_step3_test_header">3. Teste das Einmal-Passwort</string>
     <string name="smscommunicator_otp_reset_header">Authentifikators zurücksetzen</string>
     <string name="smscommunicator_otp_install_info">Installiere auf jedem Follower-Phone eine Authenticator-App, die RFC 6238 TOTP-Token unterstützt. Beliebte kostenlose Apps sind:\n Authy\n Google Authenticator\n LastPass Authenticator\n FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_reset_warning">Wenn Du den Authentifikator zurücksetzt werden alle bestehenden Authentifikatoren ungültig. Du musst sie dann neu einrichten!</string>
     <string name="overview_show_predictions">Predictions (Vorhersagen)</string>
     <string name="overview_show_treatments">Behandlungen</string>
     <string name="overview_show_deviationslope">Steigung der Abweichung</string>
@@ -1018,7 +1004,6 @@ Unerwartetes Verhalten.</string>
     <string name="above" comment="above &quot;in range&quot;">Über</string>
     <string name="show_loop_records">Zeige Loop Datensätze</string>
     <string name="show_hide_records">Verberge Loop Datensätze</string>
-    <string name="widget_description">AndroidAPS Widget</string>
     <string name="configure">Deckkraft konfigurieren</string>
     <string name="loop_status">Loop Status</string>
     <string name="graph_scale">Diagrammskala</string>

@@ -63,7 +63,7 @@
     <string name="action_preset_1">Predefinição 1</string>
     <string name="action_preset_2">Predefinição 2</string>
     <string name="action_preset_3">Predefinição 3</string>
-    <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Valor livre</string>
+    <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Valor livre</string>
     <string name="action_confirm">CONFIRMAR</string>
     <string name="action_timeshift">Deslocamento temporal</string>
     <string name="bolus_progress">Progresso do Bólus</string>

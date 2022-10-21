@@ -2,14 +2,11 @@ package info.nightscout.androidaps.database.daos
 
 import androidx.room.Dao
 import androidx.room.Query
-import info.nightscout.androidaps.database.TABLE_GLUCOSE_VALUES
 import info.nightscout.androidaps.database.TABLE_TEMPORARY_TARGETS
-import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 
-@Suppress("FunctionName")
 @Dao
 internal interface TemporaryTargetDao : TraceableDao<TemporaryTarget> {
 
@@ -18,6 +15,12 @@ internal interface TemporaryTargetDao : TraceableDao<TemporaryTarget> {
 
     @Query("DELETE FROM $TABLE_TEMPORARY_TARGETS")
     override fun deleteAllEntries()
+
+    @Query("DELETE FROM $TABLE_TEMPORARY_TARGETS WHERE timestamp < :than")
+    override fun deleteOlderThan(than: Long): Int
+
+    @Query("DELETE FROM $TABLE_TEMPORARY_TARGETS WHERE referenceId IS NOT NULL")
+    override fun deleteTrackedChanges(): Int
 
     @Query("SELECT id FROM $TABLE_TEMPORARY_TARGETS ORDER BY id DESC limit 1")
     fun getLastId(): Maybe<Long>

@@ -38,9 +38,7 @@
     <string name="description_source_ns_client">Gauti kraujo gliukozės vertes iš Nightscout</string>
     <string name="description_source_xdrip">Gauti kraujo gliukozės reikšmes iš xDrip+.</string>
     <string name="description_treatments">Išsaugoti visus terapijos pakeitimus</string>
-    <string name="description_wear">Stebėti ir kontroliuoti AndroidAPS naudojant WearOS laikrodį.</string>
     <string name="description_xdrip_status_line">Rodyti Ciklo informaciją laikrodyje, xDrip+ pradžios ekrane.</string>
-    <string name="description_sms_communicator">Nuotolinis AndroidAPS valdymas naudojant SMS komandas.</string>
     <string name="treatments_insulin_label_string">Insulinas:</string>
     <string name="treatments_carbs_label_string">AV:</string>
     <string name="treatments_iob_label_string">AIO:</string>
@@ -77,9 +75,7 @@
     <string name="treatments">Terapija</string>
     <string name="virtualpump">Virtuali pompa</string>
     <string name="configbuilder_pump">Pompa</string>
-    <string name="configbuilder_pump_description">Kokią pompą naudosite su AndroidAPS?</string>
     <string name="configbuilder_profile">Profilis</string>
-    <string name="configbuilder_profile_description">Kurį profilį naudos AndroidAPS?</string>
     <string name="configbuilder_aps">DKS</string>
     <string name="configbuilder_aps_description">Kuris DKS algoritmas turėtų koreguoti terapiją?</string>
     <string name="configbuilder_general">Bendrieji</string>
@@ -87,7 +83,6 @@
     <string name="configbuilder_constraints_description">Kokie apribojimai taikomi?</string>
     <string name="constraints">Apribojimai</string>
     <string name="configbuilder_loop">Ciklas</string>
-    <string name="configbuilder_loop_description">Naudokite, norėdami aktyvuoti AndroidAPS Ciklą.</string>
     <string name="loop_aps_label">DKS</string>
     <string name="loop_constraintsprocessed_label">Pritaikius apribojimus</string>
     <string name="loop_tbrsetbypump_label">Laikina bazė nustatyta pompoje</string>
@@ -104,7 +99,6 @@
     <string name="sms_basal">Valandinė bazė:</string>
     <string name="changeyourinput">Pakeiskite įvestus duomenis!</string>
     <string name="configbuilder_bgsource">Glikemijos šaltinis</string>
-    <string name="configbuilder_bgsource_description">Iš kur AndroidAPS gaus duomenis?</string>
     <string name="xdrip">xDrip+</string>
     <string name="apsmode_title">DKS režimas</string>
     <string name="closedloop">Uždaras Ciklas</string>
@@ -327,7 +321,6 @@
     <string name="patient_name_summary">Pateikite paciento vardą arba slapyvardį, kad galima būtų atskirti tarp skirtingų konfigūracijų.</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Vartotojas</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%1$s įtraukite į baterijos optimizavimo baltąjį sąrašą tinkamam veikimui užtikrinti</string>
     <string name="loopsuspended">Ciklas sustabdytas</string>
     <string name="loopsuspendedfor">Sustabdyta (%1$d m)</string>
     <string name="suspendloopfor1h">Sustabdyti ciklą 1 val</string>
@@ -425,7 +418,6 @@
     <string name="sensitivityweightedaverage">Jautrumas pagal svertinį vidurkį</string>
     <string name="notloadedplugins">Ne visi profiliai įkelti!</string>
     <string name="valuesnotstored">Reikšmės neišsaugotos!</string>
-    <string name="ns_localbroadcasts">Įgalinti perdavimą į kitas programas (pvz., xDrip+). Neįgalinkite, jei įdiegta daugiau nei vienas AAPS arba NSClient egzempliorius!</string>
     <string name="ns_localbroadcasts_title">Įgalinti lokalų duomenų perdavimą.</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="enableuam">Įjungti NDM</string>
@@ -617,7 +609,6 @@
     <string name="welcometosetupwizard">Sveiki atvykę į sąrankos vedlį. Jis lydės jus per visą nustatymų procesą\n</string>
     <string name="readstatus">Statuso nuskaitymas</string>
     <string name="exitwizard">Praleisti sąrankos vedlį</string>
-    <string name="setupwizard_loop_description">Paspauskite mygtuką žemiau, norėdami leisti AndroidAPS patarti/atlikti bazės pakeitimus</string>
     <string name="setupwizard_sensitivity_description">Jautrumo įskiepis yra naudojamas jautrumo aptikimui ir AAO skaičiavimams. Daugiau informacijos:</string>
     <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="nsclientinfotext">NSClient palaiko ryšį su Nightscout. Jūs galite praleisti šią dalį dabar, bet negalėsite baigti mokymosi programos, kol nenustatysite ryšio su NS.</string>
@@ -652,7 +643,6 @@
     <string name="sensitivity_raises_target_title">Jautrumas didina tikslą</string>
     <string name="sensitivity_raises_target_summary">Kai aptinkamas padidėjęs jautrumas insulinui, tikslinis gliukozės lygis padidinamas</string>
     <string name="storedsettingsfound">Rasti išsaugoti nustatymai</string>
-    <string name="allow_hardware_pump_text">Dėmesio: jei aktyvuosite ir prijungsite prie aparatinės pompos, AndroidAPS nukopijuos bazės nustatymus iš profilio į pompą, pakeisdamas esančius nustatymus pompoje. Įsitikinkite, kad turimi bazės nustatymai AndroidAPS yra teisingi. Jei nesate tikri arba nenorite iš naujo keisti bazės nustatymų jūsų pompoje, paspauskite atšaukti ir pakartokite prijungimą prie pompos kitą kartą.</string>
     <string name="error_adding_treatment_title">Terapijos duomenys nepilni</string>
     <string name="maintenance_settings">Serviso nustatymai</string>
     <string name="maintenance_email">Gavėjo el. paštas</string>
@@ -678,7 +668,6 @@
     <string name="loop_openmode_min_change_summary" formatted="false">Atviras Ciklas parodys naujų pakeitimų užklausą tik tada, kai pokytis bus didesnis nei ši vertė %. Numatytoji vertė yra 20%</string>
     <string name="profile_total">== ∑  %1$s vv</string>
     <string name="dexcom_lognssensorchange_title">Registruoti sensoriaus keitimą NS</string>
-    <string name="dexcom_lognssensorchange_summary">Sukurti įvykį \"Sensoriaus keitimas\" NS automatiškai, startavus sensorių</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Jūsų Tidepool vartotojo vardas, įprastai jūsų el. pašto adresas</string>
@@ -749,7 +738,6 @@
     <string name="id">ID:</string>
     <string name="submit">Pateikti</string>
     <string name="mostcommonprofile">Dažniausiai naudojamas profilis:</string>
-    <string name="survey_comment">Pastaba: anonimiškai bus įkelti tik tie duomenys, kurie matomi šiame ekrane. Šiam diegimui AndroidAPS priskiria ID. Galite pateikti duomenis dar kartą, jei pasikeitė jūsų pagrindinis profilis. Vis dėlto leiskite jam veikti bent savaitę, kad jo rezultatas būtų matomas laiko diapazone. Ačiū už palaikymą.</string>
     <string name="invalidage">Neteisingas amžiaus įrašas</string>
     <string name="invalidweight">Neteisingas svorio įrašas</string>
     <string name="invalidpct">Netinkamas % įrašas</string>
@@ -789,11 +777,9 @@
     <string name="smscommunicator_otp_export_prompt">Ar tikrai norite nukopijuoti OTP slaptažodį į mainų sritį?\n\nTai gali būti reikalinga tik tuo atveju, jei jūsų programai kyla problemų identifikuojant nuskaitant QR kodą. Arba norite jį įvesti rankiniu būdu ar sukonfigūruoti įrangos OTP prieigos raktą naudodami specialią programą.</string>
     <string name="smscommunicator_otp_export_successful">OTP kodas (Base32 formatas) eksportuotas ir nukopijuotas į mainų sritį. Įklijuokite jį į autentifikatorių arba OTP programą!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Įdiegti Authenticator</string>
-    <string name="smscommunicator_otp_step2_provisioning_header">2. Nuskanuoti kodą AndroidAPS OTP kodų nustatymyu</string>
     <string name="smscommunicator_otp_step3_test_header">3. Patikrinti vienkartinį slaptažodį</string>
     <string name="smscommunicator_otp_reset_header">Atstatyti tapatybės nustatymą</string>
     <string name="smscommunicator_otp_install_info">Kiekviename telefone, palaikančiame RFC 6238 TOTP prieigos raktus, įdiekite autentifikavimo programą. Populiariausios nemokamos programos yra:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_reset_warning">Jei iš naujo nustatysite autentifikavimo priemonę, visi esami autentifikatoriai taps negaliojantys. Tada turėsite juos vėl nustatyti!</string>
     <string name="overview_show_predictions">Prognozė</string>
     <string name="overview_show_deviationslope">Nukrypimo koeficientas</string>
     <string name="authorizationfailed">Autorizacija nepavyko</string>

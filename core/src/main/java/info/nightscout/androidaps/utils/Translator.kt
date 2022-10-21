@@ -89,6 +89,7 @@ class Translator @Inject internal constructor(
         Action.EXPORT_SETTINGS                 -> rh.gs(R.string.uel_export_settings)
         Action.IMPORT_SETTINGS                 -> rh.gs(R.string.uel_import_settings)
         Action.RESET_DATABASES                 -> rh.gs(R.string.uel_reset_databases)
+        Action.CLEANUP_DATABASES               -> rh.gs(R.string.uel_cleanup_databases)
         Action.EXPORT_DATABASES                -> rh.gs(R.string.uel_export_databases)
         Action.IMPORT_DATABASES                -> rh.gs(R.string.uel_import_databases)
         Action.OTP_EXPORT                      -> rh.gs(R.string.uel_otp_export)

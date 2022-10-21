@@ -26,8 +26,6 @@
     <string name="objectives_pumpstatusavailableinns">NS에서 펌프상태가 확인 가능합니다</string>
     <string name="objectives_manualenacts">수동 주입</string>
     <string name="accomplished">완료: %1$s</string>
-    <string name="objectives_usage_objective">AndroidAPS를 사용하는 방법을 배워봅니다</string>
-    <string name="objectives_usage_gate">AndroidAPS에서 다양한 작업을 수행해보세요</string>
     <string name="objectives_useprofileswitch">10분동안 프로파일 90%를 설정해보세요(홈에서 프로파일명을 길게 눌러보세요)</string>
     <string name="objectives_usedisconnectpump">샤워한다고 가정하고 펌프를 1시간 동안 펌프를 일시중지하세요 (홈에서 Open Loop를 길게 눌러보세요)</string>
     <string name="objectives_usereconnectpump">... 그리고 같은 방법으로 펌프를 재연결하세요</string>

@@ -39,9 +39,7 @@
     <string name="description_source_ns_client">从 Nightscout 下载 血糖数据</string>
     <string name="description_source_xdrip">从 xDrip+ 接收血糖值。</string>
     <string name="description_treatments">保存所做的所有治疗</string>
-    <string name="description_wear">使用您的 WearOS 手表监视和控制 AndroidAPS。</string>
     <string name="description_xdrip_status_line">在 xDrip + 表盘上显示有关闭环的信息。</string>
-    <string name="description_sms_communicator">远程控制 AndroidAPS 使用 SMS 短信命令。</string>
     <string name="treatments_insulin_label_string">胰岛素:</string>
     <string name="treatments_carbs_label_string">碳水化合物:</string>
     <string name="treatments_iob_label_string">IOB活性胰岛素:</string>
@@ -78,9 +76,7 @@
     <string name="treatments">治疗</string>
     <string name="virtualpump">虚拟泵</string>
     <string name="configbuilder_pump">胰岛素泵</string>
-    <string name="configbuilder_pump_description">你想用 AndroidAPS连接哪个胰岛素泵？</string>
     <string name="configbuilder_profile">配置文件</string>
-    <string name="configbuilder_profile_description">AndroidAPS 应该使用哪个配置文件？</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">哪个 APS 算法应该用于治疗调整？</string>
     <string name="configbuilder_general">一般</string>
@@ -88,7 +84,6 @@
     <string name="configbuilder_constraints_description">应用了哪些约束条件？</string>
     <string name="constraints">约束条件</string>
     <string name="configbuilder_loop">闭环</string>
-    <string name="configbuilder_loop_description">使用此激活 AndroidAPS 的闭环集成。</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">通过约束条件之后</string>
     <string name="loop_tbrsetbypump_label">通过泵设置临时基础率</string>
@@ -105,7 +100,6 @@
     <string name="sms_basal">基础率:</string>
     <string name="changeyourinput">更改您的输入!</string>
     <string name="configbuilder_bgsource">血糖来源</string>
-    <string name="configbuilder_bgsource_description">AndroidAPS 从何处获取数据？</string>
     <string name="xdrip">xDrip+</string>
     <string name="apsmode_title">APS模式</string>
     <string name="closedloop">闭环</string>
@@ -330,7 +324,6 @@
     <string name="patient_name_summary">请提供患者姓名或昵称来区分多个设置</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">用户</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%1$s 需要加入电池优化白名单才能正常运行</string>
     <string name="loopsuspended">闭环暂停了</string>
     <string name="loopsuspendedfor">暂停了 (%1$d m)</string>
     <string name="suspendloopfor1h">暂停闭环一个小时</string>
@@ -428,7 +421,6 @@
     <string name="sensitivityweightedaverage">灵敏度 WeightedAverage</string>
     <string name="notloadedplugins">配置文件加载不完整</string>
     <string name="valuesnotstored">值没有被存储</string>
-    <string name="ns_localbroadcasts">广播信息到其他应用(如xDrip+)。如果你安装了不止一个AAPS或NS客户端，请不要启用此功能！</string>
     <string name="ns_localbroadcasts_title">启用本地广播。</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">动态ISF(胰岛素敏感系数)</string>
@@ -623,7 +615,6 @@
     <string name="welcometosetupwizard">欢迎使用设置向导。它将指导您完成设置过程 \n</string>
     <string name="readstatus">读取状态</string>
     <string name="exitwizard">跳过设置向导</string>
-    <string name="setupwizard_loop_description">按下下面的按钮, 以使 AndroidAPS 建议或者更改基础率</string>
     <string name="setupwizard_sensitivity_description">灵敏度插件用于灵敏度检测和碳水化合物计算。有关详细信息, 请访问:</string>
     <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="nsclientinfotext">NS客户端可以处理与Nightscout的连接。您可以先跳过这一部分，但在设置NS参数前，你无法通过学习计划的目标。</string>
@@ -662,7 +653,6 @@
     <string name="remove_items">删除项目</string>
     <string name="sort_items">项目排序</string>
     <string name="storedsettingsfound">发现曾经保存过的设置</string>
-    <string name="allow_hardware_pump_text">注意：如果你激活并且连接到了一个硬件泵，AndroidAPS将会从配置文件复制基础率到泵上。覆盖泵上已有的基础率。请确定你已经在AndroidAPS上设置了正确的基础率。如果你不确定或者不想覆盖泵上的基础率设置，按取消键，以后再切换激活配置文件。</string>
     <string name="error_adding_treatment_title">治疗数据不完整</string>
     <string name="maintenance_settings">维护设置</string>
     <string name="maintenance_email">电子邮箱收件人</string>
@@ -688,7 +678,6 @@
     <string name="loop_openmode_min_change_summary" formatted="false">开环状态下，算法建议的基础率调整百分比大于此数值时，才会弹出更改建议。默认值为20%</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="dexcom_lognssensorchange_title">记录传感器更换至NS服务器</string>
-    <string name="dexcom_lognssensorchange_summary">在传感器启动时在 NS服务器 自动创建事件 \"传感器更改\"</string>
     <string name="tomato">番茄（喵喵）</string>
     <string name="tomato_short">番茄</string>
     <string name="summary_tidepool_username">你的Tidepool登录用户名，通常是你的邮件地址</string>
@@ -761,7 +750,6 @@
     <string name="id">ID：</string>
     <string name="submit">提交</string>
     <string name="mostcommonprofile">最常见的配置文件:</string>
-    <string name="survey_comment">注意: 只有在此屏幕上可视的数据将被匿名上载。个人身份识别已分配给此 AndroidAPS 的安装。 如果您的主配置文件发生更改，请让它在可视的时间范围内至少运行一周，那么您可以再次提交数据。 非常感谢您的帮助！</string>
     <string name="invalidage">输入的年龄无效</string>
     <string name="invalidweight">输入的权重无效</string>
     <string name="invalidpct">输入的百分比无效</string>
@@ -802,11 +790,9 @@
     <string name="smscommunicator_otp_export_prompt">你确定要将OTP密钥复制到剪贴板？\n\n只有在验证器应用扫描二维码出现问题时，你才需要这么做。可能你想手动输入二维码，或者使用专用的应用程序配置硬件OTP令牌。</string>
     <string name="smscommunicator_otp_export_successful">将OTP密钥 (Base32 格式) 导出并复制到剪贴板。粘贴它到身份验证器或硬件OTP中！</string>
     <string name="smscommunicator_otp_step1_install_header">1. 安装身份验证器app</string>
-    <string name="smscommunicator_otp_step2_provisioning_header">2. 扫描二维码以安装AndroidAPS随机验证码密钥</string>
     <string name="smscommunicator_otp_step3_test_header">3. 测试一次性验证码</string>
     <string name="smscommunicator_otp_reset_header">重置身份验证器</string>
     <string name="smscommunicator_otp_install_info">在其他遥控手机上安装支持RFC 6238 TOTP令牌协议的应用程序。常用的免费应用有:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_reset_warning">通过重置验证码核心密钥，可以使所有已设置的OTP随机验证码生成配置无效，您需要在遥控手机上重新设置!</string>
     <string name="overview_show_predictions">预测</string>
     <string name="overview_show_treatments">治疗</string>
     <string name="overview_show_deviationslope">斜度偏差</string>
@@ -1002,7 +988,6 @@
     <string name="above" comment="above &quot;in range&quot;">上方</string>
     <string name="show_loop_records">显示闭环记录</string>
     <string name="show_hide_records">隐藏闭环记录</string>
-    <string name="widget_description">AndroidAPS小部件</string>
     <string name="configure">配置透明度</string>
     <string name="loop_status">闭环状态</string>
     <string name="graph_scale">图形缩放</string>

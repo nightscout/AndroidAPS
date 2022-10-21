@@ -20,7 +20,6 @@
     <string name="disconnected">Atsijungta</string>
     <string name="disconnecting">Atsijungiama</string>
     <string name="waiting_for_disconnection">Laukiama atsijungimo</string>
-    <string name="androidaps_start">AndroidAPS paleista</string>
     <string name="formatinsulinunits1">%1$.1f vv</string>
     <string name="formatinsulinunits">%1$.2f vv</string>
     <string name="formatsignedinsulinunits">%1$+.2f vv</string>
@@ -267,7 +266,6 @@
     <string name="versionavailable">Versiją %1$s jau galima naudoti</string>
     <string name="version_expire">Versija %1$s baigia galioti %2$s</string>
     <!-- Permissions -->
-    <string name="alert_dialog_storage_permission_text">Prašome iš naujo paleisti telefoną arba sistemos nustatymuose iš naujo paleisti AndroidAPS \nkitaip AndroidAPS negalės registruoti prisijungimų (svarbu stebėti ir tikrinti, ar algoritmai veikia tinkamai)!</string>
     <!-- WeekdayPicker -->
     <string name="monday_short">P</string>
     <string name="tuesday_short">A</string>

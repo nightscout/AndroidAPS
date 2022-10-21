@@ -2,14 +2,11 @@ package info.nightscout.androidaps.database.daos
 
 import androidx.room.Dao
 import androidx.room.Query
-import info.nightscout.androidaps.database.TABLE_GLUCOSE_VALUES
 import info.nightscout.androidaps.database.TABLE_OFFLINE_EVENTS
-import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.entities.OfflineEvent
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 
-@Suppress("FunctionName")
 @Dao
 internal interface OfflineEventDao : TraceableDao<OfflineEvent> {
 
@@ -18,6 +15,12 @@ internal interface OfflineEventDao : TraceableDao<OfflineEvent> {
 
     @Query("DELETE FROM $TABLE_OFFLINE_EVENTS")
     override fun deleteAllEntries()
+
+    @Query("DELETE FROM $TABLE_OFFLINE_EVENTS WHERE timestamp < :than")
+    override fun deleteOlderThan(than: Long): Int
+
+    @Query("DELETE FROM $TABLE_OFFLINE_EVENTS WHERE referenceId IS NOT NULL")
+    override fun deleteTrackedChanges(): Int
 
     @Query("SELECT id FROM $TABLE_OFFLINE_EVENTS ORDER BY id DESC limit 1")
     fun getLastId(): Maybe<Long>

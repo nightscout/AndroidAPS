@@ -103,7 +103,7 @@
     <string name="action_preset_1">Forvalg 1</string>
     <string name="action_preset_2">Forvalg 2</string>
     <string name="action_preset_3">Forvalg 3</string>
-    <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Fri mængde</string>
+    <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Fri mængde</string>
     <string name="action_confirm">BEKRÆFT</string>
     <string name="action_timeshift">tidsforskydning</string>
     <string name="action_bolus">Bolus</string>
