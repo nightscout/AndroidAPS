@@ -1,9 +1,12 @@
 package info.nightscout.sdk.localmodel.treatment
 
+import info.nightscout.sdk.localmodel.entry.NsUnits
+
 interface Treatment {
     val date: Long
     val device: String?
     val identifier: String
+    val units: NsUnits?
     val eventType: EventType
     val srvModified: Long
     val srvCreated: Long

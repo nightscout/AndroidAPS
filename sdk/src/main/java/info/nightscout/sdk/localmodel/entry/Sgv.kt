@@ -11,7 +11,7 @@ data class Sgv(
     override var isReadOnly: Boolean,
     override val isValid: Boolean,
     val sgv: Double, // TODO: might be Double?
-    val units: SgvUnits,
+    val units: NsUnits,
     val direction: Direction,
     val noise: Int?, // TODO: enum?
     val filtered: Double?, // number in doc (I found decimal values in API v1

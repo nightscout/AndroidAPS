@@ -24,6 +24,7 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.XDripBroadcast
 import info.nightscout.sdk.localmodel.treatment.Bolus
 import info.nightscout.sdk.localmodel.treatment.Carbs
+import info.nightscout.sdk.localmodel.treatment.TemporaryTarget
 import info.nightscout.sdk.localmodel.treatment.Treatment
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
@@ -139,6 +140,17 @@ class ProcessTreatmentsWorker(
                             }
                     }
                 }
+                is TemporaryTarget -> {
+                    if (this.duration > 0L) {
+                        // not ending event
+                        if (low < Constants.MIN_TT_MGDL) return null
+                        if (low > Constants.MAX_TT_MGDL) return null
+                        if (high < Constants.MIN_TT_MGDL) return null
+                        if (high > Constants.MAX_TT_MGDL) return null
+                        if (low > high) return null
+                    }
+
+                }
             }
             /*
             // Convert back emulated TBR -> EB
@@ -151,10 +163,14 @@ class ProcessTreatmentsWorker(
                 eventType = JsonHelper.safeGetString(json, "eventType")
                 virtualPumpPlugin.fakeDataDetected = true
             }
+
             when {
                 insulin > 0 || carbs > 0                                                    -> Any()
                 eventType == TherapyEvent.Type.TEMPORARY_TARGET.text                        ->
                     if (sp.getBoolean(R.string.key_ns_receive_temp_target, false) || config.NSCLIENT) {
+
+
+
                         temporaryTargetFromJson(json)?.let { temporaryTarget ->
                             repository.runTransactionForResult(SyncNsTemporaryTargetTransaction(temporaryTarget))
                                 .doOnError {

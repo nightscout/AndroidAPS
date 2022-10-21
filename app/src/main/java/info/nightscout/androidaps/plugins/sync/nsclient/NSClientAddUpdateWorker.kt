@@ -29,7 +29,6 @@ import info.nightscout.androidaps.extensions.isEffectiveProfileSwitch
 import info.nightscout.androidaps.extensions.offlineEventFromJson
 import info.nightscout.androidaps.extensions.profileSwitchFromJson
 import info.nightscout.androidaps.extensions.temporaryBasalFromJson
-import info.nightscout.androidaps.extensions.temporaryTargetFromJson
 import info.nightscout.androidaps.extensions.therapyEventFromJson
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.BuildHelper
@@ -41,6 +40,7 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.sync.nsclient.extensions.bolusFromJson
 import info.nightscout.androidaps.plugins.sync.nsclient.extensions.carbsFromJson
+import info.nightscout.androidaps.plugins.sync.nsclient.extensions.temporaryTargetFromJson
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper

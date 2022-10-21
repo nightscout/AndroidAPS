@@ -34,19 +34,4 @@ internal data class RemoteEntry(
     @SerializedName("filtered") val filtered: Double?, // The raw filtered value directly from CGM transmitter. (only available for sgv types)
     @SerializedName("unfiltered") val unfiltered: Double?, // The raw unfiltered value directly from CGM transmitter. (only available for sgv types)
     @SerializedName("units") val units: String?, // The units for the glucose value, mg/dl or mmol/l. It is strongly recommended to fill in this field.
-    @SerializedName("duration") val duration: Long?, // Duration of event
-
-    // TODO: add fields for other types (currently only basic "sgv" is covered)
-
-    // General Treatment fields
-    @SerializedName("eventType") val eventType : EventType?, // Treatment eventType ie "Bolus" .....
-    @SerializedName("pumpId") val pumpId : Long?, // pump ID if uploaded by AAPS
-    @SerializedName("pumpType") val pumpType : String?, // pump type if uploaded by AAPS
-    @SerializedName("pumpSerial") val pumpSerial : String?, // pump serial if uploaded by AAPS
-    @SerializedName("notes") val notes : String?, // Treatment notes
-
-    // Bolus
-    @SerializedName("insulin") val insulin : Double?, // Insulin amount
-    // Carbs
-    @SerializedName("carbs") val carbs : Double?, // Carbs amount
 )

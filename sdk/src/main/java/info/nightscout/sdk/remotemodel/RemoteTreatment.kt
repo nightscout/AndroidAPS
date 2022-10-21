@@ -2,6 +2,7 @@ package info.nightscout.sdk.remotemodel
 
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
+import info.nightscout.sdk.localmodel.treatment.EventType
 
 /*
 * Depending on the type, different other fields are present.
@@ -16,7 +17,8 @@ internal data class RemoteTreatment(
     @SerializedName("identifier") val identifier: String,       // string Main addressing, required field that identifies document in the collection. The client should not create the identifier, the server automatically assigns it when the document is inserted.
     @SerializedName("date") val date: Long,                     // integer($int64) or string required timestamp when the record or event occured, you can choose from three input formats Unix epoch in milliseconds (1525383610088), Unix epoch in seconds (1525383610), ISO 8601 with optional timezone ('2018-05-03T21:40:10.088Z' or '2018-05-03T23:40:10.088+02:00')
     @SerializedName("created_at") val created_at: String,       // integer($int64) or string timestamp on previous version of api, in my examples, a lot of treatments don't have date, only created_at, some of them with string others with long...
-    @SerializedName("utcOffset") val utcOffset: Int?,           // integer Local UTC offset (timezone) of the event in minutes. This field can be set either directly by the client (in the incoming document) or it is automatically parsed from the date field.
+    @SerializedName("utcOffset") val utcOffset: Long?,          // integer Local UTC offset (timezone) of the event in minutes. This field can be set either directly by the client (in the incoming
+    // document) or it is automatically parsed from the date field.
     // @SerializedName("app") val app : String,                       // TODO required ? Application or system in which the record was entered by human or device for the first time.
     @SerializedName("device") val device: String?,              // string The device from which the data originated (including serial number of the device, if it is relevant and safe).
     @SerializedName("srvCreated") val srvCreated: Long,         // integer($int64) example: 1525383610088 The server's timestamp of document insertion into the database (Unix epoch in ms). This field appears only for documents which were inserted by API v3.
@@ -25,15 +27,17 @@ internal data class RemoteTreatment(
     @SerializedName("modifiedBy") val modifiedBy: String?,      // string Name of the security subject (within Nightscout scope) which has patched or deleted the document for the last time. This field is automatically set by the server.
     @SerializedName("isValid") val isValid: Boolean?,           // boolean A flag set by the server only for deleted documents. This field appears only within history operation and for documents which were deleted by API v3 (and they always have a false value)
     @SerializedName("isReadOnly") val isReadOnly: Boolean?,     // boolean A flag set by client that locks the document from any changes. Every document marked with isReadOnly=true is forever immutable and cannot even be deleted.
-    @SerializedName("eventType") val eventType: String,         // string "BG Check", "Snack Bolus", "Meal Bolus", "Correction Bolus", "Carb Correction", "Combo Bolus", "Announcement", "Note", "Question", "Exercise", "Site Change", "Sensor Start", "Sensor Change", "Pump Battery Change", "Insulin Change", "Temp Basal", "Profile Switch", "D.A.D. Alert", "Temporary Target", "OpenAPS Offline", "Bolus Wizard"
+    @SerializedName("eventType") val eventType: EventType,         // string "BG Check", "Snack Bolus", "Meal Bolus", "Correction Bolus", "Carb Correction", "Combo Bolus", "Announcement", "Note",
+    // "Question", "Exercise", "Site Change", "Sensor Start", "Sensor Change", "Pump Battery Change", "Insulin Change", "Temp Basal", "Profile Switch", "D.A.D. Alert", "Temporary Target", "OpenAPS Offline", "Bolus Wizard"
     @SerializedName("glucose") val glucose: String?,            // string Current glucose
     @SerializedName("glucoseType") val glucoseType: String?,    // string example: "Sensor", "Finger", "Manual"
     @SerializedName("units") val units: String?,                // string The units for the glucose value, mg/dl or mmol/l. It is strongly recommended to fill in this field.
-    @SerializedName("carbs") val carbs: Int?,                   // number... Amount of carbs given.
+    @SerializedName("carbs") val carbs: Double?,                // number... Amount of carbs given.
     @SerializedName("protein") val protein: Int?,               // number... Amount of protein given.
     @SerializedName("fat") val fat: Int?,                       // number... Amount of fat given.
     @SerializedName("insulin") val insulin: Double?,            // number... Amount of insulin, if any.
-    @SerializedName("duration") val duration: Int?,             // number... Duration in minutes.
+    @SerializedName("duration") val duration: Long?,             // number... Duration in minutes.
+    @SerializedName("durationInMilliseconds") val durationInMilliseconds: Long?, // number... Duration in milliseconds.
     @SerializedName("preBolus") val preBolus: Int?,             // number... How many minutes the bolus was given before the meal started.
     @SerializedName("splitNow") val splitNow: Int?,             // number... Immediate part of combo bolus (in percent).
     @SerializedName("splitExt") val splitExt: Int?,             // number... Extended part of combo bolus (in percent).

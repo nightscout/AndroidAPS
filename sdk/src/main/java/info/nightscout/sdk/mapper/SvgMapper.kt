@@ -2,22 +2,8 @@ package info.nightscout.sdk.mapper
 
 import info.nightscout.sdk.localmodel.entry.Direction
 import info.nightscout.sdk.localmodel.entry.Sgv
-import info.nightscout.sdk.localmodel.entry.SgvUnits
+import info.nightscout.sdk.localmodel.entry.NsUnits
 import info.nightscout.sdk.remotemodel.RemoteEntry
-import java.util.*
-
-@JvmSynthetic
-internal fun SgvUnits.toRemoteString(): String = when (this) {
-    SgvUnits.MG_DL -> "mg/dl"
-    SgvUnits.MMOL_L -> "mmol/l" // TODO check NS conventions
-}
-
-@JvmSynthetic
-internal fun String?.toSvgUnits(): SgvUnits = when (this?.lowercase(Locale.getDefault())) {
-    "mgdl", "mg/dl", "mg" -> SgvUnits.MG_DL
-    "mmol", "mmol/l", "mol", "mmoll" -> SgvUnits.MMOL_L
-    else -> SgvUnits.MG_DL
-}
 
 @JvmSynthetic
 internal fun RemoteEntry.toSgv(): Sgv? {
@@ -40,7 +26,7 @@ internal fun RemoteEntry.toSgv(): Sgv? {
         noise = this.noise, // TODO: to Enum?
         filtered = this.filtered,
         unfiltered = this.unfiltered,
-        units = this.units.toSvgUnits()
+        units = NsUnits.fromString(this.units)
     )
 }
 

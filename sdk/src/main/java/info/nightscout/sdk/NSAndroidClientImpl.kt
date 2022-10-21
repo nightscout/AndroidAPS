@@ -14,6 +14,7 @@ import info.nightscout.sdk.mapper.toTreatment
 import info.nightscout.sdk.networking.NetworkStackBuilder
 import info.nightscout.sdk.remotemodel.LastModified
 import info.nightscout.sdk.remotemodel.RemoteEntry
+import info.nightscout.sdk.remotemodel.RemoteTreatment
 import info.nightscout.sdk.utils.retry
 import info.nightscout.sdk.utils.toNotNull
 import kotlinx.coroutines.CoroutineDispatcher
@@ -134,7 +135,7 @@ class NSAndroidClientImpl(
 
         val response = api.getTreatmentsModifiedSince(from)
         if (response.isSuccessful) {
-            return@callWrapper response.body()?.result?.map(RemoteEntry::toTreatment).toNotNull()
+            return@callWrapper response.body()?.result?.map(RemoteTreatment::toTreatment).toNotNull()
         } else {
             throw TodoNightscoutException() // TODO: react to response errors (offline, ...)
         }

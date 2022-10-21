@@ -5,11 +5,11 @@ import info.nightscout.sdk.remotemodel.LastModified
 import info.nightscout.sdk.remotemodel.NSResponse
 import info.nightscout.sdk.remotemodel.RemoteEntry
 import info.nightscout.sdk.remotemodel.RemoteStatusResponse
+import info.nightscout.sdk.remotemodel.RemoteTreatment
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
-import retrofit2.http.QueryName
 
 /**
  * Created by adrian on 2019-12-23.
@@ -43,5 +43,5 @@ internal interface NightscoutRemoteService {
     suspend fun getSgvsModifiedSince(@Path("from") from: Long): Response<NSResponse<List<RemoteEntry>>>
 
     @GET("v3/treatments/history/{from}")
-    suspend fun getTreatmentsModifiedSince(@Path("from") from: Long): Response<NSResponse<List<RemoteEntry>>>
+    suspend fun getTreatmentsModifiedSince(@Path("from") from: Long): Response<NSResponse<List<RemoteTreatment>>>
 }
