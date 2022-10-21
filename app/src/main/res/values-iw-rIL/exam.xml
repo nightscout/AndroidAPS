@@ -33,6 +33,7 @@
     <string name="objectives_hint2">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
     <string name="noisycgm_label">נתוני הסנסור שאינם יציבים</string>
     <string name="noisycgm_whattodo">מה לעשות אם נתוני הסנסור לא יציבים?</string>
+    <string name="noisycgm_nothing">אין צורך לעשות דבר - AndroidAPS יטפל בכך בעצמו.</string>
     <string name="noisycgm_pause">הפסקת הלולאה כדי למנוע מינון איסולין גבוה מדי\\נמוך מדי.</string>
     <string name="noisycgm_replacesensor">יש להחליף סנסור שבאופן קבוע מספק נתוני רועשים ו\\או לא מדויקים.</string>
     <string name="noisycgm_checksmoothing">יש לוודא שיישום הסנסור מספק נתונים איכותיים ו- \"חלקים\".</string>
