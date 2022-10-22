@@ -12,7 +12,7 @@ interface NSAndroidRxClient {
     fun getStatus(): Single<Status>
     fun getLastModified(): Single<LastModified>
     fun getSgvsModifiedSince(from: Long): Single<List<Sgv>>
-    fun getTreatmentsModifiedSince(from: Long): Single<List<Treatment>>
+    fun getTreatmentsModifiedSince(from: Long, limit: Long): Single<List<Treatment>>
 
 }
 

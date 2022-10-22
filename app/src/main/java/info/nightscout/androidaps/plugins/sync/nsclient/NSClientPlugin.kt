@@ -50,7 +50,8 @@ class NSClientPlugin @Inject constructor(
     private val sp: SP,
     private val nsClientReceiverDelegate: NsClientReceiverDelegate,
     private val config: Config,
-    private val buildHelper: BuildHelper
+    private val buildHelper: BuildHelper,
+    private val dataSyncSelector: DataSyncSelector
 ) : NsClient, Sync, PluginBase(
     PluginDescription()
         .mainType(PluginType.SYNC)
@@ -216,5 +217,7 @@ class NSClientPlugin @Inject constructor(
         nsClientService?.let { if (latestReceived > it.latestDateInReceivedData) it.latestDateInReceivedData = latestReceived }
     }
 
-    override fun resetToFullSync() { }
+    override fun resetToFullSync() {
+        dataSyncSelector.resetToNextFullSync()
+    }
 }

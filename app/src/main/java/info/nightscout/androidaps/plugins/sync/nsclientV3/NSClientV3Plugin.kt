@@ -276,6 +276,7 @@ class NSClientV3Plugin @Inject constructor(
                 dateUtil.now() - maxAge
             )
         )
+        storeLastFetched()
     }
 
     private fun storeLastFetched() {

@@ -43,5 +43,5 @@ internal interface NightscoutRemoteService {
     suspend fun getSgvsModifiedSince(@Path("from") from: Long): Response<NSResponse<List<RemoteEntry>>>
 
     @GET("v3/treatments/history/{from}")
-    suspend fun getTreatmentsModifiedSince(@Path("from") from: Long): Response<NSResponse<List<RemoteTreatment>>>
+    suspend fun getTreatmentsModifiedSince(@Path("from") from: Long, @Query("limit") limit: Long): Response<NSResponse<List<RemoteTreatment>>>
 }

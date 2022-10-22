@@ -12,7 +12,7 @@ fun info.nightscout.sdk.localmodel.treatment.TemporaryTarget.toTemporaryTarget()
         highTarget = targetTop.asMgdl(),
         lowTarget = targetBottom.asMgdl(),
         duration = duration,
-        interfaceIDs_backing = InterfaceIDs(nightscoutId = identifier)
+        interfaceIDs_backing = InterfaceIDs(nightscoutId = identifier, pumpId = pumpId, pumpType = InterfaceIDs.PumpType.fromString(pumpType), pumpSerial = pumpSerial)
     )
 
 fun info.nightscout.sdk.localmodel.treatment.TemporaryTarget.Reason?.toReason(): TemporaryTarget.Reason =

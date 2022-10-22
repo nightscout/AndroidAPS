@@ -4,6 +4,7 @@ import info.nightscout.sdk.localmodel.entry.NsUnits
 import info.nightscout.sdk.localmodel.treatment.Bolus
 import info.nightscout.sdk.localmodel.treatment.Carbs
 import info.nightscout.sdk.localmodel.treatment.EventType
+import info.nightscout.sdk.localmodel.treatment.TemporaryBasal
 import info.nightscout.sdk.localmodel.treatment.TemporaryTarget
 import info.nightscout.sdk.localmodel.treatment.Treatment
 import info.nightscout.sdk.remotemodel.RemoteTreatment
@@ -81,6 +82,36 @@ internal fun RemoteTreatment.toTreatment(): Treatment? {
                 targetBottom = this.targetBottom,
                 targetTop = this.targetTop,
                 reason = TemporaryTarget.Reason.fromString(this.reason)
+            )
+        }
+
+        eventType == EventType.TEMPORARY_BASAL -> {
+            if (this.date == 0L) return null
+
+            this.absolute ?: this.percent ?: return null
+            this.duration ?: return null
+            if (this.duration == 0L && this.durationInMilliseconds == null) return null
+
+            return TemporaryBasal(
+                date = timestamp(),
+                device = this.device,
+                identifier = this.identifier,
+                units = NsUnits.fromString(this.units),
+                srvModified = this.srvModified,
+                srvCreated = this.srvCreated,
+                utcOffset = this.utcOffset ?: 0,
+                subject = this.subject,
+                isReadOnly = this.isReadOnly ?: false,
+                isValid = this.isValid ?: true,
+                eventType = this.eventType,
+                notes = this.notes,
+                pumpId = this.pumpId,
+                pumpType = this.pumpType,
+                pumpSerial = this.pumpSerial,
+                duration = this.durationInMilliseconds ?: TimeUnit.MINUTES.toMillis(this.duration),
+                isAbsolute = this.absolute != null,
+                rate = this.absolute ?: (this.percent?.plus(100.0)) ?: 0.0,
+                type = TemporaryBasal.Type.fromString(this.type)
             )
         }
     }

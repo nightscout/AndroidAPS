@@ -41,7 +41,7 @@ class LoadTreatmentsWorker(
         runBlocking {
             if ((nsClientV3Plugin.lastModified?.collections?.treatments ?: Long.MAX_VALUE) > nsClientV3Plugin.lastFetched.collections.treatments)
                 try {
-                    val treatments = nsClientV3Plugin.nsAndroidClient.getTreatmentsModifiedSince(nsClientV3Plugin.lastFetched.collections.treatments)
+                    val treatments = nsClientV3Plugin.nsAndroidClient.getTreatmentsModifiedSince(nsClientV3Plugin.lastFetched.collections.treatments, 500)
                     aapsLogger.debug("TREATMENTS: $treatments")
                     if (treatments.isNotEmpty()) {
                         rxBus.send(

@@ -16,10 +16,11 @@ class SyncNsTemporaryBasalTransaction(
 
         if (temporaryBasal.duration != 0L) {
             // not ending event
-            val current: TemporaryBasal? =
-                temporaryBasal.interfaceIDs.nightscoutId?.let {
-                    database.temporaryBasalDao.findByNSId(it)
+            val current = temporaryBasal.interfaceIDs.nightscoutId?.let {
+                database.temporaryBasalDao.findByNSId(it) ?: temporaryBasal.interfaceIDs.pumpId?.let {
+                    database.temporaryBasalDao.findByPumpIds(temporaryBasal.interfaceIDs.pumpId!!, temporaryBasal.interfaceIDs.pumpType!!, temporaryBasal.interfaceIDs.pumpSerial!!)
                 }
+            }
 
             if (current != null) {
                 // nsId exists, allow only invalidation
@@ -45,6 +46,9 @@ class SyncNsTemporaryBasalTransaction(
                 result.updatedNsId.add(running)
             } else if (running != null) {
                 // another running record. end current and insert new
+                if (running.timestamp == temporaryBasal.timestamp) {
+                    throw Exception()
+                }
                 running.end = temporaryBasal.timestamp
                 database.temporaryBasalDao.updateExistingEntry(running)
                 database.temporaryBasalDao.insertNewEntry(temporaryBasal)

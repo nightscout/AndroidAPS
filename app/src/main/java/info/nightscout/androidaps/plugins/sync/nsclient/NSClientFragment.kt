@@ -121,10 +121,7 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
                 context?.let { context ->
                     OKDialog.showConfirmation(
                         context, rh.gs(R.string.nsclientinternal), rh.gs(R.string.full_sync_comment),
-                        Runnable {
-                            dataSyncSelector.resetToNextFullSync()
-                            (plugin as NsClient?)?.resetToFullSync()
-                        }
+                        Runnable { (plugin as NsClient?)?.resetToFullSync() }
                     )
                 }
                 true

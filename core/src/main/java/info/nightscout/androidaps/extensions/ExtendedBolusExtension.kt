@@ -1,20 +1,16 @@
 package info.nightscout.androidaps.extensions
 
 import info.nightscout.androidaps.data.IobTotal
-import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.database.entities.ExtendedBolus
 import info.nightscout.androidaps.database.entities.TemporaryBasal
-import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.interfaces.Insulin
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter.to2Decimal
-import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.T
-import org.json.JSONObject
 import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.math.min
@@ -50,84 +46,6 @@ fun ExtendedBolus.toTemporaryBasal(profile: Profile): TemporaryBasal =
         type = TemporaryBasal.Type.FAKE_EXTENDED
     )
 
-fun ExtendedBolus.toJson(isAdd: Boolean, profile: Profile, dateUtil: DateUtil): JSONObject =
-    if (isEmulatingTempBasal)
-        toTemporaryBasal(profile)
-            .toJson(isAdd, profile, dateUtil)
-            .put("extendedEmulated", toRealJson(isAdd, dateUtil))
-    else toRealJson(isAdd, dateUtil)
-
-fun ExtendedBolus.toRealJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
-    JSONObject()
-        .put("created_at", dateUtil.toISOString(timestamp))
-        .put("enteredBy", "openaps://" + "AndroidAPS")
-        .put("eventType", TherapyEvent.Type.COMBO_BOLUS.text)
-        .put("duration", T.msecs(duration).mins())
-        .put("durationInMilliseconds", duration)
-        .put("splitNow", 0)
-        .put("splitExt", 100)
-        .put("enteredinsulin", amount)
-        .put("relative", rate)
-        .put("isValid", isValid)
-        .put("isEmulatingTempBasal", isEmulatingTempBasal)
-        .also {
-            if (interfaceIDs.pumpId != null) it.put("pumpId", interfaceIDs.pumpId)
-            if (interfaceIDs.endId != null) it.put("endId", interfaceIDs.endId)
-            if (interfaceIDs.pumpType != null) it.put("pumpType", interfaceIDs.pumpType!!.name)
-            if (interfaceIDs.pumpSerial != null) it.put("pumpSerial", interfaceIDs.pumpSerial)
-            if (isAdd && interfaceIDs.nightscoutId != null) it.put("_id", interfaceIDs.nightscoutId)
-        }
-
-/*
-        create fake object with nsID and isValid == false
- */
-fun extendedBolusFromNsIdForInvalidating(nsId: String): ExtendedBolus =
-    extendedBolusFromJson(
-        JSONObject()
-            .put("mills", 1)
-            .put("amount", -1.0)
-            .put("enteredinsulin", -1.0)
-            .put("duration", -1.0)
-            .put("splitNow", 0)
-            .put("splitExt", 100)
-            .put("_id", nsId)
-            .put("isValid", false)
-    )!!
-
-fun extendedBolusFromJson(jsonObject: JSONObject): ExtendedBolus? {
-    val timestamp = JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null) ?: return null
-    if (JsonHelper.safeGetIntAllowNull(jsonObject, "splitNow") != 0) return null
-    if (JsonHelper.safeGetIntAllowNull(jsonObject, "splitExt") != 100) return null
-    val amount = JsonHelper.safeGetDoubleAllowNull(jsonObject, "enteredinsulin") ?: return null
-    val duration = JsonHelper.safeGetLongAllowNull(jsonObject, "duration") ?: return null
-    val durationInMilliseconds = JsonHelper.safeGetLongAllowNull(jsonObject, "durationInMilliseconds")
-    val isValid = JsonHelper.safeGetBoolean(jsonObject, "isValid", true)
-    val isEmulatingTempBasal = JsonHelper.safeGetBoolean(jsonObject, "isEmulatingTempBasal", false)
-    val id = JsonHelper.safeGetStringAllowNull(jsonObject, "_id", null) ?: return null
-    val pumpId = JsonHelper.safeGetLongAllowNull(jsonObject, "pumpId", null)
-    val endPumpId = JsonHelper.safeGetLongAllowNull(jsonObject, "endId", null)
-    val pumpType = InterfaceIDs.PumpType.fromString(JsonHelper.safeGetStringAllowNull(jsonObject, "pumpType", null))
-    val pumpSerial = JsonHelper.safeGetStringAllowNull(jsonObject, "pumpSerial", null)
-
-    if (timestamp == 0L) return null
-    if (duration == 0L && durationInMilliseconds == 0L) return null
-    if (amount == 0.0) return null
-
-    return ExtendedBolus(
-        timestamp = timestamp,
-        amount = amount,
-        duration = durationInMilliseconds ?: T.mins(duration).msecs(),
-        isEmulatingTempBasal = isEmulatingTempBasal,
-        isValid = isValid
-    ).also {
-        it.interfaceIDs.nightscoutId = id
-        it.interfaceIDs.pumpId = pumpId
-        it.interfaceIDs.endId = endPumpId
-        it.interfaceIDs.pumpType = pumpType
-        it.interfaceIDs.pumpSerial = pumpSerial
-    }
-}
-
 fun ExtendedBolus.iobCalc(time: Long, profile: Profile, insulinInterface: Insulin): IobTotal {
     val result = IobTotal(time)
     val realDuration = getPassedDurationToTimeInMinutes(time)
@@ -156,7 +74,15 @@ fun ExtendedBolus.iobCalc(time: Long, profile: Profile, insulinInterface: Insuli
     return result
 }
 
-fun ExtendedBolus.iobCalc(time: Long, profile: Profile, lastAutosensResult: AutosensResult, exercise_mode: Boolean, half_basal_exercise_target: Int, isTempTarget: Boolean, insulinInterface: Insulin): IobTotal {
+fun ExtendedBolus.iobCalc(
+    time: Long,
+    profile: Profile,
+    lastAutosensResult: AutosensResult,
+    exercise_mode: Boolean,
+    half_basal_exercise_target: Int,
+    isTempTarget: Boolean,
+    insulinInterface: Insulin
+): IobTotal {
     val result = IobTotal(time)
     val realDuration = getPassedDurationToTimeInMinutes(time)
     var sensitivityRatio = lastAutosensResult.ratio

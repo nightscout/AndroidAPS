@@ -11,5 +11,5 @@ fun info.nightscout.sdk.localmodel.treatment.Carbs.toCarbs(): Carbs =
         amount = carbs,
         notes = notes,
         duration = duration,
-        interfaceIDs_backing = InterfaceIDs(nightscoutId = identifier)
+        interfaceIDs_backing = InterfaceIDs(nightscoutId = identifier, pumpId = pumpId, pumpType = InterfaceIDs.PumpType.fromString(pumpType), pumpSerial = pumpSerial)
     )

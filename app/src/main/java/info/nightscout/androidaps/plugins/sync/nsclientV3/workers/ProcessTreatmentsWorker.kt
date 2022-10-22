@@ -12,6 +12,7 @@ import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.SyncNsBolusTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsCarbsTransaction
+import info.nightscout.androidaps.database.transactions.SyncNsTemporaryBasalTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsTemporaryTargetTransaction
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.BuildHelper
@@ -23,12 +24,14 @@ import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.sync.nsclient.events.EventNSClientNewLog
 import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toBolus
 import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toCarbs
+import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toTemporaryBasal
 import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toTemporaryTarget
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.XDripBroadcast
 import info.nightscout.sdk.localmodel.treatment.Bolus
 import info.nightscout.sdk.localmodel.treatment.Carbs
+import info.nightscout.sdk.localmodel.treatment.TemporaryBasal
 import info.nightscout.sdk.localmodel.treatment.TemporaryTarget
 import info.nightscout.sdk.localmodel.treatment.Treatment
 import info.nightscout.shared.logging.AAPSLogger
@@ -221,324 +224,328 @@ class ProcessTreatmentsWorker(
                             }
                     }
                 }
-            }
-            /*
-            // Convert back emulated TBR -> EB
-            if (eventType == TherapyEvent.Type.TEMPORARY_BASAL.text && json.has("extendedEmulated")) {
-                val ebJson = json.getJSONObject("extendedEmulated")
-                ebJson.put("_id", json.getString("_id"))
-                ebJson.put("isValid", json.getBoolean("isValid"))
-                ebJson.put("mills", mills)
-                json = ebJson
-                eventType = JsonHelper.safeGetString(json, "eventType")
-                virtualPumpPlugin.fakeDataDetected = true
-            }
-
-            when {
-                insulin > 0 || carbs > 0                                                    -> Any()
-
-                eventType == TherapyEvent.Type.NOTE.text && json.isEffectiveProfileSwitch() -> // replace this by new Type when available in NS
-                    if (sp.getBoolean(R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
-                        effectiveProfileSwitchFromJson(json, dateUtil)?.let { effectiveProfileSwitch ->
-                            repository.runTransactionForResult(SyncNsEffectiveProfileSwitchTransaction(effectiveProfileSwitch))
-                                .doOnError {
-                                    aapsLogger.error(LTag.DATABASE, "Error while saving EffectiveProfileSwitch", it)
-                                    ret = Result.failure(workDataOf("Error" to it.toString()))
-                                }
-                                .blockingGet()
-                                .also { result ->
-                                    result.inserted.forEach {
-                                        uel.log(
-                                            Action.PROFILE_SWITCH, Sources.NSClient,
-                                            ValueWithUnit.Timestamp(it.timestamp)
-                                        )
-                                        aapsLogger.debug(LTag.DATABASE, "Inserted EffectiveProfileSwitch $it")
-                                    }
-                                    result.invalidated.forEach {
-                                        uel.log(
-                                            Action.PROFILE_SWITCH_REMOVED, Sources.NSClient,
-                                            ValueWithUnit.Timestamp(it.timestamp)
-                                        )
-                                        aapsLogger.debug(LTag.DATABASE, "Invalidated EffectiveProfileSwitch $it")
-                                    }
-                                    result.updatedNsId.forEach {
-                                        aapsLogger.debug(LTag.DATABASE, "Updated nsId EffectiveProfileSwitch $it")
-                                    }
-                                }
-                        } ?: aapsLogger.error("Error parsing EffectiveProfileSwitch json $json")
-                    }
-
-                eventType == TherapyEvent.Type.BOLUS_WIZARD.text                            ->
-                    bolusCalculatorResultFromJson(json)?.let { bolusCalculatorResult ->
-                        repository.runTransactionForResult(SyncNsBolusCalculatorResultTransaction(bolusCalculatorResult))
+                /*
+                // Convert back emulated TBR -> EB
+                if (eventType == TherapyEvent.Type.TEMPORARY_BASAL.text && json.has("extendedEmulated")) {
+                    val ebJson = json.getJSONObject("extendedEmulated")
+                    ebJson.put("_id", json.getString("_id"))
+                    ebJson.put("isValid", json.getBoolean("isValid"))
+                    ebJson.put("mills", mills)
+                    json = ebJson
+                    eventType = JsonHelper.safeGetString(json, "eventType")
+                    virtualPumpPlugin.fakeDataDetected = true
+                }
+                */
+                is TemporaryBasal  -> {
+                    if (buildHelper.isEngineeringMode() && sp.getBoolean(R.string.key_ns_receive_tbr_eb, false) || config.NSCLIENT) {
+                        repository.runTransactionForResult(SyncNsTemporaryBasalTransaction(treatment.toTemporaryBasal()))
                             .doOnError {
-                                aapsLogger.error(LTag.DATABASE, "Error while saving BolusCalculatorResult", it)
+                                aapsLogger.error(LTag.DATABASE, "Error while saving temporary basal", it)
                                 ret = Result.failure(workDataOf("Error" to it.toString()))
                             }
                             .blockingGet()
                             .also { result ->
                                 result.inserted.forEach {
                                     uel.log(
-                                        Action.BOLUS_CALCULATOR_RESULT, Sources.NSClient,
+                                        UserEntry.Action.TEMP_BASAL, UserEntry.Sources.NSClient,
                                         ValueWithUnit.Timestamp(it.timestamp),
+                                        if (it.isAbsolute) ValueWithUnit.UnitPerHour(it.rate) else ValueWithUnit.Percent(it.rate.toInt()),
+                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
                                     )
-                                    aapsLogger.debug(LTag.DATABASE, "Inserted BolusCalculatorResult $it")
+                                    aapsLogger.debug(LTag.DATABASE, "Inserted TemporaryBasal $it")
+                                    processed[TemporaryBasal::class.java.simpleName] = (processed[TemporaryBasal::class.java.simpleName] ?: 0) + 1
                                 }
                                 result.invalidated.forEach {
                                     uel.log(
-                                        Action.BOLUS_CALCULATOR_RESULT_REMOVED, Sources.NSClient,
+                                        UserEntry.Action.TEMP_BASAL_REMOVED, UserEntry.Sources.NSClient,
                                         ValueWithUnit.Timestamp(it.timestamp),
+                                        if (it.isAbsolute) ValueWithUnit.UnitPerHour(it.rate) else ValueWithUnit.Percent(it.rate.toInt()),
+                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
                                     )
-                                    aapsLogger.debug(LTag.DATABASE, "Invalidated BolusCalculatorResult $it")
+                                    aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryBasal $it")
+                                    processed[TemporaryBasal::class.java.simpleName] = (processed[TemporaryBasal::class.java.simpleName] ?: 0) + 1
+                                }
+                                result.ended.forEach {
+                                    uel.log(
+                                        UserEntry.Action.CANCEL_TEMP_BASAL, UserEntry.Sources.NSClient,
+                                        ValueWithUnit.Timestamp(it.timestamp),
+                                        if (it.isAbsolute) ValueWithUnit.UnitPerHour(it.rate) else ValueWithUnit.Percent(it.rate.toInt()),
+                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
+                                    )
+                                    aapsLogger.debug(LTag.DATABASE, "Ended TemporaryBasal $it")
+                                    processed[TemporaryBasal::class.java.simpleName] = (processed[TemporaryBasal::class.java.simpleName] ?: 0) + 1
                                 }
                                 result.updatedNsId.forEach {
-                                    aapsLogger.debug(LTag.DATABASE, "Updated nsId BolusCalculatorResult $it")
+                                    aapsLogger.debug(LTag.DATABASE, "Updated nsId TemporaryBasal $it")
+                                    processed[TemporaryBasal::class.java.simpleName] = (processed[TemporaryBasal::class.java.simpleName] ?: 0) + 1
+                                }
+                                result.updatedDuration.forEach {
+                                    aapsLogger.debug(LTag.DATABASE, "Updated duration TemporaryBasal $it")
+                                    processed[TemporaryBasal::class.java.simpleName] = (processed[TemporaryBasal::class.java.simpleName] ?: 0) + 1
                                 }
                             }
-                    } ?: aapsLogger.error("Error parsing BolusCalculatorResult json $json")
-
-                eventType == TherapyEvent.Type.CANNULA_CHANGE.text ||
-                    eventType == TherapyEvent.Type.INSULIN_CHANGE.text ||
-                    eventType == TherapyEvent.Type.SENSOR_CHANGE.text ||
-                    eventType == TherapyEvent.Type.FINGER_STICK_BG_VALUE.text ||
-                    eventType == TherapyEvent.Type.NONE.text ||
-                    eventType == TherapyEvent.Type.ANNOUNCEMENT.text ||
-                    eventType == TherapyEvent.Type.QUESTION.text ||
-                    eventType == TherapyEvent.Type.EXERCISE.text ||
-                    eventType == TherapyEvent.Type.NOTE.text ||
-                    eventType == TherapyEvent.Type.PUMP_BATTERY_CHANGE.text                 ->
-                    if (sp.getBoolean(R.string.key_ns_receive_therapy_events, false) || config.NSCLIENT) {
-                        therapyEventFromJson(json)?.let { therapyEvent ->
-                            repository.runTransactionForResult(SyncNsTherapyEventTransaction(therapyEvent))
-                                .doOnError {
-                                    aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it)
-                                    ret = Result.failure(workDataOf("Error" to it.toString()))
-                                }
-                                .blockingGet()
-                                .also { result ->
-                                    val action = when (eventType) {
-                                        TherapyEvent.Type.CANNULA_CHANGE.text -> Action.SITE_CHANGE
-                                        TherapyEvent.Type.INSULIN_CHANGE.text -> Action.RESERVOIR_CHANGE
-                                        else                                  -> Action.CAREPORTAL
-                                    }
-                                    result.inserted.forEach { therapyEvent ->
-                                        uel.log(action, Sources.NSClient,
-                                                therapyEvent.note ?: "",
-                                                ValueWithUnit.Timestamp(therapyEvent.timestamp),
-                                                ValueWithUnit.TherapyEventType(therapyEvent.type),
-                                                ValueWithUnit.fromGlucoseUnit(therapyEvent.glucose ?: 0.0, therapyEvent.glucoseUnit.toString).takeIf { therapyEvent.glucose != null }
-                                        )
-                                        aapsLogger.debug(LTag.DATABASE, "Inserted TherapyEvent $therapyEvent")
-                                    }
-                                    result.invalidated.forEach { therapyEvent ->
-                                        uel.log(Action.CAREPORTAL_REMOVED, Sources.NSClient,
-                                                therapyEvent.note ?: "",
-                                                ValueWithUnit.Timestamp(therapyEvent.timestamp),
-                                                ValueWithUnit.TherapyEventType(therapyEvent.type),
-                                                ValueWithUnit.fromGlucoseUnit(therapyEvent.glucose ?: 0.0, therapyEvent.glucoseUnit.toString).takeIf { therapyEvent.glucose != null }
-                                        )
-                                        aapsLogger.debug(LTag.DATABASE, "Invalidated TherapyEvent $therapyEvent")
-                                    }
-                                    result.updatedNsId.forEach {
-                                        aapsLogger.debug(LTag.DATABASE, "Updated nsId TherapyEvent $it")
-                                    }
-                                    result.updatedDuration.forEach {
-                                        aapsLogger.debug(LTag.DATABASE, "Updated nsId TherapyEvent $it")
-                                    }
-                                }
-                        } ?: aapsLogger.error("Error parsing TherapyEvent json $json")
-                    }
-
-                eventType == TherapyEvent.Type.COMBO_BOLUS.text                             ->
-                    if (buildHelper.isEngineeringMode() && sp.getBoolean(R.string.key_ns_receive_tbr_eb, false) || config.NSCLIENT) {
-                        extendedBolusFromJson(json)?.let { extendedBolus ->
-                            repository.runTransactionForResult(SyncNsExtendedBolusTransaction(extendedBolus))
-                                .doOnError {
-                                    aapsLogger.error(LTag.DATABASE, "Error while saving extended bolus", it)
-                                    ret = Result.failure(workDataOf("Error" to it.toString()))
-                                }
-                                .blockingGet()
-                                .also { result ->
-                                    result.inserted.forEach {
-                                        uel.log(
-                                            Action.EXTENDED_BOLUS, Sources.NSClient,
-                                            ValueWithUnit.Timestamp(it.timestamp),
-                                            ValueWithUnit.Insulin(it.amount),
-                                            ValueWithUnit.UnitPerHour(it.rate),
-                                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
-                                        )
-                                        aapsLogger.debug(LTag.DATABASE, "Inserted ExtendedBolus $it")
-                                    }
-                                    result.invalidated.forEach {
-                                        uel.log(
-                                            Action.EXTENDED_BOLUS_REMOVED, Sources.NSClient,
-                                            ValueWithUnit.Timestamp(it.timestamp),
-                                            ValueWithUnit.Insulin(it.amount),
-                                            ValueWithUnit.UnitPerHour(it.rate),
-                                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
-                                        )
-                                        aapsLogger.debug(LTag.DATABASE, "Invalidated ExtendedBolus $it")
-                                    }
-                                    result.ended.forEach {
-                                        uel.log(
-                                            Action.CANCEL_EXTENDED_BOLUS, Sources.NSClient,
-                                            ValueWithUnit.Timestamp(it.timestamp),
-                                            ValueWithUnit.Insulin(it.amount),
-                                            ValueWithUnit.UnitPerHour(it.rate),
-                                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
-                                        )
-                                        aapsLogger.debug(LTag.DATABASE, "Updated ExtendedBolus $it")
-                                    }
-                                    result.updatedNsId.forEach {
-                                        aapsLogger.debug(LTag.DATABASE, "Updated nsId ExtendedBolus $it")
-                                    }
-                                    result.updatedDuration.forEach {
-                                        aapsLogger.debug(LTag.DATABASE, "Updated duration ExtendedBolus $it")
-                                    }
-                                }
-                        } ?: aapsLogger.error("Error parsing ExtendedBolus json $json")
-                    }
-
-                eventType == TherapyEvent.Type.TEMPORARY_BASAL.text                         ->
-                    if (buildHelper.isEngineeringMode() && sp.getBoolean(R.string.key_ns_receive_tbr_eb, false) || config.NSCLIENT) {
-                        temporaryBasalFromJson(json)?.let { temporaryBasal ->
-                            repository.runTransactionForResult(SyncNsTemporaryBasalTransaction(temporaryBasal))
-                                .doOnError {
-                                    aapsLogger.error(LTag.DATABASE, "Error while saving temporary basal", it)
-                                    ret = Result.failure(workDataOf("Error" to it.toString()))
-                                }
-                                .blockingGet()
-                                .also { result ->
-                                    result.inserted.forEach {
-                                        uel.log(
-                                            Action.TEMP_BASAL, Sources.NSClient,
-                                            ValueWithUnit.Timestamp(it.timestamp),
-                                            if (it.isAbsolute) ValueWithUnit.UnitPerHour(it.rate) else ValueWithUnit.Percent(it.rate.toInt()),
-                                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
-                                        )
-                                        aapsLogger.debug(LTag.DATABASE, "Inserted TemporaryBasal $it")
-                                    }
-                                    result.invalidated.forEach {
-                                        uel.log(
-                                            Action.TEMP_BASAL_REMOVED, Sources.NSClient,
-                                            ValueWithUnit.Timestamp(it.timestamp),
-                                            if (it.isAbsolute) ValueWithUnit.UnitPerHour(it.rate) else ValueWithUnit.Percent(it.rate.toInt()),
-                                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
-                                        )
-                                        aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryBasal $it")
-                                    }
-                                    result.ended.forEach {
-                                        uel.log(
-                                            Action.CANCEL_TEMP_BASAL, Sources.NSClient,
-                                            ValueWithUnit.Timestamp(it.timestamp),
-                                            if (it.isAbsolute) ValueWithUnit.UnitPerHour(it.rate) else ValueWithUnit.Percent(it.rate.toInt()),
-                                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
-                                        )
-                                        aapsLogger.debug(LTag.DATABASE, "Ended TemporaryBasal $it")
-                                    }
-                                    result.updatedNsId.forEach {
-                                        aapsLogger.debug(LTag.DATABASE, "Updated nsId TemporaryBasal $it")
-                                    }
-                                    result.updatedDuration.forEach {
-                                        aapsLogger.debug(LTag.DATABASE, "Updated duration TemporaryBasal $it")
-                                    }
-                                }
-                        } ?: aapsLogger.error("Error parsing TemporaryBasal json $json")
-                    }
-
-                eventType == TherapyEvent.Type.PROFILE_SWITCH.text                          ->
-                    if (sp.getBoolean(R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
-                        profileSwitchFromJson(json, dateUtil, activePlugin)?.let { profileSwitch ->
-                            repository.runTransactionForResult(SyncNsProfileSwitchTransaction(profileSwitch))
-                                .doOnError {
-                                    aapsLogger.error(LTag.DATABASE, "Error while saving ProfileSwitch", it)
-                                    ret = Result.failure(workDataOf("Error" to it.toString()))
-                                }
-                                .blockingGet()
-                                .also { result ->
-                                    result.inserted.forEach {
-                                        uel.log(
-                                            Action.PROFILE_SWITCH, Sources.NSClient,
-                                            ValueWithUnit.Timestamp(it.timestamp)
-                                        )
-                                        aapsLogger.debug(LTag.DATABASE, "Inserted ProfileSwitch $it")
-                                    }
-                                    result.invalidated.forEach {
-                                        uel.log(
-                                            Action.PROFILE_SWITCH_REMOVED, Sources.NSClient,
-                                            ValueWithUnit.Timestamp(it.timestamp)
-                                        )
-                                        aapsLogger.debug(LTag.DATABASE, "Invalidated ProfileSwitch $it")
-                                    }
-                                    result.updatedNsId.forEach {
-                                        aapsLogger.debug(LTag.DATABASE, "Updated nsId ProfileSwitch $it")
-                                    }
-                                }
-                        } ?: aapsLogger.error("Error parsing ProfileSwitch json $json")
-                    }
-
-                eventType == TherapyEvent.Type.APS_OFFLINE.text                             ->
-                    if (sp.getBoolean(R.string.key_ns_receive_offline_event, false) && buildHelper.isEngineeringMode() || config.NSCLIENT) {
-                        offlineEventFromJson(json)?.let { offlineEvent ->
-                            repository.runTransactionForResult(SyncNsOfflineEventTransaction(offlineEvent))
-                                .doOnError {
-                                    aapsLogger.error(LTag.DATABASE, "Error while saving OfflineEvent", it)
-                                    ret = Result.failure(workDataOf("Error" to it.toString()))
-                                }
-                                .blockingGet()
-                                .also { result ->
-                                    result.inserted.forEach { oe ->
-                                        uel.log(
-                                            Action.LOOP_CHANGE, Sources.NSClient,
-                                            ValueWithUnit.OfflineEventReason(oe.reason),
-                                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(oe.duration).toInt())
-                                        )
-                                        aapsLogger.debug(LTag.DATABASE, "Inserted OfflineEvent $oe")
-                                    }
-                                    result.invalidated.forEach { oe ->
-                                        uel.log(
-                                            Action.LOOP_REMOVED, Sources.NSClient,
-                                            ValueWithUnit.OfflineEventReason(oe.reason),
-                                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(oe.duration).toInt())
-                                        )
-                                        aapsLogger.debug(LTag.DATABASE, "Invalidated OfflineEvent $oe")
-                                    }
-                                    result.ended.forEach { oe ->
-                                        uel.log(
-                                            Action.LOOP_CHANGE, Sources.NSClient,
-                                            ValueWithUnit.OfflineEventReason(oe.reason),
-                                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(oe.duration).toInt())
-                                        )
-                                        aapsLogger.debug(LTag.DATABASE, "Updated OfflineEvent $oe")
-                                    }
-                                    result.updatedNsId.forEach {
-                                        aapsLogger.debug(LTag.DATABASE, "Updated nsId OfflineEvent $it")
-                                    }
-                                    result.updatedDuration.forEach {
-                                        aapsLogger.debug(LTag.DATABASE, "Updated duration OfflineEvent $it")
-                                    }
-                                }
-                        } ?: aapsLogger.error("Error parsing OfflineEvent json $json")
-                    }
-            }
-            if (sp.getBoolean(R.string.key_ns_receive_therapy_events, false) || config.NSCLIENT)
-                if (eventType == TherapyEvent.Type.ANNOUNCEMENT.text) {
-                    val date = safeGetLong(json, "mills")
-                    val now = System.currentTimeMillis()
-                    val enteredBy = JsonHelper.safeGetString(json, "enteredBy", "")
-                    val notes = JsonHelper.safeGetString(json, "notes", "")
-                    if (date > now - 15 * 60 * 1000L && notes.isNotEmpty()
-                        && enteredBy != sp.getString("careportal_enteredby", "AndroidAPS")
-                    ) {
-                        val defaultVal = config.NSCLIENT
-                        if (sp.getBoolean(R.string.key_ns_announcements, defaultVal)) {
-                            val announcement = Notification(Notification.NS_ANNOUNCEMENT, notes, Notification.ANNOUNCEMENT, 60)
-                            rxBus.send(EventNewNotification(announcement))
-                        }
                     }
                 }
+            }
+            /*
+                        when {
+                            insulin > 0 || carbs > 0                                                    -> Any()
 
-             */
+                            eventType == TherapyEvent.Type.NOTE.text && json.isEffectiveProfileSwitch() -> // replace this by new Type when available in NS
+                                if (sp.getBoolean(R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
+                                    effectiveProfileSwitchFromJson(json, dateUtil)?.let { effectiveProfileSwitch ->
+                                        repository.runTransactionForResult(SyncNsEffectiveProfileSwitchTransaction(effectiveProfileSwitch))
+                                            .doOnError {
+                                                aapsLogger.error(LTag.DATABASE, "Error while saving EffectiveProfileSwitch", it)
+                                                ret = Result.failure(workDataOf("Error" to it.toString()))
+                                            }
+                                            .blockingGet()
+                                            .also { result ->
+                                                result.inserted.forEach {
+                                                    uel.log(
+                                                        Action.PROFILE_SWITCH, Sources.NSClient,
+                                                        ValueWithUnit.Timestamp(it.timestamp)
+                                                    )
+                                                    aapsLogger.debug(LTag.DATABASE, "Inserted EffectiveProfileSwitch $it")
+                                                }
+                                                result.invalidated.forEach {
+                                                    uel.log(
+                                                        Action.PROFILE_SWITCH_REMOVED, Sources.NSClient,
+                                                        ValueWithUnit.Timestamp(it.timestamp)
+                                                    )
+                                                    aapsLogger.debug(LTag.DATABASE, "Invalidated EffectiveProfileSwitch $it")
+                                                }
+                                                result.updatedNsId.forEach {
+                                                    aapsLogger.debug(LTag.DATABASE, "Updated nsId EffectiveProfileSwitch $it")
+                                                }
+                                            }
+                                    } ?: aapsLogger.error("Error parsing EffectiveProfileSwitch json $json")
+                                }
+
+                            eventType == TherapyEvent.Type.BOLUS_WIZARD.text                            ->
+                                bolusCalculatorResultFromJson(json)?.let { bolusCalculatorResult ->
+                                    repository.runTransactionForResult(SyncNsBolusCalculatorResultTransaction(bolusCalculatorResult))
+                                        .doOnError {
+                                            aapsLogger.error(LTag.DATABASE, "Error while saving BolusCalculatorResult", it)
+                                            ret = Result.failure(workDataOf("Error" to it.toString()))
+                                        }
+                                        .blockingGet()
+                                        .also { result ->
+                                            result.inserted.forEach {
+                                                uel.log(
+                                                    Action.BOLUS_CALCULATOR_RESULT, Sources.NSClient,
+                                                    ValueWithUnit.Timestamp(it.timestamp),
+                                                )
+                                                aapsLogger.debug(LTag.DATABASE, "Inserted BolusCalculatorResult $it")
+                                            }
+                                            result.invalidated.forEach {
+                                                uel.log(
+                                                    Action.BOLUS_CALCULATOR_RESULT_REMOVED, Sources.NSClient,
+                                                    ValueWithUnit.Timestamp(it.timestamp),
+                                                )
+                                                aapsLogger.debug(LTag.DATABASE, "Invalidated BolusCalculatorResult $it")
+                                            }
+                                            result.updatedNsId.forEach {
+                                                aapsLogger.debug(LTag.DATABASE, "Updated nsId BolusCalculatorResult $it")
+                                            }
+                                        }
+                                } ?: aapsLogger.error("Error parsing BolusCalculatorResult json $json")
+
+                            eventType == TherapyEvent.Type.CANNULA_CHANGE.text ||
+                                eventType == TherapyEvent.Type.INSULIN_CHANGE.text ||
+                                eventType == TherapyEvent.Type.SENSOR_CHANGE.text ||
+                                eventType == TherapyEvent.Type.FINGER_STICK_BG_VALUE.text ||
+                                eventType == TherapyEvent.Type.NONE.text ||
+                                eventType == TherapyEvent.Type.ANNOUNCEMENT.text ||
+                                eventType == TherapyEvent.Type.QUESTION.text ||
+                                eventType == TherapyEvent.Type.EXERCISE.text ||
+                                eventType == TherapyEvent.Type.NOTE.text ||
+                                eventType == TherapyEvent.Type.PUMP_BATTERY_CHANGE.text                 ->
+                                if (sp.getBoolean(R.string.key_ns_receive_therapy_events, false) || config.NSCLIENT) {
+                                    therapyEventFromJson(json)?.let { therapyEvent ->
+                                        repository.runTransactionForResult(SyncNsTherapyEventTransaction(therapyEvent))
+                                            .doOnError {
+                                                aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it)
+                                                ret = Result.failure(workDataOf("Error" to it.toString()))
+                                            }
+                                            .blockingGet()
+                                            .also { result ->
+                                                val action = when (eventType) {
+                                                    TherapyEvent.Type.CANNULA_CHANGE.text -> Action.SITE_CHANGE
+                                                    TherapyEvent.Type.INSULIN_CHANGE.text -> Action.RESERVOIR_CHANGE
+                                                    else                                  -> Action.CAREPORTAL
+                                                }
+                                                result.inserted.forEach { therapyEvent ->
+                                                    uel.log(action, Sources.NSClient,
+                                                            therapyEvent.note ?: "",
+                                                            ValueWithUnit.Timestamp(therapyEvent.timestamp),
+                                                            ValueWithUnit.TherapyEventType(therapyEvent.type),
+                                                            ValueWithUnit.fromGlucoseUnit(therapyEvent.glucose ?: 0.0, therapyEvent.glucoseUnit.toString).takeIf { therapyEvent.glucose != null }
+                                                    )
+                                                    aapsLogger.debug(LTag.DATABASE, "Inserted TherapyEvent $therapyEvent")
+                                                }
+                                                result.invalidated.forEach { therapyEvent ->
+                                                    uel.log(Action.CAREPORTAL_REMOVED, Sources.NSClient,
+                                                            therapyEvent.note ?: "",
+                                                            ValueWithUnit.Timestamp(therapyEvent.timestamp),
+                                                            ValueWithUnit.TherapyEventType(therapyEvent.type),
+                                                            ValueWithUnit.fromGlucoseUnit(therapyEvent.glucose ?: 0.0, therapyEvent.glucoseUnit.toString).takeIf { therapyEvent.glucose != null }
+                                                    )
+                                                    aapsLogger.debug(LTag.DATABASE, "Invalidated TherapyEvent $therapyEvent")
+                                                }
+                                                result.updatedNsId.forEach {
+                                                    aapsLogger.debug(LTag.DATABASE, "Updated nsId TherapyEvent $it")
+                                                }
+                                                result.updatedDuration.forEach {
+                                                    aapsLogger.debug(LTag.DATABASE, "Updated nsId TherapyEvent $it")
+                                                }
+                                            }
+                                    } ?: aapsLogger.error("Error parsing TherapyEvent json $json")
+                                }
+
+                            eventType == TherapyEvent.Type.COMBO_BOLUS.text                             ->
+                                if (buildHelper.isEngineeringMode() && sp.getBoolean(R.string.key_ns_receive_tbr_eb, false) || config.NSCLIENT) {
+                                    extendedBolusFromJson(json)?.let { extendedBolus ->
+                                        repository.runTransactionForResult(SyncNsExtendedBolusTransaction(extendedBolus))
+                                            .doOnError {
+                                                aapsLogger.error(LTag.DATABASE, "Error while saving extended bolus", it)
+                                                ret = Result.failure(workDataOf("Error" to it.toString()))
+                                            }
+                                            .blockingGet()
+                                            .also { result ->
+                                                result.inserted.forEach {
+                                                    uel.log(
+                                                        Action.EXTENDED_BOLUS, Sources.NSClient,
+                                                        ValueWithUnit.Timestamp(it.timestamp),
+                                                        ValueWithUnit.Insulin(it.amount),
+                                                        ValueWithUnit.UnitPerHour(it.rate),
+                                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
+                                                    )
+                                                    aapsLogger.debug(LTag.DATABASE, "Inserted ExtendedBolus $it")
+                                                }
+                                                result.invalidated.forEach {
+                                                    uel.log(
+                                                        Action.EXTENDED_BOLUS_REMOVED, Sources.NSClient,
+                                                        ValueWithUnit.Timestamp(it.timestamp),
+                                                        ValueWithUnit.Insulin(it.amount),
+                                                        ValueWithUnit.UnitPerHour(it.rate),
+                                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
+                                                    )
+                                                    aapsLogger.debug(LTag.DATABASE, "Invalidated ExtendedBolus $it")
+                                                }
+                                                result.ended.forEach {
+                                                    uel.log(
+                                                        Action.CANCEL_EXTENDED_BOLUS, Sources.NSClient,
+                                                        ValueWithUnit.Timestamp(it.timestamp),
+                                                        ValueWithUnit.Insulin(it.amount),
+                                                        ValueWithUnit.UnitPerHour(it.rate),
+                                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
+                                                    )
+                                                    aapsLogger.debug(LTag.DATABASE, "Updated ExtendedBolus $it")
+                                                }
+                                                result.updatedNsId.forEach {
+                                                    aapsLogger.debug(LTag.DATABASE, "Updated nsId ExtendedBolus $it")
+                                                }
+                                                result.updatedDuration.forEach {
+                                                    aapsLogger.debug(LTag.DATABASE, "Updated duration ExtendedBolus $it")
+                                                }
+                                            }
+                                    } ?: aapsLogger.error("Error parsing ExtendedBolus json $json")
+                                }
+
+                            eventType == TherapyEvent.Type.PROFILE_SWITCH.text                          ->
+                                if (sp.getBoolean(R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
+                                    profileSwitchFromJson(json, dateUtil, activePlugin)?.let { profileSwitch ->
+                                        repository.runTransactionForResult(SyncNsProfileSwitchTransaction(profileSwitch))
+                                            .doOnError {
+                                                aapsLogger.error(LTag.DATABASE, "Error while saving ProfileSwitch", it)
+                                                ret = Result.failure(workDataOf("Error" to it.toString()))
+                                            }
+                                            .blockingGet()
+                                            .also { result ->
+                                                result.inserted.forEach {
+                                                    uel.log(
+                                                        Action.PROFILE_SWITCH, Sources.NSClient,
+                                                        ValueWithUnit.Timestamp(it.timestamp)
+                                                    )
+                                                    aapsLogger.debug(LTag.DATABASE, "Inserted ProfileSwitch $it")
+                                                }
+                                                result.invalidated.forEach {
+                                                    uel.log(
+                                                        Action.PROFILE_SWITCH_REMOVED, Sources.NSClient,
+                                                        ValueWithUnit.Timestamp(it.timestamp)
+                                                    )
+                                                    aapsLogger.debug(LTag.DATABASE, "Invalidated ProfileSwitch $it")
+                                                }
+                                                result.updatedNsId.forEach {
+                                                    aapsLogger.debug(LTag.DATABASE, "Updated nsId ProfileSwitch $it")
+                                                }
+                                            }
+                                    } ?: aapsLogger.error("Error parsing ProfileSwitch json $json")
+                                }
+
+                            eventType == TherapyEvent.Type.APS_OFFLINE.text                             ->
+                                if (sp.getBoolean(R.string.key_ns_receive_offline_event, false) && buildHelper.isEngineeringMode() || config.NSCLIENT) {
+                                    offlineEventFromJson(json)?.let { offlineEvent ->
+                                        repository.runTransactionForResult(SyncNsOfflineEventTransaction(offlineEvent))
+                                            .doOnError {
+                                                aapsLogger.error(LTag.DATABASE, "Error while saving OfflineEvent", it)
+                                                ret = Result.failure(workDataOf("Error" to it.toString()))
+                                            }
+                                            .blockingGet()
+                                            .also { result ->
+                                                result.inserted.forEach { oe ->
+                                                    uel.log(
+                                                        Action.LOOP_CHANGE, Sources.NSClient,
+                                                        ValueWithUnit.OfflineEventReason(oe.reason),
+                                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(oe.duration).toInt())
+                                                    )
+                                                    aapsLogger.debug(LTag.DATABASE, "Inserted OfflineEvent $oe")
+                                                }
+                                                result.invalidated.forEach { oe ->
+                                                    uel.log(
+                                                        Action.LOOP_REMOVED, Sources.NSClient,
+                                                        ValueWithUnit.OfflineEventReason(oe.reason),
+                                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(oe.duration).toInt())
+                                                    )
+                                                    aapsLogger.debug(LTag.DATABASE, "Invalidated OfflineEvent $oe")
+                                                }
+                                                result.ended.forEach { oe ->
+                                                    uel.log(
+                                                        Action.LOOP_CHANGE, Sources.NSClient,
+                                                        ValueWithUnit.OfflineEventReason(oe.reason),
+                                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(oe.duration).toInt())
+                                                    )
+                                                    aapsLogger.debug(LTag.DATABASE, "Updated OfflineEvent $oe")
+                                                }
+                                                result.updatedNsId.forEach {
+                                                    aapsLogger.debug(LTag.DATABASE, "Updated nsId OfflineEvent $it")
+                                                }
+                                                result.updatedDuration.forEach {
+                                                    aapsLogger.debug(LTag.DATABASE, "Updated duration OfflineEvent $it")
+                                                }
+                                            }
+                                    } ?: aapsLogger.error("Error parsing OfflineEvent json $json")
+                                }
+                        }
+                        if (sp.getBoolean(R.string.key_ns_receive_therapy_events, false) || config.NSCLIENT)
+                            if (eventType == TherapyEvent.Type.ANNOUNCEMENT.text) {
+                                val date = safeGetLong(json, "mills")
+                                val now = System.currentTimeMillis()
+                                val enteredBy = JsonHelper.safeGetString(json, "enteredBy", "")
+                                val notes = JsonHelper.safeGetString(json, "notes", "")
+                                if (date > now - 15 * 60 * 1000L && notes.isNotEmpty()
+                                    && enteredBy != sp.getString("careportal_enteredby", "AndroidAPS")
+                                ) {
+                                    val defaultVal = config.NSCLIENT
+                                    if (sp.getBoolean(R.string.key_ns_announcements, defaultVal)) {
+                                        val announcement = Notification(Notification.NS_ANNOUNCEMENT, notes, Notification.ANNOUNCEMENT, 60)
+                                        rxBus.send(EventNewNotification(announcement))
+                                    }
+                                }
+                            }
+
+                         */
         }
         for (key in processed.keys) rxBus.send(EventNSClientNewLog("PROCESSED", "$key ${processed[key]}", NsClient.Version.V3))
         activePlugin.activeNsClient?.updateLatestTreatmentReceivedIfNewer(latestDateInReceivedData)

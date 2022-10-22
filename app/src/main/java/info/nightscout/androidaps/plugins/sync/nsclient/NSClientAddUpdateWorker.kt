@@ -24,11 +24,9 @@ import info.nightscout.androidaps.database.transactions.SyncNsTemporaryTargetTra
 import info.nightscout.androidaps.database.transactions.SyncNsTherapyEventTransaction
 import info.nightscout.androidaps.extensions.bolusCalculatorResultFromJson
 import info.nightscout.androidaps.extensions.effectiveProfileSwitchFromJson
-import info.nightscout.androidaps.extensions.extendedBolusFromJson
 import info.nightscout.androidaps.extensions.isEffectiveProfileSwitch
 import info.nightscout.androidaps.extensions.offlineEventFromJson
 import info.nightscout.androidaps.extensions.profileSwitchFromJson
-import info.nightscout.androidaps.extensions.temporaryBasalFromJson
 import info.nightscout.androidaps.extensions.therapyEventFromJson
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.BuildHelper
@@ -40,6 +38,8 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.sync.nsclient.extensions.bolusFromJson
 import info.nightscout.androidaps.plugins.sync.nsclient.extensions.carbsFromJson
+import info.nightscout.androidaps.plugins.sync.nsclient.extensions.extendedBolusFromJson
+import info.nightscout.androidaps.plugins.sync.nsclient.extensions.temporaryBasalFromJson
 import info.nightscout.androidaps.plugins.sync.nsclient.extensions.temporaryTargetFromJson
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DateUtil

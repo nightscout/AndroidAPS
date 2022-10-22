@@ -131,9 +131,9 @@ class NSAndroidClientImpl(
         }
     }
 
-    override suspend fun getTreatmentsModifiedSince(from: Long): List<Treatment> = callWrapper(dispatcher) {
+    override suspend fun getTreatmentsModifiedSince(from: Long, limit: Long): List<Treatment> = callWrapper(dispatcher) {
 
-        val response = api.getTreatmentsModifiedSince(from)
+        val response = api.getTreatmentsModifiedSince(from, limit)
         if (response.isSuccessful) {
             return@callWrapper response.body()?.result?.map(RemoteTreatment::toTreatment).toNotNull()
         } else {

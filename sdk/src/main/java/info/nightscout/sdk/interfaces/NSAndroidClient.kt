@@ -15,5 +15,5 @@ interface NSAndroidClient {
     suspend fun getSgvs(): List<Sgv>
     suspend fun getSgvsModifiedSince(from: Long): List<Sgv>
     suspend fun getSgvsNewerThan(from: Long, limit: Long): List<Sgv>
-    suspend fun getTreatmentsModifiedSince(from: Long): List<Treatment>
+    suspend fun getTreatmentsModifiedSince(from: Long, limit: Long): List<Treatment>
 }

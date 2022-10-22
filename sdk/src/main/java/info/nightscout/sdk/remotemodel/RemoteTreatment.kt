@@ -55,7 +55,7 @@ internal data class RemoteTreatment(
     @SerializedName("preBolus") val preBolus: Int?,             // number... How many minutes the bolus was given before the meal started.
     @SerializedName("splitNow") val splitNow: Int?,             // number... Immediate part of combo bolus (in percent).
     @SerializedName("splitExt") val splitExt: Int?,             // number... Extended part of combo bolus (in percent).
-    @SerializedName("percent") val percent: Int?,               // number... Eventual basal change in percent.
+    @SerializedName("percent") val percent: Double?,            // number... Eventual basal change in percent.
     @SerializedName("absolute") val absolute: Double?,          // number... Eventual basal change in absolute value (insulin units per hour).
     @SerializedName("targetTop") val targetTop: Double?,        // number... Top limit of temporary target.
     @SerializedName("targetBottom") val targetBottom: Double?,  // number... Bottom limit of temporary target.

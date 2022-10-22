@@ -11,7 +11,7 @@ fun info.nightscout.sdk.localmodel.treatment.Bolus.toBolus() : Bolus =
         amount = insulin,
         type = type.toBolusType(),
         notes = notes,
-        interfaceIDs_backing = InterfaceIDs(nightscoutId = identifier)
+        interfaceIDs_backing = InterfaceIDs(nightscoutId = identifier, pumpId = pumpId, pumpType = InterfaceIDs.PumpType.fromString(pumpType), pumpSerial = pumpSerial)
     )
 
 fun info.nightscout.sdk.localmodel.treatment.Bolus.BolusType?.toBolusType() : Bolus.Type =
