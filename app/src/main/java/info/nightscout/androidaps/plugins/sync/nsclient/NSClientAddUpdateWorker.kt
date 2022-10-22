@@ -23,8 +23,8 @@ import info.nightscout.androidaps.database.transactions.SyncNsTemporaryBasalTran
 import info.nightscout.androidaps.database.transactions.SyncNsTemporaryTargetTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsTherapyEventTransaction
 import info.nightscout.androidaps.extensions.bolusCalculatorResultFromJson
-import info.nightscout.androidaps.extensions.effectiveProfileSwitchFromJson
-import info.nightscout.androidaps.extensions.isEffectiveProfileSwitch
+import info.nightscout.androidaps.plugins.sync.nsclient.extensions.effectiveProfileSwitchFromJson
+import info.nightscout.androidaps.plugins.sync.nsclient.extensions.isEffectiveProfileSwitch
 import info.nightscout.androidaps.extensions.offlineEventFromJson
 import info.nightscout.androidaps.extensions.profileSwitchFromJson
 import info.nightscout.androidaps.extensions.therapyEventFromJson

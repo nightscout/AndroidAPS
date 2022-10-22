@@ -12,6 +12,7 @@ import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.SyncNsBolusTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsCarbsTransaction
+import info.nightscout.androidaps.database.transactions.SyncNsEffectiveProfileSwitchTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsTemporaryBasalTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsTemporaryTargetTransaction
 import info.nightscout.androidaps.interfaces.ActivePlugin
@@ -24,6 +25,7 @@ import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.sync.nsclient.events.EventNSClientNewLog
 import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toBolus
 import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toCarbs
+import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toEffectiveProfileSwitch
 import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toTemporaryBasal
 import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toTemporaryTarget
 import info.nightscout.androidaps.receivers.DataWorkerStorage
@@ -31,6 +33,7 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.XDripBroadcast
 import info.nightscout.sdk.localmodel.treatment.Bolus
 import info.nightscout.sdk.localmodel.treatment.Carbs
+import info.nightscout.sdk.localmodel.treatment.EffectiveProfileSwitch
 import info.nightscout.sdk.localmodel.treatment.TemporaryBasal
 import info.nightscout.sdk.localmodel.treatment.TemporaryTarget
 import info.nightscout.sdk.localmodel.treatment.Treatment
@@ -76,7 +79,7 @@ class ProcessTreatmentsWorker(
                 if (mills > latestDateInReceivedData) latestDateInReceivedData = mills
 
             when (treatment) {
-                is Bolus           -> {
+                is Bolus                  -> {
                     if (sp.getBoolean(R.string.key_ns_receive_insulin, false) || config.NSCLIENT) {
                         repository.runTransactionForResult(SyncNsBolusTransaction(treatment.toBolus()))
                             .doOnError {
@@ -115,7 +118,7 @@ class ProcessTreatmentsWorker(
                     }
                 }
 
-                is Carbs           -> {
+                is Carbs                  -> {
                     if (sp.getBoolean(R.string.key_ns_receive_carbs, false) || config.NSCLIENT) {
                         repository.runTransactionForResult(SyncNsCarbsTransaction(treatment.toCarbs()))
                             .doOnError {
@@ -159,7 +162,7 @@ class ProcessTreatmentsWorker(
                     }
                 }
 
-                is TemporaryTarget -> {
+                is TemporaryTarget        -> {
                     if (sp.getBoolean(R.string.key_ns_receive_temp_target, false) || config.NSCLIENT) {
                         if (treatment.duration > 0L) {
                             // not ending event
@@ -236,7 +239,7 @@ class ProcessTreatmentsWorker(
                     virtualPumpPlugin.fakeDataDetected = true
                 }
                 */
-                is TemporaryBasal  -> {
+                is TemporaryBasal         -> {
                     if (buildHelper.isEngineeringMode() && sp.getBoolean(R.string.key_ns_receive_tbr_eb, false) || config.NSCLIENT) {
                         repository.runTransactionForResult(SyncNsTemporaryBasalTransaction(treatment.toTemporaryBasal()))
                             .doOnError {
@@ -286,41 +289,45 @@ class ProcessTreatmentsWorker(
                             }
                     }
                 }
+
+                is EffectiveProfileSwitch -> {
+                    if (sp.getBoolean(R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
+                        treatment.toEffectiveProfileSwitch(dateUtil)?.let { effectiveProfileSwitch ->
+                            repository.runTransactionForResult(SyncNsEffectiveProfileSwitchTransaction(effectiveProfileSwitch))
+                                .doOnError {
+                                    aapsLogger.error(LTag.DATABASE, "Error while saving EffectiveProfileSwitch", it)
+                                    ret = Result.failure(workDataOf("Error" to it.toString()))
+                                }
+                                .blockingGet()
+                                .also { result ->
+                                    result.inserted.forEach {
+                                        uel.log(
+                                            UserEntry.Action.PROFILE_SWITCH, UserEntry.Sources.NSClient,
+                                            ValueWithUnit.Timestamp(it.timestamp)
+                                        )
+                                        aapsLogger.debug(LTag.DATABASE, "Inserted EffectiveProfileSwitch $it")
+                                        processed[EffectiveProfileSwitch::class.java.simpleName] = (processed[EffectiveProfileSwitch::class.java.simpleName] ?: 0) + 1
+                                    }
+                                    result.invalidated.forEach {
+                                        uel.log(
+                                            UserEntry.Action.PROFILE_SWITCH_REMOVED, UserEntry.Sources.NSClient,
+                                            ValueWithUnit.Timestamp(it.timestamp)
+                                        )
+                                        aapsLogger.debug(LTag.DATABASE, "Invalidated EffectiveProfileSwitch $it")
+                                        processed[EffectiveProfileSwitch::class.java.simpleName] = (processed[EffectiveProfileSwitch::class.java.simpleName] ?: 0) + 1
+                                    }
+                                    result.updatedNsId.forEach {
+                                        aapsLogger.debug(LTag.DATABASE, "Updated nsId EffectiveProfileSwitch $it")
+                                        processed[EffectiveProfileSwitch::class.java.simpleName] = (processed[EffectiveProfileSwitch::class.java.simpleName] ?: 0) + 1
+                                    }
+                                }
+                        }
+                    }
+                }
             }
             /*
                         when {
                             insulin > 0 || carbs > 0                                                    -> Any()
-
-                            eventType == TherapyEvent.Type.NOTE.text && json.isEffectiveProfileSwitch() -> // replace this by new Type when available in NS
-                                if (sp.getBoolean(R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
-                                    effectiveProfileSwitchFromJson(json, dateUtil)?.let { effectiveProfileSwitch ->
-                                        repository.runTransactionForResult(SyncNsEffectiveProfileSwitchTransaction(effectiveProfileSwitch))
-                                            .doOnError {
-                                                aapsLogger.error(LTag.DATABASE, "Error while saving EffectiveProfileSwitch", it)
-                                                ret = Result.failure(workDataOf("Error" to it.toString()))
-                                            }
-                                            .blockingGet()
-                                            .also { result ->
-                                                result.inserted.forEach {
-                                                    uel.log(
-                                                        Action.PROFILE_SWITCH, Sources.NSClient,
-                                                        ValueWithUnit.Timestamp(it.timestamp)
-                                                    )
-                                                    aapsLogger.debug(LTag.DATABASE, "Inserted EffectiveProfileSwitch $it")
-                                                }
-                                                result.invalidated.forEach {
-                                                    uel.log(
-                                                        Action.PROFILE_SWITCH_REMOVED, Sources.NSClient,
-                                                        ValueWithUnit.Timestamp(it.timestamp)
-                                                    )
-                                                    aapsLogger.debug(LTag.DATABASE, "Invalidated EffectiveProfileSwitch $it")
-                                                }
-                                                result.updatedNsId.forEach {
-                                                    aapsLogger.debug(LTag.DATABASE, "Updated nsId EffectiveProfileSwitch $it")
-                                                }
-                                            }
-                                    } ?: aapsLogger.error("Error parsing EffectiveProfileSwitch json $json")
-                                }
 
                             eventType == TherapyEvent.Type.BOLUS_WIZARD.text                            ->
                                 bolusCalculatorResultFromJson(json)?.let { bolusCalculatorResult ->

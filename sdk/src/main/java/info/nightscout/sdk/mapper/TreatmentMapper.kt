@@ -3,11 +3,13 @@ package info.nightscout.sdk.mapper
 import info.nightscout.sdk.localmodel.entry.NsUnits
 import info.nightscout.sdk.localmodel.treatment.Bolus
 import info.nightscout.sdk.localmodel.treatment.Carbs
+import info.nightscout.sdk.localmodel.treatment.EffectiveProfileSwitch
 import info.nightscout.sdk.localmodel.treatment.EventType
 import info.nightscout.sdk.localmodel.treatment.TemporaryBasal
 import info.nightscout.sdk.localmodel.treatment.TemporaryTarget
 import info.nightscout.sdk.localmodel.treatment.Treatment
 import info.nightscout.sdk.remotemodel.RemoteTreatment
+import org.json.JSONObject
 import java.util.concurrent.TimeUnit
 
 @JvmSynthetic
@@ -85,7 +87,7 @@ internal fun RemoteTreatment.toTreatment(): Treatment? {
             )
         }
 
-        eventType == EventType.TEMPORARY_BASAL -> {
+        eventType == EventType.TEMPORARY_BASAL  -> {
             if (this.date == 0L) return null
 
             this.absolute ?: this.percent ?: return null
@@ -112,6 +114,41 @@ internal fun RemoteTreatment.toTreatment(): Treatment? {
                 isAbsolute = this.absolute != null,
                 rate = this.absolute ?: (this.percent?.plus(100.0)) ?: 0.0,
                 type = TemporaryBasal.Type.fromString(this.type)
+            )
+        }
+
+        eventType == EventType.NOTE && this.originalProfileName != null -> {
+            if (this.date == 0L) return null
+            this.profileJson ?: return null
+            this.originalCustomizedName ?: return null
+            this.originalTimeshift ?: return null
+            this.originalPercentage ?: return null
+            this.originalDuration ?: return null
+            this.originalEnd ?: return null
+
+            return EffectiveProfileSwitch(
+                date = timestamp(),
+                device = this.device,
+                identifier = this.identifier,
+                units = NsUnits.fromString(this.units),
+                srvModified = this.srvModified,
+                srvCreated = this.srvCreated,
+                utcOffset = this.utcOffset ?: 0,
+                subject = this.subject,
+                isReadOnly = this.isReadOnly ?: false,
+                isValid = this.isValid ?: true,
+                eventType = this.eventType,
+                notes = this.notes,
+                pumpId = this.pumpId,
+                pumpType = this.pumpType,
+                pumpSerial = this.pumpSerial,
+                profileJson = JSONObject(this.profileJson),
+                originalProfileName = this.originalProfileName,
+                originalCustomizedName = this.originalCustomizedName,
+                originalTimeshift = this.originalTimeshift,
+                originalPercentage = this.originalPercentage,
+                originalDuration = this.originalDuration,
+                originalEnd = this.originalEnd
             )
         }
     }
