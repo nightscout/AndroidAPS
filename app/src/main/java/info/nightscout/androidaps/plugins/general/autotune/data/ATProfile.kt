@@ -7,7 +7,7 @@ import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.data.PureProfile
 import info.nightscout.androidaps.database.data.Block
 import info.nightscout.androidaps.extensions.blockValueBySeconds
-import info.nightscout.androidaps.extensions.pureProfileFromJson
+import info.nightscout.androidaps.utils.extensions.pureProfileFromJson
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.DateUtil

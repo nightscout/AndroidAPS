@@ -13,7 +13,7 @@ import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.data.PureProfile
 import info.nightscout.androidaps.events.EventProfileStoreChanged
 import info.nightscout.androidaps.extensions.blockFromJsonArray
-import info.nightscout.androidaps.extensions.pureProfileFromJson
+import info.nightscout.androidaps.utils.extensions.pureProfileFromJson
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag

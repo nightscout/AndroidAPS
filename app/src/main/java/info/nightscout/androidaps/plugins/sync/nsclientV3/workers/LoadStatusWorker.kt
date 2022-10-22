@@ -26,7 +26,7 @@ class LoadStatusWorker(
                 aapsLogger.debug("STATUS: $status")
             } catch (error: Exception) {
                 aapsLogger.error("Error: ", error)
-                ret = Result.failure(workDataOf("Error" to error))
+                ret = Result.failure(workDataOf("Error" to error.toString()))
             }
         }
         return ret

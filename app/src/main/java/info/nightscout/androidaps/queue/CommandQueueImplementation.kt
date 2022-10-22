@@ -21,7 +21,7 @@ import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.dialogs.BolusProgressDialog
 import info.nightscout.androidaps.events.EventMobileToWear
 import info.nightscout.androidaps.events.EventProfileSwitchChanged
-import info.nightscout.androidaps.extensions.getCustomizedName
+import info.nightscout.androidaps.utils.extensions.getCustomizedName
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker

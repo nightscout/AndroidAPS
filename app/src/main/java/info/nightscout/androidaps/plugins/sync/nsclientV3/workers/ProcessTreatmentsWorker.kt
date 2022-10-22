@@ -13,6 +13,7 @@ import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.SyncNsBolusTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsCarbsTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsEffectiveProfileSwitchTransaction
+import info.nightscout.androidaps.database.transactions.SyncNsProfileSwitchTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsTemporaryBasalTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsTemporaryTargetTransaction
 import info.nightscout.androidaps.interfaces.ActivePlugin
@@ -26,6 +27,7 @@ import info.nightscout.androidaps.plugins.sync.nsclient.events.EventNSClientNewL
 import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toBolus
 import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toCarbs
 import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toEffectiveProfileSwitch
+import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toProfileSwitch
 import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toTemporaryBasal
 import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toTemporaryTarget
 import info.nightscout.androidaps.receivers.DataWorkerStorage
@@ -34,6 +36,7 @@ import info.nightscout.androidaps.utils.XDripBroadcast
 import info.nightscout.sdk.localmodel.treatment.Bolus
 import info.nightscout.sdk.localmodel.treatment.Carbs
 import info.nightscout.sdk.localmodel.treatment.EffectiveProfileSwitch
+import info.nightscout.sdk.localmodel.treatment.ProfileSwitch
 import info.nightscout.sdk.localmodel.treatment.TemporaryBasal
 import info.nightscout.sdk.localmodel.treatment.TemporaryTarget
 import info.nightscout.sdk.localmodel.treatment.Treatment
@@ -324,6 +327,41 @@ class ProcessTreatmentsWorker(
                         }
                     }
                 }
+
+                is ProfileSwitch          -> {
+                    if (sp.getBoolean(R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
+                        treatment.toProfileSwitch(activePlugin, dateUtil)?.let { profileSwitch ->
+                            repository.runTransactionForResult(SyncNsProfileSwitchTransaction(profileSwitch))
+                                .doOnError {
+                                    aapsLogger.error(LTag.DATABASE, "Error while saving ProfileSwitch", it)
+                                    ret = Result.failure(workDataOf("Error" to it.toString()))
+                                }
+                                .blockingGet()
+                                .also { result ->
+                                    result.inserted.forEach {
+                                        uel.log(
+                                            UserEntry.Action.PROFILE_SWITCH, UserEntry.Sources.NSClient,
+                                            ValueWithUnit.Timestamp(it.timestamp)
+                                        )
+                                        aapsLogger.debug(LTag.DATABASE, "Inserted ProfileSwitch $it")
+                                        processed[ProfileSwitch::class.java.simpleName] = (processed[ProfileSwitch::class.java.simpleName] ?: 0) + 1
+                                    }
+                                    result.invalidated.forEach {
+                                        uel.log(
+                                            UserEntry.Action.PROFILE_SWITCH_REMOVED, UserEntry.Sources.NSClient,
+                                            ValueWithUnit.Timestamp(it.timestamp)
+                                        )
+                                        aapsLogger.debug(LTag.DATABASE, "Invalidated ProfileSwitch $it")
+                                        processed[ProfileSwitch::class.java.simpleName] = (processed[ProfileSwitch::class.java.simpleName] ?: 0) + 1
+                                    }
+                                    result.updatedNsId.forEach {
+                                        aapsLogger.debug(LTag.DATABASE, "Updated nsId ProfileSwitch $it")
+                                        processed[ProfileSwitch::class.java.simpleName] = (processed[ProfileSwitch::class.java.simpleName] ?: 0) + 1
+                                    }
+                                }
+                        }
+                    }
+                }
             }
             /*
                         when {
@@ -458,37 +496,6 @@ class ProcessTreatmentsWorker(
                                                 }
                                             }
                                     } ?: aapsLogger.error("Error parsing ExtendedBolus json $json")
-                                }
-
-                            eventType == TherapyEvent.Type.PROFILE_SWITCH.text                          ->
-                                if (sp.getBoolean(R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
-                                    profileSwitchFromJson(json, dateUtil, activePlugin)?.let { profileSwitch ->
-                                        repository.runTransactionForResult(SyncNsProfileSwitchTransaction(profileSwitch))
-                                            .doOnError {
-                                                aapsLogger.error(LTag.DATABASE, "Error while saving ProfileSwitch", it)
-                                                ret = Result.failure(workDataOf("Error" to it.toString()))
-                                            }
-                                            .blockingGet()
-                                            .also { result ->
-                                                result.inserted.forEach {
-                                                    uel.log(
-                                                        Action.PROFILE_SWITCH, Sources.NSClient,
-                                                        ValueWithUnit.Timestamp(it.timestamp)
-                                                    )
-                                                    aapsLogger.debug(LTag.DATABASE, "Inserted ProfileSwitch $it")
-                                                }
-                                                result.invalidated.forEach {
-                                                    uel.log(
-                                                        Action.PROFILE_SWITCH_REMOVED, Sources.NSClient,
-                                                        ValueWithUnit.Timestamp(it.timestamp)
-                                                    )
-                                                    aapsLogger.debug(LTag.DATABASE, "Invalidated ProfileSwitch $it")
-                                                }
-                                                result.updatedNsId.forEach {
-                                                    aapsLogger.debug(LTag.DATABASE, "Updated nsId ProfileSwitch $it")
-                                                }
-                                            }
-                                    } ?: aapsLogger.error("Error parsing ProfileSwitch json $json")
                                 }
 
                             eventType == TherapyEvent.Type.APS_OFFLINE.text                             ->

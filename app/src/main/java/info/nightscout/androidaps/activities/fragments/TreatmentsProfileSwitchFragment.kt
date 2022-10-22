@@ -24,7 +24,7 @@ import info.nightscout.androidaps.databinding.TreatmentsProfileswitchItemBinding
 import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.events.EventEffectiveProfileSwitchChanged
 import info.nightscout.androidaps.events.EventProfileSwitchChanged
-import info.nightscout.androidaps.extensions.getCustomizedName
+import info.nightscout.androidaps.utils.extensions.getCustomizedName
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus

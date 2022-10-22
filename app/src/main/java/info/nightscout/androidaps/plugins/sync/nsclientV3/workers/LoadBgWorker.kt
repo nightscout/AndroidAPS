@@ -66,7 +66,7 @@ class LoadBgWorker(
                     } else rxBus.send(EventNSClientNewLog("END", "No SGVs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.entries)}", NsClient.Version.V3))
                 } catch (error: Exception) {
                     aapsLogger.error("Error: ", error)
-                    ret = Result.failure(workDataOf("Error" to error))
+                    ret = Result.failure(workDataOf("Error" to error.toString()))
                 }
             else rxBus.send(EventNSClientNewLog("END", "No new SGVs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.entries)}", NsClient.Version.V3))
         }

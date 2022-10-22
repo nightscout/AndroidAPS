@@ -5,6 +5,7 @@ import info.nightscout.sdk.localmodel.treatment.Bolus
 import info.nightscout.sdk.localmodel.treatment.Carbs
 import info.nightscout.sdk.localmodel.treatment.EffectiveProfileSwitch
 import info.nightscout.sdk.localmodel.treatment.EventType
+import info.nightscout.sdk.localmodel.treatment.ProfileSwitch
 import info.nightscout.sdk.localmodel.treatment.TemporaryBasal
 import info.nightscout.sdk.localmodel.treatment.TemporaryTarget
 import info.nightscout.sdk.localmodel.treatment.Treatment
@@ -14,10 +15,12 @@ import java.util.concurrent.TimeUnit
 
 @JvmSynthetic
 internal fun RemoteTreatment.toTreatment(): Treatment? {
+    val treatmentTimestamp = timestamp()
+    val ageDays = (System.currentTimeMillis() - treatmentTimestamp) / (24* 3600 * 1000.0)
     when {
-        insulin != null && insulin > 0          ->
+        insulin != null && insulin > 0                                  ->
             return Bolus(
-                date = timestamp(),
+                date = treatmentTimestamp,
                 device = this.device,
                 identifier = this.identifier,
                 units = NsUnits.fromString(this.units),
@@ -36,9 +39,9 @@ internal fun RemoteTreatment.toTreatment(): Treatment? {
                 type = Bolus.BolusType.fromString(this.type),
             )
 
-        carbs != null && carbs > 0              ->
+        carbs != null && carbs > 0                                      ->
             return Carbs(
-                date = timestamp(),
+                date = treatmentTimestamp,
                 device = this.device,
                 identifier = this.identifier,
                 units = NsUnits.fromString(this.units),
@@ -57,15 +60,15 @@ internal fun RemoteTreatment.toTreatment(): Treatment? {
                 duration = this.duration ?: 0L
             )
 
-        eventType == EventType.TEMPORARY_TARGET -> {
-            if (this.date == 0L) return null
+        eventType == EventType.TEMPORARY_TARGET                         -> {
+            if (treatmentTimestamp == 0L) return null
 
             this.duration ?: return null
             this.targetBottom ?: return null
             this.targetTop ?: return null
 
             return TemporaryTarget(
-                date = timestamp(),
+                date = treatmentTimestamp,
                 device = this.device,
                 identifier = this.identifier,
                 units = NsUnits.fromString(this.units),
@@ -87,15 +90,15 @@ internal fun RemoteTreatment.toTreatment(): Treatment? {
             )
         }
 
-        eventType == EventType.TEMPORARY_BASAL  -> {
-            if (this.date == 0L) return null
+        eventType == EventType.TEMPORARY_BASAL                          -> {
+            if (treatmentTimestamp == 0L) return null
 
             this.absolute ?: this.percent ?: return null
             this.duration ?: return null
             if (this.duration == 0L && this.durationInMilliseconds == null) return null
 
             return TemporaryBasal(
-                date = timestamp(),
+                date = treatmentTimestamp,
                 device = this.device,
                 identifier = this.identifier,
                 units = NsUnits.fromString(this.units),
@@ -118,7 +121,7 @@ internal fun RemoteTreatment.toTreatment(): Treatment? {
         }
 
         eventType == EventType.NOTE && this.originalProfileName != null -> {
-            if (this.date == 0L) return null
+            if (treatmentTimestamp == 0L) return null
             this.profileJson ?: return null
             this.originalCustomizedName ?: return null
             this.originalTimeshift ?: return null
@@ -127,7 +130,7 @@ internal fun RemoteTreatment.toTreatment(): Treatment? {
             this.originalEnd ?: return null
 
             return EffectiveProfileSwitch(
-                date = timestamp(),
+                date = treatmentTimestamp,
                 device = this.device,
                 identifier = this.identifier,
                 units = NsUnits.fromString(this.units),
@@ -149,6 +152,36 @@ internal fun RemoteTreatment.toTreatment(): Treatment? {
                 originalPercentage = this.originalPercentage,
                 originalDuration = this.originalDuration,
                 originalEnd = this.originalEnd
+            )
+        }
+
+        eventType == EventType.PROFILE_SWITCH                           -> {
+            if (treatmentTimestamp == 0L) return null
+            this.profile ?: return null
+
+            return ProfileSwitch(
+                date = treatmentTimestamp,
+                device = this.device,
+                identifier = this.identifier,
+                units = NsUnits.fromString(this.units),
+                srvModified = this.srvModified,
+                srvCreated = this.srvCreated,
+                utcOffset = this.utcOffset ?: 0,
+                subject = this.subject,
+                isReadOnly = this.isReadOnly ?: false,
+                isValid = this.isValid ?: true,
+                eventType = this.eventType,
+                notes = this.notes,
+                pumpId = this.pumpId,
+                pumpType = this.pumpType,
+                pumpSerial = this.pumpSerial,
+                profileJson = this.profileJson?.let { JSONObject(this.profileJson) },
+                profileName = this.profile,
+                originalProfileName = this.originalProfileName,
+                originalDuration = this.originalDuration,
+                duration = this.duration,
+                timeShift = this.timeshift,
+                percentage = this.percentage,
             )
         }
     }

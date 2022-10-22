@@ -70,7 +70,7 @@ class LoadTreatmentsWorker(
                         )
                 } catch (error: Exception) {
                     aapsLogger.error("Error: ", error)
-                    ret = Result.failure(workDataOf("Error" to error))
+                    ret = Result.failure(workDataOf("Error" to error.toString()))
                 }
             else
                 rxBus.send(EventNSClientNewLog("END", "No new TRs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.treatments)}", NsClient.Version.V3))

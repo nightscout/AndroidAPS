@@ -26,7 +26,7 @@ import info.nightscout.androidaps.extensions.bolusCalculatorResultFromJson
 import info.nightscout.androidaps.plugins.sync.nsclient.extensions.effectiveProfileSwitchFromJson
 import info.nightscout.androidaps.plugins.sync.nsclient.extensions.isEffectiveProfileSwitch
 import info.nightscout.androidaps.extensions.offlineEventFromJson
-import info.nightscout.androidaps.extensions.profileSwitchFromJson
+import info.nightscout.androidaps.plugins.sync.nsclient.extensions.profileSwitchFromJson
 import info.nightscout.androidaps.extensions.therapyEventFromJson
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.BuildHelper

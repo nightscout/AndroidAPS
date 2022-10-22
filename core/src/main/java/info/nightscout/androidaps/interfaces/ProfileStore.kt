@@ -4,11 +4,11 @@ import androidx.collection.ArrayMap
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.data.PureProfile
-import info.nightscout.androidaps.extensions.pureProfileFromJson
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.JsonHelper
+import info.nightscout.androidaps.utils.extensions.pureProfileFromJson
 import info.nightscout.shared.logging.AAPSLogger
 import org.json.JSONException
 import org.json.JSONObject

@@ -27,7 +27,7 @@ class LoadLastModificationWorker(
                 aapsLogger.debug("LAST MODIFIED: ${nsClientV3Plugin.lastModified}")
             } catch (error: Exception) {
                 aapsLogger.error("Error: ", error)
-                ret = Result.failure(workDataOf("Error" to error))
+                ret = Result.failure(workDataOf("Error" to error.toString()))
             }
         }
         return ret
